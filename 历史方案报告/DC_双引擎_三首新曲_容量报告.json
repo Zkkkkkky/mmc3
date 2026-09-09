@@ -1,0 +1,113 @@
+{
+  "source": {
+    "rom": "build\\nsf\\新DC.nes",
+    "bytes": 786448,
+    "sha256": "267cfa5e6273e0fe3557d5339b0e50172bcf25475283944c7e8372276fb3493c",
+    "preserved": true
+  },
+  "output": {
+    "rom": "build\\DC_双引擎_三首新曲_测试.nes",
+    "bytes": 786448,
+    "sha256": "74982e3f46204e7e57b4381734f710c7e1301fdfe5aafe2138a071f2018a94be",
+    "ips": "patches\\DC_双引擎_三首新曲_测试.ips",
+    "ipsBytes": 30715,
+    "ipsSha256": "06b47c21ba95865661d221c892ab8a4556118b74e05c98906ecce95da53b1002",
+    "changedBytes": 16242
+  },
+  "architecture": {
+    "engineCount": 2,
+    "stockEngine": "20 original songs plus 56 original SFX",
+    "famiStudioEngine": "3 new songs plus 56 migrated FamiStudio SFX",
+    "apuOwnership": "Only the selected engine updates the APU in each frame",
+    "handoffToStock": "Send 0xFE reset, then replay the pending stock command on the next frame",
+    "newSongDebugCommands": {
+      "0x9D": "Ash to Ash",
+      "0x9E": "Dark Knight",
+      "0x9F": "Dark Prison"
+    },
+    "gameplayBindingsChanged": false
+  },
+  "capacity": {
+    "original": {
+      "tracks": 20,
+      "musicDataBytes": 14480,
+      "driverBytes": 2137,
+      "sfxRecords": 56,
+      "sfxTableAndDataBytes": 2086,
+      "totalAudioBytes": 18703
+    },
+    "addedFamiStudioSide": {
+      "tracks": 3,
+      "musicDataBytes": 13571,
+      "engineAndEntryBytes": 2185,
+      "migratedSfxRecords": 56,
+      "migratedSfxDataBytes": 2984,
+      "bridgeBytes": 449,
+      "trampolineBytes": 29,
+      "totalAudioBytes": 19218
+    },
+    "combined": {
+      "tracks": 23,
+      "pureMusicDataBytes": 28051,
+      "totalAudioBytes": 37921,
+      "totalAudioKiB": 37.032,
+      "romFileBytes": 786448,
+      "romFileGrowthBytes": 0
+    }
+  },
+  "newMusicBanks": [
+    {
+      "bank": "0x0D",
+      "song": "Ash to Ash",
+      "usedBytes": 4672,
+      "freeBytes": 3520,
+      "sha256": "9db804e96cd15b09a7cf754bec4369d67899e3d82853553d2e04e559cb2f5a2d"
+    },
+    {
+      "bank": "0x15",
+      "song": "Dark Knight",
+      "usedBytes": 4065,
+      "freeBytes": 4127,
+      "sha256": "f3dad8bbf5aad45484a000479df7c4e9a8640bf05ed50c615e8adb6d1be49607"
+    },
+    {
+      "bank": "0x17",
+      "song": "Dark Prison",
+      "usedBytes": 4834,
+      "freeBytes": 3358,
+      "sha256": "946f14198c50a2a276b6d9cf1cd0b1316af0b4e65f503ffc5f08df2c9cc3e4fb"
+    }
+  ],
+  "engineBank": {
+    "bank": "0x33",
+    "sha256": "aac2d973d13b46fc7bc4a51c1a2c283974c652ac72c1806e0eea15b482ad6f08",
+    "entryAndEngineRange": "0xA000-0xA888",
+    "migratedSfxRange": "0xA889-0xB430",
+    "reservedGapBytes": 719,
+    "bridgeRange": "0xB700-0xB8C0"
+  },
+  "preservation": {
+    "stockMusicDataBanks00And01": "byte-identical",
+    "stockDriverBank18Cpu8020To8878": "byte-identical",
+    "stockSfxBank18Cpu8879To909E": "byte-identical",
+    "stockPartnerBank19": "byte-identical",
+    "onlyStockAreaChanges": [
+      "Bank 18 pointer at CPU 0x8000: 0x8020 -> 0x99AF",
+      "29-byte trampoline in verified empty Bank 18 CPU range 0x99AF-0x99CB"
+    ]
+  },
+  "ram": {
+    "bridgePersistentState": [
+      "0x0455-0x0457",
+      "0x0460-0x0462"
+    ],
+    "famiStudioZeroPage": "0x0094-0x009B",
+    "famiStudioState": [
+      "0x031E-0x0352",
+      "0x035C-0x037F",
+      "0x0400-0x0454"
+    ],
+    "stockAndFamiStudio0400Overlap": "intentional; the engines never update concurrently and are reinitialized at every handoff",
+    "mapWeaponGuard": "FamiStudio updates pause while the particle renderer owns 0x031E-0x037F; the current custom song is rebuilt afterward"
+  }
+}

@@ -1,0 +1,26 @@
+                                ; Entry stored only in the expanded copy of stock PRG bank $18. The NMI
+                                ; dispatcher maps physical Mapper 194 bank $60 before reading this pointer.
+                                
+                                    .base $99af
+099AF                           
+099AF                           mapper_select = $8000
+099AF                           mapper_data   = $8001
+099AF                           
+099AF                           dc_dual_audio_trampoline:
+099AF A9 87                         lda #$87
+099B1 8D 00 80                      sta mapper_select
+099B4 A9 64                         lda #$64
+099B6 8D 01 80                      sta mapper_data
+099B9 4C 00 B5                      jmp $b500
+099BC                           
+099BC                           stock_restore_dispatch:
+099BC A9 87                         lda #$87
+099BE 8D 00 80                      sta mapper_select
+099C1 A9 19                         lda #$19
+099C3 8D 01 80                      sta mapper_data
+099C6 90 03                         bcc @return
+099C8 4C 20 80                      jmp $8020
+099CB                           @return:
+099CB 60                            rts
+099CC                           
+099CC                           dc_dual_audio_trampoline_end:

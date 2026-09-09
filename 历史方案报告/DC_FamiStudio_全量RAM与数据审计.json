@@ -1,0 +1,327 @@
+{
+  "source": {
+    "path": "build\\nsf\\新DC.nes",
+    "sha256": "267cfa5e6273e0fe3557d5339b0e50172bcf25475283944c7e8372276fb3493c",
+    "bytes": 786448
+  },
+  "output": {
+    "path": "build\\DC_FamiStudio_三首新曲已绑定_全量RAM修复测试.nes",
+    "sha256": "b7cf9a5843908e86abb4283a6ce00e0194695567ddc5ea1da874ca2213a129fe",
+    "bytes": 786448,
+    "changedBytes": 55675
+  },
+  "romCoverage": {
+    "prgBanksChecked": 64,
+    "chrBanksChecked": 32,
+    "inesHeaderUnchanged": true,
+    "chrDataUnchanged": true,
+    "unexpectedGameDataChanges": 0,
+    "onlyGameplayBindingOffsets": [
+      "0xCF99",
+      "0xD061",
+      "0x14EE7",
+      "0x67703",
+      "0x67723"
+    ],
+    "prgBankChanges": [
+      {
+        "bank": "0x00",
+        "changedBytes": 8144
+      },
+      {
+        "bank": "0x01",
+        "changedBytes": 6219
+      },
+      {
+        "bank": "0x02",
+        "changedBytes": 0
+      },
+      {
+        "bank": "0x03",
+        "changedBytes": 0
+      },
+      {
+        "bank": "0x04",
+        "changedBytes": 0
+      },
+      {
+        "bank": "0x05",
+        "changedBytes": 0
+      },
+      {
+        "bank": "0x06",
+        "changedBytes": 2
+      },
+      {
+        "bank": "0x07",
+        "changedBytes": 0
+      },
+      {
+        "bank": "0x08",
+        "changedBytes": 0
+      },
+      {
+        "bank": "0x09",
+        "changedBytes": 0
+      },
+      {
+        "bank": "0x0A",
+        "changedBytes": 1
+      },
+      {
+        "bank": "0x0B",
+        "changedBytes": 0
+      },
+      {
+        "bank": "0x0C",
+        "changedBytes": 0
+      },
+      {
+        "bank": "0x0D",
+        "changedBytes": 6447
+      },
+      {
+        "bank": "0x0E",
+        "changedBytes": 0
+      },
+      {
+        "bank": "0x0F",
+        "changedBytes": 0
+      },
+      {
+        "bank": "0x10",
+        "changedBytes": 0
+      },
+      {
+        "bank": "0x11",
+        "changedBytes": 0
+      },
+      {
+        "bank": "0x12",
+        "changedBytes": 0
+      },
+      {
+        "bank": "0x13",
+        "changedBytes": 0
+      },
+      {
+        "bank": "0x14",
+        "changedBytes": 0
+      },
+      {
+        "bank": "0x15",
+        "changedBytes": 6164
+      },
+      {
+        "bank": "0x16",
+        "changedBytes": 0
+      },
+      {
+        "bank": "0x17",
+        "changedBytes": 6095
+      },
+      {
+        "bank": "0x18",
+        "changedBytes": 3737
+      },
+      {
+        "bank": "0x19",
+        "changedBytes": 0
+      },
+      {
+        "bank": "0x1A",
+        "changedBytes": 0
+      },
+      {
+        "bank": "0x1B",
+        "changedBytes": 0
+      },
+      {
+        "bank": "0x1C",
+        "changedBytes": 0
+      },
+      {
+        "bank": "0x1D",
+        "changedBytes": 0
+      },
+      {
+        "bank": "0x1E",
+        "changedBytes": 0
+      },
+      {
+        "bank": "0x1F",
+        "changedBytes": 0
+      },
+      {
+        "bank": "0x20",
+        "changedBytes": 0
+      },
+      {
+        "bank": "0x21",
+        "changedBytes": 0
+      },
+      {
+        "bank": "0x22",
+        "changedBytes": 0
+      },
+      {
+        "bank": "0x23",
+        "changedBytes": 0
+      },
+      {
+        "bank": "0x24",
+        "changedBytes": 0
+      },
+      {
+        "bank": "0x25",
+        "changedBytes": 0
+      },
+      {
+        "bank": "0x26",
+        "changedBytes": 0
+      },
+      {
+        "bank": "0x27",
+        "changedBytes": 0
+      },
+      {
+        "bank": "0x28",
+        "changedBytes": 0
+      },
+      {
+        "bank": "0x29",
+        "changedBytes": 0
+      },
+      {
+        "bank": "0x2A",
+        "changedBytes": 0
+      },
+      {
+        "bank": "0x2B",
+        "changedBytes": 6709
+      },
+      {
+        "bank": "0x2C",
+        "changedBytes": 0
+      },
+      {
+        "bank": "0x2D",
+        "changedBytes": 0
+      },
+      {
+        "bank": "0x2E",
+        "changedBytes": 0
+      },
+      {
+        "bank": "0x2F",
+        "changedBytes": 0
+      },
+      {
+        "bank": "0x30",
+        "changedBytes": 0
+      },
+      {
+        "bank": "0x31",
+        "changedBytes": 6754
+      },
+      {
+        "bank": "0x32",
+        "changedBytes": 0
+      },
+      {
+        "bank": "0x33",
+        "changedBytes": 5403
+      },
+      {
+        "bank": "0x34",
+        "changedBytes": 0
+      },
+      {
+        "bank": "0x35",
+        "changedBytes": 0
+      },
+      {
+        "bank": "0x36",
+        "changedBytes": 0
+      },
+      {
+        "bank": "0x37",
+        "changedBytes": 0
+      },
+      {
+        "bank": "0x38",
+        "changedBytes": 0
+      },
+      {
+        "bank": "0x39",
+        "changedBytes": 0
+      },
+      {
+        "bank": "0x3A",
+        "changedBytes": 0
+      },
+      {
+        "bank": "0x3B",
+        "changedBytes": 0
+      },
+      {
+        "bank": "0x3C",
+        "changedBytes": 0
+      },
+      {
+        "bank": "0x3D",
+        "changedBytes": 0
+      },
+      {
+        "bank": "0x3E",
+        "changedBytes": 0
+      },
+      {
+        "bank": "0x3F",
+        "changedBytes": 0
+      }
+    ]
+  },
+  "gameDataCoverage": {
+    "method": "whole-ROM byte comparison plus an exact modified-region whitelist",
+    "result": "all bytes outside replaced stock-audio/empty banks and five verified selection bindings are identical",
+    "scenarioAndEventDataOutsideBindingsUnchanged": true
+  },
+  "ramOwnership": {
+    "certifiedStockAudioBytes": 165,
+    "persistentBytes": 146,
+    "scratchBytes": 8,
+    "savedOutputBytes": 11,
+    "unusedGapPreserved": "0x002C",
+    "zeroPageOwned": "0x0028-0x005D except 0x002C",
+    "page4Owned": "0x0400-0x046F",
+    "persistentRanges": [
+      "0x002F",
+      "0x0032-0x004B",
+      "0x0057-0x005D",
+      "0x0400-0x046F"
+    ],
+    "transientRanges": [
+      "0x0028-0x002B",
+      "0x002D-0x002E",
+      "0x0030-0x0031",
+      "0x004C-0x0056 (saved/restored each frame)"
+    ],
+    "excluded": [
+      "stack-page game buffers 0x0100-0x0158",
+      "map-cannon particles 0x031E-0x037F",
+      "DATA LOAD buffers 0x0679-0x06B7",
+      "battery SRAM 0x6000-0x7FFF"
+    ],
+    "sceneSpecificPauseOrReinit": false
+  },
+  "runtimeCoverage": {
+    "23 tracks and 56 SFX": "RESULT checks=39 failures=0 frames=519 pc=F873 bridge=512 init=30 music=27 sfx=56 apu=4890 mapper6=3841 mapper7=3811",
+    "23 complete/long playback passes": "RESULT checks=23 failures=0 frames=71888 pc=F873 bridge=71881 apu=651892 suppressed=73",
+    "DATA LOAD -> data 0 + RAM monitor": "RESULT pass=true bridge=8992 apu=81088 normal_frames=7600 illegal=0 game_state_writes=0 min_stack=D5 frame=8999 pc=F874 state=9C77",
+    "first-stage map cannon": "RESULT pass=true particle_writes=53 first=14590 last=14711 apu_during_particle=14 bridge=20136 frame=19999 pc=F871 state=9CB9",
+    "title and new-game map": "RESULT pass=true title_command=268 title_loaded=269 map_command=681 map_loaded=682 apu_writes=8112 frame=899 pc=F981",
+    "CONTINUE map": "RESULT pass=true command=716 loaded=717 apu_writes=6147 wrong_alias=false frame=1399 pc=F981",
+    "Wisdom God battle": "RESULT pass=true wisdom=true command=2430 loaded=2431 apu_writes=15977 frame=4199 pc=F981"
+  }
+}

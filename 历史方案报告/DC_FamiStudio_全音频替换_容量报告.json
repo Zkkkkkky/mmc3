@@ -1,0 +1,224 @@
+{
+  "source": {
+    "rom": "build\\nsf\\新DC.nes",
+    "bytes": 786448,
+    "sha256": "267cfa5e6273e0fe3557d5339b0e50172bcf25475283944c7e8372276fb3493c"
+  },
+  "output": {
+    "rom": "build\\DC_FamiStudio_全音频替换_测试.nes",
+    "romSha256": "142cfd8620eb97483debb827a407ea5d593dd991de82104a580bf20dde416855",
+    "ips": "patches\\DC_FamiStudio_全音频替换_测试.ips",
+    "ipsBytes": 86179,
+    "ipsSha256": "0c3a95bacd7c95b63aabbb8fef946c3f030888b12f0aa65cbac27e821e96f23c",
+    "changedBytes": 55671,
+    "logicalModifiedRegions": [
+      {
+        "bank": "0x00",
+        "fileStart": "0x00010",
+        "fileEndInclusive": "0x0200F"
+      },
+      {
+        "bank": "0x01",
+        "fileStart": "0x02010",
+        "fileEndInclusive": "0x0400F"
+      },
+      {
+        "bank": "0x0D",
+        "fileStart": "0x1A010",
+        "fileEndInclusive": "0x1C00F"
+      },
+      {
+        "bank": "0x15",
+        "fileStart": "0x2A010",
+        "fileEndInclusive": "0x2C00F"
+      },
+      {
+        "bank": "0x17",
+        "fileStart": "0x2E010",
+        "fileEndInclusive": "0x3000F"
+      },
+      {
+        "bank": "0x2B",
+        "fileStart": "0x56010",
+        "fileEndInclusive": "0x5800F"
+      },
+      {
+        "bank": "0x31",
+        "fileStart": "0x62010",
+        "fileEndInclusive": "0x6400F"
+      },
+      {
+        "bank": "0x33",
+        "fileStart": "0x66010",
+        "fileEndInclusive": "0x6800F"
+      },
+      {
+        "bank": "0x18",
+        "cpuRange": "0x8020-0x909E",
+        "fileStart": "0x30030",
+        "fileEndInclusive": "0x310AE"
+      }
+    ]
+  },
+  "originalAudio": {
+    "musicRecords": 20,
+    "sfxCommandRecords": 56,
+    "musicDataBytes": 14480,
+    "driverCodeBytes": 2137,
+    "sfxTableAndDataBytes": 2086,
+    "totalBytes": 18703
+  },
+  "replacementAudio": {
+    "musicTracks": 23,
+    "originalTracks": 20,
+    "newUnboundTracks": [
+      "Ash to Ash",
+      "Dark Knight",
+      "Dark Prison"
+    ],
+    "sfxTracks": 56,
+    "sharedMusicInstruments": 9,
+    "sharedSfxInstruments": 3,
+    "musicDataBytes": 48704,
+    "engineAndEntryBytes": 2078,
+    "sfxDataBytes": 2984,
+    "bridgeBytes": 596,
+    "reservedGapBytes": 314,
+    "totalUsedBytesExcludingAlignmentGap": 54362,
+    "increaseOverStockBytes": 35659
+  },
+  "musicBanks": [
+    {
+      "bank": "0x00",
+      "usedBytes": 6930,
+      "freeBytes": 1262,
+      "sha256": "974691aed5f7b39780616c67159b717ceb4c09a7f31961eedfbe608583e82a76",
+      "songs": [
+        "Original 86",
+        "Original 87",
+        "Original 88",
+        "Original 8F"
+      ]
+    },
+    {
+      "bank": "0x01",
+      "usedBytes": 4029,
+      "freeBytes": 4163,
+      "sha256": "755c134c7a4ebddd7744e4a42bac8d457816611669245fcd3463e9dec4498f16",
+      "songs": [
+        "Original 84",
+        "Original 8C",
+        "Original 8D",
+        "Original 8E",
+        "Original 92"
+      ]
+    },
+    {
+      "bank": "0x0D",
+      "usedBytes": 7650,
+      "freeBytes": 542,
+      "sha256": "e0bb142274ab1063d437d642e875f03c8d0bab07b87dda5cdaafbfb658c8e672",
+      "songs": [
+        "Original 8B",
+        "Original 93",
+        "Ash to Ash"
+      ]
+    },
+    {
+      "bank": "0x15",
+      "usedBytes": 7356,
+      "freeBytes": 836,
+      "sha256": "e80e2749881036dd91fa0dc0f3b2e3be14af6a05521de71d642322811c67089e",
+      "songs": [
+        "Original 89",
+        "Dark Knight"
+      ]
+    },
+    {
+      "bank": "0x17",
+      "usedBytes": 7468,
+      "freeBytes": 724,
+      "sha256": "e528bd13f59f0f24dd9c1211bdaadad07159ad83bf6620aa4321d3ad8e9f19ad",
+      "songs": [
+        "Original 83",
+        "Dark Prison"
+      ]
+    },
+    {
+      "bank": "0x2B",
+      "usedBytes": 7677,
+      "freeBytes": 515,
+      "sha256": "3e4d06191b375afb4c9091e5006bfc1c0995393c1bb302c681f710f3c727916f",
+      "songs": [
+        "Original 80",
+        "Original 81",
+        "Original 82"
+      ]
+    },
+    {
+      "bank": "0x31",
+      "usedBytes": 7594,
+      "freeBytes": 598,
+      "sha256": "0cf774d601068890be11c6608d8a539613d3e7360e6531c66984b3d143ccccc0",
+      "songs": [
+        "Original 85",
+        "Original 8A",
+        "Original 90",
+        "Original 91"
+      ]
+    }
+  ],
+  "engineBank": {
+    "bank": "0x33",
+    "sha256": "97410dd40ee975e32b7493996240020d28581c9c68f8822093276ae6483492cb",
+    "entryRange": "0xA000-0xA011",
+    "engineEnd": "0xA81E",
+    "sfxEnd": "0xB3C6",
+    "bridgeRange": "0xB500-0xB753"
+  },
+  "stockRemoval": {
+    "oldMusicBanksReused": [
+      "0x00",
+      "0x01"
+    ],
+    "oldDriverAndSfxCpuRange": "0x8020-0x909E in bank 0x18",
+    "replacementStubBytes": 24,
+    "preservedBank18PointerTable": "0x8000-0x801F",
+    "preservedBank18GameData": "0x909F-0x9FFF",
+    "preservedBank19": true
+  },
+  "ram": {
+    "certifiedStockAudioBytes": 165,
+    "persistentBytes": 146,
+    "scratchBytes": 8,
+    "savedOutputBytes": 11,
+    "unusedGapPreserved": "0x002C",
+    "zeroPageOwned": "0x0028-0x005D except 0x002C",
+    "page4Owned": "0x0400-0x046F",
+    "persistentRanges": [
+      "0x002F",
+      "0x0032-0x004B",
+      "0x0057-0x005D",
+      "0x0400-0x046F"
+    ],
+    "callLocalScratch": [
+      "0x0028-0x002B",
+      "0x002D-0x002E",
+      "0x0030-0x0031"
+    ],
+    "savedGameInterfaceAndOutput": "0x004C-0x0056",
+    "forbiddenFormerExperiments": [
+      "0x0100-0x0158",
+      "0x031E-0x037F",
+      "0x0679-0x06B7"
+    ],
+    "mapWeaponGuardRequired": false
+  },
+  "behaviorNotes": [
+    "Original music is the captured complete first pass, then loops deterministically.",
+    "Commands 0x9D-0x9F select the three new tracks only for external/debug testing; no gameplay table was changed.",
+    "Command 0xF9 keeps the stock delayed-stop timing but does not perform a gradual volume fade.",
+    "All persistent state now fits inside the removed stock driver's original RAM; no scene-specific pause/restart guard is used.",
+    "The game-facing bytes 0x004C-0x0056 are saved to the NMI stack around the transient FamiStudio output mix and restored before returning."
+  ]
+}

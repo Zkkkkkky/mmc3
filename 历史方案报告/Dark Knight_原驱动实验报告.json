@@ -1,0 +1,110 @@
+{
+  "source": {
+    "rom": "D:\\LLM\\项目\\FC\\FC模拟器\\DC_写入Dark Knight前备份.nes",
+    "romSha256": "267cfa5e6273e0fe3557d5339b0e50172bcf25475283944c7e8372276fb3493c",
+    "midi": "D:\\LLM\\项目\\FC\\build\\Dark Knight source.mid"
+  },
+  "output": {
+    "rom": "D:\\LLM\\项目\\FC\\build\\DC_睿智之神_Dark Knight_原驱动实验.nes",
+    "romSha256": "3900231f3c8b0ca5ad4173d148d62395cbcd052a8c96d390f3b1420345ea6341",
+    "ips": "D:\\LLM\\项目\\FC\\patches\\DC_睿智之神_Dark Knight_原驱动实验.ips",
+    "ipsSha256": "2c2f73a2e0060967ccfb6702ee5196c47e46a07cdd35fd91ae6490b6c9779653",
+    "ipsBytes": 8635,
+    "musicData": "D:\\LLM\\项目\\FC\\build\\Dark Knight_原驱动音乐数据.bin",
+    "musicDataSha256": "01d9c74993193ee4172a076ce144bf57e103b5b9fa7ebfe3ffe5a54b293bc4e2"
+  },
+  "music": {
+    "command": "0x9F",
+    "songId": "0x1F",
+    "tempo": "0x96",
+    "format": "DC.nes original two-byte note/duration stream",
+    "driver": "shared original game driver at PRG bank $18",
+    "instruments": "shared original EC/EB/EF instrument/envelope commands",
+    "frames": 3545,
+    "loopFrame": 69,
+    "headerBytes": 12,
+    "streamBytes": 5647,
+    "payloadBytes": 5659,
+    "freeBytesRemainingInBank": 2533,
+    "channels": {
+      "pulse1": {
+        "bytes": 1273,
+        "prefixBytes": 4,
+        "introEvents": 7,
+        "loopEvents": 632,
+        "activeRuns": 361,
+        "restRuns": 101,
+        "innerLoopCommands": 7,
+        "bytesSavedByInnerLoops": 13,
+        "cpuPointer": "0xA00C"
+      },
+      "pulse2": {
+        "bytes": 1405,
+        "prefixBytes": 6,
+        "introEvents": 6,
+        "loopEvents": 692,
+        "activeRuns": 362,
+        "restRuns": 173,
+        "innerLoopCommands": 1,
+        "bytesSavedByInnerLoops": 1,
+        "cpuPointer": "0xA505"
+      },
+      "triangle": {
+        "bytes": 1602,
+        "prefixBytes": 4,
+        "introEvents": 5,
+        "loopEvents": 793,
+        "activeRuns": 560,
+        "restRuns": 118,
+        "innerLoopCommands": 2,
+        "bytesSavedByInnerLoops": 2,
+        "cpuPointer": "0xAA82"
+      },
+      "noise": {
+        "bytes": 1367,
+        "prefixBytes": 0,
+        "introEvents": 24,
+        "loopEvents": 756,
+        "activeRuns": 309,
+        "restRuns": 274,
+        "innerLoopCommands": 33,
+        "bytesSavedByInnerLoops": 197,
+        "cpuPointer": "0xB0C4"
+      }
+    }
+  },
+  "layout": {
+    "customBank": "0x33",
+    "customBankFileOffset": "0x66010",
+    "hookCpuRange": "0x99EC-0x9A21",
+    "hookFileOffset": "0x319FC",
+    "hookBytes": 54,
+    "vectorBytes": 6,
+    "themeBytes": 2,
+    "newOccupiedBytes": 5721,
+    "changedBytes": 4997
+  },
+  "comparisonWithInstalledIndependentPlayer": {
+    "legacyPlayerAndEntryBytes": 1805,
+    "legacySongSequenceBytes": 4065,
+    "legacyBridgeBytes": 139,
+    "legacyTrampolineBytes": 29,
+    "legacyCodeAndDataBytes": 6038,
+    "sharedCodeAndDataBytes": 5713,
+    "codeAndDataBytesSaved": 325,
+    "legacyTotalIncludingReplacedBytes": 6042,
+    "sharedTotalIncludingReplacedBytes": 5721,
+    "totalBytesSaved": 321,
+    "legacyIpsBytes": 9698,
+    "sharedIpsBytes": 8635,
+    "ipsBytesSaved": 1063
+  },
+  "stockAudioAudit": {
+    "reachableBgmRecords": 20,
+    "additionalUnclassifiedRecord": 1,
+    "songHeaderAndDataRegionBytes": 14480,
+    "sharedDriverCodeBytes": 2137,
+    "sharedSfxInstrumentAndLookupBytes": 2086,
+    "note": "The previously counted 56 six-byte records are sound-effect/instrument configurations, not 56 songs."
+  }
+}

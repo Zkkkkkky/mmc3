@@ -1,0 +1,7 @@
+Project TempoMode="FamiStudio" Name="DC stock audio transcription" Author="Unknown original composer" Copyright="Analysis-only wrapper"
+	Song Name="Song 69" Length="1" LoopPoint="0" PatternLength="32" BeatLength="4" NoteLength="8" Groove="8" GroovePaddingMode="Middle"
+		Channel Type="Square1"
+		Channel Type="Square2"
+		Channel Type="Triangle"
+		Channel Type="Noise"
+		Channel Type="DPCM"
