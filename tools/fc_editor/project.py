@@ -14,6 +14,7 @@ from .codecs.unit import UnitCodec
 from .codecs.unit_name import UnitNameReferenceCodec
 from .codecs.unit_weapon import UnitWeaponCodec
 from .codecs.weapon import WeaponCodec
+from .codecs.weapon_name import WeaponNameReferenceCodec
 from .constants import PROJECT_SCHEMA_VERSION
 from .errors import ProjectFormatError
 from .models import (
@@ -31,7 +32,7 @@ class ProjectDocument:
     base_sha256: str
     base_mapper: int
     base_size: int
-    tool_version: str = "1.0.2"
+    tool_version: str = "1.1.0"
     operations: list[dict[str, Any]] = field(default_factory=list)
 
     @classmethod
@@ -203,6 +204,25 @@ class ProjectDocument:
             }
         )
 
+    def add_weapon_name_reference(
+        self,
+        weapon_id: int,
+        source_name_id: int,
+        expected_old_pointer: int,
+    ) -> None:
+        if not 1 <= weapon_id <= 0xFF or not 1 <= source_name_id <= 0xFF:
+            raise ValueError("武器 ID 或名称来源 ID 必须在 01—FF 之间。")
+        if not 0x8000 <= expected_old_pointer <= 0xBFFF:
+            raise ValueError("原武器名称指针必须在 $8000—$BFFF 之间。")
+        self.operations.append(
+            {
+                "kind": "weapon.set_name_reference",
+                "weaponId": weapon_id,
+                "sourceNameId": source_name_id,
+                "expectedOldPointer": expected_old_pointer,
+            }
+        )
+
     def add_map_replace(
         self,
         map_id: int,
@@ -303,6 +323,11 @@ class ProjectDocument:
             else None
         )
         weapon_codec = WeaponCodec(rom)
+        weapon_name_codec = (
+            WeaponNameReferenceCodec(rom)
+            if rom.profile.weapon_name_pointer_table_offset is not None
+            else None
+        )
         map_codec = MapCodec(rom)
         scenario_codec = ScenarioLayoutCodec(rom)
         story_text_codec = StoryTextCodec(rom)
@@ -399,6 +424,33 @@ class ProjectDocument:
                         after,
                         source=f"unit-weapons:{unit_id:02X}",
                         description=f"机体 {unit_id:02X} · 武器槽 {slot + 1}",
+                        expected=before,
+                    )
+                elif kind == "weapon.set_name_reference":
+                    if weapon_name_codec is None:
+                        raise ProjectFormatError(
+                            "当前基准 ROM 没有已验证的武器名称表。"
+                        )
+                    weapon_id = int(operation["weaponId"])
+                    source_name_id = int(operation["sourceNameId"])
+                    expected_pointer = int(operation["expectedOldPointer"])
+                    current_data = changes.materialize()
+                    current_pointer = weapon_name_codec.pointer(weapon_id, current_data)
+                    if current_pointer != expected_pointer:
+                        raise ProjectFormatError(
+                            f"第 {index + 1} 条操作原武器名称指针不匹配：需要 "
+                            f"${expected_pointer:04X}，实际 ${current_pointer:04X}。"
+                        )
+                    offset, before, after = weapon_name_codec.reference_patch(
+                        current_data, weapon_id, source_name_id
+                    )
+                    changes.apply_patch(
+                        offset,
+                        after,
+                        source=f"weapon-name:{weapon_id:02X}",
+                        description=(
+                            f"武器 {weapon_id:02X} · 名称引用 {source_name_id:02X}"
+                        ),
                         expected=before,
                     )
                 elif kind == "unit.set_name_reference":

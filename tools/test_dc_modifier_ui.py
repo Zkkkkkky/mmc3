@@ -10,7 +10,7 @@ from PySide6.QtWidgets import QApplication
 from dc_modifier.app import MainWindow
 from dc_modifier.event_page import EventPage
 from dc_modifier.map_page import MapPage
-from dc_modifier.pages import ChangesPage, MusicPage, UnitPage
+from dc_modifier.pages import ChangesPage, MusicPage, UnitPage, WeaponPage
 from dc_modifier.story_page import StoryPage
 from dc_modifier.unit_import_page import UnitImportPage
 from fc_editor.text_table import TextTable
@@ -87,6 +87,7 @@ class DesktopEditorSmokeTests(unittest.TestCase):
             )
         )
         self.assertEqual(page.record_text(0x79), "$79  里克·大魔")
+        self.assertIn("光束军刀", page.weapon_slots[0].itemText(page.weapon_slots[0].findData(1)))
         page.records.setCurrentRow(0)
         unit_id = int(page.records.currentItem().data(256))
         old_value = self.window.project.get_value(unit_id, "movement")
@@ -111,6 +112,8 @@ class DesktopEditorSmokeTests(unittest.TestCase):
         self.assertEqual(page.music_slot.count(), 3)
         self.assertEqual(page.music_slot.itemData(0), 0x9D)
         self.assertIn("8192 字节", page.music_slot_status.text())
+        self.assertIn("查理", page.record_text(0x02))
+        self.assertIn("睿智之神", page.record_text(0x13))
 
         self.window.validate_project()
         validation_page = self.window.pages[self.window.page_index["changes"]]
@@ -149,6 +152,22 @@ class DesktopEditorSmokeTests(unittest.TestCase):
         self.window.undo()
         self.assertEqual(self.window.project.get_map(0).tiles, record.tiles)
 
+    def test_weapon_and_deployment_ids_have_resolved_names(self) -> None:
+        weapon_page = self.window.pages[self.window.page_index["weapons"]]
+        self.assertIsInstance(weapon_page, WeaponPage)
+        assert isinstance(weapon_page, WeaponPage)
+        self.assertEqual(weapon_page.record_text(0x01), "$01  光束军刀")
+        self.assertEqual(weapon_page.record_text(0x0B), "$0B  交叉粉碎炮")
+
+        map_page = self.window.pages[self.window.page_index["maps"]]
+        assert isinstance(map_page, MapPage)
+        self.assertIn("伏击之战", map_page.map_list.item(0).text())
+        if map_page.enemy_table.rowCount():
+            unit_editor = map_page.enemy_table.cellWidget(0, 2)
+            pilot_editor = map_page.enemy_table.cellWidget(0, 3)
+            self.assertIn(" · ", unit_editor.currentText())
+            self.assertIn(" · ", pilot_editor.currentText())
+
     def test_story_page_decodes_tokens_without_changing_rom(self) -> None:
         assert self.window.project is not None
         page = self.window.pages[self.window.page_index["story"]]
@@ -157,6 +176,10 @@ class DesktopEditorSmokeTests(unittest.TestCase):
         self.assertIsNotNone(page.current_selector)
         self.assertIsNotNone(page.current_index)
         self.assertGreater(page.tokens.rowCount(), 0)
+        page.selector.setCurrentIndex(page.selector.findData(0x32))
+        page.indices.setCurrentRow(0x0E)
+        self.assertIn("劝降拉拉", page.decoded.toPlainText())
+        self.assertNotIn("<C9", page.decoded.toPlainText())
         before = bytes(self.window.project.working)
         page.apply_text()
         self.assertEqual(bytes(self.window.project.working), before)
@@ -183,6 +206,8 @@ class DesktopEditorSmokeTests(unittest.TestCase):
         self.assertIsNotNone(instruction)
         assert instruction is not None
         self.assertEqual(instruction.opcode, 0x4B)
+        self.assertIn("机体ID=$2A（空白/未分配机体槽）", page._parameter_text(instruction))
+        self.assertIn("人物ID=$5E（空白/未分配人物槽）", page._parameter_text(instruction))
         page.template.setCurrentIndex(page.template.findData(0x4A))
         page.parameters[0].setValue(0x10)
         page.parameters[1].setValue(0x08)

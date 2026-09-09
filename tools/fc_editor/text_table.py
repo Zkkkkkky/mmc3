@@ -12,17 +12,14 @@ class TextTable:
     def __post_init__(self) -> None:
         if any(not key or not value for key, value in self.byte_to_text.items()):
             raise ValueError("字库映射的编码和值不能为空。")
-        values = list(self.byte_to_text.values())
-        if len(values) != len(set(values)):
-            raise ValueError("字库映射含有重复文字，无法反向编码。")
 
     @classmethod
     def parse(cls, text: str) -> "TextTable":
         mapping: dict[bytes, str] = {}
         for line_number, source_line in enumerate(text.splitlines(), 1):
-            line = source_line.strip()
-            if not line or line.startswith(("#", ";")):
+            if not source_line.strip() or source_line.lstrip().startswith(("#", ";")):
                 continue
+            line = source_line
             if "=" not in line:
                 raise ValueError(f"字库表第 {line_number} 行缺少等号。")
             code_text, value_text = line.split("=", 1)
@@ -49,7 +46,16 @@ class TextTable:
 
     @property
     def text_to_byte(self) -> dict[str, bytes]:
-        return {value: key for key, value in self.byte_to_text.items()}
+        # The shipped DC font contains duplicate glyphs in several banks and
+        # also has compact one-byte punctuation aliases. Prefer the shortest
+        # code so an unchanged Unicode edit cannot grow merely because a
+        # two-byte duplicate appeared earlier in the source table.
+        reverse: dict[str, bytes] = {}
+        for key, value in sorted(
+            self.byte_to_text.items(), key=lambda item: len(item[0])
+        ):
+            reverse.setdefault(value, key)
+        return reverse
 
     def decode(self, raw: bytes) -> str:
         result: list[str] = []

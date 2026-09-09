@@ -13,6 +13,7 @@ from collections.abc import Iterator
 
 from fc_editor.codecs import (
     BattleMusicCodec,
+    CharacterNameCodec,
     ChapterEventCodec,
     ChrCodec,
     CustomMusicCodec,
@@ -23,6 +24,7 @@ from fc_editor.codecs import (
     UnitNameReferenceCodec,
     UnitWeaponCodec,
     WeaponCodec,
+    WeaponNameReferenceCodec,
 )
 from fc_editor.constants import (
     EXPECTED_BASE_SHA256,
@@ -31,6 +33,7 @@ from fc_editor.constants import (
     WEAPON_RECORD_SIZE,
 )
 from fc_editor.errors import RomFormatError
+from fc_editor.dc_text import concise_dc_text
 from fc_editor.models import (
     FieldSpec,
     UNIT_FIELD_BY_KEY,
@@ -405,6 +408,16 @@ class RomProject:
             else None
         )
         self.weapon_codec = WeaponCodec(self.rom_image)
+        self.weapon_name_codec = (
+            WeaponNameReferenceCodec(self.rom_image)
+            if self.rom_image.profile.weapon_name_pointer_table_offset is not None
+            else None
+        )
+        self.character_name_codec = (
+            CharacterNameCodec(self.rom_image)
+            if self.rom_image.profile.character_name_pointer_table_offset is not None
+            else None
+        )
         self.map_codec = MapCodec(self.rom_image)
         self.scenario_layout_codec = ScenarioLayoutCodec(self.rom_image)
         self.chapter_event_codec = (
@@ -580,6 +593,14 @@ class RomProject:
     @property
     def supports_unit_weapons(self) -> bool:
         return self.unit_weapon_codec is not None
+
+    @property
+    def supports_weapon_names(self) -> bool:
+        return self.weapon_name_codec is not None
+
+    @property
+    def supports_character_names(self) -> bool:
+        return self.character_name_codec is not None
 
     @property
     def chr_tile_count(self) -> int:
@@ -772,6 +793,114 @@ class RomProject:
         ]
         self._finish_mutation(before, f"武器 {weapon_id:02X} · 还原记录")
 
+    def get_weapon_name_pointer(
+        self,
+        weapon_id: int,
+        *,
+        original: bool = False,
+    ) -> int:
+        if self.weapon_name_codec is None:
+            raise ValueError("当前 ROM 的武器名称表尚未验证。")
+        source = self.original if original else bytes(self.working)
+        return self.weapon_name_codec.pointer(weapon_id, source)
+
+    def weapon_name_source_ids(
+        self,
+        weapon_id: int,
+        *,
+        original: bool = False,
+    ) -> tuple[int, ...]:
+        if self.weapon_name_codec is None:
+            raise ValueError("当前 ROM 的武器名称表尚未验证。")
+        return self.weapon_name_codec.source_ids(
+            self.get_weapon_name_pointer(weapon_id, original=original)
+        )
+
+    def weapon_name_record_bytes(
+        self,
+        weapon_id: int,
+        *,
+        original: bool = False,
+    ) -> bytes:
+        if self.weapon_name_codec is None:
+            raise ValueError("当前 ROM 的武器名称表尚未验证。")
+        source = self.original if original else bytes(self.working)
+        return self.weapon_name_codec.record_bytes(weapon_id, source)
+
+    def weapon_display_name(self, weapon_id: int) -> str:
+        if self.weapon_name_codec is None:
+            return f"武器记录 ${weapon_id:02X}"
+        label = concise_dc_text(self.weapon_name_record_bytes(weapon_id))
+        if not label or not label.strip("-_"):
+            return "空白/未分配武器槽"
+        return label
+
+    def character_display_name(self, character_id: int) -> str:
+        """Return the verified in-battle name for a character byte ID."""
+        if character_id == 0:
+            return "无人物/特殊上下文"
+        if (
+            self.character_name_codec is None
+            or not 0 <= character_id < self.profile.character_name_count
+        ):
+            return "超出已验证人物表"
+        label = concise_dc_text(
+            self.character_name_codec.record_bytes(character_id)
+        )
+        if not label or not label.strip("-_ "):
+            return "空白/未分配人物槽"
+        if label and all(character in "?？" for character in label):
+            return f"原ROM占位名“{label}”"
+        return label
+
+    def battle_music_selector_label(self, selector: int) -> str:
+        spec = self.profile.battle_music
+        if spec is None:
+            return self.character_display_name(selector)
+        named = spec.selector_label(selector)
+        if named != "未命名选择器":
+            return named
+        return self.character_display_name(selector)
+
+    def weapon_name_reference_options(
+        self,
+    ) -> tuple[tuple[int, int, str, tuple[int, ...]], ...]:
+        if self.weapon_name_codec is None:
+            return ()
+        options: list[tuple[int, int, str, tuple[int, ...]]] = []
+        for pointer in sorted(self.weapon_name_codec.ids_by_pointer):
+            source_ids = self.weapon_name_codec.source_ids(pointer)
+            if not source_ids:
+                continue
+            source_id = source_ids[0]
+            options.append(
+                (
+                    source_id,
+                    pointer,
+                    self.weapon_display_name(source_id),
+                    source_ids,
+                )
+            )
+        return tuple(options)
+
+    def set_weapon_name_reference(self, weapon_id: int, source_name_id: int) -> None:
+        if self.weapon_name_codec is None:
+            raise ValueError("当前 ROM 的武器名称表尚未验证。")
+        before = self._mutation_snapshot()
+        offset, _old, after = self.weapon_name_codec.reference_patch(
+            bytes(self.working), weapon_id, source_name_id
+        )
+        self.working[offset : offset + 2] = after
+        self._finish_mutation(before, f"武器 {weapon_id:02X} · 名称引用")
+
+    def reset_weapon_name(self, weapon_id: int) -> None:
+        if self.weapon_name_codec is None:
+            raise ValueError("当前 ROM 的武器名称表尚未验证。")
+        before = self._mutation_snapshot()
+        offset = self.weapon_name_codec.pointer_offset(weapon_id)
+        self.working[offset : offset + 2] = self.original[offset : offset + 2]
+        self._finish_mutation(before, f"武器 {weapon_id:02X} · 还原名称")
+
     def get_unit_weapons(
         self,
         unit_id: int,
@@ -837,7 +966,7 @@ class RomProject:
                     if source_id in aliases
                 )
             )
-            return " / ".join(names) if names else "—（未命名槽位）"
+            return " / ".join(names) if names else "空白/未分配机体槽"
         if self.profile.uses_original_name_aliases:
             names = tuple(
                 dict.fromkeys(
@@ -1041,7 +1170,7 @@ class RomProject:
         )
         for offset, _before, after in patches:
             self.working[offset : offset + len(after)] = after
-        label = self.profile.battle_music.selector_label(selector)
+        label = self.battle_music_selector_label(selector)
         self._finish_mutation(
             before_snapshot,
             f"人物战斗音乐 ${selector:02X} · {label}",
@@ -1068,7 +1197,7 @@ class RomProject:
         if aliases:
             return " / ".join(aliases)
         if self.profile.uses_original_name_aliases:
-            return "未命名机体记录"
+            return "空白/未分配机体记录"
         return f"机体记录 {compact_ids(ids)}"
 
     def change_rows(self) -> list[tuple[int, int, int]]:
@@ -1261,7 +1390,7 @@ class RomProject:
                 }
             )
         report = {
-            "toolVersion": "1.0.2",
+            "toolVersion": "1.1.0",
             "base": {
                 "path": str(self.path),
                 "profile": self.profile.key,
@@ -1381,6 +1510,25 @@ class RomProject:
                     original_value,
                 )
                 covered_offsets.add(record_offset + field.record_offset)
+
+        if self.weapon_name_codec is not None:
+            for weapon_id in range(1, self.weapon_count):
+                original_pointer = self.get_weapon_name_pointer(
+                    weapon_id, original=True
+                )
+                current_pointer = self.get_weapon_name_pointer(weapon_id)
+                if original_pointer == current_pointer:
+                    continue
+                source_ids = self.weapon_name_codec.source_ids(current_pointer)
+                if not source_ids:
+                    continue
+                document.add_weapon_name_reference(
+                    weapon_id,
+                    source_ids[0],
+                    original_pointer,
+                )
+                offset = self.weapon_name_codec.pointer_offset(weapon_id)
+                covered_offsets.update(range(offset, offset + 2))
 
         if self.unit_weapon_codec is not None:
             for unit_id in range(1, self.unit_count):

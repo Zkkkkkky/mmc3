@@ -29,8 +29,11 @@ class ProjectView(Protocol):
     story_text_groups: tuple
     profile: object
     battle_music_codec: object | None
+    character_name_codec: object | None
     custom_music_codec: object | None
     chapter_event_codec: object | None
+    unit_weapon_codec: object | None
+    weapon_name_codec: object | None
 
     def get_map(self, map_id: int, *, original: bool = False): ...
 
@@ -43,6 +46,10 @@ class ProjectView(Protocol):
     def weapon_record_bytes(self, weapon_id: int, *, original: bool = False) -> bytes: ...
 
     def get_unit_name_pointer(self, unit_id: int, *, original: bool = False) -> int: ...
+
+    def get_unit_weapons(self, unit_id: int, *, original: bool = False): ...
+
+    def get_weapon_name_pointer(self, weapon_id: int, *, original: bool = False) -> int: ...
 
 
 def validate_project(project: ProjectView) -> tuple[ValidationIssue, ...]:
@@ -70,6 +77,44 @@ def validate_project(project: ProjectView) -> tuple[ValidationIssue, ...]:
             issues.append(
                 ValidationIssue("error", "武器", f"武器 {weapon_id:02X} 记录长度错误。")
             )
+
+    if project.unit_weapon_codec is not None:
+        for unit_id in range(1, project.unit_count):
+            for slot, weapon_id in enumerate(project.get_unit_weapons(unit_id), 1):
+                if not 0 <= weapon_id < project.weapon_count:
+                    issues.append(
+                        ValidationIssue(
+                            "error",
+                            "机体武器",
+                            f"机体 {unit_id:02X} 的武器槽 {slot} 引用了越界武器 "
+                            f"${weapon_id:02X}。",
+                        )
+                    )
+
+    if project.weapon_name_codec is not None:
+        valid_pointers = set(project.weapon_name_codec.original_pointers)
+        for weapon_id in range(1, project.weapon_count):
+            pointer = project.get_weapon_name_pointer(weapon_id)
+            if pointer not in valid_pointers:
+                issues.append(
+                    ValidationIssue(
+                        "error",
+                        "武器名称",
+                        f"武器 {weapon_id:02X} 的名称指针 ${pointer:04X} "
+                        "未指向已验证的原生名称。",
+                    )
+                )
+
+    if project.character_name_codec is not None:
+        for character_id in range(project.profile.character_name_count):
+            if not project.character_name_codec.round_trip(character_id):
+                issues.append(
+                    ValidationIssue(
+                        "error",
+                        "人物名称",
+                        f"人物 {character_id:02X} 的战斗名称记录边界错误。",
+                    )
+                )
 
     for map_id in range(project.map_count):
         record = project.get_map(map_id)

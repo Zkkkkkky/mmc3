@@ -21,6 +21,7 @@ from PySide6.QtWidgets import (
 )
 
 from fc_editor.codecs.chapter_event import ACTION_FIELDS, ACTION_LABELS
+from fc_editor.dc_text import dc_map_label
 
 from .pages import ProjectPage, page_title, readonly_item
 
@@ -67,7 +68,9 @@ class EventPage(ProjectPage):
         self.scenario_filter = QComboBox()
         self.scenario_filter.addItem("全部章节", None)
         for scenario_id in range(0x20):
-            self.scenario_filter.addItem(f"章节 ${scenario_id:02X}", scenario_id)
+            self.scenario_filter.addItem(
+                f"${scenario_id:02X} · {dc_map_label(scenario_id)}", scenario_id
+            )
         self.phase_filter = QComboBox()
         self.phase_filter.addItem("全部阶段", None)
         self.kind_filter = QComboBox()
@@ -121,6 +124,11 @@ class EventPage(ProjectPage):
             value.setRange(0, 255)
             value.setDisplayIntegerBase(16)
             value.setPrefix("$")
+            value.valueChanged.connect(
+                lambda _value, parameter_index=index: self._update_parameter_annotation(
+                    parameter_index
+                )
+            )
             label.hide()
             value.hide()
             form.addRow(label, value)
@@ -173,19 +181,39 @@ class EventPage(ProjectPage):
         if not instruction.contexts:
             return "共享/分支块"
         return " / ".join(
-            f"${context.scenario_id:02X}·{context.label}"
+            f"${context.scenario_id:02X}·{dc_map_label(context.scenario_id)}·{context.label}"
             for context in instruction.contexts
         )
 
-    @staticmethod
-    def _parameter_text(instruction) -> str:
+    def _parameter_annotation(self, label: str, value: int) -> str:
+        if self.project is None:
+            return ""
+        if "机体ID" in label:
+            if not 1 <= value < self.project.unit_count:
+                return "无机体/特殊值" if value == 0 else "超出机体表"
+            return self.project.unit_display_name(value)
+        if "人物ID" in label:
+            return self.project.character_display_name(value)
+        return ""
+
+    def _parameter_text(self, instruction) -> str:
         labels = instruction.field_labels
         if labels:
-            return "，".join(
-                f"{label}=${value:02X}"
-                for label, value in zip(labels, instruction.parameters)
-            )
+            parts = []
+            for label, value in zip(labels, instruction.parameters):
+                annotation = self._parameter_annotation(label, value)
+                suffix = f"（{annotation}）" if annotation else ""
+                parts.append(f"{label}=${value:02X}{suffix}")
+            return "，".join(parts)
         return " ".join(f"{value:02X}" for value in instruction.parameters) or "—"
+
+    def _update_parameter_annotation(self, index: int) -> None:
+        if index >= len(self.parameter_labels):
+            return
+        label = self.parameter_labels[index].text()
+        spin = self.parameters[index]
+        annotation = self._parameter_annotation(label, spin.value())
+        spin.setSuffix(f" · {annotation}" if annotation else "")
 
     def refresh(self) -> None:
         self.phase_filter.blockSignals(True)
@@ -316,6 +344,9 @@ class EventPage(ProjectPage):
             if visible:
                 label_widget.setText(labels[index])
                 spin.setValue(values[index] if index < len(values) else 0)
+                self._update_parameter_annotation(index)
+            else:
+                spin.setSuffix("")
         self.apply_template_button.setEnabled(instruction is not None and bool(labels) or (
             instruction is not None and opcode in {0x67, 0x68, 0x6A, 0x6B}
         ))

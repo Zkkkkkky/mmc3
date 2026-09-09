@@ -22,6 +22,8 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
+from fc_editor.dc_text import dc_map_label
+
 from fc_editor.models import PlayerPlacement, ScenarioEntity, ScenarioLayout
 
 from .pages import ProjectPage, page_title
@@ -161,11 +163,15 @@ class MapCanvas(QWidget):
 class ByteEntryTable(QTableWidget):
     values_changed = Signal()
 
-    def __init__(self, headers: tuple[str, ...]) -> None:
+    def __init__(self, headers: tuple[str, ...], label_providers=None) -> None:
         super().__init__(0, len(headers))
         self.headers = headers
+        self.label_providers = dict(label_providers or {})
         self.setHorizontalHeaderLabels(headers)
-        self.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeMode.Stretch)
+        header = self.horizontalHeader()
+        header.setSectionResizeMode(QHeaderView.ResizeMode.Interactive)
+        for column in range(len(headers)):
+            self.setColumnWidth(column, 150 if column in self.label_providers else 62)
         self.verticalHeader().setVisible(False)
         self.setSelectionBehavior(QAbstractItemView.SelectionBehavior.SelectRows)
         self.setSelectionMode(QAbstractItemView.SelectionMode.SingleSelection)
@@ -181,12 +187,21 @@ class ByteEntryTable(QTableWidget):
         row = self.rowCount()
         self.insertRow(row)
         for column, value in enumerate(values):
-            editor = QSpinBox()
-            editor.setRange(0, 255)
-            editor.setDisplayIntegerBase(16 if column >= 2 else 10)
-            editor.setPrefix("$" if column >= 2 else "")
-            editor.setValue(value)
-            editor.valueChanged.connect(self.values_changed)
+            provider = self.label_providers.get(column)
+            if provider is not None:
+                editor = QComboBox()
+                editor.setMaxVisibleItems(24)
+                for item_value in range(256):
+                    editor.addItem(provider(item_value), item_value)
+                editor.setCurrentIndex(editor.findData(value))
+                editor.currentIndexChanged.connect(self.values_changed)
+            else:
+                editor = QSpinBox()
+                editor.setRange(0, 255)
+                editor.setDisplayIntegerBase(16 if column >= 2 else 10)
+                editor.setPrefix("$" if column >= 2 else "")
+                editor.setValue(value)
+                editor.valueChanged.connect(self.values_changed)
             self.setCellWidget(row, column, editor)
         self.setCurrentCell(row, 0)
         self.values_changed.emit()
@@ -202,7 +217,11 @@ class ByteEntryTable(QTableWidget):
         for row in range(self.rowCount()):
             result.append(
                 tuple(
-                    int(self.cellWidget(row, column).value())
+                    int(
+                        self.cellWidget(row, column).currentData()
+                        if isinstance(self.cellWidget(row, column), QComboBox)
+                        else self.cellWidget(row, column).value()
+                    )
                     for column in range(self.columnCount())
                 )
             )
@@ -219,17 +238,18 @@ class MapPage(ProjectPage):
         outer = QVBoxLayout(self)
         title, subtitle = page_title(
             "地图与部署",
-            "左键绘制地形，右键吸取地形；部署圆点会直接叠加在地图上。修改后点击“应用地图与部署”。",
+            "左键绘制逻辑图块，右键吸取；颜色只区分ROM中的0—F编号，不虚构未验证的地形语义。",
         )
         outer.addWidget(title)
         outer.addWidget(subtitle)
         splitter = QSplitter()
 
         left = QWidget()
+        left.setMinimumWidth(205)
         left_layout = QVBoxLayout(left)
         left_layout.setContentsMargins(0, 0, 0, 0)
         self.search = QLineEdit()
-        self.search.setPlaceholderText("搜索地图ID…")
+        self.search.setPlaceholderText("搜索关卡名、地图ID…")
         self.search.setClearButtonEnabled(True)
         self.search.textChanged.connect(self._filter_maps)
         self.map_list = QListWidget()
@@ -245,7 +265,7 @@ class MapPage(ProjectPage):
         tools = QHBoxLayout()
         self.terrain = QComboBox()
         for tile in range(16):
-            self.terrain.addItem(f"地形 {tile:X}", tile)
+            self.terrain.addItem(f"逻辑图块 ${tile:X} · ROM原值", tile)
         self.terrain.currentIndexChanged.connect(self._terrain_selected)
         self.zoom = QSpinBox()
         self.zoom.setRange(14, 40)
@@ -276,6 +296,9 @@ class MapPage(ProjectPage):
         splitter.addWidget(center)
 
         right = QWidget()
+        # Deployment rows contain resolved machine and pilot names.  Keep enough
+        # room for those names instead of collapsing every editor to an ID stub.
+        right.setMinimumWidth(540)
         right_layout = QVBoxLayout(right)
         right_layout.setContentsMargins(0, 0, 0, 0)
         dimensions = QGroupBox("地图尺寸")
@@ -296,10 +319,16 @@ class MapPage(ProjectPage):
         right_layout.addWidget(QLabel("场景前导列表"))
         right_layout.addWidget(self.prelude)
         self.enemy_table = self._deployment_group(
-            right_layout, "敌军", ("X", "Y", "机体", "驾驶员", "等级", "标志")
+            right_layout,
+            "敌军",
+            ("X", "Y", "机体", "驾驶员", "等级", "标志"),
+            {2: self._unit_choice_label, 3: self._character_choice_label},
         )
         self.guest_table = self._deployment_group(
-            right_layout, "客军", ("X", "Y", "机体", "驾驶员", "等级", "标志")
+            right_layout,
+            "客军",
+            ("X", "Y", "机体", "驾驶员", "等级", "标志"),
+            {2: self._unit_choice_label, 3: self._character_choice_label},
         )
         self.player_table = self._deployment_group(
             right_layout, "我方出击位", ("X", "Y", "名单位", "标志")
@@ -314,7 +343,7 @@ class MapPage(ProjectPage):
         buttons.addWidget(reset_button)
         right_layout.addLayout(buttons)
         splitter.addWidget(right)
-        splitter.setSizes([210, 620, 390])
+        splitter.setSizes([180, 500, 540])
         outer.addWidget(splitter, 1)
 
     def _deployment_group(
@@ -322,10 +351,11 @@ class MapPage(ProjectPage):
         layout: QVBoxLayout,
         title: str,
         headers: tuple[str, ...],
+        label_providers=None,
     ) -> ByteEntryTable:
         group = QGroupBox(title)
         group_layout = QVBoxLayout(group)
-        table = ByteEntryTable(headers)
+        table = ByteEntryTable(headers, label_providers)
         table.setMinimumHeight(105)
         table.values_changed.connect(self._update_overlays)
         buttons = QHBoxLayout()
@@ -341,6 +371,23 @@ class MapPage(ProjectPage):
         layout.addWidget(group, 1)
         return table
 
+    def _unit_choice_label(self, unit_id: int) -> str:
+        if unit_id == 0:
+            label = "无机体/特殊值"
+        elif self.project is not None and unit_id < self.project.unit_count:
+            label = self.project.unit_display_name(unit_id)
+        else:
+            label = "超出已验证机体表"
+        return f"{label} · ${unit_id:02X}"
+
+    def _character_choice_label(self, character_id: int) -> str:
+        label = (
+            self.project.character_display_name(character_id)
+            if self.project is not None
+            else "尚未载入 ROM"
+        )
+        return f"{label} · ${character_id:02X}"
+
     def refresh(self) -> None:
         previous = self.current_map_id
         self.map_list.blockSignals(True)
@@ -348,7 +395,10 @@ class MapPage(ProjectPage):
         if self.project is not None:
             for map_id in range(self.project.map_count):
                 record = self.project.get_map(map_id)
-                item = QListWidgetItem(f"地图 ${map_id:02X}  ·  {record.width}×{record.height}")
+                item = QListWidgetItem(
+                    f"${map_id:02X}  {dc_map_label(map_id)}  ·  "
+                    f"{record.width}×{record.height}"
+                )
                 item.setData(Qt.ItemDataRole.UserRole, map_id)
                 self.map_list.addItem(item)
         self.map_list.blockSignals(False)
@@ -443,7 +493,8 @@ class MapPage(ProjectPage):
         capacity = self.project.map_codec.capacities[self.current_map_id]
         status = "可保存" if len(encoded) <= capacity else "超出容量"
         self.size_label.setText(
-            f"地图 ${self.current_map_id:02X} · RLE {len(encoded)} / {capacity} 字节 · {status}"
+            f"地图 ${self.current_map_id:02X} · {dc_map_label(self.current_map_id)} · "
+            f"RLE {len(encoded)} / {capacity} 字节 · {status}"
         )
 
     @staticmethod

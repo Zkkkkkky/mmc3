@@ -22,6 +22,12 @@ class StoryTextCodec:
     """
 
     PAIR_CPU_BASE = 0x8000
+    # The localized font is arranged as twelve 256-glyph pages.  Only these
+    # lead bytes form two-byte glyph tokens; treating every C9-ED byte as a
+    # lead corrupts token boundaries after punctuation and control codes.
+    GLYPH_LEADS = frozenset(
+        (*range(0xB8, 0xBC), *range(0xC8, 0xCC), *range(0xD8, 0xDC))
+    )
 
     def __init__(self, rom: RomImage) -> None:
         self.rom = rom
@@ -118,10 +124,10 @@ class StoryTextCodec:
         offset = 0
         while offset < len(raw):
             lead = raw[offset]
-            if 0xC9 <= lead <= 0xED and offset + 1 < len(raw):
+            if lead in StoryTextCodec.GLYPH_LEADS and offset + 1 < len(raw):
                 token = raw[offset : offset + 2]
                 category = "中文字形码"
-            elif 0xC9 <= lead <= 0xED:
+            elif lead in StoryTextCodec.GLYPH_LEADS:
                 token = raw[offset : offset + 1]
                 category = "尾随字形导字节"
             elif lead == 0xFF:

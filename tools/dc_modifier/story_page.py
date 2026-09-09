@@ -22,6 +22,7 @@ from PySide6.QtWidgets import (
 )
 
 from fc_editor.text_table import TextTable
+from fc_editor.dc_text import concise_dc_text, default_dc_text_table
 
 from .pages import ProjectPage, page_title, readonly_item
 
@@ -31,11 +32,11 @@ class StoryPage(ProjectPage):
         super().__init__()
         self.current_selector: int | None = None
         self.current_index: int | None = None
-        self.text_table: TextTable | None = None
+        self.text_table: TextTable | None = default_dc_text_table()
         outer = QVBoxLayout(self)
         title, subtitle = page_title(
             "剧情文本",
-            "当前以无损Token模式编辑：已识别中文字形对、控制码和结束码，未知内容不会被自动改写。",
+            "内置新DC完整码表；Unicode与原始Token可双向编辑，控制参数以“原始字节”明确标注并可逆保留。",
         )
         outer.addWidget(title)
         outer.addWidget(subtitle)
@@ -69,9 +70,11 @@ class StoryPage(ProjectPage):
         right_layout.addWidget(self.heading)
         right_layout.addWidget(self.meta)
         table_row = QHBoxLayout()
-        self.table_status = QLabel("未载入 .tbl 字库；Unicode页以原始Token显示。")
+        self.table_status = QLabel(
+            f"内置新DC码表 · {len(self.text_table.byte_to_text)} 条有效映射"
+        )
         self.table_status.setObjectName("hintText")
-        load_table_button = QPushButton("载入 .tbl…")
+        load_table_button = QPushButton("载入外部 .tbl…")
         load_table_button.clicked.connect(self.load_text_table)
         export_template_button = QPushButton("导出字库模板…")
         export_template_button.clicked.connect(self.export_text_table_template)
@@ -86,7 +89,7 @@ class StoryPage(ProjectPage):
         self.raw.textChanged.connect(self._raw_changed)
         self.decoded = QPlainTextEdit()
         self.decoded.setPlaceholderText(
-            "载入 .tbl 后显示Unicode文字；未映射Token保持为 <C901> 形式。"
+            "内置码表会显示Unicode文字；未证实语义的控制参数显示为 ⟦原始字节 $XX⟧。"
         )
         editor_tabs.addTab(self.decoded, "Unicode文字")
         editor_tabs.addTab(self.raw, "原始Token")
@@ -154,7 +157,11 @@ class StoryPage(ProjectPage):
         for index, pointer in enumerate(pointers):
             record = self.project.get_story_text(self.current_selector, index)
             suffix = f"{record.capacity} B" if record.capacity else "空/别名哨兵"
-            item = QListWidgetItem(f"${index:02X}  指针 ${pointer:04X}  ·  {suffix}")
+            preview = concise_dc_text(record.raw) if record.capacity else ""
+            preview_text = f" · {preview}" if preview else ""
+            item = QListWidgetItem(
+                f"${index:02X}  指针 ${pointer:04X}  ·  {suffix}{preview_text}"
+            )
             item.setData(Qt.ItemDataRole.UserRole, index)
             self.indices.addItem(item)
         self.indices.blockSignals(False)
@@ -300,8 +307,14 @@ class StoryPage(ProjectPage):
         tokens = self.project.story_text_codec.tokenize(raw)
         self.tokens.setRowCount(len(tokens))
         for row, token in enumerate(tokens):
+            explanation = token.category
+            if self.text_table is not None:
+                value = self.text_table.byte_to_text.get(token.raw)
+                if value:
+                    display = "换行" if value == "\n" else value
+                    explanation = f"{explanation}：{display}"
             for column, value in enumerate(
-                (f"+0x{token.record_offset:04X}", token.code, token.category)
+                (f"+0x{token.record_offset:04X}", token.code, explanation)
             ):
                 self.tokens.setItem(row, column, readonly_item(value))
 

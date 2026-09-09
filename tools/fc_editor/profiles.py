@@ -151,6 +151,18 @@ class RomProfile:
     chapter_events: ChapterEventSpec | None = None
     protected_prg_regions: tuple[PrgBankRegion, ...] = ()
     free_prg_regions: tuple[PrgBankRegion, ...] = ()
+    weapon_name_pointer_table_offset: int | None = None
+    weapon_name_pointer_count: int = 0
+    weapon_name_first_pointer: int | None = None
+    weapon_name_data_prg_bank: int | None = None
+    weapon_name_data_window_base: int = 0x8000
+    weapon_name_data_end_pointer: int | None = None
+    character_name_pointer_table_offset: int | None = None
+    character_name_count: int = 0
+    character_name_first_pointer: int | None = None
+    character_name_data_prg_bank: int | None = None
+    character_name_data_window_base: int = 0x8000
+    character_name_data_end_pointer: int | None = None
 
     def map_storage(self, map_id: int) -> MapStorageRange:
         for storage in self.map_storage_ranges:
@@ -269,8 +281,32 @@ MMC5_BATTLE_MUSIC = BattleMusicSpec(
     tracks=(
         BattleMusicTrackSpec(0x00, "无专属曲（按游戏规则回退）"),
         *tuple(
-            BattleMusicTrackSpec(command, f"原曲 {command - 0x80 + 1:02d}")
-            for command in range(0x80, 0x94)
+            BattleMusicTrackSpec(command, label)
+            for command, label in zip(
+                range(0x80, 0x94),
+                (
+                    "大卫主题曲",
+                    "盖塔主题曲",
+                    "加代主题曲",
+                    "古莲主题曲",
+                    "吉尔变身曲",
+                    "安东主题曲",
+                    "用途未确认 2（旧资料编号）",
+                    "地球·我方战斗曲",
+                    "地球·敌方战斗曲",
+                    "存档曲",
+                    "敌方增援曲 2",
+                    "游戏结束曲",
+                    "宇宙·我方战斗曲",
+                    "敌方增援曲 1",
+                    "升级曲",
+                    "吉尔主题曲",
+                    "瓦尔主题曲",
+                    "宇宙·敌方战斗曲",
+                    "用途未确认 1（旧资料编号）",
+                    "通关曲",
+                ),
+            )
         ),
         BattleMusicTrackSpec(0x9D, "Ash to Ash"),
         BattleMusicTrackSpec(0x9E, "Dark Knight"),
@@ -299,8 +335,8 @@ MMC5_PROFILE = RomProfile(
     weapon_count=0xFF,
     weapon_data_prg_bank=0x24,
     weapon_data_window_base=0x8000,
-    # DC 版的机体武器关系不是旧版的两个直接 ID 表；第一版不猜写。
-    unit_weapon_table_offset=None,
+    # Verified two-slot direct weapon-ID table; IDs $01-$FF start at 0xB2DA.
+    unit_weapon_table_offset=0xB2D8,
     unit_name_pointer_table_offset=0x49908,
     unit_name_count=0x100,
     unit_name_first_pointer=0x0000,
@@ -331,6 +367,20 @@ MMC5_PROFILE = RomProfile(
     free_prg_regions=(
         PrgBankRegion(0x66, 0x7E, "预留扩展空间"),
     ),
+    weapon_name_pointer_table_offset=0x49DBD,
+    weapon_name_pointer_count=0x100,
+    weapon_name_first_pointer=0x9FAD,
+    weapon_name_data_prg_bank=0x24,
+    weapon_name_data_window_base=0x8000,
+    weapon_name_data_end_pointer=0xA415,
+    # The second of the two character-name tables is the in-battle name table.
+    # It intentionally maps the five reserved character slots to the blank name.
+    character_name_pointer_table_offset=0x49776,
+    character_name_count=0xC8,
+    character_name_first_pointer=0x95DB,
+    character_name_data_prg_bank=0x24,
+    character_name_data_window_base=0x8000,
+    character_name_data_end_pointer=0x9766,
 )
 
 
@@ -349,8 +399,7 @@ DC_EXPANDED_MMC3_PROFILE = RomProfile(
     weapon_count=MMC5_PROFILE.weapon_count,
     weapon_data_prg_bank=MMC5_PROFILE.weapon_data_prg_bank,
     weapon_data_window_base=MMC5_PROFILE.weapon_data_window_base,
-    # DC 版的机体武器关系尚未完成语义逆向，保持只读保护。
-    unit_weapon_table_offset=None,
+    unit_weapon_table_offset=MMC5_PROFILE.unit_weapon_table_offset,
     unit_name_pointer_table_offset=MMC5_PROFILE.unit_name_pointer_table_offset,
     unit_name_count=MMC5_PROFILE.unit_name_count,
     unit_name_first_pointer=MMC5_PROFILE.unit_name_first_pointer,
@@ -392,6 +441,18 @@ DC_EXPANDED_MMC3_PROFILE = RomProfile(
     free_prg_regions=(
         PrgBankRegion(0x65, 0x7E, "修改器扩展资源空间"),
     ),
+    weapon_name_pointer_table_offset=MMC5_PROFILE.weapon_name_pointer_table_offset,
+    weapon_name_pointer_count=MMC5_PROFILE.weapon_name_pointer_count,
+    weapon_name_first_pointer=MMC5_PROFILE.weapon_name_first_pointer,
+    weapon_name_data_prg_bank=MMC5_PROFILE.weapon_name_data_prg_bank,
+    weapon_name_data_window_base=MMC5_PROFILE.weapon_name_data_window_base,
+    weapon_name_data_end_pointer=MMC5_PROFILE.weapon_name_data_end_pointer,
+    character_name_pointer_table_offset=MMC5_PROFILE.character_name_pointer_table_offset,
+    character_name_count=MMC5_PROFILE.character_name_count,
+    character_name_first_pointer=MMC5_PROFILE.character_name_first_pointer,
+    character_name_data_prg_bank=MMC5_PROFILE.character_name_data_prg_bank,
+    character_name_data_window_base=MMC5_PROFILE.character_name_data_window_base,
+    character_name_data_end_pointer=MMC5_PROFILE.character_name_data_end_pointer,
 )
 
 

@@ -9,6 +9,7 @@ import zipfile
 from pathlib import Path
 
 from fc_editor.codecs.battle_music import BattleMusicCodec
+from fc_editor.codecs.character_name import CharacterNameCodec
 from fc_editor.codecs.chr import ChrCodec
 from fc_editor.codecs.chapter_event import ChapterEventCodec
 from fc_editor.codecs.custom_music import CustomMusicCodec
@@ -17,7 +18,10 @@ from fc_editor.codecs.scenario_layout import ScenarioLayoutCodec
 from fc_editor.codecs.story_text import StoryTextCodec
 from fc_editor.codecs.unit import UnitCodec
 from fc_editor.codecs.unit_name import UnitNameReferenceCodec
+from fc_editor.codecs.unit_weapon import UnitWeaponCodec
 from fc_editor.codecs.weapon import WeaponCodec
+from fc_editor.codecs.weapon_name import WeaponNameReferenceCodec
+from fc_editor.dc_text import dc_map_label, decode_dc_text, default_dc_text_table
 from fc_editor.profiles import DC_EXPANDED_MMC3_PROFILE
 from fc_editor.project import ProjectDocument
 from fc_editor.resources import Allocation, BankAllocator, ResourceGraph
@@ -59,12 +63,21 @@ class DcExpandedProfileTests(unittest.TestCase):
         story_codec = StoryTextCodec(self.rom)
         chr_codec = ChrCodec(self.rom)
         chapter_event_codec = ChapterEventCodec(self.rom)
+        character_name_codec = CharacterNameCodec(self.rom)
+        unit_weapon_codec = UnitWeaponCodec(self.rom)
+        weapon_name_codec = WeaponNameReferenceCodec(self.rom)
 
         for unit_id in (1, 4, 5, 0x13, 0x80, 0xFF):
             self.assertTrue(unit_codec.round_trip_record(unit_id))
             self.assertTrue(name_codec.source_ids(name_codec.pointer(unit_id)))
         for weapon_id in (1, 2, 0x40, 0x80, 0xFE):
             self.assertTrue(weapon_codec.round_trip_record(weapon_id))
+            self.assertTrue(weapon_name_codec.round_trip(weapon_id))
+        for character_id in (0, 1, 2, 4, 5, 0x13, 0xC7):
+            self.assertTrue(character_name_codec.round_trip(character_id))
+        for unit_id in (1, 0x25, 0x79, 0xFF):
+            config = unit_weapon_codec.decode(unit_id)
+            self.assertEqual(unit_weapon_codec.encode(config), bytes(config.weapon_ids))
         for map_id in (0, 1, 0x1F, 0x20, 0x63):
             self.assertTrue(map_codec.round_trip(map_id))
         for scenario_id in (0, 1, 0x10, 0x1F):
@@ -157,12 +170,83 @@ class TextTableTests(unittest.TestCase):
         table = TextTable.parse(completed)
         self.assertEqual(table.decode(bytes.fromhex("C901 FF")), "机<FF>")
 
-    def test_duplicate_reverse_mapping_is_rejected(self) -> None:
-        with self.assertRaisesRegex(ValueError, "重复文字"):
-            TextTable.parse("01=A\n02=A\n")
+    def test_whitespace_glyph_is_not_discarded(self) -> None:
+        table = TextTable.parse("CAAA=　\n20= \n")
+        self.assertEqual(table.decode(bytes.fromhex("CAAA 20")), "　 ")
+
+    def test_duplicate_glyphs_decode_and_use_first_code_for_encoding(self) -> None:
+        table = TextTable.parse("01=A\n02=A\n")
+        self.assertEqual(table.decode(bytes((1, 2))), "AA")
+        self.assertEqual(table.encode("A"), bytes((1,)))
+
+    def test_builtin_dc_table_decodes_real_dialogue_without_raw_glyphs(self) -> None:
+        table = default_dc_text_table()
+        self.assertGreaterEqual(len(table.byte_to_text), 2700)
+        raw = bytes.fromhex(
+            "C9 0D C9 10 C9 A8 C9 A8 2F F2 CB 0B CA D1 CA D3 "
+            "CB 61 CA E0 DA FA DA FB C9 64 CB 10 2F F6 FF"
+        )
+        self.assertEqual(
+            decode_dc_text(raw),
+            "劝降拉拉！\n接下来可以选择机体！】⟦结束⟧",
+        )
+        encoded = table.encode(table.decode(raw))
+        self.assertEqual(len(encoded), len(raw))
+        self.assertEqual(table.decode(encoded), table.decode(raw))
+
+    def test_every_story_token_has_a_reversible_display_mapping(self) -> None:
+        project = RomProject.load(TARGET_ROM)
+        table = default_dc_text_table()
+        for group in project.story_text_groups:
+            for index in range(group.count):
+                record = project.get_story_text(group.selector, index)
+                for token in project.story_text_codec.tokenize(record.raw):
+                    self.assertIn(token.raw, table.byte_to_text)
+                if record.raw:
+                    rendered = table.decode(record.raw)
+                    encoded = table.encode(rendered)
+                    self.assertEqual(len(encoded), len(record.raw))
+                    self.assertEqual(table.decode(encoded), rendered)
+
+    def test_known_chapter_labels_are_not_generic(self) -> None:
+        self.assertEqual(dc_map_label(0), "伏击之战")
+        self.assertEqual(dc_map_label(0x0C), "白河愁的试炼")
+        self.assertEqual(dc_map_label(0x0D), "未使用关卡槽位")
+        self.assertEqual(dc_map_label(0x20), "备用地图 1")
 
 
 class EditorProjectTests(unittest.TestCase):
+    def test_weapon_character_and_music_names_are_resolved_from_rom(self) -> None:
+        project = RomProject.load(TARGET_ROM)
+        self.assertEqual(project.weapon_display_name(0x01), "光束军刀")
+        self.assertEqual(project.weapon_display_name(0x0B), "交叉粉碎炮")
+        self.assertEqual(project.weapon_display_name(0x40), "空白/未分配武器槽")
+        self.assertEqual(project.character_display_name(0x02), "查理")
+        self.assertEqual(project.character_display_name(0x13), "拉坎")
+        self.assertEqual(project.character_display_name(0x17), "空白/未分配人物槽")
+        self.assertEqual(project.character_display_name(0x1D), "原ROM占位名“？？？”")
+        self.assertEqual(project.battle_music_selector_label(0x13), "睿智之神")
+        self.assertNotEqual(project.profile.battle_music.tracks[1].label, "原曲 01")
+
+    def test_unit_weapon_and_weapon_name_project_round_trip(self) -> None:
+        project = RomProject.load(TARGET_ROM)
+        original_slots = project.get_unit_weapons(0x25)
+        original_name = project.get_weapon_name_pointer(0x0B)
+        project.set_unit_weapon(0x25, 0, 0x01)
+        project.set_weapon_name_reference(0x0B, 0x01)
+        self.assertEqual(project.get_unit_weapons(0x25)[0], 0x01)
+        self.assertEqual(project.weapon_display_name(0x0B), "光束军刀")
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "names-and-weapons.dcmod"
+            project.save_project(path)
+            reopened = RomProject.load_project(path, TARGET_ROM)
+            self.assertEqual(reopened.get_unit_weapons(0x25)[0], 0x01)
+            self.assertEqual(reopened.weapon_display_name(0x0B), "光束军刀")
+        project.reset_unit_weapons(0x25)
+        project.reset_weapon_name(0x0B)
+        self.assertEqual(project.get_unit_weapons(0x25), original_slots)
+        self.assertEqual(project.get_weapon_name_pointer(0x0B), original_name)
+
     def test_dc_unit_names_match_verified_labels_and_deduplicate_shared_pointers(self) -> None:
         project = RomProject.load(TARGET_ROM)
         expected = {
@@ -175,7 +259,7 @@ class EditorProjectTests(unittest.TestCase):
         }
         for unit_id, name in expected.items():
             self.assertEqual(project.unit_display_name(unit_id), name)
-        self.assertEqual(project.unit_display_name(0x26), "—（未命名槽位）")
+        self.assertEqual(project.unit_display_name(0x26), "空白/未分配机体槽")
         self.assertFalse(
             any(
                 "原生名称" in project.unit_display_name(unit_id)

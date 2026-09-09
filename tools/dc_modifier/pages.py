@@ -244,6 +244,10 @@ class UnitPage(SearchableRecordPage):
         self.name_reference = QComboBox()
         self.name_reference.setMaxVisibleItems(20)
         form.addRow("名称引用", self.name_reference)
+        self.weapon_slots = (QComboBox(), QComboBox())
+        for slot, editor in enumerate(self.weapon_slots, 1):
+            editor.setMaxVisibleItems(24)
+            form.addRow(f"武器槽 {slot}", editor)
         scroll.setWidget(form_host)
         detail_layout.addWidget(scroll, 1)
 
@@ -293,6 +297,21 @@ class UnitPage(SearchableRecordPage):
                     source_id,
                 )
         self.name_reference.blockSignals(False)
+        for editor in self.weapon_slots:
+            editor.blockSignals(True)
+            editor.clear()
+            if self.project is not None and self.project.supports_unit_weapons:
+                editor.addItem("$00 · 无武器", 0)
+                for weapon_id in range(1, self.project.weapon_count):
+                    editor.addItem(
+                        f"${weapon_id:02X} · {self.project.weapon_display_name(weapon_id)}",
+                        weapon_id,
+                    )
+                editor.setEnabled(True)
+            else:
+                editor.addItem("当前ROM无已验证关系表", 0)
+                editor.setEnabled(False)
+            editor.blockSignals(False)
         self.populate_records()
 
     def load_record(self, record_id: int | None) -> None:
@@ -320,6 +339,11 @@ class UnitPage(SearchableRecordPage):
         if source_ids:
             index = self.name_reference.findData(source_ids[0])
             self.name_reference.setCurrentIndex(index)
+        if self.project.supports_unit_weapons:
+            for editor, weapon_id in zip(
+                self.weapon_slots, self.project.get_unit_weapons(record_id)
+            ):
+                editor.setCurrentIndex(editor.findData(weapon_id))
         self.raw_record.setText(record.raw.hex(" ").upper())
 
     def apply_record(self) -> None:
@@ -335,6 +359,11 @@ class UnitPage(SearchableRecordPage):
                     )
                 source_id = int(self.name_reference.currentData())
                 self.project.set_unit_name_reference(self.current_id, source_id)
+                if self.project.supports_unit_weapons:
+                    for slot, editor in enumerate(self.weapon_slots):
+                        self.project.set_unit_weapon(
+                            self.current_id, slot, int(editor.currentData())
+                        )
             self.project_changed.emit(f"已更新机体 ${self.current_id:02X}")
         except Exception as error:
             self.show_error(error)
@@ -362,6 +391,8 @@ class UnitPage(SearchableRecordPage):
             with self.project.transaction(f"机体 ${self.current_id:02X} · 完整还原"):
                 self.project.reset_record(self.current_id)
                 self.project.reset_unit_name(self.current_id)
+                if self.project.supports_unit_weapons:
+                    self.project.reset_unit_weapons(self.current_id)
             self.project_changed.emit(f"已还原机体 ${self.current_id:02X}")
         except Exception as error:
             self.show_error(error)
@@ -373,7 +404,7 @@ class WeaponPage(SearchableRecordPage):
         outer = QVBoxLayout(self)
         title, subtitle = page_title(
             "武器编辑",
-            "编辑射程、命中及三种地形攻击力。尚未确认的攻击类型位保留不动。",
+            "显示并切换ROM中的真实武器名称，编辑射程、命中及三种地形攻击力。未确认位保持原值。",
         )
         outer.addWidget(title)
         outer.addWidget(subtitle)
@@ -394,6 +425,12 @@ class WeaponPage(SearchableRecordPage):
         detail_layout.addWidget(self.record_heading)
         detail_layout.addWidget(self.record_meta)
         form = QFormLayout()
+        self.name_reference = QComboBox()
+        self.name_reference.setMaxVisibleItems(24)
+        form.addRow("名称引用", self.name_reference)
+        self.name_tokens = QLineEdit()
+        self.name_tokens.setReadOnly(True)
+        form.addRow("名称Token", self.name_tokens)
         self.fields: dict[str, QSpinBox] = {}
         for field in WEAPON_FIELDS:
             editor = QSpinBox()
@@ -425,9 +462,20 @@ class WeaponPage(SearchableRecordPage):
         return range(1, self.project.weapon_count)
 
     def record_text(self, record_id: int) -> str:
-        return f"武器 ${record_id:02X}"
+        assert self.project is not None
+        return f"${record_id:02X}  {self.project.weapon_display_name(record_id)}"
 
     def refresh(self) -> None:
+        self.name_reference.blockSignals(True)
+        self.name_reference.clear()
+        if self.project is not None:
+            for source_id, pointer, label, source_ids in self.project.weapon_name_reference_options():
+                self.name_reference.addItem(
+                    f"{label} · 来源 ${source_id:02X} · 指针 ${pointer:04X} · 共享ID {compact_ids(source_ids)}",
+                    source_id,
+                )
+        self.name_reference.setEnabled(bool(self.name_reference.count()))
+        self.name_reference.blockSignals(False)
         self.populate_records()
 
     def load_record(self, record_id: int | None) -> None:
@@ -435,12 +483,33 @@ class WeaponPage(SearchableRecordPage):
             self.record_heading.setText("请选择武器")
             self.record_meta.setText("—")
             self.raw_record.clear()
+            self.name_tokens.clear()
             return
         record = self.project.weapon_codec.decode_record(record_id, bytes(self.project.working))
-        self.record_heading.setText(f"武器 ${record_id:02X}")
-        self.record_meta.setText(
-            f"记录指针 ${record.pointer:04X} · 文件偏移 0x{self.project.weapon_record_file_offset(record_id):06X}"
+        name = self.project.weapon_display_name(record_id)
+        self.record_heading.setText(f"武器 ${record_id:02X} · {name}")
+        metadata = (
+            f"属性指针 ${record.pointer:04X} · 文件偏移 "
+            f"0x{self.project.weapon_record_file_offset(record_id):06X}"
         )
+        if self.project.supports_weapon_names:
+            name_pointer = self.project.get_weapon_name_pointer(record_id)
+            source_ids = self.project.weapon_name_source_ids(record_id)
+            metadata += (
+                f" · 名称指针 ${name_pointer:04X} · 名称共享ID："
+                f"{compact_ids(source_ids)}"
+            )
+            if source_ids:
+                self.name_reference.setCurrentIndex(
+                    self.name_reference.findData(source_ids[0])
+                )
+            self.name_tokens.setText(
+                self.project.weapon_name_record_bytes(record_id).hex(" ").upper()
+            )
+        else:
+            metadata += " · 此ROM配置未验证名称表"
+            self.name_tokens.clear()
+        self.record_meta.setText(metadata)
         for field in WEAPON_FIELDS:
             self.fields[field.key].setValue(record.get(field.key))
         self.raw_record.setText(record.raw.hex(" ").upper())
@@ -449,12 +518,16 @@ class WeaponPage(SearchableRecordPage):
         if self.project is None or self.current_id is None:
             return
         try:
-            with self.project.transaction(f"武器 ${self.current_id:02X} · 批量属性"):
+            with self.project.transaction(f"武器 ${self.current_id:02X} · 属性与名称"):
                 for field in WEAPON_FIELDS:
                     self.project.set_weapon_value(
                         self.current_id,
                         field.key,
                         self.fields[field.key].value(),
+                    )
+                if self.project.supports_weapon_names:
+                    self.project.set_weapon_name_reference(
+                        self.current_id, int(self.name_reference.currentData())
                     )
             self.project_changed.emit(f"已更新武器 ${self.current_id:02X}")
         except Exception as error:
@@ -464,7 +537,10 @@ class WeaponPage(SearchableRecordPage):
         if self.project is None or self.current_id is None:
             return
         try:
-            self.project.reset_weapon_record(self.current_id)
+            with self.project.transaction(f"武器 ${self.current_id:02X} · 完整还原"):
+                self.project.reset_weapon_record(self.current_id)
+                if self.project.supports_weapon_names:
+                    self.project.reset_weapon_name(self.current_id)
             self.project_changed.emit(f"已还原武器 ${self.current_id:02X}")
         except Exception as error:
             self.show_error(error)
@@ -559,7 +635,7 @@ class MusicPage(SearchableRecordPage):
         assert self.project is not None
         binding = self.project.get_battle_music_binding(record_id)
         return (
-            f"${record_id:02X}  {binding.label}  · "
+            f"${record_id:02X}  {self.project.battle_music_selector_label(record_id)}  · "
             f"${binding.attacker_command:02X} / ${binding.defender_command:02X}"
         )
 
@@ -707,7 +783,10 @@ class MusicPage(SearchableRecordPage):
             self.record_heading.setText("请选择音乐选择器")
             return
         binding = self.project.get_battle_music_binding(record_id)
-        self.record_heading.setText(f"选择器 ${record_id:02X} · {binding.label}")
+        self.record_heading.setText(
+            f"选择器 ${record_id:02X} · "
+            f"{self.project.battle_music_selector_label(record_id)}"
+        )
         self.attacker.setCurrentIndex(self.attacker.findData(binding.attacker_command))
         self.defender.setCurrentIndex(self.defender.findData(binding.defender_command))
 

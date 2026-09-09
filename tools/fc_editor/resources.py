@@ -100,6 +100,38 @@ class ResourceGraph:
                 True,
             )
         )
+        if profile.unit_weapon_table_offset is not None:
+            graph.add_node(
+                ResourceNode(
+                    "units.weapon_table",
+                    "机体武器关系表",
+                    "table",
+                    profile.unit_weapon_table_offset,
+                    profile.unit_count * 2,
+                    True,
+                )
+            )
+        if profile.weapon_name_pointer_table_offset is not None:
+            graph.add_node(
+                ResourceNode(
+                    "weapons.name_pointer_table",
+                    "武器名称指针表",
+                    "table",
+                    profile.weapon_name_pointer_table_offset,
+                    profile.weapon_name_pointer_count * 2,
+                    True,
+                )
+            )
+        if profile.character_name_pointer_table_offset is not None:
+            graph.add_node(
+                ResourceNode(
+                    "characters.battle_name_pointer_table",
+                    "人物战斗名称指针表",
+                    "table",
+                    profile.character_name_pointer_table_offset,
+                    profile.character_name_count * 2,
+                )
+            )
         graph.add_node(
             ResourceNode(
                 "maps.pointer_table",
