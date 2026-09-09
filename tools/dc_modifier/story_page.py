@@ -17,6 +17,7 @@ from PySide6.QtWidgets import (
     QSplitter,
     QTabWidget,
     QTableWidget,
+    QToolButton,
     QVBoxLayout,
     QWidget,
 )
@@ -51,12 +52,28 @@ class StoryPage(ProjectPage):
         self.search.setPlaceholderText("搜索文本索引…")
         self.search.setClearButtonEnabled(True)
         self.search.textChanged.connect(self._filter_indices)
+        search_row = QHBoxLayout()
+        self.previous_button = QToolButton()
+        self.previous_button.setText("◀")
+        self.previous_button.setToolTip("上一条可见文本")
+        self.previous_button.clicked.connect(lambda: self._select_relative(-1))
+        self.next_button = QToolButton()
+        self.next_button.setText("▶")
+        self.next_button.setToolTip("下一条可见文本")
+        self.next_button.clicked.connect(lambda: self._select_relative(1))
+        self.result_count = QLabel("0 条")
+        self.result_count.setObjectName("countBadge")
+        search_row.addWidget(self.search, 1)
+        search_row.addWidget(self.previous_button)
+        search_row.addWidget(self.next_button)
+        search_row.addWidget(self.result_count)
         self.indices = QListWidget()
         self.indices.setAlternatingRowColors(True)
+        self.indices.setUniformItemSizes(True)
         self.indices.currentItemChanged.connect(self._index_changed)
         left_layout.addWidget(QLabel("文本组"))
         left_layout.addWidget(self.selector)
-        left_layout.addWidget(self.search)
+        left_layout.addLayout(search_row)
         left_layout.addWidget(self.indices)
         splitter.addWidget(left)
 
@@ -102,14 +119,14 @@ class StoryPage(ProjectPage):
         parse_button.clicked.connect(self._render_tokens)
         encode_button = QPushButton("文字编码到Token")
         encode_button.clicked.connect(self.encode_decoded_text)
-        apply_button = QPushButton("应用文本")
-        apply_button.setObjectName("primaryButton")
-        apply_button.clicked.connect(self.apply_text)
+        self.apply_button = QPushButton("应用当前文本")
+        self.apply_button.setObjectName("primaryButton")
+        self.apply_button.clicked.connect(self.apply_text)
         reset_button = QPushButton("还原此文本")
         reset_button.clicked.connect(self.reset_text)
         buttons.addWidget(parse_button)
         buttons.addWidget(encode_button)
-        buttons.addWidget(apply_button)
+        buttons.addWidget(self.apply_button)
         buttons.addWidget(reset_button)
         buttons.addStretch()
         right_layout.addLayout(buttons)
@@ -173,10 +190,31 @@ class StoryPage(ProjectPage):
 
     def _filter_indices(self, text: str) -> None:
         query = text.strip().lower()
+        visible_count = 0
         for row in range(self.indices.count()):
             item = self.indices.item(row)
             index = int(item.data(Qt.ItemDataRole.UserRole))
-            item.setHidden(bool(query) and query not in item.text().lower() and query not in (str(index), f"{index:02x}"))
+            visible = not (
+                bool(query)
+                and query not in item.text().lower()
+                and query not in (str(index), f"{index:02x}")
+            )
+            item.setHidden(not visible)
+            visible_count += int(visible)
+        self.result_count.setText(f"{visible_count} 条")
+        self.previous_button.setEnabled(visible_count > 1)
+        self.next_button.setEnabled(visible_count > 1)
+
+    def _select_relative(self, direction: int) -> None:
+        if not self.indices.count():
+            return
+        start = self.indices.currentRow()
+        for step in range(1, self.indices.count() + 1):
+            row = (start + direction * step) % self.indices.count()
+            if not self.indices.item(row).isHidden():
+                self.indices.setCurrentRow(row)
+                self.indices.scrollToItem(self.indices.item(row))
+                return
 
     def _index_changed(
         self,
@@ -219,10 +257,26 @@ class StoryPage(ProjectPage):
         capacity = self.project.get_story_text(self.current_selector, self.current_index).capacity
         try:
             length = len(self._parse_hex(self.raw.toPlainText()))
+            current = self.project.get_story_text(
+                self.current_selector, self.current_index
+            ).raw
+            parsed = self._parse_hex(self.raw.toPlainText())
+            changed = parsed != current
             status = "长度正确" if length == capacity else "必须保持等长"
-            self.length_label.setText(f"输入 {length} / 容量 {capacity} 字节 · {status}")
+            staged = " · 有尚未应用的改动" if changed else " · 与当前工程一致"
+            self.length_label.setText(
+                f"输入 {length} / 容量 {capacity} 字节 · {status}{staged}"
+            )
+            self.length_label.setStyleSheet(
+                "color: #b45309; font-weight: 650;"
+                if changed
+                else "color: #2e7d4f;"
+            )
+            self.apply_button.setEnabled(length == capacity and changed)
         except ValueError as error:
             self.length_label.setText(str(error))
+            self.length_label.setStyleSheet("color: #b42318;")
+            self.apply_button.setEnabled(False)
         self._render_decoded()
 
     def _render_decoded(self) -> None:

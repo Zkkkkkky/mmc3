@@ -11,6 +11,10 @@ from ..rom_image import RomImage
 class ScenarioLayoutCodec:
     """Lossless codec for scenario prelude, enemy, guest and player placement lists."""
 
+    MAX_ENEMIES = 18
+    MAX_GUESTS = 3
+    MAX_PLAYER_PLACEMENTS = 11
+
     def __init__(self, rom: RomImage) -> None:
         self.rom = rom
         self.pointers = self._read_pointers()
@@ -121,6 +125,7 @@ class ScenarioLayoutCodec:
 
     @staticmethod
     def encode(layout: ScenarioLayout) -> bytes:
+        ScenarioLayoutCodec.validate_layout(layout)
         result = bytearray(layout.prelude)
         result.append(0xFF)
         for entity in layout.enemies:
@@ -133,6 +138,46 @@ class ScenarioLayoutCodec:
             result.extend(placement.to_bytes())
         result.append(0xFF)
         return bytes(result)
+
+    @staticmethod
+    def validate_layout(
+        layout: ScenarioLayout,
+        width: int | None = None,
+        height: int | None = None,
+    ) -> None:
+        limits = (
+            ("敌军", len(layout.enemies), ScenarioLayoutCodec.MAX_ENEMIES),
+            ("客军", len(layout.guests), ScenarioLayoutCodec.MAX_GUESTS),
+            (
+                "我方出击位",
+                len(layout.player_placements),
+                ScenarioLayoutCodec.MAX_PLAYER_PLACEMENTS,
+            ),
+        )
+        for label, count, maximum in limits:
+            if count > maximum:
+                raise ValueError(f"{label}最多 {maximum} 个，当前为 {count} 个。")
+        if width is None or height is None:
+            return
+        occupied: dict[tuple[int, int], str] = {}
+        for label, entries in (
+            ("敌军", layout.enemies),
+            ("客军", layout.guests),
+            ("我方", layout.player_placements),
+        ):
+            for index, entry in enumerate(entries, 1):
+                if not 0 <= entry.x < width or not 0 <= entry.y < height:
+                    raise ValueError(
+                        f"{label} #{index} 坐标 ({entry.x},{entry.y}) "
+                        f"超出 {width}×{height} 地图。"
+                    )
+                position = (entry.x, entry.y)
+                if position in occupied:
+                    raise ValueError(
+                        f"{label} #{index} 与{occupied[position]}重叠于 "
+                        f"({entry.x},{entry.y})。"
+                    )
+                occupied[position] = f"{label} #{index}"
 
     @staticmethod
     def semantic_digest(layout: ScenarioLayout) -> str:

@@ -1,0 +1,22 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML><HEAD><TITLE>理解方式</TITLE>
+<META name=GENERATOR content="MSHTML 8.00.7601.19104">
+<META content="text/html; charset=gb2312" http-equiv=Content-Type>
+<STYLE>
+html,body { 
+	/* Default Font */
+	font-family: Microsoft YaHei, Simsun, sans-serif;
+	font-size: 12pt;
+}
+</STYLE>
+</HEAD>
+<BODY>
+<P><STRONG>1.参数化理解</STRONG></P>
+<P><STRONG>2.棋局化理解</STRONG></P>
+<P><FONT 
+size=2>棋局化理解是对于整个游戏全局化的理解方式，我们只考虑其各个影响因素，而不考虑相关的参数数据。为什么要这样理解？我们在实际过程中对于参数的计算消耗了太多时间，尽管是简单的加减乘除，这占据的时间阻碍了我们对游戏的全局化考虑甚至是局部回合的考虑。我们对参数计算过程进行忽略，将这部分时间用来对各个因素进行综合处理，那么此时我们就不难对游戏形成全局化理解。</FONT></P>
+<P><FONT 
+size=2>正向读题，逆向解题。将整个游戏分解为由若干个棋局组成的集合。后者的输入由前者的输出决定，输出由玩家个人意愿所决定，输入条件为游戏设定的固定参数。每个棋局由棋盘与敌我单位组成。棋盘可以认为是若干个参数（这些参数包括地形命中补正、地形阻碍逻辑、地形机动补正）矩阵和特殊矩阵（加血站、地图事件【包括逃脱点、商店、行动不能等】）叠加的结果，也可以是认为包含一系列参数的地形组合的矩阵。</FONT></P>
+<P><FONT size=2></FONT>&nbsp;</P>
+<P><FONT 
+size=2>事件干扰项，作为干扰正常游戏流程的存在，对于我方而言是有利有弊的，当然这个也在很大程度上取决于玩家的主观选择。</FONT></P></BODY></HTML>

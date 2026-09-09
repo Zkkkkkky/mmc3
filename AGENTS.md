@@ -4,6 +4,8 @@
 
 This repository is a self-contained NES ROM expansion handoff. `tools/` contains the Python builder, IPS helpers, reusable `fc_editor/` modules, and the `unittest` suite. `analysis/` holds 6502/ASM6 sources, generated listings, Lua emulator checks, and bundled FamiStudio assembler dependencies. Final ROMs, reports, and NSF inputs live under `build/`; distributable patches belong in `patches/`. Treat `历史方案报告/` as reference material and `验证工具/` as vendored tooling. Read `交接文档.md` before changing ROM layout or audio behavior.
 
+For historical reverse-engineering experience, consult `analysis/FC第二次机器人大战资料集V1.16_阅读笔记.md` first and use the extracted CHM content under `analysis/reference_chm_v1_16/` when more detail is needed. Treat this material as leads rather than authoritative project facts: verify addresses, free-space claims, mapper behavior, and uncertain annotations against the current ROM, disassembly, builder assertions, and emulator checks.
+
 ## Build, Test, and Development Commands
 
 Run commands from the repository root on Windows:

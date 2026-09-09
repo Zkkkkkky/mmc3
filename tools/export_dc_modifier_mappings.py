@@ -6,7 +6,7 @@ import io
 import json
 from pathlib import Path
 
-from fc_editor.codecs.chapter_event import ACTION_FIELDS, ACTION_LABELS
+from fc_editor.codecs.chapter_event import ACTION_FIELDS, ACTION_LABELS, OPCODE_LABELS
 from fc_editor.dc_text import dc_map_label, default_dc_text_table
 from fc_rom_editor_core import RomProject
 
@@ -174,8 +174,9 @@ def export_rom_mappings(project: RomProject) -> dict[str, object]:
             }
         )
 
-    maps = [
-        {
+    maps = []
+    for map_id in range(project.map_count):
+        item = {
             "id": map_id,
             "hexId": f"${map_id:02X}",
             "title": dc_map_label(map_id),
@@ -187,8 +188,23 @@ def export_rom_mappings(project: RomProject) -> dict[str, object]:
                 else "reserved"
             ),
         }
-        for map_id in range(project.map_count)
-    ]
+        if project.map_trigger_codec is not None and map_id < 0x20:
+            item["coordinateEvents"] = [
+                {
+                    "x": trigger.x,
+                    "y": trigger.y,
+                    "characterId": trigger.character_id,
+                    "characterName": (
+                        "任何人物"
+                        if trigger.character_id == 0xFF
+                        else project.character_display_name(trigger.character_id)
+                    ),
+                    "eventId": trigger.event_id,
+                    "kind": "shop" if trigger.is_shop else "event",
+                }
+                for trigger in project.get_map_triggers(map_id)
+            ]
+        maps.append(item)
 
     music_spec = project.profile.battle_music
     tracks = [
@@ -216,7 +232,7 @@ def export_rom_mappings(project: RomProject) -> dict[str, object]:
             )
 
     output = {
-        "schemaVersion": 1,
+        "schemaVersion": 2,
         "profile": project.profile.key,
         "sourceRom": str(ROM_PATH.relative_to(ROOT)).replace("\\", "/"),
         "sourceRomSha256": project.source_sha256,
@@ -227,6 +243,10 @@ def export_rom_mappings(project: RomProject) -> dict[str, object]:
             "characterBattleNamePointers": "0x49776",
             "battleMusicAttacker": "0x0CF86",
             "battleMusicDefender": "0x0D04E",
+            "mapEventPointers": "0x1588E",
+            "mapEventManagedPool": "0x15EE4-0x1600F",
+            "persuasionRules": "0x3B73D",
+            "persuasionScriptPointers": "0x35DD0",
         },
         "units": units,
         "weapons": weapons,
@@ -243,6 +263,29 @@ def export_rom_mappings(project: RomProject) -> dict[str, object]:
             }
             for opcode, label in sorted(ACTION_LABELS.items())
         ],
+        "chapterEventOpcodes": [
+            {
+                "opcode": opcode,
+                "hexOpcode": f"${opcode:02X}",
+                "label": label,
+                "fields": list(ACTION_FIELDS.get(opcode, ())),
+            }
+            for opcode, label in sorted(OPCODE_LABELS.items())
+        ],
+        "persuasionRules": [
+            {
+                "slot": rule.slot,
+                "hexSlot": f"${rule.slot:02X}",
+                "scenarioId": rule.scenario_id,
+                "scenario": dc_map_label(rule.scenario_id),
+                "persuaderId": rule.persuader_id,
+                "persuader": project.character_display_name(rule.persuader_id),
+                "targetId": rule.target_id,
+                "target": project.character_display_name(rule.target_id),
+                "scriptAddress": f"${rule.script_address:04X}",
+            }
+            for rule in project.persuasion_rule_codec.editable_rules(project.working)
+        ] if project.persuasion_rule_codec is not None else [],
     }
     output_path = OUTPUT_ROOT / "新DC_ROM名称与表地址映射.json"
     _write_text(output_path, json.dumps(output, ensure_ascii=False, indent=2) + "\n")

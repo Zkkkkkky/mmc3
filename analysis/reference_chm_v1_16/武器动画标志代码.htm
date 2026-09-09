@@ -1,0 +1,42 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML><HEAD><TITLE>武器动画标志代码</TITLE>
+<META name=GENERATOR content="MSHTML 8.00.7601.19104">
+<META content="text/html; charset=gb2312" http-equiv=Content-Type>
+<STYLE>
+html,body { 
+	/* Default Font */
+	font-family: Microsoft YaHei, Simsun, sans-serif;
+	font-size: 12pt;
+}
+</STYLE>
+</HEAD>
+<BODY><FONT size=3 face="Microsoft YaHei" font><PRE>             <FONT size=2 face=微软雅黑>武器动画标志代码
+  标志代码，顾名思义是具有标志性的代码。
+01.F4:F4+XX 调取音乐代码XX为音乐代码。
+02.F0 05 03:F0 05 03+AA+BB+CC 调取3个颜色代码到
+光束类武器图片上 AA、BB、CC分别为3个颜色代码。
+03.F1 00 01: 不太清楚。（需要加在颜色代码之后,初
+步判断为写入内存）
+04.F2 03 01:F2 03 01+XX 调取图片模块，XX为图片模
+块代码。
+05.F3 22:F3 22+XX+YY提取光束类武器组图规律代码，
+XX为光束类武器组图规律代码。（在蓝月修改器里既是
+规律1）YY为等待时间，等待XX运行的时间。
+06.FD:FD+XX+YY动画变为远程且屏幕可以移动，XX为屏
+幕X轴的移动方向和距离，以00为分界线加1向右移动1像
+素减1向左移动1像素。YY为屏幕Y轴的移动方向和距离，
+以00为分界线加1向下移动1像素减1向上移动1像素。
+07.FE:FE+AA+BB+CC重复指针BB CC所指向的地址到FE之
+间的代码AA次。
+08.F0 11 03：F0 11 03+AA+BB+CC调取3个颜色代码到物
+理类武器图片上 AA、BB、CC分别为3个颜色代码。
+09.F9：F9+AA+BB+CC调试物理武器AA号出现的起始位置BB
+为X坐标CC为Y坐标。
+10.42 69:42 69+AA+BB+CC+DD从机体碎片模块中用物理
+武器运行规律AA取出用运行规律BB、CC执行运行方式，DD
+等待时间等待运行规律运行完毕。其中BB为图像左右移动
+规律CC为图像上下移动规律(AA、BB、CC为规律2)。
+11.C2 69 和42 69 其实一样，只不过规律3取图代码为
+00-7F之间时我方用42 69 敌方用C2 69，为80-FF之间时
+我方用C2 69敌方用42 69。
+12.FF:动画运行完毕结束。</FONT></PRE></FONT></BODY></HTML>

@@ -1,0 +1,34 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML><HEAD><TITLE>地形影响</TITLE>
+<META name=GENERATOR content="MSHTML 8.00.7601.19104">
+<META content="text/html; charset=gb2312" http-equiv=Content-Type>
+<STYLE>
+html,body { 
+	/* Default Font */
+	font-family: Microsoft YaHei, Simsun, sans-serif;
+	font-size: 12pt;
+}
+</STYLE>
+</HEAD>
+<BODY>
+<P><FONT 
+size=2>地形即组成战场地图的地图模块，在原版中一个有4个位图，每个位图包含了不同的地图模块，所有相关参数在下面我都会一一列举。</FONT></P>
+<P><FONT 
+size=2>关于位图：位图指的是地图模块的图像信息（包括颜色）赋予一系列参数之后用来构成游戏的关卡地图的地图模块元素的总和（一个位图一共为16个地图模块）。</FONT></P>
+<P><FONT 
+size=2>地形一共包含三个重要参数-命中补正、地形阻碍、机动补正，其中命中补正为对攻击方造成减命中的效果（空类型不会受到补正的影响），详细数值参照下图；地形阻碍为是否可穿越、停留的逻辑判定，00表示可以，01表示不可以；机动补正为对机体移动力的修正值，详细数值参考下图（空类型不会受到补正的影响）。</FONT></P>
+<P><FONT size=2>特殊地形：在原版中特殊地形分为两类-<FONT 
+color=#ff0000>加血站、地图事件</FONT>（包含移动不能、商店、逃脱点等）。加血站有明确的地形标识，在前三个位图中为倒数第六个（如下图所示），最后一个位图没有加血站；地图事件没有特殊的地形标识，也就是说商店可以不是原版那些是商店图标的地形；地图事件与事件同理，例如原版第十四关的移动不能和第十六关的逃脱点。具体的地图事件说明请参考<FONT 
+color=#ff0000>修改</FONT><FONT color=#ff0000>器使用手册-主界面-地图事件。</FONT></FONT></P>
+<P><FONT size=2><STRONG>地形所包含的所有参数如下图所示：</STRONG></FONT></P>
+<P><FONT size=2><FONT color=#ff0000>位图A</FONT>如下所示：</FONT></P>
+<P><IMG src="地图模块.png"></P>
+<P>===============================================================================</P>
+<P><FONT size=2><FONT color=#ff0000>位图B</FONT>如下所示：</FONT></P>
+<P><IMG src="位图B-2.png"></P>
+<P>===============================================================================</P>
+<P><FONT size=2><FONT color=#ff0000>位图C</FONT>如下所示：</FONT></P>
+<P><IMG src="位图C.png"></P>
+<P>===============================================================================</P>
+<P><FONT size=2><FONT color=#ff0000>位图D</FONT>如下所示：</FONT></P>
+<P><IMG src="位图D-1.png"></P></BODY></HTML>

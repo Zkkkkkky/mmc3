@@ -5,6 +5,8 @@ from .chapter_event import ChapterEventCodec
 from .custom_music import CustomMusicCodec
 from .event import EventScriptCodec
 from .map import MapCodec
+from .map_trigger import MapTrigger, MapTriggerCodec, MapTriggerLayout
+from .persuasion import PersuasionRule, PersuasionRuleCodec
 from .scenario_layout import ScenarioLayoutCodec
 from .story_text import StoryTextCodec
 from .unit import UnitCodec
@@ -22,6 +24,11 @@ __all__ = [
     "ChapterEventCodec",
     "CustomMusicCodec",
     "MapCodec",
+    "MapTrigger",
+    "MapTriggerCodec",
+    "MapTriggerLayout",
+    "PersuasionRule",
+    "PersuasionRuleCodec",
     "EventScriptCodec",
     "ScenarioLayoutCodec",
     "StoryTextCodec",

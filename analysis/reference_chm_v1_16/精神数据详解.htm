@@ -1,0 +1,13 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML><HEAD><TITLE>精神数据详解</TITLE>
+<META name=GENERATOR content="MSHTML 8.00.7601.19104">
+<META content="text/html; charset=gb2312" http-equiv=Content-Type>
+<STYLE>
+html,body { 
+	/* Default Font */
+	font-family: Microsoft YaHei, Simsun, sans-serif;
+	font-size: 12pt;
+}
+</STYLE>
+</HEAD>
+<BODY><PRE><FONT size=2 face=微软雅黑>比如：<BR>强攻的精神：<BR>14 8A强攻：<BR>18 21 9D 2D 1D 03 38 02 06 2D 1E 0F 15 0F 0E 21<BR>1B E0 82</FONT></PRE><PRE><BR><FONT size=2 face=微软雅黑>18 21 ：取消对话框<BR>9D：写精神状态到内存的7817和扣除精神值<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; （关于精神状态：<BR>&nbsp;精神状态内存：7817-7821（11人，每个人1个字节）如果使用了这种精神，则对应的位置1<BR>&nbsp;0000&nbsp; 0000<BR>&nbsp;第一位：回避<BR>&nbsp;第二位：必杀<BR>&nbsp;第三位：热血<BR>&nbsp;第四位：强攻<BR>&nbsp;第五位：防守<BR>&nbsp;第六位：瞄准<BR>&nbsp;第七位：疾风<BR>&nbsp;第八位：加速</FONT></PRE><PRE><FONT size=2 face=微软雅黑>&nbsp;特殊状态：干扰，写入750D，置40）</FONT></PRE><PRE><FONT size=2 face=微软雅黑>2D 1D 03 38 XX XX 2D：表示播放动画和声音。后面接两个字节的动画代码（传真、狂怒的动画调用有点不同）<BR>&nbsp;&nbsp;&nbsp;&nbsp; 02 01：爆机动画<BR>&nbsp;&nbsp;&nbsp;&nbsp; 02 02：恢复类动画（毅力、潜力、爱心等）<BR>&nbsp;&nbsp;&nbsp;&nbsp; 02 03：加速疾风动画<BR>&nbsp;&nbsp;&nbsp;&nbsp; 02 04：瞄准回避必杀动画<BR>&nbsp;&nbsp;&nbsp;&nbsp; 02 05：防守动画<BR>&nbsp;&nbsp;&nbsp;&nbsp; 02 06：强攻热血动画<BR>&nbsp;&nbsp;&nbsp;&nbsp; 02 07：传真的闪屏动画<BR>&nbsp;&nbsp;&nbsp;&nbsp; 02 08：怒、狂怒动画<BR>&nbsp;&nbsp;&nbsp;&nbsp; 02 09：干扰动画<BR>&nbsp;&nbsp;&nbsp;&nbsp; 02 0A：传真的闪屏动画<BR>&nbsp;&nbsp;&nbsp;&nbsp; 02 0E：脉冲波动画<BR>&nbsp;&nbsp;&nbsp;&nbsp; 02 0F：脉冲波的爆数字动画</FONT></PRE><PRE><FONT size=2 face=微软雅黑>1E 0F：显示文字之前的准备。<BR>15 0F 0E：调用0F 0E的文字段（位于2C010-3000F之间的文字段）<BR>21：取消对话框<BR>1B E0 82：转到E0 82指针处</FONT></PRE><PRE><FONT size=2 face=微软雅黑>其他的解析：<BR>1D 05 XX：指定精神施放开始的人物序号。<BR>&nbsp;&nbsp;&nbsp;&nbsp; 00：从我方第一个开始<BR>&nbsp;&nbsp;&nbsp;&nbsp; 0B：从NPC开始<BR>&nbsp;&nbsp;&nbsp;&nbsp; 0E：从敌方开始<BR>&nbsp;&nbsp;&nbsp;&nbsp; 序号的范围：00-0A：我方11个人，0B-0D：三个NPC，0E-20：18个敌军</FONT></PRE><PRE><FONT size=2 face=微软雅黑>1D 07 XX：表示恢复生命。后面接一个字节，调用恢复的生命值<BR>&nbsp;&nbsp;&nbsp;&nbsp; 00：恢复50<BR>&nbsp;&nbsp;&nbsp;&nbsp; 01：恢复100<BR>&nbsp;&nbsp;&nbsp;&nbsp; 02：随机恢复<BR>&nbsp;&nbsp;&nbsp;&nbsp; 03：全部恢复<BR>1C 05 XX XX XX：结束范围。在第N-1个人物处结束，后加一个指针，指向功能处，表示如果没有达到指定范围则继续执行。<BR>&nbsp;&nbsp;&nbsp;&nbsp; 0B：在我们最后一个结束<BR>&nbsp;&nbsp;&nbsp;&nbsp; 0E：在最后一个NPC处结束<BR>&nbsp;&nbsp;&nbsp;&nbsp; 20：在最后一个敌军处结束</FONT></PRE><PRE><FONT size=2 face=微软雅黑>1C 09 XX XX：后面加指针，表示当前人物如果人物代码为0则跳转，获取当前人物的坐标存于内存的00CC/00CD地址。</FONT></PRE><PRE><FONT size=2 face=微软雅黑>AD XX XX 03 45 05：范围技能的动画调用。指针指向2D所指的动画，后面03 45 05表示动画播放的人物没有显示在当前画面。</FONT></PRE><PRE><FONT size=2 face=微软雅黑>1B XX XX：无条件跳转到指针处。多表示精神的结束，1B E0 82为单体精神的结束，1B 48 88为范围精神的结束。</FONT></PRE><PRE><FONT size=2 face=微软雅黑>1E 0F：显示文字之前的准备。<BR>12 81：获取当前机体的名称。<BR>15 XX XX：调用文字段XX XX。（文字段中的F000为12获取的文字）</FONT></PRE></BODY></HTML>

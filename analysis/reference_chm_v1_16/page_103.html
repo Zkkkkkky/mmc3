@@ -1,0 +1,251 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML XMLNS:ST1><HEAD><TITLE>中央处理器</TITLE>
+<META name=GENERATOR content="MSHTML 8.00.7601.19104">
+<META content="text/html; charset=gb2312" http-equiv=Content-Type>
+<STYLE>
+html,body { 
+	/* Default Font */
+	font-family: Microsoft YaHei, Simsun, sans-serif;
+	font-size: 12pt;
+}
+</STYLE>
+</HEAD>
+<BODY><FONT size=2>
+<H2><SPAN lang=EN-US>3</SPAN>、中央处理器</H2>
+<P><SPAN lang=EN-US>NES</SPAN>定制的<SPAN lang=EN-US>6502</SPAN>内部特别加上了声音处理单元。<SPAN 
+lang=EN-US>NTSC</SPAN>制式的<SPAN lang=EN-US>NES</SPAN>使用<SPAN 
+lang=EN-US>1.7897725MHz</SPAN>主频，<SPAN lang=EN-US>PAL</SPAN>制式使用<SPAN 
+lang=EN-US>1.773447MHz</SPAN>主频。 <SPAN 
+lang=EN-US><BR><B><BR>CPU</B></SPAN><B>内存映像：</B> 
+<TABLE style="mso-cellspacing: .7pt" class=MsoNormalTable border=1 cellSpacing=1 
+cellPadding=0>
+  <TBODY>
+  <TR style="mso-yfti-irow: 0; mso-yfti-firstrow: yes">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>开始地址 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>用途 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>结束地址 </FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 1">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>$0000 
+    </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2><SPAN lang=EN-US>2K</SPAN>字节<SPAN 
+      lang=EN-US>RAM</SPAN>，做<SPAN lang=EN-US>4</SPAN>次镜象（即<SPAN 
+      lang=EN-US>$0000-$07FF</SPAN>可用<SPAN lang=EN-US>) </SPAN></FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>$1FFF 
+    </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 2">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>$2000 
+    </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>寄存器 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>$2007 
+    </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 3">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>$2008 
+    </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>寄存器（<SPAN 
+      lang=EN-US>$2000-$2008</SPAN>的镜像，每<SPAN lang=EN-US>8</SPAN>个字节镜像一次） 
+      </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>$3FFF 
+    </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 4">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>$4000 
+    </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>寄存器 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>$<ST1:CHMETCNV 
+      style="BACKGROUND-IMAGE: url(res://ietag.dll/#34/#1001); BACKGROUND-REPEAT: repeat-x; BACKGROUND-POSITION: left bottom" 
+      tabIndex=0 w:st="on" TCSC="0" NumberType="1" Negative="False" 
+      HasSpace="False" SourceValue="401" UnitName="F">401F</ST1:CHMETCNV> 
+      </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 5">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>$4020 
+    </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>扩展<SPAN lang=EN-US>ROM 
+    </SPAN></FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>$5FFF 
+    </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 6">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>$6000 
+    </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>卡带的<SPAN lang=EN-US>SRAM</SPAN>（需要有电池支持） 
+      </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>$7FFF 
+    </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 7">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>$8000 
+    </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>卡带的下层<SPAN lang=EN-US>ROM 
+      </SPAN></FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>$BFFF 
+    </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 8; mso-yfti-lastrow: yes">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>$C000 
+    </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>卡带的上层<SPAN lang=EN-US>ROM 
+      </SPAN></FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>$FFFF 
+    </FONT></SPAN></P></TD></TR></TBODY></TABLE></P>
+<P><B>中断：<SPAN lang=EN-US><BR></SPAN></B><SPAN lang=EN-US>6502</SPAN>有<SPAN 
+lang=EN-US>3</SPAN>个中断<SPAN lang=EN-US>IRQ/BRK</SPAN>、<SPAN 
+lang=EN-US>NMI</SPAN>和<SPAN lang=EN-US>RESET</SPAN>，每个中断都有一个<SPAN 
+lang=EN-US>16</SPAN>位的向量，即指针，用来存放该中断发生时中断服务函数的地址。中断发生时<SPAN 
+lang=EN-US>CPU</SPAN>都会把状态标志和返回地址压栈，然后调用中断服务程序。<SPAN 
+lang=EN-US><BR>IRQ/BRK</SPAN>中断由一下两种情况产生：一是软件通过<SPAN 
+lang=EN-US>BRK</SPAN>指令产生，一是硬件通过<SPAN lang=EN-US>IRQ</SPAN>引脚产生。<SPAN 
+lang=EN-US><BR>RESET</SPAN>在开机的时候触发，这是<SPAN lang=EN-US>ROM</SPAN>被装入，<SPAN 
+lang=EN-US>6502</SPAN>跳到<SPAN 
+lang=EN-US>RESET</SPAN>向量指向的地址没有寄存器被修改，没有内存被清空，这些都只在开机是发生。<SPAN 
+lang=EN-US><BR>NMI</SPAN>指不可屏蔽中断，它在<SPAN 
+lang=EN-US>VBlank</SPAN>即屏幕刷新时发生，持续时间根据系统（<SPAN 
+lang=EN-US>NTSC/PAL</SPAN>）不同而不同。<SPAN lang=EN-US>NTSC</SPAN>是每秒<SPAN 
+lang=EN-US>60</SPAN>次，而<SPAN lang=EN-US>PAL</SPAN>是每秒<SPAN 
+lang=EN-US>50</SPAN>次。<SPAN lang=EN-US>6502</SPAN>的中断延时是<SPAN 
+lang=EN-US>7</SPAN>个时钟周期，也就是说，进入和离开中断都需要<SPAN lang=EN-US>7</SPAN>个时钟周期。它产生于<SPAN 
+lang=EN-US>PPU</SPAN>的每一帧结束，<SPAN lang=EN-US>NMI</SPAN>中断可以由<SPAN 
+lang=EN-US>$2000</SPAN>的第<SPAN lang=EN-US>7</SPAN>位的<SPAN 
+lang=EN-US>1/0</SPAN>控制允许<SPAN lang=EN-US>/</SPAN>禁止。<SPAN 
+lang=EN-US><BR></SPAN>大部分中断应该使用<SPAN 
+lang=EN-US>RTI</SPAN>指令返回，但是有些游戏不用，例如《最终幻想<SPAN 
+lang=EN-US>1</SPAN>》。它用一个很奇怪的方式：手工修改堆栈指针，然后执行<SPAN 
+lang=EN-US>RTS</SPAN>指令。这种方法在技术上是可行的，但是应该尽量避免。<SPAN 
+lang=EN-US><BR><BR></SPAN>以上中断在<SPAN lang=EN-US>ROM</SPAN>内有以下对应的地址：<SPAN 
+lang=EN-US> </SPAN>
+<TABLE style="mso-cellspacing: .7pt" class=MsoNormalTable border=1 cellSpacing=1 
+cellPadding=0>
+  <TBODY>
+  <TR style="mso-yfti-irow: 0; mso-yfti-firstrow: yes">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>中断地址 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>中断 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>优先权 </FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 1">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>$FFFA 
+    </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>NMI </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>中 </FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 2">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>$FFFC 
+    </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>RESET 
+    </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>高 </FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 3; mso-yfti-lastrow: yes">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>$FFFE 
+    </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>IRQ/BRK 
+    </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>低 </FONT></P></TD></TR></TBODY></TABLE></P>
+<P><B>特别说明：<SPAN lang=EN-US><BR></SPAN></B><SPAN lang=EN-US>NES</SPAN>的<SPAN 
+lang=EN-US>6502</SPAN>不支持<SPAN lang=EN-US>10</SPAN>进制。虽然<SPAN 
+lang=EN-US>CLD</SPAN>和<SPAN lang=EN-US>SED</SPAN>指令都正常工作，但是<SPAN 
+lang=EN-US>ADC</SPAN>和<SPAN lang=EN-US>SBC</SPAN>都不使用<SPAN 
+lang=EN-US>CPU</SPAN>状态标志的<SPAN lang=EN-US>“D”</SPAN>位。由于复位后<SPAN 
+lang=EN-US>“D”</SPAN>位的状态是不确定的，所以游戏通常在程序开始时使用一个<SPAN 
+lang=EN-US>CLD</SPAN>指令。<SPAN lang=EN-US><BR></SPAN>声音寄存器映射到<SPAN 
+lang=EN-US>CPU</SPAN>内部，所有波形发生的工作都在<SPAN lang=EN-US>CPU</SPAN>内部完成。<SPAN 
+lang=EN-US><BR></SPAN>注意那两个分开的<SPAN lang=EN-US>16K 
+ROM</SPAN>段，它们可能是连续的，但是它们根据卡带的大小扮演不同的角色。有的卡带只有一个<SPAN lang=EN-US>16K 
+ROM</SPAN>，那么它就同时被装入<SPAN lang=EN-US>$8000</SPAN>和<SPAN 
+lang=EN-US>$COOO</SPAN>。<SPAN lang=EN-US><BR></SPAN>所有游戏都将它们自己装入<SPAN 
+lang=EN-US>$8000</SPAN>，使用<SPAN lang=EN-US>32K 
+RAM</SPAN>，但是它们都能够通过内存映射把多于一个<SPAN lang=EN-US>16K ROM</SPAN>装入<SPAN 
+lang=EN-US>$8000</SPAN>。<SPAN lang=EN-US>VROM</SPAN>也是同样的道理。<SPAN 
+lang=EN-US><BR></SPAN>当<SPAN lang=EN-US>BRK</SPAN>中断发生的时候，<SPAN 
+lang=EN-US>CPU</SPAN>把状态标志压入堆栈，同时设置<SPAN lang=EN-US>“B”</SPAN>标志。而<SPAN 
+lang=EN-US>IRQ</SPAN>中断发生时，<SPAN lang=EN-US>CPU</SPAN>把状态标志压入堆栈，同时清除<SPAN 
+lang=EN-US>“B”</SPAN>标志。这是因为<SPAN lang=EN-US>6502</SPAN>使用同一个向量来处理两种中断，用<SPAN 
+lang=EN-US>“B”</SPAN>标志来区分它们。你可以用以下程序来区别两种中断：<SPAN lang=EN-US><BR>　 C134: PLA 
+;　　　</SPAN>拷贝<SPAN lang=EN-US>CPU</SPAN>状态标志到<SPAN lang=EN-US>A<BR>　 C135: PHA 
+;　　　</SPAN>把状态标志还回给堆栈<SPAN lang=EN-US><BR>　 C136: AND #$10 ;　</SPAN>检查<SPAN 
+lang=EN-US>“B”</SPAN>标志<SPAN lang=EN-US><BR>　 C138: BNE 
+is_BRK_opcode;　</SPAN>如果设置了，就是软件中断<SPAN lang=EN-US>(BRK)<BR></SPAN>在<SPAN 
+lang=EN-US>NMI</SPAN>里指向<SPAN lang=EN-US>BRK</SPAN>会导致已经被压栈的<SPAN 
+lang=EN-US>“B”</SPAN>标志被设置。<SPAN lang=EN-US><BR>6502</SPAN>的<SPAN 
+lang=EN-US>$6C</SPAN>指令（间接绝对跳转）有一个<SPAN lang=EN-US>BUG</SPAN>，当低位字节是<SPAN 
+lang=EN-US>$FF</SPAN>时<SPAN lang=EN-US>CPU</SPAN>将不能正确计算有效地址。例如：<SPAN 
+lang=EN-US><BR>　 C100: 4F<BR>　 C1FF: 00<BR>　 C200: 23<BR>　 ..<BR>　 D000: 6C FF 
+C1 - JMP ($C1FF)<BR></SPAN>本来它是应该跳到<SPAN 
+lang=EN-US>$2300</SPAN>的，但是在计算高位字节的时候，在页面边界处地址是不能再增加的，所以实际将跳转到<SPAN 
+lang=EN-US>$4F00</SPAN>。<SPAN 
+lang=EN-US><BR></SPAN>需要注意的是，页面越界不会在变址间接寻址模式发生。由于<SPAN 
+lang=EN-US>0</SPAN>页面的限制，由于<SPAN 
+lang=EN-US>0</SPAN>页面的限制，所有变址间接寻址的读写都应该在计算有效地址之后和<SPAN 
+lang=EN-US>#$FF</SPAN>进行逻辑与操作。例如：<SPAN lang=EN-US><BR>　C000: LDX #3 
+;　</SPAN>从<SPAN lang=EN-US> $0002+$0003 </SPAN>读变址地址，<SPAN lang=EN-US><BR>　 
+C002: LDA ($FF,X) ;　</SPAN>不是<SPAN lang=EN-US> 
+$0102+$0103.<BR><BR></SPAN></P></FONT></BODY></HTML>

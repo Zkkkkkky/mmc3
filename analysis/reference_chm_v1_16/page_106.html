@@ -1,0 +1,1289 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML XMLNS:ST1 XMLNS:O><HEAD><TITLE>声音处理器</TITLE>
+<META name=GENERATOR content="MSHTML 8.00.7601.19104">
+<META content="text/html; charset=gb2312" http-equiv=Content-Type>
+<STYLE>
+html,body { 
+	/* Default Font */
+	font-family: Microsoft YaHei, Simsun, sans-serif;
+	font-size: 12pt;
+}
+</STYLE>
+</HEAD>
+<BODY><FONT size=2><SPAN lang=EN-US>
+<H2><SPAN lang=EN-US>5</SPAN>、声音处理器</H2></SPAN>
+<P><SPAN lang=EN-US>NES</SPAN>的集成<SPAN lang=EN-US>CPU</SPAN>里包含了一个<SPAN 
+lang=EN-US>4</SPAN>声道的声音处理器（<ST1:CHMETCNV 
+style="BACKGROUND-IMAGE: url(res://ietag.dll/#34/#1001); BACKGROUND-REPEAT: repeat-x; BACKGROUND-POSITION: left bottom" 
+tabIndex=0 w:st="on" TCSC="0" NumberType="1" Negative="False" HasSpace="False" 
+SourceValue="2" UnitName="a"><SPAN lang=EN-US>2A</SPAN></ST1:CHMETCNV><SPAN 
+lang=EN-US>03</SPAN>），为播放音乐提供准模拟的声音。<SPAN lang=EN-US>4</SPAN>个声道分别是：<SPAN 
+lang=EN-US>2</SPAN>个方波，一个三角波和一个噪声发生通道，每个声道的特性都不一样。</P>
+<P><B>声道：<SPAN lang=EN-US><BR></SPAN></B>方波声道能够产生<SPAN 
+lang=EN-US>54.6Hz</SPAN>到<SPAN 
+lang=EN-US>12.4KHz</SPAN>的方波，它的主要特性是频率扫略功能和调整输出的占空周期；三角波声道可产生<SPAN 
+lang=EN-US>27.3Hz</SPAN>到<SPAN lang=EN-US>55.9KHz</SPAN>分辨率是<SPAN 
+lang=EN-US>4</SPAN>位（<SPAN 
+lang=EN-US>16</SPAN>级）的三角波，它的主要特性是输出模拟三角波和线性计数器（可用来定时关闭声道）；噪声通道能产生<SPAN 
+lang=EN-US>29.3Hz</SPAN>到<SPAN 
+lang=EN-US>44.7KHz</SPAN>的随机噪声，它的主要特性是产生伪随机数，在声道输出随机频率。</P>
+<P><B>帧计数器：<SPAN lang=EN-US><BR></SPAN></B><SPAN 
+lang=EN-US>2A03</SPAN>有一个内含的帧计数器，它能够产生<SPAN lang=EN-US>60Hz</SPAN>（<SPAN 
+lang=EN-US>1/1</SPAN>帧率）、<SPAN lang=EN-US>120Hz</SPAN>（<SPAN 
+lang=EN-US>1/2</SPAN>帧率）和<SPAN lang=EN-US>240Hz</SPAN>（<SPAN 
+lang=EN-US>1/4</SPAN>帧率）的信号，提供给其他一些声音硬件使用。<SPAN 
+lang=EN-US>1/4</SPAN>帧率的信号是由<SPAN lang=EN-US>CPU</SPAN>频率乘以<SPAN 
+lang=EN-US>2</SPAN>即<SPAN lang=EN-US>3579545Hz</SPAN>再除以<SPAN 
+lang=EN-US>14915</SPAN>得到的。</P>
+<P><B>声音硬件延迟：<SPAN lang=EN-US><BR></SPAN></B>在<SPAN 
+lang=EN-US>2A03</SPAN>复位之后，到各个声音硬件开始接收时钟信号之间有<SPAN 
+lang=EN-US>2048</SPAN>个时钟周期的延迟。当这<SPAN 
+lang=EN-US>2K</SPAN>个时钟周期之后，声音开始正常工作，输出使能有效。这种现象只发生在系统复位之后的<SPAN 
+lang=EN-US>2048</SPAN>个时钟周期内。这个资料的准确性有待验证。</P>
+<P><B>控制寄存器：<SPAN lang=EN-US><BR></SPAN></B><SPAN 
+lang=EN-US>2A03</SPAN>的声音控制寄存器在<SPAN lang=EN-US>CPU</SPAN>内分配的特殊地址如下：</P>
+<TABLE style="mso-cellspacing: 0cm; mso-padding-alt: 0cm 0cm 0cm 0cm" 
+class=MsoNormalTable border=1 cellSpacing=0 cellPadding=0>
+  <TBODY>
+  <TR style="mso-yfti-irow: 0; mso-yfti-firstrow: yes">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>寄存器地址 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>描述 </FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 1">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>$4000-$4003 
+      </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>方波<SPAN lang=EN-US>1 
+  </SPAN></FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 2">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>$4004-$4007 
+      </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>方波<SPAN lang=EN-US>2 
+  </SPAN></FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 3">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>$4008-$400B 
+      </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>三角波 </FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 4">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>$<ST1:CHMETCNV 
+      style="BACKGROUND-IMAGE: url(res://ietag.dll/#34/#1001); BACKGROUND-REPEAT: repeat-x; BACKGROUND-POSITION: left bottom" 
+      tabIndex=0 w:st="on" TCSC="0" NumberType="1" Negative="False" 
+      HasSpace="False" SourceValue="400" 
+      UnitName="C">400C</ST1:CHMETCNV>-$<ST1:CHMETCNV 
+      style="BACKGROUND-IMAGE: url(res://ietag.dll/#34/#1001); BACKGROUND-REPEAT: repeat-x; BACKGROUND-POSITION: left bottom" 
+      tabIndex=0 w:st="on" TCSC="0" NumberType="1" Negative="False" 
+      HasSpace="False" SourceValue="400" UnitName="F">400F</ST1:CHMETCNV> 
+      </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>噪声 </FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 5; mso-yfti-lastrow: yes">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>$4015 
+    </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>声道使能、音长计数状态</FONT> 
+</P></TD></TR></TBODY></TABLE>
+<P>只有<SPAN lang=EN-US>$4015</SPAN>是可读可写的，其他都是只能够写的，如果你读这些寄存器最可能得到的是<SPAN 
+lang=EN-US>$40</SPAN>（因为<SPAN 
+lang=EN-US>NES</SPAN>数据线的重负荷）。读这些只写寄存器对寄存器本身和声道都没有任何影响。每个声音通道都有<SPAN 
+lang=EN-US>4</SPAN>个寄存器，具体描述如下：</P>
+<TABLE style="mso-cellspacing: 0cm; mso-padding-alt: 0cm 0cm 0cm 0cm" 
+class=MsoNormalTable border=1 cellSpacing=0 cellPadding=0>
+  <TBODY>
+  <TR style="mso-yfti-irow: 0; mso-yfti-firstrow: yes">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>寄存器<SPAN lang=EN-US>\</SPAN>位 
+    </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>0 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>1 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>2 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>3 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>4 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>5 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>6 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>7 
+</FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 1">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT 
+      size=2>$4000/$4004/$<ST1:CHMETCNV 
+      style="BACKGROUND-IMAGE: url(res://ietag.dll/#34/#1001); BACKGROUND-REPEAT: repeat-x; BACKGROUND-POSITION: left bottom" 
+      tabIndex=0 w:st="on" TCSC="0" NumberType="1" Negative="False" 
+      HasSpace="False" SourceValue="400" UnitName="C">400C</ST1:CHMETCNV> 
+      </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm" 
+    colSpan=4>
+      <P class=MsoNormal><FONT size=2>音量衰减率 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>无衰减 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>音长计数中止<SPAN lang=EN-US>/</SPAN>衰减循环使能 
+      </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm" 
+    colSpan=2>
+      <P class=MsoNormal><FONT size=2>占空周期类型 </FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 2">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>$4001/$4005 
+      </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm" 
+    colSpan=3>
+      <P class=MsoNormal><FONT size=2>右移量 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2><SPAN lang=EN-US>1</SPAN>减少<SPAN 
+      lang=EN-US>/0</SPAN>增加波长 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm" 
+    colSpan=3>
+      <P class=MsoNormal><FONT size=2>扫描更新率 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>扫描使能 </FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 3">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT 
+      size=2>$4002/$4006/$<ST1:CHMETCNV 
+      style="BACKGROUND-IMAGE: url(res://ietag.dll/#34/#1001); BACKGROUND-REPEAT: repeat-x; BACKGROUND-POSITION: left bottom" 
+      tabIndex=0 w:st="on" TCSC="0" NumberType="1" Negative="False" 
+      HasSpace="False" SourceValue="400" UnitName="a">400A</ST1:CHMETCNV> 
+      </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm" 
+    colSpan=8>
+      <P class=MsoNormal><FONT size=2>波长低八位 </FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 4">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT 
+      size=2>$4003/$4007/$400B/$<ST1:CHMETCNV 
+      style="BACKGROUND-IMAGE: url(res://ietag.dll/#34/#1001); BACKGROUND-REPEAT: repeat-x; BACKGROUND-POSITION: left bottom" 
+      tabIndex=0 w:st="on" TCSC="0" NumberType="1" Negative="False" 
+      HasSpace="False" SourceValue="400" UnitName="F">400F</ST1:CHMETCNV> 
+      </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm" 
+    colSpan=3>
+      <P class=MsoNormal><FONT size=2>波长高三位 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm" 
+    colSpan=5>
+      <P class=MsoNormal><FONT size=2>音长计数值 </FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 5">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>$4008 
+    </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm" 
+    colSpan=7>
+      <P class=MsoNormal><FONT size=2>线性计数值 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>音长计数中止<SPAN lang=EN-US>/</SPAN>线性计数开始 
+      </FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 6">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>$4009/$400D 
+      </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm" 
+    colSpan=8>
+      <P class=MsoNormal><FONT size=2>未使用 </FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 7">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>$400E 
+    </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm" 
+    colSpan=4>
+      <P class=MsoNormal><FONT size=2>播放采样率 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm" 
+    colSpan=3>
+      <P class=MsoNormal><FONT size=2>未使用 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>随机数类型发生 </FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 8">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2><SPAN lang=EN-US>$4015:</SPAN>音长状态（读） 
+      </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>方<SPAN lang=EN-US>1 </SPAN></FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>方<SPAN lang=EN-US>2 </SPAN></FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>三角 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>噪声 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>DMC </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm" 
+    colSpan=2>
+      <P class=MsoNormal><FONT size=2>未使用 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2><SPAN lang=EN-US>DMC</SPAN>的<SPAN 
+      lang=EN-US>IRQ</SPAN>状态 </FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 9; mso-yfti-lastrow: yes">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2><SPAN lang=EN-US>$4015:</SPAN>通道使能（写） 
+      </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>方<SPAN lang=EN-US>1 </SPAN></FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>方<SPAN lang=EN-US>2 </SPAN></FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>三角 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>噪声 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>DMC </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm" 
+    colSpan=3>
+      <P class=MsoNormal><FONT size=2>未使用 </FONT></P></TD></TR></TBODY></TABLE>
+<P><B>声道结构体系：<SPAN lang=EN-US><BR></SPAN></B>总表：</P>
+<TABLE style="mso-cellspacing: 0cm; mso-padding-alt: 0cm 0cm 0cm 0cm" 
+class=MsoNormalTable border=1 cellSpacing=0 cellPadding=0>
+  <TBODY>
+  <TR style="mso-yfti-irow: 0; mso-yfti-firstrow: yes">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>设备 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>三角波 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>噪声 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>方波 </FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 1">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>三角阶梯发生器 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>√ </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>　 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>　 </FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 2">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>线性计数器 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>√ </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>　 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>　 </FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 3">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>可编程定时器 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>√ </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>√ </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>√ </FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 4">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>音长计数器 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>√ </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>√ </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>√ </FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 5">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2><SPAN lang=EN-US>4</SPAN>位<SPAN 
+      lang=EN-US>DAC </SPAN></FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>√ </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>√ </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>√ </FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 6">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>音量衰减单元 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>　 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>√ </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>√ </FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 7">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>扫频单元 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>　 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>　 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>√ </FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 8">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>占空周期发生器 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>　 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>　 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>√ </FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 9">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>波长转换器 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>　 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>√ </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>　 </FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 10; mso-yfti-lastrow: yes">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>随机数发生器 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>　 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>√ </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>　</FONT> </P></TD></TR></TBODY></TABLE>
+<P>三角阶梯发生器：<SPAN lang=EN-US><BR></SPAN>这是一个<SPAN 
+lang=EN-US>5</SPAN>位的单向的计数器，只存在于三角波通道，计数器输出的低<SPAN 
+lang=EN-US>4</SPAN>位分别通到一个<SPAN lang=EN-US>XNOR</SPAN>（异或非）门。<SPAN 
+lang=EN-US>4</SPAN>个<SPAN lang=EN-US>XNOR</SPAN>门被同一个选通信号控制，当选通是<SPAN 
+lang=EN-US>0</SPAN>时，计数器输出的<SPAN lang=EN-US>4</SPAN>个低位在门电路的输出端反相；当选通是<SPAN 
+lang=EN-US>1</SPAN>时，不反相。选通信号连到计数器的最高位，这样就可以在<SPAN 
+lang=EN-US>XNOR</SPAN>门的输出端产生一个计数序列，就造出了一个比较理想的三角阶梯信号发生器。<SPAN 
+lang=EN-US>XNOR</SPAN>门的输出反馈到一个<SPAN lang=EN-US>4</SPAN>位的<SPAN 
+lang=EN-US>DAC</SPAN>输入端。当三角波的音长计数器或线性计数器是<SPAN lang=EN-US>0</SPAN>时，这个<SPAN 
+lang=EN-US>5</SPAN>位的计算器会暂停，同时锁定，计数器不会被重设置到某一个特定的状态。在系统复位的时候，计数器装入<SPAN 
+lang=EN-US>0</SPAN>。计数器的时钟输入直接连接到三角波通道内一个<SPAN 
+lang=EN-US>11</SPAN>位的可编程定时器的输出端，这样，这个<SPAN 
+lang=EN-US>5</SPAN>位的三角波阶梯信号发生器的输出频率就是通道内可编程定时器频率的<SPAN 
+lang=EN-US>1/32</SPAN>。</P>
+<P>线性计数器：（<SPAN lang=EN-US>$4008</SPAN>）<SPAN lang=EN-US><BR></SPAN>这是一个<SPAN 
+lang=EN-US>7</SPAN>位的递减计数器，只存在于三角波通道，计数器减到<SPAN 
+lang=EN-US>0</SPAN>时输出。计数器的时钟是<SPAN lang=EN-US>240Hz</SPAN>（<SPAN 
+lang=EN-US>1/4</SPAN>帧率），用帧来计算长度就是<SPAN lang=EN-US>0.25×N</SPAN>，其中<SPAN 
+lang=EN-US>N</SPAN>是预先装入的<SPAN lang=EN-US>7</SPAN>位的值。计数器会保持计数状态直到输出<SPAN 
+lang=EN-US>0</SPAN>，这时线性计数器和三角阶梯发生器的时钟信号被禁止，导致两个计数器被锁定，线性计数器的输出保持是<SPAN 
+lang=EN-US>0</SPAN>，声道因此而出现静音。线性计算器有两种工作模式：装入和计数。在装入模式，所有的输入（写到<SPAN 
+lang=EN-US>$4008</SPAN>）的值都会在传送到输出，也就没有计数；在计数模式，计数器会从当前值向下减，在<SPAN 
+lang=EN-US>$4008</SPAN>的数会被忽略。下表表示了如何通过<SPAN 
+lang=EN-US>$4008</SPAN>的最高位设置计数器：</P>
+<TABLE style="mso-cellspacing: 0cm; mso-padding-alt: 0cm 0cm 0cm 0cm" 
+class=MsoNormalTable border=1 cellSpacing=0 cellPadding=0>
+  <TBODY>
+  <TR style="mso-yfti-irow: 0; mso-yfti-firstrow: yes">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>旧值 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>新值 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>模式 </FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 1">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>0 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>X </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>计数 </FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 2">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>1 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>0 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>在写周期没有变化，计数 </FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 3; mso-yfti-lastrow: yes">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>1 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>1 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>没有变化 </FONT></P></TD></TR></TBODY></TABLE>
+<P>可编程定时器（<SPAN lang=EN-US>$4002/3</SPAN>、<SPAN lang=EN-US>$4006/7</SPAN>、<SPAN 
+lang=EN-US>$400A/B</SPAN>、<SPAN lang=EN-US>$400F</SPAN>）：<SPAN 
+lang=EN-US><BR></SPAN>这是一个<SPAN 
+lang=EN-US>11</SPAN>位可预设的递减计数器，每个声音通道都有，但是注意在噪声通道不是直接可用的，详见<SPAN 
+lang=EN-US>“</SPAN>波长转换器<SPAN lang=EN-US>”</SPAN>。这个计数器在计数完成的时候自动重载，因此它在减到<SPAN 
+lang=EN-US>0</SPAN>前会计算<SPAN lang=EN-US>N</SPAN>＋<SPAN 
+lang=EN-US>1</SPAN>个时钟周期，其中<SPAN lang=EN-US>N</SPAN>是预装入的<SPAN 
+lang=EN-US>11</SPAN>位值。这个计数器直接使用<SPAN lang=EN-US>6502</SPAN>的频率（<SPAN 
+lang=EN-US>1.79MHz</SPAN>）作为时钟，输出频率是<SPAN lang=EN-US>1.79MHz/(N</SPAN>＋<SPAN 
+lang=EN-US>1)</SPAN>。当到达计数终点的时候会产生一个<SPAN 
+lang=EN-US>1</SPAN>时钟周期的脉冲，而输出频率会被反馈到对应于声音通道的特殊设备。对于方波，这个计数终点脉冲会被送到占空周期发生器；对于三角波，会被送到三角阶梯发生器；对于噪声，会被送到随机数发生器。</P>
+<P>音长计数器（<SPAN lang=EN-US>$4003</SPAN>、<SPAN lang=EN-US>$4007</SPAN>、<SPAN 
+lang=EN-US>$400B</SPAN>、<SPAN lang=EN-US>$400F</SPAN>）：<SPAN 
+lang=EN-US><BR></SPAN>这是一个<SPAN lang=EN-US>7</SPAN>位的递减计数器，时钟是<SPAN 
+lang=EN-US>60Hz</SPAN>，每个声音通道都有。当计数器减到<SPAN 
+lang=EN-US>0</SPAN>，计数停止，相应的通道出现静音。可以通过设置音长计数时钟的禁止位来暂停计数，写<SPAN 
+lang=EN-US>1</SPAN>则中止计数，<SPAN 
+lang=EN-US>0</SPAN>则允许计数。在不同的寄存器里，这个位的位置不同，见寄存器表。计数值通过<SPAN 
+lang=EN-US>$4003</SPAN>、<SPAN lang=EN-US>$4007</SPAN>、<SPAN 
+lang=EN-US>$400B</SPAN>和<SPAN lang=EN-US>$400F</SPAN>的<SPAN 
+lang=EN-US>3</SPAN>－<SPAN lang=EN-US>7</SPAN>位来写入。输入的<SPAN 
+lang=EN-US>5</SPAN>位值通过下面<SPAN lang=EN-US>2</SPAN>个表转换到计数器的<SPAN 
+lang=EN-US>7</SPAN>位值：</P>
+<TABLE style="mso-cellspacing: 0cm; mso-padding-alt: 0cm 0cm 0cm 0cm" 
+class=MsoNormalTable border=1 cellSpacing=0 cellPadding=0>
+  <TBODY>
+  <TR style="mso-yfti-irow: 0; mso-yfti-firstrow: yes">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm" 
+    colSpan=3>
+      <P class=MsoNormal><FONT size=2>第<SPAN lang=EN-US>3</SPAN>位＝<SPAN 
+      lang=EN-US>0 </SPAN></FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 1">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm" 
+    rowSpan=2>
+      <P class=MsoNormal><FONT size=2><SPAN lang=EN-US>4</SPAN>－<SPAN 
+      lang=EN-US>6</SPAN>位的值 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm" 
+    colSpan=2>
+      <P class=MsoNormal><FONT size=2>帧 </FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 2">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>第<SPAN lang=EN-US>7</SPAN>位＝<SPAN 
+      lang=EN-US>0 </SPAN></FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>第<SPAN lang=EN-US>7</SPAN>位＝<SPAN 
+      lang=EN-US>1 </SPAN></FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 3">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>0 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>05 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>06 
+  </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 4">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>1 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2><ST1:CHMETCNV 
+      style="BACKGROUND-IMAGE: url(res://ietag.dll/#34/#1001); BACKGROUND-REPEAT: repeat-x; BACKGROUND-POSITION: left bottom" 
+      tabIndex=0 w:st="on" TCSC="0" NumberType="1" Negative="False" 
+      HasSpace="False" SourceValue="0" UnitName="a"><SPAN 
+      lang=EN-US>0A</SPAN></ST1:CHMETCNV><SPAN lang=EN-US> </SPAN></FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2><ST1:CHMETCNV 
+      style="BACKGROUND-IMAGE: url(res://ietag.dll/#34/#1001); BACKGROUND-REPEAT: repeat-x; BACKGROUND-POSITION: left bottom" 
+      tabIndex=0 w:st="on" TCSC="0" NumberType="1" Negative="False" 
+      HasSpace="False" SourceValue="0" UnitName="C"><SPAN 
+      lang=EN-US>0C</SPAN></ST1:CHMETCNV><SPAN lang=EN-US> 
+  </SPAN></FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 5">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>2 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>14 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>18 
+  </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 6">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>3 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>28 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>30 
+  </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 7">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>4 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>50 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>60 
+  </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 8">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>5 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>1E </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>24 
+  </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 9">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>6 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>07 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>08 
+  </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 10; mso-yfti-lastrow: yes">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>7 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>0E </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>10 
+  </FONT></SPAN></P></TD></TR></TBODY></TABLE>
+<P class=MsoNormal><SPAN style="DISPLAY: none; mso-hide: all" 
+lang=EN-US><O:P>&nbsp;</O:P></SPAN></P>
+<TABLE style="mso-cellspacing: 0cm; mso-padding-alt: 0cm 0cm 0cm 0cm" 
+class=MsoNormalTable border=1 cellSpacing=0 cellPadding=0>
+  <TBODY>
+  <TR style="mso-yfti-irow: 0; mso-yfti-firstrow: yes">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm" 
+    colSpan=2>
+      <P class=MsoNormal><FONT size=2>第<SPAN lang=EN-US>3</SPAN>位＝<SPAN 
+      lang=EN-US>1 </SPAN></FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 1">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2><SPAN lang=EN-US>4</SPAN>－<SPAN 
+      lang=EN-US>7</SPAN>位 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>帧 </FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 2">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>0 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2><ST1:CHMETCNV 
+      style="BACKGROUND-IMAGE: url(res://ietag.dll/#34/#1001); BACKGROUND-REPEAT: repeat-x; BACKGROUND-POSITION: left bottom" 
+      tabIndex=0 w:st="on" TCSC="0" NumberType="1" Negative="False" 
+      HasSpace="False" SourceValue="7" UnitName="F"><SPAN 
+      lang=EN-US>7F</SPAN></ST1:CHMETCNV><SPAN lang=EN-US> 
+  </SPAN></FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 3">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>1 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>01 
+  </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 4">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>2 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>02 
+  </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 5">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>3 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>03 
+  </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 6">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>4 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>04 
+  </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 7">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>5 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>05 
+  </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 8">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>6 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>06 
+  </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 9">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>7 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>07 
+  </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 10">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>8 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>08 
+  </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 11">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>9 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>09 
+  </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 12">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>A </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2><ST1:CHMETCNV 
+      style="BACKGROUND-IMAGE: url(res://ietag.dll/#34/#1001); BACKGROUND-REPEAT: repeat-x; BACKGROUND-POSITION: left bottom" 
+      tabIndex=0 w:st="on" TCSC="0" NumberType="1" Negative="False" 
+      HasSpace="False" SourceValue="0" UnitName="a"><SPAN 
+      lang=EN-US>0A</SPAN></ST1:CHMETCNV><SPAN lang=EN-US> 
+  </SPAN></FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 13">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>B </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>0B 
+  </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 14">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>C </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2><ST1:CHMETCNV 
+      style="BACKGROUND-IMAGE: url(res://ietag.dll/#34/#1001); BACKGROUND-REPEAT: repeat-x; BACKGROUND-POSITION: left bottom" 
+      tabIndex=0 w:st="on" TCSC="0" NumberType="1" Negative="False" 
+      HasSpace="False" SourceValue="0" UnitName="C"><SPAN 
+      lang=EN-US>0C</SPAN></ST1:CHMETCNV><SPAN lang=EN-US> 
+  </SPAN></FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 15">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>D </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2><ST1:CHMETCNV 
+      style="BACKGROUND-IMAGE: url(res://ietag.dll/#34/#1001); BACKGROUND-REPEAT: repeat-x; BACKGROUND-POSITION: left bottom" 
+      tabIndex=0 w:st="on" TCSC="0" NumberType="1" Negative="False" 
+      HasSpace="False" SourceValue="0" UnitName="C"><SPAN 
+      lang=EN-US>0C</SPAN></ST1:CHMETCNV><SPAN lang=EN-US> 
+  </SPAN></FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 16">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>E </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>0E 
+  </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 17; mso-yfti-lastrow: yes">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>F </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><ST1:CHMETCNV 
+      style="BACKGROUND-IMAGE: url(res://ietag.dll/#34/#1001); BACKGROUND-REPEAT: repeat-x; BACKGROUND-POSITION: left bottom" 
+      tabIndex=0 w:st="on" TCSC="0" NumberType="1" Negative="False" 
+      HasSpace="False" SourceValue="0" UnitName="F"><SPAN lang=EN-US><FONT 
+      size=2>0F</FONT></SPAN></ST1:CHMETCNV><SPAN lang=EN-US> 
+  </SPAN></P></TD></TR></TBODY></TABLE>
+<P>音长计数器的状态可以通过<SPAN lang=EN-US>$4015</SPAN>来读取，<SPAN 
+lang=EN-US>0</SPAN>表示计数器处于<SPAN lang=EN-US>0</SPAN>状态（停止在<SPAN 
+lang=EN-US>0</SPAN>），<SPAN lang=EN-US>1</SPAN>表示处于非<SPAN 
+lang=EN-US>0</SPAN>状态。通过写<SPAN lang=EN-US>0</SPAN>到<SPAN 
+lang=EN-US>$4015</SPAN>可以令音长计数器永远处于<SPAN lang=EN-US>0</SPAN>状态，使得声道被禁止；写<SPAN 
+lang=EN-US>1</SPAN>可以取消禁止状态，但它不会改变计数器里面的值。在系统复位时这个寄存器全部<SPAN 
+lang=EN-US>5</SPAN>个使用的位都被设置为<SPAN lang=EN-US>0</SPAN>。</P>
+<P><SPAN lang=EN-US>4</SPAN>位<SPAN lang=EN-US>DAC</SPAN>：<SPAN 
+lang=EN-US><BR></SPAN>这是一个标准的<SPAN lang=EN-US>4</SPAN>位<SPAN 
+lang=EN-US>DAC</SPAN>（数模转换）单元，有<SPAN lang=EN-US>16</SPAN>级输出电压，<SPAN 
+lang=EN-US>4</SPAN>个声道共用。在<ST1:CHMETCNV 
+style="BACKGROUND-IMAGE: url(res://ietag.dll/#34/#1001); BACKGROUND-REPEAT: repeat-x; BACKGROUND-POSITION: left bottom" 
+tabIndex=0 w:st="on" TCSC="0" NumberType="1" Negative="False" HasSpace="False" 
+SourceValue="2" UnitName="a"><SPAN lang=EN-US>2A</SPAN></ST1:CHMETCNV><SPAN 
+lang=EN-US>03</SPAN>里，方波<SPAN lang=EN-US>1</SPAN>和方波<SPAN 
+lang=EN-US>2</SPAN>混合通过引脚<SPAN lang=EN-US>1</SPAN>输入，三角波和噪音通过引脚<SPAN 
+lang=EN-US>2</SPAN>输入。这些模拟量输出需要一个负的电流源，以使得电压的级输出变成平滑的声音信号。因为<SPAN 
+lang=EN-US>NES</SPAN>只外置了一个<SPAN 
+lang=EN-US>100</SPAN>欧姆的下拉电阻，使得输出波形的幅值很小，但是也获得最小的不平滑度。这个不平滑度小到难以发现，就算用示波器也不明显。</P>
+<P>音量衰减单元（<SPAN lang=EN-US>$4000</SPAN>、<SPAN lang=EN-US>$4004</SPAN>、<SPAN 
+lang=EN-US>$400C</SPAN>）：<SPAN 
+lang=EN-US><BR></SPAN>音量衰减器只存在于方波和噪声通道。当衰减禁止位（第<SPAN 
+lang=EN-US>4</SPAN>位）被设置为<SPAN lang=EN-US>1</SPAN>，当前的音量值（<SPAN 
+lang=EN-US>0</SPAN>－<SPAN lang=EN-US>3</SPAN>位）被直接送到<SPAN 
+lang=EN-US>DAC</SPAN>。在下列情况中，音量值会被忽略，而直接送<SPAN lang=EN-US>0</SPAN>到<SPAN 
+lang=EN-US>DAC</SPAN>。<SPAN lang=EN-US><BR>·</SPAN>声道硬件要停止声音，例如音长计数器或扫频单元；<SPAN 
+lang=EN-US><BR>·</SPAN>处于占空周期或随机数发生器输出频率信号的负值部分，也即在声音使能的时候送到<SPAN 
+lang=EN-US>DAC</SPAN>的或者是音量值或者是<SPAN lang=EN-US>0</SPAN>（无声）。<SPAN 
+lang=EN-US><BR></SPAN>当衰减禁止位被清零，<SPAN lang=EN-US>0</SPAN>－<SPAN 
+lang=EN-US>3</SPAN>位当前的值就是衰减率。衰减率是指音量从最大值向下线性衰减的速度，衰减速度是<SPAN 
+lang=EN-US>240/(N+1)</SPAN>，<SPAN lang=EN-US>N</SPAN>的值从<SPAN 
+lang=EN-US>$0</SPAN>－<SPAN lang=EN-US>$F</SPAN>。当衰减到<SPAN 
+lang=EN-US>0</SPAN>之后，根据寄存器第<SPAN lang=EN-US>5</SPAN>位的状态将发生两种情况：<SPAN 
+lang=EN-US> </SPAN></P>
+<TABLE style="mso-cellspacing: 0cm; mso-padding-alt: 0cm 0cm 0cm 0cm" 
+class=MsoNormalTable border=1 cellSpacing=0 cellPadding=0>
+  <TBODY>
+  <TR style="mso-yfti-irow: 0; mso-yfti-firstrow: yes">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>第<SPAN lang=EN-US>5</SPAN>位 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>行为 </FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 1">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>0 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>音量停在<SPAN lang=EN-US>0</SPAN>，声道静音 
+      </FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 2; mso-yfti-lastrow: yes">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>1 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>音量循环不断从最大值减到</FONT><SPAN lang=EN-US><FONT 
+      size=2>0</FONT> </SPAN></P></TD></TR></TBODY></TABLE>
+<P>只有通过对寄存器进行写操作才能重新设置硬件的衰减状态，否则就一直按当前状态进行衰减甚至循环，即使寄存器的第<SPAN 
+lang=EN-US>4</SPAN>位被设置成禁止衰减也没有用。<SPAN lang=EN-US><BR><BR></SPAN>扫频单元：<SPAN 
+lang=EN-US><BR></SPAN>这个东西只存在在方波通道中。当寄存器的第<SPAN lang=EN-US>7</SPAN>位被设为<SPAN 
+lang=EN-US>1</SPAN>，扫频被激活，波长会实时地增加或减少（对应频率降低或提高）。波长的值通过<SPAN 
+lang=EN-US>$4002/3</SPAN>和<SPAN 
+lang=EN-US>$4006/7</SPAN>被不断的读入和更新，写到那里的值会立刻反应到声音里。第<SPAN 
+lang=EN-US>4</SPAN>－<SPAN lang=EN-US>6</SPAN>位代表了频率扫略速度，或者说<SPAN 
+lang=EN-US>$4002/3</SPAN>和<SPAN lang=EN-US>$4006/7</SPAN>里波长值被改变的频率。刷新率是<SPAN 
+lang=EN-US>120Hz/(N+1)</SPAN>，<SPAN lang=EN-US>N</SPAN>是写入的值，从<SPAN 
+lang=EN-US>0</SPAN>－<SPAN lang=EN-US>7</SPAN>。第<SPAN 
+lang=EN-US>3</SPAN>位控制扫频的模式，<SPAN lang=EN-US>1</SPAN>表示波长减少，<SPAN 
+lang=EN-US>0</SPAN>表示波长增加。第<SPAN lang=EN-US>0</SPAN>－<SPAN 
+lang=EN-US>2</SPAN>位是右移量，用来控制波长增量的右移量，见下表：<SPAN lang=EN-US> </SPAN></P>
+<TABLE style="mso-cellspacing: 0cm; mso-padding-alt: 0cm 0cm 0cm 0cm" 
+class=MsoNormalTable border=1 cellSpacing=0 cellPadding=0>
+  <TBODY>
+  <TR style="mso-yfti-irow: 0; mso-yfti-firstrow: yes">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>第<SPAN lang=EN-US>3</SPAN>位 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>表达式，<SPAN lang=EN-US>N</SPAN>是右移量从<SPAN 
+      lang=EN-US>0</SPAN>－<SPAN lang=EN-US>7 </SPAN></FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 1">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>0 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>波长＝波长＋（波长<SPAN 
+      lang=EN-US>&gt;&gt;N</SPAN>） </FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 2; mso-yfti-lastrow: yes">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>1 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>波长＝波长－（波长<SPAN 
+      lang=EN-US>&gt;&gt;N</SPAN>）</FONT> </P></TD></TR></TBODY></TABLE>
+<P>当满足以下<SPAN lang=EN-US>3</SPAN>个条件，波长寄存器每个周期都会被更新：<SPAN 
+lang=EN-US><BR>·</SPAN>第<SPAN lang=EN-US>7</SPAN>位被设置，即扫频使能；<SPAN 
+lang=EN-US><BR>·</SPAN>右移量不等于<SPAN lang=EN-US>0</SPAN>；<SPAN 
+lang=EN-US><BR>·</SPAN>音量计数器的值非<SPAN lang=EN-US>0</SPAN>。<SPAN 
+lang=EN-US><BR></SPAN>以下两种情况会暂停扫描时钟，使声道静音，而不管扫描刷新率是多少或扫描使能位是否设置：<SPAN 
+lang=EN-US><BR>·11</SPAN>位的波长值小于<SPAN lang=EN-US>$008</SPAN>；<SPAN 
+lang=EN-US><BR>·</SPAN>扫频处于增加模式，而进位标志＝<SPAN 
+lang=EN-US>1</SPAN>。硬件在波长寄存器被更新之前总要检查进位标志的。<SPAN lang=EN-US> </SPAN></P>
+<P>占空周期发生器（<SPAN lang=EN-US>$4000</SPAN>、<SPAN lang=EN-US>$4004</SPAN>）：<SPAN 
+lang=EN-US><BR></SPAN>占空周期发生器只存在于方波通道，它使用可编程定时器的输出频率作为时钟，使用<SPAN 
+lang=EN-US>4</SPAN>位计数器来产生<SPAN 
+lang=EN-US>4</SPAN>种类型的占空周期，因此它的输出频率是可编程定时器的<SPAN 
+lang=EN-US>1/16</SPAN>，输出信号反馈到音量衰减器。占空类型见下表：<SPAN lang=EN-US> </SPAN></P>
+<TABLE style="mso-cellspacing: 0cm; mso-padding-alt: 0cm 0cm 0cm 0cm" 
+class=MsoNormalTable border=1 cellSpacing=0 cellPadding=0>
+  <TBODY>
+  <TR style="mso-yfti-irow: 0; mso-yfti-firstrow: yes">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2><SPAN lang=EN-US>6</SPAN>、<SPAN 
+      lang=EN-US>7</SPAN>位 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>一个时钟周期里的占空周期（正<SPAN 
+      lang=EN-US>/</SPAN>负<SPAN lang=EN-US>) </SPAN></FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 1">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>00 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>2/14 
+  </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 2">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>01 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>4/12 
+  </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 3">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>10 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>8/8 
+  </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 4; mso-yfti-lastrow: yes">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>11 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>12/4 
+  </FONT></SPAN></P></TD></TR></TBODY></TABLE>
+<P>波长转换器（<SPAN lang=EN-US>$400E</SPAN>）：<SPAN 
+lang=EN-US><BR></SPAN>这个东西只存在于噪声通道，用来将一个给定的<SPAN lang=EN-US>4</SPAN>位值转换成<SPAN 
+lang=EN-US>11</SPAN>位的波长，然后送到可编程定时器。下表是转换关系：<SPAN lang=EN-US> </SPAN></P>
+<TABLE style="mso-cellspacing: 0cm; mso-padding-alt: 0cm 0cm 0cm 0cm" 
+class=MsoNormalTable border=1 cellSpacing=0 cellPadding=0>
+  <TBODY>
+  <TR style="mso-yfti-irow: 0; mso-yfti-firstrow: yes">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2><SPAN lang=EN-US>0</SPAN>－<SPAN 
+      lang=EN-US>3</SPAN>位 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>音度 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>音阶 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2><SPAN lang=EN-US>CPU</SPAN>时钟周期（<SPAN 
+      lang=EN-US>11</SPAN>位波长＋<SPAN lang=EN-US>1</SPAN>） </FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 1">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>0 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>15 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>A </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>002 
+  </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 2">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>1 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>14 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>A </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>004 
+  </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 3">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>2 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>13 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>A </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>008 
+  </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 4">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>3 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>12 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>A </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>010 
+  </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 5">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>4 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>11 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>A </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>020 
+  </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 6">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>5 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>11 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>D </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>030 
+  </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 7">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>6 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>10 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>A </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>040 
+  </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 8">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>7 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>10 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>F </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>050 
+  </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 9">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>8 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>10 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>C </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>065 
+  </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 10">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>9 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>9 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>A </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2><ST1:CHMETCNV 
+      style="BACKGROUND-IMAGE: url(res://ietag.dll/#34/#1001); BACKGROUND-REPEAT: repeat-x; BACKGROUND-POSITION: left bottom" 
+      tabIndex=0 w:st="on" TCSC="0" NumberType="1" Negative="False" 
+      HasSpace="False" SourceValue="7" UnitName="F"><SPAN 
+      lang=EN-US>07F</SPAN></ST1:CHMETCNV><SPAN lang=EN-US> 
+  </SPAN></FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 11">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>A </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>9 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>D </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>0BE 
+  </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 12">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>B </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>8 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>A </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>0FE 
+  </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 13">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>C </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>8 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>D </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>17D 
+  </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 14">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>D </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>7 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>A </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>1FC 
+  </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 15">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>E </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>6 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>A </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2><ST1:CHMETCNV 
+      style="BACKGROUND-IMAGE: url(res://ietag.dll/#34/#1001); BACKGROUND-REPEAT: repeat-x; BACKGROUND-POSITION: left bottom" 
+      tabIndex=0 w:st="on" TCSC="0" NumberType="1" Negative="False" 
+      HasSpace="False" SourceValue="3" UnitName="F"><SPAN 
+      lang=EN-US>3F</SPAN></ST1:CHMETCNV><SPAN lang=EN-US>9 
+  </SPAN></FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 16; mso-yfti-lastrow: yes">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>F </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>5 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>A </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2><ST1:CHMETCNV 
+      style="BACKGROUND-IMAGE: url(res://ietag.dll/#34/#1001); BACKGROUND-REPEAT: repeat-x; BACKGROUND-POSITION: left bottom" 
+      tabIndex=0 w:st="on" TCSC="0" NumberType="1" Negative="False" 
+      HasSpace="False" SourceValue="7" UnitName="F"><SPAN 
+      lang=EN-US>7F</SPAN></ST1:CHMETCNV><SPAN lang=EN-US>2 
+  </SPAN></FONT></P></TD></TR></TBODY></TABLE>
+<P>随机数发生器（<SPAN lang=EN-US>$400E</SPAN>）：<SPAN 
+lang=EN-US><BR></SPAN>噪声通道有一个<SPAN lang=EN-US>1</SPAN>位的伪随机数发生器，它是由一个<SPAN 
+lang=EN-US>15</SPAN>位的移位寄存器和一个异或门组成，它能够提供<SPAN lang=EN-US>‘</SPAN>长<SPAN 
+lang=EN-US>’</SPAN>和<SPAN lang=EN-US>‘</SPAN>短<SPAN 
+lang=EN-US>’</SPAN>两种类型的伪随机数序列：当寄存器第<SPAN lang=EN-US>7</SPAN>位是<SPAN 
+lang=EN-US>0</SPAN>时，产生<SPAN lang=EN-US>32767</SPAN>位的长序列（<SPAN 
+lang=EN-US>32K</SPAN>模式）；是<SPAN lang=EN-US>1</SPAN>时，产生<SPAN 
+lang=EN-US>93</SPAN>位的短序列（<SPAN lang=EN-US>93</SPAN>位模式）。<SPAN 
+lang=EN-US>93</SPAN>位模式通常在声道中产生较高频率的声音回放。下表说明了在移位寄存器的那些位里进行异或：<SPAN lang=EN-US> 
+</SPAN></P>
+<TABLE style="mso-cellspacing: 0cm; mso-padding-alt: 0cm 0cm 0cm 0cm" 
+class=MsoNormalTable border=1 cellSpacing=0 cellPadding=0>
+  <TBODY>
+  <TR style="mso-yfti-irow: 0; mso-yfti-firstrow: yes">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>模式 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT 
+      size=2>EDCBA9876543210<BR>&lt;-------------&lt; </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 1">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>32K </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>** 
+  </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 2; mso-yfti-lastrow: yes">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2><SPAN lang=EN-US>93</SPAN>位 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>*&nbsp;&nbsp;&nbsp;&nbsp; 
+      * </FONT></SPAN></P></TD></TR></TBODY></TABLE>
+<P>当前的异或结果在下一个移位周期之前送到移位寄存器的<SPAN lang=EN-US>0</SPAN>位，<SPAN 
+lang=EN-US>1</SPAN>个位的随机数从<SPAN 
+lang=EN-US>E</SPAN>引脚输出，反相然后送到音量衰减器。移位寄存器每接收到两个可编程定时器的时钟脉冲就移位一次，所以它的频率是可编程定时器的一半，也就是低一个音度。系统复位的时候移位寄存器被装入值<SPAN 
+lang=EN-US>1</SPAN>。<BR></P></FONT></BODY></HTML>

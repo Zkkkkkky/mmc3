@@ -1,0 +1,13 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML><HEAD><TITLE>核心程序</TITLE>
+<META name=GENERATOR content="MSHTML 8.00.7601.19104">
+<META content="text/html; charset=gb2312" http-equiv=Content-Type>
+<STYLE>
+html,body { 
+	/* Default Font */
+	font-family: Microsoft YaHei, Simsun, sans-serif;
+	font-size: 12pt;
+}
+</STYLE>
+</HEAD>
+<BODY><PRE><FONT size=2 face=宋体>AD XX YY 03 46 05：根据情况设定光标位置，如果光标不在此画面则执行03 45 05，黑屏换画面。如果在则执行指针所指的内容。<BR>36：返回地图界面<BR>9E：使指定的人物消失<BR>9F：使指定的人物消失<BR>A0：待机。：38946<BR>A2：移动的起始部分。<BR>56 57：移动到目的地。<BR>A3 2F：移动落定。</FONT></PRE><PRE><FONT size=2 face=宋体>&nbsp;</FONT></PRE><PRE><FONT size=2 face=宋体>54 ：攻击光标从攻击方滑动到被攻击方。<BR>1A 0C：光标落定。<BR>1C 0F：根据FE的值选择后面的程序。<BR>&nbsp;&nbsp; 选择1、2、3、4（1：不移动也不攻击、2：只移动不攻击、3：只攻击不移动、4：既攻击又移动）</FONT></PRE><PRE><FONT size=2 face=宋体>1C 05 XX XX XX：结束范围。在第N-1个人物处结束，后加一个指针，指向功能处，表示如果没有达到指定范围则继续执行。<BR>1C 11+XX XX：判断武器是否为地图武器，是则转到指针处执行。<BR>1C 12+XX XX：判断当前人物能不能攻击。如果不能则转到指针处执行。<BR>1D 07 (00 01 02 03 04)<BR>加血。<BR>00：200<BR>01：500<BR>02：随机数50-200<BR>03：<BR>04：</FONT></PRE><PRE><FONT size=2 face=宋体>1D 0C 03：扣血<BR>1D 0B ：用干扰动画扣血。</FONT></PRE><PRE><FONT size=2 face=宋体>2B XX：播放XX音乐</FONT></PRE><PRE><FONT size=2 face=宋体>18：隐藏选项卡通。<BR>21：菜单界面从下面退出。<BR>1E：显示选项卡通，并读取精神。<BR>05：显示精神列表。<BR>16 00 0D ：选择等等。<BR>34 83 ：执行退出指令<BR>1C 08：执行确定指令</FONT></PRE><PRE><FONT size=2 face=宋体>B8：第一关开始前的调用<BR>42：每关开始前的SAM区清零，读取每关的初始配置</FONT></PRE><PRE><BR><FONT size=2 face=宋体>2F：光标消失<BR>4D 4B：根据射程让地图变成黑白，可以攻击的敌人变成有色。<BR>48：+XXXX + YYYY选择攻击的敌人。此时退出则执行XXXX指针，如果不在画面则执行YYYY指针，选择敌人则执行后面的内容。</FONT></PRE><PRE><BR><FONT size=2 face=宋体>81：显示文字，等待按键。<BR>88 82：播放攻击方武器动画。<BR>8B 82：播放被攻击方武器动画。<BR>84：消除所有的战斗对话文字。<BR>83：消除反击战斗文字。<BR>89 ：判断攻击方是否攻击成功和扣除多少血量等<BR>8A：判断能否反击。<BR>86：判定能否反击双击等。<BR>8C：判断被攻击方是否攻击成功和扣除多少血量等<BR>6D：调属性框：00：机动 01-03：三围 04：HP 05：经验 06：类型 07：精神<BR>&nbsp;&nbsp;&nbsp; </FONT></PRE></BODY></HTML>

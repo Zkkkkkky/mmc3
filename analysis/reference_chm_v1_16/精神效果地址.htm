@@ -1,0 +1,13 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML><HEAD><TITLE>精神效果地址</TITLE>
+<META name=GENERATOR content="MSHTML 8.00.7601.19104">
+<META content="text/html; charset=gb2312" http-equiv=Content-Type>
+<STYLE>
+html,body { 
+	/* Default Font */
+	font-family: Microsoft YaHei, Simsun, sans-serif;
+	font-size: 12pt;
+}
+</STYLE>
+</HEAD>
+<BODY><PRE><FONT size=2 face=宋体>效果的地址：就是前面精神数据中9D会调用的地方，<BR>调用代码9D后，会写相应的内存状态，还有扣除相应的SP</FONT></PRE><PRE><FONT size=2 face=宋体>效果的指针：<BR>指针群146D6-14FB(19个)：<BR>01 87 毅力<BR>5A 87 加速<BR>74 87 瞄准<BR>9B 87 防卫<BR>81 87 强攻<BR>04 87 友情<BR>A8 87 必杀<BR>67 87 疾风<BR>B5 87 回避<BR>01 87 潜力<BR>8E 87 热血<BR>04 87 情谊<BR>C2 87 传真<BR>01 87 援助<BR>01 87 怒<BR>01 87 祈祷<BR>EC 86 干扰<BR>01 87 狂怒<BR>01 87 爱心<BR>上面的指针指向的是6502指令处理</FONT></PRE><PRE><FONT size=2 face=宋体>精神效果：<BR>防卫：<BR>0147AB:A6 F5&nbsp;&nbsp;&nbsp;&nbsp; LDX $00F5 = #$01<BR>&nbsp; 0147AD:BD 17 78&nbsp; LDA $7817,X @ $7831 = #$32<BR>&nbsp; 0147B0:09 10&nbsp;&nbsp;&nbsp;&nbsp; ORA #$10<BR>&nbsp; 0147B2:9D 17 78&nbsp; STA $7817,X @ $7831 = #$32<BR>&nbsp; 0147B5:4C F1 86&nbsp; JMP $86F1</FONT></PRE><PRE><FONT size=2 face=宋体>必杀：<BR>&nbsp;0147B8:A6 F5&nbsp;&nbsp;&nbsp;&nbsp; LDX $00F5 = #$01<BR>&nbsp; 0147BA:BD 17 78&nbsp; LDA $7817,X @ $7831 = #$32<BR>&nbsp; 0147BD:09 02&nbsp;&nbsp;&nbsp;&nbsp; ORA #$02<BR>&nbsp; 0147BF:9D 17 78&nbsp; STA $7817,X @ $7831 = #$32<BR>&nbsp; 0147C2:4C F1 86&nbsp; JMP $86F1</FONT></PRE></BODY></HTML>

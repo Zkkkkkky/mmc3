@@ -95,6 +95,54 @@ class ChapterEventSpec:
 
 
 @dataclass(frozen=True)
+class MapTriggerSpec:
+    """Per-chapter map-coordinate triggers and the managed replacement pool."""
+
+    prg_bank: int
+    window_base: int
+    pointer_table: int
+    scenario_count: int
+    original_data_start: int
+    original_data_end: int
+    managed_data_start: int
+    managed_data_end: int
+
+    def __post_init__(self) -> None:
+        bank_end = self.window_base + 0x2000
+        ranges = (
+            self.pointer_table,
+            self.original_data_start,
+            self.original_data_end - 1,
+            self.managed_data_start,
+            self.managed_data_end - 1,
+        )
+        if any(not self.window_base <= value < bank_end for value in ranges):
+            raise ValueError("地图触发器地址超出 8 KiB PRG Bank。")
+        if self.scenario_count <= 0:
+            raise ValueError("地图触发器关卡数必须大于零。")
+        if not self.original_data_start < self.original_data_end:
+            raise ValueError("地图触发器原始数据范围无效。")
+        if not self.managed_data_start < self.managed_data_end:
+            raise ValueError("地图触发器托管数据范围无效。")
+
+
+@dataclass(frozen=True)
+class PersuasionRuleSpec:
+    """Verified persuasion match records and their script pointer table."""
+
+    table_offset: int
+    script_pointer_table_offset: int
+    slot_count: int
+    editable_count: int
+
+    def __post_init__(self) -> None:
+        if self.table_offset < 16 or self.script_pointer_table_offset < 16:
+            raise ValueError("劝降表文件偏移无效。")
+        if not 0 < self.editable_count <= self.slot_count:
+            raise ValueError("劝降表可编辑槽位数无效。")
+
+
+@dataclass(frozen=True)
 class PrgBankRegion:
     first_bank: int
     end_bank: int
@@ -163,6 +211,8 @@ class RomProfile:
     character_name_data_prg_bank: int | None = None
     character_name_data_window_base: int = 0x8000
     character_name_data_end_pointer: int | None = None
+    map_triggers: MapTriggerSpec | None = None
+    persuasion_rules: PersuasionRuleSpec | None = None
 
     def map_storage(self, map_id: int) -> MapStorageRange:
         for storage in self.map_storage_ranges:
@@ -291,7 +341,7 @@ MMC5_BATTLE_MUSIC = BattleMusicSpec(
                     "古莲主题曲",
                     "吉尔变身曲",
                     "安东主题曲",
-                    "用途未确认 2（旧资料编号）",
+                    "第8关阶段三剧情曲",
                     "地球·我方战斗曲",
                     "地球·敌方战斗曲",
                     "存档曲",
@@ -303,7 +353,7 @@ MMC5_BATTLE_MUSIC = BattleMusicSpec(
                     "吉尔主题曲",
                     "瓦尔主题曲",
                     "宇宙·敌方战斗曲",
-                    "用途未确认 1（旧资料编号）",
+                    "原版保留曲19（当前剧情/战斗表未引用）",
                     "通关曲",
                 ),
             )
@@ -381,6 +431,16 @@ MMC5_PROFILE = RomProfile(
     character_name_data_prg_bank=0x24,
     character_name_data_window_base=0x8000,
     character_name_data_end_pointer=0x9766,
+    map_triggers=MapTriggerSpec(
+        prg_bank=0x0A,
+        window_base=0x8000,
+        pointer_table=0x987E,
+        scenario_count=0x20,
+        original_data_start=0x9946,
+        original_data_end=0x9950,
+        managed_data_start=0x9ED4,
+        managed_data_end=0xA000,
+    ),
 )
 
 
@@ -453,6 +513,13 @@ DC_EXPANDED_MMC3_PROFILE = RomProfile(
     character_name_data_prg_bank=MMC5_PROFILE.character_name_data_prg_bank,
     character_name_data_window_base=MMC5_PROFILE.character_name_data_window_base,
     character_name_data_end_pointer=MMC5_PROFILE.character_name_data_end_pointer,
+    map_triggers=MMC5_PROFILE.map_triggers,
+    persuasion_rules=PersuasionRuleSpec(
+        table_offset=0x3B73D,
+        script_pointer_table_offset=0x35DD0,
+        slot_count=0x20,
+        editable_count=4,
+    ),
 )
 
 

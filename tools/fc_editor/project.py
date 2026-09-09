@@ -7,7 +7,9 @@ from typing import Any
 
 from .changes import ChangeSet
 from .codecs.battle_music import BattleMusicCodec
+from .codecs.character_name import CharacterNameCodec
 from .codecs.map import MapCodec
+from .codecs.map_trigger import MapTrigger, MapTriggerCodec
 from .codecs.scenario_layout import ScenarioLayoutCodec
 from .codecs.story_text import StoryTextCodec
 from .codecs.unit import UnitCodec
@@ -32,7 +34,7 @@ class ProjectDocument:
     base_sha256: str
     base_mapper: int
     base_size: int
-    tool_version: str = "1.1.0"
+    tool_version: str = "2.1.0"
     operations: list[dict[str, Any]] = field(default_factory=list)
 
     @classmethod
@@ -223,6 +225,25 @@ class ProjectDocument:
             }
         )
 
+    def add_character_name_reference(
+        self,
+        character_id: int,
+        source_name_id: int,
+        expected_old_pointer: int,
+    ) -> None:
+        if not 1 <= character_id <= 0xFF or not 1 <= source_name_id <= 0xFF:
+            raise ValueError("人物 ID 或名称来源 ID 必须在 01—FF 之间。")
+        if not 0x8000 <= expected_old_pointer <= 0xBFFF:
+            raise ValueError("原人物名称指针必须在 $8000—$BFFF 之间。")
+        self.operations.append(
+            {
+                "kind": "character.set_name_reference",
+                "characterId": character_id,
+                "sourceNameId": source_name_id,
+                "expectedOldPointer": expected_old_pointer,
+            }
+        )
+
     def add_map_replace(
         self,
         map_id: int,
@@ -305,6 +326,24 @@ class ProjectDocument:
             }
         )
 
+    def add_map_trigger_replace(
+        self,
+        map_id: int,
+        entries: tuple[MapTrigger, ...],
+        expected_old_digest: str,
+    ) -> None:
+        if not 0 <= map_id < 0x20:
+            raise ValueError("地图事件关卡 ID 必须在 00—1F 之间。")
+        MapTriggerCodec.validate_entries(entries)
+        self.operations.append(
+            {
+                "kind": "map_triggers.replace",
+                "mapId": map_id,
+                "entries": [list(entry.to_bytes()) for entry in entries],
+                "expectedOldDigest": expected_old_digest.upper(),
+            }
+        )
+
     def _validate_base(self, rom: RomImage) -> None:
         if (
             rom.sha256 != self.base_sha256
@@ -328,8 +367,17 @@ class ProjectDocument:
             if rom.profile.weapon_name_pointer_table_offset is not None
             else None
         )
+
+        character_name_codec = (
+            CharacterNameCodec(rom)
+            if rom.profile.character_name_pointer_table_offset is not None
+            else None
+        )
         map_codec = MapCodec(rom)
         scenario_codec = ScenarioLayoutCodec(rom)
+        map_trigger_codec = (
+            MapTriggerCodec(rom) if rom.profile.map_triggers is not None else None
+        )
         story_text_codec = StoryTextCodec(rom)
         battle_music_codec = (
             BattleMusicCodec(rom) if rom.profile.battle_music is not None else None
@@ -476,6 +524,35 @@ class ProjectDocument:
                         ),
                         expected=before,
                     )
+                elif kind == "character.set_name_reference":
+                    if character_name_codec is None:
+                        raise ProjectFormatError(
+                            "当前基准 ROM 没有已验证的人物名称表。"
+                        )
+                    character_id = int(operation["characterId"])
+                    source_name_id = int(operation["sourceNameId"])
+                    expected_pointer = int(operation["expectedOldPointer"])
+                    current_data = changes.materialize()
+                    current_pointer = character_name_codec.pointer(
+                        character_id, current_data
+                    )
+                    if current_pointer != expected_pointer:
+                        raise ProjectFormatError(
+                            f"第 {index + 1} 条操作原人物名称指针不匹配：需要 "
+                            f"${expected_pointer:04X}，实际 ${current_pointer:04X}。"
+                        )
+                    offset, before, after = character_name_codec.reference_patch(
+                        current_data, character_id, source_name_id
+                    )
+                    changes.apply_patch(
+                        offset,
+                        after,
+                        source=f"character-name:{character_id:02X}",
+                        description=(
+                            f"人物 {character_id:02X} · 名称引用 {source_name_id:02X}"
+                        ),
+                        expected=before,
+                    )
                 elif kind == "map.replace":
                     map_id = int(operation["mapId"])
                     width = int(operation["width"])
@@ -551,6 +628,10 @@ class ProjectDocument:
                         current.raw,
                         current.capacity,
                     )
+                    map_record = map_codec.decode(map_id, current_data)
+                    scenario_codec.validate_layout(
+                        changed_layout, map_record.width, map_record.height
+                    )
                     offset, before, after = scenario_codec.replacement_patch(
                         current_data, changed_layout
                     )
@@ -561,6 +642,47 @@ class ProjectDocument:
                         description=f"场景 {map_id:02X} · 部署数据",
                         expected=before,
                     )
+                elif kind == "map_triggers.replace":
+                    if map_trigger_codec is None:
+                        raise ProjectFormatError(
+                            "当前基准 ROM 没有已验证的地图事件表。"
+                        )
+                    map_id = int(operation["mapId"])
+                    rows_value = operation["entries"]
+                    if not isinstance(rows_value, list):
+                        raise ProjectFormatError("地图事件 entries 必须是数组。")
+                    rows: list[MapTrigger] = []
+                    for row in rows_value:
+                        if not isinstance(row, list) or len(row) != 4:
+                            raise ProjectFormatError(
+                                "每条地图事件必须包含 X、Y、限定人物、事件编号四个字节。"
+                            )
+                        values = [int(item) for item in row]
+                        if any(not 0 <= item <= 0xFF for item in values):
+                            raise ProjectFormatError("地图事件含越界字节。")
+                        rows.append(MapTrigger(*values))
+                    entries = tuple(rows)
+                    current_data = changes.materialize()
+                    current = map_trigger_codec.decode(map_id, current_data)
+                    expected_digest = str(operation["expectedOldDigest"]).upper()
+                    if map_trigger_codec.semantic_digest(current) != expected_digest:
+                        raise ProjectFormatError(
+                            f"第 {index + 1} 条操作的地图事件摘要不匹配。"
+                        )
+                    map_record = map_codec.decode(map_id, current_data)
+                    map_trigger_codec.validate_entries(
+                        entries, map_record.width, map_record.height
+                    )
+                    for offset, before, after in map_trigger_codec.repack_patches(
+                        current_data, map_id, entries
+                    ):
+                        changes.apply_patch(
+                            offset,
+                            after,
+                            source=f"map-triggers:{map_id:02X}",
+                            description=f"地图 {map_id:02X} · 事件与商店",
+                            expected=before,
+                        )
                 elif kind == "story.replace_text_record":
                     selector = int(operation["selector"])
                     text_index = int(operation["index"])

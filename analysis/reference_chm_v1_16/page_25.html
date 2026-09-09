@@ -1,0 +1,88 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML><HEAD><TITLE>SRAM（电池内存）</TITLE>
+<META name=GENERATOR content="MSHTML 8.00.7601.19104">
+<META content="text/html; charset=gb2312" http-equiv=Content-Type>
+<STYLE>
+html,body { 
+	/* Default Font */
+	font-family: Microsoft YaHei, Simsun, sans-serif;
+	font-size: 12pt;
+}
+</STYLE>
+</HEAD>
+<BODY>
+<P><FONT 
+size=2>6000-67FF为PPU2000-27FF（第一第二背景页）的映射<BR>6800-6FFF:移动范围，攻击范围的处理<BR>地图数据：32*32=1024<BR>7000-73FF:1024字节</FONT></P>
+<P><FONT size=2>7410：随机数计算<BR>7411：关数</FONT></P>
+<P><FONT size=2>7412-7415：每过一关置一位。</FONT></P>
+<P><FONT size=2>7416：最后一位是全关开关<BR>7419：<BR>全关开关</FONT></P>
+<P><FONT 
+size=2>道具数量：<BR>741A-7431（从超合金Z到非尔卡共24种）<BR>742D：根基<BR>742E：地雷</FONT></P>
+<P><FONT 
+size=2>金钱：<BR>743A-743B<BR>在队人员（当前人员编制，可不出战）：<BR>743C-744B<BR>在队机体（当前机体编制，可不出战）：<BR>744C-745B<BR>等级：<BR>745C-746B（当前编制人员等级）</FONT></P>
+<P><FONT 
+size=2>746C：用道具加的机动<BR>747C：用道具加的强度<BR>748C：用道具加的防御<BR>749C：用道具加的速度<BR>74AC：用道具加的血量低位<BR>74BC：用道具加的血量高位<BR>74CC-74DB：用道具加的类型，升级经验方案调用03，战场死亡或80<BR>74DC-74EB：精神附加值<BR>强度：74D4-74DB 
+防御：74DC-74E3 速度：74E4-74EB</FONT></P>
+<P><FONT size=2></FONT>&nbsp;</P>
+<P><FONT 
+size=2>经验地址低位：<BR>74EC-74FB<BR>经验地址高位：<BR>74FC-750B<BR>------------------------------关卡存档截止点<BR>回合：<BR>750C</FONT></P>
+<P><FONT size=2>本回合开关：<BR>750D（40为干扰状态）</FONT></P>
+<P><FONT size=2>本关开关：<BR>750E</FONT></P>
+<P><FONT 
+size=2>750F-7518：地形命中率<BR>751F-7520：记录关前事件指针<BR>7521-7522：记录增援事件指针<BR>7523-7524：记录过关事件指针<BR>7525-7526：劝降事件指针记录<BR>7527-7528：<BR>7529：我方地图音乐<BR>752A：敌方地图音乐</FONT></P><FONT 
+size=2>
+<P><BR>752C：记录攻击方对象<BR>752D：记录被攻击方对象<BR>752E：记录战斗状态（00：没发生什么事。10：被攻击方被击杀，20：攻击方被击杀。）</P>
+<P>752F-7536：未用</P>
+<P>人物图像：（根据配置先后）<BR>我方：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+<BR>7537-7544（11+3台）&nbsp;&nbsp;<BR>敌方：<BR>7545-7556（18台）</P>
+<P>机体图像：（根据配置先后）<BR>我方：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+<BR>7557-7564（11+3台）&nbsp;&nbsp;<BR>敌方：<BR>7565-7576（18台）</P>
+<P>等级：（根据配置先后）<BR>我方：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+<BR>7577-7584（11+3台）&nbsp;&nbsp;<BR>敌方：<BR>7585-7596（18台）</P>
+<P>横坐标：（根据配置先后）<BR>我方：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+<BR>7597-75A4（11+3台）&nbsp;&nbsp;<BR>敌方：<BR>75A5-75B6（18台）</P>
+<P>纵坐标：（根据配置先后）<BR>我方：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+<BR>75B7-75C4（11+3台）&nbsp;&nbsp;<BR>敌方：<BR>75C5-75D6（18台）</P>
+<P>小图标：（根据配置先后）<BR>我方：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+<BR>75D7-75E4（11+3台）&nbsp;&nbsp;<BR>敌方：<BR>75E5-75F6（18台）</P>
+<P>武器1：（根据配置先后）<BR>我方：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+<BR>75F7-7604（11+3台）&nbsp;&nbsp;<BR>敌方：<BR>7605-7616（18台）</P>
+<P>武器2：（根据配置先后）<BR>我方：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+<BR>7617-7624（11+3台）&nbsp;&nbsp;<BR>敌方：<BR>7625-7636（18台）</P>
+<P>机动：（根据配置先后）<BR>我方：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+<BR>7637-7644（11+3台）&nbsp;&nbsp;<BR>敌方：<BR>7645- 7656（18台）</P>
+<P>强度：<BR>我方：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+<BR>7657-7664（11+3台）&nbsp;&nbsp;<BR>敌方：<BR>7665- 7676（18台）</P>
+<P>防御：<BR>我方：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+<BR>7677-7684（11+3台）&nbsp;&nbsp;<BR>敌方：<BR>7685- 7696（18台）</P>
+<P>速度：<BR>我方：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+<BR>7697-76A4（11+3台）&nbsp;&nbsp;<BR>敌方：<BR>76A5- 76B6（18台）</P>
+<P>当前生命值的低位：<BR>我方：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+<BR>76B7-76C4（11+3台）&nbsp;&nbsp;<BR>敌方：<BR>76C5- 76D6（18台）</P>
+<P><BR>当前生命值高位：<BR>我方：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+<BR>76D7-76E4（11+3台）&nbsp;&nbsp;<BR>敌方：<BR>76E5- 76F6（18台）</P>
+<P><BR>最大生命值低位：<BR>我方：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+<BR>76F7-7704（11+3台）&nbsp;&nbsp;<BR>敌方：<BR>7705- 7716（18台）</P>
+<P>最大生命值高位：<BR>我方：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+<BR>7717-7724（11+3台）&nbsp;&nbsp;<BR>敌方：<BR>7725- 7736（18台）</P>
+<P>图标状态：<BR>我方：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+<BR>7737-7744（11+3台）&nbsp;&nbsp;<BR>敌方：<BR>7745- 
+7756（18台）<BR>说明：此状态与小图标的配色有关，数值为20-2F为我方图标（对应人物在队编号），30为敌方图标，<BR>数值加80为待机图标。</P>
+<P>行动受限制状态：<BR>我方：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+<BR>7757-7764（11+3台）&nbsp;&nbsp;<BR>敌方：<BR>7765- 7776（18台）<BR>说明：数值为00 40 
+80为可移动，其他位置1（原版为D5位）为不可移动状态。（如果移动状态不同则可阻挡）&nbsp;</P>
+<P>(我方我80，敌方为40)</P>
+<P>行动代号：<BR>我方：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <BR>7777-7781 
+（11台，一般不用）<BR>7782-7784（3台）&nbsp;&nbsp;<BR>敌方：<BR>7785- 7796（18台）</P>
+<P>下次行动方式的低地址：<BR>我方：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+<BR>7797-77A4（11+3台）&nbsp;&nbsp;<BR>敌方：<BR>77A5- 77B6（18台）</P>
+<P>下次行动方式的高地址：<BR>我方：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+<BR>77B7-77C4（11+3台）&nbsp;&nbsp;<BR>敌方：<BR>77C5- 77D6（18台）</P>
+<P>机体类型（海陆空）：<BR>我方：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+<BR>77D7-77E4（11+3台）&nbsp;&nbsp;<BR>敌方：<BR>77E5- 
+77F6（18台）<BR>如果或上C0则表示在母舰中<BR>第一位：陆(01)<BR>第二位：海(02)<BR>第三到第八位的不同方式组合为变形</P>
+<P><BR>机体技能：<BR>我方：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+<BR>77F7-7804（11+3台）&nbsp;&nbsp;<BR>敌方：<BR>7805- 7816（18台）</P>
+<P>精神状态<BR>7817-7821（11）<BR>当前精神：&nbsp;&nbsp;&nbsp;&nbsp; 
+<BR>7822-782C（11）&nbsp;&nbsp;<BR>最大精神：<BR>782D-7837（11）<BR>7838-783F：小图标有关<BR>&nbsp;<BR>7F78-7F80<BR>与文字显示有关</P>
+<P><BR></FONT>&nbsp;</P></BODY></HTML>

@@ -1,0 +1,2347 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML><HEAD><TITLE>伤月之痕（蓝月）整理</TITLE>
+<META name=GENERATOR content="MSHTML 8.00.7601.19104">
+<META content="text/html; charset=gb2312" http-equiv=Content-Type>
+<STYLE>
+html,body { 
+	/* Default Font */
+	font-family: Microsoft YaHei, Simsun, sans-serif;
+	font-size: 12pt;
+}
+</STYLE>
+</HEAD>
+<BODY>
+<P><FONT 
+size=2>1.机体图标指针：A06C开始，每机体2字节<BR>2.人物爱称指针：DCC4开始，每人物2字节<BR>3.机体名称指针：DF32开始，每机体2字节<BR>4.武器动画指针：10032开始，每种2字节（注意近程和远程的武器不要互换）<BR>5.武器名称指针：E394开始，每种2字节<BR>6.机体图像指针：A9BC开始，每机体2字节（只修改这个机体图一般会贴图错误，因为有其他程序是规定机体图像数据TILE的像素大小、拼合方式、显示位置等等，这些还没完全破解出来）<BR>八、图像动画数据<BR>1.机体图像:从AB3B开始，包含图像显示位置、调色板等。调色板一般是第4-6字节，占3字节。<BR>2.武器动画：从101B0开始，包含播放动画速度，动画调色板等。调色板占3字节，有部分武器调色板共用。</FONT></P>
+<P><FONT size=2>速度成长率、强度成长率、防卫成长率：表示每升1及所提升的数值，填入0：提升1.5&nbsp; 
+填入1：提升2&nbsp;&nbsp; 填入7：提升2.5&nbsp;&nbsp;&nbsp; 填入8：提升3&nbsp;&nbsp; 
+填入6：不提升<BR>HP成长率：每升1及所提升的HP&nbsp; 1：提升3&nbsp;&nbsp;&nbsp; 2：提升5&nbsp;&nbsp; 
+3：提升10&nbsp;&nbsp; 6：不提升&nbsp; 
+9：提升15<BR>0-空，1-陆，2-海<BR>机体特技是以8为倍数的。<BR>机体特技（可叠加）： 
+1-防御技能、2-盾防技能、5-干扰电波、6-干扰电波(减命中的)、128-间无】<BR>武器是以16为倍数的。<BR>47到223都是射程,没什么效果,224到239是地图炮射程,240到255是修理装置射程。 
+<BR>射程32-47有特殊的效果</FONT></P>
+<P><FONT 
+size=2>各个指针的位置!!!!(改地址的指针是指向固定位置的指针，可以说是指针的老大)<BR>4010&nbsp;&nbsp;&nbsp; 
+8010&nbsp;&nbsp;&nbsp; C010&nbsp;&nbsp; <BR>10010&nbsp;&nbsp; 14010&nbsp;&nbsp; 
+18010&nbsp;&nbsp;&nbsp; 1C010&nbsp; <BR>20010&nbsp;&nbsp; 24010&nbsp;&nbsp; 
+28010&nbsp;&nbsp;&nbsp; 2C010<BR>30010&nbsp;&nbsp; 34010&nbsp;&nbsp; 
+38010&nbsp;&nbsp;&nbsp; 3C010(？？未知？？)</FONT></P><FONT size=2>
+<P><BR>%temp% ROM一体。</P>
+<P>&nbsp;</P>
+<P><BR>334f</P>
+<P>5CFD0</P>
+<P>12c50&nbsp; 大卫&nbsp;&nbsp; 12c64&nbsp; 卡姆&nbsp; 12c6E 
+韦尔<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+60810</P>
+<P>60760</P>
+<P>机体图片属性控制</P>
+<P><BR>卡姆机体<BR>12C64-12C6D<BR>代码为<BR>F3FB 00FD 2009 F936 00FF</P>
+<P>大卫机体为例<BR>12c50-12c59<BR>代码为</P>
+<P>f3f9 00fd 2008 f940 00ff</P>
+<P>其中f940 00FF 中的40为图片结束位置(16进制)<BR>&nbsp;&nbsp;&nbsp; 2008 
+中的08表示图片宽度(16进制)<BR>&nbsp;&nbsp;&nbsp; f3f9 
+中的f9表示图片高度(16进制)（Y坐标）<BR>&nbsp;&nbsp;&nbsp; 00FD 中的00表示该图片在战斗中的位置（X坐标）</P>
+<P>敌方机体比纳为例<BR>12D03-12D1E<BR>F3FBFD1E1F&nbsp;&nbsp; 
+F301FDFD2005F90A20&nbsp;&nbsp; F300FFFD2006F90C2A00 F90436FF</P>
+<P>其中 F3FB 之中的FB为整体图像中第1副图像的的高度。<BR>1E1F表示第一幅图片开始位置为1E，1F为该图片的结束位置。 </P>
+<P>F301表示第二幅图片的高度（Y坐标）<BR>FDFD表示第二幅图片的战斗位置（X坐标）<BR>2005表示第二幅图片的宽度<BR>F90A20表示第二幅图片的大小和开始位置，0A表示大小，20表示开始位置</P>
+<P>F300表示第三幅图片的高度（Y坐标）<BR>FFFD表示第三幅图片的战斗位置（X坐标）<BR>2006表示第三幅图片的宽度<BR>F90C2A表示第三幅图片的大小和开始位置，0C表示大小，2A表示开始位置</P>
+<P>F90436表示第四幅图片的大小和开始位置，04表示大小，36表示开始位置</P>
+<P>&nbsp;</P>
+<P>76E70&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; BOBO5 瓦尔图地址&nbsp;&nbsp; 12EAA 图片数据控制</P>
+<P><BR>77010&nbsp; 在此位置导入图片</P>
+<P>AF04 调色板&nbsp; 251b3b</P>
+<P><BR>734E0&nbsp; 拉姆残骸</P>
+<P><BR>AE89&nbsp; 高达ZZ色盘</P>
+<P><BR>12c50 高达数据控制地址</P>
+<P>AE53&nbsp; 高达色盘</P>
+<P>60010 导入图片</P>
+<P>&nbsp;</P>
+<P>奈尔图片地址&nbsp; 7C9E0&nbsp; 11*9</P>
+<P>图片数据控制&nbsp; 12e62</P>
+<P>调色板&nbsp; AEFA</P>
+<P><BR>733A0 ，731D0 奈尔残骸</P>
+<P>12CA4 高达ZZ&nbsp; 61010<BR>&nbsp;</P>
+<P>&nbsp;</P>
+<P>014&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+035&nbsp;&nbsp;&nbsp; 113&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1</P>
+<P>028&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+028&nbsp;&nbsp;&nbsp; 275&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 2</P>
+<P>113&nbsp;&nbsp; 018&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 060&nbsp;&nbsp;&nbsp; 
+028&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 3</P>
+<P>141&nbsp;&nbsp; 046&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 060&nbsp;&nbsp;&nbsp; 
+028&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 4&nbsp;&nbsp; </P>
+<P>056&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+085&nbsp;&nbsp;&nbsp; 236&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 5</P>
+<P>049&nbsp;&nbsp; 056&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 011&nbsp;&nbsp;&nbsp; 
+056&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 6</P>
+<P>音乐修改</P>
+<P><BR>80大卫音乐</P>
+<P>81盖塔音乐</P>
+<P>82加代音乐</P>
+<P>83古莲音乐</P>
+<P>84吉尔变身音乐</P>
+<P>85安东音乐</P>
+<P>86？？？音乐</P>
+<P>87地球我方音乐</P>
+<P>88地球敌方音乐</P>
+<P>89存档音乐</P>
+<P>8A？？？音乐</P>
+<P>8B game over音乐</P>
+<P>8c宇宙我方音乐</P>
+<P>8D敌方增援音乐</P>
+<P>8E升级音乐</P>
+<P>8F吉尔音乐</P>
+<P>90瓦尔音乐</P>
+<P>91宇宙敌方音乐</P>
+<P>92？？？音乐</P>
+<P>93通关音乐</P>
+<P>&nbsp;</P>
+<P>&nbsp;</P>
+<P><BR>武器修改</P>
+<P>59010？？离子波</P>
+<P>离子波图片&nbsp;&nbsp; 59390&nbsp;&nbsp;&nbsp;&nbsp; 
+59790<BR>武器射程为16，攻击出现100%阻止攻击。<BR>武器射程改成了32，出现吸血攻击</P>
+<P>我军配置<BR>00为乔<BR>01为大卫<BR>02为龙<BR>03为加代<BR>04为前期为由美后期为发<BR>05为前期为杰克后期为萨米<BR>06为卡姆<BR>07为希塔<BR>08为布克<BR>09为古莲<BR>0A为布西<BR>0B，0C为？？<BR>0E为伊娃<BR>0F为安东</P>
+<P>&nbsp;</P>
+<P>47到223都是射程,没什么效果,224到239是地图炮射程,240到255是修理装置射程。 <BR>射程32-47有特殊的效果</P>
+<P>39660？？？39C40??</P>
+<P><BR>20130为剧情对话位置</P>
+<P>1300E-130EA 一串？？指针</P>
+<P>135B0-136AE 一串？？指针</P>
+<P>160E0??<BR>1D410-1D4B0 为敌增援的对话指针</P>
+<P>2C66C-2C70A ？？指针</P>
+<P>15770？？？<BR>17550-177b0文字相关？？？<BR>187A0战斗对白部分<BR>35731-35770未知指针</P>
+<P>&nbsp;</P>
+<P>&nbsp;</P>
+<P>&nbsp;</P>
+<P>&nbsp;</P>
+<P>&nbsp;</P>
+<P>18020&nbsp; 应该是战斗对话的指针位置<BR>187A2&nbsp; 武器对白<BR>18E90-1BD90 为武器对话位置</P>
+<P>8030-9868???<BR>B837？？？？<BR>1C020&nbsp; ??指针</P>
+<P>&nbsp;</P>
+<P>&nbsp;</P>
+<P>&nbsp;</P>
+<P>&nbsp;</P>
+<P>&nbsp;</P>
+<P>&nbsp;</P>
+<P>人物地址</P>
+<P>9949-9c65全人物精神<BR>位置一共6为，其中精神位置一共5位，最后一位是用来控制机师能力补正的东西。<BR>9d6f-9fbb全人物色盘及头像指针<BR>c6e2-c716人物音乐地址<BR>da2e-df08全人物名字</P>
+<P>机体<BR>a06c-a1d2全机体小图标指针<BR>a1fa-a9aa全机体类型<BR>A9BC-ab39全机体图片指针<BR>ab3b-af95全机体色盘<BR>ab3a-af94全机体各项属性<BR>AF9F-B106各机体武器选择<BR>df33-e08d全机体名字指针<BR>e0b2-e347全机体名字<BR>1242d-12593全机体图片属性地址指针<BR>机体属性指针地址=1242D+（机体数-1）*2<BR>125ab-13002全机体图片属性地址<BR>15994-15B10全机体碎片指针<BR>机体碎片指针地址=15994+（机体数-1）*2</P>
+<P>配置<BR>706B-7C76全关敌我机体配置<BR>3577B-364A0全关敌我增援<BR>3651B-36D82各个机器强化位置<BR>37555-3778B各个能劝降的人物配置地址</P>
+<P>武器<BR>B29D-b70a武器属性设定<BR>e398-e50c武器名字指针<BR>e514-e8d5武器名字<BR>10032-101a8我方武器动画指针<BR>10ce1-10e4f敌方武器动画指针<BR>101B0-10C6C我方武器动画<BR>10E5F-1198B敌方武器动画</P>
+<P>地图<BR>5AE5-6C9A各关地图配置<BR>6D9C-6DDB 为和地图有关，代表位图A,B,C,D。（指针）<BR>3B2EE-3B2F1 
+4个字节。是战斗背景色盘<BR>3b2d9-3b2dc 4个字节是机体状态色盘。<BR>3B2C0-3B2C3 4个字节是 
+地图上的色盘<BR>3b34a-3b34d 4个字节是标题的色盘。<BR>3b36a-3b36d 4个字节是开头剧情色盘。<BR>3B3B5-3B3B8 
+4个字节是每一话的色盘</P>
+<P>杂项<BR>4BC0&nbsp; 和修理装置有关，改了会出BUG<BR>3A809 毅力恢复值<BR>3A811 祈祷恢复值<BR>8AB4&nbsp; 
+瞄准附加命中值<BR>8AB0&nbsp; 必杀地址（大致位置）<BR>8D0C&nbsp; 为等级限制<BR>15720 道具价格设定</P>
+<P>文字<BR>353FA-35729每关开头人物对话调用指令<BR>1D410-1D4B0 
+为敌增援的对话指针，我方劝降对话指针<BR>1D4D2-1EAFE 为敌方增援对话位置，我方劝降对话位置<BR>20020-20120 
+为剧情对话指针<BR>20130为剧情对话位置<BR>F6F9为结束对话，但是对话人物更改<BR>F6F1为结束对话，但是对话人物不变<BR>对话结束，直接填入人物代码，则调用人物图片<BR>2D0AC后面为字库地址。<BR>2D00C-2FC4C</P>
+<P>？？<BR>e8d5-？？为界面的图片指针相关<BR>11bb0和武器动画有关</P>
+<P>&nbsp;</P>
+<P>---------------------------------------------------------------<BR>---------------------------------------------------------------<BR>---------------------------------------------------------------<BR>---------------------------------------------------------------</P>
+<P>4030&nbsp; 为每关开头调用</P>
+<P><BR>4032-4069为指针</P>
+<P>5A80<BR>DA80<BR>0781&nbsp; 为调用敌我配置的指令指针<BR>5182<BR>A282<BR>B182&nbsp; 
+为开头转向地图配置的指令指针<BR>A685<BR>6A88<BR>4F89<BR>4C8A<BR>598A<BR>A090<BR>E08A<BR>4C8B<BR>7F8C<BR>878C<BR>928C<BR>A08C<BR>B98C<BR>5D8D<BR>F093<BR>5E94<BR>B090<BR>7291<BR>7D91<BR>7892<BR>F192<BR>DF8C</P>
+<P>5AE5-6C9A各关地图配置<BR>6D9C-6DDB 为和地图有关，代表位图A,B,C,D。（指针）（CCAD,20AE,74AE,C8AE）</P>
+<P>6F2C-6F6B 每关的小图标通用指针<BR>6F6C-7029 每关小图标的配置方式</P>
+<P>702A-7069 全关敌我机体配置的指针<BR>706B-7C76 全关敌我机体配置</P>
+<P>---------------------------------------------------------------<BR>---------------------------------------------------------------<BR>2，解除敌我方移动格数限制（已知：96F7，96FB 
+改为FF 我方机动最高可以为255 ？）</P>
+<P>我方移动限制96F7 10改为FF&nbsp; 我方机动最高可以为255<BR>敌方移动限制97C9 
+(97CD)10改为FF。敌方机动最高可以为255<BR>---------------------------------------------------------------<BR>---------------------------------------------------------------</P>
+<P>9949-9c65全人物精神<BR>9d6f-9fbb全人物色盘及头像指针<BR>a06c-a1d2全机体能力指针<BR>a1fa-a9aa全机体能力地址<BR>A9BC-ab39全机体图片指针<BR>A9BC-ab39 
+全机体图片，颜色控制指针<BR>AB3A-AF94 全机体图片，颜色控制指令<BR>AF9F-B106各机体武器选择<BR>B120-B29C 
+武器属性指针<BR>B29E-B710 武器攻击力，射程属性<BR>B838 为成长修改(成长上面为经验。)<BR>C030-C060 
+战斗相关指针(其中有射程指针和经验一类的。)<BR>C000-D849 之中的位置表示战斗过程的指令<BR>D84A-D878 
+道具名称指针<BR>D87A-D939 道具名称代码<BR>D94C-DA2A 全人物名字指针<BR>da2e-df08 
+全人物名字<BR>第一个名字代码为在地图上显示名字，第二个名字代码为战斗中显示名字。</P>
+<P>df33-e08d全机体名字指针<BR>e0b2-e347全机体名字<BR>e398-e50c武器名字指针<BR>e514-e8d5武器名字<BR>E92B-EA36</P>
+<P>地址&nbsp; 指针&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 指向地址<BR>E92B&nbsp; 
+27AA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+EA37&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 为每关名字调用指令（关于图片）<BR>E92D&nbsp; 
+5BAA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+EA6B&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ？？？？可能与图片相关<BR>E92F&nbsp; 
+75AA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+EA85&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ？？？？可能与图片相关<BR>E931&nbsp; 
+7CAA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; EA8C<BR>E937&nbsp; 
+C0BF&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+FFD0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 菜单图片<BR>E947&nbsp; 
+A6AD&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+EDB6&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 菜单指令调用<BR>E949&nbsp; 
+97AE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+EEA7&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+胜利条件调用指令<BR>E94B-E97C为各关胜利条件的文字指针<BR>---------------------------------------------------------------<BR>---------------------------------------------------------------<BR>---------------------------------------------------------------<BR>---------------------------------------------------------------<BR>地图相关</P>
+<P>原版各关地图代码地址，前两个字节表示地图的长和宽。<BR>第1关5AE5<BR>第2关5B67<BR>第3关5BF5<BR>第4关5CA0<BR>第5关5D54<BR>第6关5DE9<BR>第7关5E90<BR>第8关5F18<BR>第9关5FC2<BR>第10关608B<BR>第11关6198<BR>第12关6257<BR>第13关6317<BR>第14关63B2<BR>第15关6449<BR>第16关653C<BR>第17关65E3<BR>第18关66B3<BR>第19关6787<BR>第20关6857<BR>第21关68DC<BR>第22关6A11<BR>第23关6A5C<BR>第24关6AD9<BR>第25关6BC5<BR>第26关6C9A</P>
+<P>---------------------------------------------------------------<BR>---------------------------------------------------------------<BR>---------------------------------------------------------------<BR>---------------------------------------------------------------<BR>关于机体战斗花屏问题，2个大型机体战斗花屏无法修复<BR>小型机体战斗花屏可修复。其中战斗的黑色背景为机体图片中的第一幅小图片。敌我双方都是。所以想要没有花屏，敌我双方机体图片的第一幅图片都要是黑色背景即可。</P>
+<P>---------------------------------------------------------------<BR>---------------------------------------------------------------<BR>---------------------------------------------------------------<BR>---------------------------------------------------------------<BR>2战图标显示：<BR>34组图标对应地址为4D010<BR>一幅图占64*16*2像素。<BR>图像地址为：该图像数*400+40010<BR>---------------------------------------------------------------<BR>---------------------------------------------------------------<BR>战斗图片表示<BR>近战的整个图片大小，长为255，宽为255.<BR>即16进制的FF。<BR>所以敌人的显示位置在FF那里附近，我方显示位置在00附近。<BR>---------------------------------------------------------------<BR>---------------------------------------------------------------<BR>图片移动规则：X坐标增大时向右移动，减小向左移动。<BR>Y坐标增大时向下移动，减小时向上移动。<BR>---------------------------------------------------------------<BR>---------------------------------------------------------------<BR>机体图片属性控制</P>
+<P><BR>卡姆机体<BR>12C64-12C6D<BR>代码为<BR>F3FB 00FD 2009 F936 00FF</P>
+<P>大卫机体为例<BR>12c50-12c59<BR>代码为</P>
+<P>f3f9 00fd 2008 f940 00ff</P>
+<P>其中f940 00FF 中的40为图片结束位置(16进制)<BR>&nbsp;&nbsp;&nbsp; 2008 
+中的08表示图片宽度(16进制)<BR>&nbsp;&nbsp;&nbsp; f3f9 
+中的f9表示图片高度(16进制)（Y坐标）<BR>&nbsp;&nbsp;&nbsp; 00FD 中的00表示该图片在战斗中的位置（X坐标）</P>
+<P>敌方机体比纳为例<BR>12D03-12D1E<BR>F3FBFD1E1F&nbsp;&nbsp; 
+F301FDFD2005F90A20&nbsp;&nbsp; F300FFFD2006F90C2A 00F90436FF</P>
+<P>其中 F3FB 
+之中的FB为整体图像中第1副图像的的高度。<BR>FD为第一幅图片的战斗位置（X坐标）（一个单位差为4像素）<BR>1E1F表示第一幅图片开始位置为1E，1F为该图片的结束位置。 
+</P>
+<P><BR>F301表示第二幅图片的高度（Y坐标）（一个单位差为4像素）<BR>FDFD表示第二幅图片的战斗位置（X坐标）（一个单位差为4像素）<BR>2005表示第二幅图片的宽度<BR>F90A20表示第二幅图片的大小和开始位置，0A表示大小，20表示开始位置</P>
+<P>F300表示第三幅图片的高度（Y坐标）（一个单位差为4像素）<BR>FFFD表示第三幅图片的战斗位置（X坐标）（一个单位差为4像素）<BR>2006表示第三幅图片的宽度<BR>F90C2A表示第三幅图片的大小和开始位置，0C表示大小，2A表示开始位置<BR>00表示第3至第4幅图片的中间位置还有空间，这段空间就用00这张图片来填补。<BR>F90436表示第四幅图片的大小和开始位置，04表示大小，36表示开始位置</P>
+<P><BR>加恩机体图片属性：<BR>F3F9FD01 F301FF0203 F301FD040506 F301FCF90507 F301F7F90A0C 
+F301F6F90A16&nbsp;&nbsp; F301FAF90620&nbsp; F301F9F90726FF</P>
+<P>&nbsp;</P>
+<P>---------------------------------------------------------------<BR>其中关于图片位置，第二幅图片的位置是第一幅图片的相对位置，即第二副图片一直跟着第一副图片走。<BR>---------------------------------------------------------------<BR>---------------------------------------------------------------<BR>---------------------------------------------------------------<BR>---------------------------------------------------------------<BR>图片移动规则：X坐标增大时向右移动，减小向左移动。<BR>Y坐标增大时向下移动，减小时向上移动。<BR>敌我碎片距离为200，由敌方移动到我方就需要减200，由我方移动到敌方就需要加200。<BR>X坐标整个屏幕为00-FF这么多距离<BR>---------------------------------------------------------------<BR>敌方机体坐标排列顺序，第一幅碎片不是按X坐标,Y坐标的顺序来排列的，是按大小排列，敌方机体碎片，大的排在前面，小的排在后面。<BR>一般碎片最后都是03FF。</P>
+<P>03应该是表示该幅碎片结束的意思。（同时X,Y坐标确定）<BR>07（只确定X坐标，Y坐标未确定）<BR>0B应该是表示这一行结束换到下一行。（只确定Y坐标，X坐标未确定）<BR>0F应该是X,Y都未确定</P>
+<P>03为结束后图片直接排在前一幅后面（Y坐标相同，X在前一幅后面）<BR>07为结束后图片空一副图片的距离排在前一幅后面（Y坐标相同，X在前一幅后面一副距离）<BR>0B为结束后图片空一副图片的距离排在前一幅后面（Y坐标在前一幅下面，X在前一幅后面一副距离）<BR>0F为结束后图片空两副图片的距离排在前一幅后面（Y坐标在前一幅下面2幅图片距离，X在前一幅后面一副距离）<BR>敌方机体碎片图片存放规则，我方的存放规则为敌方减1。（敌方为03,07,0B,0F我方则为02,06,0A,0E）<BR>---------------------------------------------------------------<BR>---------------------------------------------------------------<BR>2F后面跟碎片图片位置+X,Y坐标（即2F后面可以改碎片位置）<BR>---------------------------------------------------------------<BR>---------------------------------------------------------------<BR>机体碎片属性控制<BR>机体碎片排列顺序为从高到低，从左到右。高低优先级高于左右。</P>
+<P><BR>以敌方比纳为例<BR>15FA3-15FB5<BR>E5D2180F 0CFC0B 0007 100B F00B F00F 0D 06 03 
+FF</P>
+<P>E5 为碎片的高度（Y坐标）（一个单位差为1像素）<BR>D2 为碎片的战斗位置（X坐标）（一个单位差为1像素）<BR>18 
+为碎片的开始地址（24，第一个碎片为0）</P>
+<P>0F 为碎片的图片相关，和战斗有关，目前具体用途未知。<BR>0C 中的0C为第二幅碎片的战斗位置（X坐标）（一个单位差为1像素）<BR>FC 
+中的FC为第二幅碎片的高度（Y坐标）（一个单位差为1像素）</P>
+<P>0B 为碎片的图片相关，因为和图片的数值差4，所以除以4后图片变化。<BR>00 中的00为第三幅碎片的战斗位置（X坐标）（一个单位差为1像素）</P>
+<P>07 为碎片的图片相关，和战斗有关，目前具体用途未知。<BR>10 中的10为第四幅碎片的战斗位置（X坐标）（一个单位差为1像素）</P>
+<P>0B 为碎片的图片相关，和战斗有关，目前具体用途未知。<BR>F0 中的F0为第五幅碎片的战斗位置（X坐标）（一个单位差为1像素）</P>
+<P>0B 为碎片的图片相关，和战斗有关，目前具体用途未知。<BR>F0 中的F0为第六幅碎片的战斗位置（X坐标）（一个单位差为1像素）</P>
+<P>0F 为碎片的图片相关，和战斗有关，目前具体用途未知。<BR>0D 中的0D为第七幅碎片的战斗位置（X坐标）（一个单位差为1像素）<BR>06 
+中的06为第七幅碎片的高度（Y坐标）（一个单位差为1像素）</P>
+<P>03 为碎片的图片相关，和战斗有关，目前具体用途未知。</P>
+<P>敌方高达陆型为例<BR>15FB6-15FD0<BR>DF C4 35 03 0F 0B 04 03 0F ED 04 0F 0B 04 0F E6 17 
+03 0F 10 <BR>04 03 0F E8 04 03 FF</P>
+<P><BR>DF 为碎片的战斗位置（X坐标）（（一个单位差为1像素）<BR>C4 为碎片的高度（Y坐标）（一个单位差为1像素）<BR>35 
+为碎片的开始地址（53，第一个碎片为0）</P>
+<P>03 为碎片的图片相关，和战斗有关，目前具体用途未知。<BR>0F 为碎片的图片相关，和战斗有关，目前具体用途未知。<BR>0B 
+中的0B为第三幅碎片的战斗位置（X坐标）（一个单位差为1像素）<BR>04 中的04为第三幅碎片的高度（Y坐标）（一个单位差为1像素）。</P>
+<P>03 为碎片的图片相关，和战斗有关，目前具体用途未知。<BR>0F 为碎片的图片相关，和战斗有关，目前具体用途未知。<BR>ED 
+中的ED为第五幅碎片的战斗位置（X坐标）（一个单位差为1像素）<BR>04 中的04为第五幅碎片的高度（Y坐标）（一个单位差为1像素）。</P>
+<P>0F 为碎片的图片相关，和战斗有关，目前具体用途未知。<BR>0B 中的0B为第六幅碎片的战斗位置（X坐标）（一个单位差为1像素）<BR>04 
+中的04为第六幅碎片的高度（Y坐标）（一个单位差为1像素）</P>
+<P>0F 为碎片的图片相关，和战斗有关，目前具体用途未知。<BR>E6 中的E6为第七幅碎片的战斗位置（X坐标）（一个单位差为1像素）<BR>17 
+中的17为第七幅碎片的高度（Y坐标）（一个单位差为1像素）</P>
+<P>03 为碎片的图片相关，和战斗有关，目前具体用途未知。<BR>0F 为碎片的图片相关，和战斗有关，目前具体用途未知。<BR>10 
+中的10为第九幅碎片的战斗位置（X坐标）（一个单位差为1像素）<BR>04 中的04为第九幅碎片的高度（Y坐标）（一个单位差为1像素）。</P>
+<P>03 为碎片的图片相关，和战斗有关，目前具体用途未知。<BR>0F 为碎片的图片相关，和战斗有关，目前具体用途未知。<BR>E8 
+中的E8为第十一幅碎片的战斗位置（X坐标）（一个单位差为1像素）<BR>04 中的04为第十一幅碎片的高度（Y坐标）（一个单位差为1像素）。</P>
+<P>03 为碎片的图片相关，和战斗有关，目前具体用途未知。</P>
+<P>&nbsp;</P>
+<P>&nbsp;</P>
+<P><BR>我方高达陆型为例<BR>15B4C-15B66<BR>17 C4 35 02 0E 0B 04 02 0E ED 04 0E 0B 04 0E 
+E6 17 02 0E 10<BR>04 02 0E E8 04 02 FF</P>
+<P>17 为碎片的战斗位置（X坐标）（（一个单位差为1像素）<BR>C4 为碎片的高度（Y坐标）（一个单位差为1像素）<BR>35 
+为碎片的开始地址（53，第一个碎片为0）</P>
+<P>02 为碎片的图片相关，和战斗有关，目前具体用途未知。<BR>0E 为碎片的图片相关，和战斗有关，目前具体用途未知。<BR>0B 
+中的0B为第三幅碎片的战斗位置（X坐标）（一个单位差为1像素）<BR>04 中的04为第三幅碎片的高度（Y坐标）（一个单位差为1像素）。</P>
+<P>02 为碎片的图片相关，和战斗有关，目前具体用途未知。<BR>0E 为碎片的图片相关，和战斗有关，目前具体用途未知。<BR>ED 
+中的ED为第五幅碎片的战斗位置（X坐标）（一个单位差为1像素）<BR>04 中的04为第五幅碎片的高度（Y坐标）（一个单位差为1像素）。</P>
+<P>0E 为碎片的图片相关，和战斗有关，目前具体用途未知。<BR>0B 为碎片的图片相关，和战斗有关，目前具体用途未知。<BR>04 
+中的04为第六幅碎片的高度（Y坐标）（一个单位差为1像素）</P>
+<P>0E 为碎片的图片相关，和战斗有关，目前具体用途未知。<BR>E6 中的E6为第七幅碎片的战斗位置（X坐标）（一个单位差为1像素）<BR>17 
+中的17为第七幅碎片的高度（Y坐标）（一个单位差为1像素）</P>
+<P>02 为碎片的图片相关，和战斗有关，目前具体用途未知。<BR>0E 为碎片的图片相关，和战斗有关，目前具体用途未知。<BR>10 
+中的10为第九幅碎片的战斗位置（X坐标）（一个单位差为1像素）<BR>04 中的04为第九幅碎片的高度（Y坐标）（一个单位差为1像素）。</P>
+<P>02 为碎片的图片相关，和战斗有关，目前具体用途未知。<BR>0E 为碎片的图片相关，和战斗有关，目前具体用途未知。<BR>E8 
+中的E8为第十一幅碎片的战斗位置（X坐标）（一个单位差为1像素）<BR>04 中的04为第十一幅碎片的高度（Y坐标）（一个单位差为1像素）。</P>
+<P>02 为碎片的图片相关，和战斗有关，目前具体用途未知。</P>
+<P>&nbsp;</P>
+<P>&nbsp;</P>
+<P>&nbsp;</P>
+<P><BR>以敌方西马陆型为例<BR>15B72-15B7A<BR>DFD779 030B F8 0303 FF</P>
+<P>DF 为碎片的战斗位置（X坐标）（一个单位差为1像素）<BR>D7 为碎片的高度（Y坐标）（一个单位差为1像素）<BR>79 
+为碎片的开始地址（121，第一个碎片为0）</P>
+<P>03 为碎片的图片相关，和战斗有关，目前具体用途未知。<BR>0B 为碎片的图片相关，和战斗有关，目前具体用途未知。<BR>F8 
+第三幅图片碎片的战斗位置（X坐标）（一个单位差为1像素）</P>
+<P>03 为碎片的图片相关，和战斗有关，目前具体用途未知。</P>
+<P>03 为碎片的图片相关，和战斗有关，目前具体用途未知。</P>
+<P><BR>以敌方西马空型为例<BR>15B67-15B71</P>
+<P>F0 D7 74 0B FD 03 0B FB 03 03 FF</P>
+<P>F0 为碎片的战斗位置（X坐标）（一个单位差为1像素）<BR>D7 为碎片的高度（Y坐标）（一个单位差为1像素）<BR>74 
+为碎片的开始地址（116，第一个碎片为0）</P>
+<P>0B 为碎片的图片相关，和战斗有关，目前具体用途未知。<BR>FD 第二幅图片碎片的战斗位置（X坐标）（一个单位差为1像素）</P>
+<P>03 为碎片的图片相关，和战斗有关，目前具体用途未知。<BR>0B 为碎片的图片相关，和战斗有关，目前具体用途未知。<BR>FB 
+第四幅图片碎片的战斗位置（X坐标）（一个单位差为1像素）</P>
+<P>03 为碎片的图片相关，和战斗有关，目前具体用途未知。</P>
+<P>03 为碎片的图片相关，和战斗有关，目前具体用途未知。</P>
+<P><BR>---------------------------------------------------------------<BR>---------------------------------------------------------------<BR>---------------------------------------------------------------<BR>---------------------------------------------------------------</P>
+<P>6F2C-6F6B 每关的小图标通用指针<BR>6F6C-7029 每关小图标的配置方式</P>
+<P>机体小图标的显示：</P>
+<P>特殊小图标的数据为34,35,36一共3组一共有48个图标，每组16个图标。<BR>38,3A,3C,3E,40,42,44,48一共9组图标，每组15个图标。</P>
+<P>特殊图标<BR>第一组图标<BR>1&nbsp; 34图标对应地址为4D010&nbsp; <BR>2&nbsp; 35图标对应地址为4D410 
+<BR>3&nbsp; 36图标对应地址为4D810 </P>
+<P>杂兵图标</P>
+<P>4&nbsp;&nbsp; 38图标对应地址为4E010 <BR>5&nbsp;&nbsp; 
+3A图标对应地址为4E810<BR>6&nbsp;&nbsp; 3C图标对应地址为4F010<BR>7&nbsp;&nbsp; 
+3E图标对应地址为4F810<BR>8&nbsp;&nbsp; 40图标对应地址为50010<BR>9&nbsp;&nbsp; 
+42图标对应地址为50810<BR>10&nbsp; 44图标对应地址为51010<BR>11&nbsp; 46图标对应地址为51810<BR>12&nbsp; 
+48图标对应地址为52010</P>
+<P>每关图标显示：</P>
+<P>第1组<BR>第1关指针地址在6F2C,对应指针为5CAF，调用的图标为34,35,38<BR>第2关指针地址在6F2E,对应指针为5CAF，调用的图标为34,35,38<BR>第3关指针地址在6F30,对应指针为5CAF，调用的图标为34,35,38</P>
+<P>第2组<BR>第4关指针地址在6F32,对应指针为6FAF，调用的图标为34,35,3A<BR>第5关指针地址在6F34,对应指针为6FAF，调用的图标为34,35,3A<BR>第6关指针地址在6F36,对应指针为6FAF，调用的图标为34,35,3A</P>
+<P>第3组<BR>第7关指针地址在6F38,对应指针为82AF，调用的图标为34,35,3C<BR>第8关指针地址在6F3A,对应指针为82AF，调用的图标为34,35,3C<BR>第9关指针地址在6F3C,对应指针为82AF，调用的图标为34,35,3C</P>
+<P>第4组<BR>第10关指针地址在6F3E,对应指针为95AF，调用的图标为34,35,3E<BR>第11关指针地址在6F40,对应指针为95AF，调用的图标为34,35,3E<BR>第12关指针地址在6F42,对应指针为95AF，调用的图标为34,35,3E</P>
+<P>第5组<BR>第13关指针地址在6F44,对应指针为A8AF，调用的图标为36,35,40<BR>第14关指针地址在6F46,对应指针为A8AF，调用的图标为36,35,40<BR>第15关指针地址在6F48,对应指针为A8AF，调用的图标为36,35,40</P>
+<P>第6组<BR>第16关指针地址在6F4A,对应指针为BBAF，调用的图标为36,35,42<BR>第25关指针地址在6F5C,对应指针为BBAF，调用的图标为36,35,42</P>
+<P>第7组<BR>第17关指针地址在6F4C,对应指针为CEAF，调用的图标为36,35,44<BR>第18关指针地址在6F4E,对应指针为CEAF，调用的图标为36,35,44<BR>第19关指针地址在6F50,对应指针为CEAF，调用的图标为36,35,44<BR>第22关指针地址在6F56,对应指针为CEAF，调用的图标为36,35,44</P>
+<P>第8组<BR>第20关指针地址在6F52,对应指针为E1AF，调用的图标为36,35,46<BR>第21关指针地址在6F54,对应指针为E1AF，调用的图标为36,35,46</P>
+<P>第9组<BR>第23关指针地址在6F58,对应指针为F4AF，调用的图标为36,35,48<BR>第24关指针地址在6F5A,对应指针为F4AF，调用的图标为36,35,48<BR>第26关指针地址在6F5E,对应指针为F4AF，调用的图标为36,35,48</P>
+<P>&nbsp;</P>
+<P>调用图标的代码为最后3个字节，34 35 
+38，其中应该表示调用34，35，38图标的机体。<BR>其中34,35有16个图标，38只有15个图标，所以地图上显示的为16+16+15=47个图标，因为图标是从0开始，所以最后一个图标为46。</P>
+<P>各个机体图标的计算方式为<BR>该机体图标数=机体图标（在机体属性中）/4。</P>
+<P>例如：图标数为184的机体调用184/4=46<BR>则该机体调用46这个图标，就是最后一个图标。</P>
+<P>&nbsp;</P>
+<P><BR>702A-7069 全关敌我机体配置的指针<BR>706B-7C76 全关敌我机体配置</P>
+<P>---------------------------------------------------------------<BR>---------------------------------------------------------------<BR>---------------------------------------------------------------<BR>---------------------------------------------------------------<BR>8030-805D为指针<BR>805C-9868为未知地址</P>
+<P>4BC0&nbsp; 和修理装置有关，改了会出BUG<BR>3A809 毅力恢复值<BR>3A811 祈祷恢复值<BR>8AB4&nbsp; 
+瞄准附加命中值<BR>8AB0&nbsp; 必杀地址（大致位置）<BR>8D0C&nbsp; 为等级限制</P>
+<P>4E80为我方配置<BR>960E为敌我移动相关，可以把敌我移动改为255.<BR>---------------------------------------------------------------<BR>---------------------------------------------------------------<BR>解除敌我方移动格数限制（已知：96F7，96FB 
+改为FF 我方机动最高可以为255 ？）<BR>我方移动限制96F7 10改为FF。 我方机动最高可以为255<BR>敌方移动限制97C9 10改为FF。 
+敌方机动最高可以为255<BR>---------------------------------------------------------------<BR>---------------------------------------------------------------</P>
+<P>9949-9c65全人物精神<BR>位置一共6为，其中精神位置一共5位，最后一位是用来控制机师能力补正的东西。<BR>9d6f-9fbb全人物色盘及头像指针<BR>a06c-a1d2全机体能力指针<BR>a1fa-a9aa全机体能力地址<BR>A9BA-ab39 
+全机体图片，颜色控制指针<BR>AB3A-AF94 全机体图片，颜色控制指令<BR>AF9F-B106 各机体武器选择<BR>B120-B29C 
+武器属性指针<BR>B29E-B710 武器攻击力，射程属性<BR>B837-B89A 
+指针（（和升级所增加的能力有关））<BR>地址&nbsp;&nbsp;&nbsp;&nbsp; 指针&nbsp;&nbsp;&nbsp;&nbsp; 
+指向地址&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 作用<BR>B837&nbsp;&nbsp;&nbsp;&nbsp; 
+8BB8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; B89B&nbsp;&nbsp;&nbsp;&nbsp; 
+升级成长第一次升2之后升1，如此反复。<BR>B839&nbsp;&nbsp;&nbsp;&nbsp; 
+A4B8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; B8B4&nbsp;&nbsp;&nbsp;&nbsp; 
+升级成长固定为2，如此反复。<BR>B83B&nbsp;&nbsp;&nbsp;&nbsp; 
+BDB8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; B8CD&nbsp;&nbsp;&nbsp;&nbsp; 
+升级成长固定为5，如此反复。<BR>B83D&nbsp;&nbsp;&nbsp;&nbsp; 
+D6B8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; B8E6&nbsp;&nbsp;&nbsp;&nbsp; 
+升级成长固定为10，如此反复。<BR>B83F&nbsp;&nbsp;&nbsp;&nbsp; 
+EFB8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; B8FF&nbsp;&nbsp;&nbsp;&nbsp; 
+升级成长方式为4，具体自己看。<BR>B841&nbsp;&nbsp;&nbsp;&nbsp; 
+08B9&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; B918&nbsp;&nbsp;&nbsp;&nbsp; 
+升级成长方式为5，具体自己看。<BR>B843&nbsp;&nbsp;&nbsp;&nbsp; 
+21B9&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; B931&nbsp;&nbsp;&nbsp;&nbsp; 
+升级成长固定为0，如此反复。<BR>B845&nbsp;&nbsp;&nbsp;&nbsp; 
+3AB9&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; B94A&nbsp;&nbsp;&nbsp;&nbsp; 
+升级成长第一次升2之后升3，如此反复。<BR>B847&nbsp;&nbsp;&nbsp;&nbsp; 
+53B9&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; B963&nbsp;&nbsp;&nbsp;&nbsp; 
+升级成长固定为3，如此反复。<BR>B849&nbsp;&nbsp;&nbsp;&nbsp; 
+6CB9&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; B97C&nbsp;&nbsp;&nbsp;&nbsp; 
+升级成长固定为15，如此反复。<BR>B84B&nbsp;&nbsp;&nbsp;&nbsp; 
+85B9&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; B995&nbsp;&nbsp;&nbsp;&nbsp; 
+升级成长固定为0，如此反复。<BR>这之后的成长都为0。<BR>其对应的方式为 
+00,01,02,03,04,05,06,07,08,09,0A。<BR>---------------------------------------------------------------<BR>---------------------------------------------------------------<BR>---------------------------------------------------------------<BR>---------------------------------------------------------------</P>
+<P>该段代码基本是表示战斗中的过程<BR>C030-C060&nbsp;&nbsp;&nbsp; 
+未知指针<BR>在C000-D849之中的位置<BR>C485&nbsp; 主动攻击双击的速度<BR>C49F&nbsp; 反击攻击双击的速度</P>
+<P>5280&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 战斗中的命中显示的指针。<BR>C062-C0B9&nbsp; 
+战斗中的命中显示</P>
+<P>AA80&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 战斗中位置的调用指针<BR>C0BA-C12C&nbsp; 
+战斗中位置的调用<BR>1D81<BR>C12D-C13D<BR>2E81<BR>C13E-C184<BR>7581<BR>C185-C203<BR>F481<BR>C204-C258<BR>4982<BR>C259-C291<BR>8282<BR>C292-C2E8<BR>D982<BR>C2E9-C319<BR>0A83<BR>C31A-C344<BR>3583<BR>C345-C3C6<BR>B783<BR>C3C7-C3F7<BR>E883<BR>C3F8-C422<BR>1384<BR>C423-C44C<BR>3D84<BR>C44D-C476<BR>6784<BR>C477-C4B7<BR>A884<BR>C4B8-C4CB<BR>BC84<BR>C4CC-C654<BR>4586<BR>C655-C6BB<BR>AC86&nbsp;&nbsp;&nbsp; 
+战斗中人物音乐指针<BR>C6BC-C719&nbsp;&nbsp; 
+战斗中的人物音乐<BR>0A87<BR>C71A-C72C<BR>1D87<BR>C72D-C7EE<BR>DF87<BR>C7EF-C7F3<BR>E487<BR>C7F4-D849</P>
+<P>人物战斗音乐<BR>C6C1地址处的D286为敌方人物战斗音乐</P>
+<P>人物&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+地址&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+地址数据</P>
+<P>35：贝壳&nbsp;C6E2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+3590&nbsp;&nbsp; <BR>06：大卫 
+&nbsp;C6E4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+0680<BR>0B：卡姆 
+&nbsp;C6E6&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+0B80<BR>0C：希塔 
+&nbsp;C6E8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+0C80<BR>0D：布克 
+&nbsp;C6EA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+0D80<BR>10：发 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+C6EC&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+1080<BR>13：克娃 
+&nbsp;C6EE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+1380<BR>1B：伊娃 
+&nbsp;C6F0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+1B80<BR>1C：普西 
+&nbsp;C6F2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+1C80<BR>23：萨米 
+&nbsp;C6F4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+2380<BR>2B：尼娜 
+&nbsp;C6F6&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+2B80<BR>31：米亚&nbsp;C6F8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+3180<BR>34：珍妮 
+&nbsp;C6FA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+3480<BR>36：乔&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+C6FC&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+3680<BR>37：乔治 
+&nbsp;C6FE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+3780<BR>08：龙 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+C700&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+0881<BR>09：欧文 
+&nbsp;C702&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+0981<BR>0A：路易 
+&nbsp;C704&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+0A81<BR>11：杰克 
+&nbsp;C706&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+1181<BR>2C：卡尔 
+&nbsp;C708&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+2C81<BR>2D：米奇&nbsp;C70A&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+2D81<BR>07：加代 
+&nbsp;C70C&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+0782<BR>0F：由美&nbsp;C70E&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+0F82<BR>12：布西 
+&nbsp;C710&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+1282<BR>5F：米巴&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+C712&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+5F82<BR>0E：马丁 
+&nbsp;C714&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+0E83<BR>14：安东 
+&nbsp;C716&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+1485<BR>音乐修改</P>
+<P><BR>80大卫音乐</P>
+<P>81盖塔音乐</P>
+<P>82加代音乐</P>
+<P>83古莲音乐</P>
+<P>84吉尔变身音乐</P>
+<P>85安东音乐</P>
+<P>86？？？音乐</P>
+<P>87地球我方音乐</P>
+<P>88地球敌方音乐</P>
+<P>89存档音乐</P>
+<P>8A？？？音乐</P>
+<P>8B game over音乐</P>
+<P>8c宇宙我方音乐</P>
+<P>8D敌方增援音乐</P>
+<P>8E升级音乐</P>
+<P>8F吉尔音乐</P>
+<P>90瓦尔音乐</P>
+<P>91宇宙敌方音乐</P>
+<P>92？？？音乐</P>
+<P>93通关音乐</P>
+<P>&nbsp;</P>
+<P>C0大卫音乐</P>
+<P>C1盖塔音乐</P>
+<P>C2加代音乐</P>
+<P>C3古莲音乐</P>
+<P>C4吉尔变身音乐</P>
+<P>C5安东音乐</P>
+<P>C6？？？音乐</P>
+<P>C7地球我方音乐</P>
+<P>C8地球敌方音乐</P>
+<P>C9存档音乐</P>
+<P>CA？？？音乐&nbsp; B0B05敌增援音乐</P>
+<P>CB game over音乐</P>
+<P>CC宇宙我方音乐</P>
+<P>CD敌方增援音乐</P>
+<P>CE升级音乐</P>
+<P>CF吉尔音乐</P>
+<P>D0瓦尔音乐</P>
+<P>D1宇宙敌方音乐</P>
+<P>D2？？？音乐</P>
+<P>D3通关音乐</P>
+<P>FC</P>
+<P>&nbsp;</P>
+<P>CD5C-CE18人物战斗对话指针<BR>CE1A-D6EC<BR>人物战斗对话计算：该人物对话的指针地址=CD5A+人物代码*2</P>
+<P>战斗对话格式：一共6段，1段为攻击，2段为反击，3段为2次攻击，防御成功等等</P>
+<P>OEOF000A 表示该人物用0E0F这2个武器时调用0A这个对话指令（其中0A这个对话指令可以有多段对话，调用时，系统会自动选取）</P>
+<P>反击是调用的对话和第一次攻击调用的对话不同。</P>
+<P><BR>大卫战斗对话为例<BR>0400 0401 0402 0403 0404 0405 00 04 00 EF 060A0000 01050001 
+2A2C000C FF 00FF0002 FF 010A0003 2A2C0015 
+FF<BR>其中第一个2A2C000C表示第一次攻击时用2A-2C之间的武器时的战斗对话，0C表示战斗对话的调用。<BR>060A0000,01050001与第一段类似，表示第一次攻击的对话，但是不表示反击对话。<BR>其中00FF0002表示反击对话，00-FF表示从00至FF之间的武器。表示敌人攻击我方后，我方反击时的对话。反击对话为02。<BR>第二个2A2C0015表示2次攻击时用的战斗对话，2A-2C表示2A,2B,2C武器，15表示战斗对话。<BR>010A0003与前面一样，表示01至0A之间的武器，用这些武器时，第2次攻击的对话。</P>
+<P><BR>防御时的对话。<BR>0400 0401 0402 0403 0404 
+0405<BR>一共6段<BR>其中第一段表示攻击时我方回避成功是说的话。<BR>第二段表示受到攻击时，我方虽然受到攻击，但是HP没有损失时说的话。<BR>第三段表示受到攻击，我方费的HP很少时说的话。<BR>第四段表示受到攻击，我方费的HP不多不少时说的话。<BR>第五段表示受到攻击，我方费的HP很多时说的话。<BR>第六段表示机体被击破时说的话。</P>
+<P>无力反击时的对话。<BR>00 04 00EF<BR>其中00 
+04表示对方阻止我方攻击时所说的话。<BR>00EF表示我方反击时，不在射程内，无法反击时所说的话。</P>
+<P><BR>用武器攻击是的对话<BR>战斗对话用FF分为3段<BR>第一段为我方第一次攻击时的战斗对话<BR>第二段为我方反击时用的战斗对话<BR>第三段为我方2次攻击时用的战斗对话</P>
+<P><BR>人物名字&nbsp;&nbsp; 对话指针地址&nbsp;&nbsp; 战斗对话指针&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+指向地址</P>
+<P><BR>00：——&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+CD5A&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+<BR>01：——&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+CD5C<BR>02：——&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+CD5E<BR>03：士兵&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+CD60&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+298E&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+CE39<BR>04：——&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+CD62&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+BC96<BR>05：查里&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+CD64&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 298E 
+<BR>06：大卫&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+CD66&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+488E<BR>07：加代&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+CD68&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 738E 
+<BR>08：龙&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+CD6A&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+FE8E<BR>09：欧文&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+CD6C&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 418F<BR>0A：路易&nbsp; 
+　　 CD6E&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 848F<BR>0B：卡姆 
+　　&nbsp; CD70&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; DF8F 
+<BR>0C：希塔 　　&nbsp; CD72&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+0290 <BR>0D：布克 　　&nbsp; 
+CD74&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 3190 <BR>0E：马丁 
+　　&nbsp; CD76&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+5890<BR>0F：由美 　　&nbsp; 
+CD78&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1391 
+<BR>10：发&nbsp;&nbsp; 　　&nbsp; 
+CD7A&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 3291<BR>11：杰克 
+　　&nbsp; CD7C&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+5191<BR>12：布西 　　&nbsp; 
+CD7E&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+7491<BR>13：克娃&nbsp;&nbsp; 
+　　CD80&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+9391<BR>14：安东&nbsp;&nbsp; 
+　　CD82&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+BA91<BR>15：弗兰克&nbsp; 　 
+CD84&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+BA91<BR>16：凯&nbsp;&nbsp; 
+　　　CD86&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+ED91<BR>17：拉尔&nbsp;&nbsp; 
+　　CD88&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0C92<BR>18：洛克&nbsp; 
+　　 CD8A&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+2B92<BR>19：萨拉&nbsp;&nbsp; 
+　　CD8C&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+4A92<BR>1A：芬尼&nbsp;&nbsp; 
+　　CD8E&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 6992<BR>1B：伊娃&nbsp; 
+　　 CD90&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 8C92<BR>1C：普西 
+　　&nbsp; CD92&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+B392<BR>1D：马休 　　&nbsp; 
+CD94&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; DA92<BR>1E：马斯 
+　　&nbsp; CD96&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+F992<BR>1F：加纳 　　&nbsp; 
+CD98&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; F992<BR>20：麦克&nbsp; 
+　　 CD9A&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+F992<BR>21：肯特&nbsp;&nbsp; 
+　　CD9C&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1893<BR>22：休&nbsp; 
+　 　　CD9E&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 3793<BR>23：萨米 
+　　&nbsp; CDA0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+5A93<BR>24：保罗　　&nbsp;&nbsp; 
+CDA2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+7993<BR>25：梅尔　　&nbsp;&nbsp; 
+CDA4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+9893<BR>26：布朗　　&nbsp;&nbsp; 
+CDA6&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+B793<BR>27：琼　　　&nbsp;&nbsp; 
+CDA8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+D693<BR>28：亨利　　&nbsp;&nbsp; 
+CDAA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+F593<BR>29：诺思　　&nbsp;&nbsp; 
+CDAC&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+1494<BR>2A：温妮　　&nbsp;&nbsp; 
+CDAE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+3394<BR>2B：尼娜　　&nbsp;&nbsp; 
+CDB0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+5294<BR>2C：卡尔　　&nbsp;&nbsp; 
+CDB2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+7994<BR>2D：米奇尔　&nbsp;&nbsp; 
+CDB4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 9894<BR>2E：布托&nbsp; 
+　　 CDB6&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; C394<BR>2F：海伦 
+　　&nbsp; CDB8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+E294<BR>30：里卡&nbsp; 　　 
+CDBA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0195<BR>31：米亚 
+　　&nbsp; CDBC&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+2095<BR>32：格恩 　　&nbsp; 
+CDBE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+3F95<BR>33：帕亚　　&nbsp;&nbsp; 
+CDC0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 6695<BR>34：珍妮 
+　　&nbsp; CDC2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+8D95<BR>35：贝克 　　&nbsp; 
+CDC4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+AC95<BR>36：乔&nbsp;&nbsp; 
+　　　CDC6&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; D795<BR>37：乔治 
+　　&nbsp; CDC8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+0296<BR>38：麦斯&nbsp; 　　 
+CDCA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 2196<BR>39：约克 
+　　&nbsp; CDCC&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+2196<BR>3A：西蒙 　　&nbsp; 
+CDCE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 2196<BR>3B：拉多&nbsp; 
+　　 CDD0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+2196<BR>3C：男爵&nbsp;&nbsp; 
+　　CDD2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 4096<BR>3D：罗纳&nbsp; 
+　　 CDD4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+5F96<BR>3E：凯（无面具）CDD6&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+7E96<BR>3F：汤姆&nbsp; 　　 
+CDD8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 7E96<BR>40：艾玛 
+　　&nbsp; CDDA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+7E96<BR>41：凯文 　　&nbsp; 
+CDDC&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 7E96<BR>42：洛卡 
+　　&nbsp; CDDE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+7E96<BR>43：里纳　　&nbsp;&nbsp; 
+CDE0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+7E96<BR>44：奇恩　　&nbsp;&nbsp; 
+CDE2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+7E96<BR>45：里德　　&nbsp;&nbsp; 
+CDE4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+7E96<BR>46：莫里　　&nbsp;&nbsp; 
+CDE6&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+7E96<BR>47：尤里　　&nbsp;&nbsp; 
+CDE8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 7E96<BR>48：瓦西 
+　　&nbsp; CDEA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+7E96<BR>49：希拉 　　&nbsp; 
+CDEC&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 7E96<BR>4A：布尔 
+　　&nbsp; CDEE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+7E96<BR>4B：罗依 　　&nbsp; 
+CDF0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 7E96<BR>4C：芬奇 
+　　&nbsp; CDF2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+9D96<BR>4D：米拉 　　&nbsp; 
+CDF4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; BC96<BR>4E：艾玛 
+　　&nbsp; CDF6&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+BC96<BR>4F：莫尼 　　&nbsp; 
+CDF8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 298E<BR>50：邓肯　　　 
+CDFA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+298E<BR>51：彼得　　&nbsp;&nbsp; 
+CDFC&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+BC96<BR>52：吉姆　　&nbsp;&nbsp; 
+CDFE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+BC96<BR>53：狄克　　&nbsp;&nbsp; 
+CE00&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+BC96<BR>54：杰夫　　&nbsp;&nbsp; 
+CE02&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+298E<BR>55：休斯　　&nbsp;&nbsp; 
+CE04&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 298E<BR>56：假马丁&nbsp; 
+　 CE08&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 298E<BR>57：士兵　　　 
+CE0A&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+0A8E<BR>58：吉尔&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+CE0C&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+BC96<BR>59：发电镜&nbsp;&nbsp;&nbsp;&nbsp; 
+CE0E&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+BC96<BR>5A：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+CE10&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+BC96<BR>5B：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+CE12&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+BC96<BR>5C：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+CE14&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+BC96<BR>5D：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+CE16&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+BC96<BR>5F：米巴&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+CE18&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; DB96</P>
+<P>&nbsp;</P>
+<P>&nbsp;</P>
+<P>D84A-D879该位置为全道具的名字指针<BR>D87A-D933该位置为全道具的名字代码</P>
+<P>D94C-DA2B为全人物名字指针（这段人名是地图调用的人名）<BR>DA2E-DC8E为全人物名字代码</P>
+<P>DC8F-DD6E为全人物名字指针（这段人名是战斗中调用的人名）<BR>DD6F-DF31为全人物名字代码<BR>df33-e08d全机体名字指针<BR>e0b2-e347全机体名字<BR>e398-e50c武器名字指针<BR>e514-e8d5武器名字<BR>E92B-EA36</P>
+<P>地址&nbsp; 指针&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 指向地址<BR>E92B&nbsp; 
+27AA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+EA37&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 为每关名字调用指令（关于图片）<BR>E92D&nbsp; 
+5BAA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+EA6B&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ？？？？可能与图片相关<BR>E92F&nbsp; 
+75AA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+EA85&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ？？？？可能与图片相关<BR>E931&nbsp; 
+7CAA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; EA8C<BR>E937&nbsp; 
+C0BF&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+FFD0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 菜单图片<BR>E947&nbsp; 
+A6AD&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+EDB6&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 菜单指令调用<BR>E949&nbsp; 
+97AE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+EEA7&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 胜利条件调用指令</P>
+<P>&nbsp;</P>
+<P><BR>E94B-E97C为各关胜利条件的文字指针<BR>E94B&nbsp; 为每关目标的指针（文字的指针 ）</P>
+<P><BR>每关胜利条件文字=E94B+（关数-1）*2（16进制）</P>
+<P>---------------------------------------------------------------<BR>---------------------------------------------------------------<BR>---------------------------------------------------------------<BR>---------------------------------------------------------------</P>
+<P><BR>10032-101a8我方武器动画指针<BR>10ce1-10e4f敌方武器动画指针<BR>101B0-10C6C我方武器动画<BR>10E5F-1198B敌方武器动画<BR>11994-11B90 
+武器动画部分图片指针（目前看来是击中敌人是的爆炸效果一类）<BR>11B9B-1242B 武器动画部分图片</P>
+<P>武器动画修改：<BR>想要敌我动画共存，就要修改处一个独立的动画。<BR>其中声音，音效图片基本没有太大问题，关键要把指针改掉，将指针改成指向新动画地址即可完成敌我动画共存。</P>
+<P>1242d-12593全机体图片属性地址指针<BR>机体属性指针地址=1242D+（机体数-1）*2<BR>125ab-13002全机体图片属性地址</P>
+<P>1300E-130EA 武器动画部分图片指针（看来是由我方攻击到敌方的过程图片） <BR>130EC-135BB 武器动画部分图片</P>
+<P>135BE-136AE 武器动画部分图片指针（目前为止，貌似和方向，爆炸效果一类有关,可能是武器的运行轨迹）<BR>136B0-13E1C 
+武器动画部分图片<BR>---------------------------------------------------------------<BR>---------------------------------------------------------------<BR>武器动画图片：</P>
+<P>特殊动画</P>
+<P>37&nbsp;&nbsp;&nbsp; 4DC10&nbsp; 闪电？，小喷火武器图片</P>
+<P>39&nbsp;&nbsp;&nbsp; 4E410&nbsp; 我方中子炮，敌方粒子炮，子母弹图片<BR>4E410-4E480&nbsp; 
+我方光束枪图片，4EC10-4EC80敌方光束枪图片。<BR>4E4F0-4E510&nbsp; 基奥炮图片，4ECF0-4EE10基奥炮图片。</P>
+<P>3B&nbsp;&nbsp;&nbsp; 4EC10&nbsp; 我方中子炮，我方粒子炮，子母弹，盖塔射线图片</P>
+<P>3D&nbsp;&nbsp;&nbsp; 4F410&nbsp; 敌方大喷火武器，我方闪电图片</P>
+<P>3F&nbsp;&nbsp;&nbsp; 4FC10&nbsp; 敌方大喷火武器，我方闪电图片</P>
+<P>41&nbsp;&nbsp;&nbsp; 50410&nbsp; 我方三栖导弹图片</P>
+<P>43&nbsp;&nbsp;&nbsp; 50C10&nbsp; 我方三栖导弹图片</P>
+<P>45&nbsp;&nbsp;&nbsp; 51410&nbsp; 敌方三栖导弹图片</P>
+<P>47&nbsp;&nbsp;&nbsp; 51C10&nbsp; 敌方三栖导弹图片</P>
+<P>56&nbsp;&nbsp;&nbsp; 55810&nbsp; 敌方闪电，神风转，扩散光炮，十字捣碎机 图片</P>
+<P>58&nbsp;&nbsp;&nbsp; 56010&nbsp; 敌方闪电，神风转，扩散光炮，十字捣碎机 图片</P>
+<P>5A&nbsp;&nbsp;&nbsp; 56810&nbsp; 神风转，扩散光炮，十字捣碎机 图片</P>
+<P>64&nbsp;&nbsp;&nbsp; 59010&nbsp; 离子波动画图片</P>
+<P>机体动画</P>
+<P>66&nbsp;&nbsp;&nbsp; 59810&nbsp; 埃尔，古莲，帕斯，瓦尔</P>
+<P>6A&nbsp;&nbsp;&nbsp; 5A810&nbsp; 双帕，钻帕，德帕</P>
+<P>6C&nbsp;&nbsp;&nbsp; 5B010&nbsp; 巴斯塔，吉尔，麦加金刚</P>
+<P>72&nbsp;&nbsp;&nbsp; 5C810&nbsp; 巴得</P>
+<P>C0&nbsp;&nbsp;&nbsp; 70010</P>
+<P>C2&nbsp;&nbsp;&nbsp; 70810&nbsp; 基奥</P>
+<P>C4&nbsp;&nbsp;&nbsp; 71010</P>
+<P>C6&nbsp;&nbsp;&nbsp; 71810</P>
+<P>C8&nbsp;&nbsp;&nbsp; 72010</P>
+<P>CA&nbsp;&nbsp;&nbsp; 72810&nbsp; 盖马</P>
+<P>CC&nbsp;&nbsp;&nbsp; 73010</P>
+<P>CE&nbsp;&nbsp;&nbsp; 73810</P>
+<P>FC&nbsp;&nbsp;&nbsp; 7F010 盖塔龙</P>
+<P>FE&nbsp;&nbsp;&nbsp; 7F810 
+金<BR>---------------------------------------------------------------<BR>---------------------------------------------------------------<BR>武器动画地址【我方】<BR>[01]01:光剑1级 
+101B0<BR>[02]02:光剑2级 101B0<BR>[03]03:光剑3级 101B0<BR>[04]04:光剑4级 
+101B0<BR>[05]05:光剑5级 101B0<BR>[06]06:光束枪1级 101C4<BR>[07]07:光束枪2级 
+101C4<BR>[08]08:光束枪3级 101C4<BR>[09]09:光束枪4级 101F8<BR>[0A]10:光束枪5级 
+101F8<BR>[0B]11:导弹1 1022C<BR>[0C]12:导弹2 1022C<BR>[0D]13:导弹3 1022C<BR>[0E]14:穿甲弹 
+10248<BR>[0F]15:光子射线 1025C<BR>[10]16:机械刀 102B3<BR>[11]17:火焰喷射器 
+102C7<BR>[12]18:中子刀 10823<BR>[13]19:原子钻 1031C<BR>[14]20:闪电 10330<BR>[15]21:光回旋镖 
+1036C<BR>[16]22:质子炮 102C7<BR>[17]23:压力钻 1038A<BR>[18]24:盖塔战斧1 
+1039E<BR>[19]25:盖塔战斧2 1039E<BR>[1A]26:盖塔射线1 103BC<BR>[1B]27:盖塔射线2 
+103BC<BR>[1C]28:盖塔射线3 10413<BR>[1D]29:回旋钻1 1044F<BR>[1E]30:回旋钻2 
+1044F<BR>[1F]31:神风钻1 10463<BR>[20]32:神风钻2 10463<BR>[21]33:冷冻液1 
+104A7<BR>[22]34:冷冻液2 104A7<BR>[23]35:盖塔导弹1 104EB<BR>[24]36:盖塔导弹2 
+104EB<BR>[25]37:远程激光炮1 10507<BR>[26]38:远程激光炮2 
+10507<BR>[27]39:高能光束枪10543<BR>[28]40:高能光剑1 10577<BR>[29]41:高能光剑2 
+10577<BR>[2A]42:激光子母炮21058B<BR>[2B]43:激光子母炮3 1058B<BR>[2C]44:激光子母炮1 
+1058B<BR>[2D]45:中子炮1 105D8<BR>[2E]46:中子炮2 105D8<BR>[2F]47:手持光束枪 
+1060F<BR>[30]48:螺旋粉碎器 10663<BR>[31]49:反重力风暴 10677<BR>[32]50:十字镖 
+106CB<BR>[33]51:宇宙闪电 10330<BR>[34]52:双面钩 106E9<BR>[35]53:双刃战斧1 
+106FD<BR>[36]54:双刃战斧2 106FD<BR>[37]55:双刃战斧3 106FD<BR>[38]56:链子炮3 
+1071B<BR>[39]57:链子炮1 1071B<BR>[3A]58:链子炮2 1071B<BR>[3B]59:格雷导弹1 
+10761<BR>[3C]60:格雷导弹2 10761<BR>[3D]61:气旋炮1 104A7<BR>[3E]62:气旋炮2 
+104A7<BR>[3F]63:鱼雷1 1077D<BR>[40]64:鱼雷2&nbsp; 1077D<BR>[41]65:组合刀1 
+10823<BR>[42]66:脉冲波 （地图炮）10799<BR>[43]67:组合刀2 
+10823<BR>[44]68:射线枪1（地图炮）107C7<BR>[45]69:锯齿刀 
+10823<BR>[46]70:射线枪2（地图炮）107F5<BR>[47]71:萨斯剑 10823<BR>[48]72:左轮手枪 
+1086E<BR>[49]73:激光枪 108A2<BR>[4A]74:激光枪 108A2<BR>[4B]75:火箭弹 108D6<BR>[4C]76:激光1 
+10914<BR>[4D]77:激光2 10914<BR>[4E]78:激光3 10914<BR>[4F]79:高压电1 
+10914<BR>[50]80:高压电2 10914<BR>[51]81:光刀 10914<BR>[52]82:鞭 10914<BR>[53]83:步枪 
+10914<BR>[54]84:手枪 10914<BR>[55]85:溶解液 10914<BR>[56]86:角 10914<BR>[57]87:战斧 
+10914<BR>[58]88:破坏光线1 10914<BR>[59]89:破坏光线2 10914<BR>[5A]90:矛 10914<BR>[5B]91:毒液 
+10914<BR>[5C]92:红外线 10914<BR>[5D]93:导弹 10914<BR>[5E]94:大炮 10930<BR>[5F]95:远程导弹1 
+10930<BR>[60]96:远程导弹2 10930<BR>[61]97:远程导弹310930<BR>[62]98:喷火器1 
+10930<BR>[63]99:喷火器2 10930<BR>[64]100:撞击器 10930<BR>[65]101:三指叉 
+10930<BR>[66]102:连发枪 10930<BR>[67]103:75高射炮 10930<BR>[68]104:热能剑 
+10930<BR>[69]105:红外线枪 10930<BR>[6A]106:反坦克炮 10930<BR>[6B]107:扩散光炮1 
+10930<BR>[6C]108:扩散光炮2 10930<BR>[6D]109:扩散光炮3 
+10930<BR>[6E]110:远程粒子炮10930<BR>[6F]111:防空粒子炮 10930<BR>[70]112:粒子炮1 
+101C4<BR>[71]113:粒子炮2 108D6<BR>[72]114:粒子炮3 108D6<BR>[73]115:子母弹1 
+10507<BR>[74]116:子母弹2 
+10507<BR>[75]117:高能光炮10930<BR>[76]118:激光加农炮1097D<BR>[77]119:手持导弹 
+1097D<BR>[78]120:机械爪1097D<BR>[79]121:激光枪 1097D<BR>[7A]122:激光子母炮 
+1097D<BR>[7B]123:激光剑2 1097D<BR>[7C]124:激光剑3 1097D<BR>[7D]125:激光剑1 
+1097D<BR>[7E]126:激光剑4 109CA<BR>[7F]127:激光剑5 10A17<BR>[80]128:扩散粒子炮 
+10A17<BR>[81]129:激光剑610A17<BR>[82]130:三栖导弹1 10A17<BR>[83]131:三栖导弹2 
+10A17<BR>[84]132:三栖导弹3 10A17<BR>[85]133:三栖导弹4 10A17<BR>[86]134:激光炮&nbsp; 
+10A52<BR>[87]135:激光刀101C4<BR>[88]136:激光战斧 10A52<BR>[89]137:子母炮 
+10A52<BR>[8A]138:近距导弹10A52<BR>[8B]139:超级粒子炮 10A52<BR>[8C]140:激光剑1 
+10A52<BR>[8D]141:激光剑2 10A52<BR>[8E]142:激光剑3 10A52<BR>[8F]143:质子刀&nbsp; 
+10AA0<BR>[90]144:激光枪 10AA0<BR>[91]145:激光剑 10AA0<BR>[92]146:尾巴 
+10AA0<BR>[93]147:火焰弹 10AA0<BR>[94]148:火箭弹 10AA0<BR>[95]149:离子剑 
+10AA0<BR>[96]150:冷冻光线 10AA0<BR>[97]151:蝶形光枪10AA0<BR>[98]152:回旋镖&nbsp; 
+10AD2<BR>[99]153:回旋镖2 10B1F<BR>[9A]154:粉碎机 10B3D<BR>[9B]155:G加农炮 
+10B3D<BR>[9C]156:激光剑（休）10B3D<BR>[9D]157:能量球（休）10B3D<BR>[9E]158:激光剑 
+10B3D<BR>[9F]159:离子波 10B3D<BR>[A0]160:离子波 
+10A52<BR>[A1]161:粒子加农炮10A52<BR>[A2]162:粒子加农炮 
+10B3D<BR>[A3]163:十字捣毁机10B3D<BR>[A4]164:恢复hp10B3D<BR>[A5]165:气旋光束10B3D<BR>[A6]166:热能炮 
+10B63<BR>[A7]167:气旋光束 10BA4<BR>[A8]168:气旋光束10BA4<BR>[A9]169:双刃刀 
+10C0C<BR>[AA]170：双刃刀10C0C<BR>[AB]171:马林导弹10C20<BR>[AC]172:离子刀 
+10C3C<BR>[AD]173:神风导弹10C50<BR>[AE]174:紫外线枪 10C6C<BR>[AF]175:20机枪1 
+10837<BR>[B0]176:20机枪2 10837<BR>[B1]177:20机枪3 10837<BR>[B2]178:20机枪4 
+10837<BR>[B3]179:能量波1 10CC3<BR>[B4]180:能量波2 10CC3<BR>[B5]181:冲击波1 
+10CC3<BR>[B6]182:冲击波2 10CC3<BR>[B7]183:格雷导弹10761<BR>[B8]184:射线枪 
+104A7<BR>[B9]185:射线枪 1077D<BR>[BA]186:穿甲弹2 10248<BR>[BB]187:高能穿甲弹 
+10248<BR>[BC]188:DX穿甲弹 
+10248<BR>---------------------------------------------------------------<BR>---------------------------------------------------------------<BR>武器动画地址【敌方】<BR>[01]01:光剑1级 
+10E5F<BR>[02]02:光剑2级 10E5F<BR>[03]03:光剑3级 10E5F<BR>[04]04:光剑4级 
+10E5F<BR>[05]05:光剑5级 10E5F<BR>[06]06:光束枪1级 10E87<BR>[07]07:光束枪2级 
+10E87<BR>[08]08:光束枪3级 10E87<BR>[09]09:光束枪4级 10EBB<BR>[0A]10:光束枪5级 
+10EBB<BR>[0B]11:导弹1 10EEF<BR>[0C]12:导弹2 10EEF<BR>[0D]13:导弹3 10EEF<BR>[0E]14:穿甲弹 
+10F0B<BR>[0F]15:光子射线 10F1F<BR>[10]16:机械刀 10F1F<BR>[11]17:火焰喷射器 
+10F1F<BR>[12]18:中子刀 10F73<BR>[13]19:原子钻 10F73<BR>[14]20:闪电 10F73<BR>[15]21:光回旋镖 
+10F73<BR>[16]22:质子炮 10F73<BR>[17]23:压力钻 10F73<BR>[18]24:盖塔战斧1 
+10F73<BR>[19]25:盖塔战斧2 10F73<BR>[1A]26:盖塔射线1 10F73<BR>[1B]27:盖塔射线2 
+10F73<BR>[1C]28:盖塔射线3 10FCA<BR>[1D]29:回旋钻1 10FCA<BR>[1E]30:回旋钻2 
+10FCA<BR>[1F]31:神风钻1 10FCA<BR>[20]32:神风钻2 10FCA<BR>[21]33:冷冻液1 
+10FCA<BR>[22]34:冷冻液2 10FCA<BR>[23]35:盖塔导弹1 10FCA<BR>[24]36:盖塔导弹2 
+10FCA<BR>[25]37:远程激光炮1 10FCA<BR>[26]38:远程激光炮2 
+10FCA<BR>[27]39:高能光束枪11008<BR>[28]40:高能光剑1 11008<BR>[29]41:高能光剑2 
+11008<BR>[2A]42:激光子母炮211008<BR>[2B]43:激光子母炮3 11008<BR>[2C]44:激光子母炮1 
+11008<BR>[2D]45:中子炮1 11008<BR>[2E]46:中子炮2 11008<BR>[2F]47:手持光束枪 
+11008<BR>[30]48:螺旋粉碎器 11008<BR>[31]49:反重力风暴 11008<BR>[32]50:十字镖 
+11008<BR>[33]51:宇宙闪电 11008<BR>[34]52:双面钩 11008<BR>[35]53:双刃战斧1 
+11008<BR>[36]54:双刃战斧2 11008<BR>[37]55:双刃战斧3 11008<BR>[38]56:链子炮3 
+11008<BR>[39]57:链子炮1 11008<BR>[3A]58:链子炮2 11008<BR>[3B]59:格雷导弹1 
+11008<BR>[3C]60:格雷导弹2 11008<BR>[3D]61:气旋炮1 11008<BR>[3E]62:气旋炮2 
+11008<BR>[3F]63:鱼雷1 11008<BR>[40]64:鱼雷2&nbsp; 11008<BR>[41]65:组合刀1 
+11008<BR>[42]66:脉冲波 （地图炮）11008<BR>[43]67:组合刀2 
+11008<BR>[44]68:射线枪1（地图炮）11008<BR>[45]69:锯齿刀 
+11008<BR>[46]70:射线枪2（地图炮）11008<BR>[47]71:萨斯剑 11008<BR>[48]72:左轮手枪 
+11008<BR>[49]73:激光枪 11008<BR>[4A]74:激光枪 11008<BR>[4B]75:火箭弹 11008<BR>[4C]76:激光1 
+11046<BR>[4D]77:激光2 11046<BR>[4E]78:激光3 11046<BR>[4F]79:高压电1 
+1107A<BR>[50]80:高压电2 1107A<BR>[51]81:光刀 1126E<BR>[52]82:鞭 10E73<BR>[53]83:步枪 
+110B2<BR>[54]84:手枪 110D0<BR>[55]85:溶解液 11105<BR>[56]86:角 11259<BR>[57]87:战斧 
+10E73<BR>[58]88:破坏光线1 11147<BR>[59]89:破坏光线2 11147<BR>[5A]90:矛 11259<BR>[5B]91:毒液 
+1117F<BR>[5C]92:红外线 111C1<BR>[5D]93:导弹 111C1<BR>[5E]94:大炮 111F4<BR>[5F]95:远程导弹1 
+10EEF<BR>[60]96:远程导弹2 10EEF<BR>[61]97:远程导弹310EEF<BR>[62]98:喷火器1 
+11210<BR>[63]99:喷火器2 11210<BR>[64]100:撞击器 11259<BR>[65]101:三指叉 
+1126E<BR>[66]102:连发枪 11282<BR>[67]103:75高射炮 11282<BR>[68]104:热能剑 
+1126E<BR>[69]105:红外线枪 1126E<BR>[6A]106:反坦克炮 112BA<BR>[6B]107:扩散光炮1 
+112CE<BR>[6C]108:扩散光炮2 112CE<BR>[6D]109:扩散光炮3 
+112CE<BR>[6E]110:远程粒子炮1172A<BR>[6F]111:防空粒子炮 1130B<BR>[70]112:粒子炮1 
+10E87<BR>[71]113:粒子炮2 11008<BR>[72]114:粒子炮3 11008<BR>[73]115:子母弹1 
+10FCA<BR>[74]116:子母弹2 
+10FCA<BR>[75]117:高能光炮11348<BR>[76]118:激光加农炮11670<BR>[77]119:手持导弹 
+10E87<BR>[78]120:机械爪11395<BR>[79]121:激光枪 1126E<BR>[7A]122:激光子母炮 
+113A9<BR>[7B]123:激光剑2 113EB<BR>[7C]124:激光剑3 11438<BR>[7D]125:激光剑1 
+11485<BR>[7E]126:激光剑4 114D2<BR>[7F]127:激光剑5 1151F<BR>[80]128:扩散粒子炮 
+115B7<BR>[81]129:激光剑6 115CB<BR>[82]130:三栖导弹1 11618<BR>[83]131:三栖导弹2 
+11618<BR>[84]132:三栖导弹3 11618<BR>[85]133:三栖导弹4 11618<BR>[86]134:激光炮&nbsp; 
+11654<BR>[87]135:激光刀10E87<BR>[88]136:激光战斧 1126E<BR>[89]137:子母炮 
+1126E<BR>[8A]138:近距导弹116CD<BR>[8B]139:超级粒子炮 10EBB<BR>[8C]140:激光剑1 
+1172A<BR>[8D]141:激光剑2 1172A<BR>[8E]142:激光剑3 1172A<BR>[8F]143:质子刀&nbsp; 
+11778<BR>[90]144:激光枪 11778<BR>[91]145:激光剑 11778<BR>[92]146:尾巴&nbsp;&nbsp; 
+1126E<BR>[93]147:火焰弹 1126E<BR>[94]148:火箭弹 117B0<BR>[95]149:离子剑 
+11395<BR>[96]150:冷冻光线 1126E<BR>[97]151:蝶形光枪117C4<BR>[98]152:回旋镖&nbsp; 
+117F8<BR>[99]153:回旋镖2 11845<BR>[9A]154:粉碎机&nbsp; 11863<BR>[9B]155:G加农炮 
+11863<BR>[9C]156:激光剑（休）10E73<BR>[9D]157:能量球（休）11863<BR>[9E]158:激光剑 
+10E73<BR>[9F]159:离子波 118D1<BR>[A0]160:离子波 
+1172A<BR>[A1]161:粒子加农炮1172A<BR>[A2]162:粒子加农炮 
+10E73<BR>[A3]163:十字捣毁机1191F<BR>[A4]164:恢复hp1198B<BR>[A5]165:气旋光束1198B<BR>[A6]166:热能炮 
+1198B<BR>[A7]167:气旋光束 1198B<BR>[A8]168:气旋光束1198B<BR>[A9]169:双刃刀 
+1198B<BR>[AA]170：双刃刀1198B<BR>[AB]171:马林导弹1198B<BR>[AC]172:离子刀 
+1198B<BR>[AD]173:神风导弹1198B<BR>[AE]174:紫外线枪 1198B<BR>[AF]175:20机枪1 
+11282<BR>[B0]176:20机枪2 11282<BR>[B1]177:20机枪3 11282<BR>[B2]178:20机枪4 
+11282<BR>[B3]179:能量波1 1198B<BR>[B4]180:能量波2 1198B<BR>[B5]181:冲击波1 
+1198B<BR>[B6]182:冲击波2 1198B<BR>[B7]183:格雷导弹1198B<BR>[B8]184:射线枪 
+1198B<BR>[B9]185:射线枪 1198B<BR>[BA]186:穿甲弹2 1198B<BR>[BB]187:高能穿甲弹 
+1198B<BR>[BC]188:DX穿甲弹 
+1198B<BR>---------------------------------------------------------------<BR>---------------------------------------------------------------<BR>---------------------------------------------------------------<BR>我方光剑动画</P>
+<P>F01103 303828 F1 00 01 F90F88C0 C2 69 04 05 06 64 FF</P>
+<P>303828为武器调色板&nbsp; <BR>F9 0F 88 C0 
+C2中的88为武器的横坐标（X坐标），C0为武器的纵坐标（Y坐标）。C2为武器的图片（推测为调用程式）。<BR>04 05 06 64 
+中的64为图片的停留时间，数字越小时间越长。</P>
+<P><BR>我方小光束枪动画</P>
+<P>F40F F00503 303818 F10001 F2030139 F3220403 F3220503 F32206 F01103 302101 
+F10001 F90FB4E0 42 693F0303 F403 1E F3 22 03 64 FF</P>
+<P>303818,302101为调色板，F90F B4E0 42 
+其中B4为3F图片的横坐标（X坐标）E0为武器的纵坐标（Y坐标）。42为武器的图片（推测为调用程式）。</P>
+<P><BR>F0 通常F00503 后面跟的就是图片的调色板。</P>
+<P>F1 通常F10001 未知，其中01表示武器释放时间，数值越大，时间越长。</P>
+<P>F2 通常F203013B未知，其中3B为图片。03表示敌方图片，01表示我方图片。（3B为该武器调用的大图片数值）</P>
+<P>F3 通常F3220703未知，其中07代表图片，03代表图片的停留时间，数值越大，时间越长。</P>
+<P>F4 通常F403，F4 08 ,F4 0F中的08,0F，03为武器音乐。F4后面通常跟的是武器的音乐。</P>
+<P>F90F3CE0 42 69 3F 03 03</P>
+<P>F9 通常F90F3CE0中的3C为X坐标EO为Y坐标。<BR>69 通常69 03 04 05,69 3F 03 
+03，未知，其中03,04,05表示图片调用顺序，图片调用。其中69 3F 03 
+04中，3F表示调用的图片，声音（推测为程式），03为X坐标是相对F9后面的位置来确定的，04为Y坐标是相对F9后面的位置来确定的。<BR>其中F9后面的X,Y坐标是表示69这里的图片坐标。69后面的坐标是动画移动后的坐标。</P>
+<P>最后的F403 1E ,F32209 1E中的1E表示图片的停留时间。</P>
+<P>其中42表示碎片图片，C2表示固定的图片地址，用改地址的图片。</P>
+<P><BR>远程武器之中有个FD FC 00 01 FE 40 AAAA&nbsp;其中AAAA为指针。 <BR>FC为动画速度。越小越快。 
+FB,FA,F9,F8都可以。</P>
+<P>---------------------------------------------------------------<BR>粒子炮动画 
+108D6</P>
+<P>F410 F00503 302818 F10001 F2030139 F3224C01 FDF800 F3224D FE1E D888 FDF800 
+FDF800 F01103 302101 F10001 F90FF6D8 42 693F0303 F403 14 F32201 02 64FF</P>
+<P>62字节</P>
+<P>F0 通常F00503,F01103 后面跟的就是图片的调色板。</P>
+<P>F1 通常F10001 未知，其中01表示武器释放时间，数值越大，时间越长。</P>
+<P>F2 通常F203013B未知，其中3B为图片。03表示敌方图片，01表示我方图片。（3B为该武器调用的大图片数值）</P>
+<P>F3 通常F3220703未知，其中07代表图片，03代表图片的停留时间，数值越大，时间越长。</P>
+<P>F4 通常F403，F4 08 ,F4 0F中的08,0F，03为武器音乐。F4后面通常跟的是武器的音乐。</P>
+<P>F90F3CE0 42 69 3F 03 03</P>
+<P>FE 0F, FE 1E其中1E,OF表示武器图片的长度，还有时间的长短。</P>
+<P>F9 通常F90F3CE0中的3C为X坐标EO为Y坐标。<BR>69 通常42 69 03 04 05,69 3F 03 
+03，未知，其中03,04,05表示图片调用顺序，图片调用。其中69 3F 03 
+04中，3F表示调用的图片，声音（推测为程式），03为该图片运行的距离相关，04为暂时不清楚。F9后面的位置来确定的。<BR>其中F9后面的X,Y坐标是表示69这里的图片坐标。69后面的坐标是动画移动后的坐标。<BR>---------------------------------------------------------------<BR>注意：其中69之前的C2和42表示图片调用一类的，一般我方武器控制修改不好的时候，就试试42改C2或者C2改42。<BR>---------------------------------------------------------------<BR>最后的F403 
+1E ,F32209 1E中的1E表示图片的停留时间。</P>
+<P>FD F8 00中的F8为X坐标，当X坐标增大时，则机体（图片）向左移动。00为Y坐标，当Y坐标增大时，机体（图片）则向上移动。（攻击时候）</P>
+<P>FD F8 00在非攻击时，这个同循环中的一样。</P>
+<P>FE 1E中的1E表示远程武器的长度，数值越大，距离越长，距离过长时会打穿敌人。</P>
+<P>D888应该是指针，指向108E8这个地址。</P>
+<P>&nbsp;</P>
+<P><BR>离子波动画&nbsp; 118D1</P>
+<P>F419 F00503 322212 F10001 F2030164 F3225801 FD0800 F32259 FE0F D398 01 FD0800 
+FE11 DE98 F01103 302101 F10001 F90F00D8 42 693F0303 04 F2030165 04 F2030164 FE08 
+F898 F32201 02 F3225C 02FF</P>
+<P>78字节</P>
+<P>---------------------------------------------------------------<BR>---------------------------------------------------------------</P>
+<P><BR>武器图片相关的地址（应该是爆炸效果）</P>
+<P><BR>11996&nbsp; 为指针</P>
+<P>代码&nbsp;指针地址&nbsp;&nbsp;&nbsp; 指针&nbsp;&nbsp;&nbsp;&nbsp; 
+指向地址&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 作用</P>
+<P>1&nbsp;11996&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 849B&nbsp;&nbsp;&nbsp;&nbsp; 
+11B94<BR>2&nbsp;11998&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+8B9B&nbsp;&nbsp;&nbsp;&nbsp; 
+11B9B<BR>3&nbsp;1199A&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+959B&nbsp;&nbsp;&nbsp;&nbsp; 
+11BA5<BR>4&nbsp;1199C&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+A39B&nbsp;&nbsp;&nbsp;&nbsp; 
+11BB3<BR>5&nbsp;1199E&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+CF9B&nbsp;&nbsp;&nbsp;&nbsp; 
+11BDF<BR>6&nbsp;119A0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+D49B&nbsp;&nbsp;&nbsp;&nbsp; 
+11BE4<BR>7&nbsp;119A2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+DD9B&nbsp;&nbsp;&nbsp;&nbsp; 
+11BEE<BR>8&nbsp;119A4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+E69B&nbsp;&nbsp;&nbsp;&nbsp; 
+11BF6<BR>9&nbsp;119A6&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+F89B&nbsp;&nbsp;&nbsp;&nbsp; 
+11C08<BR>A&nbsp;119A8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+0B9C&nbsp;&nbsp;&nbsp;&nbsp; 
+11C1B<BR>B&nbsp;119AA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+1A9C&nbsp;&nbsp;&nbsp;&nbsp; 
+11C2A<BR>C&nbsp;119AC&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+279C&nbsp;&nbsp;&nbsp;&nbsp; 
+11C37<BR>D&nbsp;119AE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+409C&nbsp;&nbsp;&nbsp;&nbsp; 
+11C50<BR>E&nbsp;119B0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+599C&nbsp;&nbsp;&nbsp;&nbsp; 
+11C69<BR>F&nbsp;119B2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+6A9C&nbsp;&nbsp;&nbsp;&nbsp; 
+11C7A<BR>10&nbsp;119B4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+7D9C&nbsp;&nbsp;&nbsp;&nbsp; 
+11C8D<BR>11&nbsp;119B6&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+909C&nbsp;&nbsp;&nbsp;&nbsp; 
+11CA0<BR>12&nbsp;119B8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+A19C&nbsp;&nbsp;&nbsp;&nbsp; 
+11CB1<BR>13&nbsp;119BA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+BA9C&nbsp;&nbsp;&nbsp;&nbsp; 
+11CCA<BR>14&nbsp;119BC&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+D29C&nbsp;&nbsp;&nbsp;&nbsp; 
+11CE2<BR>15&nbsp;119BE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+DA9C&nbsp;&nbsp;&nbsp;&nbsp; 
+11CEA<BR>16&nbsp;119C0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+E39C&nbsp;&nbsp;&nbsp;&nbsp; 
+11CF3<BR>17&nbsp;119C2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+EE9C&nbsp;&nbsp;&nbsp;&nbsp; 
+11CFF<BR>18&nbsp;119C4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+FF9C&nbsp;&nbsp;&nbsp;&nbsp; 
+11D0F<BR>19&nbsp;119C6&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+339D&nbsp;&nbsp;&nbsp;&nbsp; 
+11D43<BR>1A&nbsp;119C8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+3C9D&nbsp;&nbsp;&nbsp;&nbsp; 
+11D4C<BR>1B&nbsp;119CA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+479D&nbsp;&nbsp;&nbsp;&nbsp; 
+11D57<BR>1C&nbsp;119CC&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+539D&nbsp;&nbsp;&nbsp;&nbsp; 
+11D63<BR>1D&nbsp;119CE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+5C9D&nbsp;&nbsp;&nbsp;&nbsp; 
+11D6C<BR>1E&nbsp;119D0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+669D&nbsp;&nbsp;&nbsp;&nbsp; 
+11D76<BR>1F&nbsp;119D2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+709D&nbsp;&nbsp;&nbsp;&nbsp; 
+11D80<BR>20&nbsp;119D4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+829D&nbsp;&nbsp;&nbsp;&nbsp; 
+11D92<BR>21&nbsp;119D6&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+A89D&nbsp;&nbsp;&nbsp;&nbsp; 
+11DB8<BR>22&nbsp;119D8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+B19D&nbsp;&nbsp;&nbsp;&nbsp; 
+11DC1<BR>23&nbsp;119DA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+BB9D&nbsp;&nbsp;&nbsp;&nbsp; 
+11DCB<BR>24&nbsp;119DC&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+CA9D&nbsp;&nbsp;&nbsp;&nbsp; 
+11DDA<BR>25&nbsp;119DE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+D79D&nbsp;&nbsp;&nbsp;&nbsp; 
+11DE7<BR>26&nbsp;119E0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+E59D&nbsp;&nbsp;&nbsp;&nbsp; 
+11DF5<BR>27&nbsp;119E2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+EE9D&nbsp;&nbsp;&nbsp;&nbsp; 
+11DFE<BR>28&nbsp;119E4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+F79D&nbsp;&nbsp;&nbsp;&nbsp; 
+11E07<BR>29&nbsp;119E6&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+069E&nbsp;&nbsp;&nbsp;&nbsp; 
+11E16<BR>2A&nbsp;119E8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+159E&nbsp;&nbsp;&nbsp;&nbsp; 
+11E25<BR>2B&nbsp;119EA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+209E&nbsp;&nbsp;&nbsp;&nbsp; 
+11E30<BR>2C&nbsp;119EC&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+299E&nbsp;&nbsp;&nbsp;&nbsp; 
+11E39<BR>2D&nbsp;119EE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+3A9E&nbsp;&nbsp;&nbsp;&nbsp; 
+11E4A<BR>2E&nbsp;119F0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+539E&nbsp;&nbsp;&nbsp;&nbsp; 
+11E63<BR>2F&nbsp;119F2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+649E&nbsp;&nbsp;&nbsp;&nbsp; 
+11E74<BR>30&nbsp;119F4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+769E&nbsp;&nbsp;&nbsp;&nbsp; 
+11E86<BR>31&nbsp;119F6&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+919E&nbsp;&nbsp;&nbsp;&nbsp; 
+11EA1<BR>32&nbsp;119F8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+AA9E&nbsp;&nbsp;&nbsp;&nbsp; 
+11EBA<BR>33&nbsp;119FA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+C99E&nbsp;&nbsp;&nbsp;&nbsp; 
+11ED9<BR>34&nbsp;119FC&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+E89E&nbsp;&nbsp;&nbsp;&nbsp; 
+11EF8<BR>35&nbsp;119FE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+FB9E&nbsp;&nbsp;&nbsp;&nbsp; 
+11F0B<BR>36&nbsp;11A00&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+0F9F&nbsp;&nbsp;&nbsp;&nbsp; 
+11F0B<BR>37&nbsp;11A02&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+229F&nbsp;&nbsp;&nbsp;&nbsp; 
+11F32<BR>38&nbsp;11A04&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+359F&nbsp;&nbsp;&nbsp;&nbsp; 
+11F45<BR>39&nbsp;11A06&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+489F&nbsp;&nbsp;&nbsp;&nbsp; 
+11F58<BR>3A&nbsp;11A08&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+5B9F&nbsp;&nbsp;&nbsp;&nbsp; 
+11F6B<BR>3B&nbsp;11A0A&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+619F&nbsp;&nbsp;&nbsp;&nbsp; 
+11F71<BR>3C&nbsp;11A0C&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+679F&nbsp;&nbsp;&nbsp;&nbsp; 
+11F77<BR>3D&nbsp;11A0E&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+709F&nbsp;&nbsp;&nbsp;&nbsp; 
+11F80<BR>3E&nbsp;11A10&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+799F&nbsp;&nbsp;&nbsp;&nbsp; 
+11F89<BR>3F&nbsp;11A12&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+8B9F&nbsp;&nbsp;&nbsp;&nbsp; 
+11F9B<BR>40&nbsp;11A14&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+969F&nbsp;&nbsp;&nbsp;&nbsp; 
+11FA6<BR>41&nbsp;11A16&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+A59F&nbsp;&nbsp;&nbsp;&nbsp; 
+11FB5<BR>42&nbsp;11A18&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+B09F&nbsp;&nbsp;&nbsp;&nbsp; 
+11FC0<BR>43&nbsp;11A1A&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+BB9F&nbsp;&nbsp;&nbsp;&nbsp; 
+11FCC<BR>44&nbsp;11A1C&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+C49F&nbsp;&nbsp;&nbsp;&nbsp; 
+11FD4<BR>45&nbsp;11A1E&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+CD9F&nbsp;&nbsp;&nbsp;&nbsp; 
+11FDD<BR>46&nbsp;11A20&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+D59F&nbsp;&nbsp;&nbsp;&nbsp; 
+11FE5<BR>47&nbsp;11A22&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+DE9F&nbsp;&nbsp;&nbsp;&nbsp; 
+11FEE<BR>48&nbsp;11A24&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+E59F&nbsp;&nbsp;&nbsp;&nbsp; 
+11FF5<BR>49&nbsp;11A26&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+ED9F&nbsp;&nbsp;&nbsp;&nbsp; 
+11FFD<BR>4A&nbsp;11A28&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+F69F&nbsp;&nbsp;&nbsp;&nbsp; 
+12006<BR>4B&nbsp;11A2A&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+FF9F&nbsp;&nbsp;&nbsp;&nbsp; 
+1200F<BR>4C&nbsp;11A2C&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+09A0&nbsp;&nbsp;&nbsp;&nbsp; 
+12019<BR>4D&nbsp;11A2E&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+1BA0&nbsp;&nbsp;&nbsp;&nbsp; 
+1202B<BR>4E&nbsp;11A30&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+2BA0&nbsp;&nbsp;&nbsp;&nbsp; 
+1203B<BR>4F&nbsp;11A32&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+3EA0&nbsp;&nbsp;&nbsp;&nbsp; 
+1204E<BR>50&nbsp;11A34&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+4FA0&nbsp;&nbsp;&nbsp;&nbsp; 
+1205F<BR>51&nbsp;11A36&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+5AA0&nbsp;&nbsp;&nbsp;&nbsp; 
+1206A<BR>52&nbsp;11A38&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+6FA0&nbsp;&nbsp;&nbsp;&nbsp; 
+1207F<BR>53&nbsp;11A3A&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+86A0&nbsp;&nbsp;&nbsp;&nbsp; 
+12096<BR>54&nbsp;11A3C&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+99A0&nbsp;&nbsp;&nbsp;&nbsp; 
+120A9<BR>55&nbsp;11A3E&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+A9A0&nbsp;&nbsp;&nbsp;&nbsp; 
+120B9<BR>56&nbsp;11A40&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+C1A0&nbsp;&nbsp;&nbsp;&nbsp; 
+120D1<BR>57&nbsp;11A42&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+D9A0&nbsp;&nbsp;&nbsp;&nbsp; 
+120E9<BR>58&nbsp;11A44&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+DFA0&nbsp;&nbsp;&nbsp;&nbsp; 
+120EF<BR>59&nbsp;11A46&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+E5A0&nbsp;&nbsp;&nbsp;&nbsp; 
+120F5<BR>5A&nbsp;11A48&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+EBA0&nbsp;&nbsp;&nbsp;&nbsp; 
+120FB<BR>5B&nbsp;11A4A&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+FEA0&nbsp;&nbsp;&nbsp;&nbsp; 
+1210E<BR>5C&nbsp;11A4C&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+11A1&nbsp;&nbsp;&nbsp;&nbsp; 
+12121<BR>5D&nbsp;11A4E&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+1EA1&nbsp;&nbsp;&nbsp;&nbsp; 
+1212E<BR>5E&nbsp;11A50&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+31A1&nbsp;&nbsp;&nbsp;&nbsp; 
+12141<BR>5F&nbsp;11A52&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+46A1&nbsp;&nbsp;&nbsp;&nbsp; 
+12156<BR>60&nbsp;11A54&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+5EA1&nbsp;&nbsp;&nbsp;&nbsp; 
+1216E<BR>61&nbsp;11A56&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+76A1&nbsp;&nbsp;&nbsp;&nbsp; 
+12186<BR>62&nbsp;11A58&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+7BA1&nbsp;&nbsp;&nbsp;&nbsp; 
+1218B<BR>63&nbsp;11A5A&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+80A1&nbsp;&nbsp;&nbsp;&nbsp; 
+12190<BR>64&nbsp;11A5C&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+89A1&nbsp;&nbsp;&nbsp;&nbsp; 
+12199<BR>65&nbsp;11A5E&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+89A1&nbsp;&nbsp;&nbsp;&nbsp; 
+12199<BR>66&nbsp;11A60&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+89A1&nbsp;&nbsp;&nbsp;&nbsp; 
+12199<BR>67&nbsp;11A62&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+98A1&nbsp;&nbsp;&nbsp;&nbsp; 
+121A8<BR>68&nbsp;11A64&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+AAA1&nbsp;&nbsp;&nbsp;&nbsp; 
+121BA<BR>69&nbsp;11A66&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+C0A1&nbsp;&nbsp;&nbsp;&nbsp; 
+121D0<BR>6A&nbsp;11A68&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+CFA1&nbsp;&nbsp;&nbsp;&nbsp; 
+121DF<BR>6B&nbsp;11A6A&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+E7A1&nbsp;&nbsp;&nbsp;&nbsp; 
+121F7<BR>6C&nbsp;11A6C&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+02A2&nbsp;&nbsp;&nbsp;&nbsp; 
+12212<BR>6D&nbsp;11A6E&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+15A2&nbsp;&nbsp;&nbsp;&nbsp; 
+12225<BR>6E&nbsp;11A70&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+2AAC&nbsp;&nbsp;&nbsp;&nbsp; 
+1223A<BR>6F&nbsp;11A72&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+3EA2&nbsp;&nbsp;&nbsp;&nbsp; 
+1224E<BR>70&nbsp;11A74&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+52A2&nbsp;&nbsp;&nbsp;&nbsp; 
+12262<BR>71&nbsp;11A76&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+68A2&nbsp;&nbsp;&nbsp;&nbsp; 
+12278<BR>72&nbsp;11A78&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+7EA2&nbsp;&nbsp;&nbsp;&nbsp; 
+1228E<BR>73&nbsp;11A7A&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+94A2&nbsp;&nbsp;&nbsp;&nbsp; 
+122A4<BR>74&nbsp;11A7C&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+ACA2&nbsp;&nbsp;&nbsp;&nbsp; 
+122BC<BR>75&nbsp;11A7E&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+B7A2&nbsp;&nbsp;&nbsp;&nbsp; 
+122C7<BR>76&nbsp;11A80&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+C3A2&nbsp;&nbsp;&nbsp;&nbsp; 
+122D3<BR>77&nbsp;11A82&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+CEA2&nbsp;&nbsp;&nbsp;&nbsp; 
+122DE<BR>78&nbsp;11A84&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+D9A2&nbsp;&nbsp;&nbsp;&nbsp; 
+122E9<BR>79&nbsp;11A86&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+E4A2&nbsp;&nbsp;&nbsp;&nbsp; 
+122F4<BR>7A&nbsp;11A88&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+F6A2&nbsp;&nbsp;&nbsp;&nbsp; 
+12306<BR>7B&nbsp;11A8A&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+09A3&nbsp;&nbsp;&nbsp;&nbsp; 
+12319<BR>7C&nbsp;11A8C&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+22A3&nbsp;&nbsp;&nbsp;&nbsp; 
+12332<BR>7D&nbsp;11A8E&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+3BA3&nbsp;&nbsp;&nbsp;&nbsp; 
+1234B<BR>7E&nbsp;11A90&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+53A3&nbsp;&nbsp;&nbsp;&nbsp; 
+12363<BR>7F&nbsp;11A92&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+6BA3&nbsp;&nbsp;&nbsp;&nbsp; 
+1237B<BR>80&nbsp;11A94&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+71A3&nbsp;&nbsp;&nbsp;&nbsp; 
+12381<BR>81&nbsp;11A96&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+77A3&nbsp;&nbsp;&nbsp;&nbsp; 
+12387<BR>82&nbsp;11A98&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+88A3&nbsp;&nbsp;&nbsp;&nbsp; 
+12398<BR>83&nbsp;11A9A&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+A1A3&nbsp;&nbsp;&nbsp;&nbsp; 
+123B1<BR>84&nbsp;11A9C&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+B2A3&nbsp;&nbsp;&nbsp;&nbsp; 
+123C2<BR>85&nbsp;11A9E&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+C4A3&nbsp;&nbsp;&nbsp;&nbsp; 
+123D4<BR>86&nbsp;11AA0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+DFA3&nbsp;&nbsp;&nbsp;&nbsp; 
+123EF<BR>87&nbsp;11AA2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+F8A3&nbsp;&nbsp;&nbsp;&nbsp; 
+12408<BR>88&nbsp;11AA4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+01A4&nbsp;&nbsp;&nbsp;&nbsp; 
+12411<BR>89&nbsp;11AA6&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+0CA4&nbsp;&nbsp;&nbsp;&nbsp; 
+1241C<BR>8A&nbsp;11AA8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+1BA4&nbsp;&nbsp;&nbsp;&nbsp; 
+1242B<BR>8B&nbsp;11AAA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+1BA4&nbsp;&nbsp;&nbsp;&nbsp; 
+1242B<BR>8C&nbsp;11AAC&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+1BA4&nbsp;&nbsp;&nbsp;&nbsp; 
+1242B<BR>......<BR>FF&nbsp;11B92&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+1BA4&nbsp;&nbsp;&nbsp;&nbsp; 
+1242B<BR>---------------------------------------------------------------<BR>光剑的动画 
+136E0</P>
+<P>FD 0E 1E 1E 1E 1F 1F 20 20 FB 19 FC FF</P>
+<P>FD 0E中的0E为武器音乐，1E 1E 1E 1F 1F 1F 20 20 中的代码为调用的图片。FB 19 FC 
+FF其中FC为效果。其中图片1E,1F,20就是调用的这里的代码。</P>
+<P>光束枪的爆炸动画 13B72</P>
+<P>0B 0A 0B 0B FB 14 FA FF</P>
+<P>其中FB 14 FA FF中的FA为爆炸时的闪烁效果</P>
+<P>冲击波动画代码2C<BR>FD 11 32 33 32 33 FB 04 F9 FD 03 0A 0B FB 08 FB FF <BR>FD 
+11中的11为武器音乐，32 33 32 33 中的代码为调用的图片。其中图片32,33就是调用的这里的代码。<BR>FB 04 F9 FD 03 0A 0B 
+FB 08 FB其中FC为效果。<BR>FB 04 中的04表示时间。</P>
+<P>---------------------------------------------------------------</P>
+<P>光剑的动画 11D70</P>
+<P>1E&nbsp;&nbsp;&nbsp;&nbsp; 000092 689408 44F840 FF</P>
+<P>1F&nbsp;&nbsp;&nbsp;&nbsp; 000091 48 0844 F868 921044 F848 1044 F840 FF</P>
+<P>20&nbsp;&nbsp;&nbsp;&nbsp; 00009148 0844 F868 921044 F868 921044 F868 921044 
+F868&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 921044 F868 
+921044 F848 1044 F840 FF </P>
+<P>5F&nbsp;&nbsp;&nbsp;&nbsp; 00 00 78 00 08 F8 00 2C 78 08 F8 4C F8 10 8C 08 F8 
+68 78 00 D4 F0 80 FF <BR>其中78 00 00表示78后面00 00 
+第一个00表示78该图片，第二个00表示下张图片，一次类推。<BR>其中图片后面可以直接再跟XY坐标，来决定下张图片的位置，没有的话，就默认跟在第一张后面。</P>
+<P>其中1E中的<BR>第一个00为图片X坐标，第二个00为图片Y坐标。<BR>92 68中的92表示第二幅图片。68表示图片的方向，对称方向。<BR>94 
+08 44中的08表示第三幅图片的X坐标，94表示图片。<BR>44表示图片方向。<BR>F8 40中的F8表示第5幅图片的X坐标。 40表示图片方向。</P>
+<P><BR>关于图片的翻转问题：00-3F为保持原图，40-7F为左右对称翻转，80-BF为上下对称翻转，C0-FF为中心对称翻转。</P>
+<P>关于图片位置为92-80=12，图片数=图片代码-80。</P>
+<P>这些代码为这上面的代码。<BR>32 33 为冲击波图片代码。<BR>32&nbsp;&nbsp; 08 00 18 00 08 F4 00 08 F4 
+00 08 F8 00 28 1E F8 80 A8 1C F8 80 A8 1A FC 80 A8 18 FC 80 80 FF<BR>08 00 18 00 
+08中第一个08为X坐标，00为Y坐标，18表示图片，00表示第一张图片不做翻转，08表示之后一张和第一张一样不做翻转。<BR>F4 00 08 
+中的F4表示X坐标，00图片不做翻转，08表示之后一张和第一张一样不做翻转。<BR>28 1E F8 
+80其中28表示图片不翻转，同时下一个代码表示图片数值。1E表示图片,F8表示X坐标，80表示上下对称翻转，A8表示下张图片和前面一张一样上下对称翻转。<BR>其中28和24表示同一个意思，只是28表示图片位置在24下一格。<BR>1C 
+F8 80 
+A8其中A8表示上下对称翻转，1C表示图片,F8表示X坐标，80表示该图片翻转方式，A8表示后面的一张图片翻转方式。<BR>其中A8和A4表示同一个意思，只是A8表示图片位置在A4下一格。</P>
+<P>高能光炮图片89代码。<BR>10 00 28 44 F8 44 F8 48 10 44 F8 44 F8 40 FF<BR>10 00 28 44 
+其中10表示X坐标，00为Y坐标。28表示图片。44表示左右对称翻转，其中44和48表示同一个意思，只是48表示图片位置在44下一格。<BR>08，纵坐标只能是4的倍数来。</P>
+<P>光剑的代码 1E<BR>00 00 92 68 94 08 44 F8 40 FF <BR>00 00 92 68 
+中的00表示X坐标，第二个00表示Y坐标，92表示图片位置（92-80=12）68 表示图片左右对称翻转且后面跟图片数。</P>
+<P>08 为不做翻转，后面直接跟后面的图片+X坐标。 28一样为不做翻转，但是后面跟图片数值+X坐标。<BR>48 
+为左右对称翻转，后面直接跟图片+X坐标。68一样为左右对称翻转，但是后面跟图片数值+X坐标。<BR>88 
+为上下对称翻转，后面直接跟图片+X坐标。A8一样为上下对称翻转，但是后面跟图片数值+X坐标。<BR>C8 
+为中心对称翻转，后面直接跟图片+X坐标。E8一样为中心对称翻转，但是后面跟图片数值+X坐标。<BR>其中00，04，08表示Y坐标，并且只能是4的倍数+X坐标。<BR>00后面直接跟图片，不跟坐标。</P>
+<P>规律为从一开始算起。<BR>X坐标，Y坐标 
++图片+翻转代码，之后根据翻转代码来排列后面的代码。<BR>---------------------------------------------------------------<BR>---------------------------------------------------------------<BR>---------------------------------------------------------------<BR>图片，为独立武器的运行过程</P>
+<P>1300E-130EA</P>
+<P>代码&nbsp;指针地址&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+指针&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 指向地址</P>
+<P>01&nbsp;1300E&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+DCB0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 130EC&nbsp;&nbsp;&nbsp;&nbsp; 
+近程战斗图片整体大小（表示黑色背景图片） 
+<BR>02&nbsp;13010&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+E6B0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 130F6&nbsp;&nbsp;&nbsp;&nbsp; 
+该武器的图片大小（表示黑色背景图片）<BR>03&nbsp;13012&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+F0B0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 13100&nbsp;&nbsp;&nbsp;&nbsp; 
+该武器的图片大小（表示黑色背景图片）<BR>04&nbsp;13014&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+FAB0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+1310A<BR>05&nbsp;13016&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+00B1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+13110<BR>06&nbsp;13018&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+07B1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+13117<BR>07&nbsp;1301A&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+10B1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+13120<BR>08&nbsp;1301C&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+16B1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+13126<BR>09&nbsp;1301E&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+1DB1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+1312D<BR>0A&nbsp;13020&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+26B1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+13136<BR>0B&nbsp;13022&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+30B1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+13140<BR>0C&nbsp;13024&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+46B1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+13156<BR>0D&nbsp;13026&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+5CB1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+1316C<BR>0E&nbsp;13028&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+66B1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+13176<BR>0F&nbsp;1302A&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+6DB1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+1317D<BR>10&nbsp;1302C&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+74B1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+13184<BR>11&nbsp;1302E&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+7DB1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+1318D<BR>12&nbsp;13030&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+8DB1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+1319D<BR>13&nbsp;13032&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+9DB1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+131AD<BR>14&nbsp;13034&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+ADB1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+131BD<BR>15&nbsp;13036&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+BDB1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+131CD<BR>16&nbsp;13038&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+C7B1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+131D7<BR>17&nbsp;1303A&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+D1B1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+131E1<BR>18&nbsp;1303C&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+DCB1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+131EC<BR>19&nbsp;1303E&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+E9B1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+131F9<BR>1A&nbsp;13040&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+FAB1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+1320A<BR>1B&nbsp;13042&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+05B2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+13215<BR>1C&nbsp;13044&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+12B2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+13222<BR>1D&nbsp;13046&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+1FB2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+1322F<BR>1E&nbsp;13048&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+2CB2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+1323C<BR>1F&nbsp;1304A&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+37B2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+13247<BR>20&nbsp;1304C&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+41B2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+13251<BR>21&nbsp;1304E&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+50B2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+13260<BR>22&nbsp;13050&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+67B2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+13277<BR>23&nbsp;13052&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+71B2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+13281<BR>24&nbsp;13054&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+7BB2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+1328B<BR>25&nbsp;13056&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+81B2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+13291<BR>26&nbsp;13058&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+88B2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+13298<BR>27&nbsp;1305A&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+91B2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+132A1<BR>28&nbsp;1305C&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+98B2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+132A8<BR>29&nbsp;1305E&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+9FB2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+132AF<BR>2A&nbsp;13060&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+A6B2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+132B6<BR>2B&nbsp;13062&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+AFB2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+132BF<BR>2C&nbsp;13064&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+B5B2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+132C5<BR>2D&nbsp;13066&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+BDB2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+132CD<BR>2E&nbsp;13068&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+C8B2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+132D8<BR>2F&nbsp;1306A&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+D8B2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+132E8<BR>30&nbsp;1306C&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+E8B2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+132F8<BR>31&nbsp;1306E&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+F8B2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+13308<BR>32&nbsp;13070&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+08B3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+13318<BR>33&nbsp;13072&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+13B3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+13323<BR>34&nbsp;13074&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+20B3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+13330<BR>35&nbsp;13076&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+31B3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+13341<BR>36&nbsp;13078&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+46B3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+13356<BR>37&nbsp;1307A&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+5BB3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+1336B<BR>38&nbsp;1307C&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+66B3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+13376<BR>39&nbsp;1307E&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+73B3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+13383<BR>3A&nbsp;13080&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+84B3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+13394<BR>3B&nbsp;13082&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+99B3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+133A9<BR>3C&nbsp;13084&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+AEB3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+133BE<BR>3D&nbsp;13086&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+B9B3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+133C9<BR>3E&nbsp;13088&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+C3B3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+133D3<BR>3F&nbsp;1308A&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+CDB3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+133DD<BR>40&nbsp;1308C&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+D7B3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+133E7<BR>41&nbsp;1308E&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+E6B3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+133F6<BR>42&nbsp;13090&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+F5B3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+13405<BR>43&nbsp;13092&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+04B4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+13414<BR>44&nbsp;13094&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+0AB4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+1341A<BR>45&nbsp;13096&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+11B4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+13421<BR>46&nbsp;13098&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+1AB4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+1342A<BR>47&nbsp;1309A&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+20B4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+13430<BR>48&nbsp;1309C&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+27B4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+13437<BR>49&nbsp;1309E&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+30B4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+13440<BR>4A&nbsp;130A0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+36B4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+13446<BR>4B&nbsp;130A2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+3DB4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+1344D<BR>4C&nbsp;130A4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+46B4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+13456<BR>4D&nbsp;130A6&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+4FB4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+1345F<BR>4E&nbsp;130A8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+55B4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+13465<BR>4F&nbsp;130AA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+5EB4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+1346E<BR>50&nbsp;130AC&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+64B4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+13474<BR>51&nbsp;130AE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+76B4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+13486<BR>52&nbsp;130B0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+85B4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+13495<BR>53&nbsp;130B2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+8EB4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+1349E<BR>54&nbsp;130B4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+94B4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+134A4<BR>55&nbsp;130B6&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+9DB4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+134AD<BR>56&nbsp;130B8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+A3B4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+134B3<BR>57&nbsp;130BA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+B5B4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+134C5<BR>58&nbsp;130BC&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+C4B4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+134D4<BR>59&nbsp;130BE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+C7B4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+134D7<BR>5A&nbsp;130C0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+DCB4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+134EC<BR>5B&nbsp;130C2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+DFB4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+134EF<BR>5C&nbsp;130C4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+EAB4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+134FA<BR>5D&nbsp;130C6&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+F4B4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+13504<BR>5E&nbsp;130C8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+FAB4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+1350A<BR>5F&nbsp;130CA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+02B5&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+13512<BR>60&nbsp;130CC&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+0DB5&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+1351D<BR>61&nbsp;130CE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+17B5&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+13527<BR>62&nbsp;130D0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+1EB5&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+1352E<BR>63&nbsp;130D2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+28B5&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+13538<BR>64&nbsp;130D4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+2FB5&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+1353F<BR>65&nbsp;130D6&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+34B5&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+13544<BR>66&nbsp;130D8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+36B5&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+13546<BR>67&nbsp;130DA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+3EB5&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+1354E<BR>68&nbsp;130DC&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+43B5&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+13553<BR>69&nbsp;130DE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+4EB5&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+1355E<BR>6A&nbsp;130E0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+58B5&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+13568<BR>6B&nbsp;130E2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+62B5&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+13572<BR>6C&nbsp;130E4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+78B5&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+13588<BR>6D&nbsp;130E6&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+8BB5&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+1359B<BR>6E&nbsp;130E8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+9EB5&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+135AE<BR>6F&nbsp;130EA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+A1B5&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 135B1</P>
+<P>&nbsp;</P>
+<P>---------------------------------------------------------------<BR>FE 09 10 
+FD 20 20 F8 40 00 FF（01）</P>
+<P>FE 06 10 FD 20 08 F8 10 00 FF（02）</P>
+<P>FE 08 10 FD 20 08 F8 30 00 FF（03）</P>
+<P>FE 09 10 78 79 F3 01 FE 7A 7B F3 01 FE 7C 7D F3 01 FE 7E 7F F3 FD 00 FF</P>
+<P>其中F3 01中的所有F3后面的数值相加结果等于100。</P>
+<P>FE 09 10 78 79 F3 01 中的09表示Y坐标，10表示X坐标，78 ,79表示图片的位置（数值）。F3,01其中F3 
+？？01表示Y坐标相关。(注意，除了第一个FE外，之后的FE表示图片由左至右移动，FA表示图片由右至左移动)<BR>最后的F3FD00，之中的00表示图片调用的距离。其中以（FE-1）即之前的移动规则-1表示图片重叠。</P>
+<P>其中FE 09 10 中的09表示Y坐标，10表示X坐标。这个表示该图片的显示位置。</P>
+<P>F8 40其中F8后面跟的是距离。就是武器的长度。</P>
+<P>FD 20 08&nbsp; F8 40 00 FF中的FD2008表示该图片的宽度为08，40表示图片大小为40（16进制）。</P>
+<P>FE 0B 16 42 44 FF（04）<BR>(其中最后的F3 FD 00 FF 
+中的00为X坐标，FC为我方2格距离，我方为4个距离，<BR>则为F8)<BR>其中FE同上，16 42 44 
+FF表示该图片由42,44这2个碎片组成。（42，44为16进制）<BR>---------------------------------------------------------------<BR>这段代码在武器中是在F3 
+22 02 
+后面调用的，02就是调用的上面组图片。<BR>---------------------------------------------------------------</P>
+<P>---------------------------------------------------------------<BR>---------------------------------------------------------------<BR>135BE-136AE 
+爆炸的路径，武器动画方向等有关系</P>
+<P>代码&nbsp;指针地址&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+指针&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+指向地址&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 作用</P>
+<P>1&nbsp;135BE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+A0B6&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+136B0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+<BR>2&nbsp;135C0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+BBB6&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 136CB&nbsp;&nbsp; 
+<BR>3&nbsp;135C2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+CEB6&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 136DE&nbsp;&nbsp; 
+<BR>4&nbsp;135C4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+D0B6&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+136E0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 表示光剑 
+<BR>5&nbsp;135C6&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+CEB6&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 136DE&nbsp;&nbsp; 
+<BR>6&nbsp;135C8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+CEB6&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 136DE&nbsp;&nbsp; 
+<BR>7&nbsp;135CA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+DDB6&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 136ED&nbsp;&nbsp; 
+<BR>8&nbsp;135CC&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+EFB6&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 136FF&nbsp;&nbsp; 
+<BR>9&nbsp;135CE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+08B7&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 13718&nbsp;&nbsp; 
+<BR>A&nbsp;135D0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+11B7&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 13721&nbsp;&nbsp; 
+<BR>B&nbsp;135D2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+21B7&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 13731&nbsp;&nbsp; 
+<BR>C&nbsp;135D4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+61B7&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 13771&nbsp;&nbsp; 
+<BR>D&nbsp;135D6&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+99B7&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 137A9&nbsp;&nbsp; 
+<BR>E&nbsp;135D8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+A2B7&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 137B2&nbsp;&nbsp; 
+<BR>F&nbsp;135DA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+B3B7&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 137C3&nbsp;&nbsp; 
+<BR>10&nbsp;135DC&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+F4B7&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 13804&nbsp;&nbsp; 
+<BR>11&nbsp;135DE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+08B8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 13818&nbsp;&nbsp; 
+<BR>12&nbsp;135E0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+15B8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 13825&nbsp;&nbsp; 
+<BR>13&nbsp;135E2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+26B8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 13836&nbsp;&nbsp; 
+<BR>14&nbsp;135E4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+4EB8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1385E&nbsp;&nbsp; 
+<BR>15&nbsp;135E6&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+62B8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 13872&nbsp;&nbsp; 
+<BR>16&nbsp;135E8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+6FB8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1387F&nbsp;&nbsp; 
+<BR>17&nbsp;135EA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+80B8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 13890&nbsp;&nbsp; 
+<BR>18&nbsp;135EC&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+C1B8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 138D1&nbsp;&nbsp; 
+<BR>19&nbsp;135EE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+D5B8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 138E5&nbsp;&nbsp; 
+<BR>1A&nbsp;135F0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+E0B8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 138F0&nbsp;&nbsp; 
+<BR>1B&nbsp;135F2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+01B9&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 13911&nbsp;&nbsp; 
+<BR>1C&nbsp;135F4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+15B9&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 13925&nbsp;&nbsp; 
+<BR>1D&nbsp;135F6&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+21B9&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 13931&nbsp;&nbsp; 
+<BR>1E&nbsp;135F8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+2DB9&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1393D&nbsp;&nbsp; 
+<BR>1F&nbsp;135FA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+39B9&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 13949&nbsp;&nbsp; 
+<BR>20&nbsp;135FC&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+45B9&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 13955&nbsp;&nbsp; 
+<BR>21&nbsp;135FE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+51B9&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 13961&nbsp;&nbsp; 
+<BR>22&nbsp;13600&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+72B9&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 13982&nbsp;&nbsp; 
+<BR>23&nbsp;13602&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+86B9&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 13996&nbsp;&nbsp; 
+<BR>24&nbsp;13604&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+92B9&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 139A2&nbsp;&nbsp; 
+<BR>25&nbsp;13606&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+9EB9&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 139AE&nbsp;&nbsp; 
+<BR>26&nbsp;13608&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+A9B9&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 139B9&nbsp;&nbsp; 
+<BR>27&nbsp;1360A&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+B3B9&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 139C3&nbsp;&nbsp; 
+<BR>28&nbsp;1360C&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+B7B9&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 139C7&nbsp;&nbsp; 
+<BR>29&nbsp;1360E&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+E0B9&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 139F0&nbsp;&nbsp; 
+<BR>2A&nbsp;13610&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+F1B9&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 13A01&nbsp;&nbsp; 
+<BR>2B&nbsp;13612&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+26BA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 13A36&nbsp;&nbsp; 
+<BR>2C&nbsp;13614&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+2ABA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 13A3A&nbsp;&nbsp; 
+<BR>2D&nbsp;13616&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+3BBA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 13A4B&nbsp;&nbsp; 
+<BR>2E&nbsp;13618&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+43BA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 13A53&nbsp;&nbsp; 
+<BR>2F&nbsp;1361A&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+47BA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 13A57&nbsp;&nbsp; 
+<BR>30&nbsp;1361C&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+57BA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 13A67&nbsp;&nbsp; 
+<BR>31&nbsp;1361E&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+61BA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 13A71&nbsp;&nbsp; 
+<BR>32&nbsp;13620&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+71BA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 13A81&nbsp;&nbsp; 
+<BR>33&nbsp;13622&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+7BBA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 13A8B&nbsp;&nbsp; 
+<BR>34&nbsp;13624&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+8CBA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 13A9C&nbsp;&nbsp; 
+<BR>35&nbsp;13626&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+9DBA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 13AAD&nbsp;&nbsp; 
+<BR>36&nbsp;13628&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+AEBA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 13ABE&nbsp;&nbsp; 
+<BR>37&nbsp;1362A&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+BFBA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 13ACF&nbsp;&nbsp; 
+<BR>38&nbsp;1362C&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+BFBA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 13ACF&nbsp;&nbsp; 
+<BR>39&nbsp;1362E&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+CFBA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 13ADF&nbsp;&nbsp; 
+<BR>3A&nbsp;13630&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+0FBB&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 13B1F&nbsp;&nbsp; 
+<BR>3B&nbsp;13632&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+47BB&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 13B57&nbsp;&nbsp; 
+<BR>3C&nbsp;13634&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+51BB&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 13B61&nbsp; 
+<BR>3D&nbsp;13636&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+56BB&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 13B66&nbsp;&nbsp; 
+<BR>3E&nbsp;13638&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+5ABB&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 13B6A&nbsp;&nbsp; 
+<BR>3F&nbsp;1363A&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+62BB&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 13B72&nbsp;&nbsp; 
+<BR>40&nbsp;1363C&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+6ABB&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 13B7A&nbsp;&nbsp; 
+<BR>41&nbsp;1363E&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+7BBB&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 13B8B&nbsp;&nbsp; 
+<BR>42&nbsp;13640&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+8FBB&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 13B9F&nbsp;&nbsp; 
+<BR>43&nbsp;13642&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+A3BB&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 13BB3&nbsp;&nbsp; 
+<BR>44&nbsp;13644&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+B5BB&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 13BC5&nbsp;&nbsp; 
+<BR>45&nbsp;13646&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+C6BB&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 13BD6&nbsp;&nbsp; 
+<BR>46&nbsp;13648&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+CEBB&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 13BDE&nbsp;&nbsp; 
+<BR>47&nbsp;1364A&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+FFBB&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 13C0F&nbsp;&nbsp; 
+<BR>48&nbsp;1364C&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+03BC&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 13C13&nbsp;&nbsp; 
+<BR>49&nbsp;1364E&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+12BC&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 13C22&nbsp;&nbsp; 
+<BR>4A&nbsp;13650&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+1DBC&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 13C2D&nbsp;&nbsp; 
+<BR>4B&nbsp;13652&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+28BC&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 13C38&nbsp;&nbsp; 
+<BR>4C&nbsp;13654&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+30BC&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 13C40&nbsp;&nbsp; 
+<BR>4D&nbsp;13656&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+3CBC&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 13C4C&nbsp;&nbsp; 
+<BR>4E&nbsp;13658&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+44BC&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 13C54&nbsp;&nbsp; 
+<BR>4F&nbsp;1365A&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+50BC&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 13C60&nbsp;&nbsp; 
+<BR>50&nbsp;1365C&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+58BC&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 13C68&nbsp;&nbsp; 
+<BR>51&nbsp;1365E&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+64BC&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 13C74&nbsp;&nbsp; 
+<BR>52&nbsp;13660&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+70BC&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 13C80&nbsp;&nbsp; 
+<BR>53&nbsp;13662&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+78BC&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 13C88&nbsp;&nbsp; 
+<BR>54&nbsp;13664&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+84BC&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 13C94&nbsp;&nbsp; 
+<BR>55&nbsp;13666&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+8CBC&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 13C9C&nbsp;&nbsp; 
+<BR>56&nbsp;13668&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+94BC&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 13CA4&nbsp;&nbsp; 
+<BR>57&nbsp;1366A&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+A0BC&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 13CB0&nbsp;&nbsp; 
+<BR>58&nbsp;1366C&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+ACBC&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 13CBC&nbsp;&nbsp; 
+<BR>59&nbsp;1366E&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+B4BC&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 13CC4&nbsp;&nbsp; 
+<BR>5A&nbsp;13670&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+C0BC&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 13CD0&nbsp;&nbsp; 
+<BR>5B&nbsp;13672&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+C8BC&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 13CD8&nbsp; 
+<BR>5C&nbsp;13674&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+D4BC&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 13CE4&nbsp;&nbsp; 
+<BR>5D&nbsp;13676&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+DCBC&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 13CEC&nbsp;&nbsp; 
+<BR>5E&nbsp;13678&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+F7BC&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 13D07&nbsp;&nbsp; 
+<BR>5F&nbsp;1367A&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+0FBD&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 13D1F&nbsp;&nbsp; 
+<BR>60&nbsp;1367C&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+2DBD&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 13D3D&nbsp;&nbsp; 
+<BR>61&nbsp;1367E&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+35BD&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 13D45&nbsp;&nbsp; 
+<BR>62&nbsp;13680&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+35BD&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 13D45&nbsp;&nbsp; 
+<BR>63&nbsp;13682&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+3CBD&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 13D4C&nbsp;&nbsp; 
+<BR>64&nbsp;13684&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+44BD&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 13D54&nbsp;&nbsp; 
+<BR>65&nbsp;13686&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+4CBD&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 13D5C&nbsp;&nbsp; 
+<BR>66&nbsp;13688&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+51BD&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 13D61&nbsp;&nbsp; 
+<BR>67&nbsp;1368A&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+5DBD&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 13D6D&nbsp;&nbsp; 
+<BR>68&nbsp;1368C&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+61BD&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 13D71&nbsp;&nbsp; 
+<BR>69&nbsp;1368E&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+73BD&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 13D83&nbsp;&nbsp; 
+<BR>6A&nbsp;13690&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+83BD&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 13D93&nbsp;&nbsp; 
+<BR>6B&nbsp;13692&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+93BD&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 13DA3&nbsp;&nbsp; 
+<BR>6C&nbsp;13694&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+9DBD&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 13DAD&nbsp;&nbsp; 
+<BR>6D&nbsp;13696&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+AEBD&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 13DBE&nbsp;&nbsp; 
+<BR>6E&nbsp;13698&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+BFBD&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 13DCF&nbsp;&nbsp; 
+<BR>6F&nbsp;1369A&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+D0BD&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 13DE0&nbsp;&nbsp; 
+<BR>70&nbsp;1369C&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+F8BD&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 13E08&nbsp;&nbsp; 
+<BR>71&nbsp;1369E&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+0CBE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 13E1C&nbsp;&nbsp; 
+<BR>72&nbsp;136A0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+1DBE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 13E2D&nbsp;&nbsp; 
+<BR>73&nbsp;136A2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+5EBE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 13E6E&nbsp;&nbsp; 
+<BR>74&nbsp;136A4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+72BE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 13E82&nbsp;&nbsp; 
+<BR>75&nbsp;136A6&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+86BE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 13E96&nbsp;&nbsp; 
+<BR>76&nbsp;136A8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+9EBE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 13EAE&nbsp;&nbsp; 
+<BR>77&nbsp;136AA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+AABE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 13EBA&nbsp;&nbsp; 
+<BR>78&nbsp;136AC&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+BBBE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 13ECB&nbsp;&nbsp; 
+<BR>79&nbsp;136AE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+C0BE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 13ED0&nbsp;&nbsp; </P>
+<P>---------------------------------------------------------------<BR>武器中69 3F 
+03 
+03之中3F的代码为调用该段数据的代码。<BR>路径长度是无限的，路径代码只是决定了武器路线，长度是有武器时间决定的。<BR>---------------------------------------------------------------<BR>---------------------------------------------------------------<BR>光剑的动画 
+136E0</P>
+<P>FD 0E 1E 1E 1E 1F 1F 20 20 FB 19 FC FF</P>
+<P>FD 0E中的0E为武器音乐，1E 1E 1E 1F 1F 1F 20 20 中的代码为调用的图片。FB 19 FC 
+FF其中FC为效果。其中图片1E,1F,20图片调用的代码为11996处的代码。</P>
+<P>光束枪的爆炸动画 13B72</P>
+<P>0B 0A 0B 0B FB 14 FA FF</P>
+<P>其中FB 14 FA FF中的FA为爆炸时的闪烁效果</P>
+<P>其中FB 14 FA,FB 19 FC中的14,19貌似和时间有一点关系，数值越大，时间越长。<BR>其中 69 2C 2D 
+2E中的2C表示图片，2C,2D表示路径。2C中的第一个数字表示路径的长度。2D中的第一个数字表示X坐标。<BR>FD 11 32 33 32 33 FB 04 
+F9 FD 03 0A 0B FB 08 FB FF <BR>中的FB 04 中的04表示图片停留的时间。<BR>F9 
+表示闪烁的效果。（比FA更加透明）<BR>FA 表示闪烁的效果。（比F9稍稍不透明些）<BR>FB 04 中的04表示图片停留的时间。<BR>FC 
+表示画面覆盖前一张效果。<BR>FD 
+22表示后面跟的22这个音乐。（FD后面可以跟多个音乐。）<BR>---------------------------------------------------------------<BR>---------------------------------------------------------------<BR>---------------------------------------------------------------<BR>---------------------------------------------------------------<BR>---------------------------------------------------------------</P>
+<P>14032-1407C 为指针<BR>地址&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+指针&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+指针指向地址&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+作用<BR>14072&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+2596&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+15635&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+道具相关<BR>1407C&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+5498&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+15864&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+和坐标相关的事件，如商店坐标，固定坐标脱离等等</P>
+<P>15723-15751 为道具价格<BR>15753-15762 为商店指针商店代码由F0到F7可用<BR>15763-15798 
+为商店出售的商品<BR>4D 0F 30 04 02 03 0A 
+10之中4D表示的是4D这个人为商店店员，0F30为进去时这个人说的话，后面的为出售的商品代码。</P>
+<P>1588E-158CD 为每关的商店坐标。或者是某个特殊事件的坐标。<BR>060236F3 0602FFF0 
+表示在0602由36这个人物进去是F3这个店，其他人进去是F0这个店。<BR>为每关的商店坐标。或者是某个特殊事件的坐标。1588E+（关数-1）*2（16进制）（目前可以确定的是第16关逃脱坐标）（还有第13关，琼发生对话的坐标）（胜利条件在每关结束地址）<BR>16关逃脱地点1F08<BR>15936的1F08为逃脱地址，改变后脱离地点也将改变<BR>35617的1F08为16关对话位置</P>
+<P>15992-15B10 机体碎片指针<BR>15B12-160CC 机体碎片处理方式</P>
+<P>160D1-160D6为地球宇宙地球图片<BR>地址&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+指针&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+作用<BR>160D1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+95A1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+第1-13关开头地球图片<BR>160D3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+34A3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+第14-22关开头宇宙图片<BR>160D5&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+F4A4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+第23-26关开头地球图片</P>
+<P>16151-161A4处地址为指针，表示各个道具作用，通关人物所说的话等</P>
+<P>---------------------------------------------------------------<BR>---------------------------------------------------------------<BR>---------------------------------------------------------------<BR>---------------------------------------------------------------</P>
+<P><BR>18020-1821E&nbsp; 
+战斗对话的指针（武器对话还是目前未知，目前可确定的事是该指针是攻击时所说的话）<BR>18220-18799&nbsp; 
+战斗对话的调用指令（在此字节中的指针，直接指向战斗对话）</P>
+<P>战斗对话数目位置=18020+（战斗对话数目*2）</P>
+<P>目前看来，其中有F803，F805,F807之后的指针，F7之后的指针武器的对话。</P>
+<P>191E3-19201 战斗对话指针（攻击时说的话）<BR>19203-19254 战斗对话的调用指令</P>
+<P><BR>19255-1933E 
+每关中途援军（援军行动后），撤退事件的对话指针（第1关除外，仅限敌方）（14关米亚，卡姆事件，米亚变NPC后的对话也在这里）<BR>1933F-1AB74 
+每关中途援军（援军行动后），撤退事件的对话（第1关除外，仅限敌方）（14关米亚，卡姆事件，米亚变NPC后的对话也在这里）</P>
+<P>1AB75-1AC13 估计是最后下地球的对话指针<BR>1AC15-1BD90 
+最后下地球的对话地址<BR>---------------------------------------------------------------<BR>---------------------------------------------------------------<BR>---------------------------------------------------------------<BR>---------------------------------------------------------------</P>
+<P>1C020-1C21E 战斗对话指针（受到攻击或者回避时说的话??）<BR>1C220-1C78F 战斗对话调用指令</P>
+<P>1D248-1D2C6 战斗对话指针（受到攻击或者回避时说的话??）<BR>1d2C8-1D410 战斗对话调用指令</P>
+<P>1D412-1D4B0 每关中途援军对话指针（援军未行动时）我方劝降的对话指针（目前看来是上宇宙事前的）<BR>1D4D2-1E56D 
+每关中途援军对话指针（援军未行动时）我方劝降的的对话（目前看来是上宇宙事前的）（包括14关结束时的剧情对话）</P>
+<P>1E56D-1E5D3 每个人机体变形，从母舰里出发等一些杂项的对话指针（其中既有调用指针的，也有直接是对话的）<BR>1E5D5-1EAFE 
+一些杂项的文字对话地址<BR>1EE10-1EFA0未知（貌似不是指针，里面可能有指针）？？？</P>
+<P>---------------------------------------------------------------<BR>---------------------------------------------------------------<BR>---------------------------------------------------------------<BR>---------------------------------------------------------------</P>
+<P>20020-20120 为剧情对话指针<BR>20130-239C3 为剧情对话位置</P>
+<P>24030-2414E 为剧情对话指针（貌似是分支剧情的对话）<BR>24150-270FD 为剧情对话位置（貌似是分支剧情的对话）</P>
+<P>28030-28771&nbsp; ？？？不是指针（对话相关）</P>
+<P>2C030-2C04E&nbsp; 对话指针（什么对话目前不明）<BR>2C050-2C66B&nbsp; 对话地址（什么对话目前不明）</P>
+<P>2C66C-2C70A&nbsp; 位置指针？？？<BR>2C70C-2CEB0&nbsp; ？？未知作用</P>
+<P>---------------------------------------------------------------<BR>---------------------------------------------------------------<BR>---------------------------------------------------------------<BR>---------------------------------------------------------------</P>
+<P>2cf10-2cf90感觉是加密的方式<BR>2d000-30000感觉是字库正体</P>
+<P>---------------------------------------------------------------<BR>---------------------------------------------------------------<BR>---------------------------------------------------------------<BR>---------------------------------------------------------------</P>
+<P>30030-310AE&nbsp; ？？未知作用</P>
+<P>310AF-310CD&nbsp; 
+？？未知指针（估计是系统执行的一些指令的指针）<BR>（第1个指针貌似是回合结束恢复行动的指针）<BR>310CF-3178D&nbsp; ？？未知作用</P>
+<P>317B5-317EB&nbsp; 未知作用的指针<BR>317ED-31987&nbsp; ？？未知作用</P>
+<P>31988-31A4E&nbsp; 未知作用的指针（可能是指向系统图片一类的指针）<BR>31A50-31FC7&nbsp; 
+未知作用的地址（可能是系统图片一类的地址）</P>
+<P>31FC8-32006&nbsp; 未知作用的指针<BR>32008-3287D&nbsp; 未知作用的地址</P>
+<P>3287E-328EA&nbsp; 未知作用的指针（可能是指向系统图片一类的指针）<BR>328EC-32C36&nbsp; 
+未知作用的地址（可能是系统图片一类的地址）</P>
+<P>32C37-32C5A&nbsp; 未知作用的指针<BR>32C5B-32CBF&nbsp; 未知作用的地址</P>
+<P>32CC1-32D45&nbsp; 未知作用的地址</P>
+<P>32D45-32D63&nbsp; 未知作用的指针<BR>32D85-32DBF&nbsp; 未知作用的地址</P>
+<P>---------------------------------------------------------------<BR>---------------------------------------------------------------<BR>---------------------------------------------------------------<BR>---------------------------------------------------------------</P>
+<P>34020-3402E&nbsp; 
+指针<BR>指针&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+地址&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+作用<BR>2080&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+34030-3406B&nbsp; 
+（每关开头对话调用）<BR>5C80&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+3406C-3409E&nbsp; 
+（每关增援调用）<BR>8F80&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+3409F-340D1&nbsp; 
+（每关结束调用）<BR>C280&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+340D2-3410C&nbsp; 
+（每关我方智商调用）<BR>FD80&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+3410D-34147&nbsp; 
+（每关敌方智商调用）<BR>3881&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+34148-34174&nbsp; 
+（劝降资料调用）<BR>6581&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+34175-?????&nbsp; （和第16关逃脱有关）<BR>341C0-342BE&nbsp; 未知作用的指针<BR>34334-353F4&nbsp; 
+未知作用的地址</P>
+<P><BR>353B5-353F3&nbsp; 每关开头人物对话调用指令的指针<BR>353F5-35729&nbsp; 每关开头人物对话调用指令</P>
+<P>1: 353B5&nbsp;E593<BR>2: 353B7&nbsp;F393<BR>3: 353B9&nbsp;2194<BR>4: 
+353BB&nbsp;3594<BR>5: 353BD&nbsp;4794<BR>6: 353BF&nbsp;5994<BR>7: 
+353C1&nbsp;6B94<BR>8: 353C3&nbsp;8994<BR>9: 353C5&nbsp;A394<BR>10: 
+353C7&nbsp;C194<BR>11: 353C9&nbsp;DF94<BR>12: 353CB&nbsp;F194<BR>13: 
+353CD&nbsp;1495<BR>14: 353CF&nbsp;2D95<BR>15: 353D1&nbsp;4B95<BR>16: 
+353D3&nbsp;D895<BR>17: 353D5&nbsp;1396<BR>18: 353D7&nbsp;2D96<BR>19: 
+353D9&nbsp;4096<BR>20: 353DB&nbsp;6D96<BR>21: 353DD&nbsp;7296<BR>22: 
+353DF&nbsp;A896<BR>23: 353E1&nbsp;B596<BR>24: 353E3&nbsp;BF96<BR>25: 
+353E5&nbsp;E696<BR>26: 353E7&nbsp;FC96</P>
+<P>5987 5A88 C0360800 41360801&nbsp; 开头对话调用格式<BR>其中5987 5A88 
+之中的87为我方回合开始的音乐，5A88中的88为敌方开始音乐。<BR>C0360800表示36这个人物说0800这段对话，其中C0表示该人物说完后调用每关标题图片。</P>
+<P>353F5-35402 第1关开头人物对话调用指令<BR>35403-35430 第2关开头人物对话调用指令<BR>35431-35444 
+第3关开头人物对话调用指令<BR>35445-35456 第4关开头人物对话调用指令<BR>35457-35468 
+第5关开头人物对话调用指令<BR>35469-3547A 第6关开头人物对话调用指令<BR>3547B-35498 
+第7关开头人物对话调用指令<BR>35499-354B2 第8关开头人物对话调用指令<BR>354B3-354D0 
+第9关开头人物对话调用指令<BR>354D1-354EE 第10关开头人物对话调用指令<BR>354EF-35500 
+第11关开头人物对话调用指令<BR>35501-35523 第12关开头人物对话调用指令<BR>35524-3553C 
+第13关开头人物对话调用指令<BR>3553D-3555A 第14关开头人物对话调用指令<BR>3555B-355E7 
+第15关开头人物对话调用指令（14关米亚存活情况下）<BR>355B3-355EC 第15关开头人物对话调用指令（14关米亚死亡情况下）</P>
+<P><BR>355E8-35622 第16关开头人物对话调用指令<BR>35623-3563C 第17关开头人物对话调用指令<BR>3563D-3564F 
+第18关开头人物对话调用指令<BR>35650-3567C 第19关开头人物对话调用指令<BR>3567D-35681 
+第20关开头人物对话调用指令<BR>35682-356B7 第21关开头人物对话调用指令<BR>356B8-356C4 
+第22关开头人物对话调用指令<BR>356C5-356CE 第23关开头人物对话调用指令 B596<BR>356CF-356F5 
+第24关开头人物对话调用指令<BR>356F6-3570B 第25关开头人物对话调用指令<BR>3570C-3572A 第26关开头人物对话调用指令</P>
+<P>53 + 人物代码表示该人物在这关无法移动。</P>
+<P>1B97&nbsp; 1C97&nbsp; 1D97 1E97&nbsp; 1F97&nbsp; 2097未知，估计是通关信息。</P>
+<P>毅力8、加速4、瞄准2、防守1---；<BR>强攻8、友情4、必杀2、疾风1---；<BR>回避8、潜力4、热血2、情义1---；<BR>传真8、援助4、怒2、祈祷1---；<BR>干扰8、狂怒4、爱心2</P>
+<P>&nbsp;</P>
+<P>3577B-364A0&nbsp; 全关敌我增援<BR>其中第一个增援援军之前有段5BCD46 0500 430F44073145&nbsp; 
+之中的0500为调用地图的坐标地址（敌增援出来时先将地图移至该位置，那段指令就是将地图移至该坐标的指令）</P>
+<P>35731-35770&nbsp; 敌我双方的增援指针<BR>每关增援指针地址=（关数-1）*2+35731</P>
+<P><BR>每关的增援地址<BR>第1关6197&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+35771<BR>第2关9E97&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+357AE<BR>第3关1E98&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+3582E<BR>第4关D898&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+358E8<BR>第5关6399&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+35973<BR>第6关CB99&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+359DB<BR>第7关4C9A&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+35A5C<BR>第8关CF9A&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+35ADF<BR>第9关9F9B&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+35BAF<BR>第10关B69C&nbsp;&nbsp;&nbsp;&nbsp; 
+35CC6<BR>第11关219D&nbsp;&nbsp;&nbsp;&nbsp; 
+35D31<BR>第12关D79D&nbsp;&nbsp;&nbsp;&nbsp; 
+35DE7<BR>第13关399E&nbsp;&nbsp;&nbsp;&nbsp; 
+35E49<BR>第14关F39E&nbsp;&nbsp;&nbsp;&nbsp; 
+35F03<BR>第15关809F&nbsp;&nbsp;&nbsp;&nbsp; 
+35F90<BR>第16关B19F&nbsp;&nbsp;&nbsp;&nbsp; 
+35FC1<BR>第17关C79F&nbsp;&nbsp;&nbsp;&nbsp; 
+35FD7<BR>第18关99A0&nbsp;&nbsp;&nbsp;&nbsp; 
+360A9<BR>第19关82A1&nbsp;&nbsp;&nbsp;&nbsp; 
+36192<BR>第20关A4A1&nbsp;&nbsp;&nbsp;&nbsp; 
+361B4<BR>第21关2BA2&nbsp;&nbsp;&nbsp;&nbsp; 
+3623B<BR>第22关0AA3&nbsp;&nbsp;&nbsp;&nbsp; 
+3631A<BR>第23关4DA3&nbsp;&nbsp;&nbsp;&nbsp; 
+3635D<BR>第24关FFA3&nbsp;&nbsp;&nbsp;&nbsp; 
+3640F<BR>第25关28A4&nbsp;&nbsp;&nbsp;&nbsp; 36438</P>
+<P>其中18关有个未知增援（没有调用代码）<BR>22关有个未知增援（是否有调用代码未知）</P>
+<P><BR>5B C0 表示增援音乐。</P>
+<P>未知95A4 96A4 97A4 98A4 9AA4 9BA4 <BR>增援回合在每关增援的开头<BR>增援回合调用：<BR>00 02 57 81 9B 
+,00 01 57 E1 
+9A其中0257,0157为增援回合，分别为第2回合和第1回合增援，819A,E19A为指针，指向增援地址。<BR>增援音乐，46后面为坐标，46前的为增援音乐。<BR>03 
+23 58 C1 A2表示23这个人是否加入我方，加入则继续，没有加入我方则跳转到C1A2所指的地址。（增援地址处的判断指令）<BR>03 2C 58 3F 
+9B表示2C这个人是否加入我方，加入则继续，没有加入我方则跳转到C1A2所指的地址。（增援地址处的判断指令）<BR>其中5E0A 460F08 中的0F 
+08表示光标指向该处。<BR>04 36 D8 D898表示36这个人是否存活，活着则继续，死亡就跳转到D898这个指针指向的地址。</P>
+<P><BR>C0大卫音乐</P>
+<P>C1盖塔音乐</P>
+<P>C2加代音乐</P>
+<P>C3古莲音乐</P>
+<P>C4吉尔变身音乐</P>
+<P>C5安东音乐</P>
+<P>C6？？？音乐</P>
+<P>C7地球我方音乐</P>
+<P>C8地球敌方音乐</P>
+<P>C9存档音乐</P>
+<P>CA？？？音乐&nbsp; B0B05敌增援音乐</P>
+<P>CB game over音乐</P>
+<P>CC宇宙我方音乐</P>
+<P>CD敌方增援音乐</P>
+<P>CE升级音乐</P>
+<P>CF吉尔音乐</P>
+<P>D0瓦尔音乐</P>
+<P>D1宇宙敌方音乐</P>
+<P>D2？？？音乐</P>
+<P>D3通关音乐</P>
+<P>音乐修改</P>
+<P><BR>80大卫音乐</P>
+<P>81盖塔音乐</P>
+<P>82加代音乐</P>
+<P>83古莲音乐</P>
+<P>84吉尔变身音乐</P>
+<P>85安东音乐</P>
+<P>86？？？音乐</P>
+<P>87地球我方音乐</P>
+<P>88地球敌方音乐</P>
+<P>89存档音乐</P>
+<P>8A？？？音乐</P>
+<P>8B game over音乐</P>
+<P>8c宇宙我方音乐</P>
+<P>8D敌方增援音乐</P>
+<P>8E升级音乐</P>
+<P>8F吉尔音乐</P>
+<P>90瓦尔音乐</P>
+<P>91宇宙敌方音乐</P>
+<P>92？？？音乐</P>
+<P>93通关音乐</P>
+<P>&nbsp;</P>
+<P>364AC-364EA&nbsp; 每关结束时的指针（应该是机体强化的位置指针） <BR>364EC-36E0B&nbsp; 
+每关结束的地址（应该是机体强化的位置地址，其中包含一些剧情对话，这些剧情对话都有一定的触发条件，其中第3关包含大卫劝降妮娜时最后凯和尼娜的3句对话）</P>
+<P>每关的结束地址的指针<BR>第1关DCA4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+364EC<BR>第2关26A5&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+36536<BR>第3关4BA5&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+3655B<BR>第4关97A5&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+365A7<BR>第5关DDA5&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+365ED<BR>第6关53A6&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+36663<BR>第7关90A6&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+366A0<BR>第8关06A7&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+36716<BR>第9关EBA7&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+367FB<BR>第10关37A8&nbsp;&nbsp;&nbsp;&nbsp; 
+36847<BR>第11关5CA8&nbsp;&nbsp;&nbsp;&nbsp; 
+3686C<BR>第12关92A8&nbsp;&nbsp;&nbsp;&nbsp; 
+368A2<BR>第13关1DA9&nbsp;&nbsp;&nbsp;&nbsp; 
+3692D<BR>第14关4CAA&nbsp;&nbsp;&nbsp;&nbsp; 
+36A5C<BR>第15关CCAA&nbsp;&nbsp;&nbsp;&nbsp; 
+36ADC<BR>第16关0EAB&nbsp;&nbsp;&nbsp;&nbsp; 
+36B1E（包含16关珍妮和布克的对话，劝降对话）<BR>第17关ADAB&nbsp;&nbsp;&nbsp;&nbsp; 
+36BBD<BR>第18关FDAB&nbsp;&nbsp;&nbsp;&nbsp; 
+36C0D<BR>第19关41AC&nbsp;&nbsp;&nbsp;&nbsp; 
+36C51<BR>第20关85AC&nbsp;&nbsp;&nbsp;&nbsp; 
+36C95<BR>第21关C1AC&nbsp;&nbsp;&nbsp;&nbsp; 
+36CD1<BR>第22关DDAC&nbsp;&nbsp;&nbsp;&nbsp; 
+36CED<BR>第23关17AD&nbsp;&nbsp;&nbsp;&nbsp; 
+36D27<BR>第24关50AD&nbsp;&nbsp;&nbsp;&nbsp; 
+36D60<BR>第25关A9AD&nbsp;&nbsp;&nbsp;&nbsp; 
+36DB9<BR>第26关C4AD&nbsp;&nbsp;&nbsp;&nbsp; 36DD4<BR>未知F6AD F7AD F8AD F9AD FAAD 
+FBAD 
+<BR>---------------------------------------------------------------<BR>该段字节的书写注意点。<BR>条件与结果分开书写，条件写完后写D526A5，这表示读取到这里是跳回26A5处。<BR>---------------------------------------------------------------<BR>这其中应该是该关结束时的指令代码，其中包含了结束时更换机体，结束时人物的去留，结束时机体强化，对话，增援等等<BR>在地址366FE 
+中的6E05为妮娜（妮娜的序号为05）离开时代码，如果将其换成其他人的换妮娜就不会走了而是其他人走。（6E05表示05序号的人离开。<BR>6F 05 10 
+6A 09 
+表示10代码的人驾驶6A机体为09等级加入我方，同时将替换掉序号为05的人）<BR>4E068C（表示在该关结束时，06代码的人物将乘坐8C代码的机体在下一关出击）<BR>其中5E05643C&nbsp; 
+5E0F6B52&nbsp;&nbsp; 表示3C这个人物离开<BR>其中40 14 03 01,41 14 03 01表示14这个代码的人说03 
+01这段话，而41表示在屏幕中直接说话，41表示什么人说话，光表指向什么人。<BR>其中5BFA表示结束，一般指令在结束之前写好。<BR>58表示否定意思，57表示肯定意思。<BR>其中06 
+01 58 33 A5中的06 01 58表示胜利条件达成，33 
+A5表示条件达成后转向的地址指针。(其中01表示敌人的剩余数量)（即敌全灭条件达成或者说地图上无敌人）<BR>其中07 01 58 45 A5中的07 01 
+58表示失败条件达成，45 A5表示条件达成后转向的地址指针。(其中01表示我方的剩余数量)（我方全灭或者说地图上无我方）<BR>其中04 59 58 C4 
+AB表示59这种敌人全灭，C4 AB表示达成这一条件后转到的地址指针<BR>04 19 57 表示该人物存活则跳转。<BR>03 23 58 C1 
+A2表示23这个人是否加入我方，加入则继续，没有加入我方则跳转到C1A2所指的地址。（增援地址处的判断指令，也可以用在每关结束地址的判断指令）58表示死亡，57表示存活。<BR>03 
+2C 58 3F 
+9B表示2C这个人是否加入我方，加入则继续，没有加入我方则跳转到C1A2所指的地址。（增援地址处的判断指令，也可以用在每关结束地址的判断指令）<BR>05 23 
+57 31 AA表示23这个人物存活则跳转到31AA所指地址。<BR>01 0F 57 7E A5 
+是表示0F这个标记的人物是否在我方，在则跳转到7EA5这个地址，不在则直接跳过。（每关结束地址的判断指令，0F是每个人加入是的判断代码，一边部分人物加入资料中会有该条件，条件存放方式为51 
+88，后面的88即为条件）<BR>变身剧情修改，将该人物死亡为条件，出现增援驾驶员相同，同时加入条件，当该条件达成则转移。<BR>5B 8B 5E 3C 72 
+DF 表示游戏结束。其中8B表示调用GAMEOVER音乐<BR>5B FA 5E 3C 5B 89 71 DF 
+表示胜利，进入下一关。其中89表示调用中途存档音乐。<BR>这之中5B8B中的5B表示调用音乐，5E3C表示切换画面，72表示GAMEOVER，<BR>71表示进入下一关，F3表示通关。</P>
+<P>---------------------------------------------------------------<BR>第一关 卡姆加入代码 
+460C015E1E 6F060B8202 4C0C010600 
+400B080245<BR>其中460C015E1E为增援调用指令0C01表示地图显示位置在坐标0C01处。<BR>其中6F06 
+0B8202表示0B人物驾驶82机体等级为3及加入我方，并调用06这个代码。<BR>其中4C0C010600 
+表示06调用代码的人物与坐标0C01处加入我方。<BR>其中400B080245 
+表示0B这个人物说0802这段话，40为开始语，45为结束语。<BR>---------------------------------------------------------------<BR>第二关中的过关语句 
+402D081645 506400 
+6E05中506400为未知作用。6E05表示05这个调用代码的人物离开。<BR>---------------------------------------------------------------<BR>第三关520F510E55其中52OF表示OF这个条件用完清空的意思。<BR>---------------------------------------------------------------<BR>第十六关 
+010A57表示脱离后过关。<BR>---------------------------------------------------------------<BR>第八关09 
+21 00 58 51 A7其中表示21这个人物受到伤害就跳转到51A7这个指针所指的地址。（表示HP低于多少时进行跳转。（00表示满血状态））<BR>64 
+0E 6C 1B 21 表示 OE 
+这个人物攻击21这个人物。<BR>---------------------------------------------------------------<BR>第十三关 
+5E1E1E146B其中表示14这个人物离开战场。<BR>---------------------------------------------------------------<BR>第十六关 
+5E1E1E146B其中表示14这个人物离开战场。<BR>---------------------------------------------------------------<BR>第十九关 
+13 1C1B B02057 
+5BAC这段代码表示在敌方行动时，1C这个人物杀死1B这个人物，则满足条件，跳转到5BAC这个指针所指的地址。<BR>---------------------------------------------------------------<BR>第二十关中的 
+5E0F 6422 
+6B510E其中表示22这个人物离开战场。<BR>64226B表示22这个人物离开战场。<BR>6B表示离开战场6422表示选定22这个人物。<BR>6A表示爆炸式的离开战场。<BR>5E 
+01 1A 00 57 AAAA 后面的AAAA表示指针，前面的代码为判断，表示能攻击到则跳转到AAAA这个指针指向的地址。<BR>55 AAAA 
+中的AAAA表示指针，55表示只跳转一次，过后就不在跳转。<BR>---------------------------------------------------------------<BR>0C 
+12 12 FD AAAA&nbsp; 其中0C 12 
+12表示任意人物站在1212这个坐标的位置，<BR>AAAA表示站在这个位置跳转的指针。<BR>---------------------------------------------------------------<BR>64 
++人物和1E+人物一样意思，但是1E没有光标。<BR>---------------------------------------------------------------<BR>---------------------------------------------------------------<BR>---------------------------------------------------------------<BR>---------------------------------------------------------------<BR>---------------------------------------------------------------<BR>---------------------------------------------------------------<BR>---------------------------------------------------------------<BR>---------------------------------------------------------------<BR>---------------------------------------------------------------<BR>---------------------------------------------------------------<BR>---------------------------------------------------------------<BR>---------------------------------------------------------------<BR>---------------------------------------------------------------<BR>---------------------------------------------------------------<BR>---------------------------------------------------------------<BR>---------------------------------------------------------------<BR>---------------------------------------------------------------<BR>---------------------------------------------------------------<BR>---------------------------------------------------------------<BR>---------------------------------------------------------------<BR>---------------------------------------------------------------<BR>---------------------------------------------------------------<BR>---------------------------------------------------------------<BR>---------------------------------------------------------------<BR>---------------------------------------------------------------<BR>---------------------------------------------------------------<BR>---------------------------------------------------------------<BR>---------------------------------------------------------------<BR>---------------------------------------------------------------</P>
+<P>&nbsp;</P>
+<P><BR>36E0C-36E4A&nbsp; 特殊事件的指针（我方NPC的智商指针）<BR>36E4C-36F92&nbsp; 我方NPC智商地址</P>
+<P><BR>0&nbsp;&nbsp; 3CAE这个指针是安东释放脉冲波的指针（每回合开始自动释放，位置不会移动）<BR>1&nbsp; 
+36E59&nbsp;&nbsp; 49AE这个指针是第7关安东从开始位置移动到离开位置的指针<BR>2&nbsp; 36E72&nbsp;&nbsp; 
+62AE这个指针是第6关安东智商，攻击完炮台，离开时的对话指针<BR>3&nbsp; 36E9C&nbsp;&nbsp; 
+8CAE这个指针是第7关开头安东离开，布克对话的指针<BR>4&nbsp; 36EB0&nbsp;&nbsp; 
+A0AE这个指针是自动攻击指针（每回合开始自动攻击，位置不会移动）<BR>5&nbsp; 36EBE&nbsp;&nbsp; 
+AEAE这个指针是我方NPC指针（不会攻击，移动，没有智商的NPC，估计是16关布&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+克劝降珍妮后珍妮的移动方式）<BR>6&nbsp; 36EBF&nbsp;&nbsp; AFAE这个指针是米亚变为我方NPC跟随卡姆的指针<BR>7&nbsp; 
+36EF1&nbsp;&nbsp; E1AE这个指针是米亚由我方NPC变为敌人的过程及对话指针<BR>8&nbsp; 36EFD&nbsp;&nbsp; 
+EDAE这个指针是假马丁暴露时的对话和移动方式<BR>9&nbsp; 36F39&nbsp;&nbsp; 
+29AF这个指针是我方NPC无智商自动行动（第五关萨米智商）<BR>A&nbsp; 36F69&nbsp;&nbsp; 
+59AF这个指针是自动攻击指针（每回合开始自动攻击，位置不会移动）(萨米的智商)</P>
+<P><BR>36F93-36FF2&nbsp; 敌方智商指针（部分特殊事件的地址）<BR>36FF3-374F9&nbsp; 敌方智商地址</P>
+<P>37269-372CD&nbsp; 为米亚判断卡姆的地址（和电脑智商有关）<BR>3727F 
+处的0B表示判断，假如靠近的人物代码为0B，则变为我方NPC）（敌方智商指针）</P>
+<P><BR>0&nbsp;&nbsp;&nbsp; E3AF&nbsp; 36FF3&nbsp; 
+攻击智商，不会移动<BR>1&nbsp;&nbsp;&nbsp; F1AF&nbsp; 37001&nbsp; 
+远攻母舰智商<BR>2&nbsp;&nbsp;&nbsp; FEAF&nbsp; 3700E&nbsp; 
+不动，或N回合后攻击（为第1关凯智商）<BR>3&nbsp;&nbsp;&nbsp; 55B0&nbsp; 37065&nbsp; 
+远攻母舰智商（为第1关莫尼智商）<BR>4&nbsp;&nbsp;&nbsp; 71B0&nbsp; 37081&nbsp; 
+第1关增援，杂兵对话（为第1关邓肯智商）<BR>5&nbsp;&nbsp;&nbsp; 9EB0&nbsp; 370AE&nbsp; 
+远攻母舰智商（8回合之后进攻）<BR>6&nbsp;&nbsp;&nbsp; B4B0&nbsp; 370C4&nbsp; 
+第2关增援，拉尔对话（为第2关拉尔智商）<BR>7&nbsp;&nbsp;&nbsp; C9B0&nbsp; 370D9&nbsp; 
+攻击智商（为第2关保罗智商）<BR>8&nbsp;&nbsp;&nbsp; 0BB1&nbsp; 3711B&nbsp; 
+第13关保罗智商，目标锁定卡姆<BR>9&nbsp;&nbsp;&nbsp; 3DB1&nbsp; 3714D&nbsp; 
+攻击智商（为第2关米奇尔智商）<BR>A&nbsp;&nbsp;&nbsp; 69B1&nbsp; 37179&nbsp; 
+攻击智商<BR>B&nbsp;&nbsp;&nbsp; 76B1&nbsp; 37186&nbsp; 攻击智商&nbsp;&nbsp;&nbsp; 
+<BR>C&nbsp;&nbsp;&nbsp; 83B1&nbsp; 37193&nbsp; 远攻母舰智商<BR>D&nbsp;&nbsp;&nbsp; 
+99B1&nbsp; 371A9&nbsp; 第6关布朗智商，对话<BR>E&nbsp;&nbsp;&nbsp; E8B1&nbsp; 371F8&nbsp; 
+第6关卡尔智商，对话，目标锁定盖塔（卡尔智商）<BR>F&nbsp;&nbsp;&nbsp; 23B2&nbsp; 37233&nbsp; 
+第7关希拉智商，对话<BR>10&nbsp;&nbsp; 53B2&nbsp; 37263&nbsp; 
+攻击智商(第8关肯特智商)&nbsp;&nbsp;&nbsp; <BR>11&nbsp;&nbsp; 69B2&nbsp; 37279&nbsp; 
+14关米亚变为我方NPC的指针（判断是否为卡姆，14关米亚智商）<BR>12&nbsp;&nbsp; BDB2&nbsp; 372CD&nbsp; 
+11关贝克跟随我方，并且对话的指针<BR>13&nbsp;&nbsp; D2B2&nbsp; 372E2<BR>14&nbsp;&nbsp; 
+ECB2&nbsp; 372FC&nbsp; 不动，无智商（13关洛克智商）<BR>15&nbsp;&nbsp; FFB2&nbsp; 3730F&nbsp; 
+13关马休智商，对话。<BR>16&nbsp;&nbsp; 19B3&nbsp; 37329&nbsp; 仅跟随，不攻击<BR>17&nbsp;&nbsp; 
+29B3&nbsp; 37339&nbsp; 米巴跟随金的智商<BR>18&nbsp;&nbsp; 37B3&nbsp; 37347&nbsp; 
+攻击智商<BR>19&nbsp;&nbsp; 49B3&nbsp; 37359&nbsp; 攻击智商<BR>1A&nbsp;&nbsp; 5EB3&nbsp; 
+3736E&nbsp; 攻击智商（10关萨米智商，受到攻击就会移动）<BR>1B&nbsp;&nbsp; 74B3&nbsp; 37384&nbsp; 
+近攻智商（19关普西智商，攻击伊娃）<BR>1C&nbsp;&nbsp; D0B3&nbsp; 373E0&nbsp; 
+攻击智商（16关珍妮智商）<BR>1D&nbsp;&nbsp; 1FB4&nbsp; 3742F&nbsp; 近攻智商<BR>1E&nbsp;&nbsp; 
+72B4&nbsp; 37482&nbsp; 远攻母舰智商<BR>1F&nbsp;&nbsp; 88B4&nbsp; 37498&nbsp; 
+攻击智商（20关休智商）<BR>20&nbsp;&nbsp; C1B4&nbsp; 374D1&nbsp; 近攻母舰智商<BR>21&nbsp;&nbsp; 
+D3B4&nbsp; 374E3&nbsp; 远攻母舰智商<BR>??&nbsp;&nbsp; E9B4&nbsp; 374F9&nbsp; 
+不是指向智商的指针</P>
+<P><BR>智商代码<BR>智商代码中会含有指针，这个指针可能是指向对话，也可能是触发某个指令，使其触发过后，变为其他智商。（此时的指针就指向该智商）</P>
+<P>敌人智商</P>
+<P>01、0A、0B-战斗一开始就主动进攻<BR>07、0C-等待我方接近时或进入射程范围才主动进攻<BR>15-1E到某回合后或进入射程范围主动进攻<BR>00、0F、18、-原地不动或进入射程范围时进攻<BR>1A-当我方攻击后或进入射程范围才主动进攻<BR>14-撤退？<BR>1B-优先瞄准某一目标进攻<BR>0E、17、1C-可说得？特殊行动方式？<BR>20-只瞄准某一目标进攻<BR>1E-到第5回合进攻<BR>05-到第8回合进攻（其中5E010008中的08表示进攻回合）<BR>15-到第5回合进攻<BR>0C-到第12回合进攻</P>
+<P>01最优先攻击防御低的和速度低的，但是速度的判断在防御之后（不管反击,注视命中）<BR>0A最优先的是反击不能的，优先攻击速度低或者命中高的<BR>0B最优先的是反击不能的，优先攻击防御低的，（无视命中）<BR>智商中 
+0B为不计命中，用高攻武器进攻，0A为注重命中，用低攻武器进攻。<BR>---------------------------------------------------------------<BR>5E 
+01 00 08 58 A9B0 61 05 1A 00 57 AFB0 14 62 63 D5 A0B0<BR>其中5E 01 00 08 
+58表示到第8回合，转到A9B0这个指针的地址<BR>---------------------------------------------------------------<BR>6005 
+表示可以攻击，不能移动。<BR>6263 
+表示直接攻击<BR>---------------------------------------------------------------<BR>19 
+00 00 62&nbsp; 18 00 00 62 表示移动到00，00，这个坐标。19表示无视机动。<BR>6C表示恢复这个选定的人物的行动力。<BR>19 
+00 00 58 AA AA 表示移动到00 00 
+这个位置不成立则跳转。<BR>---------------------------------------------------------------<BR>---------------------------------------------------------------<BR>16 
+28 58 表示在28这个人附近，64 16 16 06 58 表示16这个人物在06这个人物附近。<BR>64 23 表示选定23这个人物。1B 28 
+58表示在28这个人物旁边。（攻击28这个人物）<BR>16 36 58 表示无视机动移动到36这个人物旁边。<BR>5E0F表示光标停留时间。</P>
+<P>12 00 57 AAAA 
+表示HP还剩一半达到该条件则跳转。<BR>---------------------------------------------------------------</P>
+<P><BR>劝降资料</P>
+<P><BR>34珍妮<BR>52（比纳）我9B（比纳）敌</P>
+<P>3778B&nbsp; 珍妮所在位置<BR>37607&nbsp; 
+萨米所在位置<BR>在可劝降的人物附近有劝降改人物的人物代码<BR>其中0B06304123063141中的0B，23为说话人物，0630为对白指针，41为未知</P>
+<P>37555 妮娜所在位置，修改劝降是在人物配置前面修改。其中人物代码（妮娜为2B）后面为对白的指针</P>
+<P>配置前一点的代码45642B6905的大概意思为2B（妮娜）加入我方，配置代码为05,注意，修改加入我方的人员时，必须是该地图有的人物，配置代码和替换代码一起修改。<BR>69表示加入我方，67表示我方NPC<BR>39E13 
+<BR>其中的02062B，是大卫劝降妮娜的资料</P>
+<P>39E26<BR>其中的0C0C1B,100C1B表示在0C和10这关由0C这个人物劝降1B这个人物（希塔劝降伊娃的部分代码）一般一次劝降是占这3个字节</P>
+<P>&nbsp;</P>
+<P>其中39E13-39E33为劝降指令每个人物每次劝降为3个字节</P>
+<P>02062B 为第3关大卫劝降妮娜</P>
+<P>05082C 05092C&nbsp; 050A2C 为第6关龙劝降卡尔</P>
+<P>07075F 为第8关加代劝降米巴</P>
+<P>090B23 为第10关卡姆劝降萨米 </P>
+<P>0C0C1B 为第13关希塔劝降伊娃</P>
+<P>0F0D34 为第16关布克劝降珍妮</P>
+<P>100C1B 为第17关希塔劝降伊娃</P>
+<P>150C1C 为第22关希塔劝降普西</P>
+<P>18OD34 为第25关布克劝降珍妮</P>
+<P>&nbsp;</P>
+<P>注意：劝降人物珍妮，假如杀死珍妮，那么第25关珍妮增援将不会出现，珍妮的死活的决定是在第16关结束指令那里，增援的判断条件就是调用第16关的判断结果。<BR>将珍妮的加入代码进行了修改，确认为可劝降人物，同时是非NPC。</P>
+<P>&nbsp;</P>
+<P>374EA-3750D&nbsp; 劝降人物指针（374F9-3750E精确地址）<BR>3750F-377C0&nbsp; 劝降人物地址</P>
+<P>人物&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+指针&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+地址</P>
+<P><BR>第3关尼娜&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+FFB4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+3750F</P>
+<P>第6关卡尔&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+53B5,53B5,53B5&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+37563</P>
+<P>第8关米巴&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+9BB5&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+375AB</P>
+<P>第10关萨米&nbsp;&nbsp;&nbsp;&nbsp; 
+C0B5&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+375D0</P>
+<P>第13关伊娃&nbsp;&nbsp;&nbsp;&nbsp; 
+04B6&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+37614</P>
+<P>第16关珍妮&nbsp;&nbsp;&nbsp;&nbsp; 
+42B6&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+37652</P>
+<P>第17关伊娃&nbsp;&nbsp;&nbsp;&nbsp; 
+89B6&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+37699</P>
+<P>第22关普西&nbsp;&nbsp;&nbsp;&nbsp; 
+DAB6&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+376EA</P>
+<P>第25关珍妮&nbsp;&nbsp;&nbsp;&nbsp; 
+40B7&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+37750</P>
+<P>64161606583FB5 1B066263B545 
+尼娜劝降代码中的凯攻击大卫的指令。<BR>其中64161606583FB5表示判断，判断其中第一个16表示16（凯）和06（大卫）是否属于不能攻击状态 
+，如果是则转移地址，如果不是则凯攻击大卫。其中1B066263之中的62表示攻击06（大卫）。</P>
+<P>64 2C 69 0B 4E 2C 5A 51 87 1E 08 58 9A B5 63 DF&nbsp;&nbsp; 卡尔加入我方代码</P>
+<P>64 5F 69 0C 4E 5F 2C 51 89 1E 07 58 BF B5 63 DF&nbsp;&nbsp; 米巴加入我方代码</P>
+<P>64 23 69 05 4E 23 09 54 23 05 1E 0B 58 03 B6 63 DF 萨米加入我方代码</P>
+<P>64 1B 69 0E 4E 1B 41 54 1B 05 51 0E 1E 0C 63 DF</P>
+<P>64 31 67 表示31这个代码的人变为我方的NPC。</P>
+<P>64 2C 69 0B ,64 5F 69 0C ,64 23 69 05 这段代码表示 
+2C,5F,23这几人加入，调用代码为0B,0C,05.<BR>4E 2C 5A, 4E 5F 2C, 4E 23 09 这段代码表示 
+2C,5F,23这几人加入是乘坐5A,2C,09这几部机体.<BR>51 87 1E 08 58 ， 51 89 1E 07 58 ， 54 23 05 1E 
+0B 58 其中51 87, 51 89, 为人物的加入后判断条件， 1E 08 58 , 1E 07 58, 1E 0B 58 
+中的08,07,0B为劝降人物代码。 （1E 08 58 应该是表示该人物劝降过后行动结束的指令）<BR>9A B5 63 DF, BF B5 63 DF, 
+03 B6 63 DF其中63DF为结束语句，9A B5，BF B5 03 B6为指针，指向结束的地址 
+（指向DF这个地址）<BR>34180指向劝降人物的最后的指针.<BR>37750该段地址的 01 85 57 6E B7， 01 0F 57 61 B7 
+是一个条件判断语句，前面的条件应该是在第16关劝降过珍妮则触发，后面的是第16关没有劝降珍妮，在后来在劝降时，第一次对话过后，之后的对话都会自动指向该条件。（注意其中6EB7,61B7为指针，当条件满足时，指针指向的地址）.<BR>37690地址处的51 
+85 1E 0D 58 这个几个字节应该是条件判断基准一类，该处地址为16关布克劝降珍妮地址的结束部分。<BR>37750地址处的01 85 57 
+为条件判断，与之前16关的珍妮劝降地址结束的85一致，估计这个85即为条件成立的关键。</P>
+<P><BR>37794-377C0这些指针数据和第16关逃脱有关，地址改变后就无法离开。<BR>16关逃脱地点1F08<BR>35617的1F08为16关对话位置<BR>15936的1F08为逃脱地址，改变后脱离地点也将改变<BR>36ADD地址处的18表示洛克，其意思表示杀死洛克，洛克说话。<BR>或者说当洛克不在敌方是，洛克说话。将18改为其他人时，判断条件换成其他人。</P>
+<P>---------------------------------------------------------------<BR>---------------------------------------------------------------<BR>---------------------------------------------------------------<BR>---------------------------------------------------------------</P>
+<P><BR>38030-38036&nbsp; 系统指针</P>
+<P>38030地址的指针2880为开头动画的调用<BR>38838-380ED开头动画的调用地址</P>
+<P>DE80&nbsp; 
+指针为每关开头图片调用的指针（从开头对话到进入地图对话结束）<BR>380EE-382AD为每关开头图片调用的指令（从开头对话到进入地图对话结束）</P>
+<P>9E82&nbsp; 指针为每关对话结束后回合开始<BR>382AE-382EF 为每关对话结束后回合开始的指令</P>
+<P>E082&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+未知指针<BR>382F0-38331&nbsp; 未知地址</P>
+<P>38332-3833D&nbsp; 未知指针<BR>3833D-38550&nbsp; 未知地址</P>
+<P>38669-386A6&nbsp; 未知指针<BR>386A8-38C74&nbsp; 未知地址</P>
+<P>38C75-38CDE&nbsp; 未知指针<BR>38CDF-39000&nbsp; 未知地址</P>
+<P><BR>3900D-3908A&nbsp; 未知指针</P>
+<P>39620&nbsp; 第一关人物初始配置地址。<BR>39638&nbsp; 第一关机体初始配置地址。</P>
+<P>3965D 为第1关人物配置</P>
+<P>39C44为各个精神的消费精神数量</P>
+<P>3A7FD-3A806为各精神恢复指针<BR>地址&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+指针&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 指向地址&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+作用<BR>3A7FD&nbsp;&nbsp;&nbsp;&nbsp; F7A7&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+3A807&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+毅力的恢复地址<BR>3A7FF&nbsp;&nbsp;&nbsp;&nbsp; 
+00A8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+3A810&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+祈祷的恢复地址<BR>3A801&nbsp;&nbsp;&nbsp;&nbsp; 
+09A8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+3A819&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+修理装置的恢复HP上限有关<BR>3A803&nbsp;&nbsp;&nbsp;&nbsp; 
+18A8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+3A828&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+潜力的恢复地址<BR>3A805&nbsp;&nbsp;&nbsp;&nbsp; 
+21A8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+3A831&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ？？？？</P>
+<P>恢复代码：A90F8500 A927 4C2E28 潜力恢复值，A9A9后面的为恢复数值总数，A90F 
+A927表示恢复总数为270F即十进制的9999。</P>
+<P>3A808 毅力恢复值<BR>3A811 祈祷恢复值<BR>3B2EE-3B2F1 4个字节。是战斗背景色盘<BR>3b2d9-3b2dc 
+4个字节是机体状态色盘。<BR>3B2C0-3B2C3 4个字节是 地图上的色盘<BR>3b34a-3b34d 
+4个字节是标题的色盘。<BR>3b36a-3b36d 4个字节是开头剧情色盘。<BR>3B3B5-3B3B8 4个字节是每一话的色盘</P>
+<P>3C566和开头有关，每关开头的调用。</P>
+<P>毅力8、加速4、瞄准2、防守1---；<BR>强攻8、友情4、必杀2、疾风1---；<BR>回避8、潜力4、热血2、情义1---；<BR>传真8、援助4、怒2、祈祷1---；<BR>干扰8、狂怒4、爱心2</P>
+<P>关于机师能力补正：（精神能力最后一位（第6位）是补正属性）<BR>第一位&nbsp;&nbsp;&nbsp;&nbsp; 8是移动补正， 
+强度补正4、防卫补正2、速度补正1---（后面的为速度补正）；</P>
+<P>顺位为&nbsp;&nbsp;&nbsp;&nbsp; 数值大的在后面，数值小的在最后。</P>
+<P>第二位&nbsp;&nbsp;&nbsp;&nbsp; 8是HP补正。</P>
+<P>&nbsp;</P>
+<P>&nbsp;</P>
+<P>39C94为各个精神的消费精神数量</P>
+<P>17000貌似是各个人机体出发变形的对话等等</P>
+<P><BR>5E 0F 64 28 6B 5E 0F 表示28这个人物离开战场。</P>
+<P>5E 0A 也是表示离开战场</P>
+<P><BR>8B80<BR>8BB0</P>
+<P><BR>Ollydbg&nbsp;&nbsp; 32位调试工具</P>
+<P><BR><A 
+href="http://www.405228576@qq.com">www.405228576@qq.com</A><BR>weiranjing</P>
+<P>&nbsp;</P>
+<P>&nbsp;</P>
+<P>&nbsp;</P>
+<P>我方&nbsp; 光剑&nbsp; &nbsp;&nbsp; 101B0<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+光束枪1&nbsp; &nbsp;&nbsp; 101C4<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 光束枪2&nbsp; 
+&nbsp;&nbsp; 101F8<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+导弹11&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+1022C<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+穿甲弹&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+10248<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+光子射线&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+1025C<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+机械刀&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+102B3<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+火焰喷射器&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+102C7<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+原子钻&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+1031C<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+闪电&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+10330<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+光回旋镖&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+1036C<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+压力钻&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+1038A<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+盖塔战斧&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+1039E<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+盖塔射线1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+103BC<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+盖塔射线2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+10413<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+回旋钻&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+1044F<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+神风钻&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+10463<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+冷冻液&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+104A7<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+盖塔导弹&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+104EB<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+远程激光炮&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+10507<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+高能光束枪&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+10543<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+高能光剑&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+10577（和光剑差不多）<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+激光子母炮&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+1058B<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+中子炮&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+105D8<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+手持光束枪&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+1060F<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+螺旋粉碎机&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+10663<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+反重力风暴&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+10677<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+十字镖&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+106CB<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+双面钩&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+106E9（和光剑差不多）<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+双刃战斧&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+106FD<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+链子炮&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+1071B<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+雷格导弹&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+10761<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+鱼雷&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+1077D<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+脉冲波1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+10799（和脉冲波一样）<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+脉冲波2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+107C7（和脉冲波一样）<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+脉冲波3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+107F5（和脉冲波一样）<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+组合刀&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+10823（和光剑差不多）（萨斯剑）<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+20机枪&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+10837<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+左轮手枪&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+1086E<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+激光枪&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+108A2<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+粒子炮&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+108D6<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 导弹（阿波罗A）&nbsp;&nbsp;&nbsp; 
+10914<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 高能光炮（艾文）&nbsp;&nbsp; 
+10930<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 激光剑（吉伯）&nbsp;&nbsp;&nbsp;&nbsp; 
+1097D<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 激光剑（伯利）&nbsp;&nbsp;&nbsp;&nbsp; 
+109CA<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+三栖导弹&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+10A17<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 激光剑（粗的）&nbsp;&nbsp;&nbsp;&nbsp; 
+10A52<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+冷冻光线&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+10AA0（和小光束枪差不多。）<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+回旋镖（麦乔）&nbsp;&nbsp;&nbsp;&nbsp; 10AD2<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+回旋镖（麦乔）&nbsp;&nbsp;&nbsp;&nbsp; 10B1F<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+回转光束枪&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+10B3D<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+热能炮&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+10B63<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+气旋光束&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+10BA4<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+双刃刀&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+10C0C<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+马林导弹&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+10C20<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+离子刀&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+10C3C<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+神风导弹&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+10C50<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+紫外线枪&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+10C6C<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+冲击波&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+10CC3</P>
+<P><BR>敌方&nbsp; 光剑&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+10E5F<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+光束枪1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 10E73&nbsp; 
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 离子剑（149）&nbsp;&nbsp;&nbsp; 
+10EA7<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+光束枪2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+10EBB<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+导弹11&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+10EEF<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+穿甲弹&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+10F0B<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+火焰喷射器&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+10F1F<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+盖塔射线&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+10F73<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+子母弹&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+10FCA<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+粒子炮&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+11008<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 激光（哥顿武器） 
+11046<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+高压电&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+1107A<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+步枪&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+110B2<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 手枪（7射程的）&nbsp; 
+110D0<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 溶解液（85）&nbsp;&nbsp;&nbsp;&nbsp; 
+11105<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+破坏光线&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+11147<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+毒液（91）&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+1117F（和溶解液差不多）<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 红外线（92）&nbsp;&nbsp;&nbsp;&nbsp; 
+111C1（和哥顿激光差不多）<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+大炮94&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+111F4<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+喷火器&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+11210<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+撞击器&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+11259<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+三指叉101&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+1126E（和光剑差不多）<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+连发枪102&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+11282（和20机枪差不多）<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+反坦克炮（黑色3合体）&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 112BA 
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+扩散光炮&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+112CE<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+防空粒子炮&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+1130B（和三西导弹差不多）<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+高能光炮&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+11348（艾文的子母炮）<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+机械爪&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+11395（和离子剑差不多）<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+基奥炮&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+113A9<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+激光剑&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+113EB（子母炮1）<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+激光剑&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+11438（子母炮2）<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+激光剑&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+11485（子母炮3）<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+激光剑&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+114D2（子母炮4）<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+激光剑&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+1151F（盖马激光剑）<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+扩散粒子炮&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+115B7（和光剑差不多）<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+激光剑&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+115CB（子母炮5）<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+三栖导弹&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+11618<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+激光炮&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+11654（帕拉的激光炮）<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 激光加农炮（118）&nbsp; 
+11670（和伯希的远程武器差不多。）<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+近距导弹（138）&nbsp;&nbsp;&nbsp; 116CD（和伯希的远程武器）<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+激光剑&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+1172A（粗的激光剑）<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+激光剑&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+11778（基格的近程激光剑）<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+碟型光枪&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+117C4（和哥顿激光差不多，几个中颜色最好。）<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+回旋镖&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+117F8（麦乔近程（攻击低的那个））<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+回旋镖&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+11845（麦乔近程（攻击高的那个））<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+能量球&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+11863<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+离子波&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+118D1<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+十字捣碎机&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1191F</P>
+<P>&nbsp;</P>
+<P>&nbsp;</P>
+<P>&nbsp;</P>
+<P>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+小标题地址<BR>指针地址：16111-16145<BR>代码地址16a6b开始第一关fe调试标题代码2a左右移动，0d上下移动，06调试06个单位位长度的图片代码，22 
+23：</P>
+<P>指针群：160D0-16144为大字体。<BR>其中：16111-16145为每关的标题。<BR>05 A6 10 A6 3F A6 65 A6 CB 
+A6 34 A7 51 A7 63 A7<BR>75 A7 8C A7 A3 A7 BE A7 DB A7 45 A8 4C A8 C5 A8<BR>DE A8 
+E5 A8 9D A9 1E A9 A6 A9 BD A9 26 AA 3B AA<BR>43 AA 4B AA 53 AA 5B AA 84 AA A1 AA 
+CA AA EF AA<BR>18 AB 41 AB 5E AB 7B AB 98 AB B9 AB E6 AB 0F AC<BR>30 AC 61 AC 82 
+AC A3 AC C4 AC ED AC 16 AD 3F AD<BR>74 AD A1 AD C2 AD E3 AD 10 AE</P>
+<P>5 e7 aa<BR>6 0c ab<BR>7 39 ab<BR>8 62 ab<BR>9 87 ab</P>
+<P>数据解析：<BR>FE 2A 0D 06 22 23 05 06 26 27 24 25 07 08 28 29 <BR>FE 2E 0B 0A 
+<BR>41 42 43 44 45 46 47 48 49 4A <BR>4B 4C 4D 4E 4F 50 51 52 53 54 FF</P>
+<P>FE+XX+YY：XXYY为坐标。06为标题长度</P>
+<P>15535-15563：读取标题VROM</P>
+<P>指针：<BR>1553F<BR>15545<BR>1554B</P>
+<P>15564-155B1：标题VROM数据</P>
+<P><BR></FONT>&nbsp;</P></BODY></HTML>

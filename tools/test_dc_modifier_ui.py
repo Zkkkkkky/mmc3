@@ -10,7 +10,15 @@ from PySide6.QtWidgets import QApplication
 from dc_modifier.app import MainWindow
 from dc_modifier.event_page import EventPage
 from dc_modifier.map_page import MapPage
-from dc_modifier.pages import ChangesPage, MusicPage, UnitPage, WeaponPage
+from dc_modifier.persuasion_page import PersuasionPage
+from dc_modifier.pages import (
+    CharacterPage,
+    ChangesPage,
+    MusicPage,
+    UnitPage,
+    WeaponPage,
+    parse_id_expression,
+)
 from dc_modifier.story_page import StoryPage
 from dc_modifier.unit_import_page import UnitImportPage
 from fc_editor.text_table import TextTable
@@ -32,9 +40,23 @@ class DesktopEditorSmokeTests(unittest.TestCase):
 
     def test_navigation_and_default_project(self) -> None:
         assert self.window.project is not None
-        self.assertEqual(self.window.navigation.count(), 10)
+        self.assertEqual(self.window.navigation.count(), 12)
+        self.assertEqual(self.window.workspace.count(), 5)
         self.assertEqual(self.window.project.profile.key, "dc-kuorong-mmc3-v1")
         self.assertEqual(self.window.project.expansion_capacity, 200 * 1024)
+        self.window.show_page("weapons")
+        self.assertEqual(self.window.workspace.currentIndex(), 1)
+        database_tabs = self.window.workspace.currentWidget()
+        self.assertEqual(database_tabs.currentIndex(), 2)
+        self.assertEqual(self.window.module_status.text(), "武器")
+
+    def test_id_expression_supports_hex_ranges_and_rejects_invalid_ids(self) -> None:
+        self.assertEqual(
+            parse_id_expression("$00-$02, 0x10，17", 0x20),
+            [0, 1, 2, 16, 17],
+        )
+        with self.assertRaisesRegex(ValueError, "超出范围"):
+            parse_id_expression("$21", 0x20)
 
     def test_unit_import_page_builds_package_and_previews_shared_ids(self) -> None:
         page = self.window.pages[self.window.page_index["unit_import"]]
@@ -65,6 +87,8 @@ class DesktopEditorSmokeTests(unittest.TestCase):
             if len(set(self.window.project.chr_tile_pixels(index))) > 1
         )
         graphics.tile_index.setValue(tile_index)
+        self.assertEqual(graphics.sheet.selected_tile, tile_index)
+        self.assertEqual(graphics.sheet_page.value(), tile_index // 256)
         original = self.window.project.chr_tile_pixels(tile_index)
         staged = list(original)
         staged[0] = (staged[0] + 1) % 4
@@ -106,6 +130,8 @@ class DesktopEditorSmokeTests(unittest.TestCase):
         page.records.setCurrentRow(0x04)
         page.attacker.setCurrentIndex(page.attacker.findData(0x9E))
         page.defender.setCurrentIndex(page.defender.findData(0x9E))
+        self.assertTrue(page.apply_button.isEnabled())
+        self.assertIn("尚未应用", page.pending_state.text())
         page.apply_record()
         binding = self.window.project.get_battle_music_binding(0x04)
         self.assertEqual((binding.attacker_command, binding.defender_command), (0x9E, 0x9E))
@@ -121,12 +147,37 @@ class DesktopEditorSmokeTests(unittest.TestCase):
         assert isinstance(validation_page, ChangesPage)
         self.assertGreater(validation_page.validation.rowCount(), 0)
 
+    def test_character_page_edits_name_and_music_together(self) -> None:
+        assert self.window.project is not None
+        page = self.window.pages[self.window.page_index["characters"]]
+        self.assertIsInstance(page, CharacterPage)
+        assert isinstance(page, CharacterPage)
+        page.records.setCurrentRow(0x12)
+        self.assertEqual(page.current_id, 0x13)
+        self.assertIn("拉坎", page.record_heading.text())
+        page.name_reference.setCurrentIndex(page.name_reference.findData(0x02))
+        page.ally_music.setCurrentIndex(page.ally_music.findData(0x9E))
+        page.enemy_music.setCurrentIndex(page.enemy_music.findData(0x9F))
+        self.assertTrue(page.apply_button.isEnabled())
+        page.apply_record()
+        self.assertEqual(self.window.project.character_display_name(0x13), "查理")
+        binding = self.window.project.get_battle_music_binding(0x13)
+        self.assertEqual(
+            (binding.attacker_command, binding.defender_command),
+            (0x9E, 0x9F),
+        )
+        self.window.undo()
+        self.assertEqual(self.window.project.character_display_name(0x13), "拉坎")
+
     def test_map_page_applies_a_capacity_safe_tile_change(self) -> None:
         assert self.window.project is not None
         page = self.window.pages[self.window.page_index["maps"]]
         self.assertIsInstance(page, MapPage)
         assert isinstance(page, MapPage)
         record = self.window.project.get_map(0)
+        self.assertEqual(page.tileset.currentData(), "D")
+        self.assertEqual(len(page.canvas.tile_images), 16)
+        self.assertFalse(page.canvas.tile_images[1].isNull())
         candidate_tiles = list(record.tiles)
         changed_index = None
         for index in range(1, len(candidate_tiles)):
@@ -151,6 +202,21 @@ class DesktopEditorSmokeTests(unittest.TestCase):
         self.assertEqual(changed.tiles[changed_index], candidate_tiles[changed_index])
         self.window.undo()
         self.assertEqual(self.window.project.get_map(0).tiles, record.tiles)
+
+    def test_map_page_edits_coordinate_event_and_shop(self) -> None:
+        assert self.window.project is not None
+        page = self.window.pages[self.window.page_index["maps"]]
+        assert isinstance(page, MapPage)
+        self.assertEqual(self.window.project.get_map_triggers(0), ())
+        page.trigger_table.set_rows([(3, 4, 0xFF, 0xF2)])
+        self.assertTrue(page.apply_button.isEnabled())
+        page.apply_changes()
+        entries = self.window.project.get_map_triggers(0)
+        self.assertEqual(tuple(entries[0].to_bytes()), (3, 4, 0xFF, 0xF2))
+        self.assertTrue(entries[0].is_shop)
+        self.assertEqual(entries[0].shop_id, 2)
+        self.window.undo()
+        self.assertEqual(self.window.project.get_map_triggers(0), ())
 
     def test_weapon_and_deployment_ids_have_resolved_names(self) -> None:
         weapon_page = self.window.pages[self.window.page_index["weapons"]]
@@ -206,8 +272,8 @@ class DesktopEditorSmokeTests(unittest.TestCase):
         self.assertIsNotNone(instruction)
         assert instruction is not None
         self.assertEqual(instruction.opcode, 0x4B)
-        self.assertIn("机体ID=$2A（空白/未分配机体槽）", page._parameter_text(instruction))
-        self.assertIn("人物ID=$5E（空白/未分配人物槽）", page._parameter_text(instruction))
+        self.assertIn("人物ID=$2A（", page._parameter_text(instruction))
+        self.assertIn("机体ID=$5E（", page._parameter_text(instruction))
         page.template.setCurrentIndex(page.template.findData(0x4A))
         page.parameters[0].setValue(0x10)
         page.parameters[1].setValue(0x08)
@@ -222,6 +288,24 @@ class DesktopEditorSmokeTests(unittest.TestCase):
             instruction.address, bytes(self.window.project.working)
         )
         self.assertEqual(restored.opcode, 0x4B)
+
+    def test_persuasion_page_uses_named_characters_and_undo(self) -> None:
+        assert self.window.project is not None
+        page = self.window.pages[self.window.page_index["persuasion"]]
+        self.assertIsInstance(page, PersuasionPage)
+        assert isinstance(page, PersuasionPage)
+        self.assertEqual(page.table.rowCount(), 4)
+        self.assertNotIn("原生名称", page.table.item(0, 2).text())
+        original = self.window.project.get_persuasion_rule(0)
+        page.table.selectRow(0)
+        page.chapter.setCurrentIndex(page.chapter.findData(0x02))
+        page.persuader.setCurrentIndex(page.persuader.findData(0x08))
+        page.target.setCurrentIndex(page.target.findData(0x42))
+        page.apply_button.click()
+        changed = self.window.project.get_persuasion_rule(0)
+        self.assertEqual(changed.raw, bytes((0x02, 0x08, 0x42)))
+        self.window.undo()
+        self.assertEqual(self.window.project.get_persuasion_rule(0).raw, original.raw)
 
 
 if __name__ == "__main__":

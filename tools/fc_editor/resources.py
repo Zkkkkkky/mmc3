@@ -152,6 +152,29 @@ class ResourceGraph:
                 True,
             )
         )
+        if profile.map_triggers is not None:
+            spec = profile.map_triggers
+            bank_offset = INES_HEADER_SIZE + spec.prg_bank * PRG_BANK_SIZE
+            graph.add_node(
+                ResourceNode(
+                    "map_triggers.pointer_table",
+                    "地图事件/商店指针表",
+                    "table",
+                    bank_offset + spec.pointer_table - spec.window_base,
+                    spec.scenario_count * 2,
+                    True,
+                )
+            )
+            graph.add_node(
+                ResourceNode(
+                    "map_triggers.managed_pool",
+                    "地图事件/商店托管池",
+                    "data",
+                    bank_offset + spec.managed_data_start - spec.window_base,
+                    spec.managed_data_end - spec.managed_data_start,
+                    True,
+                )
+            )
         if profile.chapter_events is not None:
             spec = profile.chapter_events
             graph.add_node(
@@ -165,6 +188,27 @@ class ResourceGraph:
                     - spec.data_window_base,
                     spec.data_end - spec.data_start,
                     True,
+                )
+            )
+        if profile.persuasion_rules is not None:
+            spec = profile.persuasion_rules
+            graph.add_node(
+                ResourceNode(
+                    "events.persuasion_rules",
+                    "劝降匹配规则表",
+                    "table",
+                    spec.table_offset,
+                    spec.slot_count * 3 + 1,
+                    True,
+                )
+            )
+            graph.add_node(
+                ResourceNode(
+                    "events.persuasion_pointers",
+                    "劝降事件脚本指针表",
+                    "table",
+                    spec.script_pointer_table_offset,
+                    spec.slot_count * 2,
                 )
             )
         for index, region in enumerate(profile.protected_prg_regions):

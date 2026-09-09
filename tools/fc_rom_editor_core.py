@@ -18,6 +18,10 @@ from fc_editor.codecs import (
     ChrCodec,
     CustomMusicCodec,
     MapCodec,
+    MapTrigger,
+    MapTriggerCodec,
+    PersuasionRule,
+    PersuasionRuleCodec,
     ScenarioLayoutCodec,
     StoryTextCodec,
     UnitCodec,
@@ -420,9 +424,19 @@ class RomProject:
         )
         self.map_codec = MapCodec(self.rom_image)
         self.scenario_layout_codec = ScenarioLayoutCodec(self.rom_image)
+        self.map_trigger_codec = (
+            MapTriggerCodec(self.rom_image)
+            if self.rom_image.profile.map_triggers is not None
+            else None
+        )
         self.chapter_event_codec = (
             ChapterEventCodec(self.rom_image)
             if self.rom_image.profile.chapter_events is not None
+            else None
+        )
+        self.persuasion_rule_codec = (
+            PersuasionRuleCodec(self.rom_image)
+            if self.rom_image.profile.persuasion_rules is not None
             else None
         )
         self.story_text_codec = StoryTextCodec(self.rom_image)
@@ -601,6 +615,10 @@ class RomProject:
     @property
     def supports_character_names(self) -> bool:
         return self.character_name_codec is not None
+
+    @property
+    def supports_map_triggers(self) -> bool:
+        return self.map_trigger_codec is not None
 
     @property
     def chr_tile_count(self) -> int:
@@ -845,13 +863,97 @@ class RomProject:
         ):
             return "超出已验证人物表"
         label = concise_dc_text(
-            self.character_name_codec.record_bytes(character_id)
+            self.character_name_codec.record_bytes(character_id, self.working)
         )
         if not label or not label.strip("-_ "):
             return "空白/未分配人物槽"
         if label and all(character in "?？" for character in label):
-            return f"原ROM占位名“{label}”"
+            return f"占位/未命名人物槽（原ROM“{label}”）"
         return label
+
+    def get_character_name_pointer(
+        self,
+        character_id: int,
+        *,
+        original: bool = False,
+    ) -> int:
+        if self.character_name_codec is None:
+            raise ValueError("当前 ROM 的人物名称表尚未验证。")
+        source = self.original if original else self.working
+        return self.character_name_codec.pointer(character_id, source)
+
+    def character_name_source_ids(
+        self,
+        character_id: int,
+        *,
+        original: bool = False,
+    ) -> tuple[int, ...]:
+        if self.character_name_codec is None:
+            raise ValueError("当前 ROM 的人物名称表尚未验证。")
+        return self.character_name_codec.source_ids(
+            self.get_character_name_pointer(character_id, original=original)
+        )
+
+    def character_name_record_bytes(
+        self,
+        character_id: int,
+        *,
+        original: bool = False,
+    ) -> bytes:
+        if self.character_name_codec is None:
+            raise ValueError("当前 ROM 的人物名称表尚未验证。")
+        source = self.original if original else self.working
+        return self.character_name_codec.record_bytes(character_id, source)
+
+    def character_name_reference_options(
+        self,
+    ) -> tuple[tuple[int, int, str, tuple[int, ...]], ...]:
+        if self.character_name_codec is None:
+            return ()
+        options: list[tuple[int, int, str, tuple[int, ...]]] = []
+        for pointer in sorted(self.character_name_codec.ids_by_pointer):
+            source_ids = self.character_name_codec.source_ids(pointer)
+            if not source_ids:
+                continue
+            source_id = source_ids[0]
+            options.append(
+                (
+                    source_id,
+                    pointer,
+                    self.character_display_name(source_id),
+                    source_ids,
+                )
+            )
+        return tuple(options)
+
+    def set_character_name_reference(
+        self,
+        character_id: int,
+        source_name_id: int,
+    ) -> None:
+        if self.character_name_codec is None:
+            raise ValueError("当前 ROM 的人物名称表尚未验证。")
+        before = self._mutation_snapshot()
+        offset, _old, after = self.character_name_codec.reference_patch(
+            self.working, character_id, source_name_id
+        )
+        self.working[offset : offset + 2] = after
+        self._finish_mutation(
+            before,
+            f"人物 {character_id:02X} · 名称引用 {source_name_id:02X}",
+        )
+
+    def reset_character_name(self, character_id: int) -> None:
+        if self.character_name_codec is None:
+            raise ValueError("当前 ROM 的人物名称表尚未验证。")
+        if not 1 <= character_id < self.profile.character_name_count:
+            raise ValueError(
+                f"人物 ID 必须在 01—{self.profile.character_name_count - 1:02X} 之间。"
+            )
+        before = self._mutation_snapshot()
+        offset = self.character_name_codec.pointer_offset(character_id)
+        self.working[offset : offset + 2] = self.original[offset : offset + 2]
+        self._finish_mutation(before, f"人物 {character_id:02X} · 还原名称")
 
     def battle_music_selector_label(self, selector: int) -> str:
         spec = self.profile.battle_music
@@ -1057,6 +1159,10 @@ class RomProject:
         return self.scenario_layout_codec.decode(map_id, source)
 
     def set_scenario_layout(self, layout: ScenarioLayout) -> None:
+        map_record = self.get_map(layout.map_id)
+        self.scenario_layout_codec.validate_layout(
+            layout, map_record.width, map_record.height
+        )
         before = self._mutation_snapshot()
         offset, _before, after = self.scenario_layout_codec.replacement_patch(
             bytes(self.working), layout
@@ -1072,6 +1178,93 @@ class RomProject:
             offset : offset + capacity
         ]
         self._finish_mutation(before, f"场景 {map_id:02X} · 还原部署")
+
+    def get_map_triggers(
+        self,
+        map_id: int,
+        *,
+        original: bool = False,
+    ) -> tuple[MapTrigger, ...]:
+        if self.map_trigger_codec is None:
+            raise ValueError("当前 ROM 没有已验证的地图事件表。")
+        source = self.original if original else bytes(self.working)
+        return self.map_trigger_codec.decode(map_id, source).entries
+
+    def _replace_map_triggers(
+        self,
+        map_id: int,
+        entries: tuple[MapTrigger, ...],
+        description: str,
+    ) -> None:
+        if self.map_trigger_codec is None:
+            raise ValueError("当前 ROM 没有已验证的地图事件表。")
+        record = self.get_map(map_id)
+        self.map_trigger_codec.validate_entries(entries, record.width, record.height)
+        before_snapshot = self._mutation_snapshot()
+        for offset, _before, after in self.map_trigger_codec.repack_patches(
+            bytes(self.working), map_id, entries
+        ):
+            self.working[offset : offset + len(after)] = after
+        self._finish_mutation(before_snapshot, description)
+
+    def set_map_triggers(
+        self,
+        map_id: int,
+        entries: tuple[MapTrigger, ...],
+    ) -> None:
+        self._replace_map_triggers(
+            map_id, tuple(entries), f"地图 {map_id:02X} · 事件与商店"
+        )
+
+    def reset_map_triggers(self, map_id: int) -> None:
+        self._replace_map_triggers(
+            map_id,
+            self.get_map_triggers(map_id, original=True),
+            f"地图 {map_id:02X} · 还原事件与商店",
+        )
+
+    @property
+    def supports_persuasion_rules(self) -> bool:
+        return self.persuasion_rule_codec is not None
+
+    def get_persuasion_rule(
+        self,
+        slot: int,
+        *,
+        original: bool = False,
+    ) -> PersuasionRule:
+        if self.persuasion_rule_codec is None:
+            raise ValueError("当前 ROM 没有已验证的劝降规则表。")
+        source = self.original if original else bytes(self.working)
+        return self.persuasion_rule_codec.decode(slot, source)
+
+    def set_persuasion_rule(
+        self,
+        slot: int,
+        scenario_id: int,
+        persuader_id: int,
+        target_id: int,
+    ) -> None:
+        if self.persuasion_rule_codec is None:
+            raise ValueError("当前 ROM 没有已验证的劝降规则表。")
+        before = self._mutation_snapshot()
+        offset, _old, after = self.persuasion_rule_codec.replacement_patch(
+            self.working,
+            slot,
+            scenario_id,
+            persuader_id,
+            target_id,
+        )
+        self.working[offset : offset + len(after)] = after
+        self._finish_mutation(before, f"劝降规则 ${slot:02X}")
+
+    def reset_persuasion_rule(self, slot: int) -> None:
+        if self.persuasion_rule_codec is None:
+            raise ValueError("当前 ROM 没有已验证的劝降规则表。")
+        before = self._mutation_snapshot()
+        offset = self.persuasion_rule_codec.record_offset(slot)
+        self.working[offset : offset + 3] = self.original[offset : offset + 3]
+        self._finish_mutation(before, f"劝降规则 ${slot:02X} · 还原")
 
     @property
     def supports_chapter_events(self) -> bool:
@@ -1234,6 +1427,14 @@ class RomProject:
                 start = self.custom_music_codec.bank_offset(slot)
                 if start <= offset < start + 0x2000:
                     return f"扩展曲 ${slot.command:02X} · {slot.label}"
+        if self.map_trigger_codec is not None:
+            pointer_start = self.map_trigger_codec.pointer_table_offset
+            pointer_end = pointer_start + self.map_trigger_codec.spec.scenario_count * 2
+            if pointer_start <= offset < pointer_end:
+                return f"地图 {(offset - pointer_start) // 2:02X} · 事件指针"
+            pool_start = self.map_trigger_codec.pool_offset
+            if pool_start <= offset < pool_start + self.map_trigger_codec.pool_capacity:
+                return "地图事件与商店托管数据"
         if self.chapter_event_codec is not None:
             spec = self.chapter_event_codec.spec
             start = self.chapter_event_codec.data_address_to_file_offset(spec.data_start)
@@ -1252,6 +1453,12 @@ class RomProject:
                     if instruction is not None
                     else "章节事件脚本"
                 )
+        if self.persuasion_rule_codec is not None:
+            start = self.persuasion_rule_codec.spec.table_offset
+            end = start + self.persuasion_rule_codec.spec.slot_count * 3
+            if start <= offset < end:
+                slot = (offset - start) // 3
+                return f"劝降规则 ${slot:02X} · 章节/劝说者/目标"
         if self.profile.battle_music is not None:
             spec = self.profile.battle_music
             for label, start in (
@@ -1271,6 +1478,18 @@ class RomProject:
         ):
             unit_id = (offset - self.profile.unit_name_pointer_table_offset) // 2
             return f"机体 {unit_id:02X} · 名称指针"
+        if (
+            self.character_name_codec is not None
+            and self.profile.character_name_pointer_table_offset is not None
+            and self.profile.character_name_pointer_table_offset + 2
+            <= offset
+            < self.profile.character_name_pointer_table_offset
+            + self.profile.character_name_count * 2
+        ):
+            character_id = (
+                offset - self.profile.character_name_pointer_table_offset
+            ) // 2
+            return f"人物 {character_id:02X} · 名称指针"
         for group in self.story_text_groups:
             for pointer, ids in self.story_text_codec.ids_by_pointer(group.selector).items():
                 if not group.data_start <= pointer < group.data_end:
@@ -1390,7 +1609,7 @@ class RomProject:
                 }
             )
         report = {
-            "toolVersion": "1.1.0",
+            "toolVersion": "2.1.0",
             "base": {
                 "path": str(self.path),
                 "profile": self.profile.key,
@@ -1564,6 +1783,25 @@ class RomProject:
             offset = self.unit_name_codec.pointer_offset(unit_id)
             covered_offsets.update(range(offset, offset + 2))
 
+        if self.character_name_codec is not None:
+            for character_id in range(1, self.profile.character_name_count):
+                original_pointer = self.get_character_name_pointer(
+                    character_id, original=True
+                )
+                current_pointer = self.get_character_name_pointer(character_id)
+                if original_pointer == current_pointer:
+                    continue
+                source_ids = self.character_name_codec.source_ids(current_pointer)
+                if not source_ids:
+                    continue
+                document.add_character_name_reference(
+                    character_id,
+                    source_ids[0],
+                    original_pointer,
+                )
+                offset = self.character_name_codec.pointer_offset(character_id)
+                covered_offsets.update(range(offset, offset + 2))
+
         for map_id in range(self.map_count):
             original_map = self.get_map(map_id, original=True)
             current_map = self.get_map(map_id)
@@ -1604,6 +1842,30 @@ class RomProject:
             covered_offsets.update(
                 range(offset, offset + self.scenario_layout_codec.capacities[map_id])
             )
+
+        if self.map_trigger_codec is not None:
+            triggers_changed = False
+            for map_id in range(self.map_trigger_codec.spec.scenario_count):
+                original_layout = self.map_trigger_codec.decode(map_id, self.original)
+                current_layout = self.map_trigger_codec.decode(
+                    map_id, bytes(self.working)
+                )
+                if original_layout.entries == current_layout.entries:
+                    continue
+                triggers_changed = True
+                document.add_map_trigger_replace(
+                    map_id,
+                    current_layout.entries,
+                    self.map_trigger_codec.semantic_digest(original_layout),
+                )
+            if triggers_changed:
+                pointer_start = self.map_trigger_codec.pointer_table_offset
+                pointer_size = self.map_trigger_codec.spec.scenario_count * 2
+                covered_offsets.update(range(pointer_start, pointer_start + pointer_size))
+                pool_start = self.map_trigger_codec.pool_offset
+                covered_offsets.update(
+                    range(pool_start, pool_start + self.map_trigger_codec.pool_capacity)
+                )
 
         for group in self.story_text_groups:
             for pointer, indices in self.story_text_codec.ids_by_pointer(

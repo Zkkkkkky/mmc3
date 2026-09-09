@@ -1,0 +1,29 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML><HEAD><TITLE>光束类武器动画组图方式</TITLE>
+<META name=GENERATOR content="MSHTML 8.00.7601.19104">
+<META content="text/html; charset=gb2312" http-equiv=Content-Type>
+<STYLE>
+html,body { 
+	/* Default Font */
+	font-family: Microsoft YaHei, Simsun, sans-serif;
+	font-size: 12pt;
+}
+</STYLE>
+</HEAD>
+<BODY><FONT size=3 face="Microsoft YaHei" font><PRE>            <FONT size=2 face=微软雅黑>光束类武器动画组图方式
+1.FE:FE+AA+BB规定光束类武器图片第一个格子所显示
+的位置,AA为Y坐标，每加1下移一格（8像素）每减1下
+移一格;BB为X坐标,每加1右移一格（8像素）每减1左移
+一格。
+2.组图方式1：FD 20+AA+F9+BB+CC FD 20规定取图方
+式为顺序取图，AA为图像的宽；F9+BB+CC规定从Tile号
+CC（40-7F）处开始读取BB(最多H40个)个图块。
+3.组图方式2：单个tile读取，以tile号为单位单个写
+入可重复。
+标志代码F3：F3+AA+BB F3后面的图块以上一个图块所
+显示的位置按照AA、BB的移动位置重新排列；AA为Y坐
+标以00为分界线加1向下移动1像素减1向上移动1格
+（8像素）；BB为X坐标以00为分界线加1向右移动1像素
+减1向左移动1格8（像素）。
+4.FF：结束。
+</FONT></PRE></FONT></BODY></HTML>

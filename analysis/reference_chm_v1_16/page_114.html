@@ -1,0 +1,305 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML><HEAD><TITLE>mapper（MMC5）</TITLE>
+<META name=GENERATOR content="MSHTML 8.00.7601.19104">
+<META content="text/html; charset=gb2312" http-equiv=Content-Type>
+<STYLE>
+html,body { 
+	/* Default Font */
+	font-family: Microsoft YaHei, Simsun, sans-serif;
+	font-size: 12pt;
+}
+</STYLE>
+</HEAD>
+<BODY>
+<P><FONT size=2>========================<BR>=&nbsp; Mapper 
+005&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+=<BR>========================&nbsp;</FONT></P>
+<P><FONT size=2>又名<BR>--------------------------<BR>MMC5<BR>ExROM</FONT></P>
+<P><FONT size=2></FONT>&nbsp;</P>
+<P><FONT size=2>游戏示例：<BR>--------------------------<BR>Castlevania 3恶魔城3<BR>Just 
+Breed<BR>Uncharted Waters大航海时代<BR>Romance of the 3 Kingdoms 2三国演义2<BR>Laser 
+Invasion<BR>Metal Slader Glory<BR>Uchuu Keibitai SDF宇宙警备队SDF<BR>Shin 4 Nin Uchi 
+Mahjong - Yakuman Tengoku役满天国</FONT></P><FONT size=2>
+<P><BR>测试ROM的注意事项：<BR>---------------------------<BR>- Uchuu Keibitai SDF 
+是唯一已知的使用分屏模式的游戏（游戏演示时， 展示飞船各部分参数）<BR>&nbsp; stats)<BR>- Shin 4 Nin Uchi Mahjong 
+使用扩展 PCM 通道 ($5011)以及其他扩展声源<BR>- Uncharted Waters 可切换 PRG-RAM <BR>- Just Breed 
+可在任何位置使用 扩展属性表模式，以及扩展声源</P>
+<P><BR>一般注意事项：<BR>---------------------------<BR>MMC5是一个声名狼藉的主宰映射。它整体巧妙的转换技巧，使得它更强大远远超过周围任何其他映射。尽管它的明显的复杂性， 
+吃惊的是它可以直接模拟(但这并不意味着它容易模拟)。</P>
+<P>惭愧的是，真正使用这个映射的是一堆蛋疼的光荣策略游戏。真是浪费。</P>
+<P><BR>RAM 注意事项：<BR>----------------------------<BR>MMC5 可以寻址高达 64k 
+的PRG-RAM！与通常使用8k的比较实在是引人注目。模拟时， 
+最简单的方法只是给MMC5游戏一个完整的64K空间，因为文件头并没有真正提供一个体面的方式来表示<BR>实际上存在多少PRG -RAM。</P>
+<P>除了PRG-RAM，MMC5本身有一个 1k 完整的可被CPU和PPU访问的扩展RAM。此扩展RAM有很多功能，从普通的WRAM, 
+到一个扩展命名表，屏幕撕裂，扩展属性表。</P>
+<P><BR>本文档的结构：<BR>---------------------------<BR>既然此映射有这么多的寄存器，它有这么多的功能，寄存器将被列出，并概括为特征的解释，整体寄存器的部分将是非常简短的，主要是作为一个非常快速参考或清单。</P>
+<P>其他模式和设置：<BR>---------------------------</P>
+<P>&nbsp; $5102:&nbsp; [.... ..AA]&nbsp;&nbsp;&nbsp; PRG-RAM 保护 A<BR>&nbsp; 
+$5103:&nbsp; [.... ..BB]&nbsp;&nbsp;&nbsp; PRG-RAM 保护 
+B<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+必须向寄存器写入以下数值才允许写入PRG-RAM：<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+A=%10<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+B=%01<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 其他数值会阻止PRG-RAM写入。</P>
+<P>&nbsp; $5104:&nbsp; [.... ..XX]&nbsp;&nbsp;&nbsp; 扩展RAM 
+模式<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; %00 = 扩展命名表模式&nbsp;&nbsp; 
+("Ex0")<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; %01 = 扩展属性表模式 
+("Ex1")<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; %10 = 
+CPU访问模式&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+("Ex2")<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; %11 = CPU 
+只读模式&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ("Ex3")</P>
+<P><BR>CHR 
+设置：<BR>---------------------------<BR>MMC5有两组CHR寄存器。一组用于精灵，一组用于背景。MMC5仔细监视哪个图案块什么时候被取出(或者以其他不明方式与NES同步)， 
+这使得它告诉你NES什么时候取出背景图案，什么时候取出精灵图案。因此，它可以相应地使用不同的暂存器，允许游戏基本上一次具有 12k的“可用” 
+CHR在而不是通常的8K ！这意味着你可以有512个图案作为精灵使用，并且还有一个额外256个图案作为背景使用！</P>
+<P>CHR 模式选择寄存器<BR>&nbsp;$5101:&nbsp; [.... 
+..CC]<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; %00 = 8k 
+模式<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; %01 = 4k 
+模式<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; %10 = 2k 
+模式<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; %11 = 1k 模式</P>
+<P>'High' CHR 寄存器：<BR>&nbsp; $5130&nbsp; [.... ..HH]&nbsp; (见下文)</P>
+<P>'A' 组寄存器：<BR>&nbsp; $5120 - $5127<BR>'B' 组寄存器：<BR>&nbsp; $5128 - $512B</P>
+<P>在8x16精灵模式下，两组寄存器同时被使用。A组用于精灵，B组用于背景。这就让精灵可以有完整8K可用的CHR， 无需与背景共享任何图案。 
+(自此背景使用自己的4k的CHR，由 'B' 组指定)。通过$2007的读取的数据是不确定的。</P>
+<P>在8x8精灵模式下，只有一组同时用于背景和精灵。无论是“A”或是“B”，取决于哪个最后写入。假如 'B' 被使用， $1000-1FFF 始终镜像于 
+$0000-0FFF (使得 'B' 组在 8x8 精灵模式下非常无用)</P>
+<P><BR>'A' 组 
+(精灵)：<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+$0000&nbsp;&nbsp; $0400&nbsp;&nbsp; $0800&nbsp;&nbsp; $0C00&nbsp;&nbsp; 
+$1000&nbsp;&nbsp; $1400&nbsp;&nbsp; $1800&nbsp;&nbsp; $1C00 
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
++---------------------------------------------------------------+<BR>&nbsp; 
+C=%00:&nbsp;&nbsp;&nbsp; 
+|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+$5127&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+|<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
++---------------------------------------------------------------+<BR>&nbsp; 
+C=%01:&nbsp;&nbsp;&nbsp; 
+|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+$5123&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+$5127&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+|<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
++-------------------------------+-------------------------------+<BR>&nbsp; 
+C=%10:&nbsp;&nbsp;&nbsp; |&nbsp;&nbsp;&nbsp;&nbsp; $5121&nbsp;&nbsp;&nbsp;&nbsp; 
+|&nbsp;&nbsp;&nbsp;&nbsp; $5123&nbsp;&nbsp;&nbsp;&nbsp; 
+|&nbsp;&nbsp;&nbsp;&nbsp; $5125&nbsp;&nbsp;&nbsp;&nbsp; 
+|&nbsp;&nbsp;&nbsp;&nbsp; $5127&nbsp;&nbsp;&nbsp;&nbsp; 
+|<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
++---------------+---------------+---------------+---------------+<BR>&nbsp; 
+C=%11:&nbsp;&nbsp;&nbsp; | $5120 | $5121 | $5122 | $5123 | $5124 | $5125 | $5126 
+| $5127 |<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
++-------+-------+-------+-------+-------+-------+-------+-------+</P>
+<P>'B' 组 
+(背景)：<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+$0000&nbsp;&nbsp; $0400&nbsp;&nbsp; $0800&nbsp;&nbsp; $0C00&nbsp;&nbsp; 
+$1000&nbsp;&nbsp; $1400&nbsp;&nbsp; $1800&nbsp;&nbsp; $1C00 
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
++-------------------------------+<BR>&nbsp; C=%00:&nbsp;&nbsp;&nbsp; 
+|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+$512B*&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+|<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
++-------------------------------+<BR>&nbsp; C=%01:&nbsp;&nbsp;&nbsp; 
+|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+$512B&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+|<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
++-------------------------------+&nbsp;&nbsp; $1yyy 始终镜像于 $0yyy<BR>&nbsp; 
+C=%10:&nbsp;&nbsp;&nbsp; |&nbsp;&nbsp;&nbsp;&nbsp; $5129&nbsp;&nbsp;&nbsp;&nbsp; 
+|&nbsp;&nbsp;&nbsp;&nbsp; $512B&nbsp;&nbsp;&nbsp;&nbsp; 
+|<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
++---------------+---------------+<BR>&nbsp; C=%11:&nbsp;&nbsp;&nbsp; | $5128 | 
+$5129 | $512A | $512B 
+|<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
++-------+-------+-------+-------+</P>
+<P>&nbsp;* $512B在8k模式下是一个8k 的页码，但是只有第一个8K的页面的一半被使用。</P>
+<P>请注意，不同于大多数其他映射， 这些CHR拥有“实际”大小。例如：&nbsp; 4k模式下， 寄存器包含4k页码。但在 2k 
+模式下，寄存器包含2k页码。</P>
+<P>CHR寄存器实际上是10位宽，而不是8位。当你写入寄存器时，将写入低8位，高两位从$5130复制。例如：</P>
+<P>&nbsp; LDA #$00<BR>&nbsp; STA $5130&nbsp; ; 高位 = 0<BR>&nbsp; LDA 
+#$20<BR>&nbsp; STA $5127&nbsp; ; $5127 此时 = $020</P>
+<P>&nbsp; LDA #$02<BR>&nbsp; STA $5130<BR>&nbsp; LDA #$41<BR>&nbsp; STA 
+$5123&nbsp; ; $5123 此时 = 
+$241<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+; $5127 依然 = $020 (而不是$220)</P>
+<P>$5130在扩展属性表模式下还扮演额外的角色。</P>
+<P>&nbsp;</P>
+<P>PRG/RAM 设置：<BR>---------------------------</P>
+<P><BR>$5100:&nbsp; [.... ..PP]&nbsp;&nbsp;&nbsp; PRG 
+模式选择：<BR>&nbsp;&nbsp;&nbsp; %00 = 32k<BR>&nbsp;&nbsp;&nbsp; %01 = 
+16k<BR>&nbsp;&nbsp;&nbsp; %10 = 16k+8k<BR>&nbsp;&nbsp;&nbsp; %11 = 8k</P>
+<P>$5113:&nbsp; [.... .PPP]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+(简化的，但在技术上不准确，请参阅下文)<BR>&nbsp; 8k的 PRG-RAM 页面映射于 $6000</P>
+<P>$5114-5117:&nbsp; [RPPP PPPP]<BR>&nbsp; R = ROM 选择 (0=选择 RAM, 1=选择 ROM)&nbsp; 
+**在$5117中未使用**<BR>&nbsp; P = PRG 页面</P>
+<P>最高位允许游戏在ROM和RAM之间进行选择。 这样就可以把PRG-RAM放到$6000-DFFF之间任意位置 
+(不能超过范围，因为$5117只能切换ROM)</P>
+<P>只有RAM可以被切换到$6000-7FFF。$5117 只能切换ROM，永不切换 RAM (ROM永远是$E000-FFFF).</P>
+<P>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+$6000&nbsp;&nbsp; $8000&nbsp;&nbsp; $A000&nbsp;&nbsp; $C000&nbsp;&nbsp; 
+$E000&nbsp; 
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
++-------+-------------------------------+<BR>&nbsp;&nbsp; 
+P=%00:&nbsp;&nbsp;&nbsp;&nbsp; | $5113 
+|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+&lt;&lt;$5117&gt;&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+|<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
++-------+-------------------------------+<BR>&nbsp;&nbsp; 
+P=%01:&nbsp;&nbsp;&nbsp;&nbsp; | $5113 |&nbsp;&nbsp;&nbsp; 
+&lt;$5115&gt;&nbsp;&nbsp;&nbsp; |&nbsp;&nbsp;&nbsp; 
+&lt;$5117&gt;&nbsp;&nbsp;&nbsp; 
+|<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
++-------+---------------+-------+-------+<BR>&nbsp;&nbsp; 
+P=%10:&nbsp;&nbsp;&nbsp;&nbsp; | $5113 |&nbsp;&nbsp;&nbsp; 
+&lt;$5115&gt;&nbsp;&nbsp;&nbsp; | $5116 | $5117 
+|<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
++-------+---------------+-------+-------+<BR>&nbsp;&nbsp; 
+P=%11:&nbsp;&nbsp;&nbsp;&nbsp; | $5113 | $5114 | $5115 | $5116 | $5117 
+|<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
++-------+-------+-------+-------+-------+</P>
+<P><BR>从技术上讲， $5113应该是这个样子：<BR>&nbsp;&nbsp; [.... 
+.CPP]<BR>&nbsp;&nbsp;&nbsp;&nbsp; C = 芯片选择<BR>&nbsp;&nbsp;&nbsp;&nbsp; P = 
+所选芯片上的 8k PRG-RAM 页面</P>
+<P>MMC5可寻址两块独立的内存芯片，每个大小可达32K。</P>
+<P>这个细节可以影响如果芯片大小小于32K，RAM如何跨页镜像。举个例子，大航海时代有两个8k芯片(总共只有16K，但在两个单独的芯片中)， 
+所以它使用选择页面$00和$04，而不是像你所期待$00和$01。这是因为，第2位是芯片选择，每个芯片上的8K被镜像到芯片上的每一页，这就是$00-$03为什么都会选择第一个8K。</P>
+<P>请注意，没有商业游戏依赖这个镜像，因此，你可以采取简单的方法，简单地给所有MMC5 64K的PRG-RAM。</P>
+<P><BR>镜像：<BR>---------------------------<BR>&nbsp; $5105:&nbsp; [DDCC BBAA]</P>
+<P><BR>MMC5允许配置每个命名表槽：<BR>&nbsp; [&nbsp;&nbsp; A&nbsp;&nbsp; ][&nbsp;&nbsp; 
+B&nbsp;&nbsp; ]<BR>&nbsp; [&nbsp;&nbsp; C&nbsp;&nbsp; ][&nbsp;&nbsp; 
+D&nbsp;&nbsp; ]</P>
+<P>值可以是以下内容：<BR>&nbsp; %00 = NES 内部 命名表A<BR>&nbsp; %01 = NES 内部 命名表B<BR>&nbsp; 
+%10 =&nbsp; 扩展RAM 作为 命名表 使用<BR>&nbsp; %11 = 填充模式</P>
+<P><BR>举个例子，一个标准的镜像设置象是这样：<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+(&nbsp; D&nbsp; C&nbsp; B&nbsp; A)<BR>&nbsp; 水平镜像：&nbsp; $50&nbsp; (%01 01 00 
+00)<BR>&nbsp; 垂直镜像：&nbsp; $44&nbsp; (%01 00 01 00)<BR>&nbsp; 单屏幕A：&nbsp; 
+$00&nbsp; (%00 00 00 00)<BR>&nbsp; 单屏幕B：&nbsp; $55&nbsp; (%01 01 01 01)</P>
+<P><BR>扩展RAM 可以作为这里的第3个命名表，但只有 Ex0 或者 Ex1 (见上文的$5104).&nbsp; 如果在 Ex2 或 Ex3模式下， 
+当它试图读取命名表时PPU将得到$00。请注意，虽然扩展RAM在Ex1模式下可以用作命名表，但它可能是一个坏主意，因为扩展RAM还用于在该模式下的扩展属性表。因此，使用扩展RAM作为命名表时，你应该在Ex0模式下。</P>
+<P>填充模式是一个虚拟的命名表。这不是一个完整的命名表，而宁可说是，PPU试图读取它时MMC5会输送它一个特定的图案，这样看上去好像有一个完整的命名表被单一的图案填充。此图案可以由游戏用下面的寄存器配置：</P>
+<P>&nbsp; $5106:&nbsp; [TTTT TTTT]&nbsp;&nbsp;&nbsp;&nbsp; 填充图案<BR>&nbsp; 
+$5107:&nbsp; [.... ..AA]&nbsp;&nbsp;&nbsp;&nbsp; 填充属性位</P>
+<P>&nbsp;</P>
+<P>扩展属性表模式：<BR>---------------------------<BR>Ex1 模式下(见上文$5104中)， 
+普通属性表和背景CHR寄存器被忽略，取而代之的是， 在扩展RAM每个字节与屏幕上的图案对应，并分配了图案4K的CHR页面 
+(允许选择16K图案，而不是256)和它自己的属性表位(允许每个8x8图案有它自己的调色板，而不是正常的16×16块)。</P>
+<P>扩展RAM中的字节：<BR>&nbsp; [AACC CCCC]<BR>&nbsp;&nbsp;&nbsp; A = 
+属性位<BR>&nbsp;&nbsp;&nbsp; C = 4k CHR 页面</P>
+<P>另外，$5130在该模式下为每一个屏幕上的背景图案被直接用作CHR的高2位。它有效地选择一个256k块作为背景使用 
+(除了其正常使用与CHR切换).<BR>$5130 运行值会影响所有 背景图案，因此在此模式下更改$5130将会立即切换掉屏幕上所有的图案。所以， 
+如果/当你更改$5130为精灵切换CHR时，你必须再次向写入$5130背景所需的值。</P>
+<P>精灵此模式下不受影响，仍然使用正常的CHR寄存器。</P>
+<P>在扩展RAM中哪些图案用哪些字节取决于其在命名表的位置。滚动是无关紧要的。$2000的图案始终使用扩展RAM的第一个字节，$2001使用第二个字节。&nbsp; 
+$2400，$2800，和 $2C00 也使用扩展RAM的第一个字节。</P>
+<P><BR>CPU 访问 扩展RAM：<BR>---------------------------<BR>扩展RAM 可通过CPU 的 
+$5C00-$5FFF访问。无论你是否可以读取或写入取决于当前的模式 (见 $5104)：</P>
+<P>&nbsp;&nbsp; 模式&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+可读&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 可写<BR>&nbsp;&nbsp; 
+-------------------------<BR>&nbsp;&nbsp; 
+Ex0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+no&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; *<BR>&nbsp;&nbsp; 
+Ex1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+no&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; *<BR>&nbsp;&nbsp; 
+Ex2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; yes&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+yes<BR>&nbsp;&nbsp; Ex3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+yes&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; no</P>
+<P>在 Ex0 和 Ex1模式下， 扩展RAM只能在渲染过程中写入 (很疯狂，我知道)。如果一个游戏试图不在渲染时写入，$00 
+将代替期望值被写入。在Ex3模式下写入绝对没有影响。</P>
+<P>试图读取时无法读取将返回开放式总线。</P>
+<P>&nbsp;</P>
+<P><BR>8 * 8 -&gt; 16 乘法器：<BR>---------------------------<BR>MMC5 
+有个非常好的乘法器，类似SNES的。</P>
+<P>写入时：<BR>&nbsp; $5205:&nbsp; 被乘数<BR>&nbsp; $5206:&nbsp; 乘数</P>
+<P>读取时：<BR>&nbsp; $5205:&nbsp; 乘积的低八位<BR>&nbsp; $5206:&nbsp; 乘积的高八位</P>
+<P>基本功能是， 你写两个值，你要乘到$5205和$5206, 然后读回乘积。乘法为无符号类型。没有明显的延迟，也就是说，该乘积可以在写入后被读回。</P>
+<P>&nbsp;</P>
+<P><BR>屏幕撕裂：<BR>---------------------------<BR>MMC5一个独特的功能是它能够垂直拦腰分割屏幕。然而，由于无法避免的一些限制，它终止了不是那么有用功能的。</P>
+<P>注意：&nbsp; 分屏模式只允许在Ex0或Ex1。Ex2 和 Ex3模式下，它始终是禁用的。我不知道分屏在Ex1是否受到扩展属性表的影响。由 
+$5202来看， 我会假设它不是， 但是这是一个总的猜测。</P>
+<P>&nbsp; $5200:&nbsp; [ER.T TTTT]&nbsp;&nbsp;&nbsp; 分屏控制<BR>&nbsp;&nbsp;&nbsp; 
+E = 使能&nbsp; (0=分屏模式禁用，1=分屏模式启用)<BR>&nbsp;&nbsp;&nbsp; R = 右侧&nbsp; 
+(0=分屏将在左侧，1=分屏将在右侧)<BR>&nbsp;&nbsp;&nbsp; T = 分屏图案编号</P>
+<P>&nbsp; $5201:&nbsp; [YYYY YYYY]&nbsp;&nbsp;&nbsp; 分屏 Y 滚动</P>
+<P>&nbsp; $5202:&nbsp; [CCCC CCCC]&nbsp;&nbsp;&nbsp; 4k CHR 页面用于分屏</P>
+<P><BR>每扫描线提取34个背景图案。MMC5 通过对背景图案被提取进行观察，如果它是在该分割区域内, 分割屏幕数据将代替正常命名表数据。Since it 
+operates on a per-tile basis... fine horizontal scrolling "carries into" the 
+split region.&nbsp; 水平滚动设置为1-7 ，将产生分裂被移动到左1-7像素，然而，当你滚动到8，分屏将“迅速”回到正常位置。</P>
+<P><BR>左侧分裂：<BR>&nbsp; 图案 0 到 T-1 分裂。&nbsp; 图案 T 正常显示。</P>
+<P>右侧分裂：<BR>&nbsp; 图案 0 到 T-1 正常显示。&nbsp; 图案 T 分裂。</P>
+<P><BR>屏幕分裂没有任何形式的粗水平滚动右侧分割将始终显示命名表的右侧， 左侧分割将始终显示命名表的左侧。粗水平滚动仍然可以用于非分屏区域。</P>
+<P>扩展RAM总是用作分屏模式的命名表。</P>
+<P>分屏的垂直滚动操作就像正常的垂直滚动。0?239是有效的滚动值，而240-255将为前几个扫描线显示属性表数据作为命名表的数据。The split 
+nametable will wrap so that the top of the nametable will appear below as you 
+scroll (just as if vertical mirroring were employed).</P>
+<P>$5202 选择(还有另一个) CHR 页面用于背景。此页面仅用于分屏区域。</P>
+<P>&nbsp;</P>
+<P><BR>IRQ 操作：<BR>---------------------------<BR>MMC5 有一个 
+IRQ的扫描线计数器，但它是明显比MMC3的更复杂， 并且不受相同限制的影响。这也有点更容易使用。</P>
+<P>写入：<BR>&nbsp; $5203:&nbsp; [IIII IIII]&nbsp;&nbsp;&nbsp; IRQ 目标<BR>&nbsp; 
+$5204:&nbsp; [E... ....]&nbsp;&nbsp;&nbsp; IRQ 使能 (0=禁用， 1=启用)</P>
+<P>读取：<BR>&nbsp; $5204:&nbsp; [PI.. ....]<BR>&nbsp;&nbsp;&nbsp; P = IRQ 
+目前正在等待<BR>&nbsp;&nbsp;&nbsp; I = "在帧内" 信号</P>
+<P>&nbsp; 读取$5204将清除悬挂标志 (确认IRQ)。</P>
+<P>&nbsp;</P>
+<P>基本操作：<BR>1)&nbsp; 写入所需的扫描线编号至 $5203<BR>2)&nbsp; 通过写$5204的D7位启用 IRQ</P>
+<P>&nbsp;&nbsp; 那么IRQ会在给定的扫描线编号触发(假如PPU渲染启用).&nbsp; 
+这里唯一要注意的的事情是，这种行为大大改变，如果在中间帧你把PPU关闭，当目标的扫描线编号是0或大于（或等于？）$F0 IRQ永远不会发生。</P>
+<P>&nbsp;&nbsp; PPU渲染期间"在帧内"信号将读回设置(在扫描线 0-239)。然而它的实际行为和如何与IRQ计数器进行交互更复杂一点。</P>
+<P>&nbsp;</P>
+<P>具体操作：</P>
+<P>&nbsp;&nbsp; 该IRQ计数器是一个向上计数器，而不是向下计数器 (类似MMC3)。每次MMC5检测到的扫描线，它执行以下操作：</P>
+<P>- 如果帧内信号清除...<BR>&nbsp;&nbsp; a) 设置帧内信号<BR>&nbsp;&nbsp; b) 重置 IRQ 计数器为 
+0<BR>&nbsp;&nbsp; c) 清除的IRQ标志位 (自动确认IRQ)</P>
+<P>- 否则...<BR>&nbsp;&nbsp; a)&nbsp; IRQ 计数器自增<BR>&nbsp;&nbsp; b) 
+如果IRQ计数器现在等于触发值， 设置IRQ标志位</P>
+<P>注意该IRQ挂起标志被设置不管IRQ是否被启用。无论如何，这只会触发6502的IRQ，如果该标志位*和*的IRQ使能标志设置时。所以IRQ为了效果仍然必须启用，然而悬挂标志仍然可以$5204读回设置，即使IRQ被禁用。</P>
+<P>还请注意，它与被递增后的IRQ计数器进行比较。这就是为什么0触发值永远不会触发的IRQ。</P>
+<P>在任何时候，当MMC5检测到PPU为非活动状态，在帧内信号 被自动清除。该MMC5渲染帧之后将检测这个， 
+并且只要经由$2001关闭PPU。这就是为什么关闭PPU中间帧会干扰IRQ，因为在帧信号被清除将在下一扫描线重置IRQ计数器。</P>
+<P>如何在MMC5检测扫描线仍是未知数。有一种说法是，它看起来两个模拟的命名表扫描线结束时提取。或者它计算PPU执行取数。没有人确切地知道。</P>
+<P>该IRQ将在所需的扫描线的*开始* 触发。或者，更精确地，靠近扫描线的最末端 (最接近我计算为336点阵)。也就是说...如果触发线被置为1， 
+该IRQ在扫描线0的336点阵就会触发。 </P>
+<P>我不确定最后的扫描线渲染（239）是否由该MMC5检测。我会假设它是, 这意味着$F0的触发值将在渲染结束时触发一个IRQ。$F0以上触发值永远不会达成， 
+因为在此之前渲染停止，在帧信号会自动清除。</P>
+<P>&nbsp;</P>
+<P><BR>声音：<BR>---------------------------<BR>该MMC5也有3个附加声道！(功能列表将会永不结束？！？！)不幸的是，由于在NES被简单化， 
+这些只能从Famicom上听到(或修改过的NES)。</P>
+<P>有2个额外的脉冲通道，和1个额外的PCM通道。</P>
+<P>他们的寄存器为如下：</P>
+<P>写入：<BR>&nbsp; $5000-5003:&nbsp; 脉冲1寄存器<BR>&nbsp; $5004-5007:&nbsp; 
+脉冲2寄存器<BR>&nbsp; $5010:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; PCM 
+未知(没有游戏使用此部分的PCM)<BR>&nbsp; $5011:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; PCM 
+输出<BR>&nbsp; $5015:&nbsp; [.... ..BA]&nbsp;&nbsp; 脉冲标志使能 1 (A), 2 (B)&nbsp; 
+(0=禁用， 1=使用)</P>
+<P>读取：<BR>&nbsp; $5015&nbsp;&nbsp; [.... ..BA]&nbsp;&nbsp; 1 (A), 2 
+(B)的脉冲长度状态</P>
+<P><BR>脉冲通道的行为与NES脉冲通道一样，只是他们缺乏一个扫描单元。与其追究功能上的细节还不如我建议你看一下 blargg 的 apu 参考。</P>
+<P>$5000-5007 操作就像 $4000-4007，$5015 操作就像 $4015 (读取和写入时)</P>
+<P><BR>没有人确切地知道MMC5的PCM通道如何工作。公开的文档还不明确，好像没有游戏使用除了$5011。$5010 
+可能做了什么，但是没人知道是什么。</P>
+<P>$5011 操作完全和 $4011一样，但只是8位宽，而不是7位宽。游戏使用该寄存器来输出声音。</P>
+<P><BR>通电时：<BR>---------------------------<BR>通电时$5117端口应该是FF (最后的PRG页切入).&nbsp; 
+另外，吞食天地2通电时应该是8K PRG模式（$5100 = $03）。</P>
+<P>&nbsp;</P>
+<P>寄存器概述：<BR>---------------------------<BR>由于此映射的寄存器众多，这部分从简。这些寄存器在上面都有详细介绍，这里只是再次概括一下：</P>
+<P><BR>可写寄存器：<BR>&nbsp; $5000-5003:&nbsp; 声音, 脉冲 1<BR>&nbsp; $5004-5007:&nbsp; 
+声音, 脉冲 2<BR>&nbsp; $5010-5011:&nbsp; 声音, PCM<BR>&nbsp; 
+$5015:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 声音，通用<BR>&nbsp; 
+$5100:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; PRG 模式选择<BR>&nbsp; 
+$5101:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; CHR 模式选择<BR>&nbsp; $5102-5103:&nbsp; 
+PRG-RAM 写保护<BR>&nbsp; $5104:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+扩展RAM模式<BR>&nbsp; $5105:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 镜像模式<BR>&nbsp; 
+$5106:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 填充图案<BR>&nbsp; 
+$5107:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 填充属性表<BR>&nbsp; 
+$5113:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; PRG-RAM 寄存器<BR>&nbsp; 
+$5114-5117:&nbsp; PRG 寄存器<BR>&nbsp; $5120-5127:&nbsp; CHR 寄存器 'A'<BR>&nbsp; 
+$5128-512B:&nbsp; CHR 寄存器 'B'<BR>&nbsp; 
+$5130:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; CHR 高位<BR>&nbsp; 
+$5200:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 屏幕撕裂控制<BR>&nbsp; 
+$5201:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 屏幕撕裂垂直滚动<BR>&nbsp; 
+$5202:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 屏幕撕裂 CHR 页面<BR>&nbsp; 
+$5203:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; IRQ 开关<BR>&nbsp; 
+$5204:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; IRQ 控制<BR>&nbsp; $5205-5206:&nbsp; 
+8*8-&gt;16 乘法器<BR>&nbsp; $5C00-5FFF:&nbsp; 扩展RAM CPU 访问</P>
+<P><BR>可读寄存器：<BR>&nbsp; $5015:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+声音状态<BR>&nbsp; $5204:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; IRQ 状态<BR>&nbsp; 
+$5205-5206:&nbsp; 8*8-&gt;16 乘法器乘积<BR>&nbsp; $5C00-5FFF:&nbsp; 扩展RAM CPU 
+访问</FONT></P></BODY></HTML>

@@ -14,6 +14,8 @@ from fc_editor.codecs.chr import ChrCodec
 from fc_editor.codecs.chapter_event import ChapterEventCodec
 from fc_editor.codecs.custom_music import CustomMusicCodec
 from fc_editor.codecs.map import MapCodec
+from fc_editor.codecs.map_trigger import MapTrigger, MapTriggerCodec
+from fc_editor.codecs.persuasion import PersuasionRuleCodec
 from fc_editor.codecs.scenario_layout import ScenarioLayoutCodec
 from fc_editor.codecs.story_text import StoryTextCodec
 from fc_editor.codecs.unit import UnitCodec
@@ -35,6 +37,7 @@ from dc_modifier.unit_packages import (
     package_from_project,
 )
 from dc_modifier.music_import import assemble_famistudio_music_source, load_music_bank
+from dc_modifier.map_tiles import campaign_tileset_key, render_map_tile
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -59,6 +62,8 @@ class DcExpandedProfileTests(unittest.TestCase):
         weapon_codec = WeaponCodec(self.rom)
         name_codec = UnitNameReferenceCodec(self.rom)
         map_codec = MapCodec(self.rom)
+        map_trigger_codec = MapTriggerCodec(self.rom)
+        persuasion_codec = PersuasionRuleCodec(self.rom)
         scenario_codec = ScenarioLayoutCodec(self.rom)
         story_codec = StoryTextCodec(self.rom)
         chr_codec = ChrCodec(self.rom)
@@ -82,6 +87,29 @@ class DcExpandedProfileTests(unittest.TestCase):
             self.assertTrue(map_codec.round_trip(map_id))
         for scenario_id in (0, 1, 0x10, 0x1F):
             self.assertTrue(scenario_codec.round_trip(scenario_id))
+        trigger_layouts = map_trigger_codec.layouts()
+        self.assertEqual(len(trigger_layouts), 0x20)
+        self.assertTrue(all(not item.entries for item in trigger_layouts[:0x0F]))
+        self.assertEqual(
+            trigger_layouts[0x0F].entries,
+            (MapTrigger(0x1F, 0x08, 0xFF, 0x00),),
+        )
+        self.assertEqual(
+            tuple(
+                (rule.scenario_id, rule.persuader_id, rule.target_id)
+                for rule in persuasion_codec.editable_rules()
+            ),
+            (
+                (0x01, 0x06, 0x45),
+                (0x02, 0x06, 0x45),
+                (0x05, 0x0E, 0x41),
+                (0x09, 0x08, 0x42),
+            ),
+        )
+        self.assertEqual(
+            tuple(rule.script_address for rule in persuasion_codec.editable_rules()),
+            (0xAABF, 0xAB7D, 0xAC03, 0xAC31),
+        )
         for selector in story_codec.selectors:
             self.assertTrue(story_codec.round_trip(selector, 0))
         self.assertEqual(chr_codec.tile_count, 0x4000)
@@ -95,6 +123,16 @@ class DcExpandedProfileTests(unittest.TestCase):
         )
         self.assertEqual(first_reinforcement.address, 0xA11D)
         self.assertEqual(first_reinforcement.parameters, (0x16, 0x04, 0x2A, 0x5E, 0x07, 0x0E))
+        self.assertEqual(
+            first_reinforcement.field_labels,
+            ("X", "Y", "人物ID", "机体ID", "等级", "AI/标志"),
+        )
+        self.assertFalse(
+            any(
+                item.action_label.startswith(("操作码", "未知操作码"))
+                for item in chapter_event_codec.instructions()
+            )
+        )
 
     def test_current_battle_music_bindings(self) -> None:
         codec = BattleMusicCodec(self.rom)
@@ -135,8 +173,17 @@ class ResourceModelTests(unittest.TestCase):
         self.assertTrue(graph.node("audio.custom.9D").writable)
         self.assertEqual(graph.node("audio.custom.9F").size, 0x2000)
         self.assertTrue(graph.node("events.chapter_data").writable)
+        self.assertTrue(graph.node("map_triggers.pointer_table").writable)
+        self.assertEqual(graph.node("map_triggers.pointer_table").offset, 0x1588E)
+        self.assertTrue(graph.node("map_triggers.managed_pool").writable)
+        self.assertEqual(graph.node("map_triggers.managed_pool").size, 300)
         self.assertEqual(graph.node("events.chapter_data").offset, 0x36010)
         self.assertEqual(graph.node("events.chapter_data").size, 0x1FDA)
+        self.assertEqual(graph.node("events.persuasion_rules").offset, 0x3B73D)
+        self.assertEqual(graph.node("events.persuasion_rules").size, 97)
+        self.assertTrue(graph.node("events.persuasion_rules").writable)
+        self.assertEqual(graph.node("events.persuasion_pointers").offset, 0x35DD0)
+        self.assertFalse(graph.node("events.persuasion_pointers").writable)
 
     def test_allocator_is_deterministic_and_stays_in_free_banks(self) -> None:
         allocator = BankAllocator(self.rom.profile, self.rom.data)
@@ -216,6 +263,60 @@ class TextTableTests(unittest.TestCase):
 
 
 class EditorProjectTests(unittest.TestCase):
+    def test_map_trigger_repack_is_bounded_and_project_round_trips(self) -> None:
+        project = RomProject.load(TARGET_ROM)
+        self.assertTrue(project.supports_map_triggers)
+        self.assertEqual(project.get_map_triggers(0), ())
+        original = bytes(project.working)
+        entry = MapTrigger(3, 4, 0xFF, 0xF2)
+        project.set_map_triggers(0, (entry,))
+        self.assertEqual(project.get_map_triggers(0), (entry,))
+        self.assertEqual(
+            project.get_map_triggers(0x0F),
+            (MapTrigger(0x1F, 0x08, 0xFF, 0x00),),
+        )
+        self.assertLessEqual(
+            project.map_trigger_codec.storage_used(project.working),
+            project.map_trigger_codec.pool_capacity,
+        )
+        self.assertEqual(TARGET_ROM.read_bytes(), original)
+        self.assertFalse(any(issue.severity == "error" for issue in project.validate()))
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "map-triggers.dcmod"
+            project.save_project(path)
+            reopened = RomProject.load_project(path, TARGET_ROM)
+            self.assertEqual(reopened.get_map_triggers(0), (entry,))
+        project.undo()
+        self.assertEqual(project.get_map_triggers(0), ())
+
+    def test_map_trigger_validation_rejects_bad_coordinates_and_duplicates(self) -> None:
+        project = RomProject.load(TARGET_ROM)
+        record = project.get_map(0)
+        with self.assertRaisesRegex(ValueError, "超出"):
+            project.set_map_triggers(
+                0, (MapTrigger(record.width, 0, 0xFF, 0),)
+            )
+        with self.assertRaisesRegex(ValueError, "重复"):
+            project.set_map_triggers(
+                0,
+                (
+                    MapTrigger(1, 1, 0xFF, 0),
+                    MapTrigger(1, 1, 0xFF, 1),
+                ),
+            )
+
+    def test_campaign_map_tiles_render_from_active_chr(self) -> None:
+        project = RomProject.load(TARGET_ROM)
+        self.assertEqual(campaign_tileset_key(0), "D")
+        self.assertEqual(campaign_tileset_key(6), "F")
+        self.assertEqual(campaign_tileset_key(12), "G")
+        self.assertEqual(campaign_tileset_key(31), "C")
+        self.assertIsNone(campaign_tileset_key(32))
+        grass = render_map_tile(project, "D", 1)
+        water = render_map_tile(project, "D", 5)
+        self.assertEqual((grass.width(), grass.height()), (16, 16))
+        self.assertNotEqual(grass.pixelColor(0, 0), water.pixelColor(0, 0))
+
     def test_weapon_character_and_music_names_are_resolved_from_rom(self) -> None:
         project = RomProject.load(TARGET_ROM)
         self.assertEqual(project.weapon_display_name(0x01), "光束军刀")
@@ -224,9 +325,34 @@ class EditorProjectTests(unittest.TestCase):
         self.assertEqual(project.character_display_name(0x02), "查理")
         self.assertEqual(project.character_display_name(0x13), "拉坎")
         self.assertEqual(project.character_display_name(0x17), "空白/未分配人物槽")
-        self.assertEqual(project.character_display_name(0x1D), "原ROM占位名“？？？”")
+        self.assertEqual(
+            project.character_display_name(0x1D),
+            "占位/未命名人物槽（原ROM“？？？”）",
+        )
         self.assertEqual(project.battle_music_selector_label(0x13), "睿智之神")
         self.assertNotEqual(project.profile.battle_music.tracks[1].label, "原曲 01")
+        self.assertFalse(
+            any(
+                label in project.unit_display_name(unit_id)
+                for unit_id in range(1, project.unit_count)
+                for label in ("未知原生名称", "原生名称")
+            )
+        )
+        self.assertFalse(
+            any(
+                project.weapon_display_name(weapon_id).startswith("武器记录")
+                for weapon_id in range(1, project.weapon_count)
+            )
+        )
+        self.assertFalse(
+            any(
+                project.character_display_name(character_id).startswith("超出")
+                for character_id in range(project.profile.character_name_count)
+            )
+        )
+        self.assertFalse(
+            any("用途未确认" in track.label for track in project.profile.battle_music.tracks)
+        )
 
     def test_unit_weapon_and_weapon_name_project_round_trip(self) -> None:
         project = RomProject.load(TARGET_ROM)
@@ -246,6 +372,29 @@ class EditorProjectTests(unittest.TestCase):
         project.reset_weapon_name(0x0B)
         self.assertEqual(project.get_unit_weapons(0x25), original_slots)
         self.assertEqual(project.get_weapon_name_pointer(0x0B), original_name)
+
+    def test_character_name_reference_project_round_trip(self) -> None:
+        project = RomProject.load(TARGET_ROM)
+        original_pointer = project.get_character_name_pointer(0x13)
+        source_pointer = project.get_character_name_pointer(0x02)
+        project.set_character_name_reference(0x13, 0x02)
+        self.assertEqual(project.get_character_name_pointer(0x13), source_pointer)
+        self.assertEqual(project.character_display_name(0x13), "查理")
+        self.assertEqual(
+            project.change_description(
+                project.character_name_codec.pointer_offset(0x13)
+            ),
+            "人物 13 · 名称指针",
+        )
+        self.assertFalse(any(issue.severity == "error" for issue in project.validate()))
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "character-name.dcmod"
+            project.save_project(path)
+            reopened = RomProject.load_project(path, TARGET_ROM)
+            self.assertEqual(reopened.get_character_name_pointer(0x13), source_pointer)
+            self.assertEqual(reopened.character_display_name(0x13), "查理")
+        project.reset_character_name(0x13)
+        self.assertEqual(project.get_character_name_pointer(0x13), original_pointer)
 
     def test_dc_unit_names_match_verified_labels_and_deduplicate_shared_pointers(self) -> None:
         project = RomProject.load(TARGET_ROM)
@@ -416,6 +565,27 @@ class EditorProjectTests(unittest.TestCase):
         )
         with self.assertRaisesRegex(ValueError, "保持 7 字节"):
             project.set_chapter_event_instruction(reinforcement.address, bytes((0x69, 0x01)))
+
+    def test_persuasion_rule_edit_undo_and_project_round_trip(self) -> None:
+        project = RomProject.load(TARGET_ROM)
+        original = project.get_persuasion_rule(0)
+        project.set_persuasion_rule(0, 0x02, 0x08, 0x42)
+        changed = project.get_persuasion_rule(0)
+        self.assertEqual(
+            (changed.scenario_id, changed.persuader_id, changed.target_id),
+            (0x02, 0x08, 0x42),
+        )
+        self.assertFalse(any(issue.severity == "error" for issue in project.validate()))
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "persuasion.dcmod"
+            project.save_project(path)
+            reopened = RomProject.load_project(path, TARGET_ROM)
+            self.assertEqual(reopened.get_persuasion_rule(0).raw, changed.raw)
+        project.undo()
+        self.assertEqual(project.get_persuasion_rule(0).raw, original.raw)
+
+        with self.assertRaisesRegex(ValueError, "没有独立安全脚本"):
+            project.set_persuasion_rule(4, 0x02, 0x08, 0x42)
 
 
 class UnitPackageTests(unittest.TestCase):

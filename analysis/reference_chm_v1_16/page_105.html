@@ -1,0 +1,1691 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML XMLNS:ST1 XMLNS:O><HEAD><TITLE>声音处理器</TITLE>
+<META name=GENERATOR content="MSHTML 8.00.7601.19104">
+<META content="text/html; charset=gb2312" http-equiv=Content-Type>
+<STYLE>
+html,body { 
+	/* Default Font */
+	font-family: Microsoft YaHei, Simsun, sans-serif;
+	font-size: 12pt;
+}
+</STYLE>
+</HEAD>
+<BODY><FONT size=2><B><SPAN lang=EN-US><SPAN lang=EN-US>
+<H2><SPAN lang=EN-US>4</SPAN>、图形处理器</H2>
+<P></SPAN>PPU</SPAN>时序：</B><SPAN lang=EN-US> </SPAN></P>
+<TABLE style="mso-cellspacing: 0cm" class=MsoNormalTable border=1 cellSpacing=0 
+cellPadding=0>
+  <TBODY>
+  <TR style="mso-yfti-irow: 0; mso-yfti-firstrow: yes">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>　</FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2><SPAN 
+    lang=EN-US>NTSC</SPAN>制式</FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2><SPAN 
+  lang=EN-US>PAL</SPAN>制式</FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 1">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>基频（<SPAN lang=EN-US>Base 
+      clock</SPAN>）</FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT 
+      size=2>21477270.0Hz</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT 
+      size=2>21281364.0Hz</FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 2">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2><SPAN lang=EN-US>CPU</SPAN>主频（<SPAN 
+      lang=EN-US>Cpu clock</SPAN>）</FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT 
+      size=2>1789772.5Hz</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT 
+      size=2>1773447.0Hz</FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 3">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>总扫描线数（<SPAN lang=EN-US>Total 
+      scanlines</SPAN>）</FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>262</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT 
+  size=2>312</FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 4">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>扫描线总周期（<SPAN lang=EN-US>Scanline total 
+      cycles</SPAN>）</FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT 
+      size=2>1364(15.75KHz)</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT 
+      size=2>1362(15.625KHz)</FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 5">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>水平扫描周期（<SPAN lang=EN-US>H-Draw 
+      cycles</SPAN>）</FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>1024</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT 
+  size=2>1024</FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 6">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>水平空白周期（<SPAN lang=EN-US>H-Blank 
+      cycles</SPAN>）</FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>340</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT 
+  size=2>338</FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 7">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>结束周期（<SPAN lang=EN-US>End 
+      cycles</SPAN>）</FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>4</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>2</FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 8">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>帧周期（<SPAN lang=EN-US>Frame 
+      cycles</SPAN>）</FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT 
+    size=2>1364*262</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT 
+    size=2>1362*312</FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 9">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>帧<SPAN lang=EN-US>IRQ</SPAN>周期（<SPAN 
+      lang=EN-US>FrameIRQ cycles</SPAN>）</FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT 
+size=2>29830</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT 
+  size=2>35469</FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 10">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>帧率（<SPAN lang=EN-US>Frame 
+      rate</SPAN>）</FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT 
+      size=2>60(59.94Hz)</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT 
+  size=2>50Hz</FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 11; mso-yfti-lastrow: yes">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>帧时间（<SPAN lang=EN-US>Frame 
+      period</SPAN>）</FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT 
+      size=2>1000.0/60.0(ms)</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT 
+      size=2>1000.0/50.0(ms)</FONT></SPAN></P></TD></TR></TBODY></TABLE>
+<P><SPAN lang=EN-US><BR></SPAN>镜像是指通过硬件映射特殊的内存地址或范围的一个过程。<SPAN 
+lang=EN-US><BR><B>PPU</B></SPAN><B>内存映像：</B><SPAN lang=EN-US> </SPAN></P>
+<TABLE style="mso-cellspacing: .7pt" class=MsoNormalTable border=1 cellSpacing=1 
+cellPadding=0>
+  <TBODY>
+  <TR style="mso-yfti-irow: 0; mso-yfti-firstrow: yes">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>开始地址 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>用途 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>结束地址 </FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 1">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>$0000 
+    </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>图案表<SPAN lang=EN-US>0</SPAN>（<SPAN 
+      lang=EN-US>256x2x8</SPAN>，可能是<SPAN lang=EN-US>VROM</SPAN>） </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>$0FFF 
+    </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 2">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>$1000 
+    </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>图案表<SPAN lang=EN-US>1</SPAN>（<SPAN 
+      lang=EN-US>256x2x8</SPAN>，可能是<SPAN lang=EN-US>VROM</SPAN>） </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>$1FFF 
+    </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 3">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>$2000 
+    </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>命名表<SPAN lang=EN-US>0</SPAN>（<SPAN 
+      lang=EN-US>32x30</SPAN>块）（镜像，见命名表镜像） </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>$23BF 
+    </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 4">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>$<ST1:CHMETCNV 
+      style="BACKGROUND-IMAGE: url(res://ietag.dll/#34/#1001); BACKGROUND-REPEAT: repeat-x; BACKGROUND-POSITION: left bottom" 
+      tabIndex=0 w:st="on" TCSC="0" NumberType="1" Negative="False" 
+      HasSpace="False" SourceValue="23" UnitName="C">23C</ST1:CHMETCNV>0 
+      </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>属性表<SPAN lang=EN-US>0</SPAN>（镜像，见命名表镜像） 
+      </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>$23FF 
+    </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 5">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>$2400 
+    </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>命名表<SPAN lang=EN-US>1</SPAN>（<SPAN 
+      lang=EN-US>32x30</SPAN>块）（镜像，见命名表镜像） </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>$27BF 
+    </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 6">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>$<ST1:CHMETCNV 
+      style="BACKGROUND-IMAGE: url(res://ietag.dll/#34/#1001); BACKGROUND-REPEAT: repeat-x; BACKGROUND-POSITION: left bottom" 
+      tabIndex=0 w:st="on" TCSC="0" NumberType="1" Negative="False" 
+      HasSpace="False" SourceValue="27" UnitName="C">27C</ST1:CHMETCNV>0 
+      </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>属性表<SPAN lang=EN-US>1</SPAN>（镜像，见命名表镜像） 
+      </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>$27FF 
+    </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 7">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>$2800 
+    </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>命名表<SPAN lang=EN-US>2</SPAN>（<SPAN 
+      lang=EN-US>32x30</SPAN>块）（镜像，见命名表镜像） </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>$2BBF 
+    </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 8">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>$2BC0 
+    </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>属性表<SPAN lang=EN-US>2</SPAN>（镜像，见命名表镜像） 
+      </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>$2BFF 
+    </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 9">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>$<ST1:CHMETCNV 
+      style="BACKGROUND-IMAGE: url(res://ietag.dll/#34/#1001); BACKGROUND-REPEAT: repeat-x; BACKGROUND-POSITION: left bottom" 
+      tabIndex=0 w:st="on" TCSC="0" NumberType="1" Negative="False" 
+      HasSpace="False" SourceValue="2" UnitName="C">2C</ST1:CHMETCNV>00 
+      </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>命名表<SPAN lang=EN-US>3</SPAN>（<SPAN 
+      lang=EN-US>32x30</SPAN>块）（镜像，见命名表镜像） </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>$2FBF 
+    </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 10">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>$2FC0 
+    </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>属性表<SPAN lang=EN-US>3</SPAN>（镜像，见命名表镜像） 
+      </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>$2FFF 
+    </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 11">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>$3000 
+    </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2><SPAN lang=EN-US>$2000-$2EFF</SPAN>的镜像 
+      </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>$3EFF 
+    </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 12">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>$<ST1:CHMETCNV 
+      style="BACKGROUND-IMAGE: url(res://ietag.dll/#34/#1001); BACKGROUND-REPEAT: repeat-x; BACKGROUND-POSITION: left bottom" 
+      tabIndex=0 w:st="on" TCSC="0" NumberType="1" Negative="False" 
+      HasSpace="False" SourceValue="3" UnitName="F">3F</ST1:CHMETCNV>00 
+      </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>背景调色板<SPAN lang=EN-US>#1 
+    </SPAN></FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>$<ST1:CHMETCNV 
+      style="BACKGROUND-IMAGE: url(res://ietag.dll/#34/#1001); BACKGROUND-REPEAT: repeat-x; BACKGROUND-POSITION: left bottom" 
+      tabIndex=0 w:st="on" TCSC="0" NumberType="1" Negative="False" 
+      HasSpace="False" SourceValue="3" 
+      UnitName="F">3F</ST1:CHMETCNV><ST1:CHMETCNV 
+      style="BACKGROUND-IMAGE: url(res://ietag.dll/#34/#1001); BACKGROUND-REPEAT: repeat-x; BACKGROUND-POSITION: left bottom" 
+      tabIndex=0 w:st="on" TCSC="0" NumberType="1" Negative="False" 
+      HasSpace="False" SourceValue="0" UnitName="F">0F</ST1:CHMETCNV> 
+      </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 13">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>$<ST1:CHMETCNV 
+      style="BACKGROUND-IMAGE: url(res://ietag.dll/#34/#1001); BACKGROUND-REPEAT: repeat-x; BACKGROUND-POSITION: left bottom" 
+      tabIndex=0 w:st="on" TCSC="0" NumberType="1" Negative="False" 
+      HasSpace="False" SourceValue="3" UnitName="F">3F</ST1:CHMETCNV>10 
+      </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>精灵调色板<SPAN lang=EN-US>#1 
+    </SPAN></FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>$<ST1:CHMETCNV 
+      style="BACKGROUND-IMAGE: url(res://ietag.dll/#34/#1001); BACKGROUND-REPEAT: repeat-x; BACKGROUND-POSITION: left bottom" 
+      tabIndex=0 w:st="on" TCSC="0" NumberType="1" Negative="False" 
+      HasSpace="False" SourceValue="3" 
+      UnitName="F">3F</ST1:CHMETCNV><ST1:CHMETCNV 
+      style="BACKGROUND-IMAGE: url(res://ietag.dll/#34/#1001); BACKGROUND-REPEAT: repeat-x; BACKGROUND-POSITION: left bottom" 
+      tabIndex=0 w:st="on" TCSC="0" NumberType="1" Negative="False" 
+      HasSpace="False" SourceValue="1" UnitName="F">1F</ST1:CHMETCNV> 
+      </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 14">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>$<ST1:CHMETCNV 
+      style="BACKGROUND-IMAGE: url(res://ietag.dll/#34/#1001); BACKGROUND-REPEAT: repeat-x; BACKGROUND-POSITION: left bottom" 
+      tabIndex=0 w:st="on" TCSC="0" NumberType="1" Negative="False" 
+      HasSpace="False" SourceValue="3" UnitName="F">3F</ST1:CHMETCNV>20 
+      </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>镜像，（见调色板镜像） </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>$3FFF 
+    </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 15; mso-yfti-lastrow: yes">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>$4000 
+    </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2><SPAN lang=EN-US>$0000-$3FFF</SPAN>的镜像 
+      </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>$7FFF 
+    </FONT></SPAN></P></TD></TR></TBODY></TABLE>
+<P><B>命名表：<SPAN lang=EN-US><BR></SPAN></B><SPAN lang=EN-US>NES</SPAN>的图像通过<SPAN 
+lang=EN-US>Tile</SPAN>矩阵来显示，这个网格就叫命名表。一个命名表和字符模式下的屏幕缓冲比较相象，它包含字符的代码，也就是<SPAN 
+lang=EN-US>30</SPAN>列的<SPAN lang=EN-US>32Byte</SPAN>长度。每个<SPAN 
+lang=EN-US>Tile</SPAN>有<SPAN lang=EN-US>8x8</SPAN>个象素，每个命名表有<SPAN 
+lang=EN-US>32x30</SPAN>个<SPAN lang=EN-US>Tile</SPAN>，也就是<SPAN 
+lang=EN-US>256x240</SPAN>象素。<SPAN lang=EN-US>PPU</SPAN>支持<SPAN 
+lang=EN-US>4</SPAN>个命名表，他们在<SPAN 
+lang=EN-US>$2000,$2400,$2800,$2C00</SPAN>。在<SPAN 
+lang=EN-US>NTSC</SPAN>制式下，上面和下面的<SPAN lang=EN-US>8</SPAN>象素通常不显示出来，只有<SPAN 
+lang=EN-US>256x224</SPAN>象素；在<SPAN lang=EN-US>PAL</SPAN>制式下，屏幕有<SPAN 
+lang=EN-US>256x240</SPAN>象素。<SPAN lang=EN-US><BR></SPAN>需要说的是，虽然<SPAN 
+lang=EN-US>PPU</SPAN>支持<SPAN lang=EN-US>4</SPAN>个命名表，任天堂主机只支持<SPAN 
+lang=EN-US>2</SPAN>个命名表。另外两个被做了镜像。命名表保存了<SPAN lang=EN-US>Tile</SPAN>的编号，而<SPAN 
+lang=EN-US>Tile</SPAN>存在图案表里。计算命名表里<SPAN 
+lang=EN-US>Tile</SPAN>号对应的实际地址的公式是：<SPAN lang=EN-US><BR></SPAN>（<SPAN 
+lang=EN-US>Tile</SPAN>号<SPAN lang=EN-US>×16</SPAN>）＋由<SPAN 
+lang=EN-US>$2000</SPAN>端口指定的图案表地址<SPAN lang=EN-US> </SPAN></P>
+<P><B>命名表镜像：</B><SPAN lang=EN-US><BR>NES</SPAN>只有<SPAN 
+lang=EN-US>2048</SPAN>字节（<SPAN lang=EN-US>$800</SPAN>）的<SPAN 
+lang=EN-US>VRAM</SPAN>给命名表使用，但是如前表所示，<SPAN lang=EN-US>NES</SPAN>有能力寻址到<SPAN 
+lang=EN-US>4</SPAN>个命名表。缺省情况下，<SPAN 
+lang=EN-US>NES</SPAN>卡带都带有水平和垂直镜像，允许你改变命名表指向<SPAN lang=EN-US>PPU</SPAN>的<SPAN 
+lang=EN-US>VRAM</SPAN>位置。这种方式同时影响两个命名表，你不能单独改变其中的一个。每个卡带都控制着<SPAN 
+lang=EN-US>PPU</SPAN>地址线的<SPAN lang=EN-US>A10 </SPAN>和<SPAN 
+lang=EN-US>A11</SPAN>。它可能将他们设置成以下<SPAN lang=EN-US>4</SPAN>种可能的方式的<SPAN 
+lang=EN-US>1</SPAN>种。下面这个图表有助于理解<SPAN lang=EN-US>NES</SPAN>里的各种镜像，指向<SPAN 
+lang=EN-US>PPU VRAM</SPAN>中命名表的<SPAN lang=EN-US>12</SPAN>位地址相当于<SPAN 
+lang=EN-US>“$2xxxx”</SPAN>：<SPAN 
+lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+&nbsp;&nbsp; </SPAN></P>
+<TABLE style="mso-cellspacing: .7pt" class=MsoNormalTable border=1 cellSpacing=1 
+cellPadding=0>
+  <TBODY>
+  <TR style="mso-yfti-irow: 0; mso-yfti-firstrow: yes">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2><SPAN lang=EN-US>&nbsp;</SPAN>名字 
+      </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>命名 表<SPAN lang=EN-US>#0 
+    </SPAN></FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>命名 表<SPAN lang=EN-US>#1 
+    </SPAN></FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>命名 表<SPAN lang=EN-US>#2 
+    </SPAN></FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>命名 表<SPAN lang=EN-US>#3 
+    </SPAN></FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>说明 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2><SPAN lang=EN-US>&nbsp;</SPAN>地址线<SPAN 
+      lang=EN-US>A11 </SPAN></FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>地址线<SPAN lang=EN-US>A10 
+    </SPAN></FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 1">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>水平 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>$000 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>$000 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>$400 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>$400 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>　 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>1 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>0 
+</FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 2">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>垂直 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>$000 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>$800 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>$000 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>$800 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>　 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>0 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>1 
+</FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 3">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2><SPAN lang=EN-US>4</SPAN>屏幕镜像 
+    </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>$000 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>$400 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>$800 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>$C00 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>卡带里有<SPAN lang=EN-US>2K VRAM</SPAN>，<SPAN 
+      lang=EN-US>4</SPAN>个命名表物理上独立的 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>1 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>1 
+</FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 4">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>单屏幕 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>$X00 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>$X00 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>$X00 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>$X00 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>所有的命名表指相同的<SPAN 
+      lang=EN-US>VRAM</SPAN>区域<SPAN lang=EN-US>,X=0</SPAN>、<SPAN 
+      lang=EN-US>4</SPAN>、<SPAN lang=EN-US>8</SPAN>、<SPAN lang=EN-US>C 
+      </SPAN></FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>0 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>0 
+</FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 5; mso-yfti-lastrow: yes">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2><SPAN lang=EN-US>VROM</SPAN>镜像 
+    </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; WIDTH: 71%; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt" 
+    width="71%" colSpan=5>
+      <P class=MsoNormal><FONT size=2><SPAN lang=EN-US>Mapper 
+      68#</SPAN>游戏映射<SPAN lang=EN-US>VROM</SPAN>到<SPAN lang=EN-US>PPU 
+      VRAM</SPAN>的命名表，这使得命名表是基于<SPAN lang=EN-US>VROM</SPAN>的，你不能写它但却可以通过<SPAN 
+      lang=EN-US>mapper</SPAN>自己来控制是否使用这种特性 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>　 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>　 </FONT></P></TD></TR></TBODY></TABLE>
+<P><B>图案表：<SPAN lang=EN-US><BR></SPAN></B>图案表储存了实际<SPAN 
+lang=EN-US>8x8</SPAN>象素的<SPAN lang=EN-US>Tile</SPAN>，同时也储存了用来指向<SPAN 
+lang=EN-US>NES</SPAN>调色板全部<SPAN lang=EN-US>16</SPAN>种颜色的<SPAN 
+lang=EN-US>4</SPAN>位元矩阵的低两位。<SPAN lang=EN-US>PPU</SPAN>支持两个图案表在<SPAN 
+lang=EN-US>$0000</SPAN>和<SPAN lang=EN-US>$1000</SPAN>。他们有以下格式：<SPAN lang=EN-US> 
+</SPAN></P>
+<TABLE style="mso-cellspacing: .7pt" class=MsoNormalTable border=1 cellSpacing=1 
+cellPadding=0>
+  <TBODY>
+  <TR style="mso-yfti-irow: 0; mso-yfti-firstrow: yes">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2><SPAN lang=EN-US>VRAM</SPAN>地址 
+    </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt" 
+    colSpan=2>
+      <P class=MsoNormal><FONT size=2>图案表内容 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>颜色效果 </FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 1">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT 
+      size=2>$0000<BR>..<BR>..<BR>..<BR>..<BR>..<BR>..<BR>$0007 
+      </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>%00010000 = 
+      $10<BR>%00000000 = $00<BR>%01000100 = $44<BR>%00000000 = $00<BR>%11111110 
+      = $FE<BR>%00000000 = $00<BR>%10000010 = $82<BR>%00000000 = $00 
+      </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>组<SPAN lang=EN-US> 0 </SPAN></FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT 
+      size=2>...1....<BR>..2.2...<BR>.3...3..<BR>2.....2.<BR>1111111.<BR>2.....2.<BR>3.....3. 
+      </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 2; mso-yfti-lastrow: yes">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT 
+      size=2>$0008<BR>..<BR>..<BR>..<BR>..<BR>..<BR>..<BR>$<ST1:CHMETCNV 
+      style="BACKGROUND-IMAGE: url(res://ietag.dll/#34/#1001); BACKGROUND-REPEAT: repeat-x; BACKGROUND-POSITION: left bottom" 
+      tabIndex=0 w:st="on" TCSC="0" NumberType="1" Negative="False" 
+      HasSpace="False" SourceValue="0" UnitName="F">000F</ST1:CHMETCNV> 
+      </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>%00000000 = 
+      $00<BR>%00101000 = $28<BR>%01000100 = $44<BR>%10000010 = 
+      $82&nbsp;<BR>%00000000 = $00<BR>%10000010 = $82&nbsp;<BR>%10000010 = 
+      $82<BR>%00000000 = $00 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>组<SPAN lang=EN-US> 1 </SPAN></FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>点表示<SPAN 
+      lang=EN-US>0</SPAN>号颜色，数字表示实际调色板颜色代号</FONT> </P></TD></TR></TBODY></TABLE>
+<P>注意在图案表里存储的是每个点的<SPAN lang=EN-US>2</SPAN>个位。其他两个由属性表得到。所以，在屏幕上总体出现的颜色数是<SPAN 
+lang=EN-US>16</SPAN>，而每个块里只有<SPAN lang=EN-US>4</SPAN>种颜色。<SPAN lang=EN-US> 
+</SPAN></P>
+<P><B>属性表：<SPAN lang=EN-US><BR></SPAN></B>每个命名表有它自己的属性表。属性表的每一个字节代表了屏幕上的一组<SPAN 
+lang=EN-US>4x4</SPAN>的<SPAN lang=EN-US>Tile</SPAN>，一共有<SPAN 
+lang=EN-US>8x8</SPAN>个字节。有几种方法来描述属性表里一个字节的功能：<SPAN 
+lang=EN-US><BR>&nbsp;&nbsp;&nbsp; *</SPAN>保存<SPAN 
+lang=EN-US>32x32</SPAN>象素方格的高<SPAN lang=EN-US>2</SPAN>位颜色，每<SPAN 
+lang=EN-US>16x16</SPAN>象素用<SPAN lang=EN-US>2</SPAN>位；<SPAN 
+lang=EN-US><BR>&nbsp;&nbsp;&nbsp; *</SPAN>保存<SPAN lang=EN-US>16</SPAN>个<SPAN 
+lang=EN-US>8x8 Tile</SPAN>的高<SPAN lang=EN-US>2</SPAN>位颜色；<SPAN 
+lang=EN-US><BR>&nbsp;&nbsp;&nbsp; *</SPAN>保存<SPAN lang=EN-US>4</SPAN>个<SPAN 
+lang=EN-US>4x4 Tile</SPAN>格子的高<SPAN lang=EN-US>2</SPAN>位颜色。<SPAN 
+lang=EN-US><BR></SPAN>看以下两个图表帮助理解：<SPAN lang=EN-US><BR>1</SPAN>、一个<SPAN 
+lang=EN-US>16x16 </SPAN>象素的格子：<SPAN lang=EN-US>#0-F </SPAN>代表了一个<SPAN 
+lang=EN-US>8x8 Tile,</SPAN>方块<SPAN lang=EN-US> [x] </SPAN>代表了<SPAN 
+lang=EN-US>4</SPAN>个<SPAN lang=EN-US>8x8 Tile, </SPAN></P>
+<TABLE style="mso-cellspacing: .7pt" class=MsoNormalTable border=1 cellSpacing=1 
+cellPadding=0>
+  <TBODY>
+  <TR style="mso-yfti-irow: 0; mso-yfti-firstrow: yes">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <TABLE style="mso-cellspacing: 0cm" class=MsoNormalTable border=1 
+      cellSpacing=0 cellPadding=0>
+        <TBODY>
+        <TR style="mso-yfti-irow: 0; mso-yfti-firstrow: yes">
+          <TD 
+          style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt" 
+          colSpan=2>
+            <P class=MsoNormal><FONT size=2>方块<SPAN lang=EN-US> 0 
+            </SPAN></FONT></P></TD></TR>
+        <TR style="mso-yfti-irow: 1">
+          <TD 
+          style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+            <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>#0 
+            </FONT></SPAN></P></TD>
+          <TD 
+          style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+            <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>#1 
+            </FONT></SPAN></P></TD></TR>
+        <TR style="mso-yfti-irow: 2; mso-yfti-lastrow: yes">
+          <TD 
+          style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+            <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>#2 
+            </FONT></SPAN></P></TD>
+          <TD 
+          style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+            <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>#3 
+            </FONT></SPAN></P></TD></TR></TBODY></TABLE>
+      <P class=MsoNormal><SPAN lang=EN-US><O:P><FONT 
+      size=2></FONT></O:P></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt" 
+    vAlign=top>
+      <TABLE 
+      style="mso-cellspacing: 0cm; mso-table-lspace: 2.25pt; mso-table-rspace: 2.25pt; mso-table-anchor-vertical: paragraph; mso-table-anchor-horizontal: column; mso-table-left: left" 
+      class=MsoNormalTable border=1 cellSpacing=0 cellPadding=0 align=left>
+        <TBODY>
+        <TR style="mso-yfti-irow: 0; mso-yfti-firstrow: yes">
+          <TD 
+          style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt" 
+          colSpan=2>
+            <P class=MsoNormal><FONT size=2>方块<SPAN lang=EN-US> 1 
+            </SPAN></FONT></P></TD></TR>
+        <TR style="mso-yfti-irow: 1">
+          <TD 
+          style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+            <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>#4 
+            </FONT></SPAN></P></TD>
+          <TD 
+          style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+            <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>#5 
+            </FONT></SPAN></P></TD></TR>
+        <TR style="mso-yfti-irow: 2; mso-yfti-lastrow: yes">
+          <TD 
+          style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+            <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>#6 
+            </FONT></SPAN></P></TD>
+          <TD 
+          style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+            <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>#7 
+            </FONT></SPAN></P></TD></TR></TBODY></TABLE>
+      <P class=MsoNormal><SPAN lang=EN-US><O:P><FONT 
+      size=2></FONT></O:P></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 1; mso-yfti-lastrow: yes">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <TABLE style="mso-cellspacing: 0cm" class=MsoNormalTable border=1 
+      cellSpacing=0 cellPadding=0>
+        <TBODY>
+        <TR style="mso-yfti-irow: 0; mso-yfti-firstrow: yes">
+          <TD 
+          style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt" 
+          colSpan=2>
+            <P class=MsoNormal><FONT size=2>方块<SPAN lang=EN-US> 2 
+            </SPAN></FONT></P></TD></TR>
+        <TR style="mso-yfti-irow: 1">
+          <TD 
+          style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+            <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>#8 
+            </FONT></SPAN></P></TD>
+          <TD 
+          style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+            <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>#9 
+            </FONT></SPAN></P></TD></TR>
+        <TR style="mso-yfti-irow: 2; mso-yfti-lastrow: yes">
+          <TD 
+          style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+            <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>#A 
+            </FONT></SPAN></P></TD>
+          <TD 
+          style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+            <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>#B 
+            </FONT></SPAN></P></TD></TR></TBODY></TABLE>
+      <P class=MsoNormal><SPAN lang=EN-US><O:P><FONT 
+      size=2></FONT></O:P></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <TABLE style="mso-cellspacing: 0cm" class=MsoNormalTable border=1 
+      cellSpacing=0 cellPadding=0>
+        <TBODY>
+        <TR style="mso-yfti-irow: 0; mso-yfti-firstrow: yes">
+          <TD 
+          style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt" 
+          colSpan=2>
+            <P class=MsoNormal><FONT size=2>方块<SPAN lang=EN-US> 3 
+            </SPAN></FONT></P></TD></TR>
+        <TR style="mso-yfti-irow: 1">
+          <TD 
+          style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+            <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>#C 
+            </FONT></SPAN></P></TD>
+          <TD 
+          style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+            <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>#D 
+            </FONT></SPAN></P></TD></TR>
+        <TR style="mso-yfti-irow: 2; mso-yfti-lastrow: yes">
+          <TD 
+          style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+            <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>#E 
+            </FONT></SPAN></P></TD>
+          <TD 
+          style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+            <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>#F 
+            </FONT></SPAN></P></TD></TR></TBODY></TABLE>
+      <P class=MsoNormal><SPAN 
+lang=EN-US><O:P></O:P></SPAN></P></TD></TR></TBODY></TABLE>
+<P><SPAN lang=EN-US>2</SPAN>、属性表一个字节的实际格式定义如下（对应于上面的例子）：<SPAN lang=EN-US> 
+</SPAN></P>
+<TABLE style="mso-cellspacing: 0cm; mso-padding-alt: 0cm 0cm 0cm 0cm" 
+class=MsoNormalTable border=1 cellSpacing=0 cellPadding=0>
+  <TBODY>
+  <TR style="mso-yfti-irow: 0; mso-yfti-firstrow: yes">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>位 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>描述 </FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 1">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2><SPAN lang=EN-US>0</SPAN>、<SPAN 
+      lang=EN-US>1 </SPAN></FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>方块<SPAN lang=EN-US> 0</SPAN>的高两位颜色<SPAN 
+      lang=EN-US>(Tile #0,1,2,3) </SPAN></FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 2">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2><SPAN lang=EN-US>2</SPAN>、<SPAN 
+      lang=EN-US>3 </SPAN></FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>方块<SPAN lang=EN-US> 1</SPAN>的高两位颜色<SPAN 
+      lang=EN-US>(Tile #4,5,6,7) </SPAN></FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 3">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2><SPAN lang=EN-US>4</SPAN>、<SPAN 
+      lang=EN-US>5 </SPAN></FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>方块<SPAN lang=EN-US> 2</SPAN>的高两位颜色<SPAN 
+      lang=EN-US>(Tile #8,9,A,B) </SPAN></FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 4; mso-yfti-lastrow: yes">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2><SPAN lang=EN-US>6</SPAN>、<SPAN 
+      lang=EN-US>7 </SPAN></FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>方块<SPAN lang=EN-US> 
+      3</SPAN>的高两位颜色</FONT><SPAN lang=EN-US><FONT size=2>(Tile #C,D,E,F)</FONT> 
+      </SPAN></P></TD></TR></TBODY></TABLE>
+<P><B>调色板：</B><SPAN lang=EN-US><BR>NES</SPAN>有两个调色板，背景调色板和精灵调色板。调色板不包含实际的<SPAN 
+lang=EN-US>RGB</SPAN>值，它们更象一个索引表。写到<SPAN lang=EN-US>$3F00-$3FFF</SPAN>的<SPAN 
+lang=EN-US>D6</SPAN>－<SPAN lang=EN-US>D7</SPAN>字节被忽略。<SPAN lang=EN-US> 
+</SPAN></P>
+<TABLE 
+style="WIDTH: 80%; mso-cellspacing: 0cm; mso-padding-alt: 0cm 0cm 0cm 0cm" 
+class=MsoNormalTable border=0 cellSpacing=0 cellPadding=0 width="100%">
+  <TBODY>
+  <TR style="HEIGHT: 15.75pt; mso-yfti-irow: 1">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; WIDTH: 5%; PADDING-RIGHT: 0cm; BACKGROUND: white; HEIGHT: 15.75pt; PADDING-TOP: 0cm" 
+    width="5%">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>30 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; WIDTH: 6%; PADDING-RIGHT: 0cm; BACKGROUND: #a6fcff; HEIGHT: 15.75pt; PADDING-TOP: 0cm" 
+    width="6%">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>31 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; WIDTH: 6%; PADDING-RIGHT: 0cm; BACKGROUND: #b3ecff; HEIGHT: 15.75pt; PADDING-TOP: 0cm" 
+    width="6%">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>32 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; WIDTH: 6%; PADDING-RIGHT: 0cm; BACKGROUND: #daabeb; HEIGHT: 15.75pt; PADDING-TOP: 0cm" 
+    width="6%">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>33 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; WIDTH: 6%; PADDING-RIGHT: 0cm; BACKGROUND: #ffa8f9; HEIGHT: 15.75pt; PADDING-TOP: 0cm" 
+    width="6%">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>34 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; WIDTH: 6%; PADDING-RIGHT: 0cm; BACKGROUND: #ffabb3; HEIGHT: 15.75pt; PADDING-TOP: 0cm" 
+    width="6%">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>35 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; WIDTH: 6%; PADDING-RIGHT: 0cm; BACKGROUND: #ffd2b0; HEIGHT: 15.75pt; PADDING-TOP: 0cm" 
+    width="6%">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>36 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; WIDTH: 6%; PADDING-RIGHT: 0cm; BACKGROUND: #ffefa6; HEIGHT: 15.75pt; PADDING-TOP: 0cm" 
+    width="6%">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>37 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; WIDTH: 6%; PADDING-RIGHT: 0cm; BACKGROUND: #fff79c; HEIGHT: 15.75pt; PADDING-TOP: 0cm" 
+    width="6%">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>38 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; WIDTH: 6%; PADDING-RIGHT: 0cm; BACKGROUND: #d7e895; HEIGHT: 15.75pt; PADDING-TOP: 0cm" 
+    width="6%">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>39 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; WIDTH: 6%; PADDING-RIGHT: 0cm; BACKGROUND: #a6edaf; HEIGHT: 15.75pt; PADDING-TOP: 0cm" 
+    width="6%">
+      <P class=MsoNormal><FONT size=2><ST1:CHMETCNV 
+      style="BACKGROUND-IMAGE: url(res://ietag.dll/#34/#1001); BACKGROUND-REPEAT: repeat-x; BACKGROUND-POSITION: left bottom" 
+      tabIndex=0 w:st="on" TCSC="0" NumberType="1" Negative="False" 
+      HasSpace="False" SourceValue="3" UnitName="a"><SPAN 
+      lang=EN-US>3A</SPAN></ST1:CHMETCNV><SPAN lang=EN-US> </SPAN></FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; WIDTH: 6%; PADDING-RIGHT: 0cm; BACKGROUND: #a2f2da; HEIGHT: 15.75pt; PADDING-TOP: 0cm" 
+    width="6%">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>3B </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; WIDTH: 6%; PADDING-RIGHT: 0cm; BACKGROUND: #99fffc; HEIGHT: 15.75pt; PADDING-TOP: 0cm" 
+    width="6%">
+      <P class=MsoNormal><FONT size=2><ST1:CHMETCNV 
+      style="BACKGROUND-IMAGE: url(res://ietag.dll/#34/#1001); BACKGROUND-REPEAT: repeat-x; BACKGROUND-POSITION: left bottom" 
+      tabIndex=0 w:st="on" TCSC="0" NumberType="1" Negative="False" 
+      HasSpace="False" SourceValue="3" UnitName="C"><SPAN 
+      lang=EN-US>3C</SPAN></ST1:CHMETCNV><SPAN lang=EN-US> </SPAN></FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; WIDTH: 6%; PADDING-RIGHT: 0cm; BACKGROUND: #dddddd; HEIGHT: 15.75pt; PADDING-TOP: 0cm" 
+    width="6%">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>3D </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; WIDTH: 6%; PADDING-RIGHT: 0cm; BACKGROUND: #111111; HEIGHT: 15.75pt; PADDING-TOP: 0cm" 
+    width="6%">
+      <P class=MsoNormal><FONT size=2><SPAN style="COLOR: white" 
+      lang=EN-US>3E</SPAN><SPAN lang=EN-US> </SPAN></FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; WIDTH: 6%; PADDING-RIGHT: 0cm; BACKGROUND: #111111; HEIGHT: 15.75pt; PADDING-TOP: 0cm" 
+    width="6%">
+      <P class=MsoNormal><FONT size=2><ST1:CHMETCNV 
+      style="BACKGROUND-IMAGE: url(res://ietag.dll/#34/#1001); BACKGROUND-REPEAT: repeat-x; BACKGROUND-POSITION: left bottom" 
+      tabIndex=0 w:st="on" TCSC="0" NumberType="1" Negative="False" 
+      HasSpace="False" SourceValue="3" UnitName="F"><SPAN style="COLOR: white" 
+      lang=EN-US>3F</SPAN></ST1:CHMETCNV><SPAN lang=EN-US> 
+  </SPAN></FONT></P></TD></TR>
+  <TR style="HEIGHT: 15.75pt; mso-yfti-irow: 2">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; WIDTH: 5%; PADDING-RIGHT: 0cm; BACKGROUND: white; HEIGHT: 15.75pt; PADDING-TOP: 0cm" 
+    width="5%">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>20 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; WIDTH: 6%; PADDING-RIGHT: 0cm; BACKGROUND: #0fd7ff; HEIGHT: 15.75pt; PADDING-TOP: 0cm" 
+    width="6%">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>21 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; WIDTH: 6%; PADDING-RIGHT: 0cm; BACKGROUND: #69a2ff; HEIGHT: 15.75pt; PADDING-TOP: 0cm" 
+    width="6%">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>22 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; WIDTH: 6%; PADDING-RIGHT: 0cm; BACKGROUND: #d480ff; HEIGHT: 15.75pt; PADDING-TOP: 0cm" 
+    width="6%">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>23 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; WIDTH: 6%; PADDING-RIGHT: 0cm; BACKGROUND: #ff45f3; HEIGHT: 15.75pt; PADDING-TOP: 0cm" 
+    width="6%">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>24 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; WIDTH: 6%; PADDING-RIGHT: 0cm; BACKGROUND: #ff618b; HEIGHT: 15.75pt; PADDING-TOP: 0cm" 
+    width="6%">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>25 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; WIDTH: 6%; PADDING-RIGHT: 0cm; BACKGROUND: #ff8833; HEIGHT: 15.75pt; PADDING-TOP: 0cm" 
+    width="6%">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>26 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; WIDTH: 6%; PADDING-RIGHT: 0cm; BACKGROUND: #ff9c12; HEIGHT: 15.75pt; PADDING-TOP: 0cm" 
+    width="6%">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>27 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; WIDTH: 6%; PADDING-RIGHT: 0cm; BACKGROUND: #fabc20; HEIGHT: 15.75pt; PADDING-TOP: 0cm" 
+    width="6%">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>28 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; WIDTH: 6%; PADDING-RIGHT: 0cm; BACKGROUND: #9fe30e; HEIGHT: 15.75pt; PADDING-TOP: 0cm" 
+    width="6%">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>29 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; WIDTH: 6%; PADDING-RIGHT: 0cm; BACKGROUND: #2bf035; HEIGHT: 15.75pt; PADDING-TOP: 0cm" 
+    width="6%">
+      <P class=MsoNormal><FONT size=2><ST1:CHMETCNV 
+      style="BACKGROUND-IMAGE: url(res://ietag.dll/#34/#1001); BACKGROUND-REPEAT: repeat-x; BACKGROUND-POSITION: left bottom" 
+      tabIndex=0 w:st="on" TCSC="0" NumberType="1" Negative="False" 
+      HasSpace="False" SourceValue="2" UnitName="a"><SPAN 
+      lang=EN-US>2A</SPAN></ST1:CHMETCNV><SPAN lang=EN-US> </SPAN></FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; WIDTH: 6%; PADDING-RIGHT: 0cm; BACKGROUND: #0cf0a4; HEIGHT: 15.75pt; PADDING-TOP: 0cm" 
+    width="6%">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>2B </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; WIDTH: 6%; PADDING-RIGHT: 0cm; BACKGROUND: #05fbff; HEIGHT: 15.75pt; PADDING-TOP: 0cm" 
+    width="6%">
+      <P class=MsoNormal><FONT size=2><ST1:CHMETCNV 
+      style="BACKGROUND-IMAGE: url(res://ietag.dll/#34/#1001); BACKGROUND-REPEAT: repeat-x; BACKGROUND-POSITION: left bottom" 
+      tabIndex=0 w:st="on" TCSC="0" NumberType="1" Negative="False" 
+      HasSpace="False" SourceValue="2" UnitName="C"><SPAN 
+      lang=EN-US>2C</SPAN></ST1:CHMETCNV><SPAN lang=EN-US> </SPAN></FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; WIDTH: 6%; PADDING-RIGHT: 0cm; BACKGROUND: #5e5e5e; HEIGHT: 15.75pt; PADDING-TOP: 0cm" 
+    width="6%">
+      <P class=MsoNormal><FONT size=2><SPAN style="COLOR: white" 
+      lang=EN-US>2D</SPAN><SPAN lang=EN-US> </SPAN></FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; WIDTH: 6%; PADDING-RIGHT: 0cm; BACKGROUND: #0d0d0d; HEIGHT: 15.75pt; PADDING-TOP: 0cm" 
+    width="6%">
+      <P class=MsoNormal><FONT size=2><SPAN style="COLOR: white" 
+      lang=EN-US>2E</SPAN><SPAN lang=EN-US> </SPAN></FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; WIDTH: 6%; PADDING-RIGHT: 0cm; BACKGROUND: #0d0d0d; HEIGHT: 15.75pt; PADDING-TOP: 0cm" 
+    width="6%">
+      <P class=MsoNormal><FONT size=2><ST1:CHMETCNV 
+      style="BACKGROUND-IMAGE: url(res://ietag.dll/#34/#1001); BACKGROUND-REPEAT: repeat-x; BACKGROUND-POSITION: left bottom" 
+      tabIndex=0 w:st="on" TCSC="0" NumberType="1" Negative="False" 
+      HasSpace="False" SourceValue="2" UnitName="F"><SPAN style="COLOR: white" 
+      lang=EN-US>2F</SPAN></ST1:CHMETCNV><SPAN lang=EN-US> 
+  </SPAN></FONT></P></TD></TR>
+  <TR style="HEIGHT: 15.75pt; mso-yfti-irow: 3">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; WIDTH: 5%; PADDING-RIGHT: 0cm; BACKGROUND: #c7c7c7; HEIGHT: 15.75pt; PADDING-TOP: 0cm" 
+    width="5%">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>10 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; WIDTH: 6%; PADDING-RIGHT: 0cm; BACKGROUND: #0077ff; HEIGHT: 15.75pt; PADDING-TOP: 0cm" 
+    width="6%">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>11 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; WIDTH: 6%; PADDING-RIGHT: 0cm; BACKGROUND: #2155ff; HEIGHT: 15.75pt; PADDING-TOP: 0cm" 
+    width="6%">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>12 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; WIDTH: 6%; PADDING-RIGHT: 0cm; BACKGROUND: #8237fa; HEIGHT: 15.75pt; PADDING-TOP: 0cm" 
+    width="6%">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>13 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; WIDTH: 6%; PADDING-RIGHT: 0cm; BACKGROUND: #eb2fb5; HEIGHT: 15.75pt; PADDING-TOP: 0cm" 
+    width="6%">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>14 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; WIDTH: 6%; PADDING-RIGHT: 0cm; BACKGROUND: #ff2950; HEIGHT: 15.75pt; PADDING-TOP: 0cm" 
+    width="6%">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>15 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; WIDTH: 6%; PADDING-RIGHT: 0cm; BACKGROUND: #ff2200; HEIGHT: 15.75pt; PADDING-TOP: 0cm" 
+    width="6%">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>16 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; WIDTH: 6%; PADDING-RIGHT: 0cm; BACKGROUND: #d63200; HEIGHT: 15.75pt; PADDING-TOP: 0cm" 
+    width="6%">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>17 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; WIDTH: 6%; PADDING-RIGHT: 0cm; BACKGROUND: #c46200; HEIGHT: 15.75pt; PADDING-TOP: 0cm" 
+    width="6%">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>18 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; WIDTH: 6%; PADDING-RIGHT: 0cm; BACKGROUND: #358000; HEIGHT: 15.75pt; PADDING-TOP: 0cm" 
+    width="6%">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>19 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; WIDTH: 6%; PADDING-RIGHT: 0cm; BACKGROUND: #058f00; HEIGHT: 15.75pt; PADDING-TOP: 0cm" 
+    width="6%">
+      <P class=MsoNormal><FONT size=2><ST1:CHMETCNV 
+      style="BACKGROUND-IMAGE: url(res://ietag.dll/#34/#1001); BACKGROUND-REPEAT: repeat-x; BACKGROUND-POSITION: left bottom" 
+      tabIndex=0 w:st="on" TCSC="0" NumberType="1" Negative="False" 
+      HasSpace="False" SourceValue="1" UnitName="a"><SPAN 
+      lang=EN-US>1A</SPAN></ST1:CHMETCNV><SPAN lang=EN-US> </SPAN></FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; WIDTH: 6%; PADDING-RIGHT: 0cm; BACKGROUND: #008a55; HEIGHT: 15.75pt; PADDING-TOP: 0cm" 
+    width="6%">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>1B </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; WIDTH: 6%; PADDING-RIGHT: 0cm; BACKGROUND: #0099cc; HEIGHT: 15.75pt; PADDING-TOP: 0cm" 
+    width="6%">
+      <P class=MsoNormal><FONT size=2><ST1:CHMETCNV 
+      style="BACKGROUND-IMAGE: url(res://ietag.dll/#34/#1001); BACKGROUND-REPEAT: repeat-x; BACKGROUND-POSITION: left bottom" 
+      tabIndex=0 w:st="on" TCSC="0" NumberType="1" Negative="False" 
+      HasSpace="False" SourceValue="1" UnitName="C"><SPAN 
+      lang=EN-US>1C</SPAN></ST1:CHMETCNV><SPAN lang=EN-US> </SPAN></FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; WIDTH: 6%; PADDING-RIGHT: 0cm; BACKGROUND: #212121; HEIGHT: 15.75pt; PADDING-TOP: 0cm" 
+    width="6%">
+      <P class=MsoNormal><FONT size=2><SPAN style="COLOR: white" 
+      lang=EN-US>1D</SPAN><SPAN lang=EN-US> </SPAN></FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; WIDTH: 6%; PADDING-RIGHT: 0cm; BACKGROUND: #090909; HEIGHT: 15.75pt; PADDING-TOP: 0cm" 
+    width="6%">
+      <P class=MsoNormal><FONT size=2><SPAN style="COLOR: white" 
+      lang=EN-US>1E</SPAN><SPAN lang=EN-US> </SPAN></FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; WIDTH: 6%; PADDING-RIGHT: 0cm; BACKGROUND: #090909; HEIGHT: 15.75pt; PADDING-TOP: 0cm" 
+    width="6%">
+      <P class=MsoNormal><FONT size=2><ST1:CHMETCNV 
+      style="BACKGROUND-IMAGE: url(res://ietag.dll/#34/#1001); BACKGROUND-REPEAT: repeat-x; BACKGROUND-POSITION: left bottom" 
+      tabIndex=0 w:st="on" TCSC="0" NumberType="1" Negative="False" 
+      HasSpace="False" SourceValue="1" UnitName="F"><SPAN style="COLOR: white" 
+      lang=EN-US>1F</SPAN></ST1:CHMETCNV><SPAN lang=EN-US> 
+  </SPAN></FONT></P></TD></TR>
+  <TR style="HEIGHT: 15.75pt; mso-yfti-irow: 4">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; WIDTH: 5%; PADDING-RIGHT: 0cm; BACKGROUND: gray; HEIGHT: 15.75pt; PADDING-TOP: 0cm" 
+    width="5%">
+      <P class=MsoNormal><FONT size=2><SPAN style="COLOR: white" 
+      lang=EN-US>00</SPAN><SPAN lang=EN-US> </SPAN></FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; WIDTH: 6%; PADDING-RIGHT: 0cm; BACKGROUND: #003da6; HEIGHT: 15.75pt; PADDING-TOP: 0cm" 
+    width="6%">
+      <P class=MsoNormal><FONT size=2><SPAN style="COLOR: white" 
+      lang=EN-US>01</SPAN><SPAN lang=EN-US> </SPAN></FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; WIDTH: 6%; PADDING-RIGHT: 0cm; BACKGROUND: #0012b0; HEIGHT: 15.75pt; PADDING-TOP: 0cm" 
+    width="6%">
+      <P class=MsoNormal><FONT size=2><SPAN style="COLOR: white" 
+      lang=EN-US>02</SPAN><SPAN lang=EN-US> </SPAN></FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; WIDTH: 6%; PADDING-RIGHT: 0cm; BACKGROUND: #440096; HEIGHT: 15.75pt; PADDING-TOP: 0cm" 
+    width="6%">
+      <P class=MsoNormal><FONT size=2><SPAN style="COLOR: white" 
+      lang=EN-US>03</SPAN><SPAN lang=EN-US> </SPAN></FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; WIDTH: 6%; PADDING-RIGHT: 0cm; BACKGROUND: #a1005e; HEIGHT: 15.75pt; PADDING-TOP: 0cm" 
+    width="6%">
+      <P class=MsoNormal><FONT size=2><SPAN style="COLOR: white" 
+      lang=EN-US>04</SPAN><SPAN lang=EN-US> </SPAN></FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; WIDTH: 6%; PADDING-RIGHT: 0cm; BACKGROUND: #c70028; HEIGHT: 15.75pt; PADDING-TOP: 0cm" 
+    width="6%">
+      <P class=MsoNormal><FONT size=2><SPAN style="COLOR: white" 
+      lang=EN-US>05</SPAN><SPAN lang=EN-US> </SPAN></FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; WIDTH: 6%; PADDING-RIGHT: 0cm; BACKGROUND: #ba0600; HEIGHT: 15.75pt; PADDING-TOP: 0cm" 
+    width="6%">
+      <P class=MsoNormal><FONT size=2><SPAN style="COLOR: white" 
+      lang=EN-US>06</SPAN><SPAN lang=EN-US> </SPAN></FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; WIDTH: 6%; PADDING-RIGHT: 0cm; BACKGROUND: #8c1700; HEIGHT: 15.75pt; PADDING-TOP: 0cm" 
+    width="6%">
+      <P class=MsoNormal><FONT size=2><SPAN style="COLOR: white" 
+      lang=EN-US>07</SPAN><SPAN lang=EN-US> </SPAN></FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; WIDTH: 6%; PADDING-RIGHT: 0cm; BACKGROUND: #5c2f00; HEIGHT: 15.75pt; PADDING-TOP: 0cm" 
+    width="6%">
+      <P class=MsoNormal><FONT size=2><SPAN style="COLOR: white" 
+      lang=EN-US>08</SPAN><SPAN lang=EN-US> </SPAN></FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; WIDTH: 6%; PADDING-RIGHT: 0cm; BACKGROUND: #104500; HEIGHT: 15.75pt; PADDING-TOP: 0cm" 
+    width="6%">
+      <P class=MsoNormal><FONT size=2><SPAN style="COLOR: white" 
+      lang=EN-US>09</SPAN><SPAN lang=EN-US> </SPAN></FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; WIDTH: 6%; PADDING-RIGHT: 0cm; BACKGROUND: #054a00; HEIGHT: 15.75pt; PADDING-TOP: 0cm" 
+    width="6%">
+      <P class=MsoNormal><FONT size=2><ST1:CHMETCNV 
+      style="BACKGROUND-IMAGE: url(res://ietag.dll/#34/#1001); BACKGROUND-REPEAT: repeat-x; BACKGROUND-POSITION: left bottom" 
+      tabIndex=0 w:st="on" TCSC="0" NumberType="1" Negative="False" 
+      HasSpace="False" SourceValue="0" UnitName="a"><SPAN style="COLOR: white" 
+      lang=EN-US>0A</SPAN></ST1:CHMETCNV><SPAN lang=EN-US> </SPAN></FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; WIDTH: 6%; PADDING-RIGHT: 0cm; BACKGROUND: #00472e; HEIGHT: 15.75pt; PADDING-TOP: 0cm" 
+    width="6%">
+      <P class=MsoNormal><FONT size=2><SPAN style="COLOR: white" 
+      lang=EN-US>0B</SPAN><SPAN lang=EN-US> </SPAN></FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; WIDTH: 6%; PADDING-RIGHT: 0cm; BACKGROUND: #004166; HEIGHT: 15.75pt; PADDING-TOP: 0cm" 
+    width="6%">
+      <P class=MsoNormal><FONT size=2><ST1:CHMETCNV 
+      style="BACKGROUND-IMAGE: url(res://ietag.dll/#34/#1001); BACKGROUND-REPEAT: repeat-x; BACKGROUND-POSITION: left bottom" 
+      tabIndex=0 w:st="on" TCSC="0" NumberType="1" Negative="False" 
+      HasSpace="False" SourceValue="0" UnitName="C"><SPAN style="COLOR: white" 
+      lang=EN-US>0C</SPAN></ST1:CHMETCNV><SPAN lang=EN-US> </SPAN></FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; WIDTH: 6%; PADDING-RIGHT: 0cm; BACKGROUND: black; HEIGHT: 15.75pt; PADDING-TOP: 0cm" 
+    width="6%">
+      <P class=MsoNormal><FONT size=2><SPAN style="COLOR: white" 
+      lang=EN-US>0D</SPAN><SPAN lang=EN-US> </SPAN></FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; WIDTH: 6%; PADDING-RIGHT: 0cm; BACKGROUND: #050505; HEIGHT: 15.75pt; PADDING-TOP: 0cm" 
+    width="6%">
+      <P class=MsoNormal><FONT size=2><SPAN style="COLOR: white" 
+      lang=EN-US>0E</SPAN><SPAN lang=EN-US> </SPAN></FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; WIDTH: 6%; PADDING-RIGHT: 0cm; BACKGROUND: #050505; HEIGHT: 15.75pt; PADDING-TOP: 0cm" 
+    width="6%">
+      <P class=MsoNormal><FONT size=2><ST1:CHMETCNV 
+      style="BACKGROUND-IMAGE: url(res://ietag.dll/#34/#1001); BACKGROUND-REPEAT: repeat-x; BACKGROUND-POSITION: left bottom" 
+      tabIndex=0 w:st="on" TCSC="0" NumberType="1" Negative="False" 
+      HasSpace="False" SourceValue="0" UnitName="F"><SPAN style="COLOR: white" 
+      lang=EN-US>0F</SPAN></ST1:CHMETCNV><SPAN lang=EN-US> 
+  </SPAN></FONT></P></TD></TR></TBODY></TABLE>
+<P><B>调色板镜像：<SPAN lang=EN-US><BR></SPAN></B>镜像发生在背景调色板和精灵调色板之间，例如所有写到<SPAN 
+lang=EN-US>$3F00</SPAN>的数据会被镜像到<SPAN lang=EN-US>$3F10</SPAN>，<SPAN 
+lang=EN-US>$3F04</SPAN>镜像到<SPAN lang=EN-US>$3F14</SPAN>。背景和精灵的最高<SPAN 
+lang=EN-US>3</SPAN>个调色板的<SPAN lang=EN-US>0</SPAN>号色盘定义为透明，存在那里的颜色不会被画出来。<SPAN 
+lang=EN-US>PPU</SPAN>使用放在<SPAN lang=EN-US>$3F00</SPAN>里的颜色作为背景色，详细如下：<SPAN 
+lang=EN-US><BR>&nbsp;&nbsp;&nbsp; *$0D</SPAN>被写到<SPAN 
+lang=EN-US>$3F00</SPAN>（镜像到<SPAN lang=EN-US>$3F10)</SPAN>；<SPAN 
+lang=EN-US><BR>&nbsp;&nbsp;&nbsp; *$03</SPAN>被写到<SPAN 
+lang=EN-US>$3F08</SPAN>（镜像到<SPAN lang=EN-US>$3F18)</SPAN>；<SPAN 
+lang=EN-US><BR>&nbsp;&nbsp;&nbsp; *$1A</SPAN>被写到<SPAN 
+lang=EN-US>$3F18</SPAN>；<SPAN lang=EN-US><BR>&nbsp;&nbsp;&nbsp; 
+*$3F08</SPAN>被读到累加器。<SPAN lang=EN-US><BR>PPU</SPAN>使用<SPAN 
+lang=EN-US>$0D</SPAN>作为背景颜色，尽管<SPAN lang=EN-US>$3F08</SPAN>有一个颜色<SPAN 
+lang=EN-US>$03</SPAN>（因为<SPAN 
+lang=EN-US>0</SPAN>号颜色在所有的调色板里都定义为透明）。最后，累加器上有一个值<SPAN 
+lang=EN-US>$1A</SPAN>，这是从<SPAN lang=EN-US>$3F18</SPAN>映像过来的。又一次，这个<SPAN 
+lang=EN-US>$1A</SPAN>值没有被画出，因为所有的调色板的<SPAN 
+lang=EN-US>0</SPAN>号颜色被定义为透明。整个背景和精灵调色板同时也映像到<SPAN 
+lang=EN-US>VRAM</SPAN>的其他区域，<SPAN 
+lang=EN-US>$3F20-$3FFF</SPAN>全部都是这两个调色板分别的映像。写到<SPAN 
+lang=EN-US>$3F00-$3FFF</SPAN>的<SPAN lang=EN-US>D6</SPAN>－<SPAN 
+lang=EN-US>D7</SPAN>字节被忽略。<SPAN lang=EN-US> </SPAN></P>
+<P><B>背景滚动：<SPAN lang=EN-US><BR></SPAN></B><SPAN 
+lang=EN-US>NES</SPAN>可以通过预提取命名表，图案表和属性表来使背景滚动，背景是独立于精灵而位于最下层的。可以水平和垂直滚动。<SPAN 
+lang=EN-US> </SPAN></P>
+<TABLE style="mso-cellspacing: .7pt" class=MsoNormalTable border=1 cellSpacing=1 
+cellPadding=0>
+  <TBODY>
+  <TR style="mso-yfti-irow: 0; mso-yfti-firstrow: yes">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>水平滚动 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>垂直滚动 </FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 1; mso-yfti-lastrow: yes">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <DIV>
+      <TABLE style="mso-cellspacing: .7pt" class=MsoNormalTable border=1 
+      cellSpacing=1 cellPadding=0>
+        <TBODY>
+        <TR style="mso-yfti-irow: 0; mso-yfti-firstrow: yes">
+          <TD 
+          style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt" 
+          colSpan=2>
+            <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>0&nbsp;&nbsp; 
+            　　&nbsp;&nbsp;512 </FONT></SPAN></P></TD></TR>
+        <TR style="HEIGHT: 36pt; mso-yfti-irow: 1; mso-yfti-lastrow: yes">
+          <TD 
+          style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; WIDTH: 24pt; PADDING-RIGHT: 0.75pt; HEIGHT: 36pt; PADDING-TOP: 0.75pt" 
+          width=32>
+            <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>A 
+          </FONT></SPAN></P></TD>
+          <TD 
+          style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; WIDTH: 24.75pt; PADDING-RIGHT: 0.75pt; HEIGHT: 36pt; PADDING-TOP: 0.75pt" 
+          width=33>
+            <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>B 
+          </FONT></SPAN></P></TD></TR></TBODY></TABLE></DIV>
+      <P class=MsoNormal><SPAN lang=EN-US><O:P><FONT 
+      size=2></FONT></O:P></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt" 
+    vAlign=top>
+      <TABLE style="WIDTH: 61.5pt; mso-cellspacing: .7pt" class=MsoNormalTable 
+      border=1 cellSpacing=1 cellPadding=0 width=82 height=76>
+        <TBODY>
+        <TR style="HEIGHT: 13.5pt; mso-yfti-irow: 0; mso-yfti-firstrow: yes">
+          <TD 
+          style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; WIDTH: 30pt; PADDING-RIGHT: 0.75pt; HEIGHT: 13.5pt; PADDING-TOP: 0.75pt" 
+          width=40>
+            <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>A 
+          </FONT></SPAN></P></TD>
+          <TD 
+          style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; WIDTH: 19.5pt; PADDING-RIGHT: 0.75pt; HEIGHT: 13.5pt; PADDING-TOP: 0.75pt" 
+          vAlign=top rowSpan=2 width=26>
+            <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>0</FONT></SPAN></P>
+            <P><SPAN lang=EN-US><BR><FONT size=2>480 </FONT></SPAN></P></TD></TR>
+        <TR style="mso-yfti-irow: 1; mso-yfti-lastrow: yes">
+          <TD 
+          style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; WIDTH: 30pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt" 
+          width=40>
+            <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>B 
+          </FONT></SPAN></P></TD></TR></TBODY></TABLE>
+      <P class=MsoNormal><SPAN 
+lang=EN-US><O:P></O:P></SPAN></P></TD></TR></TBODY></TABLE>
+<P>命名表<SPAN lang=EN-US>A</SPAN>通过<SPAN lang=EN-US>$2000</SPAN>的<SPAN 
+lang=EN-US>D1-D0</SPAN>指定，<SPAN lang=EN-US>B</SPAN>是跟在后面的一个命名表，根据镜像不同<SPAN 
+lang=EN-US>B</SPAN>是动态的。这个不能工作在水平和垂直同时滚动的游戏里。背景会跨越多个命名表，如下所示：<SPAN lang=EN-US> 
+</SPAN></P>
+<TABLE style="mso-cellspacing: .7pt" class=MsoNormalTable border=1 cellSpacing=1 
+cellPadding=0>
+  <TBODY>
+  <TR style="mso-yfti-irow: 0; mso-yfti-firstrow: yes">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>命名表</FONT><SPAN lang=EN-US><FONT 
+      size=2>#2<BR>($2800) </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>命名表</FONT><SPAN lang=EN-US><FONT 
+      size=2>#3<BR>($2C00) </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 1; mso-yfti-lastrow: yes">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>命名表</FONT><SPAN lang=EN-US><FONT 
+      size=2>#0<BR>($2000) </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>命名表</FONT><SPAN lang=EN-US><FONT 
+      size=2>#1<BR>($2400) </FONT></SPAN></P></TD></TR></TBODY></TABLE>
+<P>在<SPAN lang=EN-US>$2005</SPAN>里写到水平滚动的值可以从<SPAN lang=EN-US>0</SPAN>－<SPAN 
+lang=EN-US>256</SPAN>，写到垂直滚动的值从<SPAN lang=EN-US>0</SPAN>－<SPAN 
+lang=EN-US>239</SPAN>，<SPAN lang=EN-US>239</SPAN>是考虑了负值的结果，例如<SPAN 
+lang=EN-US>248</SPAN>代表－<SPAN lang=EN-US>8</SPAN>。<SPAN lang=EN-US> </SPAN></P>
+<P><B>屏幕和精灵分层：<SPAN lang=EN-US><BR></SPAN></B>下面是<SPAN 
+lang=EN-US>NES</SPAN>画图的循序：<SPAN lang=EN-US> </SPAN></P>
+<TABLE style="mso-cellspacing: .7pt" class=MsoNormalTable border=1 cellSpacing=1 
+cellPadding=0>
+  <TBODY>
+  <TR style="mso-yfti-irow: 0; mso-yfti-firstrow: yes">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>前台 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>　 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>　 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>　 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>后台 </FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 1">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>CI </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>OBJs 0-63 
+      </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>BG </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>OBJs 0-63 
+      </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>EXT 
+  </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 2; mso-yfti-lastrow: yes">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>　 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2><SPAN 
+      lang=EN-US>&nbsp;</SPAN>精灵</FONT><SPAN lang=EN-US><FONT 
+      size=2>RAM&nbsp;<BR>BGPRI==0 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>　 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2><SPAN 
+      lang=EN-US>&nbsp;</SPAN>精灵</FONT><SPAN lang=EN-US><FONT 
+      size=2>RAM<BR>BGPRI==1 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>　</FONT> </P></TD></TR></TBODY></TABLE>
+<P><SPAN lang=EN-US>CI</SPAN>代表颜色亮度，相当于<SPAN lang=EN-US>$2001</SPAN>的<SPAN 
+lang=EN-US>D7-D5</SPAN>；<SPAN lang=EN-US>BG</SPAN>是背景；<SPAN 
+lang=EN-US>EXT</SPAN>是扩展口的图像信号。<SPAN lang=EN-US>BGPRI</SPAN>代表<SPAN 
+lang=EN-US>VRAM</SPAN>里背景<SPAN lang=EN-US>‘</SPAN>优先权<SPAN 
+lang=EN-US>’</SPAN>位，每个精灵都有的，即第二字节的<SPAN lang=EN-US>D5</SPAN>位。<SPAN 
+lang=EN-US>OBJ</SPAN>数代表了实际精灵的号码，不是<SPAN 
+lang=EN-US>Tile</SPAN>索引值。前台高于任何其他层，最后被画上，后台低于任何其他层，最先被画上。<SPAN lang=EN-US> 
+</SPAN></P>
+<P><B>精灵和精灵<SPAN lang=EN-US>RAM</SPAN>：<SPAN lang=EN-US><BR></SPAN></B><SPAN 
+lang=EN-US>NES</SPAN>用一个页面（<SPAN lang=EN-US>256</SPAN>字节）来存放动画，每个精灵<SPAN 
+lang=EN-US>4</SPAN>个字节，一共可以有<SPAN lang=EN-US>64</SPAN>个动画<SPAN 
+lang=EN-US>/</SPAN>精灵，它们可以是<SPAN lang=EN-US>8x8</SPAN>或<SPAN 
+lang=EN-US>8x16</SPAN>象素。动画<SPAN lang=EN-US>/</SPAN>精灵图案被存储在<SPAN 
+lang=EN-US>VRAM</SPAN>的图案表其中一个里面。精灵属性，例如翻转和优先权被储存在一个特殊的<SPAN 
+lang=EN-US>256</SPAN>字节的精灵<SPAN lang=EN-US>RAM</SPAN>，它不是<SPAN 
+lang=EN-US>CPU</SPAN>或<SPAN lang=EN-US>PPU</SPAN>的地址的一部分。整个精灵<SPAN 
+lang=EN-US>RAM</SPAN>可以通过<SPAN lang=EN-US>$4014</SPAN>的<SPAN 
+lang=EN-US>DMA</SPAN>方式来写，写一个<SPAN lang=EN-US>8</SPAN>位的数到<SPAN 
+lang=EN-US>$4014</SPAN>就将这个<SPAN lang=EN-US>8</SPAN>位数所指定的内存页面整个拷贝到精灵<SPAN 
+lang=EN-US>RAM</SPAN>上。也可以通过把开始地址放在<SPAN lang=EN-US>$2003</SPAN>然后读<SPAN 
+lang=EN-US>/</SPAN>写于<SPAN 
+lang=EN-US>$2004</SPAN>（每次存取地址自动加一），它是一个一个字节存取的。动画<SPAN 
+lang=EN-US>/</SPAN>精灵的属性格式是：<SPAN lang=EN-US><BR></SPAN>动画<SPAN 
+lang=EN-US>/</SPAN>精灵属性<SPAN lang=EN-US>RAM:<BR>| </SPAN>精灵<SPAN lang=EN-US>#0 | 
+</SPAN>精灵<SPAN lang=EN-US>#1 | ... | </SPAN>精灵<SPAN lang=EN-US>#62 | 
+</SPAN>精灵<SPAN lang=EN-US>#63 | &nbsp;&nbsp; &nbsp; </SPAN></P>
+<TABLE style="mso-cellspacing: .7pt" class=MsoNormalTable border=1 cellSpacing=1 
+cellPadding=0>
+  <TBODY>
+  <TR style="mso-yfti-irow: 0; mso-yfti-firstrow: yes">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>字节 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>位<SPAN lang=EN-US>&nbsp; 
+    </SPAN></FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>描述 </FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 1">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>0 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>YYYYYYYY 
+      </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>精灵左上角的<SPAN lang=EN-US>Y</SPAN>坐标－<SPAN 
+      lang=EN-US>1 </SPAN></FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 2">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>1 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>IIIIIIII 
+      </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2><SPAN lang=EN-US>Tile</SPAN>索引号 
+    </FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 3">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt" 
+    rowSpan=4>
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>2 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt" 
+    rowSpan=4>
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>vhp000cc 
+      </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2><SPAN lang=EN-US>v</SPAN>＝垂直翻转<SPAN 
+      lang=EN-US>(1</SPAN>＝翻转<SPAN lang=EN-US>) </SPAN></FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 4">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2><SPAN lang=EN-US>h</SPAN>＝水平翻转<SPAN 
+      lang=EN-US>(1</SPAN>＝翻转<SPAN lang=EN-US>) </SPAN></FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 5">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2><SPAN lang=EN-US>p</SPAN>＝背景优先权（<SPAN 
+      lang=EN-US>0</SPAN>＝前台<SPAN lang=EN-US>1</SPAN>＝后台） </FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 6">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2><SPAN lang=EN-US>c</SPAN>＝颜色的高<SPAN 
+      lang=EN-US>2</SPAN>位 </FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 7; mso-yfti-lastrow: yes">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>3 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>XXXXXXXX 
+      </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>精灵左上角的<SPAN lang=EN-US>X</SPAN>坐标 
+      </FONT></P></TD></TR></TBODY></TABLE>
+<P><SPAN lang=EN-US>Tile</SPAN>索引号就和命名表里的一样。精灵图案可以象<SPAN 
+lang=EN-US>Tile</SPAN>图案对于背景图片一样抓取。唯一的不同是在<SPAN 
+lang=EN-US>8x16</SPAN>的精灵时，上半部分（偶数号码）的<SPAN lang=EN-US>Tile</SPAN>索引由精灵图案表的<SPAN 
+lang=EN-US>$0000</SPAN>开始，而下半部分（奇数号码）由<SPAN lang=EN-US>$1000</SPAN>开始。<SPAN 
+lang=EN-US>$2000</SPAN>寄存器对<SPAN lang=EN-US>8x16</SPAN>精灵无效。全部<SPAN 
+lang=EN-US>64</SPAN>个精灵有自己内部的优先权，<SPAN lang=EN-US>0</SPAN>号最高（最后被画），<SPAN 
+lang=EN-US>63</SPAN>号最低（最先被画）。每条扫描线只能显示<SPAN lang=EN-US>8</SPAN>个精灵，每个精灵<SPAN 
+lang=EN-US>RAM</SPAN>条目都会被检查是否处于其他精灵的水平范围内。注意，这是基于扫描线的，不是基于精灵的，也就是说，会进行<SPAN 
+lang=EN-US>256</SPAN>次检查，而不是<SPAN lang=EN-US>256/8</SPAN>或<SPAN 
+lang=EN-US>256/16</SPAN>次。在一个真实的<SPAN lang=EN-US>NES</SPAN>芯片里，如果精灵被禁止（<SPAN 
+lang=EN-US>$2001</SPAN>的<SPAN lang=EN-US>D4</SPAN>是<SPAN 
+lang=EN-US>0</SPAN>）很长一段时间，精灵数据会渐渐消失。可以理解为精灵<SPAN lang=EN-US>RAM</SPAN>是一个<SPAN 
+lang=EN-US>DRAM</SPAN>，<SPAN lang=EN-US>D4</SPAN>控制了<SPAN 
+lang=EN-US>DRAM</SPAN>的周期刷新信号。<SPAN lang=EN-US> </SPAN></P>
+<P><B>碰撞标志：<SPAN lang=EN-US><BR></SPAN></B>碰撞标志是<SPAN 
+lang=EN-US>PPU</SPAN>状态寄存器<SPAN lang=EN-US>($2002)</SPAN>的第<SPAN 
+lang=EN-US>6</SPAN>位（<SPAN lang=EN-US>D6</SPAN>）。<SPAN 
+lang=EN-US>PPU</SPAN>能够找出<SPAN lang=EN-US>0</SPAN>号精灵的位置，然后设置<SPAN 
+lang=EN-US>D6</SPAN>，它是这样工作的：<SPAN 
+lang=EN-US>PPU</SPAN>扫描出背景图案象素和精灵象素同时不是透明的第一个地方。比如，屏幕的背景是一个非透明颜色<SPAN 
+lang=EN-US>(</SPAN>颜色号<SPAN lang=EN-US>&gt;0)</SPAN>，<SPAN 
+lang=EN-US>0</SPAN>号精灵的坐标是（<SPAN lang=EN-US>12</SPAN>，<SPAN 
+lang=EN-US>34</SPAN>），它只是在第<SPAN lang=EN-US>4</SPAN>行的开始才有象素，那么，碰撞标志在屏幕刷新到（<SPAN 
+lang=EN-US>12</SPAN>，<SPAN lang=EN-US>37</SPAN>）时才被设置。要记住，<SPAN 
+lang=EN-US>0</SPAN>号颜色被定义为透明。引起<SPAN 
+lang=EN-US>D6</SPAN>被设置的象素必须是已经被画出来的。下面的例子能帮助理解，这是两个<SPAN 
+lang=EN-US>Tile</SPAN>，下划线表示透明的<SPAN lang=EN-US>0</SPAN>号颜色，<SPAN 
+lang=EN-US>*</SPAN>号表示碰撞标志被设置。<SPAN lang=EN-US> </SPAN></P>
+<TABLE style="mso-cellspacing: .7pt" class=MsoNormalTable border=1 cellSpacing=1 
+cellPadding=0>
+  <TBODY>
+  <TR style="mso-yfti-irow: 0; mso-yfti-firstrow: yes">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>精灵 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt" 
+    rowSpan=2>
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>+ </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2><SPAN lang=EN-US>&nbsp;</SPAN>背景 
+      </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt" 
+    rowSpan=2>
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>= </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>结果 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt" 
+    rowSpan=2>
+      <P class=MsoNormal><FONT size=2>‘<SPAN lang=EN-US>*</SPAN>’会用<SPAN 
+      lang=EN-US>2</SPAN>号颜色画出 </FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 1; mso-yfti-lastrow: yes">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT 
+      size=2>&nbsp;__1111__<BR>_111111_<BR>11222211<BR>112__211<BR>112__211<BR>11222211<BR>_111111_<BR>__1111__ 
+      </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT 
+      size=2>________<BR>_______2<BR>______21<BR>_____211<BR>____2111<BR>___21111<BR>__211111<BR>_2111111 
+      </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT 
+      size=2>__1111__<BR>_1111112<BR>11222211<BR>112__*11<BR>112_2211<BR>11222211<BR>_1111111<BR>_2111111</FONT> 
+      </SPAN></P></TD></TR></TBODY></TABLE>
+<P>这个例子说的是背景＋精灵，但是对于靠近背景的精灵也通用，即精灵＋精灵，通过设置背景优先权来实现。<SPAN 
+lang=EN-US>D6</SPAN>不可以通过读<SPAN lang=EN-US>PPU</SPAN>的状态来复位，只在每次<SPAN 
+lang=EN-US>VBlank</SPAN>之后被清零。<SPAN 
+lang=EN-US>Hit</SPAN>标志可以用在水平或者垂直屏幕分割的时候，还有许多好玩的效果。<SPAN lang=EN-US> </SPAN></P>
+<P><B>水平和垂直消隐：<SPAN 
+lang=EN-US><BR></SPAN></B>所有的游戏机都有一个刷新动作，用来重新定位电子枪显示可见的数据。最通用的显示设备是电视机，它分为每秒刷新<SPAN 
+lang=EN-US>60</SPAN>次的<SPAN lang=EN-US>NTSC</SPAN>制式和<SPAN 
+lang=EN-US>50</SPAN>次的<SPAN 
+lang=EN-US>PAL</SPAN>制式。电子枪从左到右画出象素，它每次只能画一条扫描线，画下一条之前要先回到左面并且做好准备，这之间有一段时间叫做水平消隐（<SPAN 
+lang=EN-US>HBlank</SPAN>）。在画完全部<SPAN 
+lang=EN-US>256</SPAN>条扫描线之后它又回到屏幕左上角准备下一次画屏幕（帧），这之间的一段时间就是垂直消隐（<SPAN 
+lang=EN-US>VBlank</SPAN>）。电子枪就是一个不断的走<SPAN lang=EN-US>‘</SPAN>之<SPAN 
+lang=EN-US>’</SPAN>字形的过程。<SPAN lang=EN-US>VBlank</SPAN>标志就是<SPAN 
+lang=EN-US>$2002</SPAN>的<SPAN lang=EN-US>D7</SPAN>，它表明<SPAN 
+lang=EN-US>PPU</SPAN>是否在<SPAN lang=EN-US>VBlank</SPAN>期间，当<SPAN 
+lang=EN-US>VBlank</SPAN>标志存在时，你就可以通过<SPAN lang=EN-US>$2006</SPAN>和<SPAN 
+lang=EN-US>$2007</SPAN>访问<SPAN lang=EN-US>PPU</SPAN>内存。一个程序可以通过读<SPAN 
+lang=EN-US>$2002</SPAN>来使<SPAN lang=EN-US>D7</SPAN>复位。在屏幕刷新期间，我们不能访问<SPAN 
+lang=EN-US>PPU</SPAN>，而<SPAN lang=EN-US>PPU</SPAN>会在<SPAN 
+lang=EN-US>CPU</SPAN>背后修改<SPAN lang=EN-US>VRAM</SPAN>指针，这样我们很容易在写入<SPAN 
+lang=EN-US>VRAM</SPAN>时出错，为了让<SPAN lang=EN-US>PPU</SPAN>停下来，可以对<SPAN 
+lang=EN-US>$2000</SPAN>和<SPAN lang=EN-US>$2001</SPAN>写<SPAN 
+lang=EN-US>00</SPAN>。<SPAN lang=EN-US> </SPAN></P>
+<P><B>访问<SPAN lang=EN-US>PPU RAM:<BR></SPAN></B>在一个任天堂主机，访问<SPAN 
+lang=EN-US>PPU</SPAN>内存只可以在<SPAN 
+lang=EN-US>VBlank</SPAN>期间。当在屏幕刷新时访问会破坏刷新地址寄存器，一般它经常用来做隐含的<SPAN 
+lang=EN-US>“</SPAN>分割屏幕<SPAN lang=EN-US>”</SPAN>效果（见<SPAN 
+lang=EN-US>“</SPAN>在屏幕刷新的时候访问<SPAN lang=EN-US>VRAM”</SPAN>）。很多小些的<SPAN 
+lang=EN-US>ROM</SPAN>用只读存储体<SPAN lang=EN-US>(VROM)</SPAN>用做图案表。在这种情况下，你不可以写<SPAN 
+lang=EN-US>PPU</SPAN>地址，只可以读。<SPAN lang=EN-US><BR></SPAN>写<SPAN 
+lang=EN-US>PPU</SPAN>记忆体<SPAN lang=EN-US>:<BR>&nbsp;&nbsp;&nbsp; a) 
+</SPAN>写高位地址字节到<SPAN lang=EN-US>$2006<BR>&nbsp;&nbsp;&nbsp; b) 
+</SPAN>写低位地址字节到<SPAN lang=EN-US>$2006<BR>&nbsp;&nbsp;&nbsp; c) </SPAN>写数据到<SPAN 
+lang=EN-US>$2007</SPAN>。每一个写操作后，地址会增加<SPAN lang=EN-US>1($2000</SPAN>的第二位是<SPAN 
+lang=EN-US>0)</SPAN>或增加<SPAN lang=EN-US>32($2000</SPAN>的第二位是<SPAN 
+lang=EN-US>1)</SPAN>。<SPAN lang=EN-US><BR></SPAN>读<SPAN 
+lang=EN-US>PPU</SPAN>记忆体<SPAN lang=EN-US>:<BR>&nbsp;&nbsp;&nbsp; a) 
+</SPAN>写高位地址字节到<SPAN lang=EN-US>$2006<BR>&nbsp;&nbsp;&nbsp; b) 
+</SPAN>写低位地址字节到<SPAN lang=EN-US>$2006<BR>&nbsp;&nbsp;&nbsp; c) </SPAN>从<SPAN 
+lang=EN-US>$2007</SPAN>读数据。从<SPAN lang=EN-US>$2007</SPAN>读到的第一个字节是无效的<SPAN 
+lang=EN-US>(</SPAN>见下例<SPAN lang=EN-US>)</SPAN>。然后每读一次地址就增加一<SPAN 
+lang=EN-US>($2000</SPAN>的第二位是<SPAN lang=EN-US>0)</SPAN>或增加<SPAN 
+lang=EN-US><BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 32($2000</SPAN>的第二位是<SPAN 
+lang=EN-US>1)</SPAN>。<SPAN lang=EN-US><BR></SPAN>例子：<SPAN 
+lang=EN-US>VRAM</SPAN>的<SPAN lang=EN-US>$2000</SPAN>里有<SPAN lang=EN-US>$AA $BB 
+$CC $DD</SPAN>。<SPAN lang=EN-US>VRAM</SPAN>的增量是<SPAN 
+lang=EN-US>1</SPAN>。执行效果如下：<SPAN lang=EN-US><BR>&nbsp;&nbsp;&nbsp; LDA 
+#$20<BR>&nbsp;&nbsp;&nbsp; STA $2006<BR>&nbsp;&nbsp;&nbsp; LDA 
+#$00<BR>&nbsp;&nbsp;&nbsp; STA $2006 ; VRAM </SPAN>地址设为<SPAN lang=EN-US> 
+$2000<BR>&nbsp;&nbsp;&nbsp; LDA $2007 ; A=??&nbsp; VRAM </SPAN>缓冲<SPAN 
+lang=EN-US>=$AA<BR>&nbsp;&nbsp;&nbsp; LDA $2007 ; A=$AA VRAM </SPAN>缓冲<SPAN 
+lang=EN-US>=$BB<BR>&nbsp;&nbsp;&nbsp; LDA $2007 ; A=$BB VRAM </SPAN>缓冲<SPAN 
+lang=EN-US>=$CC<BR>&nbsp;&nbsp;&nbsp; LDA #$20<BR>&nbsp;&nbsp;&nbsp; STA 
+$2006<BR>&nbsp;&nbsp;&nbsp; LDA #$00<BR>&nbsp;&nbsp;&nbsp; STA $2006 ; VRAM 
+</SPAN>地址设为<SPAN lang=EN-US> $2000<BR>&nbsp;&nbsp;&nbsp; LDA $2007 ; A=$CC VRAM 
+</SPAN>缓冲<SPAN lang=EN-US>=$AA<BR>&nbsp;&nbsp;&nbsp; LDA $2007 ; A=$AA VRAM 
+</SPAN>缓冲<SPAN lang=EN-US>=$BB<BR></SPAN>这个只适用于<SPAN 
+lang=EN-US>$0000-$FEFF</SPAN>，访问调色板数据没有这种现象。<SPAN lang=EN-US> </SPAN></P>
+<P><B>在屏幕刷新的时候访问<SPAN lang=EN-US>VRAM</SPAN>：<SPAN 
+lang=EN-US><BR></SPAN></B>前面说过，在屏幕刷新的时候存取<SPAN 
+lang=EN-US>VRAM</SPAN>的地址和数据是不合法的。许多程序存取这些寄存器来制造不同的滚动效果。比如，一些游戏从屏幕底部开始滚动，那么它可能向<SPAN 
+lang=EN-US>$2006</SPAN>写第一行的状态来复位屏幕滚动。更好的诡计是<SPAN 
+lang=EN-US>PPU</SPAN>在屏幕刷新时用<SPAN lang=EN-US>VRAM</SPAN>的地址寄存器来储存当前地址。通过向<SPAN 
+lang=EN-US>$2006</SPAN>修改地址以及让<SPAN lang=EN-US>PPU</SPAN>从一个不同的地方接着刷新。关于<SPAN 
+lang=EN-US>$2007</SPAN>如何影响屏幕刷新仍不了解。<SPAN lang=EN-US><BR>&nbsp;&nbsp;&nbsp; 
+</SPAN>当不知道向<SPAN lang=EN-US>$2006</SPAN>中写什么数据时，看下面的图表。<SPAN 
+lang=EN-US><BR>&nbsp;&nbsp;&nbsp; </SPAN>写到<SPAN lang=EN-US>$2006</SPAN>的地址<SPAN 
+lang=EN-US> </SPAN></P>
+<TABLE style="mso-cellspacing: 0cm; mso-padding-alt: 0cm 0cm 0cm 0cm" 
+class=MsoNormalTable border=1 cellSpacing=0 cellPadding=0>
+  <TBODY>
+  <TR style="mso-yfti-irow: 0; mso-yfti-firstrow: yes">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>位 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>描述 </FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 1">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2><SPAN lang=EN-US>0</SPAN>－<SPAN 
+      lang=EN-US>4 </SPAN></FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2><SPAN lang=EN-US>Tiles</SPAN>的水平偏移量<SPAN 
+      lang=EN-US>(</SPAN>例如<SPAN lang=EN-US>1 = 8</SPAN>象素<SPAN 
+      lang=EN-US>)</SPAN>；水平位置＝水平偏移量×<SPAN lang=EN-US>8 </SPAN></FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 2">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2><SPAN lang=EN-US>5</SPAN>－<SPAN 
+      lang=EN-US>9 </SPAN></FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2><SPAN lang=EN-US>Tiles</SPAN>的垂直偏移量<SPAN 
+      lang=EN-US>(</SPAN>例如<SPAN lang=EN-US>1 = 8</SPAN>象素<SPAN 
+      lang=EN-US>)</SPAN>；垂直位置＝垂直偏移量×<SPAN lang=EN-US>8 </SPAN></FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 3">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2><SPAN lang=EN-US>A</SPAN>、<SPAN 
+      lang=EN-US>B </SPAN></FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>命名表的号码<SPAN 
+      lang=EN-US>($2000,$2400,$2800,$2C00)</SPAN>； </FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 4">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2><SPAN lang=EN-US>C</SPAN>、<SPAN 
+      lang=EN-US>D </SPAN></FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>附加的垂直偏移量，单位：象素<SPAN 
+      lang=EN-US>(0..3)</SPAN>；扫描线＝垂直偏移量＋附加的垂直偏移量 </FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 5; mso-yfti-lastrow: yes">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2><SPAN lang=EN-US>E</SPAN>、<SPAN 
+      lang=EN-US>F </SPAN></FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>00 
+  </FONT></SPAN></P></TD></TR></TBODY></TABLE><BR></FONT></BODY></HTML>

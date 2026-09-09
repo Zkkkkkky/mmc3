@@ -1,0 +1,82 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML><HEAD><TITLE>解决大型机相遇花屏相关事宜</TITLE>
+<META name=GENERATOR content="MSHTML 8.00.7601.19104">
+<META content="text/html; charset=gb2312" http-equiv=Content-Type>
+<STYLE>
+html,body { 
+	/* Default Font */
+	font-family: Microsoft YaHei, Simsun, sans-serif;
+	font-size: 12pt;
+}
+</STYLE>
+</HEAD>
+<BODY>
+<DIV id=post_content_105173972785 class="d_post_content j_d_post_content "><FONT 
+size=2>武器动画综合解析（大型机相遇花屏问题原因和解决方法以及之后的背景武器写法）<BR>先把之前的光束武器的覆盖规律讲一下吧<BR>之前讲过，背景武器是作为背景存在的，而且不能与机体图片部分重叠<BR>如果没有覆盖规律，武器动画结束之后是这样的<BR><IMG 
+class=BDE_Image 
+src="https://imgsa.baidu.com/forum/w%3D580/sign=b7a7ff379025bc312b5d01906ede8de7/3da7fad3572c11df33be95da6a2762d0f603c25e.jpg" 
+width=321 height=349 pic_type="0"><BR><BR>现在需要把这部分残留的背景去除<BR><IMG 
+class=BDE_Image 
+src="https://imgsa.baidu.com/forum/w%3D580/sign=899853c167061d957d4637304bf50a5d/df7411d8bc3eb13513639d42af1ea8d3fc1f4424.jpg" 
+width=500 height=201 pic_type="0"><BR><BR>来看蓝色标注的这部分<BR><BR>读取规律01<BR><IMG 
+class=BDE_Image 
+src="https://imgsa.baidu.com/forum/w%3D580/sign=d5d78cdab97eca80120539efa1219712/1485f3edab64034f1f36e8ffa6c3793108551dc9.jpg" 
+width=560 height=480 pic_type="0"><BR><BR>这个就是规律01的具体代码<BR>FE 09 10 FD 20 20 F8 
+40 00 FF <BR>FE调试坐标位置<BR>09横坐标<BR>10纵坐标<BR>FD 20 
+定义图块长度<BR>20图块长度，用16进制表示，20=10进制的32格，也就是256像素，机体远程攻击之间的距离<BR><IMG 
+class=BDE_Image 
+src="https://imgsa.baidu.com/forum/w%3D580/sign=d904041ca46eddc426e7b4f309d9b6a2/0c3df3f2b2119313678ed5496c380cd793238dfc.jpg" 
+width=475 height=112 pic_type="0"><BR><BR>也就是中间那条的长度<BR>F8 定义取图数量的标志码<BR>40 
+取图块的数量，也就是10进制的64格<BR>00 
+从00图块开始取图（即黑色图块）<BR>FF结束取图<BR><BR>综上所述，该段代码为长20，宽2的黑色背景<BR>然后把黄绿色的粒子炮用黑色背景覆盖掉<BR>所有光束武器最后的处理同理<BR>再来看另外一个覆盖规律<BR><BR>FE 
+07 85 F8 0B 00 F3 03 F5 F8 0B 00 F3 03 F5 F8 0B 00 FF 
+<BR><BR>FE调试坐标位置<BR>07纵坐标<BR>85横坐标<BR>F8未知<BR>0B黑背景长度（宽度默认1）<BR>00从00图块取图<BR>F3调试下一图块位置<BR>03相对于上一图块向下移动3格<BR>F5相对于上一图块左移12格<BR>后面同理<BR><BR>背景武器的覆盖规律代码写法不一样，但是总体上都是差不多的<BR><BR>这样，背景武器和精灵武器差不多就全部讲完了</FONT></DIV>
+<DIV class="d_post_content j_d_post_content "><FONT 
+size=2>接下來来看看这个游戏图库调用的全过程和介绍<BR><IMG class=BDE_Image 
+src="https://imgsa.baidu.com/forum/w%3D580/sign=3e3b53398b025aafd3327ec3cbecab8d/5e973101213fb80e94c4742e3fd12f2eb83894b4.jpg" 
+width=496 height=506 
+pic_type="0"><BR><BR>打开FCEUX，然后点击调试-PPU查看器（FCEUX可以在6502图书馆下载）<BR><IMG 
+class=BDE_Image 
+src="https://imgsa.baidu.com/forum/w%3D580/sign=824b2a9cba19ebc4c0787691b227cf79/da4beddde71190ef8dbc8726c71b9d16fcfa6006.jpg" 
+width=539 height=451 
+pic_type="0"><BR><BR>会显示这样一个框图<BR><BR>FC游戏可以一次性读取4个背景图库，4个精灵图库（俗称碎片）<BR><BR>左边4个为背景，右边4个为精灵</FONT></DIV>
+<DIV class="d_post_content j_d_post_content "><FONT size=2><IMG class=BDE_Image 
+src="https://imgsa.baidu.com/forum/w%3D580/sign=0c80e8231cce36d3a20483380af23a24/24f796510fb30f241592f8fac195d143ac4b03b8.jpg" 
+width=539 height=451 
+pic_type="0"><BR><BR>我用数字标注了<BR><BR>对了，我先说一下，接下來要讲的是PPU查看器图库解析<BR>大型机相遇花屏问题原因，解决方法以及相关的背景武器写法<BR><BR>只需要看左边的4个图库就行了<BR><IMG 
+class=BDE_Image 
+src="https://imgsa.baidu.com/forum/w%3D580/sign=2d8185d7a1d3fd1f3609a232004f25ce/c75c7a0e0cf3d7cad4c1298ffb1fbe096a63a996.jpg" 
+width=560 height=246 pic_type="0" 
+size="65803"><BR><BR>这是在地图界面显示的PPU查看器所读取的4个图库<BR><BR>其中2个敌方机体图标的图库，1个我方机体图标的图库，1个地图模块的图库<BR><BR><BR><IMG 
+class=BDE_Image 
+src="https://imgsa.baidu.com/forum/w%3D580/sign=7ca915520a3b5bb5bed720f606d2d523/8b793dfae6cd7b89cacc2e7a062442a7d8330e20.jpg" 
+width=560 height=223 
+pic_type="0"><BR><BR>现在进入战斗状态，我们看到切换了3个图库<BR>按照顺序，我称之为图库1，图库3和图库4<BR>其中图库3，图库4切换到了机械基鲁基鲁刚所读取的两个图库<BR><BR><IMG 
+class=BDE_Image 
+src="https://imgsa.baidu.com/forum/w%3D580/sign=abf7fc9d5f4e9258a63486e6ac80d1d1/ff9200fa513d2697fb3a1ca45cfbb2fb4116d8d8.jpg" 
+width=496 height=506 pic_type="0"><BR><BR>然后，开始播放战斗动画<BR><IMG class=BDE_Image 
+src="https://imgsa.baidu.com/forum/w%3D580/sign=62c89646855494ee87220f111df4e0e1/317815950a7b0208eae228186bd9f2d3562cc89a.jpg" 
+width=560 height=236 pic_type="0"><BR><BR>可以看到图库2切换了，就是你们所看到的粒子炮贴图所在的图库<BR><IMG 
+class=BDE_Image 
+src="https://imgsa.baidu.com/forum/w%3D580/sign=c37145c0c03d70cf4cfaaa05c8ddd1ba/d83ae3f81a4c510f65b6f5e36959252dd52aa553.jpg" 
+width=560 height=242 
+pic_type="0"><BR><BR>然后再播放敌方武器动画<BR><BR>我们可以看到第二个图库又切换到了离子波贴图所在的图库<BR><BR>看到这里应该很清楚了，原版战斗动画切换图库的方式为图库1为我方机体图像<BR><BR>图库3，图库4则为敌方机体图像<BR><BR>在播放战斗动画之前，图库2没有切换，还是之前的在地图上读取的敌方机体图标的一个图库<BR><BR>播放光束武器战斗动画时，切换了图库2，也就是敌我光束武器所在贴图的图库<BR><IMG 
+class=BDE_Image 
+src="https://imgsa.baidu.com/forum/w%3D580/sign=052bafd908e9390156028d364bee54f9/f6093112b31bb05181eba4d13f7adab448ede0fe.jpg" 
+width=560 height=221 pic_type="0"><BR><IMG class=BDE_Image 
+src="https://imgsa.baidu.com/forum/w%3D580/sign=b922d924a264034f0fcdc20e9fc17980/0b993ed12f2eb93869896d0bdc628535e7dd6fe5.jpg" 
+width=560 height=232 pic_type="0"><BR><BR>这个就是大型机相遇花屏的原因</FONT></DIV>
+<DIV class="d_post_content j_d_post_content "><FONT 
+size=2>之前我在讲解背景武器的时候留了一个东西没讲，那就是为什么背景武器读取图块时从40开始<BR><BR><IMG class=BDE_Image 
+src="https://imgsa.baidu.com/forum/w%3D580/sign=3e2490d2b951f819f1250342eab54a76/655725f5e0fe9925bb077fa93da85edf8cb171b9.jpg" 
+width=539 height=451 
+pic_type="0"><BR><BR>再来看PPU查看器的图像<BR><BR>图库1的第一格为00<BR><BR>按照顺序，由于切换图库都是切换到图库2<BR><BR>所以读取图块时就是从40开始<BR><IMG 
+class=BDE_Image 
+src="https://imgsa.baidu.com/forum/w%3D580/sign=2a373a11b53eb13544c7b7b3961fa8cb/103428a4462309f73a6fbbeb7b0e0cf3d6cad641.jpg" 
+width=268 height=273 
+pic_type="0"><BR><BR>粒子炮贴图所在的图库就是图库2<BR><BR>接下來就是大型机相遇问题的解决方法<BR><BR>我方大型机拥有背景武器时，图库切换不变，还是切换到图库2，因此，需要把背景武器的贴图贴在我方大型机所在的第2个图库<BR><BR>先讲一下大型机和小型机的区别吧，小型机只读取一个图库，大型机读取两个图库<BR><BR>敌方大型机拥有背景武器时，图库切换到图库4，因此，需要把背景武器的贴图贴在敌方大型机所在的第2个图库<BR><BR>之前说过，如果切换到第四图库，读取图块时就是C0开始<BR><BR>但是，这样的读取方式是和游戏程序冲突的<BR><BR>所以，在实际操作过程中，把图库3和图库4互换了，读取图块时从80开始<BR><BR>这样，完美的解决大型机相遇花屏的问题，有且仅有这一种方法<BR><BR>来看这个机体的贴图<BR><IMG 
+class=BDE_Image 
+src="https://imgsa.baidu.com/forum/w%3D580/sign=f852b414a844ad342ebf878fe0a30c08/f0bd71310a55b31982b5948c4aa98226cefc177c.jpg" 
+width=560 height=171 
+pic_type="0"><BR><BR>很明显，将十字捣碎机的贴图贴在了图库3<BR><BR>那么，解决大型机相遇花屏时候写光束武器需要注意的是，我方大型机光束武器贴图和第二个图库贴在一起<BR><BR>武器代码写法不变<BR><BR>敌方大型机光束武器贴图和第一个图库贴在一起，需要注意的是，组图规律取图都是从80开始的<BR><BR>并且读取图库的方式为F2 
+05 01+XX<BR><BR>之前读取图库的方式为F2 03 01+XX<BR><BR>其他也不变</FONT></DIV></BODY></HTML>

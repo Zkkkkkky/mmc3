@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "profile": "dc-kuorong-mmc3-v1",
   "sourceRom": "FC模拟器/DC_kuorong.nes",
   "sourceRomSha256": "1DDD4F74B2D3ACEAA8A0BC4A6846BE8E6148C858C2D8EA5A1F6E0A04F0AD4A75",
@@ -9,7 +9,11 @@
     "weaponNamePointers": "0x49DBD",
     "characterBattleNamePointers": "0x49776",
     "battleMusicAttacker": "0x0CF86",
-    "battleMusicDefender": "0x0D04E"
+    "battleMusicDefender": "0x0D04E",
+    "mapEventPointers": "0x1588E",
+    "mapEventManagedPool": "0x15EE4-0x1600F",
+    "persuasionRules": "0x3B73D",
+    "persuasionScriptPointers": "0x35DD0"
   },
   "units": [
     {
@@ -41890,14 +41894,14 @@
     {
       "id": 29,
       "hexId": "$1D",
-      "name": "原ROM占位名“？？？”",
+      "name": "占位/未命名人物槽（原ROM“？？？”）",
       "pointer": "$9665",
       "tokens": "9E 9E 9E FF"
     },
     {
       "id": 30,
       "hexId": "$1E",
-      "name": "原ROM占位名“？？？”",
+      "name": "占位/未命名人物槽（原ROM“？？？”）",
       "pointer": "$9665",
       "tokens": "9E 9E 9E FF"
     },
@@ -43090,193 +43094,234 @@
       "id": 0,
       "hexId": "$00",
       "title": "伏击之战",
-      "status": "chapter"
+      "status": "chapter",
+      "coordinateEvents": []
     },
     {
       "id": 1,
       "hexId": "$01",
       "title": "街上追击战",
-      "status": "chapter"
+      "status": "chapter",
+      "coordinateEvents": []
     },
     {
       "id": 2,
       "hexId": "$02",
       "title": "进攻基地",
-      "status": "chapter"
+      "status": "chapter",
+      "coordinateEvents": []
     },
     {
       "id": 3,
       "hexId": "$03",
       "title": "救出人质",
-      "status": "chapter"
+      "status": "chapter",
+      "coordinateEvents": []
     },
     {
       "id": 4,
       "hexId": "$04",
       "title": "荒野再叛",
-      "status": "chapter"
+      "status": "chapter",
+      "coordinateEvents": []
     },
     {
       "id": 5,
       "hexId": "$05",
       "title": "再攻要塞",
-      "status": "chapter"
+      "status": "chapter",
+      "coordinateEvents": []
     },
     {
       "id": 6,
       "hexId": "$06",
       "title": "内战",
-      "status": "chapter"
+      "status": "chapter",
+      "coordinateEvents": []
     },
     {
       "id": 7,
       "hexId": "$07",
       "title": "荒野谋略",
-      "status": "chapter"
+      "status": "chapter",
+      "coordinateEvents": []
     },
     {
       "id": 8,
       "hexId": "$08",
       "title": "激战大扎姆",
-      "status": "chapter"
+      "status": "chapter",
+      "coordinateEvents": []
     },
     {
       "id": 9,
       "hexId": "$09",
       "title": "燃烧都市",
-      "status": "chapter"
+      "status": "chapter",
+      "coordinateEvents": []
     },
     {
       "id": 10,
       "hexId": "$0A",
       "title": "幕后浮现",
-      "status": "chapter"
+      "status": "chapter",
+      "coordinateEvents": []
     },
     {
       "id": 11,
       "hexId": "$0B",
       "title": "激战大魔神",
-      "status": "chapter"
+      "status": "chapter",
+      "coordinateEvents": []
     },
     {
       "id": 12,
       "hexId": "$0C",
       "title": "白河愁的试炼",
-      "status": "chapter"
+      "status": "chapter",
+      "coordinateEvents": []
     },
     {
       "id": 13,
       "hexId": "$0D",
       "title": "未使用关卡槽位",
-      "status": "unused"
+      "status": "unused",
+      "coordinateEvents": []
     },
     {
       "id": 14,
       "hexId": "$0E",
       "title": "未使用关卡槽位",
-      "status": "unused"
+      "status": "unused",
+      "coordinateEvents": []
     },
     {
       "id": 15,
       "hexId": "$0F",
       "title": "未使用关卡槽位",
-      "status": "unused"
+      "status": "unused",
+      "coordinateEvents": [
+        {
+          "x": 31,
+          "y": 8,
+          "characterId": 255,
+          "characterName": "任何人物",
+          "eventId": 0,
+          "kind": "event"
+        }
+      ]
     },
     {
       "id": 16,
       "hexId": "$10",
       "title": "未使用关卡槽位",
-      "status": "unused"
+      "status": "unused",
+      "coordinateEvents": []
     },
     {
       "id": 17,
       "hexId": "$11",
       "title": "未使用关卡槽位",
-      "status": "unused"
+      "status": "unused",
+      "coordinateEvents": []
     },
     {
       "id": 18,
       "hexId": "$12",
       "title": "未使用关卡槽位",
-      "status": "unused"
+      "status": "unused",
+      "coordinateEvents": []
     },
     {
       "id": 19,
       "hexId": "$13",
       "title": "未使用关卡槽位",
-      "status": "unused"
+      "status": "unused",
+      "coordinateEvents": []
     },
     {
       "id": 20,
       "hexId": "$14",
       "title": "未使用关卡槽位",
-      "status": "unused"
+      "status": "unused",
+      "coordinateEvents": []
     },
     {
       "id": 21,
       "hexId": "$15",
       "title": "未使用关卡槽位",
-      "status": "unused"
+      "status": "unused",
+      "coordinateEvents": []
     },
     {
       "id": 22,
       "hexId": "$16",
       "title": "未使用关卡槽位",
-      "status": "unused"
+      "status": "unused",
+      "coordinateEvents": []
     },
     {
       "id": 23,
       "hexId": "$17",
       "title": "未使用关卡槽位",
-      "status": "unused"
+      "status": "unused",
+      "coordinateEvents": []
     },
     {
       "id": 24,
       "hexId": "$18",
       "title": "未使用关卡槽位",
-      "status": "unused"
+      "status": "unused",
+      "coordinateEvents": []
     },
     {
       "id": 25,
       "hexId": "$19",
       "title": "未使用关卡槽位",
-      "status": "unused"
+      "status": "unused",
+      "coordinateEvents": []
     },
     {
       "id": 26,
       "hexId": "$1A",
       "title": "未使用关卡槽位",
-      "status": "unused"
+      "status": "unused",
+      "coordinateEvents": []
     },
     {
       "id": 27,
       "hexId": "$1B",
       "title": "未使用关卡槽位",
-      "status": "unused"
+      "status": "unused",
+      "coordinateEvents": []
     },
     {
       "id": 28,
       "hexId": "$1C",
       "title": "未使用关卡槽位",
-      "status": "unused"
+      "status": "unused",
+      "coordinateEvents": []
     },
     {
       "id": 29,
       "hexId": "$1D",
       "title": "未使用关卡槽位",
-      "status": "unused"
+      "status": "unused",
+      "coordinateEvents": []
     },
     {
       "id": 30,
       "hexId": "$1E",
       "title": "未使用关卡槽位",
-      "status": "unused"
+      "status": "unused",
+      "coordinateEvents": []
     },
     {
       "id": 31,
       "hexId": "$1F",
       "title": "未使用关卡槽位",
-      "status": "unused"
+      "status": "unused",
+      "coordinateEvents": []
     },
     {
       "id": 32,
@@ -43726,7 +43771,7 @@
     {
       "command": 134,
       "hexCommand": "$86",
-      "label": "用途未确认 2（旧资料编号）"
+      "label": "第8关阶段三剧情曲"
     },
     {
       "command": 135,
@@ -43786,7 +43831,7 @@
     {
       "command": 146,
       "hexCommand": "$92",
-      "label": "用途未确认 1（旧资料编号）"
+      "label": "原版保留曲19（当前剧情/战斗表未引用）"
     },
     {
       "command": 147,
@@ -44074,7 +44119,7 @@
     {
       "id": 29,
       "hexId": "$1D",
-      "label": "原ROM占位名“？？？”",
+      "label": "占位/未命名人物槽（原ROM“？？？”）",
       "attackerCommand": "$90",
       "attackerTrack": "$90 · 瓦尔主题曲",
       "defenderCommand": "$8F",
@@ -44083,7 +44128,7 @@
     {
       "id": 30,
       "hexId": "$1E",
-      "label": "原ROM占位名“？？？”",
+      "label": "占位/未命名人物槽（原ROM“？？？”）",
       "attackerCommand": "$90",
       "attackerTrack": "$90 · 瓦尔主题曲",
       "defenderCommand": "$00",
@@ -45619,8 +45664,8 @@
       "fields": [
         "X",
         "Y",
-        "机体ID",
         "人物ID",
+        "机体ID",
         "等级",
         "AI/标志"
       ]
@@ -45632,8 +45677,8 @@
       "fields": [
         "X",
         "Y",
-        "机体ID",
         "人物ID",
+        "机体ID",
         "等级",
         "AI/标志"
       ]
@@ -45691,7 +45736,7 @@
     {
       "opcode": 106,
       "hexOpcode": "$6A",
-      "label": "撤退并保留镜头目标",
+      "label": "当前单位自爆",
       "fields": []
     },
     {
@@ -45736,6 +45781,839 @@
         "队伍槽",
         "标志"
       ]
+    }
+  ],
+  "chapterEventOpcodes": [
+    {
+      "opcode": 0,
+      "hexOpcode": "$00",
+      "label": "回合判定",
+      "fields": []
+    },
+    {
+      "opcode": 1,
+      "hexOpcode": "$01",
+      "label": "开关判定",
+      "fields": []
+    },
+    {
+      "opcode": 2,
+      "hexOpcode": "$02",
+      "label": "人物行动限制位判定",
+      "fields": []
+    },
+    {
+      "opcode": 3,
+      "hexOpcode": "$03",
+      "label": "人物在队伍判定",
+      "fields": []
+    },
+    {
+      "opcode": 4,
+      "hexOpcode": "$04",
+      "label": "人物在战场判定",
+      "fields": []
+    },
+    {
+      "opcode": 5,
+      "hexOpcode": "$05",
+      "label": "人物在母舰判定",
+      "fields": []
+    },
+    {
+      "opcode": 6,
+      "hexOpcode": "$06",
+      "label": "敌方数量判定",
+      "fields": []
+    },
+    {
+      "opcode": 7,
+      "hexOpcode": "$07",
+      "label": "我方数量判定",
+      "fields": []
+    },
+    {
+      "opcode": 8,
+      "hexOpcode": "$08",
+      "label": "持有道具判定",
+      "fields": []
+    },
+    {
+      "opcode": 9,
+      "hexOpcode": "$09",
+      "label": "指定人物受伤判定",
+      "fields": []
+    },
+    {
+      "opcode": 10,
+      "hexOpcode": "$0A",
+      "label": "我方进入范围判定",
+      "fields": []
+    },
+    {
+      "opcode": 11,
+      "hexOpcode": "$0B",
+      "label": "敌方进入范围判定",
+      "fields": []
+    },
+    {
+      "opcode": 12,
+      "hexOpcode": "$0C",
+      "label": "人物进入坐标判定",
+      "fields": []
+    },
+    {
+      "opcode": 13,
+      "hexOpcode": "$0D",
+      "label": "当前人物行动限制判定",
+      "fields": []
+    },
+    {
+      "opcode": 14,
+      "hexOpcode": "$0E",
+      "label": "接触人物判定",
+      "fields": []
+    },
+    {
+      "opcode": 15,
+      "hexOpcode": "$0F",
+      "label": "当前人物坐标判定",
+      "fields": []
+    },
+    {
+      "opcode": 16,
+      "hexOpcode": "$10",
+      "label": "当前人物范围判定",
+      "fields": []
+    },
+    {
+      "opcode": 17,
+      "hexOpcode": "$11",
+      "label": "敌人距离判定",
+      "fields": []
+    },
+    {
+      "opcode": 18,
+      "hexOpcode": "$12",
+      "label": "当前人物受伤判定",
+      "fields": []
+    },
+    {
+      "opcode": 19,
+      "hexOpcode": "$13",
+      "label": "攻击/击落判定",
+      "fields": []
+    },
+    {
+      "opcode": 20,
+      "hexOpcode": "$14",
+      "label": "向最近敌人移动",
+      "fields": []
+    },
+    {
+      "opcode": 21,
+      "hexOpcode": "$15",
+      "label": "向指定人物移动判定",
+      "fields": []
+    },
+    {
+      "opcode": 22,
+      "hexOpcode": "$16",
+      "label": "无视机动力移向人物",
+      "fields": []
+    },
+    {
+      "opcode": 23,
+      "hexOpcode": "$17",
+      "label": "按指定机动力移向坐标",
+      "fields": []
+    },
+    {
+      "opcode": 24,
+      "hexOpcode": "$18",
+      "label": "移向坐标判定",
+      "fields": []
+    },
+    {
+      "opcode": 25,
+      "hexOpcode": "$19",
+      "label": "无视机动力移向坐标",
+      "fields": []
+    },
+    {
+      "opcode": 26,
+      "hexOpcode": "$1A",
+      "label": "自动攻击判定",
+      "fields": []
+    },
+    {
+      "opcode": 27,
+      "hexOpcode": "$1B",
+      "label": "攻击指定人物判定",
+      "fields": []
+    },
+    {
+      "opcode": 28,
+      "hexOpcode": "$1C",
+      "label": "排除指定人物的攻击判定",
+      "fields": []
+    },
+    {
+      "opcode": 29,
+      "hexOpcode": "$1D",
+      "label": "地图炮攻击判定",
+      "fields": []
+    },
+    {
+      "opcode": 30,
+      "hexOpcode": "$1E",
+      "label": "选择人物上下文",
+      "fields": []
+    },
+    {
+      "opcode": 31,
+      "hexOpcode": "$1F",
+      "label": "保留条件 $1F（默认处理）",
+      "fields": []
+    },
+    {
+      "opcode": 32,
+      "hexOpcode": "$20",
+      "label": "保留条件 $20（默认处理）",
+      "fields": []
+    },
+    {
+      "opcode": 33,
+      "hexOpcode": "$21",
+      "label": "保留条件 $21（默认处理）",
+      "fields": []
+    },
+    {
+      "opcode": 34,
+      "hexOpcode": "$22",
+      "label": "保留条件 $22（默认处理）",
+      "fields": []
+    },
+    {
+      "opcode": 35,
+      "hexOpcode": "$23",
+      "label": "保留条件 $23（默认处理）",
+      "fields": []
+    },
+    {
+      "opcode": 36,
+      "hexOpcode": "$24",
+      "label": "保留条件 $24（默认处理）",
+      "fields": []
+    },
+    {
+      "opcode": 37,
+      "hexOpcode": "$25",
+      "label": "保留条件 $25（默认处理）",
+      "fields": []
+    },
+    {
+      "opcode": 38,
+      "hexOpcode": "$26",
+      "label": "保留条件 $26（默认处理）",
+      "fields": []
+    },
+    {
+      "opcode": 39,
+      "hexOpcode": "$27",
+      "label": "保留条件 $27（默认处理）",
+      "fields": []
+    },
+    {
+      "opcode": 40,
+      "hexOpcode": "$28",
+      "label": "保留条件 $28（默认处理）",
+      "fields": []
+    },
+    {
+      "opcode": 41,
+      "hexOpcode": "$29",
+      "label": "保留条件 $29（默认处理）",
+      "fields": []
+    },
+    {
+      "opcode": 42,
+      "hexOpcode": "$2A",
+      "label": "保留条件 $2A（默认处理）",
+      "fields": []
+    },
+    {
+      "opcode": 43,
+      "hexOpcode": "$2B",
+      "label": "保留条件 $2B（默认处理）",
+      "fields": []
+    },
+    {
+      "opcode": 44,
+      "hexOpcode": "$2C",
+      "label": "保留条件 $2C（默认处理）",
+      "fields": []
+    },
+    {
+      "opcode": 45,
+      "hexOpcode": "$2D",
+      "label": "保留条件 $2D（默认处理）",
+      "fields": []
+    },
+    {
+      "opcode": 46,
+      "hexOpcode": "$2E",
+      "label": "保留条件 $2E（默认处理）",
+      "fields": []
+    },
+    {
+      "opcode": 47,
+      "hexOpcode": "$2F",
+      "label": "保留条件 $2F（默认处理）",
+      "fields": []
+    },
+    {
+      "opcode": 48,
+      "hexOpcode": "$30",
+      "label": "保留条件 $30（默认处理）",
+      "fields": []
+    },
+    {
+      "opcode": 49,
+      "hexOpcode": "$31",
+      "label": "保留条件 $31（默认处理）",
+      "fields": []
+    },
+    {
+      "opcode": 50,
+      "hexOpcode": "$32",
+      "label": "保留条件 $32（默认处理）",
+      "fields": []
+    },
+    {
+      "opcode": 51,
+      "hexOpcode": "$33",
+      "label": "保留条件 $33（默认处理）",
+      "fields": []
+    },
+    {
+      "opcode": 52,
+      "hexOpcode": "$34",
+      "label": "保留条件 $34（默认处理）",
+      "fields": []
+    },
+    {
+      "opcode": 53,
+      "hexOpcode": "$35",
+      "label": "保留条件 $35（默认处理）",
+      "fields": []
+    },
+    {
+      "opcode": 54,
+      "hexOpcode": "$36",
+      "label": "保留条件 $36（默认处理）",
+      "fields": []
+    },
+    {
+      "opcode": 55,
+      "hexOpcode": "$37",
+      "label": "保留条件 $37（默认处理）",
+      "fields": []
+    },
+    {
+      "opcode": 56,
+      "hexOpcode": "$38",
+      "label": "保留条件 $38（默认处理）",
+      "fields": []
+    },
+    {
+      "opcode": 57,
+      "hexOpcode": "$39",
+      "label": "保留条件 $39（默认处理）",
+      "fields": []
+    },
+    {
+      "opcode": 58,
+      "hexOpcode": "$3A",
+      "label": "保留条件 $3A（默认处理）",
+      "fields": []
+    },
+    {
+      "opcode": 59,
+      "hexOpcode": "$3B",
+      "label": "保留条件 $3B（默认处理）",
+      "fields": []
+    },
+    {
+      "opcode": 60,
+      "hexOpcode": "$3C",
+      "label": "保留条件 $3C（默认处理）",
+      "fields": []
+    },
+    {
+      "opcode": 61,
+      "hexOpcode": "$3D",
+      "label": "保留条件 $3D（默认处理）",
+      "fields": []
+    },
+    {
+      "opcode": 62,
+      "hexOpcode": "$3E",
+      "label": "保留条件 $3E（默认处理）",
+      "fields": []
+    },
+    {
+      "opcode": 63,
+      "hexOpcode": "$3F",
+      "label": "保留条件 $3F（默认处理）",
+      "fields": []
+    },
+    {
+      "opcode": 64,
+      "hexOpcode": "$40",
+      "label": "无光标人物对话",
+      "fields": []
+    },
+    {
+      "opcode": 65,
+      "hexOpcode": "$41",
+      "label": "光标指向人物并对话",
+      "fields": []
+    },
+    {
+      "opcode": 66,
+      "hexOpcode": "$42",
+      "label": "光标对话调用",
+      "fields": []
+    },
+    {
+      "opcode": 67,
+      "hexOpcode": "$43",
+      "label": "打开文字窗口",
+      "fields": []
+    },
+    {
+      "opcode": 68,
+      "hexOpcode": "$44",
+      "label": "在文字窗口显示文本",
+      "fields": []
+    },
+    {
+      "opcode": 69,
+      "hexOpcode": "$45",
+      "label": "关闭对白窗口",
+      "fields": []
+    },
+    {
+      "opcode": 70,
+      "hexOpcode": "$46",
+      "label": "光标移至坐标",
+      "fields": []
+    },
+    {
+      "opcode": 71,
+      "hexOpcode": "$47",
+      "label": "光标移至人物",
+      "fields": []
+    },
+    {
+      "opcode": 72,
+      "hexOpcode": "$48",
+      "label": "光标移至人物并等待",
+      "fields": []
+    },
+    {
+      "opcode": 73,
+      "hexOpcode": "$49",
+      "label": "写入事件临时变量",
+      "fields": []
+    },
+    {
+      "opcode": 74,
+      "hexOpcode": "$4A",
+      "label": "客军增援",
+      "fields": [
+        "X",
+        "Y",
+        "人物ID",
+        "机体ID",
+        "等级",
+        "AI/标志"
+      ]
+    },
+    {
+      "opcode": 75,
+      "hexOpcode": "$4B",
+      "label": "敌军增援",
+      "fields": [
+        "X",
+        "Y",
+        "人物ID",
+        "机体ID",
+        "等级",
+        "AI/标志"
+      ]
+    },
+    {
+      "opcode": 76,
+      "hexOpcode": "$4C",
+      "label": "我方出击/加入",
+      "fields": [
+        "X/特殊标志",
+        "Y",
+        "队伍槽",
+        "标志"
+      ]
+    },
+    {
+      "opcode": 77,
+      "hexOpcode": "$4D",
+      "label": "替换人物与机体",
+      "fields": [
+        "目标人物ID",
+        "新人物ID",
+        "新机体ID"
+      ]
+    },
+    {
+      "opcode": 78,
+      "hexOpcode": "$4E",
+      "label": "更换人物机体",
+      "fields": [
+        "目标人物ID",
+        "新机体ID"
+      ]
+    },
+    {
+      "opcode": 79,
+      "hexOpcode": "$4F",
+      "label": "获得道具",
+      "fields": []
+    },
+    {
+      "opcode": 80,
+      "hexOpcode": "$50",
+      "label": "获得金钱",
+      "fields": []
+    },
+    {
+      "opcode": 81,
+      "hexOpcode": "$51",
+      "label": "打开事件开关",
+      "fields": []
+    },
+    {
+      "opcode": 82,
+      "hexOpcode": "$52",
+      "label": "关闭事件开关",
+      "fields": []
+    },
+    {
+      "opcode": 83,
+      "hexOpcode": "$53",
+      "label": "限制人物移动",
+      "fields": []
+    },
+    {
+      "opcode": 84,
+      "hexOpcode": "$54",
+      "label": "解除人物移动限制",
+      "fields": []
+    },
+    {
+      "opcode": 85,
+      "hexOpcode": "$55",
+      "label": "无条件跳转",
+      "fields": []
+    },
+    {
+      "opcode": 86,
+      "hexOpcode": "$56",
+      "label": "否定判定",
+      "fields": []
+    },
+    {
+      "opcode": 87,
+      "hexOpcode": "$57",
+      "label": "条件成立跳转",
+      "fields": []
+    },
+    {
+      "opcode": 88,
+      "hexOpcode": "$58",
+      "label": "条件不成立跳转",
+      "fields": []
+    },
+    {
+      "opcode": 89,
+      "hexOpcode": "$59",
+      "label": "设置我方阶段音乐",
+      "fields": []
+    },
+    {
+      "opcode": 90,
+      "hexOpcode": "$5A",
+      "label": "设置敌方阶段音乐",
+      "fields": []
+    },
+    {
+      "opcode": 91,
+      "hexOpcode": "$5B",
+      "label": "立即播放音乐",
+      "fields": []
+    },
+    {
+      "opcode": 92,
+      "hexOpcode": "$5C",
+      "label": "等待指定帧数",
+      "fields": []
+    },
+    {
+      "opcode": 93,
+      "hexOpcode": "$5D",
+      "label": "等待指定帧数（变体）",
+      "fields": []
+    },
+    {
+      "opcode": 94,
+      "hexOpcode": "$5E",
+      "label": "等待指定帧数（变体）",
+      "fields": []
+    },
+    {
+      "opcode": 95,
+      "hexOpcode": "$5F",
+      "label": "保留/无效果",
+      "fields": []
+    },
+    {
+      "opcode": 96,
+      "hexOpcode": "$60",
+      "label": "限制当前人物移动",
+      "fields": []
+    },
+    {
+      "opcode": 97,
+      "hexOpcode": "$61",
+      "label": "解除当前人物移动限制",
+      "fields": []
+    },
+    {
+      "opcode": 98,
+      "hexOpcode": "$62",
+      "label": "执行攻击或移动",
+      "fields": []
+    },
+    {
+      "opcode": 99,
+      "hexOpcode": "$63",
+      "label": "执行待机",
+      "fields": []
+    },
+    {
+      "opcode": 100,
+      "hexOpcode": "$64",
+      "label": "光标控制指定人物",
+      "fields": []
+    },
+    {
+      "opcode": 101,
+      "hexOpcode": "$65",
+      "label": "传真效果移动到坐标",
+      "fields": []
+    },
+    {
+      "opcode": 102,
+      "hexOpcode": "$66",
+      "label": "当前人物更换机体（不恢复）",
+      "fields": []
+    },
+    {
+      "opcode": 103,
+      "hexOpcode": "$67",
+      "label": "转为临时友军",
+      "fields": []
+    },
+    {
+      "opcode": 104,
+      "hexOpcode": "$68",
+      "label": "转为敌军",
+      "fields": []
+    },
+    {
+      "opcode": 105,
+      "hexOpcode": "$69",
+      "label": "正式加入我方（说得/加入）",
+      "fields": [
+        "队伍/成长参数"
+      ]
+    },
+    {
+      "opcode": 106,
+      "hexOpcode": "$6A",
+      "label": "当前单位自爆",
+      "fields": []
+    },
+    {
+      "opcode": 107,
+      "hexOpcode": "$6B",
+      "label": "当前单位撤退/离场",
+      "fields": []
+    },
+    {
+      "opcode": 108,
+      "hexOpcode": "$6C",
+      "label": "刷新移动坐标",
+      "fields": []
+    },
+    {
+      "opcode": 109,
+      "hexOpcode": "$6D",
+      "label": "直接获得经验与金钱",
+      "fields": []
+    },
+    {
+      "opcode": 110,
+      "hexOpcode": "$6E",
+      "label": "指定队友离队",
+      "fields": []
+    },
+    {
+      "opcode": 111,
+      "hexOpcode": "$6F",
+      "label": "人物直接加入队伍",
+      "fields": []
+    },
+    {
+      "opcode": 112,
+      "hexOpcode": "$70",
+      "label": "提升队员等级",
+      "fields": []
+    },
+    {
+      "opcode": 113,
+      "hexOpcode": "$71",
+      "label": "关卡胜利",
+      "fields": []
+    },
+    {
+      "opcode": 114,
+      "hexOpcode": "$72",
+      "label": "关卡失败",
+      "fields": []
+    },
+    {
+      "opcode": 115,
+      "hexOpcode": "$73",
+      "label": "游戏通关",
+      "fields": []
+    },
+    {
+      "opcode": 116,
+      "hexOpcode": "$74",
+      "label": "扩展事件指令 $74",
+      "fields": []
+    },
+    {
+      "opcode": 117,
+      "hexOpcode": "$75",
+      "label": "客军增援（扩展别名）",
+      "fields": [
+        "X",
+        "Y",
+        "机体ID",
+        "人物ID",
+        "等级",
+        "AI/标志"
+      ]
+    },
+    {
+      "opcode": 118,
+      "hexOpcode": "$76",
+      "label": "敌军增援（扩展别名）",
+      "fields": [
+        "X",
+        "Y",
+        "机体ID",
+        "人物ID",
+        "等级",
+        "AI/标志"
+      ]
+    },
+    {
+      "opcode": 119,
+      "hexOpcode": "$77",
+      "label": "我方出击/加入（扩展别名）",
+      "fields": [
+        "X/特殊标志",
+        "Y",
+        "队伍槽",
+        "标志"
+      ]
+    },
+    {
+      "opcode": 120,
+      "hexOpcode": "$78",
+      "label": "扩展事件指令 $78",
+      "fields": []
+    },
+    {
+      "opcode": 121,
+      "hexOpcode": "$79",
+      "label": "扩展事件指令 $79",
+      "fields": []
+    },
+    {
+      "opcode": 122,
+      "hexOpcode": "$7A",
+      "label": "扩展事件指令 $7A",
+      "fields": []
+    }
+  ],
+  "persuasionRules": [
+    {
+      "slot": 0,
+      "hexSlot": "$00",
+      "scenarioId": 1,
+      "scenario": "街上追击战",
+      "persuaderId": 6,
+      "persuader": "夏亚",
+      "targetId": 69,
+      "target": "拉拉",
+      "scriptAddress": "$AABF"
+    },
+    {
+      "slot": 1,
+      "hexSlot": "$01",
+      "scenarioId": 2,
+      "scenario": "进攻基地",
+      "persuaderId": 6,
+      "persuader": "夏亚",
+      "targetId": 69,
+      "target": "拉拉",
+      "scriptAddress": "$AB7D"
+    },
+    {
+      "slot": 2,
+      "hexSlot": "$02",
+      "scenarioId": 5,
+      "scenario": "再攻要塞",
+      "persuaderId": 14,
+      "persuader": "哈曼",
+      "targetId": 65,
+      "target": "玛修曼",
+      "scriptAddress": "$AC03"
+    },
+    {
+      "slot": 3,
+      "hexSlot": "$03",
+      "scenarioId": 9,
+      "scenario": "燃烧都市",
+      "persuaderId": 8,
+      "persuader": "西罗克",
+      "targetId": 66,
+      "target": "罗莎米亚",
+      "scriptAddress": "$AC31"
     }
   ]
 }

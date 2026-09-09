@@ -1,0 +1,1080 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML><HEAD><TITLE>音乐编写研究</TITLE>
+<META name=GENERATOR content="MSHTML 8.00.7601.19104">
+<META content="text/html; charset=gb2312" http-equiv=Content-Type>
+<STYLE>
+html,body { 
+	/* Default Font */
+	font-family: Microsoft YaHei, Simsun, sans-serif;
+	font-size: 12pt;
+}
+</STYLE>
+</HEAD>
+<BODY>
+<H3 class="title pre fs1"><FONT size=2>FC音乐编写研究-摘文</FONT></H3>
+<P class="tdep clearfix nbw-act fc06"><SPAN class=pleft><A class="fc03 m2a" 
+onmouseover="" onmouseout="" onclick="" 
+href="http://nicotine.knight.blog.163.com/blog/#m=0&amp;t=1&amp;c=fks_087064087086086067080083085095086080088065082087087065"><FONT 
+size=2>FC知识整理</FONT></A><FONT size=2> <SPAN class=sep>2009-01-09 13:21:19</SPAN> 
+<SPAN class=sep>阅读<SPAN id=$_spanReadCount>185</SPAN></SPAN> <SPAN 
+class=sep>评论<SPAN id=$_spanCommentCount>0</SPAN></SPAN> </FONT></SPAN><FONT 
+size=2><SPAN class="pright fc07 ztag">字号：<SPAN class="ul sep fc04" 
+__tabkey__="true" index="0" __esnkey__="ev_8269191166">大</SPAN><SPAN 
+class="ul sep fc04" __tabkey__="true" index="1" 
+__esnkey__="ev_4671834208">中</SPAN><SPAN 
+class="sep ul fc04 selected js-fcurrent fc05" __tabkey__="true" index="2" 
+__esnkey__="ev_1490729309">小</SPAN></SPAN> </FONT></P>
+<DIV class="bct fc05 fc11 nbw-blog ztag js-fs2" onmouseover="" onmouseout="" 
+onclick="">
+<P MARGIN: 0cm 0pt?><SPAN 
+style="FONT-FAMILY: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman'"><FONT 
+size=2>《电脑游戏机硬件与编程特技》（之音乐研究）</FONT></SPAN></P>
+<P MARGIN: 0cm 0pt?><FONT size=2><SPAN 
+style="FONT-FAMILY: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman'">下面均为引用本书。抄者为能直接生成</SPAN><SPAN 
+lang=EN-US>NES</SPAN><SPAN 
+style="FONT-FAMILY: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman'">文件，将部分</SPAN><SPAN 
+lang=EN-US>Fbasic</SPAN><SPAN 
+style="FONT-FAMILY: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman'">改写成</SPAN><SPAN 
+lang=EN-US>Nbasic</SPAN><SPAN 
+style="FONT-FAMILY: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman'">，读者请参照原本读。</SPAN></FONT></P>
+<P MARGIN: 0cm 0pt?><FONT size=2><SPAN 
+style="FONT-FAMILY: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman'">第</SPAN><SPAN 
+lang=EN-US>59</SPAN><SPAN 
+style="FONT-FAMILY: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman'">页</SPAN><SPAN 
+lang=EN-US>(PDF</SPAN><SPAN 
+style="FONT-FAMILY: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman'">第</SPAN><SPAN 
+lang=EN-US>63</SPAN><SPAN 
+style="FONT-FAMILY: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman'">页</SPAN><SPAN 
+lang=EN-US>)</SPAN></FONT></P>
+<P MARGIN: 0cm 0pt?><SPAN lang=EN-US><FONT size=2></FONT></SPAN>&nbsp;</P>
+<P MARGIN: 0cm 0pt?><FONT size=2><SPAN lang=EN-US>2.3<SPAN 
+style="mso-spacerun: yes">&nbsp; </SPAN>6527CPU</SPAN><SPAN 
+style="FONT-FAMILY: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman'">的音响系统</SPAN></FONT></P>
+<P MARGIN: 0cm 0pt?><SPAN lang=EN-US><FONT size=2></FONT></SPAN>&nbsp;</P>
+<P MARGIN: 0cm 0pt?><FONT size=2><SPAN 
+style="FONT-FAMILY: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman'">任天堂游戏中美妙动听的音响来自</SPAN><SPAN 
+lang=EN-US>6527CPU</SPAN><SPAN 
+style="FONT-FAMILY: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman'">内部的</SPAN><SPAN 
+lang=EN-US>PSG(Programmable Sound Generator)---</SPAN><SPAN 
+style="FONT-FAMILY: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman'">可编程音响发生器。其主要特点为：</SPAN></FONT></P>
+<P MARGIN: 0cm 0pt?><SPAN 
+style="FONT-FAMILY: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman'"><FONT 
+size=2>。五个声部发声：三个主声部、两个副声部；</FONT></SPAN></P>
+<P MARGIN: 0cm 0pt?><FONT size=2><SPAN 
+style="FONT-FAMILY: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman'">。</SPAN><SPAN 
+lang=EN-US>15</SPAN><SPAN 
+style="FONT-FAMILY: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman'">级音量调节；</SPAN></FONT></P>
+<P MARGIN: 0cm 0pt?><FONT size=2><SPAN 
+style="FONT-FAMILY: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman'">。</SPAN><SPAN 
+lang=EN-US>15</SPAN><SPAN 
+style="FONT-FAMILY: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman'">种音色选择；</SPAN></FONT></P>
+<P MARGIN: 0cm 0pt?><FONT size=2><SPAN 
+style="FONT-FAMILY: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman'">。</SPAN><SPAN 
+lang=EN-US>15</SPAN><SPAN 
+style="FONT-FAMILY: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman'">种音形包络；</SPAN></FONT></P>
+<P MARGIN: 0cm 0pt?><FONT size=2><SPAN 
+style="FONT-FAMILY: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman'">。</SPAN><SPAN 
+lang=EN-US>8</SPAN><SPAN 
+style="FONT-FAMILY: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman'">种包络周期；</SPAN></FONT></P>
+<P MARGIN: 0cm 0pt?><FONT size=2><SPAN 
+style="FONT-FAMILY: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman'">。</SPAN><SPAN 
+lang=EN-US>4096</SPAN><SPAN 
+style="FONT-FAMILY: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman'">种音调。</SPAN></FONT></P>
+<P MARGIN: 0cm 0pt?><FONT size=2><SPAN 
+style="FONT-FAMILY: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman'">以上六大特点表明了</SPAN><SPAN 
+lang=EN-US>6527CPU</SPAN><SPAN 
+style="FONT-FAMILY: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman'">音响系统的发音功能是十分强大的。只要对发声软开关设置恰当的数值就可以模拟出各种的音响。众所周知，《魂斗罗》二代游戏专门设置了音乐欣赏密码开关，只要选中密码便可欣赏游戏中的全部音响。实际上，这些音响我们都可以在电脑游戏机中通过设置发声软开关模仿出来。</SPAN></FONT></P>
+<P MARGIN: 0cm 0pt?><FONT size=2><SPAN lang=EN-US><SPAN 
+style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp; </SPAN></SPAN><SPAN 
+style="FONT-FAMILY: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman'">强大的发音功能、简单的发音操作是</SPAN><SPAN 
+lang=EN-US>6527CPU</SPAN><SPAN 
+style="FONT-FAMILY: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman'">优于其它</SPAN><SPAN 
+lang=EN-US>CPU</SPAN><SPAN 
+style="FONT-FAMILY: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman'">的又一显著特点。</SPAN></FONT></P>
+<P MARGIN: 0cm 0pt?><SPAN lang=EN-US><FONT size=2></FONT></SPAN>&nbsp;</P>
+<P MARGIN: 0cm 0pt?><FONT size=2><SPAN lang=EN-US>2</SPAN><SPAN 
+style="FONT-FAMILY: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman'">．</SPAN><SPAN 
+lang=EN-US>3</SPAN><SPAN 
+style="FONT-FAMILY: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman'">．</SPAN><SPAN 
+lang=EN-US>1 </SPAN><SPAN 
+style="FONT-FAMILY: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman'">发声软开关简介</SPAN></FONT></P>
+<P MARGIN: 0cm 0pt?><FONT size=2><SPAN lang=EN-US>6527CPU</SPAN><SPAN 
+style="FONT-FAMILY: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman'">的音响发声软开关位于</SPAN><SPAN 
+lang=EN-US>CPU I/O</SPAN><SPAN 
+style="FONT-FAMILY: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman'">区的</SPAN><SPAN 
+lang=EN-US>$4000~$4013</SPAN><SPAN 
+style="FONT-FAMILY: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman'">共</SPAN><SPAN 
+lang=EN-US>20</SPAN><SPAN 
+style="FONT-FAMILY: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman'">个单元，由它们组成</SPAN><SPAN 
+lang=EN-US>5</SPAN><SPAN 
+style="FONT-FAMILY: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman'">个发声声部，每个声部占用</SPAN><SPAN 
+lang=EN-US>4</SPAN><SPAN 
+style="FONT-FAMILY: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman'">个单元。其分配顺序如下：</SPAN></FONT></P>
+<P MARGIN: 0cm 0pt?><FONT size=2><SPAN 
+style="FONT-FAMILY: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman'">。第一主声部：</SPAN><SPAN 
+lang=EN-US>$4000~$4003</SPAN></FONT></P>
+<P MARGIN: 0cm 0pt?><FONT size=2><SPAN 
+style="FONT-FAMILY: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman'">。第二主声部：</SPAN><SPAN 
+lang=EN-US>$4004~$4007</SPAN></FONT></P>
+<P MARGIN: 0cm 0pt?><FONT size=2><SPAN 
+style="FONT-FAMILY: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman'">。第三主声部：</SPAN><SPAN 
+lang=EN-US>$4008~$400B</SPAN></FONT></P>
+<P MARGIN: 0cm 0pt?><FONT size=2><SPAN 
+style="FONT-FAMILY: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman'">。第一副声部：</SPAN><SPAN 
+lang=EN-US>$400C~$400F</SPAN></FONT></P>
+<P MARGIN: 0cm 0pt?><FONT size=2><SPAN 
+style="FONT-FAMILY: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman'">。第二副声部：</SPAN><SPAN 
+lang=EN-US>$4010~$4013</SPAN></FONT></P>
+<P MARGIN: 0cm 0pt?><SPAN 
+style="FONT-FAMILY: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman'"><FONT 
+size=2>各声部对应单元的功能相同。下面仅以第一主声部为例介绍软开关的作用。</FONT></SPAN></P>
+<P MARGIN: 0cm 0pt?><SPAN lang=EN-US><FONT size=2></FONT></SPAN>&nbsp;</P>
+<P MARGIN: 0cm 0pt?><FONT size=2><SPAN lang=EN-US>1</SPAN><SPAN 
+style="FONT-FAMILY: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman'">、音色音量控制软开关</SPAN><SPAN 
+lang=EN-US>$4000</SPAN></FONT></P>
+<P MARGIN: 0cm 0pt?><FONT size=2><SPAN lang=EN-US>$4000</SPAN><SPAN 
+style="FONT-FAMILY: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman'">是第一主声部的音色、音量控制软开关，各位功能如图</SPAN><SPAN 
+lang=EN-US>2-22</SPAN><SPAN 
+style="FONT-FAMILY: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman'">：</SPAN></FONT></P>
+<P><FONT size=2>&nbsp;</FONT><A onmouseover="" onmouseout="" onclick="" 
+href="http://img.blog.163.com/photo/QU3wLm_NndKRbBi2Fn9SKg==/1415256182901749014.jpg" 
+target=_blank><FONT size=2><IMG onmouseover="" 
+title="FC音乐编写研究-摘文 - 维京人 - 深夜是徘徊在潮湿睫毛上的我的梦以及他的梦" onmousewheel="" onmouseout="" 
+onclick="" alt="FC音乐编写研究-摘文 - 维京人 - 深夜是徘徊在潮湿睫毛上的我的梦以及他的梦" 
+src="mk:@MSITStore:C:\Users\Administrator\Desktop\6502汇编\6502资料集\维京猎人教程.chm::/维京猎人教程/FC音乐NSF的研究/E09AD065-3C7A-405F-8FD5-7A2BA2DD0652_files/1415256182901749014.gif" 
+onload=""></FONT></A></P>
+<P MARGIN: 0cm 0pt?><FONT size=2><SPAN 
+style="FONT-FAMILY: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman'">。</SPAN><SPAN 
+lang=EN-US>D0~D3</SPAN><SPAN 
+style="FONT-FAMILY: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman'">：为</SPAN><SPAN 
+lang=EN-US>15</SPAN><SPAN 
+style="FONT-FAMILY: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman'">级音量控制软开关。其值为</SPAN><SPAN 
+lang=EN-US>0</SPAN><SPAN 
+style="FONT-FAMILY: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman'">时关闭音量；为</SPAN><SPAN 
+lang=EN-US>1</SPAN><SPAN 
+style="FONT-FAMILY: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman'">时音量最小；为</SPAN><SPAN 
+lang=EN-US>15</SPAN><SPAN 
+style="FONT-FAMILY: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman'">时音量最大。</SPAN></FONT></P>
+<P MARGIN: 0cm 0pt?><FONT size=2><SPAN 
+style="FONT-FAMILY: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman'">。</SPAN><SPAN 
+lang=EN-US>D4~D7</SPAN><SPAN 
+style="FONT-FAMILY: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman'">：为音色控制软开关。其中</SPAN><SPAN 
+lang=EN-US>D4=1</SPAN><SPAN 
+style="FONT-FAMILY: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman'">时发声时间延长；</SPAN><SPAN 
+lang=EN-US>D5=1</SPAN><SPAN 
+style="FONT-FAMILY: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman'">时可发出各段衰减音；</SPAN><SPAN 
+lang=EN-US>D6=1</SPAN><SPAN 
+style="FONT-FAMILY: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman'">时将缩短发声时间。</SPAN></FONT></P>
+<P MARGIN: 0cm 0pt?><SPAN lang=EN-US><FONT size=2></FONT></SPAN>&nbsp;</P>
+<P MARGIN: 0cm 0pt?><FONT size=2><SPAN lang=EN-US>2</SPAN><SPAN 
+style="FONT-FAMILY: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman'">、包络控制软开关</SPAN><SPAN 
+lang=EN-US>$4001</SPAN></FONT></P>
+<P MARGIN: 0cm 0pt?><FONT size=2><SPAN lang=EN-US>$4001</SPAN><SPAN 
+style="FONT-FAMILY: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman'">是第一主声部音形包络控制软开关。各位功能如图</SPAN><SPAN 
+lang=EN-US>2-23</SPAN><SPAN 
+style="FONT-FAMILY: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman'">。</SPAN></FONT></P>
+<P><A onmouseover="" onmouseout="" onclick="" 
+href="http://img.blog.163.com/photo/S9XvSUYosKN3f7QfQz8PNg==/1480839852475958551.jpg" 
+target=_blank><FONT size=2><IMG onmouseover="" 
+title="FC音乐编写研究-摘文 - 维京人 - 深夜是徘徊在潮湿睫毛上的我的梦以及他的梦" onmousewheel="" onmouseout="" 
+onclick="" alt="FC音乐编写研究-摘文 - 维京人 - 深夜是徘徊在潮湿睫毛上的我的梦以及他的梦" 
+src="mk:@MSITStore:C:\Users\Administrator\Desktop\6502汇编\6502资料集\维京猎人教程.chm::/维京猎人教程/FC音乐NSF的研究/E09AD065-3C7A-405F-8FD5-7A2BA2DD0652_files/1480839852475958551.jpg" 
+onload=""></FONT></A></P>
+<P><FONT size=2></FONT>&nbsp;</P>
+<P style="TEXT-INDENT: 2em"><FONT size=2></FONT>&nbsp;</P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>。D7：为包络开关位。D7=1时包络有效。</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT 
+size=2>。D4~D6：为8级包络周期控制开关。调整它们的取值，可模拟声差极大的效果音响。它们与$4000的D5位配合可发出多级衰减音。</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT 
+size=2>。D0~D3：为15种包络形状控制开关，取值范围0~15。当取值等于0和等于8时无包络，发平直音；当取值等于1~7时，发音频率从高到低变化；当取值等于9~15时，发声频率则从低到高。当取值等于1、9时发声时间最短；取值等到于7、15时发声时间最长。</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2></FONT>&nbsp;</P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>3、音调细调控制软开关$4002</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT 
+size=2>$4002是第一主声部音调细调控制软开关。使用它可以细调发声音调，取值范围0~255，取值越大发声频率越低。</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2></FONT>&nbsp;</P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>4、音调粗调控制软开关$4003</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT 
+size=2>$4003是第一主声部音调粗调开关。合用它可以粗调发声音调，取值范围0~15，取值越大频率越低。</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2></FONT>&nbsp;</P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>5、发声开关组$4015</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT 
+size=2>$4015是启动发声控制开关组，写入不同的数据，可选择不同的发声声部。各位控制功能见图2-24。 </FONT></P>
+<P style="TEXT-INDENT: 2em"><A onmouseover="" onmouseout="" onclick="" 
+href="http://img.blog.163.com/photo/e7jLFgF6SJ1fNLu8VDkqxg==/3728699016487030891.jpg" 
+target=_blank><FONT size=2><IMG onmouseover="" 
+title="FC音乐编写研究-摘文 - 维京人 - 深夜是徘徊在潮湿睫毛上的我的梦以及他的梦" onmousewheel="" onmouseout="" 
+onclick="" alt="FC音乐编写研究-摘文 - 维京人 - 深夜是徘徊在潮湿睫毛上的我的梦以及他的梦" 
+src="mk:@MSITStore:C:\Users\Administrator\Desktop\6502汇编\6502资料集\维京猎人教程.chm::/维京猎人教程/FC音乐NSF的研究/E09AD065-3C7A-405F-8FD5-7A2BA2DD0652_files/3728699016487030891.jpg" 
+onload=""></FONT></A><FONT size=2> </FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2></FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2></FONT>&nbsp;</P>
+<P style="TEXT-INDENT: 2em"><FONT 
+size=2>根据图2-24，向不同位置值可方便地控制各声部发声。置入1接通开关；置入0则关闭开关。</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2></FONT>&nbsp;</P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>2．3．2 发声方法及控制程序</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>一、 发声方法</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT 
+size=2>6527CPU的发声方法就是对不同的声部单元置入不同的数值。置数顺序一般为：</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>1、&nbsp; 
+接通发声开关，做好发声准备。一般对$4015单元置入FFH，接通五个声部的发声开关。若不需要哪一声部发声时，可把其对应位置入0。</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>2、&nbsp; 
+对包络开关单元、音调控制开关单元置入音色音量数据，以确定发声音调。</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>3、&nbsp; 
+最后对音色、音量控制开关单元置入音色音量数据，就可启动发声。这时，程序可转向处理其它事务，只要不对$4015写入0或对发声声部的音量单元写入0，发声可一直持续下去。</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2></FONT>&nbsp;</P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>二、发声控制程序</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>1、控制发声的原理程序</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>控制发声的机器语言程序见No.2-24。</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>No.2-24</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>LDA #$FF</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>STA $4015&nbsp;&nbsp;&nbsp;&nbsp; 
+;打开发声开关，准备发声</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>LDA #$B1</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>STA $4001&nbsp;&nbsp;&nbsp;&nbsp; 
+;第一主声部包络数据</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>LDA #$C1</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>STA $4002&nbsp;&nbsp;&nbsp;&nbsp; 
+;第一主声部音调细调</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>LDA #$D1</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>STA $4003&nbsp;&nbsp;&nbsp;&nbsp; 
+;第一主声部音调粗调</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>LDA #$A1</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>STA $4000&nbsp;&nbsp;&nbsp;&nbsp; 
+;第一主声部音色音量</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>LDA #$B2</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>STA $4005</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>LDA #C2</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>STA $4006</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>LDA #$D2</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>STA $4007</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>LDA #$A2</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>STA $4004&nbsp;&nbsp;&nbsp;&nbsp; 
+;第二主声部数据</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>LDA #$B3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+;以后各声部数据</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>……</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>RTS</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>2 FBASIC 发声程序</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>(略,抄者改成NBasic)No.2-26</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>set $4015 $FF</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>set $4000 xa</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>set $4001 xb</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>set $4002 xc</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>set $4003 cd</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT 
+size=2>输入程序No.2-26，按表2-10填入xa、xb、xc、xd发声参数，就可模拟出不同的效果音。</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>表2-10 第一主声部效果音发声数据 </FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>&nbsp; </FONT>
+<TABLE dataSrc="" border=1 cellSpacing=0 cellPadding=0 width=576>
+  <TBODY>
+  <TR>
+    <TD vAlign=top width=127>
+      <P><FONT size=2></FONT></P>
+      <P style="TEXT-INDENT: 2em"><FONT size=2>效果音响</FONT></P></TD>
+    <TD vAlign=top width=39>
+      <P><FONT size=2></FONT></P>
+      <P style="TEXT-INDENT: 2em"><FONT size=2>xa</FONT></P></TD>
+    <TD vAlign=top width=39>
+      <P><FONT size=2></FONT></P>
+      <P style="TEXT-INDENT: 2em"><FONT size=2>xb</FONT></P></TD>
+    <TD vAlign=top width=39>
+      <P><FONT size=2></FONT></P>
+      <P style="TEXT-INDENT: 2em"><FONT size=2>xc</FONT></P></TD>
+    <TD vAlign=top width=39>
+      <P><FONT size=2></FONT></P>
+      <P style="TEXT-INDENT: 2em"><FONT size=2>xd</FONT></P></TD>
+    <TD vAlign=top width=121>
+      <P><FONT size=2></FONT></P>
+      <P style="TEXT-INDENT: 2em"><FONT size=2>效果音响</FONT></P></TD>
+    <TD vAlign=top width=43>
+      <P><FONT size=2></FONT></P>
+      <P style="TEXT-INDENT: 2em"><FONT size=2>xa</FONT></P></TD>
+    <TD vAlign=top width=43>
+      <P><FONT size=2></FONT></P>
+      <P style="TEXT-INDENT: 2em"><FONT size=2>xb</FONT></P></TD>
+    <TD vAlign=top width=43>
+      <P><FONT size=2></FONT></P>
+      <P style="TEXT-INDENT: 2em"><FONT size=2>xc</FONT></P></TD>
+    <TD vAlign=top width=43>
+      <P><FONT size=2></FONT></P>
+      <P style="TEXT-INDENT: 2em"><FONT size=2>xd</FONT></P></TD></TR>
+  <TR>
+    <TD vAlign=top width=127>
+      <P><FONT size=2></FONT></P>
+      <P style="TEXT-INDENT: 2em"><FONT size=2>被枪击中</FONT></P></TD>
+    <TD vAlign=top width=39>
+      <P><FONT size=2></FONT></P>
+      <P style="TEXT-INDENT: 2em"><FONT size=2>1F</FONT></P></TD>
+    <TD vAlign=top width=39>
+      <P><FONT size=2></FONT></P>
+      <P style="TEXT-INDENT: 2em"><FONT size=2>81</FONT></P></TD>
+    <TD vAlign=top width=39>
+      <P><FONT size=2></FONT></P>
+      <P style="TEXT-INDENT: 2em"><FONT size=2>EF</FONT></P></TD>
+    <TD vAlign=top width=39>
+      <P><FONT size=2></FONT></P>
+      <P style="TEXT-INDENT: 2em"><FONT size=2>08</FONT></P></TD>
+    <TD vAlign=top width=121>
+      <P><FONT size=2></FONT></P>
+      <P style="TEXT-INDENT: 2em"><FONT size=2>八级升调衰减音</FONT></P></TD>
+    <TD vAlign=top width=43>
+      <P><FONT size=2></FONT></P>
+      <P style="TEXT-INDENT: 2em"><FONT size=2>2F</FONT></P></TD>
+    <TD vAlign=top width=43>
+      <P><FONT size=2></FONT></P>
+      <P style="TEXT-INDENT: 2em"><FONT size=2>DF</FONT></P></TD>
+    <TD vAlign=top width=43>
+      <P><FONT size=2></FONT></P>
+      <P style="TEXT-INDENT: 2em"><FONT size=2>EF</FONT></P></TD>
+    <TD vAlign=top width=43>
+      <P><FONT size=2></FONT></P>
+      <P style="TEXT-INDENT: 2em"><FONT size=2>08</FONT></P></TD></TR>
+  <TR>
+    <TD vAlign=top width=127>
+      <P><FONT size=2></FONT></P>
+      <P style="TEXT-INDENT: 2em"><FONT size=2>飞机降落</FONT></P></TD>
+    <TD vAlign=top width=39>
+      <P><FONT size=2></FONT></P>
+      <P style="TEXT-INDENT: 2em"><FONT size=2>1F</FONT></P></TD>
+    <TD vAlign=top width=39>
+      <P><FONT size=2></FONT></P>
+      <P style="TEXT-INDENT: 2em"><FONT size=2>96</FONT></P></TD>
+    <TD vAlign=top width=39>
+      <P><FONT size=2></FONT></P>
+      <P style="TEXT-INDENT: 2em"><FONT size=2>EF</FONT></P></TD>
+    <TD vAlign=top width=39>
+      <P><FONT size=2></FONT></P>
+      <P style="TEXT-INDENT: 2em"><FONT size=2>08</FONT></P></TD>
+    <TD vAlign=top width=121>
+      <P><FONT size=2></FONT></P>
+      <P style="TEXT-INDENT: 2em"><FONT size=2>十级升调衰减音</FONT></P></TD>
+    <TD vAlign=top width=43>
+      <P><FONT size=2></FONT></P>
+      <P style="TEXT-INDENT: 2em"><FONT size=2>2F</FONT></P></TD>
+    <TD vAlign=top width=43>
+      <P><FONT size=2></FONT></P>
+      <P style="TEXT-INDENT: 2em"><FONT size=2>EF</FONT></P></TD>
+    <TD vAlign=top width=43>
+      <P><FONT size=2></FONT></P>
+      <P style="TEXT-INDENT: 2em"><FONT size=2>EF</FONT></P></TD>
+    <TD vAlign=top width=43>
+      <P><FONT size=2></FONT></P>
+      <P style="TEXT-INDENT: 2em"><FONT size=2>08</FONT></P></TD></TR>
+  <TR>
+    <TD vAlign=top width=127>
+      <P><FONT size=2></FONT></P>
+      <P style="TEXT-INDENT: 2em"><FONT size=2>子弹射到金属上</FONT></P></TD>
+    <TD vAlign=top width=39>
+      <P><FONT size=2></FONT></P>
+      <P style="TEXT-INDENT: 2em"><FONT size=2>1F</FONT></P></TD>
+    <TD vAlign=top width=39>
+      <P><FONT size=2></FONT></P>
+      <P style="TEXT-INDENT: 2em"><FONT size=2>89</FONT></P></TD>
+    <TD vAlign=top width=39>
+      <P><FONT size=2></FONT></P>
+      <P style="TEXT-INDENT: 2em"><FONT size=2>EF</FONT></P></TD>
+    <TD vAlign=top width=39>
+      <P><FONT size=2></FONT></P>
+      <P style="TEXT-INDENT: 2em"><FONT size=2>08</FONT></P></TD>
+    <TD vAlign=top width=121>
+      <P><FONT size=2></FONT></P>
+      <P style="TEXT-INDENT: 2em"><FONT size=2>十一级升调衰减</FONT></P></TD>
+    <TD vAlign=top width=43>
+      <P><FONT size=2></FONT></P>
+      <P style="TEXT-INDENT: 2em"><FONT size=2>2F</FONT></P></TD>
+    <TD vAlign=top width=43>
+      <P><FONT size=2></FONT></P>
+      <P style="TEXT-INDENT: 2em"><FONT size=2>FF</FONT></P></TD>
+    <TD vAlign=top width=43>
+      <P><FONT size=2></FONT></P>
+      <P style="TEXT-INDENT: 2em"><FONT size=2>EF</FONT></P></TD>
+    <TD vAlign=top width=43>
+      <P><FONT size=2></FONT></P>
+      <P style="TEXT-INDENT: 2em"><FONT size=2>08</FONT></P></TD></TR>
+  <TR>
+    <TD vAlign=top width=127>
+      <P><FONT size=2></FONT></P>
+      <P style="TEXT-INDENT: 2em"><FONT size=2>射击声</FONT></P></TD>
+    <TD vAlign=top width=39>
+      <P><FONT size=2></FONT></P>
+      <P style="TEXT-INDENT: 2em"><FONT size=2>1F</FONT></P></TD>
+    <TD vAlign=top width=39>
+      <P><FONT size=2></FONT></P>
+      <P style="TEXT-INDENT: 2em"><FONT size=2>8B</FONT></P></TD>
+    <TD vAlign=top width=39>
+      <P><FONT size=2></FONT></P>
+      <P style="TEXT-INDENT: 2em"><FONT size=2>EF</FONT></P></TD>
+    <TD vAlign=top width=39>
+      <P><FONT size=2></FONT></P>
+      <P style="TEXT-INDENT: 2em"><FONT size=2>08</FONT></P></TD>
+    <TD vAlign=top width=121>
+      <P><FONT size=2></FONT></P>
+      <P style="TEXT-INDENT: 2em"><FONT size=2>长升调音</FONT></P></TD>
+    <TD vAlign=top width=43>
+      <P><FONT size=2></FONT></P>
+      <P style="TEXT-INDENT: 2em"><FONT size=2>3F</FONT></P></TD>
+    <TD vAlign=top width=43>
+      <P><FONT size=2></FONT></P>
+      <P style="TEXT-INDENT: 2em"><FONT size=2>BF</FONT></P></TD>
+    <TD vAlign=top width=43>
+      <P><FONT size=2></FONT></P>
+      <P style="TEXT-INDENT: 2em"><FONT size=2>EF</FONT></P></TD>
+    <TD vAlign=top width=43>
+      <P><FONT size=2></FONT></P>
+      <P style="TEXT-INDENT: 2em"><FONT size=2>08</FONT></P></TD></TR>
+  <TR>
+    <TD vAlign=top width=127>
+      <P><FONT size=2></FONT></P>
+      <P style="TEXT-INDENT: 2em"><FONT size=2>七宝奇谋进小屋</FONT></P></TD>
+    <TD vAlign=top width=39>
+      <P><FONT size=2></FONT></P>
+      <P style="TEXT-INDENT: 2em"><FONT size=2>1F</FONT></P></TD>
+    <TD vAlign=top width=39>
+      <P><FONT size=2></FONT></P>
+      <P style="TEXT-INDENT: 2em"><FONT size=2>FA</FONT></P></TD>
+    <TD vAlign=top width=39>
+      <P><FONT size=2></FONT></P>
+      <P style="TEXT-INDENT: 2em"><FONT size=2>EF</FONT></P></TD>
+    <TD vAlign=top width=39>
+      <P><FONT size=2></FONT></P>
+      <P style="TEXT-INDENT: 2em"><FONT size=2>08</FONT></P></TD>
+    <TD vAlign=top width=121>
+      <P><FONT size=2></FONT></P>
+      <P style="TEXT-INDENT: 2em"><FONT size=2>三级降调衰减音</FONT></P></TD>
+    <TD vAlign=top width=43>
+      <P><FONT size=2></FONT></P>
+      <P style="TEXT-INDENT: 2em"><FONT size=2>AF</FONT></P></TD>
+    <TD vAlign=top width=43>
+      <P><FONT size=2></FONT></P>
+      <P style="TEXT-INDENT: 2em"><FONT size=2>F4</FONT></P></TD>
+    <TD vAlign=top width=43>
+      <P><FONT size=2></FONT></P>
+      <P style="TEXT-INDENT: 2em"><FONT size=2>EF</FONT></P></TD>
+    <TD vAlign=top width=43>
+      <P><FONT size=2></FONT></P>
+      <P style="TEXT-INDENT: 2em"><FONT size=2>08</FONT></P></TD></TR>
+  <TR>
+    <TD vAlign=top width=127>
+      <P><FONT size=2></FONT></P>
+      <P style="TEXT-INDENT: 2em"><FONT size=2>警报</FONT></P></TD>
+    <TD vAlign=top width=39>
+      <P><FONT size=2></FONT></P>
+      <P style="TEXT-INDENT: 2em"><FONT size=2>FF</FONT></P></TD>
+    <TD vAlign=top width=39>
+      <P><FONT size=2></FONT></P>
+      <P style="TEXT-INDENT: 2em"><FONT size=2>FF</FONT></P></TD>
+    <TD vAlign=top width=39>
+      <P><FONT size=2></FONT></P>
+      <P style="TEXT-INDENT: 2em"><FONT size=2>FF</FONT></P></TD>
+    <TD vAlign=top width=39>
+      <P><FONT size=2></FONT></P>
+      <P style="TEXT-INDENT: 2em"><FONT size=2>FF</FONT></P></TD>
+    <TD vAlign=top width=121>
+      <P><FONT size=2></FONT></P>
+      <P style="TEXT-INDENT: 2em"><FONT size=2>五级降调衰减音</FONT></P></TD>
+    <TD vAlign=top width=43>
+      <P><FONT size=2></FONT></P>
+      <P style="TEXT-INDENT: 2em"><FONT size=2>AF</FONT></P></TD>
+    <TD vAlign=top width=43>
+      <P><FONT size=2></FONT></P>
+      <P style="TEXT-INDENT: 2em"><FONT size=2>F5</FONT></P></TD>
+    <TD vAlign=top width=43>
+      <P><FONT size=2></FONT></P>
+      <P style="TEXT-INDENT: 2em"><FONT size=2>EF</FONT></P></TD>
+    <TD vAlign=top width=43>
+      <P><FONT size=2></FONT></P>
+      <P style="TEXT-INDENT: 2em"><FONT size=2>08</FONT></P></TD></TR>
+  <TR>
+    <TD vAlign=top width=127>
+      <P><FONT size=2></FONT></P>
+      <P style="TEXT-INDENT: 2em"><FONT size=2>铃声</FONT></P></TD>
+    <TD vAlign=top width=39>
+      <P><FONT size=2></FONT></P>
+      <P style="TEXT-INDENT: 2em"><FONT size=2>AF</FONT></P></TD>
+    <TD vAlign=top width=39>
+      <P><FONT size=2></FONT></P>
+      <P style="TEXT-INDENT: 2em"><FONT size=2>C0</FONT></P></TD>
+    <TD vAlign=top width=39>
+      <P><FONT size=2></FONT></P>
+      <P style="TEXT-INDENT: 2em"><FONT size=2>EF</FONT></P></TD>
+    <TD vAlign=top width=39>
+      <P><FONT size=2></FONT></P>
+      <P style="TEXT-INDENT: 2em"><FONT size=2>08</FONT></P></TD>
+    <TD vAlign=top width=121>
+      <P><FONT size=2></FONT></P>
+      <P style="TEXT-INDENT: 2em"><FONT size=2>十级降调衰减音</FONT></P></TD>
+    <TD vAlign=top width=43>
+      <P><FONT size=2></FONT></P>
+      <P style="TEXT-INDENT: 2em"><FONT size=2>AF</FONT></P></TD>
+    <TD vAlign=top width=43>
+      <P><FONT size=2></FONT></P>
+      <P style="TEXT-INDENT: 2em"><FONT size=2>F6</FONT></P></TD>
+    <TD vAlign=top width=43>
+      <P><FONT size=2></FONT></P>
+      <P style="TEXT-INDENT: 2em"><FONT size=2>EF</FONT></P></TD>
+    <TD vAlign=top width=43>
+      <P><FONT size=2></FONT></P>
+      <P style="TEXT-INDENT: 2em"><FONT size=2>08</FONT></P></TD></TR>
+  <TR>
+    <TD vAlign=top width=127>
+      <P><FONT size=2></FONT></P>
+      <P style="TEXT-INDENT: 2em"><FONT size=2>四级升调衰减音</FONT></P></TD>
+    <TD vAlign=top width=39>
+      <P><FONT size=2></FONT></P>
+      <P style="TEXT-INDENT: 2em"><FONT size=2>2F</FONT></P></TD>
+    <TD vAlign=top width=39>
+      <P><FONT size=2></FONT></P>
+      <P style="TEXT-INDENT: 2em"><FONT size=2>BE</FONT></P></TD>
+    <TD vAlign=top width=39>
+      <P><FONT size=2></FONT></P>
+      <P style="TEXT-INDENT: 2em"><FONT size=2>EF</FONT></P></TD>
+    <TD vAlign=top width=39>
+      <P><FONT size=2></FONT></P>
+      <P style="TEXT-INDENT: 2em"><FONT size=2>08</FONT></P></TD>
+    <TD vAlign=top width=121>
+      <P><FONT size=2></FONT></P>
+      <P style="TEXT-INDENT: 2em"><FONT size=2>廿级降调衰减音</FONT></P></TD>
+    <TD vAlign=top width=43>
+      <P><FONT size=2></FONT></P>
+      <P style="TEXT-INDENT: 2em"><FONT size=2>AF</FONT></P></TD>
+    <TD vAlign=top width=43>
+      <P><FONT size=2></FONT></P>
+      <P style="TEXT-INDENT: 2em"><FONT size=2>F7</FONT></P></TD>
+    <TD vAlign=top width=43>
+      <P><FONT size=2></FONT></P>
+      <P style="TEXT-INDENT: 2em"><FONT size=2>EF</FONT></P></TD>
+    <TD vAlign=top width=43>
+      <P><FONT size=2></FONT></P>
+      <P style="TEXT-INDENT: 2em"><FONT size=2>08</FONT></P></TD></TR>
+  <TR>
+    <TD vAlign=top width=127>
+      <P><FONT size=2></FONT></P>
+      <P style="TEXT-INDENT: 2em"><FONT size=2>六级升调衰减音</FONT></P></TD>
+    <TD vAlign=top width=39>
+      <P><FONT size=2></FONT></P>
+      <P style="TEXT-INDENT: 2em"><FONT size=2>2F</FONT></P></TD>
+    <TD vAlign=top width=39>
+      <P><FONT size=2></FONT></P>
+      <P style="TEXT-INDENT: 2em"><FONT size=2>BF</FONT></P></TD>
+    <TD vAlign=top width=39>
+      <P><FONT size=2></FONT></P>
+      <P style="TEXT-INDENT: 2em"><FONT size=2>EF</FONT></P></TD>
+    <TD vAlign=top width=39>
+      <P><FONT size=2></FONT></P>
+      <P style="TEXT-INDENT: 2em"><FONT size=2>08</FONT></P></TD>
+    <TD vAlign=top width=121>
+      <P><FONT size=2></FONT></P>
+      <P style="TEXT-INDENT: 2em"><FONT size=2>合卡箭头移动声</FONT></P></TD>
+    <TD vAlign=top width=43>
+      <P><FONT size=2></FONT></P>
+      <P style="TEXT-INDENT: 2em"><FONT size=2>1F</FONT></P></TD>
+    <TD vAlign=top width=43>
+      <P><FONT size=2></FONT></P>
+      <P style="TEXT-INDENT: 2em"><FONT size=2>99</FONT></P></TD>
+    <TD vAlign=top width=43>
+      <P><FONT size=2></FONT></P>
+      <P style="TEXT-INDENT: 2em"><FONT size=2>EF</FONT></P></TD>
+    <TD vAlign=top width=43>
+      <P><FONT size=2></FONT></P>
+      <P style="TEXT-INDENT: 2em"><FONT size=2>08</FONT></P></TD></TR>
+  <TR>
+    <TD vAlign=top width=127>
+      <P><FONT size=2></FONT></P>
+      <P style="TEXT-INDENT: 2em"><FONT size=2>七级升调衰减音</FONT></P></TD>
+    <TD vAlign=top width=39>
+      <P><FONT size=2></FONT></P>
+      <P style="TEXT-INDENT: 2em"><FONT size=2>2F</FONT></P></TD>
+    <TD vAlign=top width=39>
+      <P><FONT size=2></FONT></P>
+      <P style="TEXT-INDENT: 2em"><FONT size=2>CF</FONT></P></TD>
+    <TD vAlign=top width=39>
+      <P><FONT size=2></FONT></P>
+      <P style="TEXT-INDENT: 2em"><FONT size=2>EF</FONT></P></TD>
+    <TD vAlign=top width=39>
+      <P><FONT size=2></FONT></P>
+      <P style="TEXT-INDENT: 2em"><FONT size=2>08</FONT></P></TD>
+    <TD vAlign=top width=121>
+      <P><FONT size=2></FONT></P>
+      <P style="TEXT-INDENT: 2em"><FONT size=2>合卡节目换页声</FONT></P></TD>
+    <TD vAlign=top width=43>
+      <P><FONT size=2></FONT></P>
+      <P style="TEXT-INDENT: 2em"><FONT size=2>1F</FONT></P></TD>
+    <TD vAlign=top width=43>
+      <P><FONT size=2></FONT></P>
+      <P style="TEXT-INDENT: 2em"><FONT size=2>AA</FONT></P></TD>
+    <TD vAlign=top width=43>
+      <P><FONT size=2></FONT></P>
+      <P style="TEXT-INDENT: 2em"><FONT size=2>EF</FONT></P></TD>
+    <TD vAlign=top width=43>
+      <P><FONT size=2></FONT></P>
+      <P style="TEXT-INDENT: 2em"><FONT 
+size=2>08</FONT></P></TD></TR></TBODY></TABLE></P>
+<P><FONT size=2></FONT>&nbsp;</P>
+<P><FONT size=2></FONT>&nbsp;</P>
+<P style="TEXT-INDENT: 2em"><FONT size=2></FONT>&nbsp;</P>
+<P style="TEXT-INDENT: 2em"><FONT size=2></FONT>&nbsp;</P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>3、火车运行声音模拟</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT 
+size=2>使用第一副声部可以惟妙惟肖、十分逼真地模拟出火车运行中的各种声响，其中有火车上坡、下坡的加速、减速声、火车钻入山洞的回声、火车过桥梁时的隆隆声，还有火车走远的渐弱声和火车开近的渐强声等。程序No.2-27仅仅数行程序就能产生如此奇妙的效果，不能不令人对6527CPU的发声能力惊叹咋舌。下面列出程序清单供朋友们欣赏。</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>（改成NBasic）</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>set rnd_1 
+$AA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; //这个随意取一个</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>set ax 10</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>start_sound:</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>set xb 33</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>set $4015 8</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>set $400F $80</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>set $400C xb</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>set $400D $FF</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>set $400E xa</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>gosub 
+rnd&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+//自己写一个随机数生成过程，用rnd_1为输入随机种子，也以它输出</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>set mod1 rnd_1</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>set mod2 100</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>gosub 
+div_mod&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; //带余除法，(mod1=mod2*div1+r) 最后set mod1 
+r</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>set t1 + mod1 150</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>mark01:</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>gosub 
+vwait&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+//过一次垂直消隐，不知pause 1是多长时间，这里可用数次vwait</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>//也可改用中断次数，假设pause 1为一次中断</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>dec t1</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>if t1&lt;&gt;0 goto mark01</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>inc xa</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>if xa=250 goto mark02</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>goto mark03</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>mark02:</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>gosub rnd</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>set mod1 rnd_1</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>set mod2 30</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>gosub div_mod</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>set xa + mod1 10</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>mark03:</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>if xa &gt; 200 inc xb</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>if xb &gt;47 goto mark04</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>goto mark05</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>mark04:</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>gosub rnd</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>set mod1 rnd_1</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>set mod2 5</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>gosub div_mod</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>set xa + mod1 33</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>mark05:</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>goto start_sound</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2></FONT>&nbsp;</P>
+<P style="TEXT-INDENT: 2em"><FONT size=2></FONT>&nbsp;</P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>1、&nbsp; 音乐旋律的演奏</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT 
+size=2>以上仅介绍了各种效果音的发声方法，下面讨论音乐旋律的演奏。</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>6527CPU可发出6个8度音域共72个音阶（&nbsp; 
+包括半音）。因此。几乎可以演奏常见的各种音乐旋律。</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT 
+size=2>演奏时，当音乐选定后，音符的变化就是改变音调单元的数据，音符与音调的对应关系见表2-11。 </FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>&nbsp;<IMG onmouseover="" 
+title="FC音乐编写研究-摘文 - 维京人 - 深夜是徘徊在潮湿睫毛上的我的梦以及他的梦" onmousewheel="" onmouseout="" 
+onclick="" alt="FC音乐编写研究-摘文 - 维京人 - 深夜是徘徊在潮湿睫毛上的我的梦以及他的梦" 
+src="mk:@MSITStore:C:\Users\Administrator\Desktop\6502汇编\6502资料集\维京猎人教程.chm::/维京猎人教程/FC音乐NSF的研究/E09AD065-3C7A-405F-8FD5-7A2BA2DD0652_files/1142225455493063306.jpg" 
+onload=""></FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>&nbsp;清淅图见:&nbsp; </FONT><A 
+onmouseover="" onmouseout="" onclick="" 
+href="http://nicotine.knight.blog.163.com/editPhoto.do?photoId=fks_087065082086080071085086081067072084087074086080087066086&amp;albumId=fks_087064087082089064092095085095086080088065082087087065"><FONT 
+size=2>http://nicotine.knight.blog.163.com/editPhoto.do?photoId=fks_087065082086080071085086081067072084087074086080087066086&amp;albumId=fks_087064087082089064092095085095086080088065082087087065</FONT></A></P>
+<P style="TEXT-INDENT: 2em"><FONT 
+size=2>关于音符时值的控制（发声音长），我们不必像苹果机、中华学习机那样采用延时的方法进行控制（那样不仅降低了CPU的工作效率，而且也无法做到声、像同步），而是通过设置计数器的方法实现的，一般放在中断程序中进行处理。由于6527CPU的中断频率为50Hz，中断间隔为0.02秒，因此使用中断次数控制音长，可准确地控制音符的时值。在实际演奏中，音长、音量、音调各数值都是通过查表法获得的。这些内容我们将在以后章节中讨论。</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2></FONT>&nbsp;</P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>1、&nbsp; 各声部的特点及应用</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>发声系统的五个声部各有特点，使用方法也不尽相同。</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT 
+size=2>一般用第一声部作为主音演奏，用第二主声部作为和声伴奏，或两个声部交换位置。也就是说第一、第二主部具有近似相同的特性。</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT 
+size=2>第三主声部主要用于和声伴奏，即使对其置入同第一、第二主声部相同的数据，第三主声部的发声音调也要比它们低一个八度音，同时音符的时值也缩短很多。这样安排的目的是节约数据区。</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT 
+size=2>两个副声部主要用于模仿各种噪声，如鼓声、锣声、钟声、脚步声、蝉鸣声等效果音。火车运行声的模拟就是使用第一副声部实现的。</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT 
+size=2>另外，各声部之间还有着密切的内在联系，只要合理搭配，就能够发出千奇百怪的奇妙音响。有兴趣的读者不妨耐心一试。</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>&nbsp;&nbsp;&nbsp; 
+以上讨论，我们大体上解释了引言中关于音响的问题。至于具体的音乐演奏程序的编写和背景音乐的插入方法，将在第五章详细介绍。</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2></FONT>&nbsp;</P>
+<P style="TEXT-INDENT: 2em"><FONT size=2></FONT>&nbsp;</P>
+<P style="TEXT-INDENT: 2em"><FONT size=2></FONT>&nbsp;</P>
+<P style="TEXT-INDENT: 2em"><FONT size=2></FONT>&nbsp;</P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>（第549页）</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>随机数产生子程序</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>LDA $51</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>AND #$02</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>SAT $00</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>LDA $52</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>AND #$02</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>EOR $00</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>CLC</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>BEQ $EDF8</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>SEC</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>EDF8: ROR $51</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>ROR $52</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>ROR $53</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>ROR $54</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>ROR $55</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>ROR $56</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>ROR $57</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>ROR $58</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>RTS</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2></FONT>&nbsp;</P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>第451页除法</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2></FONT>&nbsp;</P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>5．6．1系统效果音响的调用</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>（第295页&nbsp;&nbsp; PDF第299页）</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>&nbsp;&nbsp; 
+通过第三章的讨论，我们已经了解到人机对话工作系统中有着丰富的效果音响，若能在我们编写的程序中直接调用，必能使编程质量提高一个档次。从表3-32可见，对话系统中由零页单元$FC控制发出的效果音有四种、由$FE控制发出的效果音有五种、由$FF控制发出的效果音有四种，共有十三种。若对$FC置入H21、H22……，还可以发出几十种不同的背景噪声，可用以模仿风声、雨声、引擎声等等。</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>程序No.5-37可以实现上述系统效果音响的调用。</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>No.5-37系统音响调用子程序</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>7EF7:</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>LDA #$00</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>STA $EE</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>LDA #$7F</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>STA $EF</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>RTS</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>PHA</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>TXA</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>PHA</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>TYA</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>PHA</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>JSR $FD5B</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>LDA #$00</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>STA $FE</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>STA $FF</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>PLA</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>TAY</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>PLA</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>TAX</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>PLA</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>JMP $880F</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>----------------</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>（略）</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2></FONT>&nbsp;</P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>5．6．3音乐旋律演奏程序的编写</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT 
+size=2>以上通过调用系统发声子程序，收到了较满意的效果。但是，吃嚼过的甘蔗总觉得没有滋味，可能许多朋友想尝试自己动手编写背景音乐程序。实际上，通过以上的讨论，朋友们应该能够编出这一程序，但考虑到在其它系统中编写背景音乐的因素，更为入门较晚的朋友也能早日登堂入室，特讨论如下：</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT 
+size=2>我们仅以流行歌曲《小秘密》为例，具体介绍音乐旋律演奏程序的编写过程。</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>一、选取演奏声部及程序格式</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT 
+size=2>演奏主旋律选择第一、第二主声部都可以，本例我们选择第二进制主声部。程序格式以$FC控制演奏的程序为参考加以改造（这样选择的目的：一方面使程序便于理解；另一方面便于加深对系统发声处理方法的认识。）。</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>二、确定程序区和数据区</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT 
+size=2>$FC控制发声的数据区有三段：分为音量数据、音长数据和音符数据。由于音量、音长数据区较小，故选择$7FE0~$7FEF为音量数据区、$7FF0~$7FFF为音长数据；由于《小秘密》的音符数据量不大，故选择$7E00为存放首址；选择$7F00为程序区首址；选择$7EF7~$7EFF为进入中断程序区(该段程序运行后可以删除)。</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2></FONT>&nbsp;</P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>三、编写演奏控制程序</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>根据以上的选定，改写程序见No.5-40。</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>No.5-40音乐旋律演奏子程序</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2></FONT>&nbsp;</P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>7F00:</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+LDA $FC</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+BNE $7F0A</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+STA $FB</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+STA $F3</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+BEQ $7F41</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>7F0A:</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+EOR $FB</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+BEQ $7F18</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+LDA $FC</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+STA $FB</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+LDA #$00</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+STA $F4</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+BEQ $7F1C</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>7F18:</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+DEC $F6</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+BNE $7F41</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>7F1C:</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+LDY $F4</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>INC $F4</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>LDA $7E00,Y</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>BEQ $7F12</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>TAX</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>ROR</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>TXA</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>ROL</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>ROL</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>ROL</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>AND #$07</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>TAY</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>LDA $7FF0,Y</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>STA $F6</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>TXA</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>AND #$3E</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>CMP #$02</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>BEQ $7F41</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>JSR $7F8A</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>LDA #$00</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>STA $F8</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>7F41:</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>LDY $F8</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>STA $4004</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>INC $F8</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>RTS</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>-----------------</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2></FONT>&nbsp;</P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>四、写出乐谱</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>《小秘密》的简谱如下： </FONT></P>
+<P style="TEXT-INDENT: 2em"><A onmouseover="" onmouseout="" onclick="" 
+href="http://img.blog.163.com/photo/PPqgINBXEmz7iVuQjJw2mw==/4266316222004571942.jpg" 
+target=_blank><FONT size=2><IMG onmouseover="" 
+title="FC音乐编写研究-摘文 - 维京人 - 深夜是徘徊在潮湿睫毛上的我的梦以及他的梦" onmousewheel="" onmouseout="" 
+onclick="" alt="FC音乐编写研究-摘文 - 维京人 - 深夜是徘徊在潮湿睫毛上的我的梦以及他的梦" 
+src="mk:@MSITStore:C:\Users\Administrator\Desktop\6502汇编\6502资料集\维京猎人教程.chm::/维京猎人教程/FC音乐NSF的研究/E09AD065-3C7A-405F-8FD5-7A2BA2DD0652_files/4266316222004571942.gif" 
+onload=""></FONT></A><FONT size=2> </FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2></FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2></FONT>&nbsp;</P>
+<P style="TEXT-INDENT: 2em"><FONT size=2></FONT>&nbsp;</P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>五、编写数据区</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT 
+size=2>根据《小秘密》的节奏特点，若选取八个中断周期为八分音符，那么附点八分音符则为十二个中断周期，相应地四分音符为十六个中断周期，其它依次类推。故音长数据区如下： 
+</FONT>
+<TABLE dataSrc="" border=1 cellSpacing=0 cellPadding=0>
+  <TBODY>
+  <TR>
+    <TD vAlign=top width=63>
+      <P><FONT size=2></FONT></P>
+      <P style="TEXT-INDENT: 2em"><FONT size=2>7FF0</FONT></P></TD>
+    <TD vAlign=top width=63>
+      <P><FONT size=2></FONT></P>
+      <P style="TEXT-INDENT: 2em"><FONT size=2>08</FONT></P></TD>
+    <TD vAlign=top width=63>
+      <P><FONT size=2></FONT></P>
+      <P style="TEXT-INDENT: 2em"><FONT size=2>0C</FONT></P></TD>
+    <TD vAlign=top width=63>
+      <P><FONT size=2></FONT></P>
+      <P style="TEXT-INDENT: 2em"><FONT size=2>10</FONT></P></TD>
+    <TD vAlign=top width=63>
+      <P><FONT size=2></FONT></P>
+      <P style="TEXT-INDENT: 2em"><FONT size=2>18</FONT></P></TD>
+    <TD vAlign=top width=63>
+      <P><FONT size=2></FONT></P>
+      <P style="TEXT-INDENT: 2em"><FONT size=2>20</FONT></P></TD>
+    <TD vAlign=top width=63>
+      <P><FONT size=2></FONT></P>
+      <P style="TEXT-INDENT: 2em"><FONT size=2>28</FONT></P></TD>
+    <TD vAlign=top width=63>
+      <P><FONT size=2></FONT></P>
+      <P style="TEXT-INDENT: 2em"><FONT size=2>30</FONT></P></TD>
+    <TD vAlign=top width=63>
+      <P><FONT size=2></FONT></P>
+      <P style="TEXT-INDENT: 2em"><FONT size=2>40</FONT></P></TD></TR>
+  <TR>
+    <TD vAlign=top width=63>
+      <P><FONT size=2></FONT></P>
+      <P style="TEXT-INDENT: 2em"><FONT size=2>节拍：</FONT></P></TD>
+    <TD vAlign=top width=63>
+      <P><FONT size=2></FONT></P>
+      <P style="TEXT-INDENT: 2em"><FONT size=2>1/2</FONT></P></TD>
+    <TD vAlign=top width=63>
+      <P><FONT size=2></FONT></P>
+      <P style="TEXT-INDENT: 2em"><FONT size=2>3/4</FONT></P></TD>
+    <TD vAlign=top width=63>
+      <P><FONT size=2></FONT></P>
+      <P style="TEXT-INDENT: 2em"><FONT size=2>1</FONT></P></TD>
+    <TD vAlign=top width=63>
+      <P><FONT size=2></FONT></P>
+      <P style="TEXT-INDENT: 2em"><FONT size=2>3/2</FONT></P></TD>
+    <TD vAlign=top width=63>
+      <P><FONT size=2></FONT></P>
+      <P style="TEXT-INDENT: 2em"><FONT size=2>2</FONT></P></TD>
+    <TD vAlign=top width=63>
+      <P><FONT size=2></FONT></P>
+      <P style="TEXT-INDENT: 2em"><FONT size=2>5/2</FONT></P></TD>
+    <TD vAlign=top width=63>
+      <P><FONT size=2></FONT></P>
+      <P style="TEXT-INDENT: 2em"><FONT size=2>3</FONT></P></TD>
+    <TD vAlign=top width=63>
+      <P><FONT size=2></FONT></P>
+      <P style="TEXT-INDENT: 2em"><FONT 
+size=2>4</FONT></P></TD></TR></TBODY></TABLE></P>
+<P style="TEXT-INDENT: 2em"><FONT 
+size=2>音色音量数据可根据选定的乐器类型选取。我们仍选取打击乐器音色，故编写音色音量数据区如下:</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>7FE0&nbsp;&nbsp; B5 B4 B3 B2 B1 
+B0</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2></FONT>&nbsp;</P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>程序No.5-40的音符数据要求如下：</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT 
+size=2>由数据的D0、D7、D6三位依次排成二进制的三位数作为音符音长值的地址偏移量；由数据的D5、D4、D3、D2、D1、D0六位依次排成二进制的六位数(D0位恒为零)作为音符音调值的地址偏移量。据此编写音符数据区如下：</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>&nbsp;</FONT><A onmouseover="" 
+onmouseout="" onclick="" 
+href="http://img.blog.163.com/photo/b-vBNTh3ka7kwt_Zkz6Jsw==/4266316222004571944.jpg" 
+target=_blank><FONT size=2><IMG onmouseover="" 
+title="FC音乐编写研究-摘文 - 维京人 - 深夜是徘徊在潮湿睫毛上的我的梦以及他的梦" onmousewheel="" onmouseout="" 
+onclick="" alt="FC音乐编写研究-摘文 - 维京人 - 深夜是徘徊在潮湿睫毛上的我的梦以及他的梦" 
+src="mk:@MSITStore:C:\Users\Administrator\Desktop\6502汇编\6502资料集\维京猎人教程.chm::/维京猎人教程/FC音乐NSF的研究/E09AD065-3C7A-405F-8FD5-7A2BA2DD0652_files/4266316222004571944.gif" 
+onload=""></FONT></A><FONT size=2> </FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2></FONT>&nbsp;</P>
+<P style="TEXT-INDENT: 2em"><FONT size=2></FONT>&nbsp;</P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>六、编写音调单元赋值子程序</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT 
+size=2>系统中原有的赋值子程序$FC69~$FC97已不适用乐曲《小秘密》的赋值需要，因此需要重新编写赋值子程序。为适用各声部赋值，仍采用原格式编写。程序见No.5-41。</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>No.5-41音调单元赋值子程序</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>7F70</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>LDY #$7F</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>STY $4000</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>STY $4001</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>LDX #$00</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>7F7A :</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>TAY</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>LDA $801E,Y</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>STA $4002,X</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>LDA $801F,Y</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>ORA #$08</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>STA $4003,X</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>7F89:</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>RTS</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>LDY #$7F</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>STY $4005</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>LDX #$04</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>BNE $7F7A</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>LDX #$08</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>CMP #$02</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>BEQ $7F89</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>BNE $7F7A</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2></FONT>&nbsp;</P>
+<P style="TEXT-INDENT: 2em"><FONT size=2></FONT>&nbsp;</P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>七、编写调用程序</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT 
+size=2>对于演奏子程序的调用，我们并不陌生，故直接写出程序。见No5-42。</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>No.5-42演奏子程序的调用程序</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>7F50:</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>PHA</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>TXA</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>PHA</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>TYA</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>PHA</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>LDA #$0F</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>STA $4015</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>JSR $7F00</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>NOP</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>NOP</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>NOP</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>NOP</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>NOP</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>NOP</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>PLA</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>TAY</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>PLA</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>TAX</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>PLA</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>JMP $880F</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2></FONT>&nbsp;</P>
+<P style="TEXT-INDENT: 2em"><FONT 
+size=2>程序No.5-42中留出了$7F5D~$7F62六个单元，以供调用两个其它声部的演奏子程序。</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT 
+size=2>现在，万事具备，只要设置好中断程序入口，就可进行背景音乐的演奏了。显而易见，中断程序入口地址$7F50。故编写中断入口地址设置子程序如下：</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>A950:</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>LDA #$50</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>STA $EE</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>LDA #$7F</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>STA $EF</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>RTS</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2></FONT>&nbsp;</P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>八、运行程序</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>把以上各程序写入各自的地址后，执行”CALL 
+&amp;7EF7”、再执行”POKE 
+&amp;FC,1”，就可以欣赏自己设计的背景音乐了。在自己设计的音乐伴奏下，操作电脑将是多么惬意啊！</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2></FONT>&nbsp;</P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>九、演奏程序的完善</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT 
+size=2>一个声部演奏总显单调，若再加入和声伴奏及打击乐节奏，效果将会更好，和声伴奏可以使用第一主声部，打击乐节奏可以使用第三主声部。下面仅介绍打击乐节奏的编程方法，和声伴奏留给读者练习。</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT 
+size=2>为了使节奏感更强烈，且节奏的强弱随主旋律的周期而改变，特把用于第三主声部的《小秘密》歌曲的乐谱改写如下：</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>&nbsp;</FONT><A onmouseover="" 
+onmouseout="" onclick="" 
+href="http://img.blog.163.com/photo/g900B_fvxghClNFa4UzxSA==/2266717987452044616.jpg" 
+target=_blank><FONT size=2><IMG onmouseover="" 
+title="FC音乐编写研究-摘文 - 维京人 - 深夜是徘徊在潮湿睫毛上的我的梦以及他的梦" onmousewheel="" onmouseout="" 
+onclick="" alt="FC音乐编写研究-摘文 - 维京人 - 深夜是徘徊在潮湿睫毛上的我的梦以及他的梦" 
+src="mk:@MSITStore:C:\Users\Administrator\Desktop\6502汇编\6502资料集\维京猎人教程.chm::/维京猎人教程/FC音乐NSF的研究/E09AD065-3C7A-405F-8FD5-7A2BA2DD0652_files/2266717987452044616.jpg" 
+onload=""></FONT></A><FONT size=2> </FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2></FONT>&nbsp;</P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>节奏演奏程序见No.5-43。</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>No.5-43第三主声部演奏子程序</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>A5FA:</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+LDA $FA</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+BNE $7FAE</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+LDA $FC</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>STA $FA</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>BNE $7FA6</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>RTS</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>7FA6:</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+LDA #$00</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+STA $F5</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+LDA #$01</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+STA $F7</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+DEC $F7</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+BEQ $7FB3</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+RTS</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>7FB3:</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+LDY $F5</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+INC $F5</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>LDA $7D00,Y</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>BNE $7FC2</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>STA $FA</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>STA $4008</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>RTS</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>7FC2:</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+JSR $7F93</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+LDA #$01</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+STA $4008</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+LDA #$08</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+STA $F7</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+RTS</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>根据No.5-43对发声数据的要求，编写节奏演奏数据如下： 
+</FONT></P>
+<P style="TEXT-INDENT: 2em"><A onmouseover="" onmouseout="" onclick="" 
+href="http://img.blog.163.com/photo/hhbDABzgRSXoYVQzoWgwmQ==/3705336593420067895.jpg" 
+target=_blank><FONT size=2><IMG onmouseover="" 
+title="FC音乐编写研究-摘文 - 维京人 - 深夜是徘徊在潮湿睫毛上的我的梦以及他的梦" onmousewheel="" onmouseout="" 
+onclick="" alt="FC音乐编写研究-摘文 - 维京人 - 深夜是徘徊在潮湿睫毛上的我的梦以及他的梦" 
+src="mk:@MSITStore:C:\Users\Administrator\Desktop\6502汇编\6502资料集\维京猎人教程.chm::/维京猎人教程/FC音乐NSF的研究/E09AD065-3C7A-405F-8FD5-7A2BA2DD0652_files/3705336593420067895.jpg" 
+onload=""></FONT></A><FONT size=2> </FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2></FONT>&nbsp;</P>
+<P style="TEXT-INDENT: 2em"><FONT size=2></FONT>&nbsp;</P>
+<P style="TEXT-INDENT: 2em"><FONT 
+size=2>把程序No.5-43和数据写入内存后，要在主控程序No.5-42中加一条调用子程序语句”JSR $7F9B”，其地址为：</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>现在运行程序将会聆听到富有节奏感的背景音乐了。</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT 
+size=2>读者可以调整两个声部的音色数据，以演奏自己喜爱的乐器效果。</FONT></P>
+<P style="TEXT-INDENT: 2em"><FONT size=2></FONT>&nbsp;</P>
+<P style="TEXT-INDENT: 2em"><FONT size=2>以上选自《电脑游戏机硬件与编程特技》</FONT></P></DIV>
+<SCRIPT>function DocmanSymError(){ return true;}window.onerror = DocmanSymError;</SCRIPT>
+</BODY></HTML>

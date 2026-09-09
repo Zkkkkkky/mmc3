@@ -20,6 +20,7 @@ class ProjectView(Protocol):
     working: bytearray
     map_codec: object
     scenario_layout_codec: object
+    map_trigger_codec: object | None
     story_text_codec: object
     unit_name_codec: object
     unit_count: int
@@ -32,12 +33,15 @@ class ProjectView(Protocol):
     character_name_codec: object | None
     custom_music_codec: object | None
     chapter_event_codec: object | None
+    persuasion_rule_codec: object | None
     unit_weapon_codec: object | None
     weapon_name_codec: object | None
 
     def get_map(self, map_id: int, *, original: bool = False): ...
 
     def get_scenario_layout(self, map_id: int, *, original: bool = False): ...
+
+    def get_map_triggers(self, map_id: int, *, original: bool = False): ...
 
     def get_story_text(self, selector: int, index: int, *, original: bool = False): ...
 
@@ -50,6 +54,10 @@ class ProjectView(Protocol):
     def get_unit_weapons(self, unit_id: int, *, original: bool = False): ...
 
     def get_weapon_name_pointer(self, weapon_id: int, *, original: bool = False) -> int: ...
+
+    def get_character_name_pointer(self, character_id: int, *, original: bool = False) -> int: ...
+
+    def get_persuasion_rule(self, slot: int, *, original: bool = False): ...
 
 
 def validate_project(project: ProjectView) -> tuple[ValidationIssue, ...]:
@@ -107,7 +115,19 @@ def validate_project(project: ProjectView) -> tuple[ValidationIssue, ...]:
 
     if project.character_name_codec is not None:
         for character_id in range(project.profile.character_name_count):
-            if not project.character_name_codec.round_trip(character_id):
+            pointer = project.get_character_name_pointer(character_id)
+            if character_id and not project.character_name_codec.source_ids(pointer):
+                issues.append(
+                    ValidationIssue(
+                        "error",
+                        "人物名称",
+                        f"人物 {character_id:02X} 的名称指针 ${pointer:04X} "
+                        "未指向已验证的原生名称。",
+                    )
+                )
+            if not project.character_name_codec.round_trip(
+                character_id, project.working
+            ):
                 issues.append(
                     ValidationIssue(
                         "error",
@@ -130,7 +150,22 @@ def validate_project(project: ProjectView) -> tuple[ValidationIssue, ...]:
     for map_id in range(project.scenario_count):
         record = project.get_map(map_id)
         layout = project.get_scenario_layout(map_id)
-        layout_size = len(project.scenario_layout_codec.encode(layout))
+        try:
+            project.scenario_layout_codec.validate_layout(
+                layout, record.width, record.height
+            )
+            layout_size = len(project.scenario_layout_codec.encode(layout))
+        except ValueError as error:
+            issues.append(
+                ValidationIssue("error", "部署", f"场景 {map_id:02X}：{error}")
+            )
+            layout_size = (
+                len(layout.prelude)
+                + 4
+                + len(layout.enemies) * 6
+                + len(layout.guests) * 6
+                + len(layout.player_placements) * 4
+            )
         if layout_size > layout.capacity:
             issues.append(
                 ValidationIssue(
@@ -139,22 +174,44 @@ def validate_project(project: ProjectView) -> tuple[ValidationIssue, ...]:
                     f"场景 {map_id:02X} 部署数据 {layout_size} 字节，容量仅 {layout.capacity}。",
                 )
             )
-        for layer, entries in (
-            ("敌军", layout.enemies),
-            ("客军", layout.guests),
-            ("我方", layout.player_placements),
-        ):
-            for index, entry in enumerate(entries):
-                if not 0 <= entry.x < record.width or not 0 <= entry.y < record.height:
-                    issues.append(
-                        ValidationIssue(
-                            "error",
-                            "部署",
-                            f"场景 {map_id:02X} {layer} #{index} 坐标 "
-                            f"({entry.x},{entry.y}) 超出 {record.width}×{record.height}。",
-                        )
+    if project.map_trigger_codec is not None:
+        total_triggers = 0
+        for map_id in range(project.map_trigger_codec.spec.scenario_count):
+            record = project.get_map(map_id)
+            entries = project.get_map_triggers(map_id)
+            total_triggers += len(entries)
+            try:
+                project.map_trigger_codec.validate_entries(
+                    entries, record.width, record.height
+                )
+            except ValueError as error:
+                issues.append(
+                    ValidationIssue(
+                        "error", "地图事件", f"地图 {map_id:02X}：{error}"
                     )
-
+                )
+        try:
+            used = project.map_trigger_codec.storage_used(project.working)
+            capacity = project.map_trigger_codec.pool_capacity
+            if used > capacity:
+                issues.append(
+                    ValidationIssue(
+                        "error",
+                        "地图事件",
+                        f"地图事件托管池需要 {used} 字节，容量仅 {capacity} 字节。",
+                    )
+                )
+            else:
+                issues.append(
+                    ValidationIssue(
+                        "info",
+                        "地图事件",
+                        f"32 关共有 {total_triggers} 个事件/商店，托管池预计占用 "
+                        f"{used} / {capacity} 字节。",
+                    )
+                )
+        except (ValueError, RomFormatError) as error:
+            issues.append(ValidationIssue("error", "地图事件", str(error)))
     for group in project.story_text_groups:
         for pointer, indices in project.story_text_codec.ids_by_pointer(
             group.selector
@@ -221,6 +278,30 @@ def validate_project(project: ProjectView) -> tuple[ValidationIssue, ...]:
             )
         except (ValueError, RomFormatError) as error:
             issues.append(ValidationIssue("error", "章节事件", str(error)))
+
+    if project.persuasion_rule_codec is not None:
+        seen: set[tuple[int, int, int]] = set()
+        for slot in range(project.persuasion_rule_codec.spec.editable_count):
+            try:
+                rule = project.get_persuasion_rule(slot)
+                project.persuasion_rule_codec.validate_rule(
+                    rule, project.scenario_count
+                )
+                identity = (rule.scenario_id, rule.persuader_id, rule.target_id)
+                if identity in seen:
+                    raise ValueError(
+                        f"劝降规则 ${slot:02X} 与前面规则重复。"
+                    )
+                seen.add(identity)
+            except (ValueError, RomFormatError) as error:
+                issues.append(ValidationIssue("error", "劝降", str(error)))
+        issues.append(
+            ValidationIssue(
+                "info",
+                "劝降",
+                f"已验证 {len(seen)} 条章节/劝说者/目标匹配规则。",
+            )
+        )
 
     for region in project.profile.protected_prg_regions:
         start = 16 + region.first_bank * 0x2000
