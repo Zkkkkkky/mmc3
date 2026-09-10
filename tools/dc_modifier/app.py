@@ -10,7 +10,6 @@ from PySide6.QtWidgets import (
     QDialog,
     QDialogButtonBox,
     QFileDialog,
-    QGridLayout,
     QHBoxLayout,
     QInputDialog,
     QLabel,
@@ -189,40 +188,14 @@ class LauncherWindow(QDialog):
 
         layout = QVBoxLayout(self)
         layout.setContentsMargins(15, 20, 15, 20)
-        introduction = QLabel(
-            "SRW2修改器：\n"
-            "　　　　原版修改器作者：贴吧ID：DG小火\n\n"
-            "第二次机器人大战资料集整理：\n"
-            "　　　　当前版本：新DC篇完整修改器\n\n"
-            "提示：请先进入修改器，再从“文件→打开”选择兼容的 NES ROM。"
-        )
+        introduction = QLabel("作者 断月残心")
+        introduction.setObjectName("launcherAuthor")
         introduction.setStyleSheet("color: #ef4e4e; font-family: SimSun; font-size: 20px;")
         introduction.setAlignment(Qt.AlignmentFlag.AlignTop | Qt.AlignmentFlag.AlignLeft)
         layout.addWidget(introduction, 1)
 
-        links = QGridLayout()
-        labels = (
-            "第二次机器人大战百度贴吧",
-            "第二次机器人大战公共网盘",
-            "第二次机器人大战资料集",
-            "修改器更新查看",
-        )
-        for index, label in enumerate(labels):
-            button = QPushButton(label)
-            button.setMinimumSize(275, 55)
-            button.clicked.connect(
-                lambda _checked=False, text=label: QMessageBox.information(
-                    self,
-                    text,
-                    "参考修改器中的外部地址尚未经过安全核验。当前版本保留入口，不自动打开未知链接。",
-                )
-            )
-            links.addWidget(button, index // 2, index % 2)
-        links.setColumnStretch(0, 1)
-        links.setColumnStretch(1, 1)
-        layout.addLayout(links)
-
         enter = QPushButton("进入修改器")
+        enter.setObjectName("launcherEnterButton")
         enter.setMinimumSize(160, 58)
         enter.clicked.connect(self.enter_editor)
         enter_row = QHBoxLayout()

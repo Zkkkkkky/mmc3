@@ -9,7 +9,14 @@ from unittest.mock import patch
 os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 
 from PySide6.QtGui import QAction
-from PySide6.QtWidgets import QApplication, QDialog, QFileDialog, QLabel, QToolBar
+from PySide6.QtWidgets import (
+    QApplication,
+    QDialog,
+    QFileDialog,
+    QLabel,
+    QPushButton,
+    QToolBar,
+)
 
 from dc_modifier.app import LEGACY_ROM, LEGACY_WINDOW_TITLE, LauncherWindow, MainWindow
 from dc_modifier.event_page import EventPage
@@ -117,6 +124,23 @@ class DesktopEditorSmokeTests(unittest.TestCase):
             self.assertFalse(empty.project_menu.menuAction().isVisible())
         finally:
             empty.close()
+
+    def test_launcher_only_shows_author_and_enter_button(self) -> None:
+        launcher = LauncherWindow()
+        try:
+            author = launcher.findChild(QLabel, "launcherAuthor")
+            enter = launcher.findChild(QPushButton, "launcherEnterButton")
+            self.assertIsNotNone(author)
+            self.assertIsNotNone(enter)
+            assert author is not None
+            self.assertEqual(author.text(), "作者 断月残心")
+            self.assertIn("#ef4e4e", author.styleSheet())
+            self.assertEqual(
+                [button.text() for button in launcher.findChildren(QPushButton)],
+                ["进入修改器"],
+            )
+        finally:
+            launcher.close()
 
     def test_closing_main_window_closes_hidden_launcher_session(self) -> None:
         class TrackingLauncher(LauncherWindow):
