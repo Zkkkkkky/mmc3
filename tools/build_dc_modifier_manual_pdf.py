@@ -486,7 +486,7 @@ class ManualDocTemplate(BaseDocTemplate):
             rightMargin=RIGHT_MARGIN,
             topMargin=TOP_MARGIN,
             bottomMargin=BOTTOM_MARGIN,
-            title="新DC篇完整修改器 2.2：图文使用说明",
+            title="新DC篇完整修改器 3.0：图文使用说明",
             author="新DC篇完整修改器项目",
             subject="扩容版第二次机器人大战 ROM 修改器使用说明",
         )
@@ -516,7 +516,7 @@ class ManualDocTemplate(BaseDocTemplate):
         else:
             canvas.setFont("CNRegular", 8)
             canvas.setFillColor(SLATE)
-            canvas.drawString(LEFT_MARGIN, PAGE_HEIGHT - 10 * mm, "新DC篇完整修改器 2.2")
+            canvas.drawString(LEFT_MARGIN, PAGE_HEIGHT - 10 * mm, "新DC篇完整修改器 3.0")
             canvas.drawRightString(PAGE_WIDTH - RIGHT_MARGIN, PAGE_HEIGHT - 10 * mm, "图文使用说明")
             canvas.setStrokeColor(LINE)
             canvas.setLineWidth(0.45)
@@ -551,7 +551,7 @@ def build_pdf(source_path: Path, output_path: Path) -> None:
     story: list[object] = [
         Spacer(1, 18 * mm),
         Paragraph("新DC篇完整修改器", styles["cover_title"]),
-        Paragraph("2.2 图文使用说明", styles["cover_subtitle"]),
+        Paragraph("3.0 图文使用说明", styles["cover_subtitle"]),
         Paragraph(
             "扩容版《第二次机器人大战》新 DC 篇 ROM 的完整编辑、验证与输出指南",
             styles["cover_lead"],

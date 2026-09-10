@@ -312,8 +312,37 @@ class EventPage(ProjectPage):
 
     def _selection_changed(self) -> None:
         instruction = self._selected_instruction()
+        if (
+            instruction is not None
+            and self.current_address is not None
+            and instruction.address != self.current_address
+            and self.has_pending_draft
+        ):
+            target_address = instruction.address
+            old_address = self.current_address
+            self.table.blockSignals(True)
+            self._select_address(old_address)
+            self.table.blockSignals(False)
+            if not self.commit_pending_changes():
+                self.show_error(
+                    ValueError(
+                        self.pending_draft_error
+                        or "当前事件仍有无法应用的改动，请修正后再切换。"
+                    )
+                )
+                return
+            self._select_address(target_address)
+            return
         self.current_address = instruction.address if instruction is not None else None
         self._show_instruction(instruction)
+
+    def _select_address(self, address: int) -> bool:
+        for row in range(self.table.rowCount()):
+            item = self.table.item(row, 0)
+            if item is not None and item.data(Qt.ItemDataRole.UserRole) == address:
+                self.table.selectRow(row)
+                return True
+        return False
 
     def _show_instruction(self, instruction) -> None:
         enabled = instruction is not None
@@ -342,6 +371,13 @@ class EventPage(ProjectPage):
             current_index = self.template.findData(instruction.opcode)
             if current_index >= 0:
                 self.template.setCurrentIndex(current_index)
+            elif templates:
+                # A same-length template does not imply that the current
+                # opcode is one of the verified actions.  Keep an explicit
+                # lossless choice selected so simply opening the dialog never
+                # manufactures a pending replacement for an unknown opcode.
+                self.template.insertItem(0, "保持当前原始指令", None)
+                self.template.setCurrentIndex(0)
             self.terminal.setChecked(instruction.is_terminal)
             self.raw.setText(instruction.raw.hex(" ").upper())
         self.template.blockSignals(False)
@@ -407,13 +443,51 @@ class EventPage(ProjectPage):
             self.pending_state.setText(
                 f"● 原始字节必须保持 {len(instruction.raw)} 字节；当前输入不可应用"
             )
+            self.pending_state.setStyleSheet("color: #b42318; font-weight: 650;")
         else:
             self.pending_state.setText(
                 "● 当前参数尚未应用" if pending else "✓ 与当前工程一致"
             )
-        self.pending_state.setStyleSheet(
-            "color: #b45309; font-weight: 650;" if pending else "color: #2e7d4f;"
+            self.pending_state.setStyleSheet(
+                "color: #b45309; font-weight: 650;"
+                if pending
+                else "color: #2e7d4f;"
+            )
+
+    @property
+    def has_pending_draft(self) -> bool:
+        return self.pending_state.text().startswith("●")
+
+    @property
+    def pending_draft_error(self) -> str | None:
+        if not self.has_pending_draft:
+            return None
+        enabled = sum(
+            button.isEnabled()
+            for button in (self.apply_template_button, self.apply_raw_button)
         )
+        if enabled == 0:
+            return self.pending_state.text().lstrip("● ")
+        if enabled > 1:
+            return "模板参数和原始字节同时有改动，请先明确应用其中一种。"
+        return None
+
+    def commit_pending_changes(self) -> bool:
+        if not self.has_pending_draft:
+            return True
+        if self.pending_draft_error is not None:
+            return False
+        assert self.project is not None
+        before = bytes(self.project.working)
+        button = (
+            self.apply_template_button
+            if self.apply_template_button.isEnabled()
+            else self.apply_raw_button
+        )
+        button.click()
+        if bytes(self.project.working) != before and self.has_pending_draft:
+            self.refresh()
+        return not self.has_pending_draft
 
     def _apply_template(self) -> None:
         instruction = self._selected_instruction()

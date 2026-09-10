@@ -75,6 +75,9 @@ class PersuasionPage(ProjectPage):
         form.addRow("被劝说目标", self.target)
         form.addRow("成功脚本", self.script_value)
         form.addRow("原始3字节", self.raw_value)
+        self.pending_state = QLabel("请选择劝降条件")
+        self.pending_state.setObjectName("pendingBanner")
+        form.addRow("编辑状态", self.pending_state)
         editor_layout.addWidget(group)
 
         buttons = QHBoxLayout()
@@ -110,10 +113,11 @@ class PersuasionPage(ProjectPage):
             self.chapter,
             self.persuader,
             self.target,
-            self.apply_button,
             self.reset_button,
         ):
             widget.setEnabled(enabled)
+        if not enabled:
+            self.apply_button.setEnabled(False)
 
     @staticmethod
     def _select_data(combo: QComboBox, value: int) -> None:
@@ -185,7 +189,23 @@ class PersuasionPage(ProjectPage):
         item = self.table.item(row, 0)
         if item is None:
             return
-        self.current_slot = int(item.data(Qt.ItemDataRole.UserRole))
+        next_slot = int(item.data(Qt.ItemDataRole.UserRole))
+        if (
+            self.current_slot is not None
+            and next_slot != self.current_slot
+            and self.has_pending_draft
+        ):
+            target_slot = next_slot
+            old_slot = self.current_slot
+            self.table.blockSignals(True)
+            self.table.selectRow(old_slot)
+            self.table.blockSignals(False)
+            if not self.commit_pending_changes():
+                self.show_error(ValueError("当前劝降条件无法应用，请修正后再切换。"))
+                return
+            self.table.selectRow(target_slot)
+            return
+        self.current_slot = next_slot
         rule = self.project.get_persuasion_rule(self.current_slot)
         for combo in (self.chapter, self.persuader, self.target):
             combo.blockSignals(True)
@@ -207,8 +227,22 @@ class PersuasionPage(ProjectPage):
         )
         if any(value is None for value in values):
             self.raw_value.setText("—")
+            self.pending_state.setText("请选择劝降条件")
+            self.apply_button.setEnabled(False)
             return
         self.raw_value.setText(" ".join(f"{int(value):02X}" for value in values))
+        changed = False
+        if self.project is not None and self.current_slot is not None:
+            rule = self.project.get_persuasion_rule(self.current_slot)
+            changed = tuple(int(value) for value in values) != (
+                rule.scenario_id,
+                rule.persuader_id,
+                rule.target_id,
+            )
+        self.apply_button.setEnabled(changed)
+        self.pending_state.setText(
+            "● 当前条件尚未应用" if changed else "✓ 与当前工程一致"
+        )
 
     def _apply(self) -> None:
         if self.project is None or self.current_slot is None:

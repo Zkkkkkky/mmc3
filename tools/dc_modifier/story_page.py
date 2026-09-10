@@ -165,8 +165,29 @@ class StoryPage(ProjectPage):
     def _selector_changed(self) -> None:
         if self.project is None or self.selector.currentIndex() < 0:
             return
+        next_selector = int(self.selector.currentData())
+        if (
+            self.current_selector is not None
+            and next_selector != self.current_selector
+            and self.has_pending_draft
+        ):
+            target_selector = next_selector
+            old_selector = self.current_selector
+            self.selector.blockSignals(True)
+            self.selector.setCurrentIndex(self.selector.findData(old_selector))
+            self.selector.blockSignals(False)
+            if not self.commit_pending_changes():
+                self.show_error(
+                    ValueError(
+                        self.pending_draft_error
+                        or "当前文本仍有无法应用的改动，请修正后再切换文本组。"
+                    )
+                )
+                return
+            self.selector.setCurrentIndex(self.selector.findData(target_selector))
+            return
         previous_index = self.current_index
-        self.current_selector = int(self.selector.currentData())
+        self.current_selector = next_selector
         group = self.project.story_text_codec.group_by_selector[self.current_selector]
         self.indices.blockSignals(True)
         self.indices.clear()
@@ -219,11 +240,39 @@ class StoryPage(ProjectPage):
     def _index_changed(
         self,
         item: QListWidgetItem | None,
-        _previous: QListWidgetItem | None,
+        previous: QListWidgetItem | None,
     ) -> None:
         if self.project is None or self.current_selector is None or item is None:
             return
-        self.current_index = int(item.data(Qt.ItemDataRole.UserRole))
+        next_index = int(item.data(Qt.ItemDataRole.UserRole))
+        if (
+            previous is not None
+            and self.current_index is not None
+            and next_index != self.current_index
+            and self.has_pending_draft
+        ):
+            target_index = next_index
+            old_index = self.current_index
+            self.indices.blockSignals(True)
+            for row in range(self.indices.count()):
+                if int(self.indices.item(row).data(Qt.ItemDataRole.UserRole)) == old_index:
+                    self.indices.setCurrentRow(row)
+                    break
+            self.indices.blockSignals(False)
+            if not self.commit_pending_changes():
+                self.show_error(
+                    ValueError(
+                        self.pending_draft_error
+                        or "当前文本仍有无法应用的改动，请修正后再切换。"
+                    )
+                )
+                return
+            for row in range(self.indices.count()):
+                if int(self.indices.item(row).data(Qt.ItemDataRole.UserRole)) == target_index:
+                    self.indices.setCurrentRow(row)
+                    return
+            return
+        self.current_index = next_index
         record = self.project.get_story_text(self.current_selector, self.current_index)
         aliases = "、".join(f"${index:02X}" for index in record.indices)
         self.heading.setText(f"剧情文本 ${self.current_selector:02X}:${self.current_index:02X}")
@@ -245,6 +294,52 @@ class StoryPage(ProjectPage):
         self._raw_changed()
         self._render_tokens()
         self._render_decoded()
+
+    @property
+    def has_pending_draft(self) -> bool:
+        if self.project is None or self.current_selector is None or self.current_index is None:
+            return False
+        try:
+            staged = self._parse_hex(self.raw.toPlainText())
+        except ValueError:
+            return True
+        return staged != self.project.get_story_text(
+            self.current_selector, self.current_index
+        ).raw
+
+    @property
+    def pending_draft_error(self) -> str | None:
+        if not self.has_pending_draft:
+            return None
+        assert self.project is not None
+        assert self.current_selector is not None
+        assert self.current_index is not None
+        try:
+            staged = self._parse_hex(self.raw.toPlainText())
+            current = self.project.get_story_text(
+                self.current_selector, self.current_index
+            ).raw
+            if self.project.expansion_plan is None and len(staged) != len(current):
+                return "当前 ROM 尚未自动规划剧情空间，文本必须保持原长度。"
+            if self.project.expansion_plan is not None:
+                self.project.story_text_replacement_usage(
+                    self.current_selector, self.current_index, staged
+                )
+        except (TypeError, ValueError) as error:
+            return str(error)
+        return None
+
+    def commit_pending_changes(self) -> bool:
+        if not self.has_pending_draft:
+            return True
+        if self.pending_draft_error is not None:
+            return False
+        assert self.project is not None
+        before = bytes(self.project.working)
+        self.apply_text()
+        if bytes(self.project.working) != before and self.has_pending_draft:
+            self.refresh()
+        return not self.has_pending_draft
 
     @staticmethod
     def _parse_hex(text: str) -> bytes:

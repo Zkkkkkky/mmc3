@@ -3,16 +3,23 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
+from PySide6.QtCore import Qt, Signal
 from PySide6.QtGui import QAction, QCloseEvent, QDragEnterEvent, QDropEvent, QFont, QKeySequence
 from PySide6.QtWidgets import (
     QApplication,
+    QDialog,
+    QDialogButtonBox,
     QFileDialog,
+    QGridLayout,
+    QHBoxLayout,
     QInputDialog,
     QLabel,
     QListWidget,
     QListWidgetItem,
     QMainWindow,
     QMessageBox,
+    QPushButton,
+    QStackedWidget,
     QStatusBar,
     QTabWidget,
     QVBoxLayout,
@@ -58,237 +65,243 @@ EXPANDED_ROM = ROOT / "FC模拟器" / "DC_kuorong_464K.nes"
 LEGACY_ROM = ROOT / "FC模拟器" / "DC_kuorong.nes"
 DEFAULT_ROM = EXPANDED_ROM if EXPANDED_ROM.is_file() else LEGACY_ROM
 APP_TITLE = "新DC篇完整修改器"
+LEGACY_WINDOW_TITLE = "SRW2扩容版修改器V1.0"
+LAUNCHER_TITLE = "SRW2修改器V1.5"
 
 
 STYLE_SHEET = """
-QMainWindow, QWidget {
-    background: #f2f7fb;
-    color: #17324a;
+QMainWindow, QDialog, QWidget {
+    background: #f3f7fb;
+    color: #111111;
 }
-QMenuBar, QMenu, QToolBar, QStatusBar {
-    background: #ffffff;
-}
-QMenuBar {
-    border-bottom: 1px solid #bdd5e5;
-}
+QMenuBar, QMenu, QStatusBar { background: #fbfdff; }
+QMenuBar { border-bottom: 1px solid #86c7e7; }
+QMenuBar::item { padding: 5px 12px; }
 QMenuBar::item:selected, QMenu::item:selected {
-    background: #dceffc;
-    color: #0c5f98;
+    background: #cdefff;
+    color: #092b3d;
 }
-QToolBar {
-    background: #eaf5fc;
-    border-bottom: 1px solid #abcde2;
-    spacing: 6px;
-    padding: 7px 10px;
+QMenu::item { padding: 5px 30px 5px 22px; }
+QTabWidget::pane {
+    background: #f7fbfe;
+    border: 1px solid #6fc4eb;
+    top: -1px;
 }
-QFrame#workspaceHeader {
-    background: qlineargradient(x1:0, y1:0, x2:1, y2:0,
-        stop:0 #dff2fd, stop:1 #f8fcff);
-    border: 1px solid #a9cfe5;
-    border-radius: 7px;
-}
-QLabel#appMark {
-    background: #1379b9;
-    color: white;
-    border-radius: 6px;
-    padding: 7px 10px;
-    font-size: 16px;
-    font-weight: 700;
-}
-QLabel#workspaceTitle {
-    color: #0d4770;
-    font-size: 18px;
-    font-weight: 700;
-}
-QLabel#romBadge, QLabel#countBadge {
-    background: #d9edf9;
-    border: 1px solid #a7cce2;
-    border-radius: 9px;
-    color: #155d88;
-    padding: 3px 8px;
-}
-QTabWidget#workspaceTabs::pane {
-    background: white;
-    border: 1px solid #9fc4dc;
-    border-radius: 0 6px 6px 6px;
-}
-QTabWidget#workspaceTabs > QTabBar::tab {
-    background: #d9ebf6;
-    border: 1px solid #9fc4dc;
+QTabBar::tab {
+    background: #f7fbfe;
+    border: 1px solid #8ebfd7;
     border-bottom: none;
-    min-width: 112px;
-    padding: 9px 16px;
-    font-weight: 650;
+    padding: 6px 13px;
+    margin-right: 1px;
 }
-QTabWidget#workspaceTabs > QTabBar::tab:selected {
-    background: #1684c4;
-    color: white;
-}
-QTabWidget#subTabs::pane {
+QTabBar::tab:selected {
     background: white;
-    border: 1px solid #c2d8e6;
+    color: #1837a0;
 }
-QTabWidget#subTabs > QTabBar::tab {
-    background: #edf6fb;
-    border: 1px solid #bfd7e6;
-    padding: 6px 14px;
-}
-QTabWidget#subTabs > QTabBar::tab:selected {
-    background: white;
-    color: #0e6ea7;
-    font-weight: 650;
-}
-QLabel#pageTitle {
-    color: #124f78;
-    font-size: 21px;
-    font-weight: 700;
-}
-QLabel#pageSubtitle, QLabel#hintText {
-    color: #607789;
-}
-QLabel#sectionTitle {
-    color: #124f78;
-    font-size: 17px;
-    font-weight: 650;
+QLabel#pageTitle, QLabel#pageSubtitle { max-height: 0px; min-height: 0px; }
+QLabel#hintText { color: #53636e; }
+QLabel#sectionTitle { color: #173b50; font-size: 16px; font-weight: 600; }
+QLabel#romBadge, QLabel#countBadge {
+    background: #e4f5fd;
+    border: 1px solid #70bfdf;
+    padding: 2px 7px;
 }
 QLabel#pendingBanner, QLabel#editState {
-    background: #eaf6ee;
-    border: 1px solid #acd3ba;
-    border-radius: 5px;
-    color: #2e7d4f;
-    padding: 6px 9px;
+    background: #eef8f0;
+    border: 1px solid #97caa2;
+    color: #28643a;
+    padding: 5px 8px;
 }
 QLabel#editState[pending="true"] {
-    background: #fff5e5;
-    border-color: #e5bd73;
-    color: #9a5b00;
+    background: #fff8e5;
+    border-color: #dcb768;
+    color: #835100;
 }
 QFrame#metricCard, QGroupBox {
-    background: white;
-    border: 1px solid #b8d1e0;
-    border-radius: 6px;
+    background: #fbfdff;
+    border: 1px solid #62c3ed;
+    border-radius: 2px;
 }
 QGroupBox {
     margin-top: 10px;
-    padding: 12px 8px 8px 8px;
+    padding: 11px 7px 7px 7px;
     font-weight: 600;
 }
 QGroupBox::title {
     subcontrol-origin: margin;
-    left: 12px;
+    left: 10px;
     padding: 0 4px;
 }
-QLabel#metricLabel {
-    color: #647180;
-    font-size: 12px;
-}
-QLabel#metricValue {
-    color: #17212b;
-    font-size: 16px;
-    font-weight: 650;
-}
+QLabel#metricLabel { color: #53636e; font-size: 12px; }
+QLabel#metricValue { font-size: 15px; font-weight: 600; }
 QLabel#emptyState {
     background: white;
-    border: 1px dashed #b7c0ca;
-    border-radius: 10px;
-    color: #647180;
-    padding: 24px;
+    border: 1px dashed #8fb8cc;
+    color: #5f6970;
+    padding: 18px;
 }
-QPushButton {
-    background: #fafdff;
-    border: 1px solid #9fbed2;
-    border-radius: 5px;
-    padding: 6px 12px;
+QPushButton, QToolButton {
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+        stop:0 #ffffff, stop:0.5 #d8f3ff, stop:1 #74ccef);
+    border: 1px solid #478fac;
+    border-radius: 2px;
+    padding: 5px 11px;
 }
-QPushButton:hover { background: #e2f2fb; }
-QPushButton:disabled {
-    background: #eef2f5;
-    border-color: #d2dde4;
-    color: #91a0aa;
+QPushButton:hover, QToolButton:hover { background: #c5efff; }
+QPushButton:pressed, QToolButton:pressed { background: #8fd7f4; }
+QPushButton:disabled, QToolButton:disabled {
+    background: #edf1f3;
+    border-color: #bdc8ce;
+    color: #8b969c;
 }
-QPushButton#primaryButton {
-    background: #1684c4;
-    border-color: #0f6fa9;
-    color: white;
-    font-weight: 600;
-}
-QPushButton#primaryButton:hover { background: #0f72ad; }
-QPushButton#terrainButton {
-    min-width: 44px;
-    min-height: 36px;
-    font-weight: 700;
-}
-QPushButton#terrainButton:checked {
-    border: 2px solid #0f72ad;
-    background: #d7eefb;
-}
+QPushButton#primaryButton { font-weight: 600; }
+QPushButton#terrainButton { min-width: 38px; min-height: 34px; padding: 1px; }
+QPushButton#terrainButton:checked { border: 2px solid #164a9a; background: #b9e9ff; }
 QLineEdit, QSpinBox, QComboBox, QPlainTextEdit, QTableWidget, QListWidget {
     background: white;
-    border: 1px solid #b7cddb;
-    border-radius: 4px;
-    padding: 4px;
-    selection-background-color: #1684c4;
+    border: 1px solid #77b8d4;
+    border-radius: 0;
+    padding: 3px;
+    selection-background-color: #1686c4;
 }
 QLineEdit:focus, QSpinBox:focus, QComboBox:focus, QPlainTextEdit:focus,
-QTableWidget:focus, QListWidget:focus { border: 1px solid #1684c4; }
+QTableWidget:focus, QListWidget:focus { border: 1px solid #1879ac; }
 QHeaderView::section {
-    background: #e3f0f7;
+    background: #e9f5fb;
     border: none;
-    border-right: 1px solid #d7dce2;
-    border-bottom: 1px solid #c8cfd7;
-    padding: 6px;
+    border-right: 1px solid #bed5df;
+    border-bottom: 1px solid #a9c6d4;
+    padding: 5px;
     font-weight: 600;
 }
 """
 
 
+class LauncherWindow(QDialog):
+    """Reference-compatible launch screen shown before the editor session."""
+
+    def __init__(self) -> None:
+        super().__init__()
+        self.main_window: MainWindow | None = None
+        self.setWindowTitle(LAUNCHER_TITLE)
+        self.setFixedSize(930, 715)
+        self.setWindowFlag(Qt.WindowType.WindowMaximizeButtonHint, False)
+
+        layout = QVBoxLayout(self)
+        layout.setContentsMargins(15, 20, 15, 20)
+        introduction = QLabel(
+            "SRW2修改器：\n"
+            "　　　　原版修改器作者：贴吧ID：DG小火\n\n"
+            "第二次机器人大战资料集整理：\n"
+            "　　　　当前版本：新DC篇完整修改器\n\n"
+            "提示：请先进入修改器，再从“文件→打开”选择兼容的 NES ROM。"
+        )
+        introduction.setStyleSheet("color: #ef4e4e; font-family: SimSun; font-size: 20px;")
+        introduction.setAlignment(Qt.AlignmentFlag.AlignTop | Qt.AlignmentFlag.AlignLeft)
+        layout.addWidget(introduction, 1)
+
+        links = QGridLayout()
+        labels = (
+            "第二次机器人大战百度贴吧",
+            "第二次机器人大战公共网盘",
+            "第二次机器人大战资料集",
+            "修改器更新查看",
+        )
+        for index, label in enumerate(labels):
+            button = QPushButton(label)
+            button.setMinimumSize(275, 55)
+            button.clicked.connect(
+                lambda _checked=False, text=label: QMessageBox.information(
+                    self,
+                    text,
+                    "参考修改器中的外部地址尚未经过安全核验。当前版本保留入口，不自动打开未知链接。",
+                )
+            )
+            links.addWidget(button, index // 2, index % 2)
+        links.setColumnStretch(0, 1)
+        links.setColumnStretch(1, 1)
+        layout.addLayout(links)
+
+        enter = QPushButton("进入修改器")
+        enter.setMinimumSize(160, 58)
+        enter.clicked.connect(self.enter_editor)
+        enter_row = QHBoxLayout()
+        enter_row.addStretch()
+        enter_row.addWidget(enter)
+        enter_row.addStretch()
+        layout.addLayout(enter_row)
+
+    def enter_editor(self) -> None:
+        if self.main_window is not None:
+            self.main_window.raise_()
+            self.main_window.activateWindow()
+            return
+        self.main_window = MainWindow(open_default=False)
+        self.main_window.closed.connect(self.close)
+        self.main_window.show()
+        self.hide()
+
+
 class MainWindow(QMainWindow):
+    """The legacy map shell. Data editors are opened as independent dialogs."""
+
+    closed = Signal()
+
     def __init__(self, *, open_default: bool = True) -> None:
         super().__init__()
         self.project: RomProject | None = None
         self.project_path: Path | None = None
+        self.rom_output_path: Path | None = None
         self._saved_snapshot: bytes | None = None
-        self.setWindowTitle(APP_TITLE)
-        self.resize(1280, 900)
+        self._saved_allocations: tuple[object, ...] | None = None
+        self.setWindowTitle(LEGACY_WINDOW_TITLE)
+        self.resize(1257, 998)
         self.setMinimumSize(1024, 700)
         self.setAcceptDrops(True)
 
-        # Kept as a non-visual compatibility/navigation model for tests and
-        # keyboard actions; the visible UI is the reference-inspired tab deck.
-        self.navigation = QListWidget()
+        # Keep a non-visual registry for automated functional checks. Only the
+        # map page is part of the normal main-window route; all other editors
+        # are constructed afresh in independent transaction dialogs.
+        self.navigation = QListWidget(self)
         self.navigation.hide()
         self.pages: list[ProjectPage] = []
         self.page_index: dict[str, int] = {}
-        self.page_locations: dict[str, tuple[int, QTabWidget | None, int]] = {}
-        self.group_page_keys: list[tuple[str, ...]] = []
+        self.page_stack_index: dict[str, int] = {}
+        self.workspace = QStackedWidget()
+        self.blank_page = QWidget()
+        self.workspace.addWidget(self.blank_page)
         self._build_pages()
-        self.workspace = QTabWidget()
-        self.workspace.setObjectName("workspaceTabs")
-        self.workspace.setDocumentMode(False)
-        self._build_workspace()
-        self.workspace.tabBar().hide()
-
-        central = QWidget()
-        central_layout = QVBoxLayout(central)
-        central_layout.setContentsMargins(3, 3, 3, 3)
-        central_layout.setSpacing(0)
-        central_layout.addWidget(self.workspace, 1)
-        self.setCentralWidget(central)
+        self.setCentralWidget(self.workspace)
 
         self.status = QStatusBar()
+        self.session_status = QLabel("尚未载入ROM")
+        self.status.addWidget(self.session_status, 1)
+        self.x_status = QLabel("X坐标：—")
+        self.y_status = QLabel("Y坐标：—")
+        self.status.addPermanentWidget(self.x_status)
+        self.status.addPermanentWidget(self.y_status)
+        # Compatibility labels retained for existing integrations; they are
+        # deliberately hidden to preserve the reference status-bar layout.
         self.path_status = QLabel("尚未载入ROM")
-        self.status.addWidget(self.path_status, 1)
         self.module_status = QLabel("战场地图")
-        self.status.addPermanentWidget(self.module_status)
         self.change_status = QLabel("0 字节修改")
-        self.status.addPermanentWidget(self.change_status)
+        for label in (self.path_status, self.module_status, self.change_status):
+            label.hide()
         self.setStatusBar(self.status)
+        # The reference main window presents coordinates inside the shared
+        # map workspace and has no second status strip.  Keep the status
+        # object for programmatic messages, but do not duplicate that footer.
+        self.status.hide()
+
+        self.map_page = self.pages[self.page_index["maps"]]
+        assert isinstance(self.map_page, MapPage)
+        self.map_page.canvas.coordinate_changed.connect(self._map_coordinate_changed)
+        self.map_page.draft_state_changed.connect(self._update_window_state)
 
         self._create_actions()
         self._create_menus()
         self.navigation.currentRowChanged.connect(self._show_page_by_index)
-        self.workspace.currentChanged.connect(self._sync_navigation_from_workspace)
-        self.show_page("maps")
+        self.workspace.setCurrentWidget(self.blank_page)
         self._update_action_state()
 
         if open_default and DEFAULT_ROM.exists():
@@ -298,60 +311,31 @@ class MainWindow(QMainWindow):
         self.page_index[key] = len(self.pages)
         self.pages.append(page)
         page.project_changed.connect(self._after_edit)
-        page.navigation_requested.connect(self.show_page)
+        page.navigation_requested.connect(self._open_extension_page)
         item = QListWidgetItem(label)
         item.setToolTip(label)
         self.navigation.addItem(item)
+        self.page_stack_index[key] = self.workspace.addWidget(page)
 
-    def _build_workspace(self) -> None:
-        groups = (
-            ("战场地图", (("地图与部署", "maps"),)),
-            (
-                "数据库",
-                (
-                    ("机体修改", "units"),
-                    ("人物修改", "characters"),
-                    ("武器修改", "weapons"),
-                    ("机体导入与图像", "unit_import"),
-                ),
-            ),
-            (
-                "剧情与事件",
-                (
-                    ("剧情对话", "story"),
-                    ("战场事件", "events"),
-                    ("劝降", "persuasion"),
-                ),
-            ),
-            ("背景音乐", (("战斗音乐", "music"),)),
-            (
-                "工程与输出",
-                (("工程概览", "overview"), ("容量规划", "resources"), ("变更验证", "changes")),
-            ),
-        )
-        for group_index, (group_label, entries) in enumerate(groups):
-            keys = tuple(key for _label, key in entries)
-            self.group_page_keys.append(keys)
-            if len(entries) == 1:
-                label, key = entries[0]
-                self.workspace.addTab(self.pages[self.page_index[key]], group_label)
-                self.page_locations[key] = (group_index, None, 0)
-                continue
-            sub_tabs = QTabWidget()
-            sub_tabs.setObjectName("subTabs")
-            for sub_index, (label, key) in enumerate(entries):
-                sub_tabs.addTab(self.pages[self.page_index[key]], label)
-                self.page_locations[key] = (group_index, sub_tabs, sub_index)
-            sub_tabs.currentChanged.connect(
-                lambda _index, owner=sub_tabs: self._sync_navigation_from_subtabs(owner)
-            )
-            self.workspace.addTab(sub_tabs, group_label)
+    def _build_pages(self) -> None:
+        self._add_page("maps", "战场地图", MapPage())
+        self._add_page("units", "机体", UnitPage())
+        self._add_page("characters", "人物", CharacterPage())
+        self._add_page("weapons", "武器", WeaponPage())
+        self._add_page("unit_import", "机体导入与图像", UnitImportPage())
+        self._add_page("story", "剧情文本", StoryPage())
+        self._add_page("events", "战场事件", EventPage())
+        self._add_page("persuasion", "劝降条件", PersuasionPage())
+        self._add_page("music", "背景音乐", MusicPage())
+        self._add_page("overview", "工程概览", OverviewPage())
+        self._add_page("resources", "容量规划", ResourcePage())
+        self._add_page("changes", "变更与验证", ChangesPage())
 
     def show_page(self, key: str) -> None:
-        group_index, sub_tabs, sub_index = self.page_locations[key]
-        self.workspace.setCurrentIndex(group_index)
-        if sub_tabs is not None:
-            sub_tabs.setCurrentIndex(sub_index)
+        """Select a registered page for tests/capture; menus use dialogs."""
+        if key not in self.page_stack_index:
+            raise KeyError(f"未知页面：{key}")
+        self.workspace.setCurrentIndex(self.page_stack_index[key])
         row = self.page_index[key]
         self.navigation.blockSignals(True)
         self.navigation.setCurrentRow(row)
@@ -363,38 +347,6 @@ class MainWindow(QMainWindow):
             return
         key = next(key for key, index in self.page_index.items() if index == row)
         self.show_page(key)
-
-    def _sync_navigation_from_subtabs(self, owner: QTabWidget) -> None:
-        for key, (_group, tabs, sub_index) in self.page_locations.items():
-            if tabs is owner and owner.currentIndex() == sub_index:
-                self.show_page(key)
-                return
-
-    def _sync_navigation_from_workspace(self) -> None:
-        group_index = self.workspace.currentIndex()
-        if not 0 <= group_index < len(self.group_page_keys):
-            return
-        keys = self.group_page_keys[group_index]
-        if len(keys) == 1:
-            self.show_page(keys[0])
-            return
-        current = self.workspace.currentWidget()
-        if isinstance(current, QTabWidget):
-            self.show_page(keys[current.currentIndex()])
-
-    def _build_pages(self) -> None:
-        self._add_page("overview", "工程概览", OverviewPage())
-        self._add_page("units", "机体", UnitPage())
-        self._add_page("characters", "人物", CharacterPage())
-        self._add_page("unit_import", "机体导入与图像", UnitImportPage())
-        self._add_page("weapons", "武器", WeaponPage())
-        self._add_page("story", "剧情文本", StoryPage())
-        self._add_page("maps", "地图与部署", MapPage())
-        self._add_page("events", "战场事件", EventPage())
-        self._add_page("persuasion", "劝降条件", PersuasionPage())
-        self._add_page("music", "背景音乐", MusicPage())
-        self._add_page("resources", "容量规划", ResourcePage())
-        self._add_page("changes", "变更与验证", ChangesPage())
 
     def _action(
         self,
@@ -409,82 +361,300 @@ class MainWindow(QMainWindow):
         return action
 
     def _create_actions(self) -> None:
-        self.open_rom_action = self._action("打开ROM…", self.open_rom_dialog, QKeySequence.StandardKey.Open)
+        self.open_rom_action = self._action("打开(&O)…", self.open_rom_dialog, "Ctrl+O")
+        self.save_rom_action = self._action("保存(&S)", self.save_rom, "Ctrl+S")
+        self.exit_action = self._action("退出(&X)", self.close, "Ctrl+X")
+
+        self.database_action = self._action("数据库(&D)", self.open_database, "Ctrl+D")
+        self.font_library_action = self._action("文字库(&W)", self.open_font_library, "Ctrl+W")
+        self.map_animation_action = self._action("地图动画(&M)", self.open_map_animation, "Ctrl+M")
+        self.text_converter_action = self._action("文字转换(&Z)", self.open_text_converter, "Ctrl+Z")
+        self.scenario_action = self._action("剧情事件(&J)", self.open_scenario, "Ctrl+J")
+        self.export_unit_action = self._action("导出机体(&P)", self.export_unit, "Ctrl+F")
+        self.export_avatar_action = self._action("导出头像(&L)", self.open_avatar_exporter, "Ctrl+L")
+        self.attribute_calculator_action = self._action("属性计算器", self.open_attribute_calculator)
+        self.save_editor_action = self._action("存档修改器", self.open_save_editor)
+        self.other_settings_action = self._action("其他(&T)", self.open_other_settings, "Ctrl+T")
+
         self.open_project_action = self._action("打开工程…", self.open_project_dialog, "Ctrl+Shift+O")
-        self.save_project_action = self._action("保存工程", self.save_project, QKeySequence.StandardKey.Save)
-        self.save_project_as_action = self._action("工程另存为…", self.save_project_as, "Ctrl+Shift+S")
-        self.save_rom_action = self._action("输出ROM…", self.save_rom_as, "Ctrl+Alt+S")
+        self.save_project_action = self._action("保存工程", self.save_project, "Ctrl+Shift+S")
+        self.save_project_as_action = self._action("工程另存为…", self.save_project_as)
+        self.save_rom_as_action = self._action("ROM另存为…", self.save_rom_as, "Ctrl+Alt+S")
         self.export_ips_action = self._action("导出IPS…", self.export_ips)
         self.build_action = self._action("一键构建…", self.build_release, "Ctrl+B")
-        self.exit_action = self._action("退出", self.close, QKeySequence.StandardKey.Quit)
-        self.undo_action = self._action("撤销", self.undo, QKeySequence.StandardKey.Undo)
-        self.redo_action = self._action("重做", self.redo, QKeySequence.StandardKey.Redo)
+        # Ctrl+Z belongs to the reference editor's “文字转换” command. Keep
+        # project-history shortcuts in the extension namespace to avoid an
+        # ambiguous Qt shortcut that would make both commands unusable.
+        self.undo_action = self._action("撤销", self.undo, "Ctrl+Alt+Z")
+        self.redo_action = self._action("重做", self.redo, "Ctrl+Alt+Y")
         self.validate_action = self._action("完整检查", self.validate_project, "F7")
         self.about_action = self._action("关于与安全说明", self.show_about)
-        self.page_actions: dict[str, QAction] = {}
-        page_commands = (
-            ("maps", "战场地图", "Ctrl+1"),
-            ("units", "机体数据库", "Ctrl+2"),
-            ("characters", "人物数据库", "Ctrl+9"),
-            ("weapons", "武器数据库", "Ctrl+3"),
-            ("story", "剧情文字库", "Ctrl+4"),
-            ("events", "剧情与战场事件", "Ctrl+5"),
-            ("persuasion", "劝降条件", None),
-            ("music", "战斗背景音乐", "Ctrl+6"),
-            ("unit_import", "机体导入与CHR图像", "Ctrl+7"),
-            ("overview", "工程概览", "Ctrl+8"),
-            ("resources", "扩展容量规划", None),
-            ("changes", "变更与验证", None),
-        )
-        for key, text, shortcut in page_commands:
-            self.page_actions[key] = self._action(
+        self.page_actions = {
+            key: self._action(
                 text,
-                lambda _checked=False, page_key=key: self.show_page(page_key),
-                shortcut,
+                lambda _checked=False, page_key=key: self._open_extension_page(page_key),
             )
+            for key, text in (
+                ("music", "战斗背景音乐"),
+                ("unit_import", "机体导入与CHR图像"),
+                ("overview", "工程概览"),
+                ("resources", "扩展容量规划"),
+                ("changes", "变更与验证"),
+            )
+        }
 
     def _create_menus(self) -> None:
-        file_menu = self.menuBar().addMenu("文件")
+        file_menu = self.menuBar().addMenu("文件(&F)")
         file_menu.addAction(self.open_rom_action)
-        file_menu.addAction(self.open_project_action)
-        file_menu.addSeparator()
-        file_menu.addAction(self.save_project_action)
-        file_menu.addAction(self.save_project_as_action)
-        file_menu.addSeparator()
         file_menu.addAction(self.save_rom_action)
-        file_menu.addAction(self.export_ips_action)
-        file_menu.addAction(self.build_action)
         file_menu.addSeparator()
         file_menu.addAction(self.exit_action)
-        data_menu = self.menuBar().addMenu("数据")
-        data_menu.addAction(self.page_actions["maps"])
-        data_menu.addSeparator()
-        data_menu.addAction(self.page_actions["units"])
-        data_menu.addAction(self.page_actions["characters"])
-        data_menu.addAction(self.page_actions["weapons"])
-        data_menu.addAction(self.page_actions["unit_import"])
-        data_menu.addSeparator()
-        data_menu.addAction(self.page_actions["story"])
-        data_menu.addAction(self.page_actions["events"])
-        data_menu.addAction(self.page_actions["persuasion"])
-        data_menu.addAction(self.page_actions["music"])
-        data_menu.addSeparator()
-        data_menu.addAction(self.page_actions["overview"])
-        data_menu.addAction(self.page_actions["resources"])
-        data_menu.addAction(self.page_actions["changes"])
-        data_menu.addAction(self.validate_action)
-        data_menu.addSeparator()
-        data_menu.addAction(self.undo_action)
-        data_menu.addAction(self.redo_action)
-        help_menu = self.menuBar().addMenu("帮助")
+
+        self.data_menu = self.menuBar().addMenu("数据(&A)")
+        self.data_menu.addAction(self.database_action)
+        self.data_menu.addAction(self.font_library_action)
+        self.data_menu.addSeparator()
+        self.data_menu.addAction(self.map_animation_action)
+        self.data_menu.addAction(self.text_converter_action)
+        self.data_menu.addSeparator()
+        self.data_menu.addAction(self.scenario_action)
+        self.data_menu.addAction(self.export_unit_action)
+        self.data_menu.addAction(self.export_avatar_action)
+        self.data_menu.addSeparator()
+        self.data_menu.addAction(self.attribute_calculator_action)
+        self.data_menu.addAction(self.save_editor_action)
+        self.data_menu.addAction(self.other_settings_action)
+
+        self.extension_menu = self.menuBar().addMenu("扩展功能")
+        self.extension_menu.addAction(self.page_actions["music"])
+        self.extension_menu.addAction(self.page_actions["unit_import"])
+        self.extension_menu.addAction(self.page_actions["resources"])
+        self.extension_menu.addSeparator()
+        self.extension_menu.addAction(self.page_actions["overview"])
+        self.extension_menu.addAction(self.page_actions["changes"])
+
+        self.project_menu = self.menuBar().addMenu("工程")
+        self.project_menu.addAction(self.open_project_action)
+        self.project_menu.addAction(self.save_project_action)
+        self.project_menu.addAction(self.save_project_as_action)
+        self.project_menu.addSeparator()
+        self.project_menu.addAction(self.save_rom_as_action)
+        self.project_menu.addAction(self.export_ips_action)
+        self.project_menu.addAction(self.build_action)
+        self.project_menu.addSeparator()
+        self.project_menu.addAction(self.undo_action)
+        self.project_menu.addAction(self.redo_action)
+        self.project_menu.addAction(self.validate_action)
+
+        help_menu = self.menuBar().addMenu("帮助(&H)")
         help_menu.addAction(self.about_action)
+
+    def _map_coordinate_changed(self, x: int, y: int) -> None:
+        self.x_status.setText(f"X坐标：{x}")
+        self.y_status.setText(f"Y坐标：{y}")
+
+    def _run_project_dialog(self, dialog: QDialog, success_message: str) -> int:
+        if hasattr(dialog, "project_changed"):
+            dialog.project_changed.connect(self._dialog_edit_notice)
+        result = dialog.exec()
+        self._refresh_registered_pages(preserve_map_draft=True)
+        self._update_window_state()
+        if result == QDialog.DialogCode.Accepted:
+            self.status.showMessage(success_message, 4000)
+        dialog.deleteLater()
+        return result
+
+    def _dialog_edit_notice(self, message: str) -> None:
+        self._update_window_state()
+        self.status.showMessage(message, 4000)
+
+    def open_database(self) -> None:
+        if self.project is None:
+            return
+        from .legacy_windows import DatabaseDialog
+
+        self._run_project_dialog(DatabaseDialog(self.project, self), "数据库修改已确认")
+
+    def open_scenario(self) -> None:
+        if self.project is None:
+            return
+        from .legacy_windows import ScenarioDialog
+
+        self._run_project_dialog(ScenarioDialog(self.project, self), "剧情事件修改已确认")
+
+    def _run_tool_dialog(self, dialog: QDialog) -> None:
+        result = dialog.exec()
+        if result == QDialog.DialogCode.Accepted:
+            self._refresh_registered_pages(preserve_map_draft=True)
+            self._update_window_state()
+        dialog.deleteLater()
+
+    def open_font_library(self) -> None:
+        if self.project is None:
+            return
+        from .legacy_tools import FontLibraryDialog
+
+        self._run_tool_dialog(FontLibraryDialog(parent=self, project=self.project))
+
+    def open_map_animation(self) -> None:
+        if self.project is None:
+            return
+        from .legacy_tools import MapAnimationDialog
+
+        self._run_tool_dialog(MapAnimationDialog(parent=self, project=self.project))
+
+    def open_text_converter(self) -> None:
+        if self.project is None:
+            return
+        from .legacy_tools import TextConverterDialog
+
+        self._run_tool_dialog(TextConverterDialog(parent=self, project=self.project))
+
+    def open_attribute_calculator(self) -> None:
+        if self.project is None:
+            return
+        from .legacy_tools import AttributeCalculatorDialog
+
+        self._run_tool_dialog(AttributeCalculatorDialog(parent=self, project=self.project))
+
+    def open_save_editor(self) -> None:
+        if self.project is None:
+            return
+        from .legacy_tools import SaveEditorDialog
+
+        self._run_tool_dialog(SaveEditorDialog(parent=self, project=self.project))
+
+    def open_other_settings(self) -> None:
+        if self.project is None:
+            return
+        from .legacy_tools import OtherSettingsDialog
+
+        self._run_tool_dialog(OtherSettingsDialog(parent=self, project=self.project))
+
+    def _create_extension_dialog(self, key: str) -> QDialog:
+        if self.project is None:
+            raise ValueError("请先打开ROM。")
+        from .legacy_windows import TransactionalProjectDialog
+
+        definitions: dict[str, tuple[str, type[ProjectPage]]] = {
+            "music": ("战斗背景音乐", MusicPage),
+            "unit_import": ("机体导入与CHR图像", UnitImportPage),
+            "overview": ("工程概览", OverviewPage),
+            "resources": ("扩展容量规划", ResourcePage),
+            "changes": ("变更与验证", ChangesPage),
+        }
+        title, page_type = definitions[key]
+        dialog = TransactionalProjectDialog(self.project, self)
+        dialog.setWindowTitle(title)
+        dialog.resize(1180, 820)
+        layout = QVBoxLayout(dialog)
+        page = dialog.register_page(page_type())
+        if isinstance(page, ChangesPage):
+            page.run_validation()
+        layout.addWidget(page, 1)
+        buttons = QDialogButtonBox(
+            QDialogButtonBox.StandardButton.Ok
+            | QDialogButtonBox.StandardButton.Cancel
+        )
+        buttons.button(QDialogButtonBox.StandardButton.Ok).setText("确定")
+        buttons.button(QDialogButtonBox.StandardButton.Cancel).setText("取消")
+        buttons.accepted.connect(dialog.accept)
+        buttons.rejected.connect(dialog.reject)
+        layout.addWidget(buttons)
+        dialog.page = page
+        return dialog
+
+    def _open_extension_page(self, key: str) -> None:
+        if self.project is None:
+            return
+        if key == "maps":
+            self.show_page("maps")
+            self.raise_()
+            self.activateWindow()
+            return
+        if key in {"units", "characters", "weapons"}:
+            from .legacy_windows import DatabaseDialog
+
+            dialog = DatabaseDialog(self.project, self)
+            dialog.tabs.setCurrentIndex(
+                {"units": 0, "characters": 1, "weapons": 2}[key]
+            )
+            self._run_project_dialog(dialog, "数据库修改已确认")
+            return
+        if key in {"story", "events", "persuasion"}:
+            from .legacy_windows import ScenarioDialog
+
+            dialog = ScenarioDialog(self.project, self)
+            dialog.tabs.setCurrentIndex(
+                {"events": 1, "persuasion": 2, "story": 4}[key]
+            )
+            self._run_project_dialog(dialog, "剧情事件修改已确认")
+            return
+        dialog = self._create_extension_dialog(key)
+        requested: list[str] = []
+
+        def finish_before_navigation(page_key: str) -> None:
+            requested.append(page_key)
+            dialog.accept()
+
+        dialog.navigation_requested.connect(finish_before_navigation)
+        self._run_project_dialog(dialog, f"{dialog.windowTitle()}已确认")
+        if requested:
+            self._open_extension_page(requested[-1])
+
+    def export_unit(self) -> None:
+        if self.project is None:
+            return
+        from .unit_packages import package_from_project
+
+        labels = [
+            f"${unit_id:02X} · {self.project.unit_display_name(unit_id)}"
+            for unit_id in range(1, self.project.unit_count)
+        ]
+        selected, accepted = QInputDialog.getItem(
+            self, "导出机体", "选择机体：", labels, 0, False
+        )
+        if not accepted:
+            return
+        unit_id = labels.index(selected) + 1
+        destination, _ = QFileDialog.getSaveFileName(
+            self,
+            "导出机体",
+            str(self.project.path.with_name(f"unit_{unit_id:02X}.dcunit")),
+            "新DC机体包 (*.dcunit)",
+        )
+        if not destination:
+            return
+        try:
+            path = Path(destination)
+            if path.suffix.lower() != ".dcunit":
+                path = path.with_suffix(".dcunit")
+            package_from_project(self.project, unit_id).save(path)
+            self.status.showMessage(f"机体已导出：{path.name}", 5000)
+        except Exception as error:
+            QMessageBox.critical(self, "导出机体失败", str(error))
+
+    def open_avatar_exporter(self) -> None:
+        if self.project is None:
+            return
+        dialog = self._create_extension_dialog("unit_import")
+        dialog.setWindowTitle("导出头像 / CHR图像")
+        page = dialog.page
+        if isinstance(page, UnitImportPage):
+            page.tabs.setCurrentIndex(1)
+        self._run_project_dialog(dialog, "CHR图像操作已确认")
 
     @property
     def has_unsaved_changes(self) -> bool:
         return (
             self.project is not None
             and self._saved_snapshot is not None
-            and bytes(self.project.working) != self._saved_snapshot
+            and (
+                bytes(self.project.working) != self._saved_snapshot
+                or self.project.resource_allocator.allocations
+                != self._saved_allocations
+                or self.map_page.has_pending_draft
+            )
         )
 
     def _confirm_discard(self) -> bool:
@@ -509,20 +679,10 @@ class MainWindow(QMainWindow):
         self.project = project
         self.project_path = project_path
         self._saved_snapshot = bytes(project.working) if saved_snapshot is None else saved_snapshot
+        self._saved_allocations = project.resource_allocator.allocations
         for page in self.pages:
             page.set_project(project)
         self._update_window_state()
-
-    @staticmethod
-    def _initial_page_key(project: RomProject) -> str:
-        """Route every fresh v2 project through capacity planning first."""
-
-        if (
-            project.profile.key == "dc-kuorong-mmc3-v2"
-            and project.expansion_plan is None
-        ):
-            return "resources"
-        return "maps"
 
     def _activate_project(
         self,
@@ -536,7 +696,13 @@ class MainWindow(QMainWindow):
             project_path=project_path,
             saved_snapshot=saved_snapshot,
         )
-        self.show_page(self._initial_page_key(project))
+        self.rom_output_path = None
+        self.show_page("maps")
+        if project.profile.key == "dc-kuorong-mmc3-v2" and project.expansion_plan is None:
+            self.status.showMessage(
+                "ROM已载入；扩展容量尚未规划，可稍后从“扩展功能”进入。",
+                8000,
+            )
 
     def load_rom(self, path: str | Path, *, quiet: bool = False) -> bool:
         try:
@@ -597,16 +763,27 @@ class MainWindow(QMainWindow):
     def save_project(self) -> None:
         if self.project is None:
             return
+        if not self._commit_pending_map():
+            return
         if self.project_path is None:
             self.save_project_as()
             return
         try:
             self.project.save_project(self.project_path)
             self._saved_snapshot = bytes(self.project.working)
+            self._saved_allocations = self.project.resource_allocator.allocations
             self._update_window_state()
             self.status.showMessage(f"工程已保存：{self.project_path.name}", 4000)
         except Exception as error:
             QMessageBox.critical(self, "无法保存工程", str(error))
+
+    def save_rom(self) -> None:
+        if self.project is None:
+            return
+        if self.rom_output_path is None:
+            self.save_rom_as()
+            return
+        self._write_rom(self.rom_output_path)
 
     def save_project_as(self) -> None:
         if self.project is None:
@@ -623,6 +800,40 @@ class MainWindow(QMainWindow):
         self.project_path = path.resolve()
         self.save_project()
 
+    def _commit_pending_map(self) -> bool:
+        if not self.map_page.has_pending_draft:
+            return True
+        error = self.map_page.pending_draft_error
+        if error is not None:
+            QMessageBox.warning(
+                self,
+                "地图草稿无法保存",
+                f"当前地图、部署或事件输入无效：\n{error}",
+            )
+            return False
+        if not self.map_page.commit_pending_changes():
+            QMessageBox.warning(
+                self,
+                "地图草稿无法保存",
+                self.map_page.pending_draft_error
+                or "当前地图、部署或事件草稿提交失败。",
+            )
+            return False
+        return True
+
+    def _write_rom(self, destination: Path) -> None:
+        if self.project is None or not self._commit_pending_map():
+            return
+        try:
+            self.project.save_as(destination)
+            self.rom_output_path = destination
+            self._saved_snapshot = bytes(self.project.working)
+            self._saved_allocations = self.project.resource_allocator.allocations
+            self._update_window_state()
+            self.status.showMessage(f"ROM已保存：{destination.name}", 5000)
+        except Exception as error:
+            QMessageBox.critical(self, "无法保存ROM", str(error))
+
     def save_rom_as(self) -> None:
         if self.project is None:
             return
@@ -636,14 +847,10 @@ class MainWindow(QMainWindow):
         if destination == self.project.path.resolve():
             QMessageBox.warning(self, "禁止覆盖", "不能覆盖当前载入的基准ROM，请选择新文件名。")
             return
-        try:
-            self.project.save_as(destination)
-            self.status.showMessage(f"ROM已输出：{destination.name}", 5000)
-        except Exception as error:
-            QMessageBox.critical(self, "无法输出ROM", str(error))
+        self._write_rom(destination)
 
     def export_ips(self) -> None:
-        if self.project is None:
+        if self.project is None or not self._commit_pending_map():
             return
         default = self.project.path.with_name(self.project.path.stem + "_modified.ips")
         filename, _ = QFileDialog.getSaveFileName(
@@ -658,7 +865,7 @@ class MainWindow(QMainWindow):
             QMessageBox.critical(self, "无法导出IPS", str(error))
 
     def build_release(self) -> None:
-        if self.project is None:
+        if self.project is None or not self._commit_pending_map():
             return
         directory = QFileDialog.getExistingDirectory(self, "选择构建输出目录", str(ROOT / "build"))
         if not directory:
@@ -679,73 +886,122 @@ class MainWindow(QMainWindow):
             QMessageBox.critical(self, "构建失败", str(error))
 
     def undo(self) -> None:
-        if self.project is None or not self.project.can_undo:
+        if self.project is None or not self._commit_pending_map():
+            return
+        if not self.project.can_undo:
             return
         try:
             description = self.project.undo()
+            self._refresh_registered_pages(preserve_map_draft=False)
             self._after_edit(f"已撤销：{description}")
         except Exception as error:
             QMessageBox.critical(self, "无法撤销", str(error))
 
     def redo(self) -> None:
-        if self.project is None or not self.project.can_redo:
+        if self.project is None:
+            return
+        if self.map_page.has_pending_draft:
+            error = self.map_page.pending_draft_error
+            detail = (
+                f"当前地图、部署或事件输入无效：\n{error}"
+                if error is not None
+                else "当前地图、部署或事件存在尚未应用的草稿。"
+            )
+            QMessageBox.warning(
+                self,
+                "地图草稿阻止重做",
+                f"{detail}\n请先应用或还原该草稿，再执行重做。",
+            )
+            return
+        if not self.project.can_redo:
             return
         try:
             description = self.project.redo()
+            self._refresh_registered_pages(preserve_map_draft=False)
             self._after_edit(f"已重做：{description}")
         except Exception as error:
             QMessageBox.critical(self, "无法重做", str(error))
 
     def validate_project(self) -> None:
-        if self.project is None:
+        if self.project is None or not self._commit_pending_map():
             return
-        self.show_page("changes")
-        page = self.pages[self.page_index["changes"]]
-        assert isinstance(page, ChangesPage)
-        page.refresh()
-        page.run_validation()
+        self._open_extension_page("changes")
 
     def _after_edit(self, message: str) -> None:
-        for page in self.pages:
-            if page is self.sender() and isinstance(page, ChangesPage):
-                continue
-            page.refresh()
+        source = self.sender()
+        if isinstance(source, ProjectPage):
+            source.refresh()
         self._update_window_state()
         self.status.showMessage(message, 4000)
+
+    def _refresh_registered_pages(self, *, preserve_map_draft: bool) -> None:
+        for page in self.pages:
+            if (
+                preserve_map_draft
+                and page is self.map_page
+                and self.map_page.apply_button.isEnabled()
+            ):
+                continue
+            page.refresh()
 
     def _update_action_state(self) -> None:
         loaded = self.project is not None
         for action in (
+            self.save_rom_action,
             self.save_project_action,
             self.save_project_as_action,
-            self.save_rom_action,
+            self.save_rom_as_action,
             self.export_ips_action,
             self.build_action,
             self.validate_action,
+            self.database_action,
+            self.font_library_action,
+            self.map_animation_action,
+            self.text_converter_action,
+            self.scenario_action,
+            self.export_unit_action,
+            self.export_avatar_action,
+            self.attribute_calculator_action,
+            self.save_editor_action,
+            self.other_settings_action,
         ):
             action.setEnabled(loaded)
         for key, action in self.page_actions.items():
-            action.setEnabled(loaded or key == "overview")
-        self.undo_action.setEnabled(loaded and bool(self.project and self.project.can_undo))
+            action.setEnabled(loaded)
+        self.undo_action.setEnabled(
+            loaded
+            and bool(
+                (self.project and self.project.can_undo)
+                or self.map_page.has_pending_draft
+            )
+        )
         self.redo_action.setEnabled(loaded and bool(self.project and self.project.can_redo))
+        self.data_menu.menuAction().setVisible(loaded)
+        self.extension_menu.menuAction().setVisible(loaded)
+        self.project_menu.menuAction().setVisible(loaded)
 
     def _update_window_state(self) -> None:
         self._update_action_state()
         if self.project is None:
-            self.setWindowTitle(APP_TITLE)
+            self.setWindowTitle(LEGACY_WINDOW_TITLE)
             self.path_status.setText("尚未载入ROM")
+            self.session_status.setText("")
             self.change_status.setText("0 字节修改")
+            self.workspace.setCurrentWidget(self.blank_page)
             return
         marker = " *" if self.has_unsaved_changes else ""
-        self.setWindowTitle(f"{APP_TITLE}：{self.project.path}{marker}")
+        self.setWindowTitle(f"{LEGACY_WINDOW_TITLE}：{self.project.path}{marker}")
         self.path_status.setText(str(self.project.path))
+        self.session_status.setText(
+            f"{len(self.project.change_rows())} 字节修改" if self.has_unsaved_changes else ""
+        )
         self.change_status.setText(f"{len(self.project.change_rows())} 字节修改")
 
     def show_about(self) -> None:
         QMessageBox.information(
             self,
             "关于新DC篇完整修改器",
-            "版本 2.2.0 采用参考修改器的菜单导航、顶部标签与左选右编流程，并启用："
+            "版本 3.0.0 复刻 SRW2 修改器的主窗口、菜单快捷键、独立数据窗口与确认/取消流程，并启用："
             "机体与图像导入、武器与真实名称、内置剧情字库、地图/部署/踩点事件、"
             "增援/加入等章节事件、劝降条件、战斗音乐绑定、扩展曲导入、工程保存、"
             "撤销/重做、资源视图、ROM/IPS构建与结构验证。\n\n"
@@ -774,6 +1030,7 @@ class MainWindow(QMainWindow):
     def closeEvent(self, event: QCloseEvent) -> None:
         if self._confirm_discard():
             event.accept()
+            self.closed.emit()
         else:
             event.ignore()
 
@@ -787,19 +1044,22 @@ def run() -> int:
     application.setStyle("Fusion")
     application.setFont(QFont("Microsoft YaHei UI", 10))
     application.setStyleSheet(STYLE_SHEET)
-    window = MainWindow()
-    window.show()
     if self_test:
+        window = MainWindow(open_default=True)
+        window.show()
         application.processEvents()
         valid = (
             window.project is not None
             and window.navigation.count() == 12
             and len(window.pages) == 12
-            and window.workspace.count() == 5
+            and window.workspace.currentWidget() is window.map_page
+            and window.data_menu.menuAction().isVisible()
         )
         if window.project is not None:
             window._saved_snapshot = bytes(window.project.working)
         window.close()
         application.processEvents()
         return 0 if valid else 91
+    launcher = LauncherWindow()
+    launcher.show()
     return application.exec()

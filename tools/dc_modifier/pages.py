@@ -112,6 +112,38 @@ class ProjectPage(QWidget):
     def refresh(self) -> None:
         pass
 
+    @property
+    def has_pending_draft(self) -> bool:
+        """Whether this page owns a valid form that has not been applied yet."""
+
+        button = getattr(self, "apply_button", None)
+        return isinstance(button, QPushButton) and button.isEnabled()
+
+    @property
+    def pending_draft_error(self) -> str | None:
+        """Return why a pending form cannot be committed, if applicable."""
+
+        return None
+
+    def commit_pending_changes(self) -> bool:
+        """Apply the page's primary pending form before a window-level OK."""
+
+        if not self.has_pending_draft:
+            return True
+        button = getattr(self, "apply_button", None)
+        if not isinstance(button, QPushButton):
+            return False
+        before = bytes(self.project.working) if self.project is not None else None
+        button.click()
+        if (
+            self.project is not None
+            and before is not None
+            and bytes(self.project.working) != before
+            and self.has_pending_draft
+        ):
+            self.refresh()
+        return not self.has_pending_draft
+
     def show_error(self, error: Exception) -> None:
         QMessageBox.critical(self, "操作失败", str(error))
 
@@ -298,11 +330,43 @@ class SearchableRecordPage(ProjectPage):
     def _selection_changed(
         self,
         current: QListWidgetItem | None,
-        _previous: QListWidgetItem | None,
+        previous: QListWidgetItem | None,
     ) -> None:
-        self.current_id = (
+        next_id = (
             int(current.data(Qt.ItemDataRole.UserRole)) if current is not None else None
         )
+        if (
+            previous is not None
+            and self.current_id is not None
+            and next_id is not None
+            and next_id != self.current_id
+            and self.has_pending_draft
+        ):
+            # The legacy editor keeps edits while moving between records. Apply
+            # them to the dialog's transactional ROM buffer before switching;
+            # Cancel on the outer dialog still rolls the whole session back.
+            target_id = next_id
+            old_id = self.current_id
+            self.records.blockSignals(True)
+            for row in range(self.records.count()):
+                if int(self.records.item(row).data(Qt.ItemDataRole.UserRole)) == old_id:
+                    self.records.setCurrentRow(row)
+                    break
+            self.records.blockSignals(False)
+            if not self.commit_pending_changes():
+                self.show_error(
+                    ValueError(
+                        self.pending_draft_error
+                        or "当前记录仍有无法应用的改动，请修正后再切换。"
+                    )
+                )
+                return
+            for row in range(self.records.count()):
+                if int(self.records.item(row).data(Qt.ItemDataRole.UserRole)) == target_id:
+                    self.records.setCurrentRow(row)
+                    return
+            return
+        self.current_id = next_id
         self.load_record(self.current_id)
 
     def load_record(self, record_id: int | None) -> None:
