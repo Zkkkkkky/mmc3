@@ -2,7 +2,18 @@
 
 ## 目标与交付形态
 
-修改器以 `FC模拟器/DC_kuorong_464K.nes` 为当前基线，同时只读兼容旧版 `DC_kuorong.nes`。当前版把旧位置 CHR 副本和旧音频驱动副本释放为托管空间，提供 464 KiB；旧版继续显示 200 KiB。工具提供 Windows 图形界面、可重放工程文件、独立 ROM/IPS 构建、自动检查和单文件 EXE。核心原则是“已确认格式结构化编辑，未确认字段明确标注，任何修改都可撤销并可追踪到 ROM 偏移”。
+修改器以 `output/rom/DC_kuorong_464K.nes` 为当前基线，同时只读兼容 `references/rom/baselines/DC_kuorong.nes`。当前版把旧位置 CHR 副本和旧音频驱动副本释放为托管空间，提供 464 KiB；旧版继续显示 200 KiB。工具提供 Windows 图形界面、可重放工程文件、独立 ROM/IPS 构建、自动检查和 `output/app/新DC篇完整修改器.exe` 单文件 EXE。核心原则是“已确认格式结构化编辑，未确认字段明确标注，任何修改都可撤销并可追踪到 ROM 偏移”。
+
+本次工程重整只改变源码、工具、测试、产物、文档和参考输入的归类路径，不改变上述产品功能、ROM 数据布局或用户工作流。当前源码与交付边界如下：
+
+| 目录 | 职责 |
+|---|---|
+| `src/` | `dc_modifier` GUI、`fc_editor` 核心、`fc_rom_editor_core.py`、`src/asm/` 及运行资源 |
+| `tools/` | 构建、打包、文档和映射脚本，以及 `tools/vendor/` 下的第三方工具 |
+| `tests/` | Python 回归测试；Mesen Lua 冒烟脚本位于 `tests/emulator/` |
+| `output/` | EXE、ROM、IPS、报告及 `output/build/asm/` 中的 `.bin`/`.lst` 生成物 |
+| `docs/` | 当前说明、设计、交接文档和历史归档 |
+| `references/` | 只读 ROM、旧修改器、音频输入和 `references/research/fc资料集-v1.16/` |
 
 ## 分层架构
 

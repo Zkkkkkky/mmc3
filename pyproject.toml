@@ -1,0 +1,30 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "dc-rom-modifier"
+version = "2.1.0"
+description = "Windows desktop ROM editor for the expanded New DC edition of FC Super Robot Wars 2"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "PySide6>=6.8,<7",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pyinstaller>=6.10,<7",
+    "py65>=1.2,<2",
+    "reportlab>=4,<5",
+]
+
+[project.scripts]
+dc-modifier = "dc_modifier.app:run"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+py-modules = ["fc_rom_editor_core"]
+
+[tool.setuptools.packages.find]
+where = ["src"]

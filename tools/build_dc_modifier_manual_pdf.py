@@ -35,7 +35,7 @@ from reportlab.platypus.tableofcontents import TableOfContents
 
 
 ROOT = Path(__file__).resolve().parents[1]
-DEFAULT_SOURCE = ROOT / "DC修改器使用说明.md"
+DEFAULT_SOURCE = ROOT / "docs" / "DC修改器使用说明.md"
 DEFAULT_OUTPUT = ROOT / "output" / "pdf" / "DC修改器使用说明.pdf"
 PAGE_WIDTH, PAGE_HEIGHT = A4
 LEFT_MARGIN = 18 * mm
@@ -329,7 +329,11 @@ def markdown_table(lines: list[str], styles: dict[str, ParagraphStyle]) -> Table
     return table
 
 
-def render_markdown(source: str, styles: dict[str, ParagraphStyle]) -> list[object]:
+def render_markdown(
+    source: str,
+    styles: dict[str, ParagraphStyle],
+    source_directory: Path,
+) -> list[object]:
     lines = source.splitlines()
     story: list[object] = []
     heading_serial = 0
@@ -390,7 +394,7 @@ def render_markdown(source: str, styles: dict[str, ParagraphStyle]) -> list[obje
         image_match = re.fullmatch(r"!\[(.*?)\]\((.*?)\)", stripped)
         if image_match:
             alt_text, relative_path = image_match.groups()
-            image_path = ROOT / relative_path
+            image_path = source_directory / relative_path
             if image_path.name == "12-project-overview.png":
                 skip_overview_caption = True
                 index += 1
@@ -615,7 +619,7 @@ def build_pdf(source_path: Path, output_path: Path) -> None:
         ),
     ]
     story.extend([toc, PageBreak()])
-    story.extend(render_markdown(source, styles))
+    story.extend(render_markdown(source, styles, source_path.parent))
 
     document = ManualDocTemplate(str(output_path))
     document.multiBuild(story)

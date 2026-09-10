@@ -4,17 +4,22 @@ import csv
 import hashlib
 import io
 import json
+import sys
 from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[1]
+SRC_ROOT = ROOT / "src"
+if str(SRC_ROOT) not in sys.path:
+    sys.path.insert(0, str(SRC_ROOT))
 
 from fc_editor.codecs.chapter_event import ACTION_FIELDS, ACTION_LABELS, OPCODE_LABELS
 from fc_editor.dc_text import dc_map_label, default_dc_text_table
 from fc_rom_editor_core import RomProject
 
 
-ROOT = Path(__file__).resolve().parents[1]
-ROM_PATH = ROOT / "FC模拟器" / "DC_kuorong_464K.nes"
-CONFIG_ROOT = ROOT / "默认配置文件"
-OUTPUT_ROOT = ROOT / "build" / "修改器映射表"
+ROM_PATH = ROOT / "output" / "rom" / "DC_kuorong_464K.nes"
+CONFIG_ROOT = ROOT / "src" / "resources" / "default_config"
+OUTPUT_ROOT = ROOT / "output" / "mappings"
 
 
 def _sha256(data: bytes) -> str:
@@ -44,7 +49,7 @@ def export_text_tables() -> dict[str, object]:
     table = default_dc_text_table()
     tbl_lines = [
         "# 新DC篇完整Token字库（UTF-8）",
-        "# 来源：默认配置文件/码表.ini；F2=换行，FF=文本结束。",
+        "# 来源：src/resources/default_config/码表.ini；F2=换行，FF=文本结束。",
     ]
     for token, value in sorted(
         table.byte_to_text.items(), key=lambda item: (len(item[0]), item[0])
@@ -306,7 +311,7 @@ def main() -> None:
     rom_info = export_rom_mappings(project)
     readme = f"""# 新DC篇修改器映射表
 
-本目录由 `python tools\\export_dc_modifier_mappings.py` 从当前基准 ROM 和用户提供的 `默认配置文件/` 确定性生成，文件均为 UTF-8。
+本目录由 `python tools\\export_dc_modifier_mappings.py` 从当前基准 ROM 和 `src/resources/default_config/` 中的已验证配置确定性生成，文件均为 UTF-8。
 
 - `新DC完整码表.tbl`：{text_info['effectiveMappings']} 条实际可解码 Token；可由新版剧情编辑器直接载入。
 - `新DC字模地址映射.csv`：保留旧配置的 {text_info['sourceRows']} 行字模地址、Token 和字符关系。
