@@ -1,0 +1,3540 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML XMLNS:O><HEAD><TITLE>内存映射硬件</TITLE>
+<META name=GENERATOR content="MSHTML 8.00.7601.19104">
+<META content="text/html; charset=gb2312" http-equiv=Content-Type>
+<STYLE>
+html,body { 
+	/* Default Font */
+	font-family: Microsoft YaHei, Simsun, sans-serif;
+	font-size: 12pt;
+}
+</STYLE>
+</HEAD>
+<BODY><FONT size=2><SPAN lang=EN-US>
+<H2><SPAN lang=EN-US>7</SPAN>、内存映射硬件</H2></SPAN>
+<P>这里只提供一些硬件资料，软件方面请参考扩容资料。<SPAN 
+lang=EN-US><BR>Mapper</SPAN>其实就是硬件上的地址映射。用了切换<SPAN lang=EN-US>ROM</SPAN>和<SPAN 
+lang=EN-US>VROM</SPAN>，更有的用于动态切换<SPAN lang=EN-US>VROM</SPAN>。动态切换<SPAN 
+lang=EN-US>VROM</SPAN>通常有<SPAN lang=EN-US>2</SPAN>种办法：一是用<SPAN 
+lang=EN-US>Latches</SPAN>，所谓<SPAN lang=EN-US>Latch</SPAN>就是切换器，当<SPAN 
+lang=EN-US>PPU</SPAN>访问命名表遇到特定的数据时，自动切换去指定的<SPAN 
+lang=EN-US>VROM</SPAN>，例如圣火徽章外传就用了这种方法，它的特定数据是<SPAN lang=EN-US>FE</SPAN>和<SPAN 
+lang=EN-US>FD</SPAN>，就是对话框的两个边<SPAN lang=EN-US>^_^</SPAN>；二是用<SPAN 
+lang=EN-US>IRQ</SPAN>中断，算好<SPAN lang=EN-US>PPU</SPAN>的时序和<SPAN 
+lang=EN-US>CPU</SPAN>的指令周期后设置<SPAN lang=EN-US>IRQ</SPAN>计数器，等待到特定的时候就触发<SPAN 
+lang=EN-US>IRQ</SPAN>中断，调用中断服务切换<SPAN lang=EN-US>VROM</SPAN>，例如三国志<SPAN 
+lang=EN-US>2</SPAN>－霸王之大陆就是这样，有的<SPAN lang=EN-US>IRQ</SPAN>计数器是每个<SPAN 
+lang=EN-US>CPU</SPAN>周期增加<SPAN lang=EN-US>1</SPAN>，有的是每条扫描线增加<SPAN 
+lang=EN-US>1</SPAN>，视硬件电路而定。</P>
+<P>图例：<SPAN lang=EN-US><BR>R</SPAN>：连接到<SPAN lang=EN-US>ROM</SPAN>部分；<SPAN 
+lang=EN-US><BR>S</SPAN>：由<SPAN lang=EN-US>ROM</SPAN>，<SPAN 
+lang=EN-US>MMC</SPAN>和<SPAN lang=EN-US>NES</SPAN>共用；<SPAN 
+lang=EN-US><BR>N</SPAN>：连接到卡带接口；<SPAN lang=EN-US><BR>W</SPAN>：连接到电池<SPAN 
+lang=EN-US>RAM</SPAN>；<SPAN lang=EN-US><BR>Pxxx</SPAN>：对应于<SPAN 
+lang=EN-US>CPU</SPAN>的；<SPAN lang=EN-US><BR>Vxxx</SPAN>：对应于<SPAN 
+lang=EN-US>PPU</SPAN>的；<SPAN lang=EN-US><BR>M2</SPAN>：时钟。</P>
+<TABLE style="mso-cellspacing: 0cm; mso-padding-alt: 0cm 0cm 0cm 0cm" 
+class=MsoNormalTable border=1 cellSpacing=0 cellPadding=0>
+  <TBODY>
+  <TR style="mso-yfti-irow: 0; mso-yfti-firstrow: yes">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>+5V </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>M2 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>PA13 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>PA14 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>P-CE 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>PD7 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>PD0 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>R/W </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>VA10 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>VA12 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>VA11 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>V10 
+  </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 1">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>24 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>23 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>22 N 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>21 N 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>20 N 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>19 S 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>18 S 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>17 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>16 N 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>15 N 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>14 S 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>13 S 
+  </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 2">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>） </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm" 
+    colSpan=11>
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>MMC1 
+  </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 3">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>1 R </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>2 R </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>3 R </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>4 R </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>5 R </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>6 W </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>7 R </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>8 R </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>9 R </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>10 R 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>11 R/W 
+    </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>12 
+  </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 4; mso-yfti-lastrow: yes">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>PA14 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>PA15 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>PA16 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>PA17 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>P-CE 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>B-CE 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>VA12 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>VA13 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>VA14 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>VA15 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>VA16/B-CE 
+      </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>GND 
+  </FONT></SPAN></P></TD></TR></TBODY></TABLE>
+<P><SPAN lang=EN-US>RD387-001: </SPAN></P>
+<TABLE style="mso-cellspacing: 0cm; mso-padding-alt: 0cm 0cm 0cm 0cm" 
+class=MsoNormalTable border=1 cellSpacing=0 cellPadding=0>
+  <TBODY>
+  <TR style="mso-yfti-irow: 0; mso-yfti-firstrow: yes">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>+5V </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>+5V </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>GND </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>VA10 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>VA15 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>VA12 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>VA14 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>VA12 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>VA13 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>VA16 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>VA8 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>VA5 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>VA9 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>VA4 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>VA11 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>VA3 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>VA7 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>VA2 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>VA10 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>VA1 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>V-CE 
+  </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 1">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>XX </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>40 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>39 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>38 N 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>37 R 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>36 R 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>35 R 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>34 N 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>33 R 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>32 R 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>31 S 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>30 S 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>29 S 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>28 S 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>27 S 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>26 S 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>25 S 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>24 S 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>23 S 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>22 S 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>21 S 
+  </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 2">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>） </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm" 
+    colSpan=20>
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>MMC2&nbsp; 
+      </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 3">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>XX </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>01 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>02 N 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>03 N 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>04 R 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>05 R 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>06 S 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>07 R 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>08 R 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>09 R 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>10 S 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>11 S 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>12 S 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>13 S 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>14 S 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>15 N 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>16 N 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>17 S 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>18 S 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>19 S 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>20 
+  </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 4; mso-yfti-lastrow: yes">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>GND </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>M2 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>PA14 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>PA13 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>PA15 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>PA14 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>PA12 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>PA13 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>PA16 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>P-CE 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>PD4 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>PD3 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>PD0 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>PD1 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>PD2 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>R/W </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>P-CE 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>V-RD 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>VA0 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>VA6 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>GND 
+  </FONT></SPAN></P></TD></TR></TBODY></TABLE>
+<P>　 </P>
+<TABLE style="mso-cellspacing: 0cm; mso-padding-alt: 0cm 0cm 0cm 0cm" 
+class=MsoNormalTable border=1 cellSpacing=0 cellPadding=0>
+  <TBODY>
+  <TR style="mso-yfti-irow: 0; mso-yfti-firstrow: yes">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>　 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>　 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>PD6 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>PA0 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>PD7 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>B-CE 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>M2 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>GND </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>+5V </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>P-CE 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>PA18 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>PA13 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>PA17 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>　 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>　 </FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 1">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>　 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>　 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>33 S 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>32 S 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>31 S 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>30 W 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>29 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>28 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>27 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>26 R 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>25 R 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>24 N 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>23 R 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>　 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>　 </FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 2">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>PD0 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>34 S 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm" 
+    rowSpan=11 colSpan=11>
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>MMC3 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>22 R 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>PA14 
+  </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 3">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>PD5 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>35 S 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>21 R 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>PA16 
+  </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 4">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>PD1 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>36 S 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>20 N 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>PA14 
+  </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 5">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>PD4 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>37 S 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>19 R 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>PA13 
+  </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 6">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>PD2 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>38 S 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>18 R 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>PA15 
+  </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 7">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>PD3 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>39 S 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>17 N 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>R/W 
+  </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 8">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>GND </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>40 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>16 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>? 
+</FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 9">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>B-CE 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>41 W 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>15 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>GND 
+  </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 10">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>B-WE 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>42 W 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>14 N 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>P-CE 
+  </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 11">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>PA11 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>43 R 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>13 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>IRQ 
+  </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 12">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>PA16 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>44 R 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>12 R 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>VA17 
+  </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 13">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>　 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>　 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>1 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>2 R </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>3 N </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>4 N </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>5 N </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>6 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>7 R </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>8 R </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>9 R </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>10 N 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>11 R 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>　 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>　 </FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 14; mso-yfti-lastrow: yes">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>　 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>　 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>? </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>VA10 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>VA12 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>VA11 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>VA10 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>GND </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>VA13 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>VA14 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>VA12 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>VA10 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>VA15 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>　 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>　 </FONT></P></TD></TR></TBODY></TABLE>
+<P><SPAN lang=EN-US>MMC5: </SPAN></P>
+<TABLE style="mso-cellspacing: 0cm; mso-padding-alt: 0cm 0cm 0cm 0cm" 
+class=MsoNormalTable border=1 cellSpacing=0>
+  <TBODY>
+  <TR style="mso-yfti-irow: 0; mso-yfti-firstrow: yes">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>引脚 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>功能 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>引脚 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>功能 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>引脚 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>功能 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>引脚 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>功能 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>引脚 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>功能 </FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 1">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>1 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>RC0 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>21 R 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>VA16 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>41 S 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>PD5 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>61 R 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>PA14 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>81 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>NC 
+  </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 2">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>2 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>RC1 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>22 R 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>VA17 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>42 S 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>PD6 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>62 R 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>PA15 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>82 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>NC 
+  </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 3">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>3 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>RC2 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>23 R 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>VA18 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>43 S 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>PD7 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>63 R 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>PA16 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>83 W 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>B-CE 
+  </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 4">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>4 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>+5V </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>24 R 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>VA19 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>44 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>+5V </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>64 R 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>PA17 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>84 S 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>VD0 
+  </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 5">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>5 S </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>VA0 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>25 N 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>VA10 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>45 S 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>PA0 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>65 R 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>PA18 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>85 S 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>VD1 
+  </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 6">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>6 S </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>VA1 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>26 N 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>VA11 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>46 S 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>PA1 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>66 R 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>PA19 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>86 S 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>VD2 
+  </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 7">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>7 S </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>VA2 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>27 N 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>VA12 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>47 S 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>PA2 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>67 N 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>PA13 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>87 S 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>VD3 
+  </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 8">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>8 S </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>VA3 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>28 N 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>VA13 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>48 S 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>PA3 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>68 N 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>PA14 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>88 S 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>VD4 
+  </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 9">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>9 S </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>VA4 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>29 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>NC </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>49 S 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>PA4 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>69 W 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>A13 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>89 S 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>VD5 
+  </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 10">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>10 S 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>VA5 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>30 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>NC </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>50 S 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>PA5 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>70 W 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>A14 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>90 S 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>VD6 
+  </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 11">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>11 S 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>VA6 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>31 N 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>V-CE 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>51 S 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>PA6 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>71 W 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>CE-0 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>91 S 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>VD7 
+  </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 12">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>12 S 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>VA7 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>32 N 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>VA10 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>52 S 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>PA7 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>72 W 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>CE-1 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>92 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>NC 
+  </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 13">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>13 S 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>VA8 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>33 N 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>V-WR 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>53 S 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>PA8 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>73 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>NC </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>93 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>NC 
+  </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 14">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>14 S 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>VA9 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>34 S 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>V-RD 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>54 S 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>PA9 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>74 R 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>P-CE 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>94 R 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>VA0 
+  </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 15">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>15 R 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>VA10 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>35 N 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>IRQ </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>55 S 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>PA10 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>75 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>NC </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>95 R 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>VA1 
+  </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 16">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>16 R 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>VA11 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>36 S 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>PD0 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>56 W 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>VCC </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>76 W 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>B-WE 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>96 R 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>VA2 
+  </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 17">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>17 R 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>VA12 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>37 S 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>PD1 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>57 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>+BAT 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>77 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>NC </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>97 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>CL3 
+  </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 18">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>18 R 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>VA13 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>38 S 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>PD2 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>58 S 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>PA11 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>78 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>NC </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>98 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>SL3 
+  </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 19">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>19 R 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>VA14 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>39 S 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>PD3 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>59 S 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>PA12 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>79 N 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>M2 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>99 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>GND 
+  </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 20; mso-yfti-lastrow: yes">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>20 R 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>VA15 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>40 S 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>PD4 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>60 R 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>PA13 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>80 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>GND </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>100 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>RC3 
+  </FONT></SPAN></P></TD></TR></TBODY></TABLE>
+<P><SPAN lang=EN-US>MMC6: </SPAN></P>
+<TABLE style="mso-cellspacing: 0cm; mso-padding-alt: 0cm 0cm 0cm 0cm" 
+class=MsoNormalTable border=1 cellSpacing=0 cellPadding=0>
+  <TBODY>
+  <TR style="mso-yfti-irow: 0; mso-yfti-firstrow: yes">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>引脚 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>功能 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>引脚 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>功能 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>引脚 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>功能 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>引脚 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>功能 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>引脚 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>功能 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>引脚 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>功能 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>引脚 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>功能 </FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 1">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>1 N </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>PA13 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>11 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>GND </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>21 R 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>VA13 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>31 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>IRQ </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>41 S 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>PD5 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>51 S 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>PA5 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>61 R 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>PA14 
+  </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 2">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>2 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>M2 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>12 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>+5V </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>22 R 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>VA12 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>32 N 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>P-CE 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>42 S 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>PA0 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>52 S 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>PA6 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>62 R 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>PA18 
+  </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 3">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>3 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>GND </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>13 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>HLD </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>23 R 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>VA14 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>33 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>R/W </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>43 S 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>PD6 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>53 S 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>PA9 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>63 N 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>PA14 
+  </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 4">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>4 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>GND </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>14 N 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>VA10 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>24 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>GND </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>34 S 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>PD2 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>44 S 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>PA1 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>54 S 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>PA7 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>64 R 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>PA17 
+  </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 5">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>5 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>GND </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>15 N 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>VA11 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>25 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>+BAT 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>35 S 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>PD3&nbsp; 
+      </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>45 S 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>PD7 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>55 S 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>PA8 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>　 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>　 </FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 6">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>6 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>NC </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>16 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>NC </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>26 R 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>VA18 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>36 S 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>PD1 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>46 S 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>PA2 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>56 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>+BAT 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>　 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>　 </FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 7">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>7 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>GND </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>17 R 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>VA10 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>27 N 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>VA10 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>37 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>GND </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>47 R 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>P-CE 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>57 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>GND </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>　 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>　 </FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 8">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>8 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>+5V </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>18 R 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>VA16 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>28 S 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>V-RD 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>38 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>+BAT 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>48 S 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>PA3 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>58 S 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>PA12 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>　 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>　 </FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 9">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>9 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>+5V </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>19 R 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>VA11 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>29 S 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>V-CE 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>39 S 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>PD4 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>49 S 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>PA4 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>59 R 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>PA13 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>　 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>　 </FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 10; mso-yfti-lastrow: yes">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>10 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>+BAT 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>20 N 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>VA12 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>30 R 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>VA17 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>40 S 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>PD0 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>50 R 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>PA16 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>60 R 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>PA15 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>　 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>　 </FONT></P></TD></TR></TBODY></TABLE>
+<P><SPAN lang=EN-US>NES-CN-ROM-256-[02,05]: </SPAN></P>
+<TABLE style="mso-cellspacing: 0cm; mso-padding-alt: 0cm 0cm 0cm 0cm" 
+class=MsoNormalTable border=1 cellSpacing=0 cellPadding=0>
+  <TBODY>
+  <TR style="mso-yfti-irow: 0; mso-yfti-firstrow: yes">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>+5V </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>NC </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>VA14 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>VA13 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>VA12 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>VA11 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>GND </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>R/W 
+  </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 1">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>16 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>15 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>14 R 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>13 R 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>12 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>11 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>10 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>09 
+  </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 2">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>） </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm" 
+    colSpan=7>
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>74LS161 
+    </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 3">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>01 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>02 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>03 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>04 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>05 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>06 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>07 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>08 
+  </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 4; mso-yfti-lastrow: yes">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>+5V </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>P-CE 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>PD0 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>PD1 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>PD4 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>PD5 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>GND </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>GND 
+  </FONT></SPAN></P></TD></TR></TBODY></TABLE>
+<P><SPAN lang=EN-US>NES-AOROM-03 NES-BN-ROM-01: </SPAN></P>
+<TABLE style="mso-cellspacing: 0cm; mso-padding-alt: 0cm 0cm 0cm 0cm" 
+class=MsoNormalTable border=1 cellSpacing=0 cellPadding=0>
+  <TBODY>
+  <TR style="mso-yfti-irow: 0; mso-yfti-firstrow: yes">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>+5V </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>NC </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>PA15 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>PA16 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>PA17 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>VA10 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>GND </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>R/W 
+  </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 1">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>16 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>15 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>14 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>13 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>12 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>11 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>10 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>09 
+  </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 2">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>） </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm" 
+    colSpan=7>
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>74LS161 
+    </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 3">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>01 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>02 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>03 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>04 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>05 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>06 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>07 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>08 
+  </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 4; mso-yfti-lastrow: yes">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>+5V </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>P-CE 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>PD0 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>PD1 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>PD2 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>PD4 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>GND </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>GND 
+  </FONT></SPAN></P></TD></TR></TBODY></TABLE>
+<P><SPAN lang=EN-US>NES-CN-ROM-256-[02,05]: </SPAN></P>
+<TABLE style="mso-cellspacing: 0cm; mso-padding-alt: 0cm 0cm 0cm 0cm" 
+class=MsoNormalTable border=1 cellSpacing=0 cellPadding=0>
+  <TBODY>
+  <TR style="mso-yfti-irow: 0; mso-yfti-firstrow: yes">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>+5V </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>NC </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>LS32-13 
+    </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>LS32-2 
+    </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>LS32-9 
+    </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>NC </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>GND </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>R/W 
+  </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 1">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>16 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>15 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>14 R 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>13 R 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>12 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>11 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>10 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>09 
+  </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 2">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>） </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm" 
+    colSpan=7>
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>74LS161 
+    </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 3">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>01 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>02 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>03 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>04 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>05 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>06 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>07 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>08 
+  </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 4; mso-yfti-lastrow: yes">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>+5V </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>P-CE 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>PD0 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>PD1 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>PD2 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>GND </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>GND </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>GND 
+  </FONT></SPAN></P></TD></TR></TBODY></TABLE>
+<P style="MARGIN: 0cm 0cm 0pt"><SPAN style="DISPLAY: none; mso-hide: all" 
+lang=EN-US><O:P>&nbsp;</O:P></SPAN></P>
+<TABLE style="mso-cellspacing: 0cm; mso-padding-alt: 0cm 0cm 0cm 0cm" 
+class=MsoNormalTable border=1 cellSpacing=0 cellPadding=0>
+  <TBODY>
+  <TR style="mso-yfti-irow: 0; mso-yfti-firstrow: yes">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>+5V </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>LS161-14 
+      </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>A14 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>A14 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>A14 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>LS161-12 
+      </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>A16 
+  </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 1">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>14 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>13 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>12 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>11 R 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>10 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>09 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>08 R 
+  </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 2">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>） </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm" 
+    colSpan=6>
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>LS32 
+  </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 3">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>01 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>02 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>03 R 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>04 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>05 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>06 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>07 
+  </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 4; mso-yfti-lastrow: yes">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>A14 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>LS161-13 
+      </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>A15 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>GND </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>GND </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>NC </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>GND 
+  </FONT></SPAN></P></TD></TR></TBODY></TABLE>
+<P><SPAN lang=EN-US><BR>NES-ANROM-03: </SPAN></P>
+<TABLE style="mso-cellspacing: 0cm; mso-padding-alt: 0cm 0cm 0cm 0cm" 
+class=MsoNormalTable border=1 cellSpacing=0 cellPadding=0>
+  <TBODY>
+  <TR style="mso-yfti-irow: 0; mso-yfti-firstrow: yes">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>+5V </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>NC </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>PA15 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>PA16 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>NC </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>VA10 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>GND </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>R/W 
+  </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 1">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>16 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>15 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>14&nbsp; 
+      </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>13&nbsp; 
+      </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>12 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>11 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>10 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>09 
+  </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 2">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>） </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm" 
+    colSpan=7>
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>74LS161 
+    </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 3">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>01 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>02 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>03 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>04 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>05 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>06 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>07 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>08 
+  </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 4; mso-yfti-lastrow: yes">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>+5V </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>P-CE 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>PD0 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>PD1 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>+5V </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>PD4 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>GND </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>GND 
+  </FONT></SPAN></P></TD></TR></TBODY></TABLE>
+<P style="MARGIN: 0cm 0cm 0pt"><SPAN style="DISPLAY: none; mso-hide: all" 
+lang=EN-US><O:P>&nbsp;</O:P></SPAN></P>
+<TABLE style="mso-cellspacing: 0cm; mso-padding-alt: 0cm 0cm 0cm 0cm" 
+class=MsoNormalTable border=1 cellSpacing=0 cellPadding=0>
+  <TBODY>
+  <TR style="mso-yfti-irow: 0; mso-yfti-firstrow: yes">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>+5V </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>-8-9 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>-1 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>P-CE 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>CE </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>-13 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>-13 
+  </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 1">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>14 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>13 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>12 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>11 R 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>10 R 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>09 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>08 
+  </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 2">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>） </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm" 
+    colSpan=6>
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>LS02 
+  </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 3">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>01 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>02 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>03 R 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>04 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>05 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>06 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>07 
+  </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 4; mso-yfti-lastrow: yes">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>-12 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>R/W </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>R/W </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>NC </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>GND </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>GND </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>GND 
+  </FONT></SPAN></P></TD></TR></TBODY></TABLE>
+<P><SPAN lang=EN-US>CPU: </SPAN></P>
+<TABLE style="mso-cellspacing: 0cm; mso-padding-alt: 0cm 0cm 0cm 0cm" 
+class=MsoNormalTable border=1 cellSpacing=0 cellPadding=0>
+  <TBODY>
+  <TR style="mso-yfti-irow: 0; mso-yfti-firstrow: yes">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>+5V </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>Load 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>Q1 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>Q2 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>INP0 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>INP1 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>NMI </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>R/W </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>IRQ </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>M2 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>GND </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>CLK </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>D0 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>D1 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>D2 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>D3 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>D4 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>D5 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>D6 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>D7 
+  </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 1">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>40 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>39 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>38 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>37 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>36 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>35 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>34 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>33 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>32 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>31 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>30 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>29 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>28 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>27 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>26 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>25 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>24 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>23 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>22 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>21 
+  </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 2">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>） </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm" 
+    colSpan=19>
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>6502/6527 
+      </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 3">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>01 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>02 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>03 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>04 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>05 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>06 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>07 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>08 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>09 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>10 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>11 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>12 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>13 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>14 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>15 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>16 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>17 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>18 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>19 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>20 
+  </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 4; mso-yfti-lastrow: yes">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>Audio1 
+    </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>Audio2 
+    </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>RESET 
+    </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>A0 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>A1 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>A2 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>A3 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>A4 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>A5 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>A6 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>A7 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>A8 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>A9 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>A10 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>A11 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>A12 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>A13 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>A14 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>A15 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>GND 
+  </FONT></SPAN></P></TD></TR></TBODY></TABLE>
+<P><SPAN lang=EN-US>PPU: </SPAN></P>
+<TABLE style="mso-cellspacing: 0cm; mso-padding-alt: 0cm 0cm 0cm 0cm" 
+class=MsoNormalTable border=1 cellSpacing=0 cellPadding=0>
+  <TBODY>
+  <TR style="mso-yfti-irow: 0; mso-yfti-firstrow: yes">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>+5V </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>ALE </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>AD0 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>AD1 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>AD2 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>AD3 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>AD4 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>AD5 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>AD6 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>AD7 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>A8 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>A9 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>A10 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>A11 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>A12 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>A13 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>RD </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>WR </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>RST </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>VIDEO OUT 
+      </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 1">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>40 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>39 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>38 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>37 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>36 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>35 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>34 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>33 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>32 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>31 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>30 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>29 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>28 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>27 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>26 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>25 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>24 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>23 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>22 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>21 
+  </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 2">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>） </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm" 
+    colSpan=19>
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>6528/6538 
+      </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 3">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>01 P 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>02 P 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>03 P 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>04 P 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>05 P 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>06 P 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>07 P 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>08 P 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>09 P 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>10 P 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>11 P 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>12 P 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>13 P 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>14 P 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>15 P 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>16 P 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>17 P 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>18 P 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>19 P 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>20 
+  </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 4; mso-yfti-lastrow: yes">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>R/W </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>D0 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>D1 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>D2 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>D3 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>D4 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>D5 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>D6 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>D7 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>A2 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>A1 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>A0 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>CE </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>GND </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>GND </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>GND </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>GND </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>CLK </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>INT </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>GND 
+  </FONT></SPAN></P></TD></TR></TBODY></TABLE></FONT></BODY></HTML>

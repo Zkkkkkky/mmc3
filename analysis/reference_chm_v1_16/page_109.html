@@ -1,0 +1,834 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML XMLNS:ST1 XMLNS:O><HEAD><TITLE>I/O端口</TITLE>
+<META name=GENERATOR content="MSHTML 8.00.7601.19104">
+<META content="text/html; charset=gb2312" http-equiv=Content-Type>
+<STYLE>
+html,body { 
+	/* Default Font */
+	font-family: Microsoft YaHei, Simsun, sans-serif;
+	font-size: 12pt;
+}
+</STYLE>
+</HEAD>
+<BODY><FONT size=2><SPAN lang=EN-US>
+<H2><SPAN lang=EN-US>8</SPAN>、<SPAN lang=EN-US>I/O</SPAN>端口</H2></SPAN>
+<P>端口是预分配好的可访问地址，程序通过端口和<SPAN lang=EN-US>PPU</SPAN>或<SPAN 
+lang=EN-US>APU</SPAN>交换信息。每个端口都是<SPAN lang=EN-US>16</SPAN>位的<SPAN lang=EN-US> 
+</SPAN></P>
+<TABLE style="mso-cellspacing: .7pt" class=MsoNormalTable border=1 cellSpacing=1 
+cellPadding=0>
+  <TBODY>
+  <TR style="mso-yfti-irow: 0; mso-yfti-firstrow: yes">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>端口 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>读写<SPAN lang=EN-US>/</SPAN>位 
+</FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>功能描述 </FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 1">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>$2000 
+    </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>读写 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2><SPAN lang=EN-US>PPU</SPAN>控制寄存器<SPAN 
+      lang=EN-US> 1 </SPAN></FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 2">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt" 
+    rowSpan=7>
+      <P class=MsoNormal><FONT size=2>　 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>0-1 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>命名表地址<SPAN lang=EN-US>: </SPAN></FONT></P>
+      <TABLE style="mso-cellspacing: .7pt" class=MsoNormalTable border=1 
+      cellSpacing=1 cellPadding=0>
+        <TBODY>
+        <TR style="mso-yfti-irow: 0; mso-yfti-firstrow: yes">
+          <TD 
+          style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+            <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>%10 ($2800) 
+            </FONT></SPAN></P></TD>
+          <TD 
+          style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+            <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>%11 ($<ST1:CHMETCNV 
+            style="BACKGROUND-IMAGE: url(res://ietag.dll/#34/#1001); BACKGROUND-REPEAT: repeat-x; BACKGROUND-POSITION: left bottom" 
+            tabIndex=0 w:st="on" TCSC="0" NumberType="1" Negative="False" 
+            HasSpace="False" SourceValue="2" UnitName="C">2C</ST1:CHMETCNV>00) 
+            </FONT></SPAN></P></TD></TR>
+        <TR style="mso-yfti-irow: 1; mso-yfti-lastrow: yes">
+          <TD 
+          style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+            <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>%00 ($2000) 
+            </FONT></SPAN></P></TD>
+          <TD 
+          style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+            <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>%01 ($2400) 
+            </FONT></SPAN></P></TD></TR></TBODY></TABLE>
+      <P><FONT size=2>请记住，因为镜像，只有<SPAN lang=EN-US>2</SPAN>个真实的命名表，而不是<SPAN 
+      lang=EN-US>4</SPAN>个；</FONT><SPAN lang=EN-US><BR></SPAN><FONT 
+      size=2>当滚动超出当前命名表时<SPAN lang=EN-US>PPU</SPAN>会自动切换到另一个命名表 
+</FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 3">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>2 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>垂直写<SPAN lang=EN-US>, 1</SPAN>＝<SPAN 
+      lang=EN-US>VRAM</SPAN>地址以<SPAN lang=EN-US>32</SPAN>递增<SPAN lang=EN-US>: 
+      </SPAN></FONT></P>
+      <TABLE style="mso-cellspacing: .7pt" class=MsoNormalTable border=1 
+      cellSpacing=1 cellPadding=0>
+        <TBODY>
+        <TR style="mso-yfti-irow: 0; mso-yfti-firstrow: yes">
+          <TD 
+          style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+            <P class=MsoNormal><FONT size=2>命名表<SPAN lang=EN-US>, 
+            VW</SPAN>＝<SPAN lang=EN-US>0 </SPAN></FONT></P></TD>
+          <TD 
+          style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+            <P class=MsoNormal><FONT size=2>命名表<SPAN lang=EN-US>, 
+            VW</SPAN>＝<SPAN lang=EN-US>1 </SPAN></FONT></P></TD></TR>
+        <TR style="mso-yfti-irow: 1; mso-yfti-lastrow: yes">
+          <TD 
+          style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+            <P class=MsoNormal><FONT size=2>——<SPAN lang=EN-US>&gt; 
+            </SPAN>写<SPAN lang=EN-US>&nbsp; </SPAN></FONT></P></TD>
+          <TD 
+          style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+            <P class=MsoNormal><FONT size=2><SPAN lang=EN-US>| 
+            </SPAN>写</FONT><SPAN lang=EN-US><BR><FONT size=2>|<BR>V 
+            </FONT></SPAN></P></TD></TR></TBODY></TABLE>
+      <P class=MsoNormal><SPAN lang=EN-US><O:P><FONT 
+      size=2></FONT></O:P></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 4">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>3 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>精灵图案表地址<SPAN lang=EN-US>, 1</SPAN>＝<SPAN 
+      lang=EN-US>$1000, 0</SPAN>＝<SPAN lang=EN-US>$0000 </SPAN></FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 5">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>4 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>屏幕图案表地址<SPAN lang=EN-US>, 1</SPAN>＝<SPAN 
+      lang=EN-US>$1000, 0</SPAN>＝<SPAN lang=EN-US>$0000 </SPAN></FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 6">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>5 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>精灵尺寸<SPAN lang=EN-US>, 1</SPAN>＝<SPAN 
+      lang=EN-US>8x16, 0</SPAN>＝<SPAN lang=EN-US>8x8 </SPAN></FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 7">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>6 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2><SPAN lang=EN-US>PPU </SPAN>主<SPAN 
+      lang=EN-US>/</SPAN>从模式<SPAN lang=EN-US>, </SPAN>没有在<SPAN 
+      lang=EN-US>NES</SPAN>里使用 </FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 8">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>7 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2><SPAN lang=EN-US>Vblank</SPAN>使能<SPAN 
+      lang=EN-US>, 1</SPAN>＝在<SPAN lang=EN-US>Vblank</SPAN>时发生中断 
+  </FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 9">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>$2001 
+    </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>读写 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2><SPAN lang=EN-US>PPU</SPAN>控制寄存器<SPAN 
+      lang=EN-US>2 </SPAN></FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 10">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt" 
+    rowSpan=6>
+      <P class=MsoNormal><FONT size=2>　 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>0 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>显示模式，<SPAN lang=EN-US>0</SPAN>＝彩色，<SPAN 
+      lang=EN-US>1</SPAN>＝单色 </FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 11">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>1 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>背景掩码，<SPAN 
+      lang=EN-US>0</SPAN>＝不显示屏幕的左<SPAN lang=EN-US>8</SPAN>列 </FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 12">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>2 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>精灵掩码，<SPAN lang=EN-US>0</SPAN>＝不在左<SPAN 
+      lang=EN-US>8</SPAN>列显示精灵 </FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 13">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>3 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>屏幕使能，<SPAN lang=EN-US>1</SPAN>＝显示图像，<SPAN 
+      lang=EN-US>0</SPAN>＝黑屏 </FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 14">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>4 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>精灵使能，<SPAN lang=EN-US>1</SPAN>＝显示精灵，<SPAN 
+      lang=EN-US>0</SPAN>＝隐藏精灵 </FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 15">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>5-7 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>当<SPAN lang=EN-US>D0</SPAN>＝<SPAN 
+      lang=EN-US>0</SPAN>：背景颜色，<SPAN lang=EN-US>% 000</SPAN>＝黑，<SPAN 
+      lang=EN-US>%001</SPAN>＝蓝，<SPAN lang=EN-US>%010</SPAN>＝绿，<SPAN 
+      lang=EN-US>%100</SPAN>＝红；不用混合使用，因为可能会损坏<SPAN 
+      lang=EN-US>PPU</SPAN>硬件</FONT><SPAN lang=EN-US><BR></SPAN><FONT 
+      size=2>当<SPAN lang=EN-US>D0</SPAN>＝<SPAN lang=EN-US>1</SPAN>：颜色亮度<SPAN 
+      lang=EN-US>,% 000</SPAN>没效果，<SPAN lang=EN-US>%00 1</SPAN>强化蓝色，<SPAN 
+      lang=EN-US>%010</SPAN>强化绿色，<SPAN lang=EN-US>%100</SPAN>强化红色，不要混合使用 
+      </FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 16">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>$2002&nbsp; 
+      </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>读 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2><SPAN lang=EN-US>PPU</SPAN>状态寄存器：读取后<SPAN 
+      lang=EN-US>$2005</SPAN>和<SPAN lang=EN-US>$2006</SPAN>被复位，下一个写到<SPAN 
+      lang=EN-US>$2005</SPAN>的数据是水平的，写到<SPAN lang=EN-US>$2006</SPAN>的数据是高位 
+      </FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 17">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt" 
+    rowSpan=5>
+      <P class=MsoNormal><FONT size=2>　 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>0-3 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>未知<SPAN lang=EN-US>(???) 
+    </SPAN></FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 18">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>4 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2><SPAN lang=EN-US>VRAM</SPAN>写标志：<SPAN 
+      lang=EN-US>0</SPAN>＝写有效，<SPAN lang=EN-US>1</SPAN>＝写忽略 </FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 19">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>5 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>扫描线精灵计数：<SPAN 
+      lang=EN-US>0</SPAN>＝当前扫描线精灵个数小于等于<SPAN lang=EN-US>8</SPAN>个，<SPAN 
+      lang=EN-US>1</SPAN>＝大于<SPAN lang=EN-US>8</SPAN>个 </FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 20">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>6 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>命中标志：<SPAN 
+      lang=EN-US>1</SPAN>＝精灵刷新碰到了<SPAN 
+      lang=EN-US>#0</SPAN>精灵。在屏幕刷新状态，这个标志被复位为<SPAN lang=EN-US>0 
+      </SPAN></FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 21">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>7 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2><SPAN lang=EN-US>Vblank</SPAN>标志：<SPAN 
+      lang=EN-US>1</SPAN>＝<SPAN lang=EN-US> PPU</SPAN>在<SPAN 
+      lang=EN-US>Vblank</SPAN>状态。当<SPAN lang=EN-US>Vblank</SPAN>结束或<SPAN 
+      lang=EN-US>CPU</SPAN>读<SPAN lang=EN-US>$2002</SPAN>时，该标志被复位为<SPAN 
+      lang=EN-US>0 </SPAN></FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 22">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>$2003 
+    </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>写 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>精灵<SPAN 
+      lang=EN-US>RAM</SPAN>地址：用来设置通过<SPAN lang=EN-US>$2004</SPAN>访问的<SPAN 
+      lang=EN-US>256</SPAN>字节精灵<SPAN lang=EN-US>RAM</SPAN>地址。每次访问<SPAN 
+      lang=EN-US>$2004</SPAN>后该地址增加<SPAN lang=EN-US>1 </SPAN></FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 23">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>$2004 
+    </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>读写 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>精灵<SPAN lang=EN-US>RAM</SPAN>数据：用来读<SPAN 
+      lang=EN-US>/</SPAN>写精灵内存。地址通过<SPAN 
+      lang=EN-US>$2003</SPAN>来设置，每次访问后地址增加<SPAN lang=EN-US>1 
+    </SPAN></FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 24">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>$2005 
+    </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>写 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>屏幕滚动偏移：第一个写的值会进入垂直滚动寄存器（若<SPAN 
+      lang=EN-US>&gt;239</SPAN>，被忽略）。第二个值出现在水平滚动寄存器 </FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 25">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>$2006 
+    </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>写 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2><SPAN lang=EN-US>VRAM</SPAN>地址：设置<SPAN 
+      lang=EN-US>$2007</SPAN>访问的<SPAN lang=EN-US>VRAM</SPAN>地址。第一个写地址的高<SPAN 
+      lang=EN-US>6</SPAN>位。第二个写低<SPAN lang=EN-US>8</SPAN>位。每次访问<SPAN 
+      lang=EN-US>$2007</SPAN>后地址增加 </FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 26">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>$2007 
+    </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>读写 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2><SPAN lang=EN-US>VRAM</SPAN>数据：用来访问<SPAN 
+      lang=EN-US>VRAM</SPAN>数据，通过<SPAN 
+      lang=EN-US>$2006</SPAN>设置的地址在每次访问之后会增加<SPAN lang=EN-US>1</SPAN>或<SPAN 
+      lang=EN-US>32 </SPAN></FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 27">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>$4000 
+    </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>写 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2><SPAN lang=EN-US>APU</SPAN>方波<SPAN 
+      lang=EN-US>#1</SPAN>控制端口 </FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 28">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>$4001 
+    </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>写 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2><SPAN lang=EN-US>APU</SPAN>方波<SPAN 
+      lang=EN-US>#1</SPAN>音量控制端口 </FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 29">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>$4002 
+    </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>写 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2><SPAN lang=EN-US>APU</SPAN>方波<SPAN 
+      lang=EN-US>#1</SPAN>细音调（<SPAN lang=EN-US>FT</SPAN>）端口 </FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 30">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>$4003 
+    </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>写 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2><SPAN lang=EN-US>APU</SPAN>方波<SPAN 
+      lang=EN-US>#1</SPAN>粗音调（<SPAN lang=EN-US>CT</SPAN>）端口 </FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 31">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>$4004 
+    </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>写 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2><SPAN lang=EN-US>APU</SPAN>方波<SPAN 
+      lang=EN-US>#2</SPAN>控制端口 </FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 32">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>$4005 
+    </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>写 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2><SPAN lang=EN-US>APU</SPAN>方波<SPAN 
+      lang=EN-US>#2</SPAN>音量控制端口 </FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 33">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>$4006 
+    </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>写 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2><SPAN lang=EN-US>APU</SPAN>方波<SPAN 
+      lang=EN-US>#2</SPAN>细音调（<SPAN lang=EN-US>FT</SPAN>）端口 </FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 34">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>$4007 
+    </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>写 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2><SPAN lang=EN-US>APU</SPAN>方波<SPAN 
+      lang=EN-US>#2</SPAN>粗音调（<SPAN lang=EN-US>CT</SPAN>）端口 </FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 35">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>$4008 
+    </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>写 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2><SPAN lang=EN-US>APU</SPAN>三角波控制端口<SPAN 
+      lang=EN-US>#1 </SPAN></FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 36">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>$4009 
+    </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>? </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2><SPAN lang=EN-US>APU</SPAN>三角波控制端口<SPAN 
+      lang=EN-US>#2 </SPAN></FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 37">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>$<ST1:CHMETCNV 
+      style="BACKGROUND-IMAGE: url(res://ietag.dll/#34/#1001); BACKGROUND-REPEAT: repeat-x; BACKGROUND-POSITION: left bottom" 
+      tabIndex=0 w:st="on" TCSC="0" NumberType="1" Negative="False" 
+      HasSpace="False" SourceValue="400" UnitName="a">400A</ST1:CHMETCNV> 
+      </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>写 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2><SPAN lang=EN-US>APU</SPAN>三角波频率端口<SPAN 
+      lang=EN-US>#1 </SPAN></FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 38">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>$400B 
+    </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>写 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2><SPAN lang=EN-US>APU</SPAN>三角波频率端口<SPAN 
+      lang=EN-US>#2 </SPAN></FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 39">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>$<ST1:CHMETCNV 
+      style="BACKGROUND-IMAGE: url(res://ietag.dll/#34/#1001); BACKGROUND-REPEAT: repeat-x; BACKGROUND-POSITION: left bottom" 
+      tabIndex=0 w:st="on" TCSC="0" NumberType="1" Negative="False" 
+      HasSpace="False" SourceValue="400" UnitName="C">400C</ST1:CHMETCNV> 
+      </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>写 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2><SPAN lang=EN-US>APU</SPAN>噪声控制端口<SPAN 
+      lang=EN-US>#1 </SPAN></FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 40">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>$400D 
+    </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>　 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>未使用<SPAN lang=EN-US>(???) 
+      </SPAN></FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 41">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>$400E 
+    </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>写 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2><SPAN lang=EN-US>APU</SPAN>噪声频率端口<SPAN 
+      lang=EN-US>#1 </SPAN></FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 42">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>$<ST1:CHMETCNV 
+      style="BACKGROUND-IMAGE: url(res://ietag.dll/#34/#1001); BACKGROUND-REPEAT: repeat-x; BACKGROUND-POSITION: left bottom" 
+      tabIndex=0 w:st="on" TCSC="0" NumberType="1" Negative="False" 
+      HasSpace="False" SourceValue="400" UnitName="F">400F</ST1:CHMETCNV> 
+      </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>写 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2><SPAN lang=EN-US>APU</SPAN>噪声频率端口<SPAN 
+      lang=EN-US>#2 </SPAN></FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 43">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>$4010 
+    </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>写 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2><SPAN lang=EN-US>APU</SPAN>增量调制控制端口 
+      </FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 44">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>$4011 
+    </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>写 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2><SPAN lang=EN-US>APU</SPAN>增量调制<SPAN 
+      lang=EN-US>D/A</SPAN>端口 </FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 45">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>$4012 
+    </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>写 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2><SPAN lang=EN-US>APU</SPAN>增量调制地址端口 
+      </FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 46">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>$4013 
+    </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>写 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2><SPAN lang=EN-US>APU</SPAN>增量调制数据长度 
+      </FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 47">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>$4014 
+    </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>写 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2><SPAN lang=EN-US>DMA</SPAN>访问精灵<SPAN 
+      lang=EN-US>RAM</SPAN>：通过写一个值<SPAN lang=EN-US>xx</SPAN>到这个端口，引起<SPAN 
+      lang=EN-US>CPU</SPAN>内存地址为<SPAN lang=EN-US>$xx00</SPAN>－<SPAN 
+      lang=EN-US>$xxFF</SPAN>的区域传送到精灵内存 </FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 48">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>$4015 
+    </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>读写 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>声音通道切换 </FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 49">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt" 
+    rowSpan=7>
+      <P class=MsoNormal><FONT size=2>　 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>0 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>方波<SPAN lang=EN-US>#1</SPAN>通道：<SPAN 
+      lang=EN-US>1</SPAN>＝声音使能， </FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 50">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>1 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>方波<SPAN lang=EN-US>#2</SPAN>通道：<SPAN 
+      lang=EN-US>1</SPAN>＝声音使能， </FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 51">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>2 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>三角波通道：<SPAN lang=EN-US>1</SPAN>＝声音使能， 
+      </FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 52">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>3 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>噪声通道：<SPAN lang=EN-US>1</SPAN>＝声音使能， 
+      </FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 53">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>4 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>增量调制：<SPAN lang=EN-US>1</SPAN>＝声音使能， 
+      </FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 54">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2><SPAN lang=EN-US>5</SPAN>、<SPAN 
+      lang=EN-US>7 </SPAN></FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>未使用<SPAN lang=EN-US> (???) 
+      </SPAN></FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 55">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2><SPAN lang=EN-US>6(</SPAN>只读<SPAN 
+      lang=EN-US>) </SPAN></FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>垂直时钟信号<SPAN lang=EN-US>IRQ</SPAN>可用：<SPAN 
+      lang=EN-US>0</SPAN>＝<SPAN lang=EN-US>1</SPAN>帧存在，因为没有<SPAN 
+      lang=EN-US>IRQ</SPAN>；<SPAN lang=EN-US>1</SPAN>＝<SPAN 
+      lang=EN-US>1</SPAN>帧被<SPAN lang=EN-US>IRQ</SPAN>中断 </FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 56">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>$4016 
+    </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>读写 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>手柄<SPAN lang=EN-US>1</SPAN>＋选通 
+    </FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 57">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt" 
+    rowSpan=5>
+      <P class=MsoNormal><FONT size=2>　 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>0 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>读：手柄<SPAN lang=EN-US>1</SPAN>数据；写：选通，<SPAN 
+      lang=EN-US>1</SPAN>＝复位，<SPAN lang=EN-US>0</SPAN>＝清除；扩展端口：<SPAN 
+      lang=EN-US>0</SPAN>＝写，<SPAN lang=EN-US>1</SPAN>＝读 </FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 58">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>1 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>手柄<SPAN lang=EN-US>1 </SPAN>存在，<SPAN 
+      lang=EN-US> 0</SPAN>＝连接 </FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 59">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>3 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>光枪精灵检测：<SPAN lang=EN-US>1</SPAN>＝瞄准 
+      </FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 60">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>4 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>光枪扳机：<SPAN lang=EN-US>0</SPAN>＝按下，<SPAN 
+      lang=EN-US>1</SPAN>＝松开 </FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 61">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2><SPAN lang=EN-US>2</SPAN>、<SPAN 
+      lang=EN-US>5</SPAN>－<SPAN lang=EN-US>7 </SPAN></FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>未知，<SPAN lang=EN-US>6</SPAN>、<SPAN 
+      lang=EN-US>7</SPAN>设为<SPAN lang=EN-US>%10(???) </SPAN></FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 62">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>$4017 
+    </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>读写 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>手柄<SPAN lang=EN-US>2</SPAN>＋ 选通 
+    </FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 63">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt" 
+    rowSpan=7>
+      <P class=MsoNormal><FONT size=2>　 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>0 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>读：手柄<SPAN lang=EN-US>2</SPAN>数据；写：选通，<SPAN 
+      lang=EN-US>1</SPAN>＝复位，<SPAN lang=EN-US>0</SPAN>＝清除；扩展端口：<SPAN 
+      lang=EN-US>0</SPAN>＝<SPAN lang=EN-US>??</SPAN>，<SPAN lang=EN-US>1</SPAN>＝读 
+      </FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 64">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>1 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>手柄<SPAN lang=EN-US>2 </SPAN>存在，<SPAN 
+      lang=EN-US> 0</SPAN>＝连接 </FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 65">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2><SPAN lang=EN-US>2</SPAN>、<SPAN 
+      lang=EN-US>5 </SPAN></FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>未使用<SPAN lang=EN-US>(???) 
+      </SPAN></FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 66">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>3 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>光枪精灵检测：<SPAN lang=EN-US>1</SPAN>＝瞄准 
+      </FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 67">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>4 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>光枪扳机：<SPAN lang=EN-US>0</SPAN>＝按下，<SPAN 
+      lang=EN-US>1</SPAN>＝松开 </FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 68">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>6 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>垂直时钟信号（内部），<SPAN 
+      lang=EN-US>0</SPAN>＝存在，<SPAN lang=EN-US>$4016</SPAN>的<SPAN 
+      lang=EN-US>D6</SPAN>受影响；<SPAN lang=EN-US>1</SPAN>＝不存在<SPAN 
+      lang=EN-US>$4016</SPAN>的<SPAN lang=EN-US>D6</SPAN>不可触及 </FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 69; mso-yfti-lastrow: yes">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>7 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>垂直时钟信号（外部），<SPAN 
+      lang=EN-US>0</SPAN>＝存在，<SPAN lang=EN-US>1</SPAN>＝不存在 
+  </FONT></P></TD></TR></TBODY></TABLE></FONT></BODY></HTML>

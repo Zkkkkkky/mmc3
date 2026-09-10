@@ -7,15 +7,33 @@ from typing import Any
 
 from .changes import ChangeSet
 from .codecs.battle_music import BattleMusicCodec
+from .codecs.character_name import CharacterNameCodec
 from .codecs.map import MapCodec
+from .codecs.map_trigger import MapTrigger, MapTriggerCodec
 from .codecs.scenario_layout import ScenarioLayoutCodec
 from .codecs.story_text import StoryTextCodec
 from .codecs.unit import UnitCodec
 from .codecs.unit_name import UnitNameReferenceCodec
 from .codecs.unit_weapon import UnitWeaponCodec
 from .codecs.weapon import WeaponCodec
+from .codecs.weapon_name import WeaponNameReferenceCodec
 from .constants import PROJECT_SCHEMA_VERSION
 from .errors import ProjectFormatError
+from .expansion import (
+    AUTO_ALLOCATION_PREFIX,
+    FLAG_MAPS,
+    FLAG_UNITS,
+    PARTITION_ALLOCATION_PREFIX,
+    ExpansionPlan,
+    bank_file_offset,
+)
+from .expansion_map import TERRAIN_BANK_DIRECTORY_OFFSET, read_expanded_map_layout
+from .expansion_unit import (
+    ATTRIBUTE_TABLE,
+    NAME_TABLE,
+    SINGLE_RESOURCE_TABLE,
+    SOURCE_CONFIGURATION_PAIR,
+)
 from .models import (
     PlayerPlacement,
     ScenarioEntity,
@@ -23,6 +41,7 @@ from .models import (
     UNIT_FIELD_BY_KEY,
     WEAPON_FIELD_BY_KEY,
 )
+from .resources import Allocation, BankAllocator
 from .rom_image import RomImage
 
 
@@ -31,7 +50,7 @@ class ProjectDocument:
     base_sha256: str
     base_mapper: int
     base_size: int
-    tool_version: str = "1.0.2"
+    tool_version: str = "2.2.0"
     operations: list[dict[str, Any]] = field(default_factory=list)
 
     @classmethod
@@ -203,6 +222,81 @@ class ProjectDocument:
             }
         )
 
+    def add_resource_allocation(
+        self,
+        allocation: Allocation,
+        data: bytes,
+    ) -> None:
+        if len(data) != allocation.size:
+            raise ValueError("资源数据长度与分配大小不一致。")
+        self.operations.append(
+            {
+                "kind": "resource.allocate",
+                "resourceId": allocation.resource_id,
+                "label": allocation.label,
+                "offset": allocation.offset,
+                "size": allocation.size,
+                "alignment": allocation.alignment,
+                "data": data.hex().upper(),
+            }
+        )
+
+    @staticmethod
+    def _decode_resource_allocation(
+        operation: dict[str, Any],
+    ) -> tuple[Allocation, bytes]:
+        data = bytes.fromhex(str(operation["data"]))
+        allocation = Allocation(
+            str(operation["resourceId"]),
+            str(operation["label"]),
+            int(operation["offset"]),
+            int(operation["size"]),
+            int(operation.get("alignment", 1)),
+        )
+        if not allocation.label.strip():
+            raise ValueError("资源名称不能为空。")
+        if len(data) != allocation.size:
+            raise ValueError("资源数据长度与分配大小不一致。")
+        return allocation, data
+
+    def add_weapon_name_reference(
+        self,
+        weapon_id: int,
+        source_name_id: int,
+        expected_old_pointer: int,
+    ) -> None:
+        if not 1 <= weapon_id <= 0xFF or not 1 <= source_name_id <= 0xFF:
+            raise ValueError("武器 ID 或名称来源 ID 必须在 01—FF 之间。")
+        if not 0x8000 <= expected_old_pointer <= 0xBFFF:
+            raise ValueError("原武器名称指针必须在 $8000—$BFFF 之间。")
+        self.operations.append(
+            {
+                "kind": "weapon.set_name_reference",
+                "weaponId": weapon_id,
+                "sourceNameId": source_name_id,
+                "expectedOldPointer": expected_old_pointer,
+            }
+        )
+
+    def add_character_name_reference(
+        self,
+        character_id: int,
+        source_name_id: int,
+        expected_old_pointer: int,
+    ) -> None:
+        if not 1 <= character_id <= 0xFF or not 1 <= source_name_id <= 0xFF:
+            raise ValueError("人物 ID 或名称来源 ID 必须在 01—FF 之间。")
+        if not 0x8000 <= expected_old_pointer <= 0xBFFF:
+            raise ValueError("原人物名称指针必须在 $8000—$BFFF 之间。")
+        self.operations.append(
+            {
+                "kind": "character.set_name_reference",
+                "characterId": character_id,
+                "sourceNameId": source_name_id,
+                "expectedOldPointer": expected_old_pointer,
+            }
+        )
+
     def add_map_replace(
         self,
         map_id: int,
@@ -285,6 +379,24 @@ class ProjectDocument:
             }
         )
 
+    def add_map_trigger_replace(
+        self,
+        map_id: int,
+        entries: tuple[MapTrigger, ...],
+        expected_old_digest: str,
+    ) -> None:
+        if not 0 <= map_id < 0x20:
+            raise ValueError("地图事件关卡 ID 必须在 00—1F 之间。")
+        MapTriggerCodec.validate_entries(entries)
+        self.operations.append(
+            {
+                "kind": "map_triggers.replace",
+                "mapId": map_id,
+                "entries": [list(entry.to_bytes()) for entry in entries],
+                "expectedOldDigest": expected_old_digest.upper(),
+            }
+        )
+
     def _validate_base(self, rom: RomImage) -> None:
         if (
             rom.sha256 != self.base_sha256
@@ -293,22 +405,132 @@ class ProjectDocument:
         ):
             raise ProjectFormatError("项目文件与当前基准 ROM 的哈希、Mapper 或大小不匹配。")
 
+    def resource_allocations(self, rom: RomImage) -> tuple[Allocation, ...]:
+        self._validate_base(rom)
+        allocator = BankAllocator(rom.profile, rom.data)
+        for index, operation in enumerate(self.operations):
+            if not isinstance(operation, dict) or operation.get("kind") != "resource.allocate":
+                continue
+            try:
+                allocation, _data = self._decode_resource_allocation(operation)
+                if allocation.resource_id.startswith(AUTO_ALLOCATION_PREFIX) and not (
+                    allocation.resource_id.startswith(PARTITION_ALLOCATION_PREFIX)
+                ):
+                    raise ValueError("auto. 前缀仅供修改器内部分区使用。")
+                if (
+                    any(rom.data[allocation.offset : allocation.end])
+                    and not allocation.resource_id.startswith(
+                        PARTITION_ALLOCATION_PREFIX
+                    )
+                ):
+                    raise ValueError("资源分配的基准区域不是全零。")
+                allocator.reserve(allocation)
+            except (KeyError, TypeError, ValueError) as error:
+                raise ProjectFormatError(
+                    f"第 {index + 1} 条资源分配操作无效：{error}"
+                ) from error
+        return allocator.allocations
+
     def materialize(self, rom: RomImage) -> bytes:
         self._validate_base(rom)
-        unit_codec = UnitCodec(rom)
-        unit_name_codec = UnitNameReferenceCodec(rom)
+        initial_plan = ExpansionPlan.from_bytes(rom.data)
+        if initial_plan is not None and initial_plan.flags & FLAG_UNITS:
+            core_bank = initial_plan.unit_banks[0]
+            name_bank = (
+                initial_plan.unit_banks[8]
+                if len(initial_plan.unit_banks) == 10
+                else core_bank
+            )
+            name_table = (
+                SINGLE_RESOURCE_TABLE
+                if len(initial_plan.unit_banks) == 10
+                else NAME_TABLE
+            )
+            unit_codec = UnitCodec(
+                rom,
+                rom.data,
+                pointer_table_offset=(
+                    bank_file_offset(core_bank) + ATTRIBUTE_TABLE - 0x8000
+                ),
+                pair_first_bank=core_bank,
+            )
+            unit_name_codec = UnitNameReferenceCodec(
+                rom,
+                rom.data,
+                pointer_table_offset=(
+                    bank_file_offset(name_bank) + name_table - 0x8000
+                ),
+                pair_first_bank=name_bank,
+            )
+        else:
+            unit_codec = UnitCodec(rom)
+            unit_name_codec = UnitNameReferenceCodec(rom)
         unit_weapon_codec = (
-            UnitWeaponCodec(rom)
+            UnitWeaponCodec(
+                rom,
+                rom.data,
+                table_offset=(
+                    bank_file_offset(initial_plan.unit_banks[2])
+                    + rom.profile.unit_weapon_table_offset
+                    - bank_file_offset(SOURCE_CONFIGURATION_PAIR)
+                    if initial_plan is not None and initial_plan.flags & FLAG_UNITS
+                    else rom.profile.unit_weapon_table_offset
+                ),
+            )
             if rom.profile.unit_weapon_table_offset is not None
             else None
         )
         weapon_codec = WeaponCodec(rom)
-        map_codec = MapCodec(rom)
-        scenario_codec = ScenarioLayoutCodec(rom)
-        story_text_codec = StoryTextCodec(rom)
+        weapon_name_codec = (
+            WeaponNameReferenceCodec(rom)
+            if rom.profile.weapon_name_pointer_table_offset is not None
+            else None
+        )
+
+        character_name_codec = (
+            CharacterNameCodec(rom)
+            if rom.profile.character_name_pointer_table_offset is not None
+            else None
+        )
+        if initial_plan is not None and initial_plan.flags & FLAG_MAPS:
+            initial_layout = read_expanded_map_layout(rom.data)
+            map_codec = MapCodec(
+                rom,
+                rom.data,
+                bank_table_offset=TERRAIN_BANK_DIRECTORY_OFFSET,
+                record_locations=initial_layout.terrain,
+            )
+            scenario_codec = ScenarioLayoutCodec(
+                rom, rom.data, record_locations=initial_layout.scenarios
+            )
+            map_trigger_codec = MapTriggerCodec(
+                rom,
+                rom.data,
+                record_locations=initial_layout.triggers,
+                expanded_capacity=len(initial_plan.map_banks) * 0x2000,
+            )
+        else:
+            map_codec = MapCodec(rom)
+            scenario_codec = ScenarioLayoutCodec(rom)
+            map_trigger_codec = (
+                MapTriggerCodec(rom) if rom.profile.map_triggers is not None else None
+            )
+        story_overrides = (
+            {
+                selector: pair[0]
+                for selector in initial_plan.expanded_story_selectors
+                if (pair := initial_plan.story_pair_for(selector)) is not None
+            }
+            if initial_plan is not None
+            else {}
+        )
+        story_text_codec = StoryTextCodec(
+            rom, rom.data, group_bank_overrides=story_overrides
+        )
         battle_music_codec = (
             BattleMusicCodec(rom) if rom.profile.battle_music is not None else None
         )
+        resource_allocator = BankAllocator(rom.profile, rom.data)
         changes = ChangeSet(rom.data)
         for index, operation in enumerate(self.operations):
             if not isinstance(operation, dict):
@@ -401,6 +623,33 @@ class ProjectDocument:
                         description=f"机体 {unit_id:02X} · 武器槽 {slot + 1}",
                         expected=before,
                     )
+                elif kind == "weapon.set_name_reference":
+                    if weapon_name_codec is None:
+                        raise ProjectFormatError(
+                            "当前基准 ROM 没有已验证的武器名称表。"
+                        )
+                    weapon_id = int(operation["weaponId"])
+                    source_name_id = int(operation["sourceNameId"])
+                    expected_pointer = int(operation["expectedOldPointer"])
+                    current_data = changes.materialize()
+                    current_pointer = weapon_name_codec.pointer(weapon_id, current_data)
+                    if current_pointer != expected_pointer:
+                        raise ProjectFormatError(
+                            f"第 {index + 1} 条操作原武器名称指针不匹配：需要 "
+                            f"${expected_pointer:04X}，实际 ${current_pointer:04X}。"
+                        )
+                    offset, before, after = weapon_name_codec.reference_patch(
+                        current_data, weapon_id, source_name_id
+                    )
+                    changes.apply_patch(
+                        offset,
+                        after,
+                        source=f"weapon-name:{weapon_id:02X}",
+                        description=(
+                            f"武器 {weapon_id:02X} · 名称引用 {source_name_id:02X}"
+                        ),
+                        expected=before,
+                    )
                 elif kind == "unit.set_name_reference":
                     unit_id = int(operation["unitId"])
                     source_name_id = int(operation["sourceNameId"])
@@ -421,6 +670,35 @@ class ProjectDocument:
                         source=f"unit-name:{unit_id:02X}",
                         description=(
                             f"机体 {unit_id:02X} · 名称引用 {source_name_id:02X}"
+                        ),
+                        expected=before,
+                    )
+                elif kind == "character.set_name_reference":
+                    if character_name_codec is None:
+                        raise ProjectFormatError(
+                            "当前基准 ROM 没有已验证的人物名称表。"
+                        )
+                    character_id = int(operation["characterId"])
+                    source_name_id = int(operation["sourceNameId"])
+                    expected_pointer = int(operation["expectedOldPointer"])
+                    current_data = changes.materialize()
+                    current_pointer = character_name_codec.pointer(
+                        character_id, current_data
+                    )
+                    if current_pointer != expected_pointer:
+                        raise ProjectFormatError(
+                            f"第 {index + 1} 条操作原人物名称指针不匹配：需要 "
+                            f"${expected_pointer:04X}，实际 ${current_pointer:04X}。"
+                        )
+                    offset, before, after = character_name_codec.reference_patch(
+                        current_data, character_id, source_name_id
+                    )
+                    changes.apply_patch(
+                        offset,
+                        after,
+                        source=f"character-name:{character_id:02X}",
+                        description=(
+                            f"人物 {character_id:02X} · 名称引用 {source_name_id:02X}"
                         ),
                         expected=before,
                     )
@@ -499,6 +777,10 @@ class ProjectDocument:
                         current.raw,
                         current.capacity,
                     )
+                    map_record = map_codec.decode(map_id, current_data)
+                    scenario_codec.validate_layout(
+                        changed_layout, map_record.width, map_record.height
+                    )
                     offset, before, after = scenario_codec.replacement_patch(
                         current_data, changed_layout
                     )
@@ -509,6 +791,47 @@ class ProjectDocument:
                         description=f"场景 {map_id:02X} · 部署数据",
                         expected=before,
                     )
+                elif kind == "map_triggers.replace":
+                    if map_trigger_codec is None:
+                        raise ProjectFormatError(
+                            "当前基准 ROM 没有已验证的地图事件表。"
+                        )
+                    map_id = int(operation["mapId"])
+                    rows_value = operation["entries"]
+                    if not isinstance(rows_value, list):
+                        raise ProjectFormatError("地图事件 entries 必须是数组。")
+                    rows: list[MapTrigger] = []
+                    for row in rows_value:
+                        if not isinstance(row, list) or len(row) != 4:
+                            raise ProjectFormatError(
+                                "每条地图事件必须包含 X、Y、限定人物、事件编号四个字节。"
+                            )
+                        values = [int(item) for item in row]
+                        if any(not 0 <= item <= 0xFF for item in values):
+                            raise ProjectFormatError("地图事件含越界字节。")
+                        rows.append(MapTrigger(*values))
+                    entries = tuple(rows)
+                    current_data = changes.materialize()
+                    current = map_trigger_codec.decode(map_id, current_data)
+                    expected_digest = str(operation["expectedOldDigest"]).upper()
+                    if map_trigger_codec.semantic_digest(current) != expected_digest:
+                        raise ProjectFormatError(
+                            f"第 {index + 1} 条操作的地图事件摘要不匹配。"
+                        )
+                    map_record = map_codec.decode(map_id, current_data)
+                    map_trigger_codec.validate_entries(
+                        entries, map_record.width, map_record.height
+                    )
+                    for offset, before, after in map_trigger_codec.repack_patches(
+                        current_data, map_id, entries
+                    ):
+                        changes.apply_patch(
+                            offset,
+                            after,
+                            source=f"map-triggers:{map_id:02X}",
+                            description=f"地图 {map_id:02X} · 事件与商店",
+                            expected=before,
+                        )
                 elif kind == "story.replace_text_record":
                     selector = int(operation["selector"])
                     text_index = int(operation["index"])
@@ -566,6 +889,29 @@ class ProjectDocument:
                             ),
                             expected=before,
                         )
+                elif kind == "resource.allocate":
+                    allocation, payload = self._decode_resource_allocation(operation)
+                    if allocation.resource_id.startswith(AUTO_ALLOCATION_PREFIX) and not (
+                        allocation.resource_id.startswith(PARTITION_ALLOCATION_PREFIX)
+                    ):
+                        raise ProjectFormatError(
+                            "auto. 前缀仅供修改器内部分区使用。"
+                        )
+                    if (
+                        any(rom.data[allocation.offset : allocation.end])
+                        and not allocation.resource_id.startswith(
+                            PARTITION_ALLOCATION_PREFIX
+                        )
+                    ):
+                        raise ProjectFormatError("资源分配的基准区域不是全零。")
+                    resource_allocator.reserve(allocation)
+                    changes.apply_patch(
+                        allocation.offset,
+                        payload,
+                        source=f"resource:{allocation.resource_id}",
+                        description=f"扩展资源 · {allocation.label}",
+                        expected=rom.data[allocation.offset : allocation.end],
+                    )
                 elif kind == "raw.patch":
                     offset = int(operation["offset"])
                     before = bytes.fromhex(str(operation["before"]))

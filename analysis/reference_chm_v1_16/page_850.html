@@ -1,0 +1,1616 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML><HEAD><TITLE>杀死某人触发</TITLE>
+<META name=GENERATOR content="MSHTML 8.00.7601.19104">
+<META content="text/html; charset=gb2312" http-equiv=Content-Type>
+<STYLE>
+html,body { 
+	/* Default Font */
+	font-family: Microsoft YaHei, Simsun, sans-serif;
+	font-size: 12pt;
+}
+</STYLE>
+</HEAD>
+<BODY>
+<P><FONT size=2 face=宋体>&nbsp;0C:8312:A0 01&nbsp;&nbsp;&nbsp;&nbsp; LDY 
+#$01<BR>&nbsp;0C:8314:B1 FC&nbsp;&nbsp;&nbsp;&nbsp; LDA ($FC),Y @ $A451 = 
+#$D5<BR>&nbsp;0C:8316:38&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+SEC<BR>&nbsp;0C:8317:E9 01&nbsp;&nbsp;&nbsp;&nbsp; SBC #$01<BR>&nbsp;0C:8319:CD 
+0C 75&nbsp; CMP $750C = #$00<BR>&nbsp;0C:831C:F0 03&nbsp;&nbsp;&nbsp;&nbsp; BEQ 
+$8321<BR>&nbsp;0C:831E:4C AF 82&nbsp; JMP $82AF<BR>&nbsp;0C:8321:4C B5 82&nbsp; 
+JMP $82B5<BR>&nbsp;0C:8324:A0 01&nbsp;&nbsp;&nbsp;&nbsp; LDY 
+#$01<BR>------------------------------------------------------------<BR>&nbsp;0C:8326:B1 
+FC&nbsp;&nbsp;&nbsp;&nbsp; LDA ($FC),Y @ $A451 = #$D5<BR>&nbsp;0C:8328:30 
+08&nbsp;&nbsp;&nbsp;&nbsp; BMI $8332<BR>&nbsp;0C:832A:20 63 C0&nbsp; JSR 
+$C063<BR>&nbsp;0C:832D:B0 0A&nbsp;&nbsp;&nbsp;&nbsp; BCS 
+$8339<BR>&nbsp;0C:832F:4C AF 82&nbsp; JMP $82AF<BR>&nbsp;0C:8332:29 
+7F&nbsp;&nbsp;&nbsp;&nbsp; AND #$7F<BR>&nbsp;0C:8334:20 6C C0&nbsp; JSR 
+$C06C<BR>&nbsp;0C:8337:90 F6&nbsp;&nbsp;&nbsp;&nbsp; BCC 
+$832F<BR>&nbsp;0C:8339:4C B5 82&nbsp; JMP $82B5<BR>&nbsp;0C:833C:A0 
+01&nbsp;&nbsp;&nbsp;&nbsp; LDY 
+#$01<BR>--------------------------------------------------------------<BR>&nbsp;0C:833E:B1 
+FC&nbsp;&nbsp;&nbsp;&nbsp; LDA ($FC),Y @ $A451 = #$D5<BR>&nbsp;0C:8340:20 1D 
+93&nbsp; JSR $931D<BR>&nbsp;0C:8343:B0 15&nbsp;&nbsp;&nbsp;&nbsp; BCS 
+$835A<BR>&nbsp;0C:8345:A0 02&nbsp;&nbsp;&nbsp;&nbsp; LDY 
+#$02<BR>&nbsp;0C:8347:B1 FC&nbsp;&nbsp;&nbsp;&nbsp; LDA ($FC),Y @ $A451 = 
+#$D5<BR>&nbsp;0C:8349:20 7C 8E&nbsp; JSR $8E7C<BR>&nbsp;0C:834C:A6 
+CD&nbsp;&nbsp;&nbsp;&nbsp; LDX $00CD = #$1D<BR>&nbsp;0C:834E:BD 57 77&nbsp; LDA 
+$7757,X @ $7757 = #$80<BR>&nbsp;0C:8351:25 01&nbsp;&nbsp;&nbsp;&nbsp; AND $0001 
+= #$99<BR>&nbsp;0C:8353:F0 05&nbsp;&nbsp;&nbsp;&nbsp; BEQ 
+$835A<BR>&nbsp;0C:8355:A0 02&nbsp;&nbsp;&nbsp;&nbsp; LDY 
+#$02<BR>&nbsp;0C:8357:4C B5 82&nbsp; JMP $82B5<BR>&nbsp;0C:835A:A0 
+02&nbsp;&nbsp;&nbsp;&nbsp; LDY #$02<BR>&nbsp;0C:835C:4C AF 82&nbsp; JMP 
+$82AF<BR>-----------------------------------------------------------<BR>&nbsp;0C:835F:A0 
+01&nbsp;&nbsp;&nbsp;&nbsp; LDY #$01<BR>&nbsp;0C:8361:B1 
+FC&nbsp;&nbsp;&nbsp;&nbsp; LDA ($FC),Y @ $A451 = #$D5<BR>&nbsp;0C:8363:20 39 
+93&nbsp; JSR $9339<BR>&nbsp;0C:8366:B0 03&nbsp;&nbsp;&nbsp;&nbsp; BCS 
+$836B<BR>&nbsp;0C:8368:4C B5 82&nbsp; JMP $82B5<BR>&nbsp;0C:836B:4C AF 82&nbsp; 
+JMP 
+$82AF<BR>-----------------------------------------------------------<BR>&nbsp;0C:836E:A0 
+01&nbsp;&nbsp;&nbsp;&nbsp; LDY #$01<BR>&nbsp;0C:8370:B1 
+FC&nbsp;&nbsp;&nbsp;&nbsp; LDA ($FC),Y @ $A451 = #$D5<BR>&nbsp;0C:8372:20 1D 
+93&nbsp; JSR $931D<BR>&nbsp;0C:8375:B0 03&nbsp;&nbsp;&nbsp;&nbsp; BCS 
+$837A<BR>&nbsp;0C:8377:4C B5 82&nbsp; JMP $82B5<BR>&nbsp;0C:837A:4C AF 82&nbsp; 
+JMP 
+$82AF<BR>-----------------------------------------------------------<BR>&nbsp;0C:837D:A0 
+01&nbsp;&nbsp;&nbsp;&nbsp; LDY #$01<BR>&nbsp;0C:837F:B1 
+FC&nbsp;&nbsp;&nbsp;&nbsp; LDA ($FC),Y @ $A451 = #$D5<BR>&nbsp;0C:8381:20 55 
+93&nbsp; JSR $9355<BR>&nbsp;0C:8384:B0 03&nbsp;&nbsp;&nbsp;&nbsp; BCS 
+$8389<BR>&nbsp;0C:8386:4C B5 82&nbsp; JMP $82B5<BR>&nbsp;0C:8389:4C AF 82&nbsp; 
+JMP 
+$82AF<BR>-----------------------------------------------------------<BR>&nbsp;0C:838C:A9 
+00&nbsp;&nbsp;&nbsp;&nbsp; LDA #$00<BR>&nbsp;0C:838E:85 
+00&nbsp;&nbsp;&nbsp;&nbsp; STA $0000 = #$78<BR>&nbsp;0C:8390:A2 
+0E&nbsp;&nbsp;&nbsp;&nbsp; LDX #$0E<BR>&nbsp;0C:8392:BD 37 75&nbsp; LDA $7537,X 
+@ $7537 = #$36<BR>&nbsp;0C:8395:F0 02&nbsp;&nbsp;&nbsp;&nbsp; BEQ 
+$8399<BR>&nbsp;0C:8397:E6 00&nbsp;&nbsp;&nbsp;&nbsp; INC $0000 = 
+#$78<BR>&nbsp;0C:8399:E8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+INX<BR>&nbsp;0C:839A:E0 20&nbsp;&nbsp;&nbsp;&nbsp; CPX #$20<BR>&nbsp;0C:839C:D0 
+F4&nbsp;&nbsp;&nbsp;&nbsp; BNE $8392<BR>&nbsp;0C:839E:A0 
+01&nbsp;&nbsp;&nbsp;&nbsp; LDY #$01<BR>&nbsp;0C:83A0:A5 
+00&nbsp;&nbsp;&nbsp;&nbsp; LDA $0000 = #$78<BR>&nbsp;0C:83A2:D1 
+FC&nbsp;&nbsp;&nbsp;&nbsp; CMP ($FC),Y @ $A451 = #$D5<BR>&nbsp;0C:83A4:90 
+03&nbsp;&nbsp;&nbsp;&nbsp; BCC $83A9<BR>&nbsp;0C:83A6:4C B5 82&nbsp; JMP 
+$82B5<BR>&nbsp;0C:83A9:4C AF 82&nbsp; JMP 
+$82AF<BR>-----------------------------------------------------------<BR>&nbsp;0C:83AC:A9 
+00&nbsp;&nbsp;&nbsp;&nbsp; LDA #$00<BR>&nbsp;0C:83AE:85 
+00&nbsp;&nbsp;&nbsp;&nbsp; STA $0000 = #$78<BR>&nbsp;0C:83B0:A2 
+00&nbsp;&nbsp;&nbsp;&nbsp; LDX #$00<BR>&nbsp;0C:83B2:BD 37 75&nbsp; LDA $7537,X 
+@ $7537 = #$36<BR>&nbsp;0C:83B5:F0 02&nbsp;&nbsp;&nbsp;&nbsp; BEQ 
+$83B9<BR>&nbsp;0C:83B7:E6 00&nbsp;&nbsp;&nbsp;&nbsp; INC $0000 = 
+#$78<BR>&nbsp;0C:83B9:E8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+INX<BR>&nbsp;0C:83BA:E0 0B&nbsp;&nbsp;&nbsp;&nbsp; CPX #$0B<BR>&nbsp;0C:83BC:D0 
+F4&nbsp;&nbsp;&nbsp;&nbsp; BNE $83B2<BR>&nbsp;0C:83BE:A0 
+01&nbsp;&nbsp;&nbsp;&nbsp; LDY #$01<BR>&nbsp;0C:83C0:A5 
+00&nbsp;&nbsp;&nbsp;&nbsp; LDA $0000 = #$78<BR>&nbsp;0C:83C2:D1 
+FC&nbsp;&nbsp;&nbsp;&nbsp; CMP ($FC),Y @ $A451 = #$D5<BR>&nbsp;0C:83C4:90 
+03&nbsp;&nbsp;&nbsp;&nbsp; BCC $83C9<BR>&nbsp;0C:83C6:4C B5 82&nbsp; JMP 
+$82B5<BR>&nbsp;0C:83C9:4C AF 82&nbsp; JMP 
+$82AF<BR>-----------------------------------------------------------<BR>&nbsp;0C:83CC:A0 
+01&nbsp;&nbsp;&nbsp;&nbsp; LDY #$01<BR>&nbsp;0C:83CE:B1 
+FC&nbsp;&nbsp;&nbsp;&nbsp; LDA ($FC),Y @ $A451 = 
+#$D5<BR>&nbsp;0C:83D0:AA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+TAX<BR>&nbsp;0C:83D1:BD 1A 74&nbsp; LDA $741A,X @ $741A = 
+#$00<BR>&nbsp;0C:83D4:F0 03&nbsp;&nbsp;&nbsp;&nbsp; BEQ 
+$83D9<BR>&nbsp;0C:83D6:4C B5 82&nbsp; JMP $82B5<BR>&nbsp;0C:83D9:4C AF 82&nbsp; 
+JMP 
+$82AF<BR>-----------------------------------------------------------<BR>&nbsp;0C:83DC:A0 
+01&nbsp;&nbsp;&nbsp;&nbsp; LDY #$01<BR>&nbsp;0C:83DE:B1 
+FC&nbsp;&nbsp;&nbsp;&nbsp; LDA ($FC),Y @ $A451 = #$D5<BR>&nbsp;0C:83E0:20 1D 
+93&nbsp; JSR $931D<BR>&nbsp;0C:83E3:A0 02&nbsp;&nbsp;&nbsp;&nbsp; LDY 
+#$02<BR>&nbsp;0C:83E5:B0 10&nbsp;&nbsp;&nbsp;&nbsp; BCS 
+$83F7<BR>&nbsp;0C:83E7:B1 FC&nbsp;&nbsp;&nbsp;&nbsp; LDA ($FC),Y @ $A451 = 
+#$D5<BR>&nbsp;0C:83E9:F0 0F&nbsp;&nbsp;&nbsp;&nbsp; BEQ 
+$83FA<BR>&nbsp;0C:83EB:BD D7 76&nbsp; LDA $76D7,X @ $76D7 = 
+#$03<BR>&nbsp;0C:83EE:D0 1A&nbsp;&nbsp;&nbsp;&nbsp; BNE 
+$840A<BR>&nbsp;0C:83F0:BD B7 76&nbsp; LDA $76B7,X @ $76B7 = 
+#$F2<BR>&nbsp;0C:83F3:D1 FC&nbsp;&nbsp;&nbsp;&nbsp; CMP ($FC),Y @ $A451 = 
+#$D5<BR>&nbsp;0C:83F5:B0 13&nbsp;&nbsp;&nbsp;&nbsp; BCS 
+$840A<BR>&nbsp;0C:83F7:4C AF 82&nbsp; JMP $82AF<BR>&nbsp;0C:83FA:BD B7 76&nbsp; 
+LDA $76B7,X @ $76B7 = #$F2<BR>&nbsp;0C:83FD:DD F7 76&nbsp; CMP $76F7,X @ $76F7 = 
+#$F2<BR>&nbsp;0C:8400:D0 F5&nbsp;&nbsp;&nbsp;&nbsp; BNE 
+$83F7<BR>&nbsp;0C:8402:BD D7 76&nbsp; LDA $76D7,X @ $76D7 = 
+#$03<BR>&nbsp;0C:8405:DD 17 77&nbsp; CMP $7717,X @ $7717 = 
+#$03<BR>&nbsp;0C:8408:D0 ED&nbsp;&nbsp;&nbsp;&nbsp; BNE 
+$83F7<BR>&nbsp;0C:840A:4C B5 82&nbsp; JMP 
+$82B5<BR>-----------------------------------------------------------<BR>&nbsp;0C:840D:A0 
+01&nbsp;&nbsp;&nbsp;&nbsp; LDY #$01<BR>&nbsp;0C:840F:B1 
+FC&nbsp;&nbsp;&nbsp;&nbsp; LDA ($FC),Y @ $A451 = #$D5<BR>&nbsp;0C:8411:85 
+10&nbsp;&nbsp;&nbsp;&nbsp; STA $0010 = 
+#$8F<BR>&nbsp;0C:8413:C8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+INY<BR>&nbsp;0C:8414:B1 FC&nbsp;&nbsp;&nbsp;&nbsp; LDA ($FC),Y @ $A451 = 
+#$D5<BR>&nbsp;0C:8416:85 11&nbsp;&nbsp;&nbsp;&nbsp; STA $0011 = 
+#$00<BR>&nbsp;0C:8418:C8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+INY<BR>&nbsp;0C:8419:B1 FC&nbsp;&nbsp;&nbsp;&nbsp; LDA ($FC),Y @ $A451 = 
+#$D5<BR>&nbsp;0C:841B:85 12&nbsp;&nbsp;&nbsp;&nbsp; STA $0012 = 
+#$87<BR>&nbsp;0C:841D:C8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+INY<BR>&nbsp;0C:841E:B1 FC&nbsp;&nbsp;&nbsp;&nbsp; LDA ($FC),Y @ $A451 = 
+#$D5<BR>&nbsp;0C:8420:85 13&nbsp;&nbsp;&nbsp;&nbsp; STA $0013 = 
+#$00<BR>&nbsp;0C:8422:A2 00&nbsp;&nbsp;&nbsp;&nbsp; LDX #$00<BR>&nbsp;0C:8424:BD 
+37 75&nbsp; LDA $7537,X @ $7537 = #$36<BR>&nbsp;0C:8427:F0 
+21&nbsp;&nbsp;&nbsp;&nbsp; BEQ $844A<BR>&nbsp;0C:8429:BD D7 77&nbsp; LDA $77D7,X 
+@ $77D7 = #$00<BR>&nbsp;0C:842C:30 1C&nbsp;&nbsp;&nbsp;&nbsp; BMI 
+$844A<BR>&nbsp;0C:842E:BD 97 75&nbsp; LDA $7597,X @ $7597 = 
+#$11<BR>&nbsp;0C:8431:C5 10&nbsp;&nbsp;&nbsp;&nbsp; CMP $0010 = 
+#$8F<BR>&nbsp;0C:8433:90 15&nbsp;&nbsp;&nbsp;&nbsp; BCC 
+$844A<BR>&nbsp;0C:8435:A5 12&nbsp;&nbsp;&nbsp;&nbsp; LDA $0012 = 
+#$87<BR>&nbsp;0C:8437:DD 97 75&nbsp; CMP $7597,X @ $7597 = 
+#$11<BR>&nbsp;0C:843A:90 0E&nbsp;&nbsp;&nbsp;&nbsp; BCC 
+$844A<BR>&nbsp;0C:843C:BD B7 75&nbsp; LDA $75B7,X @ $75B7 = 
+#$0D<BR>&nbsp;0C:843F:C5 11&nbsp;&nbsp;&nbsp;&nbsp; CMP $0011 = 
+#$00<BR>&nbsp;0C:8441:90 07&nbsp;&nbsp;&nbsp;&nbsp; BCC 
+$844A<BR>&nbsp;0C:8443:A5 13&nbsp;&nbsp;&nbsp;&nbsp; LDA $0013 = 
+#$00<BR>&nbsp;0C:8445:DD B7 75&nbsp; CMP $75B7,X @ $75B7 = 
+#$0D<BR>&nbsp;0C:8448:B0 08&nbsp;&nbsp;&nbsp;&nbsp; BCS 
+$8452<BR>&nbsp;0C:844A:E8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+INX<BR>&nbsp;0C:844B:E0 0B&nbsp;&nbsp;&nbsp;&nbsp; CPX #$0B<BR>&nbsp;0C:844D:D0 
+D5&nbsp;&nbsp;&nbsp;&nbsp; BNE $8424<BR>&nbsp;0C:844F:4C AF 82&nbsp; JMP 
+$82AF<BR>&nbsp;0C:8452:4C B5 82&nbsp; JMP 
+$82B5<BR>-----------------------------------------------------------<BR>&nbsp;0C:8455:A0 
+01&nbsp;&nbsp;&nbsp;&nbsp; LDY #$01<BR>&nbsp;0C:8457:B1 
+FC&nbsp;&nbsp;&nbsp;&nbsp; LDA ($FC),Y @ $A451 = #$D5<BR>&nbsp;0C:8459:85 
+10&nbsp;&nbsp;&nbsp;&nbsp; STA $0010 = 
+#$8F<BR>&nbsp;0C:845B:C8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+INY<BR>&nbsp;0C:845C:B1 FC&nbsp;&nbsp;&nbsp;&nbsp; LDA ($FC),Y @ $A451 = 
+#$D5<BR>&nbsp;0C:845E:85 11&nbsp;&nbsp;&nbsp;&nbsp; STA $0011 = 
+#$00<BR>&nbsp;0C:8460:C8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+INY<BR>&nbsp;0C:8461:B1 FC&nbsp;&nbsp;&nbsp;&nbsp; LDA ($FC),Y @ $A451 = 
+#$D5<BR>&nbsp;0C:8463:85 12&nbsp;&nbsp;&nbsp;&nbsp; STA $0012 = 
+#$87<BR>&nbsp;0C:8465:C8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+INY<BR>&nbsp;0C:8466:B1 FC&nbsp;&nbsp;&nbsp;&nbsp; LDA ($FC),Y @ $A451 = 
+#$D5<BR>&nbsp;0C:8468:85 13&nbsp;&nbsp;&nbsp;&nbsp; STA $0013 = 
+#$00<BR>&nbsp;0C:846A:A2 0E&nbsp;&nbsp;&nbsp;&nbsp; LDX #$0E<BR>&nbsp;0C:846C:BD 
+37 75&nbsp; LDA $7537,X @ $7537 = #$36<BR>&nbsp;0C:846F:F0 
+21&nbsp;&nbsp;&nbsp;&nbsp; BEQ $8492<BR>&nbsp;0C:8471:BD D7 77&nbsp; LDA $77D7,X 
+@ $77D7 = #$00<BR>&nbsp;0C:8474:30 1C&nbsp;&nbsp;&nbsp;&nbsp; BMI 
+$8492<BR>&nbsp;0C:8476:BD 97 75&nbsp; LDA $7597,X @ $7597 = 
+#$11<BR>&nbsp;0C:8479:C5 10&nbsp;&nbsp;&nbsp;&nbsp; CMP $0010 = 
+#$8F<BR>&nbsp;0C:847B:90 15&nbsp;&nbsp;&nbsp;&nbsp; BCC 
+$8492<BR>&nbsp;0C:847D:A5 12&nbsp;&nbsp;&nbsp;&nbsp; LDA $0012 = 
+#$87<BR>&nbsp;0C:847F:DD 97 75&nbsp; CMP $7597,X @ $7597 = 
+#$11<BR>&nbsp;0C:8482:90 0E&nbsp;&nbsp;&nbsp;&nbsp; BCC 
+$8492<BR>&nbsp;0C:8484:BD B7 75&nbsp; LDA $75B7,X @ $75B7 = 
+#$0D<BR>&nbsp;0C:8487:C5 11&nbsp;&nbsp;&nbsp;&nbsp; CMP $0011 = 
+#$00<BR>&nbsp;0C:8489:90 07&nbsp;&nbsp;&nbsp;&nbsp; BCC 
+$8492<BR>&nbsp;0C:848B:A5 13&nbsp;&nbsp;&nbsp;&nbsp; LDA $0013 = 
+#$00<BR>&nbsp;0C:848D:DD B7 75&nbsp; CMP $75B7,X @ $75B7 = 
+#$0D<BR>&nbsp;0C:8490:B0 08&nbsp;&nbsp;&nbsp;&nbsp; BCS 
+$849A<BR>&nbsp;0C:8492:E8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+INX<BR>&nbsp;0C:8493:E0 20&nbsp;&nbsp;&nbsp;&nbsp; CPX #$20<BR>&nbsp;0C:8495:D0 
+D5&nbsp;&nbsp;&nbsp;&nbsp; BNE $846C<BR>&nbsp;0C:8497:4C AF 82&nbsp; JMP 
+$82AF<BR>&nbsp;0C:849A:4C B5 82&nbsp; JMP 
+$82B5<BR>-----------------------------------------------------------<BR>&nbsp;0C:849D:A0 
+01&nbsp;&nbsp;&nbsp;&nbsp; LDY #$01<BR>&nbsp;0C:849F:B1 
+FC&nbsp;&nbsp;&nbsp;&nbsp; LDA ($FC),Y @ $A451 = #$D5<BR>&nbsp;0C:84A1:85 
+08&nbsp;&nbsp;&nbsp;&nbsp; STA $0008 = 
+#$E4<BR>&nbsp;0C:84A3:C8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+INY<BR>&nbsp;0C:84A4:B1 FC&nbsp;&nbsp;&nbsp;&nbsp; LDA ($FC),Y @ $A451 = 
+#$D5<BR>&nbsp;0C:84A6:85 09&nbsp;&nbsp;&nbsp;&nbsp; STA $0009 = 
+#$63<BR>&nbsp;0C:84A8:20 51 C0&nbsp; JSR 
+$C051<BR>&nbsp;0C:84AB:18&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+CLC<BR>&nbsp;0C:84AC:69 04&nbsp;&nbsp;&nbsp;&nbsp; ADC #$04<BR>&nbsp;0C:84AE:85 
+09&nbsp;&nbsp;&nbsp;&nbsp; STA $0009 = #$63<BR>&nbsp;0C:84B0:B1 
+08&nbsp;&nbsp;&nbsp;&nbsp; LDA ($08),Y @ $63E4 = #$23<BR>&nbsp;0C:84B2:10 
+21&nbsp;&nbsp;&nbsp;&nbsp; BPL $84D5<BR>&nbsp;0C:84B4:29 
+1F&nbsp;&nbsp;&nbsp;&nbsp; AND 
+#$1F<BR>&nbsp;0C:84B6:AA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+TAX<BR>&nbsp;0C:84B7:A0 03&nbsp;&nbsp;&nbsp;&nbsp; LDY #$03<BR>&nbsp;0C:84B9:B1 
+FC&nbsp;&nbsp;&nbsp;&nbsp; LDA ($FC),Y @ $A451 = #$D5<BR>&nbsp;0C:84BB:C9 
+FF&nbsp;&nbsp;&nbsp;&nbsp; CMP #$FF<BR>&nbsp;0C:84BD:F0 
+0D&nbsp;&nbsp;&nbsp;&nbsp; BEQ $84CC<BR>&nbsp;0C:84BF:C9 
+FD&nbsp;&nbsp;&nbsp;&nbsp; CMP #$FD<BR>&nbsp;0C:84C1:F0 
+0E&nbsp;&nbsp;&nbsp;&nbsp; BEQ $84D1<BR>&nbsp;0C:84C3:C9 
+FE&nbsp;&nbsp;&nbsp;&nbsp; CMP #$FE<BR>&nbsp;0C:84C5:F0 
+13&nbsp;&nbsp;&nbsp;&nbsp; BEQ $84DA<BR>&nbsp;0C:84C7:DD 37 75&nbsp; CMP $7537,X 
+@ $7537 = #$36<BR>&nbsp;0C:84CA:D0 09&nbsp;&nbsp;&nbsp;&nbsp; BNE 
+$84D5<BR>&nbsp;0C:84CC:A0 03&nbsp;&nbsp;&nbsp;&nbsp; LDY 
+#$03<BR>&nbsp;0C:84CE:4C B5 82&nbsp; JMP $82B5<BR>&nbsp;0C:84D1:E0 
+0B&nbsp;&nbsp;&nbsp;&nbsp; CPX #$0B<BR>&nbsp;0C:84D3:90 
+F7&nbsp;&nbsp;&nbsp;&nbsp; BCC $84CC<BR>&nbsp;0C:84D5:A0 
+03&nbsp;&nbsp;&nbsp;&nbsp; LDY #$03<BR>&nbsp;0C:84D7:4C AF 82&nbsp; JMP 
+$82AF<BR>&nbsp;0C:84DA:E0 0E&nbsp;&nbsp;&nbsp;&nbsp; CPX 
+#$0E<BR>&nbsp;0C:84DC:B0 EE&nbsp;&nbsp;&nbsp;&nbsp; BCS 
+$84CC<BR>&nbsp;0C:84DE:4C D5 84&nbsp; JMP 
+$84D5<BR>-----------------------------------------------------------<BR>&nbsp;0C:84E1:A0 
+01&nbsp;&nbsp;&nbsp;&nbsp; LDY #$01<BR>&nbsp;0C:84E3:B1 
+FC&nbsp;&nbsp;&nbsp;&nbsp; LDA ($FC),Y @ $A451 = #$D5<BR>&nbsp;0C:84E5:20 7C 
+8E&nbsp; JSR $8E7C<BR>&nbsp;0C:84E8:A6 CD&nbsp;&nbsp;&nbsp;&nbsp; LDX $00CD = 
+#$1D<BR>&nbsp;0C:84EA:BD 57 77&nbsp; LDA $7757,X @ $7757 = 
+#$80<BR>&nbsp;0C:84ED:25 01&nbsp;&nbsp;&nbsp;&nbsp; AND $0001 = 
+#$99<BR>&nbsp;0C:84EF:F0 03&nbsp;&nbsp;&nbsp;&nbsp; BEQ 
+$84F4<BR>&nbsp;0C:84F1:4C B5 82&nbsp; JMP $82B5<BR>&nbsp;0C:84F4:4C AF 82&nbsp; 
+JMP 
+$82AF<BR>-----------------------------------------------------------<BR>&nbsp;0C:84F7:A0 
+01&nbsp;&nbsp;&nbsp;&nbsp; LDY #$01<BR>&nbsp;0C:84F9:B1 
+FC&nbsp;&nbsp;&nbsp;&nbsp; LDA ($FC),Y @ $A451 = #$D5<BR>&nbsp;0C:84FB:C9 
+FD&nbsp;&nbsp;&nbsp;&nbsp; CMP #$FD<BR>&nbsp;0C:84FD:B0 
+1B&nbsp;&nbsp;&nbsp;&nbsp; BCS $851A<BR>&nbsp;0C:84FF:20 1D 93&nbsp; JSR 
+$931D<BR>&nbsp;0C:8502:B0 11&nbsp;&nbsp;&nbsp;&nbsp; BCS 
+$8515<BR>&nbsp;0C:8504:BD D7 77&nbsp; LDA $77D7,X @ $77D7 = 
+#$00<BR>&nbsp;0C:8507:30 0C&nbsp;&nbsp;&nbsp;&nbsp; BMI 
+$8515<BR>&nbsp;0C:8509:20 57 C0&nbsp; JSR $C057<BR>&nbsp;0C:850C:C9 
+01&nbsp;&nbsp;&nbsp;&nbsp; CMP #$01<BR>&nbsp;0C:850E:D0 
+05&nbsp;&nbsp;&nbsp;&nbsp; BNE $8515<BR>&nbsp;0C:8510:A0 
+01&nbsp;&nbsp;&nbsp;&nbsp; LDY #$01<BR>&nbsp;0C:8512:4C B5 82&nbsp; JMP 
+$82B5<BR>&nbsp;0C:8515:A0 01&nbsp;&nbsp;&nbsp;&nbsp; LDY 
+#$01<BR>&nbsp;0C:8517:4C AF 82&nbsp; JMP $82AF<BR>&nbsp;0C:851A:F0 
+21&nbsp;&nbsp;&nbsp;&nbsp; BEQ $853D<BR>&nbsp;0C:851C:C9 
+FF&nbsp;&nbsp;&nbsp;&nbsp; CMP #$FF<BR>&nbsp;0C:851E:F0 
+3A&nbsp;&nbsp;&nbsp;&nbsp; BEQ $855A<BR>&nbsp;0C:8520:A2 
+0E&nbsp;&nbsp;&nbsp;&nbsp; LDX #$0E<BR>&nbsp;0C:8522:BD 37 75&nbsp; LDA $7537,X 
+@ $7537 = #$36<BR>&nbsp;0C:8525:F0 0C&nbsp;&nbsp;&nbsp;&nbsp; BEQ 
+$8533<BR>&nbsp;0C:8527:BD D7 77&nbsp; LDA $77D7,X @ $77D7 = 
+#$00<BR>&nbsp;0C:852A:30 07&nbsp;&nbsp;&nbsp;&nbsp; BMI 
+$8533<BR>&nbsp;0C:852C:20 57 C0&nbsp; JSR $C057<BR>&nbsp;0C:852F:C9 
+01&nbsp;&nbsp;&nbsp;&nbsp; CMP #$01<BR>&nbsp;0C:8531:F0 
+DD&nbsp;&nbsp;&nbsp;&nbsp; BEQ 
+$8510<BR>&nbsp;0C:8533:E8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+INX<BR>&nbsp;0C:8534:E0 20&nbsp;&nbsp;&nbsp;&nbsp; CPX #$20<BR>&nbsp;0C:8536:D0 
+EA&nbsp;&nbsp;&nbsp;&nbsp; BNE $8522<BR>&nbsp;0C:8538:A0 
+01&nbsp;&nbsp;&nbsp;&nbsp; LDY #$01<BR>&nbsp;0C:853A:4C AF 82&nbsp; JMP 
+$82AF<BR>&nbsp;0C:853D:A2 00&nbsp;&nbsp;&nbsp;&nbsp; LDX 
+#$00<BR>&nbsp;0C:853F:BD 37 75&nbsp; LDA $7537,X @ $7537 = 
+#$36<BR>&nbsp;0C:8542:F0 0C&nbsp;&nbsp;&nbsp;&nbsp; BEQ 
+$8550<BR>&nbsp;0C:8544:BD D7 77&nbsp; LDA $77D7,X @ $77D7 = 
+#$00<BR>&nbsp;0C:8547:30 07&nbsp;&nbsp;&nbsp;&nbsp; BMI 
+$8550<BR>&nbsp;0C:8549:20 57 C0&nbsp; JSR $C057<BR>&nbsp;0C:854C:C9 
+01&nbsp;&nbsp;&nbsp;&nbsp; CMP #$01<BR>&nbsp;0C:854E:F0 
+C0&nbsp;&nbsp;&nbsp;&nbsp; BEQ 
+$8510<BR>&nbsp;0C:8550:E8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+INX<BR>&nbsp;0C:8551:E0 0B&nbsp;&nbsp;&nbsp;&nbsp; CPX #$0B<BR>&nbsp;0C:8553:D0 
+EA&nbsp;&nbsp;&nbsp;&nbsp; BNE $853F<BR>&nbsp;0C:8555:A0 
+01&nbsp;&nbsp;&nbsp;&nbsp; LDY #$01<BR>&nbsp;0C:8557:4C AF 82&nbsp; JMP 
+$82AF<BR>&nbsp;0C:855A:A2 00&nbsp;&nbsp;&nbsp;&nbsp; LDX 
+#$00<BR>&nbsp;0C:855C:BD 37 75&nbsp; LDA $7537,X @ $7537 = 
+#$36<BR>&nbsp;0C:855F:F0 0C&nbsp;&nbsp;&nbsp;&nbsp; BEQ 
+$856D<BR>&nbsp;0C:8561:BD D7 77&nbsp; LDA $77D7,X @ $77D7 = 
+#$00<BR>&nbsp;0C:8564:30 07&nbsp;&nbsp;&nbsp;&nbsp; BMI 
+$856D<BR>&nbsp;0C:8566:20 57 C0&nbsp; JSR $C057<BR>&nbsp;0C:8569:C9 
+01&nbsp;&nbsp;&nbsp;&nbsp; CMP #$01<BR>&nbsp;0C:856B:F0 
+A3&nbsp;&nbsp;&nbsp;&nbsp; BEQ 
+$8510<BR>&nbsp;0C:856D:E8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+INX<BR>&nbsp;0C:856E:E0 20&nbsp;&nbsp;&nbsp;&nbsp; CPX #$20<BR>&nbsp;0C:8570:D0 
+EA&nbsp;&nbsp;&nbsp;&nbsp; BNE $855C<BR>&nbsp;0C:8572:A0 
+01&nbsp;&nbsp;&nbsp;&nbsp; LDY #$01<BR>&nbsp;0C:8574:4C AF 82&nbsp; JMP 
+$82AF<BR>-----------------------------------------------------------<BR>&nbsp;0C:8577:A6 
+CD&nbsp;&nbsp;&nbsp;&nbsp; LDX $00CD = #$1D<BR>&nbsp;0C:8579:A0 
+01&nbsp;&nbsp;&nbsp;&nbsp; LDY #$01<BR>&nbsp;0C:857B:B1 
+FC&nbsp;&nbsp;&nbsp;&nbsp; LDA ($FC),Y @ $A451 = 
+#$D5<BR>&nbsp;0C:857D:C8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+INY<BR>&nbsp;0C:857E:DD 97 75&nbsp; CMP $7597,X @ $7597 = 
+#$11<BR>&nbsp;0C:8581:D0 0A&nbsp;&nbsp;&nbsp;&nbsp; BNE 
+$858D<BR>&nbsp;0C:8583:B1 FC&nbsp;&nbsp;&nbsp;&nbsp; LDA ($FC),Y @ $A451 = 
+#$D5<BR>&nbsp;0C:8585:DD B7 75&nbsp; CMP $75B7,X @ $75B7 = 
+#$0D<BR>&nbsp;0C:8588:D0 03&nbsp;&nbsp;&nbsp;&nbsp; BNE 
+$858D<BR>&nbsp;0C:858A:4C B5 82&nbsp; JMP $82B5<BR>&nbsp;0C:858D:4C AF 82&nbsp; 
+JMP 
+$82AF<BR>-----------------------------------------------------------<BR>&nbsp;0C:8590:A0 
+01&nbsp;&nbsp;&nbsp;&nbsp; LDY #$01<BR>&nbsp;0C:8592:B1 
+FC&nbsp;&nbsp;&nbsp;&nbsp; LDA ($FC),Y @ $A451 = #$D5<BR>&nbsp;0C:8594:85 
+10&nbsp;&nbsp;&nbsp;&nbsp; STA $0010 = 
+#$8F<BR>&nbsp;0C:8596:C8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+INY<BR>&nbsp;0C:8597:B1 FC&nbsp;&nbsp;&nbsp;&nbsp; LDA ($FC),Y @ $A451 = 
+#$D5<BR>&nbsp;0C:8599:85 11&nbsp;&nbsp;&nbsp;&nbsp; STA $0011 = 
+#$00<BR>&nbsp;0C:859B:C8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+INY<BR>&nbsp;0C:859C:B1 FC&nbsp;&nbsp;&nbsp;&nbsp; LDA ($FC),Y @ $A451 = 
+#$D5<BR>&nbsp;0C:859E:85 12&nbsp;&nbsp;&nbsp;&nbsp; STA $0012 = 
+#$87<BR>&nbsp;0C:85A0:C8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+INY<BR>&nbsp;0C:85A1:B1 FC&nbsp;&nbsp;&nbsp;&nbsp; LDA ($FC),Y @ $A451 = 
+#$D5<BR>&nbsp;0C:85A3:85 13&nbsp;&nbsp;&nbsp;&nbsp; STA $0013 = 
+#$00<BR>&nbsp;0C:85A5:A6 CD&nbsp;&nbsp;&nbsp;&nbsp; LDX $00CD = 
+#$1D<BR>&nbsp;0C:85A7:BD D7 77&nbsp; LDA $77D7,X @ $77D7 = 
+#$00<BR>&nbsp;0C:85AA:10 02&nbsp;&nbsp;&nbsp;&nbsp; BPL 
+$85AE<BR>&nbsp;0C:85AC:A2 00&nbsp;&nbsp;&nbsp;&nbsp; LDX 
+#$00<BR>&nbsp;0C:85AE:BD 97 75&nbsp; LDA $7597,X @ $7597 = 
+#$11<BR>&nbsp;0C:85B1:C5 10&nbsp;&nbsp;&nbsp;&nbsp; CMP $0010 = 
+#$8F<BR>&nbsp;0C:85B3:90 18&nbsp;&nbsp;&nbsp;&nbsp; BCC 
+$85CD<BR>&nbsp;0C:85B5:A5 12&nbsp;&nbsp;&nbsp;&nbsp; LDA $0012 = 
+#$87<BR>&nbsp;0C:85B7:DD 97 75&nbsp; CMP $7597,X @ $7597 = 
+#$11<BR>&nbsp;0C:85BA:90 11&nbsp;&nbsp;&nbsp;&nbsp; BCC 
+$85CD<BR>&nbsp;0C:85BC:BD B7 75&nbsp; LDA $75B7,X @ $75B7 = 
+#$0D<BR>&nbsp;0C:85BF:C5 11&nbsp;&nbsp;&nbsp;&nbsp; CMP $0011 = 
+#$00<BR>&nbsp;0C:85C1:90 0A&nbsp;&nbsp;&nbsp;&nbsp; BCC 
+$85CD<BR>&nbsp;0C:85C3:A5 13&nbsp;&nbsp;&nbsp;&nbsp; LDA $0013 = 
+#$00<BR>&nbsp;0C:85C5:DD B7 75&nbsp; CMP $75B7,X @ $75B7 = 
+#$0D<BR>&nbsp;0C:85C8:90 03&nbsp;&nbsp;&nbsp;&nbsp; BCC 
+$85CD<BR>&nbsp;0C:85CA:4C B5 82&nbsp; JMP $82B5<BR>&nbsp;0C:85CD:4C AF 82&nbsp; 
+JMP 
+$82AF<BR>-----------------------------------------------------------<BR>&nbsp;0C:85D0:A0 
+01&nbsp;&nbsp;&nbsp;&nbsp; LDY #$01<BR>&nbsp;0C:85D2:B1 
+FC&nbsp;&nbsp;&nbsp;&nbsp; LDA ($FC),Y @ $A451 = #$D5<BR>&nbsp;0C:85D4:85 
+17&nbsp;&nbsp;&nbsp;&nbsp; STA $0017 = #$00<BR>&nbsp;0C:85D6:A6 
+CD&nbsp;&nbsp;&nbsp;&nbsp; LDX $00CD = #$1D<BR>&nbsp;0C:85D8:BD 57 77&nbsp; LDA 
+$7757,X @ $7757 = #$80<BR>&nbsp;0C:85DB:29 C0&nbsp;&nbsp;&nbsp;&nbsp; AND 
+#$C0<BR>&nbsp;0C:85DD:85 16&nbsp;&nbsp;&nbsp;&nbsp; STA $0016 = 
+#$4C<BR>&nbsp;0C:85DF:A2 00&nbsp;&nbsp;&nbsp;&nbsp; LDX #$00<BR>&nbsp;0C:85E1:BD 
+37 75&nbsp; LDA $7537,X @ $7537 = #$36<BR>&nbsp;0C:85E4:F0 
+15&nbsp;&nbsp;&nbsp;&nbsp; BEQ $85FB<BR>&nbsp;0C:85E6:BD D7 77&nbsp; LDA $77D7,X 
+@ $77D7 = #$00<BR>&nbsp;0C:85E9:30 10&nbsp;&nbsp;&nbsp;&nbsp; BMI 
+$85FB<BR>&nbsp;0C:85EB:BD 57 77&nbsp; LDA $7757,X @ $7757 = 
+#$80<BR>&nbsp;0C:85EE:25 16&nbsp;&nbsp;&nbsp;&nbsp; AND $0016 = 
+#$4C<BR>&nbsp;0C:85F0:D0 09&nbsp;&nbsp;&nbsp;&nbsp; BNE 
+$85FB<BR>&nbsp;0C:85F2:20 57 C0&nbsp; JSR $C057<BR>&nbsp;0C:85F5:C5 
+17&nbsp;&nbsp;&nbsp;&nbsp; CMP $0017 = #$00<BR>&nbsp;0C:85F7:F0 
+0C&nbsp;&nbsp;&nbsp;&nbsp; BEQ $8605<BR>&nbsp;0C:85F9:90 
+0A&nbsp;&nbsp;&nbsp;&nbsp; BCC 
+$8605<BR>&nbsp;0C:85FB:E8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+INX<BR>&nbsp;0C:85FC:E0 20&nbsp;&nbsp;&nbsp;&nbsp; CPX #$20<BR>&nbsp;0C:85FE:D0 
+E1&nbsp;&nbsp;&nbsp;&nbsp; BNE $85E1<BR>&nbsp;0C:8600:A0 
+01&nbsp;&nbsp;&nbsp;&nbsp; LDY #$01<BR>&nbsp;0C:8602:4C AF 82&nbsp; JMP 
+$82AF<BR>&nbsp;0C:8605:A0 01&nbsp;&nbsp;&nbsp;&nbsp; LDY 
+#$01<BR>&nbsp;0C:8607:4C B5 82&nbsp; JMP 
+$82B5<BR>-----------------------------------------------------------<BR>&nbsp;0C:860A:A0 
+01&nbsp;&nbsp;&nbsp;&nbsp; LDY #$01<BR>&nbsp;0C:860C:A6 
+CD&nbsp;&nbsp;&nbsp;&nbsp; LDX $00CD = #$1D<BR>&nbsp;0C:860E:B1 
+FC&nbsp;&nbsp;&nbsp;&nbsp; LDA ($FC),Y @ $A451 = #$D5<BR>&nbsp;0C:8610:F0 
+0F&nbsp;&nbsp;&nbsp;&nbsp; BEQ $8621<BR>&nbsp;0C:8612:BD D7 76&nbsp; LDA $76D7,X 
+@ $76D7 = #$03<BR>&nbsp;0C:8615:D0 1A&nbsp;&nbsp;&nbsp;&nbsp; BNE 
+$8631<BR>&nbsp;0C:8617:BD B7 76&nbsp; LDA $76B7,X @ $76B7 = 
+#$F2<BR>&nbsp;0C:861A:D1 FC&nbsp;&nbsp;&nbsp;&nbsp; CMP ($FC),Y @ $A451 = 
+#$D5<BR>&nbsp;0C:861C:B0 13&nbsp;&nbsp;&nbsp;&nbsp; BCS 
+$8631<BR>&nbsp;0C:861E:4C AF 82&nbsp; JMP $82AF<BR>&nbsp;0C:8621:BD B7 76&nbsp; 
+LDA $76B7,X @ $76B7 = #$F2<BR>&nbsp;0C:8624:DD F7 76&nbsp; CMP $76F7,X @ $76F7 = 
+#$F2<BR>&nbsp;0C:8627:D0 F5&nbsp;&nbsp;&nbsp;&nbsp; BNE 
+$861E<BR>&nbsp;0C:8629:BD D7 76&nbsp; LDA $76D7,X @ $76D7 = 
+#$03<BR>&nbsp;0C:862C:DD 17 77&nbsp; CMP $7717,X @ $7717 = 
+#$03<BR>&nbsp;0C:862F:D0 ED&nbsp;&nbsp;&nbsp;&nbsp; BNE 
+$861E<BR>&nbsp;0C:8631:4C B5 82&nbsp; JMP 
+$82B5<BR>-----------------------------------------------------------<BR>&nbsp;0C:8634:AD 
+2C 75&nbsp; LDA $752C = #$00<BR>&nbsp;0C:8637:0D 2D 75&nbsp; ORA $752D = 
+#$00<BR>&nbsp;0C:863A:F0 31&nbsp;&nbsp;&nbsp;&nbsp; BEQ 
+$866D<BR>&nbsp;0C:863C:A0 01&nbsp;&nbsp;&nbsp;&nbsp; LDY 
+#$01<BR>&nbsp;0C:863E:B1 FC&nbsp;&nbsp;&nbsp;&nbsp; LDA ($FC),Y @ $A451 = 
+#$D5<BR>&nbsp;0C:8640:C9 FF&nbsp;&nbsp;&nbsp;&nbsp; CMP #$FF<BR>&nbsp;0C:8642:F0 
+08&nbsp;&nbsp;&nbsp;&nbsp; BEQ $864C<BR>&nbsp;0C:8644:20 87 C0&nbsp; JSR 
+$C087<BR>&nbsp;0C:8647:CD 2C 75&nbsp; CMP $752C = #$00<BR>&nbsp;0C:864A:D0 
+21&nbsp;&nbsp;&nbsp;&nbsp; BNE $866D<BR>&nbsp;0C:864C:A0 
+02&nbsp;&nbsp;&nbsp;&nbsp; LDY #$02<BR>&nbsp;0C:864E:B1 
+FC&nbsp;&nbsp;&nbsp;&nbsp; LDA ($FC),Y @ $A451 = #$D5<BR>&nbsp;0C:8650:C9 
+FF&nbsp;&nbsp;&nbsp;&nbsp; CMP #$FF<BR>&nbsp;0C:8652:F0 
+08&nbsp;&nbsp;&nbsp;&nbsp; BEQ $865C<BR>&nbsp;0C:8654:20 87 C0&nbsp; JSR 
+$C087<BR>&nbsp;0C:8657:CD 2D 75&nbsp; CMP $752D = #$00<BR>&nbsp;0C:865A:D0 
+11&nbsp;&nbsp;&nbsp;&nbsp; BNE $866D<BR>&nbsp;0C:865C:A0 
+03&nbsp;&nbsp;&nbsp;&nbsp; LDY #$03<BR>&nbsp;0C:865E:B1 
+FC&nbsp;&nbsp;&nbsp;&nbsp; LDA ($FC),Y @ $A451 = #$D5<BR>&nbsp;0C:8660:2D 2E 
+75&nbsp; AND $752E = 
+#$00<BR>&nbsp;0C:8663:C8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+INY<BR>&nbsp;0C:8664:D1 FC&nbsp;&nbsp;&nbsp;&nbsp; CMP ($FC),Y @ $A451 = 
+#$D5<BR>&nbsp;0C:8666:D0 05&nbsp;&nbsp;&nbsp;&nbsp; BNE 
+$866D<BR>&nbsp;0C:8668:A0 04&nbsp;&nbsp;&nbsp;&nbsp; LDY 
+#$04<BR>&nbsp;0C:866A:4C B5 82&nbsp; JMP $82B5<BR>&nbsp;0C:866D:A0 
+04&nbsp;&nbsp;&nbsp;&nbsp; LDY #$04<BR>&nbsp;0C:866F:4C AF 82&nbsp; JMP 
+$82AF<BR>-----------------------------------------------------------<BR>&nbsp;0C:8672:A6 
+CD&nbsp;&nbsp;&nbsp;&nbsp; LDX $00CD = #$1D<BR>&nbsp;0C:8674:BD 57 77&nbsp; LDA 
+$7757,X @ $7757 = #$80<BR>&nbsp;0C:8677:29 20&nbsp;&nbsp;&nbsp;&nbsp; AND 
+#$20<BR>&nbsp;0C:8679:D0 79&nbsp;&nbsp;&nbsp;&nbsp; BNE 
+$86F4<BR>&nbsp;0C:867B:A5 D3&nbsp;&nbsp;&nbsp;&nbsp; LDA $00D3 = 
+#$0C<BR>&nbsp;0C:867D:C5 D5&nbsp;&nbsp;&nbsp;&nbsp; CMP $00D5 = 
+#$0C<BR>&nbsp;0C:867F:D0 73&nbsp;&nbsp;&nbsp;&nbsp; BNE 
+$86F4<BR>&nbsp;0C:8681:A5 D4&nbsp;&nbsp;&nbsp;&nbsp; LDA $00D4 = 
+#$0B<BR>&nbsp;0C:8683:C5 D6&nbsp;&nbsp;&nbsp;&nbsp; CMP $00D6 = 
+#$0B<BR>&nbsp;0C:8685:D0 6D&nbsp;&nbsp;&nbsp;&nbsp; BNE 
+$86F4<BR>&nbsp;0C:8687:A9 2F&nbsp;&nbsp;&nbsp;&nbsp; LDA 
+#$2F<BR>&nbsp;0C:8689:20 08 C1&nbsp; JSR $C108<BR>&nbsp;0C:868C:A9 
+4E&nbsp;&nbsp;&nbsp;&nbsp; LDA #$4E<BR>&nbsp;0C:868E:20 08 C1&nbsp; JSR 
+$C108<BR>&nbsp;0C:8691:A9 4F&nbsp;&nbsp;&nbsp;&nbsp; LDA 
+#$4F<BR>&nbsp;0C:8693:20 08 C1&nbsp; JSR $C108<BR>&nbsp;0C:8696:A6 
+CD&nbsp;&nbsp;&nbsp;&nbsp; LDX $00CD = #$1D<BR>&nbsp;0C:8698:BD 57 77&nbsp; LDA 
+$7757,X @ $7757 = #$80<BR>&nbsp;0C:869B:29 C0&nbsp;&nbsp;&nbsp;&nbsp; AND 
+#$C0<BR>&nbsp;0C:869D:85 04&nbsp;&nbsp;&nbsp;&nbsp; STA $0004 = 
+#$01<BR>&nbsp;0C:869F:A9 FF&nbsp;&nbsp;&nbsp;&nbsp; LDA #$FF<BR>&nbsp;0C:86A1:85 
+07&nbsp;&nbsp;&nbsp;&nbsp; STA $0007 = #$68<BR>&nbsp;0C:86A3:85 
+06&nbsp;&nbsp;&nbsp;&nbsp; STA $0006 = #$00<BR>&nbsp;0C:86A5:A2 
+00&nbsp;&nbsp;&nbsp;&nbsp; LDX #$00<BR>&nbsp;0C:86A7:BD 37 75&nbsp; LDA $7537,X 
+@ $7537 = #$36<BR>&nbsp;0C:86AA:F0 1C&nbsp;&nbsp;&nbsp;&nbsp; BEQ 
+$86C8<BR>&nbsp;0C:86AC:BD D7 77&nbsp; LDA $77D7,X @ $77D7 = 
+#$00<BR>&nbsp;0C:86AF:30 17&nbsp;&nbsp;&nbsp;&nbsp; BMI 
+$86C8<BR>&nbsp;0C:86B1:BD 57 77&nbsp; LDA $7757,X @ $7757 = 
+#$80<BR>&nbsp;0C:86B4:25 04&nbsp;&nbsp;&nbsp;&nbsp; AND $0004 = 
+#$01<BR>&nbsp;0C:86B6:D0 10&nbsp;&nbsp;&nbsp;&nbsp; BNE 
+$86C8<BR>&nbsp;0C:86B8:20 8A C0&nbsp; JSR $C08A<BR>&nbsp;0C:86BB:20 54 C0&nbsp; 
+JSR $C054<BR>&nbsp;0C:86BE:B1 08&nbsp;&nbsp;&nbsp;&nbsp; LDA ($08),Y @ $63E4 = 
+#$23<BR>&nbsp;0C:86C0:C5 06&nbsp;&nbsp;&nbsp;&nbsp; CMP $0006 = 
+#$00<BR>&nbsp;0C:86C2:B0 04&nbsp;&nbsp;&nbsp;&nbsp; BCS 
+$86C8<BR>&nbsp;0C:86C4:85 06&nbsp;&nbsp;&nbsp;&nbsp; STA $0006 = 
+#$00<BR>&nbsp;0C:86C6:86 05&nbsp;&nbsp;&nbsp;&nbsp; STX $0005 = 
+#$11<BR>&nbsp;0C:86C8:E8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+INX<BR>&nbsp;0C:86C9:E0 20&nbsp;&nbsp;&nbsp;&nbsp; CPX #$20<BR>&nbsp;0C:86CB:D0 
+DA&nbsp;&nbsp;&nbsp;&nbsp; BNE $86A7<BR>&nbsp;0C:86CD:A5 
+07&nbsp;&nbsp;&nbsp;&nbsp; LDA $0007 = #$68<BR>&nbsp;0C:86CF:C9 
+FD&nbsp;&nbsp;&nbsp;&nbsp; CMP #$FD<BR>&nbsp;0C:86D1:90 
+17&nbsp;&nbsp;&nbsp;&nbsp; BCC $86EA<BR>&nbsp;0C:86D3:A5 
+06&nbsp;&nbsp;&nbsp;&nbsp; LDA $0006 = #$00<BR>&nbsp;0C:86D5:C9 
+FD&nbsp;&nbsp;&nbsp;&nbsp; CMP #$FD<BR>&nbsp;0C:86D7:90 
+11&nbsp;&nbsp;&nbsp;&nbsp; BCC $86EA<BR>&nbsp;0C:86D9:A6 
+CD&nbsp;&nbsp;&nbsp;&nbsp; LDX $00CD = #$1D<BR>&nbsp;0C:86DB:BD 97 75&nbsp; LDA 
+$7597,X @ $7597 = #$11<BR>&nbsp;0C:86DE:85 D5&nbsp;&nbsp;&nbsp;&nbsp; STA $00D5 
+= #$0C<BR>&nbsp;0C:86E0:BD B7 75&nbsp; LDA $75B7,X @ $75B7 = 
+#$0D<BR>&nbsp;0C:86E3:85 D6&nbsp;&nbsp;&nbsp;&nbsp; STA $00D6 = 
+#$0B<BR>&nbsp;0C:86E5:A0 00&nbsp;&nbsp;&nbsp;&nbsp; LDY #$00<BR>&nbsp;0C:86E7:4C 
+AF 82&nbsp; JMP $82AF<BR>&nbsp;0C:86EA:20 8D C0&nbsp; JSR 
+$C08D<BR>&nbsp;0C:86ED:B0 05&nbsp;&nbsp;&nbsp;&nbsp; BCS 
+$86F4<BR>&nbsp;0C:86EF:A0 00&nbsp;&nbsp;&nbsp;&nbsp; LDY 
+#$00<BR>&nbsp;0C:86F1:4C B5 82&nbsp; JMP $82B5<BR>&nbsp;0C:86F4:A0 
+00&nbsp;&nbsp;&nbsp;&nbsp; LDY #$00<BR>&nbsp;0C:86F6:4C AF 82&nbsp; JMP 
+$82AF<BR>-----------------------------------------------------------<BR>&nbsp;0C:86F9:A6 
+CD&nbsp;&nbsp;&nbsp;&nbsp; LDX $00CD = #$1D<BR>&nbsp;0C:86FB:BD 57 77&nbsp; LDA 
+$7757,X @ $7757 = #$80<BR>&nbsp;0C:86FE:29 20&nbsp;&nbsp;&nbsp;&nbsp; AND 
+#$20<BR>&nbsp;0C:8700:D0 53&nbsp;&nbsp;&nbsp;&nbsp; BNE 
+$8755<BR>&nbsp;0C:8702:A5 D3&nbsp;&nbsp;&nbsp;&nbsp; LDA $00D3 = 
+#$0C<BR>&nbsp;0C:8704:C5 D5&nbsp;&nbsp;&nbsp;&nbsp; CMP $00D5 = 
+#$0C<BR>&nbsp;0C:8706:D0 4D&nbsp;&nbsp;&nbsp;&nbsp; BNE 
+$8755<BR>&nbsp;0C:8708:A5 D4&nbsp;&nbsp;&nbsp;&nbsp; LDA $00D4 = 
+#$0B<BR>&nbsp;0C:870A:C5 D6&nbsp;&nbsp;&nbsp;&nbsp; CMP $00D6 = 
+#$0B<BR>&nbsp;0C:870C:D0 47&nbsp;&nbsp;&nbsp;&nbsp; BNE 
+$8755<BR>&nbsp;0C:870E:A9 2F&nbsp;&nbsp;&nbsp;&nbsp; LDA 
+#$2F<BR>&nbsp;0C:8710:20 08 C1&nbsp; JSR $C108<BR>&nbsp;0C:8713:A9 
+4E&nbsp;&nbsp;&nbsp;&nbsp; LDA #$4E<BR>&nbsp;0C:8715:20 08 C1&nbsp; JSR 
+$C108<BR>&nbsp;0C:8718:A9 4F&nbsp;&nbsp;&nbsp;&nbsp; LDA 
+#$4F<BR>&nbsp;0C:871A:20 08 C1&nbsp; JSR $C108<BR>&nbsp;0C:871D:A0 
+01&nbsp;&nbsp;&nbsp;&nbsp; LDY #$01<BR>&nbsp;0C:871F:B1 
+FC&nbsp;&nbsp;&nbsp;&nbsp; LDA ($FC),Y @ $A451 = #$D5<BR>&nbsp;0C:8721:20 1D 
+93&nbsp; JSR $931D<BR>&nbsp;0C:8724:90 03&nbsp;&nbsp;&nbsp;&nbsp; BCC 
+$8729<BR>&nbsp;0C:8726:4C AF 82&nbsp; JMP $82AF<BR>&nbsp;0C:8729:BD D7 77&nbsp; 
+LDA $77D7,X @ $77D7 = #$00<BR>&nbsp;0C:872C:29 C0&nbsp;&nbsp;&nbsp;&nbsp; AND 
+#$C0<BR>&nbsp;0C:872E:C9 C0&nbsp;&nbsp;&nbsp;&nbsp; CMP #$C0<BR>&nbsp;0C:8730:D0 
+02&nbsp;&nbsp;&nbsp;&nbsp; BNE $8734<BR>&nbsp;0C:8732:A2 
+00&nbsp;&nbsp;&nbsp;&nbsp; LDX #$00<BR>&nbsp;0C:8734:A9 
+FF&nbsp;&nbsp;&nbsp;&nbsp; LDA #$FF<BR>&nbsp;0C:8736:85 
+07&nbsp;&nbsp;&nbsp;&nbsp; STA $0007 = #$68<BR>&nbsp;0C:8738:20 8A C0&nbsp; JSR 
+$C08A<BR>&nbsp;0C:873B:A5 07&nbsp;&nbsp;&nbsp;&nbsp; LDA $0007 = 
+#$68<BR>&nbsp;0C:873D:C9 FD&nbsp;&nbsp;&nbsp;&nbsp; CMP #$FD<BR>&nbsp;0C:873F:90 
+0A&nbsp;&nbsp;&nbsp;&nbsp; BCC $874B<BR>&nbsp;0C:8741:BD 97 75&nbsp; LDA $7597,X 
+@ $7597 = #$11<BR>&nbsp;0C:8744:85 D5&nbsp;&nbsp;&nbsp;&nbsp; STA $00D5 = 
+#$0C<BR>&nbsp;0C:8746:BD B7 75&nbsp; LDA $75B7,X @ $75B7 = 
+#$0D<BR>&nbsp;0C:8749:85 D6&nbsp;&nbsp;&nbsp;&nbsp; STA $00D6 = 
+#$0B<BR>&nbsp;0C:874B:20 8D C0&nbsp; JSR $C08D<BR>&nbsp;0C:874E:B0 
+05&nbsp;&nbsp;&nbsp;&nbsp; BCS $8755<BR>&nbsp;0C:8750:A0 
+01&nbsp;&nbsp;&nbsp;&nbsp; LDY #$01<BR>&nbsp;0C:8752:4C B5 82&nbsp; JMP 
+$82B5<BR>&nbsp;0C:8755:A0 01&nbsp;&nbsp;&nbsp;&nbsp; LDY 
+#$01<BR>&nbsp;0C:8757:4C AF 82&nbsp; JMP 
+$82AF<BR>-----------------------------------------------------------<BR>&nbsp;0C:875A:A6 
+CD&nbsp;&nbsp;&nbsp;&nbsp; LDX $00CD = #$1D<BR>&nbsp;0C:875C:BD 57 77&nbsp; LDA 
+$7757,X @ $7757 = #$80<BR>&nbsp;0C:875F:29 20&nbsp;&nbsp;&nbsp;&nbsp; AND 
+#$20<BR>&nbsp;0C:8761:D0 28&nbsp;&nbsp;&nbsp;&nbsp; BNE 
+$878B<BR>&nbsp;0C:8763:A5 D3&nbsp;&nbsp;&nbsp;&nbsp; LDA $00D3 = 
+#$0C<BR>&nbsp;0C:8765:C5 D5&nbsp;&nbsp;&nbsp;&nbsp; CMP $00D5 = 
+#$0C<BR>&nbsp;0C:8767:D0 22&nbsp;&nbsp;&nbsp;&nbsp; BNE 
+$878B<BR>&nbsp;0C:8769:A5 D4&nbsp;&nbsp;&nbsp;&nbsp; LDA $00D4 = 
+#$0B<BR>&nbsp;0C:876B:C5 D6&nbsp;&nbsp;&nbsp;&nbsp; CMP $00D6 = 
+#$0B<BR>&nbsp;0C:876D:D0 1C&nbsp;&nbsp;&nbsp;&nbsp; BNE 
+$878B<BR>&nbsp;0C:876F:A9 2F&nbsp;&nbsp;&nbsp;&nbsp; LDA 
+#$2F<BR>&nbsp;0C:8771:20 08 C1&nbsp; JSR $C108<BR>&nbsp;0C:8774:A9 
+4E&nbsp;&nbsp;&nbsp;&nbsp; LDA #$4E<BR>&nbsp;0C:8776:20 08 C1&nbsp; JSR 
+$C108<BR>&nbsp;0C:8779:A9 4F&nbsp;&nbsp;&nbsp;&nbsp; LDA 
+#$4F<BR>&nbsp;0C:877B:20 08 C1&nbsp; JSR $C108<BR>&nbsp;0C:877E:A9 
+FC&nbsp;&nbsp;&nbsp;&nbsp; LDA #$FC<BR>&nbsp;0C:8780:85 
+D0&nbsp;&nbsp;&nbsp;&nbsp; STA $00D0 = #$01<BR>&nbsp;0C:8782:A0 
+01&nbsp;&nbsp;&nbsp;&nbsp; LDY #$01<BR>&nbsp;0C:8784:B1 
+FC&nbsp;&nbsp;&nbsp;&nbsp; LDA ($FC),Y @ $A451 = #$D5<BR>&nbsp;0C:8786:20 1D 
+93&nbsp; JSR $931D<BR>&nbsp;0C:8789:90 9E&nbsp;&nbsp;&nbsp;&nbsp; BCC 
+$8729<BR>&nbsp;0C:878B:A0 01&nbsp;&nbsp;&nbsp;&nbsp; LDY 
+#$01<BR>&nbsp;0C:878D:4C AF 82&nbsp; JMP 
+$82AF<BR>-----------------------------------------------------------<BR>&nbsp;0C:8790:A6 
+CD&nbsp;&nbsp;&nbsp;&nbsp; LDX $00CD = #$1D<BR>&nbsp;0C:8792:BD 57 77&nbsp; LDA 
+$7757,X @ $7757 = #$80<BR>&nbsp;0C:8795:29 20&nbsp;&nbsp;&nbsp;&nbsp; AND 
+#$20<BR>&nbsp;0C:8797:D0 35&nbsp;&nbsp;&nbsp;&nbsp; BNE 
+$87CE<BR>&nbsp;0C:8799:A5 D3&nbsp;&nbsp;&nbsp;&nbsp; LDA $00D3 = 
+#$0C<BR>&nbsp;0C:879B:C5 D5&nbsp;&nbsp;&nbsp;&nbsp; CMP $00D5 = 
+#$0C<BR>&nbsp;0C:879D:D0 2F&nbsp;&nbsp;&nbsp;&nbsp; BNE 
+$87CE<BR>&nbsp;0C:879F:A5 D4&nbsp;&nbsp;&nbsp;&nbsp; LDA $00D4 = 
+#$0B<BR>&nbsp;0C:87A1:C5 D6&nbsp;&nbsp;&nbsp;&nbsp; CMP $00D6 = 
+#$0B<BR>&nbsp;0C:87A3:D0 29&nbsp;&nbsp;&nbsp;&nbsp; BNE 
+$87CE<BR>&nbsp;0C:87A5:A9 2F&nbsp;&nbsp;&nbsp;&nbsp; LDA 
+#$2F<BR>&nbsp;0C:87A7:20 08 C1&nbsp; JSR $C108<BR>&nbsp;0C:87AA:A9 
+4E&nbsp;&nbsp;&nbsp;&nbsp; LDA #$4E<BR>&nbsp;0C:87AC:20 08 C1&nbsp; JSR 
+$C108<BR>&nbsp;0C:87AF:A9 4F&nbsp;&nbsp;&nbsp;&nbsp; LDA 
+#$4F<BR>&nbsp;0C:87B1:20 08 C1&nbsp; JSR $C108<BR>&nbsp;0C:87B4:A0 
+01&nbsp;&nbsp;&nbsp;&nbsp; LDY #$01<BR>&nbsp;0C:87B6:B1 
+FC&nbsp;&nbsp;&nbsp;&nbsp; LDA ($FC),Y @ $A451 = #$D5<BR>&nbsp;0C:87B8:85 
+D5&nbsp;&nbsp;&nbsp;&nbsp; STA $00D5 = 
+#$0C<BR>&nbsp;0C:87BA:C8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+INY<BR>&nbsp;0C:87BB:B1 FC&nbsp;&nbsp;&nbsp;&nbsp; LDA ($FC),Y @ $A451 = 
+#$D5<BR>&nbsp;0C:87BD:85 D6&nbsp;&nbsp;&nbsp;&nbsp; STA $00D6 = 
+#$0B<BR>&nbsp;0C:87BF:C8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+INY<BR>&nbsp;0C:87C0:B1 FC&nbsp;&nbsp;&nbsp;&nbsp; LDA ($FC),Y @ $A451 = 
+#$D5<BR>&nbsp;0C:87C2:85 D0&nbsp;&nbsp;&nbsp;&nbsp; STA $00D0 = 
+#$01<BR>&nbsp;0C:87C4:20 8D C0&nbsp; JSR $C08D<BR>&nbsp;0C:87C7:B0 
+05&nbsp;&nbsp;&nbsp;&nbsp; BCS $87CE<BR>&nbsp;0C:87C9:A0 
+03&nbsp;&nbsp;&nbsp;&nbsp; LDY #$03<BR>&nbsp;0C:87CB:4C B5 82&nbsp; JMP 
+$82B5<BR>&nbsp;0C:87CE:A0 03&nbsp;&nbsp;&nbsp;&nbsp; LDY 
+#$03<BR>&nbsp;0C:87D0:4C AF 82&nbsp; JMP 
+$82AF<BR>-----------------------------------------------------------<BR>&nbsp;0C:87D3:A6 
+CD&nbsp;&nbsp;&nbsp;&nbsp; LDX $00CD = #$1D<BR>&nbsp;0C:87D5:BD 57 77&nbsp; LDA 
+$7757,X @ $7757 = #$80<BR>&nbsp;0C:87D8:29 20&nbsp;&nbsp;&nbsp;&nbsp; AND 
+#$20<BR>&nbsp;0C:87DA:D0 37&nbsp;&nbsp;&nbsp;&nbsp; BNE 
+$8813<BR>&nbsp;0C:87DC:A5 D3&nbsp;&nbsp;&nbsp;&nbsp; LDA $00D3 = 
+#$0C<BR>&nbsp;0C:87DE:C5 D5&nbsp;&nbsp;&nbsp;&nbsp; CMP $00D5 = 
+#$0C<BR>&nbsp;0C:87E0:D0 31&nbsp;&nbsp;&nbsp;&nbsp; BNE 
+$8813<BR>&nbsp;0C:87E2:A5 D4&nbsp;&nbsp;&nbsp;&nbsp; LDA $00D4 = 
+#$0B<BR>&nbsp;0C:87E4:C5 D6&nbsp;&nbsp;&nbsp;&nbsp; CMP $00D6 = 
+#$0B<BR>&nbsp;0C:87E6:D0 2B&nbsp;&nbsp;&nbsp;&nbsp; BNE 
+$8813<BR>&nbsp;0C:87E8:A9 2F&nbsp;&nbsp;&nbsp;&nbsp; LDA 
+#$2F<BR>&nbsp;0C:87EA:20 08 C1&nbsp; JSR $C108<BR>&nbsp;0C:87ED:A9 
+4E&nbsp;&nbsp;&nbsp;&nbsp; LDA #$4E<BR>&nbsp;0C:87EF:20 08 C1&nbsp; JSR 
+$C108<BR>&nbsp;0C:87F2:A9 4F&nbsp;&nbsp;&nbsp;&nbsp; LDA 
+#$4F<BR>&nbsp;0C:87F4:20 08 C1&nbsp; JSR $C108<BR>&nbsp;0C:87F7:A0 
+01&nbsp;&nbsp;&nbsp;&nbsp; LDY #$01<BR>&nbsp;0C:87F9:B1 
+FC&nbsp;&nbsp;&nbsp;&nbsp; LDA ($FC),Y @ $A451 = #$D5<BR>&nbsp;0C:87FB:85 
+D5&nbsp;&nbsp;&nbsp;&nbsp; STA $00D5 = 
+#$0C<BR>&nbsp;0C:87FD:C8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+INY<BR>&nbsp;0C:87FE:B1 FC&nbsp;&nbsp;&nbsp;&nbsp; LDA ($FC),Y @ $A451 = 
+#$D5<BR>&nbsp;0C:8800:85 D6&nbsp;&nbsp;&nbsp;&nbsp; STA $00D6 = 
+#$0B<BR>&nbsp;0C:8802:A6 CD&nbsp;&nbsp;&nbsp;&nbsp; LDX $00CD = 
+#$1D<BR>&nbsp;0C:8804:BD 37 76&nbsp; LDA $7637,X @ $7637 = 
+#$08<BR>&nbsp;0C:8807:85 D0&nbsp;&nbsp;&nbsp;&nbsp; STA $00D0 = 
+#$01<BR>&nbsp;0C:8809:20 8D C0&nbsp; JSR $C08D<BR>&nbsp;0C:880C:B0 
+05&nbsp;&nbsp;&nbsp;&nbsp; BCS $8813<BR>&nbsp;0C:880E:A0 
+02&nbsp;&nbsp;&nbsp;&nbsp; LDY #$02<BR>&nbsp;0C:8810:4C B5 82&nbsp; JMP 
+$82B5<BR>&nbsp;0C:8813:A0 02&nbsp;&nbsp;&nbsp;&nbsp; LDY 
+#$02<BR>&nbsp;0C:8815:4C AF 82&nbsp; JMP 
+$82AF<BR>-----------------------------------------------------------<BR>&nbsp;0C:8818:A6 
+CD&nbsp;&nbsp;&nbsp;&nbsp; LDX $00CD = #$1D<BR>&nbsp;0C:881A:BD 57 77&nbsp; LDA 
+$7757,X @ $7757 = #$80<BR>&nbsp;0C:881D:29 20&nbsp;&nbsp;&nbsp;&nbsp; AND 
+#$20<BR>&nbsp;0C:881F:D0 34&nbsp;&nbsp;&nbsp;&nbsp; BNE 
+$8855<BR>&nbsp;0C:8821:A5 D3&nbsp;&nbsp;&nbsp;&nbsp; LDA $00D3 = 
+#$0C<BR>&nbsp;0C:8823:C5 D5&nbsp;&nbsp;&nbsp;&nbsp; CMP $00D5 = 
+#$0C<BR>&nbsp;0C:8825:D0 2E&nbsp;&nbsp;&nbsp;&nbsp; BNE 
+$8855<BR>&nbsp;0C:8827:A5 D4&nbsp;&nbsp;&nbsp;&nbsp; LDA $00D4 = 
+#$0B<BR>&nbsp;0C:8829:C5 D6&nbsp;&nbsp;&nbsp;&nbsp; CMP $00D6 = 
+#$0B<BR>&nbsp;0C:882B:D0 28&nbsp;&nbsp;&nbsp;&nbsp; BNE 
+$8855<BR>&nbsp;0C:882D:A9 2F&nbsp;&nbsp;&nbsp;&nbsp; LDA 
+#$2F<BR>&nbsp;0C:882F:20 08 C1&nbsp; JSR $C108<BR>&nbsp;0C:8832:A9 
+4E&nbsp;&nbsp;&nbsp;&nbsp; LDA #$4E<BR>&nbsp;0C:8834:20 08 C1&nbsp; JSR 
+$C108<BR>&nbsp;0C:8837:A9 4F&nbsp;&nbsp;&nbsp;&nbsp; LDA 
+#$4F<BR>&nbsp;0C:8839:20 08 C1&nbsp; JSR $C108<BR>&nbsp;0C:883C:A0 
+01&nbsp;&nbsp;&nbsp;&nbsp; LDY #$01<BR>&nbsp;0C:883E:B1 
+FC&nbsp;&nbsp;&nbsp;&nbsp; LDA ($FC),Y @ $A451 = #$D5<BR>&nbsp;0C:8840:85 
+D5&nbsp;&nbsp;&nbsp;&nbsp; STA $00D5 = 
+#$0C<BR>&nbsp;0C:8842:C8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+INY<BR>&nbsp;0C:8843:B1 FC&nbsp;&nbsp;&nbsp;&nbsp; LDA ($FC),Y @ $A451 = 
+#$D5<BR>&nbsp;0C:8845:85 D6&nbsp;&nbsp;&nbsp;&nbsp; STA $00D6 = 
+#$0B<BR>&nbsp;0C:8847:A9 FC&nbsp;&nbsp;&nbsp;&nbsp; LDA #$FC<BR>&nbsp;0C:8849:85 
+D0&nbsp;&nbsp;&nbsp;&nbsp; STA $00D0 = #$01<BR>&nbsp;0C:884B:20 8D C0&nbsp; JSR 
+$C08D<BR>&nbsp;0C:884E:B0 05&nbsp;&nbsp;&nbsp;&nbsp; BCS 
+$8855<BR>&nbsp;0C:8850:A0 02&nbsp;&nbsp;&nbsp;&nbsp; LDY 
+#$02<BR>&nbsp;0C:8852:4C B5 82&nbsp; JMP $82B5<BR>&nbsp;0C:8855:A0 
+02&nbsp;&nbsp;&nbsp;&nbsp; LDY #$02<BR>&nbsp;0C:8857:4C AF 82&nbsp; JMP 
+$82AF<BR>-----------------------------------------------------------<BR>&nbsp;0C:885A:A9 
+00&nbsp;&nbsp;&nbsp;&nbsp; LDA #$00<BR>&nbsp;0C:885C:8D F2 04&nbsp; STA $04F2 = 
+#$AA<BR>&nbsp;0C:885F:A0 01&nbsp;&nbsp;&nbsp;&nbsp; LDY #$01<BR>&nbsp;0C:8861:B1 
+FC&nbsp;&nbsp;&nbsp;&nbsp; LDA ($FC),Y @ $A451 = #$D5<BR>&nbsp;0C:8863:29 
+07&nbsp;&nbsp;&nbsp;&nbsp; AND #$07<BR>&nbsp;0C:8865:8D B2 06&nbsp; STA $06B2 = 
+#$00<BR>&nbsp;0C:8868:A6 CD&nbsp;&nbsp;&nbsp;&nbsp; LDX $00CD = 
+#$1D<BR>&nbsp;0C:886A:86 D1&nbsp;&nbsp;&nbsp;&nbsp; STX $00D1 = 
+#$00<BR>&nbsp;0C:886C:BD F7 75&nbsp; LDA $75F7,X @ $75F7 = 
+#$74<BR>&nbsp;0C:886F:F0 11&nbsp;&nbsp;&nbsp;&nbsp; BEQ 
+$8882<BR>&nbsp;0C:8871:85 D7&nbsp;&nbsp;&nbsp;&nbsp; STA $00D7 = 
+#$00<BR>&nbsp;0C:8873:A9 00&nbsp;&nbsp;&nbsp;&nbsp; LDA #$00<BR>&nbsp;0C:8875:85 
+D2&nbsp;&nbsp;&nbsp;&nbsp; STA $00D2 = #$00<BR>&nbsp;0C:8877:20 93 C0&nbsp; JSR 
+$C093<BR>&nbsp;0C:887A:E6 D2&nbsp;&nbsp;&nbsp;&nbsp; INC $00D2 = 
+#$00<BR>&nbsp;0C:887C:A5 D2&nbsp;&nbsp;&nbsp;&nbsp; LDA $00D2 = 
+#$00<BR>&nbsp;0C:887E:C9 20&nbsp;&nbsp;&nbsp;&nbsp; CMP #$20<BR>&nbsp;0C:8880:D0 
+F5&nbsp;&nbsp;&nbsp;&nbsp; BNE $8877<BR>&nbsp;0C:8882:A6 
+D1&nbsp;&nbsp;&nbsp;&nbsp; LDX $00D1 = #$00<BR>&nbsp;0C:8884:BD 17 76&nbsp; LDA 
+$7617,X @ $7617 = #$B2<BR>&nbsp;0C:8887:F0 11&nbsp;&nbsp;&nbsp;&nbsp; BEQ 
+$889A<BR>&nbsp;0C:8889:85 D7&nbsp;&nbsp;&nbsp;&nbsp; STA $00D7 = 
+#$00<BR>&nbsp;0C:888B:A9 00&nbsp;&nbsp;&nbsp;&nbsp; LDA #$00<BR>&nbsp;0C:888D:85 
+D2&nbsp;&nbsp;&nbsp;&nbsp; STA $00D2 = #$00<BR>&nbsp;0C:888F:20 93 C0&nbsp; JSR 
+$C093<BR>&nbsp;0C:8892:E6 D2&nbsp;&nbsp;&nbsp;&nbsp; INC $00D2 = 
+#$00<BR>&nbsp;0C:8894:A5 D2&nbsp;&nbsp;&nbsp;&nbsp; LDA $00D2 = 
+#$00<BR>&nbsp;0C:8896:C9 20&nbsp;&nbsp;&nbsp;&nbsp; CMP #$20<BR>&nbsp;0C:8898:D0 
+F5&nbsp;&nbsp;&nbsp;&nbsp; BNE $888F<BR>&nbsp;0C:889A:AD F2 04&nbsp; LDA $04F2 = 
+#$AA<BR>&nbsp;0C:889D:F0 07&nbsp;&nbsp;&nbsp;&nbsp; BEQ 
+$88A6<BR>&nbsp;0C:889F:AD B2 06&nbsp; LDA $06B2 = #$00<BR>&nbsp;0C:88A2:29 
+04&nbsp;&nbsp;&nbsp;&nbsp; AND #$04<BR>&nbsp;0C:88A4:F0 
+6F&nbsp;&nbsp;&nbsp;&nbsp; BEQ $8915<BR>&nbsp;0C:88A6:A5 
+D3&nbsp;&nbsp;&nbsp;&nbsp; LDA $00D3 = #$0C<BR>&nbsp;0C:88A8:C5 
+D5&nbsp;&nbsp;&nbsp;&nbsp; CMP $00D5 = #$0C<BR>&nbsp;0C:88AA:D0 
+64&nbsp;&nbsp;&nbsp;&nbsp; BNE $8910<BR>&nbsp;0C:88AC:A5 
+D4&nbsp;&nbsp;&nbsp;&nbsp; LDA $00D4 = #$0B<BR>&nbsp;0C:88AE:C5 
+D6&nbsp;&nbsp;&nbsp;&nbsp; CMP $00D6 = #$0B<BR>&nbsp;0C:88B0:D0 
+5E&nbsp;&nbsp;&nbsp;&nbsp; BNE $8910<BR>&nbsp;0C:88B2:A6 
+D1&nbsp;&nbsp;&nbsp;&nbsp; LDX $00D1 = #$00<BR>&nbsp;0C:88B4:BD 57 77&nbsp; LDA 
+$7757,X @ $7757 = #$80<BR>&nbsp;0C:88B7:29 20&nbsp;&nbsp;&nbsp;&nbsp; AND 
+#$20<BR>&nbsp;0C:88B9:D0 55&nbsp;&nbsp;&nbsp;&nbsp; BNE 
+$8910<BR>&nbsp;0C:88BB:A9 2F&nbsp;&nbsp;&nbsp;&nbsp; LDA 
+#$2F<BR>&nbsp;0C:88BD:20 08 C1&nbsp; JSR $C108<BR>&nbsp;0C:88C0:A9 
+4E&nbsp;&nbsp;&nbsp;&nbsp; LDA #$4E<BR>&nbsp;0C:88C2:20 08 C1&nbsp; JSR 
+$C108<BR>&nbsp;0C:88C5:A9 50&nbsp;&nbsp;&nbsp;&nbsp; LDA 
+#$50<BR>&nbsp;0C:88C7:20 08 C1&nbsp; JSR $C108<BR>&nbsp;0C:88CA:A6 
+D1&nbsp;&nbsp;&nbsp;&nbsp; LDX $00D1 = #$00<BR>&nbsp;0C:88CC:BD F7 75&nbsp; LDA 
+$75F7,X @ $75F7 = #$74<BR>&nbsp;0C:88CF:F0 11&nbsp;&nbsp;&nbsp;&nbsp; BEQ 
+$88E2<BR>&nbsp;0C:88D1:85 D7&nbsp;&nbsp;&nbsp;&nbsp; STA $00D7 = 
+#$00<BR>&nbsp;0C:88D3:A9 00&nbsp;&nbsp;&nbsp;&nbsp; LDA #$00<BR>&nbsp;0C:88D5:85 
+D2&nbsp;&nbsp;&nbsp;&nbsp; STA $00D2 = #$00<BR>&nbsp;0C:88D7:20 96 C0&nbsp; JSR 
+$C096<BR>&nbsp;0C:88DA:E6 D2&nbsp;&nbsp;&nbsp;&nbsp; INC $00D2 = 
+#$00<BR>&nbsp;0C:88DC:A5 D2&nbsp;&nbsp;&nbsp;&nbsp; LDA $00D2 = 
+#$00<BR>&nbsp;0C:88DE:C9 20&nbsp;&nbsp;&nbsp;&nbsp; CMP #$20<BR>&nbsp;0C:88E0:D0 
+F5&nbsp;&nbsp;&nbsp;&nbsp; BNE $88D7<BR>&nbsp;0C:88E2:A6 
+D1&nbsp;&nbsp;&nbsp;&nbsp; LDX $00D1 = #$00<BR>&nbsp;0C:88E4:BD 17 76&nbsp; LDA 
+$7617,X @ $7617 = #$B2<BR>&nbsp;0C:88E7:F0 11&nbsp;&nbsp;&nbsp;&nbsp; BEQ 
+$88FA<BR>&nbsp;0C:88E9:85 D7&nbsp;&nbsp;&nbsp;&nbsp; STA $00D7 = 
+#$00<BR>&nbsp;0C:88EB:A9 00&nbsp;&nbsp;&nbsp;&nbsp; LDA #$00<BR>&nbsp;0C:88ED:85 
+D2&nbsp;&nbsp;&nbsp;&nbsp; STA $00D2 = #$00<BR>&nbsp;0C:88EF:20 96 C0&nbsp; JSR 
+$C096<BR>&nbsp;0C:88F2:E6 D2&nbsp;&nbsp;&nbsp;&nbsp; INC $00D2 = 
+#$00<BR>&nbsp;0C:88F4:A5 D2&nbsp;&nbsp;&nbsp;&nbsp; LDA $00D2 = 
+#$00<BR>&nbsp;0C:88F6:C9 20&nbsp;&nbsp;&nbsp;&nbsp; CMP #$20<BR>&nbsp;0C:88F8:D0 
+F5&nbsp;&nbsp;&nbsp;&nbsp; BNE $88EF<BR>&nbsp;0C:88FA:AD F2 04&nbsp; LDA $04F2 = 
+#$AA<BR>&nbsp;0C:88FD:D0 16&nbsp;&nbsp;&nbsp;&nbsp; BNE 
+$8915<BR>&nbsp;0C:88FF:A5 D3&nbsp;&nbsp;&nbsp;&nbsp; LDA $00D3 = 
+#$0C<BR>&nbsp;0C:8901:85 D5&nbsp;&nbsp;&nbsp;&nbsp; STA $00D5 = 
+#$0C<BR>&nbsp;0C:8903:A5 D4&nbsp;&nbsp;&nbsp;&nbsp; LDA $00D4 = 
+#$0B<BR>&nbsp;0C:8905:85 D6&nbsp;&nbsp;&nbsp;&nbsp; STA $00D6 = 
+#$0B<BR>&nbsp;0C:8907:A9 00&nbsp;&nbsp;&nbsp;&nbsp; LDA #$00<BR>&nbsp;0C:8909:85 
+D7&nbsp;&nbsp;&nbsp;&nbsp; STA $00D7 = #$00<BR>&nbsp;0C:890B:A0 
+01&nbsp;&nbsp;&nbsp;&nbsp; LDY #$01<BR>&nbsp;0C:890D:4C AF 82&nbsp; JMP 
+$82AF<BR>&nbsp;0C:8910:AD F2 04&nbsp; LDA $04F2 = #$AA<BR>&nbsp;0C:8913:F0 
+F2&nbsp;&nbsp;&nbsp;&nbsp; BEQ $8907<BR>&nbsp;0C:8915:20 90 C0&nbsp; JSR 
+$C090<BR>&nbsp;0C:8918:A0 01&nbsp;&nbsp;&nbsp;&nbsp; LDY 
+#$01<BR>&nbsp;0C:891A:4C B5 82&nbsp; JMP 
+$82B5<BR>-----------------------------------------------------------<BR>&nbsp;0C:891D:A9 
+00&nbsp;&nbsp;&nbsp;&nbsp; LDA #$00<BR>&nbsp;0C:891F:8D F2 04&nbsp; STA $04F2 = 
+#$AA<BR>&nbsp;0C:8922:A9 07&nbsp;&nbsp;&nbsp;&nbsp; LDA #$07<BR>&nbsp;0C:8924:8D 
+B2 06&nbsp; STA $06B2 = #$00<BR>&nbsp;0C:8927:A0 01&nbsp;&nbsp;&nbsp;&nbsp; LDY 
+#$01<BR>&nbsp;0C:8929:B1 FC&nbsp;&nbsp;&nbsp;&nbsp; LDA ($FC),Y @ $A451 = 
+#$D5<BR>&nbsp;0C:892B:20 1D 93&nbsp; JSR $931D<BR>&nbsp;0C:892E:B0 
+71&nbsp;&nbsp;&nbsp;&nbsp; BCS $89A1<BR>&nbsp;0C:8930:86 
+D2&nbsp;&nbsp;&nbsp;&nbsp; STX $00D2 = #$00<BR>&nbsp;0C:8932:A6 
+CD&nbsp;&nbsp;&nbsp;&nbsp; LDX $00CD = #$1D<BR>&nbsp;0C:8934:86 
+D1&nbsp;&nbsp;&nbsp;&nbsp; STX $00D1 = #$00<BR>&nbsp;0C:8936:BD F7 75&nbsp; LDA 
+$75F7,X @ $75F7 = #$74<BR>&nbsp;0C:8939:F0 05&nbsp;&nbsp;&nbsp;&nbsp; BEQ 
+$8940<BR>&nbsp;0C:893B:85 D7&nbsp;&nbsp;&nbsp;&nbsp; STA $00D7 = 
+#$00<BR>&nbsp;0C:893D:20 93 C0&nbsp; JSR $C093<BR>&nbsp;0C:8940:A6 
+D1&nbsp;&nbsp;&nbsp;&nbsp; LDX $00D1 = #$00<BR>&nbsp;0C:8942:BD 17 76&nbsp; LDA 
+$7617,X @ $7617 = #$B2<BR>&nbsp;0C:8945:F0 05&nbsp;&nbsp;&nbsp;&nbsp; BEQ 
+$894C<BR>&nbsp;0C:8947:85 D7&nbsp;&nbsp;&nbsp;&nbsp; STA $00D7 = 
+#$00<BR>&nbsp;0C:8949:20 93 C0&nbsp; JSR $C093<BR>&nbsp;0C:894C:AD F2 04&nbsp; 
+LDA $04F2 = #$AA<BR>&nbsp;0C:894F:F0 07&nbsp;&nbsp;&nbsp;&nbsp; BEQ 
+$8958<BR>&nbsp;0C:8951:AD B2 06&nbsp; LDA $06B2 = #$00<BR>&nbsp;0C:8954:29 
+04&nbsp;&nbsp;&nbsp;&nbsp; AND #$04<BR>&nbsp;0C:8956:F0 
+57&nbsp;&nbsp;&nbsp;&nbsp; BEQ $89AF<BR>&nbsp;0C:8958:A5 
+D3&nbsp;&nbsp;&nbsp;&nbsp; LDA $00D3 = #$0C<BR>&nbsp;0C:895A:C5 
+D5&nbsp;&nbsp;&nbsp;&nbsp; CMP $00D5 = #$0C<BR>&nbsp;0C:895C:D0 
+4C&nbsp;&nbsp;&nbsp;&nbsp; BNE $89AA<BR>&nbsp;0C:895E:A5 
+D4&nbsp;&nbsp;&nbsp;&nbsp; LDA $00D4 = #$0B<BR>&nbsp;0C:8960:C5 
+D6&nbsp;&nbsp;&nbsp;&nbsp; CMP $00D6 = #$0B<BR>&nbsp;0C:8962:D0 
+46&nbsp;&nbsp;&nbsp;&nbsp; BNE $89AA<BR>&nbsp;0C:8964:A6 
+D1&nbsp;&nbsp;&nbsp;&nbsp; LDX $00D1 = #$00<BR>&nbsp;0C:8966:BD 57 77&nbsp; LDA 
+$7757,X @ $7757 = #$80<BR>&nbsp;0C:8969:29 20&nbsp;&nbsp;&nbsp;&nbsp; AND 
+#$20<BR>&nbsp;0C:896B:D0 3D&nbsp;&nbsp;&nbsp;&nbsp; BNE 
+$89AA<BR>&nbsp;0C:896D:A9 2F&nbsp;&nbsp;&nbsp;&nbsp; LDA 
+#$2F<BR>&nbsp;0C:896F:20 08 C1&nbsp; JSR $C108<BR>&nbsp;0C:8972:A9 
+4E&nbsp;&nbsp;&nbsp;&nbsp; LDA #$4E<BR>&nbsp;0C:8974:20 08 C1&nbsp; JSR 
+$C108<BR>&nbsp;0C:8977:A9 50&nbsp;&nbsp;&nbsp;&nbsp; LDA 
+#$50<BR>&nbsp;0C:8979:20 08 C1&nbsp; JSR $C108<BR>&nbsp;0C:897C:A6 
+D1&nbsp;&nbsp;&nbsp;&nbsp; LDX $00D1 = #$00<BR>&nbsp;0C:897E:BD F7 75&nbsp; LDA 
+$75F7,X @ $75F7 = #$74<BR>&nbsp;0C:8981:F0 05&nbsp;&nbsp;&nbsp;&nbsp; BEQ 
+$8988<BR>&nbsp;0C:8983:85 D7&nbsp;&nbsp;&nbsp;&nbsp; STA $00D7 = 
+#$00<BR>&nbsp;0C:8985:20 96 C0&nbsp; JSR $C096<BR>&nbsp;0C:8988:A6 
+D1&nbsp;&nbsp;&nbsp;&nbsp; LDX $00D1 = #$00<BR>&nbsp;0C:898A:BD 17 76&nbsp; LDA 
+$7617,X @ $7617 = #$B2<BR>&nbsp;0C:898D:F0 05&nbsp;&nbsp;&nbsp;&nbsp; BEQ 
+$8994<BR>&nbsp;0C:898F:85 D7&nbsp;&nbsp;&nbsp;&nbsp; STA $00D7 = 
+#$00<BR>&nbsp;0C:8991:20 96 C0&nbsp; JSR $C096<BR>&nbsp;0C:8994:AD F2 04&nbsp; 
+LDA $04F2 = #$AA<BR>&nbsp;0C:8997:D0 16&nbsp;&nbsp;&nbsp;&nbsp; BNE 
+$89AF<BR>&nbsp;0C:8999:A5 D3&nbsp;&nbsp;&nbsp;&nbsp; LDA $00D3 = 
+#$0C<BR>&nbsp;0C:899B:85 D5&nbsp;&nbsp;&nbsp;&nbsp; STA $00D5 = 
+#$0C<BR>&nbsp;0C:899D:A5 D4&nbsp;&nbsp;&nbsp;&nbsp; LDA $00D4 = 
+#$0B<BR>&nbsp;0C:899F:85 D6&nbsp;&nbsp;&nbsp;&nbsp; STA $00D6 = 
+#$0B<BR>&nbsp;0C:89A1:A9 00&nbsp;&nbsp;&nbsp;&nbsp; LDA #$00<BR>&nbsp;0C:89A3:85 
+D7&nbsp;&nbsp;&nbsp;&nbsp; STA $00D7 = #$00<BR>&nbsp;0C:89A5:A0 
+01&nbsp;&nbsp;&nbsp;&nbsp; LDY #$01<BR>&nbsp;0C:89A7:4C AF 82&nbsp; JMP 
+$82AF<BR>&nbsp;0C:89AA:AD F2 04&nbsp; LDA $04F2 = #$AA<BR>&nbsp;0C:89AD:F0 
+F2&nbsp;&nbsp;&nbsp;&nbsp; BEQ $89A1<BR>&nbsp;0C:89AF:20 90 C0&nbsp; JSR 
+$C090<BR>&nbsp;0C:89B2:A0 01&nbsp;&nbsp;&nbsp;&nbsp; LDY 
+#$01<BR>&nbsp;0C:89B4:4C B5 82&nbsp; JMP 
+$82B5<BR>-----------------------------------------------------------<BR>&nbsp;0C:89B7:A9 
+00&nbsp;&nbsp;&nbsp;&nbsp; LDA #$00<BR>&nbsp;0C:89B9:8D F2 04&nbsp; STA $04F2 = 
+#$AA<BR>&nbsp;0C:89BC:A0 01&nbsp;&nbsp;&nbsp;&nbsp; LDY #$01<BR>&nbsp;0C:89BE:B1 
+FC&nbsp;&nbsp;&nbsp;&nbsp; LDA ($FC),Y @ $A451 = #$D5<BR>&nbsp;0C:89C0:29 
+07&nbsp;&nbsp;&nbsp;&nbsp; AND #$07<BR>&nbsp;0C:89C2:8D B2 06&nbsp; STA $06B2 = 
+#$00<BR>&nbsp;0C:89C5:C8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+INY<BR>&nbsp;0C:89C6:B1 FC&nbsp;&nbsp;&nbsp;&nbsp; LDA ($FC),Y @ $A451 = 
+#$D5<BR>&nbsp;0C:89C8:20 1D 93&nbsp; JSR $931D<BR>&nbsp;0C:89CB:8E FF 04&nbsp; 
+STX $04FF = #$00<BR>&nbsp;0C:89CE:A6 CD&nbsp;&nbsp;&nbsp;&nbsp; LDX $00CD = 
+#$1D<BR>&nbsp;0C:89D0:86 D1&nbsp;&nbsp;&nbsp;&nbsp; STX $00D1 = 
+#$00<BR>&nbsp;0C:89D2:BD F7 75&nbsp; LDA $75F7,X @ $75F7 = 
+#$74<BR>&nbsp;0C:89D5:F0 16&nbsp;&nbsp;&nbsp;&nbsp; BEQ 
+$89ED<BR>&nbsp;0C:89D7:85 D7&nbsp;&nbsp;&nbsp;&nbsp; STA $00D7 = 
+#$00<BR>&nbsp;0C:89D9:A9 00&nbsp;&nbsp;&nbsp;&nbsp; LDA #$00<BR>&nbsp;0C:89DB:85 
+D2&nbsp;&nbsp;&nbsp;&nbsp; STA $00D2 = #$00<BR>&nbsp;0C:89DD:CD FF 04&nbsp; CMP 
+$04FF = #$00<BR>&nbsp;0C:89E0:F0 03&nbsp;&nbsp;&nbsp;&nbsp; BEQ 
+$89E5<BR>&nbsp;0C:89E2:20 93 C0&nbsp; JSR $C093<BR>&nbsp;0C:89E5:E6 
+D2&nbsp;&nbsp;&nbsp;&nbsp; INC $00D2 = #$00<BR>&nbsp;0C:89E7:A5 
+D2&nbsp;&nbsp;&nbsp;&nbsp; LDA $00D2 = #$00<BR>&nbsp;0C:89E9:C9 
+20&nbsp;&nbsp;&nbsp;&nbsp; CMP #$20<BR>&nbsp;0C:89EB:D0 
+F0&nbsp;&nbsp;&nbsp;&nbsp; BNE $89DD<BR>&nbsp;0C:89ED:A6 
+D1&nbsp;&nbsp;&nbsp;&nbsp; LDX $00D1 = #$00<BR>&nbsp;0C:89EF:BD 17 76&nbsp; LDA 
+$7617,X @ $7617 = #$B2<BR>&nbsp;0C:89F2:F0 16&nbsp;&nbsp;&nbsp;&nbsp; BEQ 
+$8A0A<BR>&nbsp;0C:89F4:85 D7&nbsp;&nbsp;&nbsp;&nbsp; STA $00D7 = 
+#$00<BR>&nbsp;0C:89F6:A9 00&nbsp;&nbsp;&nbsp;&nbsp; LDA #$00<BR>&nbsp;0C:89F8:85 
+D2&nbsp;&nbsp;&nbsp;&nbsp; STA $00D2 = #$00<BR>&nbsp;0C:89FA:CD FF 04&nbsp; CMP 
+$04FF = #$00<BR>&nbsp;0C:89FD:F0 03&nbsp;&nbsp;&nbsp;&nbsp; BEQ 
+$8A02<BR>&nbsp;0C:89FF:20 93 C0&nbsp; JSR $C093<BR>&nbsp;0C:8A02:E6 
+D2&nbsp;&nbsp;&nbsp;&nbsp; INC $00D2 = #$00<BR>&nbsp;0C:8A04:A5 
+D2&nbsp;&nbsp;&nbsp;&nbsp; LDA $00D2 = #$00<BR>&nbsp;0C:8A06:C9 
+20&nbsp;&nbsp;&nbsp;&nbsp; CMP #$20<BR>&nbsp;0C:8A08:D0 
+F0&nbsp;&nbsp;&nbsp;&nbsp; BNE $89FA<BR>&nbsp;0C:8A0A:AD F2 04&nbsp; LDA $04F2 = 
+#$AA<BR>&nbsp;0C:8A0D:F0 07&nbsp;&nbsp;&nbsp;&nbsp; BEQ 
+$8A16<BR>&nbsp;0C:8A0F:AD B2 06&nbsp; LDA $06B2 = #$00<BR>&nbsp;0C:8A12:29 
+04&nbsp;&nbsp;&nbsp;&nbsp; AND #$04<BR>&nbsp;0C:8A14:F0 
+79&nbsp;&nbsp;&nbsp;&nbsp; BEQ $8A8F<BR>&nbsp;0C:8A16:A5 
+D3&nbsp;&nbsp;&nbsp;&nbsp; LDA $00D3 = #$0C<BR>&nbsp;0C:8A18:C5 
+D5&nbsp;&nbsp;&nbsp;&nbsp; CMP $00D5 = #$0C<BR>&nbsp;0C:8A1A:D0 
+6E&nbsp;&nbsp;&nbsp;&nbsp; BNE $8A8A<BR>&nbsp;0C:8A1C:A5 
+D4&nbsp;&nbsp;&nbsp;&nbsp; LDA $00D4 = #$0B<BR>&nbsp;0C:8A1E:C5 
+D6&nbsp;&nbsp;&nbsp;&nbsp; CMP $00D6 = #$0B<BR>&nbsp;0C:8A20:D0 
+68&nbsp;&nbsp;&nbsp;&nbsp; BNE $8A8A<BR>&nbsp;0C:8A22:A6 
+D1&nbsp;&nbsp;&nbsp;&nbsp; LDX $00D1 = #$00<BR>&nbsp;0C:8A24:BD 57 77&nbsp; LDA 
+$7757,X @ $7757 = #$80<BR>&nbsp;0C:8A27:29 20&nbsp;&nbsp;&nbsp;&nbsp; AND 
+#$20<BR>&nbsp;0C:8A29:D0 5F&nbsp;&nbsp;&nbsp;&nbsp; BNE 
+$8A8A<BR>&nbsp;0C:8A2B:A9 2F&nbsp;&nbsp;&nbsp;&nbsp; LDA 
+#$2F<BR>&nbsp;0C:8A2D:20 08 C1&nbsp; JSR $C108<BR>&nbsp;0C:8A30:A9 
+4E&nbsp;&nbsp;&nbsp;&nbsp; LDA #$4E<BR>&nbsp;0C:8A32:20 08 C1&nbsp; JSR 
+$C108<BR>&nbsp;0C:8A35:A9 50&nbsp;&nbsp;&nbsp;&nbsp; LDA 
+#$50<BR>&nbsp;0C:8A37:20 08 C1&nbsp; JSR $C108<BR>&nbsp;0C:8A3A:A6 
+D1&nbsp;&nbsp;&nbsp;&nbsp; LDX $00D1 = #$00<BR>&nbsp;0C:8A3C:BD F7 75&nbsp; LDA 
+$75F7,X @ $75F7 = #$74<BR>&nbsp;0C:8A3F:F0 16&nbsp;&nbsp;&nbsp;&nbsp; BEQ 
+$8A57<BR>&nbsp;0C:8A41:85 D7&nbsp;&nbsp;&nbsp;&nbsp; STA $00D7 = 
+#$00<BR>&nbsp;0C:8A43:A9 00&nbsp;&nbsp;&nbsp;&nbsp; LDA #$00<BR>&nbsp;0C:8A45:85 
+D2&nbsp;&nbsp;&nbsp;&nbsp; STA $00D2 = #$00<BR>&nbsp;0C:8A47:CD FF 04&nbsp; CMP 
+$04FF = #$00<BR>&nbsp;0C:8A4A:F0 03&nbsp;&nbsp;&nbsp;&nbsp; BEQ 
+$8A4F<BR>&nbsp;0C:8A4C:20 96 C0&nbsp; JSR $C096<BR>&nbsp;0C:8A4F:E6 
+D2&nbsp;&nbsp;&nbsp;&nbsp; INC $00D2 = #$00<BR>&nbsp;0C:8A51:A5 
+D2&nbsp;&nbsp;&nbsp;&nbsp; LDA $00D2 = #$00<BR>&nbsp;0C:8A53:C9 
+20&nbsp;&nbsp;&nbsp;&nbsp; CMP #$20<BR>&nbsp;0C:8A55:D0 
+F0&nbsp;&nbsp;&nbsp;&nbsp; BNE $8A47<BR>&nbsp;0C:8A57:A6 
+D1&nbsp;&nbsp;&nbsp;&nbsp; LDX $00D1 = #$00<BR>&nbsp;0C:8A59:BD 17 76&nbsp; LDA 
+$7617,X @ $7617 = #$B2<BR>&nbsp;0C:8A5C:F0 16&nbsp;&nbsp;&nbsp;&nbsp; BEQ 
+$8A74<BR>&nbsp;0C:8A5E:85 D7&nbsp;&nbsp;&nbsp;&nbsp; STA $00D7 = 
+#$00<BR>&nbsp;0C:8A60:A9 00&nbsp;&nbsp;&nbsp;&nbsp; LDA #$00<BR>&nbsp;0C:8A62:85 
+D2&nbsp;&nbsp;&nbsp;&nbsp; STA $00D2 = #$00<BR>&nbsp;0C:8A64:CD FF 04&nbsp; CMP 
+$04FF = #$00<BR>&nbsp;0C:8A67:F0 03&nbsp;&nbsp;&nbsp;&nbsp; BEQ 
+$8A6C<BR>&nbsp;0C:8A69:20 96 C0&nbsp; JSR $C096<BR>&nbsp;0C:8A6C:E6 
+D2&nbsp;&nbsp;&nbsp;&nbsp; INC $00D2 = #$00<BR>&nbsp;0C:8A6E:A5 
+D2&nbsp;&nbsp;&nbsp;&nbsp; LDA $00D2 = #$00<BR>&nbsp;0C:8A70:C9 
+20&nbsp;&nbsp;&nbsp;&nbsp; CMP #$20<BR>&nbsp;0C:8A72:D0 
+F0&nbsp;&nbsp;&nbsp;&nbsp; BNE $8A64<BR>&nbsp;0C:8A74:AD F2 04&nbsp; LDA $04F2 = 
+#$AA<BR>&nbsp;0C:8A77:D0 16&nbsp;&nbsp;&nbsp;&nbsp; BNE 
+$8A8F<BR>&nbsp;0C:8A79:A5 D3&nbsp;&nbsp;&nbsp;&nbsp; LDA $00D3 = 
+#$0C<BR>&nbsp;0C:8A7B:85 D5&nbsp;&nbsp;&nbsp;&nbsp; STA $00D5 = 
+#$0C<BR>&nbsp;0C:8A7D:A5 D4&nbsp;&nbsp;&nbsp;&nbsp; LDA $00D4 = 
+#$0B<BR>&nbsp;0C:8A7F:85 D6&nbsp;&nbsp;&nbsp;&nbsp; STA $00D6 = 
+#$0B<BR>&nbsp;0C:8A81:A9 00&nbsp;&nbsp;&nbsp;&nbsp; LDA #$00<BR>&nbsp;0C:8A83:85 
+D7&nbsp;&nbsp;&nbsp;&nbsp; STA $00D7 = #$00<BR>&nbsp;0C:8A85:A0 
+02&nbsp;&nbsp;&nbsp;&nbsp; LDY #$02<BR>&nbsp;0C:8A87:4C AF 82&nbsp; JMP 
+$82AF<BR>&nbsp;0C:8A8A:AD F2 04&nbsp; LDA $04F2 = #$AA<BR>&nbsp;0C:8A8D:F0 
+F2&nbsp;&nbsp;&nbsp;&nbsp; BEQ $8A81<BR>&nbsp;0C:8A8F:20 90 C0&nbsp; JSR 
+$C090<BR>&nbsp;0C:8A92:A0 02&nbsp;&nbsp;&nbsp;&nbsp; LDY 
+#$02<BR>&nbsp;0C:8A94:4C B5 82&nbsp; JMP 
+$82B5<BR>-----------------------------------------------------------<BR>&nbsp;0C:8A97:A6 
+CD&nbsp;&nbsp;&nbsp;&nbsp; LDX $00CD = #$1D<BR>&nbsp;0C:8A99:BD 37 75&nbsp; LDA 
+$7537,X @ $7537 = #$36<BR>&nbsp;0C:8A9C:F0 25&nbsp;&nbsp;&nbsp;&nbsp; BEQ 
+$8AC3<BR>&nbsp;0C:8A9E:BD D7 77&nbsp; LDA $77D7,X @ $77D7 = 
+#$00<BR>&nbsp;0C:8AA1:30 20&nbsp;&nbsp;&nbsp;&nbsp; BMI 
+$8AC3<BR>&nbsp;0C:8AA3:A9 65&nbsp;&nbsp;&nbsp;&nbsp; LDA 
+#$65<BR>&nbsp;0C:8AA5:20 08 C1&nbsp; JSR $C108<BR>&nbsp;0C:8AA8:AD E1 04&nbsp; 
+LDA $04E1 = #$9B<BR>&nbsp;0C:8AAB:29 F0&nbsp;&nbsp;&nbsp;&nbsp; AND 
+#$F0<BR>&nbsp;0C:8AAD:C9 E0&nbsp;&nbsp;&nbsp;&nbsp; CMP #$E0<BR>&nbsp;0C:8AAF:F0 
+17&nbsp;&nbsp;&nbsp;&nbsp; BEQ $8AC8<BR>&nbsp;0C:8AB1:AD F0 04&nbsp; LDA $04F0 = 
+#$18<BR>&nbsp;0C:8AB4:8D E0 04&nbsp; STA $04E0 = #$34<BR>&nbsp;0C:8AB7:AD F1 
+04&nbsp; LDA $04F1 = #$08<BR>&nbsp;0C:8ABA:8D E1 04&nbsp; STA $04E1 = 
+#$9B<BR>&nbsp;0C:8ABD:29 F0&nbsp;&nbsp;&nbsp;&nbsp; AND #$F0<BR>&nbsp;0C:8ABF:C9 
+E0&nbsp;&nbsp;&nbsp;&nbsp; CMP #$E0<BR>&nbsp;0C:8AC1:F0 
+05&nbsp;&nbsp;&nbsp;&nbsp; BEQ $8AC8<BR>&nbsp;0C:8AC3:A0 
+00&nbsp;&nbsp;&nbsp;&nbsp; LDY #$00<BR>&nbsp;0C:8AC5:4C AF 82&nbsp; JMP 
+$82AF<BR>&nbsp;0C:8AC8:AD E1 04&nbsp; LDA $04E1 = #$9B<BR>&nbsp;0C:8ACB:29 
+0F&nbsp;&nbsp;&nbsp;&nbsp; AND 
+#$0F<BR>&nbsp;0C:8ACD:18&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+CLC<BR>&nbsp;0C:8ACE:69 01&nbsp;&nbsp;&nbsp;&nbsp; ADC #$01<BR>&nbsp;0C:8AD0:8D 
+E1 04&nbsp; STA $04E1 = #$9B<BR>&nbsp;0C:8AD3:A6 CD&nbsp;&nbsp;&nbsp;&nbsp; LDX 
+$00CD = #$1D<BR>&nbsp;0C:8AD5:BD 57 77&nbsp; LDA $7757,X @ $7757 = 
+#$80<BR>&nbsp;0C:8AD8:29 C0&nbsp;&nbsp;&nbsp;&nbsp; AND #$C0<BR>&nbsp;0C:8ADA:85 
+04&nbsp;&nbsp;&nbsp;&nbsp; STA $0004 = #$01<BR>&nbsp;0C:8ADC:A2 
+00&nbsp;&nbsp;&nbsp;&nbsp; LDX #$00<BR>&nbsp;0C:8ADE:BD 37 75&nbsp; LDA $7537,X 
+@ $7537 = #$36<BR>&nbsp;0C:8AE1:F0 36&nbsp;&nbsp;&nbsp;&nbsp; BEQ 
+$8B19<BR>&nbsp;0C:8AE3:BD D7 77&nbsp; LDA $77D7,X @ $77D7 = 
+#$00<BR>&nbsp;0C:8AE6:30 31&nbsp;&nbsp;&nbsp;&nbsp; BMI 
+$8B19<BR>&nbsp;0C:8AE8:BD 57 77&nbsp; LDA $7757,X @ $7757 = 
+#$80<BR>&nbsp;0C:8AEB:25 04&nbsp;&nbsp;&nbsp;&nbsp; AND $0004 = 
+#$01<BR>&nbsp;0C:8AED:D0 2A&nbsp;&nbsp;&nbsp;&nbsp; BNE 
+$8B19<BR>&nbsp;0C:8AEF:BD 97 75&nbsp; LDA $7597,X @ $7597 = 
+#$11<BR>&nbsp;0C:8AF2:38&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+SEC<BR>&nbsp;0C:8AF3:E5 D5&nbsp;&nbsp;&nbsp;&nbsp; SBC $00D5 = 
+#$0C<BR>&nbsp;0C:8AF5:B0 04&nbsp;&nbsp;&nbsp;&nbsp; BCS 
+$8AFB<BR>&nbsp;0C:8AF7:49 FF&nbsp;&nbsp;&nbsp;&nbsp; EOR 
+#$FF<BR>&nbsp;0C:8AF9:69 01&nbsp;&nbsp;&nbsp;&nbsp; ADC #$01<BR>&nbsp;0C:8AFB:85 
+00&nbsp;&nbsp;&nbsp;&nbsp; STA $0000 = #$78<BR>&nbsp;0C:8AFD:BD B7 75&nbsp; LDA 
+$75B7,X @ $75B7 = 
+#$0D<BR>&nbsp;0C:8B00:38&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+SEC<BR>&nbsp;0C:8B01:E5 D6&nbsp;&nbsp;&nbsp;&nbsp; SBC $00D6 = 
+#$0B<BR>&nbsp;0C:8B03:B0 04&nbsp;&nbsp;&nbsp;&nbsp; BCS 
+$8B09<BR>&nbsp;0C:8B05:49 FF&nbsp;&nbsp;&nbsp;&nbsp; EOR 
+#$FF<BR>&nbsp;0C:8B07:69 01&nbsp;&nbsp;&nbsp;&nbsp; ADC 
+#$01<BR>&nbsp;0C:8B09:18&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+CLC<BR>&nbsp;0C:8B0A:65 00&nbsp;&nbsp;&nbsp;&nbsp; ADC $0000 = 
+#$78<BR>&nbsp;0C:8B0C:85 00&nbsp;&nbsp;&nbsp;&nbsp; STA $0000 = 
+#$78<BR>&nbsp;0C:8B0E:C9 01&nbsp;&nbsp;&nbsp;&nbsp; CMP #$01<BR>&nbsp;0C:8B10:F0 
+07&nbsp;&nbsp;&nbsp;&nbsp; BEQ $8B19<BR>&nbsp;0C:8B12:AD E1 04&nbsp; LDA $04E1 = 
+#$9B<BR>&nbsp;0C:8B15:C5 00&nbsp;&nbsp;&nbsp;&nbsp; CMP $0000 = 
+#$78<BR>&nbsp;0C:8B17:B0 0A&nbsp;&nbsp;&nbsp;&nbsp; BCS 
+$8B23<BR>&nbsp;0C:8B19:E8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+INX<BR>&nbsp;0C:8B1A:E0 20&nbsp;&nbsp;&nbsp;&nbsp; CPX #$20<BR>&nbsp;0C:8B1C:D0 
+C0&nbsp;&nbsp;&nbsp;&nbsp; BNE $8ADE<BR>&nbsp;0C:8B1E:A0 
+00&nbsp;&nbsp;&nbsp;&nbsp; LDY #$00<BR>&nbsp;0C:8B20:4C AF 82&nbsp; JMP 
+$82AF<BR>&nbsp;0C:8B23:86 D2&nbsp;&nbsp;&nbsp;&nbsp; STX $00D2 = 
+#$00<BR>&nbsp;0C:8B25:A6 CD&nbsp;&nbsp;&nbsp;&nbsp; LDX $00CD = 
+#$1D<BR>&nbsp;0C:8B27:86 D1&nbsp;&nbsp;&nbsp;&nbsp; STX $00D1 = 
+#$00<BR>&nbsp;0C:8B29:AD E0 04&nbsp; LDA $04E0 = #$34<BR>&nbsp;0C:8B2C:85 
+D7&nbsp;&nbsp;&nbsp;&nbsp; STA $00D7 = #$00<BR>&nbsp;0C:8B2E:A0 
+00&nbsp;&nbsp;&nbsp;&nbsp; LDY #$00<BR>&nbsp;0C:8B30:4C B5 82&nbsp; JMP 
+$82B5<BR>-----------------------------------------------------------<BR>&nbsp;0C:8B33:A0 
+01&nbsp;&nbsp;&nbsp;&nbsp; LDY #$01<BR>&nbsp;0C:8B35:B1 
+FC&nbsp;&nbsp;&nbsp;&nbsp; LDA ($FC),Y @ $A451 = #$D5<BR>&nbsp;0C:8B37:20 1D 
+93&nbsp; JSR $931D<BR>&nbsp;0C:8B3A:B0 05&nbsp;&nbsp;&nbsp;&nbsp; BCS 
+$8B41<BR>&nbsp;0C:8B3C:86 CD&nbsp;&nbsp;&nbsp;&nbsp; STX $00CD = 
+#$1D<BR>&nbsp;0C:8B3E:4C B5 82&nbsp; JMP $82B5<BR>&nbsp;0C:8B41:4C AF 82&nbsp; 
+JMP 
+$82AF<BR>======================================================================执行事件：<BR>&nbsp;0C:8B44:A9 
+0B&nbsp;&nbsp;&nbsp;&nbsp; LDA #$0B<BR>&nbsp;0C:8B46:8D 8D 06&nbsp; STA $068D = 
+#$0F<BR>&nbsp;0C:8B49:A0 01&nbsp;&nbsp;&nbsp;&nbsp; LDY #$01<BR>&nbsp;0C:8B4B:B1 
+FC&nbsp;&nbsp;&nbsp;&nbsp; LDA ($FC),Y @ $A451 = #$D5<BR>&nbsp;0C:8B4D:8D 8E 
+06&nbsp; STA $068E = 
+#$00<BR>&nbsp;0C:8B50:C8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+INY<BR>&nbsp;0C:8B51:B1 FC&nbsp;&nbsp;&nbsp;&nbsp; LDA ($FC),Y @ $A451 = 
+#$D5<BR>&nbsp;0C:8B53:18&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+CLC<BR>&nbsp;0C:8B54:69 30&nbsp;&nbsp;&nbsp;&nbsp; ADC #$30<BR>&nbsp;0C:8B56:8D 
+8B 06&nbsp; STA $068B = 
+#$37<BR>&nbsp;0C:8B59:C8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+INY<BR>&nbsp;0C:8B5A:B1 FC&nbsp;&nbsp;&nbsp;&nbsp; LDA ($FC),Y @ $A451 = 
+#$D5<BR>&nbsp;0C:8B5C:8D 8C 06&nbsp; STA $068C = #$31<BR>&nbsp;0C:8B5F:4C C5 
+82&nbsp; JMP 
+$82C5<BR>-----------------------------------------------------------<BR>&nbsp;0C:8B62:A9 
+0C&nbsp;&nbsp;&nbsp;&nbsp; LDA #$0C<BR>&nbsp;0C:8B64:8D 8D 06&nbsp; STA $068D = 
+#$0F<BR>&nbsp;0C:8B67:A0 01&nbsp;&nbsp;&nbsp;&nbsp; LDY #$01<BR>&nbsp;0C:8B69:B1 
+FC&nbsp;&nbsp;&nbsp;&nbsp; LDA ($FC),Y @ $A451 = #$D5<BR>&nbsp;0C:8B6B:20 1D 
+93&nbsp; JSR $931D<BR>&nbsp;0C:8B6E:B0 14&nbsp;&nbsp;&nbsp;&nbsp; BCS 
+$8B84<BR>&nbsp;0C:8B70:BD D7 77&nbsp; LDA $77D7,X @ $77D7 = 
+#$00<BR>&nbsp;0C:8B73:10 02&nbsp;&nbsp;&nbsp;&nbsp; BPL 
+$8B77<BR>&nbsp;0C:8B75:A2 00&nbsp;&nbsp;&nbsp;&nbsp; LDX 
+#$00<BR>&nbsp;0C:8B77:BD 97 75&nbsp; LDA $7597,X @ $7597 = 
+#$11<BR>&nbsp;0C:8B7A:85 CB&nbsp;&nbsp;&nbsp;&nbsp; STA $00CB = 
+#$1F<BR>&nbsp;0C:8B7C:BD B7 75&nbsp; LDA $75B7,X @ $75B7 = 
+#$0D<BR>&nbsp;0C:8B7F:85 CC&nbsp;&nbsp;&nbsp;&nbsp; STA $00CC = 
+#$08<BR>&nbsp;0C:8B81:4C 8C 8B&nbsp; JMP $8B8C<BR>&nbsp;0C:8B84:A5 
+C0&nbsp;&nbsp;&nbsp;&nbsp; LDA $00C0 = #$1F<BR>&nbsp;0C:8B86:85 
+CB&nbsp;&nbsp;&nbsp;&nbsp; STA $00CB = #$1F<BR>&nbsp;0C:8B88:A5 
+C1&nbsp;&nbsp;&nbsp;&nbsp; LDA $00C1 = #$08<BR>&nbsp;0C:8B8A:85 
+CC&nbsp;&nbsp;&nbsp;&nbsp; STA $00CC = #$08<BR>&nbsp;0C:8B8C:B1 
+FC&nbsp;&nbsp;&nbsp;&nbsp; LDA ($FC),Y @ $A451 = #$D5<BR>&nbsp;0C:8B8E:8D 8E 
+06&nbsp; STA $068E = 
+#$00<BR>&nbsp;0C:8B91:C8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+INY<BR>&nbsp;0C:8B92:B1 FC&nbsp;&nbsp;&nbsp;&nbsp; LDA ($FC),Y @ $A451 = 
+#$D5<BR>&nbsp;0C:8B94:18&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+CLC<BR>&nbsp;0C:8B95:69 30&nbsp;&nbsp;&nbsp;&nbsp; ADC #$30<BR>&nbsp;0C:8B97:8D 
+8B 06&nbsp; STA $068B = 
+#$37<BR>&nbsp;0C:8B9A:C8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+INY<BR>&nbsp;0C:8B9B:B1 FC&nbsp;&nbsp;&nbsp;&nbsp; LDA ($FC),Y @ $A451 = 
+#$D5<BR>&nbsp;0C:8B9D:8D 8C 06&nbsp; STA $068C = #$31<BR>&nbsp;0C:8BA0:4C C5 
+82&nbsp; JMP 
+$82C5<BR>-----------------------------------------------------------<BR>&nbsp;0C:8BA3:A9 
+0C&nbsp;&nbsp;&nbsp;&nbsp; LDA #$0C<BR>&nbsp;0C:8BA5:8D 8D 06&nbsp; STA $068D = 
+#$0F<BR>&nbsp;0C:8BA8:A0 01&nbsp;&nbsp;&nbsp;&nbsp; LDY #$01<BR>&nbsp;0C:8BAA:B1 
+FC&nbsp;&nbsp;&nbsp;&nbsp; LDA ($FC),Y @ $A451 = #$D5<BR>&nbsp;0C:8BAC:20 1D 
+93&nbsp; JSR $931D<BR>&nbsp;0C:8BAF:B0 11&nbsp;&nbsp;&nbsp;&nbsp; BCS 
+$8BC2<BR>&nbsp;0C:8BB1:BD D7 77&nbsp; LDA $77D7,X @ $77D7 = 
+#$00<BR>&nbsp;0C:8BB4:10 02&nbsp;&nbsp;&nbsp;&nbsp; BPL 
+$8BB8<BR>&nbsp;0C:8BB6:A2 00&nbsp;&nbsp;&nbsp;&nbsp; LDX 
+#$00<BR>&nbsp;0C:8BB8:BD 97 75&nbsp; LDA $7597,X @ $7597 = 
+#$11<BR>&nbsp;0C:8BBB:85 C0&nbsp;&nbsp;&nbsp;&nbsp; STA $00C0 = 
+#$1F<BR>&nbsp;0C:8BBD:BD B7 75&nbsp; LDA $75B7,X @ $75B7 = 
+#$0D<BR>&nbsp;0C:8BC0:85 C1&nbsp;&nbsp;&nbsp;&nbsp; STA $00C1 = 
+#$08<BR>&nbsp;0C:8BC2:B1 FC&nbsp;&nbsp;&nbsp;&nbsp; LDA ($FC),Y @ $A451 = 
+#$D5<BR>&nbsp;0C:8BC4:8D 8E 06&nbsp; STA $068E = 
+#$00<BR>&nbsp;0C:8BC7:C8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+INY<BR>&nbsp;0C:8BC8:B1 FC&nbsp;&nbsp;&nbsp;&nbsp; LDA ($FC),Y @ $A451 = 
+#$D5<BR>&nbsp;0C:8BCA:18&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+CLC<BR>&nbsp;0C:8BCB:69 30&nbsp;&nbsp;&nbsp;&nbsp; ADC #$30<BR>&nbsp;0C:8BCD:8D 
+8B 06&nbsp; STA $068B = 
+#$37<BR>&nbsp;0C:8BD0:C8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+INY<BR>&nbsp;0C:8BD1:B1 FC&nbsp;&nbsp;&nbsp;&nbsp; LDA ($FC),Y @ $A451 = 
+#$D5<BR>&nbsp;0C:8BD3:8D 8C 06&nbsp; STA $068C = #$31<BR>&nbsp;0C:8BD6:4C C5 
+82&nbsp; JMP 
+$82C5<BR>-----------------------------------------------------------<BR>&nbsp;0C:8BD9:A0 
+01&nbsp;&nbsp;&nbsp;&nbsp; LDY #$01<BR>&nbsp;0C:8BDB:B1 
+FC&nbsp;&nbsp;&nbsp;&nbsp; LDA ($FC),Y @ $A451 = #$D5<BR>&nbsp;0C:8BDD:8D 8D 
+06&nbsp; STA $068D = #$0F<BR>&nbsp;0C:8BE0:C9 0B&nbsp;&nbsp;&nbsp;&nbsp; CMP 
+#$0B<BR>&nbsp;0C:8BE2:F0 04&nbsp;&nbsp;&nbsp;&nbsp; BEQ 
+$8BE8<BR>&nbsp;0C:8BE4:C9 0C&nbsp;&nbsp;&nbsp;&nbsp; CMP 
+#$0C<BR>&nbsp;0C:8BE6:D0 06&nbsp;&nbsp;&nbsp;&nbsp; BNE 
+$8BEE<BR>&nbsp;0C:8BE8:C8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+INY<BR>&nbsp;0C:8BE9:B1 FC&nbsp;&nbsp;&nbsp;&nbsp; LDA ($FC),Y @ $A451 = 
+#$D5<BR>&nbsp;0C:8BEB:8D 8E 06&nbsp; STA $068E = #$00<BR>&nbsp;0C:8BEE:4C C5 
+82&nbsp; JMP 
+$82C5<BR>-----------------------------------------------------------<BR>&nbsp;0C:8BF1:A0 
+01&nbsp;&nbsp;&nbsp;&nbsp; LDY #$01<BR>&nbsp;0C:8BF3:B1 
+FC&nbsp;&nbsp;&nbsp;&nbsp; LDA ($FC),Y @ $A451 = 
+#$D5<BR>&nbsp;0C:8BF5:18&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+CLC<BR>&nbsp;0C:8BF6:69 30&nbsp;&nbsp;&nbsp;&nbsp; ADC #$30<BR>&nbsp;0C:8BF8:8D 
+8B 06&nbsp; STA $068B = 
+#$37<BR>&nbsp;0C:8BFB:C8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+INY<BR>&nbsp;0C:8BFC:B1 FC&nbsp;&nbsp;&nbsp;&nbsp; LDA ($FC),Y @ $A451 = 
+#$D5<BR>&nbsp;0C:8BFE:8D 8C 06&nbsp; STA $068C = #$31<BR>&nbsp;0C:8C01:4C C5 
+82&nbsp; JMP 
+$82C5<BR>-----------------------------------------------------------<BR>&nbsp;0C:8C04:A0 
+00&nbsp;&nbsp;&nbsp;&nbsp; LDY #$00<BR>&nbsp;0C:8C06:4C C5 82&nbsp; JMP 
+$82C5<BR>-----------------------------------------------------------<BR>&nbsp;0C:8C09:A0 
+01&nbsp;&nbsp;&nbsp;&nbsp; LDY #$01<BR>&nbsp;0C:8C0B:B1 
+FC&nbsp;&nbsp;&nbsp;&nbsp; LDA ($FC),Y @ $A451 = #$D5<BR>&nbsp;0C:8C0D:85 
+C0&nbsp;&nbsp;&nbsp;&nbsp; STA $00C0 = 
+#$1F<BR>&nbsp;0C:8C0F:C8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+INY<BR>&nbsp;0C:8C10:B1 FC&nbsp;&nbsp;&nbsp;&nbsp; LDA ($FC),Y @ $A451 = 
+#$D5<BR>&nbsp;0C:8C12:85 C1&nbsp;&nbsp;&nbsp;&nbsp; STA $00C1 = 
+#$08<BR>&nbsp;0C:8C14:4C C5 82&nbsp; JMP 
+$82C5<BR>-----------------------------------------------------------<BR>&nbsp;0C:8C17:A0 
+01&nbsp;&nbsp;&nbsp;&nbsp; LDY #$01<BR>&nbsp;0C:8C19:B1 
+FC&nbsp;&nbsp;&nbsp;&nbsp; LDA ($FC),Y @ $A451 = #$D5<BR>&nbsp;0C:8C1B:20 1D 
+93&nbsp; JSR $931D<BR>&nbsp;0C:8C1E:B0 14&nbsp;&nbsp;&nbsp;&nbsp; BCS 
+$8C34<BR>&nbsp;0C:8C20:BD D7 77&nbsp; LDA $77D7,X @ $77D7 = 
+#$00<BR>&nbsp;0C:8C23:10 02&nbsp;&nbsp;&nbsp;&nbsp; BPL 
+$8C27<BR>&nbsp;0C:8C25:A2 00&nbsp;&nbsp;&nbsp;&nbsp; LDX 
+#$00<BR>&nbsp;0C:8C27:BD 97 75&nbsp; LDA $7597,X @ $7597 = 
+#$11<BR>&nbsp;0C:8C2A:85 CB&nbsp;&nbsp;&nbsp;&nbsp; STA $00CB = 
+#$1F<BR>&nbsp;0C:8C2C:BD B7 75&nbsp; LDA $75B7,X @ $75B7 = 
+#$0D<BR>&nbsp;0C:8C2F:85 CC&nbsp;&nbsp;&nbsp;&nbsp; STA $00CC = 
+#$08<BR>&nbsp;0C:8C31:4C 3C 8C&nbsp; JMP $8C3C<BR>&nbsp;0C:8C34:A5 
+C0&nbsp;&nbsp;&nbsp;&nbsp; LDA $00C0 = #$1F<BR>&nbsp;0C:8C36:85 
+CB&nbsp;&nbsp;&nbsp;&nbsp; STA $00CB = #$1F<BR>&nbsp;0C:8C38:A5 
+C1&nbsp;&nbsp;&nbsp;&nbsp; LDA $00C1 = #$08<BR>&nbsp;0C:8C3A:85 
+CC&nbsp;&nbsp;&nbsp;&nbsp; STA $00CC = #$08<BR>&nbsp;0C:8C3C:4C C5 82&nbsp; JMP 
+$82C5<BR>-----------------------------------------------------------<BR>&nbsp;0C:8C3F:A0 
+01&nbsp;&nbsp;&nbsp;&nbsp; LDY #$01<BR>&nbsp;0C:8C41:B1 
+FC&nbsp;&nbsp;&nbsp;&nbsp; LDA ($FC),Y @ $A451 = #$D5<BR>&nbsp;0C:8C43:20 1D 
+93&nbsp; JSR $931D<BR>&nbsp;0C:8C46:B0 11&nbsp;&nbsp;&nbsp;&nbsp; BCS 
+$8C59<BR>&nbsp;0C:8C48:BD D7 77&nbsp; LDA $77D7,X @ $77D7 = 
+#$00<BR>&nbsp;0C:8C4B:10 02&nbsp;&nbsp;&nbsp;&nbsp; BPL 
+$8C4F<BR>&nbsp;0C:8C4D:A2 00&nbsp;&nbsp;&nbsp;&nbsp; LDX 
+#$00<BR>&nbsp;0C:8C4F:BD 97 75&nbsp; LDA $7597,X @ $7597 = 
+#$11<BR>&nbsp;0C:8C52:85 C0&nbsp;&nbsp;&nbsp;&nbsp; STA $00C0 = 
+#$1F<BR>&nbsp;0C:8C54:BD B7 75&nbsp; LDA $75B7,X @ $75B7 = 
+#$0D<BR>&nbsp;0C:8C57:85 C1&nbsp;&nbsp;&nbsp;&nbsp; STA $00C1 = 
+#$08<BR>&nbsp;0C:8C59:4C C5 82&nbsp; JMP 
+$82C5<BR>-----------------------------------------------------------<BR>&nbsp;0C:8C5C:A0 
+01&nbsp;&nbsp;&nbsp;&nbsp; LDY #$01<BR>&nbsp;0C:8C5E:B1 
+FC&nbsp;&nbsp;&nbsp;&nbsp; LDA ($FC),Y @ $A451 = #$D5<BR>&nbsp;0C:8C60:29 
+07&nbsp;&nbsp;&nbsp;&nbsp; AND 
+#$07<BR>&nbsp;0C:8C62:AA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+TAX<BR>&nbsp;0C:8C63:C8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+INY<BR>&nbsp;0C:8C64:B1 FC&nbsp;&nbsp;&nbsp;&nbsp; LDA ($FC),Y @ $A451 = 
+#$D5<BR>&nbsp;0C:8C66:9D 2F 75&nbsp; STA $752F,X @ $752F = 
+#$00<BR>&nbsp;0C:8C69:4C FD 82&nbsp; JMP 
+$82FD<BR>-----------------------------------------------------------<BR>&nbsp;0C:8C6C:A0 
+01&nbsp;&nbsp;&nbsp;&nbsp; LDY #$01<BR>&nbsp;0C:8C6E:B1 
+FC&nbsp;&nbsp;&nbsp;&nbsp; LDA ($FC),Y @ $A451 = #$D5<BR>&nbsp;0C:8C70:99 EF 
+00&nbsp; STA $00EF,Y @ $00EF = 
+#$00<BR>&nbsp;0C:8C73:C8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+INY<BR>&nbsp;0C:8C74:C0 07&nbsp;&nbsp;&nbsp;&nbsp; CPY #$07<BR>&nbsp;0C:8C76:D0 
+F6&nbsp;&nbsp;&nbsp;&nbsp; BNE $8C6E<BR>&nbsp;0C:8C78:A9 
+2F&nbsp;&nbsp;&nbsp;&nbsp; LDA #$2F<BR>&nbsp;0C:8C7A:20 08 C1&nbsp; JSR 
+$C108<BR>&nbsp;0C:8C7D:A9 5B&nbsp;&nbsp;&nbsp;&nbsp; LDA 
+#$5B<BR>&nbsp;0C:8C7F:20 08 C1&nbsp; JSR $C108<BR>&nbsp;0C:8C82:A9 
+5F&nbsp;&nbsp;&nbsp;&nbsp; LDA #$5F<BR>&nbsp;0C:8C84:20 08 C1&nbsp; JSR 
+$C108<BR>&nbsp;0C:8C87:A6 CD&nbsp;&nbsp;&nbsp;&nbsp; LDX $00CD = 
+#$1D<BR>&nbsp;0C:8C89:E0 FF&nbsp;&nbsp;&nbsp;&nbsp; CPX #$FF<BR>&nbsp;0C:8C8B:F0 
+23&nbsp;&nbsp;&nbsp;&nbsp; BEQ $8CB0<BR>&nbsp;0C:8C8D:BD 77 77&nbsp; LDA $7777,X 
+@ $7777 = #$00<BR>&nbsp;0C:8C90:0A&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+ASL<BR>&nbsp;0C:8C91:A8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+TAY<BR>&nbsp;0C:8C92:B9 FC AD&nbsp; LDA $ADFC,Y @ $ADFC = 
+#$3C<BR>&nbsp;0C:8C95:9D 97 77&nbsp; STA $7797,X @ $7797 = 
+#$00<BR>&nbsp;0C:8C98:B9 FD AD&nbsp; LDA $ADFD,Y @ $ADFD = 
+#$AE<BR>&nbsp;0C:8C9B:9D B7 77&nbsp; STA $77B7,X @ $77B7 = 
+#$00<BR>&nbsp;0C:8C9E:BD 97 75&nbsp; LDA $7597,X @ $7597 = 
+#$11<BR>&nbsp;0C:8CA1:85 CB&nbsp;&nbsp;&nbsp;&nbsp; STA $00CB = 
+#$1F<BR>&nbsp;0C:8CA3:BD B7 75&nbsp; LDA $75B7,X @ $75B7 = 
+#$0D<BR>&nbsp;0C:8CA6:85 CC&nbsp;&nbsp;&nbsp;&nbsp; STA $00CC = 
+#$08<BR>&nbsp;0C:8CA8:20 FE 8C&nbsp; JSR $8CFE<BR>&nbsp;0C:8CAB:A0 
+06&nbsp;&nbsp;&nbsp;&nbsp; LDY #$06<BR>&nbsp;0C:8CAD:4C C5 82&nbsp; JMP 
+$82C5<BR>&nbsp;0C:8CB0:A0 06&nbsp;&nbsp;&nbsp;&nbsp; LDY 
+#$06<BR>&nbsp;0C:8CB2:4C FD 82&nbsp; JMP 
+$82FD<BR>-----------------------------------------------------------<BR>&nbsp;0C:8CB5:A0 
+01&nbsp;&nbsp;&nbsp;&nbsp; LDY #$01<BR>&nbsp;0C:8CB7:B1 
+FC&nbsp;&nbsp;&nbsp;&nbsp; LDA ($FC),Y @ $A451 = #$D5<BR>&nbsp;0C:8CB9:99 EF 
+00&nbsp; STA $00EF,Y @ $00EF = 
+#$00<BR>&nbsp;0C:8CBC:C8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+INY<BR>&nbsp;0C:8CBD:C0 07&nbsp;&nbsp;&nbsp;&nbsp; CPY #$07<BR>&nbsp;0C:8CBF:D0 
+F6&nbsp;&nbsp;&nbsp;&nbsp; BNE $8CB7<BR>&nbsp;0C:8CC1:A9 
+2F&nbsp;&nbsp;&nbsp;&nbsp; LDA #$2F<BR>&nbsp;0C:8CC3:20 08 C1&nbsp; JSR 
+$C108<BR>&nbsp;0C:8CC6:A9 5B&nbsp;&nbsp;&nbsp;&nbsp; LDA 
+#$5B<BR>&nbsp;0C:8CC8:20 08 C1&nbsp; JSR $C108<BR>&nbsp;0C:8CCB:A9 
+60&nbsp;&nbsp;&nbsp;&nbsp; LDA #$60<BR>&nbsp;0C:8CCD:20 08 C1&nbsp; JSR 
+$C108<BR>&nbsp;0C:8CD0:A6 CD&nbsp;&nbsp;&nbsp;&nbsp; LDX $00CD = 
+#$1D<BR>&nbsp;0C:8CD2:E0 FF&nbsp;&nbsp;&nbsp;&nbsp; CPX #$FF<BR>&nbsp;0C:8CD4:F0 
+23&nbsp;&nbsp;&nbsp;&nbsp; BEQ $8CF9<BR>&nbsp;0C:8CD6:BD 77 77&nbsp; LDA $7777,X 
+@ $7777 = #$00<BR>&nbsp;0C:8CD9:0A&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+ASL<BR>&nbsp;0C:8CDA:A8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+TAY<BR>&nbsp;0C:8CDB:B9 83 AF&nbsp; LDA $AF83,Y @ $AF83 = 
+#$E3<BR>&nbsp;0C:8CDE:9D 97 77&nbsp; STA $7797,X @ $7797 = 
+#$00<BR>&nbsp;0C:8CE1:B9 84 AF&nbsp; LDA $AF84,Y @ $AF84 = 
+#$AF<BR>&nbsp;0C:8CE4:9D B7 77&nbsp; STA $77B7,X @ $77B7 = 
+#$00<BR>&nbsp;0C:8CE7:BD 97 75&nbsp; LDA $7597,X @ $7597 = 
+#$11<BR>&nbsp;0C:8CEA:85 CB&nbsp;&nbsp;&nbsp;&nbsp; STA $00CB = 
+#$1F<BR>&nbsp;0C:8CEC:BD B7 75&nbsp; LDA $75B7,X @ $75B7 = 
+#$0D<BR>&nbsp;0C:8CEF:85 CC&nbsp;&nbsp;&nbsp;&nbsp; STA $00CC = 
+#$08<BR>&nbsp;0C:8CF1:20 FE 8C&nbsp; JSR $8CFE<BR>&nbsp;0C:8CF4:A0 
+06&nbsp;&nbsp;&nbsp;&nbsp; LDY #$06<BR>&nbsp;0C:8CF6:4C C5 82&nbsp; JMP 
+$82C5<BR>&nbsp;0C:8CF9:A0 06&nbsp;&nbsp;&nbsp;&nbsp; LDY 
+#$06<BR>&nbsp;0C:8CFB:4C FD 82&nbsp; JMP $82FD<BR>&nbsp;0C:8CFE:A2 
+11&nbsp;&nbsp;&nbsp;&nbsp; LDX #$11<BR>&nbsp;0C:8D00:BD 9F 06&nbsp; LDA $069F,X 
+@ $069F = #$00<BR>&nbsp;0C:8D03:9D A0 06&nbsp; STA $06A0,X @ $06A0 = 
+#$1D<BR>&nbsp;0C:8D06:CA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+DEX<BR>&nbsp;0C:8D07:D0 F7&nbsp;&nbsp;&nbsp;&nbsp; BNE $8D00<BR>&nbsp;0C:8D09:A5 
+CD&nbsp;&nbsp;&nbsp;&nbsp; LDA $00CD = #$1D<BR>&nbsp;0C:8D0B:8D A0 06&nbsp; STA 
+$06A0 = #$1D<BR>&nbsp;0C:8D0E:60&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; RTS 
+---------------------------<BR>-----------------------------------------------------------<BR>&nbsp;0C:8D0F:A0 
+01&nbsp;&nbsp;&nbsp;&nbsp; LDY #$01<BR>&nbsp;0C:8D11:B1 
+FC&nbsp;&nbsp;&nbsp;&nbsp; LDA ($FC),Y @ $A451 = #$D5<BR>&nbsp;0C:8D13:99 EF 
+00&nbsp; STA $00EF,Y @ $00EF = 
+#$00<BR>&nbsp;0C:8D16:C8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+INY<BR>&nbsp;0C:8D17:C0 05&nbsp;&nbsp;&nbsp;&nbsp; CPY #$05<BR>&nbsp;0C:8D19:D0 
+F6&nbsp;&nbsp;&nbsp;&nbsp; BNE $8D11<BR>&nbsp;0C:8D1B:A9 
+2F&nbsp;&nbsp;&nbsp;&nbsp; LDA #$2F<BR>&nbsp;0C:8D1D:20 08 C1&nbsp; JSR 
+$C108<BR>&nbsp;0C:8D20:A9 5B&nbsp;&nbsp;&nbsp;&nbsp; LDA 
+#$5B<BR>&nbsp;0C:8D22:20 08 C1&nbsp; JSR $C108<BR>&nbsp;0C:8D25:A9 
+5E&nbsp;&nbsp;&nbsp;&nbsp; LDA #$5E<BR>&nbsp;0C:8D27:20 08 C1&nbsp; JSR 
+$C108<BR>&nbsp;0C:8D2A:A6 CD&nbsp;&nbsp;&nbsp;&nbsp; LDX $00CD = 
+#$1D<BR>&nbsp;0C:8D2C:E0 FF&nbsp;&nbsp;&nbsp;&nbsp; CPX #$FF<BR>&nbsp;0C:8D2E:F0 
+14&nbsp;&nbsp;&nbsp;&nbsp; BEQ $8D44<BR>&nbsp;0C:8D30:BD 37 75&nbsp; LDA $7537,X 
+@ $7537 = #$36<BR>&nbsp;0C:8D33:F0 0F&nbsp;&nbsp;&nbsp;&nbsp; BEQ 
+$8D44<BR>&nbsp;0C:8D35:BD 97 75&nbsp; LDA $7597,X @ $7597 = 
+#$11<BR>&nbsp;0C:8D38:85 CB&nbsp;&nbsp;&nbsp;&nbsp; STA $00CB = 
+#$1F<BR>&nbsp;0C:8D3A:BD B7 75&nbsp; LDA $75B7,X @ $75B7 = 
+#$0D<BR>&nbsp;0C:8D3D:85 CC&nbsp;&nbsp;&nbsp;&nbsp; STA $00CC = 
+#$08<BR>&nbsp;0C:8D3F:A0 04&nbsp;&nbsp;&nbsp;&nbsp; LDY #$04<BR>&nbsp;0C:8D41:4C 
+C5 82&nbsp; JMP $82C5<BR>&nbsp;0C:8D44:A0 04&nbsp;&nbsp;&nbsp;&nbsp; LDY 
+#$04<BR>&nbsp;0C:8D46:4C FD 82&nbsp; JMP 
+$82FD<BR>-----------------------------------------------------------<BR>&nbsp;0C:8D49:A0 
+01&nbsp;&nbsp;&nbsp;&nbsp; LDY #$01<BR>&nbsp;0C:8D4B:B1 
+FC&nbsp;&nbsp;&nbsp;&nbsp; LDA ($FC),Y @ $A451 = #$D5<BR>&nbsp;0C:8D4D:20 1D 
+93&nbsp; JSR $931D<BR>&nbsp;0C:8D50:B0 23&nbsp;&nbsp;&nbsp;&nbsp; BCS 
+$8D75<BR>&nbsp;0C:8D52:86 CD&nbsp;&nbsp;&nbsp;&nbsp; STX $00CD = 
+#$1D<BR>&nbsp;0C:8D54:C8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+INY<BR>&nbsp;0C:8D55:B1 FC&nbsp;&nbsp;&nbsp;&nbsp; LDA ($FC),Y @ $A451 = 
+#$D5<BR>&nbsp;0C:8D57:9D 37 75&nbsp; STA $7537,X @ $7537 = 
+#$36<BR>&nbsp;0C:8D5A:C8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+INY<BR>&nbsp;0C:8D5B:B1 FC&nbsp;&nbsp;&nbsp;&nbsp; LDA ($FC),Y @ $A451 = 
+#$D5<BR>&nbsp;0C:8D5D:9D 57 75&nbsp; STA $7557,X @ $7557 = 
+#$A4<BR>&nbsp;0C:8D60:E0 0B&nbsp;&nbsp;&nbsp;&nbsp; CPX #$0B<BR>&nbsp;0C:8D62:B0 
+0C&nbsp;&nbsp;&nbsp;&nbsp; BCS $8D70<BR>&nbsp;0C:8D64:BD 37 77&nbsp; LDA $7737,X 
+@ $7737 = #$20<BR>&nbsp;0C:8D67:29 0F&nbsp;&nbsp;&nbsp;&nbsp; AND 
+#$0F<BR>&nbsp;0C:8D69:85 F2&nbsp;&nbsp;&nbsp;&nbsp; STA $00F2 = 
+#$34<BR>&nbsp;0C:8D6B:86 F3&nbsp;&nbsp;&nbsp;&nbsp; STX $00F3 = 
+#$9B<BR>&nbsp;0C:8D6D:20 7A 8D&nbsp; JSR $8D7A<BR>&nbsp;0C:8D70:A9 
+72&nbsp;&nbsp;&nbsp;&nbsp; LDA #$72<BR>&nbsp;0C:8D72:20 08 C1&nbsp; JSR 
+$C108<BR>&nbsp;0C:8D75:A0 03&nbsp;&nbsp;&nbsp;&nbsp; LDY 
+#$03<BR>&nbsp;0C:8D77:4C FD 82&nbsp; JMP $82FD<BR>&nbsp;0C:8D7A:A4 
+F2&nbsp;&nbsp;&nbsp;&nbsp; LDY $00F2 = #$34<BR>&nbsp;0C:8D7C:A6 
+F3&nbsp;&nbsp;&nbsp;&nbsp; LDX $00F3 = #$9B<BR>&nbsp;0C:8D7E:BD 37 75&nbsp; LDA 
+$7537,X @ $7537 = #$36<BR>&nbsp;0C:8D81:20 87 C0&nbsp; JSR 
+$C087<BR>&nbsp;0C:8D84:99 3C 74&nbsp; STA $743C,Y @ $743C = 
+#$36<BR>&nbsp;0C:8D87:BD 57 75&nbsp; LDA $7557,X @ $7557 = 
+#$A4<BR>&nbsp;0C:8D8A:8D E1 04&nbsp; STA $04E1 = #$9B<BR>&nbsp;0C:8D8D:A9 
+63&nbsp;&nbsp;&nbsp;&nbsp; LDA #$63<BR>&nbsp;0C:8D8F:20 08 C1&nbsp; JSR 
+$C108<BR>&nbsp;0C:8D92:AD EE 04&nbsp; LDA $04EE = 
+#$01<BR>&nbsp;0C:8D95:4A&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+LSR<BR>&nbsp;0C:8D96:4A&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+LSR<BR>&nbsp;0C:8D97:4A&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+LSR<BR>&nbsp;0C:8D98:4A&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+LSR<BR>&nbsp;0C:8D99:29 03&nbsp;&nbsp;&nbsp;&nbsp; AND #$03<BR>&nbsp;0C:8D9B:85 
+00&nbsp;&nbsp;&nbsp;&nbsp; STA $0000 = #$78<BR>&nbsp;0C:8D9D:AD E1 04&nbsp; LDA 
+$04E1 = #$9B<BR>&nbsp;0C:8DA0:38&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+SEC<BR>&nbsp;0C:8DA1:E5 00&nbsp;&nbsp;&nbsp;&nbsp; SBC $0000 = 
+#$78<BR>&nbsp;0C:8DA3:A4 F2&nbsp;&nbsp;&nbsp;&nbsp; LDY $00F2 = 
+#$34<BR>&nbsp;0C:8DA5:99 4C 74&nbsp; STA $744C,Y @ $744C = 
+#$A4<BR>&nbsp;0C:8DA8:60&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; RTS 
+-----------------------------------------<BR>-----------------------------------------------------------<BR>&nbsp;0C:8DA9:A0 
+01&nbsp;&nbsp;&nbsp;&nbsp; LDY #$01<BR>&nbsp;0C:8DAB:B1 
+FC&nbsp;&nbsp;&nbsp;&nbsp; LDA ($FC),Y @ $A451 = #$D5<BR>&nbsp;0C:8DAD:20 1D 
+93&nbsp; JSR $931D<BR>&nbsp;0C:8DB0:B0 36&nbsp;&nbsp;&nbsp;&nbsp; BCS 
+$8DE8<BR>&nbsp;0C:8DB2:A9 00&nbsp;&nbsp;&nbsp;&nbsp; LDA 
+#$00<BR>&nbsp;0C:8DB4:85 07&nbsp;&nbsp;&nbsp;&nbsp; STA $0007 = 
+#$68<BR>&nbsp;0C:8DB6:BD 37 75&nbsp; LDA $7537,X @ $7537 = 
+#$36<BR>&nbsp;0C:8DB9:C9 0B&nbsp;&nbsp;&nbsp;&nbsp; CMP #$0B<BR>&nbsp;0C:8DBB:B0 
+08&nbsp;&nbsp;&nbsp;&nbsp; BCS $8DC5<BR>&nbsp;0C:8DBD:C9 
+08&nbsp;&nbsp;&nbsp;&nbsp; CMP #$08<BR>&nbsp;0C:8DBF:90 
+04&nbsp;&nbsp;&nbsp;&nbsp; BCC $8DC5<BR>&nbsp;0C:8DC1:E9 
+08&nbsp;&nbsp;&nbsp;&nbsp; SBC #$08<BR>&nbsp;0C:8DC3:85 
+07&nbsp;&nbsp;&nbsp;&nbsp; STA $0007 = 
+#$68<BR>&nbsp;0C:8DC5:C8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+INY<BR>&nbsp;0C:8DC6:B1 FC&nbsp;&nbsp;&nbsp;&nbsp; LDA ($FC),Y @ $A451 = 
+#$D5<BR>&nbsp;0C:8DC8:18&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+CLC<BR>&nbsp;0C:8DC9:65 07&nbsp;&nbsp;&nbsp;&nbsp; ADC $0007 = 
+#$68<BR>&nbsp;0C:8DCB:9D 57 75&nbsp; STA $7557,X @ $7557 = 
+#$A4<BR>&nbsp;0C:8DCE:E0 0B&nbsp;&nbsp;&nbsp;&nbsp; CPX #$0B<BR>&nbsp;0C:8DD0:B0 
+0C&nbsp;&nbsp;&nbsp;&nbsp; BCS $8DDE<BR>&nbsp;0C:8DD2:BD 37 77&nbsp; LDA $7737,X 
+@ $7737 = #$20<BR>&nbsp;0C:8DD5:29 0F&nbsp;&nbsp;&nbsp;&nbsp; AND 
+#$0F<BR>&nbsp;0C:8DD7:85 F2&nbsp;&nbsp;&nbsp;&nbsp; STA $00F2 = 
+#$34<BR>&nbsp;0C:8DD9:86 F3&nbsp;&nbsp;&nbsp;&nbsp; STX $00F3 = 
+#$9B<BR>&nbsp;0C:8DDB:20 7A 8D&nbsp; JSR $8D7A<BR>&nbsp;0C:8DDE:A9 
+72&nbsp;&nbsp;&nbsp;&nbsp; LDA #$72<BR>&nbsp;0C:8DE0:20 08 C1&nbsp; JSR 
+$C108<BR>&nbsp;0C:8DE3:A0 02&nbsp;&nbsp;&nbsp;&nbsp; LDY 
+#$02<BR>&nbsp;0C:8DE5:4C FD 82&nbsp; JMP $82FD<BR>&nbsp;0C:8DE8:A0 
+01&nbsp;&nbsp;&nbsp;&nbsp; LDY #$01<BR>&nbsp;0C:8DEA:B1 
+FC&nbsp;&nbsp;&nbsp;&nbsp; LDA ($FC),Y @ $A451 = #$D5<BR>&nbsp;0C:8DEC:20 39 
+93&nbsp; JSR $9339<BR>&nbsp;0C:8DEF:B0 0E&nbsp;&nbsp;&nbsp;&nbsp; BCS 
+$8DFF<BR>&nbsp;0C:8DF1:C8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+INY<BR>&nbsp;0C:8DF2:B1 FC&nbsp;&nbsp;&nbsp;&nbsp; LDA ($FC),Y @ $A451 = 
+#$D5<BR>&nbsp;0C:8DF4:9D 4C 74&nbsp; STA $744C,X @ $744C = 
+#$A4<BR>&nbsp;0C:8DF7:BD CC 74&nbsp; LDA $74CC,X @ $74CC = 
+#$00<BR>&nbsp;0C:8DFA:29 7F&nbsp;&nbsp;&nbsp;&nbsp; AND #$7F<BR>&nbsp;0C:8DFC:9D 
+CC 74&nbsp; STA $74CC,X @ $74CC = #$00<BR>&nbsp;0C:8DFF:4C FD 82&nbsp; JMP 
+$82FD<BR>-----------------------------------------------------------<BR>&nbsp;0C:8E02:A0 
+01&nbsp;&nbsp;&nbsp;&nbsp; LDY #$01<BR>&nbsp;0C:8E04:B1 
+FC&nbsp;&nbsp;&nbsp;&nbsp; LDA ($FC),Y @ $A451 = 
+#$D5<BR>&nbsp;0C:8E06:AA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+TAX<BR>&nbsp;0C:8E07:BD 1A 74&nbsp; LDA $741A,X @ $741A = 
+#$00<BR>&nbsp;0C:8E0A:18&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+CLC<BR>&nbsp;0C:8E0B:69 01&nbsp;&nbsp;&nbsp;&nbsp; ADC #$01<BR>&nbsp;0C:8E0D:90 
+02&nbsp;&nbsp;&nbsp;&nbsp; BCC $8E11<BR>&nbsp;0C:8E0F:A9 
+FF&nbsp;&nbsp;&nbsp;&nbsp; LDA #$FF<BR>&nbsp;0C:8E11:9D 1A 74&nbsp; STA $741A,X 
+@ $741A = #$00<BR>&nbsp;0C:8E14:4C FD 82&nbsp; JMP 
+$82FD<BR>-----------------------------------------------------------<BR>&nbsp;0C:8E17:A0 
+01&nbsp;&nbsp;&nbsp;&nbsp; LDY #$01<BR>&nbsp;0C:8E19:B1 
+FC&nbsp;&nbsp;&nbsp;&nbsp; LDA ($FC),Y @ $A451 = 
+#$D5<BR>&nbsp;0C:8E1B:18&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+CLC<BR>&nbsp;0C:8E1C:6D 3A 74&nbsp; ADC $743A = #$BC<BR>&nbsp;0C:8E1F:8D 3A 
+74&nbsp; STA $743A = 
+#$BC<BR>&nbsp;0C:8E22:C8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+INY<BR>&nbsp;0C:8E23:B1 FC&nbsp;&nbsp;&nbsp;&nbsp; LDA ($FC),Y @ $A451 = 
+#$D5<BR>&nbsp;0C:8E25:6D 3B 74&nbsp; ADC $743B = #$02<BR>&nbsp;0C:8E28:8D 3B 
+74&nbsp; STA $743B = #$02<BR>&nbsp;0C:8E2B:90 08&nbsp;&nbsp;&nbsp;&nbsp; BCC 
+$8E35<BR>&nbsp;0C:8E2D:A9 FF&nbsp;&nbsp;&nbsp;&nbsp; LDA 
+#$FF<BR>&nbsp;0C:8E2F:8D 3A 74&nbsp; STA $743A = #$BC<BR>&nbsp;0C:8E32:8D 3B 
+74&nbsp; STA $743B = #$02<BR>&nbsp;0C:8E35:4C FD 82&nbsp; JMP 
+$82FD<BR>-----------------------------------------------------------<BR>&nbsp;0C:8E38:A0 
+01&nbsp;&nbsp;&nbsp;&nbsp; LDY #$01<BR>&nbsp;0C:8E3A:B1 
+FC&nbsp;&nbsp;&nbsp;&nbsp; LDA ($FC),Y @ $A451 = #$D5<BR>&nbsp;0C:8E3C:30 
+06&nbsp;&nbsp;&nbsp;&nbsp; BMI $8E44<BR>&nbsp;0C:8E3E:20 5D C0&nbsp; JSR 
+$C05D<BR>&nbsp;0C:8E41:4C FD 82&nbsp; JMP $82FD<BR>&nbsp;0C:8E44:29 
+7F&nbsp;&nbsp;&nbsp;&nbsp; AND #$7F<BR>&nbsp;0C:8E46:20 66 C0&nbsp; JSR 
+$C066<BR>&nbsp;0C:8E49:4C FD 82&nbsp; JMP 
+$82FD<BR>-----------------------------------------------------------<BR>&nbsp;0C:8E4C:A0 
+01&nbsp;&nbsp;&nbsp;&nbsp; LDY #$01<BR>&nbsp;0C:8E4E:B1 
+FC&nbsp;&nbsp;&nbsp;&nbsp; LDA ($FC),Y @ $A451 = #$D5<BR>&nbsp;0C:8E50:30 
+06&nbsp;&nbsp;&nbsp;&nbsp; BMI $8E58<BR>&nbsp;0C:8E52:20 60 C0&nbsp; JSR 
+$C060<BR>&nbsp;0C:8E55:4C FD 82&nbsp; JMP $82FD<BR>&nbsp;0C:8E58:29 
+7F&nbsp;&nbsp;&nbsp;&nbsp; AND #$7F<BR>&nbsp;0C:8E5A:20 69 C0&nbsp; JSR 
+$C069<BR>&nbsp;0C:8E5D:4C FD 82&nbsp; JMP 
+$82FD<BR>-----------------------------------------------------------<BR>&nbsp;0C:8E60:A0 
+01&nbsp;&nbsp;&nbsp;&nbsp; LDY #$01<BR>&nbsp;0C:8E62:B1 
+FC&nbsp;&nbsp;&nbsp;&nbsp; LDA ($FC),Y @ $A451 = #$D5<BR>&nbsp;0C:8E64:20 1D 
+93&nbsp; JSR $931D<BR>&nbsp;0C:8E67:B0 0E&nbsp;&nbsp;&nbsp;&nbsp; BCS 
+$8E77<BR>&nbsp;0C:8E69:C8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+INY<BR>&nbsp;0C:8E6A:B1 FC&nbsp;&nbsp;&nbsp;&nbsp; LDA ($FC),Y @ $A451 = 
+#$D5<BR>&nbsp;0C:8E6C:20 7C 8E&nbsp; JSR $8E7C<BR>&nbsp;0C:8E6F:BD 57 77&nbsp; 
+LDA $7757,X @ $7757 = #$80<BR>&nbsp;0C:8E72:05 01&nbsp;&nbsp;&nbsp;&nbsp; ORA 
+$0001 = #$99<BR>&nbsp;0C:8E74:9D 57 77&nbsp; STA $7757,X @ $7757 = 
+#$80<BR>&nbsp;0C:8E77:A0 02&nbsp;&nbsp;&nbsp;&nbsp; LDY #$02<BR>&nbsp;0C:8E79:4C 
+FD 82&nbsp; JMP $82FD<BR>&nbsp;0C:8E7C:29 07&nbsp;&nbsp;&nbsp;&nbsp; AND 
+#$07<BR>&nbsp;0C:8E7E:85 00&nbsp;&nbsp;&nbsp;&nbsp; STA $0000 = 
+#$78<BR>&nbsp;0C:8E80:A9 01&nbsp;&nbsp;&nbsp;&nbsp; LDA #$01<BR>&nbsp;0C:8E82:85 
+01&nbsp;&nbsp;&nbsp;&nbsp; STA $0001 = #$99<BR>&nbsp;0C:8E84:A5 
+00&nbsp;&nbsp;&nbsp;&nbsp; LDA $0000 = #$78<BR>&nbsp;0C:8E86:F0 
+06&nbsp;&nbsp;&nbsp;&nbsp; BEQ $8E8E<BR>&nbsp;0C:8E88:06 
+01&nbsp;&nbsp;&nbsp;&nbsp; ASL $0001 = #$99<BR>&nbsp;0C:8E8A:C6 
+00&nbsp;&nbsp;&nbsp;&nbsp; DEC $0000 = #$78<BR>&nbsp;0C:8E8C:D0 
+FA&nbsp;&nbsp;&nbsp;&nbsp; BNE 
+$8E88<BR>&nbsp;0C:8E8E:60&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; RTS 
+-----------------------------------------<BR>-----------------------------------------------------------<BR>&nbsp;0C:8E8F:A0 
+01&nbsp;&nbsp;&nbsp;&nbsp; LDY #$01<BR>&nbsp;0C:8E91:B1 
+FC&nbsp;&nbsp;&nbsp;&nbsp; LDA ($FC),Y @ $A451 = #$D5<BR>&nbsp;0C:8E93:20 1D 
+93&nbsp; JSR $931D<BR>&nbsp;0C:8E96:B0 10&nbsp;&nbsp;&nbsp;&nbsp; BCS 
+$8EA8<BR>&nbsp;0C:8E98:C8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+INY<BR>&nbsp;0C:8E99:B1 FC&nbsp;&nbsp;&nbsp;&nbsp; LDA ($FC),Y @ $A451 = 
+#$D5<BR>&nbsp;0C:8E9B:20 7C 8E&nbsp; JSR $8E7C<BR>&nbsp;0C:8E9E:A5 
+01&nbsp;&nbsp;&nbsp;&nbsp; LDA $0001 = #$99<BR>&nbsp;0C:8EA0:49 
+FF&nbsp;&nbsp;&nbsp;&nbsp; EOR #$FF<BR>&nbsp;0C:8EA2:3D 57 77&nbsp; AND $7757,X 
+@ $7757 = #$80<BR>&nbsp;0C:8EA5:9D 57 77&nbsp; STA $7757,X @ $7757 = 
+#$80<BR>&nbsp;0C:8EA8:A0 02&nbsp;&nbsp;&nbsp;&nbsp; LDY #$02<BR>&nbsp;0C:8EAA:4C 
+FD 82&nbsp; JMP 
+$82FD<BR>-----------------------------------------------------------<BR>&nbsp;0C:8EAD:A0 
+01&nbsp;&nbsp;&nbsp;&nbsp; LDY #$01<BR>&nbsp;0C:8EAF:B1 
+FC&nbsp;&nbsp;&nbsp;&nbsp; LDA ($FC),Y @ $A451 = #$D5<BR>&nbsp;0C:8EB1:85 
+00&nbsp;&nbsp;&nbsp;&nbsp; STA $0000 = 
+#$78<BR>&nbsp;0C:8EB3:C8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+INY<BR>&nbsp;0C:8EB4:B1 FC&nbsp;&nbsp;&nbsp;&nbsp; LDA ($FC),Y @ $A451 = 
+#$D5<BR>&nbsp;0C:8EB6:85 FD&nbsp;&nbsp;&nbsp;&nbsp; STA $00FD = 
+#$A4<BR>&nbsp;0C:8EB8:A5 00&nbsp;&nbsp;&nbsp;&nbsp; LDA $0000 = 
+#$78<BR>&nbsp;0C:8EBA:85 FC&nbsp;&nbsp;&nbsp;&nbsp; STA $00FC = 
+#$51<BR>&nbsp;0C:8EBC:24 1F&nbsp;&nbsp;&nbsp;&nbsp; BIT $001F = 
+#$01<BR>&nbsp;0C:8EBE:30 03&nbsp;&nbsp;&nbsp;&nbsp; BMI 
+$8EC3<BR>&nbsp;0C:8EC0:4C 92 81&nbsp; JMP 
+$8192<BR>&nbsp;0C:8EC3:60&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; RTS 
+-----------------------------------------<BR>-----------------------------------------------------------<BR>&nbsp;0C:8EC4:A5 
+FE&nbsp;&nbsp;&nbsp;&nbsp; LDA $00FE = #$80<BR>&nbsp;0C:8EC6:49 
+80&nbsp;&nbsp;&nbsp;&nbsp; EOR #$80<BR>&nbsp;0C:8EC8:85 
+FE&nbsp;&nbsp;&nbsp;&nbsp; STA $00FE = #$80<BR>&nbsp;0C:8ECA:A0 
+00&nbsp;&nbsp;&nbsp;&nbsp; LDY #$00<BR>&nbsp;0C:8ECC:4C FD 82&nbsp; JMP 
+$82FD<BR>-----------------------------------------------------------<BR>&nbsp;0C:8ECF:A5 
+FE&nbsp;&nbsp;&nbsp;&nbsp; LDA $00FE = #$80<BR>&nbsp;0C:8ED1:30 
+03&nbsp;&nbsp;&nbsp;&nbsp; BMI $8ED6<BR>&nbsp;0C:8ED3:4C AD 8E&nbsp; JMP 
+$8EAD<BR>&nbsp;0C:8ED6:A5 FC&nbsp;&nbsp;&nbsp;&nbsp; LDA $00FC = 
+#$51<BR>&nbsp;0C:8ED8:18&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+CLC<BR>&nbsp;0C:8ED9:69 03&nbsp;&nbsp;&nbsp;&nbsp; ADC #$03<BR>&nbsp;0C:8EDB:85 
+FC&nbsp;&nbsp;&nbsp;&nbsp; STA $00FC = #$51<BR>&nbsp;0C:8EDD:A5 
+FD&nbsp;&nbsp;&nbsp;&nbsp; LDA $00FD = #$A4<BR>&nbsp;0C:8EDF:69 
+00&nbsp;&nbsp;&nbsp;&nbsp; ADC #$00<BR>&nbsp;0C:8EE1:85 
+FD&nbsp;&nbsp;&nbsp;&nbsp; STA $00FD = #$A4<BR>&nbsp;0C:8EE3:4C 92 81&nbsp; JMP 
+$8192<BR>-----------------------------------------------------------<BR>&nbsp;0C:8EE6:A5 
+FE&nbsp;&nbsp;&nbsp;&nbsp; LDA $00FE = #$80<BR>&nbsp;0C:8EE8:10 
+EC&nbsp;&nbsp;&nbsp;&nbsp; BPL $8ED6<BR>&nbsp;0C:8EEA:4C AD 8E&nbsp; JMP 
+$8EAD<BR>-----------------------------------------------------------<BR>&nbsp;0C:8EED:A0 
+01&nbsp;&nbsp;&nbsp;&nbsp; LDY #$01<BR>&nbsp;0C:8EEF:B1 
+FC&nbsp;&nbsp;&nbsp;&nbsp; LDA ($FC),Y @ $A451 = #$D5<BR>&nbsp;0C:8EF1:8D 29 
+75&nbsp; STA $7529 = #$87<BR>&nbsp;0C:8EF4:4C FD 82&nbsp; JMP 
+$82FD<BR>-----------------------------------------------------------<BR>&nbsp;0C:8EF7:A0 
+01&nbsp;&nbsp;&nbsp;&nbsp; LDY #$01<BR>&nbsp;0C:8EF9:B1 
+FC&nbsp;&nbsp;&nbsp;&nbsp; LDA ($FC),Y @ $A451 = #$D5<BR>&nbsp;0C:8EFB:8D 2A 
+75&nbsp; STA $752A = #$88<BR>&nbsp;0C:8EFE:4C FD 82&nbsp; JMP 
+$82FD<BR>-----------------------------------------------------------<BR>&nbsp;0C:8F01:A0 
+01&nbsp;&nbsp;&nbsp;&nbsp; LDY #$01<BR>&nbsp;0C:8F03:B1 
+FC&nbsp;&nbsp;&nbsp;&nbsp; LDA ($FC),Y @ $A451 = #$D5<BR>&nbsp;0C:8F05:C9 
+FB&nbsp;&nbsp;&nbsp;&nbsp; CMP #$FB<BR>&nbsp;0C:8F07:D0 
+03&nbsp;&nbsp;&nbsp;&nbsp; BNE $8F0C<BR>&nbsp;0C:8F09:AD 2B 75&nbsp; LDA $752B = 
+#$88<BR>&nbsp;0C:8F0C:C9 FC&nbsp;&nbsp;&nbsp;&nbsp; CMP #$FC<BR>&nbsp;0C:8F0E:D0 
+06&nbsp;&nbsp;&nbsp;&nbsp; BNE $8F16<BR>&nbsp;0C:8F10:AD 29 75&nbsp; LDA $7529 = 
+#$87<BR>&nbsp;0C:8F13:8D 2B 75&nbsp; STA $752B = #$88<BR>&nbsp;0C:8F16:C9 
+FD&nbsp;&nbsp;&nbsp;&nbsp; CMP #$FD<BR>&nbsp;0C:8F18:D0 
+06&nbsp;&nbsp;&nbsp;&nbsp; BNE $8F20<BR>&nbsp;0C:8F1A:AD 2A 75&nbsp; LDA $752A = 
+#$88<BR>&nbsp;0C:8F1D:8D 2B 75&nbsp; STA $752B = #$88<BR>&nbsp;0C:8F20:85 
+4C&nbsp;&nbsp;&nbsp;&nbsp; STA $004C = #$FF<BR>&nbsp;0C:8F22:4C FD 82&nbsp; JMP 
+$82FD<BR>&nbsp;0C:8F25:A0 01&nbsp;&nbsp;&nbsp;&nbsp; LDY 
+#$01<BR>&nbsp;0C:8F27:B1 FC&nbsp;&nbsp;&nbsp;&nbsp; LDA ($FC),Y @ $A451 = 
+#$D5<BR>&nbsp;0C:8F29:8D 8F 06&nbsp; STA $068F = #$00<BR>&nbsp;0C:8F2C:4C C5 
+82&nbsp; JMP 
+$82C5<BR>-----------------------------------------------------------<BR>&nbsp;0C:8F2F:60&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+RTS 
+------------------------------<BR>-----------------------------------------------------------<BR>&nbsp;0C:8F30:A0 
+01&nbsp;&nbsp;&nbsp;&nbsp; LDY #$01<BR>&nbsp;0C:8F32:B1 
+FC&nbsp;&nbsp;&nbsp;&nbsp; LDA ($FC),Y @ $A451 = #$D5<BR>&nbsp;0C:8F34:20 7C 
+8E&nbsp; JSR $8E7C<BR>&nbsp;0C:8F37:A6 CD&nbsp;&nbsp;&nbsp;&nbsp; LDX $00CD = 
+#$1D<BR>&nbsp;0C:8F39:BD 57 77&nbsp; LDA $7757,X @ $7757 = 
+#$80<BR>&nbsp;0C:8F3C:05 01&nbsp;&nbsp;&nbsp;&nbsp; ORA $0001 = 
+#$99<BR>&nbsp;0C:8F3E:9D 57 77&nbsp; STA $7757,X @ $7757 = 
+#$80<BR>&nbsp;0C:8F41:4C FD 82&nbsp; JMP 
+$82FD<BR>-----------------------------------------------------------<BR>&nbsp;0C:8F44:A0 
+01&nbsp;&nbsp;&nbsp;&nbsp; LDY #$01<BR>&nbsp;0C:8F46:B1 
+FC&nbsp;&nbsp;&nbsp;&nbsp; LDA ($FC),Y @ $A451 = #$D5<BR>&nbsp;0C:8F48:20 7C 
+8E&nbsp; JSR $8E7C<BR>&nbsp;0C:8F4B:A6 CD&nbsp;&nbsp;&nbsp;&nbsp; LDX $00CD = 
+#$1D<BR>&nbsp;0C:8F4D:A5 01&nbsp;&nbsp;&nbsp;&nbsp; LDA $0001 = 
+#$99<BR>&nbsp;0C:8F4F:49 FF&nbsp;&nbsp;&nbsp;&nbsp; EOR #$FF<BR>&nbsp;0C:8F51:3D 
+57 77&nbsp; AND $7757,X @ $7757 = #$80<BR>&nbsp;0C:8F54:9D 57 77&nbsp; STA 
+$7757,X @ $7757 = #$80<BR>&nbsp;0C:8F57:4C FD 82&nbsp; JMP 
+$82FD<BR>-----------------------------------------------------------<BR>&nbsp;0C:8F5A:A9 
+00&nbsp;&nbsp;&nbsp;&nbsp; LDA #$00<BR>&nbsp;0C:8F5C:85 
+C9&nbsp;&nbsp;&nbsp;&nbsp; STA $00C9 = #$AB<BR>&nbsp;0C:8F5E:A5 
+FE&nbsp;&nbsp;&nbsp;&nbsp; LDA $00FE = #$80<BR>&nbsp;0C:8F60:29 
+F0&nbsp;&nbsp;&nbsp;&nbsp; AND #$F0<BR>&nbsp;0C:8F62:85 
+FE&nbsp;&nbsp;&nbsp;&nbsp; STA $00FE = #$80<BR>&nbsp;0C:8F64:A6 
+CD&nbsp;&nbsp;&nbsp;&nbsp; LDX $00CD = #$1D<BR>&nbsp;0C:8F66:BD D7 77&nbsp; LDA 
+$77D7,X @ $77D7 = #$00<BR>&nbsp;0C:8F69:10 02&nbsp;&nbsp;&nbsp;&nbsp; BPL 
+$8F6D<BR>&nbsp;0C:8F6B:A2 00&nbsp;&nbsp;&nbsp;&nbsp; LDX 
+#$00<BR>&nbsp;0C:8F6D:BD 97 75&nbsp; LDA $7597,X @ $7597 = 
+#$11<BR>&nbsp;0C:8F70:C5 D5&nbsp;&nbsp;&nbsp;&nbsp; CMP $00D5 = 
+#$0C<BR>&nbsp;0C:8F72:D0 07&nbsp;&nbsp;&nbsp;&nbsp; BNE 
+$8F7B<BR>&nbsp;0C:8F74:BD B7 75&nbsp; LDA $75B7,X @ $75B7 = 
+#$0D<BR>&nbsp;0C:8F77:C5 D6&nbsp;&nbsp;&nbsp;&nbsp; CMP $00D6 = 
+#$0B<BR>&nbsp;0C:8F79:F0 06&nbsp;&nbsp;&nbsp;&nbsp; BEQ 
+$8F81<BR>&nbsp;0C:8F7B:A5 FE&nbsp;&nbsp;&nbsp;&nbsp; LDA $00FE = 
+#$80<BR>&nbsp;0C:8F7D:09 01&nbsp;&nbsp;&nbsp;&nbsp; ORA #$01<BR>&nbsp;0C:8F7F:85 
+FE&nbsp;&nbsp;&nbsp;&nbsp; STA $00FE = #$80<BR>&nbsp;0C:8F81:A5 
+D7&nbsp;&nbsp;&nbsp;&nbsp; LDA $00D7 = #$00<BR>&nbsp;0C:8F83:F0 
+06&nbsp;&nbsp;&nbsp;&nbsp; BEQ $8F8B<BR>&nbsp;0C:8F85:A5 
+FE&nbsp;&nbsp;&nbsp;&nbsp; LDA $00FE = #$80<BR>&nbsp;0C:8F87:09 
+02&nbsp;&nbsp;&nbsp;&nbsp; ORA #$02<BR>&nbsp;0C:8F89:85 
+FE&nbsp;&nbsp;&nbsp;&nbsp; STA $00FE = #$80<BR>&nbsp;0C:8F8B:A0 
+00&nbsp;&nbsp;&nbsp;&nbsp; LDY #$00<BR>&nbsp;0C:8F8D:4C C5 82&nbsp; JMP 
+$82C5<BR>-----------------------------------------------------------<BR>&nbsp;0C:8F90:A0 
+00&nbsp;&nbsp;&nbsp;&nbsp; LDY #$00<BR>&nbsp;0C:8F92:4C C5 82&nbsp; JMP 
+$82C5<BR>-----------------------------------------------------------<BR>&nbsp;0C:8F95:A0 
+01&nbsp;&nbsp;&nbsp;&nbsp; LDY #$01<BR>&nbsp;0C:8F97:B1 
+FC&nbsp;&nbsp;&nbsp;&nbsp; LDA ($FC),Y @ $A451 = #$D5<BR>&nbsp;0C:8F99:20 1D 
+93&nbsp; JSR $931D<BR>&nbsp;0C:8F9C:B0 16&nbsp;&nbsp;&nbsp;&nbsp; BCS 
+$8FB4<BR>&nbsp;0C:8F9E:86 CD&nbsp;&nbsp;&nbsp;&nbsp; STX $00CD = 
+#$1D<BR>&nbsp;0C:8FA0:BD D7 77&nbsp; LDA $77D7,X @ $77D7 = 
+#$00<BR>&nbsp;0C:8FA3:10 02&nbsp;&nbsp;&nbsp;&nbsp; BPL 
+$8FA7<BR>&nbsp;0C:8FA5:A2 00&nbsp;&nbsp;&nbsp;&nbsp; LDX 
+#$00<BR>&nbsp;0C:8FA7:BD 97 75&nbsp; LDA $7597,X @ $7597 = 
+#$11<BR>&nbsp;0C:8FAA:85 CB&nbsp;&nbsp;&nbsp;&nbsp; STA $00CB = 
+#$1F<BR>&nbsp;0C:8FAC:BD B7 75&nbsp; LDA $75B7,X @ $75B7 = 
+#$0D<BR>&nbsp;0C:8FAF:85 CC&nbsp;&nbsp;&nbsp;&nbsp; STA $00CC = 
+#$08<BR>&nbsp;0C:8FB1:4C C5 82&nbsp; JMP $82C5<BR>&nbsp;0C:8FB4:A6 
+CD&nbsp;&nbsp;&nbsp;&nbsp; LDX $00CD = #$1D<BR>&nbsp;0C:8FB6:BD 97 75&nbsp; LDA 
+$7597,X @ $7597 = #$11<BR>&nbsp;0C:8FB9:85 CB&nbsp;&nbsp;&nbsp;&nbsp; STA $00CB 
+= #$1F<BR>&nbsp;0C:8FBB:BD B7 75&nbsp; LDA $75B7,X @ $75B7 = 
+#$0D<BR>&nbsp;0C:8FBE:85 CC&nbsp;&nbsp;&nbsp;&nbsp; STA $00CC = 
+#$08<BR>&nbsp;0C:8FC0:4C C5 82&nbsp; JMP 
+$82C5<BR>-----------------------------------------------------------<BR>&nbsp;0C:8FC3:A0 
+01&nbsp;&nbsp;&nbsp;&nbsp; LDY #$01<BR>&nbsp;0C:8FC5:B1 
+FC&nbsp;&nbsp;&nbsp;&nbsp; LDA ($FC),Y @ $A451 = #$D5<BR>&nbsp;0C:8FC7:85 
+F0&nbsp;&nbsp;&nbsp;&nbsp; STA $00F0 = 
+#$1F<BR>&nbsp;0C:8FC9:C8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+INY<BR>&nbsp;0C:8FCA:B1 FC&nbsp;&nbsp;&nbsp;&nbsp; LDA ($FC),Y @ $A451 = 
+#$D5<BR>&nbsp;0C:8FCC:85 F1&nbsp;&nbsp;&nbsp;&nbsp; STA $00F1 = 
+#$08<BR>&nbsp;0C:8FCE:A9 2F&nbsp;&nbsp;&nbsp;&nbsp; LDA #$2F<BR>&nbsp;0C:8FD0:20 
+08 C1&nbsp; JSR $C108<BR>&nbsp;0C:8FD3:A9 5B&nbsp;&nbsp;&nbsp;&nbsp; LDA 
+#$5B<BR>&nbsp;0C:8FD5:20 08 C1&nbsp; JSR $C108<BR>&nbsp;0C:8FD8:A5 
+F0&nbsp;&nbsp;&nbsp;&nbsp; LDA $00F0 = #$1F<BR>&nbsp;0C:8FDA:85 
+D5&nbsp;&nbsp;&nbsp;&nbsp; STA $00D5 = #$0C<BR>&nbsp;0C:8FDC:A5 
+F1&nbsp;&nbsp;&nbsp;&nbsp; LDA $00F1 = #$08<BR>&nbsp;0C:8FDE:85 
+D6&nbsp;&nbsp;&nbsp;&nbsp; STA $00D6 = #$0B<BR>&nbsp;0C:8FE0:A6 
+CD&nbsp;&nbsp;&nbsp;&nbsp; LDX $00CD = #$1D<BR>&nbsp;0C:8FE2:BD D7 77&nbsp; LDA 
+$77D7,X @ $77D7 = #$00<BR>&nbsp;0C:8FE5:10 02&nbsp;&nbsp;&nbsp;&nbsp; BPL 
+$8FE9<BR>&nbsp;0C:8FE7:A2 00&nbsp;&nbsp;&nbsp;&nbsp; LDX 
+#$00<BR>&nbsp;0C:8FE9:BD 97 75&nbsp; LDA $7597,X @ $7597 = 
+#$11<BR>&nbsp;0C:8FEC:85 D3&nbsp;&nbsp;&nbsp;&nbsp; STA $00D3 = 
+#$0C<BR>&nbsp;0C:8FEE:BD B7 75&nbsp; LDA $75B7,X @ $75B7 = 
+#$0D<BR>&nbsp;0C:8FF1:85 D4&nbsp;&nbsp;&nbsp;&nbsp; STA $00D4 = 
+#$0B<BR>&nbsp;0C:8FF3:A0 02&nbsp;&nbsp;&nbsp;&nbsp; LDY #$02<BR>&nbsp;0C:8FF5:4C 
+C5 82&nbsp; JMP 
+$82C5<BR>-----------------------------------------------------------<BR>&nbsp;0C:8FF8:A6 
+CD&nbsp;&nbsp;&nbsp;&nbsp; LDX $00CD = #$1D<BR>&nbsp;0C:8FFA:BD 57 75&nbsp; LDA 
+$7557,X @ $7557 = #$A4<BR>&nbsp;0C:8FFD:85 CE&nbsp;&nbsp;&nbsp;&nbsp; STA $00CE 
+= #$00<BR>&nbsp;0C:8FFF:A0 01&nbsp;&nbsp;&nbsp;&nbsp; LDY 
+#$01<BR>&nbsp;0C:9001:B1 FC&nbsp;&nbsp;&nbsp;&nbsp; LDA ($FC),Y @ $A451 = 
+#$D5<BR>&nbsp;0C:9003:85 CF&nbsp;&nbsp;&nbsp;&nbsp; STA $00CF = 
+#$00<BR>&nbsp;0C:9005:4C C5 82&nbsp; JMP 
+$82C5<BR>-----------------------------------------------------------<BR>&nbsp;0C:9008:A2 
+0B&nbsp;&nbsp;&nbsp;&nbsp; LDX #$0B<BR>&nbsp;0C:900A:BD 37 75&nbsp; LDA $7537,X 
+@ $7537 = #$36<BR>&nbsp;0C:900D:F0 0A&nbsp;&nbsp;&nbsp;&nbsp; BEQ 
+$9019<BR>&nbsp;0C:900F:E8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+INX<BR>&nbsp;0C:9010:E0 0E&nbsp;&nbsp;&nbsp;&nbsp; CPX #$0E<BR>&nbsp;0C:9012:D0 
+F6&nbsp;&nbsp;&nbsp;&nbsp; BNE $900A<BR>&nbsp;0C:9014:A0 
+00&nbsp;&nbsp;&nbsp;&nbsp; LDY #$00<BR>&nbsp;0C:9016:4C FD 82&nbsp; JMP 
+$82FD<BR>&nbsp;0C:9019:86 F4&nbsp;&nbsp;&nbsp;&nbsp; STX $00F4 = 
+#$2D<BR>&nbsp;0C:901B:A6 CD&nbsp;&nbsp;&nbsp;&nbsp; LDX $00CD = 
+#$1D<BR>&nbsp;0C:901D:A4 F4&nbsp;&nbsp;&nbsp;&nbsp; LDY $00F4 = 
+#$2D<BR>&nbsp;0C:901F:20 62 91&nbsp; JSR $9162<BR>&nbsp;0C:9022:BD 37 77&nbsp; 
+LDA $7737,X @ $7737 = #$20<BR>&nbsp;0C:9025:29 CF&nbsp;&nbsp;&nbsp;&nbsp; AND 
+#$CF<BR>&nbsp;0C:9027:09 20&nbsp;&nbsp;&nbsp;&nbsp; ORA #$20<BR>&nbsp;0C:9029:99 
+37 77&nbsp; STA $7737,Y @ $7737 = #$20<BR>&nbsp;0C:902C:BD 57 77&nbsp; LDA 
+$7757,X @ $7757 = #$80<BR>&nbsp;0C:902F:29 3F&nbsp;&nbsp;&nbsp;&nbsp; AND 
+#$3F<BR>&nbsp;0C:9031:09 80&nbsp;&nbsp;&nbsp;&nbsp; ORA #$80<BR>&nbsp;0C:9033:99 
+57 77&nbsp; STA $7757,Y @ $7757 = #$80<BR>&nbsp;0C:9036:E0 
+0B&nbsp;&nbsp;&nbsp;&nbsp; CPX #$0B<BR>&nbsp;0C:9038:B0 
+0E&nbsp;&nbsp;&nbsp;&nbsp; BCS $9048<BR>&nbsp;0C:903A:BD 37 77&nbsp; LDA $7737,X 
+@ $7737 = #$20<BR>&nbsp;0C:903D:29 0F&nbsp;&nbsp;&nbsp;&nbsp; AND 
+#$0F<BR>&nbsp;0C:903F:A8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+TAY<BR>&nbsp;0C:9040:B9 CC 74&nbsp; LDA $74CC,Y @ $74CC = 
+#$00<BR>&nbsp;0C:9043:09 40&nbsp;&nbsp;&nbsp;&nbsp; ORA #$40<BR>&nbsp;0C:9045:99 
+CC 74&nbsp; STA $74CC,Y @ $74CC = #$00<BR>&nbsp;0C:9048:A9 
+00&nbsp;&nbsp;&nbsp;&nbsp; LDA #$00<BR>&nbsp;0C:904A:9D 37 75&nbsp; STA $7537,X 
+@ $7537 = #$36<BR>&nbsp;0C:904D:A5 F4&nbsp;&nbsp;&nbsp;&nbsp; LDA $00F4 = 
+#$2D<BR>&nbsp;0C:904F:EC B3 06&nbsp; CPX $06B3 = #$00<BR>&nbsp;0C:9052:D0 
+03&nbsp;&nbsp;&nbsp;&nbsp; BNE $9057<BR>&nbsp;0C:9054:8D B3 06&nbsp; STA $06B3 = 
+#$00<BR>&nbsp;0C:9057:85 CD&nbsp;&nbsp;&nbsp;&nbsp; STA $00CD = 
+#$1D<BR>&nbsp;0C:9059:AA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+TAX<BR>&nbsp;0C:905A:BD 97 75&nbsp; LDA $7597,X @ $7597 = 
+#$11<BR>&nbsp;0C:905D:85 CB&nbsp;&nbsp;&nbsp;&nbsp; STA $00CB = 
+#$1F<BR>&nbsp;0C:905F:BD B7 75&nbsp; LDA $75B7,X @ $75B7 = 
+#$0D<BR>&nbsp;0C:9062:85 CC&nbsp;&nbsp;&nbsp;&nbsp; STA $00CC = 
+#$08<BR>&nbsp;0C:9064:A0 00&nbsp;&nbsp;&nbsp;&nbsp; LDY #$00<BR>&nbsp;0C:9066:4C 
+C5 82&nbsp; JMP 
+$82C5<BR>-----------------------------------------------------------<BR>&nbsp;0C:9069:A2 
+0E&nbsp;&nbsp;&nbsp;&nbsp; LDX #$0E<BR>&nbsp;0C:906B:BD 37 75&nbsp; LDA $7537,X 
+@ $7537 = #$36<BR>&nbsp;0C:906E:F0 0A&nbsp;&nbsp;&nbsp;&nbsp; BEQ 
+$907A<BR>&nbsp;0C:9070:E8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+INX<BR>&nbsp;0C:9071:E0 20&nbsp;&nbsp;&nbsp;&nbsp; CPX #$20<BR>&nbsp;0C:9073:D0 
+F6&nbsp;&nbsp;&nbsp;&nbsp; BNE $906B<BR>&nbsp;0C:9075:A0 
+00&nbsp;&nbsp;&nbsp;&nbsp; LDY #$00<BR>&nbsp;0C:9077:4C FD 82&nbsp; JMP 
+$82FD<BR>&nbsp;0C:907A:86 F4&nbsp;&nbsp;&nbsp;&nbsp; STX $00F4 = 
+#$2D<BR>&nbsp;0C:907C:A6 CD&nbsp;&nbsp;&nbsp;&nbsp; LDX $00CD = 
+#$1D<BR>&nbsp;0C:907E:A4 F4&nbsp;&nbsp;&nbsp;&nbsp; LDY $00F4 = 
+#$2D<BR>&nbsp;0C:9080:20 62 91&nbsp; JSR $9162<BR>&nbsp;0C:9083:BD 37 77&nbsp; 
+LDA $7737,X @ $7737 = #$20<BR>&nbsp;0C:9086:29 CF&nbsp;&nbsp;&nbsp;&nbsp; AND 
+#$CF<BR>&nbsp;0C:9088:09 30&nbsp;&nbsp;&nbsp;&nbsp; ORA #$30<BR>&nbsp;0C:908A:99 
+37 77&nbsp; STA $7737,Y @ $7737 = #$20<BR>&nbsp;0C:908D:BD 57 77&nbsp; LDA 
+$7757,X @ $7757 = #$80<BR>&nbsp;0C:9090:29 3F&nbsp;&nbsp;&nbsp;&nbsp; AND 
+#$3F<BR>&nbsp;0C:9092:09 40&nbsp;&nbsp;&nbsp;&nbsp; ORA #$40<BR>&nbsp;0C:9094:99 
+57 77&nbsp; STA $7757,Y @ $7757 = #$80<BR>&nbsp;0C:9097:E0 
+0B&nbsp;&nbsp;&nbsp;&nbsp; CPX #$0B<BR>&nbsp;0C:9099:B0 
+0E&nbsp;&nbsp;&nbsp;&nbsp; BCS $90A9<BR>&nbsp;0C:909B:BD 37 77&nbsp; LDA $7737,X 
+@ $7737 = #$20<BR>&nbsp;0C:909E:29 0F&nbsp;&nbsp;&nbsp;&nbsp; AND 
+#$0F<BR>&nbsp;0C:90A0:A8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+TAY<BR>&nbsp;0C:90A1:B9 CC 74&nbsp; LDA $74CC,Y @ $74CC = 
+#$00<BR>&nbsp;0C:90A4:09 40&nbsp;&nbsp;&nbsp;&nbsp; ORA #$40<BR>&nbsp;0C:90A6:99 
+CC 74&nbsp; STA $74CC,Y @ $74CC = #$00<BR>&nbsp;0C:90A9:A9 
+00&nbsp;&nbsp;&nbsp;&nbsp; LDA #$00<BR>&nbsp;0C:90AB:9D 37 75&nbsp; STA $7537,X 
+@ $7537 = #$36<BR>&nbsp;0C:90AE:A5 F4&nbsp;&nbsp;&nbsp;&nbsp; LDA $00F4 = 
+#$2D<BR>&nbsp;0C:90B0:EC B3 06&nbsp; CPX $06B3 = #$00<BR>&nbsp;0C:90B3:D0 
+03&nbsp;&nbsp;&nbsp;&nbsp; BNE $90B8<BR>&nbsp;0C:90B5:8D B3 06&nbsp; STA $06B3 = 
+#$00<BR>&nbsp;0C:90B8:85 CD&nbsp;&nbsp;&nbsp;&nbsp; STA $00CD = 
+#$1D<BR>&nbsp;0C:90BA:AA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+TAX<BR>&nbsp;0C:90BB:BD 97 75&nbsp; LDA $7597,X @ $7597 = 
+#$11<BR>&nbsp;0C:90BE:85 CB&nbsp;&nbsp;&nbsp;&nbsp; STA $00CB = 
+#$1F<BR>&nbsp;0C:90C0:BD B7 75&nbsp; LDA $75B7,X @ $75B7 = 
+#$0D<BR>&nbsp;0C:90C3:85 CC&nbsp;&nbsp;&nbsp;&nbsp; STA $00CC = 
+#$08<BR>&nbsp;0C:90C5:A0 00&nbsp;&nbsp;&nbsp;&nbsp; LDY #$00<BR>&nbsp;0C:90C7:4C 
+C5 82&nbsp; JMP 
+$82C5<BR>-----------------------------------------------------------<BR>&nbsp;0C:90CA:A2 
+01&nbsp;&nbsp;&nbsp;&nbsp; LDX #$01<BR>&nbsp;0C:90CC:BD 37 75&nbsp; LDA $7537,X 
+@ $7537 = #$36<BR>&nbsp;0C:90CF:F0 0A&nbsp;&nbsp;&nbsp;&nbsp; BEQ 
+$90DB<BR>&nbsp;0C:90D1:E8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+INX<BR>&nbsp;0C:90D2:E0 0B&nbsp;&nbsp;&nbsp;&nbsp; CPX #$0B<BR>&nbsp;0C:90D4:D0 
+F6&nbsp;&nbsp;&nbsp;&nbsp; BNE $90CC<BR>&nbsp;0C:90D6:A0 
+01&nbsp;&nbsp;&nbsp;&nbsp; LDY #$01<BR>&nbsp;0C:90D8:4C FD 82&nbsp; JMP 
+$82FD<BR>&nbsp;0C:90DB:86 F4&nbsp;&nbsp;&nbsp;&nbsp; STX $00F4 = 
+#$2D<BR>&nbsp;0C:90DD:A0 01&nbsp;&nbsp;&nbsp;&nbsp; LDY #$01<BR>&nbsp;0C:90DF:B1 
+FC&nbsp;&nbsp;&nbsp;&nbsp; LDA ($FC),Y @ $A451 = #$D5<BR>&nbsp;0C:90E1:85 
+F0&nbsp;&nbsp;&nbsp;&nbsp; STA $00F0 = #$1F<BR>&nbsp;0C:90E3:A6 
+CD&nbsp;&nbsp;&nbsp;&nbsp; LDX $00CD = #$1D<BR>&nbsp;0C:90E5:A4 
+F4&nbsp;&nbsp;&nbsp;&nbsp; LDY $00F4 = #$2D<BR>&nbsp;0C:90E7:20 62 91&nbsp; JSR 
+$9162<BR>&nbsp;0C:90EA:BD 37 77&nbsp; LDA $7737,X @ $7737 = 
+#$20<BR>&nbsp;0C:90ED:29 C0&nbsp;&nbsp;&nbsp;&nbsp; AND #$C0<BR>&nbsp;0C:90EF:05 
+F0&nbsp;&nbsp;&nbsp;&nbsp; ORA $00F0 = #$1F<BR>&nbsp;0C:90F1:09 
+20&nbsp;&nbsp;&nbsp;&nbsp; ORA #$20<BR>&nbsp;0C:90F3:99 37 77&nbsp; STA $7737,Y 
+@ $7737 = #$20<BR>&nbsp;0C:90F6:BD 57 77&nbsp; LDA $7757,X @ $7757 = 
+#$80<BR>&nbsp;0C:90F9:29 3F&nbsp;&nbsp;&nbsp;&nbsp; AND #$3F<BR>&nbsp;0C:90FB:09 
+80&nbsp;&nbsp;&nbsp;&nbsp; ORA #$80<BR>&nbsp;0C:90FD:99 57 77&nbsp; STA $7757,Y 
+@ $7757 = #$80<BR>&nbsp;0C:9100:A9 00&nbsp;&nbsp;&nbsp;&nbsp; LDA 
+#$00<BR>&nbsp;0C:9102:99 17 78&nbsp; STA $7817,Y @ $7817 = 
+#$00<BR>&nbsp;0C:9105:B9 37 75&nbsp; LDA $7537,Y @ $7537 = 
+#$36<BR>&nbsp;0C:9108:85 F1&nbsp;&nbsp;&nbsp;&nbsp; STA $00F1 = 
+#$08<BR>&nbsp;0C:910A:B9 57 75&nbsp; LDA $7557,Y @ $7557 = 
+#$A4<BR>&nbsp;0C:910D:85 F2&nbsp;&nbsp;&nbsp;&nbsp; STA $00F2 = 
+#$34<BR>&nbsp;0C:910F:B9 77 75&nbsp; LDA $7577,Y @ $7577 = 
+#$1F<BR>&nbsp;0C:9112:85 F3&nbsp;&nbsp;&nbsp;&nbsp; STA $00F3 = 
+#$9B<BR>&nbsp;0C:9114:A9 73&nbsp;&nbsp;&nbsp;&nbsp; LDA #$73<BR>&nbsp;0C:9116:20 
+08 C1&nbsp; JSR $C108<BR>&nbsp;0C:9119:A4 F4&nbsp;&nbsp;&nbsp;&nbsp; LDY $00F4 = 
+#$2D<BR>&nbsp;0C:911B:B9 37 75&nbsp; LDA $7537,Y @ $7537 = 
+#$36<BR>&nbsp;0C:911E:8D E0 04&nbsp; STA $04E0 = #$34<BR>&nbsp;0C:9121:B9 57 
+75&nbsp; LDA $7557,Y @ $7557 = #$A4<BR>&nbsp;0C:9124:8D E1 04&nbsp; STA $04E1 = 
+#$9B<BR>&nbsp;0C:9127:B9 77 75&nbsp; LDA $7577,Y @ $7577 = 
+#$1F<BR>&nbsp;0C:912A:8D E2 04&nbsp; STA $04E2 = #$2D<BR>&nbsp;0C:912D:A9 
+62&nbsp;&nbsp;&nbsp;&nbsp; LDA #$62<BR>&nbsp;0C:912F:20 08 C1&nbsp; JSR 
+$C108<BR>&nbsp;0C:9132:A4 F4&nbsp;&nbsp;&nbsp;&nbsp; LDY $00F4 = 
+#$2D<BR>&nbsp;0C:9134:A6 F0&nbsp;&nbsp;&nbsp;&nbsp; LDX $00F0 = 
+#$1F<BR>&nbsp;0C:9136:AD E3 04&nbsp; LDA $04E3 = #$6C<BR>&nbsp;0C:9139:99 22 
+78&nbsp; STA $7822,Y @ $7822 = #$4D<BR>&nbsp;0C:913C:99 2D 78&nbsp; STA $782D,Y 
+@ $782D = #$4D<BR>&nbsp;0C:913F:A6 CD&nbsp;&nbsp;&nbsp;&nbsp; LDX $00CD = 
+#$1D<BR>&nbsp;0C:9141:A9 00&nbsp;&nbsp;&nbsp;&nbsp; LDA #$00<BR>&nbsp;0C:9143:9D 
+37 75&nbsp; STA $7537,X @ $7537 = #$36<BR>&nbsp;0C:9146:A5 
+F4&nbsp;&nbsp;&nbsp;&nbsp; LDA $00F4 = #$2D<BR>&nbsp;0C:9148:EC B3 06&nbsp; CPX 
+$06B3 = #$00<BR>&nbsp;0C:914B:D0 03&nbsp;&nbsp;&nbsp;&nbsp; BNE 
+$9150<BR>&nbsp;0C:914D:8D B3 06&nbsp; STA $06B3 = #$00<BR>&nbsp;0C:9150:85 
+CD&nbsp;&nbsp;&nbsp;&nbsp; STA $00CD = 
+#$1D<BR>&nbsp;0C:9152:AA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+TAX<BR>&nbsp;0C:9153:BD 97 75&nbsp; LDA $7597,X @ $7597 = 
+#$11<BR>&nbsp;0C:9156:85 CB&nbsp;&nbsp;&nbsp;&nbsp; STA $00CB = 
+#$1F<BR>&nbsp;0C:9158:BD B7 75&nbsp; LDA $75B7,X @ $75B7 = 
+#$0D<BR>&nbsp;0C:915B:85 CC&nbsp;&nbsp;&nbsp;&nbsp; STA $00CC = 
+#$08<BR>&nbsp;0C:915D:A0 01&nbsp;&nbsp;&nbsp;&nbsp; LDY #$01<BR>&nbsp;0C:915F:4C 
+C5 82&nbsp; JMP 
+$82C5<BR>-----------------------------------------------------------<BR>&nbsp;0C:9210:A6 
+CD&nbsp;&nbsp;&nbsp;&nbsp; LDX $00CD = #$1D<BR>&nbsp;0C:9212:BD D7 77&nbsp; LDA 
+$77D7,X @ $77D7 = #$00<BR>&nbsp;0C:9215:30 17&nbsp;&nbsp;&nbsp;&nbsp; BMI 
+$922E<BR>&nbsp;0C:9217:BD 97 75&nbsp; LDA $7597,X @ $7597 = 
+#$11<BR>&nbsp;0C:921A:85 CB&nbsp;&nbsp;&nbsp;&nbsp; STA $00CB = 
+#$1F<BR>&nbsp;0C:921C:BD B7 75&nbsp; LDA $75B7,X @ $75B7 = 
+#$0D<BR>&nbsp;0C:921F:85 CC&nbsp;&nbsp;&nbsp;&nbsp; STA $00CC = 
+#$08<BR>&nbsp;0C:9221:A9 00&nbsp;&nbsp;&nbsp;&nbsp; LDA #$00<BR>&nbsp;0C:9223:9D 
+B7 76&nbsp; STA $76B7,X @ $76B7 = #$F2<BR>&nbsp;0C:9226:9D D7 76&nbsp; STA 
+$76D7,X @ $76D7 = #$03<BR>&nbsp;0C:9229:A0 00&nbsp;&nbsp;&nbsp;&nbsp; LDY 
+#$00<BR>&nbsp;0C:922B:4C C5 82&nbsp; JMP $82C5<BR>&nbsp;0C:922E:A9 
+00&nbsp;&nbsp;&nbsp;&nbsp; LDA #$00<BR>&nbsp;0C:9230:9D 37 75&nbsp; STA $7537,X 
+@ $7537 = #$36<BR>&nbsp;0C:9233:9D B7 76&nbsp; STA $76B7,X @ $76B7 = 
+#$F2<BR>&nbsp;0C:9236:9D D7 76&nbsp; STA $76D7,X @ $76D7 = 
+#$03<BR>&nbsp;0C:9239:A0 00&nbsp;&nbsp;&nbsp;&nbsp; LDY #$00<BR>&nbsp;0C:923B:4C 
+FD 82&nbsp; JMP 
+$82FD<BR>-----------------------------------------------------------<BR>&nbsp;0C:923E:A6 
+CD&nbsp;&nbsp;&nbsp;&nbsp; LDX $00CD = #$1D<BR>&nbsp;0C:9240:BD 37 75&nbsp; LDA 
+$7537,X @ $7537 = #$36<BR>&nbsp;0C:9243:F0 19&nbsp;&nbsp;&nbsp;&nbsp; BEQ 
+$925E<BR>&nbsp;0C:9245:BD D7 77&nbsp; LDA $77D7,X @ $77D7 = 
+#$00<BR>&nbsp;0C:9248:30 0F&nbsp;&nbsp;&nbsp;&nbsp; BMI 
+$9259<BR>&nbsp;0C:924A:BD 97 75&nbsp; LDA $7597,X @ $7597 = 
+#$11<BR>&nbsp;0C:924D:85 CB&nbsp;&nbsp;&nbsp;&nbsp; STA $00CB = 
+#$1F<BR>&nbsp;0C:924F:BD B7 75&nbsp; LDA $75B7,X @ $75B7 = 
+#$0D<BR>&nbsp;0C:9252:85 CC&nbsp;&nbsp;&nbsp;&nbsp; STA $00CC = 
+#$08<BR>&nbsp;0C:9254:A0 00&nbsp;&nbsp;&nbsp;&nbsp; LDY #$00<BR>&nbsp;0C:9256:4C 
+C5 82&nbsp; JMP $82C5<BR>&nbsp;0C:9259:A9 00&nbsp;&nbsp;&nbsp;&nbsp; LDA 
+#$00<BR>&nbsp;0C:925B:9D 37 75&nbsp; STA $7537,X @ $7537 = 
+#$36<BR>&nbsp;0C:925E:A0 00&nbsp;&nbsp;&nbsp;&nbsp; LDY #$00<BR>&nbsp;0C:9260:4C 
+FD 82&nbsp; JMP 
+$82FD<BR>-----------------------------------------------------------<BR>&nbsp;0C:9263:A6 
+CD&nbsp;&nbsp;&nbsp;&nbsp; LDX $00CD = #$1D<BR>&nbsp;0C:9265:8E B3 06&nbsp; STX 
+$06B3 = #$00<BR>&nbsp;0C:9268:BD 57 75&nbsp; LDA $7557,X @ $7557 = 
+#$A4<BR>&nbsp;0C:926B:85 CE&nbsp;&nbsp;&nbsp;&nbsp; STA $00CE = 
+#$00<BR>&nbsp;0C:926D:85 CF&nbsp;&nbsp;&nbsp;&nbsp; STA $00CF = 
+#$00<BR>&nbsp;0C:926F:A9 00&nbsp;&nbsp;&nbsp;&nbsp; LDA #$00<BR>&nbsp;0C:9271:85 
+D7&nbsp;&nbsp;&nbsp;&nbsp; STA $00D7 = #$00<BR>&nbsp;0C:9273:85 
+D2&nbsp;&nbsp;&nbsp;&nbsp; STA $00D2 = #$00<BR>&nbsp;0C:9275:85 
+E3&nbsp;&nbsp;&nbsp;&nbsp; STA $00E3 = #$00<BR>&nbsp;0C:9277:BD D7 77&nbsp; LDA 
+$77D7,X @ $77D7 = #$00<BR>&nbsp;0C:927A:10 02&nbsp;&nbsp;&nbsp;&nbsp; BPL 
+$927E<BR>&nbsp;0C:927C:A2 00&nbsp;&nbsp;&nbsp;&nbsp; LDX 
+#$00<BR>&nbsp;0C:927E:BD 97 75&nbsp; LDA $7597,X @ $7597 = 
+#$11<BR>&nbsp;0C:9281:85 D3&nbsp;&nbsp;&nbsp;&nbsp; STA $00D3 = 
+#$0C<BR>&nbsp;0C:9283:85 D5&nbsp;&nbsp;&nbsp;&nbsp; STA $00D5 = 
+#$0C<BR>&nbsp;0C:9285:BD B7 75&nbsp; LDA $75B7,X @ $75B7 = 
+#$0D<BR>&nbsp;0C:9288:85 D6&nbsp;&nbsp;&nbsp;&nbsp; STA $00D6 = 
+#$0B<BR>&nbsp;0C:928A:85 D4&nbsp;&nbsp;&nbsp;&nbsp; STA $00D4 = 
+#$0B<BR>&nbsp;0C:928C:4C FD 82&nbsp; JMP 
+$82FD<BR>-----------------------------------------------------------<BR>&nbsp;0C:928F:A0 
+01&nbsp;&nbsp;&nbsp;&nbsp; LDY #$01<BR>&nbsp;0C:9291:B1 
+FC&nbsp;&nbsp;&nbsp;&nbsp; LDA ($FC),Y @ $A451 = #$D5<BR>&nbsp;0C:9293:8D 95 
+06&nbsp; STA $0695 = 
+#$00<BR>&nbsp;0C:9296:C8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+INY<BR>&nbsp;0C:9297:B1 FC&nbsp;&nbsp;&nbsp;&nbsp; LDA ($FC),Y @ $A451 = 
+#$D5<BR>&nbsp;0C:9299:8D 96 06&nbsp; STA $0696 = 
+#$00<BR>&nbsp;0C:929C:C8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+INY<BR>&nbsp;0C:929D:B1 FC&nbsp;&nbsp;&nbsp;&nbsp; LDA ($FC),Y @ $A451 = 
+#$D5<BR>&nbsp;0C:929F:8D 97 06&nbsp; STA $0697 = 
+#$00<BR>&nbsp;0C:92A2:C8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+INY<BR>&nbsp;0C:92A3:B1 FC&nbsp;&nbsp;&nbsp;&nbsp; LDA ($FC),Y @ $A451 = 
+#$D5<BR>&nbsp;0C:92A5:8D 98 06&nbsp; STA $0698 = #$00<BR>&nbsp;0C:92A8:A6 
+CD&nbsp;&nbsp;&nbsp;&nbsp; LDX $00CD = #$1D<BR>&nbsp;0C:92AA:8E 94 06&nbsp; STX 
+$0694 = #$00<BR>&nbsp;0C:92AD:BD D7 77&nbsp; LDA $77D7,X @ $77D7 = 
+#$00<BR>&nbsp;0C:92B0:10 02&nbsp;&nbsp;&nbsp;&nbsp; BPL 
+$92B4<BR>&nbsp;0C:92B2:A2 00&nbsp;&nbsp;&nbsp;&nbsp; LDX 
+#$00<BR>&nbsp;0C:92B4:BD 97 75&nbsp; LDA $7597,X @ $7597 = 
+#$11<BR>&nbsp;0C:92B7:85 CB&nbsp;&nbsp;&nbsp;&nbsp; STA $00CB = 
+#$1F<BR>&nbsp;0C:92B9:BD B7 75&nbsp; LDA $75B7,X @ $75B7 = 
+#$0D<BR>&nbsp;0C:92BC:85 CC&nbsp;&nbsp;&nbsp;&nbsp; STA $00CC = 
+#$08<BR>&nbsp;0C:92BE:4C C5 82&nbsp; JMP 
+$82C5<BR>-----------------------------------------------------------<BR>&nbsp;0C:92C1:A0 
+01&nbsp;&nbsp;&nbsp;&nbsp; LDY #$01<BR>&nbsp;0C:92C3:B1 
+FC&nbsp;&nbsp;&nbsp;&nbsp; LDA ($FC),Y @ $A451 = 
+#$D5<BR>&nbsp;0C:92C5:AA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+TAX<BR>&nbsp;0C:92C6:A9 00&nbsp;&nbsp;&nbsp;&nbsp; LDA #$00<BR>&nbsp;0C:92C8:9D 
+3C 74&nbsp; STA $743C,X @ $743C = #$36<BR>&nbsp;0C:92CB:9D CC 74&nbsp; STA 
+$74CC,X @ $74CC = #$00<BR>&nbsp;0C:92CE:4C FD 82&nbsp; JMP 
+$82FD<BR>-----------------------------------------------------------<BR>&nbsp;0C:92D1:A0 
+01&nbsp;&nbsp;&nbsp;&nbsp; LDY #$01<BR>&nbsp;0C:92D3:B1 
+FC&nbsp;&nbsp;&nbsp;&nbsp; LDA ($FC),Y @ $A451 = #$D5<BR>&nbsp;0C:92D5:85 
+F0&nbsp;&nbsp;&nbsp;&nbsp; STA $00F0 = 
+#$1F<BR>&nbsp;0C:92D7:C8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+INY<BR>&nbsp;0C:92D8:B1 FC&nbsp;&nbsp;&nbsp;&nbsp; LDA ($FC),Y @ $A451 = 
+#$D5<BR>&nbsp;0C:92DA:85 F1&nbsp;&nbsp;&nbsp;&nbsp; STA $00F1 = 
+#$08<BR>&nbsp;0C:92DC:C8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+INY<BR>&nbsp;0C:92DD:B1 FC&nbsp;&nbsp;&nbsp;&nbsp; LDA ($FC),Y @ $A451 = 
+#$D5<BR>&nbsp;0C:92DF:85 F2&nbsp;&nbsp;&nbsp;&nbsp; STA $00F2 = 
+#$34<BR>&nbsp;0C:92E1:C8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+INY<BR>&nbsp;0C:92E2:B1 FC&nbsp;&nbsp;&nbsp;&nbsp; LDA ($FC),Y @ $A451 = 
+#$D5<BR>&nbsp;0C:92E4:85 F3&nbsp;&nbsp;&nbsp;&nbsp; STA $00F3 = 
+#$9B<BR>&nbsp;0C:92E6:A9 73&nbsp;&nbsp;&nbsp;&nbsp; LDA #$73<BR>&nbsp;0C:92E8:20 
+08 C1&nbsp; JSR $C108<BR>&nbsp;0C:92EB:A0 04&nbsp;&nbsp;&nbsp;&nbsp; LDY 
+#$04<BR>&nbsp;0C:92ED:4C FD 82&nbsp; JMP 
+$82FD<BR>-----------------------------------------------------------<BR>&nbsp;0C:92F0:A0 
+01&nbsp;&nbsp;&nbsp;&nbsp; LDY #$01<BR>&nbsp;0C:92F2:B1 
+FC&nbsp;&nbsp;&nbsp;&nbsp; LDA ($FC),Y @ $A451 = 
+#$D5<BR>&nbsp;0C:92F4:AA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+TAX<BR>&nbsp;0C:92F5:C8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+INY<BR>&nbsp;0C:92F6:B1 FC&nbsp;&nbsp;&nbsp;&nbsp; LDA ($FC),Y @ $A451 = 
+#$D5<BR>&nbsp;0C:92F8:18&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+CLC<BR>&nbsp;0C:92F9:7D 5C 74&nbsp; ADC $745C,X @ $745C = 
+#$1F<BR>&nbsp;0C:92FC:C9 31&nbsp;&nbsp;&nbsp;&nbsp; CMP #$31<BR>&nbsp;0C:92FE:90 
+02&nbsp;&nbsp;&nbsp;&nbsp; BCC $9302<BR>&nbsp;0C:9300:A9 
+31&nbsp;&nbsp;&nbsp;&nbsp; LDA #$31<BR>&nbsp;0C:9302:9D 5C 74&nbsp; STA $745C,X 
+@ $745C = #$1F<BR>&nbsp;0C:9305:4C FD 82&nbsp; JMP 
+$82FD<BR>-----------------------------------------------------------<BR>&nbsp;0C:9308:AD 
+11 74&nbsp; LDA $7411 = #$18<BR>&nbsp;0C:930B:20 6F C0&nbsp; JSR 
+$C06F<BR>&nbsp;0C:930E:A4 01&nbsp;&nbsp;&nbsp;&nbsp; LDY $0001 = 
+#$99<BR>&nbsp;0C:9310:B9 12 74&nbsp; LDA $7412,Y @ $7412 = 
+#$FF<BR>&nbsp;0C:9313:05 00&nbsp;&nbsp;&nbsp;&nbsp; ORA $0000 = 
+#$78<BR>&nbsp;0C:9315:99 12 74&nbsp; STA $7412,Y @ $7412 = 
+#$FF<BR>-----------------------------------------------------------<BR>&nbsp;0C:9318:A0 
+00&nbsp;&nbsp;&nbsp;&nbsp; LDY #$00<BR>&nbsp;0C:931A:4C C5 82&nbsp; JMP 
+$82C5<BR>&nbsp;0C:931D:A2 00&nbsp;&nbsp;&nbsp;&nbsp; LDX 
+#$00<BR>&nbsp;0C:931F:20 87 C0&nbsp; JSR $C087<BR>&nbsp;0C:9322:85 
+00&nbsp;&nbsp;&nbsp;&nbsp; STA $0000 = #$78<BR>&nbsp;0C:9324:BD 37 75&nbsp; LDA 
+$7537,X @ $7537 = #$36<BR>&nbsp;0C:9327:F0 07&nbsp;&nbsp;&nbsp;&nbsp; BEQ 
+$9330<BR>&nbsp;0C:9329:20 87 C0&nbsp; JSR $C087<BR>&nbsp;0C:932C:C5 
+00&nbsp;&nbsp;&nbsp;&nbsp; CMP $0000 = #$78<BR>&nbsp;0C:932E:F0 
+07&nbsp;&nbsp;&nbsp;&nbsp; BEQ 
+$9337<BR>&nbsp;0C:9330:E8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+INX<BR>&nbsp;0C:9331:E0 20&nbsp;&nbsp;&nbsp;&nbsp; CPX #$20<BR>&nbsp;0C:9333:D0 
+EF&nbsp;&nbsp;&nbsp;&nbsp; BNE 
+$9324<BR>&nbsp;0C:9335:38&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+SEC<BR>&nbsp;0C:9336:60&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; RTS 
+--------<BR></FONT></P></BODY></HTML>

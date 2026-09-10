@@ -1,0 +1,433 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML><HEAD><TITLE>机体特殊技能</TITLE>
+<META name=GENERATOR content="MSHTML 8.00.7601.19104">
+<META content="text/html; charset=gb2312" http-equiv=Content-Type>
+<STYLE>
+html,body { 
+	/* Default Font */
+	font-family: Microsoft YaHei, Simsun, sans-serif;
+	font-size: 12pt;
+}
+</STYLE>
+</HEAD>
+<BODY><FONT size=2 face=宋体>&nbsp;03:8A4E:A4 E6&nbsp;&nbsp;&nbsp;&nbsp; LDY $00E6 
+= #$13&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+读取敌方当前操作的队员序号<BR>&nbsp;03:8A50:B9 B7 76&nbsp; LDA $76B7,Y @ $76B8 = 
+#$40&nbsp;&nbsp; 读取当前生命值低位<BR>&nbsp;03:8A53:85 00&nbsp;&nbsp;&nbsp;&nbsp; STA 
+$0000 = 
+#$64&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+数据暂存<BR>&nbsp;03:8A55:B9 D7 76&nbsp; LDA $76D7,Y @ $76D8 = #$01&nbsp;&nbsp; 
+读取当前生命值高位<BR>&nbsp;03:8A58:85 01&nbsp;&nbsp;&nbsp;&nbsp; STA $0001 = 
+#$80&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+数据暂存<BR>&nbsp;03:8A5A:20 45 C0&nbsp; JSR $C045<BR>&nbsp;03:8A5D:B9 F7 76&nbsp; 
+LDA $76F7,Y @ $76F8 = #$40&nbsp;&nbsp; 读取最大生命值低位<BR>&nbsp;03:8A60:85 
+00&nbsp;&nbsp;&nbsp;&nbsp; STA $0000 = 
+#$64&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+数据暂存<BR>&nbsp;03:8A62:B9 17 77&nbsp; LDA $7717,Y @ $7718 = #$01&nbsp;&nbsp; 
+读取最大生命值高位<BR>&nbsp;03:8A65:85 01&nbsp;&nbsp;&nbsp;&nbsp; STA $0001 = 
+#$80&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+数据暂存<BR>&nbsp;03:8A67:20 45 C0&nbsp; JSR $C045<BR>&nbsp;03:8A6A:A4 
+E5&nbsp;&nbsp;&nbsp;&nbsp; LDY $00E5 = 
+#$00&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+读取我方当前操作的队员序号<BR>&nbsp;03:8A6C:B9 B7 76&nbsp; LDA $76B7,Y @ $76B8 = 
+#$40&nbsp;&nbsp; 读取当前生命值低位<BR>&nbsp;03:8A6F:85 00&nbsp;&nbsp;&nbsp;&nbsp; STA 
+$0000 = 
+#$64&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+数据暂存<BR>&nbsp;03:8A71:B9 D7 76&nbsp; LDA $76D7,Y @ $76D8 = #$01&nbsp;&nbsp; 
+读取当前生命值高位<BR>&nbsp;03:8A74:85 01&nbsp;&nbsp;&nbsp;&nbsp; STA $0001 = 
+#$80&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+数据暂存<BR>&nbsp;03:8A76:20 45 C0&nbsp; JSR $C045<BR>&nbsp;03:8A79:B9 F7 76&nbsp; 
+LDA $76F7,Y @ $76F8 = #$40&nbsp;&nbsp; 读取最大生命值低位<BR>&nbsp;03:8A7C:85 
+00&nbsp;&nbsp;&nbsp;&nbsp; STA $0000 = 
+#$64&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+数据暂存<BR>&nbsp;03:8A7E:B9 17 77&nbsp; LDA $7717,Y @ $7718 = #$01&nbsp;&nbsp; 
+读取最大生命值高位<BR>&nbsp;03:8A81:85 01&nbsp;&nbsp;&nbsp;&nbsp; STA $0001 = 
+#$80&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+数据暂存<BR>&nbsp;03:8A83:4C 45 C0&nbsp; JMP $C045<BR>&nbsp;03:8A86:A4 
+E9&nbsp;&nbsp;&nbsp;&nbsp; LDY $00E9 = 
+#$01&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+用来切换敌我的数据，切换至被攻击方<BR>&nbsp;03:8A88:B6 D1&nbsp;&nbsp;&nbsp;&nbsp; LDX $00D1,Y @ 
+$00D2 = #$00&nbsp;&nbsp; 读取攻击方人物序号<BR>&gt;03:8A8A:BD F7 77&nbsp; LDA $77F7,X @ 
+$77F7 = #$00&nbsp;&nbsp; 读取机体特殊技能<BR>&nbsp;03:8A8D:29 07&nbsp;&nbsp;&nbsp;&nbsp; 
+AND 
+#$07&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+判断机体特殊技能<BR>&nbsp;03:8A8F:C9 05&nbsp;&nbsp;&nbsp;&nbsp; CMP 
+#$05&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+是否为05（阻反电波）<BR>&nbsp;03:8A91:90 06&nbsp;&nbsp;&nbsp;&nbsp; BCC 
+$8A99&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+不是则结束<BR>&nbsp;03:8A93:F0 05&nbsp;&nbsp;&nbsp;&nbsp; BEQ 
+$8A9A&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+是则跳转执行<BR>&nbsp;03:8A95:C9 06&nbsp;&nbsp;&nbsp;&nbsp; CMP 
+#$06&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+<BR>&nbsp;03:8A97:F0 36&nbsp;&nbsp;&nbsp;&nbsp; BEQ 
+$8ACF&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+跳转（减命中电波）<BR>&nbsp;03:8A99:60&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; RTS 
+-----------------------------------------<BR>=========================================机体特技阻反==============================================<BR>&nbsp;03:8A9A:24 
+E3&nbsp;&nbsp;&nbsp;&nbsp; BIT $00E3 = 
+#$81&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+判断能否攻击某人时如果与被攻击者距离不是1，则或40<BR>&nbsp;03:8A9C:70 FB&nbsp;&nbsp;&nbsp;&nbsp; BVS 
+$8A99&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+测试D6位状态，为1（远程不执行）则跳转，否则继续执行<BR>&nbsp;03:8A9E:A9 64&nbsp;&nbsp;&nbsp;&nbsp; LDA 
+#$64&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+<BR>&nbsp;03:8AA0:20 24 C0&nbsp; JSR 
+$C024&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+返回一个比#$64小的随机数<BR>&nbsp;03:8AA3:C9 19&nbsp;&nbsp;&nbsp;&nbsp; CMP 
+#$19&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+比较大小<BR>&nbsp;03:8AA5:B0 F2&nbsp;&nbsp;&nbsp;&nbsp; BCS 
+$8A99&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+大于则返回，小于顺序执行&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+<BR>&nbsp;03:8AA7:A4 E8&nbsp;&nbsp;&nbsp;&nbsp; LDY $00E8 = 
+#$00&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+切换至攻击方<BR>&nbsp;03:8AA9:B9 E1 00&nbsp; LDA $00E1,Y @ $00E2 = #$70&nbsp;&nbsp; 
+读取攻击者状态<BR>&nbsp;03:8AAC:09 08&nbsp;&nbsp;&nbsp;&nbsp; ORA 
+#$08&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+或#$08,无法攻击<BR>&nbsp;03:8AAE:99 E1 00&nbsp; STA $00E1,Y @ $00E2 = 
+#$70&nbsp;&nbsp; 存至攻击者状态<BR>&nbsp;03:8AB1:E6 8B&nbsp;&nbsp;&nbsp;&nbsp; INC 
+$008B = 
+#$01&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+技能1使用后自增1<BR>&nbsp;03:8AB3:A9 20&nbsp;&nbsp;&nbsp;&nbsp; LDA 
+#$20<BR>&nbsp;03:8AB5:20 3C C0&nbsp; JSR $C03C<BR>&nbsp;03:8AB8:A9 
+5F&nbsp;&nbsp;&nbsp;&nbsp; LDA #$5F<BR>&nbsp;03:8ABA:20 3C C0&nbsp; JSR 
+$C03C<BR>&nbsp;03:8ABD:A4 E9&nbsp;&nbsp;&nbsp;&nbsp; LDY $00E9 = 
+#$01<BR>&nbsp;03:8ABF:B6 D1&nbsp;&nbsp;&nbsp;&nbsp; LDX $00D1,Y @ $00D2 = 
+#$00<BR>&nbsp;03:8AC1:A9 13&nbsp;&nbsp;&nbsp;&nbsp; LDA #$13<BR>&nbsp;03:8AC3:85 
+18&nbsp;&nbsp;&nbsp;&nbsp; STA $0018 = #$52<BR>&nbsp;03:8AC5:BD 57 75&nbsp; LDA 
+$7557,X @ $7557 = #$A1<BR>&nbsp;03:8AC8:85 19&nbsp;&nbsp;&nbsp;&nbsp; STA $0019 
+= #$80<BR>&nbsp;03:8ACA:A9 00&nbsp;&nbsp;&nbsp;&nbsp; LDA 
+#$00<BR>&nbsp;03:8ACC:4C 02 C1&nbsp; JMP $C102<BR>&nbsp;03:8ACF:A9 
+64&nbsp;&nbsp;&nbsp;&nbsp; LDA #$64<BR>&nbsp;03:8AD1:20 24 C0&nbsp; JSR 
+$C024<BR>&nbsp;03:8AD4:C9 19&nbsp;&nbsp;&nbsp;&nbsp; CMP 
+#$19<BR>&nbsp;03:8AD6:B0 C1&nbsp;&nbsp;&nbsp;&nbsp; BCS 
+$8A99<BR>&nbsp;03:8AD8:A4 E8&nbsp;&nbsp;&nbsp;&nbsp; LDY $00E8 = 
+#$00&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+切换至攻击方&nbsp;&nbsp;&nbsp; <BR>&nbsp;03:8ADA:B9 DF 00&nbsp; LDA $00DF,Y @ $00E0 = 
+#$64&nbsp;&nbsp; 
+读取攻击者命中<BR>&nbsp;03:8ADD:38&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; SEC 
+<BR>&nbsp;03:8ADE:E9 1E&nbsp;&nbsp;&nbsp;&nbsp; SBC 
+#$1E&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+减30%<BR>&nbsp;03:8AE0:B0 02&nbsp;&nbsp;&nbsp;&nbsp; BCS 
+$8AE4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+大于则转移<BR>&nbsp;03:8AE2:A9 00&nbsp;&nbsp;&nbsp;&nbsp; LDA 
+#$00&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+小于则读取#$00<BR>&nbsp;03:8AE4:99 DF 00&nbsp; STA $00DF,Y @ $00E0 = #$64&nbsp;&nbsp; 
+存至被攻击者命中<BR>&nbsp;03:8AE7:E6 8B&nbsp;&nbsp;&nbsp;&nbsp; INC $008B = 
+#$01<BR>&nbsp;03:8AE9:A9 20&nbsp;&nbsp;&nbsp;&nbsp; LDA #$20<BR>&nbsp;03:8AEB:20 
+3C C0&nbsp; JSR $C03C<BR>&nbsp;03:8AEE:A9 5F&nbsp;&nbsp;&nbsp;&nbsp; LDA 
+#$5F<BR>&nbsp;03:8AF0:20 3C C0&nbsp; JSR $C03C<BR>&nbsp;03:8AF3:A4 
+E9&nbsp;&nbsp;&nbsp;&nbsp; LDY $00E9 = #$01<BR>&nbsp;03:8AF5:B6 
+D1&nbsp;&nbsp;&nbsp;&nbsp; LDX $00D1,Y @ $00D2 = #$00<BR>&nbsp;03:8AF7:A9 
+13&nbsp;&nbsp;&nbsp;&nbsp; LDA #$13<BR>&nbsp;03:8AF9:85 
+18&nbsp;&nbsp;&nbsp;&nbsp; STA $0018 = #$52<BR>&nbsp;03:8AFB:BD 57 75&nbsp; LDA 
+$7557,X @ $7557 = #$A1<BR>&nbsp;03:8AFE:85 19&nbsp;&nbsp;&nbsp;&nbsp; STA $0019 
+= #$80<BR>&nbsp;03:8B00:A9 00&nbsp;&nbsp;&nbsp;&nbsp; LDA 
+#$00<BR>&nbsp;03:8B02:20 02 C1&nbsp; JSR $C102<BR>&nbsp;03:8B05:E6 
+8B&nbsp;&nbsp;&nbsp;&nbsp; INC $008B = #$01<BR>&nbsp;03:8B07:A9 
+20&nbsp;&nbsp;&nbsp;&nbsp; LDA #$20<BR>&nbsp;03:8B09:20 3C C0&nbsp; JSR 
+$C03C<BR>&nbsp;03:8B0C:A9 60&nbsp;&nbsp;&nbsp;&nbsp; LDA 
+#$60<BR>&nbsp;03:8B0E:20 3C C0&nbsp; JSR $C03C<BR>&nbsp;03:8B11:A4 
+E8&nbsp;&nbsp;&nbsp;&nbsp; LDY $00E8 = #$00<BR>&nbsp;03:8B13:B6 
+D1&nbsp;&nbsp;&nbsp;&nbsp; LDX $00D1,Y @ $00D2 = #$00<BR>&nbsp;03:8B15:A9 
+13&nbsp;&nbsp;&nbsp;&nbsp; LDA #$13<BR>&nbsp;03:8B17:85 
+18&nbsp;&nbsp;&nbsp;&nbsp; STA $0018 = #$52<BR>&nbsp;03:8B19:BD 57 75&nbsp; LDA 
+$7557,X @ $7557 = #$A1<BR>&nbsp;03:8B1C:85 19&nbsp;&nbsp;&nbsp;&nbsp; STA $0019 
+= #$80<BR>&nbsp;03:8B1E:A9 00&nbsp;&nbsp;&nbsp;&nbsp; LDA 
+#$00<BR>&nbsp;03:8B20:4C 02 C1&nbsp; JMP $C102<BR>&nbsp;03:8B23:A4 
+E9&nbsp;&nbsp;&nbsp;&nbsp; LDY $00E9 = #$01<BR>&nbsp;03:8B25:B6 
+D1&nbsp;&nbsp;&nbsp;&nbsp; LDX $00D1,Y @ $00D2 = 
+#$00&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 读取攻击方序号<BR>&nbsp;03:8B27:BD F7 
+77&nbsp; LDA $77F7,X @ $77F7 = #$00&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+读取攻击方机体特技状态&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <BR>&nbsp;03:8B2A:10 
+1B&nbsp;&nbsp;&nbsp;&nbsp; BPL 
+$8B47&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+最高位为0则跳转，不为0（间无）顺序执行<BR>&nbsp;03:8B2C:24 E3&nbsp;&nbsp;&nbsp;&nbsp; BIT $00E3 = 
+#$81&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+判断能否攻击某人时如果与被攻击者距离不是1&nbsp;&nbsp; <BR>&nbsp;03:8B2E:50 
+17&nbsp;&nbsp;&nbsp;&nbsp; BVC 
+$8B47&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+测试D6位状态，为0则跳转，不为0（远程）顺序执行<BR>&nbsp;03:8B30:A9 00&nbsp;&nbsp;&nbsp;&nbsp; LDA 
+#$00<BR>&nbsp;03:8B32:85 F0&nbsp;&nbsp;&nbsp;&nbsp; STA $00F0 = 
+#$00&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+生命值损失低位置0<BR>&nbsp;03:8B34:85 F1&nbsp;&nbsp;&nbsp;&nbsp; STA $00F1 = 
+#$00&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+生命值损失高位置0<BR>&nbsp;03:8B36:85 F2&nbsp;&nbsp;&nbsp;&nbsp; STA $00F2 = 
+#$00&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+命中置0<BR>&nbsp;03:8B38:E6 8B&nbsp;&nbsp;&nbsp;&nbsp; INC $008B = 
+#$01<BR>&nbsp;03:8B3A:A9 20&nbsp;&nbsp;&nbsp;&nbsp; LDA #$20<BR>&nbsp;03:8B3C:20 
+3C C0&nbsp; JSR $C03C<BR>&nbsp;03:8B3F:A9 5C&nbsp;&nbsp;&nbsp;&nbsp; LDA 
+#$5C<BR>&nbsp;03:8B41:20 3C C0&nbsp; JSR $C03C<BR>&nbsp;03:8B44:4C E1 8C&nbsp; 
+JMP $8CE1<BR>&nbsp;03:8B47:29 07&nbsp;&nbsp;&nbsp;&nbsp; AND 
+#$07<BR>&nbsp;03:8B49:C9 01&nbsp;&nbsp;&nbsp;&nbsp; CMP 
+#$01&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+判断防御系统<BR>&nbsp;03:8B4B:F0 32&nbsp;&nbsp;&nbsp;&nbsp; BEQ 
+$8B7F<BR>&nbsp;03:8B4D:C9 02&nbsp;&nbsp;&nbsp;&nbsp; CMP 
+#$02&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+判断盾防&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+<BR>&nbsp;03:8B4F:D0 69&nbsp;&nbsp;&nbsp;&nbsp; BNE $8BBA <BR>&nbsp;03:8B51:A9 
+64&nbsp;&nbsp;&nbsp;&nbsp; LDA 
+#$64&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+读取立即数<BR>&nbsp;03:8B53:20 24 C0&nbsp; JSR 
+$C024&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+返回随机数<BR>&nbsp;03:8B56:C9 19&nbsp;&nbsp;&nbsp;&nbsp; CMP 
+#$19&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+与#$19比较<BR>&nbsp;03:8B58:B0 60&nbsp;&nbsp;&nbsp;&nbsp; BCS 
+$8BBA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+大于则跳转<BR>&nbsp;03:8B5A:46 F1&nbsp;&nbsp;&nbsp;&nbsp; LSR $00F1 = 
+#$00&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+伤害高位右移<BR>&nbsp;03:8B5C:66 F0&nbsp;&nbsp;&nbsp;&nbsp; ROR $00F0 = 
+#$00&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+伤害低位循环右移<BR>&nbsp;03:8B5E:E6 8B&nbsp;&nbsp;&nbsp;&nbsp; INC $008B = 
+#$01<BR>&nbsp;03:8B60:A9 20&nbsp;&nbsp;&nbsp;&nbsp; LDA #$20<BR>&nbsp;03:8B62:20 
+3C C0&nbsp; JSR $C03C<BR>&nbsp;03:8B65:A9 5E&nbsp;&nbsp;&nbsp;&nbsp; LDA 
+#$5E<BR>&nbsp;03:8B67:20 3C C0&nbsp; JSR $C03C<BR>&nbsp;03:8B6A:A4 
+E9&nbsp;&nbsp;&nbsp;&nbsp; LDY $00E9 = #$01<BR>&nbsp;03:8B6C:B6 
+D1&nbsp;&nbsp;&nbsp;&nbsp; LDX $00D1,Y @ $00D2 = #$00<BR>&nbsp;03:8B6E:A9 
+13&nbsp;&nbsp;&nbsp;&nbsp; LDA #$13<BR>&nbsp;03:8B70:85 
+18&nbsp;&nbsp;&nbsp;&nbsp; STA $0018 = #$52<BR>&nbsp;03:8B72:BD 57 75&nbsp; LDA 
+$7557,X @ $7557 = #$A1<BR>&nbsp;03:8B75:85 19&nbsp;&nbsp;&nbsp;&nbsp; STA $0019 
+= #$80<BR>&nbsp;03:8B77:A9 00&nbsp;&nbsp;&nbsp;&nbsp; LDA 
+#$00<BR>&nbsp;03:8B79:20 02 C1&nbsp; JSR $C102<BR>&nbsp;03:8B7C:4C BA 8B&nbsp; 
+JMP 
+$8BBA<BR>======================================================防御系统====================================<BR>&nbsp;03:8B7F:A4 
+E9&nbsp;&nbsp;&nbsp;&nbsp; LDY $00E9 = 
+#$01&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+切换至被攻击方<BR>&nbsp;03:8B81:B6 D1&nbsp;&nbsp;&nbsp;&nbsp; LDX $00D1,Y @ $00D2 = 
+#$00&nbsp;&nbsp;&nbsp;&nbsp; 读取被攻击方序号&nbsp;&nbsp;&nbsp; <BR>&nbsp;03:8B83:BD 77 
+76&nbsp; LDA $7677,X @ $7677 = #$28&nbsp;&nbsp;&nbsp;&nbsp; 读取被攻击方防御&nbsp; 
+<BR>&nbsp;03:8B86:4A&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+LSR&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+右移<BR>&nbsp;03:8B87:85 00&nbsp;&nbsp;&nbsp;&nbsp; STA $0000 = 
+#$64&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+暂存<BR>&nbsp;03:8B89:A5 F0&nbsp;&nbsp;&nbsp;&nbsp; LDA $00F0 = 
+#$00&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+读取生命值损失低位<BR>&nbsp;03:8B8B:38&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+SEC<BR>&nbsp;03:8B8C:E5 00&nbsp;&nbsp;&nbsp;&nbsp; SBC $0000 = 
+#$64&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+减防御<BR>&nbsp;03:8B8E:85 F0&nbsp;&nbsp;&nbsp;&nbsp; STA $00F0 = 
+#$00&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+数据暂存<BR>&nbsp;03:8B90:A5 F1&nbsp;&nbsp;&nbsp;&nbsp; LDA $00F1 = 
+#$00&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+读取生命值损失高位<BR>&nbsp;03:8B92:E9 00&nbsp;&nbsp;&nbsp;&nbsp; SBC 
+#$00<BR>&nbsp;03:8B94:B0 04&nbsp;&nbsp;&nbsp;&nbsp; BCS 
+$8B9A&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+生命值损失大于防御，跳转<BR>&nbsp;03:8B96:A9 00&nbsp;&nbsp;&nbsp;&nbsp; LDA 
+#$00&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+生命值损失小于防御，伤害置0<BR>&nbsp;03:8B98:85 F0&nbsp;&nbsp;&nbsp;&nbsp; STA $00F0 = 
+#$00&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+存至生命值损失低位<BR>&nbsp;03:8B9A:85 F1&nbsp;&nbsp;&nbsp;&nbsp; STA $00F1 = 
+#$00&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+存至生命值损失高位<BR>&nbsp;03:8B9C:E6 8B&nbsp;&nbsp;&nbsp;&nbsp; INC $008B = 
+#$01&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+技能使用后自增1<BR>&nbsp;03:8B9E:A9 20&nbsp;&nbsp;&nbsp;&nbsp; LDA 
+#$20<BR>&nbsp;03:8BA0:20 3C C0&nbsp; JSR $C03C<BR>&nbsp;03:8BA3:A9 
+5D&nbsp;&nbsp;&nbsp;&nbsp; LDA #$5D<BR>&nbsp;03:8BA5:20 3C C0&nbsp; JSR 
+$C03C<BR>&nbsp;03:8BA8:A4 E9&nbsp;&nbsp;&nbsp;&nbsp; LDY $00E9 = 
+#$01&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+敌我切换<BR>&nbsp;03:8BAA:B6 D1&nbsp;&nbsp;&nbsp;&nbsp; LDX $00D1,Y @ $00D2 = 
+#$00&nbsp;&nbsp;&nbsp;&nbsp; 读取被攻击方序号<BR>&nbsp;03:8BAC:A9 
+13&nbsp;&nbsp;&nbsp;&nbsp; LDA #$13<BR>&nbsp;03:8BAE:85 
+18&nbsp;&nbsp;&nbsp;&nbsp; STA $0018 = #$52<BR>&nbsp;03:8BB0:BD 57 75&nbsp; LDA 
+$7557,X @ $7557 = #$A1<BR>&nbsp;03:8BB3:85 19&nbsp;&nbsp;&nbsp;&nbsp; STA $0019 
+= #$80<BR>&nbsp;03:8BB5:A9 00&nbsp;&nbsp;&nbsp;&nbsp; LDA 
+#$00<BR>&nbsp;03:8BB7:20 02 C1&nbsp; JSR 
+$C102<BR>===========================================特技判断结束，继续执行？？？============================<BR>&nbsp;03:8BBA:A9 
+64&nbsp;&nbsp;&nbsp;&nbsp; LDA 
+#$64&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+读取#$64<BR>&nbsp;03:8BBC:20 24 C0&nbsp; JSR 
+$C024&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+返回随机数（小于#$64）<BR>&nbsp;03:8BBF:C5 F2&nbsp;&nbsp;&nbsp;&nbsp; CMP $00F2 = 
+#$00&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+与命中比较<BR>&nbsp;03:8BC1:90 25&nbsp;&nbsp;&nbsp;&nbsp; BCC 
+$8BE8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+小于则跳转，大于顺序执行<BR>&nbsp;03:8BC3:A9 00&nbsp;&nbsp;&nbsp;&nbsp; LDA 
+#$00&nbsp;&nbsp;&nbsp;&nbsp; <BR>&nbsp;03:8BC5:85 F2&nbsp;&nbsp;&nbsp;&nbsp; STA 
+$00F2 = 
+#$00&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+命中置0<BR>&nbsp;03:8BC7:E6 8B&nbsp;&nbsp;&nbsp;&nbsp; INC $008B = 
+#$01&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+技能使用后自增1<BR>&nbsp;03:8BC9:A9 20&nbsp;&nbsp;&nbsp;&nbsp; LDA 
+#$20&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+<BR>&nbsp;03:8BCB:20 3C C0&nbsp; JSR $C03C<BR>&nbsp;03:8BCE:A9 
+54&nbsp;&nbsp;&nbsp;&nbsp; LDA #$54<BR>&nbsp;03:8BD0:20 3C C0&nbsp; JSR 
+$C03C<BR>&nbsp;03:8BD3:A4 E9&nbsp;&nbsp;&nbsp;&nbsp; LDY $00E9 = 
+#$01&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+切换至被攻击方<BR>&nbsp;03:8BD5:B6 D1&nbsp;&nbsp;&nbsp;&nbsp; LDX $00D1,Y @ $00D2 = 
+#$00&nbsp;&nbsp;&nbsp;&nbsp; 读取被攻击方序号<BR>&nbsp;03:8BD7:A9 
+13&nbsp;&nbsp;&nbsp;&nbsp; LDA 
+#$13&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+<BR>&nbsp;03:8BD9:85 18&nbsp;&nbsp;&nbsp;&nbsp; STA $0018 = 
+#$52<BR>&nbsp;03:8BDB:BD 57 75&nbsp; LDA $7557,X @ $7557 = 
+#$A1<BR>&nbsp;03:8BDE:85 19&nbsp;&nbsp;&nbsp;&nbsp; STA $0019 = 
+#$80<BR>&nbsp;03:8BE0:A9 00&nbsp;&nbsp;&nbsp;&nbsp; LDA #$00<BR>&nbsp;03:8BE2:20 
+02 C1&nbsp; JSR $C102<BR>&nbsp;03:8BE5:4C E1 8C&nbsp; JMP 
+$8CE1<BR>&nbsp;03:8BE8:A5 F3&nbsp;&nbsp;&nbsp;&nbsp; LDA $00F3 = 
+#$00<BR>&nbsp;03:8BEA:29 F0&nbsp;&nbsp;&nbsp;&nbsp; AND #$F0<BR>&nbsp;03:8BEC:C9 
+20&nbsp;&nbsp;&nbsp;&nbsp; CMP #$20<BR>&nbsp;03:8BEE:F0 
+43&nbsp;&nbsp;&nbsp;&nbsp; BEQ $8C33<BR>&nbsp;03:8BF0:C9 
+10&nbsp;&nbsp;&nbsp;&nbsp; CMP #$10<BR>&nbsp;03:8BF2:D0 
+13&nbsp;&nbsp;&nbsp;&nbsp; BNE $8C07<BR>&nbsp;03:8BF4:A9 
+64&nbsp;&nbsp;&nbsp;&nbsp; LDA #$64<BR>&nbsp;03:8BF6:20 24 C0&nbsp; JSR 
+$C024<BR>&nbsp;03:8BF9:C9 32&nbsp;&nbsp;&nbsp;&nbsp; CMP 
+#$32<BR>&nbsp;03:8BFB:B0 0A&nbsp;&nbsp;&nbsp;&nbsp; BCS 
+$8C07<BR>===============================================武器特技阻反=======================================<BR>&nbsp;03:8BFD:A4 
+E9&nbsp;&nbsp;&nbsp;&nbsp; LDY $00E9 = 
+#$01&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+切换至被攻击方<BR>&nbsp;03:8BFF:B9 E1 00&nbsp; LDA $00E1,Y @ $00E2 = #$70&nbsp; 
+读取被攻击方状态<BR>&nbsp;03:8C02:09 08&nbsp;&nbsp;&nbsp;&nbsp; ORA 
+#$08&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+或08表示不能攻击（反击）<BR>&nbsp;03:8C04:99 E1 00&nbsp; STA $00E1,Y @ $00E2 = #$70&nbsp; 
+存至被攻击方状态<BR>&nbsp;03:8C07:E6 8B&nbsp;&nbsp;&nbsp;&nbsp; INC $008B = 
+#$01&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+技能使用后自增1<BR>&nbsp;03:8C09:A9 20&nbsp;&nbsp;&nbsp;&nbsp; LDA 
+#$20<BR>&nbsp;03:8C0B:20 3C C0&nbsp; JSR $C03C<BR>&nbsp;03:8C0E:A9 
+55&nbsp;&nbsp;&nbsp;&nbsp; LDA #$55<BR>&nbsp;03:8C10:20 3C C0&nbsp; JSR 
+$C03C<BR>&nbsp;03:8C13:A4 E9&nbsp;&nbsp;&nbsp;&nbsp; LDY $00E9 = 
+#$01<BR>&nbsp;03:8C15:B6 D1&nbsp;&nbsp;&nbsp;&nbsp; LDX $00D1,Y @ $00D2 = 
+#$00<BR>&nbsp;03:8C17:A9 13&nbsp;&nbsp;&nbsp;&nbsp; LDA #$13<BR>&nbsp;03:8C19:85 
+18&nbsp;&nbsp;&nbsp;&nbsp; STA $0018 = #$52<BR>&nbsp;03:8C1B:BD 57 75&nbsp; LDA 
+$7557,X @ $7557 = #$A1<BR>&nbsp;03:8C1E:85 19&nbsp;&nbsp;&nbsp;&nbsp; STA $0019 
+= #$80<BR>&nbsp;03:8C20:A9 00&nbsp;&nbsp;&nbsp;&nbsp; LDA 
+#$00<BR>&nbsp;03:8C22:20 02 C1&nbsp; JSR $C102<BR>&nbsp;03:8C25:A5 
+F0&nbsp;&nbsp;&nbsp;&nbsp; LDA $00F0 = #$00<BR>&nbsp;03:8C27:85 
+00&nbsp;&nbsp;&nbsp;&nbsp; STA $0000 = #$64<BR>&nbsp;03:8C29:A5 
+F1&nbsp;&nbsp;&nbsp;&nbsp; LDA $00F1 = #$00<BR>&nbsp;03:8C2B:85 
+01&nbsp;&nbsp;&nbsp;&nbsp; STA $0001 = #$80<BR>&nbsp;03:8C2D:20 45 C0&nbsp; JSR 
+$C045<BR>&nbsp;03:8C30:4C 9C 8C&nbsp; JMP $8C9C<BR>&nbsp;03:8C33:E6 
+8B&nbsp;&nbsp;&nbsp;&nbsp; INC $008B = #$01<BR>&nbsp;03:8C35:A9 
+20&nbsp;&nbsp;&nbsp;&nbsp; LDA #$20<BR>&nbsp;03:8C37:20 3C C0&nbsp; JSR 
+$C03C<BR>&nbsp;03:8C3A:A9 57&nbsp;&nbsp;&nbsp;&nbsp; LDA 
+#$57<BR>&nbsp;03:8C3C:20 3C C0&nbsp; JSR $C03C<BR>&nbsp;03:8C3F:A4 
+E9&nbsp;&nbsp;&nbsp;&nbsp; LDY $00E9 = 
+#$01&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+<BR>&nbsp;03:8C41:B6 D1&nbsp;&nbsp;&nbsp;&nbsp; LDX $00D1,Y @ $00D2 = #$00&nbsp; 
+<BR>&nbsp;03:8C43:A9 13&nbsp;&nbsp;&nbsp;&nbsp; LDA #$13<BR>&nbsp;03:8C45:85 
+18&nbsp;&nbsp;&nbsp;&nbsp; STA $0018 = #$52<BR>&nbsp;03:8C47:BD 57 75&nbsp; LDA 
+$7557,X @ $7557 = #$A1<BR>&nbsp;03:8C4A:85 19&nbsp;&nbsp;&nbsp;&nbsp; STA $0019 
+= #$80<BR>&nbsp;03:8C4C:A9 00&nbsp;&nbsp;&nbsp;&nbsp; LDA 
+#$00<BR>&nbsp;03:8C4E:20 02 C1&nbsp; JSR 
+$C102<BR>===============================================吸血================================================<BR>&nbsp;03:8C51:A4 
+E9&nbsp;&nbsp;&nbsp;&nbsp; LDY $00E9 = 
+#$01&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+切换至被攻击方<BR>&nbsp;03:8C53:B6 D1&nbsp;&nbsp;&nbsp;&nbsp; LDX $00D1,Y @ $00D2 = 
+#$00&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 读取被攻击方序号<BR>&nbsp;03:8C55:BD B7 76&nbsp; LDA 
+$76B7,X @ $76B7 = #$90&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+读取当前生命值低位<BR>&nbsp;03:8C58:38&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+SEC<BR>&nbsp;03:8C59:E5 F0&nbsp;&nbsp;&nbsp;&nbsp; SBC $00F0 = 
+#$00&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+减生命值损失低位<BR>&nbsp;03:8C5B:BD D7 76&nbsp; LDA $76D7,X @ $76D7 = 
+#$01&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 读取当前生命值高位<BR>&nbsp;03:8C5E:E5 
+F1&nbsp;&nbsp;&nbsp;&nbsp; SBC $00F1 = 
+#$00&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+减生命值损失高位<BR>&nbsp;03:8C60:B0 0A&nbsp;&nbsp;&nbsp;&nbsp; BCS 
+$8C6C&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+大于则跳转（当前生命值更大）<BR>&nbsp;03:8C62:BD B7 76&nbsp; LDA $76B7,X @ $76B7 = 
+#$90&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 读取当前生命值低位<BR>&nbsp;03:8C65:85 
+F0&nbsp;&nbsp;&nbsp;&nbsp; STA $00F0 = 
+#$00&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+存至生命值损失低位&nbsp;&nbsp;&nbsp;&nbsp; <BR>&nbsp;03:8C67:BD D7 76&nbsp; LDA $76D7,X @ 
+$76D7 = #$01&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 读取生命值高位<BR>&nbsp;03:8C6A:85 
+F1&nbsp;&nbsp;&nbsp;&nbsp; STA $00F1 = 
+#$00&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+存至生命值损失高位<BR>&nbsp;03:8C6C:A4 E8&nbsp;&nbsp;&nbsp;&nbsp; LDY $00E8 = 
+#$00<BR>&nbsp;03:8C6E:B6 D1&nbsp;&nbsp;&nbsp;&nbsp; LDX $00D1,Y @ $00D2 = 
+#$00&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 读取攻击方序号<BR>&nbsp;03:8C70:BD B7 76&nbsp; LDA 
+$76B7,X @ $76B7 = #$90&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+读取当前生命值低位<BR>&nbsp;03:8C73:18&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+CLC<BR>&nbsp;03:8C74:65 F0&nbsp;&nbsp;&nbsp;&nbsp; ADC $00F0 = 
+#$00&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+加被攻击方生命损失低位<BR>&nbsp;03:8C76:9D B7 76&nbsp; STA $76B7,X @ $76B7 = 
+#$90&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 存至当前生命值低位<BR>&nbsp;03:8C79:BD D7 76&nbsp; LDA 
+$76D7,X @ $76D7 = #$01&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+读取当前生命值高位<BR>&nbsp;03:8C7C:65 F1&nbsp;&nbsp;&nbsp;&nbsp; ADC $00F1 = 
+#$00&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+加被攻击方损失生命值高位<BR>&nbsp;03:8C7E:9D D7 76&nbsp; STA $76D7,X @ $76D7 = 
+#$01&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 存至当前生命值高位<BR>&nbsp;03:8C81:BD F7 76&nbsp; LDA 
+$76F7,X @ $76F7 = #$90&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+读取最大生命值低位<BR>&nbsp;03:8C84:38&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+SEC<BR>&nbsp;03:8C85:FD B7 76&nbsp; SBC $76B7,X @ $76B7 = 
+#$90&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 减当前生命值低位BCS<BR>&nbsp;03:8C88:BD 17 77&nbsp; 
+LDA $7717,X @ $7717 = #$01&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+读取当前生命值高位<BR>&nbsp;03:8C8B:FD D7 76&nbsp; SBC $76D7,X @ $76D7 = 
+#$01&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 减当前生命值高位<BR>&nbsp;03:8C8E:B0 
+A3&nbsp;&nbsp;&nbsp;&nbsp; BCS 
+$8C33&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+大于则跳转（增加的生命值不溢出）<BR>&nbsp;03:8C90:BD F7 76&nbsp; LDA $76F7,X @ $76F7 = 
+#$90&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 溢出，读取最大生命值低位<BR>&nbsp;03:8C93:9D B7 76&nbsp; 
+STA $76B7,X @ $76B7 = #$90&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+存入当前生命值低位<BR>&nbsp;03:8C96:BD 17 77&nbsp; LDA $7717,X @ $7717 = 
+#$01&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 读取最大生命值高位<BR>&nbsp;03:8C99:9D D7 76&nbsp; STA 
+$76D7,X @ $76D7 = #$01&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+存入当前生命值高位<BR>&nbsp;03:8C9C:A4 E9&nbsp;&nbsp;&nbsp;&nbsp; LDY $00E9 = 
+#$01&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+切换至被攻击方<BR>&nbsp;03:8C9E:B6 D1&nbsp;&nbsp;&nbsp;&nbsp; LDX $00D1,Y @ $00D2 = 
+#$00&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 读取被攻击方序号<BR>&nbsp;03:8CA0:BD B7 76&nbsp; LDA 
+$76B7,X @ $76B7 = #$90&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+读取当前生命值低位<BR>&nbsp;03:8CA3:38&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+SEC<BR>&nbsp;03:8CA4:E5 F0&nbsp;&nbsp;&nbsp;&nbsp; SBC $00F0 = 
+#$00&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+减生命值损失低位<BR>&nbsp;03:8CA6:9D B7 76&nbsp; STA $76B7,X @ $76B7 = 
+#$90&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 存至当前生命值低位<BR>&nbsp;03:8CA9:BD D7 76&nbsp; LDA 
+$76D7,X @ $76D7 = #$01&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+读取当前生命值高位<BR>&nbsp;03:8CAC:E5 F1&nbsp;&nbsp;&nbsp;&nbsp; SBC $00F1 = 
+#$00&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+减生命值损失高位<BR>&nbsp;03:8CAE:9D D7 76&nbsp; STA $76D7,X @ $76D7 = 
+#$01&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 存至当前生命值高位<BR>&nbsp;03:8CB1:B0 
+08&nbsp;&nbsp;&nbsp;&nbsp; BCS 
+$8CBB&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+大于则跳转<BR>&nbsp;03:8CB3:A9 00&nbsp;&nbsp;&nbsp;&nbsp; LDA 
+#$00<BR>&nbsp;03:8CB5:9D B7 76&nbsp; STA $76B7,X @ $76B7 = 
+#$90&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 小于，生命值低位置0<BR>&nbsp;03:8CB8:9D D7 76&nbsp; 
+STA $76D7,X @ $76D7 = #$01&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+生命值高位置0<BR>&nbsp;03:8CBB:BD B7 76&nbsp; LDA $76B7,X @ $76B7 = 
+#$90&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <BR>&nbsp;03:8CBE:1D D7 76&nbsp; ORA $76D7,X 
+@ $76D7 = #$01<BR>&nbsp;03:8CC1:D0 1E&nbsp;&nbsp;&nbsp;&nbsp; BNE 
+$8CE1<BR>&nbsp;03:8CC3:E6 8B&nbsp;&nbsp;&nbsp;&nbsp; INC $008B = 
+#$01<BR>&nbsp;03:8CC5:A9 20&nbsp;&nbsp;&nbsp;&nbsp; LDA #$20<BR>&nbsp;03:8CC7:20 
+3C C0&nbsp; JSR $C03C<BR>&nbsp;03:8CCA:A9 56&nbsp;&nbsp;&nbsp;&nbsp; LDA 
+#$56<BR>&nbsp;03:8CCC:20 3C C0&nbsp; JSR $C03C<BR>&nbsp;03:8CCF:A4 
+E9&nbsp;&nbsp;&nbsp;&nbsp; LDY $00E9 = #$01<BR>&nbsp;03:8CD1:B6 
+D1&nbsp;&nbsp;&nbsp;&nbsp; LDX $00D1,Y @ $00D2 = #$00<BR>&nbsp;03:8CD3:A9 
+13&nbsp;&nbsp;&nbsp;&nbsp; LDA #$13<BR>&nbsp;03:8CD5:85 
+18&nbsp;&nbsp;&nbsp;&nbsp; STA $0018 = #$52<BR>&nbsp;03:8CD7:BD 57 75&nbsp; LDA 
+$7557,X @ $7557 = #$A1<BR>&nbsp;03:8CDA:85 19&nbsp;&nbsp;&nbsp;&nbsp; STA $0019 
+= #$80<BR>&nbsp;03:8CDC:A9 00&nbsp;&nbsp;&nbsp;&nbsp; LDA 
+#$00<BR>&nbsp;03:8CDE:20 02 C1&nbsp; JSR $C102<BR>&nbsp;03:8CE1:E6 
+8B&nbsp;&nbsp;&nbsp;&nbsp; INC $008B = #$01<BR>&nbsp;03:8CE3:A9 
+20&nbsp;&nbsp;&nbsp;&nbsp; LDA #$20<BR>&nbsp;03:8CE5:20 3C C0&nbsp; JSR 
+$C03C<BR>&nbsp;03:8CE8:A9 52&nbsp;&nbsp;&nbsp;&nbsp; LDA 
+#$52<BR>&nbsp;03:8CEA:20 3C C0&nbsp; JSR $C03C<BR>&nbsp;03:8CED:20 4E 8A&nbsp; 
+JSR $8A4E<BR>&nbsp;03:8CF0:A4 E9&nbsp;&nbsp;&nbsp;&nbsp; LDY $00E9 = 
+#$01<BR>&nbsp;03:8CF2:B6 D1&nbsp;&nbsp;&nbsp;&nbsp; LDX $00D1,Y @ $00D2 = 
+#$00<BR>&nbsp;03:8CF4:BD B7 76&nbsp; LDA $76B7,X @ $76B7 = 
+#$90<BR>&nbsp;03:8CF7:1D D7 76&nbsp; ORA $76D7,X @ $76D7 = 
+#$01<BR>&nbsp;03:8CFA:D0 05&nbsp;&nbsp;&nbsp;&nbsp; BNE 
+$8D01<BR>&nbsp;03:8CFC:A0 05&nbsp;&nbsp;&nbsp;&nbsp; LDY 
+#$05<BR>&nbsp;03:8CFE:4C 44 89&nbsp; JMP $8944<BR>&nbsp;03:8D01:A5 
+F2&nbsp;&nbsp;&nbsp;&nbsp; LDA $00F2 = #$00<BR>&nbsp;03:8D03:D0 
+05&nbsp;&nbsp;&nbsp;&nbsp; BNE $8D0A<BR>&nbsp;03:8D05:A0 
+00&nbsp;&nbsp;&nbsp;&nbsp; LDY #$00<BR>&nbsp;03:8D07:4C 44 89&nbsp; JMP 
+$8944<BR>&nbsp;03:8D0A:A5 F0&nbsp;&nbsp;&nbsp;&nbsp; LDA $00F0 = 
+#$00<BR>&nbsp;03:8D0C:05 F1&nbsp;&nbsp;&nbsp;&nbsp; ORA $00F1 = 
+#$00<BR>&nbsp;03:8D0E:D0 05&nbsp;&nbsp;&nbsp;&nbsp; BNE 
+$8D15<BR>&nbsp;03:8D10:A0 01&nbsp;&nbsp;&nbsp;&nbsp; LDY 
+#$01<BR>&nbsp;03:8D12:4C 44 89&nbsp; JMP $8944<BR>&nbsp;03:8D15:A5 
+F0&nbsp;&nbsp;&nbsp;&nbsp; LDA $00F0 = #$00<BR>&nbsp;03:8D17:85 
+00&nbsp;&nbsp;&nbsp;&nbsp; STA $0000 = #$64<BR>&nbsp;03:8D19:A5 
+F1&nbsp;&nbsp;&nbsp;&nbsp; LDA $00F1 = #$00<BR>&nbsp;03:8D1B:85 
+01&nbsp;&nbsp;&nbsp;&nbsp; STA $0001 = #$80<BR>&nbsp;03:8D1D:A9 
+64&nbsp;&nbsp;&nbsp;&nbsp; LDA #$64<BR>&nbsp;03:8D1F:85 
+08&nbsp;&nbsp;&nbsp;&nbsp; STA $0008 = #$00<BR>&nbsp;03:8D21:20 0C C0&nbsp; JSR 
+$C00C<BR>&nbsp;03:8D24:BD F7 76&nbsp; LDA $76F7,X @ $76F7 = 
+#$90<BR>&nbsp;03:8D27:85 00&nbsp;&nbsp;&nbsp;&nbsp; STA $0000 = 
+#$64<BR>&nbsp;03:8D29:BD 17 77&nbsp; LDA $7717,X @ $7717 = 
+#$01<BR>&nbsp;03:8D2C:85 01&nbsp;&nbsp;&nbsp;&nbsp; STA $0001 = 
+#$80<BR>&nbsp;03:8D2E:20 15 C0&nbsp; JSR $C015<BR>&nbsp;03:8D31:A5 
+10&nbsp;&nbsp;&nbsp;&nbsp; LDA $0010 = #$AF<BR>&nbsp;03:8D33:C9 
+24&nbsp;&nbsp;&nbsp;&nbsp; CMP #$24<BR>&nbsp;03:8D35:B0 
+0E&nbsp;&nbsp;&nbsp;&nbsp; BCS $8D45<BR>&nbsp;03:8D37:C9 
+0B&nbsp;&nbsp;&nbsp;&nbsp; CMP #$0B<BR>&nbsp;03:8D39:B0 
+05&nbsp;&nbsp;&nbsp;&nbsp; BCS $8D40<BR>&nbsp;03:8D3B:A0 
+02&nbsp;&nbsp;&nbsp;&nbsp; LDY #$02<BR>&nbsp;03:8D3D:4C 44 89&nbsp; JMP 
+$8944<BR>&nbsp;03:8D40:A0 03&nbsp;&nbsp;&nbsp;&nbsp; LDY 
+#$03<BR>&nbsp;03:8D42:4C 44 89&nbsp; JMP $8944<BR>&nbsp;03:8D45:A0 
+04&nbsp;&nbsp;&nbsp;&nbsp; LDY #$04<BR>&nbsp;03:8D47:4C 44 89&nbsp; JMP 
+$8944</FONT></BODY></HTML>

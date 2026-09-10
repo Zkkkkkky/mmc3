@@ -1,0 +1,354 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML><HEAD><TITLE>手柄、控制器和扩展口</TITLE>
+<META name=GENERATOR content="MSHTML 8.00.7601.19104">
+<META content="text/html; charset=gb2312" http-equiv=Content-Type>
+<STYLE>
+html,body { 
+	/* Default Font */
+	font-family: Microsoft YaHei, Simsun, sans-serif;
+	font-size: 12pt;
+}
+</STYLE>
+</HEAD>
+<BODY><FONT size=2><SPAN lang=EN-US>
+<H2><SPAN lang=EN-US>6</SPAN>、手柄、控制器和扩展口</H2></SPAN>
+<P><SPAN lang=EN-US>NES</SPAN>支持很多种输入设备，主要有手柄，光枪、<SPAN 
+lang=EN-US>4</SPAN>适配器和摇杆。两个手柄分别通过<SPAN lang=EN-US>$4016</SPAN>和<SPAN 
+lang=EN-US>$4017</SPAN>访问，用选通脉冲对手柄复位，即对<SPAN lang=EN-US>$4016</SPAN>或<SPAN 
+lang=EN-US>$4017</SPAN>先写<SPAN lang=EN-US>1</SPAN>后写<SPAN 
+lang=EN-US>0</SPAN>，这将在游戏手柄的电路里发生个脉冲，然后可以在<SPAN lang=EN-US>$4016</SPAN>或<SPAN 
+lang=EN-US>$4017</SPAN>读取了。每次读取将返回一个单一的按钮的状态，在第<SPAN lang=EN-US>0</SPAN>位（<SPAN 
+lang=EN-US>1</SPAN>表示按下，<SPAN lang=EN-US>0</SPAN>表没有）。第<SPAN 
+lang=EN-US>1</SPAN>位表示了游戏棒是否和端口连接。如果连接就置<SPAN lang=EN-US>0</SPAN>，否则是<SPAN 
+lang=EN-US>1</SPAN>。第<SPAN lang=EN-US>6</SPAN>和<SPAN lang=EN-US>7</SPAN>位的<SPAN 
+lang=EN-US>$4016/$4017</SPAN>好像有相同的重要性，不知是什么，有些游戏期望当一个按钮按下的时候在<SPAN 
+lang=EN-US>$4016/$4017</SPAN>得到<SPAN lang=EN-US>$41</SPAN>。复位的时候返回<SPAN 
+lang=EN-US>0</SPAN>。</P>
+<TABLE style="mso-cellspacing: .7pt" class=MsoNormalTable border=1 cellSpacing=1 
+cellPadding=0>
+  <TBODY>
+  <TR style="mso-yfti-irow: 0; mso-yfti-firstrow: yes">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>读取<SPAN lang=EN-US> # 
+</SPAN></FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>1 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>2 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>3 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>4 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>5 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>6 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>7 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>8 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>9 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>10 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>11 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>12 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>13 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>14 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>15 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>16 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>17 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>18 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>19 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>20 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>21 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>22 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>23 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>24 
+  </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 1; mso-yfti-lastrow: yes">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>按键 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2><SPAN lang=EN-US>A</SPAN>键 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2><SPAN lang=EN-US>B</SPAN>键 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>选择 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>开始 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>上 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>下 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>左 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>右 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt" 
+    colSpan=8>
+      <P class=MsoNormal><FONT size=2>忽略 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt" 
+    colSpan=4>
+      <P class=MsoNormal><FONT size=2>信号 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>0 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>0 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>0 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>0 
+  </FONT></SPAN></P></TD></TR></TBODY></TABLE>
+<P>信号用来检测是<SPAN lang=EN-US>4</SPAN>端口的接入状态：<SPAN 
+lang=EN-US><BR>&nbsp;&nbsp;&nbsp; %0000:</SPAN>没有连接设备<SPAN 
+lang=EN-US><BR>&nbsp;&nbsp;&nbsp; %0001:</SPAN>只有<SPAN 
+lang=EN-US>$4016</SPAN>手柄<SPAN lang=EN-US><BR>&nbsp;&nbsp;&nbsp; 
+%0010:</SPAN>只有<SPAN lang=EN-US>$4017</SPAN>手柄<SPAN 
+lang=EN-US><BR></SPAN><B>光枪：<SPAN lang=EN-US><BR></SPAN></B>只是简单地使用了<SPAN 
+lang=EN-US>$4016</SPAN>或<SPAN lang=EN-US>$4017</SPAN>的<SPAN 
+lang=EN-US>D0</SPAN>、<SPAN lang=EN-US>D3</SPAN>和<SPAN 
+lang=EN-US>D4</SPAN>位，完全有可能同时接两支光枪。<SPAN 
+lang=EN-US><BR><B>4</B></SPAN><B>适配器</B>：<SPAN lang=EN-US><BR></SPAN>将手柄扩展到<SPAN 
+lang=EN-US>4</SPAN>个，支持<SPAN lang=EN-US>4</SPAN>手柄的游戏有：<SPAN 
+lang=EN-US>Tengen</SPAN>的《<SPAN lang=EN-US>Gauntlet II</SPAN>》和<SPAN 
+lang=EN-US>Nintendo</SPAN>的《<SPAN lang=EN-US>RC Pro Am 2</SPAN>》。全部<SPAN 
+lang=EN-US>4</SPAN>个控制器使用<SPAN lang=EN-US>$4016</SPAN>或<SPAN 
+lang=EN-US>$4017</SPAN>的<SPAN lang=EN-US>D0</SPAN>位。对于<SPAN 
+lang=EN-US>$4016</SPAN>端口，读<SPAN lang=EN-US>1</SPAN>－<SPAN 
+lang=EN-US>8</SPAN>字节是手柄<SPAN lang=EN-US>1</SPAN>，<SPAN 
+lang=EN-US>9</SPAN>－<SPAN lang=EN-US>16</SPAN>字节是手柄<SPAN 
+lang=EN-US>3</SPAN>，<SPAN lang=EN-US>$4017</SPAN>则对应手柄<SPAN 
+lang=EN-US>2</SPAN>和<SPAN lang=EN-US>4</SPAN>。</P>
+<TABLE style="mso-cellspacing: .7pt" class=MsoNormalTable border=1 cellSpacing=1 
+cellPadding=0>
+  <TBODY>
+  <TR style="mso-yfti-irow: 0; mso-yfti-firstrow: yes">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>读取 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>1 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>2 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>3 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>4 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>5 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>6 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>7 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>8 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>9 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>10 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>11 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>12 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>13 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>14 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>15 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>16 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>17 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>18 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>19 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>20 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>21 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>22 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>23 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>24 
+  </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 1; mso-yfti-lastrow: yes">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>按键 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>1P A 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>1P B 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2><SPAN lang=EN-US>1P</SPAN>选择 
+</FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2><SPAN lang=EN-US>1P</SPAN>开始 
+</FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2><SPAN lang=EN-US>1P</SPAN>上 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2><SPAN lang=EN-US>1P</SPAN>下 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2><SPAN lang=EN-US>1P</SPAN>左 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2><SPAN lang=EN-US>1P</SPAN>右 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>2P A 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>2P B 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2><SPAN lang=EN-US>2P</SPAN>选择 
+</FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2><SPAN lang=EN-US>2P</SPAN>开始 
+</FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2><SPAN lang=EN-US>2P</SPAN>上 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2><SPAN lang=EN-US>2P</SPAN>下 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2><SPAN lang=EN-US>2P</SPAN>左 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2><SPAN lang=EN-US>2P</SPAN>右 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt" 
+    colSpan=4>
+      <P class=MsoNormal><FONT size=2>信号 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>0 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>0 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>0 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>0 
+  </FONT></SPAN></P></TD></TR></TBODY></TABLE>
+<P><B>摇杆：<SPAN lang=EN-US><BR></SPAN></B>有的游戏使用摇杆，例如<SPAN 
+lang=EN-US>Taito</SPAN>的《<SPAN lang=EN-US>Arkanoid</SPAN>》。摇杆的位置通过<SPAN 
+lang=EN-US>$4017</SPAN>的<SPAN lang=EN-US>D1</SPAN>来读取，第一个读的是<SPAN 
+lang=EN-US>MSB</SPAN>，第<SPAN lang=EN-US>8</SPAN>个读的是<SPAN 
+lang=EN-US>LSB</SPAN>，有效值的范围是<SPAN lang=EN-US>98</SPAN>－<SPAN 
+lang=EN-US>242</SPAN>，<SPAN 
+lang=EN-US>98</SPAN>代表了，摇杆完全是被逆时针转的。读到的数据要取反，例如读到<SPAN 
+lang=EN-US>%01101011</SPAN>，取反是<SPAN lang=EN-US>%10010100</SPAN>，即<SPAN 
+lang=EN-US>146</SPAN>。摇杆还带有一个按钮，通过<SPAN lang=EN-US>$4016</SPAN>的<SPAN 
+lang=EN-US>D1</SPAN>来读取，<SPAN lang=EN-US>1</SPAN>代表按钮被按下。</P>
+<P><B>扩展口：<SPAN lang=EN-US><BR></SPAN></B><SPAN 
+lang=EN-US>NES</SPAN>都有一个扩展口，用来接手柄或双手柄。手柄初始化需要写<SPAN lang=EN-US>1</SPAN>和<SPAN 
+lang=EN-US>0</SPAN>，如果初始化没有完成，或者循序错了，扩展口就可以用来通讯，例如：<SPAN 
+lang=EN-US><BR>&nbsp;&nbsp;&nbsp; LDA #%00000001<BR>&nbsp;&nbsp;&nbsp; STA 
+$4016<BR>&nbsp;&nbsp;&nbsp; STA $4017&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ; 
+</SPAN>开始扩展口的读模式<SPAN lang=EN-US><BR>&nbsp;&nbsp;&nbsp; LDA #%00000011 ; 
+</SPAN>写<SPAN lang=EN-US>%110</SPAN>到扩展口<SPAN lang=EN-US><BR>&nbsp;&nbsp;&nbsp; 
+STA $4016<BR></SPAN>确实有些卡带用这种方式来通讯。</P>
+<P>任天堂主机内部输入<SPAN lang=EN-US>/</SPAN>输出端口映射到<SPAN 
+lang=EN-US>$2000-$2007</SPAN>和<SPAN 
+lang=EN-US>$4000-$4017</SPAN>。一些端口的用处是未明的或未知的。任何有关信息将受到感激。<BR></P></FONT></BODY></HTML>

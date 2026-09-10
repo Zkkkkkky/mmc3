@@ -29,7 +29,7 @@ mapper_data   = $8001
 
 custom_first = $9d
 custom_count = 3
-stock_low_bank = $60
+stock_low_bank = $18
 
 engine_init     = $a000
 engine_play     = $a003

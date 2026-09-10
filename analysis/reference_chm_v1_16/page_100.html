@@ -1,0 +1,56 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML XMLNS:ST1><HEAD><TITLE>系统简介</TITLE>
+<META name=GENERATOR content="MSHTML 8.00.7601.19104">
+<META content="text/html; charset=gb2312" http-equiv=Content-Type>
+<STYLE>
+html,body { 
+	/* Default Font */
+	font-family: Microsoft YaHei, Simsun, sans-serif;
+	font-size: 12pt;
+}
+</STYLE>
+</HEAD>
+<BODY><FONT size=2>
+<H1 align=center>任天堂产品系统文件</H1>
+<P style="TEXT-ALIGN: center" align=center><SPAN style="COLOR: purple">（<SPAN 
+lang=EN-US>Pinokio@163.com </SPAN>译、编<SPAN lang=EN-US> <ST1:CHSDATE w:st="on" 
+IsROCDate="False" IsLunarDate="False" Day="10" Month="10" 
+Year="2002">2002/10/10）（sosovipp <SPAN style="COLOR: purple"><SPAN 
+lang=EN-US>E书制作 </SPAN></SPAN></ST1:CHSDATE></SPAN>2005/01/04）</SPAN></P>
+<H2><SPAN lang=EN-US>1</SPAN>、系统简介</H2>
+<P style="LINE-HEIGHT: 150%">　　任天堂主机由<SPAN 
+lang=EN-US>6502</SPAN>处理器和一个特制的图形处理器组成。<BR>　　 <SPAN lang=EN-US>CPU</SPAN>是<SPAN 
+lang=EN-US>6502</SPAN>，而不是传言中的<SPAN lang=EN-US>65C02</SPAN>（<SPAN 
+lang=EN-US>CMOS</SPAN>）。<SPAN lang=EN-US><BR>　　PPU</SPAN>的显存是和<SPAN 
+lang=EN-US>CPU</SPAN>的内存是分离的，可以通过对特殊端口的读<SPAN 
+lang=EN-US>/</SPAN>写来操作。<BR><BR>　　卡带可能包含的内容有位于处理器地址<SPAN 
+lang=EN-US>$8000-$FFFF</SPAN>的<SPAN lang=EN-US>ROM</SPAN>，和位于<SPAN 
+lang=EN-US>PPU</SPAN>地址<SPAN lang=EN-US>$0000-$1FFF</SPAN>的<SPAN 
+lang=EN-US>VROM</SPAN>。由于<SPAN lang=EN-US>NES</SPAN>只有<SPAN 
+lang=EN-US>2K</SPAN>的<SPAN lang=EN-US>RAM</SPAN>，因此变量的可用的变量空间只有从<SPAN 
+lang=EN-US>$0000</SPAN>到<SPAN lang=EN-US>$07FF</SPAN>共<SPAN 
+lang=EN-US>8</SPAN>个页面。在开机之后<SPAN lang=EN-US>RAM</SPAN>和<SPAN 
+lang=EN-US>VRAM</SPAN>中的内容是<SPAN 
+lang=EN-US>0</SPAN>，但是注意：复位并不改变其中的内容。在更小的卡带，比如只有<SPAN 
+lang=EN-US>16KB</SPAN>的<SPAN lang=EN-US>ROM</SPAN>，它占有<SPAN 
+lang=EN-US>$C000-$FFFF</SPAN>，而<SPAN 
+lang=EN-US>$8000-$BFFF</SPAN>的空间是不用的。那些大于<SPAN 
+lang=EN-US>32KB</SPAN>的卡带，它被特殊的电路分页到一定的地址空间。一些卡带在<SPAN 
+lang=EN-US>$6000-$7FFF</SPAN>有<SPAN 
+lang=EN-US>SRAM</SPAN>，那是电池存储的位置。<BR><BR>　　卡带<SPAN 
+lang=EN-US>VROM</SPAN>被用来做图案表（例如<SPAN lang=EN-US> Tile </SPAN>表<SPAN 
+lang=EN-US>, </SPAN>角色发生器等等<SPAN lang=EN-US>)</SPAN>。通常的数量是<SPAN 
+lang=EN-US>8KB</SPAN>，包含两个图案表。大于<SPAN lang=EN-US>8KB </SPAN>的<SPAN 
+lang=EN-US>VROM</SPAN>被特殊的电路分页到一定的地址空间。内部的<SPAN lang=EN-US>VRAM</SPAN>在<SPAN 
+lang=EN-US> PPU </SPAN>内存里定位于<SPAN 
+lang=EN-US>$2000-$3FFF</SPAN>，它用来存储命名表（例如屏幕缓冲）。虽然<SPAN lang=EN-US>PPU 
+</SPAN>支持<SPAN lang=EN-US>4</SPAN>个命名表，但只能支持两个的存放空间。另外的两个是开始两个的镜像。<SPAN 
+lang=EN-US>NES</SPAN>共有<SPAN lang=EN-US>154</SPAN>条指令。<SPAN 
+lang=EN-US><BR><BR></SPAN>　　在本文本里，你将遇到如下形式的符号：<SPAN lang=EN-US>“Dn" (5 
+</SPAN>位，<SPAN lang=EN-US>3 </SPAN>位，等等<SPAN lang=EN-US>)</SPAN>。位是按从最低位<SPAN 
+lang=EN-US>(0 </SPAN>位<SPAN lang=EN-US>)</SPAN>到最高位<SPAN lang=EN-US>(7 
+</SPAN>位<SPAN lang=EN-US>)</SPAN>。所有的十六进制都在前面加上一个美圆符号<SPAN 
+lang=EN-US>($)</SPAN>（<SPAN lang=EN-US>$2002,$4026,</SPAN>等等）是在<SPAN 
+lang=EN-US>6502</SPAN>处理器汇编里常用的符号<SPAN lang=EN-US>,</SPAN>二进制前面加上一个百分号<SPAN 
+lang=EN-US>%</SPAN>。</P>
+<P style="LINE-HEIGHT: 150%">&nbsp;</P></FONT></BODY></HTML>

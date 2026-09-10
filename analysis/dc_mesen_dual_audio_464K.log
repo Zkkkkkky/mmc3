@@ -1,0 +1,18 @@
+PASS booted-with-expanded-fixed-banks fixed=1 stock=293 bridge=293
+PASS original-song-stays-stock active=00 stock_delta=8 current=05
+PASS ash-to-ash active=9D current=1D play_delta=1 update_delta=8 bank_hits=9 apu_delta=83
+PASS ash-keeps-updating active=9D update_delta=3608
+PASS dark-knight active=9E current=1E play_delta=1 update_delta=8 bank_hits=9 apu_delta=81
+PASS dark-knight-keeps-updating active=9E update_delta=3600 apu_delta=33666
+PASS dark-prison active=9F current=1F play_delta=1 update_delta=8 bank_hits=9 apu_delta=81
+PASS dark-prison-keeps-updating active=9F update_delta=3600 apu_delta=33124
+PASS all-56-famistudio-sfx calls=56
+PASS return-to-stock-engine active=00 stock_delta=9 current=09
+PASS true-1mib-fixed-bank hits=1 wrong=0
+PASS stock-audio-patched-in-place hits=310 wrong=0
+PASS true-1mib-engine-bank bridge=11302 bridge_wrong=0 engine_wrong=0
+PASS all-three-expanded-song-banks bank61=3609 bank62=3609 bank63=3778 wrong=0
+PASS bridge-state-initialized valid_frames=10993
+PASS famistudio-apu-output writes=101960
+PASS engine-entry-counts init=3 play=3 update=10993 sfx=56
+RESULT checks=17 failures=0 frames=11309 pc=F876 stock=310 bridge=11302 init=3 play=3 update=10993 sfx=56 apu=101960

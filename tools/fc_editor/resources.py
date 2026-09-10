@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+import re
 from typing import Iterable, Literal
 
 from .constants import INES_HEADER_SIZE, PRG_BANK_SIZE
@@ -100,6 +101,38 @@ class ResourceGraph:
                 True,
             )
         )
+        if profile.unit_weapon_table_offset is not None:
+            graph.add_node(
+                ResourceNode(
+                    "units.weapon_table",
+                    "机体武器关系表",
+                    "table",
+                    profile.unit_weapon_table_offset,
+                    profile.unit_count * 2,
+                    True,
+                )
+            )
+        if profile.weapon_name_pointer_table_offset is not None:
+            graph.add_node(
+                ResourceNode(
+                    "weapons.name_pointer_table",
+                    "武器名称指针表",
+                    "table",
+                    profile.weapon_name_pointer_table_offset,
+                    profile.weapon_name_pointer_count * 2,
+                    True,
+                )
+            )
+        if profile.character_name_pointer_table_offset is not None:
+            graph.add_node(
+                ResourceNode(
+                    "characters.battle_name_pointer_table",
+                    "人物战斗名称指针表",
+                    "table",
+                    profile.character_name_pointer_table_offset,
+                    profile.character_name_count * 2,
+                )
+            )
         graph.add_node(
             ResourceNode(
                 "maps.pointer_table",
@@ -120,6 +153,29 @@ class ResourceGraph:
                 True,
             )
         )
+        if profile.map_triggers is not None:
+            spec = profile.map_triggers
+            bank_offset = INES_HEADER_SIZE + spec.prg_bank * PRG_BANK_SIZE
+            graph.add_node(
+                ResourceNode(
+                    "map_triggers.pointer_table",
+                    "地图事件/商店指针表",
+                    "table",
+                    bank_offset + spec.pointer_table - spec.window_base,
+                    spec.scenario_count * 2,
+                    True,
+                )
+            )
+            graph.add_node(
+                ResourceNode(
+                    "map_triggers.managed_pool",
+                    "地图事件/商店托管池",
+                    "data",
+                    bank_offset + spec.managed_data_start - spec.window_base,
+                    spec.managed_data_end - spec.managed_data_start,
+                    True,
+                )
+            )
         if profile.chapter_events is not None:
             spec = profile.chapter_events
             graph.add_node(
@@ -133,6 +189,27 @@ class ResourceGraph:
                     - spec.data_window_base,
                     spec.data_end - spec.data_start,
                     True,
+                )
+            )
+        if profile.persuasion_rules is not None:
+            spec = profile.persuasion_rules
+            graph.add_node(
+                ResourceNode(
+                    "events.persuasion_rules",
+                    "劝降匹配规则表",
+                    "table",
+                    spec.table_offset,
+                    spec.slot_count * 3 + 1,
+                    True,
+                )
+            )
+            graph.add_node(
+                ResourceNode(
+                    "events.persuasion_pointers",
+                    "劝降事件脚本指针表",
+                    "table",
+                    spec.script_pointer_table_offset,
+                    spec.slot_count * 2,
                 )
             )
         for index, region in enumerate(profile.protected_prg_regions):
@@ -255,10 +332,18 @@ class BankAllocator:
         )
 
     def reserve(self, allocation: Allocation) -> None:
+        if not re.fullmatch(r"[a-z0-9][a-z0-9._-]{0,63}", allocation.resource_id):
+            raise ValueError("资源 ID 格式无效。")
+        if not allocation.label.strip():
+            raise ValueError("资源名称不能为空。")
         if any(item.resource_id == allocation.resource_id for item in self._allocations):
             raise ValueError(f"资源已分配：{allocation.resource_id}")
-        if allocation.size <= 0 or allocation.alignment <= 0:
-            raise ValueError("分配大小和对齐值必须大于零。")
+        if (
+            allocation.size <= 0
+            or allocation.alignment <= 0
+            or allocation.alignment & (allocation.alignment - 1)
+        ):
+            raise ValueError("分配大小必须大于零，对齐值必须是 2 的幂。")
         if allocation.offset % allocation.alignment:
             raise ValueError("分配起始位置没有满足对齐要求。")
         if not self._is_in_free_region(allocation.offset, allocation.size):
@@ -267,6 +352,18 @@ class BankAllocator:
         if conflict is not None:
             raise ValueError(f"分配与资源 {conflict.resource_id} 重叠。")
         self._allocations.append(allocation)
+
+    def release(self, resource_id: str) -> Allocation:
+        for index, allocation in enumerate(self._allocations):
+            if allocation.resource_id == resource_id:
+                return self._allocations.pop(index)
+        raise KeyError(f"资源不存在：{resource_id}")
+
+    def allocation(self, resource_id: str) -> Allocation:
+        for allocation in self._allocations:
+            if allocation.resource_id == resource_id:
+                return allocation
+        raise KeyError(f"资源不存在：{resource_id}")
 
     def allocate(
         self,
@@ -278,6 +375,10 @@ class BankAllocator:
         single_bank: bool = True,
         require_zero_fill: bool = True,
     ) -> Allocation:
+        if not re.fullmatch(r"[a-z0-9][a-z0-9._-]{0,63}", resource_id):
+            raise ValueError("资源 ID 格式无效。")
+        if not label.strip():
+            raise ValueError("资源名称不能为空。")
         if size <= 0:
             raise ValueError("申请大小必须大于零。")
         if alignment <= 0 or alignment & (alignment - 1):

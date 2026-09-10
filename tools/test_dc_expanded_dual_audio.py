@@ -9,10 +9,10 @@ from fc_rom_editor_core import apply_ips
 
 
 EXPECTED_OUTPUT_SHA256 = (
-    "223fdd6433c95b84d4566513ffc94c2b4121c3e4027a73fe841d13db29bff2e1"
+    "82c218275459d53c0f306f6bc036c4797316976e0fa7ad1d5a8247e338995b8e"
 )
 EXPECTED_ENGINE_SHA256 = (
-    "1a78c5ac91bd578136f54e8353bb44ddfdf6a5b47aecc76fb2181e75fb4b554b"
+    "e046ac7a47a0d92ec1c41840896d323ced35d68656970d74fede42eb9711e0dc"
 )
 
 
@@ -46,26 +46,41 @@ class ExpandedDualAudioTests(unittest.TestCase):
         mapper = (self.output[6] >> 4) | (self.output[7] & 0xF0)
         self.assertEqual(mapper, 194)
 
-    def test_original_file_body_is_an_exact_prefix(self) -> None:
+    def test_source_rom_is_unchanged_and_delivery_is_derived(self) -> None:
         self.assertEqual(
-            self.output[builder.INES_HEADER_SIZE : len(self.source)],
-            self.source[builder.INES_HEADER_SIZE :],
+            hashlib.sha256(builder.SOURCE_ROM.read_bytes()).hexdigest(),
+            builder.EXPECTED_SOURCE_SHA256,
         )
-        self.assertEqual(
-            builder.prg_bank_offset(builder.COPIED_AUDIO_BANK),
-            len(self.source),
-        )
+        self.assertEqual(builder.DELIVERY_ROM.read_bytes(), self.output)
 
-    def test_original_prg_and_both_chr_copies_are_exact(self) -> None:
+    def test_original_prg_has_only_approved_patches_and_active_chr_is_exact(self) -> None:
         original_prg_end = builder.INES_HEADER_SIZE + builder.ORIGINAL_PRG_SIZE
         source_chr = self.source[original_prg_end:]
+        expected_prg = bytearray(
+            self.source[builder.INES_HEADER_SIZE:original_prg_end]
+        )
+        audio_start = builder.STOCK_AUDIO_BANK * builder.PRG_BANK_SIZE
+        expected_prg[audio_start : audio_start + builder.PRG_BANK_SIZE] = (
+            builder.patched_stock_audio_bank(
+                self.source,
+                builder.TRAMPOLINE_BIN.read_bytes(),
+                builder.HANDOFF_BIN.read_bytes(),
+            )
+        )
+        for selector, (attacker, defender) in builder.GAMEPLAY_MUSIC_BINDINGS.items():
+            expected_prg[
+                builder.BATTLE_MUSIC_ATTACKER_OFFSET
+                - builder.INES_HEADER_SIZE
+                + selector
+            ] = attacker
+            expected_prg[
+                builder.BATTLE_MUSIC_DEFENDER_OFFSET
+                - builder.INES_HEADER_SIZE
+                + selector
+            ] = defender
         self.assertEqual(
             self.output[builder.INES_HEADER_SIZE:original_prg_end],
-            self.source[builder.INES_HEADER_SIZE:original_prg_end],
-        )
-        self.assertEqual(
-            self.output[original_prg_end : original_prg_end + builder.ORIGINAL_CHR_SIZE],
-            source_chr,
+            expected_prg,
         )
         active_chr = builder.INES_HEADER_SIZE + builder.EXPANDED_PRG_SIZE
         self.assertEqual(
@@ -73,16 +88,14 @@ class ExpandedDualAudioTests(unittest.TestCase):
             source_chr,
         )
 
-    def test_copied_stock_audio_bank_has_only_dispatch_changes(self) -> None:
-        expected = bytearray(bank(self.source, builder.STOCK_AUDIO_BANK))
-        trampoline = builder.TRAMPOLINE_BIN.read_bytes()
-        handoff = builder.HANDOFF_BIN.read_bytes()
-        expected[:2] = builder.TRAMPOLINE_CPU_ADDRESS.to_bytes(2, "little")
-        start = builder.TRAMPOLINE_BANK_OFFSET
-        expected[start : start + len(trampoline)] = trampoline
-        start = builder.HANDOFF_BANK_OFFSET
-        expected[start : start + len(handoff)] = handoff
-        self.assertEqual(bank(self.output, builder.COPIED_AUDIO_BANK), expected)
+    def test_stock_audio_is_patched_in_place_and_bank_60_is_free(self) -> None:
+        expected = builder.patched_stock_audio_bank(
+            self.source,
+            builder.TRAMPOLINE_BIN.read_bytes(),
+            builder.HANDOFF_BIN.read_bytes(),
+        )
+        self.assertEqual(bank(self.output, builder.STOCK_AUDIO_BANK), expected)
+        self.assertEqual(bank(self.output, 0x60), bytes(builder.PRG_BANK_SIZE))
 
     def test_three_music_banks_and_engine_match_payloads(self) -> None:
         for music_bank in builder.MUSIC_BANK_ASM:
@@ -94,10 +107,18 @@ class ExpandedDualAudioTests(unittest.TestCase):
         engine = builder.ENGINE_BIN.read_bytes()
         self.assertEqual(hashlib.sha256(engine).hexdigest(), EXPECTED_ENGINE_SHA256)
         self.assertEqual(bank(self.output, builder.ENGINE_BANK), engine)
+        bridge_end = (
+            builder.label_address(builder.ENGINE_LST, "dc_dual_audio_bridge_end")
+            - 0xA000
+        )
+        bridge = engine[0x1500:bridge_end]
+        self.assertIn(bytes.fromhex("A9 86 8D 00 80 A9 18 8D 01 80"), bridge)
+        self.assertNotIn(bytes.fromhex("A9 86 8D 00 80 A9 60 8D 01 80"), bridge)
 
     def test_reserved_expansion_banks_are_zero(self) -> None:
-        for index in range(0x65, 0x7E):
-            self.assertEqual(bank(self.output, index), bytes(builder.PRG_BANK_SIZE))
+        for first, end in ((0x40, 0x61), (0x65, 0x7E)):
+            for index in range(first, end):
+                self.assertEqual(bank(self.output, index), bytes(builder.PRG_BANK_SIZE))
 
     def test_expanded_fixed_banks_are_exact_copies_with_audio_operands(self) -> None:
         self.assertEqual(
@@ -106,7 +127,7 @@ class ExpandedDualAudioTests(unittest.TestCase):
         )
         expected = bytearray(bank(self.source, builder.STOCK_FIXED_E000_BANK))
         for address in builder.FIXED_E000_AUDIO_OPERANDS:
-            expected[address - 0xE000] = builder.COPIED_AUDIO_BANK
+            expected[address - 0xE000] = builder.STOCK_AUDIO_BANK
         self.assertEqual(bank(self.output, builder.FIXED_BANK_E000), expected)
 
     def test_famistudio_state_reuses_only_certified_stock_audio_ram(self) -> None:
@@ -146,10 +167,11 @@ class ExpandedDualAudioTests(unittest.TestCase):
     def test_capacity_report_records_preservation_and_compatibility(self) -> None:
         report = json.loads(builder.CAPACITY_REPORT.read_text(encoding="utf-8"))
         self.assertEqual(report["preservation"]["headerChangedOffsets"], ["0x4"])
-        self.assertTrue(report["preservation"]["sourceBodySameAtOriginalOffsets"])
-        self.assertTrue(report["preservation"]["originalPrgUntouched"])
-        self.assertTrue(report["preservation"]["originalChrPrefixUntouched"])
+        self.assertFalse(report["preservation"]["sourceRomOverwritten"])
+        self.assertTrue(report["preservation"]["stockAudioPatchedInPlace"])
+        self.assertTrue(report["preservation"]["oldChrPrgBanksZeroFilled"])
         self.assertTrue(report["preservation"]["activeChrCopyMatchesSource"])
+        self.assertEqual(report["preservation"]["managedCapacityBytes"], 464 * 1024)
         self.assertEqual(report["output"]["mapper"], 194)
         self.assertEqual(report["engines"]["stock"]["musicTracks"], 20)
         self.assertEqual(report["engines"]["famiStudio"]["musicTracks"], 3)

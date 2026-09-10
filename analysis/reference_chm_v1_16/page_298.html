@@ -1,0 +1,74 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML><HEAD><TITLE>中文</TITLE>
+<META name=GENERATOR content="MSHTML 8.00.7601.19104">
+<META content="text/html; charset=gb2312" http-equiv=Content-Type>
+<STYLE>
+html,body { 
+	/* Default Font */
+	font-family: Microsoft YaHei, Simsun, sans-serif;
+	font-size: 12pt;
+}
+</STYLE>
+</HEAD>
+<BODY>
+<P><FONT size=2>MMC3 IRQs<BR>by Allan Blomquist&nbsp;&nbsp; 维京猎人 译</FONT></P>
+<P><FONT size=2>&nbsp;&nbsp;&nbsp; iNES mapper 4 
+(MMC3)提供了一个方便的方式来令帧内改变PPU实现“特殊效果”像在NES游戏中的分屏显示滚动。而不是使用0号精灵的命中去计时让你写PPU硬件，使用IRQ就可以令CPU有效的通过帧工作，而不是浪费时间获取0号精灵的命中标志。</FONT></P>
+<P><FONT size=2>这4个寄存器，是MMC3为IRQ触发而设的：</FONT></P>
+<P><FONT size=2>$C000 - IRQ 计数器 - 
+这个Mapper用倒数来触发IRQ。每一次扫描线，值递减一，当它到达0，IRQ就触发。<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+注：背景和精灵必须启用，在$2001(3和4位)，目的是为了倒数发生。</FONT></P>
+<P><FONT size=2>$C001 - IRQ 计数锁存器 - 
+写入你想要的值，即您用来倒数的值，而不是直接使用的IRQ计数寄存器。</FONT></P>
+<P><FONT size=2>$E000 - IRQ 禁用/应答 - 
+在这里写任意值，禁止IRQ的触发，但也能将IRQ计数器锁存器中的值复制到实际的IRQ计数器。它也应答一个IRQ，一旦它发生了。</FONT></P>
+<P><FONT size=2>$E001 - IRQ 使能 - 在这里写入任意值，就可以启用IRQ发生器。</FONT></P>
+<P><FONT size=2>所以，这就是大多数的商业游戏使用这些寄存器（如下）：</FONT></P>
+<P><FONT size=2>&nbsp; 当你想设置的IRQ：（在您的NMI/VBLANK例程中）<BR>&nbsp;&nbsp; 
+1。写$E000应答任何目前待定的中断<BR>&nbsp;&nbsp; 2。写扫描线数，你要(写到)$C000和$C001<BR>&nbsp;&nbsp; 
+3。写$E000再次锁定倒数值<BR>&nbsp;&nbsp; 4。写$E001启用IRQ计数器</FONT></P>
+<P><FONT size=2>&nbsp; 一旦你的IRQ发生了：（在您的IRQ例程中）<BR>&nbsp;&nbsp; 
+1。写$E000应答IRQ和禁用IRQ计数器</FONT></P>
+<P><FONT size=2>&nbsp;&nbsp;&nbsp; 
+你在游戏中使用MMC3的IRQ之前，有几件事情你必须设置。首先，你要设置IRQ矢量，即ROM结尾的指针代码，当IRQ发生时使其能够被调用。IRQ矢量位置在$FFFE，在NMI矢量和RESET矢量的右边。当一个IRQ触发时，CPU跳转到的16位的地址$FFFE，而且CPU标志被保存，当IRQ例程返回时自动恢复。但是CPU的寄存器不保存，所以你必须确保它们还原，您的IRQ例程结束时（开始时应堆栈A，X，Y，结束时应出栈Y，X，A）。</FONT></P>
+<P><FONT size=2>&nbsp;&nbsp;&nbsp; 
+第二件事情你必须做的，使用MMC3的IRQ阻止其他（过程）在NES上产生IRQ中断。NES有一个“帧计数器”，每帧结束时默认情况下产生的IRQ，很像NMI。如果这不禁用，你的IRQ代码将被调用比你要的更多，这将搞砸你的游戏。要禁用帧计数器的IRQ，只要在你的程序开始时写$40到$4017。</FONT></P>
+<P><FONT size=2>&nbsp;&nbsp;&nbsp; 
+最后，能够使用IRQ，你一定要告诉NES的CPU实际承认他们，而不是忽略他们，因为它默认情况下（这就是为什么你不必担心帧计数器的IRQ，在简单的游戏 - 
+CPU实际上忽略它们）要启用的IRQ，你必须用“CLI”指令清除CPU中的中断禁止标志。在某些时候如果你想重新禁用它们，就用“SEI”。</FONT></P>
+<P><BR><FONT size=2>下面是一个汇编的例子(上下两半红绿颜色)</FONT></P>
+<P><FONT size=2>&nbsp;.inesprg 1&nbsp;; 1 PRG bank<BR>&nbsp;.ineschr 0&nbsp;; 0 
+CHR bank<BR>&nbsp;.inesmir 0&nbsp;; 镜像类型 0<BR>&nbsp;.inesmap 4&nbsp;; mapper 4 
+(MMC3)<BR>&nbsp;.org $C000<BR>&nbsp;.bank 0</FONT></P>
+<P><FONT size=2>start:<BR>&nbsp;jsr vwait<BR>&nbsp;lda #$80<BR>&nbsp;sta 
+$2000&nbsp;; 开NMI中断（外部）发生器。<BR>&nbsp;lda #$8<BR>&nbsp;sta $2001&nbsp;; 
+开背景显示，使MMC3能够计数<BR>&nbsp;lda #$40<BR>&nbsp;sta $4017&nbsp;; 
+禁用帧计数IRQ<BR>&nbsp;cli&nbsp;&nbsp;; 启动IRQ过程</FONT></P>
+<P><FONT size=2>gameloop:<BR>&nbsp;jmp gameloop<BR>&nbsp;&nbsp;&nbsp;;&nbsp; NMI 
+例程<BR>nmi:<BR>&nbsp;lda #$3F&nbsp;; -\<BR>&nbsp;sta $2006&nbsp;;&nbsp;&nbsp; 
+&gt; 设背景色为红色<BR>&nbsp;lda #0&nbsp;&nbsp;;&nbsp; |<BR>&nbsp;sta 
+$2006&nbsp;;&nbsp; |<BR>&nbsp;lda #$6&nbsp;&nbsp;;&nbsp; |<BR>&nbsp;sta 
+$2007&nbsp;; -/<BR>&nbsp;lda #1<BR>&nbsp;sta $E000<BR>&nbsp;lda #$78&nbsp;; 
+$78=120<BR>&nbsp;sta $C000&nbsp;; 设置 MMC3 发生器<BR>&nbsp;lda #$78<BR>&nbsp;sta 
+$C001&nbsp;; 120 扫描线<BR>&nbsp;lda #1<BR>&nbsp;sta $E000<BR>&nbsp;lda 
+#1<BR>&nbsp;sta $E001<BR>&nbsp;lda #0<BR>&nbsp;sta $2006<BR>&nbsp;lda 
+#0<BR>&nbsp;sta $2006<BR>&nbsp;lda #$8<BR>&nbsp;sta $2001&nbsp;; 
+开背景显示，使MMC3能够计数<BR>&nbsp;rti<BR>&nbsp;&nbsp;&nbsp;; IRQ 例程<BR>irq:</FONT></P>
+<P><FONT size=2>&nbsp;pha<BR>&nbsp;txa<BR>&nbsp;pha&nbsp;&nbsp;; 保存A,X and 
+Y.&nbsp; 你必须这样做，是因为<BR>&nbsp;tya&nbsp;&nbsp;; IRQ 
+中断了你的主代码进程，会改变你寄存器。<BR>&nbsp;pha&nbsp;&nbsp;; <BR>&nbsp;&nbsp;&nbsp;; 
+那就坏事了...<BR>&nbsp;lda #0<BR>&nbsp;sta $2001&nbsp;; 
+背景强制关闭，叫愚蠢的仿真器，能够实现我改变背景色<BR>&nbsp;lda #$3F&nbsp;; -\<BR>&nbsp;sta 
+$2006&nbsp;;&nbsp; |<BR>&nbsp;lda #0&nbsp;&nbsp;;&nbsp; |<BR>&nbsp;sta 
+$2006&nbsp;;&nbsp;&nbsp; &gt; 设背景色为绿色<BR>&nbsp;lda #$0A&nbsp;;&nbsp; 
+|<BR>&nbsp;sta $2007&nbsp;; -/<BR>&nbsp;lda #1<BR>&nbsp;sta $E000&nbsp;; 
+应答IRQ，并禁止进一步的IRQ（外部）发生器<BR>&nbsp;lda #0<BR>&nbsp;sta $2006<BR>&nbsp;lda 
+#0<BR>&nbsp;sta $2006</FONT></P>
+<P><FONT size=2>&nbsp;pla<BR>&nbsp;tay&nbsp;&nbsp;; 
+还原你的寄存器<BR>&nbsp;pla<BR>&nbsp;tax<BR>&nbsp;pla<BR>&nbsp;rti<BR>&nbsp;&nbsp;&nbsp;; 
+等到屏幕刷新<BR>vwait:<BR>&nbsp;lda $2002<BR>&nbsp;bpl vwait&nbsp;; 
+等到刷新开始<BR>vwait_1:<BR>&nbsp;lda $2002<BR>&nbsp;bmi vwait_1&nbsp;; 
+等到刷新结束<BR>&nbsp;rts<BR>&nbsp;&nbsp;&nbsp;; 文件尾部<BR>&nbsp;&nbsp;&nbsp;; 跳转表 NMI, 
+Reset, IRQ 开端指针<BR>&nbsp;.bank 1<BR>&nbsp;.org $fffa<BR>&nbsp;.dw nmi, start, 
+irq</FONT></P>
+<P><BR>&nbsp;</P></BODY></HTML>

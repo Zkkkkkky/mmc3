@@ -5,7 +5,12 @@ $manifestPath = Join-Path $packageRoot "文件清单_SHA256.csv"
 $excludedPrefixes = @(
     ".venv\",
     ".git\",
-    "build\pyinstaller-work\"
+    ".codex-remote-attachments\",
+    ".skill-staging\",
+    "build\pyinstaller-work\",
+    # User-supplied reverse-engineering references are inputs, not handoff files.
+    "默认配置文件\",
+    "修改器\"
 )
 
 $records = Get-ChildItem -LiteralPath $packageRoot -Recurse -File | ForEach-Object {

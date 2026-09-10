@@ -1,7 +1,9 @@
 from __future__ import annotations
 
 from collections.abc import Callable
+import hashlib
 from pathlib import Path
+import re
 
 from PySide6.QtCore import Qt, Signal
 from PySide6.QtWidgets import (
@@ -13,6 +15,7 @@ from PySide6.QtWidgets import (
     QGroupBox,
     QHBoxLayout,
     QHeaderView,
+    QInputDialog,
     QLabel,
     QLineEdit,
     QListWidget,
@@ -26,11 +29,13 @@ from PySide6.QtWidgets import (
     QSplitter,
     QTableWidget,
     QTableWidgetItem,
+    QToolButton,
     QVBoxLayout,
     QWidget,
 )
 
 from fc_editor.models import UNIT_FIELDS, WEAPON_FIELDS
+from fc_editor.expansion import AUTO_ALLOCATION_PREFIX, REOPEN_GUARD_PREFIX
 from fc_editor.resources import ResourceGraph
 from fc_rom_editor_core import RomProject, compact_ids
 
@@ -38,11 +43,14 @@ from .music_import import assemble_famistudio_music_source, load_music_bank
 
 
 def page_title(title: str, subtitle: str) -> tuple[QLabel, QLabel]:
+    """Keep semantic page labels without taking space in the legacy layout."""
     heading = QLabel(title)
     heading.setObjectName("pageTitle")
     description = QLabel(subtitle)
     description.setObjectName("pageSubtitle")
     description.setWordWrap(True)
+    heading.hide()
+    description.hide()
     return heading, description
 
 
@@ -52,8 +60,46 @@ def readonly_item(text: str) -> QTableWidgetItem:
     return item
 
 
+def parse_id_expression(text: str, maximum: int) -> list[int]:
+    """Parse IDs such as ``$00-$05, 16, 0x20`` into a sorted unique list."""
+
+    def parse_one(token: str) -> int:
+        token = token.strip()
+        if not token:
+            raise ValueError("ID不能为空。")
+        if token.startswith("$"):
+            return int(token[1:], 16)
+        if token.lower().startswith("0x"):
+            return int(token[2:], 16)
+        return int(token, 10)
+
+    result: set[int] = set()
+    for part in re.split(r"[,，、\s]+", text.strip()):
+        if not part:
+            continue
+        match = re.fullmatch(r"(.+?)[-—~～](.+)", part)
+        if match:
+            start = parse_one(match.group(1))
+            end = parse_one(match.group(2))
+            if end < start:
+                raise ValueError(f"ID范围倒置：{part}")
+            result.update(range(start, end + 1))
+        else:
+            result.add(parse_one(part))
+    if not result:
+        raise ValueError("请输入至少一个ID。")
+    invalid = sorted(value for value in result if not 0 <= value <= maximum)
+    if invalid:
+        raise ValueError(
+            f"ID超出范围 $00—${maximum:02X}："
+            + "、".join(f"${value:02X}" for value in invalid)
+        )
+    return sorted(result)
+
+
 class ProjectPage(QWidget):
     project_changed = Signal(str)
+    navigation_requested = Signal(str)
 
     def __init__(self) -> None:
         super().__init__()
@@ -66,6 +112,38 @@ class ProjectPage(QWidget):
     def refresh(self) -> None:
         pass
 
+    @property
+    def has_pending_draft(self) -> bool:
+        """Whether this page owns a valid form that has not been applied yet."""
+
+        button = getattr(self, "apply_button", None)
+        return isinstance(button, QPushButton) and button.isEnabled()
+
+    @property
+    def pending_draft_error(self) -> str | None:
+        """Return why a pending form cannot be committed, if applicable."""
+
+        return None
+
+    def commit_pending_changes(self) -> bool:
+        """Apply the page's primary pending form before a window-level OK."""
+
+        if not self.has_pending_draft:
+            return True
+        button = getattr(self, "apply_button", None)
+        if not isinstance(button, QPushButton):
+            return False
+        before = bytes(self.project.working) if self.project is not None else None
+        button.click()
+        if (
+            self.project is not None
+            and before is not None
+            and bytes(self.project.working) != before
+            and self.has_pending_draft
+        ):
+            self.refresh()
+        return not self.has_pending_draft
+
     def show_error(self, error: Exception) -> None:
         QMessageBox.critical(self, "操作失败", str(error))
 
@@ -76,7 +154,7 @@ class OverviewPage(ProjectPage):
         layout = QVBoxLayout(self)
         title, subtitle = page_title(
             "工程概览",
-            "先确认基准ROM身份，再从左侧选择要修改的资源。所有输出都使用“另存为”。",
+            "先确认基准ROM身份，再从上方工作区进入要修改的资源。所有输出都使用“另存为”。",
         )
         layout.addWidget(title)
         layout.addWidget(subtitle)
@@ -91,8 +169,8 @@ class OverviewPage(ProjectPage):
         guide_layout = QVBoxLayout(guide)
         guide_layout.addWidget(
             QLabel(
-                "1. 打开 DC_kuorong.nes　→　2. 修改并随时验证　→　"
-                "3. 保存 .dcmod 工程　→　4. 构建新ROM与IPS"
+                "1. 打开 DC_kuorong_464K.nes　→　2. 自动规划扩展容量　→　"
+                "3. 修改并随时验证　→　4. 保存工程并构建ROM/IPS"
             )
         )
         safety = QLabel(
@@ -102,6 +180,26 @@ class OverviewPage(ProjectPage):
         safety.setObjectName("hintText")
         guide_layout.addWidget(safety)
         layout.addWidget(guide)
+        quick_group = QGroupBox("常用入口")
+        quick_layout = QGridLayout(quick_group)
+        quick_entries = (
+            ("扩展容量规划", "resources"),
+            ("地图与部署", "maps"),
+            ("机体属性", "units"),
+            ("人物数据", "characters"),
+            ("武器属性", "weapons"),
+            ("剧情文字", "story"),
+            ("增援/加入事件", "events"),
+            ("劝降条件", "persuasion"),
+            ("战斗音乐", "music"),
+        )
+        for index, (label, key) in enumerate(quick_entries):
+            button = QPushButton(label)
+            button.clicked.connect(
+                lambda _checked=False, page_key=key: self.navigation_requested.emit(page_key)
+            )
+            quick_layout.addWidget(button, index // 3, index % 3)
+        layout.addWidget(quick_group)
         layout.addStretch()
 
     @staticmethod
@@ -132,7 +230,11 @@ class OverviewPage(ProjectPage):
             f"Mapper {self.project.rom_image.mapper} · {len(self.project.original) / 1024:.1f} KiB"
         )
         self.hash_value.setText(self.project.source_sha256)
-        self.space_value.setText(f"{self.project.expansion_capacity // 1024} KiB（Bank $65—$7D）")
+        regions = "、".join(region.display for region in self.project.profile.free_prg_regions)
+        self.space_value.setText(
+            f"{self.project.expansion_available // 1024} / "
+            f"{self.project.expansion_capacity // 1024} KiB 可用（{regions}）"
+        )
 
 
 class SearchableRecordPage(ProjectPage):
@@ -143,8 +245,27 @@ class SearchableRecordPage(ProjectPage):
         self.search.setClearButtonEnabled(True)
         self.search.setPlaceholderText("输入名称、十进制或十六进制ID…")
         self.search.textChanged.connect(self._filter_records)
+        self.search_panel = QWidget()
+        search_layout = QHBoxLayout(self.search_panel)
+        search_layout.setContentsMargins(0, 0, 0, 0)
+        search_layout.setSpacing(6)
+        self.previous_record_button = QToolButton()
+        self.previous_record_button.setText("◀")
+        self.previous_record_button.setToolTip("上一条可见记录")
+        self.previous_record_button.clicked.connect(lambda: self._select_relative(-1))
+        self.next_record_button = QToolButton()
+        self.next_record_button.setText("▶")
+        self.next_record_button.setToolTip("下一条可见记录（Alt+↓）")
+        self.next_record_button.clicked.connect(lambda: self._select_relative(1))
+        self.result_count = QLabel("0 条")
+        self.result_count.setObjectName("countBadge")
+        search_layout.addWidget(self.search, 1)
+        search_layout.addWidget(self.previous_record_button)
+        search_layout.addWidget(self.next_record_button)
+        search_layout.addWidget(self.result_count)
         self.records = QListWidget()
         self.records.setAlternatingRowColors(True)
+        self.records.setUniformItemSizes(True)
         self.records.currentItemChanged.connect(self._selection_changed)
 
     def record_text(self, record_id: int) -> str:
@@ -179,6 +300,7 @@ class SearchableRecordPage(ProjectPage):
 
     def _filter_records(self, text: str) -> None:
         query = text.strip().lower()
+        visible_count = 0
         for index in range(self.records.count()):
             item = self.records.item(index)
             record_id = int(item.data(Qt.ItemDataRole.UserRole))
@@ -186,15 +308,65 @@ class SearchableRecordPage(ProjectPage):
             hexadecimal = f"{record_id:02x}"
             visible = not query or query in item.text().lower() or query in (decimal, hexadecimal)
             item.setHidden(not visible)
+            visible_count += int(visible)
+        self.result_count.setText(f"{visible_count} 条")
+        enabled = visible_count > 1
+        self.previous_record_button.setEnabled(enabled)
+        self.next_record_button.setEnabled(enabled)
+
+    def _select_relative(self, direction: int) -> None:
+        if not self.records.count():
+            return
+        start = self.records.currentRow()
+        if start < 0:
+            start = 0 if direction > 0 else self.records.count() - 1
+        for step in range(1, self.records.count() + 1):
+            row = (start + direction * step) % self.records.count()
+            if not self.records.item(row).isHidden():
+                self.records.setCurrentRow(row)
+                self.records.scrollToItem(self.records.item(row))
+                return
 
     def _selection_changed(
         self,
         current: QListWidgetItem | None,
-        _previous: QListWidgetItem | None,
+        previous: QListWidgetItem | None,
     ) -> None:
-        self.current_id = (
+        next_id = (
             int(current.data(Qt.ItemDataRole.UserRole)) if current is not None else None
         )
+        if (
+            previous is not None
+            and self.current_id is not None
+            and next_id is not None
+            and next_id != self.current_id
+            and self.has_pending_draft
+        ):
+            # The legacy editor keeps edits while moving between records. Apply
+            # them to the dialog's transactional ROM buffer before switching;
+            # Cancel on the outer dialog still rolls the whole session back.
+            target_id = next_id
+            old_id = self.current_id
+            self.records.blockSignals(True)
+            for row in range(self.records.count()):
+                if int(self.records.item(row).data(Qt.ItemDataRole.UserRole)) == old_id:
+                    self.records.setCurrentRow(row)
+                    break
+            self.records.blockSignals(False)
+            if not self.commit_pending_changes():
+                self.show_error(
+                    ValueError(
+                        self.pending_draft_error
+                        or "当前记录仍有无法应用的改动，请修正后再切换。"
+                    )
+                )
+                return
+            for row in range(self.records.count()):
+                if int(self.records.item(row).data(Qt.ItemDataRole.UserRole)) == target_id:
+                    self.records.setCurrentRow(row)
+                    return
+            return
+        self.current_id = next_id
         self.load_record(self.current_id)
 
     def load_record(self, record_id: int | None) -> None:
@@ -216,8 +388,8 @@ class UnitPage(SearchableRecordPage):
         left = QWidget()
         left_layout = QVBoxLayout(left)
         left_layout.setContentsMargins(0, 0, 0, 0)
-        left_layout.addWidget(self.search)
         left_layout.addWidget(self.records)
+        left_layout.addWidget(self.search_panel)
         splitter.addWidget(left)
 
         detail = QWidget()
@@ -229,31 +401,64 @@ class UnitPage(SearchableRecordPage):
         self.record_meta.setWordWrap(True)
         detail_layout.addWidget(self.record_heading)
         detail_layout.addWidget(self.record_meta)
+        self.pending_state = QLabel("请选择机体")
+        self.pending_state.setObjectName("pendingBanner")
+        detail_layout.addWidget(self.pending_state)
 
         scroll = QScrollArea()
         scroll.setWidgetResizable(True)
         form_host = QWidget()
-        form = QFormLayout(form_host)
+        form_root = QVBoxLayout(form_host)
+        identity = QGroupBox("身份与装备")
+        identity_form = QFormLayout(identity)
+        self.name_reference = QComboBox()
+        self.name_reference.setMaxVisibleItems(20)
+        self.name_reference.currentIndexChanged.connect(self._update_pending_state)
+        identity_form.addRow("名称引用", self.name_reference)
+        self.weapon_slots = (QComboBox(), QComboBox())
+        for slot, editor in enumerate(self.weapon_slots, 1):
+            editor.setMaxVisibleItems(24)
+            editor.currentIndexChanged.connect(self._update_pending_state)
+            identity_form.addRow(f"武器槽 {slot}", editor)
+        form_root.addWidget(identity)
+
+        capability = QGroupBox("能力参数")
+        field_grid = QGridLayout(capability)
+        field_grid.addWidget(QLabel("字段"), 0, 0)
+        field_grid.addWidget(QLabel("当前编辑值"), 0, 1)
+        field_grid.addWidget(QLabel("基准ROM"), 0, 2)
         self.fields: dict[str, QSpinBox] = {}
-        for field in UNIT_FIELDS:
+        self.original_values: dict[str, QLabel] = {}
+        for row, field in enumerate(UNIT_FIELDS, 1):
             editor = QSpinBox()
             editor.setRange(field.minimum, field.maximum)
             editor.setToolTip(field.description)
+            editor.valueChanged.connect(self._update_pending_state)
             self.fields[field.key] = editor
-            form.addRow(field.label, editor)
-        self.name_reference = QComboBox()
-        self.name_reference.setMaxVisibleItems(20)
-        form.addRow("名称引用", self.name_reference)
+            original = QLabel("—")
+            original.setObjectName("originalValue")
+            original.setToolTip("载入基准 ROM 时的值")
+            self.original_values[field.key] = original
+            field_grid.addWidget(QLabel(field.label), row, 0)
+            field_grid.addWidget(editor, row, 1)
+            field_grid.addWidget(original, row, 2)
+        field_grid.setColumnStretch(1, 1)
+        form_root.addWidget(capability)
+        form_root.addStretch()
         scroll.setWidget(form_host)
         detail_layout.addWidget(scroll, 1)
 
         buttons = QHBoxLayout()
-        apply_button = QPushButton("应用修改")
-        apply_button.setObjectName("primaryButton")
-        apply_button.clicked.connect(self.apply_record)
+        self.apply_button = QPushButton("应用当前表单")
+        self.apply_button.setObjectName("primaryButton")
+        self.apply_button.clicked.connect(self.apply_record)
+        duplicate_button = QPushButton("复制到其他ID…")
+        duplicate_button.setToolTip("复制数值、名称引用和两格武器配置")
+        duplicate_button.clicked.connect(self.duplicate_record)
         reset_button = QPushButton("还原此机体")
         reset_button.clicked.connect(self.reset_record)
-        buttons.addWidget(apply_button)
+        buttons.addWidget(self.apply_button)
+        buttons.addWidget(duplicate_button)
         buttons.addWidget(reset_button)
         buttons.addStretch()
         detail_layout.addLayout(buttons)
@@ -293,6 +498,21 @@ class UnitPage(SearchableRecordPage):
                     source_id,
                 )
         self.name_reference.blockSignals(False)
+        for editor in self.weapon_slots:
+            editor.blockSignals(True)
+            editor.clear()
+            if self.project is not None and self.project.supports_unit_weapons:
+                editor.addItem("$00 · 无武器", 0)
+                for weapon_id in range(1, self.project.weapon_count):
+                    editor.addItem(
+                        f"${weapon_id:02X} · {self.project.weapon_display_name(weapon_id)}",
+                        weapon_id,
+                    )
+                editor.setEnabled(True)
+            else:
+                editor.addItem("当前ROM无已验证关系表", 0)
+                editor.setEnabled(False)
+            editor.blockSignals(False)
         self.populate_records()
 
     def load_record(self, record_id: int | None) -> None:
@@ -300,6 +520,7 @@ class UnitPage(SearchableRecordPage):
             self.record_heading.setText("请选择机体")
             self.record_meta.setText("—")
             self.raw_record.clear()
+            self.pending_state.setText("请选择机体")
             return
         record = self.project.unit_codec.decode_record(record_id, bytes(self.project.working))
         self.record_heading.setText(f"机体 ${record_id:02X} · {self.project.unit_display_name(record_id)}")
@@ -316,11 +537,103 @@ class UnitPage(SearchableRecordPage):
             editor = self.fields[field.key]
             editor.setRange(spec.minimum, spec.maximum)
             editor.setValue(record.get(field.key))
+            base_value = self.project.get_value(record_id, field.key, original=True)
+            self.original_values[field.key].setText(str(base_value))
+            self.original_values[field.key].setStyleSheet(
+                "color: #b05a00; font-weight: 650;"
+                if record.get(field.key) != base_value
+                else "color: #6c8292;"
+            )
         source_ids = self.project.unit_name_source_ids(record_id)
         if source_ids:
             index = self.name_reference.findData(source_ids[0])
             self.name_reference.setCurrentIndex(index)
+        if self.project.supports_unit_weapons:
+            for editor, weapon_id in zip(
+                self.weapon_slots, self.project.get_unit_weapons(record_id)
+            ):
+                editor.setCurrentIndex(editor.findData(weapon_id))
         self.raw_record.setText(record.raw.hex(" ").upper())
+        self._update_pending_state()
+
+    def _update_pending_state(self) -> None:
+        if self.project is None or self.current_id is None:
+            self.pending_state.setText("请选择机体")
+            return
+        pending = any(
+            self.fields[field.key].value()
+            != self.project.get_value(self.current_id, field.key)
+            for field in UNIT_FIELDS
+        )
+        source_ids = self.project.unit_name_source_ids(self.current_id)
+        if source_ids and self.name_reference.currentData() is not None:
+            pending = pending or int(self.name_reference.currentData()) != source_ids[0]
+        if self.project.supports_unit_weapons:
+            pending = pending or tuple(
+                int(editor.currentData()) for editor in self.weapon_slots
+            ) != self.project.get_unit_weapons(self.current_id)
+        self.apply_button.setEnabled(pending)
+        self.pending_state.setText(
+            "● 有尚未应用的表单改动" if pending else "✓ 表单与当前工程一致"
+        )
+        self.pending_state.setStyleSheet(
+            "color: #b45309; font-weight: 650;" if pending else "color: #2e7d4f;"
+        )
+
+    def duplicate_record(self) -> None:
+        if self.project is None or self.current_id is None:
+            return
+        options = [
+            f"${unit_id:02X} · {self.project.unit_display_name(unit_id)}"
+            for unit_id in range(1, self.project.unit_count)
+            if unit_id != self.current_id
+        ]
+        selected, accepted = QInputDialog.getItem(
+            self,
+            "复制机体",
+            f"将 ${self.current_id:02X} 的数值、名称和武器复制到：",
+            options,
+            0,
+            False,
+        )
+        if not accepted:
+            return
+        target_id = int(selected[1:3], 16)
+        try:
+            affected = self.project.unit_codec.decode_record(
+                target_id, bytes(self.project.working)
+            ).ids
+            if len(affected) > 1:
+                answer = QMessageBox.question(
+                    self,
+                    "共享机体记录确认",
+                    f"目标 ${target_id:02X} 的16字节属性记录由 "
+                    f"{compact_ids(affected)} 共用。\n"
+                    "复制后这些ID的属性都会改变；名称和武器仅修改目标ID。是否继续？",
+                    QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.Cancel,
+                    QMessageBox.StandardButton.Cancel,
+                )
+                if answer != QMessageBox.StandardButton.Yes:
+                    return
+            name_ids = self.project.unit_name_source_ids(self.current_id)
+            with self.project.transaction(
+                f"复制机体 ${self.current_id:02X} 到 ${target_id:02X}"
+            ):
+                self.project.set_record_hex(
+                    target_id, self.project.record_bytes(self.current_id).hex(" ")
+                )
+                if name_ids:
+                    self.project.set_unit_name_reference(target_id, name_ids[0])
+                if self.project.supports_unit_weapons:
+                    for slot, weapon_id in enumerate(
+                        self.project.get_unit_weapons(self.current_id)
+                    ):
+                        self.project.set_unit_weapon(target_id, slot, weapon_id)
+            self.project_changed.emit(
+                f"已复制机体 ${self.current_id:02X} 到 ${target_id:02X}"
+            )
+        except Exception as error:
+            self.show_error(error)
 
     def apply_record(self) -> None:
         if self.project is None or self.current_id is None:
@@ -335,6 +648,11 @@ class UnitPage(SearchableRecordPage):
                     )
                 source_id = int(self.name_reference.currentData())
                 self.project.set_unit_name_reference(self.current_id, source_id)
+                if self.project.supports_unit_weapons:
+                    for slot, editor in enumerate(self.weapon_slots):
+                        self.project.set_unit_weapon(
+                            self.current_id, slot, int(editor.currentData())
+                        )
             self.project_changed.emit(f"已更新机体 ${self.current_id:02X}")
         except Exception as error:
             self.show_error(error)
@@ -362,7 +680,312 @@ class UnitPage(SearchableRecordPage):
             with self.project.transaction(f"机体 ${self.current_id:02X} · 完整还原"):
                 self.project.reset_record(self.current_id)
                 self.project.reset_unit_name(self.current_id)
+                if self.project.supports_unit_weapons:
+                    self.project.reset_unit_weapons(self.current_id)
             self.project_changed.emit(f"已还原机体 ${self.current_id:02X}")
+        except Exception as error:
+            self.show_error(error)
+
+
+class CharacterPage(SearchableRecordPage):
+    """Edit verified character-name references and per-character battle themes."""
+
+    def __init__(self) -> None:
+        super().__init__()
+        outer = QVBoxLayout(self)
+        title, subtitle = page_title(
+            "人物编辑",
+            "编辑ROM中的真实战斗名称引用，以及人物作为我方/敌方时使用的战斗音乐。",
+        )
+        outer.addWidget(title)
+        outer.addWidget(subtitle)
+
+        splitter = QSplitter()
+        left = QWidget()
+        left_layout = QVBoxLayout(left)
+        left_layout.setContentsMargins(0, 0, 0, 0)
+        left_layout.addWidget(self.records)
+        left_layout.addWidget(self.search_panel)
+        splitter.addWidget(left)
+
+        detail = QWidget()
+        detail_layout = QVBoxLayout(detail)
+        self.record_heading = QLabel("请选择人物")
+        self.record_heading.setObjectName("sectionTitle")
+        self.record_meta = QLabel("—")
+        self.record_meta.setObjectName("hintText")
+        self.record_meta.setWordWrap(True)
+        detail_layout.addWidget(self.record_heading)
+        detail_layout.addWidget(self.record_meta)
+        self.pending_state = QLabel("请选择人物")
+        self.pending_state.setObjectName("editState")
+        detail_layout.addWidget(self.pending_state)
+
+        identity = QGroupBox("名称")
+        identity_form = QFormLayout(identity)
+        self.name_reference = QComboBox()
+        self.name_reference.setMaxVisibleItems(24)
+        self.name_reference.currentIndexChanged.connect(self._update_pending_state)
+        identity_form.addRow("名称引用", self.name_reference)
+        self.name_tokens = QLineEdit()
+        self.name_tokens.setReadOnly(True)
+        identity_form.addRow("名称Token", self.name_tokens)
+        self.original_name = QLabel("基准ROM：—")
+        self.original_name.setObjectName("hintText")
+        identity_form.addRow("原始名称", self.original_name)
+        detail_layout.addWidget(identity)
+
+        music = QGroupBox("人物战斗音乐")
+        music_form = QFormLayout(music)
+        self.ally_music = QComboBox()
+        self.enemy_music = QComboBox()
+        self.ally_music.currentIndexChanged.connect(self._update_pending_state)
+        self.enemy_music.currentIndexChanged.connect(self._update_pending_state)
+        music_form.addRow("我方主动攻击曲", self.ally_music)
+        music_form.addRow("敌方/被攻击曲", self.enemy_music)
+        self.original_music = QLabel("基准ROM：—")
+        self.original_music.setObjectName("hintText")
+        self.original_music.setWordWrap(True)
+        music_form.addRow("原始绑定", self.original_music)
+        detail_layout.addWidget(music)
+
+        scope = QLabel(
+            "当前人物属性表、头像索引、精神与战斗台词关系尚未完成地址验证，"
+            "本页不会猜测写入这些区域。"
+        )
+        scope.setObjectName("hintText")
+        scope.setWordWrap(True)
+        detail_layout.addWidget(scope)
+
+        buttons = QHBoxLayout()
+        self.apply_button = QPushButton("应用人物修改")
+        self.apply_button.setObjectName("primaryButton")
+        self.apply_button.clicked.connect(self.apply_record)
+        self.apply_button.setEnabled(False)
+        duplicate_button = QPushButton("复制到其他ID…")
+        duplicate_button.clicked.connect(self.duplicate_record)
+        reset_button = QPushButton("还原此人物")
+        reset_button.clicked.connect(self.reset_record)
+        buttons.addWidget(self.apply_button)
+        buttons.addWidget(duplicate_button)
+        buttons.addWidget(reset_button)
+        buttons.addStretch()
+        detail_layout.addLayout(buttons)
+        detail_layout.addStretch()
+        splitter.addWidget(detail)
+        splitter.setSizes([360, 760])
+        outer.addWidget(splitter, 1)
+
+    def record_ids(self) -> range:
+        assert self.project is not None
+        return range(1, self.project.profile.character_name_count)
+
+    def record_text(self, record_id: int) -> str:
+        assert self.project is not None
+        text = f"${record_id:02X}  {self.project.character_display_name(record_id)}"
+        if (
+            self.project.supports_battle_music
+            and record_id < self.project.profile.battle_music.selector_count
+        ):
+            binding = self.project.get_battle_music_binding(record_id)
+            text += f"  ·  BGM ${binding.attacker_command:02X}/${binding.defender_command:02X}"
+        return text
+
+    def refresh(self) -> None:
+        self.name_reference.blockSignals(True)
+        self.name_reference.clear()
+        self.ally_music.blockSignals(True)
+        self.enemy_music.blockSignals(True)
+        self.ally_music.clear()
+        self.enemy_music.clear()
+        if self.project is not None:
+            for source_id, pointer, label, source_ids in (
+                self.project.character_name_reference_options()
+            ):
+                self.name_reference.addItem(
+                    f"{label} · 来源 ${source_id:02X} · 指针 ${pointer:04X} · "
+                    f"共享ID {compact_ids(source_ids)}",
+                    source_id,
+                )
+            if self.project.battle_music_codec is not None:
+                for track in self.project.battle_music_codec.tracks:
+                    self.ally_music.addItem(track.display, track.command)
+                    self.enemy_music.addItem(track.display, track.command)
+        self.name_reference.blockSignals(False)
+        self.ally_music.blockSignals(False)
+        self.enemy_music.blockSignals(False)
+        self.populate_records()
+
+    def load_record(self, record_id: int | None) -> None:
+        if self.project is None or record_id is None:
+            self.record_heading.setText("请选择人物")
+            self.record_meta.setText("—")
+            self.name_tokens.clear()
+            self.original_name.setText("基准ROM：—")
+            self.original_music.setText("基准ROM：—")
+            self.apply_button.setEnabled(False)
+            return
+        name = self.project.character_display_name(record_id)
+        pointer = self.project.get_character_name_pointer(record_id)
+        source_ids = self.project.character_name_source_ids(record_id)
+        self.record_heading.setText(f"人物 ${record_id:02X} · {name}")
+        self.record_meta.setText(
+            f"名称指针 ${pointer:04X} · 名称共享ID：{compact_ids(source_ids)} · "
+            "人物ID同时作为战斗音乐选择器"
+        )
+        self.name_tokens.setText(
+            self.project.character_name_record_bytes(record_id).hex(" ").upper()
+        )
+        if source_ids:
+            self.name_reference.setCurrentIndex(
+                self.name_reference.findData(source_ids[0])
+            )
+        original_sources = self.project.character_name_source_ids(
+            record_id, original=True
+        )
+        original_name = (
+            self.project.character_display_name(original_sources[0])
+            if original_sources
+            else "空白/未分配"
+        )
+        self.original_name.setText(
+            f"基准ROM：{original_name} · 指针 "
+            f"${self.project.get_character_name_pointer(record_id, original=True):04X}"
+        )
+        music_supported = (
+            self.project.supports_battle_music
+            and record_id < self.project.profile.battle_music.selector_count
+        )
+        self.ally_music.setEnabled(music_supported)
+        self.enemy_music.setEnabled(music_supported)
+        if music_supported:
+            binding = self.project.get_battle_music_binding(record_id)
+            original = self.project.get_battle_music_binding(record_id, original=True)
+            self.ally_music.setCurrentIndex(
+                self.ally_music.findData(binding.attacker_command)
+            )
+            self.enemy_music.setCurrentIndex(
+                self.enemy_music.findData(binding.defender_command)
+            )
+            codec = self.project.battle_music_codec
+            self.original_music.setText(
+                "基准ROM：我方 "
+                f"{codec.format_command(original.attacker_command)}；敌方 "
+                f"{codec.format_command(original.defender_command)}"
+            )
+        else:
+            self.original_music.setText("此人物ID没有已验证的音乐选择器。")
+        self._update_pending_state()
+
+    def _pending_values(self) -> tuple[bool, bool]:
+        if self.project is None or self.current_id is None:
+            return False, False
+        source_ids = self.project.character_name_source_ids(self.current_id)
+        name_pending = bool(
+            source_ids
+            and self.name_reference.currentData() is not None
+            and int(self.name_reference.currentData()) != source_ids[0]
+        )
+        music_pending = False
+        if self.ally_music.isEnabled() and self.ally_music.currentData() is not None:
+            binding = self.project.get_battle_music_binding(self.current_id)
+            music_pending = (
+                int(self.ally_music.currentData()) != binding.attacker_command
+                or int(self.enemy_music.currentData()) != binding.defender_command
+            )
+        return name_pending, music_pending
+
+    def _update_pending_state(self) -> None:
+        name_pending, music_pending = self._pending_values()
+        pending = name_pending or music_pending
+        self.apply_button.setEnabled(pending)
+        if self.project is None or self.current_id is None:
+            self.pending_state.setText("请选择人物")
+        elif pending:
+            parts = []
+            if name_pending:
+                parts.append("名称")
+            if music_pending:
+                parts.append("音乐")
+            self.pending_state.setText("● 尚未应用：" + "、".join(parts))
+        else:
+            self.pending_state.setText("✓ 表单与当前工程一致")
+        self.pending_state.setProperty("pending", pending)
+        self.pending_state.style().unpolish(self.pending_state)
+        self.pending_state.style().polish(self.pending_state)
+
+    def apply_record(self) -> None:
+        if self.project is None or self.current_id is None:
+            return
+        try:
+            with self.project.transaction(f"人物 ${self.current_id:02X} · 名称与音乐"):
+                self.project.set_character_name_reference(
+                    self.current_id, int(self.name_reference.currentData())
+                )
+                if self.ally_music.isEnabled():
+                    self.project.set_battle_music_binding(
+                        self.current_id,
+                        int(self.ally_music.currentData()),
+                        int(self.enemy_music.currentData()),
+                    )
+            self.project_changed.emit(f"已更新人物 ${self.current_id:02X}")
+        except Exception as error:
+            self.show_error(error)
+
+    def duplicate_record(self) -> None:
+        if self.project is None or self.current_id is None:
+            return
+        options = [
+            f"${character_id:02X} · {self.project.character_display_name(character_id)}"
+            for character_id in self.record_ids()
+            if character_id != self.current_id
+        ]
+        selected, accepted = QInputDialog.getItem(
+            self,
+            "复制人物",
+            f"把 ${self.current_id:02X} 的名称和战斗音乐复制到：",
+            options,
+            0,
+            False,
+        )
+        if not accepted:
+            return
+        target_id = int(selected[1:3], 16)
+        try:
+            source_ids = self.project.character_name_source_ids(self.current_id)
+            with self.project.transaction(
+                f"复制人物 ${self.current_id:02X} 到 ${target_id:02X}"
+            ):
+                if source_ids:
+                    self.project.set_character_name_reference(target_id, source_ids[0])
+                if (
+                    self.project.supports_battle_music
+                    and target_id < self.project.profile.battle_music.selector_count
+                ):
+                    binding = self.project.get_battle_music_binding(self.current_id)
+                    self.project.set_battle_music_binding(
+                        target_id,
+                        binding.attacker_command,
+                        binding.defender_command,
+                    )
+            self.project_changed.emit(
+                f"已复制人物 ${self.current_id:02X} 到 ${target_id:02X}"
+            )
+        except Exception as error:
+            self.show_error(error)
+
+    def reset_record(self) -> None:
+        if self.project is None or self.current_id is None:
+            return
+        try:
+            with self.project.transaction(f"人物 ${self.current_id:02X} · 完整还原"):
+                self.project.reset_character_name(self.current_id)
+                if (
+                    self.project.supports_battle_music
+                    and self.current_id < self.project.profile.battle_music.selector_count
+                ):
+                    self.project.reset_battle_music_binding(self.current_id)
+            self.project_changed.emit(f"已还原人物 ${self.current_id:02X}")
         except Exception as error:
             self.show_error(error)
 
@@ -373,7 +996,7 @@ class WeaponPage(SearchableRecordPage):
         outer = QVBoxLayout(self)
         title, subtitle = page_title(
             "武器编辑",
-            "编辑射程、命中及三种地形攻击力。尚未确认的攻击类型位保留不动。",
+            "显示并切换ROM中的真实武器名称，编辑射程、命中及三种地形攻击力。未确认位保持原值。",
         )
         outer.addWidget(title)
         outer.addWidget(subtitle)
@@ -381,8 +1004,8 @@ class WeaponPage(SearchableRecordPage):
         left = QWidget()
         left_layout = QVBoxLayout(left)
         left_layout.setContentsMargins(0, 0, 0, 0)
-        left_layout.addWidget(self.search)
         left_layout.addWidget(self.records)
+        left_layout.addWidget(self.search_panel)
         splitter.addWidget(left)
 
         detail = QWidget()
@@ -393,25 +1016,53 @@ class WeaponPage(SearchableRecordPage):
         self.record_meta.setObjectName("hintText")
         detail_layout.addWidget(self.record_heading)
         detail_layout.addWidget(self.record_meta)
-        form = QFormLayout()
-        self.fields: dict[str, QSpinBox] = {}
-        for field in WEAPON_FIELDS:
-            editor = QSpinBox()
-            editor.setRange(field.minimum, field.maximum)
-            editor.setToolTip(field.description)
-            self.fields[field.key] = editor
-            form.addRow(field.label, editor)
-        detail_layout.addLayout(form)
+        self.pending_state = QLabel("请选择武器")
+        self.pending_state.setObjectName("pendingBanner")
+        detail_layout.addWidget(self.pending_state)
+        identity = QGroupBox("名称与记录")
+        form = QFormLayout(identity)
+        self.name_reference = QComboBox()
+        self.name_reference.setMaxVisibleItems(24)
+        self.name_reference.currentIndexChanged.connect(self._update_pending_state)
+        form.addRow("名称引用", self.name_reference)
+        self.name_tokens = QLineEdit()
+        self.name_tokens.setReadOnly(True)
+        form.addRow("名称Token", self.name_tokens)
         self.raw_record = QLineEdit()
         self.raw_record.setReadOnly(True)
         form.addRow("原始6字节", self.raw_record)
+        detail_layout.addWidget(identity)
+        attributes = QGroupBox("战斗参数")
+        field_grid = QGridLayout(attributes)
+        field_grid.addWidget(QLabel("字段"), 0, 0)
+        field_grid.addWidget(QLabel("当前编辑值"), 0, 1)
+        field_grid.addWidget(QLabel("基准ROM"), 0, 2)
+        self.fields: dict[str, QSpinBox] = {}
+        self.original_values: dict[str, QLabel] = {}
+        for row, field in enumerate(WEAPON_FIELDS, 1):
+            editor = QSpinBox()
+            editor.setRange(field.minimum, field.maximum)
+            editor.setToolTip(field.description)
+            editor.valueChanged.connect(self._update_pending_state)
+            self.fields[field.key] = editor
+            original = QLabel("—")
+            original.setObjectName("originalValue")
+            self.original_values[field.key] = original
+            field_grid.addWidget(QLabel(field.label), row, 0)
+            field_grid.addWidget(editor, row, 1)
+            field_grid.addWidget(original, row, 2)
+        field_grid.setColumnStretch(1, 1)
+        detail_layout.addWidget(attributes)
         buttons = QHBoxLayout()
-        apply_button = QPushButton("应用修改")
-        apply_button.setObjectName("primaryButton")
-        apply_button.clicked.connect(self.apply_record)
+        self.apply_button = QPushButton("应用当前表单")
+        self.apply_button.setObjectName("primaryButton")
+        self.apply_button.clicked.connect(self.apply_record)
+        duplicate_button = QPushButton("复制到其他ID…")
+        duplicate_button.clicked.connect(self.duplicate_record)
         reset_button = QPushButton("还原此武器")
         reset_button.clicked.connect(self.reset_record)
-        buttons.addWidget(apply_button)
+        buttons.addWidget(self.apply_button)
+        buttons.addWidget(duplicate_button)
         buttons.addWidget(reset_button)
         buttons.addStretch()
         detail_layout.addLayout(buttons)
@@ -425,9 +1076,20 @@ class WeaponPage(SearchableRecordPage):
         return range(1, self.project.weapon_count)
 
     def record_text(self, record_id: int) -> str:
-        return f"武器 ${record_id:02X}"
+        assert self.project is not None
+        return f"${record_id:02X}  {self.project.weapon_display_name(record_id)}"
 
     def refresh(self) -> None:
+        self.name_reference.blockSignals(True)
+        self.name_reference.clear()
+        if self.project is not None:
+            for source_id, pointer, label, source_ids in self.project.weapon_name_reference_options():
+                self.name_reference.addItem(
+                    f"{label} · 来源 ${source_id:02X} · 指针 ${pointer:04X} · 共享ID {compact_ids(source_ids)}",
+                    source_id,
+                )
+        self.name_reference.setEnabled(bool(self.name_reference.count()))
+        self.name_reference.blockSignals(False)
         self.populate_records()
 
     def load_record(self, record_id: int | None) -> None:
@@ -435,26 +1097,139 @@ class WeaponPage(SearchableRecordPage):
             self.record_heading.setText("请选择武器")
             self.record_meta.setText("—")
             self.raw_record.clear()
+            self.name_tokens.clear()
+            self.pending_state.setText("请选择武器")
             return
         record = self.project.weapon_codec.decode_record(record_id, bytes(self.project.working))
-        self.record_heading.setText(f"武器 ${record_id:02X}")
-        self.record_meta.setText(
-            f"记录指针 ${record.pointer:04X} · 文件偏移 0x{self.project.weapon_record_file_offset(record_id):06X}"
+        name = self.project.weapon_display_name(record_id)
+        self.record_heading.setText(f"武器 ${record_id:02X} · {name}")
+        metadata = (
+            f"属性指针 ${record.pointer:04X} · 文件偏移 "
+            f"0x{self.project.weapon_record_file_offset(record_id):06X}"
         )
+        if self.project.supports_weapon_names:
+            name_pointer = self.project.get_weapon_name_pointer(record_id)
+            source_ids = self.project.weapon_name_source_ids(record_id)
+            metadata += (
+                f" · 名称指针 ${name_pointer:04X} · 名称共享ID："
+                f"{compact_ids(source_ids)}"
+            )
+            if source_ids:
+                self.name_reference.setCurrentIndex(
+                    self.name_reference.findData(source_ids[0])
+                )
+            self.name_tokens.setText(
+                self.project.weapon_name_record_bytes(record_id).hex(" ").upper()
+            )
+        else:
+            metadata += " · 此ROM配置未验证名称表"
+            self.name_tokens.clear()
+        self.record_meta.setText(metadata)
         for field in WEAPON_FIELDS:
             self.fields[field.key].setValue(record.get(field.key))
+            base_value = self.project.get_weapon_value(
+                record_id, field.key, original=True
+            )
+            self.original_values[field.key].setText(str(base_value))
+            self.original_values[field.key].setStyleSheet(
+                "color: #b05a00; font-weight: 650;"
+                if record.get(field.key) != base_value
+                else "color: #6c8292;"
+            )
         self.raw_record.setText(record.raw.hex(" ").upper())
+        self._update_pending_state()
+
+    def _update_pending_state(self) -> None:
+        if self.project is None or self.current_id is None:
+            self.pending_state.setText("请选择武器")
+            return
+        pending = any(
+            self.fields[field.key].value()
+            != self.project.get_weapon_value(self.current_id, field.key)
+            for field in WEAPON_FIELDS
+        )
+        if self.project.supports_weapon_names:
+            source_ids = self.project.weapon_name_source_ids(self.current_id)
+            if source_ids and self.name_reference.currentData() is not None:
+                pending = pending or int(self.name_reference.currentData()) != source_ids[0]
+        self.apply_button.setEnabled(pending)
+        self.pending_state.setText(
+            "● 有尚未应用的表单改动" if pending else "✓ 表单与当前工程一致"
+        )
+        self.pending_state.setStyleSheet(
+            "color: #b45309; font-weight: 650;" if pending else "color: #2e7d4f;"
+        )
+
+    def duplicate_record(self) -> None:
+        if self.project is None or self.current_id is None:
+            return
+        options = [
+            f"${weapon_id:02X} · {self.project.weapon_display_name(weapon_id)}"
+            for weapon_id in range(1, self.project.weapon_count)
+            if weapon_id != self.current_id
+        ]
+        selected, accepted = QInputDialog.getItem(
+            self,
+            "复制武器",
+            f"将 ${self.current_id:02X} 的属性和名称复制到：",
+            options,
+            0,
+            False,
+        )
+        if not accepted:
+            return
+        target_id = int(selected[1:3], 16)
+        try:
+            target_pointer = self.project.weapon_codec.pointers[target_id]
+            affected = tuple(
+                weapon_id
+                for weapon_id in range(1, self.project.weapon_count)
+                if self.project.weapon_codec.pointers[weapon_id] == target_pointer
+            )
+            if len(affected) > 1:
+                answer = QMessageBox.question(
+                    self,
+                    "共享武器记录确认",
+                    f"目标 ${target_id:02X} 的6字节属性记录由 "
+                    f"{compact_ids(affected)} 共用。\n"
+                    "复制后这些ID的属性都会改变；名称仅修改目标ID。是否继续？",
+                    QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.Cancel,
+                    QMessageBox.StandardButton.Cancel,
+                )
+                if answer != QMessageBox.StandardButton.Yes:
+                    return
+            name_ids = self.project.weapon_name_source_ids(self.current_id)
+            with self.project.transaction(
+                f"复制武器 ${self.current_id:02X} 到 ${target_id:02X}"
+            ):
+                for field in WEAPON_FIELDS:
+                    self.project.set_weapon_value(
+                        target_id,
+                        field.key,
+                        self.project.get_weapon_value(self.current_id, field.key),
+                    )
+                if name_ids:
+                    self.project.set_weapon_name_reference(target_id, name_ids[0])
+            self.project_changed.emit(
+                f"已复制武器 ${self.current_id:02X} 到 ${target_id:02X}"
+            )
+        except Exception as error:
+            self.show_error(error)
 
     def apply_record(self) -> None:
         if self.project is None or self.current_id is None:
             return
         try:
-            with self.project.transaction(f"武器 ${self.current_id:02X} · 批量属性"):
+            with self.project.transaction(f"武器 ${self.current_id:02X} · 属性与名称"):
                 for field in WEAPON_FIELDS:
                     self.project.set_weapon_value(
                         self.current_id,
                         field.key,
                         self.fields[field.key].value(),
+                    )
+                if self.project.supports_weapon_names:
+                    self.project.set_weapon_name_reference(
+                        self.current_id, int(self.name_reference.currentData())
                     )
             self.project_changed.emit(f"已更新武器 ${self.current_id:02X}")
         except Exception as error:
@@ -464,7 +1239,10 @@ class WeaponPage(SearchableRecordPage):
         if self.project is None or self.current_id is None:
             return
         try:
-            self.project.reset_weapon_record(self.current_id)
+            with self.project.transaction(f"武器 ${self.current_id:02X} · 完整还原"):
+                self.project.reset_weapon_record(self.current_id)
+                if self.project.supports_weapon_names:
+                    self.project.reset_weapon_name(self.current_id)
             self.project_changed.emit(f"已还原武器 ${self.current_id:02X}")
         except Exception as error:
             self.show_error(error)
@@ -484,8 +1262,8 @@ class MusicPage(SearchableRecordPage):
         left = QWidget()
         left_layout = QVBoxLayout(left)
         left_layout.setContentsMargins(0, 0, 0, 0)
-        left_layout.addWidget(self.search)
         left_layout.addWidget(self.records)
+        left_layout.addWidget(self.search_panel)
         splitter.addWidget(left)
         detail = QWidget()
         detail_layout = QVBoxLayout(detail)
@@ -495,20 +1273,32 @@ class MusicPage(SearchableRecordPage):
         form = QFormLayout()
         self.attacker = QComboBox()
         self.defender = QComboBox()
+        self.attacker.currentIndexChanged.connect(self._update_pending_state)
+        self.defender.currentIndexChanged.connect(self._update_pending_state)
         form.addRow("主动攻击曲", self.attacker)
         form.addRow("被攻击曲", self.defender)
         detail_layout.addLayout(form)
+        self.original_binding = QLabel("基准ROM：—")
+        self.original_binding.setObjectName("hintText")
+        detail_layout.addWidget(self.original_binding)
+        self.pending_state = QLabel("选择记录后可编辑。")
+        self.pending_state.setObjectName("editState")
+        detail_layout.addWidget(self.pending_state)
         hint = QLabel("提示：$9D Ash to Ash、$9E Dark Knight、$9F Dark Prison。")
         hint.setObjectName("hintText")
         detail_layout.addWidget(hint)
         buttons = QHBoxLayout()
-        apply_button = QPushButton("应用绑定")
-        apply_button.setObjectName("primaryButton")
-        apply_button.clicked.connect(self.apply_record)
+        self.apply_button = QPushButton("应用当前绑定")
+        self.apply_button.setObjectName("primaryButton")
+        self.apply_button.clicked.connect(self.apply_record)
+        self.apply_button.setEnabled(False)
         reset_button = QPushButton("还原此绑定")
         reset_button.clicked.connect(self.reset_record)
-        buttons.addWidget(apply_button)
+        batch_button = QPushButton("应用到多个选择器…")
+        batch_button.clicked.connect(self.apply_to_many)
+        buttons.addWidget(self.apply_button)
         buttons.addWidget(reset_button)
+        buttons.addWidget(batch_button)
         buttons.addStretch()
         detail_layout.addLayout(buttons)
 
@@ -559,7 +1349,7 @@ class MusicPage(SearchableRecordPage):
         assert self.project is not None
         binding = self.project.get_battle_music_binding(record_id)
         return (
-            f"${record_id:02X}  {binding.label}  · "
+            f"${record_id:02X}  {self.project.battle_music_selector_label(record_id)}  · "
             f"${binding.attacker_command:02X} / ${binding.defender_command:02X}"
         )
 
@@ -705,11 +1495,82 @@ class MusicPage(SearchableRecordPage):
     def load_record(self, record_id: int | None) -> None:
         if self.project is None or record_id is None:
             self.record_heading.setText("请选择音乐选择器")
+            self.original_binding.setText("基准ROM：—")
+            self.pending_state.setText("选择记录后可编辑。")
+            self.apply_button.setEnabled(False)
             return
         binding = self.project.get_battle_music_binding(record_id)
-        self.record_heading.setText(f"选择器 ${record_id:02X} · {binding.label}")
+        original = self.project.get_battle_music_binding(record_id, original=True)
+        self.record_heading.setText(
+            f"选择器 ${record_id:02X} · "
+            f"{self.project.battle_music_selector_label(record_id)}"
+        )
+        self.attacker.blockSignals(True)
+        self.defender.blockSignals(True)
         self.attacker.setCurrentIndex(self.attacker.findData(binding.attacker_command))
         self.defender.setCurrentIndex(self.defender.findData(binding.defender_command))
+        self.attacker.blockSignals(False)
+        self.defender.blockSignals(False)
+        self.original_binding.setText(
+            "基准ROM：主动 "
+            f"{self.project.battle_music_codec.format_command(original.attacker_command)} "
+            "· 被攻击 "
+            f"{self.project.battle_music_codec.format_command(original.defender_command)}"
+        )
+        self._update_pending_state()
+
+    def _update_pending_state(self) -> None:
+        if self.project is None or self.current_id is None:
+            return
+        binding = self.project.get_battle_music_binding(self.current_id)
+        changed = (
+            self.attacker.currentData() is not None
+            and self.defender.currentData() is not None
+            and (
+                int(self.attacker.currentData()) != binding.attacker_command
+                or int(self.defender.currentData()) != binding.defender_command
+            )
+        )
+        self.apply_button.setEnabled(changed)
+        self.pending_state.setText("● 有尚未应用的绑定" if changed else "✓ 当前表单已应用")
+        self.pending_state.setProperty("pending", changed)
+        self.pending_state.style().unpolish(self.pending_state)
+        self.pending_state.style().polish(self.pending_state)
+
+    def apply_to_many(self) -> None:
+        if self.project is None or self.current_id is None:
+            return
+        text_value, accepted = QInputDialog.getText(
+            self,
+            "批量应用音乐绑定",
+            "输入目标选择器ID（示例：$00-$05,$10）：",
+        )
+        if not accepted:
+            return
+        try:
+            maximum = self.project.profile.battle_music.selector_count - 1
+            ids = parse_id_expression(text_value, maximum)
+            attacker = int(self.attacker.currentData())
+            defender = int(self.defender.currentData())
+            preview = "、".join(f"${value:02X}" for value in ids[:16])
+            if len(ids) > 16:
+                preview += f" 等 {len(ids)} 项"
+            answer = QMessageBox.question(
+                self,
+                "确认批量绑定",
+                f"将当前主动/被攻击曲应用到：{preview}\n"
+                "所有写入可通过一次撤销恢复，是否继续？",
+                QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.Cancel,
+                QMessageBox.StandardButton.Cancel,
+            )
+            if answer != QMessageBox.StandardButton.Yes:
+                return
+            with self.project.transaction(f"批量更新 {len(ids)} 个音乐选择器"):
+                for selector in ids:
+                    self.project.set_battle_music_binding(selector, attacker, defender)
+            self.project_changed.emit(f"已批量更新 {len(ids)} 个音乐选择器")
+        except Exception as error:
+            self.show_error(error)
 
     def apply_record(self) -> None:
         if self.project is None or self.current_id is None:
@@ -737,10 +1598,11 @@ class MusicPage(SearchableRecordPage):
 class ResourcePage(ProjectPage):
     def __init__(self) -> None:
         super().__init__()
+        self._quota_initialized = False
         layout = QVBoxLayout(self)
         title, subtitle = page_title(
-            "ROM资源占用",
-            "查看关键表、受保护银行、扩展资源区和活动CHR。导入资源时将使用同一分配表。",
+            "容量分配与自动接通",
+            "先按用途分配容量，修改器会自动搬移数据、写入 Bank 目录并接通运行时读取。",
         )
         layout.addWidget(title)
         layout.addWidget(subtitle)
@@ -752,6 +1614,102 @@ class ResourcePage(ProjectPage):
         self.capacity.setFormat("0 / 0 KiB")
         layout.addWidget(self.capacity_label)
         layout.addWidget(self.capacity)
+
+        planner_group = QGroupBox("自动容量规划")
+        planner_layout = QVBoxLayout(planner_group)
+        planner_help = QLabel(
+            "直接选择地图、机体、剧情各占多少，再点一次按钮完成分区和运行时绑定。"
+            "地图包含地形、部署、地图事件与商店；机体包含属性、名称和战斗图配置；"
+            "剧情配额用于可变长对话文本，章节事件和劝降仍使用原有安全编辑区。"
+        )
+        planner_help.setObjectName("hintText")
+        planner_help.setWordWrap(True)
+        planner_layout.addWidget(planner_help)
+
+        quota_grid = QGridLayout()
+        self.map_quota = QSpinBox()
+        self.map_quota.setRange(16, 400)
+        self.map_quota.setSingleStep(8)
+        self.map_quota.setSuffix(" KiB")
+        self.map_quota.setToolTip("8 KiB 为一个 PRG Bank；地形、部署和地图事件共用此配额。")
+        self.unit_quota = QSpinBox()
+        self.unit_quota.setRange(48, 80)
+        self.unit_quota.setSingleStep(16)
+        self.unit_quota.setSuffix(" KiB")
+        self.unit_quota.setToolTip(
+            "48 KiB 已支持常规界面中的机体编辑；64 KiB 增加独立主体/碎片池；"
+            "80 KiB 再增加独立名称池。额外池主要供高级资源或后续导入功能。"
+        )
+        self.story_quota = QSpinBox()
+        self.story_quota.setRange(16, 112)
+        self.story_quota.setSingleStep(16)
+        self.story_quota.setSuffix(" KiB")
+        self.story_quota.setToolTip("每 16 KiB 可自动绑定一个被修改的剧情文本组。")
+        for editor in (self.map_quota, self.unit_quota, self.story_quota):
+            editor.valueChanged.connect(self._update_plan_preview)
+        quota_grid.addWidget(QLabel("地图"), 0, 0)
+        quota_grid.addWidget(self.map_quota, 0, 1)
+        quota_grid.addWidget(QLabel("机体"), 0, 2)
+        quota_grid.addWidget(self.unit_quota, 0, 3)
+        quota_grid.addWidget(QLabel("剧情"), 0, 4)
+        quota_grid.addWidget(self.story_quota, 0, 5)
+        quota_grid.setColumnStretch(6, 1)
+        planner_layout.addLayout(quota_grid)
+
+        planner_actions = QHBoxLayout()
+        self.plan_status = QLabel("尚未载入ROM")
+        self.plan_status.setWordWrap(True)
+        self.plan_status.setObjectName("hintText")
+        self.recommended_button = QPushButton("使用推荐分配")
+        self.recommended_button.clicked.connect(self._use_recommended_plan)
+        self.apply_plan_button = QPushButton("自动分区并接通")
+        self.apply_plan_button.setObjectName("primaryButton")
+        self.apply_plan_button.clicked.connect(self._apply_auto_plan)
+        planner_actions.addWidget(self.plan_status, 1)
+        planner_actions.addWidget(self.recommended_button)
+        planner_actions.addWidget(self.apply_plan_button)
+        planner_layout.addLayout(planner_actions)
+        layout.addWidget(planner_group)
+
+        managed_group = QGroupBox("高级：规划后剩余空间（不自动接通）")
+        managed_layout = QVBoxLayout(managed_group)
+        managed_help = QLabel(
+            "只在仍有未分配空间时使用。这里导入的是高级二进制资源，"
+            "不会自动建立游戏内引用；一般编辑无需操作此区域。"
+            "如果使用过此功能，请始终保留 .dcmod 并用工程续改。"
+        )
+        managed_help.setObjectName("hintText")
+        managed_help.setWordWrap(True)
+        managed_layout.addWidget(managed_help)
+        managed_buttons = QHBoxLayout()
+        self.import_button = QPushButton("导入二进制资源…")
+        self.import_button.clicked.connect(self.import_resource)
+        self.export_button = QPushButton("导出所选资源…")
+        self.export_button.clicked.connect(self.export_resource)
+        self.remove_button = QPushButton("删除所选资源")
+        self.remove_button.clicked.connect(self.remove_resource)
+        managed_buttons.addWidget(self.import_button)
+        managed_buttons.addWidget(self.export_button)
+        managed_buttons.addWidget(self.remove_button)
+        managed_buttons.addStretch()
+        managed_layout.addLayout(managed_buttons)
+        self.allocation_table = QTableWidget(0, 6)
+        self.allocation_table.setHorizontalHeaderLabels(
+            ("资源ID", "名称", "PRG Bank", "文件范围", "大小", "SHA-256")
+        )
+        self.allocation_table.horizontalHeader().setSectionResizeMode(
+            1, QHeaderView.ResizeMode.Stretch
+        )
+        for column in (0, 2, 3, 4, 5):
+            self.allocation_table.horizontalHeader().setSectionResizeMode(
+                column, QHeaderView.ResizeMode.ResizeToContents
+            )
+        self.allocation_table.setAlternatingRowColors(True)
+        self.allocation_table.itemSelectionChanged.connect(self._update_button_state)
+        managed_layout.addWidget(self.allocation_table)
+        layout.addWidget(managed_group)
+
+        layout.addWidget(QLabel("ROM布局与保护范围"))
         self.table = QTableWidget(0, 6)
         self.table.setHorizontalHeaderLabels(
             ("资源", "类型", "文件起点", "文件终点", "大小", "写入策略")
@@ -765,12 +1723,73 @@ class ResourcePage(ProjectPage):
         self.table.setAlternatingRowColors(True)
         layout.addWidget(self.table, 1)
 
+    def set_project(self, project: RomProject | None) -> None:
+        if project is not self.project:
+            self._quota_initialized = False
+        super().set_project(project)
+
     def refresh(self) -> None:
         self.table.setRowCount(0)
+        self.allocation_table.setRowCount(0)
         if self.project is None:
             self.capacity_label.setText("尚未载入ROM")
             self.capacity.setFormat("0 / 0 KiB")
+            self.capacity.setValue(0)
+            self.plan_status.setText("尚未载入ROM")
+            for editor in (self.map_quota, self.unit_quota, self.story_quota):
+                editor.setEnabled(False)
+            self.recommended_button.setEnabled(False)
+            self.apply_plan_button.setEnabled(False)
+            self._update_button_state()
             return
+        supports_planner = self.project.profile.key == "dc-kuorong-mmc3-v2"
+        plan = self.project.expansion_plan if supports_planner else None
+        if plan is not None:
+            values = (
+                plan.map_bank_count * 8,
+                plan.unit_bank_count * 8,
+                plan.story_bank_count * 8,
+            )
+            for editor, value in zip(
+                (self.map_quota, self.unit_quota, self.story_quota), values
+            ):
+                editor.blockSignals(True)
+                editor.setValue(value)
+                editor.blockSignals(False)
+                editor.setEnabled(False)
+            self.recommended_button.setEnabled(False)
+            self.apply_plan_button.setEnabled(False)
+            story_slots = plan.story_bank_count // 2
+            guarded = sum(
+                allocation.size
+                for allocation in self.project.expansion_allocations
+                if allocation.resource_id.startswith(REOPEN_GUARD_PREFIX)
+            )
+            guard_note = (
+                f"输出ROM直接重开时已安全锁定未登记区 "
+                f"{guarded // 1024} KiB，高级资源请用 .dcmod 续改。"
+                if guarded
+                else ""
+            )
+            self.plan_status.setText(
+                f"已接通：地图 {values[0]} KiB，机体 {values[1]} KiB，"
+                f"剧情 {values[2]} KiB（{story_slots} 个文本组槽位）；"
+                f"未分配 {plan.unassigned_kib} KiB。{guard_note}"
+            )
+        elif supports_planner:
+            for editor in (self.map_quota, self.unit_quota, self.story_quota):
+                editor.setEnabled(True)
+            self.recommended_button.setEnabled(True)
+            if not self._quota_initialized:
+                self._use_recommended_plan()
+                self._quota_initialized = True
+            self._update_plan_preview()
+        else:
+            for editor in (self.map_quota, self.unit_quota, self.story_quota):
+                editor.setEnabled(False)
+            self.recommended_button.setEnabled(False)
+            self.apply_plan_button.setEnabled(False)
+            self.plan_status.setText("当前ROM不是 464 KiB 可分配版本，不能使用自动容量规划。")
         graph = ResourceGraph.from_profile(self.project.profile, self.project.original)
         nodes = sorted(graph.nodes, key=lambda item: (item.offset, item.resource_id))
         self.table.setRowCount(len(nodes))
@@ -794,10 +1813,229 @@ class ResourcePage(ProjectPage):
             )
             for column, value in enumerate(values):
                 self.table.setItem(row, column, readonly_item(value))
+        capacity = self.project.expansion_capacity
+        used = self.project.expansion_used
+        available = self.project.expansion_available
+        regions = "、".join(region.display for region in self.project.profile.free_prg_regions)
+        self.capacity_label.setText(
+            f"扩展资源区 {regions}：总计 {capacity // 1024} KiB，"
+            f"剩余 {available:,} B"
+        )
+        self.capacity.setValue(round(used * 100 / capacity) if capacity else 0)
+        self.capacity.setFormat(f"已分配 {used:,} B / {capacity:,} B")
+        allocations = self.project.expansion_allocations
+        self.allocation_table.setRowCount(len(allocations))
+        for row, allocation in enumerate(allocations):
+            first_bank = (allocation.offset - 16) // 0x2000
+            last_bank = (allocation.end - 1 - 16) // 0x2000
+            bank_text = (
+                f"${first_bank:02X}"
+                if first_bank == last_bank
+                else f"${first_bank:02X}—${last_bank:02X}"
+            )
+            payload = self.project.expansion_resource_data(allocation.resource_id)
+            values = (
+                allocation.resource_id,
+                allocation.label,
+                bank_text,
+                f"0x{allocation.offset:06X}—0x{allocation.end - 1:06X}",
+                f"{allocation.size:,} B",
+                hashlib.sha256(payload).hexdigest().upper()[:16] + "…",
+            )
+            for column, value in enumerate(values):
+                item = readonly_item(value)
+                if column == 0:
+                    item.setData(Qt.ItemDataRole.UserRole, allocation.resource_id)
+                self.allocation_table.setItem(row, column, item)
+        self._update_button_state()
+
+    def _use_recommended_plan(self) -> None:
+        """Use every safe Bank while preserving all seven story-text slots."""
+
+        for editor in (self.map_quota, self.unit_quota, self.story_quota):
+            editor.blockSignals(True)
+        self.map_quota.setValue(304)
+        self.unit_quota.setValue(48)
+        self.story_quota.setValue(112)
+        for editor in (self.map_quota, self.unit_quota, self.story_quota):
+            editor.blockSignals(False)
+        self._update_plan_preview()
+
+    def _update_plan_preview(self) -> None:
+        if self.project is None or self.project.profile.key != "dc-kuorong-mmc3-v2":
+            return
+        if self.project.expansion_plan is not None:
+            return
+        map_kib = self.map_quota.value()
+        unit_kib = self.unit_quota.value()
+        story_kib = self.story_quota.value()
+        invalid = []
+        if map_kib % 8:
+            invalid.append("地图必须按 8 KiB")
+        if unit_kib not in (48, 64, 80):
+            invalid.append("机体只能选择 48、64 或 80 KiB")
+        if story_kib % 16:
+            invalid.append("剧情必须按 16 KiB")
+        if invalid:
+            self.plan_status.setText("；".join(invalid) + " 的整数倍分配。")
+            self.plan_status.setStyleSheet("color: #b42318; font-weight: 650;")
+            self.apply_plan_button.setEnabled(False)
+            return
+        total = map_kib + unit_kib + story_kib
         capacity = self.project.expansion_capacity // 1024
-        self.capacity_label.setText(f"扩展资源区：可用 {capacity} KiB")
-        self.capacity.setValue(0)
-        self.capacity.setFormat(f"已分配 0 KiB / {capacity} KiB")
+        remaining = capacity - total
+        if remaining < 0:
+            self.plan_status.setText(
+                f"已选择 {total} / {capacity} KiB，超出 {-remaining} KiB；请调小任一配额。"
+            )
+            self.plan_status.setStyleSheet("color: #b42318; font-weight: 650;")
+            self.apply_plan_button.setEnabled(False)
+        else:
+            slots = story_kib // 16
+            unit_note = {
+                48: "常规编辑池（推荐）",
+                64: "常规池+独立主体/碎片池",
+                80: "常规池+独立主体/碎片/名称池",
+            }[unit_kib]
+            self.plan_status.setText(
+                f"已选择 {total} / {capacity} KiB，剩余 {remaining} KiB；"
+                f"剧情可容纳 {slots} 个修改文本组；机体为{unit_note}。"
+            )
+            self.plan_status.setStyleSheet("color: #2e7d4f;")
+            self.apply_plan_button.setEnabled(True)
+
+    def _apply_auto_plan(self) -> None:
+        if self.project is None:
+            return
+        try:
+            self.project.configure_expansion(
+                self.map_quota.value(),
+                self.unit_quota.value(),
+                self.story_quota.value(),
+            )
+            self.project_changed.emit("已自动分区并接通地图、机体和剧情扩展容量")
+        except Exception as error:
+            self.show_error(error)
+
+    def _selected_resource_id(self) -> str | None:
+        row = self.allocation_table.currentRow()
+        if row < 0:
+            return None
+        item = self.allocation_table.item(row, 0)
+        return None if item is None else str(item.data(Qt.ItemDataRole.UserRole))
+
+    def _update_button_state(self) -> None:
+        loaded = self.project is not None
+        selected_id = self._selected_resource_id() if loaded else None
+        selected = selected_id is not None
+        internal = bool(
+            selected_id and selected_id.startswith(AUTO_ALLOCATION_PREFIX)
+        )
+        can_import = False
+        if loaded:
+            assert self.project is not None
+            has_capacity = self.project.expansion_available > 0
+            if self.project.profile.key == "dc-kuorong-mmc3-v2":
+                has_reopen_guard = any(
+                    allocation.resource_id.startswith(REOPEN_GUARD_PREFIX)
+                    for allocation in self.project.expansion_allocations
+                )
+                can_import = (
+                    self.project.expansion_plan is not None
+                    and has_capacity
+                    and not has_reopen_guard
+                )
+            else:
+                # Legacy profiles have no automatic partition table; retain
+                # their existing allocator-only workflow.
+                can_import = has_capacity
+        self.import_button.setEnabled(can_import)
+        self.export_button.setEnabled(selected)
+        self.remove_button.setEnabled(selected and not internal)
+
+    def import_resource(self) -> None:
+        if self.project is None:
+            return
+        filename, _ = QFileDialog.getOpenFileName(
+            self,
+            "导入扩展二进制资源",
+            str(self.project.path.parent),
+            "二进制文件 (*.bin);;所有文件 (*)",
+        )
+        if not filename:
+            return
+        try:
+            path = Path(filename)
+            payload = path.read_bytes()
+            suggested = re.sub(r"[^a-z0-9._-]+", "-", path.stem.lower()).strip("-.")
+            if not suggested or not suggested[0].isalnum():
+                suggested = "resource"
+            resource_id, accepted = QInputDialog.getText(
+                self, "资源ID", "唯一资源ID：", text=suggested[:64]
+            )
+            if not accepted:
+                return
+            label, accepted = QInputDialog.getText(
+                self, "资源名称", "显示名称：", text=path.stem
+            )
+            if not accepted:
+                return
+            allocation = self.project.import_expansion_resource(
+                resource_id,
+                label,
+                payload,
+                alignment=0x10,
+            )
+            self.project_changed.emit(
+                f"已导入扩展资源 {allocation.resource_id} · {allocation.size} 字节"
+            )
+        except Exception as error:
+            self.show_error(error)
+
+    def export_resource(self) -> None:
+        if self.project is None:
+            return
+        resource_id = self._selected_resource_id()
+        if resource_id is None:
+            return
+        filename, _ = QFileDialog.getSaveFileName(
+            self,
+            "导出扩展资源",
+            str(self.project.path.with_name(f"{resource_id}.bin")),
+            "二进制文件 (*.bin);;所有文件 (*)",
+        )
+        if not filename:
+            return
+        try:
+            destination = Path(filename)
+            if destination.suffix.lower() != ".bin":
+                destination = destination.with_suffix(".bin")
+            destination.write_bytes(self.project.expansion_resource_data(resource_id))
+        except Exception as error:
+            self.show_error(error)
+
+    def remove_resource(self) -> None:
+        if self.project is None:
+            return
+        resource_id = self._selected_resource_id()
+        if resource_id is None:
+            return
+        allocation = self.project.resource_allocator.allocation(resource_id)
+        answer = QMessageBox.question(
+            self,
+            "删除扩展资源",
+            f"确定删除“{allocation.label}”并释放 {allocation.size:,} 字节吗？\n"
+            "此操作可以撤销。",
+            QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.Cancel,
+            QMessageBox.StandardButton.Cancel,
+        )
+        if answer != QMessageBox.StandardButton.Yes:
+            return
+        try:
+            self.project.remove_expansion_resource(resource_id)
+            self.project_changed.emit(f"已删除扩展资源 {resource_id}")
+        except Exception as error:
+            self.show_error(error)
 
 
 class ChangesPage(ProjectPage):

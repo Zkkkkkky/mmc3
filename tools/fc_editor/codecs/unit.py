@@ -14,8 +14,22 @@ from ..rom_image import BankAddress, RomImage
 class UnitCodec:
     """Lossless decoder for the 128-entry unit pointer table and records."""
 
-    def __init__(self, rom: RomImage) -> None:
+    def __init__(
+        self,
+        rom: RomImage,
+        data: bytes | bytearray | None = None,
+        *,
+        pointer_table_offset: int | None = None,
+        pair_first_bank: int | None = None,
+    ) -> None:
         self.rom = rom
+        self._source = rom.data if data is None else bytes(data)
+        self.pointer_table_offset = (
+            rom.profile.unit_pointer_table_offset
+            if pointer_table_offset is None
+            else pointer_table_offset
+        )
+        self.pair_first_bank = pair_first_bank
         self.pointers = self._read_pointers()
         groups: dict[int, list[int]] = {}
         for unit_id, pointer in enumerate(self.pointers):
@@ -28,13 +42,18 @@ class UnitCodec:
     def _read_pointers(self) -> tuple[int, ...]:
         profile = self.rom.profile
         table_size = profile.unit_count * 2
+        raw = self._source[
+            self.pointer_table_offset : self.pointer_table_offset + table_size
+        ]
+        if len(raw) != table_size:
+            raise RomFormatError("机体指针表不完整。")
         pointers = struct.unpack(
             f"<{profile.unit_count}H",
-            self.rom.read(profile.unit_pointer_table_offset, table_size),
+            raw,
         )
         if pointers[0] != 0:
             raise RomFormatError("机体指针表起始标记不正确。")
-        table_end = profile.unit_pointer_table_offset + table_size
+        table_end = self.pointer_table_offset + table_size
         for unit_id, pointer in enumerate(pointers[1:], 1):
             try:
                 offset = self.record_offset_from_pointer(pointer)
@@ -47,6 +66,10 @@ class UnitCodec:
         return tuple(pointers)
 
     def record_offset_from_pointer(self, pointer: int) -> int:
+        if self.pair_first_bank is not None:
+            if not 0x8000 <= pointer < 0xC000:
+                raise ValueError(f"机体记录指针 ${pointer:04X} 超出扩展 Bank 对。")
+            return 16 + self.pair_first_bank * 0x2000 + pointer - 0x8000
         return BankAddress(
             self.rom.profile.unit_data_prg_bank,
             pointer,
@@ -61,7 +84,7 @@ class UnitCodec:
         return self.record_offset_from_pointer(self.pointers[unit_id])
 
     def decode_record(self, unit_id: int, data: bytes | None = None) -> UnitRecord:
-        source = self.rom.data if data is None else data
+        source = self._source if data is None else data
         pointer = self.pointers[unit_id]
         offset = self.record_offset(unit_id)
         raw = bytes(source[offset : offset + UNIT_RECORD_SIZE])

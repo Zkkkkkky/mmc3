@@ -1,0 +1,1491 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML><HEAD><TITLE>任天堂磁碟机系统</TITLE>
+<META name=GENERATOR content="MSHTML 8.00.7601.19104">
+<META content="text/html; charset=gb2312" http-equiv=Content-Type>
+<STYLE>
+html,body { 
+	/* Default Font */
+	font-family: Microsoft YaHei, Simsun, sans-serif;
+	font-size: 12pt;
+}
+</STYLE>
+</HEAD>
+<BODY><FONT size=2><SPAN lang=EN-US>
+<H2><SPAN lang=EN-US>10</SPAN>、任天堂磁碟机系统</H2></SPAN>
+<DIV>
+<P>任天堂家庭机磁碟系统<SPAN 
+lang=EN-US>(FDS)</SPAN>是它的扩展单位，它只是由任天堂公司生产以及只在亚洲国家销售。它有一个软盘驱动器可以插<SPAN 
+lang=EN-US>2.5</SPAN>寸软盘，可以以<SPAN lang=EN-US>32KB</SPAN>的<SPAN 
+lang=EN-US>RAM</SPAN>（代替了<SPAN lang=EN-US>ROM</SPAN>）来读进程序。<SPAN 
+lang=EN-US>8KB</SPAN>的<SPAN lang=EN-US>VRAM</SPAN>（代替了<SPAN 
+lang=EN-US>VROM</SPAN>），其他的硬件描述于下。<SPAN lang=EN-US> </SPAN></P>
+<P><B>内存映像：<SPAN lang=EN-US><BR></SPAN></B><SPAN 
+lang=EN-US>FDS</SPAN>的地址空间的描述：<SPAN lang=EN-US> </SPAN></P>
+<TABLE style="mso-cellspacing: .7pt" class=MsoNormalTable border=1 cellSpacing=1 
+cellPadding=0>
+  <TBODY>
+  <TR style="mso-yfti-irow: 0; mso-yfti-firstrow: yes">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>$0000 
+    </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2><SPAN lang=EN-US>2kB InternalRAM, mirrored 
+      4 times</SPAN>　 </FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 1">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>$2000 
+    </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P><SPAN lang=EN-US><FONT size=2>Input/Output </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 2">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>$5000 
+    </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>Expansion Modules 
+      </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 3">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>$6000 
+    </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>32kB Program RAM 
+      </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 4; mso-yfti-lastrow: yes">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>$E000 
+    </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>8kB FDS BIOS ROM 
+      </FONT></SPAN></P></TD></TR></TBODY></TABLE>
+<P><SPAN lang=EN-US>FDS</SPAN>还增加了一些<SPAN lang=EN-US>I/O</SPAN>端口于<SPAN 
+lang=EN-US>$4000-$40FF</SPAN>来控制磁盘系统，声音系统，<SPAN lang=EN-US>IRQ</SPAN>记数器。<SPAN 
+lang=EN-US> </SPAN></P>
+<TABLE style="mso-cellspacing: .7pt" class=MsoNormalTable border=1 cellSpacing=1 
+cellPadding=0>
+  <TBODY>
+  <TR style="mso-yfti-irow: 0; mso-yfti-firstrow: yes">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>端口 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>读写<SPAN lang=EN-US>/</SPAN>位 
+</FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>功能描述 </FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 1">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>$4020 
+    </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>W </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>Lower Byte of IRQ Counter 
+      </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 2">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>$4021 
+    </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>W </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>Upper Byte of IRQ Counter 
+      </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 3">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>$4022 
+    </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>W </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>Enable/Disable IRQs 
+      </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 4">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>　 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>2 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>\ = Stop IRQ counter and 
+      reset its interrupt request<BR>/ = Load IRQ counter with a value from 
+      $4020-$4021 and start it </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 5">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>$4024 
+    </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>W </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>Data Write Register:To 
+      write data to the disk, output it into this register 
+  </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 6">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>$4025 
+    </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>W </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>Control Register 
+      </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 7">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt" 
+    rowSpan=6>
+      <P class=MsoNormal><FONT size=2>　 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>0 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>Drive Motor, 0 = on, 1 = 
+      off </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 8">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>1 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>\ = Set drive head to the 
+      start of the first track </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 9">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>2 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>Disk Write, 0 = enabled, 
+      1 = disabled </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 10">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>3 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>Screen Mirroring, 0 = 
+      vertical, 1 = horizontal </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 11">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>4-6 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>Unknown (???) 
+      </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 12">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>7 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>Disk IRQs, 0 = disabled, 
+      1 = enabled </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 13">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>$4026 
+    </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>W </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>ExPort Output (???) 
+      </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 14">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>$4030 
+    </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>R </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>Disk Status Register 0 
+      </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 15">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt" 
+    rowSpan=2>
+      <P class=MsoNormal><FONT size=2>　 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>4 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>Unknown (???) 
+      </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 16">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>6 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>Unknown (???) 
+      </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 17">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>$4031 
+    </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>R </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>Data Read Register:To 
+      read data from the disk, input it from this register 
+  </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 18">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>$4032 
+    </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>R </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>Disk Status Register 1 
+      </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 19">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt" 
+    rowSpan=3>
+      <P class=MsoNormal><FONT size=2>　 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>0 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>Disk Presence, 0 = 
+      inserted, 1 = not inserted </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 20">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>1 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>Disk Ready, 0 = ready, 1 
+      = not ready </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 21">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>2 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>Write Protection, 0 = 
+      unprotected, 1 = protected </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 22">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>$4033 
+    </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>R </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>ExPort Input 
+      </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 23; mso-yfti-lastrow: yes">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>　 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>7 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>Battery Status, 0 = ok, 1 
+      = low </FONT></SPAN></P></TD></TR></TBODY></TABLE>
+<P><B>可屏蔽中断计数器<SPAN lang=EN-US>:<BR></SPAN></B><SPAN 
+lang=EN-US>FDS</SPAN>提供了一个<SPAN lang=EN-US>16</SPAN>位的<SPAN 
+lang=EN-US>IRQ</SPAN>记数器连接到<SPAN lang=EN-US>CPU</SPAN>时钟发生器。计数器开始于你写在<SPAN 
+lang=EN-US>$4021</SPAN>的一个预设在<SPAN lang=EN-US>$4020-$4021</SPAN>的值。它在每个<SPAN 
+lang=EN-US>CPU</SPAN>时钟周期后减一。当计数器为零时，它从预设的值开始继续计数。这时就发生了一个<SPAN 
+lang=EN-US>IRQ</SPAN>。当垂直空白时，屏幕刷新时也会发生。<SPAN lang=EN-US>$4022</SPAN>的第<SPAN 
+lang=EN-US>2</SPAN>个位用来控制<SPAN lang=EN-US>IRQ</SPAN>计数器。当它是<SPAN 
+lang=EN-US>0</SPAN>，那么计数停止，要到达的<SPAN lang=EN-US>IRQ</SPAN>被复位（如果有的话）。设置了<SPAN 
+lang=EN-US>1</SPAN>后，记数可以被恢复。<SPAN lang=EN-US> </SPAN></P>
+<P><B>磁碟格式<SPAN lang=EN-US>:<BR></SPAN></B>每个磁盘有两面，<SPAN lang=EN-US>A 
+</SPAN>和<SPAN lang=EN-US> B</SPAN>，每面可以有<SPAN 
+lang=EN-US>65000</SPAN>字节的数据。要反转一个当前面，必须先拿出来，反转，重新插回去。数据在每个面上被储存于一系列的不同类型的块<SPAN 
+lang=EN-US>[1,2,3,4,3,4,...,3,4]</SPAN>。</P>
+<TABLE style="mso-cellspacing: .7pt" class=MsoNormalTable border=1 cellSpacing=1 
+cellPadding=0>
+  <TBODY>
+  <TR style="mso-yfti-irow: 0; mso-yfti-firstrow: yes">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>Block 
+    </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>Byte 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>Description 
+      </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 1">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>1. Side Header Block(56 
+      bytes) </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>0 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>$01 
+  </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 2">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>　 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>1-14 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>"*NINTENDO-HVC*" 
+      </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 3">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>　 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>15 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>Maker ID 
+      </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 4">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>　 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>16-19 
+    </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>Side Name 
+      </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 5">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>　 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>20 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>Version Number 
+      </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 6">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>　 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>21 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>Side Number, $00 = Side 
+      A, $01 = Side B </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 7">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>　 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>&nbsp; 22-24 
+      </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>Additional Disk Data 
+      </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 8">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>　 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>25 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>$08 
+  </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 9">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>　 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>26-56 
+    </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>Reserved Space (not used 
+      by BIOS) </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 10">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>2. File Number Block (2 
+      bytes) </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>0 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>$02 
+  </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 11">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>　 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>1 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>Number of Files on this 
+      side </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 12">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>3. File Header Block (16 
+      bytes) </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>0 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>$03 
+  </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 13">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>　 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>1-2 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>File Number (not used by 
+      BIOS?) </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 14">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>　 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>3-10 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>File Name (not used by 
+      BIOS?) </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 15">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>　 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>11-12 
+    </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>Starting Address in 
+      memory </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 16">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>　 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>13-14 
+    </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>File Size 
+      </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 17">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>　 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>15 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>File Type:$00= Program 
+      Data,$01 = Character Data,$02 = Screen Data </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 18">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>4. File Data Block 
+      (variable length) </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>0 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>$04 
+  </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 19; mso-yfti-lastrow: yes">
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><FONT size=2>　 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>1-... 
+    </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0.75pt; PADDING-LEFT: 0.75pt; PADDING-RIGHT: 0.75pt; PADDING-TOP: 0.75pt">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>Data (see File Header 
+      Block for size) </FONT></SPAN></P></TD></TR></TBODY></TABLE>
+<P>所以两字节地方都以最重要的字节开始。面的名称可能和相同游戏软盘的不同面不同，但它们是一样的。当文件被读取，开始的地址在<SPAN 
+lang=EN-US>RAM</SPAN>和<SPAN lang=EN-US>VRAM</SPAN>都是实在的地址。<SPAN lang=EN-US> 
+</SPAN></P>
+<P><B>磁碟访问<SPAN lang=EN-US>:<BR></SPAN></B>下面的图表显示了<SPAN 
+lang=EN-US>FDS</SPAN>如何从软盘中读<SPAN lang=EN-US>/</SPAN>写。<SPAN 
+lang=EN-US><BR>READ: </SPAN></P>
+<TABLE style="mso-cellspacing: 0cm; mso-padding-alt: 0cm 0cm 0cm 0cm" 
+class=MsoNormalTable border=1 cellSpacing=0 cellPadding=0>
+  <TBODY>
+  <TR style="mso-yfti-irow: 0; mso-yfti-firstrow: yes">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>$4025 
+    </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>A </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>B </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>C </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>D </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>　 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>E </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>A)Initialization 
+      </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 1">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>7bit 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>_ </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>__ </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>_ </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>- </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>　 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>--_ </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>B) Motor on 
+      </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 2">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>6bit 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>_ </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>__ </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>- </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>- </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>　 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>--_ </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>C) Read start mark 
+      </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 3">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>5bit 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>- </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>-- </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>- </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>- </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>　 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>--- </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>D) Enable IRQs 
+      </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 4">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>4bit 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>_ </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>__ </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>_ </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>_ </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>　 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>_-_ </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>E) Read end mark 
+      </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 5">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>　 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>　 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>　 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>　 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>　 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>　 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>　 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>　 </FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 6">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>2bit 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>- </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>-- </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>- </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>- </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>　 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>--- </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>1. Read data, 
+      ($4030)=[xx0xxxxx] </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 7">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>1bit 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>- </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>-_ </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>_ </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>_ </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>　 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>___ </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>2. Read data, 
+      ($4030)=[xxx0xxxx] </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 8">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>0bit 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>_ </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>-- </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>- </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>- </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>　 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>--_ </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>　 </FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 9; mso-yfti-lastrow: yes">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>Note 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>　 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>　 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>　 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>　 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>　 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>1&nbsp; 2 
+      </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>　 </FONT></P></TD></TR></TBODY></TABLE>
+<P><SPAN lang=EN-US>WRITE: </SPAN></P>
+<TABLE style="mso-cellspacing: 0cm; mso-padding-alt: 0cm 0cm 0cm 0cm" 
+class=MsoNormalTable border=1 cellSpacing=0 cellPadding=0>
+  <TBODY>
+  <TR style="mso-yfti-irow: 0; mso-yfti-firstrow: yes">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>$4025 
+    </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>A </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>B </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>C </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>D </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>　 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>E </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>A)Initialization 
+      </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 1">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>7bit 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>_ </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>__ </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>__ </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>- </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>　 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>--_ </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>B) Motor on 
+      </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 2">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>6bit 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>_ </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>__ </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>_- </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>- </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>　 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>--_ </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>C) Write start mark 
+      </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 3">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>5bit 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>- </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>-- </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>-- </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>- </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>　 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>--- </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>D) Enable IRQs 
+      </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 4">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>4bit 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>_ </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>__ </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>__ </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>_ </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>　 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>_-_ </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>E) Write end mark 
+      </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 5">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>　 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>　 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>　 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>　 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>　 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>　 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>　 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>　 </FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 6">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>2bit 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>- </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>-- </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>__ </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>_ </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>　 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>__- </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>1. Delay, write 
+      [00000000] </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 7">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>1bit 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>- </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>-_ </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>__ </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>_ </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>　 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>___ </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>2. Write [10000000] 
+      </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 8">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>0bit 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>_ </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>-- </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>-- </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>- </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>　 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>--_ </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>3. Write data, 
+      ($4030)=[xx0xxxxx] </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 9; mso-yfti-lastrow: yes">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>Note 
+</FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>　 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>　 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>1 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>2 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>　 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>34 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>4. Delay 
+      </FONT></SPAN></P></TD></TR></TBODY></TABLE>
+<P>对于读写是如何完成的并不清楚。虽然知道<SPAN lang=EN-US>FDS</SPAN>每当一个字节从软盘里读出的时候就发生一个<SPAN 
+lang=EN-US>IRQ</SPAN>。<SPAN lang=EN-US>FDS</SPAN>的<SPAN 
+lang=EN-US>IRQ</SPAN>处理器（是<SPAN lang=EN-US>FDS</SPAN>的<SPAN 
+lang=EN-US>BIOS</SPAN>一部分）在<SPAN lang=EN-US>$4031</SPAN>读取这个字节，然后指针指向下个字节。<SPAN 
+lang=EN-US> </SPAN></P>
+<P><B>磁碟错误<SPAN lang=EN-US>:<BR></SPAN></B>下面是软盘错误的信息<SPAN lang=EN-US>: 
+</SPAN></P>
+<TABLE style="mso-cellspacing: 0cm; mso-padding-alt: 0cm 0cm 0cm 0cm" 
+class=MsoNormalTable border=1 cellSpacing=0 cellPadding=0>
+  <TBODY>
+  <TR style="mso-yfti-irow: 0; mso-yfti-firstrow: yes">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>ERR </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>Meaning 
+    </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>注释 </FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 1">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>01 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>No disk 
+    </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2><SPAN lang=EN-US>&nbsp;</SPAN>没有软盘 
+      </FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 2">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>02 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>No power 
+      </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>没有电源 </FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 3">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>03 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>Broken prong on the disk 
+      </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>?? 
+  </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 4">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>04 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>Wrong maker ID 
+      </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>?? 
+  </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 5">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>05 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>Wrong game name 
+      </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>不正确的游戏名字 </FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 6">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>06 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>Wrong game version 
+      </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>不正确的游戏版本 </FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 7">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>07 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>Wrong side number (flip 
+      the disk) </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>不正确的盘面（反转之） </FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 8">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>08 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>Wrong disk #1 
+      </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>一号软盘错 </FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 9">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>09 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>Wrong disk #2 
+      </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>二号软盘错 </FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 10">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>10 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>Wrong disk #3&nbsp; 
+      </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>三号软盘错 </FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 11">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>11 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>　 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>　 </FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 12">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>12 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>　 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>　 </FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 13">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>13 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>　 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>　 </FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 14">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>14 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>　 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>　 </FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 15">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>15 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>　 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>　 </FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 16">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>16 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>　 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>　 </FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 17">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>17 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>　 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>　 </FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 18">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>18 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>　 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>　 </FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 19">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>19 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>　 </FONT></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>　 </FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 20">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>20 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>Allows it to recognize 
+      screen data differs (???) </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>?? 
+  </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 21">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>21 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>Wrong Side Header Block 
+      ("*NINTENDO-HVC*") </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>不正确的盘面柱头块 </FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 22">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>22 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>Wrong Side Header Block 
+      ID ($01) </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>不正确的盘面柱头块号 </FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 23">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>23 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>Wrong File Number Block 
+      ID ($02) </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>不正确的文件块号 </FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 24">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>24 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>Wrong File Header Block 
+      ID ($03) </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>不正确的文件头块号 </FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 25">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>25 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>Wrong File Data Block ID 
+      ($04) </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>不正确的文件数据块号 </FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 26">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>26 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>Error writing data to the 
+      disk </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>写文件错 </FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 27">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>27 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>Block ends prematurely 
+      </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2>块过早结束 </FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 28">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>28 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>The disk unit and the 
+      same period can't take it(???) </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>?? 
+  </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 29">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>29 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>The disk unit and the 
+      same period can't take it (???) </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>?? 
+  </FONT></SPAN></P></TD></TR>
+  <TR style="mso-yfti-irow: 30">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>30 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>Disk full 
+      </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><FONT size=2><SPAN lang=EN-US>&nbsp;</SPAN>软盘满 
+      </FONT></P></TD></TR>
+  <TR style="mso-yfti-irow: 31; mso-yfti-lastrow: yes">
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>31 </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>Data number of a disk 
+      doesn't match up (???) </FONT></SPAN></P></TD>
+    <TD 
+    style="PADDING-BOTTOM: 0cm; PADDING-LEFT: 0cm; PADDING-RIGHT: 0cm; PADDING-TOP: 0cm">
+      <P class=MsoNormal><SPAN lang=EN-US><FONT size=2>?? 
+  </FONT></SPAN></P></TD></TR></TBODY></TABLE></DIV></FONT></BODY></HTML>

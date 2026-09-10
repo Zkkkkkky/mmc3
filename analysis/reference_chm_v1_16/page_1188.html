@@ -1,0 +1,149 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML><HEAD><TITLE>精灵动画</TITLE>
+<META name=GENERATOR content="MSHTML 8.00.7601.19104">
+<META content="text/html; charset=gb2312" http-equiv=Content-Type>
+<STYLE>
+html,body { 
+	/* Default Font */
+	font-family: Microsoft YaHei, Simsun, sans-serif;
+	font-size: 12pt;
+}
+</STYLE>
+</HEAD>
+<BODY>
+<P><FONT 
+size=2><STRONG>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+精灵武器篇<BR></STRONG>以181号武器：冲击波 为例<BR><IMG class=BDE_Image 
+src="https://imgsa.baidu.com/forum/w%3D580/sign=8e5054c167061d957d4637304bf50a5d/df7411d8bc3eb13514ab9a42af1ea8d3fc1f445c.jpg" 
+width=517 height=219 pic_type="0"><BR><BR>武器代码<BR><IMG class=BDE_Image 
+src="https://imgsa.baidu.com/forum/w%3D580/sign=4dead3267f094b36db921be593cd7c00/908216178a82b90136d7eeca7a8da9773812ef4b.jpg" 
+width=321 height=349 pic_type="0"><BR><BR>武器动画<BR>和背景武器有所区别的是<FONT 
+color=#0000ff>F0 11 03</FONT> 提取精灵武器颜色，而背景武器提取颜色的规定代码是<FONT color=#0000ff>F0 05 
+03<BR></FONT>30 38 27三个颜色代码<BR>F1 00 
+01写入调色板内存<BR>关于颜色部分需要注意的是区别背景武器和精灵武器定义颜色的标志码<BR>F9 0F 
+调试物理武器出现的位置，也就是坐标。0F即编号，同时具有区分多个精灵武器的作用，这个0F我稍后再具体说明其作用<BR>F0 
+BC分别为X轴坐标和Y轴坐标<BR>42 69 2C从我方碎片执行2C的组图规律<BR>2C就是组图规律<BR>2D 
+2E两个运行规律代码，2D为横坐标的运行规律，2E为纵坐标的运行规律<BR>64（16进制） 等待时间<BR>FF结束动画<BR>F9 
+0F的举例：如果要做双冲击波代码基本是这样<BR>F0 11 03 30 38 27 F1 00 01 F9 0F F0 BC 42 69 2C 2D 2E 
+F90E E0 BC 42 69 2C 2D 2E 64 
+FF<BR>不仅要调整两个冲击波的位置，并且用0F和0E区分开两个冲击波，<BR>若同为0F则后面的冲击波会吃掉前面的只显示一个<BR>这个0F和0E的作用就是给两个冲击波一个编号，区分两个冲击波<BR>这个就是武器代码本身的意义，应该不难理解，接下來看三个规律<BR>一个组图规律2C和两个运行规律2D和2E<BR>首先是组图规律2C</FONT></P>
+<P><FONT size=2><IMG class=BDE_Image 
+src="https://imgsa.baidu.com/forum/w%3D580/sign=4b519aefc6fc1e17fdbf8c397a92f67c/f891c61b9d16fdfaa7a9eb17bd8f8c5496ee7bfb.jpg" 
+width=560 height=253 pic_type="0"><BR><BR>来看2C的具体代码<BR>FD 11 32 32 33 33 FB 04 
+F9 FD 03 0A 0B FB 08 FB FF<BR>FD 
+提取音乐<BR>11音乐代码<BR>和背景武器有所区别的是精灵武器的音乐提取直接写在武器代码中<BR>背景武器提取音乐的标志码为F4+XX(音乐代码），而物理武器的音乐提取代码是写在组图规律里面的，标志码为FD+XX(音乐代码）<BR>32 
+32 33 33 这是4个图片拼图规律，每一个代码表示完整的一帧图片<BR>每个图片执行1帧（1/60秒）<BR>FB 04 
+F9跳转到F9所指向的地址重复04次<BR>这个可以这样理解，这三个为一个固定代码，FB+XX+YY 
+FB固定代码，XX重复次数，YY跳转<BR>首先讲一下这里是如何实现跳转的<BR>以YY为起点（00）<BR>跳转到上一个地址，也就是XX所在地址<BR>那么YY=FF<BR>跳转到FB，那么YY=FE<BR>现在YY=F9<BR><IMG 
+class=BDE_Image 
+src="https://imgsa.baidu.com/forum/w%3D580/sign=fcb06039fe36afc30e0c3f6d831beb85/e64693504fc2d5627acafd14ee1190ef74c66c83.jpg" 
+width=395 height=216 pic_type="0"><BR><BR>那么，跳转到的地方就是蓝色标注的地方<BR><BR><BR><IMG 
+class=BDE_Image 
+src="https://imgsa.baidu.com/forum/w%3D580/sign=1d8aa368c411728b302d8c2af8fdc3b3/7a53dc2a2834349bcfb1427cc0ea15ce37d3be16.jpg" 
+width=399 height=220 pic_type="0"><BR><BR>那么，这段代码的意思就是重复 32 32 33 
+33这段代码04次<BR><IMG class=BDE_Image 
+src="https://imgsa.baidu.com/forum/w%3D580/sign=a69b72a9053387449cc52f74610ed937/44aba56eddc451dad1742012bffd5266d21632c2.jpg" 
+width=420 height=185 pic_type="0"><BR><BR>FD 03 0A 0B FB 08 
+FB同理<BR>FF结束</FONT></P>
+<P><FONT size=2>现在来看每一帧的图片拼图，以32为例，32的具体代码如下所示<BR><IMG class=BDE_Image 
+src="https://imgsa.baidu.com/forum/w%3D580/sign=5d0c9d8de2f81a4c2632ecc1e72b6029/82ba59da81cb39dbe7c248afd9160924aa183042.jpg" 
+width=560 height=199 pic_type="0"><BR><BR>08 00 18 00 08 F4 00 08 F4 00 08 F8 00 
+28 1E F8 80 A8 1C F8 80 A8 1A FC 80 A8 18 FC 80 80 FF<BR>08 00 
+分别为碎片显示的Y坐标和X坐标<BR>18为取图位置<BR>那么，问题就来了，背景武器是在指定图库中取图读取图库方式为F2 03 
+01+XX(图库代码），那么，精灵武器的图库是怎么决定的呢<BR><IMG class=BDE_Image 
+src="https://imgsa.baidu.com/forum/w%3D580/sign=c5a9ca6b05f431adbcd243317b37ac0f/e83b4ba98226cffc6909904bb0014a90f703eaa2.jpg" 
+width=335 height=397 
+pic_type="0"><BR><BR>来看下盖塔龙这个机体图片的一些属性<BR>这个碎片代码的图库，也就是图库FC，就是这个冲击波的贴图所在的图库<BR>冲击波的贴图和盖塔龙碎片的贴图是贴在同一个图库的<BR>现在打开CT来看图库FC<BR><IMG 
+class=BDE_Image 
+src="https://imgsa.baidu.com/forum/w%3D580/sign=01234f32bbfb43161a1f7a7210a54642/a7a2d900baa1cd114ec55dd9b012c8fcc2ce2d51.jpg" 
+width=560 height=122 
+pic_type="0"><BR><BR>跳转到地址7F010<BR>这个就是冲击波贴图所在的图库<BR>关于图库已经讲解完了，接下來继续看32的具体代码</FONT></P>
+<P><FONT size=2><CC></FONT></P>
+<DIV id=post_content_105173661734 class="d_post_content j_d_post_content "><FONT 
+size=2><IMG class=BDE_Image 
+src="https://imgsa.baidu.com/forum/w%3D580/sign=dc2e4de518dfa9ecfd2e561f52d2f754/1e4a9f0a304e251fbb37cb01ae86c9177d3e5380.jpg" 
+width=560 height=193 pic_type="0"><BR><BR>08 00 
+分别为碎片显示的Y坐标和X坐标<BR>18为取图位置<BR>和背景武器取图有所区别的是，物理武器的取图第一格为00<BR><BR><IMG 
+class=BDE_Image 
+src="https://imgsa.baidu.com/forum/w%3D580/sign=5c0c5032f2edab6474724dc8c737af81/24925ce736d12f2e413b809946c2d5628435688f.jpg" 
+width=267 height=265 
+pic_type="0"><BR><BR>也就是虚线框所在的那一格，背景武器第一格是40，这个是需要注意的。<BR>00 
+读取图块并且下一个图片顺序排列<BR>08 00 18 
+00连起来这段代码的意思就是给定了横坐标和纵坐标，然后读取了两个图块<BR>那么，此时的图像是这样的<BR><IMG class=BDE_Image 
+src="https://imgsa.baidu.com/forum/w%3D580/sign=1ef3874bd858ccbf1bbcb53229d9bcd4/62135dfbb2fb4316c00f548329a4462308f7d3b1.jpg" 
+width=65 height=35 pic_type="0"><BR><BR>然后是08 F4 08+XX 
+读取图块且重新规定下一个图块的左右位置<BR>XX以00为分界线加1向右移动1像素减1向左移动1像素。<BR>然后是00<BR>那么 08 F4 00 
+又读取了两个图块<BR>此时的图像是这样的<BR><IMG class=BDE_Image 
+src="https://imgsa.baidu.com/forum/w%3D580/sign=74714166ad0f4bfb8cd09e5c334e788f/7e41b00e7bec54e7c0a234e7b0389b504ec26a7f.jpg" 
+width=100 height=67 pic_type="0"><BR>接下來就是蓝色标注的这一段<BR><BR><IMG class=BDE_Image 
+src="https://imgsa.baidu.com/forum/w%3D580/sign=086ae633a651f3dec3b2b96ca4eff0ec/e7e7a1014c086e0688e911b20b087bf40bd1cb00.jpg" 
+width=392 height=207 
+pic_type="0"><BR><BR>同理<BR>又读取了四个图块<BR>此时，可以看到已经读取了半个冲击波的图像了<BR><IMG 
+class=BDE_Image 
+src="https://imgsa.baidu.com/forum/w%3D580/sign=1c3c40a93da85edffa8cfe2b795509d8/4ea1a1ec8a136327c2ddebca988fa0ec09fac791.jpg" 
+width=102 height=134 pic_type="0"></FONT></DIV>
+<P><BR></CC><FONT size=2><IMG class=BDE_Image 
+src="https://imgsa.baidu.com/forum/w%3D580/sign=51f965f80355b3199cf9827d73a88286/8a1c8d35e5dde7116ed56a0faeefce1b9c166146.jpg" 
+width=560 height=202 pic_type="0"><BR><BR>接下來就是28 1E 
+F8<BR>20+XX读取图块并且下一个图片从XX（tile号）处<BR>开始读取。<BR><BR>08+XX 
+读取图块且重新规定下一个图块的左右位置<BR>XX以00为分界线加1向右移动1像素减1向左移动1像素。<BR><BR>28=20+8<BR><BR>那么28 
+1E F8的这三个代码的意思就是从1E图块开始读取，并且向左移动8像素（F8）<BR><IMG class=BDE_Image 
+src="https://imgsa.baidu.com/forum/w%3D580/sign=86b99e42af1ea8d38a22740ca70b30cf/cf2c9022720e0cf3628967020346f21fbf09aa4f.jpg" 
+width=282 height=269 
+pic_type="0"><BR><BR>这个1E图块就是虚线框所标注的图块<BR>80：将图块垂直翻转<BR><BR>那么28 1E F8 80 
+这段代码连起来的意思就是 
+1E这个图块向左移动了8像素，并且做了垂直翻转，要注意的是，一共读取了两个图块，也就是1E和1F<BR><BR>这里的图块位置关系比较难以理解，不是常规的相对位置<BR>此时的图像就是这样的<BR><BR><IMG 
+class=BDE_Image 
+src="https://imgsa.baidu.com/forum/w%3D580/sign=4308eed6b7096b6381195e583c328733/fbbc751ed21b0ef4529bb1a7d4c451da80cb3e51.jpg" 
+width=95 height=165 pic_type="0"><BR><BR><IMG class=BDE_Image 
+src="https://imgsa.baidu.com/forum/w%3D580/sign=e9819ad13f7adab43dd01b4bbbd5b36b/c65bb4315c6034a84f479178c21349540823761b.jpg" 
+width=375 height=146 
+pic_type="0"><BR><BR>后面代码同理<BR><BR>FF结束取图，然后就是你们所看到的完整的冲击波的图像了</FONT></P>
+<P><FONT size=2><CC></FONT></P>
+<DIV id=post_content_105173825270 class="d_post_content j_d_post_content "><FONT 
+size=2><IMG class=BDE_Image 
+src="https://imgsa.baidu.com/forum/w%3D580/sign=cace03de8382b9013dadc33b438ca97e/c268f5faaf51f3deb1bd919d9deef01f3b2979bd.jpg" 
+width=560 height=198 
+pic_type="0"><BR><BR>接下來是33的具体代码<BR><BR>和32类似，是从20开始取图<BR><BR>就是虚线框所标注的部分<BR><BR>那么32 
+32 33 33组合起来的意思就是 32播放两帧 33播放两帧<BR><BR>然后重复32 32 33 33 
+4次<BR><BR>32和33的图像是不一样的<BR><BR>每格两帧切换一次，因为人眼分辨率的关系，几乎是分辨不出来图像变化的<BR>只有极少数人能分辨<BR><IMG 
+class=BDE_Image 
+src="https://imgsa.baidu.com/forum/w%3D580/sign=4f6a8ae2dd0735fa91f04eb1ae500f9f/f24a5182b2b7d0a2e8862c64c2ef76094a369a7e.jpg" 
+width=560 height=242 pic_type="0"><BR><BR>那么，到目前为止，蓝色标注部分的代码已经讲解完了<BR><BR>FD 
+03提取音乐代码03<BR><BR>0A 0B FB 08 FB重复 0A 0B8次<BR><BR>0A 0B和之前的32 
+33一样，图像组合规律<BR><BR>这个是一帧一变换<BR>这个图像就是我们所看到的爆点<BR><IMG class=BDE_Image 
+src="https://imgsa.baidu.com/forum/w%3D580/sign=7f6d70eb464a20a4311e3ccfa0539847/926f7a8b4710b912f487de07cafdfc0393452206.jpg" 
+width=321 height=349 pic_type="0"><BR><BR>FF结束播放图像<BR><BR>FD 11 32 32 33 33 FB 
+04 F9 FD 03 0A 0B FB 08 FB FF 
+那么整段代码的意思就是<BR>播放音乐11（音乐播放的时间取决于具体音乐代码的长度，直到下一个音乐FD+XX开始切换音乐）<BR>播放图像32 32 33 
+33一共4次<BR>每个组图规律的播放时间为1帧（1/60秒）<BR>FD 
+03切换音乐03<BR>你们可以仔细听一下，冲击波一共两个声音，开始的一下，和爆点的那一下声音<BR>然后播放0A 0B 8次 
+<BR>FF结束播放</FONT><FONT size=2><BR></CC></FONT></DIV>
+<DIV id=post_content_105173909212 class="d_post_content j_d_post_content "><FONT 
+size=2><IMG class=BDE_Image 
+src="https://imgsa.baidu.com/forum/w%3D580/sign=9ed539b6972f07085f052a08d925b865/09309a58d109b3de8581cf91c5bf6c81810a4c8e.jpg" 
+width=560 height=239 
+pic_type="0"><BR><BR>接下来看运行规律2D，也就是横坐标的运行规律<BR>运行规律的代码没有结束点，精灵武器运行的结束取决于组图规律XX<BR>就冲击波而言，播放的时间长度取决于组图规律2C<BR>FC为移动的距离，每次移动的时间为1帧<BR>以00为分界点。+1为向右移动<BR>-1为向左移动<BR>那么FC就是向左移动4像素，移动时间为1帧<BR>83：83+AA+BB这里的83和图像提取规律里的FB作用一样<BR>83设定重复，AA设定次数，BB跳转，以BB代码所在位置的下<BR>一个代码位置为基地址BB为00基础每加1地址加1，每减1地<BR>址减1。<BR>这个和组图规律的设定跳转的方法和重复的方法是一样的<BR>区别就是标志码不同，组图规律为FB+XX+YY，运行规律为83+XX+YY<BR>FC 
+83 10 FC那么连起来的意思就是，重复FC 10（16进制）次，也就是向左移动10（16进制）次，每次4像素，00 83 10 
+FC同理<BR><BR>接下來就是运行规律2E<BR><IMG class=BDE_Image 
+src="https://imgsa.baidu.com/forum/w%3D580/sign=2c618c8cdf88d43ff0a991fa4d1fd2aa/8a47be003af33a8739322be3cf5c10385243b56e.jpg" 
+width=560 height=273 
+pic_type="0"><BR><BR>和2D一样，就不多做介绍了<BR>之前说过，运行规律是没有明确的结束点（FF）的<BR>一切都取决于组图规律<BR>那么现在连起来看组图规律2C:FD 
+11 32 32 33 33 FB 04 F9 FD 03 0A 0B FB 08 FB FF 横坐标运行规律2D:FC 83 10 FC 00 83 10 
+FC 00纵坐标运行规律2E:00 83 20 FC<BR><BR>我们可以看到冲击波图像播放的帧数为4*4=16帧<BR>纵坐标00 82 20 
+FC<BR>一共重复了00 20（16进制）次<BR>也就是纵坐标没有移动<BR>横坐标FC 83 10 
+FC<BR>一共运行了10(16进制）次<BR>所以，第一段动画你们看到的是这样的，冲击波的图像向左移动，一共播放了10（16进制）帧<BR><BR><IMG 
+class=BDE_Image 
+src="https://imgsa.baidu.com/forum/w%3D580/sign=2f111cc172f40ad115e4c7eb672d1151/6c848a8ba61ea8d3d8755ffd9e0a304e241f5875.jpg" 
+width=321 height=349 pic_type="0"><BR><BR>就是你们看到的这种动画<BR>FD 03 0A 0B FB 08 FB FF 
+然后就是接下來的一段动画，0A 0B重复08次，也就是一共播放了8帧<BR>纵坐标00 83 20 
+FC<BR>之前10（16进制）帧已经运行了<BR>接下來的10（16进制）帧仍是未动<BR>00 83 10 
+FC横坐标也是未动<BR>一共持续10（16进制）帧<BR><IMG class=BDE_Image 
+src="https://imgsa.baidu.com/forum/w%3D580/sign=70cbcae32134349b74066e8df9e81521/f4669f2bd40735fab32b654097510fb30d2408e9.jpg" 
+width=321 height=349 
+pic_type="0"><BR><BR>也就是爆点在此停留10（16进制）帧<BR>至此，整个动画播放结束<BR>根据之前的武器代码<BR>等待64（16进制）帧后显示伤害数值<BR><IMG 
+class=BDE_Image 
+src="https://imgsa.baidu.com/forum/w%3D580/sign=331a3ae4dd2a283443a636036bb4c92e/565aa318972bd40766b9f90472899e510eb3094e.jpg" 
+width=515 height=153 pic_type="0"><BR><IMG class=BDE_Image 
+src="https://imgsa.baidu.com/forum/w%3D580/sign=b687981f2e7f9e2f70351d002f31e962/822a5e4e9258d109a4d2834bd858ccbf6d814d97.jpg" 
+width=321 height=349 pic_type="0"></FONT></DIV></BODY></HTML>

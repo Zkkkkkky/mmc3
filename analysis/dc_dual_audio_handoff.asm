@@ -1,6 +1,5 @@
-; Same-frame custom-to-stock handoff stored in the expanded copy of stock PRG
-; bank $18. The source range $99EC-$9A7F is all zero and remains untouched in
-; the original bank; only the expanded copy receives this code.
+; Same-frame custom-to-stock handoff stored in a verified zero-filled hole of
+; the original stock-audio PRG bank $18 ($99EC-$9A7F).
 
     .base $99ec
 

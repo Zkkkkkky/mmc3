@@ -1,0 +1,48 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML><HEAD><TITLE>其他细节注意</TITLE>
+<META name=GENERATOR content="MSHTML 8.00.7601.19104">
+<META content="text/html; charset=gb2312" http-equiv=Content-Type>
+<STYLE>
+html,body { 
+	/* Default Font */
+	font-family: Microsoft YaHei, Simsun, sans-serif;
+	font-size: 12pt;
+}
+</STYLE>
+</HEAD>
+<BODY>
+<DIV class="d_post_content j_d_post_content "><FONT 
+size=2>下面讲几个需要注意的细节</FONT></DIV>
+<DIV class="d_post_content j_d_post_content "><FONT size=2></FONT>&nbsp;</DIV>
+<DIV class="d_post_content j_d_post_content "><FONT size=2>1.我方精灵武器如果为42 
+69+X读取组图规律，那么图像组合规律就是从00开始读取,即从第一个图库开始取图，如果是C2 
+69+XX就是从80开始读取，即从第三个图库开始取图，；敌方读取时和我方相反，如果为42 69+X读取组图规律，那么图像组合规律就是从80开始读取，如果是C2 
+69+XX就是从00开始读取，否则会导致花屏；<BR><BR>2.制作精灵武器需要注意的是，同屏幕只能显示64个精灵，这些精灵包括（头像正片的16个碎片+敌我方机体碎片+物理武器图块），也就是武器动画实际可用的精灵是去除头像正片和机体碎片之后的部分。而且需要注意的是，横坐标不能同时显示超过8个精灵。如果超过这个数目，出现，闪屏（精灵交替出现，一横同时只能显示8个）。我们可以通过模拟器的设置来解决这个问题，将其设置为一行精灵可以超过8个的设定的，但是一般情况下不建议这么做，因为手机模拟器不具备这个功能，手机玩家在玩游戏的时候体验会比较差。</FONT></DIV>
+<DIV class="d_post_content j_d_post_content "><FONT size=2></FONT>&nbsp;</DIV>
+<DIV class="d_post_content j_d_post_content "><FONT 
+size=2>3.对于背景武器特殊的拼图规律代码，例如光子射线的拼图规律，如下图所示：</FONT></DIV>
+<DIV class="d_post_content j_d_post_content "><IMG src="光子射线.png"></DIV>
+<DIV class="d_post_content j_d_post_content "><FONT size=2>FE 09 10定义起始横纵坐标，F8 
+08定义取图的数目，7C图块的编号，FF结束，连起来的意思就是读取8个图块7C,并且顺序排列。</FONT></DIV>
+<DIV class="d_post_content j_d_post_content "><IMG src="光束组图1.png"></DIV>
+<DIV class="d_post_content j_d_post_content "><FONT 
+size=2>如图所示灰色方框所示的图块7C,就是取图位置，重复取图8次。</FONT></DIV>
+<DIV class="d_post_content j_d_post_content "><FONT size=2></FONT>&nbsp;</DIV>
+<DIV class="d_post_content j_d_post_content "><FONT color=#0000ff 
+size=2>F8的作用就是重复取图，F9为顺序取图</FONT></DIV>
+<DIV class="d_post_content j_d_post_content "><FONT size=2></FONT>&nbsp;</DIV>
+<DIV class="d_post_content j_d_post_content "><FONT 
+size=2>4.对于背景武器中利用颜色的交替方法实现动态效果的方法：以光子射线为例进以说明</FONT></DIV>
+<DIV class="d_post_content j_d_post_content "><IMG src="光子射线2.png"></DIV>
+<DIV class="d_post_content j_d_post_content "><FONT size=2>FE 04 7F 
+82将其之前的蓝色标注的部分的代码重复了4次，我们可以看到，每隔4帧就改变了一次颜色，通过颜色的改变实现了光子射线的动态效果。如下图所示：</FONT></DIV>
+<DIV class="d_post_content j_d_post_content "><IMG 
+style="WIDTH: 269px; HEIGHT: 281px" src="光子射线101.png" width=300 height=367><IMG 
+style="WIDTH: 259px; HEIGHT: 281px" src="光子射线102.png" width=286 height=281><IMG 
+style="WIDTH: 274px; HEIGHT: 281px" src="光子射线103.png" width=392 
+height=291></DIV>
+<DIV class="d_post_content j_d_post_content "><FONT size=2></FONT>&nbsp;</DIV>
+<DIV class="d_post_content j_d_post_content "><FONT size=2></FONT>&nbsp;</DIV>
+<DIV class="d_post_content j_d_post_content "><FONT size=2></FONT>&nbsp;</DIV>
+<DIV class="d_post_content j_d_post_content ">&nbsp;</DIV>
+<DIV class="d_post_content j_d_post_content ">&nbsp;</DIV></BODY></HTML>

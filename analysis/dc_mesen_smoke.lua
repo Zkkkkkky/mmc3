@@ -5,7 +5,20 @@
 -- Mapper 194 banks above 512 KiB.
 
 local output_path = emu.getScriptDataFolder() .. "/dc_mesen_dual_audio.log"
-local output = assert(io.open(output_path, "w"))
+local output = nil
+if io ~= nil and io.open ~= nil then
+    output = io.open(output_path, "w")
+end
+if output == nil then
+    -- TestRunner sandboxes may disable file I/O.  Keep the behavioral checks
+    -- authoritative through emu.stop() even when no diagnostic log can be
+    -- written.
+    output = {
+        write = function() end,
+        flush = function() end,
+        close = function() end,
+    }
+end
 local failures = {}
 local checks = 0
 
@@ -77,7 +90,7 @@ end)
 
 register_exec(0x8020, function()
     local offset = prg_offset(0x8020)
-    if offset == 0xC0020 then
+    if offset == 0x30020 then
         counters.stock = counters.stock + 1
     else
         counters.stock_wrong = counters.stock_wrong + 1
@@ -194,7 +207,7 @@ local function finish()
         counters.fixed == 1 and counters.fixed_wrong == 0,
         string.format("hits=%d wrong=%d", counters.fixed, counters.fixed_wrong))
     check(
-        "true-1mib-stock-copy",
+        "stock-audio-patched-in-place",
         counters.stock > 100 and counters.stock_wrong == 0,
         string.format("hits=%d wrong=%d", counters.stock, counters.stock_wrong))
     check(
@@ -228,12 +241,14 @@ local function finish()
             counters.init, counters.play, counters.update, counters.sfx))
 
     local state = emu.getState()
-    output:write(string.format(
+    local result_line = string.format(
         "RESULT checks=%d failures=%d frames=%d pc=%04X " ..
         "stock=%d bridge=%d init=%d play=%d update=%d sfx=%d apu=%d\n",
         checks, #failures, frame, state.cpu.pc,
         counters.stock, counters.bridge, counters.init, counters.play,
-        counters.update, counters.sfx, counters.apu))
+        counters.update, counters.sfx, counters.apu)
+    output:write(result_line)
+    print(result_line)
     if #failures > 0 then
         output:write("FAILED_NAMES " .. table.concat(failures, ",") .. "\n")
     end

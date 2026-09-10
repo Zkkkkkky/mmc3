@@ -1,0 +1,13 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML><HEAD><TITLE>物理类武器的组图方式</TITLE>
+<META name=GENERATOR content="MSHTML 8.00.7601.19104">
+<META content="text/html; charset=gb2312" http-equiv=Content-Type>
+<STYLE>
+html,body { 
+	/* Default Font */
+	font-family: Microsoft YaHei, Simsun, sans-serif;
+	font-size: 12pt;
+}
+</STYLE>
+</HEAD>
+<BODY><FONT size=3 face="" font><PRE>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <FONT face=微软雅黑>物理类武器的组图方式<BR>(规律3)<BR>首先规定图片所显示的位置AA+BB；AA为Y坐标以00为<BR>分界线加1向下移动1像素减1向上移动1像素。BB为X坐<BR>标以00为分界线加1向右移动1像素减1向左移动1像素。<BR>然后规定从哪个图块开始读取XX为tile号。<BR>标志代码：<BR>01.00 读取图块并且下一个图片顺序排列。<BR>02.04+XX 读取图块且重新规定下一个图块的左右位置<BR>XX以00为分界线加1向右移动1像素减1向左移动1像素。<BR>参考位置为上一图块的位置。<BR>03.08+XX 读取图块且重新规定下一个图块的左右位置<BR>XX以00为分界线加1向右移动1像素减1向左移动1像素。<BR>参考位置为上一图块的下一格位置。<BR>04.0C+AA+BB读取图块且重新规定下一个图块的左右位<BR>置和上下位置AA为左右，BB为上下。<BR>05.20+XX读取图块并且下一个图片从XX（tile号）处<BR>开始读取。<BR>06.2C+AA+BB+CC读取图块并且下一个图片从AA（tile号）<BR>处开始读取且重新规定下一个图块的左右位置和上下位置<BR>BB为左右，CC为上下。<BR>(还有24、28其实都相当于04、08加了个20)<BR>07.将图块水平翻转则将上面的标志代码+H40。<BR>08.将图块垂直翻转则将上面的标志代码+H80。<BR>09.将图块水平翻转且垂直翻转则将上面的标志代码+HC0。<BR></FONT></PRE></FONT></BODY></HTML>

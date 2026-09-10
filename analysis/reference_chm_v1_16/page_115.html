@@ -1,0 +1,506 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML XMLNS:ST1><HEAD><TITLE>mapper004（MMC3）</TITLE>
+<META name=GENERATOR content="MSHTML 8.00.7601.19104">
+<META content="text/html; charset=gb2312" http-equiv=Content-Type>
+<STYLE>
+html,body { 
+	/* Default Font */
+	font-family: Microsoft YaHei, Simsun, sans-serif;
+	font-size: 12pt;
+}
+</STYLE>
+</HEAD>
+<BODY>
+<DIV class=tit><FONT 
+size=2>我对MMC3(Mapper4)的认识心得和一个同屏显示64色的FC程序演示(带源代码)</FONT></DIV>
+<DIV class=tit><FONT size=2></FONT>&nbsp;</DIV>
+<DIV class=tit><FONT size=2>作者 周哥</FONT></DIV>
+<DIV class=tit><FONT size=2></FONT>&nbsp;</DIV>
+<DIV class=tit><FONT size=2>引用 </FONT><A 
+href="http://hi.baidu.com/maxzhou88/blog/item/47cf10136eb5c2dcf7039ea7.html"><FONT 
+size=2>http://hi.baidu.com/maxzhou88/blog/item/47cf10136eb5c2dcf7039ea7.html</FONT></A></DIV>
+<DIV class=date><FONT size=2>2010年05月08日 星期六 上午 02:47</FONT></DIV>
+<TABLE style="WIDTH: 100%; TABLE-LAYOUT: fixed">
+  <TBODY>
+  <TR>
+    <TD>
+      <DIV id=blog_text class=cnt>
+      <P><SPAN><FONT size=2><SPAN><IMG class=blogimg border=0 
+      src="mk:@MSITStore:C:\Users\Administrator\Desktop\6502汇编\6502资料集\维京猎人教程.chm::/维京猎人教程/Mapper/5148C39C-5E5C-4292-A5D0-C69FF61E8448_files/3710529579746872d1135ef1.xif" 
+      small="0"><BR></SPAN><BR></FONT></SPAN></P>
+      <P><FONT size=2>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      还是早年前，我和一个台湾写FC游戏的软件工程师交流心得体会时，他教会了我有关MMC3的知识，作为交换，我也告诉了他一些有关2A03语音功能的使用。他一直对我强调的是：C3的使用一定要有切BANK的观念，IRQ中断是C3游戏的精华。这些对我印象很深，多年后的今天，每当我在玩C3游戏时，脑海里总是想像，这些技巧是如何实现的呢？</FONT></P>
+      <P><FONT size=2>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      MMC3是任天堂早期开发的一款配合FC或NES游戏卡带使用的ROM空间管理IC，在高K游戏卡中大量使用。它一共有3个大同小异的版本：MMC3A、MMC3B、MMC3C，可能是IC的制程方面的差异，从编程的角度上看它们没有什么区别。下面看看MMC3的引脚定义（采用 
+      44pin TQFP 硬封装）：</FONT></P>
+      <P><SPAN><FONT size=2><IMG class=blogimg border=0 
+      src="mk:@MSITStore:C:\Users\Administrator\Desktop\6502汇编\6502资料集\维京猎人教程.chm::/维京猎人教程/Mapper/5148C39C-5E5C-4292-A5D0-C69FF61E8448_files/a1e14f62c1f620e4e6113a45.bmp" 
+      small="0"><BR>这图是按美版的NES信号系统说明的，对于FC版而言M2就是CLK18，PRG/CE就是ROMS\（相当于A15\ 
+      &amp; CLK18）</FONT></SPAN></P>
+      <P><SPAN><FONT size=2>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      MMC3内部有8个可编程寄存器(Register)，通过A0，A13，A14和ROM\译码为如下端口地址：8000h， 8001h， A000h， 
+      A001h， C000h， C001h， E000h， 
+      E001h。这些地址当然还有镜像，如与8000h同效果的地址是8000～9ffe中的偶数地址， 
+      与8001h同效果的地址是8001～9fff中的奇数地址，其它类似。</FONT></SPAN></P><SPAN>
+      <P><SPAN><FONT size=2>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      MMC3可管理最大PRO-ROM空间为4Mbit(最高地址线为PRG A18)，最大CHR-ROM空间为2Mbit(最高地址线为CHR 
+      A17)；还可以管理电池记忆SRAM的使能和写保护；H/V接法(HV 
+      mirror)控制；屏幕行扫描(HScanLine)IRQ的管理，这一切皆由上面所说的寄存器来控制。</FONT></SPAN></P>
+      <P><SPAN><FONT color=#ff0000 size=2><STRONG>[1] PRO-ROM空间的切BANK管理（Bank 
+      Siwtching）</STRONG></FONT></SPAN></P>
+      <P><FONT size=2></FONT></P>
+      <P><FONT size=2></FONT></P>
+      <P><SPAN><SPAN><SPAN><FONT size=2><IMG class=blogimg border=0 
+      src="mk:@MSITStore:C:\Users\Administrator\Desktop\6502汇编\6502资料集\维京猎人教程.chm::/维京猎人教程/Mapper/5148C39C-5E5C-4292-A5D0-C69FF61E8448_files/a7779323802b9177925807b9.bmp" 
+      small="0"><BR></FONT></SPAN></SPAN></SPAN></P>
+      <P><FONT size=2><SPAN><SPAN>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      6527(或2A</SPAN></SPAN><SPAN><SPAN>03)CPU能看见的卡带程序地址空间CPU-ROM只有32KB（8000H～FFFFH），MMC3就是将它管理的4Mbit 
+      PRO-ROM空间按8KB一个Bank映射（Mapping）到CPU-ROM空间的相应8KB区中（见上图）。4MB的PRO-ROM空间共有00h～3Fh共64个Bank，最后一个Bank（3Fh）为驻留体，它固定映射到E000h~FFFFh区（简称E000h固定区或驻留体），用于程序的Reset启动。</SPAN></SPAN></FONT></P>
+      <P><SPAN><SPAN><FONT size=2>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      CPU-ROM空间的8000h区和C000h区为条件可变区，其中一个区为固定，另一个区为可变，固定的区被固定映射到PRO-ROM空间的倒数第二个Bank（3Eh），可变区可被映射到00h~3Fh任一个Bank。这要根据模式控制端口PORT_8000的D6位是0还是1来控制，D6位为0时，8000h区可变，C000h区固定，D6位为1时，则情况相反。这种条件可变区由模式控制端口PORT_8000设为06h模式号来决定，映射的Bank号由Bank号端口PORT_8001来决定。</FONT></SPAN></SPAN></P>
+      <P><SPAN><SPAN><FONT size=2>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      CPU-ROM空间的A000h区是绝对可变区，被映射到PRO-ROM空间的00h~3Fh任一个Bank，这种绝对可变区由模式控制端口PORT_8000设为07h模式号来决定，映射的Bank号由Bank号端口PORT_8001来决定。</FONT></SPAN></SPAN></P>
+      <P><SPAN><SPAN><FONT size=2>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      上图中的两种Bank映射方式代码如下：<BR><BR></FONT></SPAN></SPAN><SPAN><SPAN><FONT 
+      color=#00ff00><FONT size=2><FONT 
+      color=#ff9900>上部分的切Bank代码<BR></FONT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      LDA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      #$06&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;; 
+      06模式号，设置条件可变区<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      STA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      PORT_8000&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ; 
+      因为PORT_8000的D6位=0，所以8000h区为条件可变区<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      LDA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      #$01<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      STA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      PORT_8001&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ; 
+      设置8000h区的Bank号<BR></FONT></FONT></SPAN></SPAN><SPAN><SPAN><FONT 
+      color=#00ff00 
+      size=2>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      LDA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      #$07&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;; 
+      07模式号，设置绝对可变区<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      STA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      PORT_8000<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      LDA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      #$03<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      STA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      PORT_8001&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ; 
+      设置A000h区的Bank号</FONT></SPAN></SPAN></P>
+      <P><SPAN><SPAN><FONT color=#00ff00><SPAN><SPAN><FONT color=#00ff00><FONT 
+      size=2><FONT 
+      color=#ff9900>下部分的切Bank代码<BR></FONT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      LDA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      #$46&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;; 
+      06模式号，设置条件可变区<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      STA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      PORT_8000&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ; 
+      因为PORT_8000的D6位=1，所以C000h区为条件可变区<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      LDA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      #$03<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      STA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      PORT_8001&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ; 
+      设置C000h区的Bank号<BR></FONT></FONT></SPAN></SPAN><SPAN><SPAN><FONT 
+      color=#00ff00 
+      size=2>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      LDA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      #$07&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;; 
+      07模式号，设置绝对可变区<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      STA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      PORT_8000<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      LDA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      #$02<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      STA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      PORT_8001&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ; 
+      设置A000h区的Bank号<BR></FONT></SPAN></SPAN></FONT></SPAN></SPAN></P>
+      <P><FONT size=2></FONT></P>
+      <P><FONT size=2></FONT></P>
+      <P><FONT size=2></FONT></P>
+      <P><FONT size=2></FONT></P></SPAN>
+      <P><FONT size=2></FONT></P>
+      <P><FONT size=2></FONT></P>
+      <P><FONT size=2></FONT></P>
+      <P><FONT size=2>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      在通常的MMC3游戏中，第一种映射方案是常用的，也比较直观。和众科技 Super Game 
+      系列的MMC3游戏中，也是采用第一种映射方案，它是这样安排的：C000~FFFF 16K用于固定的程序，A000~BFFF 
+      8K用于可切Bank的程序，8000～9FFF 8K用于数据交换（如地图数据，音乐数据等）。</FONT></P>
+      <P><SPAN><FONT color=#ff0000 size=2><STRONG>[2] CHR-ROM空间的切BANK管理（Bank 
+      Siwtching）</STRONG></FONT></SPAN></P>
+      <P><SPAN><FONT color=#ff0000 size=2><STRONG><SPAN><IMG class=blogimg 
+      border=0 
+      src="mk:@MSITStore:C:\Users\Administrator\Desktop\6502汇编\6502资料集\维京猎人教程.chm::/维京猎人教程/Mapper/5148C39C-5E5C-4292-A5D0-C69FF61E8448_files/696771f818319d36d9f9fdbf.bmp" 
+      small="0"></SPAN></STRONG></FONT></SPAN></P>
+      <P><FONT size=2>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      6538(或2C02)PPU能看见的卡带字模地址空间PPU-ROM只有8KB（0000H～1FFFH），MMC3就是将它管理的2Mbit 
+      CHR-ROM空间按1KB一个Bank映射（Mapping）到PPU-ROM空间的相应1KB区或2KB区中（见上图），2MB的CHR-ROM空间共有00h～FFh共256个Bank。根据模式控制端口PORT_8000的D7位是0还是1来控制上图中的两种映射方式，D7=0时，PPU-ROM的上4K被分为两个2K体，下4K被分为四个1K体；D7=1时，PPU-ROM的上4K被分为四个1K体，下4K被分为两个2K体。PORT_8000的D2,D1,D0位为模式号，取值0～5，分别对应这6个体。PORT_8001为Bank号端口，它确定相应哪个体的映射Bank号，2K体由相邻的两个1K的Bank来映射，Bank号要为偶数（如果是Bank奇数，则实际是使用Bank 
+      - 1）；1K体就直接由1K的Bank来映射。</FONT></P>
+      <P><FONT size=2>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      上图中的两种Bank映射方式代码如下：<BR><BR></FONT><SPAN><SPAN><FONT color=#00ff00><FONT 
+      size=2><FONT 
+      color=#ff9900>上部分的切Bank代码</FONT><BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      LDA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      #$00&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      ; 00模式号<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      STA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      PORT_8000<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      LDA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      #$00&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      ; 00，01号Bank －&gt; 00体 （2K）<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      STA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      PORT_8001</FONT></FONT></SPAN></SPAN></P>
+      <P><SPAN><SPAN><FONT color=#00ff00 
+      size=2>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      LDA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      #$01&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      ; 01模式号<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      STA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      PORT_8000<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      LDA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      #$02&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      ; 02，03号Bank －&gt; 01体 （2K）<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      STA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      PORT_8001</FONT></SPAN></SPAN></P>
+      <P><SPAN><SPAN><FONT color=#00ff00 
+      size=2>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      LDA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      #$02&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      ; 02模式号<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      STA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      PORT_8000<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      LDA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      #$FC&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      ; FC号Bank －&gt; 02体<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      STA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      PORT_8001</FONT></SPAN></SPAN></P>
+      <P><SPAN><SPAN><FONT color=#00ff00 
+      size=2>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      LDA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      #$03&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      ; 03模式号<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      STA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      PORT_8000<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      LDA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      #$FD&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      ; FD号Bank －&gt; 03体<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      STA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      PORT_8001</FONT></SPAN></SPAN></P>
+      <P><SPAN><SPAN><FONT color=#00ff00 
+      size=2>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      LDA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      #$04&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      ; 04模式号<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      STA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      PORT_8000<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      LDA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      #$FE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      ; FE号Bank －&gt; 04体<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      STA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      PORT_8001</FONT></SPAN></SPAN></P>
+      <P><SPAN><SPAN><FONT color=#00ff00 
+      size=2>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      LDA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      #$05&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      ; 05模式号<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      STA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      PORT_8000<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      LDA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      #$FF&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      ; FF号Bank －&gt; 05体<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      STA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      PORT_8001</FONT></SPAN></SPAN></P>
+      <P><FONT size=2></FONT></P>
+      <P><FONT size=2></FONT></P>
+      <P><FONT size=2></FONT></P>
+      <P><FONT size=2></FONT></P>
+      <P><SPAN><SPAN><FONT color=#00ff00><SPAN><SPAN><FONT 
+      color=#00ff00><SPAN><SPAN><FONT color=#00ff00><FONT size=2><FONT 
+      color=#ff9900>下部分的切Bank代码</FONT><BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      LDA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      #$82&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      ; 82模式号<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      STA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      PORT_8000<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      LDA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      #$00&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      ; 00号Bank －&gt; 82体<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      STA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      PORT_8001</FONT></FONT></SPAN></SPAN></FONT></SPAN></SPAN></FONT></SPAN></SPAN></P><SPAN><SPAN><FONT 
+      color=#00ff00><SPAN><SPAN><FONT color=#00ff00><SPAN><SPAN><FONT 
+      color=#00ff00>
+      <P><SPAN><SPAN><FONT color=#00ff00 
+      size=2>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      LDA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      #$83&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      ; 83模式号<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      STA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      PORT_8000<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      LDA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      #$01&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      ; 01号Bank －&gt; 83体<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      STA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      PORT_8001</FONT></SPAN></SPAN></P>
+      <P><SPAN><SPAN><FONT color=#00ff00 
+      size=2>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      LDA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      #$84&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      ; 84模式号<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      STA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      PORT_8000<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      LDA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; #$02 
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      ; 02号Bank －&gt;84体<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      STA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      PORT_8001</FONT></SPAN></SPAN></P>
+      <P><SPAN><SPAN><FONT color=#00ff00 
+      size=2>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      LDA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      #$85&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      ; 85模式号<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      STA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      PORT_8000<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      LDA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      #$03&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      ; 03号Bank －&gt; 85体<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      STA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      PORT_8001</FONT></SPAN></SPAN></P>
+      <P><SPAN><SPAN><FONT color=#00ff00 
+      size=2>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      LDA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      #$80&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      ; 80模式号<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      STA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      PORT_8000<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      LDA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      #$04&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      ; 04，05号Bank －&gt; 80体 （2K）<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      STA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      PORT_8001</FONT></SPAN></SPAN></P>
+      <P><SPAN><SPAN><FONT color=#00ff00 
+      size=2>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      LDA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      #$81&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      ; 81模式号<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      STA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      PORT_8000<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      LDA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      #$06&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      ; 06，07号Bank －&gt; 81体 （2K）<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      STA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      PORT_8001</FONT></SPAN></SPAN></P></FONT></SPAN></SPAN></FONT></SPAN></SPAN></FONT></SPAN></SPAN>
+      <P><FONT size=2>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 在和众科技 Super Game 
+      系列的MMC3游戏中，第一种映射方案是常用的。上4K用来做背景(BG)字模，下4K用来做卡通(SPR)字模，这样就有4个独立切Bank的卡通（如：主角、敌物1、敌物2、其它）字模区，采用动态切卡通的Bank时，就可以做出动作非常连贯的卡通图案。背景图案在空间允许的情况下也可以通过切Bank来连续变化。这也就是为什么说采用了MMC3的游戏有作非常连贯的精美画面。<BR><BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      下面将CPU和PPU切Bank的端口统一表述一下：</FONT></P>
+      <P><FONT size=2><FONT color=#ff9900>模式控制端口 
+      PORT_8000</FONT><BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; D2 D1 D0 
+      ：用于切体模式控制，代表CPU和PPU地址空间的相应区域。<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      模式号 00，01，02，03，04，05 
+      用于PPU空间的6个区域。<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      模式号 06，07 
+      用于CPU空间的2个区域。06对应条件可变体，07对应绝对可变体。<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      D6 ：用于CPU条件可变体的选择。0：选择8000H体为条件可变体；1： 
+      选择C000H体为条件可变体。<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; D7 
+      ：用于PPU分区方式。0：上4K（2X2K）下4K（4X1K）；1：上4K（4X1K）下4K（2X2K）。<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      D7=1时，相当于将D7=0时的VROM地址与1000h 
+      异或后的结果。<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 其它位没有用</FONT></P>
+      <P><FONT size=2><FONT color=#ff9900>Bank号数据端口 
+      PORT_8001<BR></FONT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      用于相应模式号下的CPU或PPU映射的Bank号，CPU的取值范围：00~3F；PPU的取值范围：00~FF。</FONT></P>
+      <P><FONT color=#0000ff size=2>××× 
+      注意：虽然在上电复位时，MMC3的内部寄存器为0，CPU地址空间的C000h~FFFFh被固定映射为PRG-ROM空间的最后两个8K 
+      Bank，但是经过我对原装的MMC3和克隆的MMC3的实际测试发现，C000h~DFFFh这8K不一定被映射为PRG-ROM的倒数第2个Bank。也就是说，如果上电复位地址刚好落到该区域，就有可能发生死机现象。所以最好将Reaset向量控制在E000h~FFFFh中。</FONT></P>
+      <P><FONT size=2></FONT></P>
+      <P><STRONG><FONT color=#ff0000 size=2>[3] H/V接法(HV 
+      mirror)控制端口PORT_A000</FONT></STRONG></P>
+      <P><FONT size=2><FONT 
+      color=#ff9900>PORT_A000<BR></FONT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; D0 
+      ：用来控制HV镜像<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      0 - 水平H接法，V垂直镜像（Vertical 
+      mirroring）<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      1 - 垂直V接法，H水平镜像（Horizontal 
+      mirroring）<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 其它位没有用</FONT></P>
+      <P><FONT color=#00ff00 size=2>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 如： 
+      LDA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      #$00&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      ; 
+      设定水平H接法<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      STA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; PORT_A000</FONT></P>
+      <P><STRONG><FONT color=#ff0000 size=2>[4] 
+      电池记忆SRAM的使能和写保护控制端口PORT_A001</FONT></STRONG></P>
+      <P><FONT size=2><FONT 
+      color=#ff9900>PORT_A001</FONT><BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; D7 
+      ：用来控制SRAM的使能， 0 禁止使用SRAM（Disable）；1 
+      可以使用SRAM（Enable）<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; D6 ：用来控制SRAM的写保护 
+      0 SRAM可写；1 SRAM只读<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+其它位没有用</FONT></P>
+      <P><FONT color=#00ff00 size=2>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 如： 
+      LDA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      #10000000B&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ; 
+      设定SRAM空间6000h-7FFFh为可读可写<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      STA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; PORT_A001</FONT></P>
+      <P><FONT color=#ff0000 size=2><STRONG>[5] 
+      屏幕行扫描(HScanLine)的IRQ中断管理</STRONG></FONT></P>
+      <P><FONT size=2>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      IRQ的控制是MMC3最令人赏心悦目的功能，它可以精确确定IRQ中断在屏幕哪一条水平扫描线(Hscanline)上发生，这为屏幕分割显示、屏幕扭曲、动态切换字模、同屏多色等技巧提供了精确的定时。这涉及到下面4个寄存器或控制端口：<BR><BR></FONT><FONT 
+      color=#ff9900 
+      size=2>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      PORT_C000 ：IRQ计数器预装寄存器（irq counter preset value register）<BR></FONT><FONT 
+      size=2><FONT 
+      color=#ff9900>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      PORT_C001 ：IRQ计数器清零端口（irq counter clear 
+      port）<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      PORT_E000 ：IRQ禁止端口（irq <FONT color=#ff9900>acknowledge register clear 
+      port</FONT>）<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      PORT_E001 ：IRQ使能端口（irq enable register setup 
+      port）</FONT><BR><BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      由它们来控制IRQ的发生和响应。为了能很好地理解它们的相互关系，我画了张简图说明如下：</FONT></P>
+      <P><SPAN><FONT size=2><IMG class=blogimg border=0 
+      src="mk:@MSITStore:C:\Users\Administrator\Desktop\6502汇编\6502资料集\维京猎人教程.chm::/维京猎人教程/Mapper/5148C39C-5E5C-4292-A5D0-C69FF61E8448_files/1820e98d2624c32bb31bbad6.bmp" 
+      width=800 small="0"><BR>该图是我根据自己的心得体会绘制的关于MMC3 
+      IRQ发生器的原理图，如有误解请大家指正。</FONT></SPAN></P>
+      <P><SPAN><FONT size=2>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      在介绍IRQ原理前，我们先来看看行扫描期间，PPU是如何处理背景和卡通字模（BG &amp; Sprite 
+      tiles）的。PPU的地址总线在屏幕显示期间用来访问外部的字模CHR-ROM（Pattern）和显示码VRAM（Name Table 
+      ，Attribute Table 
+      ）。在一条可显示的水平扫描行（HScanline）的显示期间，PPU要读取该行的32个背景块字模并显示它们；在该行的行消隐期间，PPU要读取下一行的8个卡通字模为下一行的卡通显示作准备（呵呵，这就是为什么一个扫描行不能超过8个卡通，因为行消隐的时间有限嘛！）。如果我们将背景和卡通字模设定在8K 
+      CHR-ROM 
+      的上下不同的4K中（如背景在上4K，PA12＝0；卡通在下4K，PA12=1，这由2000h端口的D4D3位决定），那么决定上下4K的PPU地址线PA12在一条扫描行中就会有一次跳变。MMC3就是用过监视PA12的跳变来触发它的<FONT 
+      color=#00ff00>IRQ中断计数器</FONT>（IRQ Counter），以达到记录行扫描数的目的。</FONT></SPAN></P>
+      <P><SPAN><FONT size=2>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; MMC3中的<FONT 
+      color=#00ff00>IRQ中断计数器</FONT>（IRQ_Counter），是一个由PA12的边沿跳变来触发的8bit递减计数器，当计数值为0时，就会置位<FONT 
+      color=#00ff00>IRQ响应寄存器</FONT>（IRQ_Ack_Reg），在IRQ使能（Enabe）的情况下，会在IRQ_Flag脚上输出低电平的IRQ中断信号。与此同时，在下一个PA12的跳变边沿还会将<FONT 
+      color=#00ff00>IRQ预装值寄存器</FONT> 
+      PORT_C000的值重新装入IRQ_Counter。</FONT></SPAN></P>
+      <P><SPAN><FONT size=2>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      端口PORT_C001的作用是将IRQ_Counter清零，这也会导致在PA12的下一个跳变边沿将PORT_C000的值装入IRQ_Counter。</FONT></SPAN></P>
+      <P><SPAN><FONT size=2>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      IRQ中断发生后，可以用端口PORT_E000来清除中断标识，以免中断的再入发生，这就是中断处理程序的要做中断响应（IRQ 
+      Acknowledge）。</FONT></SPAN></P>
+      <P><SPAN><FONT size=2>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      PORT_E001用来使能IRQ中断，当用PORT_E000置位并关掉IRQ后，要用PORT_E001来打开<FONT 
+      color=#00ff00>IRQ使能寄存器</FONT>，为下一个IRQ的到来做准备。</FONT></SPAN></P>
+      <P><SPAN><FONT size=2>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      除PORT_C000寄存器要放扫描行数值外，其它端口写什么值都无所谓，它们仅是一个触发端口而已。PORT_C000的值如为N，那么IRQ就会在N+1显示行发生。</FONT></SPAN></P>
+      <P><SPAN><FONT size=2>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      IRQ_Counter是一个不能被程序直接访问的计数器，它在屏幕显示期间会不停地减一计数和重装。有一个例外是，如果PORT_C000设为0，则IRQ就只发生一次，其后 
+      IRQ_Counter就一直在做重装入。</FONT></SPAN></P>
+      <P><SPAN><FONT size=2>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      所以，要使IRQ能发生，就必须要有PA12在每一扫描行上有跳变，也就是背景和卡通的字模不能放在同一个4K中字模块中。在8X16的大卡通模式下，则背景要放在上4K，卡通要放在下4K。各种组合情况我都在实际的硬件主机上做过测试。当然有些模拟器可能模拟不出这种细节，如VirtuaNESex、NnnesterJ、Fceu等模拟器在背景和卡通用同一套字模区时也产生IRQ，只有号称能cycle-by-cycle地精确模拟定时模拟器Nestopia才与我做的硬件测试最符合。</FONT></SPAN></P>
+      <P><SPAN><FONT size=2>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      MMC3的IRQ在软件编程时，一般分3个部分：<BR></FONT></SPAN><SPAN><BR><FONT color=#ff9900 
+      size=2>[A] 主程序初始化片段<BR></FONT><FONT color=#00ff00 
+      size=2>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      LDA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      #$C0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;; 
+      或 #$40，关掉2A03的内部 CLOCK IRQ 以免和 MMC3 
+      IRQ冲突<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      STA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      $4017<BR><BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      STA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      PORT_E000&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;; 
+      E000写任意值禁止MMC3 IRQ</FONT></SPAN></P>
+      <P><SPAN><FONT size=2><FONT 
+      color=#00ff00>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      CLI</FONT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<FONT 
+      color=#00ff00>; 打开6502的可屏蔽中断标识，为接收MMC3 IRQ 做准备</FONT></FONT></SPAN></P>
+      <P><SPAN><FONT color=#ff9900 size=2>[B] NMI中断处理片段<BR></FONT><FONT 
+      color=#00ff00 
+      size=2>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      LDA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      #ScanLineValue&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ; IRQ将在 ScanLineValue + 1 
+      行发生<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      STA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      PORT_C000&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ; 
+      将扫描行数写入计数器预设寄存器C000<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      STA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      PORT_C001&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ; 
+      写C001使IRQ_Counter清零，C000的值在下一扫描行装入IRQ_Counter<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      STA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      PORT_E001&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ; 
+      写E001，允许MMC3 IRQ发生</FONT></SPAN></P>
+      <P><SPAN><FONT color=#00ff00 
+      size=2>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      CLI&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;; 
+      有时IRQ可能发生在NMI处理期间，所以要打开被NMI关掉的6502中断标志</FONT></SPAN></P>
+      <P><SPAN><FONT color=#ff9900 size=2>[C] IRQ中断处理片段<BR></FONT><FONT 
+      color=#00ff00 
+      size=2>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      STA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      PORT_E000&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ; 
+      清IRQ标志和禁止IRQ，以免中断再进入<BR><BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      ......&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;; 
+      做你想做的事情，如改变2005来分屏移动背景</FONT></SPAN></P>
+      <P><SPAN><FONT color=#00ff00 
+      size=2>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      STA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      PORT_E001&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ; 
+      若后面还要响应IRQ，则打开IRQ使能</FONT></SPAN></P>
+      <P><FONT size=2></FONT></P>
+      <P><SPAN><FONT size=2>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      下面介绍一个采用MMC3的IRQ实现64色同屏显示的demo，下图就是它的模拟器截图，由于程序做了比较精确定时处理，实际硬件的显示效果在PAL制式下与下图也一样，没有分屏产生的杂信。</FONT></SPAN><SPAN><BR></SPAN></P>
+      <P><FONT size=2></FONT></P>
+      <P><FONT size=2></FONT></P>
+      <P><FONT size=2></FONT></P>
+      <P><FONT size=2></FONT></P>
+      <P><FONT size=2></FONT></P>
+      <P><FONT size=2></FONT></P>
+      <P><SPAN><FONT size=2><IMG class=blogimg border=0 
+      src="mk:@MSITStore:C:\Users\Administrator\Desktop\6502汇编\6502资料集\维京猎人教程.chm::/维京猎人教程/Mapper/5148C39C-5E5C-4292-A5D0-C69FF61E8448_files/8e7abf2d0e7fd20d349bf7d0.png" 
+      small="0"></FONT></SPAN></P>
+      <P><FONT size=2></FONT></P>
+      <P><SPAN><FONT size=2>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      基本思路是，利用IRQ将屏幕上下分成8个色条，每个色条采用不同的配色板，第1个色条的配色板由NMI处理程序写入，后面的7个色条的配色板由IRQ处理程序写入。IRQ的计数值设为色条的的高度，同一IRQ处理程序被执行7次来处理不同的色条。值得注意的是，在NMI中写配色板是没有问题的，但后面的IRQ已经到了屏幕显示区，这时候要写配色板则一定要将屏幕关掉（00 
+      -&gt; 2001h）才能写，写完后再打开（0E -&gt; 
+      2001h）。也就是说，通过IRQ我们可以将屏幕动态开关多次来达到写不同区域的配色板的目的。</FONT></SPAN></P>
+      <P><SPAN><FONT size=2>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      在屏幕发生IRQ的交界处，由于定时的问题会在分屏处产生跳动的杂信，在实际的硬件和cycle-by-cycle型模拟器Nestopia中能看见，这可以通过几种技巧除掉，其中之一就是用NOP延时将杂信推到行消隐区，本Demo就是采用这种技巧消除杂信的，写配色板子程序 
+      WT_PAL 中有很多延时代码就是起这个作用。</FONT></SPAN></P>
+      <P><SPAN><FONT size=2><STRONG><FONT color=#ff0000>ROM下载地址:</FONT></STRONG> 
+      </FONT><A href="http://maxzhou88.ys168.com/"><FONT 
+      size=2>http://maxzhou88.ys168.com/</FONT></A><FONT color=#00ff00><FONT 
+      size=2> </FONT><FONT size=2><FONT color=#00ff00>NES/ FC-COLOR_64.rar 
+      4KB<BR></FONT><FONT color=#ff0000><STRONG>UUShare下载地址：</STRONG><A 
+      href="http://www.uushare.com/user/maxzhou88/file/2993133"><FONT 
+      color=#00ff00>http://www.uushare.com/user/maxzhou88/file/2993133</FONT></A></FONT></FONT></FONT></SPAN></P>
+      <P><FONT size=2></FONT></P>
+      <P><FONT size=2></FONT></P>
+      <P><FONT size=2>所用的编译工具是2500AD（汇编器：x6502 ，连接器： 
+      xlink）<BR>2500AD下载地址：</FONT><A href="http://maxzhou88.ys168.com/"><FONT 
+      size=2>http://maxzhou88.ys168.com/</FONT></A><FONT size=2> <FONT 
+      color=#00ff00>工具[Tools]/6502汇编工具(2500AD_5.01).rar 211KB</FONT></FONT></P>
+      <P><FONT color=#00ff00><FONT color=#000000><FONT color=#0000ff 
+      size=2>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </FONT><FONT color=#ff9900 
+      size=2>另外推荐一款由中国大学生－－马子杨，开发的一款国人FC模拟器：<FONT color=#ff0000>NESEmu 
+      V3.0</FONT>，它可以显示IRQ在屏幕上发生的位置。<BR></FONT></FONT></FONT></P>
+      <P><FONT size=2></FONT></P>
+      <P><FONT 
+      size=2>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      周哥（</FONT><A href="http://hi.baidu.com/maxzhou88" target=_blank><FONT 
+      color=#0000ff size=2>maxzhou88</FONT></A><FONT size=2>） 
+      写于</FONT><SPAN><FONT size=2><ST1:CHSDATE year="2009" month="1" day="21" 
+      isrocdate="False" islunardate="False">2010-05-08</ST1:CHSDATE><BR 
+      style="mso-special-character: line-break">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</FONT><A 
+      href="http://hi.baidu.com/maxzhou88" target=_blank><FONT size=2><IMG 
+      class=sigimage 
+      alt=http://user2.55.la/user_pic/logopic/2008/10/24/09/72299.gif 
+      src="mk:@MSITStore:C:\Users\Administrator\Desktop\6502汇编\6502资料集\维京猎人教程.chm::/维京猎人教程/Mapper/5148C39C-5E5C-4292-A5D0-C69FF61E8448_files/72299.gif" 
+      minmax_bound="true"></FONT></A><BR 
+      style="mso-special-character: line-break"></SPAN></P>
+      <P><FONT 
+      size=2>=====================================================================================================</FONT></P>
+      <P><FONT size=2></FONT></P>
+      <P><SPAN><FONT size=2><IMG class=blogimg border=0 
+      src="mk:@MSITStore:C:\Users\Administrator\Desktop\6502汇编\6502资料集\维京猎人教程.chm::/维京猎人教程/Mapper/5148C39C-5E5C-4292-A5D0-C69FF61E8448_files/2dde6603f4263fb1d43f7ca5.jpg" 
+      width=800 
+      small="0"><BR>这是我收藏的一款采用MMC3的NES卡带，左边的3197A就是老任CIC分区加密IC。</FONT></SPAN></P>
+      <P><SPAN><SPAN><FONT size=2><IMG class=blogimg border=0 
+      src="mk:@MSITStore:C:\Users\Administrator\Desktop\6502汇编\6502资料集\维京猎人教程.chm::/维京猎人教程/Mapper/5148C39C-5E5C-4292-A5D0-C69FF61E8448_files/ddd9188bec6441eafd1f10bc.xif" 
+      small="0"><BR>这是转载网友 </FONT><A 
+      href="http://emubbs.uuu9.com/read.php?tid=2342006&amp;fpage=3" 
+      target=_blank><FONT color=#0000ff size=2>ZH1110</FONT></A><FONT size=2> 
+      文章中介绍的带电池记忆SRAM的MMC3 NES 卡带。</FONT></SPAN></SPAN></P>
+      <P><SPAN><SPAN><SPAN><FONT size=2><IMG class=blogimg border=0 
+      src="mk:@MSITStore:C:\Users\Administrator\Desktop\6502汇编\6502资料集\维京猎人教程.chm::/维京猎人教程/Mapper/5148C39C-5E5C-4292-A5D0-C69FF61E8448_files/e7073118b569942f35fa41ea.jpeg" 
+      width=800 small="0"><BR>这是FC版本的MMC3卡带，图中的40pin 
+      DIP封装的MMC3是台湾人开的兼容IC（克隆MMC3），不是正宗的任天堂MMC3。</FONT></SPAN></SPAN></SPAN></P>
+      <P><FONT 
+      size=2>=====================================================================================================</FONT></P></DIV></TD></TR></TBODY></TABLE></BODY></HTML>

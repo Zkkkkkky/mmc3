@@ -1,0 +1,2098 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML><HEAD><TITLE>操作码排序</TITLE>
+<META name=GENERATOR content="MSHTML 8.00.7601.19104">
+<META content="text/html; charset=gb2312" http-equiv=Content-Type>
+<STYLE>
+html,body { 
+	/* Default Font */
+	font-family: Microsoft YaHei, Simsun, sans-serif;
+	font-size: 12pt;
+}
+</STYLE>
+</HEAD>
+<BODY>
+<TABLE style="WIDTH: 418pt; BORDER-COLLAPSE: collapse" border=0 cellSpacing=0 
+cellPadding=0 width=556>
+  <COLGROUP>
+  <COL style="WIDTH: 63pt; mso-width-source: userset; mso-width-alt: 2688" 
+  width=84>
+  <COL style="WIDTH: 92pt; mso-width-source: userset; mso-width-alt: 3904" 
+  width=122>
+  <COL style="WIDTH: 81pt; mso-width-source: userset; mso-width-alt: 3456" 
+  width=108>
+  <COL style="WIDTH: 182pt; mso-width-source: userset; mso-width-alt: 7744" 
+  width=242>
+  <TBODY>
+  <TR style="HEIGHT: 14.25pt" height=19>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext 0.5pt solid; BACKGROUND-COLOR: transparent; WIDTH: 63pt; HEIGHT: 14.25pt; BORDER-TOP: windowtext 0.5pt solid; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl68 height=19 width=84><STRONG><FONT size=2 
+      face=宋体>指令操作码</FONT></STRONG></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 92pt; BORDER-TOP: windowtext 0.5pt solid; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl67 width=122><STRONG><FONT size=2 face=宋体>符号码格式</FONT></STRONG></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 81pt; BORDER-TOP: windowtext 0.5pt solid; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl67 width=108><STRONG><FONT size=2 face=宋体>寻址方式</FONT></STRONG></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 182pt; BORDER-TOP: windowtext 0.5pt solid; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl76 width=242><FONT size=2 face=宋体>功能</FONT></TD></TR>
+  <TR style="HEIGHT: 14.25pt" height=19>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext 0.5pt solid; BACKGROUND-COLOR: transparent; HEIGHT: 14.25pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl73 height=19><FONT size=2 face=宋体>00</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 92pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=122><FONT size=2 face=宋体>INT</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl72><FONT size=2 face=宋体>　</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 182pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl76 width=242><FONT size=2 face=宋体>中断指令</FONT></TD></TR>
+  <TR style="HEIGHT: 14.25pt" height=19>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext 0.5pt solid; BACKGROUND-COLOR: transparent; HEIGHT: 14.25pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl73 height=19><FONT size=2 face=宋体>00</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl72><FONT size=2 face=宋体>BRK</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl72><FONT size=2 face=宋体>　</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 182pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl76 width=242><FONT size=2 face=宋体>软件中断指令</FONT></TD></TR>
+  <TR style="HEIGHT: 24pt" height=32>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext 0.5pt solid; BACKGROUND-COLOR: transparent; WIDTH: 63pt; HEIGHT: 24pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl71 height=32 width=84><FONT size=2 face=宋体>01</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 92pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=122><FONT size=2 face=宋体>ORA ($addr,X)</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 81pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=108><FONT size=2 face=宋体>先变址X后间址</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 182pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl76 width=242><FONT size=2 face=宋体>寄存器与累加器相或,结果送累加器<SPAN 
+      style="mso-spacerun: yes">&nbsp; </SPAN>A∨M→A</FONT></TD></TR>
+  <TR style="HEIGHT: 24pt" height=32>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext 0.5pt solid; BACKGROUND-COLOR: transparent; WIDTH: 63pt; HEIGHT: 24pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl71 height=32 width=84><FONT size=2 face=宋体>05</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 92pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=122><FONT size=2 face=宋体>ORA $addr</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 81pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=108><FONT size=2 face=宋体>零页寻址</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 182pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl76 width=242><FONT size=2 face=宋体>寄存器与累加器相或,结果送累加器<SPAN 
+      style="mso-spacerun: yes">&nbsp; </SPAN>A∨M→A</FONT></TD></TR>
+  <TR style="HEIGHT: 48pt" height=64>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext 0.5pt solid; BACKGROUND-COLOR: transparent; WIDTH: 63pt; HEIGHT: 48pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl71 height=64 width=84><FONT size=2 face=宋体>06</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 92pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=122><FONT size=2 face=宋体>ASL $data</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 81pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=108><FONT size=2 face=宋体>零页寻址</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 182pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl76 width=242><FONT size=2 
+      face=宋体>算术左移指令,移位功能是将字节内各位依次向左移1位，最高位移进标志位C中，最底位补0,执行结果相当于把移位前的数乘2</FONT></TD></TR>
+  <TR style="HEIGHT: 14.25pt" height=19>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext 0.5pt solid; BACKGROUND-COLOR: transparent; HEIGHT: 14.25pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl73 height=19><FONT size=2 face=宋体>08</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 92pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=122><FONT size=2 face=宋体>PHP</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl72><FONT size=2 face=宋体>　</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 182pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl76 width=242><FONT size=2 face=宋体>标志寄存器P进栈指令</FONT></TD></TR>
+  <TR style="HEIGHT: 24pt" height=32>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext 0.5pt solid; BACKGROUND-COLOR: transparent; WIDTH: 63pt; HEIGHT: 24pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl71 height=32 width=84><FONT size=2 face=宋体>09</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 92pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=122><FONT size=2 face=宋体>ORA #$data</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 81pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=108><FONT size=2 face=宋体>立即寻址</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 182pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl76 width=242><FONT size=2 face=宋体>寄存器与累加器相或,结果送累加器<SPAN 
+      style="mso-spacerun: yes">&nbsp; </SPAN>A∨M→A</FONT></TD></TR>
+  <TR style="HEIGHT: 48pt" height=64>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext 0.5pt solid; BACKGROUND-COLOR: transparent; WIDTH: 63pt; HEIGHT: 48pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl71 height=64 width=84><FONT size=2 face=宋体>0A</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 92pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=122><FONT size=2 face=宋体>ASL</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 81pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=108><FONT size=2 face=宋体>累加器寻址</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 182pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl76 width=242><FONT size=2 
+      face=宋体>算术左移指令,移位功能是将字节内各位依次向左移1位，最高位移进标志位C中，最底位补0,执行结果相当于把移位前的数乘2</FONT></TD></TR>
+  <TR style="HEIGHT: 24pt" height=32>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext 0.5pt solid; BACKGROUND-COLOR: transparent; WIDTH: 63pt; HEIGHT: 24pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl71 height=32 width=84><FONT size=2 face=宋体>0D</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 92pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=122><FONT size=2 face=宋体>ORA $addr16</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 81pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=108><FONT size=2 face=宋体>绝对寻址</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 182pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl76 width=242><FONT size=2 face=宋体>寄存器与累加器相或,结果送累加器<SPAN 
+      style="mso-spacerun: yes">&nbsp; </SPAN>A∨M→A</FONT></TD></TR>
+  <TR style="HEIGHT: 48pt" height=64>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext 0.5pt solid; BACKGROUND-COLOR: transparent; WIDTH: 63pt; HEIGHT: 48pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl71 height=64 width=84><FONT size=2 face=宋体>0E</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 92pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=122><FONT size=2 face=宋体>ASL $addr16</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 81pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=108><FONT size=2 face=宋体>绝对寻址</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 182pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl76 width=242><FONT size=2 
+      face=宋体>算术左移指令,移位功能是将字节内各位依次向左移1位，最高位移进标志位C中，最底位补0,执行结果相当于把移位前的数乘2</FONT></TD></TR>
+  <TR style="HEIGHT: 14.25pt" height=19>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext 0.5pt solid; BACKGROUND-COLOR: transparent; WIDTH: 63pt; HEIGHT: 14.25pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl71 height=19 width=84><FONT size=2 face=宋体>10</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 92pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=122><FONT size=2 face=宋体>BPL $data16</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 81pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=108><FONT size=2 face=宋体>相对寻址</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 182pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=242><FONT size=2 face=宋体>如果标志位N=0则转移，否则继续</FONT></TD></TR>
+  <TR style="HEIGHT: 24pt" height=32>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext 0.5pt solid; BACKGROUND-COLOR: transparent; WIDTH: 63pt; HEIGHT: 24pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl71 height=32 width=84><FONT size=2 face=宋体>11</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 92pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=122><FONT size=2 face=宋体>ORA ($addr),Y</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 81pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=108><FONT size=2 face=宋体>后变址Y间址</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 182pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl76 width=242><FONT size=2 face=宋体>寄存器与累加器相或,结果送累加器<SPAN 
+      style="mso-spacerun: yes">&nbsp; </SPAN>A∨M→A</FONT></TD></TR>
+  <TR style="HEIGHT: 24pt" height=32>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext 0.5pt solid; BACKGROUND-COLOR: transparent; WIDTH: 63pt; HEIGHT: 24pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl71 height=32 width=84><FONT size=2 face=宋体>15</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 92pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=122><FONT size=2 face=宋体>ORA $addr,X</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 81pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=108><FONT size=2 face=宋体>零页X变址</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 182pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl76 width=242><FONT size=2 face=宋体>寄存器与累加器相或,结果送累加器<SPAN 
+      style="mso-spacerun: yes">&nbsp; </SPAN>A∨M→A</FONT></TD></TR>
+  <TR style="HEIGHT: 48pt" height=64>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext 0.5pt solid; BACKGROUND-COLOR: transparent; WIDTH: 63pt; HEIGHT: 48pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl71 height=64 width=84><FONT size=2 face=宋体>16</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 92pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=122><FONT size=2 face=宋体>ASL $addr,X</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 81pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=108><FONT size=2 face=宋体>零页X变址</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 182pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl76 width=242><FONT size=2 
+      face=宋体>算术左移指令,移位功能是将字节内各位依次向左移1位，最高位移进标志位C中，最底位补0,执行结果相当于把移位前的数乘2</FONT></TD></TR>
+  <TR style="HEIGHT: 14.25pt" height=19>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext 0.5pt solid; BACKGROUND-COLOR: transparent; WIDTH: 63pt; HEIGHT: 14.25pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl71 height=19 width=84><FONT size=2 face=宋体>18</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 92pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=122><FONT size=2 face=宋体>CLC</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl72><FONT size=2 face=宋体>　</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 182pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl76 width=242><FONT size=2 face=宋体>清除进位标志<SPAN 
+      style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      </SPAN>0→C</FONT></TD></TR>
+  <TR style="HEIGHT: 24pt" height=32>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext 0.5pt solid; BACKGROUND-COLOR: transparent; WIDTH: 63pt; HEIGHT: 24pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl71 height=32 width=84><FONT size=2 face=宋体>19</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 92pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=122><FONT size=2 face=宋体>ORA $addr16,Y</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 81pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=108><FONT size=2 face=宋体>绝对Y变址</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 182pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl76 width=242><FONT size=2 face=宋体>寄存器与累加器相或,结果送累加器<SPAN 
+      style="mso-spacerun: yes">&nbsp; </SPAN>A∨M→A</FONT></TD></TR>
+  <TR style="HEIGHT: 24pt" height=32>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext 0.5pt solid; BACKGROUND-COLOR: transparent; WIDTH: 63pt; HEIGHT: 24pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl71 height=32 width=84><FONT size=2 face=宋体>1D</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 92pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=122><FONT size=2 face=宋体>ORA $addr16,X</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 81pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=108><FONT size=2 face=宋体>绝对X变址</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 182pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl76 width=242><FONT size=2 face=宋体>寄存器与累加器相或,结果送累加器<SPAN 
+      style="mso-spacerun: yes">&nbsp; </SPAN>A∨M→A</FONT></TD></TR>
+  <TR style="HEIGHT: 48pt" height=64>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext 0.5pt solid; BACKGROUND-COLOR: transparent; WIDTH: 63pt; HEIGHT: 48pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl71 height=64 width=84><FONT size=2 face=宋体>1E</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 92pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=122><FONT size=2 face=宋体>ASL $addr16,X</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 81pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=108><FONT size=2 face=宋体>绝对X变址</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 182pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl76 width=242><FONT size=2 
+      face=宋体>算术左移指令,移位功能是将字节内各位依次向左移1位，最高位移进标志位C中，最底位补0,执行结果相当于把移位前的数乘2</FONT></TD></TR>
+  <TR style="HEIGHT: 14.25pt" height=19>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext 0.5pt solid; BACKGROUND-COLOR: transparent; WIDTH: 63pt; HEIGHT: 14.25pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl71 height=19 width=84><FONT size=2 face=宋体>20</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 92pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=122><FONT size=2 face=宋体>JSR $addr16</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 81pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=108><FONT size=2 face=宋体>绝对寻址</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 182pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl76 width=242><FONT size=2 face=宋体>转移到子程序指令</FONT></TD></TR>
+  <TR style="HEIGHT: 24pt" height=32>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext 0.5pt solid; BACKGROUND-COLOR: transparent; WIDTH: 63pt; HEIGHT: 24pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl71 height=32 width=84><FONT size=2 face=宋体>21</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 92pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=122><FONT size=2 face=宋体>AND ($addr,X)</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 81pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=108><FONT size=2 face=宋体>先变址X后间址</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 182pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl76 width=242><FONT size=2 face=宋体>寄存器与累加器相与,结果送累加器<SPAN 
+      style="mso-spacerun: yes">&nbsp; </SPAN>A∧M→A</FONT></TD></TR>
+  <TR style="HEIGHT: 14.25pt" height=19>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext 0.5pt solid; BACKGROUND-COLOR: transparent; WIDTH: 63pt; HEIGHT: 14.25pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl71 height=19 width=84><FONT size=2 face=宋体>24</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 92pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=122><FONT size=2 face=宋体>BIT $addr</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 81pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=108><FONT size=2 face=宋体>零页寻址</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 182pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl76 width=242><FONT size=2 face=宋体>位测试指令</FONT></TD></TR>
+  <TR style="HEIGHT: 24pt" height=32>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext 0.5pt solid; BACKGROUND-COLOR: transparent; WIDTH: 63pt; HEIGHT: 24pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl71 height=32 width=84><FONT size=2 face=宋体>25</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 92pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=122><FONT size=2 face=宋体>AND $addr</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 81pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=108><FONT size=2 face=宋体>零页寻址</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 182pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl76 width=242><FONT size=2 face=宋体>寄存器与累加器相与,结果送累加器<SPAN 
+      style="mso-spacerun: yes">&nbsp; </SPAN>A∧M→A</FONT></TD></TR>
+  <TR style="HEIGHT: 24pt" height=32>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext 0.5pt solid; BACKGROUND-COLOR: transparent; WIDTH: 63pt; HEIGHT: 24pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl71 height=32 width=84><FONT size=2 face=宋体>26</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 92pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=122><FONT size=2 face=宋体>ROL $data</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 81pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=108><FONT size=2 face=宋体>零页寻址</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 182pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl76 width=242><FONT size=2 
+    face=宋体>循环左移指令,将字节内容连同进位C一起依次向左移1位</FONT></TD></TR>
+  <TR style="HEIGHT: 14.25pt" height=19>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext 0.5pt solid; BACKGROUND-COLOR: transparent; HEIGHT: 14.25pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl73 height=19><FONT size=2 face=宋体>28</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 92pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=122><FONT size=2 face=宋体>PLP</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl72><FONT size=2 face=宋体>　</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 182pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl76 width=242><FONT size=2 face=宋体>标志寄存器P出栈指令</FONT></TD></TR>
+  <TR style="HEIGHT: 24pt" height=32>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext 0.5pt solid; BACKGROUND-COLOR: transparent; WIDTH: 63pt; HEIGHT: 24pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl71 height=32 width=84><FONT size=2 face=宋体>29</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 92pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=122><FONT size=2 face=宋体>AND #$data</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 81pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=108><FONT size=2 face=宋体>立即寻址</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 182pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl76 width=242><FONT size=2 face=宋体>寄存器与累加器相与,结果送累加器<SPAN 
+      style="mso-spacerun: yes">&nbsp; </SPAN>A∧M→A</FONT></TD></TR>
+  <TR style="HEIGHT: 24pt" height=32>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext 0.5pt solid; BACKGROUND-COLOR: transparent; WIDTH: 63pt; HEIGHT: 24pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl71 height=32 width=84><FONT size=2 face=宋体>2A</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 92pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=122><FONT size=2 face=宋体>ROL</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 81pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=108><FONT size=2 face=宋体>累加器寻址</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 182pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl76 width=242><FONT size=2 
+    face=宋体>循环左移指令,将字节内容连同进位C一起依次向左移1位</FONT></TD></TR>
+  <TR style="HEIGHT: 14.25pt" height=19>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext 0.5pt solid; BACKGROUND-COLOR: transparent; WIDTH: 63pt; HEIGHT: 14.25pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl71 height=19 width=84><FONT size=2 face=宋体>2C</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 92pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=122><FONT size=2 face=宋体>BIT $addr16</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 81pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=108><FONT size=2 face=宋体>绝对寻址</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 182pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl76 width=242><FONT size=2 face=宋体>位测试指令</FONT></TD></TR>
+  <TR style="HEIGHT: 24pt" height=32>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext 0.5pt solid; BACKGROUND-COLOR: transparent; WIDTH: 63pt; HEIGHT: 24pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl71 height=32 width=84><FONT size=2 face=宋体>2D</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 92pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=122><FONT size=2 face=宋体>AND $addr16</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 81pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=108><FONT size=2 face=宋体>绝对寻址</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 182pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl76 width=242><FONT size=2 face=宋体>寄存器与累加器相与,结果送累加器<SPAN 
+      style="mso-spacerun: yes">&nbsp; </SPAN>A∧M→A</FONT></TD></TR>
+  <TR style="HEIGHT: 24pt" height=32>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext 0.5pt solid; BACKGROUND-COLOR: transparent; WIDTH: 63pt; HEIGHT: 24pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl71 height=32 width=84><FONT size=2 face=宋体>2E</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 92pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=122><FONT size=2 face=宋体>ROL $addr16</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 81pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=108><FONT size=2 face=宋体>绝对寻址</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 182pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl76 width=242><FONT size=2 
+    face=宋体>循环左移指令,将字节内容连同进位C一起依次向左移1位</FONT></TD></TR>
+  <TR style="HEIGHT: 14.25pt" height=19>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext 0.5pt solid; BACKGROUND-COLOR: transparent; WIDTH: 63pt; HEIGHT: 14.25pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl71 height=19 width=84><FONT size=2 face=宋体>30</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 92pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=122><FONT size=2 face=宋体>BMI $data16</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 81pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=108><FONT size=2 face=宋体>相对寻址</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 182pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=242><FONT size=2 face=宋体>如果标志位N=1则转移，否则继续</FONT></TD></TR>
+  <TR style="HEIGHT: 24pt" height=32>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext 0.5pt solid; BACKGROUND-COLOR: transparent; WIDTH: 63pt; HEIGHT: 24pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl71 height=32 width=84><FONT size=2 face=宋体>31</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 92pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=122><FONT size=2 face=宋体>AND ($addr),Y</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 81pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=108><FONT size=2 face=宋体>后变址Y间址</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 182pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl76 width=242><FONT size=2 face=宋体>寄存器与累加器相与,结果送累加器<SPAN 
+      style="mso-spacerun: yes">&nbsp; </SPAN>A∧M→A</FONT></TD></TR>
+  <TR style="HEIGHT: 24pt" height=32>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext 0.5pt solid; BACKGROUND-COLOR: transparent; WIDTH: 63pt; HEIGHT: 24pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl71 height=32 width=84><FONT size=2 face=宋体>35</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 92pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=122><FONT size=2 face=宋体>AND $addr,X</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 81pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=108><FONT size=2 face=宋体>零页X变址</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 182pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl76 width=242><FONT size=2 face=宋体>寄存器与累加器相与,结果送累加器<SPAN 
+      style="mso-spacerun: yes">&nbsp; </SPAN>A∧M→A</FONT></TD></TR>
+  <TR style="HEIGHT: 24pt" height=32>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext 0.5pt solid; BACKGROUND-COLOR: transparent; WIDTH: 63pt; HEIGHT: 24pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl71 height=32 width=84><FONT size=2 face=宋体>36</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 92pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=122><FONT size=2 face=宋体>ROL $addr,X</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 81pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=108><FONT size=2 face=宋体>零页X变址</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 182pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl76 width=242><FONT size=2 
+    face=宋体>循环左移指令,将字节内容连同进位C一起依次向左移1位</FONT></TD></TR>
+  <TR style="HEIGHT: 14.25pt" height=19>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext 0.5pt solid; BACKGROUND-COLOR: transparent; WIDTH: 63pt; HEIGHT: 14.25pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl71 height=19 width=84><FONT size=2 face=宋体>38</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 92pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=122><FONT size=2 face=宋体>SEC</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl72><FONT size=2 face=宋体>　</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 182pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl76 width=242><FONT size=2 face=宋体>置进位标志C<SPAN 
+      style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      </SPAN>1→C</FONT></TD></TR>
+  <TR style="HEIGHT: 24pt" height=32>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext 0.5pt solid; BACKGROUND-COLOR: transparent; WIDTH: 63pt; HEIGHT: 24pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl71 height=32 width=84><FONT size=2 face=宋体>39</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 92pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=122><FONT size=2 face=宋体>AND $addr16,Y</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 81pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=108><FONT size=2 face=宋体>绝对Y变址</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 182pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl76 width=242><FONT size=2 face=宋体>寄存器与累加器相与,结果送累加器<SPAN 
+      style="mso-spacerun: yes">&nbsp; </SPAN>A∧M→A</FONT></TD></TR>
+  <TR style="HEIGHT: 24pt" height=32>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext 0.5pt solid; BACKGROUND-COLOR: transparent; WIDTH: 63pt; HEIGHT: 24pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl71 height=32 width=84><FONT size=2 face=宋体>3D</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 92pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=122><FONT size=2 face=宋体>AND $addr16,X</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 81pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=108><FONT size=2 face=宋体>绝对X变址</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 182pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl76 width=242><FONT size=2 face=宋体>寄存器与累加器相与,结果送累加器<SPAN 
+      style="mso-spacerun: yes">&nbsp; </SPAN>A∧M→A</FONT></TD></TR>
+  <TR style="HEIGHT: 24pt" height=32>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext 0.5pt solid; BACKGROUND-COLOR: transparent; WIDTH: 63pt; HEIGHT: 24pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl71 height=32 width=84><FONT size=2 face=宋体>3E</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 92pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=122><FONT size=2 face=宋体>ROL $addr16,X</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 81pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=108><FONT size=2 face=宋体>绝对X变址</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 182pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl76 width=242><FONT size=2 
+    face=宋体>循环左移指令,将字节内容连同进位C一起依次向左移1位</FONT></TD></TR>
+  <TR style="HEIGHT: 14.25pt" height=19>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext 0.5pt solid; BACKGROUND-COLOR: transparent; HEIGHT: 14.25pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl73 height=19><FONT size=2 face=宋体>40</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl72><FONT size=2 face=宋体>RTI</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl72><FONT size=2 face=宋体>　</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 182pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl76 width=242><FONT size=2 face=宋体>中断返回</FONT></TD></TR>
+  <TR style="HEIGHT: 24pt" height=32>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext 0.5pt solid; BACKGROUND-COLOR: transparent; WIDTH: 63pt; HEIGHT: 24pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl71 height=32 width=84><FONT size=2 face=宋体>41</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 92pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=122><FONT size=2 face=宋体>EOR ($addr,X)</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 81pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=108><FONT size=2 face=宋体>先变址X后间址</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 182pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl76 width=242><FONT size=2 face=宋体>寄存器与累加器相异或,结果送累加器<SPAN 
+      style="mso-spacerun: yes">&nbsp; </SPAN>A≮M→A</FONT></TD></TR>
+  <TR style="HEIGHT: 24pt" height=32>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext 0.5pt solid; BACKGROUND-COLOR: transparent; WIDTH: 63pt; HEIGHT: 24pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl71 height=32 width=84><FONT size=2 face=宋体>45</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 92pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=122><FONT size=2 face=宋体>EOR $addr</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 81pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=108><FONT size=2 face=宋体>零页寻址</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 182pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl76 width=242><FONT size=2 face=宋体>寄存器与累加器相异或,结果送累加器<SPAN 
+      style="mso-spacerun: yes">&nbsp; </SPAN>A≮M→A</FONT></TD></TR>
+  <TR style="HEIGHT: 36pt" height=48>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext 0.5pt solid; BACKGROUND-COLOR: transparent; WIDTH: 63pt; HEIGHT: 36pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl71 height=48 width=84><FONT size=2 face=宋体>46</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 92pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=122><FONT size=2 face=宋体>LSR $data</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 81pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=108><FONT size=2 face=宋体>零页寻址</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 182pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl76 width=242><FONT size=2 
+      face=宋体>逻辑右移指令,将字节内各位依次向右移1位，最低位移进标志位C，最高位补0.对于无符号数和正数相当于乘1/2</FONT></TD></TR>
+  <TR style="HEIGHT: 14.25pt" height=19>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext 0.5pt solid; BACKGROUND-COLOR: transparent; HEIGHT: 14.25pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl73 height=19><FONT size=2 face=宋体>48</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 92pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=122><FONT size=2 face=宋体>PHA</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl72><FONT size=2 face=宋体>　</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 182pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl76 width=242><FONT size=2 face=宋体>累加器进栈指令</FONT></TD></TR>
+  <TR style="HEIGHT: 24pt" height=32>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext 0.5pt solid; BACKGROUND-COLOR: transparent; WIDTH: 63pt; HEIGHT: 24pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl71 height=32 width=84><FONT size=2 face=宋体>49</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 92pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=122><FONT size=2 face=宋体>EOR #$data</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 81pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=108><FONT size=2 face=宋体>立即寻址</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 182pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl76 width=242><FONT size=2 face=宋体>寄存器与累加器相异或,结果送累加器<SPAN 
+      style="mso-spacerun: yes">&nbsp; </SPAN>A≮M→A</FONT></TD></TR>
+  <TR style="HEIGHT: 36pt" height=48>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext 0.5pt solid; BACKGROUND-COLOR: transparent; WIDTH: 63pt; HEIGHT: 36pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl71 height=48 width=84><FONT size=2 face=宋体>4A</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 92pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=122><FONT size=2 face=宋体>LSR</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 81pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=108><FONT size=2 face=宋体>累加器寻址</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 182pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl76 width=242><FONT size=2 
+      face=宋体>逻辑右移指令,将字节内各位依次向右移1位，最低位移进标志位C，最高位补0.对于无符号数和正数相当于乘1/2</FONT></TD></TR>
+  <TR style="HEIGHT: 14.25pt" height=19>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext 0.5pt solid; BACKGROUND-COLOR: transparent; WIDTH: 63pt; HEIGHT: 14.25pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl71 height=19 width=84><FONT size=2 face=宋体>4C</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 92pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=122><FONT size=2 face=宋体>JMP&nbsp; $addr16</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 81pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=108><FONT size=2 face=宋体>绝对寻址</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 182pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl76 width=242><FONT size=2 face=宋体>无条件转移指令</FONT></TD></TR>
+  <TR style="HEIGHT: 24pt" height=32>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext 0.5pt solid; BACKGROUND-COLOR: transparent; WIDTH: 63pt; HEIGHT: 24pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl71 height=32 width=84><FONT size=2 face=宋体>4D</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 92pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=122><FONT size=2 face=宋体>EOR $addr16</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 81pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=108><FONT size=2 face=宋体>绝对寻址</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 182pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl76 width=242><FONT size=2 face=宋体>寄存器与累加器相异或,结果送累加器<SPAN 
+      style="mso-spacerun: yes">&nbsp; </SPAN>A≮M→A</FONT></TD></TR>
+  <TR style="HEIGHT: 36pt" height=48>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext 0.5pt solid; BACKGROUND-COLOR: transparent; WIDTH: 63pt; HEIGHT: 36pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl71 height=48 width=84><FONT size=2 face=宋体>4E</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 92pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=122><FONT size=2 face=宋体>LSR $addr16</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 81pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=108><FONT size=2 face=宋体>绝对寻址</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 182pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl76 width=242><FONT size=2 
+      face=宋体>逻辑右移指令,将字节内各位依次向右移1位，最低位移进标志位C，最高位补0.对于无符号数和正数相当于乘1/2</FONT></TD></TR>
+  <TR style="HEIGHT: 14.25pt" height=19>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext 0.5pt solid; BACKGROUND-COLOR: transparent; WIDTH: 63pt; HEIGHT: 14.25pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl71 height=19 width=84><FONT size=2 face=宋体>50</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 92pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=122><FONT size=2 face=宋体>BVC $data16</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 81pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=108><FONT size=2 face=宋体>相对寻址</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 182pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=242><FONT size=2 face=宋体>如果标志位V=0则转移，否则继续</FONT></TD></TR>
+  <TR style="HEIGHT: 24pt" height=32>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext 0.5pt solid; BACKGROUND-COLOR: transparent; WIDTH: 63pt; HEIGHT: 24pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl71 height=32 width=84><FONT size=2 face=宋体>51</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 92pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=122><FONT size=2 face=宋体>EOR ($addr),Y</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 81pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=108><FONT size=2 face=宋体>后变址Y间址</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 182pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl76 width=242><FONT size=2 face=宋体>寄存器与累加器相异或,结果送累加器<SPAN 
+      style="mso-spacerun: yes">&nbsp; </SPAN>A≮M→A</FONT></TD></TR>
+  <TR style="HEIGHT: 24pt" height=32>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext 0.5pt solid; BACKGROUND-COLOR: transparent; WIDTH: 63pt; HEIGHT: 24pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl71 height=32 width=84><FONT size=2 face=宋体>55</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 92pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=122><FONT size=2 face=宋体>EOR $addr,X</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 81pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=108><FONT size=2 face=宋体>零页X变址</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 182pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl76 width=242><FONT size=2 face=宋体>寄存器与累加器相异或,结果送累加器<SPAN 
+      style="mso-spacerun: yes">&nbsp; </SPAN>A≮M→A</FONT></TD></TR>
+  <TR style="HEIGHT: 36pt" height=48>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext 0.5pt solid; BACKGROUND-COLOR: transparent; WIDTH: 63pt; HEIGHT: 36pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl71 height=48 width=84><FONT size=2 face=宋体>56</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 92pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=122><FONT size=2 face=宋体>LSR $addr,X</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 81pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=108><FONT size=2 face=宋体>零页X变址</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 182pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl76 width=242><FONT size=2 
+      face=宋体>逻辑右移指令,将字节内各位依次向右移1位，最低位移进标志位C，最高位补0.对于无符号数和正数相当于乘1/2</FONT></TD></TR>
+  <TR style="HEIGHT: 14.25pt" height=19>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext 0.5pt solid; BACKGROUND-COLOR: transparent; HEIGHT: 14.25pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl73 height=19><FONT size=2 face=宋体>58</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 92pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=122><FONT size=2 face=宋体>CLI</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl72><FONT size=2 face=宋体>　</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 182pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl76 width=242><FONT size=2 face=宋体>清除中断禁止指令I<SPAN 
+      style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp; </SPAN>0→I</FONT></TD></TR>
+  <TR style="HEIGHT: 24pt" height=32>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext 0.5pt solid; BACKGROUND-COLOR: transparent; WIDTH: 63pt; HEIGHT: 24pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl71 height=32 width=84><FONT size=2 face=宋体>59</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 92pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=122><FONT size=2 face=宋体>EOR $addr16,Y</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 81pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=108><FONT size=2 face=宋体>绝对Y变址</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 182pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl76 width=242><FONT size=2 face=宋体>寄存器与累加器相异或,结果送累加器<SPAN 
+      style="mso-spacerun: yes">&nbsp; </SPAN>A≮M→A</FONT></TD></TR>
+  <TR style="HEIGHT: 24pt" height=32>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext 0.5pt solid; BACKGROUND-COLOR: transparent; WIDTH: 63pt; HEIGHT: 24pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl71 height=32 width=84><FONT size=2 face=宋体>5D</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 92pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=122><FONT size=2 face=宋体>EOR $addr16,X</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 81pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=108><FONT size=2 face=宋体>绝对X变址</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 182pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl76 width=242><FONT size=2 face=宋体>寄存器与累加器相异或,结果送累加器<SPAN 
+      style="mso-spacerun: yes">&nbsp; </SPAN>A≮M→A</FONT></TD></TR>
+  <TR style="HEIGHT: 36pt" height=48>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext 0.5pt solid; BACKGROUND-COLOR: transparent; WIDTH: 63pt; HEIGHT: 36pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl71 height=48 width=84><FONT size=2 face=宋体>5E</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 92pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=122><FONT size=2 face=宋体>LSR $addr16,X</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 81pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=108><FONT size=2 face=宋体>绝对X变址</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 182pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl76 width=242><FONT size=2 
+      face=宋体>逻辑右移指令,将字节内各位依次向右移1位，最低位移进标志位C，最高位补0.对于无符号数和正数相当于乘1/2</FONT></TD></TR>
+  <TR style="HEIGHT: 14.25pt" height=19>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext 0.5pt solid; BACKGROUND-COLOR: transparent; WIDTH: 63pt; HEIGHT: 14.25pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl71 height=19 width=84><FONT size=2 face=宋体>60</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 92pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=122><FONT size=2 face=宋体>RTS</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 81pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=108><FONT size=2 face=宋体>　</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 182pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl76 width=242><FONT size=2 face=宋体>从主程序返回指令</FONT></TD></TR>
+  <TR style="HEIGHT: 24pt" height=32>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext 0.5pt solid; BACKGROUND-COLOR: transparent; WIDTH: 63pt; HEIGHT: 24pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl71 height=32 width=84><FONT size=2 face=宋体>61</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 92pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=122><FONT size=2 face=宋体>ADC ($addr,X)</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 81pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=108><FONT size=2 face=宋体>先变址X后间址</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 182pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl76 width=242><FONT size=2 face=宋体>累加器,存储器,进位标志C相加,结果送累加器A? 
+      A+M+C→A</FONT></TD></TR>
+  <TR style="HEIGHT: 24pt" height=32>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext 0.5pt solid; BACKGROUND-COLOR: transparent; WIDTH: 63pt; HEIGHT: 24pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl71 height=32 width=84><FONT size=2 face=宋体>65</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 92pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=122><FONT size=2 face=宋体>ADC $addr</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 81pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=108><FONT size=2 face=宋体>零页寻址</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 182pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl76 width=242><FONT size=2 face=宋体>累加器,存储器,进位标志C相加,结果送累加器A? 
+      A+M+C→A</FONT></TD></TR>
+  <TR style="HEIGHT: 24pt" height=32>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext 0.5pt solid; BACKGROUND-COLOR: transparent; WIDTH: 63pt; HEIGHT: 24pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl71 height=32 width=84><FONT size=2 face=宋体>66</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 92pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=122><FONT size=2 face=宋体>ROR $data</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 81pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=108><FONT size=2 face=宋体>零页寻址</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 182pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl76 width=242><FONT size=2 
+    face=宋体>循环右移指令,将字节内容连同进位C一起依次向右移1位</FONT></TD></TR>
+  <TR style="HEIGHT: 14.25pt" height=19>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext 0.5pt solid; BACKGROUND-COLOR: transparent; HEIGHT: 14.25pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl73 height=19><FONT size=2 face=宋体>68</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 92pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=122><FONT size=2 face=宋体>PLA</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl72><FONT size=2 face=宋体>　</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 182pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl76 width=242><FONT size=2 face=宋体>累加器出栈指令</FONT></TD></TR>
+  <TR style="HEIGHT: 24pt" height=32>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext 0.5pt solid; BACKGROUND-COLOR: transparent; WIDTH: 63pt; HEIGHT: 24pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl71 height=32 width=84><FONT size=2 face=宋体>69</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 92pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=122><FONT size=2 face=宋体>ADC #$data</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 81pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=108><FONT size=2 face=宋体>立即寻址</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 182pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl76 width=242><FONT size=2 face=宋体>累加器,存储器,进位标志C相加,结果送累加器A? 
+      A+M+C→A</FONT></TD></TR>
+  <TR style="HEIGHT: 24pt" height=32>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext 0.5pt solid; BACKGROUND-COLOR: transparent; WIDTH: 63pt; HEIGHT: 24pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl71 height=32 width=84><FONT size=2 face=宋体>6A</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 92pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=122><FONT size=2 face=宋体>ROR</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 81pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=108><FONT size=2 face=宋体>累加器寻址</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 182pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl76 width=242><FONT size=2 
+    face=宋体>循环右移指令,将字节内容连同进位C一起依次向右移1位</FONT></TD></TR>
+  <TR style="HEIGHT: 14.25pt" height=19>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext 0.5pt solid; BACKGROUND-COLOR: transparent; WIDTH: 63pt; HEIGHT: 14.25pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl71 height=19 width=84><FONT size=2 face=宋体>6C</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 92pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=122><FONT size=2 face=宋体>JMP ($data16)</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 81pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=108><FONT size=2 face=宋体>间接寻址</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 182pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl76 width=242><FONT size=2 face=宋体>无条件转移指令</FONT></TD></TR>
+  <TR style="HEIGHT: 24pt" height=32>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext 0.5pt solid; BACKGROUND-COLOR: transparent; WIDTH: 63pt; HEIGHT: 24pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl71 height=32 width=84><FONT size=2 face=宋体>6D</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 92pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=122><FONT size=2 face=宋体>ADC $addr16</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 81pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=108><FONT size=2 face=宋体>绝对寻址</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 182pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl76 width=242><FONT size=2 face=宋体>累加器,存储器,进位标志C相加,结果送累加器A? 
+      A+M+C→A</FONT></TD></TR>
+  <TR style="HEIGHT: 24pt" height=32>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext 0.5pt solid; BACKGROUND-COLOR: transparent; WIDTH: 63pt; HEIGHT: 24pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl71 height=32 width=84><FONT size=2 face=宋体>6E</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 92pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=122><FONT size=2 face=宋体>ROR $addr16</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 81pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=108><FONT size=2 face=宋体>绝对寻址</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 182pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl76 width=242><FONT size=2 
+    face=宋体>循环右移指令,将字节内容连同进位C一起依次向右移1位</FONT></TD></TR>
+  <TR style="HEIGHT: 14.25pt" height=19>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext 0.5pt solid; BACKGROUND-COLOR: transparent; WIDTH: 63pt; HEIGHT: 14.25pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl71 height=19 width=84><FONT size=2 face=宋体>70</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 92pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=122><FONT size=2 face=宋体>BVS $data16</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 81pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=108><FONT size=2 face=宋体>相对寻址</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 182pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=242><FONT size=2 face=宋体>如果标志位V=1则转移，否则继续</FONT></TD></TR>
+  <TR style="HEIGHT: 24pt" height=32>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext 0.5pt solid; BACKGROUND-COLOR: transparent; WIDTH: 63pt; HEIGHT: 24pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl71 height=32 width=84><FONT size=2 face=宋体>71</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 92pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=122><FONT size=2 face=宋体>ADC ($addr),Y</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 81pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=108><FONT size=2 face=宋体>后变址Y间址</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 182pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl76 width=242><FONT size=2 face=宋体>累加器,存储器,进位标志C相加,结果送累加器A? 
+      A+M+C→A</FONT></TD></TR>
+  <TR style="HEIGHT: 24pt" height=32>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext 0.5pt solid; BACKGROUND-COLOR: transparent; WIDTH: 63pt; HEIGHT: 24pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl71 height=32 width=84><FONT size=2 face=宋体>75</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 92pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=122><FONT size=2 face=宋体>ADC $addr,X</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 81pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=108><FONT size=2 face=宋体>零页X变址</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 182pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl76 width=242><FONT size=2 face=宋体>累加器,存储器,进位标志C相加,结果送累加器A? 
+      A+M+C→A</FONT></TD></TR>
+  <TR style="HEIGHT: 24pt" height=32>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext 0.5pt solid; BACKGROUND-COLOR: transparent; WIDTH: 63pt; HEIGHT: 24pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl71 height=32 width=84><FONT size=2 face=宋体>76</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 92pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=122><FONT size=2 face=宋体>ROR $addr,X</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 81pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=108><FONT size=2 face=宋体>零页X变址</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 182pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl76 width=242><FONT size=2 
+    face=宋体>循环右移指令,将字节内容连同进位C一起依次向右移1位</FONT></TD></TR>
+  <TR style="HEIGHT: 14.25pt" height=19>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext 0.5pt solid; BACKGROUND-COLOR: transparent; HEIGHT: 14.25pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl73 height=19><FONT size=2 face=宋体>78</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 92pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=122><FONT size=2 face=宋体>SEI</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl72><FONT size=2 face=宋体>　</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 182pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl76 width=242><FONT size=2 face=宋体>置位中断禁止标志I<SPAN 
+      style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp; </SPAN>1→I</FONT></TD></TR>
+  <TR style="HEIGHT: 24pt" height=32>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext 0.5pt solid; BACKGROUND-COLOR: transparent; WIDTH: 63pt; HEIGHT: 24pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl71 height=32 width=84><FONT size=2 face=宋体>79</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 92pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=122><FONT size=2 face=宋体>ADC $addr16,Y</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 81pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=108><FONT size=2 face=宋体>绝对Y变址</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 182pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl76 width=242><FONT size=2 face=宋体>累加器,存储器,进位标志C相加,结果送累加器A? 
+      A+M+C→A</FONT></TD></TR>
+  <TR style="HEIGHT: 24pt" height=32>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext 0.5pt solid; BACKGROUND-COLOR: transparent; WIDTH: 63pt; HEIGHT: 24pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl71 height=32 width=84><FONT size=2 face=宋体>7D</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 92pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=122><FONT size=2 face=宋体>ADC $addr16,X</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 81pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=108><FONT size=2 face=宋体>绝对X变址</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 182pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl76 width=242><FONT size=2 face=宋体>累加器,存储器,进位标志C相加,结果送累加器A? 
+      A+M+C→A</FONT></TD></TR>
+  <TR style="HEIGHT: 24pt" height=32>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext 0.5pt solid; BACKGROUND-COLOR: transparent; WIDTH: 63pt; HEIGHT: 24pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl71 height=32 width=84><FONT size=2 face=宋体>7E</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 92pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=122><FONT size=2 face=宋体>ROR $addr16,X</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 81pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=108><FONT size=2 face=宋体>绝对X变址</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 182pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl76 width=242><FONT size=2 
+    face=宋体>循环右移指令,将字节内容连同进位C一起依次向右移1位</FONT></TD></TR>
+  <TR style="HEIGHT: 14.25pt" height=19>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext 0.5pt solid; BACKGROUND-COLOR: transparent; WIDTH: 63pt; HEIGHT: 14.25pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl71 height=19 width=84><FONT size=2 face=宋体>81</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 92pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=122><FONT size=2 face=宋体>STA ($addr,X)</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 81pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=108><FONT size=2 face=宋体>先变址X后间址</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 182pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl76 width=242><FONT size=2 face=宋体>将累加器的内容送入存储器 A--M</FONT></TD></TR>
+  <TR style="HEIGHT: 14.25pt" height=19>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext 0.5pt solid; BACKGROUND-COLOR: transparent; WIDTH: 63pt; HEIGHT: 14.25pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl71 height=19 width=84><FONT size=2 face=宋体>84</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 92pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=122><FONT size=2 face=宋体>STY $addr</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 81pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=108><FONT size=2 face=宋体>零页寻址</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 182pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl76 width=242><FONT size=2 face=宋体>将寄存器Y的内容送入存储器 Y--M</FONT></TD></TR>
+  <TR style="HEIGHT: 14.25pt" height=19>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext 0.5pt solid; BACKGROUND-COLOR: transparent; WIDTH: 63pt; HEIGHT: 14.25pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl71 height=19 width=84><FONT size=2 face=宋体>85</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 92pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=122><FONT size=2 face=宋体>STA $addr</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 81pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=108><FONT size=2 face=宋体>零页寻址</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 182pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl76 width=242><FONT size=2 face=宋体>将累加器的内容送入存储器 A--M</FONT></TD></TR>
+  <TR style="HEIGHT: 14.25pt" height=19>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext 0.5pt solid; BACKGROUND-COLOR: transparent; WIDTH: 63pt; HEIGHT: 14.25pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl71 height=19 width=84><FONT size=2 face=宋体>86</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 92pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=122><FONT size=2 face=宋体>STX $addr</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 81pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=108><FONT size=2 face=宋体>零页寻址</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 182pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl76 width=242><FONT size=2 face=宋体>将寄存器X的内容送入存储器 X--M</FONT></TD></TR>
+  <TR style="HEIGHT: 14.25pt" height=19>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext 0.5pt solid; BACKGROUND-COLOR: transparent; WIDTH: 63pt; HEIGHT: 14.25pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl71 height=19 width=84><FONT size=2 face=宋体>88</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 92pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=122><FONT size=2 face=宋体>DEY</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 81pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=108><FONT size=2 face=宋体>隐含寻址</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 182pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl76 width=242><FONT size=2 face=宋体>Y存储器单元内容减1<SPAN 
+      style="mso-spacerun: yes">&nbsp; </SPAN>M-1→M</FONT></TD></TR>
+  <TR style="HEIGHT: 14.25pt" height=19>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext 0.5pt solid; BACKGROUND-COLOR: transparent; WIDTH: 63pt; HEIGHT: 14.25pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl71 height=19 width=84><FONT size=2 face=宋体>8A</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 92pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=122><FONT size=2 face=宋体>TXA</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 81pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=108><FONT size=2 face=宋体>寄存器寻址</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 182pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=242><FONT size=2 face=宋体>将变址寄存器X的内容送入累加器A</FONT></TD></TR>
+  <TR style="HEIGHT: 14.25pt" height=19>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext 0.5pt solid; BACKGROUND-COLOR: transparent; WIDTH: 63pt; HEIGHT: 14.25pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl71 height=19 width=84><FONT size=2 face=宋体>8C</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 92pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=122><FONT size=2 face=宋体>STY $addr16</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 81pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=108><FONT size=2 face=宋体>绝对寻址</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 182pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl76 width=242><FONT size=2 face=宋体>将寄存器Y的内容送入存储器 Y--M</FONT></TD></TR>
+  <TR style="HEIGHT: 14.25pt" height=19>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext 0.5pt solid; BACKGROUND-COLOR: transparent; WIDTH: 63pt; HEIGHT: 14.25pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl71 height=19 width=84><FONT size=2 face=宋体>8D</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 92pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=122><FONT size=2 face=宋体>STA $addr16</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 81pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=108><FONT size=2 face=宋体>绝对寻址</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 182pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl76 width=242><FONT size=2 face=宋体>将累加器的内容送入存储器 A--M</FONT></TD></TR>
+  <TR style="HEIGHT: 14.25pt" height=19>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext 0.5pt solid; BACKGROUND-COLOR: transparent; WIDTH: 63pt; HEIGHT: 14.25pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl71 height=19 width=84><FONT size=2 face=宋体>8E</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 92pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=122><FONT size=2 face=宋体>STX $addr16</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 81pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=108><FONT size=2 face=宋体>绝对寻址</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 182pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl76 width=242><FONT size=2 face=宋体>将寄存器X的内容送入存储器 X--M</FONT></TD></TR>
+  <TR style="HEIGHT: 14.25pt" height=19>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext 0.5pt solid; BACKGROUND-COLOR: transparent; WIDTH: 63pt; HEIGHT: 14.25pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl71 height=19 width=84><FONT size=2 face=宋体>90</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 92pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=122><FONT size=2 face=宋体>BCC $data16</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 81pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=108><FONT size=2 face=宋体>相对寻址</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 182pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=242><FONT size=2 face=宋体>如果标志位C=0则转移，否则继续</FONT></TD></TR>
+  <TR style="HEIGHT: 14.25pt" height=19>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext 0.5pt solid; BACKGROUND-COLOR: transparent; WIDTH: 63pt; HEIGHT: 14.25pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl71 height=19 width=84><FONT size=2 face=宋体>91</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 92pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=122><FONT size=2 face=宋体>STA ($addr),Y</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 81pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=108><FONT size=2 face=宋体>后变址Y间址</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 182pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl76 width=242><FONT size=2 face=宋体>将累加器的内容送入存储器 A--M</FONT></TD></TR>
+  <TR style="HEIGHT: 14.25pt" height=19>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext 0.5pt solid; BACKGROUND-COLOR: transparent; WIDTH: 63pt; HEIGHT: 14.25pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl71 height=19 width=84><FONT size=2 face=宋体>94</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 92pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=122><FONT size=2 face=宋体>STY $addr,X</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 81pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=108><FONT size=2 face=宋体>零页X变址</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 182pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl76 width=242><FONT size=2 face=宋体>将寄存器Y的内容送入存储器 Y--M</FONT></TD></TR>
+  <TR style="HEIGHT: 14.25pt" height=19>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext 0.5pt solid; BACKGROUND-COLOR: transparent; WIDTH: 63pt; HEIGHT: 14.25pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl71 height=19 width=84><FONT size=2 face=宋体>95</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 92pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=122><FONT size=2 face=宋体>STA $addr,X</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 81pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=108><FONT size=2 face=宋体>零页X变址</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 182pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl76 width=242><FONT size=2 face=宋体>将累加器的内容送入存储器 A--M</FONT></TD></TR>
+  <TR style="HEIGHT: 14.25pt" height=19>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext 0.5pt solid; BACKGROUND-COLOR: transparent; WIDTH: 63pt; HEIGHT: 14.25pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl71 height=19 width=84><FONT size=2 face=宋体>96</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 92pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=122><FONT size=2 face=宋体>STX $addr,Y</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 81pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=108><FONT size=2 face=宋体>零页Y变址</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 182pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl76 width=242><FONT size=2 face=宋体>将寄存器X的内容送入存储器 X--M</FONT></TD></TR>
+  <TR style="HEIGHT: 14.25pt" height=19>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext 0.5pt solid; BACKGROUND-COLOR: transparent; WIDTH: 63pt; HEIGHT: 14.25pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl71 height=19 width=84><FONT size=2 face=宋体>98</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 92pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=122><FONT size=2 face=宋体>TYA</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 81pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=108><FONT size=2 face=宋体>寄存器寻址</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 182pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=242><FONT size=2 face=宋体>将变址寄存器Y的内容送入累加器A</FONT></TD></TR>
+  <TR style="HEIGHT: 14.25pt" height=19>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext 0.5pt solid; BACKGROUND-COLOR: transparent; WIDTH: 63pt; HEIGHT: 14.25pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl71 height=19 width=84><FONT size=2 face=宋体>99</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 92pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=122><FONT size=2 face=宋体>STA $addr16,Y</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 81pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=108><FONT size=2 face=宋体>绝对Y变址</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 182pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl76 width=242><FONT size=2 face=宋体>将累加器的内容送入存储器 A--M</FONT></TD></TR>
+  <TR style="HEIGHT: 14.25pt" height=19>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext 0.5pt solid; BACKGROUND-COLOR: transparent; WIDTH: 63pt; HEIGHT: 14.25pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl71 height=19 width=84><FONT size=2 face=宋体>9A</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 92pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=122><FONT size=2 face=宋体>TXS</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 81pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=108><FONT size=2 face=宋体>寄存器寻址</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 182pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=242><FONT size=2 face=宋体>将变址寄存器X的内容送入堆栈指针S</FONT></TD></TR>
+  <TR style="HEIGHT: 14.25pt" height=19>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext 0.5pt solid; BACKGROUND-COLOR: transparent; WIDTH: 63pt; HEIGHT: 14.25pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl71 height=19 width=84><FONT size=2 face=宋体>9D</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 92pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=122><FONT size=2 face=宋体>STA $addr16,X</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 81pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=108><FONT size=2 face=宋体>绝对X变址</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 182pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl76 width=242><FONT size=2 face=宋体>将累加器的内容送入存储器 A--M</FONT></TD></TR>
+  <TR style="HEIGHT: 14.25pt" height=19>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext 0.5pt solid; BACKGROUND-COLOR: transparent; WIDTH: 63pt; HEIGHT: 14.25pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl71 height=19 width=84><FONT size=2 face=宋体>A0</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 92pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=122><FONT size=2 face=宋体>LDY #$data</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 81pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=108><FONT size=2 face=宋体>立即寻址</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 182pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl76 width=242><FONT size=2 face=宋体>由存储器取数送入累加器 M→Y</FONT></TD></TR>
+  <TR style="HEIGHT: 14.25pt" height=19>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext 0.5pt solid; BACKGROUND-COLOR: transparent; WIDTH: 63pt; HEIGHT: 14.25pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl74 height=19 width=84><FONT size=2 face=宋体>A1</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 92pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl69 width=122><FONT size=2 face=宋体>LDA ($addr,X)</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 81pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl69 width=108><FONT size=2 face=宋体>先变址X后间址</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 182pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl76 width=242><FONT size=2 face=宋体>由存储器取数送入累加器 M→A</FONT></TD></TR>
+  <TR style="HEIGHT: 14.25pt" height=19>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext 0.5pt solid; BACKGROUND-COLOR: transparent; WIDTH: 63pt; HEIGHT: 14.25pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl74 height=19 width=84><FONT size=2 face=宋体>A2</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 92pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl69 width=122><FONT size=2 face=宋体>LDX #$data</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 81pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl69 width=108><FONT size=2 face=宋体>立即寻址</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 182pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl76 width=242><FONT size=2 face=宋体>由存储器取数送入累加器 M→X</FONT></TD></TR>
+  <TR style="HEIGHT: 14.25pt" height=19>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext 0.5pt solid; BACKGROUND-COLOR: transparent; WIDTH: 63pt; HEIGHT: 14.25pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl71 height=19 width=84><FONT size=2 face=宋体>A4</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 92pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=122><FONT size=2 face=宋体>LDY $addr</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 81pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=108><FONT size=2 face=宋体>零页寻址</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 182pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl76 width=242><FONT size=2 face=宋体>由存储器取数送入累加器 M→Y</FONT></TD></TR>
+  <TR style="HEIGHT: 14.25pt" height=19>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext 0.5pt solid; BACKGROUND-COLOR: transparent; WIDTH: 63pt; HEIGHT: 14.25pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl74 height=19 width=84><FONT size=2 face=宋体>A5</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 92pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl69 width=122><FONT size=2 face=宋体>LDA $addr</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 81pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl69 width=108><FONT size=2 face=宋体>零页寻址</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 182pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl76 width=242><FONT size=2 face=宋体>由存储器取数送入累加器 M→A</FONT></TD></TR>
+  <TR style="HEIGHT: 14.25pt" height=19>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext 0.5pt solid; BACKGROUND-COLOR: transparent; WIDTH: 63pt; HEIGHT: 14.25pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl74 height=19 width=84><FONT size=2 face=宋体>A6</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 92pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl69 width=122><FONT size=2 face=宋体>LDX $addr</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 81pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl69 width=108><FONT size=2 face=宋体>零页寻址</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 182pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl76 width=242><FONT size=2 face=宋体>由存储器取数送入累加器 M→X</FONT></TD></TR>
+  <TR style="HEIGHT: 14.25pt" height=19>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext 0.5pt solid; BACKGROUND-COLOR: transparent; WIDTH: 63pt; HEIGHT: 14.25pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl71 height=19 width=84><FONT size=2 face=宋体>A8</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 92pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=122><FONT size=2 face=宋体>TAY</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 81pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=108><FONT size=2 face=宋体>寄存器寻址</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 182pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=242><FONT size=2 face=宋体>将累加器A的内容送入变址寄存器Y</FONT></TD></TR>
+  <TR style="HEIGHT: 14.25pt" height=19>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext 0.5pt solid; BACKGROUND-COLOR: transparent; WIDTH: 63pt; HEIGHT: 14.25pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl74 height=19 width=84><FONT size=2 face=宋体>A9</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 92pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl69 width=122><FONT size=2 face=宋体>LDA #$data</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 81pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl69 width=108><FONT size=2 face=宋体>立即寻址</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 182pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl76 width=242><FONT size=2 face=宋体>由存储器取数送入累加器 M→A</FONT></TD></TR>
+  <TR style="HEIGHT: 14.25pt" height=19>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext 0.5pt solid; BACKGROUND-COLOR: transparent; WIDTH: 63pt; HEIGHT: 14.25pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl71 height=19 width=84><FONT size=2 face=宋体>AA</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 92pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=122><FONT size=2 face=宋体>TAX</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 81pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=108><FONT size=2 face=宋体>寄存器寻址</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 182pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=242><FONT size=2 face=宋体>将累加器A的内容送入变址寄存器X</FONT></TD></TR>
+  <TR style="HEIGHT: 14.25pt" height=19>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext 0.5pt solid; BACKGROUND-COLOR: transparent; WIDTH: 63pt; HEIGHT: 14.25pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl71 height=19 width=84><FONT size=2 face=宋体>AC</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 92pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=122><FONT size=2 face=宋体>LDY $addr16</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 81pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=108><FONT size=2 face=宋体>绝对寻址</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 182pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl76 width=242><FONT size=2 face=宋体>由存储器取数送入累加器 M→Y</FONT></TD></TR>
+  <TR style="HEIGHT: 14.25pt" height=19>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext 0.5pt solid; BACKGROUND-COLOR: transparent; WIDTH: 63pt; HEIGHT: 14.25pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl74 height=19 width=84><FONT size=2 face=宋体>AD</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 92pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl69 width=122><FONT size=2 face=宋体>LDA $addr16</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 81pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl69 width=108><FONT size=2 face=宋体>绝对寻址</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 182pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl76 width=242><FONT size=2 face=宋体>由存储器取数送入累加器 M→A</FONT></TD></TR>
+  <TR style="HEIGHT: 14.25pt" height=19>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext 0.5pt solid; BACKGROUND-COLOR: transparent; WIDTH: 63pt; HEIGHT: 14.25pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl74 height=19 width=84><FONT size=2 face=宋体>AE</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 92pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl69 width=122><FONT size=2 face=宋体>LDX $addr16</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 81pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl69 width=108><FONT size=2 face=宋体>绝对寻址</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 182pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl76 width=242><FONT size=2 face=宋体>由存储器取数送入累加器 M→X</FONT></TD></TR>
+  <TR style="HEIGHT: 14.25pt" height=19>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext 0.5pt solid; BACKGROUND-COLOR: transparent; WIDTH: 63pt; HEIGHT: 14.25pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl71 height=19 width=84><FONT size=2 face=宋体>B0</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 92pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=122><FONT size=2 face=宋体>BCS $data16</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 81pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=108><FONT size=2 face=宋体>相对寻址</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 182pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=242><FONT size=2 face=宋体>如果标志位C=1则转移，否则继续</FONT></TD></TR>
+  <TR style="HEIGHT: 14.25pt" height=19>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext 0.5pt solid; BACKGROUND-COLOR: transparent; WIDTH: 63pt; HEIGHT: 14.25pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl74 height=19 width=84><FONT size=2 face=宋体>B1</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 92pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl69 width=122><FONT size=2 face=宋体>LDA ($addr),Y</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 81pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl69 width=108><FONT size=2 face=宋体>后变址Y间址</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 182pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl76 width=242><FONT size=2 face=宋体>由存储器取数送入累加器 M→A</FONT></TD></TR>
+  <TR style="HEIGHT: 14.25pt" height=19>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext 0.5pt solid; BACKGROUND-COLOR: transparent; WIDTH: 63pt; HEIGHT: 14.25pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl71 height=19 width=84><FONT size=2 face=宋体>B4</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 92pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=122><FONT size=2 face=宋体>LDY $addr,X</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 81pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=108><FONT size=2 face=宋体>零页X变址</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 182pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl76 width=242><FONT size=2 face=宋体>由存储器取数送入累加器 M→Y</FONT></TD></TR>
+  <TR style="HEIGHT: 14.25pt" height=19>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext 0.5pt solid; BACKGROUND-COLOR: transparent; WIDTH: 63pt; HEIGHT: 14.25pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl74 height=19 width=84><FONT size=2 face=宋体>B5</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 92pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl69 width=122><FONT size=2 face=宋体>LDA $addr,X</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 81pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl69 width=108><FONT size=2 face=宋体>零页X变址</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 182pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl76 width=242><FONT size=2 face=宋体>由存储器取数送入累加器 M→A</FONT></TD></TR>
+  <TR style="HEIGHT: 14.25pt" height=19>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext 0.5pt solid; BACKGROUND-COLOR: transparent; WIDTH: 63pt; HEIGHT: 14.25pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl74 height=19 width=84><FONT size=2 face=宋体>B6</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 92pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl69 width=122><FONT size=2 face=宋体>LDX $addr,Y</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 81pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl69 width=108><FONT size=2 face=宋体>零页Y变址</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 182pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl76 width=242><FONT size=2 face=宋体>由存储器取数送入累加器 M→X</FONT></TD></TR>
+  <TR style="HEIGHT: 14.25pt" height=19>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext 0.5pt solid; BACKGROUND-COLOR: transparent; WIDTH: 63pt; HEIGHT: 14.25pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl71 height=19 width=84><FONT size=2 face=宋体>B8</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 92pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=122><FONT size=2 face=宋体>CLV</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl72><FONT size=2 face=宋体>　</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 182pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl76 width=242><FONT size=2 face=宋体>清除溢出标志V<SPAN 
+      style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      </SPAN>0→V</FONT></TD></TR>
+  <TR style="HEIGHT: 14.25pt" height=19>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext 0.5pt solid; BACKGROUND-COLOR: transparent; WIDTH: 63pt; HEIGHT: 14.25pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl74 height=19 width=84><FONT size=2 face=宋体>B9</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 92pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl69 width=122><FONT size=2 face=宋体>LDA $addr16,Y</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 81pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl69 width=108><FONT size=2 face=宋体>绝对Y变址</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 182pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl76 width=242><FONT size=2 face=宋体>由存储器取数送入累加器 M→A</FONT></TD></TR>
+  <TR style="HEIGHT: 14.25pt" height=19>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext 0.5pt solid; BACKGROUND-COLOR: transparent; WIDTH: 63pt; HEIGHT: 14.25pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl71 height=19 width=84><FONT size=2 face=宋体>BA</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 92pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=122><FONT size=2 face=宋体>TSX</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 81pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=108><FONT size=2 face=宋体>寄存器寻址</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 182pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=242><FONT size=2 face=宋体>将堆栈指针S的内容送入变址寄存器X</FONT></TD></TR>
+  <TR style="HEIGHT: 14.25pt" height=19>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext 0.5pt solid; BACKGROUND-COLOR: transparent; WIDTH: 63pt; HEIGHT: 14.25pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl71 height=19 width=84><FONT size=2 face=宋体>BC</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 92pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=122><FONT size=2 face=宋体>LDY $addr16,X</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 81pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=108><FONT size=2 face=宋体>绝对X变址</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 182pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl76 width=242><FONT size=2 face=宋体>由存储器取数送入累加器 M→Y</FONT></TD></TR>
+  <TR style="HEIGHT: 14.25pt" height=19>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext 0.5pt solid; BACKGROUND-COLOR: transparent; WIDTH: 63pt; HEIGHT: 14.25pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl74 height=19 width=84><FONT size=2 face=宋体>BD</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 92pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl69 width=122><FONT size=2 face=宋体>LDA $addr16,X</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 81pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl69 width=108><FONT size=2 face=宋体>绝对X变址</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 182pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl76 width=242><FONT size=2 face=宋体>由存储器取数送入累加器 M→A</FONT></TD></TR>
+  <TR style="HEIGHT: 14.25pt" height=19>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext 0.5pt solid; BACKGROUND-COLOR: transparent; WIDTH: 63pt; HEIGHT: 14.25pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl74 height=19 width=84><FONT size=2 face=宋体>BE</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 92pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl69 width=122><FONT size=2 face=宋体>LDX $addr16,Y</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 81pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl69 width=108><FONT size=2 face=宋体>绝对Y变址</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 182pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl76 width=242><FONT size=2 face=宋体>由存储器取数送入累加器 M→X</FONT></TD></TR>
+  <TR style="HEIGHT: 14.25pt" height=19>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext 0.5pt solid; BACKGROUND-COLOR: transparent; WIDTH: 63pt; HEIGHT: 14.25pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl71 height=19 width=84><FONT size=2 face=宋体>C0</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 92pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=122><FONT size=2 face=宋体>CPY #$data</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 81pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=108><FONT size=2 face=宋体>立即寻址</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 182pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl76 width=242><FONT size=2 face=宋体>寄存器Y的内容和存储器比较</FONT></TD></TR>
+  <TR style="HEIGHT: 14.25pt" height=19>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext 0.5pt solid; BACKGROUND-COLOR: transparent; WIDTH: 63pt; HEIGHT: 14.25pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl71 height=19 width=84><FONT size=2 face=宋体>C1</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 92pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=122><FONT size=2 face=宋体>CMP ($addr,X)</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 81pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=108><FONT size=2 face=宋体>先变址X后间址</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 182pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl76 width=242><FONT size=2 face=宋体>累加器和存储器比较</FONT></TD></TR>
+  <TR style="HEIGHT: 14.25pt" height=19>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext 0.5pt solid; BACKGROUND-COLOR: transparent; WIDTH: 63pt; HEIGHT: 14.25pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl71 height=19 width=84><FONT size=2 face=宋体>C4</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 92pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=122><FONT size=2 face=宋体>CPY $addr</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 81pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=108><FONT size=2 face=宋体>零页寻址</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 182pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl76 width=242><FONT size=2 face=宋体>寄存器Y的内容和存储器比较</FONT></TD></TR>
+  <TR style="HEIGHT: 14.25pt" height=19>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext 0.5pt solid; BACKGROUND-COLOR: transparent; WIDTH: 63pt; HEIGHT: 14.25pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl71 height=19 width=84><FONT size=2 face=宋体>C5</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 92pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=122><FONT size=2 face=宋体>CMP $addr</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 81pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=108><FONT size=2 face=宋体>零页寻址</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 182pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl76 width=242><FONT size=2 face=宋体>累加器和存储器比较</FONT></TD></TR>
+  <TR style="HEIGHT: 14.25pt" height=19>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext 0.5pt solid; BACKGROUND-COLOR: transparent; WIDTH: 63pt; HEIGHT: 14.25pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl71 height=19 width=84><FONT size=2 face=宋体>C6</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 92pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=122><FONT size=2 face=宋体>DEC $addr</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 81pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=108><FONT size=2 face=宋体>零页寻址</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 182pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl76 width=242><FONT size=2 face=宋体>A存储器单元内容减1<SPAN 
+      style="mso-spacerun: yes">&nbsp; </SPAN>M-1→M</FONT></TD></TR>
+  <TR style="HEIGHT: 14.25pt" height=19>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext 0.5pt solid; BACKGROUND-COLOR: transparent; WIDTH: 63pt; HEIGHT: 14.25pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl71 height=19 width=84><FONT size=2 face=宋体>C8</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 92pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=122><FONT size=2 face=宋体>INY</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 81pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=108><FONT size=2 face=宋体>隐含寻址</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 182pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl76 width=242><FONT size=2 face=宋体>Y存储器单元内容增1<SPAN 
+      style="mso-spacerun: yes">&nbsp; </SPAN>M+1→M</FONT></TD></TR>
+  <TR style="HEIGHT: 14.25pt" height=19>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext 0.5pt solid; BACKGROUND-COLOR: transparent; WIDTH: 63pt; HEIGHT: 14.25pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl71 height=19 width=84><FONT size=2 face=宋体>C9</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 92pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=122><FONT size=2 face=宋体>CMP #$data</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 81pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=108><FONT size=2 face=宋体>立即寻址</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 182pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl76 width=242><FONT size=2 face=宋体>累加器和存储器比较</FONT></TD></TR>
+  <TR style="HEIGHT: 14.25pt" height=19>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext 0.5pt solid; BACKGROUND-COLOR: transparent; WIDTH: 63pt; HEIGHT: 14.25pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl71 height=19 width=84><FONT size=2 face=宋体>CA</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 92pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=122><FONT size=2 face=宋体>DEX</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 81pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=108><FONT size=2 face=宋体>隐含寻址</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 182pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl76 width=242><FONT size=2 face=宋体>X存储器单元内容减1<SPAN 
+      style="mso-spacerun: yes">&nbsp; </SPAN>M-1→M</FONT></TD></TR>
+  <TR style="HEIGHT: 14.25pt" height=19>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext 0.5pt solid; BACKGROUND-COLOR: transparent; WIDTH: 63pt; HEIGHT: 14.25pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl71 height=19 width=84><FONT size=2 face=宋体>CC</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 92pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=122><FONT size=2 face=宋体>CPY $addr16</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 81pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=108><FONT size=2 face=宋体>绝对寻址</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 182pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl76 width=242><FONT size=2 face=宋体>寄存器Y的内容和存储器比较</FONT></TD></TR>
+  <TR style="HEIGHT: 14.25pt" height=19>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext 0.5pt solid; BACKGROUND-COLOR: transparent; WIDTH: 63pt; HEIGHT: 14.25pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl71 height=19 width=84><FONT size=2 face=宋体>CD</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 92pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=122><FONT size=2 face=宋体>CMP $addr16</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 81pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=108><FONT size=2 face=宋体>绝对寻址</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 182pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl76 width=242><FONT size=2 face=宋体>累加器和存储器比较</FONT></TD></TR>
+  <TR style="HEIGHT: 14.25pt" height=19>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext 0.5pt solid; BACKGROUND-COLOR: transparent; WIDTH: 63pt; HEIGHT: 14.25pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl71 height=19 width=84><FONT size=2 face=宋体>CE</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 92pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=122><FONT size=2 face=宋体>DEC $addr16</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 81pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=108><FONT size=2 face=宋体>绝对寻址</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 182pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl76 width=242><FONT size=2 face=宋体>A存储器单元内容减1<SPAN 
+      style="mso-spacerun: yes">&nbsp; </SPAN>M-1→M</FONT></TD></TR>
+  <TR style="HEIGHT: 14.25pt" height=19>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext 0.5pt solid; BACKGROUND-COLOR: transparent; WIDTH: 63pt; HEIGHT: 14.25pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl71 height=19 width=84><FONT size=2 face=宋体>D0</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 92pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=122><FONT size=2 face=宋体>BNE $data16</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 81pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=108><FONT size=2 face=宋体>相对寻址</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 182pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=242><FONT size=2 face=宋体>如果标志位Z=0则转移，否则继续</FONT></TD></TR>
+  <TR style="HEIGHT: 14.25pt" height=19>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext 0.5pt solid; BACKGROUND-COLOR: transparent; WIDTH: 63pt; HEIGHT: 14.25pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl71 height=19 width=84><FONT size=2 face=宋体>D1</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 92pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=122><FONT size=2 face=宋体>CMP ($addr),Y</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 81pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=108><FONT size=2 face=宋体>后变址Y间址</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 182pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl76 width=242><FONT size=2 face=宋体>累加器和存储器比较</FONT></TD></TR>
+  <TR style="HEIGHT: 14.25pt" height=19>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext 0.5pt solid; BACKGROUND-COLOR: transparent; WIDTH: 63pt; HEIGHT: 14.25pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl71 height=19 width=84><FONT size=2 face=宋体>D5</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 92pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=122><FONT size=2 face=宋体>CMP $addr,X</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 81pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=108><FONT size=2 face=宋体>零页X变址</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 182pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl76 width=242><FONT size=2 face=宋体>累加器和存储器比较</FONT></TD></TR>
+  <TR style="HEIGHT: 14.25pt" height=19>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext 0.5pt solid; BACKGROUND-COLOR: transparent; WIDTH: 63pt; HEIGHT: 14.25pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl71 height=19 width=84><FONT size=2 face=宋体>D6</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 92pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=122><FONT size=2 face=宋体>DEC $addr,X</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 81pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=108><FONT size=2 face=宋体>零页X变址</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 182pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl76 width=242><FONT size=2 face=宋体>A存储器单元内容减1<SPAN 
+      style="mso-spacerun: yes">&nbsp; </SPAN>M-1→M</FONT></TD></TR>
+  <TR style="HEIGHT: 14.25pt" height=19>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext 0.5pt solid; BACKGROUND-COLOR: transparent; HEIGHT: 14.25pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl73 height=19><FONT size=2 face=宋体>D8</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 92pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=122><FONT size=2 face=宋体>CLD</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl72><FONT size=2 face=宋体>　</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 182pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl76 width=242><FONT size=2 face=宋体>清除十进制运算标志D<SPAN 
+      style="mso-spacerun: yes">&nbsp; </SPAN>0→D</FONT></TD></TR>
+  <TR style="HEIGHT: 14.25pt" height=19>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext 0.5pt solid; BACKGROUND-COLOR: transparent; WIDTH: 63pt; HEIGHT: 14.25pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl71 height=19 width=84><FONT size=2 face=宋体>D9</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 92pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=122><FONT size=2 face=宋体>CMP $addr16,Y</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 81pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=108><FONT size=2 face=宋体>绝对Y变址</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 182pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl76 width=242><FONT size=2 face=宋体>累加器和存储器比较</FONT></TD></TR>
+  <TR style="HEIGHT: 14.25pt" height=19>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext 0.5pt solid; BACKGROUND-COLOR: transparent; WIDTH: 63pt; HEIGHT: 14.25pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl71 height=19 width=84><FONT size=2 face=宋体>DD</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 92pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=122><FONT size=2 face=宋体>CMP $addr16,X</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 81pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=108><FONT size=2 face=宋体>绝对X变址</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 182pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl76 width=242><FONT size=2 face=宋体>累加器和存储器比较</FONT></TD></TR>
+  <TR style="HEIGHT: 14.25pt" height=19>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext 0.5pt solid; BACKGROUND-COLOR: transparent; WIDTH: 63pt; HEIGHT: 14.25pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl71 height=19 width=84><FONT size=2 face=宋体>DE</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 92pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=122><FONT size=2 face=宋体>DEC $addr16,X</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 81pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=108><FONT size=2 face=宋体>绝对X变址</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 182pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl76 width=242><FONT size=2 face=宋体>A存储器单元内容减1<SPAN 
+      style="mso-spacerun: yes">&nbsp; </SPAN>M-1→M</FONT></TD></TR>
+  <TR style="HEIGHT: 14.25pt" height=19>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext 0.5pt solid; BACKGROUND-COLOR: transparent; WIDTH: 63pt; HEIGHT: 14.25pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl71 height=19 width=84><FONT size=2 face=宋体>E0</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 92pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=122><FONT size=2 face=宋体>CPX #$data</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 81pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=108><FONT size=2 face=宋体>立即寻址</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 182pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl76 width=242><FONT size=2 face=宋体>寄存器X的内容和存储器比较</FONT></TD></TR>
+  <TR style="HEIGHT: 24pt" height=32>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext 0.5pt solid; BACKGROUND-COLOR: transparent; WIDTH: 63pt; HEIGHT: 24pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl71 height=32 width=84><FONT size=2 face=宋体>E1</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 92pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=122><FONT size=2 face=宋体>SBC ($addr,X)</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 81pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=108><FONT size=2 face=宋体>先变址X后间址</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 182pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl76 width=242><FONT size=2 face=宋体>从累加器减去存储器和进位标志C,结果送累加器<SPAN 
+      style="mso-spacerun: yes">&nbsp; </SPAN>A-M-C→A</FONT></TD></TR>
+  <TR style="HEIGHT: 14.25pt" height=19>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext 0.5pt solid; BACKGROUND-COLOR: transparent; WIDTH: 63pt; HEIGHT: 14.25pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl71 height=19 width=84><FONT size=2 face=宋体>E4</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 92pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=122><FONT size=2 face=宋体>CPX $addr</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 81pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=108><FONT size=2 face=宋体>零页寻址</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 182pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl76 width=242><FONT size=2 face=宋体>寄存器X的内容和存储器比较</FONT></TD></TR>
+  <TR style="HEIGHT: 24pt" height=32>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext 0.5pt solid; BACKGROUND-COLOR: transparent; WIDTH: 63pt; HEIGHT: 24pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl71 height=32 width=84><FONT size=2 face=宋体>E5</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 92pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=122><FONT size=2 face=宋体>SBC $addr</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 81pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=108><FONT size=2 face=宋体>零页寻址</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 182pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl76 width=242><FONT size=2 face=宋体>从累加器减去存储器和进位标志C,结果送累加器<SPAN 
+      style="mso-spacerun: yes">&nbsp; </SPAN>A-M-C→A</FONT></TD></TR>
+  <TR style="HEIGHT: 14.25pt" height=19>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext 0.5pt solid; BACKGROUND-COLOR: transparent; WIDTH: 63pt; HEIGHT: 14.25pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl71 height=19 width=84><FONT size=2 face=宋体>E6</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 92pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=122><FONT size=2 face=宋体>INC $addr</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 81pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=108><FONT size=2 face=宋体>零页寻址</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 182pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl76 width=242><FONT size=2 face=宋体>A存储器单元内容增1<SPAN 
+      style="mso-spacerun: yes">&nbsp; </SPAN>M+1→M</FONT></TD></TR>
+  <TR style="HEIGHT: 14.25pt" height=19>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext 0.5pt solid; BACKGROUND-COLOR: transparent; WIDTH: 63pt; HEIGHT: 14.25pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl71 height=19 width=84><FONT size=2 face=宋体>E8</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 92pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=122><FONT size=2 face=宋体>INX</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 81pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=108><FONT size=2 face=宋体>隐含寻址</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 182pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl76 width=242><FONT size=2 face=宋体>X存储器单元内容增1<SPAN 
+      style="mso-spacerun: yes">&nbsp; </SPAN>M+1→M</FONT></TD></TR>
+  <TR style="HEIGHT: 24pt" height=32>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext 0.5pt solid; BACKGROUND-COLOR: transparent; WIDTH: 63pt; HEIGHT: 24pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl71 height=32 width=84><FONT size=2 face=宋体>E9</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 92pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=122><FONT size=2 face=宋体>SBC #$data</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 81pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=108><FONT size=2 face=宋体>立即寻址</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 182pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl76 width=242><FONT size=2 face=宋体>从累加器减去存储器和进位标志C,结果送累加器<SPAN 
+      style="mso-spacerun: yes">&nbsp; </SPAN>A-M-C→A</FONT></TD></TR>
+  <TR style="HEIGHT: 14.25pt" height=19>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext 0.5pt solid; BACKGROUND-COLOR: transparent; HEIGHT: 14.25pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl73 height=19><FONT size=2 face=宋体>EA</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl72><FONT size=2 face=宋体>NOP</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl72><FONT size=2 face=宋体>　</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 182pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl76 width=242><FONT size=2 face=宋体>不做任何工作</FONT></TD></TR>
+  <TR style="HEIGHT: 14.25pt" height=19>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext 0.5pt solid; BACKGROUND-COLOR: transparent; WIDTH: 63pt; HEIGHT: 14.25pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl71 height=19 width=84><FONT size=2 face=宋体>EC</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 92pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=122><FONT size=2 face=宋体>CPX $addr16</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 81pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=108><FONT size=2 face=宋体>绝对寻址</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 182pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl76 width=242><FONT size=2 face=宋体>寄存器X的内容和存储器比较</FONT></TD></TR>
+  <TR style="HEIGHT: 24pt" height=32>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext 0.5pt solid; BACKGROUND-COLOR: transparent; WIDTH: 63pt; HEIGHT: 24pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl71 height=32 width=84><FONT size=2 face=宋体>ED</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 92pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=122><FONT size=2 face=宋体>SBC $addr16</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 81pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=108><FONT size=2 face=宋体>绝对寻址</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 182pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl76 width=242><FONT size=2 face=宋体>从累加器减去存储器和进位标志C,结果送累加器<SPAN 
+      style="mso-spacerun: yes">&nbsp; </SPAN>A-M-C→A</FONT></TD></TR>
+  <TR style="HEIGHT: 14.25pt" height=19>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext 0.5pt solid; BACKGROUND-COLOR: transparent; WIDTH: 63pt; HEIGHT: 14.25pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl71 height=19 width=84><FONT size=2 face=宋体>EE</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 92pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=122><FONT size=2 face=宋体>INC $addr16</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 81pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=108><FONT size=2 face=宋体>绝对寻址</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 182pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl76 width=242><FONT size=2 face=宋体>A存储器单元内容增1<SPAN 
+      style="mso-spacerun: yes">&nbsp; </SPAN>M+1→M</FONT></TD></TR>
+  <TR style="HEIGHT: 14.25pt" height=19>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext 0.5pt solid; BACKGROUND-COLOR: transparent; WIDTH: 63pt; HEIGHT: 14.25pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl71 height=19 width=84><FONT size=2 face=宋体>F0</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 92pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=122><FONT size=2 face=宋体>BEQ $data16</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 81pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=108><FONT size=2 face=宋体>相对寻址</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 182pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=242><FONT size=2 face=宋体>如果标志位Z=1则转移，否则继续</FONT></TD></TR>
+  <TR style="HEIGHT: 24pt" height=32>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext 0.5pt solid; BACKGROUND-COLOR: transparent; WIDTH: 63pt; HEIGHT: 24pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl71 height=32 width=84><FONT size=2 face=宋体>F1</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 92pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=122><FONT size=2 face=宋体>SBC ($addr),Y</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 81pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=108><FONT size=2 face=宋体>后变址Y间址</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 182pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl76 width=242><FONT size=2 face=宋体>从累加器减去存储器和进位标志C,结果送累加器<SPAN 
+      style="mso-spacerun: yes">&nbsp; </SPAN>A-M-C→A</FONT></TD></TR>
+  <TR style="HEIGHT: 24pt" height=32>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext 0.5pt solid; BACKGROUND-COLOR: transparent; WIDTH: 63pt; HEIGHT: 24pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl71 height=32 width=84><FONT size=2 face=宋体>F5</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 92pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=122><FONT size=2 face=宋体>SBC $addr,X</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 81pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=108><FONT size=2 face=宋体>零页X变址</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 182pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl76 width=242><FONT size=2 face=宋体>从累加器减去存储器和进位标志C,结果送累加器<SPAN 
+      style="mso-spacerun: yes">&nbsp; </SPAN>A-M-C→A</FONT></TD></TR>
+  <TR style="HEIGHT: 14.25pt" height=19>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext 0.5pt solid; BACKGROUND-COLOR: transparent; WIDTH: 63pt; HEIGHT: 14.25pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl71 height=19 width=84><FONT size=2 face=宋体>F6</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 92pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=122><FONT size=2 face=宋体>INC $addr,X</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 81pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=108><FONT size=2 face=宋体>零页X变址</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 182pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl76 width=242><FONT size=2 face=宋体>A存储器单元内容增1<SPAN 
+      style="mso-spacerun: yes">&nbsp; </SPAN>M+1→M</FONT></TD></TR>
+  <TR style="HEIGHT: 14.25pt" height=19>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext 0.5pt solid; BACKGROUND-COLOR: transparent; HEIGHT: 14.25pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl73 height=19><FONT size=2 face=宋体>F8</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 92pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=122><FONT size=2 face=宋体>SED</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl72><FONT size=2 face=宋体>　</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 182pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl76 width=242><FONT size=2 face=宋体>置十进制运算标志D<SPAN 
+      style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp; </SPAN>1→D</FONT></TD></TR>
+  <TR style="HEIGHT: 24pt" height=32>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext 0.5pt solid; BACKGROUND-COLOR: transparent; WIDTH: 63pt; HEIGHT: 24pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl71 height=32 width=84><FONT size=2 face=宋体>F9</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 92pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=122><FONT size=2 face=宋体>SBC $addr16,Y</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 81pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=108><FONT size=2 face=宋体>绝对Y变址</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 182pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl76 width=242><FONT size=2 face=宋体>从累加器减去存储器和进位标志C,结果送累加器<SPAN 
+      style="mso-spacerun: yes">&nbsp; </SPAN>A-M-C→A</FONT></TD></TR>
+  <TR style="HEIGHT: 24pt" height=32>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext 0.5pt solid; BACKGROUND-COLOR: transparent; WIDTH: 63pt; HEIGHT: 24pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl71 height=32 width=84><FONT size=2 face=宋体>FD</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 92pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=122><FONT size=2 face=宋体>SBC $addr16,X</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 81pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=108><FONT size=2 face=宋体>绝对X变址</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 182pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl76 width=242><FONT size=2 face=宋体>从累加器减去存储器和进位标志C,结果送累加器<SPAN 
+      style="mso-spacerun: yes">&nbsp; </SPAN>A-M-C→A</FONT></TD></TR>
+  <TR style="HEIGHT: 14.25pt" height=19>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext 0.5pt solid; BACKGROUND-COLOR: transparent; WIDTH: 63pt; HEIGHT: 14.25pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl71 height=19 width=84><FONT size=2 face=宋体>FE</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 92pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=122><FONT size=2 face=宋体>INC $addr16,X</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 81pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl70 width=108><FONT size=2 face=宋体>绝对X变址</FONT></TD>
+    <TD 
+    style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: transparent; WIDTH: 182pt; BORDER-TOP: windowtext; BORDER-RIGHT: windowtext 0.5pt solid" 
+    class=xl76 width=242><FONT size=2 face=宋体>A存储器单元内容增1<SPAN 
+      style="mso-spacerun: yes">&nbsp; 
+</SPAN>M+1→M</FONT></TD></TR></TBODY></TABLE></BODY></HTML>

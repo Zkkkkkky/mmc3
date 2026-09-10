@@ -1,0 +1,71 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML><HEAD><TITLE>物理类武器的运行规律</TITLE>
+<META name=GENERATOR content="MSHTML 8.00.7601.19104">
+<META content="text/html; charset=gb2312" http-equiv=Content-Type>
+<STYLE>
+html,body { 
+	/* Default Font */
+	font-family: Microsoft YaHei, Simsun, sans-serif;
+	font-size: 12pt;
+}
+</STYLE>
+</HEAD>
+<BODY><FONT size=3 face="Microsoft YaHei" font><PRE>           <FONT size=2 face=微软雅黑>物理类武器的运行规律
+我们通过上面知道42 69（C2 69）后面三个代码是
+运行规律，其中第一个为图片提取规律，他提取的
+规律3所组合的图片。
+
+ 标志码：
+01：FD+AA FD提取音乐代码AA为音乐代码。
+02：FB+AA+BB 重复：FB设定重复，AA设定次数，BB
+跳转，以BB代码所在位置的下一个代码位置为基地址
+BB为00基础每加1地址加1，每减1地址减1。
+03.FF 结束。
+
+例：
+   地址   代码
+  13BD6   FD
+  13BD7   1A
+  13BD8   5F
+  13BD9   60
+  13BDA   FB
+  13BDB   20
+  13BDC   FB
+  13BDD   FF
+FD 1A 提取音乐1A
+5F 规律3的组合代码
+60 规律3的组合代码
+FB 20 FB 地址13BDC的FB为跳转到13BDD-05=13BD8
+即重复13BD8-13BD9的代码H20次。
+
+
+那么 42 69（C2 69）后面3个代码中的后两个分别为
+X轴运行规律和Y轴运行规律。
+
+ 标志码：
+01.运行规律里的每个非83和80的代码皆为移动的方向和
+距离。X轴依然是以00为界每加1向右移动1像素，减1向左
+移动1像素。Y轴一样只不过加1向下减1向上。
+02.83：83+AA+BB这里的83和图像提取规律里的FB作用一样
+83设定重复，AA设定次数，BB跳转，以BB代码所在位置的下
+一个代码位置为基地址BB为00基础每加1地址加1，每减1地
+址减1。
+03.80:80无休止重复80前面的1代码。
+
+例：
+   地址   代码
+  13C4C   01
+  13C4D   83
+  13C4E   08
+  13C4F   FC
+  13C50   00
+  13C51   83
+  13C52   0C
+  13C53   FC
+01 向右移动1像素
+83 08 FC地址13C4F的FC为跳转到13C50-04=13C4C
+即重复13C4C-13C4C的代码H08次(每次向右移动1像素共移
+动8次)。
+00 不动
+83 0C FC地址13C53的FC为跳转到13C54-04=13C50
+即重复13C50-13C50的代码H0C次(图像不动H0C次)。</FONT></PRE></FONT></BODY></HTML>

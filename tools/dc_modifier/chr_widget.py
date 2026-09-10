@@ -88,13 +88,106 @@ class ChrTileCanvas(QWidget):
             self._paint_at(event.position().toPoint())
 
 
+class ChrSheetCanvas(QWidget):
+    """Compact 16x16 tile browser used to locate graphics before editing them."""
+
+    tile_selected = Signal(int)
+
+    def __init__(self) -> None:
+        super().__init__()
+        self.project = None
+        self.page = 0
+        self.selected_tile = 0
+        self.cell_size = 18
+        self.setFixedSize(self.sizeHint())
+        self.setToolTip("单击图块即可在右侧放大编辑")
+
+    def sizeHint(self) -> QSize:
+        return QSize(self.cell_size * 16 + 1, self.cell_size * 16 + 1)
+
+    def set_project(self, project) -> None:
+        self.project = project
+        self.update()
+
+    def set_page(self, page: int) -> None:
+        self.page = page
+        self.update()
+
+    def set_selected_tile(self, tile_index: int) -> None:
+        self.selected_tile = tile_index
+        self.update()
+
+    def paintEvent(self, _event) -> None:
+        painter = QPainter(self)
+        painter.fillRect(self.rect(), QColor("#101820"))
+        if self.project is None:
+            return
+        first_tile = self.page * 256
+        last_tile = min(first_tile + 256, self.project.chr_tile_count)
+        pixel_size = max(1, self.cell_size // 8)
+        for tile_index in range(first_tile, last_tile):
+            local = tile_index - first_tile
+            tile_x = (local % 16) * self.cell_size + 1
+            tile_y = (local // 16) * self.cell_size + 1
+            pixels = self.project.chr_tile_pixels(tile_index)
+            for y in range(8):
+                for x in range(8):
+                    painter.fillRect(
+                        tile_x + x * pixel_size,
+                        tile_y + y * pixel_size,
+                        pixel_size,
+                        pixel_size,
+                        DISPLAY_COLORS[pixels[y * 8 + x]],
+                    )
+            if tile_index == self.selected_tile:
+                painter.setPen(QPen(QColor("#19b5fe"), 2))
+                painter.drawRect(
+                    tile_x - 1,
+                    tile_y - 1,
+                    self.cell_size - 1,
+                    self.cell_size - 1,
+                )
+
+    def mousePressEvent(self, event: QMouseEvent) -> None:
+        if event.button() != Qt.MouseButton.LeftButton or self.project is None:
+            return
+        column = event.position().toPoint().x() // self.cell_size
+        row = event.position().toPoint().y() // self.cell_size
+        tile_index = self.page * 256 + row * 16 + column
+        if 0 <= column < 16 and 0 <= row < 16 and tile_index < self.project.chr_tile_count:
+            self.tile_selected.emit(tile_index)
+
+
 class ChrGraphicsWidget(ProjectPage):
     def __init__(self) -> None:
         super().__init__()
         self.current_tile = 0
 
         layout = QHBoxLayout(self)
+        browser_group = QGroupBox("CHR 图块浏览器")
+        browser_layout = QVBoxLayout(browser_group)
+        browser_row = QHBoxLayout()
+        self.sheet_page = QSpinBox()
+        self.sheet_page.setDisplayIntegerBase(16)
+        self.sheet_page.setPrefix("$")
+        self.sheet_page.valueChanged.connect(self._sheet_page_changed)
+        browser_row.addWidget(QLabel("256图块页"))
+        browser_row.addWidget(self.sheet_page)
+        browser_row.addStretch()
+        browser_layout.addLayout(browser_row)
+        self.sheet = ChrSheetCanvas()
+        self.sheet.tile_selected.connect(self._select_tile)
+        browser_layout.addWidget(self.sheet, 0, Qt.AlignmentFlag.AlignHCenter)
+        self.sheet_selection = QLabel("选择：—")
+        self.sheet_selection.setObjectName("hintText")
+        browser_layout.addWidget(self.sheet_selection)
+        browser_layout.addStretch()
+        layout.addWidget(browser_group)
+
         canvas_column = QVBoxLayout()
+        canvas_label = QLabel("8×8 放大编辑")
+        canvas_label.setObjectName("sectionTitle")
+        canvas_column.addWidget(canvas_label)
         self.canvas = ChrTileCanvas()
         canvas_column.addWidget(self.canvas, 0, Qt.AlignmentFlag.AlignHCenter)
         self.hex_preview = QLabel("00 " * 15 + "00")
@@ -181,11 +274,20 @@ class ChrGraphicsWidget(ProjectPage):
     def refresh(self) -> None:
         enabled = self.project is not None
         self.setEnabled(enabled)
+        self.sheet.set_project(self.project)
         if not enabled:
             self.location.setText("尚未载入ROM。")
+            self.sheet_selection.setText("选择：—")
             return
         assert self.project is not None
         previous = min(self.current_tile, self.project.chr_tile_count - 1)
+        page_count = max(1, (self.project.chr_tile_count + 255) // 256)
+        self.sheet_page.blockSignals(True)
+        self.sheet_page.setRange(0, page_count - 1)
+        self.sheet_page.setValue(previous // 256)
+        self.sheet_page.blockSignals(False)
+        self.sheet.set_project(self.project)
+        self.sheet.set_page(previous // 256)
         self.tile_index.blockSignals(True)
         self.tile_index.setRange(0, self.project.chr_tile_count - 1)
         self.tile_index.setValue(previous)
@@ -197,6 +299,14 @@ class ChrGraphicsWidget(ProjectPage):
         if self.project is None:
             return
         self.canvas.set_pixels(self.project.chr_tile_pixels(tile_index))
+        page = tile_index // 256
+        if self.sheet_page.value() != page:
+            self.sheet_page.blockSignals(True)
+            self.sheet_page.setValue(page)
+            self.sheet_page.blockSignals(False)
+            self.sheet.set_page(page)
+        self.sheet.set_selected_tile(tile_index)
+        self.sheet_selection.setText(f"选择：图块 ${tile_index:04X}")
         offset = self.project.chr_codec.tile_offset(tile_index)
         bank = tile_index // 512
         within_bank = tile_index % 512
@@ -205,6 +315,14 @@ class ChrGraphicsWidget(ProjectPage):
             f"文件偏移 0x{offset:06X}"
         )
         self._update_preview()
+
+    def _sheet_page_changed(self, page: int) -> None:
+        self.sheet.set_page(page)
+        if self.project is not None:
+            self._select_tile(min(page * 256, self.project.chr_tile_count - 1))
+
+    def _select_tile(self, tile_index: int) -> None:
+        self.tile_index.setValue(tile_index)
 
     def _ink_changed(self) -> None:
         self.canvas.ink = int(self.ink.currentData())
@@ -220,6 +338,7 @@ class ChrGraphicsWidget(ProjectPage):
             return
         try:
             self.project.set_chr_tile_pixels(self.current_tile, self.canvas.pixels)
+            self.sheet.update()
             self.project_changed.emit(f"已更新CHR图块 ${self.current_tile:04X}")
         except Exception as error:
             self.show_error(error)
@@ -229,6 +348,8 @@ class ChrGraphicsWidget(ProjectPage):
             return
         try:
             self.project.reset_chr_range(self.current_tile)
+            self._load_tile(self.current_tile)
+            self.sheet.update()
             self.project_changed.emit(f"已还原CHR图块 ${self.current_tile:04X}")
         except Exception as error:
             self.show_error(error)
@@ -343,6 +464,8 @@ class ChrGraphicsWidget(ProjectPage):
             if answer != QMessageBox.StandardButton.Yes:
                 return
             self.project.set_chr_range(self.current_tile, payload)
+            self._load_tile(self.current_tile)
+            self.sheet.update()
             self.project_changed.emit(
                 f"已导入 {tile_count} 个CHR图块（起点 ${self.current_tile:04X}）"
             )

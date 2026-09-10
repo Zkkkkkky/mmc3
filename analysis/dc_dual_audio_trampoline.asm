@@ -1,5 +1,5 @@
-; Entry stored only in the expanded copy of stock PRG bank $18. The NMI
-; dispatcher maps physical Mapper 194 bank $60 before reading this pointer.
+; Entry stored in verified zero-filled holes of the original stock-audio
+; PRG bank $18. The NMI dispatcher maps physical Mapper 194 bank $18.
 
     .base $99af
 

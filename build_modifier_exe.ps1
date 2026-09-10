@@ -17,6 +17,11 @@ if (-not (Test-Path -LiteralPath $specFile -PathType Leaf)) {
     throw "未找到 PyInstaller 配置：$specFile"
 }
 
+& $python (Join-Path $root "tools\export_dc_modifier_mappings.py")
+if ($LASTEXITCODE -ne 0) {
+    throw "修改器映射表生成失败，退出码：$LASTEXITCODE"
+}
+
 & $python -m PyInstaller `
     --noconfirm `
     --clean `
@@ -45,6 +50,11 @@ if ($selfTest.ExitCode -ne 0) {
 $hash = (Get-FileHash -LiteralPath $output -Algorithm SHA256).Hash
 $hashFile = "$output.sha256.txt"
 Set-Content -LiteralPath $hashFile -Value "$hash  新DC篇完整修改器.exe" -Encoding utf8
+$mappingSource = Join-Path $root "build\修改器映射表"
+$mappingDestination = Join-Path $dist "修改器映射表"
+New-Item -ItemType Directory -Path $mappingDestination -Force | Out-Null
+Copy-Item -Path (Join-Path $mappingSource "*") -Destination $mappingDestination -Force
 Write-Host "EXE: $output"
 Write-Host "SHA-256: $hash"
 Write-Host "Checksum: $hashFile"
+Write-Host "Mappings: $mappingDestination"

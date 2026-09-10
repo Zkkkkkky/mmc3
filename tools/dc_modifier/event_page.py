@@ -21,15 +21,22 @@ from PySide6.QtWidgets import (
 )
 
 from fc_editor.codecs.chapter_event import ACTION_FIELDS, ACTION_LABELS
+from fc_editor.dc_text import dc_map_label
 
 from .pages import ProjectPage, page_title, readonly_item
 
 
 EVENT_GROUPS = (
     ("可编辑事件动作", {0x4A, 0x4B, 0x4C, 0x4D, 0x4E, 0x67, 0x68, 0x69, 0x6A, 0x6B, 0x75, 0x76, 0x77}),
+    ("触发条件与行动判定", set(range(0x00, 0x1F))),
+    ("对白、文字与镜头", set(range(0x40, 0x49))),
     ("增援", {0x4A, 0x4B, 0x4C, 0x75, 0x76, 0x77}),
     ("说得、加入与转化", {0x4D, 0x4E, 0x67, 0x68, 0x69}),
-    ("撤退与移除", {0x6A, 0x6B}),
+    ("开关、跳转与流程", set(range(0x51, 0x59))),
+    ("音乐与等待", set(range(0x59, 0x5F))),
+    ("行动控制", set(range(0x60, 0x6D))),
+    ("奖励、离队与胜负", {0x4F, 0x50, 0x6D, 0x6E, 0x6F, 0x70, 0x71, 0x72, 0x73}),
+    ("自爆、撤退与移除", {0x6A, 0x6B}),
     ("全部指令（专家）", None),
 )
 
@@ -43,7 +50,7 @@ TEMPLATES_BY_LENGTH = {
     1: (
         ("转为临时友军", 0x67),
         ("转为敌军", 0x68),
-        ("撤退并保留镜头目标", 0x6A),
+        ("当前单位自爆", 0x6A),
         ("移除当前单位", 0x6B),
     ),
 }
@@ -67,7 +74,9 @@ class EventPage(ProjectPage):
         self.scenario_filter = QComboBox()
         self.scenario_filter.addItem("全部章节", None)
         for scenario_id in range(0x20):
-            self.scenario_filter.addItem(f"章节 ${scenario_id:02X}", scenario_id)
+            self.scenario_filter.addItem(
+                f"${scenario_id:02X} · {dc_map_label(scenario_id)}", scenario_id
+            )
         self.phase_filter = QComboBox()
         self.phase_filter.addItem("全部阶段", None)
         self.kind_filter = QComboBox()
@@ -76,6 +85,8 @@ class EventPage(ProjectPage):
         self.search = QLineEdit()
         self.search.setPlaceholderText("搜索地址、事件名、参数或章节…")
         self.search.setClearButtonEnabled(True)
+        self.result_count = QLabel("0 条")
+        self.result_count.setObjectName("countBadge")
         filters.addWidget(QLabel("章节"))
         filters.addWidget(self.scenario_filter)
         filters.addWidget(QLabel("阶段"))
@@ -83,6 +94,7 @@ class EventPage(ProjectPage):
         filters.addWidget(QLabel("类型"))
         filters.addWidget(self.kind_filter)
         filters.addWidget(self.search, 1)
+        filters.addWidget(self.result_count)
         layout.addLayout(filters)
 
         splitter = QSplitter()
@@ -111,6 +123,9 @@ class EventPage(ProjectPage):
         self.terminal = QCheckBox("结束本事件组（操作码高位）")
         form.addRow("脚本地址", self.address_value)
         form.addRow("章节归属", self.context_value)
+        self.pending_state = QLabel("请选择事件动作")
+        self.pending_state.setObjectName("pendingBanner")
+        form.addRow("编辑状态", self.pending_state)
         form.addRow("兼容模板", self.template)
         form.addRow("执行控制", self.terminal)
         self.parameter_labels: list[QLabel] = []
@@ -121,6 +136,11 @@ class EventPage(ProjectPage):
             value.setRange(0, 255)
             value.setDisplayIntegerBase(16)
             value.setPrefix("$")
+            value.valueChanged.connect(
+                lambda _value, parameter_index=index: self._update_parameter_annotation(
+                    parameter_index
+                )
+            )
             label.hide()
             value.hide()
             form.addRow(label, value)
@@ -141,7 +161,7 @@ class EventPage(ProjectPage):
         editor_layout.addLayout(buttons)
         hint = QLabel(
             "使用方法：先从左侧选择原有槽位，再选相同长度的模板。"
-            "“正式加入我方”作用于当前事件上下文选中的单位；增援的六个参数依次为坐标、机体、人物、等级和AI标志。"
+            "“正式加入我方”作用于当前事件上下文选中的单位；增援的六个参数依次为坐标、人物、机体、等级和AI标志。"
         )
         hint.setObjectName("hintText")
         hint.setWordWrap(True)
@@ -164,6 +184,8 @@ class EventPage(ProjectPage):
         self.search.textChanged.connect(self._populate_table)
         self.table.itemSelectionChanged.connect(self._selection_changed)
         self.template.currentIndexChanged.connect(self._template_changed)
+        self.terminal.toggled.connect(self._update_pending_state)
+        self.raw.textChanged.connect(self._update_pending_state)
         self.apply_template_button.clicked.connect(self._apply_template)
         self.apply_raw_button.clicked.connect(self._apply_raw)
         self.reset_button.clicked.connect(self._reset_instruction)
@@ -173,19 +195,41 @@ class EventPage(ProjectPage):
         if not instruction.contexts:
             return "共享/分支块"
         return " / ".join(
-            f"${context.scenario_id:02X}·{context.label}"
+            f"${context.scenario_id:02X}·"
+            f"{dc_map_label(context.scenario_id)}·{context.label}"
             for context in instruction.contexts
         )
 
-    @staticmethod
-    def _parameter_text(instruction) -> str:
+    def _parameter_annotation(self, label: str, value: int) -> str:
+        if self.project is None:
+            return ""
+        if "机体ID" in label:
+            if not 1 <= value < self.project.unit_count:
+                return "无机体/特殊值" if value == 0 else "超出机体表"
+            return self.project.unit_display_name(value)
+        if "人物ID" in label:
+            return self.project.character_display_name(value)
+        return ""
+
+    def _parameter_text(self, instruction) -> str:
         labels = instruction.field_labels
         if labels:
-            return "，".join(
-                f"{label}=${value:02X}"
-                for label, value in zip(labels, instruction.parameters)
-            )
+            parts = []
+            for label, value in zip(labels, instruction.parameters):
+                annotation = self._parameter_annotation(label, value)
+                suffix = f"（{annotation}）" if annotation else ""
+                parts.append(f"{label}=${value:02X}{suffix}")
+            return "，".join(parts)
         return " ".join(f"{value:02X}" for value in instruction.parameters) or "—"
+
+    def _update_parameter_annotation(self, index: int) -> None:
+        if index >= len(self.parameter_labels):
+            return
+        label = self.parameter_labels[index].text()
+        spin = self.parameters[index]
+        annotation = self._parameter_annotation(label, spin.value())
+        spin.setSuffix(f" · {annotation}" if annotation else "")
+        self._update_pending_state()
 
     def refresh(self) -> None:
         self.phase_filter.blockSignals(True)
@@ -235,6 +279,7 @@ class EventPage(ProjectPage):
     def _populate_table(self) -> None:
         previous = self.current_address
         visible = tuple(self._visible_instructions())
+        self.result_count.setText(f"{len(visible)} 条")
         self.table.blockSignals(True)
         self.table.setRowCount(len(visible))
         selected_row = -1
@@ -267,8 +312,37 @@ class EventPage(ProjectPage):
 
     def _selection_changed(self) -> None:
         instruction = self._selected_instruction()
+        if (
+            instruction is not None
+            and self.current_address is not None
+            and instruction.address != self.current_address
+            and self.has_pending_draft
+        ):
+            target_address = instruction.address
+            old_address = self.current_address
+            self.table.blockSignals(True)
+            self._select_address(old_address)
+            self.table.blockSignals(False)
+            if not self.commit_pending_changes():
+                self.show_error(
+                    ValueError(
+                        self.pending_draft_error
+                        or "当前事件仍有无法应用的改动，请修正后再切换。"
+                    )
+                )
+                return
+            self._select_address(target_address)
+            return
         self.current_address = instruction.address if instruction is not None else None
         self._show_instruction(instruction)
+
+    def _select_address(self, address: int) -> bool:
+        for row in range(self.table.rowCount()):
+            item = self.table.item(row, 0)
+            if item is not None and item.data(Qt.ItemDataRole.UserRole) == address:
+                self.table.selectRow(row)
+                return True
+        return False
 
     def _show_instruction(self, instruction) -> None:
         enabled = instruction is not None
@@ -283,6 +357,7 @@ class EventPage(ProjectPage):
             self.raw.clear()
             self.terminal.setChecked(False)
             self.template.addItem("无可用指令", None)
+            self.pending_state.setText("请选择事件动作")
         else:
             self.address_value.setText(
                 f"${instruction.address:04X} / 文件 0x{instruction.file_offset:X} / {len(instruction.raw)} 字节"
@@ -296,10 +371,18 @@ class EventPage(ProjectPage):
             current_index = self.template.findData(instruction.opcode)
             if current_index >= 0:
                 self.template.setCurrentIndex(current_index)
+            elif templates:
+                # A same-length template does not imply that the current
+                # opcode is one of the verified actions.  Keep an explicit
+                # lossless choice selected so simply opening the dialog never
+                # manufactures a pending replacement for an unknown opcode.
+                self.template.insertItem(0, "保持当前原始指令", None)
+                self.template.setCurrentIndex(0)
             self.terminal.setChecked(instruction.is_terminal)
             self.raw.setText(instruction.raw.hex(" ").upper())
         self.template.blockSignals(False)
         self._update_parameter_controls(instruction)
+        self._update_pending_state()
 
     def _update_parameter_controls(self, instruction) -> None:
         opcode = self.template.currentData()
@@ -316,6 +399,9 @@ class EventPage(ProjectPage):
             if visible:
                 label_widget.setText(labels[index])
                 spin.setValue(values[index] if index < len(values) else 0)
+                self._update_parameter_annotation(index)
+            else:
+                spin.setSuffix("")
         self.apply_template_button.setEnabled(instruction is not None and bool(labels) or (
             instruction is not None and opcode in {0x67, 0x68, 0x6A, 0x6B}
         ))
@@ -323,6 +409,85 @@ class EventPage(ProjectPage):
     def _template_changed(self) -> None:
         instruction = self._selected_instruction()
         self._update_parameter_controls(instruction)
+        self._update_pending_state()
+
+    def _update_pending_state(self) -> None:
+        instruction = self._selected_instruction()
+        if instruction is None:
+            self.pending_state.setText("请选择事件动作")
+            self.apply_template_button.setEnabled(False)
+            self.apply_raw_button.setEnabled(False)
+            return
+        opcode = self.template.currentData()
+        labels = ACTION_FIELDS.get(opcode, ()) if opcode is not None else ()
+        if opcode is None:
+            template_raw = instruction.raw
+        else:
+            raw_opcode = int(opcode) | (0x80 if self.terminal.isChecked() else 0)
+            template_raw = bytes(
+                (raw_opcode, *(spin.value() for spin in self.parameters[: len(labels)]))
+            )
+        try:
+            raw_editor = self._parse_hex(self.raw.text())
+            raw_valid = len(raw_editor) == len(instruction.raw)
+        except ValueError:
+            raw_editor = b""
+            raw_valid = False
+        template_valid = opcode is not None and len(template_raw) == len(instruction.raw)
+        template_changed = template_valid and template_raw != instruction.raw
+        raw_changed = raw_valid and raw_editor != instruction.raw
+        pending = template_changed or raw_changed
+        self.apply_template_button.setEnabled(template_changed)
+        self.apply_raw_button.setEnabled(raw_changed)
+        if not raw_valid:
+            self.pending_state.setText(
+                f"● 原始字节必须保持 {len(instruction.raw)} 字节；当前输入不可应用"
+            )
+            self.pending_state.setStyleSheet("color: #b42318; font-weight: 650;")
+        else:
+            self.pending_state.setText(
+                "● 当前参数尚未应用" if pending else "✓ 与当前工程一致"
+            )
+            self.pending_state.setStyleSheet(
+                "color: #b45309; font-weight: 650;"
+                if pending
+                else "color: #2e7d4f;"
+            )
+
+    @property
+    def has_pending_draft(self) -> bool:
+        return self.pending_state.text().startswith("●")
+
+    @property
+    def pending_draft_error(self) -> str | None:
+        if not self.has_pending_draft:
+            return None
+        enabled = sum(
+            button.isEnabled()
+            for button in (self.apply_template_button, self.apply_raw_button)
+        )
+        if enabled == 0:
+            return self.pending_state.text().lstrip("● ")
+        if enabled > 1:
+            return "模板参数和原始字节同时有改动，请先明确应用其中一种。"
+        return None
+
+    def commit_pending_changes(self) -> bool:
+        if not self.has_pending_draft:
+            return True
+        if self.pending_draft_error is not None:
+            return False
+        assert self.project is not None
+        before = bytes(self.project.working)
+        button = (
+            self.apply_template_button
+            if self.apply_template_button.isEnabled()
+            else self.apply_raw_button
+        )
+        button.click()
+        if bytes(self.project.working) != before and self.has_pending_draft:
+            self.refresh()
+        return not self.has_pending_draft
 
     def _apply_template(self) -> None:
         instruction = self._selected_instruction()

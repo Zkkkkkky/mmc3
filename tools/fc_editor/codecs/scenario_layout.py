@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import hashlib
 import struct
+from collections.abc import Sequence
 
 from ..errors import RomFormatError
 from ..models import PlayerPlacement, ScenarioEntity, ScenarioLayout
@@ -11,8 +12,54 @@ from ..rom_image import RomImage
 class ScenarioLayoutCodec:
     """Lossless codec for scenario prelude, enemy, guest and player placement lists."""
 
-    def __init__(self, rom: RomImage) -> None:
+    MAX_ENEMIES = 18
+    MAX_GUESTS = 3
+    MAX_PLAYER_PLACEMENTS = 11
+
+    def __init__(
+        self,
+        rom: RomImage,
+        data: bytes | bytearray | None = None,
+        *,
+        pointer_table_offset: int | None = None,
+        data_prg_bank: int | None = None,
+        data_window_base: int | None = None,
+        data_end_pointer: int | None = None,
+        record_locations: Sequence[object] | None = None,
+    ) -> None:
         self.rom = rom
+        self._source = rom.data if data is None else bytes(data)
+        self.pointer_table_offset = (
+            rom.profile.scenario_pointer_table_offset
+            if pointer_table_offset is None
+            else pointer_table_offset
+        )
+        self.data_prg_bank = (
+            rom.profile.scenario_data_prg_bank
+            if data_prg_bank is None
+            else data_prg_bank
+        )
+        self.data_window_base = (
+            rom.profile.scenario_data_window_base
+            if data_window_base is None
+            else data_window_base
+        )
+        self.data_end_pointer = (
+            rom.profile.scenario_data_end_pointer
+            if data_end_pointer is None
+            else data_end_pointer
+        )
+        self._relocated = pointer_table_offset is not None
+        if record_locations is not None:
+            locations = tuple(record_locations)
+            if len(locations) != rom.profile.scenario_count:
+                raise RomFormatError("扩展部署位置表数量不正确。")
+            self.pointers = tuple(int(item.pointer) for item in locations)
+            self.offsets = tuple(int(item.file_offset) for item in locations)
+            self.capacities = tuple(int(item.capacity) for item in locations)
+            self.banks = tuple(int(item.bank) for item in locations)
+            self._relocated = True
+            return
         self.pointers = self._read_pointers()
         self.offsets = tuple(self.pointer_to_file_offset(pointer) for pointer in self.pointers)
         unique_pointers = sorted(set(self.pointers))
@@ -20,7 +67,7 @@ class ScenarioLayoutCodec:
             pointer: (
                 unique_pointers[index + 1]
                 if index + 1 < len(unique_pointers)
-                else self.rom.profile.scenario_data_end_pointer
+                else self.data_end_pointer
             )
             - pointer
             for index, pointer in enumerate(unique_pointers)
@@ -35,28 +82,30 @@ class ScenarioLayoutCodec:
             return ()
         pointers = struct.unpack(
             f"<{profile.scenario_count}H",
-            self.rom.read(profile.scenario_pointer_table_offset, profile.scenario_count * 2),
+            self._source[
+                self.pointer_table_offset : self.pointer_table_offset
+                + profile.scenario_count * 2
+            ],
         )
-        if pointers[0] != profile.scenario_first_pointer:
+        if not self._relocated and pointers[0] != profile.scenario_first_pointer:
             raise RomFormatError("场景部署指针表起始标记不正确。")
         if any(
-            not profile.scenario_data_window_base
+            not self.data_window_base
             <= pointer
-            < profile.scenario_data_end_pointer
+            < self.data_end_pointer
             for pointer in pointers
         ):
             raise RomFormatError("场景部署指针超出当前 ROM 的存储区。")
         return tuple(pointers)
 
     def pointer_to_file_offset(self, pointer: int) -> int:
-        profile = self.rom.profile
-        if not profile.scenario_data_window_base <= pointer < profile.scenario_data_end_pointer:
+        if not self.data_window_base <= pointer < self.data_end_pointer:
             raise ValueError(f"场景 CPU 指针 ${pointer:04X} 无效。")
         return (
             16
-            + profile.scenario_data_prg_bank * 0x2000
+            + self.data_prg_bank * 0x2000
             + pointer
-            - profile.scenario_data_window_base
+            - self.data_window_base
         )
 
     def record_offset(self, map_id: int) -> int:
@@ -95,7 +144,7 @@ class ScenarioLayoutCodec:
         return tuple(entries), cursor + 1
 
     def decode(self, map_id: int, data: bytes | None = None) -> ScenarioLayout:
-        source = self.rom.data if data is None else data
+        source = self._source if data is None else data
         offset = self.record_offset(map_id)
         capacity = self.capacities[map_id]
         block = bytes(source[offset : offset + capacity])
@@ -121,6 +170,7 @@ class ScenarioLayoutCodec:
 
     @staticmethod
     def encode(layout: ScenarioLayout) -> bytes:
+        ScenarioLayoutCodec.validate_layout(layout)
         result = bytearray(layout.prelude)
         result.append(0xFF)
         for entity in layout.enemies:
@@ -133,6 +183,46 @@ class ScenarioLayoutCodec:
             result.extend(placement.to_bytes())
         result.append(0xFF)
         return bytes(result)
+
+    @staticmethod
+    def validate_layout(
+        layout: ScenarioLayout,
+        width: int | None = None,
+        height: int | None = None,
+    ) -> None:
+        limits = (
+            ("敌军", len(layout.enemies), ScenarioLayoutCodec.MAX_ENEMIES),
+            ("客军", len(layout.guests), ScenarioLayoutCodec.MAX_GUESTS),
+            (
+                "我方出击位",
+                len(layout.player_placements),
+                ScenarioLayoutCodec.MAX_PLAYER_PLACEMENTS,
+            ),
+        )
+        for label, count, maximum in limits:
+            if count > maximum:
+                raise ValueError(f"{label}最多 {maximum} 个，当前为 {count} 个。")
+        if width is None or height is None:
+            return
+        occupied: dict[tuple[int, int], str] = {}
+        for label, entries in (
+            ("敌军", layout.enemies),
+            ("客军", layout.guests),
+            ("我方", layout.player_placements),
+        ):
+            for index, entry in enumerate(entries, 1):
+                if not 0 <= entry.x < width or not 0 <= entry.y < height:
+                    raise ValueError(
+                        f"{label} #{index} 坐标 ({entry.x},{entry.y}) "
+                        f"超出 {width}×{height} 地图。"
+                    )
+                position = (entry.x, entry.y)
+                if position in occupied:
+                    raise ValueError(
+                        f"{label} #{index} 与{occupied[position]}重叠于 "
+                        f"({entry.x},{entry.y})。"
+                    )
+                occupied[position] = f"{label} #{index}"
 
     @staticmethod
     def semantic_digest(layout: ScenarioLayout) -> str:

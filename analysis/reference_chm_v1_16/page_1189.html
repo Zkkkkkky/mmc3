@@ -1,0 +1,153 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML><HEAD><TITLE>背景动画</TITLE>
+<META name=GENERATOR content="MSHTML 8.00.7601.19104">
+<META content="text/html; charset=gb2312" http-equiv=Content-Type>
+<STYLE>
+html,body { 
+	/* Default Font */
+	font-family: Microsoft YaHei, Simsun, sans-serif;
+	font-size: 12pt;
+}
+</STYLE>
+</HEAD>
+<BODY>
+<P><FONT 
+size=2><STRONG>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+背景武器篇</STRONG></FONT></P>
+<P><FONT size=2>背景武器我以白色要塞的粒子炮进行讲解，接下來就看具体的代码<BR><IMG class=BDE_Image 
+src="https://imgsa.baidu.com/forum/w%3D580/sign=b6e768f005d79123e0e0947c9d355917/5c3170f0f736afc30556079dba19ebc4b6451269.jpg" 
+width=513 height=206 pic_type="0"></FONT></P>
+<P><FONT size=2>动画效果如下图所示<BR><BR><IMG class=BDE_Image 
+src="https://imgsa.baidu.com/forum/w%3D580/sign=6373dacf3cfae6cd0cb4ab693fb20f9e/06fcbab7d0a20cf4c5f5c5277f094b36adaf995b.jpg" 
+width=330 height=346 pic_type="0" size="29605"><BR><BR>F4 10 F0 05 03 30 28 18 
+F1 00 01 F2 03 01 39 F3 22 4C 01 FD F8 00 F3 22 4D FE 1E D8 88 FD F8 00 FD F8 00 
+F0 11 03 30 21 01 F1 00 01 F9 0F F6 D8 42 69 3F 03 03 F4 03 14 F3 22 01 02 64 
+FF<BR>这个就是具体的武器代码<BR>F4 提取音乐代码 ，</FONT><FONT 
+size=2>10音乐代码，这个10的声音，就是一开始的粒子炮发出的那个BOOM的声音，也就是音乐的编号，更改这个可以实现不同的音效</FONT><FONT 
+size=2><BR>F0 05 03 提取光束类武器颜色<BR><IMG class=BDE_Image 
+src="https://imgsa.baidu.com/forum/w%3D580/sign=71de8cca53afa40f3cc6ced59b65038c/667f293fb80e7bec56c93819262eb9389a506bb0.jpg" 
+width=560 height=127 pic_type="0"><BR><BR>30 28 18 
+就是三个颜色代码，对照色盘可以看到白、黄、深黄三个颜色，这个就是粒子炮的颜色。根据色盘，可以把粒子炮更改为自己想要的颜色。</FONT></P>
+<DIV class="d_post_content j_d_post_content "><FONT size=2><IMG class=BDE_Image 
+src="https://imgsa.baidu.com/forum/w%3D580/sign=f70b89f5f1dcd100cd9cf829428947be/8687df2a6059252d18e63efc3d9b033b59b5b9d7.jpg" 
+width=105 height=34 pic_type="0"><BR><BR>看粒子炮在CT2中的贴图，绿蓝白依次=30 28 
+18；也就是绿色的部分填充白色（30），蓝色填充（28），白色填充（18）。粒子炮是三个颜色，不是一个颜色。每个背景武器可以有三种颜色，精灵武器同理<BR>F1 
+00 01写入颜色内存</FONT></DIV>
+<DIV class="d_post_content j_d_post_content "><FONT size=2>F2 03 
+01将接下來需要读取的图库编号写入内存（切换PPU中的背景部分）</FONT></DIV>
+<DIV class="d_post_content j_d_post_content "><FONT size=2>39图库编号，</FONT><FONT 
+size=2>下图就是粒子炮贴图所在的图库</FONT></DIV>
+<DIV class="d_post_content j_d_post_content "><FONT size=2><IMG class=BDE_Image 
+src="https://imgsa.baidu.com/forum/w%3D580/sign=a3f4c4d307f41bd5da53e8fc61d881a0/992218385343fbf26cfb85dbb97eca8067388ff5.jpg" 
+width=560 height=261 
+pic_type="0"><BR><BR>打开CT跳转到4E410就可以看到，一个图库为8*8的矩阵，一个图库就是64格</FONT></DIV>
+<DIV class="d_post_content j_d_post_content "><FONT 
+size=2>（关于跳转地址：【图库编号XX*400+40010】即为跳转地址，40010是VROM开始的位置）</FONT></DIV>
+<DIV class="d_post_content j_d_post_content ">
+<DIV id=post_content_105168008007 class="d_post_content j_d_post_content "><FONT 
+size=2>然后是F3 22提取光束类规律代码<BR>4C光束规律代码<BR>这个规律4C就是<BR><IMG class=BDE_Image 
+src="https://imgsa.baidu.com/forum/w%3D580/sign=430643c2394e251fe2f7e4f09787c9c2/24b50246f21fbe09695122ec62600c338644adbd.jpg" 
+width=560 height=480 pic_type="0"><BR><BR>先来解析一下4C表示的这段代码<BR>FE调试动画的显示位置<BR>0A 
+8E 则分别为Y坐标和X坐标<BR><IMG class=BDE_Image 
+src="https://imgsa.baidu.com/forum/w%3D580/sign=33b433d999ef76c6d0d2fb23ad17fdf6/7801962f07082838c9593decb199a9014d08f175.jpg" 
+width=330 height=346 
+pic_type="0"><BR><BR>这个坐标，就是粒子炮一开始的位置，也就是粒子炮的尾部所在位置，原点为红圈标明的那个图块</FONT></DIV>
+<DIV class="d_post_content j_d_post_content "><FONT size=2>45 47 
+从所在图库中取出的2个图块，上面可以看到F2 03 01 39，读取的是图库39<BR><IMG class=BDE_Image 
+src="https://imgsa.baidu.com/forum/w%3D580/sign=401b42c2394e251fe2f7e4f09787c9c2/24b50246f21fbe096a4c23ec62600c338644adb2.jpg" 
+width=262 height=259 pic_type="0"><BR><BR>这个就是39号图库的所有贴图，</FONT><FONT 
+size=2>一共8*8=64格。其中第一格给它定义为第“40”格。接下来，从左到右，从上到下的顺序。就是40 41 42 43 44 45 46 47 48 
+49 4A 4B。注意，是16进制。关于第一格为何定义为40，之后的资料会作进一步解释，现在只要记住，第一格定义为40。<BR>FE 
+调试动画的显示位置<BR>0A 8E 则分别为Y坐标和X坐标<BR>45 47就是读取对应的图块<BR><IMG class=BDE_Image 
+src="https://imgsa.baidu.com/forum/w%3D580/sign=68b90490c5bf6c81f7372ce08c3fb1d7/0a85bafb43166d22bb71f56c4f2309f79152d247.jpg" 
+width=262 height=259 
+pic_type="0"><BR><BR>从图库中可以看到<BR>粒子炮的贴图是第一行最后三个<BR>第一格为40<BR>那么这三格依次为45 46 
+47</FONT></DIV>
+<DIV class="d_post_content j_d_post_content "><FONT 
+size=2>现在读取的是45和47<BR>那么此时的图像为<IMG class=BDE_Image 
+src="https://imgsa.baidu.com/forum/w%3D580/sign=80ad459a9122720e7bcee2f24bca0a3a/9cb0cbfdfc0392455fd201f78e94a4c27c1e2565.jpg" 
+width=72 height=38 pic_type="0"><BR><BR>F3 分割这段代码和下段代码<BR>00 
+下一段图片从这一行原Y坐标读取，若是01则从原Y坐标下一行读取<BR>FD 
+下一段图片从这一行原X坐标左移3格读取00不动<BR>FF结束取图规律<BR>这个4C规律就是这么个意思<BR>然后再来看之前的<BR><IMG 
+class=BDE_Image 
+src="https://imgsa.baidu.com/forum/w%3D580/sign=817282e418dfa9ecfd2e561f52d1f754/1e4a9f0a304e251fe66b0400ae86c9177e3e532c.jpg" 
+width=424 height=141 pic_type="0"><BR><BR>F3 22 4C 之后的一段代码<BR>01 
+等待时间<BR>FD使屏幕变得可移动<BR>F8屏幕移动时X轴的方向和距离<BR>00屏幕移动时Y轴的方向和距离<BR>可以看到X轴的距离发生了变化，就是说屏幕发生了移动，01就是等待时间<BR>这个时间=一帧<BR>1秒=60帧</FONT></DIV>
+<DIV class="d_post_content j_d_post_content "><FONT size=2><IMG class=BDE_Image 
+src="https://imgsa.baidu.com/forum/w%3D580/sign=fd0e2d3abb119313c743ffb855390c10/05d1ac0f4bfbfbed0529d58771f0f736aec31f50.jpg" 
+width=330 height=346 pic_type="0"><BR><IMG class=BDE_Image 
+src="https://imgsa.baidu.com/forum/w%3D580/sign=814d9f2527738bd4c421b2399189876c/6bd656df8db1cb1312addcebd454564e90584b84.jpg" 
+width=330 height=346 
+pic_type="0"><BR><BR>可以看到，这个过程，屏幕向左移动了<BR>注意，机体是参照物，是绝对不动物<BR>动的是屏幕<BR>F8就是向左移动了8像素<BR>这个移动的距离以00为起点<BR>如果是08就是向右移动8像素，注意，是16进制<BR>FF就是向左移动一像素<BR>01就是向右移动一像素<BR><BR>接下来的一段代码就是F3 
+22 4D<BR>F3 22 提取光束类规律代码<BR>4D 光束类规律代码<BR><BR>然后看看规律4D具体的代码<BR><BR><IMG 
+class=BDE_Image 
+src="https://imgsa.baidu.com/forum/w%3D580/sign=758c2d25a264034f0fcdc20e9fc27980/0b993ed12f2eb938a527990adc628535e4dd6f7a.jpg" 
+width=560 height=480 
+pic_type="0"><BR><BR>跟之前的一样，但是这个没有坐标，因为坐标已经被上一个规律，也就是规律4C给定了<BR><BR>这个规律就是直接读取图块<BR><BR>首先是读取图块45 
+46<BR><IMG class=BDE_Image 
+src="https://imgsa.baidu.com/forum/w%3D580/sign=745326d733292df597c3ac1d8c305ce2/5d7673f40ad162d9126e81e418dfa9ec8813cdc1.jpg" 
+width=265 height=260 
+pic_type="0"><BR><BR>再来看这个图库<BR>那个灰色的框框所圈的就是图块45<BR>后面那个就是图块46<BR>F3 00 FD 
+FF和之前的一样F3 分割这段代码和下段代码<BR>00 下一段图片从这一行原Y坐标读取，若是01则从原Y坐标下一行读取<BR>FD 
+下一段图片从这一行原X坐标左移3格读取00不动<BR>FF结束取图规律</FONT></DIV>
+<DIV class="d_post_content j_d_post_content "><FONT 
+size=2>那么这个规律所读取的东西组合起来就是这个样子的<IMG class=BDE_Image 
+src="https://imgsa.baidu.com/forum/w%3D580/sign=31a831d999ef76c6d0d2fb23ad17fdf6/7801962f07082838cb453fecb199a9014d08f179.jpg" 
+width=71 height=39 pic_type="0"><BR>之前的一个规律所读取的就是这个样子的<BR><IMG class=BDE_Image 
+src="https://imgsa.baidu.com/forum/w%3D580/sign=ec8caef90355b3199cf9827d73a88286/8a1c8d35e5dde711d3a0a10eaeefce1b9c166152.jpg" 
+width=73 height=39 pic_type="0"><BR><BR>再往回看规律4C<BR><IMG class=BDE_Image 
+src="https://imgsa.baidu.com/forum/w%3D580/sign=527a5d4ab0014a90813e46b599763971/a284a751f3deb48fc0394326f91f3a292cf57870.jpg" 
+width=232 height=54 pic_type="0"><BR>00 Y坐标不动<BR>FD 
+就是横向移动<BR>这个跟之前的一样<BR>但是需要区别的是，这里每移动1就是一格<BR>也就是8像素<BR>每个小格子是8*8像素<IMG 
+class=BDE_Image 
+src="https://imgsa.baidu.com/forum/w%3D580/sign=708c61c833f33a879e6d0012f65d1018/1dd9d133c895d14308fe06db7af082025baf0738.jpg" 
+width=59 height=44 pic_type="0"></FONT></DIV>
+<DIV class="d_post_content j_d_post_content "><FONT 
+size=2>4C和4D结合起来就是这个样子<BR><IMG class=BDE_Image 
+src="https://imgsa.baidu.com/forum/w%3D580/sign=4bf668d1e2c4b7453494b71efffd1e78/baa3ef1190ef76c6e64c15d39416fdfaae51672e.jpg" 
+width=106 height=38 pic_type="0"><BR><BR>整个过程结合起来就是先读取规律4C<IMG class=BDE_Image 
+src="https://imgsa.baidu.com/forum/w%3D580/sign=29d7fd5f50ee3d6d22c687c373146d41/2fb133c79f3df8dca9ea6169c411728b451028f5.jpg" 
+width=73 height=39 pic_type="0"><BR>然后屏幕向左移动8像素<BR>然后再读取规律4D<BR>呈现这个效果<BR><IMG 
+class=BDE_Image 
+src="https://imgsa.baidu.com/forum/w%3D580/sign=84404d47a9ec08fa260013af69ef3d4d/9669773e6709c93d038ce70f963df8dcd000544e.jpg" 
+width=106 height=38 pic_type="0"><BR><BR>然后，再看接下來的一段FE 1E D8 88<BR>FE 1E D8 88 
+指针的指向地址到FE之前的代码重复1E次既十进制30次<BR>要注意的是这些都是16进制数<BR>1E=10进制的30<BR>这个D8 88 
+就是所谓的指针<BR>指针的作用我一开始就讲到了<BR>就是一个跳转的作用<BR>指针差值：8010<BR>指针算法：指针F784指向地址=84F7+8010=10507<BR>武器动画的区域指针差值是8010<BR>数据库的每个区域指针差值都不一样<BR>指针的算法就是把指针的高位和低位互换后然后和固定的差值做加法<BR>所得到的的结果就是跳转的地址<BR>指针 
+F7 
+84<BR>F7为高位，84为低位<BR>两者互换之后，就是84F7<BR>然后与8010做加法<BR>初次接触的话，我再次说明一下，这是16进制的加法<BR>不要和10进制搞混</FONT></DIV>
+<DIV class="d_post_content j_d_post_content "><FONT size=2><IMG class=BDE_Image 
+src="https://imgsa.baidu.com/forum/w%3D580/sign=4fe7dd267f094b36db921be593cd7c00/908216178a82b90134dae0ca7a8da9773812ef56.jpg" 
+width=503 height=208 pic_type="0"><BR><BR>我们再回过来看粒子炮这段武器代码<BR>FE 1E D8 
+88<BR>也就是跳转到D8 88 所在的地址<BR>高地位互换<BR>88 D8+80 10=108E8<BR><IMG class=BDE_Image 
+src="https://imgsa.baidu.com/forum/w%3D580/sign=d114fd31134c510faec4e21250582528/0ea489cb39dbb6fd0436c6df0024ab18962b3753.jpg" 
+width=510 height=208 
+pic_type="0"><BR><BR>108E8所在的地址就是01<BR>最上面的一行的指向地址<BR>就是这段武器代码一开始的F4所在的地址<BR>现在再来看FE 
+1E D8 88这段代码的具体意思<BR>就是把01（包括）到FE之间的代码重复1E(30)次<BR>这中间的这段代码就是01 FD F8 00 F3 22 
+4D<BR>这段代码之前已经讲解过了<BR>向左移动8像素<BR>然后读取一次规律4D<BR><IMG class=BDE_Image 
+src="https://imgsa.baidu.com/forum/w%3D580/sign=09496d4097510fb37819779fe932c893/538a39adcbef7609a4b2ba6627dda3cc7dd99e08.jpg" 
+width=107 height=39 
+pic_type="0"><BR>我们之前的图像是这样的<BR>然后向左移动8像素，再读取一次4D<BR>那么，此时的图像是这样的<IMG 
+class=BDE_Image 
+src="https://imgsa.baidu.com/forum/w%3D580/sign=bade2c0e963df8dca63d8f99fd1072bf/0e71d1f9d72a6059ef3cc3e32134349b023bba9d.jpg" 
+width=135 height=38 pic_type="0"><BR><BR>在读取一次的结果<IMG class=BDE_Image 
+src="https://imgsa.baidu.com/forum/w%3D580/sign=2d1edf5cd843ad4ba62e46c8b2035a89/71a3abcc7cd98d10f5c42ec8283fb80e7aec90b1.jpg" 
+width=167 height=39 
+pic_type="0"><BR>如此重复1E（30）次<BR>因为人眼分辨率的关系，因为每次读取的间隔只有1帧<BR>所以你们看到了连贯的武器动画<BR>整个持续时间就是30帧<BR>也就是0.5秒</FONT></DIV>
+<DIV class="d_post_content j_d_post_content ">
+<DIV id=post_content_105173361097 class="d_post_content j_d_post_content "><FONT 
+size=2><IMG class=BDE_Image 
+src="https://imgsa.baidu.com/forum/w%3D580/sign=ac436ef80355b3199cf9827d73a88286/8a1c8d35e5dde711936f610faeefce1b9c166103.jpg" 
+width=330 height=346 
+pic_type="0"><BR><BR>就是你们所看到的这个效果<BR>屏幕一边向左移动，一边读取规律4D<BR>形成完整的武器动画<BR>然后再来看下一段代码<BR><BR><IMG 
+class=BDE_Image 
+src="https://imgsa.baidu.com/forum/w%3D580/sign=cfae8646a9ec08fa260013af69ef3d4d/9669773e6709c93d48622c0e963df8dcd0005430.jpg" 
+width=519 height=206 
+pic_type="0"><BR><BR>蓝色标注部分的代码<BR>这段代码的意思也是屏幕向左移动，一共移动了16像素<BR>那么，整个过程，屏幕一共移动了 
+8*30+8+8=256像素<BR>这个就是远程武器攻击时敌我机体之间的距离<BR><BR><IMG class=BDE_Image 
+src="https://imgsa.baidu.com/forum/w%3D580/sign=df062118262eb938ec6d7afae56085fe/85ca42ed2e738bd438fd90c8a88b87d6257ff9ed.jpg" 
+width=364 height=376 
+pic_type="0"><BR><BR>红点表示敌我机体<BR>黑线表示两个机体之间的距离<BR>那么这条黑线的长度就是256像素<BR>近战武器两个机体之间的距离为64像素</FONT></DIV>
+<DIV class="d_post_content j_d_post_content "><FONT size=2><IMG class=BDE_Image 
+src="https://imgsa.baidu.com/forum/w%3D580/sign=153aead64834970a47731027a5c8d1c0/538ddfca7bcb0a464ff6a9c06263f6246960aff5.jpg" 
+width=510 height=205 
+pic_type="0"><BR><BR>接下来蓝色标注的部分就是精灵武器，请参考精灵武器<BR><BR>背景武器很简单，差不多也讲完了</FONT></DIV></DIV></DIV></BODY></HTML>

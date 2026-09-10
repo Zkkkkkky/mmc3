@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import struct
+from typing import Sequence
 from ..errors import RomFormatError
 from ..rom_image import RomImage
 
@@ -8,11 +9,38 @@ from ..rom_image import RomImage
 class UnitNameReferenceCodec:
     """Stable unit-name editing by repointing to an existing localized name."""
 
-    def __init__(self, rom: RomImage) -> None:
+    def __init__(
+        self,
+        rom: RomImage,
+        data: bytes | bytearray | None = None,
+        *,
+        pointer_table_offset: int | None = None,
+        pair_first_bank: int | None = None,
+        original_pointers: Sequence[int] | None = None,
+    ) -> None:
         self.rom = rom
         profile = rom.profile
-        raw = rom.read(profile.unit_name_pointer_table_offset, profile.unit_name_count * 2)
-        self.original_pointers = tuple(struct.unpack(f"<{profile.unit_name_count}H", raw))
+        self._source = rom.data if data is None else bytes(data)
+        self.pointer_table_offset = (
+            profile.unit_name_pointer_table_offset
+            if pointer_table_offset is None
+            else pointer_table_offset
+        )
+        self.pair_first_bank = pair_first_bank
+        raw = self._source[
+            self.pointer_table_offset : self.pointer_table_offset
+            + profile.unit_name_count * 2
+        ]
+        if len(raw) != profile.unit_name_count * 2:
+            raise RomFormatError("机体名称指针表不完整。")
+        current_pointers = tuple(struct.unpack(f"<{profile.unit_name_count}H", raw))
+        self.original_pointers = (
+            current_pointers
+            if original_pointers is None
+            else tuple(int(pointer) for pointer in original_pointers)
+        )
+        if len(self.original_pointers) != profile.unit_name_count:
+            raise RomFormatError("机体名称基准指针表长度无效。")
         if self.original_pointers[0] != profile.unit_name_first_pointer:
             raise RomFormatError("机体名称指针表起始标记不正确。")
         if any(
@@ -30,10 +58,10 @@ class UnitNameReferenceCodec:
     def pointer_offset(self, unit_id: int) -> int:
         if not 0 <= unit_id < self.rom.profile.unit_name_count:
             raise IndexError("名称 ID 必须在 00—FF 之间。")
-        return self.rom.profile.unit_name_pointer_table_offset + unit_id * 2
+        return self.pointer_table_offset + unit_id * 2
 
     def pointer(self, unit_id: int, data: bytes | None = None) -> int:
-        source = self.rom.data if data is None else data
+        source = self._source if data is None else data
         offset = self.pointer_offset(unit_id)
         return int.from_bytes(source[offset : offset + 2], "little")
 

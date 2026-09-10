@@ -1,0 +1,100 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML><HEAD><TITLE>操作说明</TITLE>
+<META name=GENERATOR content="MSHTML 8.00.7601.19104">
+<META content="text/html; charset=gb2312" http-equiv=Content-Type>
+<STYLE>
+html,body { 
+	/* Default Font */
+	font-family: Microsoft YaHei, Simsun, sans-serif;
+	font-size: 12pt;
+}
+</STYLE>
+</HEAD>
+<BODY>
+<DIV class=tit><FONT size=2>Mapper 4 操作说明（网上收集的）</FONT></DIV>
+<DIV class=tit><FONT size=2></FONT>&nbsp;</DIV>
+<DIV class=tit><FONT size=2>引用 </FONT><A 
+href="http://hi.baidu.com/jhu3979/blog/item/fff8cb217029e048ac34de57.html"><FONT 
+size=2>http://hi.baidu.com/jhu3979/blog/item/fff8cb217029e048ac34de57.html</FONT></A></DIV>
+<DIV class=date><FONT size=2>2010-04-06 22:56</FONT></DIV>
+<TABLE style="WIDTH: 100%; TABLE-LAYOUT: fixed">
+  <TBODY>
+  <TR>
+    <TD>
+      <DIV id=blog_text class=cnt>
+      <P><STRONG><FONT size=2>翻译：曹老师</FONT></STRONG></P>
+      <P><FONT 
+      size=2><STRONG>整理：伪*七枷社</STRONG><BR>---------------------------</FONT></P>
+      <P><FONT size=2>$8000: [CP.. .AAA]<BR>&nbsp;&nbsp;&nbsp; C = CHR mode 
+      select (see CHR setup)<BR>&nbsp;&nbsp;&nbsp; P = PRG mode select (see PRG 
+      setup)<BR>&nbsp;&nbsp;&nbsp; A = Address for use with $8001</FONT></P>
+      <P><FONT color=#990000 size=2>$8000h -&gt;用于切bank的端口控制寄存器</FONT></P>
+      <P><FONT color=#990000 size=2>D7位用于图库地址的选择，(0＝正常，1＝地址异或1000h)</FONT></P>
+      <P><FONT color=#990000 
+      size=2>D6位用于程序体选择，为6的时候，0＝8000h-9FFF(即8000：$06),1=C000h-DFFFh(即8000：$46)</FONT></P>
+      <P><FONT color=#990000 size=2>D2-D0位用于CPU,PPU映射段数值(即值=00-07)</FONT></P>
+      <P><FONT color=#990000 size=2>//0-设2*1K VROM 到PPU 的0000h-07FFh 
+      (或者当8000：$80的时候为 1000h-17FFh）</FONT></P>
+      <P><FONT color=#990000 size=2>//1-设2*1K VROM 到PPU 的0800h-0FFFh 
+      (或者当8000：$81的时候为 1800h-1FFFh）</FONT></P>
+      <P><FONT color=#990000 size=2>//2-设1K VROM 到PPU 的1000h-13FFh 
+      (或者当8000：$82的时候为 0000h-03FFh)</FONT></P>
+      <P><FONT color=#990000 size=2>//3-设1K VROM 到PPU 的1400h-17FFh 
+      (或者当8000：$83的时候为 0400h-07FFh)</FONT></P>
+      <P><FONT color=#990000 size=2>//4-设1K VROM 到PPU 的1800h-1BFFh 
+      (或者当8000：$84的时候为 0800h-0BFFh)</FONT></P>
+      <P><FONT color=#990000 size=2>//5-设1K VROM 到PPU 的1C00h-1FFFh 
+      (或者当8000：$85的时候为 0C00h-0FFFh)</FONT></P>
+      <P><FONT color=#990000 size=2>//6-设8K PROM 到CPU 的8000h-9FFFh 
+      (或者当8000：$46的时候为 C000h-DFFFh)</FONT></P>
+      <P><FONT color=#990000 size=2>//7-设8K PROM 到CPU 的A000h-BFFFh</FONT></P>
+      <P><FONT color=#990000 
+      size=2>//当D6位＝0，驻留体为C000－DFFF，D6位＝1，驻留体为8000h－9FFFh</FONT></P>
+      <P><FONT size=2><FONT color=#990000>//最后一个PROM 映射到E000h-FFFFh 
+      (E000－FFFF是永远的驻留体)<BR></FONT>----------------------------------------------------------------------</FONT></P>
+      <P><FONT size=2>$8001: [DDDD DDDD] -- data 
+      port<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; R:0 -&gt; CHR reg 
+      0<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; R:1 -&gt; CHR reg 
+      1<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; R:2 -&gt; CHR reg 
+      2<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; R:3 -&gt; CHR reg 
+      3<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; R:4 -&gt; CHR reg 
+      4<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; R:5 -&gt; CHR reg 
+      5<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; R:6 -&gt; PRG reg 
+      0<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; R:7 -&gt; PRG reg 1</FONT></P>
+      <P><FONT color=#990000 size=2>//8001h -&gt;写入你要切换PROM或者VROM的体号:00－FF 
+      (先通过8000h的Bit2-0设置,再写入)</FONT></P>
+      <P><FONT 
+      size=2>---------------------------------------------------------------------------------</FONT></P>
+      <P><FONT size=2>$A000: [.... ...M]<BR>&nbsp;&nbsp;&nbsp; Mirroring: 
+      0=Vert<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+      1=Horz</FONT></P>
+      <P><FONT color=#990000 size=2>//A000h -&gt;镜面H，V接法，0为H，1为V</FONT></P>
+      <P><FONT size=2>-------------------------------------</FONT></P>
+      <P><FONT size=2>$A001: [EW.. ....]<BR>&nbsp;&nbsp;&nbsp; E = Enable WRAM 
+      (0=disabled, 1=enabled)<BR>&nbsp;&nbsp;&nbsp; W = WRAM write protect 
+      (0=writable, 1=not writable)</FONT></P>
+      <P><FONT color=#990000 size=2>//A001h 
+      -&gt;打开，关闭6000－7FFF(sram)的开关，0为关闭，$80为打开</FONT></P>
+      <P><FONT 
+      size=2>----------------------------------------------------------------</FONT></P>
+      <P><FONT size=2>$C000: [IIII IIII]&nbsp;&nbsp;&nbsp; IRQ Reload 
+      value<BR>$C001: [.... ....]&nbsp;&nbsp;&nbsp; IRQ Clear<BR>$E000: [.... 
+      ....]&nbsp;&nbsp;&nbsp; IRQ Acknowledge / Disable<BR>$E001: [.... 
+      ....]&nbsp;&nbsp;&nbsp; IRQ Enable</FONT></P>
+      <P><FONT color=#990000 size=2>//C000h -&gt;可屏蔽中断的计数器</FONT></P>
+      <P><FONT color=#990000 size=2>//C001h -&gt;可屏蔽中断的暂存器</FONT></P>
+      <P><FONT color=#990000 size=2>//E000h 
+      -&gt;写入任何数，首先关闭IRQ，然后从暂存器中取出数开始计数,进入IRQ</FONT></P>
+      <P><FONT color=#990000 size=2>//E001h 
+      -&gt;写入任何数，允许IRQ（退出IRQ，允许下一个IRQ进来）</FONT></P>
+      <P><FONT color=#990000 
+      size=2>-------------------------------------------------------------------------------------------------</FONT></P>
+      <P><STRONG><FONT size=2>PS：以下切换程序断操作指令：</FONT></STRONG></P>
+      <P><STRONG><FONT size=2>LDA #$06 //定义切换地址断为$8000-9FFF<BR><BR>STA $8000 
+      //略<BR><BR>LDA #$01 //把程序断编号01切换到$8000-9FFF</FONT></STRONG></P>
+      <P><STRONG><FONT size=2>STA $8001 //嗯，完成</FONT></STRONG></P>
+      <P><STRONG><FONT size=2>由于Mapper 4每次切8KB数据，那么，从编号00= 
+      $0010-200F算起,上面的程序是把$2010-400F的数据切换到CPU的</FONT></STRONG></P>
+      <P><STRONG><FONT size=2>$8000-9FFF上面。</FONT></STRONG></P>
+      <P><FONT 
+    size=2><STRONG>对于图库的切换，等以后做汉化的时候，再说</STRONG>吧……</FONT></P></DIV></TD></TR></TBODY></TABLE></BODY></HTML>

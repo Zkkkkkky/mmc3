@@ -1,0 +1,13 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML><HEAD><TITLE>系统程序（6502）</TITLE>
+<META name=GENERATOR content="MSHTML 8.00.7601.19104">
+<META content="text/html; charset=gb2312" http-equiv=Content-Type>
+<STYLE>
+html,body { 
+	/* Default Font */
+	font-family: Microsoft YaHei, Simsun, sans-serif;
+	font-size: 12pt;
+}
+</STYLE>
+</HEAD>
+<BODY><PRE><FONT size=2 face=宋体>LDA #$XX<BR>JSR C108<BR>：执行不同PROM的子程序。<BR>从7F22E选中</FONT></PRE><PRE><FONT size=2 face=宋体>LDA #$XX<BR>STA $18<BR>LDA #$YY<BR>STA $19<BR>JSR C10B<BR>：根据18、19的值读取数据的指针放入18、19<BR>18是数据大指针，19是二级指针偏移</FONT></PRE><PRE><BR><FONT size=2 face=宋体>乘法：C00C：内存08的值乘以00 01的值放到 10 11<BR>除法：C012：内存10 11的值除以08的值放到 10 11<BR>随机数：C024：返回一个小于累加器的随机数在累加器中。</FONT></PRE><PRE><FONT size=2 face=宋体>&nbsp;</FONT></PRE></BODY></HTML>
