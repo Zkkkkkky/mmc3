@@ -7,10 +7,11 @@ $excludedPrefixes = @(
     ".git\",
     ".codex-remote-attachments\",
     ".skill-staging\",
+    "tmp\",
     "build\pyinstaller-work\",
     # User-supplied reverse-engineering references are inputs, not handoff files.
     "默认配置文件\",
-    "修改器\"
+    "references\legacy_modifier\"
 )
 
 $records = Get-ChildItem -LiteralPath $packageRoot -Recurse -File | ForEach-Object {

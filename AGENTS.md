@@ -2,13 +2,13 @@
 
 ## Project Purpose & Modifier Conventions
 
-The project's core goal is to develop a ROM editor for the FC game *第二次机器人大战*. `srw2_patched.exe` is a completed editor product used as a reference source for behavior, workflows, and supported data; it is not the editor currently being developed. “新DC修改器” is the active editor product in this repository.
+The project's core goal is to develop a ROM editor for the FC game *第二次机器人大战*. `references/legacy_modifier/SRW2_patched.exe` is a completed editor product used as a reference source for behavior, workflows, and supported data; it is not the editor currently being developed. “新DC修改器” is the active editor product in this repository.
 
 Every change to the active editor must update `DC修改器使用说明.md` in the same change. Keep the instructions synchronized with changes to features, UI, supported data, operating steps, validation, and user-visible limitations.
 
 ## Project Structure & Module Organization
 
-This repository is a self-contained NES ROM expansion handoff. `tools/` contains the Python builder, IPS helpers, reusable `fc_editor/` modules, and the `unittest` suite. `analysis/` holds 6502/ASM6 sources, generated listings, Lua emulator checks, and bundled FamiStudio assembler dependencies. Final ROMs, reports, and NSF inputs live under `build/`; distributable patches belong in `patches/`. Treat `历史方案报告/` as reference material and `验证工具/` as vendored tooling. Read `交接文档.md` before changing ROM layout or audio behavior.
+This repository is a self-contained NES ROM expansion handoff. `tools/` is the Python import root and contains the active `dc_modifier/` GUI, reusable `fc_editor/` modules, build helpers, and the `unittest` suite. `analysis/` holds 6502/ASM6 sources, generated listings, Lua emulator checks, and bundled FamiStudio assembler dependencies. Final ROMs, reports, and NSF inputs live under `build/`; distributable patches belong in `patches/`. User-facing and maintenance documents live under `docs/`, with rejected designs archived in `docs/archive/`. Treat `references/legacy_modifier/` as a read-only historical reference and `验证工具/` as vendored tooling. Read `交接文档.md` before changing ROM layout or audio behavior.
 
 For historical reverse-engineering experience, consult `analysis/FC第二次机器人大战资料集V1.16_阅读笔记.md` first and use the extracted CHM content under `analysis/reference_chm_v1_16/` when more detail is needed. Treat this material as leads rather than authoritative project facts: verify addresses, free-space claims, mapper behavior, and uncertain annotations against the current ROM, disassembly, builder assertions, and emulator checks.
 
@@ -36,4 +36,4 @@ Tests use Python's standard `unittest` framework and require the exact source RO
 
 ## Commit & Pull Request Guidelines
 
-This package contains no Git metadata, so no historical commit convention can be inferred. Use concise imperative subjects, for example `Fix expanded-bank dispatch`. Pull requests should explain affected banks and behavior, list verification commands and emulator results, and identify regenerated ROM/IPS/report artifacts. Include before/after hashes when binary outputs change. Avoid distributing copyrighted ROMs publicly; prefer source, reports, and IPS patches.
+Use concise imperative subjects, for example `Fix expanded-bank dispatch`. Pull requests should explain affected banks and behavior, list verification commands and emulator results, and identify regenerated ROM/IPS/report artifacts. Include before/after hashes when binary outputs change. Avoid distributing copyrighted ROMs publicly; prefer source, reports, and IPS patches.

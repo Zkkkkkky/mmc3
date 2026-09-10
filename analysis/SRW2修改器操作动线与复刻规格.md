@@ -1,6 +1,6 @@
 # SRW2 修改器操作动线与复刻规格
 
-> 目标：为一比一复刻 `修改器/SRW2_patched.exe` 提供导航、窗口、状态和交互依据。
+> 目标：为一比一复刻 `references/legacy_modifier/SRW2_patched.exe` 提供导航、窗口、状态和交互依据。
 >
 > 验证环境：`SRW2_patched.exe` + `FC模拟器/DC_kuorong.nes`。界面截图位于同目录的 `SRW2修改器界面截图/`。
 >

@@ -1,5 +1,13 @@
+# Python environments and caches
 .venv/
 __pycache__/
 *.py[cod]
 .pytest_cache/
+
+# Generated build work
 build/pyinstaller-work/
+
+# Local Codex, scratch, and emulator state
+.codex-remote-attachments/
+tmp/
+FC模拟器/fceux.cfg
