@@ -1,8 +1,8 @@
 {
   "schemaVersion": 2,
-  "profile": "dc-kuorong-mmc3-v1",
-  "sourceRom": "FC模拟器/DC_kuorong.nes",
-  "sourceRomSha256": "1DDD4F74B2D3ACEAA8A0BC4A6846BE8E6148C858C2D8EA5A1F6E0A04F0AD4A75",
+  "profile": "dc-kuorong-mmc3-v2",
+  "sourceRom": "FC模拟器/DC_kuorong_464K.nes",
+  "sourceRomSha256": "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E",
   "verifiedTables": {
     "unitNamePointers": "0x49908",
     "unitWeapons": "0x0B2D8",

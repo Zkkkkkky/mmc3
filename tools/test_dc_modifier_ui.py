@@ -5,7 +5,7 @@ import unittest
 
 os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 
-from PySide6.QtWidgets import QApplication
+from PySide6.QtWidgets import QApplication, QLabel, QToolBar
 
 from dc_modifier.app import MainWindow
 from dc_modifier.event_page import EventPage
@@ -15,6 +15,7 @@ from dc_modifier.pages import (
     CharacterPage,
     ChangesPage,
     MusicPage,
+    ResourcePage,
     UnitPage,
     WeaponPage,
     parse_id_expression,
@@ -42,13 +43,93 @@ class DesktopEditorSmokeTests(unittest.TestCase):
         assert self.window.project is not None
         self.assertEqual(self.window.navigation.count(), 12)
         self.assertEqual(self.window.workspace.count(), 5)
-        self.assertEqual(self.window.project.profile.key, "dc-kuorong-mmc3-v1")
-        self.assertEqual(self.window.project.expansion_capacity, 200 * 1024)
+        self.assertEqual(self.window.project.profile.key, "dc-kuorong-mmc3-v2")
+        self.assertEqual(self.window.project.expansion_capacity, 464 * 1024)
         self.window.show_page("weapons")
         self.assertEqual(self.window.workspace.currentIndex(), 1)
         database_tabs = self.window.workspace.currentWidget()
         self.assertEqual(database_tabs.currentIndex(), 2)
         self.assertEqual(self.window.module_status.text(), "武器")
+
+    def test_all_pages_use_the_legacy_editor_shell(self) -> None:
+        self.window.show()
+        self.application.processEvents()
+        self.assertTrue(self.window.workspace.tabBar().isHidden())
+        self.assertEqual(
+            [action.text() for action in self.window.menuBar().actions()],
+            ["文件", "数据", "帮助"],
+        )
+        self.assertEqual(self.window.findChildren(QToolBar), [])
+        for page in self.window.pages:
+            page_titles = [
+                label
+                for label in page.findChildren(QLabel)
+                if label.objectName() in ("pageTitle", "pageSubtitle")
+            ]
+            self.assertTrue(all(label.isHidden() for label in page_titles))
+
+        self.window.show_page("units")
+        self.application.processEvents()
+        group_index, database_tabs, _sub_index = self.window.page_locations["units"]
+        self.assertEqual(group_index, 1)
+        self.assertIsNotNone(database_tabs)
+        assert database_tabs is not None
+        self.assertEqual(
+            [database_tabs.tabText(index) for index in range(database_tabs.count())],
+            ["机体修改", "人物修改", "武器修改", "机体导入与图像"],
+        )
+        for page_key, page_type in (
+            ("units", UnitPage),
+            ("characters", CharacterPage),
+            ("weapons", WeaponPage),
+            ("music", MusicPage),
+        ):
+            self.window.show_page(page_key)
+            self.application.processEvents()
+            record_page = self.window.pages[self.window.page_index[page_key]]
+            self.assertIsInstance(record_page, page_type)
+            self.assertLess(
+                record_page.records.geometry().bottom(),
+                record_page.search_panel.geometry().top(),
+            )
+
+        self.window.show_page("story")
+        self.application.processEvents()
+        story_page = self.window.pages[self.window.page_index["story"]]
+        assert isinstance(story_page, StoryPage)
+        self.assertLess(
+            story_page.indices.geometry().bottom(), story_page.search.geometry().top()
+        )
+
+        self.window.show_page("maps")
+        map_page = self.window.pages[self.window.page_index["maps"]]
+        assert isinstance(map_page, MapPage)
+        self.assertEqual(
+            [
+                map_page.editor_tabs.tabText(index)
+                for index in range(map_page.editor_tabs.count())
+            ],
+            ["战场地图", "初始配置", "商店事件"],
+        )
+
+    def test_resource_page_tracks_managed_import_and_undo(self) -> None:
+        assert self.window.project is not None
+        page = self.window.pages[self.window.page_index["resources"]]
+        self.assertIsInstance(page, ResourcePage)
+        assert isinstance(page, ResourcePage)
+        allocation = self.window.project.import_expansion_resource(
+            "ui.sample",
+            "界面测试资源",
+            bytes(range(64)),
+        )
+        page.refresh()
+        self.assertEqual(page.allocation_table.rowCount(), 1)
+        self.assertIn("64", page.capacity.format())
+        self.assertIn("$40", page.allocation_table.item(0, 2).text())
+        self.window.project.undo()
+        page.refresh()
+        self.assertEqual(page.allocation_table.rowCount(), 0)
+        self.assertEqual(allocation.first_bank, 0x40)
 
     def test_id_expression_supports_hex_ranges_and_rejects_invalid_ids(self) -> None:
         self.assertEqual(
@@ -202,6 +283,33 @@ class DesktopEditorSmokeTests(unittest.TestCase):
         self.assertEqual(changed.tiles[changed_index], candidate_tiles[changed_index])
         self.window.undo()
         self.assertEqual(self.window.project.get_map(0).tiles, record.tiles)
+
+    def test_map_page_matches_legacy_layout_and_fits_full_map(self) -> None:
+        page = self.window.pages[self.window.page_index["maps"]]
+        assert isinstance(page, MapPage)
+        self.window.show_page("maps")
+        self.window.show()
+        self.application.processEvents()
+
+        self.assertEqual(page.main_splitter.count(), 2)
+        self.assertIs(page.main_splitter.widget(0), page.navigator)
+        self.assertIs(page.main_splitter.widget(1), page.canvas_host)
+        self.assertEqual(page.navigator.layout().indexOf(page.editor_tabs), 0)
+        self.assertLess(page.editor_tabs.geometry().bottom(), page.chapter_group.geometry().top())
+        self.assertTrue(page.fit_view.isChecked())
+        self.assertFalse(page.zoom.isEnabled())
+
+        page._fit_map_to_viewport()
+        self.application.processEvents()
+        viewport = page.map_scroll.viewport()
+        self.assertLessEqual(page.canvas.width(), viewport.width())
+        self.assertLessEqual(page.canvas.height(), viewport.height())
+        self.assertEqual(page.canvas.cell_size, page.zoom.value())
+        self.assertEqual(page.map_scroll.horizontalScrollBar().maximum(), 0)
+        self.assertEqual(page.map_scroll.verticalScrollBar().maximum(), 0)
+
+        page.fit_view.setChecked(False)
+        self.assertTrue(page.zoom.isEnabled())
 
     def test_map_page_edits_coordinate_event_and_shop(self) -> None:
         assert self.window.project is not None

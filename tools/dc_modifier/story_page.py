@@ -73,8 +73,8 @@ class StoryPage(ProjectPage):
         self.indices.currentItemChanged.connect(self._index_changed)
         left_layout.addWidget(QLabel("文本组"))
         left_layout.addWidget(self.selector)
-        left_layout.addLayout(search_row)
         left_layout.addWidget(self.indices)
+        left_layout.addLayout(search_row)
         splitter.addWidget(left)
 
         right = QWidget()

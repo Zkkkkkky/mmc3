@@ -31,7 +31,7 @@ from fc_editor.codecs.map_trigger import MapTrigger
 
 from fc_editor.models import PlayerPlacement, ScenarioEntity, ScenarioLayout
 
-from .pages import ProjectPage, page_title
+from .pages import ProjectPage
 from .map_tiles import TILESET_BANKS, campaign_tileset_key, render_tileset
 
 
@@ -206,6 +206,16 @@ class MapCanvas(QWidget):
                 self.overlay_moved.emit(side, row, cell[0], cell[1])
 
 
+class MapScrollArea(QScrollArea):
+    """Notify the map page whenever the visible preview area changes size."""
+
+    viewport_resized = Signal()
+
+    def resizeEvent(self, event) -> None:
+        super().resizeEvent(event)
+        self.viewport_resized.emit()
+
+
 class ByteEntryTable(QTableWidget):
     values_changed = Signal()
 
@@ -340,20 +350,18 @@ class MapPage(ProjectPage):
         self.staged_height = 1
         self.hovered_cell: tuple[int, int] | None = None
         outer = QVBoxLayout(self)
-        title, subtitle = page_title(
-            "地图与部署",
-            "用ROM的真实CHR图块预览并绘制0—F逻辑格；右键吸取，部署点同步叠加显示。",
-        )
-        outer.addWidget(title)
-        outer.addWidget(subtitle)
-        splitter = QSplitter()
+        outer.setContentsMargins(8, 8, 8, 8)
+        self.main_splitter = QSplitter(Qt.Orientation.Horizontal)
+        self.main_splitter.setObjectName("mapMainSplitter")
+        self.main_splitter.setChildrenCollapsible(False)
 
-        # Like the established SRW2 editor, tools and chapter selection live in
-        # a compact left inspector while the map keeps the largest work area.
-        inspector = QWidget()
-        inspector.setMinimumWidth(365)
-        inspector.setMaximumWidth(470)
-        inspector_layout = QVBoxLayout(inspector)
+        # Match the original SRW2 editor: editing tabs above the chapter list
+        # on the left, with the complete battlefield occupying the right side.
+        self.navigator = QWidget()
+        self.navigator.setObjectName("mapLeftPane")
+        self.navigator.setMinimumWidth(390)
+        self.navigator.setMaximumWidth(490)
+        inspector_layout = QVBoxLayout(self.navigator)
         inspector_layout.setContentsMargins(0, 0, 8, 0)
 
         self.editor_tabs = QTabWidget()
@@ -397,7 +405,7 @@ class MapPage(ProjectPage):
             )
             self.terrain_buttons.addButton(button, tile)
             button.clicked.connect(lambda _checked=False, value=tile: self.terrain.setCurrentIndex(value))
-            palette.addWidget(button, tile // 4, tile % 4)
+            palette.addWidget(button, tile // 8, tile % 8)
         self.terrain_buttons.button(0).setChecked(True)
         brush_layout.addLayout(palette)
         self.show_ids = QCheckBox("在地图格左上角显示逻辑编号")
@@ -426,7 +434,7 @@ class MapPage(ProjectPage):
         dimensions_form.addRow("场景前导", self.prelude)
         tile_layout.addWidget(dimensions)
         tile_layout.addStretch()
-        self.editor_tabs.addTab(tile_tab, "图块与尺寸")
+        self.editor_tabs.addTab(tile_tab, "战场地图")
 
         deployment_tab = QWidget()
         deployment_layout = QVBoxLayout(deployment_tab)
@@ -467,7 +475,7 @@ class MapPage(ProjectPage):
         )
         deployment_tabs.addTab(player_host, "我方出击位")
         deployment_layout.addWidget(deployment_tabs, 1)
-        self.editor_tabs.addTab(deployment_tab, "部署配置")
+        self.editor_tabs.addTab(deployment_tab, "初始配置")
 
         trigger_tab = QWidget()
         trigger_layout = QVBoxLayout(trigger_tab)
@@ -486,11 +494,10 @@ class MapPage(ProjectPage):
             {2: self._trigger_character_label, 3: self._trigger_event_label},
             default_values=(0, 0, 0xFF, 0),
         )
-        self.editor_tabs.addTab(trigger_tab, "地图事件/商店")
-        inspector_layout.addWidget(self.editor_tabs, 3)
+        self.editor_tabs.addTab(trigger_tab, "商店事件")
 
-        chapter_group = QGroupBox("关卡选择")
-        chapter_layout = QVBoxLayout(chapter_group)
+        self.chapter_group = QGroupBox("关卡选择")
+        chapter_layout = QVBoxLayout(self.chapter_group)
         self.search = QLineEdit()
         self.search.setPlaceholderText("搜索关卡名、地图ID…")
         self.search.setClearButtonEnabled(True)
@@ -506,44 +513,55 @@ class MapPage(ProjectPage):
         self.map_list.setUniformItemSizes(True)
         self.map_list.currentItemChanged.connect(self._map_selected)
         chapter_layout.addWidget(self.map_list)
-        inspector_layout.addWidget(chapter_group, 2)
-        splitter.addWidget(inspector)
+        inspector_layout.addWidget(self.editor_tabs, 3)
+        inspector_layout.addWidget(self.chapter_group, 2)
+        self.main_splitter.addWidget(self.navigator)
 
-        canvas_host = QWidget()
-        canvas_layout = QVBoxLayout(canvas_host)
+        self.canvas_host = QWidget()
+        self.canvas_host.setObjectName("mapPreviewPane")
+        self.canvas_host.setMinimumWidth(360)
+        canvas_layout = QVBoxLayout(self.canvas_host)
         canvas_layout.setContentsMargins(8, 0, 0, 0)
-        tools = QHBoxLayout()
         self.zoom = QSpinBox()
-        self.zoom.setRange(14, 40)
+        self.zoom.setRange(8, 40)
         self.zoom.setValue(24)
         self.zoom.setSuffix(" px")
         self.zoom.valueChanged.connect(self._zoom_changed)
+        self.fit_view = QCheckBox("全景适应")
+        self.fit_view.setToolTip("自动缩放地图，使全部地图格始终位于可视区域内")
+        self.fit_view.setChecked(True)
+        self.fit_view.toggled.connect(self._fit_view_changed)
+        self.zoom.setEnabled(False)
         self.position_label = QLabel("坐标：—")
         self.size_label = QLabel("—")
         self.size_label.setObjectName("hintText")
-        tools.addWidget(QLabel("地图预览"))
-        tools.addStretch()
-        tools.addWidget(self.position_label)
-        tools.addWidget(QLabel("缩放"))
-        tools.addWidget(self.zoom)
-        canvas_layout.addLayout(tools)
         self.canvas = MapCanvas()
         self.canvas.tile_painted.connect(self._tile_painted)
         self.canvas.tile_picked.connect(self.terrain.setCurrentIndex)
         self.canvas.coordinate_changed.connect(self._canvas_coordinate_changed)
         self.canvas.overlay_moved.connect(self._overlay_moved)
-        scroll = QScrollArea()
-        scroll.setWidget(self.canvas)
-        scroll.setWidgetResizable(False)
-        scroll.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        canvas_layout.addWidget(scroll, 1)
+        self.map_scroll = MapScrollArea()
+        self.map_scroll.setObjectName("mapScrollArea")
+        self.map_scroll.setWidget(self.canvas)
+        self.map_scroll.setWidgetResizable(False)
+        self.map_scroll.setAlignment(
+            Qt.AlignmentFlag.AlignHCenter | Qt.AlignmentFlag.AlignTop
+        )
+        self.map_scroll.viewport_resized.connect(self._fit_map_to_viewport)
+        canvas_layout.addWidget(self.map_scroll, 1)
+
+        info_row = QHBoxLayout()
+        info_row.addWidget(self.size_label, 1)
+        info_row.addWidget(self.position_label)
+        info_row.addWidget(self.fit_view)
+        info_row.addWidget(QLabel("缩放"))
+        info_row.addWidget(self.zoom)
+        canvas_layout.addLayout(info_row)
+
         footer = QHBoxLayout()
-        status_column = QVBoxLayout()
-        status_column.addWidget(self.size_label)
         self.pending_state = QLabel("选择地图后可编辑。")
         self.pending_state.setObjectName("editState")
-        status_column.addWidget(self.pending_state)
-        footer.addLayout(status_column, 1)
+        footer.addWidget(self.pending_state, 1)
         buttons = QHBoxLayout()
         self.apply_button = QPushButton("应用地图、部署与事件")
         self.apply_button.setObjectName("primaryButton")
@@ -555,11 +573,12 @@ class MapPage(ProjectPage):
         buttons.addWidget(reset_button)
         footer.addLayout(buttons)
         canvas_layout.addLayout(footer)
-        splitter.addWidget(canvas_host)
-        splitter.setStretchFactor(0, 0)
-        splitter.setStretchFactor(1, 1)
-        splitter.setSizes([500, 870])
-        outer.addWidget(splitter, 1)
+        self.main_splitter.addWidget(self.canvas_host)
+
+        self.main_splitter.setStretchFactor(0, 0)
+        self.main_splitter.setStretchFactor(1, 1)
+        self.main_splitter.setSizes([440, 920])
+        outer.addWidget(self.main_splitter, 1)
 
     def _deployment_group(
         self,
@@ -798,7 +817,36 @@ class MapPage(ProjectPage):
         self.canvas.update()
 
     def _zoom_changed(self, value: int) -> None:
-        self.canvas.set_cell_size(value)
+        if not self.fit_view.isChecked():
+            self.canvas.set_cell_size(value)
+
+    def _fit_view_changed(self, checked: bool) -> None:
+        self.zoom.setEnabled(not checked)
+        if checked:
+            self._fit_map_to_viewport()
+        else:
+            self.canvas.set_cell_size(self.zoom.value())
+
+    def _fit_map_to_viewport(self) -> None:
+        if not self.fit_view.isChecked():
+            return
+        viewport = self.map_scroll.viewport()
+        available_width = max(1, viewport.width() - 3)
+        available_height = max(1, viewport.height() - 3)
+        cell_size = min(
+            24,
+            max(
+                8,
+                min(
+                    (available_width - 1) // max(1, self.staged_width),
+                    (available_height - 1) // max(1, self.staged_height),
+                ),
+            ),
+        )
+        previous = self.zoom.blockSignals(True)
+        self.zoom.setValue(cell_size)
+        self.zoom.blockSignals(previous)
+        self.canvas.set_cell_size(cell_size)
 
     def _tile_painted(self, _x: int, _y: int, _tile: int) -> None:
         self._update_size_label()
@@ -834,6 +882,7 @@ class MapPage(ProjectPage):
             self.staged_tiles,
             overlays,
         )
+        self._fit_map_to_viewport()
         if hasattr(self, "pending_state"):
             self._update_size_label()
 

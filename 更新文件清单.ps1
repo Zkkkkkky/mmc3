@@ -5,6 +5,8 @@ $manifestPath = Join-Path $packageRoot "文件清单_SHA256.csv"
 $excludedPrefixes = @(
     ".venv\",
     ".git\",
+    ".codex-remote-attachments\",
+    ".skill-staging\",
     "build\pyinstaller-work\",
     # User-supplied reverse-engineering references are inputs, not handoff files.
     "默认配置文件\",

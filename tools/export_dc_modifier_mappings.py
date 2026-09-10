@@ -12,7 +12,7 @@ from fc_rom_editor_core import RomProject
 
 
 ROOT = Path(__file__).resolve().parents[1]
-ROM_PATH = ROOT / "FC模拟器" / "DC_kuorong.nes"
+ROM_PATH = ROOT / "FC模拟器" / "DC_kuorong_464K.nes"
 CONFIG_ROOT = ROOT / "默认配置文件"
 OUTPUT_ROOT = ROOT / "build" / "修改器映射表"
 

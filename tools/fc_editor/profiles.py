@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import hashlib
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 
 from .constants import EXPECTED_BASE_SHA256, EXPECTED_MAPPER, EXPECTED_ROM_SIZE
 
@@ -444,7 +444,7 @@ MMC5_PROFILE = RomProfile(
 )
 
 
-DC_EXPANDED_MMC3_PROFILE = RomProfile(
+DC_EXPANDED_MMC3_LEGACY_PROFILE = RomProfile(
     key="dc-kuorong-mmc3-v1",
     label="第二次机器人大战新DC篇·扩容 MMC3",
     rom_size=1_310_736,
@@ -523,10 +523,27 @@ DC_EXPANDED_MMC3_PROFILE = RomProfile(
 )
 
 
+DC_EXPANDED_MMC3_PROFILE = replace(
+    DC_EXPANDED_MMC3_LEGACY_PROFILE,
+    key="dc-kuorong-mmc3-v2",
+    label="第二次机器人大战新DC篇·扩容 MMC3（464 KiB资源池）",
+    reference_sha256="82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E",
+    protected_prg_regions=(
+        PrgBankRegion(0x64, 0x65, "双音频引擎与桥接器"),
+        PrgBankRegion(0x7E, 0x80, "固定程序银行"),
+    ),
+    free_prg_regions=(
+        PrgBankRegion(0x40, 0x61, "回收的扩展资源空间"),
+        PrgBankRegion(0x65, 0x7E, "修改器扩展资源空间"),
+    ),
+)
+
+
 SUPPORTED_PROFILES = (
     ORIGINAL_PROFILE,
     V51_PROFILE,
     MMC5_PROFILE,
+    DC_EXPANDED_MMC3_LEGACY_PROFILE,
     DC_EXPANDED_MMC3_PROFILE,
 )
 
@@ -536,7 +553,24 @@ def detect_profile(data: bytes) -> RomProfile:
     if not matches:
         sizes = "、".join(str(profile.rom_size) for profile in SUPPORTED_PROFILES)
         raise ValueError(f"不受支持的 ROM 大小 {len(data)}；已支持大小：{sizes}。")
-    profile = matches[0]
+    if len(matches) == 1:
+        profile = matches[0]
+    elif DC_EXPANDED_MMC3_PROFILE in matches:
+        header = data[:16]
+        if header != bytes.fromhex("4E45531A402023C00000000000000000"):
+            raise ValueError("该 1.25 MiB ROM 不是已验证的扩容 Mapper 194 布局。")
+        bank_18_start = 16 + 0x18 * 0x2000
+        bank_60_start = 16 + 0x60 * 0x2000
+        stock_pointer = int.from_bytes(data[bank_18_start : bank_18_start + 2], "little")
+        copied_pointer = int.from_bytes(data[bank_60_start : bank_60_start + 2], "little")
+        if stock_pointer == 0x99AF:
+            profile = DC_EXPANDED_MMC3_PROFILE
+        elif copied_pointer == 0x99AF:
+            profile = DC_EXPANDED_MMC3_LEGACY_PROFILE
+        else:
+            raise ValueError("该扩容 ROM 的音频调度 Bank 不是已验证版本。")
+    else:
+        profile = matches[0]
     if profile is V51_PROFILE:
         signature = data[0x48074:0x48080]
         table_signature = data[0x48873:0x48879]
@@ -551,13 +585,18 @@ def detect_profile(data: bytes) -> RomProfile:
         engine_hash = hashlib.sha256(data[engine_start:engine_end]).hexdigest().upper()
         if engine_hash != "4F977F461CC672FB09DA384746FD43668F675523FC00D33180E8C751E5F521B0":
             raise ValueError("该 MMC5 ROM 的 FamiStudio 音频桥接银行不是已验证版本。")
-    if profile is DC_EXPANDED_MMC3_PROFILE:
+    if profile in (DC_EXPANDED_MMC3_LEGACY_PROFILE, DC_EXPANDED_MMC3_PROFILE):
         header = data[:16]
         if header != bytes.fromhex("4E45531A402023C00000000000000000"):
             raise ValueError("该 1.25 MiB ROM 不是已验证的扩容 Mapper 194 布局。")
         engine_start = 16 + 0x64 * 0x2000
         engine_end = engine_start + 0x2000
         engine_hash = hashlib.sha256(data[engine_start:engine_end]).hexdigest().upper()
-        if engine_hash != "1A78C5AC91BD578136F54E8353BB44DDFDF6A5B47AECC76FB2181E75FB4B554B":
+        expected_engine_hash = (
+            "1A78C5AC91BD578136F54E8353BB44DDFDF6A5B47AECC76FB2181E75FB4B554B"
+            if profile is DC_EXPANDED_MMC3_LEGACY_PROFILE
+            else "E046AC7A47A0D92EC1C41840896D323CED35D68656970D74FEDE42EB9711E0DC"
+        )
+        if engine_hash != expected_engine_hash:
             raise ValueError("该扩容 ROM 的双音频引擎银行不是已验证版本。")
     return profile

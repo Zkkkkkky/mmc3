@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from collections.abc import Callable
+import hashlib
 from pathlib import Path
 import re
 
@@ -41,11 +42,14 @@ from .music_import import assemble_famistudio_music_source, load_music_bank
 
 
 def page_title(title: str, subtitle: str) -> tuple[QLabel, QLabel]:
+    """Keep semantic page labels without taking space in the legacy layout."""
     heading = QLabel(title)
     heading.setObjectName("pageTitle")
     description = QLabel(subtitle)
     description.setObjectName("pageSubtitle")
     description.setWordWrap(True)
+    heading.hide()
+    description.hide()
     return heading, description
 
 
@@ -132,7 +136,7 @@ class OverviewPage(ProjectPage):
         guide_layout = QVBoxLayout(guide)
         guide_layout.addWidget(
             QLabel(
-                "1. 打开 DC_kuorong.nes　→　2. 修改并随时验证　→　"
+                "1. 打开 DC_kuorong_464K.nes　→　2. 修改并随时验证　→　"
                 "3. 保存 .dcmod 工程　→　4. 构建新ROM与IPS"
             )
         )
@@ -192,7 +196,11 @@ class OverviewPage(ProjectPage):
             f"Mapper {self.project.rom_image.mapper} · {len(self.project.original) / 1024:.1f} KiB"
         )
         self.hash_value.setText(self.project.source_sha256)
-        self.space_value.setText(f"{self.project.expansion_capacity // 1024} KiB（Bank $65—$7D）")
+        regions = "、".join(region.display for region in self.project.profile.free_prg_regions)
+        self.space_value.setText(
+            f"{self.project.expansion_available // 1024} / "
+            f"{self.project.expansion_capacity // 1024} KiB 可用（{regions}）"
+        )
 
 
 class SearchableRecordPage(ProjectPage):
@@ -314,8 +322,8 @@ class UnitPage(SearchableRecordPage):
         left = QWidget()
         left_layout = QVBoxLayout(left)
         left_layout.setContentsMargins(0, 0, 0, 0)
-        left_layout.addWidget(self.search_panel)
         left_layout.addWidget(self.records)
+        left_layout.addWidget(self.search_panel)
         splitter.addWidget(left)
 
         detail = QWidget()
@@ -630,8 +638,8 @@ class CharacterPage(SearchableRecordPage):
         left = QWidget()
         left_layout = QVBoxLayout(left)
         left_layout.setContentsMargins(0, 0, 0, 0)
-        left_layout.addWidget(self.search_panel)
         left_layout.addWidget(self.records)
+        left_layout.addWidget(self.search_panel)
         splitter.addWidget(left)
 
         detail = QWidget()
@@ -930,8 +938,8 @@ class WeaponPage(SearchableRecordPage):
         left = QWidget()
         left_layout = QVBoxLayout(left)
         left_layout.setContentsMargins(0, 0, 0, 0)
-        left_layout.addWidget(self.search_panel)
         left_layout.addWidget(self.records)
+        left_layout.addWidget(self.search_panel)
         splitter.addWidget(left)
 
         detail = QWidget()
@@ -1188,8 +1196,8 @@ class MusicPage(SearchableRecordPage):
         left = QWidget()
         left_layout = QVBoxLayout(left)
         left_layout.setContentsMargins(0, 0, 0, 0)
-        left_layout.addWidget(self.search_panel)
         left_layout.addWidget(self.records)
+        left_layout.addWidget(self.search_panel)
         splitter.addWidget(left)
         detail = QWidget()
         detail_layout = QVBoxLayout(detail)
@@ -1539,6 +1547,45 @@ class ResourcePage(ProjectPage):
         self.capacity.setFormat("0 / 0 KiB")
         layout.addWidget(self.capacity_label)
         layout.addWidget(self.capacity)
+
+        managed_group = QGroupBox("托管扩展资源")
+        managed_layout = QVBoxLayout(managed_group)
+        managed_help = QLabel(
+            "可将二进制资源安全写入空闲 Bank；分配信息会随 .dcmod 工程保存。"
+            "资源写入本身不会自动修改游戏指针。"
+        )
+        managed_help.setObjectName("hintText")
+        managed_help.setWordWrap(True)
+        managed_layout.addWidget(managed_help)
+        managed_buttons = QHBoxLayout()
+        self.import_button = QPushButton("导入二进制资源…")
+        self.import_button.clicked.connect(self.import_resource)
+        self.export_button = QPushButton("导出所选资源…")
+        self.export_button.clicked.connect(self.export_resource)
+        self.remove_button = QPushButton("删除所选资源")
+        self.remove_button.clicked.connect(self.remove_resource)
+        managed_buttons.addWidget(self.import_button)
+        managed_buttons.addWidget(self.export_button)
+        managed_buttons.addWidget(self.remove_button)
+        managed_buttons.addStretch()
+        managed_layout.addLayout(managed_buttons)
+        self.allocation_table = QTableWidget(0, 6)
+        self.allocation_table.setHorizontalHeaderLabels(
+            ("资源ID", "名称", "PRG Bank", "文件范围", "大小", "SHA-256")
+        )
+        self.allocation_table.horizontalHeader().setSectionResizeMode(
+            1, QHeaderView.ResizeMode.Stretch
+        )
+        for column in (0, 2, 3, 4, 5):
+            self.allocation_table.horizontalHeader().setSectionResizeMode(
+                column, QHeaderView.ResizeMode.ResizeToContents
+            )
+        self.allocation_table.setAlternatingRowColors(True)
+        self.allocation_table.itemSelectionChanged.connect(self._update_button_state)
+        managed_layout.addWidget(self.allocation_table)
+        layout.addWidget(managed_group)
+
+        layout.addWidget(QLabel("ROM布局与保护范围"))
         self.table = QTableWidget(0, 6)
         self.table.setHorizontalHeaderLabels(
             ("资源", "类型", "文件起点", "文件终点", "大小", "写入策略")
@@ -1554,9 +1601,12 @@ class ResourcePage(ProjectPage):
 
     def refresh(self) -> None:
         self.table.setRowCount(0)
+        self.allocation_table.setRowCount(0)
         if self.project is None:
             self.capacity_label.setText("尚未载入ROM")
             self.capacity.setFormat("0 / 0 KiB")
+            self.capacity.setValue(0)
+            self._update_button_state()
             return
         graph = ResourceGraph.from_profile(self.project.profile, self.project.original)
         nodes = sorted(graph.nodes, key=lambda item: (item.offset, item.resource_id))
@@ -1581,10 +1631,139 @@ class ResourcePage(ProjectPage):
             )
             for column, value in enumerate(values):
                 self.table.setItem(row, column, readonly_item(value))
-        capacity = self.project.expansion_capacity // 1024
-        self.capacity_label.setText(f"扩展资源区：可用 {capacity} KiB")
-        self.capacity.setValue(0)
-        self.capacity.setFormat(f"已分配 0 KiB / {capacity} KiB")
+        capacity = self.project.expansion_capacity
+        used = self.project.expansion_used
+        available = self.project.expansion_available
+        regions = "、".join(region.display for region in self.project.profile.free_prg_regions)
+        self.capacity_label.setText(
+            f"扩展资源区 {regions}：总计 {capacity // 1024} KiB，"
+            f"剩余 {available:,} B"
+        )
+        self.capacity.setValue(round(used * 100 / capacity) if capacity else 0)
+        self.capacity.setFormat(f"已分配 {used:,} B / {capacity:,} B")
+        allocations = self.project.expansion_allocations
+        self.allocation_table.setRowCount(len(allocations))
+        for row, allocation in enumerate(allocations):
+            first_bank = (allocation.offset - 16) // 0x2000
+            last_bank = (allocation.end - 1 - 16) // 0x2000
+            bank_text = (
+                f"${first_bank:02X}"
+                if first_bank == last_bank
+                else f"${first_bank:02X}—${last_bank:02X}"
+            )
+            payload = self.project.expansion_resource_data(allocation.resource_id)
+            values = (
+                allocation.resource_id,
+                allocation.label,
+                bank_text,
+                f"0x{allocation.offset:06X}—0x{allocation.end - 1:06X}",
+                f"{allocation.size:,} B",
+                hashlib.sha256(payload).hexdigest().upper()[:16] + "…",
+            )
+            for column, value in enumerate(values):
+                item = readonly_item(value)
+                if column == 0:
+                    item.setData(Qt.ItemDataRole.UserRole, allocation.resource_id)
+                self.allocation_table.setItem(row, column, item)
+        self._update_button_state()
+
+    def _selected_resource_id(self) -> str | None:
+        row = self.allocation_table.currentRow()
+        if row < 0:
+            return None
+        item = self.allocation_table.item(row, 0)
+        return None if item is None else str(item.data(Qt.ItemDataRole.UserRole))
+
+    def _update_button_state(self) -> None:
+        loaded = self.project is not None
+        selected = loaded and self._selected_resource_id() is not None
+        self.import_button.setEnabled(loaded)
+        self.export_button.setEnabled(selected)
+        self.remove_button.setEnabled(selected)
+
+    def import_resource(self) -> None:
+        if self.project is None:
+            return
+        filename, _ = QFileDialog.getOpenFileName(
+            self,
+            "导入扩展二进制资源",
+            str(self.project.path.parent),
+            "二进制文件 (*.bin);;所有文件 (*)",
+        )
+        if not filename:
+            return
+        try:
+            path = Path(filename)
+            payload = path.read_bytes()
+            suggested = re.sub(r"[^a-z0-9._-]+", "-", path.stem.lower()).strip("-.")
+            if not suggested or not suggested[0].isalnum():
+                suggested = "resource"
+            resource_id, accepted = QInputDialog.getText(
+                self, "资源ID", "唯一资源ID：", text=suggested[:64]
+            )
+            if not accepted:
+                return
+            label, accepted = QInputDialog.getText(
+                self, "资源名称", "显示名称：", text=path.stem
+            )
+            if not accepted:
+                return
+            allocation = self.project.import_expansion_resource(
+                resource_id,
+                label,
+                payload,
+                alignment=0x10,
+            )
+            self.project_changed.emit(
+                f"已导入扩展资源 {allocation.resource_id} · {allocation.size} 字节"
+            )
+        except Exception as error:
+            self.show_error(error)
+
+    def export_resource(self) -> None:
+        if self.project is None:
+            return
+        resource_id = self._selected_resource_id()
+        if resource_id is None:
+            return
+        filename, _ = QFileDialog.getSaveFileName(
+            self,
+            "导出扩展资源",
+            str(self.project.path.with_name(f"{resource_id}.bin")),
+            "二进制文件 (*.bin);;所有文件 (*)",
+        )
+        if not filename:
+            return
+        try:
+            destination = Path(filename)
+            if destination.suffix.lower() != ".bin":
+                destination = destination.with_suffix(".bin")
+            destination.write_bytes(self.project.expansion_resource_data(resource_id))
+        except Exception as error:
+            self.show_error(error)
+
+    def remove_resource(self) -> None:
+        if self.project is None:
+            return
+        resource_id = self._selected_resource_id()
+        if resource_id is None:
+            return
+        allocation = self.project.resource_allocator.allocation(resource_id)
+        answer = QMessageBox.question(
+            self,
+            "删除扩展资源",
+            f"确定删除“{allocation.label}”并释放 {allocation.size:,} 字节吗？\n"
+            "此操作可以撤销。",
+            QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.Cancel,
+            QMessageBox.StandardButton.Cancel,
+        )
+        if answer != QMessageBox.StandardButton.Yes:
+            return
+        try:
+            self.project.remove_expansion_resource(resource_id)
+            self.project_changed.emit(f"已删除扩展资源 {resource_id}")
+        except Exception as error:
+            self.show_error(error)
 
 
 class ChangesPage(ProjectPage):

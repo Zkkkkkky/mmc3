@@ -3,14 +3,10 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
-from PySide6.QtCore import Qt
 from PySide6.QtGui import QAction, QCloseEvent, QDragEnterEvent, QDropEvent, QFont, QKeySequence
 from PySide6.QtWidgets import (
     QApplication,
-    QComboBox,
     QFileDialog,
-    QFrame,
-    QHBoxLayout,
     QInputDialog,
     QLabel,
     QListWidget,
@@ -19,7 +15,6 @@ from PySide6.QtWidgets import (
     QMessageBox,
     QStatusBar,
     QTabWidget,
-    QToolBar,
     QVBoxLayout,
     QWidget,
 )
@@ -48,14 +43,20 @@ def _workspace_root() -> Path:
     if getattr(sys, "frozen", False):
         executable_dir = Path(sys.executable).resolve().parent
         for candidate in (executable_dir, executable_dir.parent, Path.cwd()):
-            if (candidate / "FC模拟器" / "DC_kuorong.nes").is_file():
+            rom_directory = candidate / "FC模拟器"
+            if any(
+                (rom_directory / name).is_file()
+                for name in ("DC_kuorong_464K.nes", "DC_kuorong.nes")
+            ):
                 return candidate
         return executable_dir
     return Path(__file__).resolve().parents[2]
 
 
 ROOT = _workspace_root()
-DEFAULT_ROM = ROOT / "FC模拟器" / "DC_kuorong.nes"
+EXPANDED_ROM = ROOT / "FC模拟器" / "DC_kuorong_464K.nes"
+LEGACY_ROM = ROOT / "FC模拟器" / "DC_kuorong.nes"
+DEFAULT_ROM = EXPANDED_ROM if EXPANDED_ROM.is_file() else LEGACY_ROM
 APP_TITLE = "新DC篇完整修改器"
 
 
@@ -248,8 +249,8 @@ class MainWindow(QMainWindow):
         self.project_path: Path | None = None
         self._saved_snapshot: bytes | None = None
         self.setWindowTitle(APP_TITLE)
-        self.resize(1420, 900)
-        self.setMinimumSize(1120, 720)
+        self.resize(1280, 900)
+        self.setMinimumSize(1024, 700)
         self.setAcceptDrops(True)
 
         # Kept as a non-visual compatibility/navigation model for tests and
@@ -265,32 +266,12 @@ class MainWindow(QMainWindow):
         self.workspace.setObjectName("workspaceTabs")
         self.workspace.setDocumentMode(False)
         self._build_workspace()
+        self.workspace.tabBar().hide()
 
         central = QWidget()
         central_layout = QVBoxLayout(central)
-        central_layout.setContentsMargins(12, 10, 12, 10)
-        central_layout.setSpacing(8)
-        header = QFrame()
-        header.setObjectName("workspaceHeader")
-        header_layout = QHBoxLayout(header)
-        header_layout.setContentsMargins(10, 7, 10, 7)
-        mark = QLabel("DC")
-        mark.setObjectName("appMark")
-        header_layout.addWidget(mark)
-        header_text = QVBoxLayout()
-        header_text.setSpacing(0)
-        app_name = QLabel("新DC篇完整修改器")
-        app_name.setObjectName("workspaceTitle")
-        self.workspace_context = QLabel("安全工程模式 · 所有 ROM 输出均另存为")
-        self.workspace_context.setObjectName("hintText")
-        header_text.addWidget(app_name)
-        header_text.addWidget(self.workspace_context)
-        header_layout.addLayout(header_text)
-        header_layout.addStretch()
-        self.rom_badge = QLabel("尚未载入 ROM")
-        self.rom_badge.setObjectName("romBadge")
-        header_layout.addWidget(self.rom_badge)
-        central_layout.addWidget(header)
+        central_layout.setContentsMargins(3, 3, 3, 3)
+        central_layout.setSpacing(0)
         central_layout.addWidget(self.workspace, 1)
         self.setCentralWidget(central)
 
@@ -304,7 +285,7 @@ class MainWindow(QMainWindow):
         self.setStatusBar(self.status)
 
         self._create_actions()
-        self._create_menus_and_toolbar()
+        self._create_menus()
         self.navigation.currentRowChanged.connect(self._show_page_by_index)
         self.workspace.currentChanged.connect(self._sync_navigation_from_workspace)
         self.show_page("maps")
@@ -328,24 +309,24 @@ class MainWindow(QMainWindow):
             (
                 "数据库",
                 (
-                    ("机体属性", "units"),
-                    ("人物数据", "characters"),
-                    ("武器属性", "weapons"),
-                    ("机体导入与CHR", "unit_import"),
+                    ("机体修改", "units"),
+                    ("人物修改", "characters"),
+                    ("武器修改", "weapons"),
+                    ("机体导入与图像", "unit_import"),
                 ),
             ),
             (
                 "剧情与事件",
                 (
-                    ("剧情文字", "story"),
+                    ("剧情对话", "story"),
                     ("战场事件", "events"),
-                    ("劝降条件", "persuasion"),
+                    ("劝降", "persuasion"),
                 ),
             ),
             ("背景音乐", (("战斗音乐", "music"),)),
             (
                 "工程与输出",
-                (("工程概览", "overview"), ("资源占用", "resources"), ("变更与验证", "changes")),
+                (("工程概览", "overview"), ("资源占用", "resources"), ("变更验证", "changes")),
             ),
         )
         for group_index, (group_label, entries) in enumerate(groups):
@@ -462,7 +443,7 @@ class MainWindow(QMainWindow):
                 shortcut,
             )
 
-    def _create_menus_and_toolbar(self) -> None:
+    def _create_menus(self) -> None:
         file_menu = self.menuBar().addMenu("文件")
         file_menu.addAction(self.open_rom_action)
         file_menu.addAction(self.open_project_action)
@@ -475,9 +456,6 @@ class MainWindow(QMainWindow):
         file_menu.addAction(self.build_action)
         file_menu.addSeparator()
         file_menu.addAction(self.exit_action)
-        edit_menu = self.menuBar().addMenu("编辑")
-        edit_menu.addAction(self.undo_action)
-        edit_menu.addAction(self.redo_action)
         data_menu = self.menuBar().addMenu("数据")
         data_menu.addAction(self.page_actions["maps"])
         data_menu.addSeparator()
@@ -490,55 +468,16 @@ class MainWindow(QMainWindow):
         data_menu.addAction(self.page_actions["events"])
         data_menu.addAction(self.page_actions["persuasion"])
         data_menu.addAction(self.page_actions["music"])
-        tools_menu = self.menuBar().addMenu("工具")
-        tools_menu.addAction(self.validate_action)
-        tools_menu.addAction(self.page_actions["resources"])
-        tools_menu.addAction(self.page_actions["changes"])
-        tools_menu.addSeparator()
-        tools_menu.addAction(self.page_actions["overview"])
+        data_menu.addSeparator()
+        data_menu.addAction(self.page_actions["overview"])
+        data_menu.addAction(self.page_actions["resources"])
+        data_menu.addAction(self.page_actions["changes"])
+        data_menu.addAction(self.validate_action)
+        data_menu.addSeparator()
+        data_menu.addAction(self.undo_action)
+        data_menu.addAction(self.redo_action)
         help_menu = self.menuBar().addMenu("帮助")
         help_menu.addAction(self.about_action)
-
-        toolbar = QToolBar("常用操作")
-        toolbar.setMovable(False)
-        toolbar.setToolButtonStyle(Qt.ToolButtonStyle.ToolButtonTextOnly)
-        toolbar.addAction(self.open_rom_action)
-        toolbar.addAction(self.save_project_action)
-        toolbar.addAction(self.save_rom_action)
-        toolbar.addSeparator()
-        toolbar.addAction(self.undo_action)
-        toolbar.addAction(self.redo_action)
-        toolbar.addSeparator()
-        toolbar.addAction(self.validate_action)
-        toolbar.addAction(self.build_action)
-        toolbar.addSeparator()
-        toolbar.addWidget(QLabel("快速跳转"))
-        self.quick_jump = QComboBox()
-        self.quick_jump.setMinimumWidth(220)
-        self.quick_jump.addItem("选择编辑模块…", None)
-        for key in (
-            "maps",
-            "units",
-            "characters",
-            "weapons",
-            "story",
-            "events",
-            "persuasion",
-            "music",
-            "unit_import",
-            "resources",
-            "changes",
-        ):
-            self.quick_jump.addItem(self.page_actions[key].text(), key)
-        self.quick_jump.activated.connect(self._quick_jump_selected)
-        toolbar.addWidget(self.quick_jump)
-        self.addToolBar(toolbar)
-
-    def _quick_jump_selected(self, index: int) -> None:
-        key = self.quick_jump.itemData(index)
-        if key is not None:
-            self.show_page(str(key))
-        self.quick_jump.setCurrentIndex(0)
 
     @property
     def has_unsaved_changes(self) -> bool:
@@ -579,7 +518,7 @@ class MainWindow(QMainWindow):
             project = RomProject.load(path)
             if not project.rom_image.is_reference_base:
                 raise ValueError(
-                    "该ROM布局兼容，但不是当前 DC_kuorong.nes 基准哈希。"
+                    f"该ROM布局兼容，但不是“{project.profile.label}”的基准哈希。"
                     "请从基准ROM建立工程，避免补丁重放到错误版本。"
                 )
             self._set_project(project)
@@ -766,27 +705,17 @@ class MainWindow(QMainWindow):
             self.setWindowTitle(APP_TITLE)
             self.path_status.setText("尚未载入ROM")
             self.change_status.setText("0 字节修改")
-            self.workspace_context.setText("安全工程模式 · 所有 ROM 输出均另存为")
-            self.rom_badge.setText("尚未载入 ROM")
             return
         marker = " *" if self.has_unsaved_changes else ""
-        project_name = self.project_path.name if self.project_path else "未命名工程"
-        self.setWindowTitle(f"{project_name}{marker} — {APP_TITLE}")
+        self.setWindowTitle(f"{APP_TITLE}：{self.project.path}{marker}")
         self.path_status.setText(str(self.project.path))
         self.change_status.setText(f"{len(self.project.change_rows())} 字节修改")
-        self.workspace_context.setText(
-            f"{self.project.path.name} · Mapper {self.project.rom_image.mapper} · "
-            "基准只读 / 修改驻留工程"
-        )
-        self.rom_badge.setText(
-            f"{len(self.project.original) // 1024} KiB · {self.project.source_sha256[:8]}…"
-        )
 
     def show_about(self) -> None:
         QMessageBox.information(
             self,
             "关于新DC篇完整修改器",
-            "版本 2.1.0 采用参考修改器的顶部工作区与左选右编流程，并启用："
+            "版本 2.2.0 采用参考修改器的菜单导航、顶部标签与左选右编流程，并启用："
             "机体与图像导入、武器与真实名称、内置剧情字库、地图/部署/踩点事件、"
             "增援/加入等章节事件、劝降条件、战斗音乐绑定、扩展曲导入、工程保存、"
             "撤销/重做、资源视图、ROM/IPS构建与结构验证。\n\n"

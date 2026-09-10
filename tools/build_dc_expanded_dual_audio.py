@@ -13,10 +13,11 @@ from fc_rom_editor_core import apply_ips
 
 ROOT = Path(__file__).resolve().parent.parent
 SOURCE_ROM = ROOT / "build" / "nsf" / "新DC.nes"
-OUTPUT_ROM = ROOT / "build" / "DC_FamiStudio_增容双引擎_测试.nes"
-OUTPUT_IPS = ROOT / "patches" / "DC_FamiStudio_增容双引擎_测试.ips"
-CAPACITY_REPORT = ROOT / "build" / "DC_FamiStudio_增容双引擎_容量报告.json"
-BUILD_LOG = ROOT / "build" / "DC_FamiStudio_增容双引擎_构建记录.md"
+OUTPUT_ROM = ROOT / "build" / "DC_FamiStudio_增容双引擎_464K_测试.nes"
+DELIVERY_ROM = ROOT / "FC模拟器" / "DC_kuorong_464K.nes"
+OUTPUT_IPS = ROOT / "patches" / "DC_FamiStudio_增容双引擎_464K_测试.ips"
+CAPACITY_REPORT = ROOT / "build" / "DC_FamiStudio_增容双引擎_464K_容量报告.json"
+BUILD_LOG = ROOT / "build" / "DC_FamiStudio_增容双引擎_464K_构建记录.md"
 
 ANALYSIS = ROOT / "analysis"
 ENGINE_ASM = ANALYSIS / "dc_dual_engine_bank.asm"
@@ -51,7 +52,6 @@ ORIGINAL_PRG_BANK_COUNT = 0x40
 EXPANDED_PRG_BANK_COUNT = 0x80
 MAPPER = 194
 
-COPIED_AUDIO_BANK = 0x60
 ASH_TO_ASH_BANK = 0x61
 DARK_KNIGHT_BANK = 0x62
 DARK_PRISON_BANK = 0x63
@@ -79,9 +79,16 @@ TRAMPOLINE_BANK_OFFSET = TRAMPOLINE_CPU_ADDRESS - 0x8000
 HANDOFF_CPU_ADDRESS = 0x99EC
 HANDOFF_BANK_OFFSET = HANDOFF_CPU_ADDRESS - 0x8000
 
-# The two NMI paths map stock audio bank $18 into $8000. Only the new copy of
-# fixed bank $3F changes these operands, selecting expanded bank $60 instead.
+# The two NMI paths keep mapping stock audio bank $18 into $8000. The verified
+# zero-filled holes in that bank host the dual-engine trampoline and handoff,
+# which releases expanded bank $60 for managed resources.
 FIXED_E000_AUDIO_OPERANDS = (0xFA84, 0xFADE)
+BATTLE_MUSIC_ATTACKER_OFFSET = 0xCF86
+BATTLE_MUSIC_DEFENDER_OFFSET = 0xD04E
+GAMEPLAY_MUSIC_BINDINGS = {
+    0x04: (0x9D, 0x9D),
+    0x05: (0x9F, 0x9F),
+}
 
 
 def sha256(data: bytes) -> str:
@@ -97,6 +104,21 @@ def source_prg_bank(source: bytes, bank: int) -> bytes:
         raise ValueError(f"Invalid source PRG bank: 0x{bank:02X}")
     start = prg_bank_offset(bank)
     return source[start : start + PRG_BANK_SIZE]
+
+
+def patched_stock_audio_bank(
+    source: bytes,
+    trampoline: bytes,
+    handoff: bytes,
+) -> bytes:
+    """Return stock bank $18 with only the verified dispatcher holes changed."""
+    audio = bytearray(source_prg_bank(source, STOCK_AUDIO_BANK))
+    audio[:2] = TRAMPOLINE_CPU_ADDRESS.to_bytes(2, "little")
+    audio[
+        TRAMPOLINE_BANK_OFFSET : TRAMPOLINE_BANK_OFFSET + len(trampoline)
+    ] = trampoline
+    audio[HANDOFF_BANK_OFFSET : HANDOFF_BANK_OFFSET + len(handoff)] = handoff
+    return bytes(audio)
 
 
 def assemble(source: Path, output: Path, listing: Path) -> None:
@@ -251,6 +273,10 @@ def validate_ram_layout() -> dict[str, object]:
     bridge_start = 0xB500 - 0xA000
     bridge_end = label_address(ENGINE_LST, "dc_dual_audio_bridge_end") - 0xA000
     bridge = engine[bridge_start:bridge_end]
+    restored_stock_bank = bytes.fromhex("A9 86 8D 00 80 A9 18 8D 01 80")
+    obsolete_copied_bank = bytes.fromhex("A9 86 8D 00 80 A9 60 8D 01 80")
+    if bridge.count(restored_stock_bank) != 1 or obsolete_copied_bank in bridge:
+        raise AssertionError("Bridge does not restore stock audio bank 0x18")
     save_pattern = b"".join(
         bytes((0xA5, address, 0x48)) for address in range(0x4C, 0x57)
     )
@@ -381,22 +407,23 @@ def build_expanded_rom(
         INES_HEADER_SIZE + ORIGINAL_PRG_SIZE : EXPECTED_SOURCE_SIZE
     ]
 
-    # The old file body remains an exact prefix. Its old CHR bytes become
-    # unused PRG banks $40-$5F, while an identical CHR copy is appended after
-    # the new 1 MiB PRG region.
-    expanded_prg = bytearray(original_prg + original_chr)
+    # The active CHR is appended after the new 1 MiB PRG region. The obsolete
+    # bytes at its former file position are cleared, releasing PRG banks
+    # $40-$5F instead of retaining a second CHR copy.
+    expanded_prg = bytearray(original_prg)
     expanded_prg.extend(bytes(EXPANDED_PRG_SIZE - len(expanded_prg)))
 
-    copied_audio = bytearray(source_prg_bank(source, STOCK_AUDIO_BANK))
-    copied_audio[:2] = TRAMPOLINE_CPU_ADDRESS.to_bytes(2, "little")
-    copied_audio[
-        TRAMPOLINE_BANK_OFFSET : TRAMPOLINE_BANK_OFFSET + len(trampoline)
-    ] = trampoline
-    copied_audio[
-        HANDOFF_BANK_OFFSET : HANDOFF_BANK_OFFSET + len(handoff)
-    ] = handoff
-    start = COPIED_AUDIO_BANK * PRG_BANK_SIZE
-    expanded_prg[start : start + PRG_BANK_SIZE] = copied_audio
+    patched_audio = patched_stock_audio_bank(source, trampoline, handoff)
+    start = STOCK_AUDIO_BANK * PRG_BANK_SIZE
+    expanded_prg[start : start + PRG_BANK_SIZE] = patched_audio
+
+    # Preserve the two bindings already present in the current DC_kuorong.nes
+    # baseline while rebuilding it from the pristine source ROM.
+    for selector, (attacker, defender) in GAMEPLAY_MUSIC_BINDINGS.items():
+        attacker_offset = BATTLE_MUSIC_ATTACKER_OFFSET - INES_HEADER_SIZE + selector
+        defender_offset = BATTLE_MUSIC_DEFENDER_OFFSET - INES_HEADER_SIZE + selector
+        expanded_prg[attacker_offset] = attacker
+        expanded_prg[defender_offset] = defender
 
     for bank, payload in music.items():
         start = bank * PRG_BANK_SIZE
@@ -411,7 +438,7 @@ def build_expanded_rom(
 
     fixed_e000 = bytearray(source_prg_bank(source, STOCK_FIXED_E000_BANK))
     for address in FIXED_E000_AUDIO_OPERANDS:
-        fixed_e000[address - 0xE000] = COPIED_AUDIO_BANK
+        fixed_e000[address - 0xE000] = STOCK_AUDIO_BANK
     start = FIXED_BANK_E000 * PRG_BANK_SIZE
     expanded_prg[start : start + PRG_BANK_SIZE] = fixed_e000
 
@@ -467,14 +494,18 @@ def write_reports(
         + len(handoff)
     )
 
-    original_body_preserved = output[INES_HEADER_SIZE : len(source)] == source[
-        INES_HEADER_SIZE:
-    ]
     active_chr_start = INES_HEADER_SIZE + EXPANDED_PRG_SIZE
     source_chr_start = INES_HEADER_SIZE + ORIGINAL_PRG_SIZE
     active_chr_preserved = output[
         active_chr_start : active_chr_start + ORIGINAL_CHR_SIZE
     ] == source[source_chr_start:]
+    reclaimed_chr_zero = not any(
+        output[source_chr_start : source_chr_start + ORIGINAL_CHR_SIZE]
+    )
+    audio_start = prg_bank_offset(STOCK_AUDIO_BANK)
+    audio_patched_in_place = output[
+        audio_start : audio_start + PRG_BANK_SIZE
+    ] == patched_stock_audio_bank(source, trampoline, handoff)
 
     report = {
         "source": {
@@ -497,26 +528,21 @@ def write_reports(
             "ipsSha256": sha256(ips),
         },
         "preservation": {
+            "sourceRomOverwritten": False,
+            "derivedRom": str(DELIVERY_ROM.relative_to(ROOT)),
             "headerChangedOffsets": ["0x4"],
-            "sourceBodySameAtOriginalOffsets": original_body_preserved,
-            "sourceBodyRange": "0x000010-0x0C000F",
-            "originalPrgUntouched": output[
-                INES_HEADER_SIZE : INES_HEADER_SIZE + ORIGINAL_PRG_SIZE
-            ] == source[
-                INES_HEADER_SIZE : INES_HEADER_SIZE + ORIGINAL_PRG_SIZE
-            ],
-            "originalChrPrefixUntouched": output[
-                source_chr_start : source_chr_start + ORIGINAL_CHR_SIZE
-            ] == source[source_chr_start:],
+            "stockAudioPatchedInPlace": audio_patched_in_place,
+            "oldChrPrgBanksZeroFilled": reclaimed_chr_zero,
             "activeChrCopyMatchesSource": active_chr_preserved,
-            "newDataStartsAtOldEof": f"0x{len(source):06X}",
+            "releasedPrgBanks": ["0x40-0x60", "0x65-0x7D"],
+            "managedCapacityBytes": 58 * PRG_BANK_SIZE,
         },
         "engines": {
             "stock": {
                 "musicTracks": 20,
                 "sfxCommands": 56,
                 "physicalBanks": ["0x00-0x3F"],
-                "status": "source bytes untouched",
+                "status": "bank 0x18 patched in verified zero-filled holes",
             },
             "famiStudio": {
                 "musicTracks": 3,
@@ -553,22 +579,26 @@ def write_reports(
                 "usedBytes": music_used[bank],
                 "freeBytes": PRG_BANK_SIZE - music_used[bank],
                 "sha256": sha256(music[bank]),
-                "gameplayBinding": None,
+                "gameplayBinding": [
+                    f"selector 0x{selector:02X} attacker/defender"
+                    for selector, binding in GAMEPLAY_MUSIC_BINDINGS.items()
+                    if 0x9D + index in binding
+                ],
             }
             for index, bank in enumerate(MUSIC_BANK_ASM)
         ],
         "expandedLayout": [
             {
-                "range": "PRG banks 0x00-0x3F",
-                "purpose": "untouched original PRG",
+                "range": "PRG banks 0x00-0x17 and 0x19-0x3F",
+                "purpose": "original PRG, except selected battle-music bindings",
             },
             {
-                "range": "PRG banks 0x40-0x5F",
-                "purpose": "untouched original CHR bytes retained at original offsets",
+                "range": "PRG bank 0x18",
+                "purpose": "stock audio plus dispatcher and same-frame handoff trampolines",
             },
             {
-                "range": "PRG bank 0x60",
-                "purpose": "new copy of stock audio bank plus dispatcher and same-frame handoff trampolines",
+                "range": "PRG banks 0x40-0x60",
+                "purpose": "managed expansion space reclaimed from obsolete CHR/audio copies",
             },
             {
                 "range": "PRG banks 0x61-0x63",
@@ -580,7 +610,7 @@ def write_reports(
             },
             {
                 "range": "PRG banks 0x65-0x7D",
-                "purpose": "new reserved expansion space",
+                "purpose": "managed expansion space",
             },
             {
                 "range": "PRG banks 0x7E-0x7F",
@@ -613,10 +643,11 @@ def write_reports(
                 f"- IPS SHA-256：`{sha256(ips).upper()}`",
                 "- Mapper：保持 194；仅将 PRG 从 512 KiB 扩展到 1 MiB。",
                 "- PRG：512 KiB → 1 MiB；CHR：保持 256 KiB。",
-                "- 除文件头偏移 `$04` 外，原文件 `$000010-$0C000F` 全部逐字节保持。",
-                "- 新增内容从原 EOF `$0C0010` 开始。",
+                "- 源 ROM 不覆盖；派生输出释放 `$40-$60` 与 `$65-$7D` 共 464 KiB。",
+                "- 原 CHR 旧位置副本清零；有效 CHR 仍位于 `$100010-$14000F`。",
+                "- 旧音频调度代码写入原 Bank `$18` 的已验证空白区，不再复制 Bank `$60`。",
                 "- 原20首音乐与56个音效仍由旧驱动播放。",
-                "- `$9D/$9E/$9F` 分别测试 Ash to Ash、Dark Knight、Dark Prison，未绑定游戏用途。",
+                "- `$9D/$9E/$9F` 分别对应 Ash to Ash、Dark Knight、Dark Prison；保留当前基准中的人物战斗曲绑定。",
                 "- 新曲播放期间的56个音效由第二套 FamiStudio SFX 播放。",
                 "- 保持 Mapper 194 后，原混合 CHR-ROM/CHR-RAM 和分屏 IRQ 映射无需转换。",
                 "- 目标模拟器：Mesen 0.9.9（已验证真实 1 MiB PRG 偏移）；FCEUX 2.6.6 会把 Mapper 194 固定回绕到 512 KiB，不兼容本增容版。",
@@ -624,7 +655,7 @@ def write_reports(
                 "- 两套引擎不并发更新 APU；切回旧驱动时在同一 NMI 内完成复位和命令重放。",
                 "- IPS 扩容回放：通过。",
                 "",
-                "运行时结果见 `build/DC_FamiStudio_增容双引擎_验证记录.md`。",
+                "运行时结果见 `build/DC_FamiStudio_增容双引擎_464K_验证记录.md`。",
             ]
         )
         + "\n",
@@ -640,20 +671,37 @@ def main() -> None:
     validate_ram_layout()
     output = build_expanded_rom(source, music, engine, trampoline, handoff)
 
-    if output[INES_HEADER_SIZE : len(source)] != source[INES_HEADER_SIZE:]:
-        raise AssertionError("Existing ROM body changed at an original file offset")
+    for first, end in ((0x40, 0x61), (0x65, 0x7E)):
+        start = prg_bank_offset(first)
+        stop = prg_bank_offset(end)
+        if any(output[start:stop]):
+            raise AssertionError(
+                f"Managed expansion banks 0x{first:02X}-0x{end - 1:02X} are not zero"
+            )
+    audio_start = prg_bank_offset(STOCK_AUDIO_BANK)
+    if output[audio_start : audio_start + PRG_BANK_SIZE] != patched_stock_audio_bank(
+        source, trampoline, handoff
+    ):
+        raise AssertionError("Stock audio bank was not patched exactly as expected")
+    active_chr_start = INES_HEADER_SIZE + EXPANDED_PRG_SIZE
+    source_chr_start = INES_HEADER_SIZE + ORIGINAL_PRG_SIZE
+    if output[active_chr_start:] != source[source_chr_start:]:
+        raise AssertionError("Active CHR copy does not match the source ROM")
 
     ips = make_expanding_ips(source, output)
     if apply_ips(source, ips) != output:
         raise AssertionError("Expanding IPS round-trip verification failed")
 
     OUTPUT_ROM.parent.mkdir(parents=True, exist_ok=True)
+    DELIVERY_ROM.parent.mkdir(parents=True, exist_ok=True)
     OUTPUT_IPS.parent.mkdir(parents=True, exist_ok=True)
     OUTPUT_ROM.write_bytes(output)
+    DELIVERY_ROM.write_bytes(output)
     OUTPUT_IPS.write_bytes(ips)
     write_reports(source, output, ips, music, engine, trampoline, handoff)
 
     print(f"ROM: {OUTPUT_ROM} ({sha256(output)})")
+    print(f"Delivery ROM: {DELIVERY_ROM}")
     print(f"IPS: {OUTPUT_IPS} ({len(ips)} bytes)")
     print(f"Capacity report: {CAPACITY_REPORT}")
     print(f"Build log: {BUILD_LOG}")

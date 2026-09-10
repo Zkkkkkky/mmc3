@@ -24,7 +24,10 @@ from fc_editor.codecs.unit_weapon import UnitWeaponCodec
 from fc_editor.codecs.weapon import WeaponCodec
 from fc_editor.codecs.weapon_name import WeaponNameReferenceCodec
 from fc_editor.dc_text import dc_map_label, decode_dc_text, default_dc_text_table
-from fc_editor.profiles import DC_EXPANDED_MMC3_PROFILE
+from fc_editor.profiles import (
+    DC_EXPANDED_MMC3_LEGACY_PROFILE,
+    DC_EXPANDED_MMC3_PROFILE,
+)
 from fc_editor.project import ProjectDocument
 from fc_editor.resources import Allocation, BankAllocator, ResourceGraph
 from fc_editor.rom_image import RomImage
@@ -41,8 +44,9 @@ from dc_modifier.map_tiles import campaign_tileset_key, render_map_tile
 
 
 ROOT = Path(__file__).resolve().parents[1]
-TARGET_ROM = ROOT / "FC模拟器" / "DC_kuorong.nes"
-TARGET_SHA256 = "1DDD4F74B2D3ACEAA8A0BC4A6846BE8E6148C858C2D8EA5A1F6E0A04F0AD4A75"
+TARGET_ROM = ROOT / "FC模拟器" / "DC_kuorong_464K.nes"
+LEGACY_ROM = ROOT / "FC模拟器" / "DC_kuorong.nes"
+TARGET_SHA256 = "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E"
 
 
 class DcExpandedProfileTests(unittest.TestCase):
@@ -56,6 +60,12 @@ class DcExpandedProfileTests(unittest.TestCase):
         self.assertTrue(self.rom.is_reference_base)
         self.assertEqual(self.rom.mapper, 194)
         self.assertEqual(self.rom.size, 1_310_736)
+
+    def test_legacy_rom_remains_supported_without_becoming_the_default(self) -> None:
+        legacy = RomImage.load(LEGACY_ROM)
+        self.assertIs(legacy.profile, DC_EXPANDED_MMC3_LEGACY_PROFILE)
+        self.assertTrue(legacy.is_reference_base)
+        self.assertEqual(sum(item.size for item in legacy.profile.free_prg_regions), 200 * 1024)
 
     def test_primary_codecs_decode_and_round_trip(self) -> None:
         unit_codec = UnitCodec(self.rom)
@@ -166,7 +176,8 @@ class ResourceModelTests(unittest.TestCase):
     def test_graph_describes_tables_free_space_and_active_chr(self) -> None:
         graph = ResourceGraph.from_profile(self.rom.profile, self.rom.data)
         self.assertEqual(graph.node("units.pointer_table").offset, 0x4876F)
-        self.assertEqual(graph.node("prg.free.0").size, 200 * 1024)
+        self.assertEqual(graph.node("prg.free.0").size, 264 * 1024)
+        self.assertEqual(graph.node("prg.free.1").size, 200 * 1024)
         self.assertEqual(graph.node("chr.active").offset, 0x100010)
         self.assertEqual(graph.node("chr.active").size, 256 * 1024)
         self.assertTrue(graph.node("chr.active").writable)
@@ -189,13 +200,30 @@ class ResourceModelTests(unittest.TestCase):
         allocator = BankAllocator(self.rom.profile, self.rom.data)
         first = allocator.allocate("test.first", "测试资源一", 0x1F00, alignment=0x10)
         second = allocator.allocate("test.second", "测试资源二", 0x0200, alignment=0x10)
-        self.assertEqual(first.first_bank, 0x65)
-        self.assertEqual(second.first_bank, 0x66)
-        self.assertEqual(allocator.capacity, 200 * 1024)
+        self.assertEqual(first.first_bank, 0x40)
+        self.assertEqual(second.first_bank, 0x41)
+        self.assertEqual(allocator.capacity, 464 * 1024)
         self.assertEqual(allocator.used, 0x2100)
+
+    def test_allocator_can_use_both_released_regions(self) -> None:
+        allocator = BankAllocator(self.rom.profile, self.rom.data)
+        first = allocator.allocate(
+            "fill.reclaimed",
+            "填满回收区",
+            264 * 1024,
+            single_bank=False,
+        )
+        second = allocator.allocate("next.region", "第二资源区", 32)
+        self.assertEqual(first.first_bank, 0x40)
+        self.assertEqual(second.first_bank, 0x65)
+        self.assertEqual(allocator.available, 200 * 1024 - 32)
 
     def test_allocator_rejects_protected_or_overlapping_reservations(self) -> None:
         allocator = BankAllocator(self.rom.profile, self.rom.data)
+        with self.assertRaises(ValueError):
+            allocator.allocate("BAD ID", "格式错误", 16)
+        with self.assertRaises(ValueError):
+            allocator.reserve(Allocation("valid.id", "有效", 0x80010, 16, 3))
         with self.assertRaises(ValueError):
             allocator.reserve(Allocation("bad", "错误资源", 16 + 0x64 * 0x2000, 16, 1))
         first = allocator.allocate("kept", "已占用资源", 32)
@@ -263,6 +291,38 @@ class TextTableTests(unittest.TestCase):
 
 
 class EditorProjectTests(unittest.TestCase):
+    def test_managed_resource_import_undo_validation_and_project_round_trip(self) -> None:
+        project = RomProject.load(TARGET_ROM)
+        payload = bytes((index * 17 + 3) & 0xFF for index in range(0x2100))
+        allocation = project.import_expansion_resource(
+            "units.prototype",
+            "测试机体资源",
+            payload,
+            single_bank=False,
+        )
+        self.assertEqual(allocation.first_bank, 0x40)
+        self.assertEqual(project.expansion_used, len(payload))
+        self.assertEqual(project.expansion_resource_data(allocation.resource_id), payload)
+        self.assertFalse(any(issue.severity == "error" for issue in project.validate()))
+        self.assertIn("测试机体资源", project.change_description(allocation.offset))
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "managed-resource.dcmod"
+            project.save_project(path)
+            reopened = RomProject.load_project(path, TARGET_ROM)
+            self.assertEqual(reopened.expansion_allocations, (allocation,))
+            self.assertEqual(reopened.expansion_resource_data(allocation.resource_id), payload)
+            self.assertFalse(any(issue.severity == "error" for issue in reopened.validate()))
+        project.undo()
+        self.assertEqual(project.expansion_used, 0)
+        self.assertEqual(
+            bytes(project.working[allocation.offset : allocation.end]),
+            bytes(len(payload)),
+        )
+        project.redo()
+        self.assertEqual(project.expansion_resource_data(allocation.resource_id), payload)
+        project.remove_expansion_resource(allocation.resource_id)
+        self.assertEqual(project.expansion_used, 0)
+
     def test_map_trigger_repack_is_bounded_and_project_round_trips(self) -> None:
         project = RomProject.load(TARGET_ROM)
         self.assertTrue(project.supports_map_triggers)

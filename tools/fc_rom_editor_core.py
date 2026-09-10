@@ -3,6 +3,7 @@ from __future__ import annotations
 import hashlib
 import json
 import os
+import re
 import shutil
 import tempfile
 from contextlib import contextmanager
@@ -49,6 +50,7 @@ from fc_editor.models import (
     StoryTextRecord,
 )
 from fc_editor.project import ProjectDocument
+from fc_editor.resources import Allocation, BankAllocator
 from fc_editor.rom_image import RomImage
 from fc_editor.services.validation import ValidationIssue, validate_project
 
@@ -68,6 +70,14 @@ class EditPatch:
 class EditHistoryEntry:
     description: str
     patches: tuple[EditPatch, ...]
+    allocations_before: tuple[Allocation, ...] = ()
+    allocations_after: tuple[Allocation, ...] = ()
+
+
+@dataclass(frozen=True)
+class ProjectSnapshot:
+    data: bytes
+    allocations: tuple[Allocation, ...]
 
 
 @dataclass(frozen=True)
@@ -300,7 +310,7 @@ CONFIRMED_DC_UNIT_ALIASES: dict[int, str] = {
     for unit_id in unit_ids
 }
 DC_UNIT_NAME_PROFILE_KEYS = frozenset(
-    {"dc-famistudio-mmc5-v1", "dc-kuorong-mmc3-v1"}
+    {"dc-famistudio-mmc5-v1", "dc-kuorong-mmc3-v1", "dc-kuorong-mmc3-v2"}
 )
 
 
@@ -453,12 +463,13 @@ class RomProject:
         )
         self.original = self.rom_image.data
         self.working = bytearray(self.original)
+        self.resource_allocator = BankAllocator(self.rom_image.profile, self.original)
         self.pointer_by_id = self.unit_codec.pointers
         self.ids_by_pointer = self.unit_codec.ids_by_pointer
         self._undo_stack: list[EditHistoryEntry] = []
         self._redo_stack: list[EditHistoryEntry] = []
         self._transaction_depth = 0
-        self._transaction_before: bytes | None = None
+        self._transaction_before: ProjectSnapshot | None = None
         self._transaction_description = ""
 
     @classmethod
@@ -475,6 +486,11 @@ class RomProject:
         document = ProjectDocument.load(project_path)
         project = cls.load(base_rom_path)
         project.working[:] = document.materialize(project.rom_image)
+        project.resource_allocator = BankAllocator(
+            project.profile,
+            project.original,
+            document.resource_allocations(project.rom_image),
+        )
         return project
 
     @staticmethod
@@ -493,32 +509,47 @@ class RomProject:
             patches.append(EditPatch(start, before[start:position], after[start:position]))
         return tuple(patches)
 
-    def _mutation_snapshot(self) -> bytes | None:
+    def _mutation_snapshot(self) -> ProjectSnapshot | None:
         if self._transaction_depth:
             return None
-        return bytes(self.working)
+        return ProjectSnapshot(bytes(self.working), self.resource_allocator.allocations)
 
-    def _finish_mutation(self, before: bytes | None, description: str) -> None:
+    def _finish_mutation(self, before: ProjectSnapshot | None, description: str) -> None:
         if before is None:
             return
-        patches = self._diff_patches(before, bytes(self.working))
-        if not patches:
+        allocations_after = self.resource_allocator.allocations
+        patches = self._diff_patches(before.data, bytes(self.working))
+        if not patches and before.allocations == allocations_after:
             return
-        self._undo_stack.append(EditHistoryEntry(description, patches))
+        self._undo_stack.append(
+            EditHistoryEntry(
+                description,
+                patches,
+                before.allocations,
+                allocations_after,
+            )
+        )
         self._redo_stack.clear()
 
     @contextmanager
     def transaction(self, description: str) -> Iterator[None]:
         outermost = self._transaction_depth == 0
         if outermost:
-            self._transaction_before = bytes(self.working)
+            self._transaction_before = ProjectSnapshot(
+                bytes(self.working), self.resource_allocator.allocations
+            )
             self._transaction_description = description
         self._transaction_depth += 1
         try:
             yield
         except Exception:
             if outermost and self._transaction_before is not None:
-                self.working[:] = self._transaction_before
+                self.working[:] = self._transaction_before.data
+                self.resource_allocator = BankAllocator(
+                    self.profile,
+                    self.original,
+                    self._transaction_before.allocations,
+                )
             raise
         finally:
             self._transaction_depth -= 1
@@ -552,6 +583,9 @@ class RomProject:
         entry = self._undo_stack.pop()
         for patch in entry.patches:
             self.working[patch.offset : patch.offset + len(patch.before)] = patch.before
+        self.resource_allocator = BankAllocator(
+            self.profile, self.original, entry.allocations_before
+        )
         self._redo_stack.append(entry)
         return entry.description
 
@@ -561,6 +595,9 @@ class RomProject:
         entry = self._redo_stack.pop()
         for patch in entry.patches:
             self.working[patch.offset : patch.offset + len(patch.after)] = patch.after
+        self.resource_allocator = BankAllocator(
+            self.profile, self.original, entry.allocations_after
+        )
         self._undo_stack.append(entry)
         return entry.description
 
@@ -603,6 +640,64 @@ class RomProject:
     @property
     def expansion_capacity(self) -> int:
         return sum(region.size for region in self.profile.free_prg_regions)
+
+    @property
+    def expansion_allocations(self) -> tuple[Allocation, ...]:
+        return self.resource_allocator.allocations
+
+    @property
+    def expansion_used(self) -> int:
+        return self.resource_allocator.used
+
+    @property
+    def expansion_available(self) -> int:
+        return self.resource_allocator.available
+
+    def expansion_resource_data(self, resource_id: str) -> bytes:
+        allocation = self.resource_allocator.allocation(resource_id)
+        return bytes(self.working[allocation.offset : allocation.end])
+
+    def import_expansion_resource(
+        self,
+        resource_id: str,
+        label: str,
+        payload: bytes,
+        *,
+        alignment: int = 0x10,
+        single_bank: bool | None = None,
+    ) -> Allocation:
+        normalized_id = resource_id.strip().lower()
+        if not re.fullmatch(r"[a-z0-9][a-z0-9._-]{0,63}", normalized_id):
+            raise ValueError("资源ID只能包含小写字母、数字、点、横线和下划线。")
+        normalized_label = label.strip()
+        if not normalized_label:
+            raise ValueError("资源名称不能为空。")
+        data = bytes(payload)
+        if not data:
+            raise ValueError("导入资源不能为空。")
+        if single_bank is None:
+            single_bank = len(data) <= 0x2000
+        before = self._mutation_snapshot()
+        allocation = self.resource_allocator.allocate(
+            normalized_id,
+            normalized_label,
+            len(data),
+            alignment=alignment,
+            single_bank=single_bank,
+        )
+        self.working[allocation.offset : allocation.end] = data
+        self._finish_mutation(before, f"导入扩展资源 · {normalized_label}")
+        return allocation
+
+    def remove_expansion_resource(self, resource_id: str) -> Allocation:
+        allocation = self.resource_allocator.allocation(resource_id)
+        before = self._mutation_snapshot()
+        self.working[allocation.offset : allocation.end] = self.original[
+            allocation.offset : allocation.end
+        ]
+        self.resource_allocator.release(resource_id)
+        self._finish_mutation(before, f"删除扩展资源 · {allocation.label}")
+        return allocation
 
     @property
     def supports_unit_weapons(self) -> bool:
@@ -719,7 +814,7 @@ class RomProject:
 
     @property
     def is_dirty(self) -> bool:
-        return self.working != self.original
+        return self.working != self.original or bool(self.expansion_allocations)
 
     def record_file_offset_from_pointer(self, pointer: int) -> int:
         return self.unit_codec.record_offset_from_pointer(pointer)
@@ -1380,6 +1475,7 @@ class RomProject:
     def reset_all(self) -> None:
         before = self._mutation_snapshot()
         self.working[:] = self.original
+        self.resource_allocator = BankAllocator(self.profile, self.original)
         self._finish_mutation(before, "还原全部修改")
 
     def aliases_for_ids(self, ids: tuple[int, ...]) -> str:
@@ -1419,6 +1515,9 @@ class RomProject:
         return validate_project(self)
 
     def change_description(self, offset: int) -> str:
+        for allocation in self.expansion_allocations:
+            if allocation.offset <= offset < allocation.end:
+                return f"扩展资源 · {allocation.label}（{allocation.resource_id}）"
         if self.chr_codec.offset <= offset < self.chr_codec.offset + self.chr_codec.size:
             tile_index = (offset - self.chr_codec.offset) // 16
             return f"CHR图块 ${tile_index:04X}"
@@ -1609,7 +1708,7 @@ class RomProject:
                 }
             )
         report = {
-            "toolVersion": "2.1.0",
+            "toolVersion": "2.2.0",
             "base": {
                 "path": str(self.path),
                 "profile": self.profile.key,
@@ -1654,6 +1753,19 @@ class RomProject:
                     }
                     for region in self.profile.free_prg_regions
                 ],
+                "managedAllocations": [
+                    {
+                        "resourceId": allocation.resource_id,
+                        "label": allocation.label,
+                        "offset": allocation.offset,
+                        "size": allocation.size,
+                        "alignment": allocation.alignment,
+                    }
+                    for allocation in self.expansion_allocations
+                ],
+                "managedCapacityBytes": self.expansion_capacity,
+                "managedUsedBytes": self.expansion_used,
+                "managedAvailableBytes": self.expansion_available,
             },
             "validation": [
                 {
@@ -1687,6 +1799,12 @@ class RomProject:
     def to_project_document(self) -> ProjectDocument:
         document = ProjectDocument.create(self.rom_image)
         covered_offsets: set[int] = set()
+        for allocation in self.expansion_allocations:
+            document.add_resource_allocation(
+                allocation,
+                bytes(self.working[allocation.offset : allocation.end]),
+            )
+            covered_offsets.update(range(allocation.offset, allocation.end))
         for pointer, ids in self.ids_by_pointer.items():
             unit_id = ids[0]
             record_offset = self.record_file_offset_from_pointer(pointer)

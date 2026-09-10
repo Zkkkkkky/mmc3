@@ -36,6 +36,10 @@ class ProjectView(Protocol):
     persuasion_rule_codec: object | None
     unit_weapon_codec: object | None
     weapon_name_codec: object | None
+    expansion_allocations: tuple
+    expansion_capacity: int
+    expansion_used: int
+    expansion_available: int
 
     def get_map(self, map_id: int, *, original: bool = False): ...
 
@@ -316,11 +320,26 @@ def validate_project(project: ProjectView) -> tuple[ValidationIssue, ...]:
             )
 
     if project.profile.free_prg_regions:
-        capacity = sum(region.size for region in project.profile.free_prg_regions)
         for region in project.profile.free_prg_regions:
             start = 16 + region.first_bank * 0x2000
             end = 16 + region.end_bank * 0x2000
-            if project.working[start:end] != project.original[start:end]:
+            cursor = start
+            unmanaged_change = False
+            allocations = tuple(
+                allocation
+                for allocation in project.expansion_allocations
+                if start <= allocation.offset and allocation.end <= end
+            )
+            for allocation in allocations:
+                if project.working[cursor : allocation.offset] != project.original[
+                    cursor : allocation.offset
+                ]:
+                    unmanaged_change = True
+                    break
+                cursor = allocation.end
+            if not unmanaged_change and project.working[cursor:end] != project.original[cursor:end]:
+                unmanaged_change = True
+            if unmanaged_change:
                 issues.append(
                     ValidationIssue(
                         "error",
@@ -333,7 +352,9 @@ def validate_project(project: ProjectView) -> tuple[ValidationIssue, ...]:
             ValidationIssue(
                 "info",
                 "空间",
-                f"预留扩展空间 {capacity // 1024} KiB；当前尚未分配资源。",
+                f"托管扩展空间 {project.expansion_capacity // 1024} KiB；"
+                f"已分配 {project.expansion_used} 字节，"
+                f"剩余 {project.expansion_available} 字节。",
             )
         )
 

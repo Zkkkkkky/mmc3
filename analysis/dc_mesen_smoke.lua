@@ -77,7 +77,7 @@ end)
 
 register_exec(0x8020, function()
     local offset = prg_offset(0x8020)
-    if offset == 0xC0020 then
+    if offset == 0x30020 then
         counters.stock = counters.stock + 1
     else
         counters.stock_wrong = counters.stock_wrong + 1
@@ -194,7 +194,7 @@ local function finish()
         counters.fixed == 1 and counters.fixed_wrong == 0,
         string.format("hits=%d wrong=%d", counters.fixed, counters.fixed_wrong))
     check(
-        "true-1mib-stock-copy",
+        "stock-audio-patched-in-place",
         counters.stock > 100 and counters.stock_wrong == 0,
         string.format("hits=%d wrong=%d", counters.stock, counters.stock_wrong))
     check(

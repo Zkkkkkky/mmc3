@@ -8116,7 +8116,7 @@
 0B500                           
 0B500                           custom_first = $9d
 0B500                           custom_count = 3
-0B500                           stock_low_bank = $60
+0B500                           stock_low_bank = $18
 0B500                           
 0B500                           engine_init     = $a000
 0B500                           engine_play     = $a003
@@ -8313,7 +8313,7 @@
 0B62B                           @restore_stock_low_bank:
 0B62B A9 86                         lda #$86
 0B62D 8D 00 80                      sta mapper_select
-0B630 A9 60                         lda #stock_low_bank
+0B630 A9 18                         lda #stock_low_bank
 0B632 8D 01 80                      sta mapper_data
 0B635 60                            rts
 0B636                           

@@ -1,0 +1,145 @@
+{
+  "source": {
+    "rom": "build\\nsf\\新DC.nes",
+    "bytes": 786448,
+    "sha256": "267cfa5e6273e0fe3557d5339b0e50172bcf25475283944c7e8372276fb3493c",
+    "mapper": 194,
+    "prgBytes": 524288,
+    "chrBytes": 262144
+  },
+  "output": {
+    "rom": "build\\DC_FamiStudio_增容双引擎_464K_测试.nes",
+    "bytes": 1310736,
+    "sha256": "82c218275459d53c0f306f6bc036c4797316976e0fa7ad1d5a8247e338995b8e",
+    "mapper": 194,
+    "prgBytes": 1048576,
+    "chrBytes": 262144,
+    "ips": "patches\\DC_FamiStudio_增容双引擎_464K_测试.ips",
+    "ipsBytes": 767134,
+    "ipsSha256": "efaedaf6e474cde676ecec2ac119f5c5eb1c4b01c851a5c997ffbd01218df823"
+  },
+  "preservation": {
+    "sourceRomOverwritten": false,
+    "derivedRom": "FC模拟器\\DC_kuorong_464K.nes",
+    "headerChangedOffsets": [
+      "0x4"
+    ],
+    "stockAudioPatchedInPlace": true,
+    "oldChrPrgBanksZeroFilled": true,
+    "activeChrCopyMatchesSource": true,
+    "releasedPrgBanks": [
+      "0x40-0x60",
+      "0x65-0x7D"
+    ],
+    "managedCapacityBytes": 475136
+  },
+  "engines": {
+    "stock": {
+      "musicTracks": 20,
+      "sfxCommands": 56,
+      "physicalBanks": [
+        "0x00-0x3F"
+      ],
+      "status": "bank 0x18 patched in verified zero-filled holes"
+    },
+    "famiStudio": {
+      "musicTracks": 3,
+      "sfxCommands": 56,
+      "engineBank": "0x64",
+      "engineCodeBytes": 2078,
+      "sfxDataBytes": 2984,
+      "bridgeBytes": 310,
+      "trampolineBytes": 29,
+      "handoffBytes": 24,
+      "totalUsedBytes": 18996,
+      "ram": {
+        "certifiedStockAudioBytes": 165,
+        "zeroPageScratch": "0x0028-0x0031 except 0x002C",
+        "famiStudioState": [
+          "0x002F and 0x0032-0x004B",
+          "0x0057-0x005D",
+          "0x0400-0x0467 and 0x046C-0x046F"
+        ],
+        "savedTransientOutput": "0x004C-0x0056",
+        "bridgeState": "0x0468-0x046B",
+        "handoff": "stock/FamiStudio never update concurrently; stock driver is reset and the pending command replayed in the same NMI"
+      }
+    }
+  },
+  "musicBanks": [
+    {
+      "track": "Ash to Ash",
+      "command": "0x9D",
+      "bank": "0x61",
+      "fileStart": "0x0C2010",
+      "usedBytes": 4672,
+      "freeBytes": 3520,
+      "sha256": "9db804e96cd15b09a7cf754bec4369d67899e3d82853553d2e04e559cb2f5a2d",
+      "gameplayBinding": [
+        "selector 0x04 attacker/defender"
+      ]
+    },
+    {
+      "track": "Dark Knight",
+      "command": "0x9E",
+      "bank": "0x62",
+      "fileStart": "0x0C4010",
+      "usedBytes": 4065,
+      "freeBytes": 4127,
+      "sha256": "f3dad8bbf5aad45484a000479df7c4e9a8640bf05ed50c615e8adb6d1be49607",
+      "gameplayBinding": []
+    },
+    {
+      "track": "Dark Prison",
+      "command": "0x9F",
+      "bank": "0x63",
+      "fileStart": "0x0C6010",
+      "usedBytes": 4834,
+      "freeBytes": 3358,
+      "sha256": "946f14198c50a2a276b6d9cf1cd0b1316af0b4e65f503ffc5f08df2c9cc3e4fb",
+      "gameplayBinding": [
+        "selector 0x05 attacker/defender"
+      ]
+    }
+  ],
+  "expandedLayout": [
+    {
+      "range": "PRG banks 0x00-0x17 and 0x19-0x3F",
+      "purpose": "original PRG, except selected battle-music bindings"
+    },
+    {
+      "range": "PRG bank 0x18",
+      "purpose": "stock audio plus dispatcher and same-frame handoff trampolines"
+    },
+    {
+      "range": "PRG banks 0x40-0x60",
+      "purpose": "managed expansion space reclaimed from obsolete CHR/audio copies"
+    },
+    {
+      "range": "PRG banks 0x61-0x63",
+      "purpose": "three new FamiStudio tracks"
+    },
+    {
+      "range": "PRG bank 0x64",
+      "purpose": "second FamiStudio engine, migrated SFX and bridge"
+    },
+    {
+      "range": "PRG banks 0x65-0x7D",
+      "purpose": "managed expansion space"
+    },
+    {
+      "range": "PRG banks 0x7E-0x7F",
+      "purpose": "new fixed-bank copies required by the expanded PRG size"
+    },
+    {
+      "range": "active CHR at 0x100010-0x14000F",
+      "purpose": "exact copy of source CHR"
+    }
+  ],
+  "compatibility": {
+    "mapperReason": "Keep Mapper 194 so the source hybrid CHR-ROM/CHR-RAM behavior remains exact while PRG grows to 1 MiB",
+    "chrBehavior": "unchanged Mapper 194 register and CHR memory semantics",
+    "target": "emulators that derive Mapper 194 PRG bank count from the iNES PRG size; verified with Mesen 0.9.9",
+    "knownIncompatible": "FCEUX 2.6.6 hard-codes Mapper 194 PRG to 512 KiB and wraps banks 0x60-0x7F"
+  }
+}

@@ -26,6 +26,7 @@ from .models import (
     UNIT_FIELD_BY_KEY,
     WEAPON_FIELD_BY_KEY,
 )
+from .resources import Allocation, BankAllocator
 from .rom_image import RomImage
 
 
@@ -34,7 +35,7 @@ class ProjectDocument:
     base_sha256: str
     base_mapper: int
     base_size: int
-    tool_version: str = "2.1.0"
+    tool_version: str = "2.2.0"
     operations: list[dict[str, Any]] = field(default_factory=list)
 
     @classmethod
@@ -206,6 +207,43 @@ class ProjectDocument:
             }
         )
 
+    def add_resource_allocation(
+        self,
+        allocation: Allocation,
+        data: bytes,
+    ) -> None:
+        if len(data) != allocation.size:
+            raise ValueError("资源数据长度与分配大小不一致。")
+        self.operations.append(
+            {
+                "kind": "resource.allocate",
+                "resourceId": allocation.resource_id,
+                "label": allocation.label,
+                "offset": allocation.offset,
+                "size": allocation.size,
+                "alignment": allocation.alignment,
+                "data": data.hex().upper(),
+            }
+        )
+
+    @staticmethod
+    def _decode_resource_allocation(
+        operation: dict[str, Any],
+    ) -> tuple[Allocation, bytes]:
+        data = bytes.fromhex(str(operation["data"]))
+        allocation = Allocation(
+            str(operation["resourceId"]),
+            str(operation["label"]),
+            int(operation["offset"]),
+            int(operation["size"]),
+            int(operation.get("alignment", 1)),
+        )
+        if not allocation.label.strip():
+            raise ValueError("资源名称不能为空。")
+        if len(data) != allocation.size:
+            raise ValueError("资源数据长度与分配大小不一致。")
+        return allocation, data
+
     def add_weapon_name_reference(
         self,
         weapon_id: int,
@@ -352,6 +390,23 @@ class ProjectDocument:
         ):
             raise ProjectFormatError("项目文件与当前基准 ROM 的哈希、Mapper 或大小不匹配。")
 
+    def resource_allocations(self, rom: RomImage) -> tuple[Allocation, ...]:
+        self._validate_base(rom)
+        allocator = BankAllocator(rom.profile, rom.data)
+        for index, operation in enumerate(self.operations):
+            if not isinstance(operation, dict) or operation.get("kind") != "resource.allocate":
+                continue
+            try:
+                allocation, _data = self._decode_resource_allocation(operation)
+                if any(rom.data[allocation.offset : allocation.end]):
+                    raise ValueError("资源分配的基准区域不是全零。")
+                allocator.reserve(allocation)
+            except (KeyError, TypeError, ValueError) as error:
+                raise ProjectFormatError(
+                    f"第 {index + 1} 条资源分配操作无效：{error}"
+                ) from error
+        return allocator.allocations
+
     def materialize(self, rom: RomImage) -> bytes:
         self._validate_base(rom)
         unit_codec = UnitCodec(rom)
@@ -382,6 +437,7 @@ class ProjectDocument:
         battle_music_codec = (
             BattleMusicCodec(rom) if rom.profile.battle_music is not None else None
         )
+        resource_allocator = BankAllocator(rom.profile, rom.data)
         changes = ChangeSet(rom.data)
         for index, operation in enumerate(self.operations):
             if not isinstance(operation, dict):
@@ -740,6 +796,18 @@ class ProjectDocument:
                             ),
                             expected=before,
                         )
+                elif kind == "resource.allocate":
+                    allocation, payload = self._decode_resource_allocation(operation)
+                    if any(rom.data[allocation.offset : allocation.end]):
+                        raise ProjectFormatError("资源分配的基准区域不是全零。")
+                    resource_allocator.reserve(allocation)
+                    changes.apply_patch(
+                        allocation.offset,
+                        payload,
+                        source=f"resource:{allocation.resource_id}",
+                        description=f"扩展资源 · {allocation.label}",
+                        expected=rom.data[allocation.offset : allocation.end],
+                    )
                 elif kind == "raw.patch":
                     offset = int(operation["offset"])
                     before = bytes.fromhex(str(operation["before"]))
