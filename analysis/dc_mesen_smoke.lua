@@ -5,7 +5,10 @@
 -- Mapper 194 banks above 512 KiB.
 
 local output_path = emu.getScriptDataFolder() .. "/dc_mesen_dual_audio.log"
-local output = io.open(output_path, "w")
+local output = nil
+if io ~= nil and io.open ~= nil then
+    output = io.open(output_path, "w")
+end
 if output == nil then
     -- TestRunner sandboxes may disable file I/O.  Keep the behavioral checks
     -- authoritative through emu.stop() even when no diagnostic log can be

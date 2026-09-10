@@ -251,7 +251,7 @@ class ExpansionPlan:
         pair = next((pair for pair in self.story_pairs if pair[0] not in used), None)
         if pair is None:
             raise ValueError(
-                "剧情配额已用完；每个发生长度变化的文本组需要 16 KiB。"
+                "剧情配额已用完；每个被修改的文本组需要 16 KiB。"
             )
         starts = list(self.story_bank_starts)
         starts[index] = pair[0]

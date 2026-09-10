@@ -19183,13 +19183,13 @@
         "banks": "$64—$64",
         "label": "双音频引擎与桥接器",
         "bytes": 8192,
-        "unchanged": true
+        "unmanagedBytesUnchanged": true
       },
       {
         "banks": "$7E—$7F",
         "label": "固定程序银行",
         "bytes": 16384,
-        "unchanged": false
+        "unmanagedBytesUnchanged": true
       }
     ],
     "freeRegions": [
