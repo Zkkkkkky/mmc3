@@ -4,6 +4,7 @@ from .chr import CHR_TILE_BYTES, CHR_TILE_PIXELS, ChrCodec
 from .chapter_event import ChapterEventCodec
 from .custom_music import CustomMusicCodec
 from .event import EventScriptCodec
+from .legacy_global_data import LegacyGlobalDataCodec
 from .map import MapCodec
 from .map_trigger import MapTrigger, MapTriggerCodec, MapTriggerLayout
 from .persuasion import PersuasionRule, PersuasionRuleCodec
@@ -30,6 +31,7 @@ __all__ = [
     "PersuasionRule",
     "PersuasionRuleCodec",
     "EventScriptCodec",
+    "LegacyGlobalDataCodec",
     "ScenarioLayoutCodec",
     "StoryTextCodec",
     "UnitCodec",

@@ -61,6 +61,11 @@ class EventPage(ProjectPage):
         super().__init__()
         self.current_address: int | None = None
         self._instructions = ()
+        self._filter_state: tuple[int, int, int, str] | None = None
+        self._changing_filters = False
+        self._template_draft_changed = False
+        self._raw_draft_changed = False
+        self._raw_draft_invalid = False
 
         layout = QVBoxLayout(self)
         title, subtitle = page_title(
@@ -178,10 +183,10 @@ class EventPage(ProjectPage):
         splitter.setStretchFactor(1, 2)
         layout.addWidget(splitter, 1)
 
-        self.scenario_filter.currentIndexChanged.connect(self._populate_table)
-        self.phase_filter.currentIndexChanged.connect(self._populate_table)
-        self.kind_filter.currentIndexChanged.connect(self._populate_table)
-        self.search.textChanged.connect(self._populate_table)
+        self.scenario_filter.currentIndexChanged.connect(self._filters_changed)
+        self.phase_filter.currentIndexChanged.connect(self._filters_changed)
+        self.kind_filter.currentIndexChanged.connect(self._filters_changed)
+        self.search.textChanged.connect(self._filters_changed)
         self.table.itemSelectionChanged.connect(self._selection_changed)
         self.template.currentIndexChanged.connect(self._template_changed)
         self.terminal.toggled.connect(self._update_pending_state)
@@ -189,6 +194,7 @@ class EventPage(ProjectPage):
         self.apply_template_button.clicked.connect(self._apply_template)
         self.apply_raw_button.clicked.connect(self._apply_raw)
         self.reset_button.clicked.connect(self._reset_instruction)
+        self._filter_state = self._current_filter_state()
 
     @staticmethod
     def _context_text(instruction) -> str:
@@ -247,6 +253,63 @@ class EventPage(ProjectPage):
         self.phase_filter.blockSignals(False)
         self._populate_table()
 
+    def _current_filter_state(self) -> tuple[int, int, int, str]:
+        return (
+            self.scenario_filter.currentIndex(),
+            self.phase_filter.currentIndex(),
+            self.kind_filter.currentIndex(),
+            self.search.text(),
+        )
+
+    def _set_filter_state(self, state: tuple[int, int, int, str]) -> None:
+        controls = (
+            self.scenario_filter,
+            self.phase_filter,
+            self.kind_filter,
+            self.search,
+        )
+        previous_blocks = tuple(control.blockSignals(True) for control in controls)
+        try:
+            scenario, phase, kind, search = state
+            self.scenario_filter.setCurrentIndex(scenario)
+            self.phase_filter.setCurrentIndex(phase)
+            self.kind_filter.setCurrentIndex(kind)
+            self.search.setText(search)
+        finally:
+            for control, blocked in zip(controls, previous_blocks):
+                control.blockSignals(blocked)
+
+    def _restore_filter_state(self) -> None:
+        if self._filter_state is not None:
+            self._set_filter_state(self._filter_state)
+
+    def _filters_changed(self) -> None:
+        if self._changing_filters:
+            return
+        self._changing_filters = True
+        try:
+            if self.has_pending_draft:
+                requested_state = self._current_filter_state()
+                # Restore the old filter before committing.  Applying an event
+                # emits a synchronous page refresh; if the requested filter
+                # already hid the old row, that refresh could otherwise bind
+                # the still-open editor controls to a different instruction.
+                self._restore_filter_state()
+                error = self.pending_draft_error
+                if error is not None or not self.commit_pending_changes():
+                    self.show_error(
+                        ValueError(
+                            error
+                            or self.pending_draft_error
+                            or "当前事件仍有无法应用的改动，请修正后再筛选。"
+                        )
+                    )
+                    return
+                self._set_filter_state(requested_state)
+            self._populate_table()
+        finally:
+            self._changing_filters = False
+
     def _visible_instructions(self):
         scenario_id = self.scenario_filter.currentData()
         phase = self.phase_filter.currentData()
@@ -302,6 +365,7 @@ class EventPage(ProjectPage):
         else:
             self.current_address = None
             self._show_instruction(None)
+        self._filter_state = self._current_filter_state()
 
     def _selected_instruction(self):
         rows = self.table.selectionModel().selectedRows()
@@ -414,6 +478,9 @@ class EventPage(ProjectPage):
     def _update_pending_state(self) -> None:
         instruction = self._selected_instruction()
         if instruction is None:
+            self._template_draft_changed = False
+            self._raw_draft_changed = False
+            self._raw_draft_invalid = False
             self.pending_state.setText("请选择事件动作")
             self.apply_template_button.setEnabled(False)
             self.apply_raw_button.setEnabled(False)
@@ -421,7 +488,14 @@ class EventPage(ProjectPage):
         opcode = self.template.currentData()
         labels = ACTION_FIELDS.get(opcode, ()) if opcode is not None else ()
         if opcode is None:
-            template_raw = instruction.raw
+            # The terminal flag is independent from the low seven opcode bits.
+            # Even when an instruction has no verified semantic template, keep
+            # every byte losslessly and allow this single well-understood bit
+            # to be toggled.
+            raw_opcode = instruction.raw[0] & 0x7F
+            if self.terminal.isChecked():
+                raw_opcode |= 0x80
+            template_raw = bytes((raw_opcode,)) + instruction.raw[1:]
         else:
             raw_opcode = int(opcode) | (0x80 if self.terminal.isChecked() else 0)
             template_raw = bytes(
@@ -433,10 +507,15 @@ class EventPage(ProjectPage):
         except ValueError:
             raw_editor = b""
             raw_valid = False
-        template_valid = opcode is not None and len(template_raw) == len(instruction.raw)
+        template_valid = len(template_raw) == len(instruction.raw)
         template_changed = template_valid and template_raw != instruction.raw
         raw_changed = raw_valid and raw_editor != instruction.raw
-        pending = template_changed or raw_changed
+        raw_invalid = not raw_valid
+        raw_dirty = raw_changed or raw_invalid
+        pending = template_changed or raw_dirty
+        self._template_draft_changed = template_changed
+        self._raw_draft_changed = raw_dirty
+        self._raw_draft_invalid = raw_invalid
         self.apply_template_button.setEnabled(template_changed)
         self.apply_raw_button.setEnabled(raw_changed)
         if not raw_valid:
@@ -462,13 +541,9 @@ class EventPage(ProjectPage):
     def pending_draft_error(self) -> str | None:
         if not self.has_pending_draft:
             return None
-        enabled = sum(
-            button.isEnabled()
-            for button in (self.apply_template_button, self.apply_raw_button)
-        )
-        if enabled == 0:
+        if self._raw_draft_invalid:
             return self.pending_state.text().lstrip("● ")
-        if enabled > 1:
+        if self._template_draft_changed and self._raw_draft_changed:
             return "模板参数和原始字节同时有改动，请先明确应用其中一种。"
         return None
 
@@ -492,11 +567,19 @@ class EventPage(ProjectPage):
     def _apply_template(self) -> None:
         instruction = self._selected_instruction()
         opcode = self.template.currentData()
-        if instruction is None or opcode is None or self.project is None:
+        if instruction is None or self.project is None:
             return
-        labels = ACTION_FIELDS.get(opcode, ())
-        raw_opcode = opcode | (0x80 if self.terminal.isChecked() else 0)
-        replacement = bytes((raw_opcode, *(spin.value() for spin in self.parameters[: len(labels)])))
+        if opcode is None:
+            raw_opcode = instruction.raw[0] & 0x7F
+            if self.terminal.isChecked():
+                raw_opcode |= 0x80
+            replacement = bytes((raw_opcode,)) + instruction.raw[1:]
+        else:
+            labels = ACTION_FIELDS.get(opcode, ())
+            raw_opcode = opcode | (0x80 if self.terminal.isChecked() else 0)
+            replacement = bytes(
+                (raw_opcode, *(spin.value() for spin in self.parameters[: len(labels)]))
+            )
         try:
             self.project.set_chapter_event_instruction(instruction.address, replacement)
         except Exception as error:

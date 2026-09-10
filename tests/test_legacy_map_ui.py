@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import os
+from types import SimpleNamespace
 import unittest
 
 os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
@@ -10,7 +11,12 @@ from PySide6.QtTest import QTest
 from PySide6.QtWidgets import QApplication
 
 from dc_modifier.app import DEFAULT_ROM
-from dc_modifier.map_page import MapPage, TerrainButton, _glyph_file_offset
+from dc_modifier.map_page import (
+    MapPage,
+    TerrainButton,
+    _glyph_file_offset,
+    render_map_title,
+)
 from fc_rom_editor_core import RomProject
 
 
@@ -64,6 +70,14 @@ class LegacyMapUiTests(unittest.TestCase):
     def test_map_title_uses_verified_glyph_addresses(self) -> None:
         self.assertEqual(_glyph_file_offset(bytes.fromhex("C908")), 0x710A0)
         self.assertEqual(_glyph_file_offset(bytes.fromhex("DAC2")), 0x76C34)
+
+    def test_map_title_renders_the_rom_glyph_instead_of_a_host_font(self) -> None:
+        working = bytearray(0x70010 + 18)
+        working[0x70010] = 0x80
+        pixmap = render_map_title(SimpleNamespace(working=working), "啊", scale=2)
+        image = pixmap.toImage()
+        self.assertEqual(image.pixelColor(8, 0).name(), "#d8d8d8")
+        self.assertEqual(image.pixelColor(10, 0).name(), "#000000")
 
     def test_battlefield_matches_legacy_controls_and_hides_modern_status(self) -> None:
         self.assertEqual(self.page.bitmap_selector.currentText(), "位图D")

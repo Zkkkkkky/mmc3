@@ -35,6 +35,7 @@ from dc_modifier.pages import (
 )
 from dc_modifier.story_page import StoryPage
 from dc_modifier.unit_import_page import UnitImportPage
+from fc_editor.codecs.chapter_event import ACTION_LABELS
 from fc_editor.text_table import TextTable
 from fc_rom_editor_core import RomProject
 
@@ -959,6 +960,131 @@ class DesktopEditorSmokeTests(unittest.TestCase):
             instruction.address, bytes(self.window.project.working)
         )
         self.assertEqual(restored.opcode, 0x4B)
+
+    def test_event_page_can_toggle_terminal_bit_without_semantic_template(self) -> None:
+        assert self.window.project is not None
+        page = self.window.pages[self.window.page_index["events"]]
+        self.assertIsInstance(page, EventPage)
+        assert isinstance(page, EventPage)
+        page.kind_filter.setCurrentIndex(
+            page.kind_filter.findText("全部指令（专家）")
+        )
+        self.application.processEvents()
+        instruction = next(
+            item for item in page._instructions if item.opcode not in ACTION_LABELS
+        )
+        self.assertTrue(page._select_address(instruction.address))
+        self.application.processEvents()
+        self.assertIsNone(page.template.currentData())
+
+        page.terminal.setChecked(not instruction.is_terminal)
+        self.assertTrue(page.has_pending_draft)
+        self.assertIsNone(page.pending_draft_error)
+        self.assertTrue(page.apply_template_button.isEnabled())
+        page.apply_template_button.click()
+
+        changed = self.window.project.chapter_event_codec.instruction_at(
+            instruction.address, bytes(self.window.project.working)
+        )
+        self.assertEqual(changed.raw[0], instruction.raw[0] ^ 0x80)
+        self.assertEqual(changed.raw[1:], instruction.raw[1:])
+        self.window.undo()
+        restored = self.window.project.chapter_event_codec.instruction_at(
+            instruction.address, bytes(self.window.project.working)
+        )
+        self.assertEqual(restored.raw, instruction.raw)
+
+    def test_event_filter_commits_terminal_draft_to_the_old_instruction(self) -> None:
+        assert self.window.project is not None
+        page = self.window.pages[self.window.page_index["events"]]
+        assert isinstance(page, EventPage)
+        page.kind_filter.setCurrentIndex(
+            page.kind_filter.findText("全部指令（专家）")
+        )
+        self.application.processEvents()
+        old = next(item for item in page._instructions if item.opcode not in ACTION_LABELS)
+        self.assertTrue(page._select_address(old.address))
+        self.application.processEvents()
+        page.terminal.setChecked(not old.is_terminal)
+        page.kind_filter.setCurrentIndex(
+            page.kind_filter.findText("可编辑事件动作")
+        )
+        self.application.processEvents()
+
+        changed_old = self.window.project.chapter_event_codec.instruction_at(
+            old.address, bytes(self.window.project.working)
+        )
+        self.assertEqual(changed_old.raw[0], old.raw[0] ^ 0x80)
+        selected = page._selected_instruction()
+        self.assertIsNotNone(selected)
+        assert selected is not None
+        self.assertNotEqual(selected.address, old.address)
+        self.assertEqual(
+            selected.raw,
+            self.window.project.chapter_event_codec.instruction_at(
+                selected.address, self.window.project.original
+            ).raw,
+        )
+
+    def test_event_search_commits_draft_before_repopulating_same_row(self) -> None:
+        assert self.window.project is not None
+        page = self.window.pages[self.window.page_index["events"]]
+        assert isinstance(page, EventPage)
+        instruction = page._selected_instruction()
+        self.assertIsNotNone(instruction)
+        assert instruction is not None
+        page.terminal.setChecked(not instruction.is_terminal)
+
+        page.search.setText(f"{instruction.address:04X}")
+        self.application.processEvents()
+
+        changed = self.window.project.chapter_event_codec.instruction_at(
+            instruction.address, bytes(self.window.project.working)
+        )
+        self.assertEqual(changed.raw[0], instruction.raw[0] ^ 0x80)
+        self.assertFalse(page.has_pending_draft)
+
+    def test_event_filter_rejects_invalid_draft_and_restores_filter(self) -> None:
+        page = self.window.pages[self.window.page_index["events"]]
+        assert isinstance(page, EventPage)
+        instruction = page._selected_instruction()
+        self.assertIsNotNone(instruction)
+        assert instruction is not None
+        invalid = "00" if len(instruction.raw) != 1 else "00 00"
+        page.raw.setText(invalid)
+        self.assertTrue(page.has_pending_draft)
+        self.assertIsNotNone(page.pending_draft_error)
+
+        with patch("dc_modifier.pages.QMessageBox.critical") as critical:
+            page.search.setText("不会命中")
+            self.application.processEvents()
+
+        critical.assert_called_once()
+        self.assertEqual(page.search.text(), "")
+        self.assertEqual(page.current_address, instruction.address)
+        self.assertEqual(page.raw.text(), invalid)
+        self.assertTrue(page.has_pending_draft)
+
+    def test_event_invalid_raw_blocks_simultaneous_template_draft(self) -> None:
+        assert self.window.project is not None
+        page = self.window.pages[self.window.page_index["events"]]
+        assert isinstance(page, EventPage)
+        instruction = page._selected_instruction()
+        self.assertIsNotNone(instruction)
+        assert instruction is not None
+        before = bytes(self.window.project.working)
+
+        page.terminal.setChecked(not instruction.is_terminal)
+        page.raw.setText("GG")
+
+        self.assertTrue(page.has_pending_draft)
+        self.assertTrue(page.apply_template_button.isEnabled())
+        self.assertFalse(page.apply_raw_button.isEnabled())
+        self.assertIsNotNone(page.pending_draft_error)
+        self.assertFalse(page.commit_pending_changes())
+        self.assertEqual(bytes(self.window.project.working), before)
+        self.assertEqual(page.raw.text(), "GG")
+        self.assertEqual(page.terminal.isChecked(), not instruction.is_terminal)
 
     def test_persuasion_page_uses_named_characters_and_undo(self) -> None:
         assert self.window.project is not None

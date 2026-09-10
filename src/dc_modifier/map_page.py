@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from PySide6.QtCore import QPoint, QRect, QSize, Qt, Signal
-from PySide6.QtGui import QColor, QFont, QIcon, QImage, QMouseEvent, QPainter, QPen, QPixmap
+from PySide6.QtGui import QColor, QIcon, QImage, QMouseEvent, QPainter, QPen, QPixmap
 from PySide6.QtWidgets import (
     QAbstractItemView,
     QButtonGroup,
@@ -133,18 +133,15 @@ def _glyph_file_offset(token: bytes) -> int | None:
 
 
 def render_map_title(project, title: str, *, scale: int = 4) -> QPixmap:
-    """Render a readable chapter title using verified token/address mappings."""
+    """Render a chapter title from the verified packed 12x12 ROM glyphs."""
 
     advance = 12 * scale
     margin = 8
     pixmap = QPixmap(max(1, margin * 2 + len(title) * advance), 12 * scale + margin)
     pixmap.fill(QColor("#000000"))
     painter = QPainter(pixmap)
-    painter.setPen(QColor("#d8d8d8"))
-    font = QFont("SimSun")
-    font.setPixelSize(10 * scale)
-    font.setStyleStrategy(QFont.StyleStrategy.NoAntialias)
-    painter.setFont(font)
+    painter.setPen(Qt.PenStyle.NoPen)
+    painter.setBrush(QColor("#d8d8d8"))
     table = default_dc_text_table()
     for character_index, character in enumerate(title):
         try:
@@ -155,11 +152,17 @@ def render_map_title(project, title: str, *, scale: int = 4) -> QPixmap:
         if offset is None or offset + 18 > len(project.working):
             continue
         origin_x = margin + character_index * advance
-        painter.drawText(
-            QRect(origin_x, 0, advance, pixmap.height()),
-            Qt.AlignmentFlag.AlignCenter,
-            character,
-        )
+        raw = project.working[offset : offset + 18]
+        for bit_index in range(144):
+            if raw[bit_index // 8] & (0x80 >> (bit_index % 8)):
+                x = bit_index % 12
+                y = bit_index // 12
+                painter.drawRect(
+                    origin_x + x * scale,
+                    y * scale,
+                    scale,
+                    scale,
+                )
     painter.end()
     return pixmap
 

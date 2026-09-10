@@ -136,11 +136,15 @@ def main() -> int:
     save_capture(application, window, "01-map-editor.png")
     assert window.project is not None
 
-    capture_dialog(
-        application,
-        DatabaseDialog(window.project, window),
-        "02-database.png",
-    )
+    database_dialog = DatabaseDialog(window.project, window)
+    save_capture(application, database_dialog, "02-database.png")
+    database_dialog.tabs.setCurrentIndex(4)
+    process_layout(application)
+    save_capture(application, database_dialog, "02b-global-tables.png")
+    database_dialog.tabs.setCurrentIndex(5)
+    process_layout(application)
+    save_capture(application, database_dialog, "02c-item-table.png")
+    close_dialog(application, database_dialog)
     capture_dialog(
         application,
         ScenarioDialog(window.project, window),

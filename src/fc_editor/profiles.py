@@ -191,6 +191,63 @@ class PersuasionRuleSpec:
 
 
 @dataclass(frozen=True)
+class LegacyGlobalDataSpec:
+    """Verified file offsets used by the reference editor's global tools."""
+
+    distance_hit_table_offset: int
+    experience_totals_offset: int
+    item_name_pointer_table_offset: int
+    item_name_pool_start_offset: int
+    item_name_pool_end_offset: int
+    item_name_bank_file_base: int
+    item_name_bank_window_base: int
+    item_price_table_offset: int
+    item_count: int
+    initial_roster_offset: int
+    double_hit_operand_pairs: tuple[tuple[int, int], ...]
+    damage_formula_operand_offsets: tuple[int, ...]
+    hit_threshold_operand_offset: int
+    item_effect_operand_offsets: tuple[int, ...]
+
+    def __post_init__(self) -> None:
+        if self.item_count <= 0:
+            raise ValueError("道具数量必须大于零。")
+        if not self.item_name_pool_start_offset < self.item_name_pool_end_offset:
+            raise ValueError("道具名称文本池范围无效。")
+        if self.item_name_bank_file_base > self.item_name_pool_start_offset:
+            raise ValueError("道具名称 Bank 文件基址无效。")
+        if not 0 <= self.item_name_bank_window_base <= 0xFFFF:
+            raise ValueError("道具名称 Bank CPU 窗口无效。")
+        item_name_cpu_end = self.item_name_bank_window_base + (
+            self.item_name_pool_end_offset - self.item_name_bank_file_base
+        )
+        if item_name_cpu_end > 0x10000:
+            raise ValueError("道具名称文本池无法用 16 位 CPU 指针表示。")
+        if len(self.double_hit_operand_pairs) != 3:
+            raise ValueError("双击公式必须有 3 组镜像操作数。")
+        if len(self.damage_formula_operand_offsets) != 5:
+            raise ValueError("伤害公式必须有 5 个操作数。")
+        if len(self.item_effect_operand_offsets) != 11:
+            raise ValueError("道具效果必须有 11 个操作数。")
+        offsets = (
+            self.distance_hit_table_offset,
+            self.experience_totals_offset,
+            self.item_name_pointer_table_offset,
+            self.item_name_pool_start_offset,
+            self.item_name_pool_end_offset,
+            self.item_name_bank_file_base,
+            self.item_price_table_offset,
+            self.initial_roster_offset,
+            self.hit_threshold_operand_offset,
+            *self.damage_formula_operand_offsets,
+            *self.item_effect_operand_offsets,
+            *(offset for pair in self.double_hit_operand_pairs for offset in pair),
+        )
+        if any(offset < 0 for offset in offsets):
+            raise ValueError("全局数据文件偏移不能为负数。")
+
+
+@dataclass(frozen=True)
 class PrgBankRegion:
     first_bank: int
     end_bank: int
@@ -261,6 +318,7 @@ class RomProfile:
     character_name_data_end_pointer: int | None = None
     map_triggers: MapTriggerSpec | None = None
     persuasion_rules: PersuasionRuleSpec | None = None
+    legacy_global_data: LegacyGlobalDataSpec | None = None
 
     def map_storage(self, map_id: int) -> MapStorageRange:
         for storage in self.map_storage_ranges:
@@ -418,6 +476,40 @@ MMC5_BATTLE_MUSIC = BattleMusicSpec(
 )
 
 
+MMC5_LEGACY_GLOBAL_DATA = LegacyGlobalDataSpec(
+    distance_hit_table_offset=0xB4D8,
+    experience_totals_offset=0xB530,
+    item_name_pointer_table_offset=0xCD5A,
+    item_name_pool_start_offset=0xCD8A,
+    item_name_pool_end_offset=0xCE42,
+    item_name_bank_file_base=0xC010,
+    item_name_bank_window_base=0x8000,
+    item_price_table_offset=0x15723,
+    item_count=24,
+    initial_roster_offset=0x3965D,
+    double_hit_operand_pairs=(
+        (0x78109, 0x7815A),
+        (0x78127, 0x78178),
+        (0x78138, 0x78189),
+    ),
+    damage_formula_operand_offsets=(0x780E4, 0x780C5, 0x780EB, 0x9999, 0x99A0),
+    hit_threshold_operand_offset=0xA44E,
+    item_effect_operand_offsets=(
+        0x140CF,
+        0x140D6,
+        0x140DD,
+        0x140E4,
+        0x140EB,
+        0x140F2,
+        0x140F9,
+        0x14100,
+        0x14107,
+        0x1410E,
+        0x14115,
+    ),
+)
+
+
 MMC5_PROFILE = RomProfile(
     key="dc-famistudio-mmc5-v1",
     label="DC FamiStudio MMC5（1 MiB）",
@@ -489,6 +581,7 @@ MMC5_PROFILE = RomProfile(
         managed_data_start=0x9ED4,
         managed_data_end=0xA000,
     ),
+    legacy_global_data=MMC5_LEGACY_GLOBAL_DATA,
 )
 
 
@@ -568,6 +661,7 @@ DC_EXPANDED_MMC3_LEGACY_PROFILE = RomProfile(
         slot_count=0x20,
         editable_count=4,
     ),
+    legacy_global_data=MMC5_PROFILE.legacy_global_data,
 )
 
 

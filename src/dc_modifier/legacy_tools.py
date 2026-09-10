@@ -5,8 +5,8 @@ import re
 from pathlib import Path
 from typing import Any
 
-from PySide6.QtCore import QRect, QSize, Qt
-from PySide6.QtGui import QColor, QFont, QIcon, QPainter, QPixmap
+from PySide6.QtCore import QSize, Qt
+from PySide6.QtGui import QColor, QIcon, QPainter, QPixmap
 from PySide6.QtWidgets import (
     QComboBox,
     QDialog,
@@ -82,30 +82,18 @@ def _glyph_file_offset(token: bytes) -> int | None:
 
 
 def _glyph_pixmap(raw: bytes, *, character: str = "", scale: int = 2) -> QPixmap:
-    """Render a mapped character; keep raw bytes as a safe fallback."""
+    """Render the packed 12x12 ROM glyph; ``character`` is display metadata only."""
     side = 12 * scale
     pixmap = QPixmap(side, side)
     pixmap.fill(QColor("#080808"))
     painter = QPainter(pixmap)
-    if character:
-        painter.setPen(QColor("#f5f5f5"))
-        font = QFont("SimSun")
-        font.setPixelSize(10 * scale)
-        font.setStyleStrategy(QFont.StyleStrategy.NoAntialias)
-        painter.setFont(font)
-        painter.drawText(
-            QRect(0, 0, side, side),
-            Qt.AlignmentFlag.AlignCenter,
-            character[:1],
-        )
-    else:
-        painter.setPen(Qt.PenStyle.NoPen)
-        painter.setBrush(QColor("#f5f5f5"))
-        for bit_index in range(min(144, len(raw) * 8)):
-            if raw[bit_index // 8] & (0x80 >> (bit_index % 8)):
-                x = bit_index % 12
-                y = bit_index // 12
-                painter.drawRect(x * scale, y * scale, scale, scale)
+    painter.setPen(Qt.PenStyle.NoPen)
+    painter.setBrush(QColor("#f5f5f5"))
+    for bit_index in range(min(144, len(raw) * 8)):
+        if raw[bit_index // 8] & (0x80 >> (bit_index % 8)):
+            x = bit_index % 12
+            y = bit_index // 12
+            painter.drawRect(x * scale, y * scale, scale, scale)
     painter.end()
     return pixmap
 
@@ -777,7 +765,7 @@ class SaveEditorDialog(QDialog):
 
 
 class OtherSettingsDialog(QDialog):
-    """Pixel-compatible grouping for the legacy global formula window."""
+    """Reference-shaped editor for verified global formulas and initial roster."""
 
     def __init__(self, parent: QWidget | None = None, project: Any | None = None) -> None:
         super().__init__(parent)
@@ -817,6 +805,100 @@ class OtherSettingsDialog(QDialog):
         self.status.setStyleSheet("color:#9a5b00; font-size:9px;")
         root.addWidget(self.status)
         root.addLayout(_dialog_buttons(self, writable=True))
+        self._load_project_values()
+
+    @property
+    def _is_writable(self) -> bool:
+        return bool(
+            self.project is not None
+            and getattr(self.project, "supports_legacy_global_data", False)
+        )
+
+    def _load_project_values(self) -> None:
+        groups = (
+            self.double_hit_values,
+            self.damage_values,
+            self.hit_values,
+            self.item_values,
+        )
+        if not self._is_writable:
+            for editors in groups:
+                for editor in editors:
+                    editor.setReadOnly(True)
+            self.status.setText(
+                READ_ONLY_NOTICE + " 当前ROM配置没有已验证的全局参数地址。"
+            )
+            return
+
+        value_groups = (
+            self.project.get_double_hit_values(),
+            self.project.get_damage_formula_values(),
+            (self.project.get_hit_threshold(),),
+            self.project.get_item_effect_values(),
+        )
+        for editors, values in zip(groups, value_groups):
+            for editor, value in zip(editors, values):
+                editor.setRange(0, 0xFF)
+                editor.setValue(value)
+                editor.setReadOnly(False)
+        for index in (2, 4):
+            self.damage_values[index].setMinimum(1)
+        field_hints = (
+            (
+                self.double_hit_values,
+                ("我方双击判定常量", "敌方双击判定常量", "双击速度差常量"),
+            ),
+            (
+                self.damage_values,
+                (
+                    "强度系数",
+                    "武器火力系数",
+                    "攻击合计除数（不可为0）",
+                    "防御系数",
+                    "防御除数（不可为0）",
+                ),
+            ),
+            (self.hit_values, ("命中判定阈值",)),
+            (
+                self.item_values,
+                (
+                    "超合金Z：防御增加",
+                    "磁性涂层：速度增加",
+                    "传感器：强度增加",
+                    "超合金C：HP增加",
+                    "超合金W：防御增加",
+                    "推进器：机动增加",
+                    "传感器2：强度增加",
+                    "M合金：速度增加",
+                    "电子护盾：HP增加",
+                    "正义：SP消耗",
+                    "治疗：SP消耗",
+                ),
+            ),
+        )
+        for editors, hints in field_hints:
+            for editor, hint in zip(editors, hints):
+                editor.setToolTip(hint)
+
+        roster = self.project.get_initial_roster()
+        for row, (character_id, unit_id) in enumerate(roster):
+            for combo, record_id in (
+                (self.initial_units[row * 2], character_id),
+                (self.initial_units[row * 2 + 1], unit_id),
+            ):
+                index = combo.findData(record_id)
+                if index < 0:
+                    raise ValueError(
+                        f"初始人物/机体ID ${record_id:02X} 不在当前配置范围内。"
+                    )
+                combo.setCurrentIndex(index)
+                combo.setEnabled(True)
+                combo.setToolTip("写入初始出击人物/机体ID")
+        self.status.setText(
+            "已读取ROM中的公式立即数、11项道具效果和6组初始人物/机体；"
+            "按“确定”作为一个事务写入，按“取消”不修改ROM。"
+        )
+        self.status.setStyleSheet("color:#2e7d4f; font-size:9px;")
 
     @staticmethod
     def _number_group(
@@ -860,7 +942,7 @@ class OtherSettingsDialog(QDialog):
                 combo.addItem(f"{unit_id:03d}：未载入{kind}", unit_id)
             elif index % 2 == 0:
                 character_count = self.project.profile.character_name_count
-                for record_id in range(1, character_count):
+                for record_id in range(character_count):
                     combo.addItem(
                         f"{record_id:03d}：{self.project.character_display_name(record_id)}",
                         record_id,
@@ -869,7 +951,7 @@ class OtherSettingsDialog(QDialog):
                 if found >= 0:
                     combo.setCurrentIndex(found)
             else:
-                for record_id in range(1, self.project.unit_count):
+                for record_id in range(self.project.unit_count):
                     combo.addItem(
                         f"{record_id:03d}：{self.project.unit_display_name(record_id)}", record_id
                     )
@@ -881,6 +963,35 @@ class OtherSettingsDialog(QDialog):
             grid.addWidget(combo, index // 2, index % 2)
             self.initial_units.append(combo)
         return group
+
+    def accept(self) -> None:
+        if not self._is_writable:
+            super().accept()
+            return
+        try:
+            roster = tuple(
+                (
+                    int(self.initial_units[row * 2].currentData()),
+                    int(self.initial_units[row * 2 + 1].currentData()),
+                )
+                for row in range(6)
+            )
+            with self.project.transaction("其他全局参数"):
+                self.project.set_double_hit_values(
+                    tuple(editor.value() for editor in self.double_hit_values)
+                )
+                self.project.set_damage_formula_values(
+                    tuple(editor.value() for editor in self.damage_values)
+                )
+                self.project.set_hit_threshold(self.hit_values[0].value())
+                self.project.set_item_effect_values(
+                    tuple(editor.value() for editor in self.item_values)
+                )
+                self.project.set_initial_roster(roster)
+        except Exception as error:
+            QMessageBox.critical(self, "无法应用全局参数", str(error))
+            return
+        super().accept()
 
 
 __all__ = [

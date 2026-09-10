@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from collections.abc import Callable
+from difflib import SequenceMatcher
 from pathlib import Path
 
 from PySide6.QtCore import Qt
@@ -35,6 +37,16 @@ class StoryPage(ProjectPage):
         self.current_selector: int | None = None
         self.current_index: int | None = None
         self.text_table: TextTable | None = default_dc_text_table()
+        self._raw_dirty = False
+        self._decoded_dirty = False
+        self._syncing_raw = False
+        self._syncing_decoded = False
+        self._raw_source_text = ""
+        self._decoded_source_raw = b""
+        self._decoded_source_text = ""
+        self._transaction_conflict_checker: (
+            Callable[[StoryPage], str | None] | None
+        ) = None
         outer = QVBoxLayout(self)
         title, subtitle = page_title(
             "剧情文本",
@@ -109,6 +121,7 @@ class StoryPage(ProjectPage):
         self.decoded.setPlaceholderText(
             "内置码表会显示Unicode文字；未证实语义的控制参数显示为 ⟦原始字节 $XX⟧。"
         )
+        self.decoded.textChanged.connect(self._decoded_changed)
         editor_tabs.addTab(self.decoded, "Unicode文字")
         editor_tabs.addTab(self.raw, "原始Token")
         right_layout.addWidget(editor_tabs, 1)
@@ -160,7 +173,7 @@ class StoryPage(ProjectPage):
             self._selector_changed()
         else:
             self.indices.clear()
-            self.raw.clear()
+            self._set_raw_editor(b"", dirty=False)
             self.tokens.setRowCount(0)
 
     def _selector_changed(self) -> None:
@@ -288,25 +301,52 @@ class StoryPage(ProjectPage):
             f"CPU指针 ${record.pointer:04X} · 当前记录 {len(record.raw)} 字节 · "
             f"共享索引：{aliases}{binding}"
         )
-        self.raw.blockSignals(True)
-        self.raw.setPlainText(record.raw.hex(" ").upper())
-        self.raw.blockSignals(False)
         self.raw.setReadOnly(not bool(record.capacity))
-        self._raw_changed()
+        self._set_raw_editor(record.raw, dirty=False)
         self._render_tokens()
-        self._render_decoded()
 
     @property
     def has_pending_draft(self) -> bool:
         if self.project is None or self.current_selector is None or self.current_index is None:
             return False
+        if not (self._raw_dirty or self._decoded_dirty):
+            return False
         try:
-            staged = self._parse_hex(self.raw.toPlainText())
+            staged = self._pending_replacement()
         except ValueError:
             return True
         return staged != self.project.get_story_text(
             self.current_selector, self.current_index
         ).raw
+
+    @property
+    def transaction_sync_group(self) -> str:
+        return "story_text"
+
+    @property
+    def pending_draft_key(self) -> tuple[str, int, int] | None:
+        if (
+            not self.has_pending_draft
+            or self.current_selector is None
+            or self.current_index is None
+        ):
+            return None
+        return (
+            self.transaction_sync_group,
+            self.current_selector,
+            self.current_index,
+        )
+
+    def set_transaction_conflict_checker(
+        self,
+        checker: Callable[[StoryPage], str | None] | None,
+    ) -> None:
+        self._transaction_conflict_checker = checker
+
+    def _transaction_conflict_error(self) -> str | None:
+        if not self.has_pending_draft or self._transaction_conflict_checker is None:
+            return None
+        return self._transaction_conflict_checker(self)
 
     @property
     def pending_draft_error(self) -> str | None:
@@ -316,19 +356,11 @@ class StoryPage(ProjectPage):
         assert self.current_selector is not None
         assert self.current_index is not None
         try:
-            staged = self._parse_hex(self.raw.toPlainText())
-            current = self.project.get_story_text(
-                self.current_selector, self.current_index
-            ).raw
-            if self.project.expansion_plan is None and len(staged) != len(current):
-                return "当前 ROM 尚未自动规划剧情空间，文本必须保持原长度。"
-            if self.project.expansion_plan is not None:
-                self.project.story_text_replacement_usage(
-                    self.current_selector, self.current_index, staged
-                )
+            staged = self._pending_replacement()
+            self._validate_replacement(staged)
         except (TypeError, ValueError) as error:
             return str(error)
-        return None
+        return self._transaction_conflict_error()
 
     def commit_pending_changes(self) -> bool:
         if not self.has_pending_draft:
@@ -354,9 +386,200 @@ class StoryPage(ProjectPage):
         except ValueError as error:
             raise ValueError("Token中含有无效的十六进制字符。") from error
 
-    def _raw_changed(self) -> None:
+    def _pending_replacement(self) -> bytes:
+        if self._raw_dirty and self._decoded_dirty:
+            raise ValueError(
+                "Unicode文字和原始Token同时存在未提交改动。"
+                "请先明确保留其中一份；可用“文字编码到Token”"
+                "以Unicode内容覆盖Token草稿。"
+            )
+        if self._decoded_dirty:
+            if self.text_table is None:
+                raise ValueError("请先载入 .tbl 字库映射。")
+            return self._encode_decoded_preserving_tokens(
+                self.decoded.toPlainText()
+            )
+        return self._parse_hex(self.raw.toPlainText())
+
+    def _encode_decoded_preserving_tokens(self, text: str) -> bytes:
+        """Encode edited text without rewriting untouched source tokens.
+
+        The DC table contains several byte aliases that render as the same
+        Unicode character.  A whole-record ``TextTable.encode`` therefore
+        canonicalizes unrelated glyphs.  Match the edited Unicode text back
+        to the exact raw stream that produced the editor view and reuse every
+        complete token contained in an unchanged span.  Only changed or
+        partially touched spans go through the ordinary encoder.
+        """
+
+        if self.text_table is None:
+            raise ValueError("请先载入 .tbl 字库映射。")
+        if text == self._decoded_source_text:
+            return self._decoded_source_raw
+        if self.project is None:
+            return self.text_table.encode(text)
+
+        token_spans: list[tuple[int, int, bytes]] = []
+        text_cursor = 0
+        for token in self.project.story_text_codec.tokenize(
+            self._decoded_source_raw
+        ):
+            token_text = self.text_table.byte_to_text.get(
+                token.raw,
+                f"<{token.raw.hex().upper()}>",
+            )
+            token_end = text_cursor + len(token_text)
+            token_spans.append((text_cursor, token_end, token.raw))
+            text_cursor = token_end
+
+        if text_cursor != len(self._decoded_source_text):
+            # The table was mutated without asking the page to render it again.
+            # Falling back is safer than splicing against stale boundaries.
+            return self.text_table.encode(text)
+
+        preserved: list[tuple[int, int, bytes]] = []
+        matcher = SequenceMatcher(
+            None,
+            self._decoded_source_text,
+            text,
+            autojunk=False,
+        )
+        for tag, source_start, source_end, edited_start, _edited_end in matcher.get_opcodes():
+            if tag != "equal":
+                continue
+            for token_start, token_end, raw in token_spans:
+                if source_start <= token_start and token_end <= source_end:
+                    preserved.append(
+                        (
+                            edited_start + token_start - source_start,
+                            edited_start + token_end - source_start,
+                            raw,
+                        )
+                    )
+
+        result = bytearray()
+        edited_cursor = 0
+        for token_start, token_end, raw in preserved:
+            if token_start < edited_cursor:
+                continue
+            result.extend(self.text_table.encode(text[edited_cursor:token_start]))
+            result.extend(raw)
+            edited_cursor = token_end
+        result.extend(self.text_table.encode(text[edited_cursor:]))
+        return bytes(result)
+
+    def _set_raw_editor(self, raw: bytes, *, dirty: bool) -> None:
+        self._syncing_raw = True
+        previous = self.raw.blockSignals(True)
+        try:
+            raw_text = raw.hex(" ").upper()
+            if not dirty:
+                self._raw_source_text = raw_text
+                self._decoded_dirty = False
+            self.raw.setPlainText(raw_text)
+            self._raw_dirty = dirty
+            self._raw_changed()
+        finally:
+            self.raw.blockSignals(previous)
+            self._syncing_raw = False
+
+    def _validate_replacement(self, replacement: bytes) -> None:
+        assert self.project is not None
+        assert self.current_selector is not None
+        assert self.current_index is not None
+        current = self.project.get_story_text(
+            self.current_selector, self.current_index
+        ).raw
+        if self.project.expansion_plan is None and len(replacement) != len(current):
+            raise ValueError("当前 ROM 尚未自动规划剧情空间，文本必须保持原长度。")
+        if self.project.expansion_plan is not None:
+            self.project.story_text_replacement_usage(
+                self.current_selector, self.current_index, replacement
+            )
+
+    def _decoded_changed(self) -> None:
+        if self._syncing_decoded:
+            return
+        self._decoded_dirty = (
+            self.decoded.toPlainText() != self._decoded_source_text
+        )
         if self.project is None or self.current_selector is None or self.current_index is None:
             self.length_label.setText("—")
+            return
+        if self._raw_dirty and self._decoded_dirty:
+            self.length_label.setText(
+                "Unicode文字和原始Token同时有改动；请先明确保留其中一份。"
+            )
+            self.length_label.setStyleSheet("color: #b42318; font-weight: 650;")
+            self.apply_button.setEnabled(False)
+            return
+        if not self._decoded_dirty:
+            self._raw_changed()
+            return
+        try:
+            encoded = self._pending_replacement()
+            current = self.project.get_story_text(
+                self.current_selector, self.current_index
+            ).raw
+            changed = encoded != current
+            if not changed:
+                self._decoded_dirty = False
+            self._validate_replacement(encoded)
+            if self.project.expansion_plan is not None:
+                used, capacity = self.project.story_text_replacement_usage(
+                    self.current_selector, self.current_index, encoded
+                )
+                status = f"文本组预计 {used} / {capacity} 字节 · 可自动重排"
+            else:
+                status = "长度正确"
+            staged = " · 有尚未应用的改动" if changed else " · 与当前工程一致"
+            self.length_label.setText(
+                f"Unicode编码后 {len(encoded)} 字节 · {status}{staged}"
+            )
+            self.length_label.setStyleSheet(
+                "color: #b45309; font-weight: 650;"
+                if changed
+                else "color: #2e7d4f;"
+            )
+            self.apply_button.setEnabled(changed)
+        except (TypeError, ValueError) as error:
+            self.length_label.setText(str(error))
+            self.length_label.setStyleSheet("color: #b42318;")
+            self.apply_button.setEnabled(False)
+
+    def _raw_changed(self) -> None:
+        if not self._syncing_raw:
+            try:
+                staged_raw = self._parse_hex(self.raw.toPlainText())
+            except ValueError:
+                # Invalid input is still a real draft and must block navigation.
+                self._raw_dirty = True
+            else:
+                if (
+                    self.project is not None
+                    and self.current_selector is not None
+                    and self.current_index is not None
+                ):
+                    current_raw = self.project.get_story_text(
+                        self.current_selector, self.current_index
+                    ).raw
+                    self._raw_dirty = staged_raw != current_raw
+                else:
+                    self._raw_dirty = (
+                        self.raw.toPlainText() != self._raw_source_text
+                    )
+        if self.project is None or self.current_selector is None or self.current_index is None:
+            self.length_label.setText("—")
+            return
+        if self._raw_dirty and self._decoded_dirty:
+            self.length_label.setText(
+                "Unicode文字和原始Token同时有改动；请先明确保留其中一份。"
+            )
+            self.length_label.setStyleSheet("color: #b42318; font-weight: 650;")
+            self.apply_button.setEnabled(False)
+            return
+        if self._decoded_dirty:
+            self._decoded_changed()
             return
         try:
             parsed = self._parse_hex(self.raw.toPlainText())
@@ -396,27 +619,47 @@ class StoryPage(ProjectPage):
             raw = self._parse_hex(self.raw.toPlainText())
         except ValueError:
             return
-        self.decoded.blockSignals(True)
-        if self.text_table is None:
-            self.decoded.setPlainText(
-                "".join(f"<{token.raw.hex().upper()}>" for token in self.project.story_text_codec.tokenize(raw))
-                if self.project is not None
-                else ""
-            )
-        else:
-            self.decoded.setPlainText(self.text_table.decode(raw))
-        self.decoded.blockSignals(False)
+        self._syncing_decoded = True
+        previous = self.decoded.blockSignals(True)
+        try:
+            if self.text_table is None:
+                decoded_text = (
+                    "".join(
+                        f"<{token.raw.hex().upper()}>"
+                        for token in self.project.story_text_codec.tokenize(raw)
+                    )
+                    if self.project is not None
+                    else ""
+                )
+            else:
+                decoded_text = self.text_table.decode(raw)
+            self.decoded.setPlainText(decoded_text)
+            self._decoded_source_raw = raw
+            self._decoded_source_text = decoded_text
+            self._decoded_dirty = False
+        finally:
+            self.decoded.blockSignals(previous)
+            self._syncing_decoded = False
 
     def encode_decoded_text(self) -> None:
         if self.text_table is None:
             self.show_error(ValueError("请先载入 .tbl 字库映射。"))
             return
         try:
-            encoded = self.text_table.encode(self.decoded.toPlainText())
-            self.raw.blockSignals(True)
-            self.raw.setPlainText(encoded.hex(" ").upper())
-            self.raw.blockSignals(False)
-            self._raw_changed()
+            encoded = self._encode_decoded_preserving_tokens(
+                self.decoded.toPlainText()
+            )
+            dirty = True
+            if (
+                self.project is not None
+                and self.current_selector is not None
+                and self.current_index is not None
+            ):
+                dirty = encoded != self.project.get_story_text(
+                    self.current_selector, self.current_index
+                ).raw
+            self._decoded_dirty = False
+            self._set_raw_editor(encoded, dirty=dirty)
             self._render_tokens()
         except Exception as error:
             self.show_error(error)
@@ -428,7 +671,13 @@ class StoryPage(ProjectPage):
         if not filename:
             return
         try:
-            self.text_table = TextTable.parse(Path(filename).read_text(encoding="utf-8-sig"))
+            table = TextTable.parse(Path(filename).read_text(encoding="utf-8-sig"))
+            if self._decoded_dirty and not self.commit_pending_changes():
+                raise ValueError(
+                    self.pending_draft_error
+                    or "Unicode文本草稿无法在重载码表前提交，请修正后重试。"
+                )
+            self.text_table = table
             self.table_status.setText(
                 f"已载入 {Path(filename).name} · {len(self.text_table.byte_to_text)} 条映射"
             )
@@ -489,12 +738,18 @@ class StoryPage(ProjectPage):
         if self.project is None or self.current_selector is None or self.current_index is None:
             return
         try:
-            replacement = self._parse_hex(self.raw.toPlainText())
+            replacement = self._pending_replacement()
+            self._validate_replacement(replacement)
+            conflict = self._transaction_conflict_error()
+            if conflict is not None:
+                raise ValueError(conflict)
             self.project.set_story_text_raw(
                 self.current_selector,
                 self.current_index,
                 replacement,
             )
+            self._set_raw_editor(replacement, dirty=False)
+            self._render_tokens()
             self.project_changed.emit(
                 f"已更新剧情文本 ${self.current_selector:02X}:${self.current_index:02X}"
             )

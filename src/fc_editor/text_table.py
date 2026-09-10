@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from difflib import SequenceMatcher
 
 from .codecs.story_text import StoryTextCodec
 
@@ -89,6 +90,58 @@ class TextTable:
                 raise ValueError(f"文字“{excerpt}”没有字库编码。")
             result.extend(reverse[match])
             cursor += len(match)
+        return bytes(result)
+
+    def encode_preserving_tokens(self, source_raw: bytes, edited_text: str) -> bytes:
+        """Encode an edit while retaining every unchanged source token byte.
+
+        Some glyphs have multiple byte aliases.  Decoding and then encoding a
+        whole string would select one canonical alias and rewrite unrelated
+        bytes.  Equal Unicode spans are therefore mapped back to their complete
+        original tokens; only changed spans use the normal encoder.
+        """
+
+        source_text = self.decode(source_raw)
+        if edited_text == source_text:
+            return source_raw
+
+        token_spans: list[tuple[int, int, bytes]] = []
+        text_cursor = 0
+        for token in StoryTextCodec.tokenize(source_raw):
+            token_text = self.byte_to_text.get(
+                token.raw,
+                f"<{token.raw.hex().upper()}>",
+            )
+            token_end = text_cursor + len(token_text)
+            token_spans.append((text_cursor, token_end, token.raw))
+            text_cursor = token_end
+        if text_cursor != len(source_text):
+            return self.encode(edited_text)
+
+        preserved: list[tuple[int, int, bytes]] = []
+        matcher = SequenceMatcher(None, source_text, edited_text, autojunk=False)
+        for tag, source_start, source_end, edited_start, _edited_end in matcher.get_opcodes():
+            if tag != "equal":
+                continue
+            for token_start, token_end, raw in token_spans:
+                if source_start <= token_start and token_end <= source_end:
+                    preserved.append(
+                        (
+                            edited_start + token_start - source_start,
+                            edited_start + token_end - source_start,
+                            raw,
+                        )
+                    )
+
+        result = bytearray()
+        edited_cursor = 0
+        for token_start, token_end, raw in preserved:
+            if token_start < edited_cursor:
+                continue
+            result.extend(self.encode(edited_text[edited_cursor:token_start]))
+            result.extend(raw)
+            edited_cursor = token_end
+        result.extend(self.encode(edited_text[edited_cursor:]))
         return bytes(result)
 
     @staticmethod

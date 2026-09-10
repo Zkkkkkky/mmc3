@@ -7,6 +7,7 @@ from typing import Any
 from PySide6.QtCore import Qt, Signal
 from PySide6.QtGui import QPixmap, QShowEvent
 from PySide6.QtWidgets import (
+    QAbstractItemView,
     QCheckBox,
     QComboBox,
     QDialog,
@@ -14,6 +15,7 @@ from PySide6.QtWidgets import (
     QFrame,
     QGridLayout,
     QGroupBox,
+    QHeaderView,
     QHBoxLayout,
     QLabel,
     QLineEdit,
@@ -25,11 +27,13 @@ from PySide6.QtWidgets import (
     QSpinBox,
     QSplitter,
     QTabWidget,
+    QTableWidget,
+    QTableWidgetItem,
     QVBoxLayout,
     QWidget,
 )
 
-from fc_editor.dc_text import dc_map_label
+from fc_editor.dc_text import dc_map_label, default_dc_text_table
 from fc_editor.resources import Allocation, BankAllocator
 from fc_rom_editor_core import RomProject
 
@@ -83,6 +87,9 @@ class TransactionalProjectDialog(QDialog):
         """Attach a functional page and proxy its public integration signals."""
 
         self.pages.append(page)
+        conflict_setter = getattr(page, "set_transaction_conflict_checker", None)
+        if callable(conflict_setter):
+            conflict_setter(self._pending_page_conflict_error)
         page.project_changed.connect(
             lambda message, source=page: self._registered_page_changed(source, message)
         )
@@ -91,10 +98,41 @@ class TransactionalProjectDialog(QDialog):
         return page
 
     def _registered_page_changed(self, page: ProjectPage, message: str) -> None:
-        """Reload only the editor that committed, preserving other tab drafts."""
+        """Reload the source and clean peers while preserving owned drafts."""
 
         page.refresh()
+        sync_group = getattr(page, "transaction_sync_group", None)
+        if sync_group is not None:
+            for sibling in self.pages:
+                if (
+                    sibling is not page
+                    and getattr(sibling, "transaction_sync_group", None) == sync_group
+                    and not sibling.has_pending_draft
+                ):
+                    sibling.refresh()
         self.project_changed.emit(message)
+
+    def _pending_page_conflict_error(self, source: ProjectPage) -> str | None:
+        """Reject two local drafts that target the same underlying resource."""
+
+        source_key = getattr(source, "pending_draft_key", None)
+        if source_key is None:
+            return None
+        for sibling in self.pages:
+            if sibling is source:
+                continue
+            if getattr(sibling, "pending_draft_key", None) == source_key:
+                if source_key[0] == "chapter_event":
+                    return (
+                        f"同一事件指令 ${source_key[1]:04X} 同时存在于多个"
+                        "编辑页的未提交草稿中。请先保留其中一份并还原"
+                        "另一份，再重试。"
+                    )
+                return (
+                    "同一剧情文本同时存在于多个编辑页的未提交草稿中。"
+                    "请先保留其中一份并还原另一份，再重试。"
+                )
+        return None
 
     def set_project(self, project: RomProject | None) -> None:
         self.project = project
@@ -134,17 +172,26 @@ class TransactionalProjectDialog(QDialog):
             page.refresh()
 
     def _commit_pending_pages(self) -> bool:
-        for page in self.pages:
-            if not page.has_pending_draft:
-                continue
+        pending = tuple(page for page in self.pages if page.has_pending_draft)
+        for page in pending:
             error = page.pending_draft_error
-            if error is not None or not page.commit_pending_changes():
+            if error is not None:
                 QMessageBox.warning(
                     self,
                     "当前修改无法确认",
-                    error or "当前页仍有无法提交的输入，请修正后重试。",
+                    error,
                 )
                 return False
+        for page in pending:
+            if page.commit_pending_changes():
+                continue
+            QMessageBox.warning(
+                self,
+                "当前修改无法确认",
+                page.pending_draft_error
+                or "当前页仍有无法提交的输入，请修正后重试。",
+            )
+            return False
         return True
 
     def accept(self) -> None:
@@ -178,6 +225,55 @@ class TransactionalProjectDialog(QDialog):
             title = self.windowTitle() or self._dialog_title
             self.project_changed.emit(f"已取消{title}修改并恢复打开前状态")
         super().reject()
+
+
+class _LegacyEventController(EventPage):
+    """Event editor that participates in window-wide resource conflicts."""
+
+    def __init__(self) -> None:
+        self._transaction_conflict_checker: (
+            Callable[[ProjectPage], str | None] | None
+        ) = None
+        super().__init__()
+
+    @property
+    def transaction_sync_group(self) -> str:
+        return "chapter_event"
+
+    @property
+    def pending_draft_key(self) -> tuple[str, int] | None:
+        if not self.has_pending_draft or self.current_address is None:
+            return None
+        return self.transaction_sync_group, self.current_address
+
+    def set_transaction_conflict_checker(
+        self,
+        checker: Callable[[ProjectPage], str | None] | None,
+    ) -> None:
+        self._transaction_conflict_checker = checker
+
+    def _transaction_conflict_error(self) -> str | None:
+        if not self.has_pending_draft or self._transaction_conflict_checker is None:
+            return None
+        return self._transaction_conflict_checker(self)
+
+    @property
+    def pending_draft_error(self) -> str | None:
+        return super().pending_draft_error or self._transaction_conflict_error()
+
+    def _apply_template(self) -> None:
+        conflict = self._transaction_conflict_error()
+        if conflict is not None:
+            self.show_error(ValueError(conflict))
+            return
+        super()._apply_template()
+
+    def _apply_raw(self) -> None:
+        conflict = self._transaction_conflict_error()
+        if conflict is not None:
+            self.show_error(ValueError(conflict))
+            return
+        super()._apply_raw()
 
 
 class _LegacyUnitController(UnitPage):
@@ -661,6 +757,466 @@ class RawInspectionPage(ProjectPage):
             self.raw.clear()
 
 
+class LegacyGlobalTablesPage(ProjectPage):
+    """Verified cumulative-EXP and distance-hit tables from database page five."""
+
+    def __init__(self) -> None:
+        super().__init__()
+        self._loading = False
+        root = QVBoxLayout(self)
+        notice = QLabel(
+            "已接通参考页中的升级累计经验表和武器距离命中补正表。"
+            "系统文字与成长方式仍需独立差分，暂不在此猜写。"
+        )
+        notice.setWordWrap(True)
+        notice.setObjectName("hintText")
+        root.addWidget(notice)
+
+        tables = QHBoxLayout()
+        experience_group = QGroupBox("升级累计经验 · 等级1—99")
+        experience_layout = QVBoxLayout(experience_group)
+        self.experience_table = QTableWidget(99, 2)
+        self.experience_table.setHorizontalHeaderLabels(("等级", "累计经验"))
+        self.experience_table.verticalHeader().setVisible(False)
+        self.experience_table.horizontalHeader().setSectionResizeMode(
+            1, QHeaderView.ResizeMode.Stretch
+        )
+        self.experience_table.setAlternatingRowColors(True)
+        self.experience_table.itemChanged.connect(self._update_pending_state)
+        experience_layout.addWidget(self.experience_table)
+        tables.addWidget(experience_group, 2)
+
+        distance_group = QGroupBox("武器距离命中补正 · 距离1—16")
+        distance_layout = QVBoxLayout(distance_group)
+        self.distance_table = QTableWidget(4, 16)
+        self.distance_table.setHorizontalHeaderLabels(
+            tuple(str(distance) for distance in range(1, 17))
+        )
+        self.distance_table.setVerticalHeaderLabels(
+            tuple(f"方式 {method}" for method in range(4))
+        )
+        self.distance_table.horizontalHeader().setSectionResizeMode(
+            QHeaderView.ResizeMode.ResizeToContents
+        )
+        self.distance_table.setAlternatingRowColors(True)
+        self.distance_table.itemChanged.connect(self._update_pending_state)
+        distance_layout.addWidget(self.distance_table)
+        tables.addWidget(distance_group, 5)
+        root.addLayout(tables, 1)
+
+        footer = QHBoxLayout()
+        self.pending_state = QLabel("当前ROM没有已验证的全局表。")
+        self.pending_state.setObjectName("pendingBanner")
+        self.apply_button = QPushButton("暂存经验与命中补正")
+        self.apply_button.clicked.connect(self.apply_changes)
+        self.reset_button = QPushButton("还原两张表")
+        self.reset_button.clicked.connect(self.reset_tables)
+        footer.addWidget(self.pending_state, 1)
+        footer.addWidget(self.apply_button)
+        footer.addWidget(self.reset_button)
+        root.addLayout(footer)
+
+    @property
+    def _is_supported(self) -> bool:
+        return bool(
+            self.project is not None
+            and getattr(self.project, "supports_legacy_global_data", False)
+        )
+
+    @staticmethod
+    def _editable_item(value: int) -> QTableWidgetItem:
+        item = QTableWidgetItem(str(value))
+        item.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
+        return item
+
+    def refresh(self) -> None:
+        self._loading = True
+        try:
+            supported = self._is_supported
+            self.experience_table.setEditTriggers(
+                QAbstractItemView.EditTrigger.AllEditTriggers
+                if supported
+                else QAbstractItemView.EditTrigger.NoEditTriggers
+            )
+            self.distance_table.setEditTriggers(
+                QAbstractItemView.EditTrigger.AllEditTriggers
+                if supported
+                else QAbstractItemView.EditTrigger.NoEditTriggers
+            )
+            self.apply_button.setEnabled(False)
+            self.reset_button.setEnabled(supported)
+            if not supported:
+                self.experience_table.clearContents()
+                self.distance_table.clearContents()
+                self.pending_state.setText("当前ROM没有已验证的全局表。")
+                return
+            experience = self.project.get_experience_totals()
+            corrections = self.project.get_distance_hit_corrections()
+            for row, value in enumerate(experience):
+                level = QTableWidgetItem(str(row + 1))
+                level.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
+                level.setFlags(level.flags() & ~Qt.ItemFlag.ItemIsEditable)
+                self.experience_table.setItem(row, 0, level)
+                self.experience_table.setItem(row, 1, self._editable_item(value))
+            for row, values in enumerate(corrections):
+                for column, value in enumerate(values):
+                    self.distance_table.setItem(
+                        row, column, self._editable_item(value)
+                    )
+        finally:
+            self._loading = False
+        self._update_pending_state()
+
+    @staticmethod
+    def _parse_cell(
+        table: QTableWidget,
+        row: int,
+        column: int,
+        *,
+        maximum: int,
+        label: str,
+    ) -> int:
+        item = table.item(row, column)
+        text = "" if item is None else item.text().strip()
+        try:
+            value = int(text, 10)
+        except ValueError as error:
+            raise ValueError(f"{label}必须是十进制整数。") from error
+        if not 0 <= value <= maximum:
+            raise ValueError(f"{label}必须在0—{maximum}之间。")
+        return value
+
+    def _draft_values(
+        self,
+    ) -> tuple[tuple[int, ...], tuple[tuple[int, ...], ...]]:
+        experience = tuple(
+            self._parse_cell(
+                self.experience_table,
+                row,
+                1,
+                maximum=0xFFFF,
+                label=f"等级{row + 1}累计经验",
+            )
+            for row in range(99)
+        )
+        corrections = tuple(
+            tuple(
+                self._parse_cell(
+                    self.distance_table,
+                    row,
+                    column,
+                    maximum=0xFF,
+                    label=f"补正方式{row}距离{column + 1}",
+                )
+                for column in range(16)
+            )
+            for row in range(4)
+        )
+        return experience, corrections
+
+    @property
+    def has_pending_draft(self) -> bool:
+        if not self._is_supported:
+            return False
+        try:
+            experience, corrections = self._draft_values()
+        except ValueError:
+            return True
+        return (
+            experience != self.project.get_experience_totals()
+            or corrections != self.project.get_distance_hit_corrections()
+        )
+
+    @property
+    def pending_draft_error(self) -> str | None:
+        if not self._is_supported:
+            return None
+        try:
+            self._draft_values()
+        except ValueError as error:
+            return str(error)
+        return None
+
+    def _update_pending_state(self) -> None:
+        if self._loading:
+            return
+        if not self._is_supported:
+            self.pending_state.setText("当前ROM没有已验证的全局表。")
+            self.apply_button.setEnabled(False)
+            return
+        error = self.pending_draft_error
+        pending = self.has_pending_draft
+        self.apply_button.setEnabled(pending and error is None)
+        if error is not None:
+            self.pending_state.setText(f"● {error}")
+        elif pending:
+            self.pending_state.setText("● 有尚未暂存的经验/命中补正改动")
+        else:
+            self.pending_state.setText("✓ 两张表与当前工程一致")
+
+    def commit_pending_changes(self) -> bool:
+        if not self.has_pending_draft:
+            return True
+        if self.pending_draft_error is not None:
+            return False
+        return self.apply_changes()
+
+    def apply_changes(self) -> bool:
+        if not self._is_supported:
+            return False
+        try:
+            experience, corrections = self._draft_values()
+            with self.project.transaction("升级经验与距离命中补正"):
+                self.project.set_experience_totals(experience)
+                self.project.set_distance_hit_corrections(corrections)
+            self.project_changed.emit("已更新升级经验与距离命中补正")
+            return not self.has_pending_draft
+        except Exception as error:
+            self.show_error(error)
+            return False
+
+    def reset_tables(self) -> None:
+        if not self._is_supported:
+            return
+        try:
+            with self.project.transaction("还原升级经验与距离命中补正"):
+                self.project.reset_experience_totals()
+                self.project.reset_distance_hit_corrections()
+            self.project_changed.emit("已还原升级经验与距离命中补正")
+        except Exception as error:
+            self.show_error(error)
+
+
+class LegacyItemTablePage(ProjectPage):
+    """Verified name/price subset of the reference editor's item page."""
+
+    ITEM_COUNT = 24
+    NAME_POOL_CAPACITY = 0xB8
+    MAX_DISPLAY_PRICE = 99_990
+
+    def __init__(self) -> None:
+        super().__init__()
+        self._loading = False
+        self._text_table = default_dc_text_table()
+        self._loaded_name_records: tuple[bytes, ...] = ()
+        self._loaded_name_texts: tuple[str, ...] = ()
+        root = QVBoxLayout(self)
+        notice = QLabel(
+            "已接通24项道具名称和价格。价格按参考窗口显示为ROM原值×10；"
+            "说明、F0—FE商店、店员和七段对话尚未完成独立差分，继续只读保护。"
+        )
+        notice.setWordWrap(True)
+        notice.setObjectName("hintText")
+        root.addWidget(notice)
+
+        self.item_table = QTableWidget(self.ITEM_COUNT, 3)
+        self.item_table.setHorizontalHeaderLabels(("编号", "道具名称", "显示价格"))
+        self.item_table.verticalHeader().setVisible(False)
+        self.item_table.horizontalHeader().setSectionResizeMode(
+            1, QHeaderView.ResizeMode.Stretch
+        )
+        self.item_table.setColumnWidth(0, 78)
+        self.item_table.setColumnWidth(2, 150)
+        self.item_table.setAlternatingRowColors(True)
+        self.item_table.itemChanged.connect(self._update_pending_state)
+        root.addWidget(self.item_table, 1)
+
+        protected = QGroupBox("尚未验证的参考字段")
+        protected_layout = QFormLayout(protected)
+        for label in ("道具说明", "商店 F0—FE", "店员及七段对话"):
+            value = QLineEdit("只读：尚无独立可写记录证据")
+            value.setReadOnly(True)
+            value.setToolTip("需先用参考程序对隔离副本做单变量保存差分。")
+            protected_layout.addRow(label, value)
+        root.addWidget(protected)
+
+        footer = QHBoxLayout()
+        self.pending_state = QLabel("当前ROM没有已验证的道具表。")
+        self.pending_state.setObjectName("pendingBanner")
+        self.apply_button = QPushButton("暂存道具名称与价格")
+        self.apply_button.clicked.connect(self.apply_changes)
+        self.reset_button = QPushButton("还原名称与价格")
+        self.reset_button.clicked.connect(self.reset_items)
+        footer.addWidget(self.pending_state, 1)
+        footer.addWidget(self.apply_button)
+        footer.addWidget(self.reset_button)
+        root.addLayout(footer)
+
+    @property
+    def _is_supported(self) -> bool:
+        return bool(
+            self.project is not None
+            and getattr(self.project, "supports_legacy_global_data", False)
+            and hasattr(self.project, "get_item_name_records")
+        )
+
+    @staticmethod
+    def _fixed_item(text: str) -> QTableWidgetItem:
+        item = QTableWidgetItem(text)
+        item.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
+        item.setFlags(item.flags() & ~Qt.ItemFlag.ItemIsEditable)
+        return item
+
+    def refresh(self) -> None:
+        self._loading = True
+        try:
+            supported = self._is_supported
+            self.item_table.setEditTriggers(
+                QAbstractItemView.EditTrigger.AllEditTriggers
+                if supported
+                else QAbstractItemView.EditTrigger.NoEditTriggers
+            )
+            self.apply_button.setEnabled(False)
+            self.reset_button.setEnabled(supported)
+            if not supported:
+                self._loaded_name_records = ()
+                self._loaded_name_texts = ()
+                self.item_table.clearContents()
+                self.pending_state.setText("当前ROM没有已验证的道具名称/价格表。")
+                return
+            names = self.project.get_item_name_records()
+            prices = self.project.get_item_prices()
+            name_texts = tuple(self._text_table.decode(raw_name) for raw_name in names)
+            self._loaded_name_records = names
+            self._loaded_name_texts = name_texts
+            for row, (name_text, raw_price) in enumerate(zip(name_texts, prices)):
+                self.item_table.setItem(row, 0, self._fixed_item(f"{row + 1:02d}"))
+                self.item_table.setItem(row, 1, QTableWidgetItem(name_text))
+                price = QTableWidgetItem(str(raw_price * 10))
+                price.setTextAlignment(Qt.AlignmentFlag.AlignRight | Qt.AlignmentFlag.AlignVCenter)
+                self.item_table.setItem(row, 2, price)
+        finally:
+            self._loading = False
+        self._update_pending_state()
+
+    def _draft_values(self) -> tuple[tuple[bytes, ...], tuple[int, ...]]:
+        names: list[bytes] = []
+        prices: list[int] = []
+        for row in range(self.ITEM_COUNT):
+            name_item = self.item_table.item(row, 1)
+            name = "" if name_item is None else name_item.text()
+            if not name:
+                raise ValueError(f"道具 {row + 1:02d} 的名称不能为空。")
+            if (
+                row < len(self._loaded_name_texts)
+                and row < len(self._loaded_name_records)
+                and name == self._loaded_name_texts[row]
+            ):
+                # Several visually identical glyphs have both compact and
+                # two-byte encodings.  Reuse the exact source bytes until the
+                # user actually changes this row, otherwise merely opening
+                # the page would silently canonicalize ROM data.
+                raw_name = self._loaded_name_records[row]
+            else:
+                try:
+                    raw_name = self._text_table.encode_preserving_tokens(
+                        self._loaded_name_records[row],
+                        name,
+                    )
+                except ValueError as error:
+                    raise ValueError(f"道具 {row + 1:02d} 名称：{error}") from error
+            if b"\xFF" in raw_name:
+                raise ValueError(f"道具 {row + 1:02d} 名称不能包含结束符。")
+            names.append(raw_name)
+
+            price_item = self.item_table.item(row, 2)
+            price_text = "" if price_item is None else price_item.text().strip()
+            try:
+                display_price = int(price_text, 10)
+            except ValueError as error:
+                raise ValueError(f"道具 {row + 1:02d} 价格必须是十进制整数。") from error
+            if not 0 <= display_price <= self.MAX_DISPLAY_PRICE:
+                raise ValueError(
+                    f"道具 {row + 1:02d} 显示价格必须在0—{self.MAX_DISPLAY_PRICE}之间。"
+                )
+            if display_price % 10:
+                raise ValueError(f"道具 {row + 1:02d} 显示价格必须是10的倍数。")
+            prices.append(display_price // 10)
+
+        used = sum(len(name) + 1 for name in names)
+        if used > self.NAME_POOL_CAPACITY:
+            raise ValueError(
+                f"24项道具名称编码后共需{used}字节，超过名称池{self.NAME_POOL_CAPACITY}字节。"
+            )
+        return tuple(names), tuple(prices)
+
+    @property
+    def has_pending_draft(self) -> bool:
+        if not self._is_supported:
+            return False
+        try:
+            names, prices = self._draft_values()
+        except ValueError:
+            return True
+        return (
+            names != self.project.get_item_name_records()
+            or prices != self.project.get_item_prices()
+        )
+
+    @property
+    def pending_draft_error(self) -> str | None:
+        if not self._is_supported:
+            return None
+        try:
+            self._draft_values()
+        except ValueError as error:
+            return str(error)
+        return None
+
+    def _update_pending_state(self) -> None:
+        if self._loading:
+            return
+        if not self._is_supported:
+            self.pending_state.setText("当前ROM没有已验证的道具名称/价格表。")
+            self.apply_button.setEnabled(False)
+            return
+        error = self.pending_draft_error
+        pending = self.has_pending_draft
+        self.apply_button.setEnabled(pending and error is None)
+        if error is not None:
+            self.pending_state.setText(f"● {error}")
+        elif pending:
+            self.pending_state.setText("● 有尚未暂存的道具名称/价格改动")
+        else:
+            self.pending_state.setText("✓ 道具名称与价格和当前工程一致")
+
+    def commit_pending_changes(self) -> bool:
+        if not self.has_pending_draft:
+            return True
+        if self.pending_draft_error is not None:
+            return False
+        return self.apply_changes()
+
+    def apply_changes(self) -> bool:
+        if not self._is_supported:
+            return False
+        try:
+            names, prices = self._draft_values()
+            current_names = self.project.get_item_name_records()
+            current_prices = self.project.get_item_prices()
+            with self.project.transaction("道具名称与价格"):
+                if names != current_names:
+                    self.project.set_item_name_records(names)
+                if prices != current_prices:
+                    self.project.set_item_prices(prices)
+            self.project_changed.emit("已更新道具名称与价格")
+            return not self.has_pending_draft
+        except Exception as error:
+            self.show_error(error)
+            return False
+
+    def reset_items(self) -> None:
+        if not self._is_supported:
+            return
+        try:
+            with self.project.transaction("还原道具名称与价格"):
+                self.project.reset_item_name_records()
+                self.project.reset_item_prices()
+            self.project_changed.emit("已还原道具名称与价格")
+        except Exception as error:
+            self.show_error(error)
+
+
 class DatabaseDialog(TransactionalProjectDialog):
     """The six-tab database window used by the reference SRW2 workflow."""
 
@@ -702,22 +1258,8 @@ class DatabaseDialog(TransactionalProjectDialog):
                 "为避免破坏脚本，本页只允许查看原始字节。",
             )
         )
-        self.other_page_1 = self.register_page(
-            RawInspectionPage(
-                "其他修改1",
-                ("字段结构待验证",),
-                "参考资料只确认“其他修改1”页签存在，尚不足以确认字段、范围和联动规则。"
-                "本页不会猜测写入。",
-            )
-        )
-        self.other_page_2 = self.register_page(
-            RawInspectionPage(
-                "其他修改2",
-                ("字段结构待验证",),
-                "参考资料只确认“其他修改2”页签存在，尚不足以确认字段、范围和联动规则。"
-                "本页不会猜测写入。",
-            )
-        )
+        self.other_page_1 = self.register_page(LegacyGlobalTablesPage())
+        self.other_page_2 = self.register_page(LegacyItemTablePage())
 
         for label, page in zip(self.TAB_LABELS, self.pages):
             self.tabs.addTab(page, label)
@@ -870,9 +1412,9 @@ class ScenarioDialog(TransactionalProjectDialog):
         self.setup_event_pages = [
             self._register_hidden_event_page(phase) for phase in range(3)
         ]
-        self.action_event_page = self._register_hidden_page(EventPage())
+        self.action_event_page = self._register_hidden_page(_LegacyEventController())
         self.persuasion_page = self._register_hidden_page(PersuasionPage())
-        self.map_event_page = self._register_hidden_page(EventPage())
+        self.map_event_page = self._register_hidden_page(_LegacyEventController())
         self.story_page = self._register_hidden_page(StoryPage())
         self.victory_page = self._register_hidden_page(StoryPage())
 
@@ -946,7 +1488,7 @@ class ScenarioDialog(TransactionalProjectDialog):
         return registered
 
     def _register_hidden_event_page(self, phase: int) -> EventPage:
-        page = self._register_hidden_page(EventPage())
+        page = self._register_hidden_page(_LegacyEventController())
         assert isinstance(page, EventPage)
         page.setProperty("legacyPhase", phase)
         return page

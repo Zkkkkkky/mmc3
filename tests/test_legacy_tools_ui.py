@@ -19,6 +19,7 @@ from dc_modifier.legacy_tools import (
     SaveEditorDialog,
     TextConverterDialog,
     _glyph_file_offset,
+    _glyph_pixmap,
 )
 from fc_editor.text_table import TextTable
 from fc_rom_editor_core import RomProject
@@ -75,6 +76,14 @@ class LegacyToolDialogTests(unittest.TestCase):
             _glyph_file_offset(bytes.fromhex("C90E")),
             _glyph_file_offset(bytes.fromhex("C900")),
         )
+
+    def test_glyph_preview_uses_rom_bits_instead_of_host_font(self) -> None:
+        blank = _glyph_pixmap(bytes(18), character="啊", scale=2).toImage()
+        self.assertEqual(blank.pixelColor(0, 0).name(), "#080808")
+        self.assertEqual(blank.pixelColor(12, 12).name(), "#080808")
+        marked = _glyph_pixmap(bytes((0x80,)) + bytes(17), character="啊", scale=2).toImage()
+        self.assertEqual(marked.pixelColor(0, 0).name(), "#f5f5f5")
+        self.assertEqual(marked.pixelColor(2, 0).name(), "#080808")
 
     def test_map_animation_has_three_legacy_tabs_and_read_only_guard(self) -> None:
         dialog = MapAnimationDialog(project=self.project)
@@ -171,9 +180,13 @@ class LegacyToolDialogTests(unittest.TestCase):
             self.assertLess(self._top(dialog.ally_table, dialog), self._top(dialog.enemy_table, dialog))
         dialog.close()
 
-    def test_other_settings_recreates_all_groups_without_rom_mutation(self) -> None:
-        before = bytes(self.project.working) if self.project is not None else None
-        dialog = OtherSettingsDialog(project=self.project)
+    def test_other_settings_loads_real_defaults_and_cancel_discards_drafts(self) -> None:
+        if not ROM_PATH.is_file():
+            self.skipTest("测试ROM不存在")
+        project = RomProject.load(ROM_PATH)
+        before = bytes(project.working)
+        undo_count = len(project._undo_stack)
+        dialog = OtherSettingsDialog(project=project)
         self.assertEqual(len(dialog.double_hit_values), 3)
         self.assertEqual(len(dialog.damage_values), 5)
         self.assertEqual(len(dialog.hit_values), 1)
@@ -181,18 +194,37 @@ class LegacyToolDialogTests(unittest.TestCase):
         self.assertEqual(len(dialog.initial_units), 12)
         self.assertTrue(dialog.accept_button.isEnabled())
         self.assertEqual(
+            tuple(editor.value() for editor in dialog.double_hit_values),
+            (70, 90, 20),
+        )
+        self.assertEqual(
+            tuple(editor.value() for editor in dialog.damage_values),
+            (13, 10, 10, 1, 1),
+        )
+        self.assertEqual(dialog.hit_values[0].value(), 70)
+        self.assertEqual(
+            tuple(editor.value() for editor in dialog.item_values),
+            (1, 1, 1, 5, 3, 1, 3, 3, 25, 25, 50),
+        )
+        self.assertEqual(
             [combo.currentData() for combo in dialog.initial_units],
             [4, 9, 5, 13, 6, 15, 7, 17, 8, 19, 9, 23],
         )
-        if self.project is not None:
-            self.assertIn(
-                self.project.character_display_name(4),
-                dialog.initial_units[0].currentText(),
-            )
-            self.assertIn(
-                self.project.unit_display_name(9),
-                dialog.initial_units[1].currentText(),
-            )
+        self.assertIn(
+            project.character_display_name(4),
+            dialog.initial_units[0].currentText(),
+        )
+        self.assertIn(
+            project.unit_display_name(9),
+            dialog.initial_units[1].currentText(),
+        )
+        dialog.double_hit_values[0].setValue(71)
+        dialog.damage_values[0].setValue(14)
+        dialog.hit_values[0].setValue(71)
+        dialog.item_values[0].setValue(2)
+        replacement = dialog.initial_units[0].findData(10)
+        self.assertGreaterEqual(replacement, 0)
+        dialog.initial_units[0].setCurrentIndex(replacement)
         self._show(dialog)
         groups = {group.title(): group for group in dialog.findChildren(QGroupBox)}
         self.assertLess(
@@ -204,8 +236,68 @@ class LegacyToolDialogTests(unittest.TestCase):
             self._top(groups["初始机体"], dialog),
         )
         dialog.reject()
-        if self.project is not None:
-            self.assertEqual(bytes(self.project.working), before)
+        self.assertEqual(bytes(project.working), before)
+        self.assertEqual(len(project._undo_stack), undo_count)
+
+    def test_other_settings_ok_writes_every_group_as_one_undo_transaction(self) -> None:
+        if not ROM_PATH.is_file():
+            self.skipTest("测试ROM不存在")
+        project = RomProject.load(ROM_PATH)
+        before = bytes(project.working)
+        undo_count = len(project._undo_stack)
+        dialog = OtherSettingsDialog(project=project)
+        new_double = (71, 91, 21)
+        new_damage = (14, 11, 12, 2, 3)
+        new_hit = 71
+        new_items = (2, 2, 2, 6, 4, 2, 4, 4, 26, 26, 51)
+        new_roster = tuple((0x10 + row, 0x40 + row) for row in range(6))
+
+        for editor, value in zip(dialog.double_hit_values, new_double):
+            editor.setValue(value)
+        for editor, value in zip(dialog.damage_values, new_damage):
+            editor.setValue(value)
+        dialog.hit_values[0].setValue(new_hit)
+        for editor, value in zip(dialog.item_values, new_items):
+            editor.setValue(value)
+        for row, (character_id, unit_id) in enumerate(new_roster):
+            for combo, record_id in (
+                (dialog.initial_units[row * 2], character_id),
+                (dialog.initial_units[row * 2 + 1], unit_id),
+            ):
+                index = combo.findData(record_id)
+                self.assertGreaterEqual(index, 0)
+                combo.setCurrentIndex(index)
+
+        self._show(dialog)
+        dialog.accept()
+
+        self.assertEqual(dialog.result(), dialog.DialogCode.Accepted)
+        self.assertEqual(project.get_double_hit_values(), new_double)
+        self.assertEqual(project.get_damage_formula_values(), new_damage)
+        self.assertEqual(project.get_hit_threshold(), new_hit)
+        self.assertEqual(project.get_item_effect_values(), new_items)
+        self.assertEqual(project.get_initial_roster(), new_roster)
+        self.assertEqual(len(project._undo_stack), undo_count + 1)
+        self.assertEqual(project.undo_description, "其他全局参数")
+
+        self.assertEqual(project.undo(), "其他全局参数")
+        self.assertEqual(bytes(project.working), before)
+
+    def test_other_settings_can_open_and_keep_zero_roster_ids(self) -> None:
+        if not ROM_PATH.is_file():
+            self.skipTest("测试ROM不存在")
+        project = RomProject.load(ROM_PATH)
+        roster = list(project.get_initial_roster())
+        roster[0] = (0, 0)
+        project.set_initial_roster(roster)
+
+        dialog = OtherSettingsDialog(project=project)
+
+        self.assertGreaterEqual(dialog.initial_units[0].findData(0), 0)
+        self.assertGreaterEqual(dialog.initial_units[1].findData(0), 0)
+        self.assertEqual(dialog.initial_units[0].currentData(), 0)
+        self.assertEqual(dialog.initial_units[1].currentData(), 0)
+        dialog.reject()
 
     def test_reference_geometry_is_fixed_and_offscreen_screenshots_render(self) -> None:
         dialogs = (

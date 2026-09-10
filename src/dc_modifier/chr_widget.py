@@ -207,7 +207,7 @@ class ChrGraphicsWidget(ProjectPage):
         self.tile_index = QSpinBox()
         self.tile_index.setDisplayIntegerBase(16)
         self.tile_index.setPrefix("$")
-        self.tile_index.valueChanged.connect(self._load_tile)
+        self.tile_index.valueChanged.connect(self._request_tile_change)
         self.location = QLabel("—")
         self.location.setObjectName("hintText")
         self.location.setWordWrap(True)
@@ -295,18 +295,109 @@ class ChrGraphicsWidget(ProjectPage):
         self.tile_index.blockSignals(False)
         self._load_tile(previous)
 
+    @property
+    def has_pending_draft(self) -> bool:
+        if self.project is None:
+            return False
+        return tuple(self.canvas.pixels) != self.project.chr_tile_pixels(
+            self.current_tile
+        )
+
+    @property
+    def pending_draft_error(self) -> str | None:
+        if not self.has_pending_draft or self.project is None:
+            return None
+        try:
+            self.project.chr_codec.encode_tile(self.canvas.pixels)
+        except (TypeError, ValueError) as error:
+            return str(error)
+        return None
+
+    def pending_draft_tile_bytes(self) -> tuple[int, bytes] | None:
+        """Return the valid visible draft without mutating the project."""
+
+        if not self.has_pending_draft or self.project is None:
+            return None
+        error = self.pending_draft_error
+        if error is not None:
+            raise ValueError(error)
+        return (
+            self.current_tile,
+            self.project.chr_codec.encode_tile(self.canvas.pixels),
+        )
+
+    def range_bytes_with_pending_draft(
+        self,
+        first_tile: int,
+        tile_count: int,
+    ) -> bytes:
+        """Read a CHR range and overlay the valid visible draft in memory."""
+
+        if self.project is None:
+            raise ValueError("尚未载入ROM。")
+        payload = bytearray(
+            self.project.chr_codec.range_bytes(
+                first_tile,
+                tile_count,
+                bytes(self.project.working),
+            )
+        )
+        draft = self.pending_draft_tile_bytes()
+        if draft is not None:
+            tile_index, tile_bytes = draft
+            if first_tile <= tile_index < first_tile + tile_count:
+                offset = (tile_index - first_tile) * 16
+                payload[offset : offset + 16] = tile_bytes
+        return bytes(payload)
+
+    def commit_pending_changes(self) -> bool:
+        if not self.has_pending_draft:
+            return True
+        if self.pending_draft_error is not None:
+            return False
+        return self.apply_tile()
+
+    def _sync_selection_controls(self, tile_index: int) -> None:
+        """Keep both selectors aligned without replacing the canvas draft."""
+
+        page = tile_index // 256
+        tile_was_blocked = self.tile_index.blockSignals(True)
+        self.tile_index.setValue(tile_index)
+        self.tile_index.blockSignals(tile_was_blocked)
+        page_was_blocked = self.sheet_page.blockSignals(True)
+        self.sheet_page.setValue(page)
+        self.sheet_page.blockSignals(page_was_blocked)
+        self.sheet.set_page(page)
+        self.sheet.set_selected_tile(tile_index)
+
+    def _request_tile_change(self, tile_index: int) -> bool:
+        if tile_index == self.current_tile:
+            self._sync_selection_controls(tile_index)
+            return True
+        if self.project is not None and self.has_pending_draft:
+            # QSpinBox has already changed by the time this slot runs. Restore
+            # the visible selection while the old tile draft is validated and
+            # committed so a failed commit cannot strand mismatched controls.
+            self._sync_selection_controls(self.current_tile)
+            error = self.pending_draft_error
+            if error is not None or not self.commit_pending_changes():
+                self.show_error(
+                    ValueError(
+                        error
+                        or self.pending_draft_error
+                        or "当前CHR图块草稿提交失败，请修正后再切换。"
+                    )
+                )
+                return False
+        self._load_tile(tile_index)
+        return True
+
     def _load_tile(self, tile_index: int) -> None:
         self.current_tile = tile_index
         if self.project is None:
             return
         self.canvas.set_pixels(self.project.chr_tile_pixels(tile_index))
-        page = tile_index // 256
-        if self.sheet_page.value() != page:
-            self.sheet_page.blockSignals(True)
-            self.sheet_page.setValue(page)
-            self.sheet_page.blockSignals(False)
-            self.sheet.set_page(page)
-        self.sheet.set_selected_tile(tile_index)
+        self._sync_selection_controls(tile_index)
         self.sheet_selection.setText(f"选择：图块 ${tile_index:04X}")
         offset = self.project.chr_codec.tile_offset(tile_index)
         bank = tile_index // 512
@@ -318,12 +409,16 @@ class ChrGraphicsWidget(ProjectPage):
         self._update_preview()
 
     def _sheet_page_changed(self, page: int) -> None:
-        self.sheet.set_page(page)
         if self.project is not None:
             self._select_tile(min(page * 256, self.project.chr_tile_count - 1))
+        else:
+            self.sheet.set_page(page)
 
-    def _select_tile(self, tile_index: int) -> None:
+    def _select_tile(self, tile_index: int) -> bool:
+        if self.tile_index.value() == tile_index:
+            return self._request_tile_change(tile_index)
         self.tile_index.setValue(tile_index)
+        return self.current_tile == tile_index
 
     def _ink_changed(self) -> None:
         self.canvas.ink = int(self.ink.currentData())
@@ -331,18 +426,24 @@ class ChrGraphicsWidget(ProjectPage):
     def _update_preview(self) -> None:
         if self.project is None:
             return
-        raw = self.project.chr_codec.encode_tile(self.canvas.pixels)
+        try:
+            raw = self.project.chr_codec.encode_tile(self.canvas.pixels)
+        except (TypeError, ValueError) as error:
+            self.hex_preview.setText(f"无效图块：{error}")
+            return
         self.hex_preview.setText(raw.hex(" ").upper())
 
-    def apply_tile(self) -> None:
+    def apply_tile(self) -> bool:
         if self.project is None:
-            return
+            return False
         try:
             self.project.set_chr_tile_pixels(self.current_tile, self.canvas.pixels)
             self.sheet.update()
             self.project_changed.emit(f"已更新CHR图块 ${self.current_tile:04X}")
+            return not self.has_pending_draft
         except Exception as error:
             self.show_error(error)
+            return False
 
     def reset_tile(self) -> None:
         if self.project is None:
@@ -461,6 +562,7 @@ class ChrGraphicsWidget(ProjectPage):
             tile_count = len(payload) // 16
             if self.current_tile + tile_count > self.project.chr_tile_count:
                 raise ValueError("导入范围超出有效CHR-ROM。")
+            self.pending_draft_tile_bytes()
             answer = QMessageBox.question(
                 self,
                 "确认批量导入",
@@ -469,6 +571,7 @@ class ChrGraphicsWidget(ProjectPage):
             )
             if answer != QMessageBox.StandardButton.Yes:
                 return
+            self._commit_pending_draft_for_range_import()
             self.project.set_chr_range(self.current_tile, payload)
             self._load_tile(self.current_tile)
             self.sheet.update()
@@ -478,6 +581,18 @@ class ChrGraphicsWidget(ProjectPage):
         except Exception as error:
             self.show_error(error)
 
+    def _commit_pending_draft_for_range_import(self) -> None:
+        """Preserve a valid draft as the undo baseline before overwriting it."""
+
+        draft = self.pending_draft_tile_bytes()
+        if draft is None:
+            return
+        if not self.commit_pending_changes():
+            raise ValueError(
+                self.pending_draft_error
+                or "当前CHR图块草稿无法提交，请修正后重试。"
+            )
+
     def export_chr(self) -> None:
         if self.project is None:
             return
@@ -485,11 +600,6 @@ class ChrGraphicsWidget(ProjectPage):
             count = min(
                 self.range_count.value(),
                 self.project.chr_tile_count - self.current_tile,
-            )
-            payload = self.project.chr_codec.range_bytes(
-                self.current_tile,
-                count,
-                bytes(self.project.working),
             )
             filename, _ = QFileDialog.getSaveFileName(
                 self,
@@ -499,11 +609,21 @@ class ChrGraphicsWidget(ProjectPage):
                 ),
                 "CHR图块数据 (*.chr)",
             )
-            if filename:
-                destination = Path(filename)
-                if destination.suffix.lower() != ".chr":
-                    destination = destination.with_suffix(".chr")
-                destination = writable_output_path(destination)
-                destination.write_bytes(payload)
+            if not filename:
+                return
+            destination = Path(filename)
+            if destination.suffix.lower() != ".chr":
+                destination = destination.with_suffix(".chr")
+            destination = writable_output_path(destination)
+            payload = self.range_bytes_with_pending_draft(
+                self.current_tile,
+                count,
+            )
+            destination.write_bytes(payload)
+            if not self.commit_pending_changes():
+                raise ValueError(
+                    self.pending_draft_error
+                    or "当前CHR图块草稿无法提交，请修正后重试。"
+                )
         except Exception as error:
             self.show_error(error)

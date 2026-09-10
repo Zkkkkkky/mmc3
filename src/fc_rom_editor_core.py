@@ -18,6 +18,7 @@ from fc_editor.codecs import (
     ChapterEventCodec,
     ChrCodec,
     CustomMusicCodec,
+    LegacyGlobalDataCodec,
     MapCodec,
     MapTrigger,
     MapTriggerCodec,
@@ -530,6 +531,11 @@ class RomProject:
             if self.rom_image.profile.character_name_pointer_table_offset is not None
             else None
         )
+        self.legacy_global_data_codec = (
+            LegacyGlobalDataCodec(self.rom_image)
+            if self.rom_image.profile.legacy_global_data is not None
+            else None
+        )
         if initial_plan is not None and initial_plan.flags & FLAG_MAPS:
             initial_layout = read_expanded_map_layout(self.original)
             self.base_map_codec = MapCodec(
@@ -942,6 +948,192 @@ class RomProject:
     @property
     def supports_battle_music(self) -> bool:
         return self.battle_music_codec is not None
+
+    @property
+    def supports_legacy_global_data(self) -> bool:
+        return self.legacy_global_data_codec is not None
+
+    def _require_legacy_global_data_codec(self) -> LegacyGlobalDataCodec:
+        if self.legacy_global_data_codec is None:
+            raise ValueError("当前 ROM 的全局参数表尚未验证。")
+        return self.legacy_global_data_codec
+
+    def _apply_legacy_global_patches(
+        self,
+        patches: Iterable[tuple[int, bytes, bytes]],
+        description: str,
+    ) -> None:
+        normalized = tuple(patches)
+        with self.transaction(description):
+            for offset, before, _after in normalized:
+                current = bytes(self.working[offset : offset + len(before)])
+                if current != before:
+                    raise RomFormatError(f"{description}的 ROM 操作数已变化。")
+            for offset, _before, after in normalized:
+                self.working[offset : offset + len(after)] = after
+
+    def get_double_hit_values(
+        self, *, original: bool = False
+    ) -> tuple[int, int, int]:
+        codec = self._require_legacy_global_data_codec()
+        source = self.original if original else self.working
+        return codec.double_hit_values(source)
+
+    def set_double_hit_values(self, values: Iterable[int]) -> None:
+        codec = self._require_legacy_global_data_codec()
+        patches = codec.double_hit_patches(self.working, values)
+        self._apply_legacy_global_patches(patches, "双击公式")
+
+    def reset_double_hit_values(self) -> None:
+        codec = self._require_legacy_global_data_codec()
+        patches = codec.double_hit_patches(
+            self.working, self.get_double_hit_values(original=True)
+        )
+        self._apply_legacy_global_patches(patches, "双击公式 · 还原")
+
+    def get_damage_formula_values(
+        self, *, original: bool = False
+    ) -> tuple[int, int, int, int, int]:
+        codec = self._require_legacy_global_data_codec()
+        source = self.original if original else self.working
+        return codec.damage_formula_values(source)
+
+    def set_damage_formula_values(self, values: Iterable[int]) -> None:
+        codec = self._require_legacy_global_data_codec()
+        patches = codec.damage_formula_patches(self.working, values)
+        self._apply_legacy_global_patches(patches, "伤害公式")
+
+    def reset_damage_formula_values(self) -> None:
+        codec = self._require_legacy_global_data_codec()
+        patches = codec.damage_formula_patches(
+            self.working, self.get_damage_formula_values(original=True)
+        )
+        self._apply_legacy_global_patches(patches, "伤害公式 · 还原")
+
+    def get_hit_threshold(self, *, original: bool = False) -> int:
+        codec = self._require_legacy_global_data_codec()
+        source = self.original if original else self.working
+        return codec.hit_threshold(source)
+
+    def set_hit_threshold(self, value: int) -> None:
+        codec = self._require_legacy_global_data_codec()
+        patches = codec.hit_threshold_patches(self.working, value)
+        self._apply_legacy_global_patches(patches, "命中阈值")
+
+    def reset_hit_threshold(self) -> None:
+        codec = self._require_legacy_global_data_codec()
+        patches = codec.hit_threshold_patches(
+            self.working, self.get_hit_threshold(original=True)
+        )
+        self._apply_legacy_global_patches(patches, "命中阈值 · 还原")
+
+    def get_item_effect_values(self, *, original: bool = False) -> tuple[int, ...]:
+        codec = self._require_legacy_global_data_codec()
+        source = self.original if original else self.working
+        return codec.item_effect_values(source)
+
+    def set_item_effect_values(self, values: Iterable[int]) -> None:
+        codec = self._require_legacy_global_data_codec()
+        patches = codec.item_effect_patches(self.working, values)
+        self._apply_legacy_global_patches(patches, "道具效果")
+
+    def reset_item_effect_values(self) -> None:
+        codec = self._require_legacy_global_data_codec()
+        patches = codec.item_effect_patches(
+            self.working, self.get_item_effect_values(original=True)
+        )
+        self._apply_legacy_global_patches(patches, "道具效果 · 还原")
+
+    def get_item_name_records(
+        self, *, original: bool = False
+    ) -> tuple[bytes, ...]:
+        codec = self._require_legacy_global_data_codec()
+        source = self.original if original else self.working
+        return codec.item_name_records(source)
+
+    def set_item_name_records(self, records: Iterable[bytes]) -> None:
+        codec = self._require_legacy_global_data_codec()
+        patches = codec.item_name_record_patches(self.working, records)
+        self._apply_legacy_global_patches(patches, "道具名称")
+
+    def reset_item_name_records(self) -> None:
+        codec = self._require_legacy_global_data_codec()
+        patches = codec.item_name_storage_copy_patches(self.working, self.original)
+        self._apply_legacy_global_patches(patches, "道具名称 · 还原")
+
+    def get_item_prices(self, *, original: bool = False) -> tuple[int, ...]:
+        codec = self._require_legacy_global_data_codec()
+        source = self.original if original else self.working
+        return codec.item_prices(source)
+
+    def set_item_prices(self, values: Iterable[int]) -> None:
+        codec = self._require_legacy_global_data_codec()
+        patches = codec.item_price_patches(self.working, values)
+        self._apply_legacy_global_patches(patches, "道具价格")
+
+    def reset_item_prices(self) -> None:
+        codec = self._require_legacy_global_data_codec()
+        patches = codec.item_price_patches(
+            self.working, self.get_item_prices(original=True)
+        )
+        self._apply_legacy_global_patches(patches, "道具价格 · 还原")
+
+    def get_initial_roster(
+        self, *, original: bool = False
+    ) -> tuple[tuple[int, int], ...]:
+        codec = self._require_legacy_global_data_codec()
+        source = self.original if original else self.working
+        return codec.initial_roster(source)
+
+    def set_initial_roster(self, roster: Iterable[tuple[int, int]]) -> None:
+        codec = self._require_legacy_global_data_codec()
+        patches = codec.initial_roster_patches(self.working, roster)
+        self._apply_legacy_global_patches(patches, "初始人物/机体")
+
+    def reset_initial_roster(self) -> None:
+        codec = self._require_legacy_global_data_codec()
+        patches = codec.initial_roster_patches(
+            self.working, self.get_initial_roster(original=True)
+        )
+        self._apply_legacy_global_patches(patches, "初始人物/机体 · 还原")
+
+    def get_distance_hit_corrections(
+        self, *, original: bool = False
+    ) -> tuple[tuple[int, ...], ...]:
+        codec = self._require_legacy_global_data_codec()
+        source = self.original if original else self.working
+        return codec.distance_hit_corrections(source)
+
+    def set_distance_hit_corrections(
+        self, rows: Iterable[Iterable[int]]
+    ) -> None:
+        codec = self._require_legacy_global_data_codec()
+        patches = codec.distance_hit_correction_patches(self.working, rows)
+        self._apply_legacy_global_patches(patches, "距离命中修正表")
+
+    def reset_distance_hit_corrections(self) -> None:
+        codec = self._require_legacy_global_data_codec()
+        patches = codec.distance_hit_correction_patches(
+            self.working, self.get_distance_hit_corrections(original=True)
+        )
+        self._apply_legacy_global_patches(patches, "距离命中修正表 · 还原")
+
+    def get_experience_totals(self, *, original: bool = False) -> tuple[int, ...]:
+        codec = self._require_legacy_global_data_codec()
+        source = self.original if original else self.working
+        return codec.experience_totals(source)
+
+    def set_experience_totals(self, values: Iterable[int]) -> None:
+        codec = self._require_legacy_global_data_codec()
+        patches = codec.experience_total_patches(self.working, values)
+        self._apply_legacy_global_patches(patches, "累计经验表")
+
+    def reset_experience_totals(self) -> None:
+        codec = self._require_legacy_global_data_codec()
+        patches = codec.experience_total_patches(
+            self.working, self.get_experience_totals(original=True)
+        )
+        self._apply_legacy_global_patches(patches, "累计经验表 · 还原")
 
     @property
     def expansion_capacity(self) -> int:

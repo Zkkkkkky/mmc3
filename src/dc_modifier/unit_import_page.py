@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from dataclasses import replace
 from pathlib import Path
 
 from PySide6.QtCore import Qt
@@ -146,6 +147,30 @@ class UnitImportPage(ProjectPage):
         self._refresh_impact()
         self.graphics.set_project(self.project)
 
+    @property
+    def has_pending_draft(self) -> bool:
+        return self.graphics.has_pending_draft
+
+    @property
+    def pending_draft_error(self) -> str | None:
+        return self.graphics.pending_draft_error
+
+    def commit_pending_changes(self) -> bool:
+        return self.graphics.commit_pending_changes()
+
+    def _commit_graphics_draft(self) -> None:
+        error = self.graphics.pending_draft_error
+        if error is not None:
+            raise ValueError(error)
+        if (
+            self.graphics.has_pending_draft
+            and not self.graphics.commit_pending_changes()
+        ):
+            raise ValueError(
+                self.graphics.pending_draft_error
+                or "当前CHR图块草稿无法提交，请修正后重试。"
+            )
+
     @staticmethod
     def _restore_combo(combo: QComboBox, value: object) -> None:
         index = combo.findData(value)
@@ -227,11 +252,33 @@ class UnitImportPage(ProjectPage):
             if first_tile + tile_count > self.project.chr_tile_count:
                 raise ValueError("随包携带的CHR范围超出有效CHR-ROM。")
             ranges = ((first_tile, tile_count),)
-        return package_from_project(
+        package = package_from_project(
             self.project,
             self._selected_id(self.source_unit),
             chr_ranges=ranges,
         )
+        if not package.assets:
+            return package
+        assets = []
+        for asset in package.assets:
+            if asset.kind != "chr_tiles":
+                assets.append(asset)
+                continue
+            metadata = asset.metadata_map
+            first_tile = metadata.get("firstTile")
+            tile_count = metadata.get("tileCount")
+            if not isinstance(first_tile, int) or not isinstance(tile_count, int):
+                raise ValueError(f"CHR资源 {asset.asset_id} 缺少有效的图块范围。")
+            assets.append(
+                replace(
+                    asset,
+                    data=self.graphics.range_bytes_with_pending_draft(
+                        first_tile,
+                        tile_count,
+                    ),
+                )
+            )
+        return replace(package, assets=tuple(assets))
 
     def clear_package(self) -> None:
         self.set_loaded_package(None)
@@ -241,7 +288,6 @@ class UnitImportPage(ProjectPage):
             return
         try:
             unit_id = self._selected_id(self.source_unit)
-            package = self._package_from_selected_unit()
             default = default_export_path(f"unit_{unit_id:02X}.dcunit")
             filename, _ = QFileDialog.getSaveFileName(
                 self,
@@ -255,9 +301,10 @@ class UnitImportPage(ProjectPage):
             if destination.suffix.lower() != ".dcunit":
                 destination = destination.with_suffix(".dcunit")
             destination = writable_output_path(destination)
+            package = self._package_from_selected_unit()
             package.save(destination)
+            self._commit_graphics_draft()
             self.set_loaded_package(package)
-            self.project_changed.emit(f"机体包已导出：{destination.name}")
         except Exception as error:
             self.show_error(error)
 
@@ -283,6 +330,7 @@ class UnitImportPage(ProjectPage):
             self.show_error(ValueError("请先载入或选择一个待导入机体。"))
             return
         try:
+            pending_draft = self.graphics.pending_draft_tile_bytes()
             target_id = self._selected_id(self.target_unit)
             affected = affected_unit_ids(self.project, target_id)
             ids = "、".join(f"${unit_id:02X}" for unit_id in affected)
@@ -295,7 +343,14 @@ class UnitImportPage(ProjectPage):
             answer = QMessageBox.question(self, "确认导入机体", question)
             if answer != QMessageBox.StandardButton.Yes:
                 return
-            apply_unit_package(self.project, self.loaded_package, target_id)
+            with self.project.transaction(
+                f"提交CHR草稿并导入机体 {self.loaded_package.label} → ${target_id:02X}"
+            ):
+                apply_unit_package(self.project, self.loaded_package, target_id)
+                if pending_draft is not None:
+                    draft_tile, draft_bytes = pending_draft
+                    self.project.set_chr_range(draft_tile, draft_bytes)
+            self.graphics.refresh()
             self.project_changed.emit(
                 f"已将机体包覆盖到 ${target_id:02X}（影响 {ids}）"
             )

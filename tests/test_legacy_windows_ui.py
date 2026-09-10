@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 import os
+from pathlib import Path
+import tempfile
 from types import SimpleNamespace
 import unittest
 from unittest.mock import patch
@@ -63,6 +65,167 @@ class LegacyWindowTests(unittest.TestCase):
         )
         self.assertEqual(dialog.ok_button.text(), "确定")
         self.assertEqual(dialog.cancel_button.text(), "取消")
+
+    def test_global_tables_load_all_verified_rom_defaults(self) -> None:
+        project = RomProject.load(DEFAULT_ROM)
+        dialog = self._show(DatabaseDialog(project))
+        page = dialog.other_page_1
+
+        experience = tuple(
+            int(page.experience_table.item(row, 1).text())
+            for row in range(page.experience_table.rowCount())
+        )
+        corrections = tuple(
+            tuple(
+                int(page.distance_table.item(row, column).text())
+                for column in range(page.distance_table.columnCount())
+            )
+            for row in range(page.distance_table.rowCount())
+        )
+
+        self.assertEqual(len(experience), 99)
+        self.assertEqual(experience, project.get_experience_totals())
+        self.assertEqual(experience[:10], (20, 60, 120, 200, 300, 420, 560, 720, 900, 1100))
+        self.assertEqual(experience[49], 15200)
+        self.assertEqual(experience[97:], (64350, 65535))
+        self.assertEqual(
+            corrections,
+            (
+                (100,) * 16,
+                (100, 98, 96, 94, 92, 90, 88, 86, 84, 82, 80, 78, 76, 74, 72, 70),
+                (100, 95, 90, 85, 80, 75, 70, 65, 60, 55, 50, 45, 40, 35, 30, 25),
+                (100, 90, 80, 70, 60, 50, 40, 30, 20, 10, 9, 8, 7, 6, 5, 4),
+            ),
+        )
+
+    def test_database_ok_commits_global_table_drafts_and_undo_restores_both(self) -> None:
+        project = RomProject.load(DEFAULT_ROM)
+        dialog = self._show(DatabaseDialog(project))
+        dialog.tabs.setCurrentWidget(dialog.other_page_1)
+        page = dialog.other_page_1
+        original_experience = project.get_experience_totals()
+        original_corrections = project.get_distance_hit_corrections()
+
+        page.experience_table.item(49, 1).setText("15201")
+        page.distance_table.item(3, 15).setText("5")
+        self.application.processEvents()
+        self.assertTrue(page.has_pending_draft)
+        self.assertTrue(page.apply_button.isEnabled())
+
+        dialog.accept()
+
+        self.assertEqual(dialog.result(), dialog.DialogCode.Accepted)
+        self.assertEqual(project.get_experience_totals()[49], 15201)
+        self.assertEqual(project.get_distance_hit_corrections()[3][15], 5)
+        self.assertEqual(project.undo_description, "升级经验与距离命中补正")
+        self.assertEqual(project.undo(), "升级经验与距离命中补正")
+        self.assertEqual(project.get_experience_totals(), original_experience)
+        self.assertEqual(project.get_distance_hit_corrections(), original_corrections)
+
+    def test_database_ok_blocks_invalid_global_cell_and_preserves_draft(self) -> None:
+        project = RomProject.load(DEFAULT_ROM)
+        before = bytes(project.working)
+        dialog = self._show(DatabaseDialog(project))
+        dialog.tabs.setCurrentWidget(dialog.other_page_1)
+        page = dialog.other_page_1
+        page.experience_table.item(0, 1).setText("不是数字")
+        self.application.processEvents()
+        self.assertTrue(page.has_pending_draft)
+        self.assertIsNotNone(page.pending_draft_error)
+
+        with patch("dc_modifier.legacy_windows.QMessageBox.warning") as warning:
+            dialog.accept()
+
+        warning.assert_called_once()
+        self.assertTrue(dialog.isVisible())
+        self.assertNotEqual(dialog.result(), dialog.DialogCode.Accepted)
+        self.assertEqual(bytes(project.working), before)
+        self.assertEqual(page.experience_table.item(0, 1).text(), "不是数字")
+        self.assertTrue(page.has_pending_draft)
+
+    def test_item_table_loads_all_24_verified_names_and_display_prices(self) -> None:
+        project = RomProject.load(DEFAULT_ROM)
+        dialog = self._show(DatabaseDialog(project))
+        page = dialog.other_page_2
+
+        self.assertEqual(page.item_table.rowCount(), 24)
+        displayed_names = tuple(
+            page.item_table.item(row, 1).text() for row in range(24)
+        )
+        displayed_prices = tuple(
+            int(page.item_table.item(row, 2).text()) for row in range(24)
+        )
+        self.assertTrue(all(displayed_names))
+        self.assertEqual(
+            displayed_names,
+            tuple(
+                page._text_table.decode(raw_name)
+                for raw_name in project.get_item_name_records()
+            ),
+        )
+        self.assertFalse(page.has_pending_draft)
+        self.assertEqual(
+            displayed_prices,
+            tuple(value * 10 for value in project.get_item_prices()),
+        )
+        self.assertEqual(
+            displayed_prices,
+            (
+                4000, 5000, 4000, 5000, 12000, 20000, 18880, 12000,
+                15000, 10000, 28000, 6000, 20000, 18000, 12000, 1000,
+                4000, 10000, 1000, 5000, 99990, 99990, 99990, 99990,
+            ),
+        )
+
+    def test_database_ok_commits_item_names_and_price_as_one_undo_entry(self) -> None:
+        project = RomProject.load(DEFAULT_ROM)
+        original_names = project.get_item_name_records()
+        original_prices = project.get_item_prices()
+        dialog = self._show(DatabaseDialog(project))
+        dialog.tabs.setCurrentWidget(dialog.other_page_2)
+        page = dialog.other_page_2
+        first_name = page.item_table.item(0, 1).text()
+        second_name = page.item_table.item(1, 1).text()
+        page.item_table.item(0, 1).setText(second_name)
+        page.item_table.item(1, 1).setText(first_name)
+        page.item_table.item(0, 2).setText("4010")
+        self.application.processEvents()
+        self.assertTrue(page.has_pending_draft)
+        self.assertIsNone(page.pending_draft_error)
+
+        dialog.accept()
+
+        self.assertEqual(dialog.result(), dialog.DialogCode.Accepted)
+        self.assertEqual(
+            project.get_item_name_records()[:2],
+            (original_names[1], original_names[0]),
+        )
+        self.assertEqual(project.get_item_prices()[0], 401)
+        self.assertEqual(project.undo_description, "道具名称与价格")
+        self.assertEqual(project.undo(), "道具名称与价格")
+        self.assertEqual(project.get_item_name_records(), original_names)
+        self.assertEqual(project.get_item_prices(), original_prices)
+
+    def test_database_ok_blocks_invalid_item_price_and_preserves_draft(self) -> None:
+        project = RomProject.load(DEFAULT_ROM)
+        before = bytes(project.working)
+        dialog = self._show(DatabaseDialog(project))
+        dialog.tabs.setCurrentWidget(dialog.other_page_2)
+        page = dialog.other_page_2
+        page.item_table.item(0, 2).setText("4001")
+        self.application.processEvents()
+        self.assertTrue(page.has_pending_draft)
+        self.assertIn("10的倍数", page.pending_draft_error or "")
+
+        with patch("dc_modifier.legacy_windows.QMessageBox.warning") as warning:
+            dialog.accept()
+
+        warning.assert_called_once()
+        self.assertTrue(dialog.isVisible())
+        self.assertNotEqual(dialog.result(), dialog.DialogCode.Accepted)
+        self.assertEqual(bytes(project.working), before)
+        self.assertEqual(page.item_table.item(0, 2).text(), "4001")
+        self.assertTrue(page.has_pending_draft)
 
     def test_unit_tab_uses_reference_list_and_real_chr_icon_preview(self) -> None:
         dialog = self._show(DatabaseDialog(self.project))
@@ -178,6 +341,68 @@ class LegacyWindowTests(unittest.TestCase):
 
         self.assertEqual(dialog.result(), dialog.DialogCode.Accepted)
         self.assertNotEqual(bytes(self.project.working), before)
+
+    def test_scenario_ok_blocks_two_drafts_for_one_real_event_address(self) -> None:
+        dialog = self._show(ScenarioDialog(self.project, initial_scenario_id=0))
+        first_page = dialog.setup_event_pages[0]
+        second_page = dialog.setup_event_pages[2]
+        shared_address = 0xA0C0
+        self.assertTrue(first_page._select_address(shared_address))
+        self.assertTrue(second_page._select_address(shared_address))
+        first = first_page._selected_instruction()
+        second = second_page._selected_instruction()
+        self.assertIsNotNone(first)
+        self.assertIsNotNone(second)
+        assert first is not None and second is not None
+        self.assertEqual(first.address, shared_address)
+        self.assertEqual(second.address, shared_address)
+        self.assertEqual(first.raw, second.raw)
+
+        first_replacement = first.raw[:-1] + bytes((first.raw[-1] ^ 0x01,))
+        second_replacement = second.raw[:-1] + bytes((second.raw[-1] ^ 0x02,))
+        first_page.raw.setText(first_replacement.hex(" ").upper())
+        second_page.raw.setText(second_replacement.hex(" ").upper())
+        self.assertTrue(first_page.has_pending_draft)
+        self.assertTrue(second_page.has_pending_draft)
+        self.assertIn("$A0C0", first_page.pending_draft_error or "")
+        self.assertIn("多个编辑页", second_page.pending_draft_error or "")
+        before = bytes(self.project.working)
+        undo_count = len(self.project._undo_stack)
+        self.assertFalse(first_page.commit_pending_changes())
+        self.assertEqual(bytes(self.project.working), before)
+        self.assertEqual(first_page.raw.text(), first_replacement.hex(" ").upper())
+        self.assertEqual(second_page.raw.text(), second_replacement.hex(" ").upper())
+
+        with patch("dc_modifier.legacy_windows.QMessageBox.warning") as warning:
+            dialog.accept()
+
+        warning.assert_called_once()
+        self.assertTrue(dialog.isVisible())
+        self.assertNotEqual(dialog.result(), dialog.DialogCode.Accepted)
+        self.assertEqual(bytes(self.project.working), before)
+        self.assertEqual(len(self.project._undo_stack), undo_count)
+        self.assertEqual(first_page.raw.text(), first_replacement.hex(" ").upper())
+        self.assertEqual(second_page.raw.text(), second_replacement.hex(" ").upper())
+        self.assertTrue(first_page.has_pending_draft)
+        self.assertTrue(second_page.has_pending_draft)
+
+        # Reset is the deliberate escape hatch advertised by the conflict
+        # message: discard one local draft without applying either competing
+        # replacement, then the remaining draft can be committed normally.
+        first_page.reset_button.click()
+        self.assertFalse(first_page.has_pending_draft)
+        self.assertTrue(second_page.has_pending_draft)
+        self.assertIsNone(second_page.pending_draft_error)
+        self.assertEqual(bytes(self.project.working), before)
+        self.assertEqual(len(self.project._undo_stack), undo_count)
+
+        dialog.accept()
+        self.assertEqual(dialog.result(), dialog.DialogCode.Accepted)
+        changed = self.project.chapter_event_codec.instruction_at(
+            shared_address,
+            bytes(self.project.working),
+        )
+        self.assertEqual(changed.raw, second_replacement)
 
     def test_scenario_chapter_switch_commits_valid_hidden_event_draft(self) -> None:
         dialog = self._show(ScenarioDialog(self.project, initial_scenario_id=0))
@@ -314,6 +539,414 @@ class LegacyWindowTests(unittest.TestCase):
         self.assertEqual(
             overview.currentItem().data(Qt.ItemDataRole.UserRole), target_index
         )
+
+    def test_story_unicode_draft_commits_before_record_switch(self) -> None:
+        dialog = self._show(ScenarioDialog(self.project, initial_scenario_id=0))
+        page = dialog.story_page
+        old_selector = page.current_selector
+        old_index = page.current_index
+        self.assertIsNotNone(old_selector)
+        self.assertIsNotNone(old_index)
+        assert old_selector is not None and old_index is not None
+        assert page.text_table is not None
+        original_text = page.decoded.toPlainText()
+        self.assertIn("！", original_text)
+        changed_text = original_text.replace("！", ".", 1)
+        replacement = page.text_table.encode(changed_text)
+
+        page.decoded.setPlainText(changed_text)
+        self.assertTrue(page.has_pending_draft)
+        self.assertIsNone(page.pending_draft_error)
+
+        target_row = next(
+            row
+            for row in range(page.indices.count())
+            if page.indices.item(row).data(Qt.ItemDataRole.UserRole) != old_index
+        )
+        target_index = page.indices.item(target_row).data(Qt.ItemDataRole.UserRole)
+        page.indices.setCurrentRow(target_row)
+        self.application.processEvents()
+
+        self.assertEqual(
+            self.project.get_story_text(old_selector, old_index).raw,
+            replacement,
+        )
+        self.assertFalse(page.has_pending_draft)
+        self.assertEqual(page.current_index, target_index)
+
+    def test_story_unicode_edit_preserves_untouched_real_alias_tokens(self) -> None:
+        dialog = self._show(ScenarioDialog(self.project, initial_scenario_id=0))
+        page = dialog.story_page
+        selector = 0x32
+        record_index = 10
+        selector_row = page.selector.findData(selector)
+        self.assertGreaterEqual(selector_row, 0)
+        page.selector.setCurrentIndex(selector_row)
+        target_row = next(
+            row
+            for row in range(page.indices.count())
+            if page.indices.item(row).data(Qt.ItemDataRole.UserRole) == record_index
+        )
+        page.indices.setCurrentRow(target_row)
+        self.application.processEvents()
+
+        assert page.text_table is not None
+        original = self.project.get_story_text(selector, record_index).raw
+        original_text = page.decoded.toPlainText()
+        self.assertNotEqual(page.text_table.encode(original_text), original)
+        self.assertEqual(original.count(bytes.fromhex("C8 89")), 2)
+        changed_text = original_text.replace("退", "走", 1)
+        changed_token_offset = original.index(bytes.fromhex("DA 17"))
+        expected = (
+            original[:changed_token_offset]
+            + page.text_table.encode("走")
+            + original[changed_token_offset + 2 :]
+        )
+
+        page.decoded.setPlainText(changed_text)
+
+        self.assertTrue(page.has_pending_draft)
+        self.assertIsNone(page.pending_draft_error)
+        self.assertEqual(page._pending_replacement(), expected)
+        self.assertEqual(page._pending_replacement().count(bytes.fromhex("C8 89")), 2)
+
+        dialog.accept()
+
+        self.assertEqual(
+            self.project.get_story_text(selector, record_index).raw,
+            expected,
+        )
+        self.assertEqual(self.project.undo(), "剧情文本 $32:0A")
+        self.assertEqual(
+            self.project.get_story_text(selector, record_index).raw,
+            original,
+        )
+
+    def test_story_unicode_revert_to_same_text_reuses_entire_raw_record(self) -> None:
+        dialog = self._show(ScenarioDialog(self.project, initial_scenario_id=0))
+        page = dialog.story_page
+        selector = 0x32
+        record_index = 10
+        page.selector.setCurrentIndex(page.selector.findData(selector))
+        target_row = next(
+            row
+            for row in range(page.indices.count())
+            if page.indices.item(row).data(Qt.ItemDataRole.UserRole) == record_index
+        )
+        page.indices.setCurrentRow(target_row)
+        self.application.processEvents()
+
+        assert page.text_table is not None
+        original = self.project.get_story_text(selector, record_index).raw
+        original_text = page.decoded.toPlainText()
+        self.assertNotEqual(page.text_table.encode(original_text), original)
+
+        page.decoded.setPlainText(original_text.replace("退", "走", 1))
+        self.assertTrue(page.has_pending_draft)
+        page.decoded.setPlainText(original_text)
+
+        self.assertFalse(page.has_pending_draft)
+        self.assertEqual(page._pending_replacement(), original)
+        page.encode_decoded_text()
+        self.assertFalse(page.has_pending_draft)
+        self.assertEqual(page._pending_replacement(), original)
+        self.assertEqual(
+            page._parse_hex(page.raw.toPlainText()).count(bytes.fromhex("C8 89")),
+            2,
+        )
+        before = bytes(self.project.working)
+        dialog.accept()
+        self.assertEqual(bytes(self.project.working), before)
+        self.assertFalse(self.project.can_undo)
+
+    def test_story_dual_source_drafts_block_without_losing_either_input(self) -> None:
+        dialog = self._show(ScenarioDialog(self.project, initial_scenario_id=0))
+        page = dialog.story_page
+        selector = 0x32
+        record_index = 10
+        page.selector.setCurrentIndex(page.selector.findData(selector))
+        target_row = next(
+            row
+            for row in range(page.indices.count())
+            if page.indices.item(row).data(Qt.ItemDataRole.UserRole) == record_index
+        )
+        page.indices.setCurrentRow(target_row)
+        self.application.processEvents()
+
+        assert page.text_table is not None
+        original = self.project.get_story_text(selector, record_index).raw
+        original_text = page.decoded.toPlainText()
+        changed_text = original_text.replace("退", "走", 1)
+        changed_token_offset = original.index(bytes.fromhex("DA 17"))
+        expected = (
+            original[:changed_token_offset]
+            + page.text_table.encode("走")
+            + original[changed_token_offset + 2 :]
+        )
+        page.decoded.setPlainText(changed_text)
+        formatted_raw = page.raw.toPlainText() + " "
+        page.raw.setPlainText(formatted_raw)
+
+        self.assertTrue(page.has_pending_draft)
+        self.assertIsNone(page.pending_draft_error)
+        self.assertEqual(page.decoded.toPlainText(), changed_text)
+        self.assertEqual(page.raw.toPlainText(), formatted_raw)
+        self.assertEqual(page._pending_replacement(), expected)
+
+        alternate = page.text_table.encode("撤")
+        self.assertEqual(len(alternate), 2)
+        raw_draft = (
+            original[:changed_token_offset]
+            + alternate
+            + original[changed_token_offset + 2 :]
+        ).hex(" ").upper()
+        page.raw.setPlainText(raw_draft)
+
+        self.assertTrue(page.has_pending_draft)
+        self.assertIn("同时存在", page.pending_draft_error or "")
+        self.assertEqual(page.decoded.toPlainText(), changed_text)
+        self.assertEqual(page.raw.toPlainText(), raw_draft)
+        before = bytes(self.project.working)
+        undo_count = len(self.project._undo_stack)
+
+        other_row = next(
+            row
+            for row in range(page.indices.count())
+            if page.indices.item(row).data(Qt.ItemDataRole.UserRole) != record_index
+        )
+        with patch("dc_modifier.pages.QMessageBox.critical") as critical:
+            page.indices.setCurrentRow(other_row)
+            self.application.processEvents()
+
+        critical.assert_called_once()
+        self.assertEqual(page.current_index, record_index)
+        self.assertEqual(page.decoded.toPlainText(), changed_text)
+        self.assertEqual(page.raw.toPlainText(), raw_draft)
+        self.assertEqual(bytes(self.project.working), before)
+
+        with patch("dc_modifier.legacy_windows.QMessageBox.warning") as warning:
+            dialog.accept()
+
+        warning.assert_called_once()
+        self.assertTrue(dialog.isVisible())
+        self.assertEqual(page.decoded.toPlainText(), changed_text)
+        self.assertEqual(page.raw.toPlainText(), raw_draft)
+        self.assertEqual(bytes(self.project.working), before)
+        self.assertEqual(len(self.project._undo_stack), undo_count)
+
+        page.encode_decoded_text()
+
+        self.assertEqual(page.decoded.toPlainText(), changed_text)
+        self.assertEqual(page._parse_hex(page.raw.toPlainText()), expected)
+        self.assertEqual(page._parse_hex(page.raw.toPlainText()).count(bytes.fromhex("C8 89")), 2)
+        self.assertIsNone(page.pending_draft_error)
+        dialog.accept()
+        self.assertEqual(
+            self.project.get_story_text(selector, record_index).raw,
+            expected,
+        )
+
+    def test_story_invalid_unicode_draft_blocks_record_switch(self) -> None:
+        dialog = self._show(ScenarioDialog(self.project, initial_scenario_id=0))
+        page = dialog.story_page
+        old_selector = page.current_selector
+        old_index = page.current_index
+        self.assertIsNotNone(old_selector)
+        self.assertIsNotNone(old_index)
+        assert old_selector is not None and old_index is not None
+        original = self.project.get_story_text(old_selector, old_index).raw
+        invalid_text = page.decoded.toPlainText() + "🙂"
+        page.decoded.setPlainText(invalid_text)
+        self.assertTrue(page.has_pending_draft)
+        self.assertIn("没有字库编码", page.pending_draft_error or "")
+
+        target_row = next(
+            row
+            for row in range(page.indices.count())
+            if page.indices.item(row).data(Qt.ItemDataRole.UserRole) != old_index
+        )
+        with patch("dc_modifier.pages.QMessageBox.critical") as critical:
+            page.indices.setCurrentRow(target_row)
+            self.application.processEvents()
+
+        critical.assert_called_once()
+        self.assertEqual(page.current_index, old_index)
+        self.assertEqual(
+            page.indices.currentItem().data(Qt.ItemDataRole.UserRole), old_index
+        )
+        self.assertEqual(page.decoded.toPlainText(), invalid_text)
+        self.assertEqual(
+            self.project.get_story_text(old_selector, old_index).raw,
+            original,
+        )
+        self.assertTrue(page.has_pending_draft)
+
+    def test_scenario_accept_commits_story_unicode_draft(self) -> None:
+        dialog = self._show(ScenarioDialog(self.project, initial_scenario_id=0))
+        page = dialog.story_page
+        selector = page.current_selector
+        index = page.current_index
+        self.assertIsNotNone(selector)
+        self.assertIsNotNone(index)
+        assert selector is not None and index is not None
+        assert page.text_table is not None
+        original_text = page.decoded.toPlainText()
+        self.assertIn("！", original_text)
+        changed_text = original_text.replace("！", ".", 1)
+        replacement = page.text_table.encode(changed_text)
+        page.decoded.setPlainText(changed_text)
+
+        dialog.accept()
+
+        self.assertEqual(
+            self.project.get_story_text(selector, index).raw,
+            replacement,
+        )
+        self.assertFalse(page.has_pending_draft)
+        self.assertFalse(dialog.isVisible())
+
+    def test_scenario_accept_preserves_invalid_story_unicode_draft(self) -> None:
+        dialog = self._show(ScenarioDialog(self.project, initial_scenario_id=0))
+        page = dialog.story_page
+        selector = page.current_selector
+        index = page.current_index
+        self.assertIsNotNone(selector)
+        self.assertIsNotNone(index)
+        assert selector is not None and index is not None
+        original = self.project.get_story_text(selector, index).raw
+        invalid_text = page.decoded.toPlainText() + "🙂"
+        page.decoded.setPlainText(invalid_text)
+
+        with patch("dc_modifier.legacy_windows.QMessageBox.warning") as warning:
+            dialog.accept()
+
+        warning.assert_called_once()
+        self.assertTrue(dialog.isVisible())
+        self.assertEqual(page.decoded.toPlainText(), invalid_text)
+        self.assertEqual(self.project.get_story_text(selector, index).raw, original)
+        self.assertTrue(page.has_pending_draft)
+
+    def test_story_commit_refreshes_clean_sibling_editor(self) -> None:
+        dialog = self._show(ScenarioDialog(self.project, initial_scenario_id=0))
+        page = dialog.story_page
+        sibling = dialog.victory_page
+        selector = page.current_selector
+        index = page.current_index
+        self.assertEqual(
+            (sibling.current_selector, sibling.current_index),
+            (selector, index),
+        )
+        self.assertIsNotNone(selector)
+        self.assertIsNotNone(index)
+        assert selector is not None and index is not None
+        assert page.text_table is not None
+        changed_text = page.decoded.toPlainText().replace("！", ".", 1)
+        replacement = page.text_table.encode(changed_text)
+        page.decoded.setPlainText(changed_text)
+
+        self.assertTrue(page.commit_pending_changes())
+
+        self.assertEqual(
+            self.project.get_story_text(selector, index).raw,
+            replacement,
+        )
+        self.assertEqual(sibling._parse_hex(sibling.raw.toPlainText()), replacement)
+        self.assertEqual(sibling.decoded.toPlainText(), changed_text)
+        self.assertFalse(sibling.has_pending_draft)
+
+    def test_story_sibling_draft_conflict_blocks_every_commit_path(self) -> None:
+        dialog = self._show(ScenarioDialog(self.project, initial_scenario_id=0))
+        story = dialog.story_page
+        victory = dialog.victory_page
+        before = bytes(self.project.working)
+        story_text = story.decoded.toPlainText().replace("！", ".", 1)
+        victory_text = victory.decoded.toPlainText().replace("！", "：", 1)
+        story.decoded.setPlainText(story_text)
+        victory.decoded.setPlainText(victory_text)
+        self.assertTrue(story.has_pending_draft)
+        self.assertTrue(victory.has_pending_draft)
+        self.assertIn("多个编辑页", story.pending_draft_error or "")
+        self.assertIn("多个编辑页", victory.pending_draft_error or "")
+
+        with patch("dc_modifier.pages.QMessageBox.critical") as critical:
+            story.apply_text()
+
+        critical.assert_called_once()
+        self.assertEqual(bytes(self.project.working), before)
+        self.assertEqual(story.decoded.toPlainText(), story_text)
+        self.assertEqual(victory.decoded.toPlainText(), victory_text)
+
+        with patch("dc_modifier.legacy_windows.QMessageBox.warning") as warning:
+            dialog.accept()
+
+        warning.assert_called_once()
+        self.assertTrue(dialog.isVisible())
+        self.assertEqual(bytes(self.project.working), before)
+        self.assertEqual(story.decoded.toPlainText(), story_text)
+        self.assertEqual(victory.decoded.toPlainText(), victory_text)
+
+    def test_loading_text_table_commits_valid_unicode_draft_first(self) -> None:
+        dialog = self._show(ScenarioDialog(self.project, initial_scenario_id=0))
+        page = dialog.story_page
+        selector = page.current_selector
+        index = page.current_index
+        self.assertIsNotNone(selector)
+        self.assertIsNotNone(index)
+        assert selector is not None and index is not None
+        assert page.text_table is not None
+        changed_text = page.decoded.toPlainText().replace("！", ".", 1)
+        replacement = page.text_table.encode(changed_text)
+        page.decoded.setPlainText(changed_text)
+
+        with tempfile.TemporaryDirectory() as directory:
+            table_path = Path(directory) / "replacement.tbl"
+            table_path.write_text("FF=[终止]\n", encoding="utf-8")
+            with patch(
+                "dc_modifier.story_page.QFileDialog.getOpenFileName",
+                return_value=(str(table_path), ""),
+            ):
+                page.load_text_table()
+
+        self.assertEqual(
+            self.project.get_story_text(selector, index).raw,
+            replacement,
+        )
+        assert page.text_table is not None
+        self.assertEqual(page.text_table.byte_to_text, {b"\xFF": "[终止]"})
+        self.assertFalse(page.has_pending_draft)
+
+    def test_loading_text_table_preserves_invalid_unicode_draft(self) -> None:
+        dialog = self._show(ScenarioDialog(self.project, initial_scenario_id=0))
+        page = dialog.story_page
+        selector = page.current_selector
+        index = page.current_index
+        self.assertIsNotNone(selector)
+        self.assertIsNotNone(index)
+        assert selector is not None and index is not None
+        original = self.project.get_story_text(selector, index).raw
+        original_table = page.text_table
+        original_status = page.table_status.text()
+        invalid_text = page.decoded.toPlainText() + "🙂"
+        page.decoded.setPlainText(invalid_text)
+
+        with tempfile.TemporaryDirectory() as directory:
+            table_path = Path(directory) / "replacement.tbl"
+            table_path.write_text("FF=[终止]\n", encoding="utf-8")
+            with (
+                patch(
+                    "dc_modifier.story_page.QFileDialog.getOpenFileName",
+                    return_value=(str(table_path), ""),
+                ),
+                patch("dc_modifier.pages.QMessageBox.critical") as critical,
+            ):
+                page.load_text_table()
+
+        critical.assert_called_once()
+        self.assertIs(page.text_table, original_table)
+        self.assertEqual(page.table_status.text(), original_status)
+        self.assertEqual(page.decoded.toPlainText(), invalid_text)
+        self.assertEqual(self.project.get_story_text(selector, index).raw, original)
+        self.assertTrue(page.has_pending_draft)
 
     def test_scenario_victory_overview_blocks_invalid_draft(self) -> None:
         dialog = self._show(ScenarioDialog(self.project, initial_scenario_id=0))
