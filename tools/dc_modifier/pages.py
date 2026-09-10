@@ -35,6 +35,7 @@ from PySide6.QtWidgets import (
 )
 
 from fc_editor.models import UNIT_FIELDS, WEAPON_FIELDS
+from fc_editor.expansion import AUTO_ALLOCATION_PREFIX, REOPEN_GUARD_PREFIX
 from fc_editor.resources import ResourceGraph
 from fc_rom_editor_core import RomProject, compact_ids
 
@@ -136,8 +137,8 @@ class OverviewPage(ProjectPage):
         guide_layout = QVBoxLayout(guide)
         guide_layout.addWidget(
             QLabel(
-                "1. 打开 DC_kuorong_464K.nes　→　2. 修改并随时验证　→　"
-                "3. 保存 .dcmod 工程　→　4. 构建新ROM与IPS"
+                "1. 打开 DC_kuorong_464K.nes　→　2. 自动规划扩展容量　→　"
+                "3. 修改并随时验证　→　4. 保存工程并构建ROM/IPS"
             )
         )
         safety = QLabel(
@@ -150,6 +151,7 @@ class OverviewPage(ProjectPage):
         quick_group = QGroupBox("常用入口")
         quick_layout = QGridLayout(quick_group)
         quick_entries = (
+            ("扩展容量规划", "resources"),
             ("地图与部署", "maps"),
             ("机体属性", "units"),
             ("人物数据", "characters"),
@@ -1532,10 +1534,11 @@ class MusicPage(SearchableRecordPage):
 class ResourcePage(ProjectPage):
     def __init__(self) -> None:
         super().__init__()
+        self._quota_initialized = False
         layout = QVBoxLayout(self)
         title, subtitle = page_title(
-            "ROM资源占用",
-            "查看关键表、受保护银行、扩展资源区和活动CHR。导入资源时将使用同一分配表。",
+            "容量分配与自动接通",
+            "先按用途分配容量，修改器会自动搬移数据、写入 Bank 目录并接通运行时读取。",
         )
         layout.addWidget(title)
         layout.addWidget(subtitle)
@@ -1548,11 +1551,68 @@ class ResourcePage(ProjectPage):
         layout.addWidget(self.capacity_label)
         layout.addWidget(self.capacity)
 
-        managed_group = QGroupBox("托管扩展资源")
+        planner_group = QGroupBox("自动容量规划")
+        planner_layout = QVBoxLayout(planner_group)
+        planner_help = QLabel(
+            "直接选择地图、机体、剧情各占多少，再点一次按钮完成分区和运行时绑定。"
+            "地图包含地形、部署、地图事件与商店；机体包含属性、名称和战斗图配置；"
+            "剧情配额用于可变长对话文本，章节事件和劝降仍使用原有安全编辑区。"
+        )
+        planner_help.setObjectName("hintText")
+        planner_help.setWordWrap(True)
+        planner_layout.addWidget(planner_help)
+
+        quota_grid = QGridLayout()
+        self.map_quota = QSpinBox()
+        self.map_quota.setRange(16, 400)
+        self.map_quota.setSingleStep(8)
+        self.map_quota.setSuffix(" KiB")
+        self.map_quota.setToolTip("8 KiB 为一个 PRG Bank；地形、部署和地图事件共用此配额。")
+        self.unit_quota = QSpinBox()
+        self.unit_quota.setRange(48, 80)
+        self.unit_quota.setSingleStep(16)
+        self.unit_quota.setSuffix(" KiB")
+        self.unit_quota.setToolTip(
+            "48 KiB 已支持常规界面中的机体编辑；64 KiB 增加独立主体/碎片池；"
+            "80 KiB 再增加独立名称池。额外池主要供高级资源或后续导入功能。"
+        )
+        self.story_quota = QSpinBox()
+        self.story_quota.setRange(16, 112)
+        self.story_quota.setSingleStep(16)
+        self.story_quota.setSuffix(" KiB")
+        self.story_quota.setToolTip("每 16 KiB 可自动绑定一个被修改的剧情文本组。")
+        for editor in (self.map_quota, self.unit_quota, self.story_quota):
+            editor.valueChanged.connect(self._update_plan_preview)
+        quota_grid.addWidget(QLabel("地图"), 0, 0)
+        quota_grid.addWidget(self.map_quota, 0, 1)
+        quota_grid.addWidget(QLabel("机体"), 0, 2)
+        quota_grid.addWidget(self.unit_quota, 0, 3)
+        quota_grid.addWidget(QLabel("剧情"), 0, 4)
+        quota_grid.addWidget(self.story_quota, 0, 5)
+        quota_grid.setColumnStretch(6, 1)
+        planner_layout.addLayout(quota_grid)
+
+        planner_actions = QHBoxLayout()
+        self.plan_status = QLabel("尚未载入ROM")
+        self.plan_status.setWordWrap(True)
+        self.plan_status.setObjectName("hintText")
+        self.recommended_button = QPushButton("使用推荐分配")
+        self.recommended_button.clicked.connect(self._use_recommended_plan)
+        self.apply_plan_button = QPushButton("自动分区并接通")
+        self.apply_plan_button.setObjectName("primaryButton")
+        self.apply_plan_button.clicked.connect(self._apply_auto_plan)
+        planner_actions.addWidget(self.plan_status, 1)
+        planner_actions.addWidget(self.recommended_button)
+        planner_actions.addWidget(self.apply_plan_button)
+        planner_layout.addLayout(planner_actions)
+        layout.addWidget(planner_group)
+
+        managed_group = QGroupBox("高级：规划后剩余空间（不自动接通）")
         managed_layout = QVBoxLayout(managed_group)
         managed_help = QLabel(
-            "可将二进制资源安全写入空闲 Bank；分配信息会随 .dcmod 工程保存。"
-            "资源写入本身不会自动修改游戏指针。"
+            "只在仍有未分配空间时使用。这里导入的是高级二进制资源，"
+            "不会自动建立游戏内引用；一般编辑无需操作此区域。"
+            "如果使用过此功能，请始终保留 .dcmod 并用工程续改。"
         )
         managed_help.setObjectName("hintText")
         managed_help.setWordWrap(True)
@@ -1599,6 +1659,11 @@ class ResourcePage(ProjectPage):
         self.table.setAlternatingRowColors(True)
         layout.addWidget(self.table, 1)
 
+    def set_project(self, project: RomProject | None) -> None:
+        if project is not self.project:
+            self._quota_initialized = False
+        super().set_project(project)
+
     def refresh(self) -> None:
         self.table.setRowCount(0)
         self.allocation_table.setRowCount(0)
@@ -1606,8 +1671,61 @@ class ResourcePage(ProjectPage):
             self.capacity_label.setText("尚未载入ROM")
             self.capacity.setFormat("0 / 0 KiB")
             self.capacity.setValue(0)
+            self.plan_status.setText("尚未载入ROM")
+            for editor in (self.map_quota, self.unit_quota, self.story_quota):
+                editor.setEnabled(False)
+            self.recommended_button.setEnabled(False)
+            self.apply_plan_button.setEnabled(False)
             self._update_button_state()
             return
+        supports_planner = self.project.profile.key == "dc-kuorong-mmc3-v2"
+        plan = self.project.expansion_plan if supports_planner else None
+        if plan is not None:
+            values = (
+                plan.map_bank_count * 8,
+                plan.unit_bank_count * 8,
+                plan.story_bank_count * 8,
+            )
+            for editor, value in zip(
+                (self.map_quota, self.unit_quota, self.story_quota), values
+            ):
+                editor.blockSignals(True)
+                editor.setValue(value)
+                editor.blockSignals(False)
+                editor.setEnabled(False)
+            self.recommended_button.setEnabled(False)
+            self.apply_plan_button.setEnabled(False)
+            story_slots = plan.story_bank_count // 2
+            guarded = sum(
+                allocation.size
+                for allocation in self.project.expansion_allocations
+                if allocation.resource_id.startswith(REOPEN_GUARD_PREFIX)
+            )
+            guard_note = (
+                f"输出ROM直接重开时已安全锁定未登记区 "
+                f"{guarded // 1024} KiB，高级资源请用 .dcmod 续改。"
+                if guarded
+                else ""
+            )
+            self.plan_status.setText(
+                f"已接通：地图 {values[0]} KiB，机体 {values[1]} KiB，"
+                f"剧情 {values[2]} KiB（{story_slots} 个文本组槽位）；"
+                f"未分配 {plan.unassigned_kib} KiB。{guard_note}"
+            )
+        elif supports_planner:
+            for editor in (self.map_quota, self.unit_quota, self.story_quota):
+                editor.setEnabled(True)
+            self.recommended_button.setEnabled(True)
+            if not self._quota_initialized:
+                self._use_recommended_plan()
+                self._quota_initialized = True
+            self._update_plan_preview()
+        else:
+            for editor in (self.map_quota, self.unit_quota, self.story_quota):
+                editor.setEnabled(False)
+            self.recommended_button.setEnabled(False)
+            self.apply_plan_button.setEnabled(False)
+            self.plan_status.setText("当前ROM不是 464 KiB 可分配版本，不能使用自动容量规划。")
         graph = ResourceGraph.from_profile(self.project.profile, self.project.original)
         nodes = sorted(graph.nodes, key=lambda item: (item.offset, item.resource_id))
         self.table.setRowCount(len(nodes))
@@ -1667,6 +1785,74 @@ class ResourcePage(ProjectPage):
                 self.allocation_table.setItem(row, column, item)
         self._update_button_state()
 
+    def _use_recommended_plan(self) -> None:
+        """Use every safe Bank while preserving all seven story-text slots."""
+
+        for editor in (self.map_quota, self.unit_quota, self.story_quota):
+            editor.blockSignals(True)
+        self.map_quota.setValue(304)
+        self.unit_quota.setValue(48)
+        self.story_quota.setValue(112)
+        for editor in (self.map_quota, self.unit_quota, self.story_quota):
+            editor.blockSignals(False)
+        self._update_plan_preview()
+
+    def _update_plan_preview(self) -> None:
+        if self.project is None or self.project.profile.key != "dc-kuorong-mmc3-v2":
+            return
+        if self.project.expansion_plan is not None:
+            return
+        map_kib = self.map_quota.value()
+        unit_kib = self.unit_quota.value()
+        story_kib = self.story_quota.value()
+        invalid = []
+        if map_kib % 8:
+            invalid.append("地图必须按 8 KiB")
+        if unit_kib not in (48, 64, 80):
+            invalid.append("机体只能选择 48、64 或 80 KiB")
+        if story_kib % 16:
+            invalid.append("剧情必须按 16 KiB")
+        if invalid:
+            self.plan_status.setText("；".join(invalid) + " 的整数倍分配。")
+            self.plan_status.setStyleSheet("color: #b42318; font-weight: 650;")
+            self.apply_plan_button.setEnabled(False)
+            return
+        total = map_kib + unit_kib + story_kib
+        capacity = self.project.expansion_capacity // 1024
+        remaining = capacity - total
+        if remaining < 0:
+            self.plan_status.setText(
+                f"已选择 {total} / {capacity} KiB，超出 {-remaining} KiB；请调小任一配额。"
+            )
+            self.plan_status.setStyleSheet("color: #b42318; font-weight: 650;")
+            self.apply_plan_button.setEnabled(False)
+        else:
+            slots = story_kib // 16
+            unit_note = {
+                48: "常规编辑池（推荐）",
+                64: "常规池+独立主体/碎片池",
+                80: "常规池+独立主体/碎片/名称池",
+            }[unit_kib]
+            self.plan_status.setText(
+                f"已选择 {total} / {capacity} KiB，剩余 {remaining} KiB；"
+                f"剧情可容纳 {slots} 个修改文本组；机体为{unit_note}。"
+            )
+            self.plan_status.setStyleSheet("color: #2e7d4f;")
+            self.apply_plan_button.setEnabled(True)
+
+    def _apply_auto_plan(self) -> None:
+        if self.project is None:
+            return
+        try:
+            self.project.configure_expansion(
+                self.map_quota.value(),
+                self.unit_quota.value(),
+                self.story_quota.value(),
+            )
+            self.project_changed.emit("已自动分区并接通地图、机体和剧情扩展容量")
+        except Exception as error:
+            self.show_error(error)
+
     def _selected_resource_id(self) -> str | None:
         row = self.allocation_table.currentRow()
         if row < 0:
@@ -1676,10 +1862,32 @@ class ResourcePage(ProjectPage):
 
     def _update_button_state(self) -> None:
         loaded = self.project is not None
-        selected = loaded and self._selected_resource_id() is not None
-        self.import_button.setEnabled(loaded)
+        selected_id = self._selected_resource_id() if loaded else None
+        selected = selected_id is not None
+        internal = bool(
+            selected_id and selected_id.startswith(AUTO_ALLOCATION_PREFIX)
+        )
+        can_import = False
+        if loaded:
+            assert self.project is not None
+            has_capacity = self.project.expansion_available > 0
+            if self.project.profile.key == "dc-kuorong-mmc3-v2":
+                has_reopen_guard = any(
+                    allocation.resource_id.startswith(REOPEN_GUARD_PREFIX)
+                    for allocation in self.project.expansion_allocations
+                )
+                can_import = (
+                    self.project.expansion_plan is not None
+                    and has_capacity
+                    and not has_reopen_guard
+                )
+            else:
+                # Legacy profiles have no automatic partition table; retain
+                # their existing allocator-only workflow.
+                can_import = has_capacity
+        self.import_button.setEnabled(can_import)
         self.export_button.setEnabled(selected)
-        self.remove_button.setEnabled(selected)
+        self.remove_button.setEnabled(selected and not internal)
 
     def import_resource(self) -> None:
         if self.project is None:

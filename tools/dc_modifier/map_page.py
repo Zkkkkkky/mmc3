@@ -898,9 +898,16 @@ class MapPage(ProjectPage):
                 self.staged_height,
                 tuple(self.staged_tiles),
             )
+            expanded = self.project.expansion_plan is not None
             capacity = self.project.map_codec.capacities[self.current_map_id]
-            size_ok = len(encoded) <= capacity
-            details = f"地图RLE {len(encoded)} / {capacity} B"
+            size_ok = expanded or len(encoded) <= capacity
+            details = (
+                f"地图RLE {len(encoded)} B"
+                if expanded
+                else f"地图RLE {len(encoded)} / {capacity} B"
+            )
+            staged_layout = None
+            staged_triggers = None
             current_map = self.project.get_map(self.current_map_id)
             changed = (
                 self.staged_width != current_map.width
@@ -916,8 +923,11 @@ class MapPage(ProjectPage):
                 scenario_capacity = self.project.scenario_layout_codec.capacities[
                     self.current_map_id
                 ]
-                size_ok = size_ok and len(scenario_encoded) <= scenario_capacity
-                details += f" · 部署 {len(scenario_encoded)} / {scenario_capacity} B"
+                if expanded:
+                    details += f" · 部署 {len(scenario_encoded)} B"
+                else:
+                    size_ok = size_ok and len(scenario_encoded) <= scenario_capacity
+                    details += f" · 部署 {len(scenario_encoded)} / {scenario_capacity} B"
                 current_layout = self.project.get_scenario_layout(self.current_map_id)
                 changed = changed or (
                     scenario_encoded
@@ -931,19 +941,36 @@ class MapPage(ProjectPage):
                 self.project.map_trigger_codec.validate_entries(
                     staged_triggers, self.staged_width, self.staged_height
                 )
-                trigger_used = self.project.map_trigger_codec.storage_used_after(
-                    self.project.working, self.current_map_id, staged_triggers
-                )
-                trigger_capacity = self.project.map_trigger_codec.pool_capacity
-                details += (
-                    f" · 事件/商店 {len(staged_triggers)} 条 · "
-                    f"全局池 {trigger_used} / {trigger_capacity} B"
-                )
+                if expanded:
+                    details += f" · 事件/商店 {len(staged_triggers)} 条"
+                else:
+                    trigger_used = self.project.map_trigger_codec.storage_used_after(
+                        self.project.working, self.current_map_id, staged_triggers
+                    )
+                    trigger_capacity = self.project.map_trigger_codec.pool_capacity
+                    details += (
+                        f" · 事件/商店 {len(staged_triggers)} 条 · "
+                        f"全局池 {trigger_used} / {trigger_capacity} B"
+                    )
                 changed = changed or (
                     staged_triggers
                     != self.project.get_map_triggers(self.current_map_id)
                 )
-            status = "可保存" if size_ok else "超出固定容量"
+            if expanded:
+                used, shared_capacity = self.project.map_resource_replacement_usage(
+                    self.current_map_id,
+                    self.staged_width,
+                    self.staged_height,
+                    tuple(self.staged_tiles),
+                    staged_layout,
+                    staged_triggers,
+                )
+                details += f" · 地图共享池 {used} / {shared_capacity} B"
+            status = (
+                "可保存（自动重排）"
+                if expanded and size_ok
+                else ("可保存" if size_ok else "超出固定容量")
+            )
             self.size_label.setText(
                 f"地图 ${self.current_map_id:02X} · {dc_map_label(self.current_map_id)} · "
                 f"{details} · {status}"

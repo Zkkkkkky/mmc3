@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import hashlib
 import struct
+from dataclasses import replace
 
 from ..errors import RomFormatError
 from ..models import StoryTextRecord, TextToken
@@ -29,12 +30,38 @@ class StoryTextCodec:
         (*range(0xB8, 0xBC), *range(0xC8, 0xCC), *range(0xD8, 0xDC))
     )
 
-    def __init__(self, rom: RomImage) -> None:
+    def __init__(
+        self,
+        rom: RomImage,
+        data: bytes | bytearray | None = None,
+        *,
+        group_bank_overrides: dict[int, int] | None = None,
+    ) -> None:
         self.rom = rom
+        self._source = rom.data if data is None else bytes(data)
+        overrides = dict(group_bank_overrides or {})
         self._pointers: dict[int, tuple[int, ...]] = {}
         self._ids_by_pointer: dict[int, dict[int, tuple[int, ...]]] = {}
         self._capacities: dict[int, dict[int, int]] = {}
-        self.groups = rom.profile.story_text_groups
+        self.relocated_selectors = tuple(
+            group.selector
+            for group in rom.profile.story_text_groups
+            if group.selector in overrides
+        )
+        self.groups = tuple(
+            replace(
+                group,
+                prg_bank=overrides[group.selector],
+                pointer_table=0x8010,
+                data_start=0x8010 + group.count * 2,
+                data_end=0xC000,
+                first_pointer=None,
+                last_pointer_writable=False,
+            )
+            if group.selector in overrides
+            else group
+            for group in rom.profile.story_text_groups
+        )
         self.group_by_selector = {group.selector: group for group in self.groups}
         for group in self.groups:
             pointers = self._read_pointers(group)
@@ -57,15 +84,48 @@ class StoryTextCodec:
                 elif group.last_pointer_writable:
                     end = group.data_end
                 else:
-                    end = pointer
+                    # These groups reserve a zero-filled tail, but their
+                    # highest pointer still targets a real FF-terminated
+                    # record.  Scan one token-safe record instead of exposing
+                    # the whole tail or incorrectly dropping it as a sentinel.
+                    end = pointer + self._terminated_record_length(group, pointer)
                 capacities[pointer] = end - pointer
             for pointer in ids:
                 capacities.setdefault(pointer, 0)
             self._capacities[group.selector] = capacities
 
+    def _terminated_record_length(
+        self,
+        group: StoryTextGroupSpec,
+        pointer: int,
+    ) -> int:
+        start = self.cpu_to_file_offset(group.prg_bank, pointer)
+        end = self.cpu_to_file_offset(group.prg_bank, group.data_end - 1) + 1
+        block = self._source[start:end]
+        cursor = 0
+        while cursor < len(block):
+            lead = block[cursor]
+            if lead in self.GLYPH_LEADS:
+                if cursor + 1 >= len(block):
+                    raise RomFormatError(
+                        f"剧情文本组 ${group.selector:02X} 的末记录字形码不完整。"
+                    )
+                cursor += 2
+                continue
+            cursor += 1
+            if lead == 0xFF:
+                return cursor
+        raise RomFormatError(
+            f"剧情文本组 ${group.selector:02X} 的末记录缺少 FF 结束码。"
+        )
+
     def _read_pointers(self, group: StoryTextGroupSpec) -> tuple[int, ...]:
         offset = self.cpu_to_file_offset(group.prg_bank, group.pointer_table)
-        raw = self.rom.read(offset, group.count * 2)
+        raw = self._source[offset : offset + group.count * 2]
+        if len(raw) != group.count * 2:
+            raise RomFormatError(
+                f"剧情文本组 ${group.selector:02X} 指针表不完整。"
+            )
         pointers = tuple(struct.unpack(f"<{group.count}H", raw))
         if pointers[0] != group.expected_first_pointer:
             raise RomFormatError(
@@ -104,7 +164,7 @@ class StoryTextCodec:
             raise IndexError(f"剧情文本索引必须在 00—{group.count - 1:02X} 之间。")
         pointer = self._pointers[selector][index]
         capacity = self._capacities[selector][pointer]
-        source = self.rom.data if data is None else data
+        source = self._source if data is None else data
         if capacity:
             offset = self.cpu_to_file_offset(group.prg_bank, pointer)
             raw = bytes(source[offset : offset + capacity])
@@ -145,6 +205,21 @@ class StoryTextCodec:
             tokens.append(TextToken(offset, token, category))
             offset += len(token)
         return tuple(tokens)
+
+    @classmethod
+    def standalone_terminator_end(cls, raw: bytes) -> int | None:
+        """Return the end offset of the first standalone ``FF`` token.
+
+        An ``FF`` byte may legally be the second byte of a two-byte Chinese
+        glyph.  Reusing the lossless tokenizer keeps integrity checks aligned
+        with the editor and prevents that glyph byte from being mistaken for
+        a record terminator.
+        """
+
+        for token in cls.tokenize(raw):
+            if token.raw == b"\xFF":
+                return token.record_offset + len(token.raw)
+        return None
 
     @staticmethod
     def semantic_digest(record: StoryTextRecord) -> str:

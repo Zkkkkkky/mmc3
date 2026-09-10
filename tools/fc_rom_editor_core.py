@@ -33,12 +33,59 @@ from fc_editor.codecs import (
 )
 from fc_editor.constants import (
     EXPECTED_BASE_SHA256,
+    PRG_BANK_SIZE,
     UNIT_RECORD_SIZE,
     UNIT_WEAPON_SLOT_COUNT,
     WEAPON_RECORD_SIZE,
 )
-from fc_editor.errors import RomFormatError
+from fc_editor.errors import ProjectFormatError, RomFormatError
 from fc_editor.dc_text import concise_dc_text
+from fc_editor.expansion import (
+    AUTO_ALLOCATION_PREFIX,
+    EXPANSION_METADATA_OFFSET,
+    FLAG_MAPS,
+    FLAG_MAP_TRIGGERS,
+    FLAG_SCENARIOS,
+    FLAG_UNITS,
+    PARTITION_ALLOCATION_PREFIX,
+    REOPEN_GUARD_PREFIX,
+    STORY_SELECTORS,
+    ExpansionPlan,
+    bank_file_offset,
+    consecutive_bank_segments,
+    resource_descriptor_offset,
+)
+from fc_editor.expansion_map import (
+    TERRAIN_BANK_DIRECTORY_OFFSET,
+    link_map_resources,
+    pack_map_resources,
+    read_expanded_map_layout,
+    read_expanded_map_payloads,
+)
+from fc_editor.expansion_story import (
+    STORY_DATA_CAPACITY,
+    STORY_DATA_START,
+    build_story_group,
+    extract_story_group,
+    pack_story_group,
+)
+from fc_editor.expansion_unit import (
+    ATTRIBUTE_TABLE,
+    CORE_CAVE_END,
+    CORE_CAVE_START,
+    NAME_TABLE,
+    SINGLE_RESOURCE_TABLE,
+    SOURCE_CONFIGURATION_PAIR,
+    SOURCE_CORE_PAIR,
+    UNIT_ATTRIBUTE_SELECTOR,
+    UNIT_BODY_SELECTOR,
+    UNIT_CONFIGURATION_SELECTOR,
+    UNIT_FRAGMENT_SELECTOR,
+    UNIT_NAME_SELECTOR,
+    UnitExpansionRecords,
+    extract_unit_expansion_records,
+    pack_unit_expansion,
+)
 from fc_editor.models import (
     FieldSpec,
     UNIT_FIELD_BY_KEY,
@@ -414,13 +461,64 @@ class RomProject:
     def __init__(self, path: Path, data: bytes) -> None:
         self.path = path
         self.rom_image = RomImage(data, path)
-        self.unit_codec = UnitCodec(self.rom_image)
-        self.unit_name_codec = UnitNameReferenceCodec(self.rom_image)
-        self.unit_weapon_codec = (
-            UnitWeaponCodec(self.rom_image)
+        self.original = self.rom_image.data
+        self.working = bytearray(self.original)
+        initial_plan = ExpansionPlan.from_bytes(self.working)
+        self._initial_expansion_plan = initial_plan
+        self._unit_name_baseline_pointers: tuple[int, ...] | None = None
+        if initial_plan is not None and initial_plan.flags & FLAG_UNITS:
+            if len(initial_plan.unit_banks) < 6:
+                raise RomFormatError("机体扩展标志存在，但配额不足 48 KiB。")
+            initial_core_bank = initial_plan.unit_banks[0]
+            initial_name_bank = (
+                initial_plan.unit_banks[8]
+                if len(initial_plan.unit_banks) == 10
+                else initial_core_bank
+            )
+            initial_name_table = (
+                SINGLE_RESOURCE_TABLE
+                if len(initial_plan.unit_banks) == 10
+                else NAME_TABLE
+            )
+            self.base_unit_codec = UnitCodec(
+                self.rom_image,
+                self.original,
+                pointer_table_offset=(
+                    bank_file_offset(initial_core_bank) + ATTRIBUTE_TABLE - 0x8000
+                ),
+                pair_first_bank=initial_core_bank,
+            )
+            self.base_unit_name_codec = UnitNameReferenceCodec(
+                self.rom_image,
+                self.original,
+                pointer_table_offset=(
+                    bank_file_offset(initial_name_bank) + initial_name_table - 0x8000
+                ),
+                pair_first_bank=initial_name_bank,
+            )
+        else:
+            self.base_unit_codec = UnitCodec(self.rom_image)
+            self.base_unit_name_codec = UnitNameReferenceCodec(self.rom_image)
+        if initial_plan is not None and initial_plan.flags & FLAG_UNITS:
+            self._unit_name_baseline_pointers = (
+                self._derive_unit_name_baseline_pointers(initial_plan)
+            )
+        self.unit_codec = self.base_unit_codec
+        self.unit_name_codec = self.base_unit_name_codec
+        self.base_unit_weapon_codec = (
+            UnitWeaponCodec(
+                self.rom_image,
+                self.original,
+                table_offset=(
+                    self._expanded_unit_weapon_table_offset(initial_plan)
+                    if initial_plan is not None and initial_plan.flags & FLAG_UNITS
+                    else self.profile.unit_weapon_table_offset
+                ),
+            )
             if self.rom_image.profile.unit_weapon_table_offset is not None
             else None
         )
+        self.unit_weapon_codec = self.base_unit_weapon_codec
         self.weapon_codec = WeaponCodec(self.rom_image)
         self.weapon_name_codec = (
             WeaponNameReferenceCodec(self.rom_image)
@@ -432,13 +530,36 @@ class RomProject:
             if self.rom_image.profile.character_name_pointer_table_offset is not None
             else None
         )
-        self.map_codec = MapCodec(self.rom_image)
-        self.scenario_layout_codec = ScenarioLayoutCodec(self.rom_image)
-        self.map_trigger_codec = (
-            MapTriggerCodec(self.rom_image)
-            if self.rom_image.profile.map_triggers is not None
-            else None
-        )
+        if initial_plan is not None and initial_plan.flags & FLAG_MAPS:
+            initial_layout = read_expanded_map_layout(self.original)
+            self.base_map_codec = MapCodec(
+                self.rom_image,
+                self.original,
+                bank_table_offset=TERRAIN_BANK_DIRECTORY_OFFSET,
+                record_locations=initial_layout.terrain,
+            )
+            self.base_scenario_layout_codec = ScenarioLayoutCodec(
+                self.rom_image,
+                self.original,
+                record_locations=initial_layout.scenarios,
+            )
+            self.base_map_trigger_codec = MapTriggerCodec(
+                self.rom_image,
+                self.original,
+                record_locations=initial_layout.triggers,
+                expanded_capacity=len(initial_plan.map_banks) * PRG_BANK_SIZE,
+            )
+        else:
+            self.base_map_codec = MapCodec(self.rom_image)
+            self.base_scenario_layout_codec = ScenarioLayoutCodec(self.rom_image)
+            self.base_map_trigger_codec = (
+                MapTriggerCodec(self.rom_image)
+                if self.rom_image.profile.map_triggers is not None
+                else None
+            )
+        self.map_codec = self.base_map_codec
+        self.scenario_layout_codec = self.base_scenario_layout_codec
+        self.map_trigger_codec = self.base_map_trigger_codec
         self.chapter_event_codec = (
             ChapterEventCodec(self.rom_image)
             if self.rom_image.profile.chapter_events is not None
@@ -449,7 +570,21 @@ class RomProject:
             if self.rom_image.profile.persuasion_rules is not None
             else None
         )
-        self.story_text_codec = StoryTextCodec(self.rom_image)
+        initial_story_overrides = (
+            {
+                selector: pair[0]
+                for selector in initial_plan.expanded_story_selectors
+                if (pair := initial_plan.story_pair_for(selector)) is not None
+            }
+            if initial_plan is not None
+            else {}
+        )
+        self.base_story_text_codec = StoryTextCodec(
+            self.rom_image,
+            self.original,
+            group_bank_overrides=initial_story_overrides,
+        )
+        self.story_text_codec = self.base_story_text_codec
         self.battle_music_codec = (
             BattleMusicCodec(self.rom_image)
             if self.rom_image.profile.battle_music is not None
@@ -461,11 +596,13 @@ class RomProject:
             if self.rom_image.profile.custom_music_slots
             else None
         )
-        self.original = self.rom_image.data
-        self.working = bytearray(self.original)
         self.resource_allocator = BankAllocator(self.rom_image.profile, self.original)
+        if initial_plan is not None:
+            self._reserve_plan_partitions(initial_plan)
+            self._reserve_direct_reopen_guards(initial_plan)
         self.pointer_by_id = self.unit_codec.pointers
         self.ids_by_pointer = self.unit_codec.ids_by_pointer
+        self._refresh_dynamic_codecs()
         self._undo_stack: list[EditHistoryEntry] = []
         self._redo_stack: list[EditHistoryEntry] = []
         self._transaction_depth = 0
@@ -491,6 +628,23 @@ class RomProject:
             project.original,
             document.resource_allocations(project.rom_image),
         )
+        plan = project.expansion_plan
+        if plan is None and any(
+            allocation.resource_id.startswith(PARTITION_ALLOCATION_PREFIX)
+            for allocation in project.expansion_allocations
+        ):
+            raise ProjectFormatError("工程含自动分区，但 ROM 中没有容量规划表。")
+        if plan is not None:
+            project._reserve_plan_partitions(plan)
+            if project._initial_expansion_plan is not None:
+                project._reserve_direct_reopen_guards(plan)
+        project._refresh_dynamic_codecs()
+        errors = [issue for issue in project.validate() if issue.severity == "error"]
+        if errors:
+            raise ProjectFormatError(
+                "工程完整性检查失败：\n"
+                + "\n".join(issue.message for issue in errors)
+            )
         return project
 
     @staticmethod
@@ -550,6 +704,7 @@ class RomProject:
                     self.original,
                     self._transaction_before.allocations,
                 )
+                self._refresh_dynamic_codecs()
             raise
         finally:
             self._transaction_depth -= 1
@@ -586,6 +741,7 @@ class RomProject:
         self.resource_allocator = BankAllocator(
             self.profile, self.original, entry.allocations_before
         )
+        self._refresh_dynamic_codecs()
         self._redo_stack.append(entry)
         return entry.description
 
@@ -598,6 +754,7 @@ class RomProject:
         self.resource_allocator = BankAllocator(
             self.profile, self.original, entry.allocations_after
         )
+        self._refresh_dynamic_codecs()
         self._undo_stack.append(entry)
         return entry.description
 
@@ -612,6 +769,142 @@ class RomProject:
     @property
     def profile(self):
         return self.rom_image.profile
+
+    @property
+    def expansion_plan(self) -> ExpansionPlan | None:
+        return ExpansionPlan.from_bytes(self.working)
+
+    def _unit_pairs(self, plan: ExpansionPlan) -> tuple[tuple[int, int], ...]:
+        banks = plan.unit_banks
+        return tuple(
+            (banks[index], banks[index + 1])
+            for index in range(0, len(banks), 2)
+        )
+
+    def _expanded_unit_weapon_table_offset(self, plan: ExpansionPlan) -> int:
+        if self.profile.unit_weapon_table_offset is None:
+            raise RomFormatError("当前ROM没有机体武器表。")
+        source_pair_offset = bank_file_offset(SOURCE_CONFIGURATION_PAIR)
+        relative = self.profile.unit_weapon_table_offset - source_pair_offset
+        if not 0 <= relative < PRG_BANK_SIZE * 2:
+            raise RomFormatError("机体武器表不在已验证的配置 Bank 对。")
+        return bank_file_offset(plan.unit_banks[2]) + relative
+
+    def _derive_unit_name_baseline_pointers(
+        self, plan: ExpansionPlan
+    ) -> tuple[int, ...]:
+        """Rebuild immutable reset targets from the retained stock resources."""
+
+        template = bytearray(self.original)
+        cave_start = bank_file_offset(SOURCE_CORE_PAIR) + CORE_CAVE_START - 0x8000
+        cave_end = bank_file_offset(SOURCE_CORE_PAIR) + CORE_CAVE_END - 0x8000
+        template[cave_start:cave_end] = bytes(cave_end - cave_start)
+        records = extract_unit_expansion_records(template)
+        packed = pack_unit_expansion(
+            template,
+            self._unit_pairs(plan),
+            records=records,
+        )
+        return packed.name_baseline_pointers
+
+    def _refresh_dynamic_codecs(self) -> None:
+        """Rebind decoders after linker metadata, pointers, or undo state changes."""
+
+        plan = ExpansionPlan.from_bytes(self.working)
+        if plan is None:
+            self.unit_codec = self.base_unit_codec
+            self.unit_name_codec = self.base_unit_name_codec
+            self.unit_weapon_codec = self.base_unit_weapon_codec
+            self.map_codec = self.base_map_codec
+            self.scenario_layout_codec = self.base_scenario_layout_codec
+            self.map_trigger_codec = self.base_map_trigger_codec
+            self.story_text_codec = self.base_story_text_codec
+        else:
+            if plan.flags & FLAG_UNITS:
+                if len(plan.unit_banks) < 6:
+                    raise RomFormatError("机体扩展标志存在，但配额不足 48 KiB。")
+                if self._unit_name_baseline_pointers is None:
+                    self._unit_name_baseline_pointers = (
+                        self._derive_unit_name_baseline_pointers(plan)
+                    )
+                core_bank = plan.unit_banks[0]
+                name_bank = (
+                    plan.unit_banks[8]
+                    if len(plan.unit_banks) == 10
+                    else core_bank
+                )
+                name_table = (
+                    SINGLE_RESOURCE_TABLE
+                    if len(plan.unit_banks) == 10
+                    else NAME_TABLE
+                )
+                self.unit_codec = UnitCodec(
+                    self.rom_image,
+                    self.working,
+                    pointer_table_offset=(
+                        bank_file_offset(core_bank) + ATTRIBUTE_TABLE - 0x8000
+                    ),
+                    pair_first_bank=core_bank,
+                )
+                self.unit_name_codec = UnitNameReferenceCodec(
+                    self.rom_image,
+                    self.working,
+                    pointer_table_offset=(
+                        bank_file_offset(name_bank) + name_table - 0x8000
+                    ),
+                    pair_first_bank=name_bank,
+                    original_pointers=self._unit_name_baseline_pointers,
+                )
+                if self.profile.unit_weapon_table_offset is not None:
+                    self.unit_weapon_codec = UnitWeaponCodec(
+                        self.rom_image,
+                        self.working,
+                        table_offset=self._expanded_unit_weapon_table_offset(plan),
+                    )
+                else:
+                    self.unit_weapon_codec = None
+            else:
+                self.unit_codec = self.base_unit_codec
+                self.unit_name_codec = self.base_unit_name_codec
+                self.unit_weapon_codec = self.base_unit_weapon_codec
+            if plan.flags & FLAG_MAPS:
+                required_flags = FLAG_MAPS | FLAG_SCENARIOS | FLAG_MAP_TRIGGERS
+                if (plan.flags & required_flags) != required_flags:
+                    raise RomFormatError("地图扩展状态不完整，缺少部署或事件绑定。")
+                layout = read_expanded_map_layout(self.working)
+                self.map_codec = MapCodec(
+                    self.rom_image,
+                    self.working,
+                    bank_table_offset=TERRAIN_BANK_DIRECTORY_OFFSET,
+                    record_locations=layout.terrain,
+                )
+                self.scenario_layout_codec = ScenarioLayoutCodec(
+                    self.rom_image,
+                    self.working,
+                    record_locations=layout.scenarios,
+                )
+                self.map_trigger_codec = MapTriggerCodec(
+                    self.rom_image,
+                    self.working,
+                    record_locations=layout.triggers,
+                    expanded_capacity=len(plan.map_banks) * PRG_BANK_SIZE,
+                )
+            else:
+                self.map_codec = self.base_map_codec
+                self.scenario_layout_codec = self.base_scenario_layout_codec
+                self.map_trigger_codec = self.base_map_trigger_codec
+            overrides = {
+                selector: pair[0]
+                for selector in plan.expanded_story_selectors
+                if (pair := plan.story_pair_for(selector)) is not None
+            }
+            self.story_text_codec = StoryTextCodec(
+                self.rom_image,
+                self.working,
+                group_bank_overrides=overrides,
+            )
+        self.pointer_by_id = self.unit_codec.pointers
+        self.ids_by_pointer = self.unit_codec.ids_by_pointer
 
     @property
     def unit_count(self) -> int:
@@ -631,7 +924,7 @@ class RomProject:
 
     @property
     def story_text_groups(self):
-        return self.profile.story_text_groups
+        return self.story_text_codec.groups
 
     @property
     def supports_battle_music(self) -> bool:
@@ -653,6 +946,251 @@ class RomProject:
     def expansion_available(self) -> int:
         return self.resource_allocator.available
 
+    def _write_expansion_plan(self, plan: ExpansionPlan) -> None:
+        payload = plan.to_bytes()
+        self.working[
+            EXPANSION_METADATA_OFFSET : EXPANSION_METADATA_OFFSET + len(payload)
+        ] = payload
+
+    @staticmethod
+    def _partition_definitions(
+        plan: ExpansionPlan,
+    ) -> tuple[tuple[str, str, tuple[int, ...]], ...]:
+        return (
+            ("unit", "机体自动扩展配额", plan.unit_banks),
+            ("map", "地图自动扩展配额", plan.map_banks),
+            ("story", "剧情文本自动扩展配额", plan.story_banks),
+        )
+
+    def _reserve_plan_partitions(self, plan: ExpansionPlan) -> None:
+        """Reserve every quota Bank so no other importer can overlap it."""
+
+        existing = {item.resource_id for item in self.expansion_allocations}
+        for category, label, banks in self._partition_definitions(plan):
+            for index, segment in enumerate(consecutive_bank_segments(banks)):
+                resource_id = f"{PARTITION_ALLOCATION_PREFIX}{category}.{index}"
+                if resource_id in existing:
+                    continue
+                self.resource_allocator.reserve(
+                    Allocation(
+                        resource_id,
+                        label,
+                        bank_file_offset(segment[0]),
+                        len(segment) * PRG_BANK_SIZE,
+                        1,
+                    )
+                )
+
+    def _reserve_direct_reopen_guards(self, plan: ExpansionPlan) -> None:
+        """Lock unregistered bytes when an already-built ROM is the base.
+
+        Expansion metadata persists the three automatic partitions, but an
+        output ROM cannot persist arbitrary allocator records.  Guard every
+        uncovered byte outside the partitions so a later import cannot
+        silently overwrite data whose ownership is unknown.  A ``.dcmod``
+        remains the editable source of truth for those manual allocations.
+        """
+
+        guard_index = 0
+        for bank in plan.unassigned_banks:
+            bank_start = bank_file_offset(bank)
+            bank_end = bank_start + PRG_BANK_SIZE
+            overlaps = sorted(
+                (
+                    item
+                    for item in self.expansion_allocations
+                    if item.offset < bank_end and bank_start < item.end
+                ),
+                key=lambda item: item.offset,
+            )
+            cursor = bank_start
+            for item in overlaps:
+                if cursor < item.offset:
+                    self.resource_allocator.reserve(
+                        Allocation(
+                            f"{REOPEN_GUARD_PREFIX}{guard_index}",
+                            "输出ROM未登记区（请用.dcmod续改）",
+                            cursor,
+                            item.offset - cursor,
+                            1,
+                        )
+                    )
+                    guard_index += 1
+                cursor = max(cursor, item.end)
+            if cursor < bank_end:
+                self.resource_allocator.reserve(
+                    Allocation(
+                        f"{REOPEN_GUARD_PREFIX}{guard_index}",
+                        "输出ROM未登记区（请用.dcmod续改）",
+                        cursor,
+                        bank_end - cursor,
+                        1,
+                    )
+                )
+                guard_index += 1
+
+    def _relink_map_resources(
+        self,
+        terrain_records: tuple[bytes, ...] | list[bytes],
+        scenario_records: tuple[bytes, ...] | list[bytes],
+        trigger_records: tuple[bytes, ...] | list[bytes],
+        plan: ExpansionPlan,
+        *,
+        source_data: bytes | bytearray | None = None,
+    ) -> ExpansionPlan:
+        source = self.working if source_data is None else source_data
+        linked, _packed, _patches = link_map_resources(
+            source,
+            terrain_records,
+            scenario_records,
+            trigger_records,
+            plan.map_banks,
+            clear_banks=plan.map_banks,
+        )
+        self.working[:] = linked
+        result = plan.with_flags(
+            plan.flags | FLAG_MAPS | FLAG_SCENARIOS | FLAG_MAP_TRIGGERS
+        )
+        self._write_expansion_plan(result)
+        return result
+
+    def _link_unit_resources(
+        self,
+        plan: ExpansionPlan,
+        *,
+        source_data: bytes | bytearray | None = None,
+        records: UnitExpansionRecords | None = None,
+        name_source_ids: tuple[int, ...] | None = None,
+    ) -> ExpansionPlan:
+        if len(plan.unit_banks) not in (6, 8, 10):
+            raise ValueError("完整机体自动绑定只支持 48、64 或 80 KiB。")
+        banks = plan.unit_banks
+        pairs = self._unit_pairs(plan)
+        # The deployment hook intentionally occupies a verified cave in source
+        # Bank $25.  Capture the current project before installing that hook so
+        # edits made before capacity planning survive the relocation.
+        source = self.original if source_data is None else bytes(source_data)
+        packed = pack_unit_expansion(
+            source,
+            pairs,
+            records=records,
+            name_source_ids=name_source_ids,
+        )
+        self.working[:] = packed.apply(self.working)
+        self._unit_name_baseline_pointers = packed.name_baseline_pointers
+        result = plan.with_flags(plan.flags | FLAG_UNITS)
+        self._write_expansion_plan(result)
+        return result
+
+    def configure_expansion(
+        self,
+        map_kib: int,
+        unit_kib: int,
+        story_kib: int,
+    ) -> ExpansionPlan:
+        """Split the safe PRG pool and install the verified automatic linkers."""
+
+        if self.profile.key != "dc-kuorong-mmc3-v2":
+            raise ValueError("自动容量规划仅支持 464 KiB 扩容基准 ROM。")
+        if self.expansion_plan is not None:
+            raise ValueError("容量区已分配；请先使用撤销恢复到分配前。")
+        if self.expansion_allocations:
+            raise ValueError("请先删除已手工导入的扩展二进制资源再分区。")
+        plan = ExpansionPlan.from_kib(map_kib, unit_kib, story_kib)
+        if len(plan.map_banks) < 2:
+            raise ValueError("地图自动绑定至少需要 16 KiB。")
+        if len(plan.unit_banks) not in (6, 8, 10):
+            raise ValueError("完整机体自动绑定只支持 48、64 或 80 KiB。")
+        if len(plan.story_banks) < 2:
+            raise ValueError("剧情文本配额至少需要 16 KiB。")
+        source_before_link = bytes(self.working)
+        current_unit_records = extract_unit_expansion_records(source_before_link)
+        original_unit_records = extract_unit_expansion_records(self.original)
+        name_source_ids: list[int] = []
+        for unit_id in range(1, self.unit_count):
+            pointer = self.unit_name_codec.pointer(unit_id, source_before_link)
+            source_ids = self.unit_name_codec.source_ids(pointer)
+            if not source_ids:
+                raise RomFormatError(
+                    f"机体 ${unit_id:02X} 的名称引用 ${pointer:04X} 无法识别。"
+                )
+            name_source_ids.append(source_ids[0])
+        unit_records = UnitExpansionRecords(
+            attributes=current_unit_records.attributes,
+            names=original_unit_records.names,
+            configurations=current_unit_records.configurations,
+            body_scripts=current_unit_records.body_scripts,
+            fragment_scripts=current_unit_records.fragment_scripts,
+        )
+        map_records = tuple(
+            self.map_codec.encode(record.width, record.height, record.tiles)
+            for map_id in range(self.map_count)
+            for record in (self.map_codec.decode(map_id, source_before_link),)
+        )
+        scenario_records = tuple(
+            self.scenario_layout_codec.encode(
+                self.scenario_layout_codec.decode(map_id, source_before_link)
+            )
+            for map_id in range(self.scenario_count)
+        )
+        if self.map_trigger_codec is None:
+            raise ValueError("当前ROM缺少已验证的地图事件表。")
+        trigger_records = tuple(
+            self.map_trigger_codec.encode_entries(
+                self.map_trigger_codec.decode(map_id, source_before_link).entries
+            )
+            for map_id in range(self.map_trigger_codec.spec.scenario_count)
+        )
+        # Before automatic planning, trigger edits are repacked into the old
+        # Bank $0A cave at $9ED4.  The new runtime hook deliberately occupies
+        # that same cave.  We already captured every current trigger above, so
+        # restore only the obsolete pool bytes before installing the hook.
+        link_source = bytearray(source_before_link)
+        if not self.map_trigger_codec.is_expanded:
+            trigger_pool_start = self.map_trigger_codec.pool_offset
+            trigger_pool_end = trigger_pool_start + self.map_trigger_codec.pool_capacity
+            link_source[trigger_pool_start:trigger_pool_end] = self.original[
+                trigger_pool_start:trigger_pool_end
+            ]
+        before = self._mutation_snapshot()
+        try:
+            self._reserve_plan_partitions(plan)
+            self._write_expansion_plan(plan)
+            plan = self._relink_map_resources(
+                map_records,
+                scenario_records,
+                trigger_records,
+                plan,
+                source_data=link_source,
+            )
+            plan = self._link_unit_resources(
+                plan,
+                source_data=source_before_link,
+                records=unit_records,
+                name_source_ids=tuple(name_source_ids),
+            )
+            # The old pointer table is no longer runtime-visible.  Keeping its
+            # canonical copy lets a directly reopened output reconstruct stable
+            # reset/name identities without an external project file.
+            old_name_table = self.profile.unit_name_pointer_table_offset
+            if old_name_table is not None:
+                old_name_end = old_name_table + self.profile.unit_name_count * 2
+                self.working[old_name_table:old_name_end] = self.original[
+                    old_name_table:old_name_end
+                ]
+            self._write_expansion_plan(plan)
+            self._refresh_dynamic_codecs()
+        except Exception:
+            if before is not None:
+                self.working[:] = before.data
+                self.resource_allocator = BankAllocator(
+                    self.profile, self.original, before.allocations
+                )
+                self._refresh_dynamic_codecs()
+            raise
+        self._finish_mutation(before, "自动分配并接通扩展容量")
+        return plan
+
     def expansion_resource_data(self, resource_id: str) -> bytes:
         allocation = self.resource_allocator.allocation(resource_id)
         return bytes(self.working[allocation.offset : allocation.end])
@@ -669,6 +1207,8 @@ class RomProject:
         normalized_id = resource_id.strip().lower()
         if not re.fullmatch(r"[a-z0-9][a-z0-9._-]{0,63}", normalized_id):
             raise ValueError("资源ID只能包含小写字母、数字、点、横线和下划线。")
+        if normalized_id.startswith(AUTO_ALLOCATION_PREFIX):
+            raise ValueError("资源ID不能使用修改器保留的 auto. 前缀。")
         normalized_label = label.strip()
         if not normalized_label:
             raise ValueError("资源名称不能为空。")
@@ -690,6 +1230,8 @@ class RomProject:
         return allocation
 
     def remove_expansion_resource(self, resource_id: str) -> Allocation:
+        if resource_id.startswith(AUTO_ALLOCATION_PREFIX):
+            raise ValueError("内部容量分区由链接器管理，不能作为普通资源删除。")
         allocation = self.resource_allocator.allocation(resource_id)
         before = self._mutation_snapshot()
         self.working[allocation.offset : allocation.end] = self.original[
@@ -814,7 +1356,10 @@ class RomProject:
 
     @property
     def is_dirty(self) -> bool:
-        return self.working != self.original or bool(self.expansion_allocations)
+        return self.working != self.original or any(
+            not allocation.resource_id.startswith(AUTO_ALLOCATION_PREFIX)
+            for allocation in self.expansion_allocations
+        )
 
     def record_file_offset_from_pointer(self, pointer: int) -> int:
         return self.unit_codec.record_offset_from_pointer(pointer)
@@ -823,9 +1368,10 @@ class RomProject:
         return self.unit_codec.record_offset(unit_id)
 
     def record_bytes(self, unit_id: int, *, original: bool = False) -> bytes:
+        if original:
+            return self.base_unit_codec.decode_record(unit_id, self.original).raw
         offset = self.record_file_offset(unit_id)
-        source = self.original if original else self.working
-        return bytes(source[offset : offset + UNIT_RECORD_SIZE])
+        return bytes(self.working[offset : offset + UNIT_RECORD_SIZE])
 
     def get_value(self, unit_id: int, field_key: str, *, original: bool = False) -> int:
         field = self.unit_field(field_key)
@@ -860,9 +1406,9 @@ class RomProject:
     def reset_record(self, unit_id: int) -> None:
         before = self._mutation_snapshot()
         offset = self.record_file_offset(unit_id)
-        self.working[offset : offset + UNIT_RECORD_SIZE] = self.original[
-            offset : offset + UNIT_RECORD_SIZE
-        ]
+        self.working[offset : offset + UNIT_RECORD_SIZE] = self.record_bytes(
+            unit_id, original=True
+        )
         self._finish_mutation(before, f"机体 {unit_id:02X} · 还原记录")
 
     def weapon_record_file_offset(self, weapon_id: int) -> int:
@@ -1104,10 +1650,11 @@ class RomProject:
         *,
         original: bool = False,
     ) -> tuple[int, int]:
-        if self.unit_weapon_codec is None:
+        codec = self.base_unit_weapon_codec if original else self.unit_weapon_codec
+        if codec is None:
             raise ValueError("当前 ROM 的机体武器关系表尚未验证。")
         source = self.original if original else bytes(self.working)
-        return self.unit_weapon_codec.decode(unit_id, source).weapon_ids
+        return codec.decode(unit_id, source).weapon_ids
 
     def set_unit_weapon(self, unit_id: int, slot: int, weapon_id: int) -> None:
         if self.unit_weapon_codec is None:
@@ -1120,18 +1667,20 @@ class RomProject:
         self._finish_mutation(before, f"机体 {unit_id:02X} · 武器槽 {slot + 1}")
 
     def reset_unit_weapons(self, unit_id: int) -> None:
-        if self.unit_weapon_codec is None:
+        if self.unit_weapon_codec is None or self.base_unit_weapon_codec is None:
             raise ValueError("当前 ROM 的机体武器关系表尚未验证。")
         before = self._mutation_snapshot()
         offset = self.unit_weapon_codec.record_offset(unit_id)
-        self.working[offset : offset + UNIT_WEAPON_SLOT_COUNT] = self.original[
-            offset : offset + UNIT_WEAPON_SLOT_COUNT
-        ]
+        original_config = self.base_unit_weapon_codec.decode(
+            unit_id, self.original
+        ).weapon_ids
+        self.working[offset : offset + UNIT_WEAPON_SLOT_COUNT] = bytes(original_config)
         self._finish_mutation(before, f"机体 {unit_id:02X} · 还原武器配置")
 
     def get_unit_name_pointer(self, unit_id: int, *, original: bool = False) -> int:
-        source = self.original if original else bytes(self.working)
-        return self.unit_name_codec.pointer(unit_id, source)
+        if original:
+            return self.base_unit_name_codec.pointer(unit_id, self.original)
+        return self.unit_name_codec.pointer(unit_id, bytes(self.working))
 
     def unit_name_source_ids(
         self,
@@ -1139,9 +1688,8 @@ class RomProject:
         *,
         original: bool = False,
     ) -> tuple[int, ...]:
-        return self.unit_name_codec.source_ids(
-            self.get_unit_name_pointer(unit_id, original=original)
-        )
+        codec = self.base_unit_name_codec if original else self.unit_name_codec
+        return codec.source_ids(self.get_unit_name_pointer(unit_id, original=original))
 
     def unit_alias_table(self) -> dict[int, str]:
         if self.profile.key in DC_UNIT_NAME_PROFILE_KEYS:
@@ -1212,14 +1760,86 @@ class RomProject:
     def reset_unit_name(self, unit_id: int) -> None:
         if not 1 <= unit_id < self.unit_count:
             raise ValueError(f"机体 ID 必须在 01—{self.unit_count - 1:02X} 之间。")
+        original_pointer = self.base_unit_name_codec.pointer(unit_id, self.original)
+        if (
+            self._initial_expansion_plan is not None
+            and self._initial_expansion_plan.flags & FLAG_UNITS
+        ):
+            source_ids = self.unit_name_codec.source_ids(original_pointer)
+        else:
+            source_ids = self.base_unit_name_codec.source_ids(original_pointer)
+        if not source_ids:
+            raise RomFormatError(
+                f"机体 ${unit_id:02X} 的原始名称引用 "
+                f"${original_pointer:04X} 无法映射到已验证名称。"
+            )
         before_snapshot = self._mutation_snapshot()
-        offset = self.unit_name_codec.pointer_offset(unit_id)
-        self.working[offset : offset + 2] = self.original[offset : offset + 2]
+        offset, _old, after = self.unit_name_codec.reference_patch(
+            bytes(self.working), unit_id, source_ids[0]
+        )
+        self.working[offset : offset + 2] = after
         self._finish_mutation(before_snapshot, f"机体 {unit_id:02X} · 还原名称")
 
     def get_map(self, map_id: int, *, original: bool = False) -> MapRecord:
-        source = self.original if original else bytes(self.working)
-        return self.map_codec.decode(map_id, source)
+        if original:
+            return self.base_map_codec.decode(map_id, self.original)
+        return self.map_codec.decode(map_id, bytes(self.working))
+
+    def _commit_expanded_map_resources(
+        self,
+        terrain_records: list[bytes],
+        scenario_records: list[bytes],
+        trigger_records: list[bytes],
+        description: str,
+    ) -> None:
+        plan = self.expansion_plan
+        if plan is None or not plan.flags & FLAG_MAPS:
+            raise ValueError("地图扩展池尚未接通。")
+        before = self._mutation_snapshot()
+        try:
+            plan = self._relink_map_resources(
+                terrain_records, scenario_records, trigger_records, plan
+            )
+            self._write_expansion_plan(plan)
+            self._refresh_dynamic_codecs()
+        except Exception:
+            if before is not None:
+                self.working[:] = before.data
+                self.resource_allocator = BankAllocator(
+                    self.profile, self.original, before.allocations
+                )
+                self._refresh_dynamic_codecs()
+            raise
+        self._finish_mutation(before, description)
+
+    def map_resource_replacement_usage(
+        self,
+        map_id: int,
+        width: int,
+        height: int,
+        tiles: tuple[int, ...],
+        layout: ScenarioLayout | None = None,
+        triggers: tuple[MapTrigger, ...] | None = None,
+    ) -> tuple[int, int]:
+        """Dry-run the shared map linker for UI capacity feedback."""
+
+        plan = self.expansion_plan
+        if plan is None or not plan.flags & FLAG_MAPS:
+            encoded = self.map_codec.encode(width, height, tiles)
+            return len(encoded), self.map_codec.capacities[map_id]
+        payloads = read_expanded_map_payloads(self.working)
+        terrain_records = list(payloads.terrain)
+        scenario_records = list(payloads.scenarios)
+        trigger_records = list(payloads.triggers)
+        terrain_records[map_id] = self.map_codec.encode(width, height, tiles)
+        if layout is not None:
+            scenario_records[map_id] = self.scenario_layout_codec.encode(layout)
+        if triggers is not None:
+            trigger_records[map_id] = self.map_trigger_codec.encode_entries(triggers)
+        packed = pack_map_resources(
+            terrain_records, scenario_records, trigger_records, plan.map_banks
+        )
+        return packed.used_bytes, packed.capacity
 
     def set_map_tiles(
         self,
@@ -1228,6 +1848,18 @@ class RomProject:
         height: int,
         tiles: tuple[int, ...],
     ) -> None:
+        plan = self.expansion_plan
+        if plan is not None and plan.flags & FLAG_MAPS:
+            payloads = read_expanded_map_payloads(self.working)
+            terrain = list(payloads.terrain)
+            terrain[map_id] = self.map_codec.encode(width, height, tiles)
+            self._commit_expanded_map_resources(
+                terrain,
+                list(payloads.scenarios),
+                list(payloads.triggers),
+                f"地图 {map_id:02X} · 地形",
+            )
+            return
         before = self._mutation_snapshot()
         offset, _before, after = self.map_codec.replacement_patch(
             bytes(self.working), map_id, width, height, tiles
@@ -1236,6 +1868,13 @@ class RomProject:
         self._finish_mutation(before, f"地图 {map_id:02X} · 地形")
 
     def reset_map(self, map_id: int) -> None:
+        plan = self.expansion_plan
+        if plan is not None and plan.flags & FLAG_MAPS:
+            original = self.get_map(map_id, original=True)
+            self.set_map_tiles(
+                map_id, original.width, original.height, original.tiles
+            )
+            return
         before = self._mutation_snapshot()
         offset = self.map_codec.record_offset(map_id)
         capacity = self.map_codec.capacities[map_id]
@@ -1250,14 +1889,27 @@ class RomProject:
         *,
         original: bool = False,
     ) -> ScenarioLayout:
-        source = self.original if original else bytes(self.working)
-        return self.scenario_layout_codec.decode(map_id, source)
+        if original:
+            return self.base_scenario_layout_codec.decode(map_id, self.original)
+        return self.scenario_layout_codec.decode(map_id, bytes(self.working))
 
     def set_scenario_layout(self, layout: ScenarioLayout) -> None:
         map_record = self.get_map(layout.map_id)
         self.scenario_layout_codec.validate_layout(
             layout, map_record.width, map_record.height
         )
+        plan = self.expansion_plan
+        if plan is not None and plan.flags & FLAG_SCENARIOS:
+            payloads = read_expanded_map_payloads(self.working)
+            scenarios = list(payloads.scenarios)
+            scenarios[layout.map_id] = self.scenario_layout_codec.encode(layout)
+            self._commit_expanded_map_resources(
+                list(payloads.terrain),
+                scenarios,
+                list(payloads.triggers),
+                f"场景 {layout.map_id:02X} · 部署",
+            )
+            return
         before = self._mutation_snapshot()
         offset, _before, after = self.scenario_layout_codec.replacement_patch(
             bytes(self.working), layout
@@ -1266,6 +1918,10 @@ class RomProject:
         self._finish_mutation(before, f"场景 {layout.map_id:02X} · 部署")
 
     def reset_scenario_layout(self, map_id: int) -> None:
+        plan = self.expansion_plan
+        if plan is not None and plan.flags & FLAG_SCENARIOS:
+            self.set_scenario_layout(self.get_scenario_layout(map_id, original=True))
+            return
         before = self._mutation_snapshot()
         offset = self.scenario_layout_codec.record_offset(map_id)
         capacity = self.scenario_layout_codec.capacities[map_id]
@@ -1282,8 +1938,11 @@ class RomProject:
     ) -> tuple[MapTrigger, ...]:
         if self.map_trigger_codec is None:
             raise ValueError("当前 ROM 没有已验证的地图事件表。")
-        source = self.original if original else bytes(self.working)
-        return self.map_trigger_codec.decode(map_id, source).entries
+        if original:
+            if self.base_map_trigger_codec is None:
+                raise ValueError("当前 ROM 没有已验证的地图事件表。")
+            return self.base_map_trigger_codec.decode(map_id, self.original).entries
+        return self.map_trigger_codec.decode(map_id, bytes(self.working)).entries
 
     def _replace_map_triggers(
         self,
@@ -1295,6 +1954,18 @@ class RomProject:
             raise ValueError("当前 ROM 没有已验证的地图事件表。")
         record = self.get_map(map_id)
         self.map_trigger_codec.validate_entries(entries, record.width, record.height)
+        plan = self.expansion_plan
+        if plan is not None and plan.flags & FLAG_MAP_TRIGGERS:
+            payloads = read_expanded_map_payloads(self.working)
+            triggers = list(payloads.triggers)
+            triggers[map_id] = self.map_trigger_codec.encode_entries(entries)
+            self._commit_expanded_map_resources(
+                list(payloads.terrain),
+                list(payloads.scenarios),
+                triggers,
+                description,
+            )
+            return
         before_snapshot = self._mutation_snapshot()
         for offset, _before, after in self.map_trigger_codec.repack_patches(
             bytes(self.working), map_id, entries
@@ -1401,10 +2072,89 @@ class RomProject:
         *,
         original: bool = False,
     ) -> StoryTextRecord:
-        source = self.original if original else bytes(self.working)
-        return self.story_text_codec.decode(selector, index, source)
+        if original:
+            return self.base_story_text_codec.decode(selector, index, self.original)
+        return self.story_text_codec.decode(selector, index, bytes(self.working))
+
+    def story_text_replacement_usage(
+        self,
+        selector: int,
+        index: int,
+        data: bytes,
+    ) -> tuple[int, int]:
+        """Dry-run a text replacement and return used/available group bytes."""
+
+        plan = self.expansion_plan
+        if plan is None:
+            record = self.get_story_text(selector, index)
+            if len(data) != record.capacity:
+                raise ValueError(f"当前记录必须保持 {record.capacity} 字节。")
+            return len(data), record.capacity
+        candidate = plan if plan.story_pair_for(selector) else plan.with_story_selector(selector)
+        pair = candidate.story_pair_for(selector)
+        if pair is None:
+            raise ValueError("剧情文本组没有可用的 16 KiB Bank pair。")
+        records = extract_story_group(self.story_text_codec, selector, self.working)
+        packed = pack_story_group(records.with_replacement(index, bytes(data)), pair[0])
+        text_used = packed.used_bytes - (STORY_DATA_START - 0x8000)
+        return text_used, STORY_DATA_CAPACITY
 
     def set_story_text_raw(self, selector: int, index: int, data: bytes) -> None:
+        plan = self.expansion_plan
+        if plan is not None:
+            records = extract_story_group(
+                self.story_text_codec, selector, self.working
+            )
+            if records.record_for_index(index).raw == bytes(data):
+                return
+            target_plan = (
+                plan if plan.story_pair_for(selector) else plan.with_story_selector(selector)
+            )
+            pair = target_plan.story_pair_for(selector)
+            if pair is None:
+                raise ValueError("剧情文本组没有可用的 16 KiB Bank pair。")
+            packed = pack_story_group(
+                records.with_replacement(index, bytes(data)), pair[0]
+            )
+            descriptor_before = bytes(
+                self.working[
+                    packed.descriptor_file_offset : packed.descriptor_file_offset + 2
+                ]
+            )
+            allowed_descriptors = {
+                bytes(
+                    self.original[
+                        packed.descriptor_file_offset : packed.descriptor_file_offset + 2
+                    ]
+                ),
+                packed.descriptor,
+            }
+            if descriptor_before not in allowed_descriptors:
+                raise RomFormatError(
+                    f"剧情文本组 ${selector:02X} 的资源描述符已被其他修改占用。"
+                )
+            before_snapshot = self._mutation_snapshot()
+            try:
+                start = packed.pair_file_offset
+                self.working[start : start + len(packed.pair_image)] = packed.pair_image
+                self.working[
+                    packed.descriptor_file_offset : packed.descriptor_file_offset + 2
+                ] = packed.descriptor
+                self._write_expansion_plan(target_plan)
+                self._refresh_dynamic_codecs()
+            except Exception:
+                if before_snapshot is not None:
+                    self.working[:] = before_snapshot.data
+                    self.resource_allocator = BankAllocator(
+                        self.profile, self.original, before_snapshot.allocations
+                    )
+                    self._refresh_dynamic_codecs()
+                raise
+            self._finish_mutation(
+                before_snapshot,
+                f"剧情文本 ${selector:02X}:{index:02X} · 自动扩容",
+            )
+            return
         before_snapshot = self._mutation_snapshot()
         offset, _before, after = self.story_text_codec.replacement_patch(
             bytes(self.working), selector, index, data
@@ -1416,6 +2166,12 @@ class RomProject:
         )
 
     def reset_story_text(self, selector: int, index: int) -> None:
+        if self.expansion_plan is not None:
+            original = extract_story_group(
+                self.base_story_text_codec, selector, self.original
+            ).record_for_index(index)
+            self.set_story_text_raw(selector, index, original.raw)
+            return
         before_snapshot = self._mutation_snapshot()
         record = self.story_text_codec.decode(selector, index, bytes(self.working))
         if not record.capacity:
@@ -1476,6 +2232,11 @@ class RomProject:
         before = self._mutation_snapshot()
         self.working[:] = self.original
         self.resource_allocator = BankAllocator(self.profile, self.original)
+        if (plan := ExpansionPlan.from_bytes(self.working)) is not None:
+            self._reserve_plan_partitions(plan)
+            if self._initial_expansion_plan is not None:
+                self._reserve_direct_reopen_guards(plan)
+        self._refresh_dynamic_codecs()
         self._finish_mutation(before, "还原全部修改")
 
     def aliases_for_ids(self, ids: tuple[int, ...]) -> str:
@@ -1513,6 +2274,18 @@ class RomProject:
 
     def validate(self) -> tuple[ValidationIssue, ...]:
         return validate_project(self)
+
+    def _require_valid_output(self, action: str) -> tuple[ValidationIssue, ...]:
+        issues = self.validate()
+        errors = [issue for issue in issues if issue.severity == "error"]
+        if errors:
+            raise ValueError(
+                f"{action}前完整性检查失败：\n"
+                + "\n".join(
+                    f"[{issue.module}] {issue.message}" for issue in errors
+                )
+            )
+        return issues
 
     def change_description(self, offset: int) -> str:
         for allocation in self.expansion_allocations:
@@ -1641,6 +2414,7 @@ class RomProject:
         return "ROM 数据"
 
     def save_as(self, path: str | Path, *, make_backup: bool = True) -> Path:
+        self._require_valid_output("输出 ROM")
         destination = Path(path).expanduser().resolve()
         if destination == self.path.resolve():
             raise ValueError("不能覆盖当前载入的基准 ROM，请使用新文件名。")
@@ -1653,6 +2427,7 @@ class RomProject:
         return destination
 
     def export_ips(self, path: str | Path) -> Path:
+        self._require_valid_output("导出 IPS")
         destination = Path(path).expanduser().resolve()
         destination.parent.mkdir(parents=True, exist_ok=True)
         atomic_write_bytes(destination, make_ips(self.original, bytes(self.working)))
@@ -1670,10 +2445,7 @@ class RomProject:
     def build_release(self, output_dir: str | Path, name: str) -> BuildArtifacts:
         if not name.strip() or Path(name).name != name:
             raise ValueError("构建名称不能为空，也不能包含路径。")
-        issues = self.validate()
-        errors = [issue for issue in issues if issue.severity == "error"]
-        if errors:
-            raise ValueError("构建检查失败：\n" + "\n".join(issue.message for issue in errors))
+        issues = self._require_valid_output("一键构建")
 
         directory = Path(output_dir).expanduser().resolve()
         directory.mkdir(parents=True, exist_ok=True)
@@ -1707,6 +2479,24 @@ class RomProject:
                     "descriptions": descriptions,
                 }
             )
+        plan = self.expansion_plan
+        managed_descriptor_selectors: set[int] = set()
+        if plan is not None:
+            if plan.flags & FLAG_UNITS:
+                managed_descriptor_selectors.update(
+                    (
+                        UNIT_NAME_SELECTOR,
+                        UNIT_BODY_SELECTOR,
+                        UNIT_FRAGMENT_SELECTOR,
+                        UNIT_ATTRIBUTE_SELECTOR,
+                        UNIT_CONFIGURATION_SELECTOR,
+                    )
+                )
+            managed_descriptor_selectors.update(plan.expanded_story_selectors)
+        managed_protected_offsets: set[int] = set()
+        for selector in managed_descriptor_selectors:
+            start = resource_descriptor_offset(selector)
+            managed_protected_offsets.update((start, start + 1))
         report = {
             "toolVersion": "2.2.0",
             "base": {
@@ -1732,10 +2522,13 @@ class RomProject:
                         "banks": region.display,
                         "label": region.label,
                         "bytes": region.size,
-                        "unchanged": all(
-                            self.original[16 + bank * 0x2000 : 16 + (bank + 1) * 0x2000]
-                            == output[16 + bank * 0x2000 : 16 + (bank + 1) * 0x2000]
-                            for bank in range(region.first_bank, region.end_bank)
+                        "unmanagedBytesUnchanged": all(
+                            self.original[offset] == output[offset]
+                            or offset in managed_protected_offsets
+                            for offset in range(
+                                16 + region.first_bank * 0x2000,
+                                16 + region.end_bank * 0x2000,
+                            )
                         ),
                     }
                     for region in self.profile.protected_prg_regions
@@ -1799,13 +2592,18 @@ class RomProject:
     def to_project_document(self) -> ProjectDocument:
         document = ProjectDocument.create(self.rom_image)
         covered_offsets: set[int] = set()
+        plan = self.expansion_plan
+        units_are_linked = bool(plan is not None and plan.flags & FLAG_UNITS)
+        maps_are_linked = bool(plan is not None and plan.flags & FLAG_MAPS)
         for allocation in self.expansion_allocations:
+            if allocation.resource_id.startswith(REOPEN_GUARD_PREFIX):
+                continue
             document.add_resource_allocation(
                 allocation,
                 bytes(self.working[allocation.offset : allocation.end]),
             )
             covered_offsets.update(range(allocation.offset, allocation.end))
-        for pointer, ids in self.ids_by_pointer.items():
+        for pointer, ids in (() if units_are_linked else self.ids_by_pointer.items()):
             unit_id = ids[0]
             record_offset = self.record_file_offset_from_pointer(pointer)
             for field in FIELDS:
@@ -1867,7 +2665,7 @@ class RomProject:
                 offset = self.weapon_name_codec.pointer_offset(weapon_id)
                 covered_offsets.update(range(offset, offset + 2))
 
-        if self.unit_weapon_codec is not None:
+        if self.unit_weapon_codec is not None and not units_are_linked:
             for unit_id in range(1, self.unit_count):
                 original_ids = self.get_unit_weapons(unit_id, original=True)
                 current_ids = self.get_unit_weapons(unit_id)
@@ -1885,7 +2683,7 @@ class RomProject:
                     )
                     covered_offsets.add(config_offset + slot)
 
-        for unit_id in range(1, self.unit_count):
+        for unit_id in (() if units_are_linked else range(1, self.unit_count)):
             original_pointer = self.get_unit_name_pointer(unit_id, original=True)
             current_pointer = self.get_unit_name_pointer(unit_id)
             if original_pointer == current_pointer:
@@ -1920,7 +2718,7 @@ class RomProject:
                 offset = self.character_name_codec.pointer_offset(character_id)
                 covered_offsets.update(range(offset, offset + 2))
 
-        for map_id in range(self.map_count):
+        for map_id in (() if maps_are_linked else range(self.map_count)):
             original_map = self.get_map(map_id, original=True)
             current_map = self.get_map(map_id)
             if (
@@ -1940,7 +2738,7 @@ class RomProject:
             covered_offsets.update(range(offset, offset + self.map_codec.capacities[map_id]))
 
         seen_scenario_pointers: set[int] = set()
-        for map_id in range(self.scenario_count):
+        for map_id in (() if maps_are_linked else range(self.scenario_count)):
             pointer = self.scenario_layout_codec.pointers[map_id]
             if pointer in seen_scenario_pointers:
                 continue
@@ -1961,7 +2759,7 @@ class RomProject:
                 range(offset, offset + self.scenario_layout_codec.capacities[map_id])
             )
 
-        if self.map_trigger_codec is not None:
+        if self.map_trigger_codec is not None and not maps_are_linked:
             triggers_changed = False
             for map_id in range(self.map_trigger_codec.spec.scenario_count):
                 original_layout = self.map_trigger_codec.decode(map_id, self.original)
@@ -1986,6 +2784,8 @@ class RomProject:
                 )
 
         for group in self.story_text_groups:
+            if plan is not None and plan.story_pair_for(group.selector) is not None:
+                continue
             for pointer, indices in self.story_text_codec.ids_by_pointer(
                 group.selector
             ).items():

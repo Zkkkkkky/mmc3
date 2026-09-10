@@ -19,6 +19,21 @@ from .codecs.weapon import WeaponCodec
 from .codecs.weapon_name import WeaponNameReferenceCodec
 from .constants import PROJECT_SCHEMA_VERSION
 from .errors import ProjectFormatError
+from .expansion import (
+    AUTO_ALLOCATION_PREFIX,
+    FLAG_MAPS,
+    FLAG_UNITS,
+    PARTITION_ALLOCATION_PREFIX,
+    ExpansionPlan,
+    bank_file_offset,
+)
+from .expansion_map import TERRAIN_BANK_DIRECTORY_OFFSET, read_expanded_map_layout
+from .expansion_unit import (
+    ATTRIBUTE_TABLE,
+    NAME_TABLE,
+    SINGLE_RESOURCE_TABLE,
+    SOURCE_CONFIGURATION_PAIR,
+)
 from .models import (
     PlayerPlacement,
     ScenarioEntity,
@@ -398,7 +413,16 @@ class ProjectDocument:
                 continue
             try:
                 allocation, _data = self._decode_resource_allocation(operation)
-                if any(rom.data[allocation.offset : allocation.end]):
+                if allocation.resource_id.startswith(AUTO_ALLOCATION_PREFIX) and not (
+                    allocation.resource_id.startswith(PARTITION_ALLOCATION_PREFIX)
+                ):
+                    raise ValueError("auto. 前缀仅供修改器内部分区使用。")
+                if (
+                    any(rom.data[allocation.offset : allocation.end])
+                    and not allocation.resource_id.startswith(
+                        PARTITION_ALLOCATION_PREFIX
+                    )
+                ):
                     raise ValueError("资源分配的基准区域不是全零。")
                 allocator.reserve(allocation)
             except (KeyError, TypeError, ValueError) as error:
@@ -409,10 +433,50 @@ class ProjectDocument:
 
     def materialize(self, rom: RomImage) -> bytes:
         self._validate_base(rom)
-        unit_codec = UnitCodec(rom)
-        unit_name_codec = UnitNameReferenceCodec(rom)
+        initial_plan = ExpansionPlan.from_bytes(rom.data)
+        if initial_plan is not None and initial_plan.flags & FLAG_UNITS:
+            core_bank = initial_plan.unit_banks[0]
+            name_bank = (
+                initial_plan.unit_banks[8]
+                if len(initial_plan.unit_banks) == 10
+                else core_bank
+            )
+            name_table = (
+                SINGLE_RESOURCE_TABLE
+                if len(initial_plan.unit_banks) == 10
+                else NAME_TABLE
+            )
+            unit_codec = UnitCodec(
+                rom,
+                rom.data,
+                pointer_table_offset=(
+                    bank_file_offset(core_bank) + ATTRIBUTE_TABLE - 0x8000
+                ),
+                pair_first_bank=core_bank,
+            )
+            unit_name_codec = UnitNameReferenceCodec(
+                rom,
+                rom.data,
+                pointer_table_offset=(
+                    bank_file_offset(name_bank) + name_table - 0x8000
+                ),
+                pair_first_bank=name_bank,
+            )
+        else:
+            unit_codec = UnitCodec(rom)
+            unit_name_codec = UnitNameReferenceCodec(rom)
         unit_weapon_codec = (
-            UnitWeaponCodec(rom)
+            UnitWeaponCodec(
+                rom,
+                rom.data,
+                table_offset=(
+                    bank_file_offset(initial_plan.unit_banks[2])
+                    + rom.profile.unit_weapon_table_offset
+                    - bank_file_offset(SOURCE_CONFIGURATION_PAIR)
+                    if initial_plan is not None and initial_plan.flags & FLAG_UNITS
+                    else rom.profile.unit_weapon_table_offset
+                ),
+            )
             if rom.profile.unit_weapon_table_offset is not None
             else None
         )
@@ -428,12 +492,41 @@ class ProjectDocument:
             if rom.profile.character_name_pointer_table_offset is not None
             else None
         )
-        map_codec = MapCodec(rom)
-        scenario_codec = ScenarioLayoutCodec(rom)
-        map_trigger_codec = (
-            MapTriggerCodec(rom) if rom.profile.map_triggers is not None else None
+        if initial_plan is not None and initial_plan.flags & FLAG_MAPS:
+            initial_layout = read_expanded_map_layout(rom.data)
+            map_codec = MapCodec(
+                rom,
+                rom.data,
+                bank_table_offset=TERRAIN_BANK_DIRECTORY_OFFSET,
+                record_locations=initial_layout.terrain,
+            )
+            scenario_codec = ScenarioLayoutCodec(
+                rom, rom.data, record_locations=initial_layout.scenarios
+            )
+            map_trigger_codec = MapTriggerCodec(
+                rom,
+                rom.data,
+                record_locations=initial_layout.triggers,
+                expanded_capacity=len(initial_plan.map_banks) * 0x2000,
+            )
+        else:
+            map_codec = MapCodec(rom)
+            scenario_codec = ScenarioLayoutCodec(rom)
+            map_trigger_codec = (
+                MapTriggerCodec(rom) if rom.profile.map_triggers is not None else None
+            )
+        story_overrides = (
+            {
+                selector: pair[0]
+                for selector in initial_plan.expanded_story_selectors
+                if (pair := initial_plan.story_pair_for(selector)) is not None
+            }
+            if initial_plan is not None
+            else {}
         )
-        story_text_codec = StoryTextCodec(rom)
+        story_text_codec = StoryTextCodec(
+            rom, rom.data, group_bank_overrides=story_overrides
+        )
         battle_music_codec = (
             BattleMusicCodec(rom) if rom.profile.battle_music is not None else None
         )
@@ -798,7 +891,18 @@ class ProjectDocument:
                         )
                 elif kind == "resource.allocate":
                     allocation, payload = self._decode_resource_allocation(operation)
-                    if any(rom.data[allocation.offset : allocation.end]):
+                    if allocation.resource_id.startswith(AUTO_ALLOCATION_PREFIX) and not (
+                        allocation.resource_id.startswith(PARTITION_ALLOCATION_PREFIX)
+                    ):
+                        raise ProjectFormatError(
+                            "auto. 前缀仅供修改器内部分区使用。"
+                        )
+                    if (
+                        any(rom.data[allocation.offset : allocation.end])
+                        and not allocation.resource_id.startswith(
+                            PARTITION_ALLOCATION_PREFIX
+                        )
+                    ):
                         raise ProjectFormatError("资源分配的基准区域不是全零。")
                     resource_allocator.reserve(allocation)
                     changes.apply_patch(

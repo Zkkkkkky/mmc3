@@ -36,3 +36,33 @@ SCENARIO_LAYOUT_POINTER_TABLE_OFFSET = 0x7043
 SCENARIO_LAYOUT_DATA_END_OFFSET = 0x8010
 
 PROJECT_SCHEMA_VERSION = 2
+
+# Authentication boundary for the current 1.25 MiB DC expansion baseline.
+# Editor-managed outputs may rewrite only the listed two-byte resource
+# descriptors in fixed Bank $7F.  Normalizing those bytes lets an edited ROM
+# retain a stable signature while still detecting pre-existing corruption in
+# the iNES header and fixed Banks $64/$7E/$7F.
+DC_EXPANDED_MMC3_REFERENCE_SHA256 = (
+    "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E"
+)
+DC_EXPANDED_MMC3_AUTHENTICATED_HEADER = bytes.fromhex(
+    "4E45531A402023C00000000000000000"
+)
+DC_EXPANDED_MMC3_PROTECTED_BANKS = (0x64, 0x7E, 0x7F)
+DC_EXPANDED_MMC3_MUTABLE_DESCRIPTOR_SELECTORS = (
+    0x13,
+    0x21,
+    0x41,
+    0x71,
+    0x74,
+    0x32,
+    0x33,
+    0x36,
+    0x38,
+    0x39,
+    0x3A,
+    0x3B,
+)
+DC_EXPANDED_MMC3_NORMALIZED_PROTECTED_SHA256 = (
+    "8793FEF1B9BFC767E48BF8703F83F579F809A412EFF53BB8A1A97B9615DD366C"
+)

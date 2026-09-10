@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import hashlib
 import struct
+from collections.abc import Sequence
 from dataclasses import dataclass
 
 from ..constants import INES_HEADER_SIZE, PRG_BANK_SIZE
@@ -45,19 +46,38 @@ class MapTriggerCodec:
 
     TERMINATOR = 0xFF
 
-    def __init__(self, rom: RomImage) -> None:
+    def __init__(
+        self,
+        rom: RomImage,
+        data: bytes | bytearray | None = None,
+        *,
+        record_locations: Sequence[object] | None = None,
+        expanded_capacity: int | None = None,
+    ) -> None:
         spec = rom.profile.map_triggers
         if spec is None:
             raise ValueError("当前 ROM 配置没有地图触发器布局。")
         self.rom = rom
         self.spec = spec
+        self._source = rom.data if data is None else bytes(data)
         self.pointer_table_offset = self.cpu_to_file_offset(spec.pointer_table)
-        raw = rom.read(self.pointer_table_offset, spec.scenario_count * 2)
+        raw = self._source[
+            self.pointer_table_offset : self.pointer_table_offset
+            + spec.scenario_count * 2
+        ]
         self.original_pointers = tuple(
             struct.unpack(f"<{spec.scenario_count}H", raw)
         )
+        self._locations = tuple(record_locations or ())
+        self._expanded_capacity = expanded_capacity
+        if self._locations and len(self._locations) != spec.scenario_count:
+            raise RomFormatError("扩展地图事件位置表数量不正确。")
         for map_id in range(spec.scenario_count):
-            self.decode(map_id, rom.data)
+            self.decode(map_id, self._source)
+
+    @property
+    def is_expanded(self) -> bool:
+        return bool(self._locations)
 
     def cpu_to_file_offset(self, address: int) -> int:
         if not self.spec.window_base <= address < self.spec.window_base + PRG_BANK_SIZE:
@@ -71,20 +91,26 @@ class MapTriggerCodec:
 
     @property
     def pool_offset(self) -> int:
+        if self.is_expanded:
+            return min(int(item.file_offset) for item in self._locations)
         return self.cpu_to_file_offset(self.spec.managed_data_start)
 
     @property
     def pool_capacity(self) -> int:
+        if self.is_expanded and self._expanded_capacity is not None:
+            return self._expanded_capacity
         return self.spec.managed_data_end - self.spec.managed_data_start
 
     def pointer(self, map_id: int, data: bytes | bytearray | None = None) -> int:
         if not 0 <= map_id < self.spec.scenario_count:
             raise IndexError("地图触发器关卡 ID 超出范围。")
-        source = self.rom.data if data is None else bytes(data)
+        source = self._source if data is None else bytes(data)
         offset = self.pointer_table_offset + map_id * 2
         return int.from_bytes(source[offset : offset + 2], "little")
 
     def _pointer_is_readable(self, pointer: int) -> bool:
+        if self.is_expanded:
+            return 0xA000 <= pointer < 0xC000
         return (
             self.spec.original_data_start <= pointer < self.spec.original_data_end
             or self.spec.managed_data_start <= pointer < self.spec.managed_data_end
@@ -95,14 +121,23 @@ class MapTriggerCodec:
         map_id: int,
         data: bytes | bytearray | None = None,
     ) -> MapTriggerLayout:
-        source = self.rom.data if data is None else bytes(data)
+        source = self._source if data is None else bytes(data)
         pointer = self.pointer(map_id, source)
         if not self._pointer_is_readable(pointer):
             raise RomFormatError(
                 f"关卡 ${map_id:02X} 的地图触发器指针 ${pointer:04X} 越界。"
             )
-        cursor = self.cpu_to_file_offset(pointer)
-        bank_end = INES_HEADER_SIZE + (self.spec.prg_bank + 1) * PRG_BANK_SIZE
+        if self.is_expanded:
+            location = self._locations[map_id]
+            if pointer != int(location.pointer):
+                raise RomFormatError(
+                    f"关卡 ${map_id:02X} 的地图事件指针与位置表不一致。"
+                )
+            cursor = int(location.file_offset)
+            bank_end = cursor + int(location.capacity)
+        else:
+            cursor = self.cpu_to_file_offset(pointer)
+            bank_end = INES_HEADER_SIZE + (self.spec.prg_bank + 1) * PRG_BANK_SIZE
         entries: list[MapTrigger] = []
         while cursor < bank_end:
             if source[cursor] == self.TERMINATOR:
@@ -158,6 +193,8 @@ class MapTriggerCodec:
         entries: tuple[MapTrigger, ...],
     ) -> tuple[tuple[int, bytes, bytes], ...]:
         source = bytes(data)
+        if self.is_expanded:
+            raise ValueError("扩展地图事件必须通过地图共享池统一重排。")
         if not 0 <= map_id < self.spec.scenario_count:
             raise IndexError("地图触发器关卡 ID 超出范围。")
         self.validate_entries(entries)

@@ -227,8 +227,16 @@ class StoryPage(ProjectPage):
         record = self.project.get_story_text(self.current_selector, self.current_index)
         aliases = "、".join(f"${index:02X}" for index in record.indices)
         self.heading.setText(f"剧情文本 ${self.current_selector:02X}:${self.current_index:02X}")
+        plan = self.project.expansion_plan
+        pair = plan.story_pair_for(self.current_selector) if plan is not None else None
+        binding = (
+            f" · 已自动绑定 Bank ${pair[0]:02X}/${pair[1]:02X}"
+            if pair is not None
+            else (" · 首次修改时自动绑定 16 KiB" if plan is not None else "")
+        )
         self.meta.setText(
-            f"CPU指针 ${record.pointer:04X} · 容量 {record.capacity} 字节 · 共享索引：{aliases}"
+            f"CPU指针 ${record.pointer:04X} · 当前记录 {len(record.raw)} 字节 · "
+            f"共享索引：{aliases}{binding}"
         )
         self.raw.blockSignals(True)
         self.raw.setPlainText(record.raw.hex(" ").upper())
@@ -254,25 +262,33 @@ class StoryPage(ProjectPage):
         if self.project is None or self.current_selector is None or self.current_index is None:
             self.length_label.setText("—")
             return
-        capacity = self.project.get_story_text(self.current_selector, self.current_index).capacity
         try:
-            length = len(self._parse_hex(self.raw.toPlainText()))
+            parsed = self._parse_hex(self.raw.toPlainText())
+            length = len(parsed)
             current = self.project.get_story_text(
                 self.current_selector, self.current_index
             ).raw
-            parsed = self._parse_hex(self.raw.toPlainText())
             changed = parsed != current
-            status = "长度正确" if length == capacity else "必须保持等长"
+            if self.project.expansion_plan is not None:
+                used, capacity = self.project.story_text_replacement_usage(
+                    self.current_selector, self.current_index, parsed
+                )
+                valid = True
+                status = f"文本组预计 {used} / {capacity} 字节 · 可自动重排"
+            else:
+                capacity = len(current)
+                valid = length == capacity
+                status = "长度正确" if valid else "当前ROM必须保持等长"
             staged = " · 有尚未应用的改动" if changed else " · 与当前工程一致"
             self.length_label.setText(
-                f"输入 {length} / 容量 {capacity} 字节 · {status}{staged}"
+                f"输入 {length} 字节 · {status}{staged}"
             )
             self.length_label.setStyleSheet(
                 "color: #b45309; font-weight: 650;"
                 if changed
                 else "color: #2e7d4f;"
             )
-            self.apply_button.setEnabled(length == capacity and changed)
+            self.apply_button.setEnabled(valid and changed)
         except ValueError as error:
             self.length_label.setText(str(error))
             self.length_label.setStyleSheet("color: #b42318;")

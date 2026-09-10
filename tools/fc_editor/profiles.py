@@ -3,7 +3,55 @@ from __future__ import annotations
 import hashlib
 from dataclasses import dataclass, replace
 
-from .constants import EXPECTED_BASE_SHA256, EXPECTED_MAPPER, EXPECTED_ROM_SIZE
+from .constants import (
+    DC_EXPANDED_MMC3_AUTHENTICATED_HEADER,
+    DC_EXPANDED_MMC3_MUTABLE_DESCRIPTOR_SELECTORS,
+    DC_EXPANDED_MMC3_NORMALIZED_PROTECTED_SHA256,
+    DC_EXPANDED_MMC3_PROTECTED_BANKS,
+    DC_EXPANDED_MMC3_REFERENCE_SHA256,
+    EXPECTED_BASE_SHA256,
+    EXPECTED_MAPPER,
+    EXPECTED_ROM_SIZE,
+    INES_HEADER_SIZE,
+    PRG_BANK_SIZE,
+)
+
+
+_DC_RESOURCE_DESCRIPTOR_BANK_OFFSET = 0xF3E2 - 0xE000
+
+
+def dc_expanded_mmc3_protected_sha256(data: bytes | bytearray) -> str:
+    """Hash immutable DC header/code while ignoring managed descriptors."""
+
+    required_size = (
+        INES_HEADER_SIZE
+        + (max(DC_EXPANDED_MMC3_PROTECTED_BANKS) + 1) * PRG_BANK_SIZE
+    )
+    if len(data) < required_size:
+        raise ValueError("扩容 ROM 长度不足，无法验证固定代码签名。")
+
+    normalized = bytearray(data[:INES_HEADER_SIZE])
+    for bank in DC_EXPANDED_MMC3_PROTECTED_BANKS:
+        start = INES_HEADER_SIZE + bank * PRG_BANK_SIZE
+        bank_data = bytearray(data[start : start + PRG_BANK_SIZE])
+        if bank == 0x7F:
+            for selector in DC_EXPANDED_MMC3_MUTABLE_DESCRIPTOR_SELECTORS:
+                descriptor = _DC_RESOURCE_DESCRIPTOR_BANK_OFFSET + selector * 2
+                bank_data[descriptor : descriptor + 2] = b"\x00\x00"
+        normalized.extend(bank_data)
+    return hashlib.sha256(normalized).hexdigest().upper()
+
+
+def dc_expanded_mmc3_protected_signature_is_valid(
+    data: bytes | bytearray,
+) -> bool:
+    """Return whether current DC fixed bytes match the authenticated baseline."""
+
+    return (
+        bytes(data[:INES_HEADER_SIZE]) == DC_EXPANDED_MMC3_AUTHENTICATED_HEADER
+        and dc_expanded_mmc3_protected_sha256(data)
+        == DC_EXPANDED_MMC3_NORMALIZED_PROTECTED_SHA256
+    )
 
 
 @dataclass(frozen=True)
@@ -527,7 +575,7 @@ DC_EXPANDED_MMC3_PROFILE = replace(
     DC_EXPANDED_MMC3_LEGACY_PROFILE,
     key="dc-kuorong-mmc3-v2",
     label="第二次机器人大战新DC篇·扩容 MMC3（464 KiB资源池）",
-    reference_sha256="82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E",
+    reference_sha256=DC_EXPANDED_MMC3_REFERENCE_SHA256,
     protected_prg_regions=(
         PrgBankRegion(0x64, 0x65, "双音频引擎与桥接器"),
         PrgBankRegion(0x7E, 0x80, "固定程序银行"),
@@ -557,7 +605,7 @@ def detect_profile(data: bytes) -> RomProfile:
         profile = matches[0]
     elif DC_EXPANDED_MMC3_PROFILE in matches:
         header = data[:16]
-        if header != bytes.fromhex("4E45531A402023C00000000000000000"):
+        if header != DC_EXPANDED_MMC3_AUTHENTICATED_HEADER:
             raise ValueError("该 1.25 MiB ROM 不是已验证的扩容 Mapper 194 布局。")
         bank_18_start = 16 + 0x18 * 0x2000
         bank_60_start = 16 + 0x60 * 0x2000
@@ -599,4 +647,12 @@ def detect_profile(data: bytes) -> RomProfile:
         )
         if engine_hash != expected_engine_hash:
             raise ValueError("该扩容 ROM 的双音频引擎银行不是已验证版本。")
+        if (
+            profile is DC_EXPANDED_MMC3_PROFILE
+            and not dc_expanded_mmc3_protected_signature_is_valid(data)
+        ):
+            raise ValueError(
+                "该扩容 ROM 的固定代码认证签名不匹配；"
+                "iNES 头或 Bank $64/$7E/$7F 含未经验证的修改。"
+            )
     return profile

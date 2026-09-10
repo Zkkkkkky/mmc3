@@ -326,7 +326,7 @@ class MainWindow(QMainWindow):
             ("背景音乐", (("战斗音乐", "music"),)),
             (
                 "工程与输出",
-                (("工程概览", "overview"), ("资源占用", "resources"), ("变更验证", "changes")),
+                (("工程概览", "overview"), ("容量规划", "resources"), ("变更验证", "changes")),
             ),
         )
         for group_index, (group_label, entries) in enumerate(groups):
@@ -393,7 +393,7 @@ class MainWindow(QMainWindow):
         self._add_page("events", "战场事件", EventPage())
         self._add_page("persuasion", "劝降条件", PersuasionPage())
         self._add_page("music", "背景音乐", MusicPage())
-        self._add_page("resources", "资源占用", ResourcePage())
+        self._add_page("resources", "容量规划", ResourcePage())
         self._add_page("changes", "变更与验证", ChangesPage())
 
     def _action(
@@ -433,7 +433,7 @@ class MainWindow(QMainWindow):
             ("music", "战斗背景音乐", "Ctrl+6"),
             ("unit_import", "机体导入与CHR图像", "Ctrl+7"),
             ("overview", "工程概览", "Ctrl+8"),
-            ("resources", "ROM资源占用", None),
+            ("resources", "扩展容量规划", None),
             ("changes", "变更与验证", None),
         )
         for key, text, shortcut in page_commands:
@@ -513,16 +513,47 @@ class MainWindow(QMainWindow):
             page.set_project(project)
         self._update_window_state()
 
+    @staticmethod
+    def _initial_page_key(project: RomProject) -> str:
+        """Route every fresh v2 project through capacity planning first."""
+
+        if (
+            project.profile.key == "dc-kuorong-mmc3-v2"
+            and project.expansion_plan is None
+        ):
+            return "resources"
+        return "maps"
+
+    def _activate_project(
+        self,
+        project: RomProject,
+        *,
+        project_path: Path | None = None,
+        saved_snapshot: bytes | None = None,
+    ) -> None:
+        self._set_project(
+            project,
+            project_path=project_path,
+            saved_snapshot=saved_snapshot,
+        )
+        self.show_page(self._initial_page_key(project))
+
     def load_rom(self, path: str | Path, *, quiet: bool = False) -> bool:
         try:
             project = RomProject.load(path)
             if not project.rom_image.is_reference_base:
-                raise ValueError(
-                    f"该ROM布局兼容，但不是“{project.profile.label}”的基准哈希。"
-                    "请从基准ROM建立工程，避免补丁重放到错误版本。"
+                if project.expansion_plan is None:
+                    raise ValueError(
+                        f"该ROM布局兼容，但不是“{project.profile.label}”的基准哈希。"
+                        "只有带有效自动容量表的修改器输出ROM可以直接续改。"
+                    )
+                errors = tuple(
+                    issue for issue in project.validate() if issue.severity == "error"
                 )
-            self._set_project(project)
-            self.show_page("maps")
+                if errors:
+                    detail = "；".join(issue.message for issue in errors[:3])
+                    raise ValueError(f"输出ROM的自动容量布局校验失败：{detail}")
+            self._activate_project(project)
             self.status.showMessage("ROM已安全载入", 4000)
             return True
         except Exception as error:
@@ -558,8 +589,7 @@ class MainWindow(QMainWindow):
             base_path = Path(base_name)
         try:
             project = RomProject.load_project(filename, base_path)
-            self._set_project(project, project_path=Path(filename).resolve())
-            self.show_page("maps")
+            self._activate_project(project, project_path=Path(filename).resolve())
             self.status.showMessage("工程已载入", 4000)
         except Exception as error:
             QMessageBox.critical(self, "无法打开工程", str(error))
@@ -737,7 +767,7 @@ class MainWindow(QMainWindow):
             try:
                 base_path = self.project.path if self.project is not None else DEFAULT_ROM
                 project = RomProject.load_project(path, base_path)
-                self._set_project(project, project_path=path.resolve())
+                self._activate_project(project, project_path=path.resolve())
             except Exception as error:
                 QMessageBox.critical(self, "无法打开工程", str(error))
 

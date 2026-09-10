@@ -3,9 +3,83 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Literal, Protocol
 
+from ..constants import UNIT_WEAPON_SLOT_COUNT
 from ..errors import RomFormatError
+from ..expansion import (
+    FLAG_MAPS,
+    FLAG_MAP_TRIGGERS,
+    FLAG_SCENARIOS,
+    FLAG_UNITS,
+    STORY_SELECTORS,
+    bank_file_offset,
+    resource_descriptor_offset,
+)
+from ..expansion_map import (
+    pack_map_resources,
+    read_expanded_map_layout,
+    read_expanded_map_payloads,
+)
+from ..expansion_story import story_descriptor_offset
+from ..expansion_unit import (
+    CONFIGURATION_CAVE_END,
+    CONFIGURATION_CAVE_START,
+    CONFIGURATION_OLD_DATA_END,
+    CONFIGURATION_TABLE,
+    SOURCE_CONFIGURATION_PAIR,
+    SOURCE_CORE_PAIR,
+    UNIT_ATTRIBUTE_SELECTOR,
+    UNIT_BODY_SELECTOR,
+    UNIT_CONFIGURATION_SELECTOR,
+    UNIT_FRAGMENT_SELECTOR,
+    UNIT_NAME_SELECTOR,
+    validate_unit_expansion_payload,
+)
+from ..profiles import (
+    DC_EXPANDED_MMC3_PROFILE,
+    dc_expanded_mmc3_protected_signature_is_valid,
+)
 
 Severity = Literal["error", "warning", "info"]
+
+CORE_LOADER_RANGES = (
+    (0x8064, 0x8098),
+    (0x8290, 0x82B2),
+)
+
+
+def _first_range_difference(
+    source: bytes | bytearray,
+    source_bank: int,
+    target_bank: int,
+    ranges: tuple[tuple[int, int], ...],
+) -> int | None:
+    source_start = bank_file_offset(source_bank)
+    target_start = bank_file_offset(target_bank)
+    for range_start, range_end in ranges:
+        for cpu_address in range(range_start, range_end):
+            relative = cpu_address - 0x8000
+            if source[source_start + relative] != source[target_start + relative]:
+                return cpu_address
+    return None
+
+
+def _first_difference_excluding(
+    source: bytes | bytearray,
+    source_bank: int,
+    target_bank: int,
+    excluded_ranges: tuple[tuple[int, int], ...],
+) -> int | None:
+    """Compare a full 16 KiB pair except explicitly mutable data pools."""
+
+    source_start = bank_file_offset(source_bank)
+    target_start = bank_file_offset(target_bank)
+    for cpu_address in range(0x8000, 0xC000):
+        if any(start <= cpu_address < end for start, end in excluded_ranges):
+            continue
+        relative = cpu_address - 0x8000
+        if source[source_start + relative] != source[target_start + relative]:
+            return cpu_address
+    return None
 
 
 @dataclass(frozen=True)
@@ -40,6 +114,7 @@ class ProjectView(Protocol):
     expansion_capacity: int
     expansion_used: int
     expansion_available: int
+    expansion_plan: object | None
 
     def get_map(self, map_id: int, *, original: bool = False): ...
 
@@ -66,8 +141,219 @@ class ProjectView(Protocol):
 
 def validate_project(project: ProjectView) -> tuple[ValidationIssue, ...]:
     issues: list[ValidationIssue] = []
+    allowed_protected_offsets: set[int] = set()
+    expanded_map_usage: tuple[int, int] | None = None
     if len(project.working) != len(project.original):
         issues.append(ValidationIssue("error", "ROM", "输出 ROM 大小发生变化。"))
+    if bytes(project.working[:16]) != bytes(project.original[:16]):
+        issues.append(
+            ValidationIssue(
+                "error",
+                "ROM",
+                "iNES 头被修改；当前修改器不允许改变 ROM 容量、Mapper 或镜像标志。",
+            )
+        )
+    if project.profile is DC_EXPANDED_MMC3_PROFILE:
+        try:
+            protected_signature_valid = (
+                dc_expanded_mmc3_protected_signature_is_valid(project.working)
+            )
+        except ValueError:
+            protected_signature_valid = False
+        if not protected_signature_valid:
+            issues.append(
+                ValidationIssue(
+                    "error",
+                    "安全",
+                    "认证固定代码签名不匹配；iNES 头或 "
+                    "Bank $64/$7E/$7F 含未经验证的修改。",
+                )
+            )
+
+    try:
+        plan = project.expansion_plan
+    except ValueError as error:
+        plan = None
+        issues.append(ValidationIssue("error", "容量规划", str(error)))
+
+    if plan is not None:
+        expected_flags = FLAG_MAPS | FLAG_SCENARIOS | FLAG_MAP_TRIGGERS | FLAG_UNITS
+        if (plan.flags & expected_flags) != expected_flags:
+            issues.append(
+                ValidationIssue("error", "容量规划", "自动链接状态不完整。")
+            )
+
+        expected_by_category = {
+            "unit": set(plan.unit_banks),
+            "map": set(plan.map_banks),
+            "story": set(plan.story_banks),
+        }
+        actual_by_category = {key: set() for key in expected_by_category}
+        for allocation in project.expansion_allocations:
+            prefix = "auto.partition."
+            if not allocation.resource_id.startswith(prefix):
+                continue
+            category = allocation.resource_id[len(prefix) :].split(".", 1)[0]
+            if category not in actual_by_category:
+                issues.append(
+                    ValidationIssue(
+                        "error",
+                        "容量规划",
+                        f"未知自动分区：{allocation.resource_id}。",
+                    )
+                )
+                continue
+            relative = allocation.offset - 16
+            if relative < 0 or relative % 0x2000 or allocation.size % 0x2000:
+                issues.append(
+                    ValidationIssue(
+                        "error", "容量规划", f"{allocation.resource_id} 未按 Bank 对齐。"
+                    )
+                )
+                continue
+            first = relative // 0x2000
+            actual_by_category[category].update(
+                range(first, first + allocation.size // 0x2000)
+            )
+        for category, expected in expected_by_category.items():
+            if actual_by_category[category] != expected:
+                issues.append(
+                    ValidationIssue(
+                        "error",
+                        "容量规划",
+                        f"{category} 分区登记与容量表不一致。",
+                    )
+                )
+
+        if plan.flags & FLAG_MAPS:
+            try:
+                map_layout = read_expanded_map_layout(project.working)
+                referenced = {
+                    item.bank
+                    for group in (
+                        map_layout.terrain,
+                        map_layout.scenarios,
+                        map_layout.triggers,
+                    )
+                    for item in group
+                }
+                outside = referenced - set(plan.map_banks)
+                if outside:
+                    labels = "、".join(f"${bank:02X}" for bank in sorted(outside))
+                    issues.append(
+                        ValidationIssue(
+                            "error", "地图扩展", f"地图资源越过地图分区：{labels}。"
+                        )
+                    )
+                payloads = read_expanded_map_payloads(project.working)
+                packed = pack_map_resources(
+                    payloads.terrain,
+                    payloads.scenarios,
+                    payloads.triggers,
+                    plan.map_banks,
+                )
+                expanded_map_usage = (packed.used_bytes, packed.capacity)
+            except (ValueError, RomFormatError) as error:
+                issues.append(ValidationIssue("error", "地图扩展", str(error)))
+
+        if plan.flags & FLAG_UNITS:
+            if len(plan.unit_banks) not in (6, 8, 10):
+                issues.append(
+                    ValidationIssue(
+                        "error", "机体扩展", "机体分区必须为 48、64 或 80 KiB。"
+                    )
+                )
+            else:
+                core, configuration, body = (
+                    plan.unit_banks[0],
+                    plan.unit_banks[2],
+                    plan.unit_banks[4],
+                )
+                fragment = (
+                    plan.unit_banks[6]
+                    if len(plan.unit_banks) >= 8
+                    else body
+                )
+                name = (
+                    plan.unit_banks[8]
+                    if len(plan.unit_banks) == 10
+                    else core
+                )
+                expected_descriptors = {
+                    UNIT_NAME_SELECTOR: bytes((0xF6, name)),
+                    UNIT_BODY_SELECTOR: bytes((0xF0, body)),
+                    UNIT_FRAGMENT_SELECTOR: bytes((0xF1, fragment)),
+                    UNIT_ATTRIBUTE_SELECTOR: bytes((0xF2, core)),
+                    UNIT_CONFIGURATION_SELECTOR: bytes((0xF6, configuration)),
+                }
+                for selector, expected in expected_descriptors.items():
+                    offset = resource_descriptor_offset(selector)
+                    allowed_protected_offsets.update((offset, offset + 1))
+                    if bytes(project.working[offset : offset + 2]) != expected:
+                        issues.append(
+                            ValidationIssue(
+                                "error",
+                                "机体扩展",
+                                f"资源选择器 ${selector:02X} 未绑定到机体分区。",
+                            )
+                        )
+                core_difference = _first_range_difference(
+                    project.working,
+                    SOURCE_CORE_PAIR,
+                    core,
+                    CORE_LOADER_RANGES,
+                )
+                configuration_difference = _first_difference_excluding(
+                    project.working,
+                    SOURCE_CONFIGURATION_PAIR,
+                    configuration,
+                    (
+                        (
+                            CONFIGURATION_TABLE,
+                            CONFIGURATION_OLD_DATA_END
+                            + project.unit_count * UNIT_WEAPON_SLOT_COUNT,
+                        ),
+                        (CONFIGURATION_CAVE_START, CONFIGURATION_CAVE_END),
+                    ),
+                )
+                for label, difference in (
+                    ("核心", core_difference),
+                    ("战斗配置", configuration_difference),
+                ):
+                    if difference is not None:
+                        issues.append(
+                            ValidationIssue(
+                                "error",
+                                "机体扩展",
+                                f"{label}代码镜像在 CPU ${difference:04X} 与保留源代码不一致。",
+                            )
+                        )
+                unit_pairs = tuple(
+                    (plan.unit_banks[index], plan.unit_banks[index + 1])
+                    for index in range(0, len(plan.unit_banks), 2)
+                )
+                try:
+                    validate_unit_expansion_payload(project.working, unit_pairs)
+                except ValueError as error:
+                    issues.append(
+                        ValidationIssue("error", "机体扩展", str(error))
+                    )
+
+        for selector in STORY_SELECTORS:
+            pair = plan.story_pair_for(selector)
+            if pair is None:
+                continue
+            offset = story_descriptor_offset(selector)
+            allowed_protected_offsets.update((offset, offset + 1))
+            expected = bytes((0xF0, pair[0]))
+            if bytes(project.working[offset : offset + 2]) != expected:
+                issues.append(
+                    ValidationIssue(
+                        "error",
+                        "剧情扩展",
+                        f"剧情组 ${selector:02X} 未绑定到分配的 Bank pair。",
+                    )
+                )
 
     for unit_id in range(1, project.unit_count):
         if len(project.record_bytes(unit_id)) != 16:
@@ -195,14 +481,18 @@ def validate_project(project: ProjectView) -> tuple[ValidationIssue, ...]:
                     )
                 )
         try:
-            used = project.map_trigger_codec.storage_used(project.working)
-            capacity = project.map_trigger_codec.pool_capacity
+            trigger_used = project.map_trigger_codec.storage_used(project.working)
+            used, capacity = (
+                expanded_map_usage
+                if expanded_map_usage is not None
+                else (trigger_used, project.map_trigger_codec.pool_capacity)
+            )
             if used > capacity:
                 issues.append(
                     ValidationIssue(
                         "error",
                         "地图事件",
-                        f"地图事件托管池需要 {used} 字节，容量仅 {capacity} 字节。",
+                        f"地图共享池需要 {used} 字节，容量仅 {capacity} 字节。",
                     )
                 )
             else:
@@ -210,8 +500,12 @@ def validate_project(project: ProjectView) -> tuple[ValidationIssue, ...]:
                     ValidationIssue(
                         "info",
                         "地图事件",
-                        f"32 关共有 {total_triggers} 个事件/商店，托管池预计占用 "
-                        f"{used} / {capacity} 字节。",
+                        f"32 关共有 {total_triggers} 个事件/商店；"
+                        + (
+                            f"地形/部署/事件共享池占用 {used} / {capacity} 字节。"
+                            if expanded_map_usage is not None
+                            else f"事件托管池占用 {used} / {capacity} 字节。"
+                        ),
                     )
                 )
         except (ValueError, RomFormatError) as error:
@@ -229,6 +523,27 @@ def validate_project(project: ProjectView) -> tuple[ValidationIssue, ...]:
                         "error",
                         "剧情",
                         f"剧情文本 ${group.selector:02X}:{indices[0]:02X} 长度改变。",
+                    )
+                )
+            terminator_end = (
+                project.story_text_codec.standalone_terminator_end(record.raw)
+            )
+            if terminator_end is None:
+                issues.append(
+                    ValidationIssue(
+                        "error",
+                        "剧情",
+                        f"剧情文本 ${group.selector:02X}:{indices[0]:02X} "
+                        "缺少独立 FF 结束码。",
+                    )
+                )
+            elif terminator_end != len(record.raw):
+                issues.append(
+                    ValidationIssue(
+                        "error",
+                        "剧情",
+                        f"剧情文本 ${group.selector:02X}:{indices[0]:02X} "
+                        "在独立 FF 结束码后仍有数据。",
                     )
                 )
 
@@ -310,7 +625,11 @@ def validate_project(project: ProjectView) -> tuple[ValidationIssue, ...]:
     for region in project.profile.protected_prg_regions:
         start = 16 + region.first_bank * 0x2000
         end = 16 + region.end_bank * 0x2000
-        if project.working[start:end] != project.original[start:end]:
+        if any(
+            project.working[offset] != project.original[offset]
+            and offset not in allowed_protected_offsets
+            for offset in range(start, end)
+        ):
             issues.append(
                 ValidationIssue(
                     "error",

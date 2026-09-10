@@ -5,7 +5,17 @@
 -- Mapper 194 banks above 512 KiB.
 
 local output_path = emu.getScriptDataFolder() .. "/dc_mesen_dual_audio.log"
-local output = assert(io.open(output_path, "w"))
+local output = io.open(output_path, "w")
+if output == nil then
+    -- TestRunner sandboxes may disable file I/O.  Keep the behavioral checks
+    -- authoritative through emu.stop() even when no diagnostic log can be
+    -- written.
+    output = {
+        write = function() end,
+        flush = function() end,
+        close = function() end,
+    }
+end
 local failures = {}
 local checks = 0
 
@@ -228,12 +238,14 @@ local function finish()
             counters.init, counters.play, counters.update, counters.sfx))
 
     local state = emu.getState()
-    output:write(string.format(
+    local result_line = string.format(
         "RESULT checks=%d failures=%d frames=%d pc=%04X " ..
         "stock=%d bridge=%d init=%d play=%d update=%d sfx=%d apu=%d\n",
         checks, #failures, frame, state.cpu.pc,
         counters.stock, counters.bridge, counters.init, counters.play,
-        counters.update, counters.sfx, counters.apu))
+        counters.update, counters.sfx, counters.apu)
+    output:write(result_line)
+    print(result_line)
     if #failures > 0 then
         output:write("FAILED_NAMES " .. table.concat(failures, ",") .. "\n")
     end

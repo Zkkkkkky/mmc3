@@ -1,13 +1,16 @@
 from __future__ import annotations
 
 import os
+from pathlib import Path
+import tempfile
 import unittest
+from unittest.mock import patch
 
 os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 
-from PySide6.QtWidgets import QApplication, QLabel, QToolBar
+from PySide6.QtWidgets import QApplication, QFileDialog, QLabel, QToolBar
 
-from dc_modifier.app import MainWindow
+from dc_modifier.app import LEGACY_ROM, MainWindow
 from dc_modifier.event_page import EventPage
 from dc_modifier.map_page import MapPage
 from dc_modifier.persuasion_page import PersuasionPage
@@ -130,6 +133,111 @@ class DesktopEditorSmokeTests(unittest.TestCase):
         page.refresh()
         self.assertEqual(page.allocation_table.rowCount(), 0)
         self.assertEqual(allocation.first_bank, 0x40)
+
+    def test_resource_page_applies_recommended_auto_plan(self) -> None:
+        assert self.window.project is not None
+        page = self.window.pages[self.window.page_index["resources"]]
+        self.assertIsInstance(page, ResourcePage)
+        assert isinstance(page, ResourcePage)
+        page.refresh()
+        self.assertEqual(
+            (page.map_quota.value(), page.unit_quota.value(), page.story_quota.value()),
+            (304, 48, 112),
+        )
+        self.assertTrue(page.apply_plan_button.isEnabled())
+
+        page.apply_plan_button.click()
+        plan = self.window.project.expansion_plan
+        self.assertIsNotNone(plan)
+        assert plan is not None
+        self.assertEqual(plan.total_kib, 464)
+        self.assertEqual(self.window.project.expansion_available, 0)
+        self.assertEqual(page.allocation_table.rowCount(), 4)
+        self.assertFalse(page.map_quota.isEnabled())
+        self.assertIn("已接通", page.plan_status.text())
+
+        self.window.undo()
+        self.assertIsNone(self.window.project.expansion_plan)
+        self.assertEqual(self.window.project.expansion_allocations, ())
+
+    def test_advanced_resource_import_requires_a_safe_planned_remainder(self) -> None:
+        assert self.window.project is not None
+        page = self.window.pages[self.window.page_index["resources"]]
+        assert isinstance(page, ResourcePage)
+
+        page.refresh()
+        self.assertIsNone(self.window.project.expansion_plan)
+        self.assertGreater(self.window.project.expansion_available, 0)
+        self.assertFalse(page.import_button.isEnabled())
+
+        self.window.project.configure_expansion(16, 48, 16)
+        page.refresh()
+        self.assertGreater(self.window.project.expansion_available, 0)
+        self.assertTrue(page.import_button.isEnabled())
+
+        with tempfile.TemporaryDirectory() as directory:
+            output = self.window.project.save_as(Path(directory) / "partial-plan.nes")
+            self.assertTrue(self.window.load_rom(output))
+            guarded_page = self.window.pages[self.window.page_index["resources"]]
+            assert isinstance(guarded_page, ResourcePage)
+            guarded_page.refresh()
+            self.assertTrue(
+                any(
+                    allocation.resource_id.startswith("auto.reopen_guard.")
+                    for allocation in self.window.project.expansion_allocations
+                )
+            )
+            self.assertFalse(guarded_page.import_button.isEnabled())
+
+        if LEGACY_ROM.is_file():
+            self.assertTrue(self.window.load_rom(LEGACY_ROM))
+            legacy_page = self.window.pages[self.window.page_index["resources"]]
+            assert isinstance(legacy_page, ResourcePage)
+            legacy_page.refresh()
+            self.assertIsNone(self.window.project.expansion_plan)
+            self.assertGreater(self.window.project.expansion_available, 0)
+            self.assertTrue(legacy_page.import_button.isEnabled())
+
+    def test_unplanned_project_open_and_drop_route_to_capacity_planning(self) -> None:
+        assert self.window.project is not None
+
+        class LocalUrl:
+            def __init__(self, path: Path) -> None:
+                self.path = path
+
+            def toLocalFile(self) -> str:
+                return str(self.path)
+
+        class DropMimeData:
+            def __init__(self, path: Path) -> None:
+                self.url = LocalUrl(path)
+
+            def urls(self) -> list[LocalUrl]:
+                return [self.url]
+
+        class DropEvent:
+            def __init__(self, path: Path) -> None:
+                self.data = DropMimeData(path)
+
+            def mimeData(self) -> DropMimeData:
+                return self.data
+
+        with tempfile.TemporaryDirectory() as directory:
+            project_path = Path(directory) / "unplanned.dcmod"
+            self.window.project.save_project(project_path)
+
+            self.window.show_page("maps")
+            with patch.object(
+                QFileDialog,
+                "getOpenFileName",
+                return_value=(str(project_path), "DC修改工程 (*.dcmod)"),
+            ):
+                self.window.open_project_dialog()
+            self.assertEqual(self.window.module_status.text(), "容量规划")
+
+            self.window.show_page("maps")
+            self.window.dropEvent(DropEvent(project_path))
+            self.assertEqual(self.window.module_status.text(), "容量规划")
 
     def test_id_expression_supports_hex_ranges_and_rejects_invalid_ids(self) -> None:
         self.assertEqual(
