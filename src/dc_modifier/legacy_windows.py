@@ -40,7 +40,12 @@ from fc_editor.unit_package import UnitPackage
 from fc_rom_editor_core import RomProject
 
 from .event_page import EventPage
-from .database_graphics import palette_color, read_unit_appearance, render_chr_banks
+from .database_graphics import (
+    palette_color,
+    read_unit_appearance,
+    render_chr_banks,
+    render_unit_body_composition,
+)
 from .database_records import (
     ReadableCharacterPage, ReadableWeaponPage, collapsible_details, readable_references,
 )
@@ -397,8 +402,8 @@ class LegacyUnitDatabasePage(ProjectPage):
         detail_layout.addWidget(self.record_heading)
         self.pending_state = self.controller.pending_state
         detail_layout.addWidget(self.pending_state)
-        detail_layout.addLayout(self._build_data_row())
         detail_layout.addWidget(self._build_graphics_group())
+        detail_layout.addLayout(self._build_data_row())
 
         staged_row = QGridLayout()
         staged_row.addWidget(self.apply_button, 0, 0)
@@ -459,36 +464,57 @@ class LegacyUnitDatabasePage(ProjectPage):
         return button
 
     def _build_graphics_group(self) -> QGroupBox:
-        group = QGroupBox("机体图片与碎片图库")
+        group = QGroupBox("机体图片")
         grid = QGridLayout(group)
         self.graphics_status = QLabel("请选择机体。")
         self.graphics_status.setWordWrap(True)
-        grid.addWidget(self.graphics_status, 0, 0, 1, 3)
+        grid.addWidget(self.graphics_status, 0, 0, 1, 2)
         self.body_preview = QLabel("请选择机体")
         self.body_preview.setObjectName("legacyUnitBodyPreview")
         self.body_preview.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.body_preview.setMinimumSize(180, 160)
+        self.body_preview.setMinimumSize(300, 260)
         self.body_preview.setStyleSheet(
             "background: #000000; color: #d2d2d2; border: 1px solid #202020;"
         )
         self.body_preview.setToolTip(
-            "按战斗外观记录的背景图库号读取真实 CHR，以图块顺序显示；不是拼合后的战斗姿势。"
+            "使用当前机体主体脚本、主体图库和机体三色合成的 128×128 完整机体。"
         )
+        grid.addWidget(QLabel("按主体拼图脚本合成"), 1, 0)
+        grid.addWidget(self.body_preview, 2, 0, 5, 1)
+
+        self.appearance_summary = QLabel("外观记录：—")
+        self.appearance_summary.setWordWrap(True)
+        self.appearance_summary.setAlignment(
+            Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignTop
+        )
+        grid.addWidget(self.appearance_summary, 1, 1)
+        self.body_palette_caption = QLabel("机体三色：—")
+        self.fragment_palette_caption = QLabel("碎片三色：—")
+        for caption in (self.body_palette_caption, self.fragment_palette_caption):
+            caption.setWordWrap(True)
+        grid.addWidget(self.body_palette_caption, 2, 1)
+        grid.addWidget(self.fragment_palette_caption, 3, 1)
+        self.edit_appearance_button = QPushButton("打开机体拼图与配色…")
+        self.edit_appearance_button.clicked.connect(self._edit_appearance)
+        grid.addWidget(self.edit_appearance_button, 4, 1)
+
+        self.raw_body_preview = QLabel("请选择机体")
+        self.raw_body_preview.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.raw_body_preview.setMinimumSize(220, 130)
+        self.raw_body_preview.setStyleSheet(self.body_preview.styleSheet())
         self.fragment_preview = QLabel("请选择机体")
         self.fragment_preview.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.fragment_preview.setMinimumSize(260, 160)
+        self.fragment_preview.setMinimumSize(220, 130)
         self.fragment_preview.setStyleSheet(self.body_preview.styleSheet())
-        grid.addWidget(QLabel("机体图库 · 原始图块"), 1, 0)
-        grid.addWidget(QLabel("碎片图库 · 2 KiB 原始图块"), 1, 1)
-        grid.addWidget(self.body_preview, 2, 0)
-        grid.addWidget(self.fragment_preview, 2, 1)
-        self.body_palette_caption = QLabel("记录配色1：—")
-        self.fragment_palette_caption = QLabel("记录配色2：—")
-        grid.addWidget(self.body_palette_caption, 3, 0)
-        grid.addWidget(self.fragment_palette_caption, 3, 1)
 
         details = QWidget()
         details_layout = QVBoxLayout(details)
+        library_grid = QGridLayout()
+        library_grid.addWidget(QLabel("机体图库原始图块"), 0, 0)
+        library_grid.addWidget(QLabel("碎片图库原始图块"), 0, 1)
+        library_grid.addWidget(self.raw_body_preview, 1, 0)
+        library_grid.addWidget(self.fragment_preview, 1, 1)
+        details_layout.addLayout(library_grid)
         self.appearance_details = QPlainTextEdit()
         self.appearance_details.setReadOnly(True)
         self.appearance_details.setMaximumHeight(130)
@@ -510,7 +536,7 @@ class LegacyUnitDatabasePage(ProjectPage):
         self.icon_address.setReadOnly(True)
         details_layout.addWidget(self.icon_address)
         unsupported = QLabel(
-            "未接通：合成效果图、拼图编辑、图片上传/清除、图标绑定。"
+            "未接通：拼图脚本编辑、图片上传/清除、图标绑定。"
             "此处展示实际资源和脚本，不表示已兼容旧版五张 BMP 导出。"
         )
         unsupported.setWordWrap(True)
@@ -519,12 +545,9 @@ class LegacyUnitDatabasePage(ProjectPage):
         for caption in ("上传机体", "清除机体", "上传碎片", "清除碎片"):
             actions.addWidget(self._disabled_button(caption, "完整图像写入关系尚未验证。"))
         details_layout.addLayout(actions)
-        grid.addWidget(collapsible_details("图像技术详情与尚未接通的功能", details), 4, 0, 1, 2)
-        self.edit_appearance_button = QPushButton("修改配色与图库…")
-        self.edit_appearance_button.clicked.connect(self._edit_appearance)
-        grid.addWidget(self.edit_appearance_button, 5, 0, 1, 2)
-        grid.setColumnStretch(0, 1)
-        grid.setColumnStretch(1, 1)
+        grid.addWidget(collapsible_details("原始图库、脚本与技术详情", details), 7, 0, 1, 2)
+        grid.setColumnStretch(0, 3)
+        grid.setColumnStretch(1, 2)
         return group
 
     def _build_data_row(self) -> QGridLayout:
@@ -734,7 +757,12 @@ class LegacyUnitDatabasePage(ProjectPage):
         )
         if self.project is None or self.current_id is None:
             self.body_preview.setText("请选择机体")
+            self.raw_body_preview.setText("请选择机体")
             self.fragment_preview.setText("请选择机体")
+            self.appearance_summary.setText("外观记录：—")
+            self.body_palette_caption.setText("机体三色：—")
+            self.fragment_palette_caption.setText("碎片三色：—")
+            self.appearance_details.clear()
             self.raw_unit_record.clear()
             self.raw_type_flags.clear()
             self.raw_graphics_index.clear()
@@ -755,8 +783,15 @@ class LegacyUnitDatabasePage(ProjectPage):
             self.graphics_status.setText(
                 f"已读取当前机体外观：主体脚本 {len(appearance.body_script)} 字节，"
                 f"碎片脚本 {len(appearance.fragment_script)} 字节。"
-                "已按机体/碎片各自配色显示，可修改配色与图库；"
-                "主体合成预览已接通，碎片拼图和图片上传尚未接通。"
+                "主画面已按主体脚本合成；原始图库与完整脚本收在技术详情中。"
+            )
+            fragment_bank = appearance.primary_bank & 0xFE
+            unit_type = "大型机" if appearance.configuration[0] & 0x80 else "小型机"
+            self.appearance_summary.setText(
+                f"类型：{unit_type}\n"
+                f"机体图库：{' / '.join(f'${bank:02X}' for bank in appearance.secondary_banks)}\n"
+                f"碎片图库：${fragment_bank:02X} / ${fragment_bank + 1:02X}\n"
+                f"外观记录：0x{appearance.file_offset:06X}"
             )
             self.appearance_details.setPlainText(
                 f"外观记录文件位置：0x{appearance.file_offset:06X}\n"
@@ -765,18 +800,31 @@ class LegacyUnitDatabasePage(ProjectPage):
                 f"碎片拼图：{appearance.fragment_script.hex(' ').upper()}"
             )
             for caption, label, colors in (
-                ("记录配色1", self.body_palette_caption, appearance.first_palette),
-                ("记录配色2", self.fragment_palette_caption, appearance.second_palette),
+                ("机体三色", self.body_palette_caption, appearance.first_palette),
+                ("碎片三色", self.fragment_palette_caption, appearance.second_palette),
             ):
                 label.setText(caption + "： " + "  ".join(
                     f'<span style="color:{palette_color(value).name()}; background:#222">'
                     f'■</span> ${value:02X}' for value in colors
                 ))
+            body_picture = render_unit_body_composition(
+                self.project,
+                appearance.body_script,
+                appearance.secondary_banks,
+                appearance.first_palette,
+            )
+            self.body_preview.setPixmap(QPixmap.fromImage(body_picture).scaled(
+                256, 256,
+                Qt.AspectRatioMode.KeepAspectRatio,
+                Qt.TransformationMode.FastTransformation,
+            ))
+            self.body_preview.setToolTip(
+                "主体脚本合成结果 · 图库 "
+                + " / ".join(f"${bank:02X}" for bank in appearance.secondary_banks)
+            )
             for label, banks, palette in (
-                (self.body_preview,
-                 appearance.secondary_banks, appearance.first_palette),
-                (self.fragment_preview,
-                 (appearance.primary_bank & 0xFE, (appearance.primary_bank & 0xFE) + 1),
+                (self.raw_body_preview, appearance.secondary_banks, appearance.first_palette),
+                (self.fragment_preview, (fragment_bank, fragment_bank + 1),
                  appearance.second_palette),
             ):
                 picture = render_chr_banks(self.project, banks, palette)
@@ -789,10 +837,12 @@ class LegacyUnitDatabasePage(ProjectPage):
         except (ValueError, IndexError) as error:
             self.graphics_status.setText(str(error))
             self.body_preview.setText("此配置暂不支持图库预览")
+            self.raw_body_preview.setText("此配置暂不支持图库预览")
             self.fragment_preview.setText("此配置暂不支持图库预览")
             self.appearance_details.clear()
-            self.body_palette_caption.setText("记录配色1：未读取")
-            self.fragment_palette_caption.setText("记录配色2：未读取")
+            self.appearance_summary.setText("外观记录：未读取")
+            self.body_palette_caption.setText("机体三色：未读取")
+            self.fragment_palette_caption.setText("碎片三色：未读取")
 
         for field_key, editor in self.fields.items():
             base_value = self.project.get_value(unit_id, field_key, original=True)

@@ -139,6 +139,7 @@ def main() -> int:
     assert window.project is not None
 
     database_dialog = DatabaseDialog(window.project, window)
+    database_dialog._select_unit(12)
     save_capture(application, database_dialog, "02-database.png")
     database_dialog.tabs.setCurrentIndex(4)
     process_layout(application)
@@ -154,7 +155,7 @@ def main() -> int:
     )
     capture_dialog(
         application,
-        UnitAppearanceDialog(window.project, 11, window),
+        UnitAppearanceDialog(window.project, 12, window),
         "02d-unit-composition.png",
     )
     capture_dialog(

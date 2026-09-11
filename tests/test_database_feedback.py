@@ -13,7 +13,12 @@ from PySide6.QtWidgets import QApplication, QListWidgetItem, QMessageBox
 import shiboken6
 
 from dc_modifier.app import DEFAULT_ROM
-from dc_modifier.database_graphics import palette_color, read_unit_appearance, render_chr_banks
+from dc_modifier.database_graphics import (
+    palette_color,
+    read_unit_appearance,
+    render_chr_banks,
+    render_unit_body_composition,
+)
 from dc_modifier.legacy_windows import DatabaseDialog
 from dc_modifier.unit_packages import package_from_project
 from fc_editor.unit_package import UnitPackage
@@ -74,6 +79,32 @@ class DatabaseFeedbackTests(QtTestCase):
                 for x in range(8):
                     self.assertEqual(image.pixel(tile % 8 * 8 + x, tile // 8 * 8 + y), colors[pixels[y * 8 + x]])
         self.assertEqual(before, bytes(self.project.working))
+
+    def test_database_main_picture_is_script_composition_not_raw_chr(self) -> None:
+        self.dialog._select_unit(11)
+        page = self.dialog.unit_page
+        appearance = read_unit_appearance(self.project, 11)
+        expected = render_unit_body_composition(
+            self.project,
+            appearance.body_script,
+            appearance.secondary_banks,
+            appearance.first_palette,
+        )
+        actual = page.body_preview.pixmap().toImage()
+        self.assertEqual((actual.width(), actual.height()), (256, 256))
+        expected_colors = {
+            expected.pixelColor(x, y).name()
+            for y in range(expected.height()) for x in range(expected.width())
+        }
+        actual_colors = {
+            actual.pixelColor(x, y).name()
+            for y in range(actual.height()) for x in range(actual.width())
+        }
+        self.assertEqual(actual_colors, expected_colors)
+        self.assertIn("主体脚本合成结果", page.body_preview.toolTip())
+        self.assertIn("大型机", page.appearance_summary.text())
+        self.assertFalse(page.raw_body_preview.isVisible())
+        self.assertFalse(page.fragment_preview.isVisible())
 
     def test_weapon_usage_lists_real_units_and_both_slots_once(self) -> None:
         self.project.set_unit_weapon(2, 0, 1)

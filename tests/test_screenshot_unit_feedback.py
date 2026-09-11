@@ -215,6 +215,27 @@ class ScreenshotUnitTests(QtTestCase):
                          ["$22", "$02", "$20", "$28", "$18", "$00"])
         self.assertIn("#5c94fc", dialog.color_swatches[0].styleSheet())
         self.assertIn("#f0bc3c", dialog.color_swatches[3].styleSheet())
+        self.assertEqual(dialog.preview_tabs.tabText(0), "主体拼图")
+        self.assertEqual(dialog.preview_tabs.tabText(1), "碎片原始图库")
+        self.assertEqual(dialog.preview_tabs.tabText(2), "拼图脚本原码")
+        self.assertEqual(
+            dialog.body_script_view.toPlainText(),
+            dialog.appearance.body_script.hex(" ").upper(),
+        )
+        self.assertEqual(
+            dialog.fragment_script_view.toPlainText(),
+            dialog.appearance.fragment_script.hex(" ").upper(),
+        )
+        self.assertEqual(
+            (dialog.body_library_preview.pixmap().width(),
+             dialog.body_library_preview.pixmap().height()),
+            (208, 416),
+        )
+        self.assertEqual(
+            (dialog.body_composition_preview.pixmap().width(),
+             dialog.body_composition_preview.pixmap().height()),
+            (416, 416),
+        )
         body = render_unit_body_composition(
             self.project,
             dialog.appearance.body_script,

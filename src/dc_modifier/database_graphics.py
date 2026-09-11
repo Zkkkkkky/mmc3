@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from PySide6.QtGui import QColor, QImage
+from PySide6.QtGui import QColor, QImage, QPainter, QPen
 
 from fc_editor.expansion import FLAG_UNITS
 from fc_editor.expansion_unit import (
@@ -187,23 +187,54 @@ def palette_color(index: int) -> QColor:
     return QColor(*FCEUX_RGB[start:start + 3])
 
 
-def render_chr_banks(project, banks: tuple[int, ...], colors: tuple[int, ...]) -> QImage:
+def render_chr_banks(
+    project,
+    banks: tuple[int, ...],
+    colors: tuple[int, ...],
+    *,
+    columns: int | None = None,
+) -> QImage:
     """Render actual CHR banks in tile order, not a fabricated battle pose."""
 
     if not banks or len(colors) != 3:
         raise ValueError("图库预览需要有效页号和三色索引。")
     if any(bank < 0 or (bank + 1) * 64 > project.chr_tile_count for bank in banks):
         raise ValueError("外观引用的图库超出活动 CHR。")
-    image = QImage(64 * len(banks), 64, QImage.Format.Format_RGB32)
+    if columns is None:
+        columns = len(banks)
+    if not 1 <= columns <= len(banks):
+        raise ValueError("图库预览列数无效。")
+    rows = (len(banks) + columns - 1) // columns
+    image = QImage(64 * columns, 64 * rows, QImage.Format.Format_RGB32)
+    image.fill(QColor("#000000"))
     palette = (QColor("#000000"), *(palette_color(value) for value in colors))
-    for column, bank in enumerate(banks):
+    for bank_index, bank in enumerate(banks):
+        bank_column = bank_index % columns
+        bank_row = bank_index // columns
         for tile in range(64):
             pixels = project.chr_tile_pixels(bank * 64 + tile)
-            x0, y0 = column * 64 + tile % 8 * 8, tile // 8 * 8
+            x0 = bank_column * 64 + tile % 8 * 8
+            y0 = bank_row * 64 + tile // 8 * 8
             for y in range(8):
                 for x in range(8):
                     image.setPixelColor(x0 + x, y0 + y, palette[pixels[y * 8 + x]])
     return image
+
+
+def render_tile_grid(image: QImage, spacing: int = 8) -> QImage:
+    """Return a copy with a subtle tile grid for the composition inspector."""
+
+    if spacing <= 0:
+        raise ValueError("网格间距必须大于零。")
+    result = image.copy()
+    painter = QPainter(result)
+    painter.setPen(QPen(QColor(190, 205, 215, 105), 1))
+    for x in range(0, result.width(), spacing):
+        painter.drawLine(x, 0, x, result.height() - 1)
+    for y in range(0, result.height(), spacing):
+        painter.drawLine(0, y, result.width() - 1, y)
+    painter.end()
+    return result
 
 
 def render_unit_body_composition(

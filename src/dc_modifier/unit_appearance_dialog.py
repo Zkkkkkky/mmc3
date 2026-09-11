@@ -4,13 +4,14 @@ from PySide6.QtCore import Qt
 from PySide6.QtGui import QPixmap
 from PySide6.QtWidgets import (
     QDialog, QDialogButtonBox, QGridLayout, QGroupBox, QLabel, QMessageBox,
-    QSpinBox, QVBoxLayout,
+    QPlainTextEdit, QSpinBox, QTabWidget, QVBoxLayout, QWidget,
 )
 
 from .database_graphics import (
     palette_color,
     read_unit_appearance,
     render_chr_banks,
+    render_tile_grid,
     render_unit_body_composition,
 )
 
@@ -48,14 +49,14 @@ class UnitAppearanceDialog(QDialog):
         self.project = project
         self.unit_id = unit_id
         self.appearance = read_unit_appearance(project, unit_id)
-        self.setWindowTitle(f"配色与图库 · {project.unit_display_name(unit_id)}")
-        self.resize(760, 610)
+        self.setWindowTitle(f"机体拼图与配色 · {project.unit_display_name(unit_id)}")
+        self.resize(1040, 780)
         self.changed = False
         root = QVBoxLayout(self)
         hint = QLabel(
             "修改当前外观记录的配色与图库。共用这条外观记录的机体会一起变化；"
-            "碎片与物理武器仍共用图库。左侧按真实主体脚本合成机体，"
-            "右侧显示碎片图库全部图块。"
+            "碎片与物理武器仍共用图库。拼图页左侧显示主体原始图库，"
+            "右侧按真实主体脚本合成完整机体。"
         )
         hint.setWordWrap(True)
         root.addWidget(hint)
@@ -100,12 +101,61 @@ class UnitAppearanceDialog(QDialog):
             bank_form.addWidget(QLabel(labels[index - 7]), index - 7, 0)
             bank_form.addWidget(editor, index - 7, 1)
             self.editors.append(editor)
-        self.previews = (QLabel(), QLabel())
-        for index, preview in enumerate(self.previews):
+        preview_tabs = QTabWidget()
+        root.addWidget(preview_tabs, 1)
+
+        body_tab = QWidget()
+        body_grid = QGridLayout(body_tab)
+        body_grid.addWidget(QLabel("主体图库（8×8 原始图块）"), 0, 0)
+        body_grid.addWidget(QLabel("拼图结果（128×128 脚本合成）"), 0, 1)
+        self.body_library_preview = QLabel()
+        self.body_composition_preview = QLabel()
+        for preview in (self.body_library_preview, self.body_composition_preview):
             preview.setAlignment(Qt.AlignmentFlag.AlignCenter)
-            preview.setStyleSheet("background:black;")
-            preview.setMinimumHeight(270)
-            grid.addWidget(preview, 1, index)
+            preview.setStyleSheet("background:black; border:1px solid #333;")
+        self.body_library_preview.setMinimumSize(260, 420)
+        self.body_composition_preview.setMinimumSize(520, 420)
+        body_grid.addWidget(self.body_library_preview, 1, 0)
+        body_grid.addWidget(self.body_composition_preview, 1, 1)
+        body_grid.setColumnStretch(0, 2)
+        body_grid.setColumnStretch(1, 3)
+        preview_tabs.addTab(body_tab, "主体拼图")
+
+        fragment_tab = QWidget()
+        fragment_layout = QVBoxLayout(fragment_tab)
+        fragment_hint = QLabel(
+            "这里仅显示碎片图库的全部原始图块，并使用碎片三色。"
+            "它不是机体主体的一部分，也不应与主体三色逐项相同。"
+        )
+        fragment_hint.setWordWrap(True)
+        fragment_layout.addWidget(fragment_hint)
+        self.fragment_library_preview = QLabel()
+        self.fragment_library_preview.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.fragment_library_preview.setStyleSheet("background:black; border:1px solid #333;")
+        self.fragment_library_preview.setMinimumHeight(360)
+        fragment_layout.addWidget(self.fragment_library_preview, 1)
+        preview_tabs.addTab(fragment_tab, "碎片原始图库")
+
+        script_tab = QWidget()
+        script_layout = QGridLayout(script_tab)
+        script_layout.addWidget(QLabel("主体拼图脚本（只读）"), 0, 0)
+        script_layout.addWidget(QLabel("碎片拼图脚本（只读）"), 0, 1)
+        self.body_script_view = QPlainTextEdit()
+        self.fragment_script_view = QPlainTextEdit()
+        for editor in (self.body_script_view, self.fragment_script_view):
+            editor.setReadOnly(True)
+            editor.setLineWrapMode(QPlainTextEdit.LineWrapMode.WidgetWidth)
+        self.body_script_view.setPlainText(self.appearance.body_script.hex(" ").upper())
+        self.fragment_script_view.setPlainText(self.appearance.fragment_script.hex(" ").upper())
+        script_layout.addWidget(self.body_script_view, 1, 0)
+        script_layout.addWidget(self.fragment_script_view, 1, 1)
+        preview_tabs.addTab(script_tab, "拼图脚本原码")
+        self.preview_tabs = preview_tabs
+        self.previews = (
+            self.body_library_preview,
+            self.body_composition_preview,
+            self.fragment_library_preview,
+        )
         self.status = QLabel()
         self.status.setWordWrap(True)
         root.addWidget(self.status)
@@ -136,25 +186,49 @@ class UnitAppearanceDialog(QDialog):
             )
         body_banks = tuple(values[7:])
         fragment_bank = values[6] & 0xFE
+        body_library = render_chr_banks(
+            self.project, body_banks, values[:3], columns=1
+        )
+        self.body_library_preview.setPixmap(QPixmap.fromImage(
+            render_tile_grid(body_library)
+        ).scaled(
+            208, 416 if len(body_banks) > 1 else 208,
+            Qt.AspectRatioMode.KeepAspectRatio,
+            Qt.TransformationMode.FastTransformation,
+        ))
         body_picture = render_unit_body_composition(
             self.project, self.appearance.body_script, body_banks, values[:3]
         )
-        self.previews[0].setPixmap(QPixmap.fromImage(body_picture).scaled(
-            256, 256, Qt.AspectRatioMode.KeepAspectRatio,
+        self.body_composition_preview.setPixmap(QPixmap.fromImage(
+            render_tile_grid(body_picture)
+        ).scaled(
+            416, 416, Qt.AspectRatioMode.KeepAspectRatio,
             Qt.TransformationMode.FastTransformation,
         ))
         fragment_picture = render_chr_banks(
-            self.project, (fragment_bank, fragment_bank + 1), values[3:6]
+            self.project, (fragment_bank, fragment_bank + 1), values[3:6], columns=1
         )
-        self.previews[1].setPixmap(QPixmap.fromImage(fragment_picture).scaled(
-            256, 128, Qt.AspectRatioMode.KeepAspectRatio,
+        self.fragment_library_preview.setPixmap(QPixmap.fromImage(
+            render_tile_grid(fragment_picture)
+        ).scaled(
+            208, 416, Qt.AspectRatioMode.KeepAspectRatio,
             Qt.TransformationMode.FastTransformation,
         ))
+        self.body_library_preview.setToolTip(
+            "主体图库：" + " / ".join(f"${bank:02X}" for bank in body_banks)
+        )
+        self.body_composition_preview.setToolTip(
+            f"主体脚本 {len(self.appearance.body_script)} 字节的合成结果"
+        )
+        self.fragment_library_preview.setToolTip(
+            f"碎片图库：${fragment_bank:02X} / ${fragment_bank + 1:02X}"
+        )
         self.status.setText(
             f"当前记录 0x{self.appearance.file_offset:06X}；"
             + ("大型机：两个主体图库。" if len(values) == 9 else "小型机：一个主体图库。")
             + f" 主体按 {len(self.appearance.body_script)} 字节脚本合成；"
-            + f"碎片实际使用 ${fragment_bank:02X}/${fragment_bank + 1:02X}。"
+            + f"碎片脚本 {len(self.appearance.fragment_script)} 字节；"
+            + f"碎片图库 ${fragment_bank:02X}/${fragment_bank + 1:02X}。"
         )
 
     def accept(self) -> None:
