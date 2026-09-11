@@ -40,7 +40,10 @@ from fc_editor.text_table import TextTable
 from fc_rom_editor_core import RomProject
 
 
-class DesktopEditorSmokeTests(unittest.TestCase):
+from tests.qt_test_case import QtTestCase
+
+
+class DesktopEditorSmokeTests(QtTestCase):
     @classmethod
     def setUpClass(cls) -> None:
         cls.application = QApplication.instance() or QApplication([])
@@ -663,7 +666,8 @@ class DesktopEditorSmokeTests(unittest.TestCase):
 
         self.assertTrue(self.window.has_unsaved_changes)
         self.assertTrue(self.window.windowTitle().endswith(" *"))
-        self.assertEqual(self.window.session_status.text(), "0 字节修改")
+        self.assertIn("0 字节修改", self.window.session_status.text())
+        self.assertIn("未应用草稿", self.window.session_status.text())
         self.assertTrue(self.window.undo_action.isEnabled())
 
         page.refresh()

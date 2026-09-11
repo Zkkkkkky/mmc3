@@ -18,7 +18,10 @@ from fc_editor.unit_package import UnitPackage
 from fc_rom_editor_core import RomProject
 
 
-class ChrWidgetDraftTests(unittest.TestCase):
+from tests.qt_test_case import QtTestCase
+
+
+class ChrWidgetDraftTests(QtTestCase):
     @classmethod
     def setUpClass(cls) -> None:
         cls.application = QApplication.instance() or QApplication([])

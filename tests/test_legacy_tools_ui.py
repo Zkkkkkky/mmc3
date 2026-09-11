@@ -29,7 +29,10 @@ ROOT = Path(__file__).resolve().parents[1]
 ROM_PATH = ROOT / "output" / "rom" / "DC_kuorong_464K.nes"
 
 
-class LegacyToolDialogTests(unittest.TestCase):
+from tests.qt_test_case import QtTestCase
+
+
+class LegacyToolDialogTests(QtTestCase):
     @classmethod
     def setUpClass(cls) -> None:
         cls.application = QApplication.instance() or QApplication([])
@@ -60,7 +63,7 @@ class LegacyToolDialogTests(unittest.TestCase):
         self.assertEqual(dialog.code_value.text(), "C800")
         self.assertEqual(dialog.address_value.text(), "070010")
         self.assertFalse(dialog.write_button.isEnabled())
-        self.assertFalse(dialog.replace_all_button.isEnabled())
+        self.assertEqual(dialog.replace_all_button.isEnabled(), self.project is not None)
         self._show(dialog)
         self.assertLess(self._top(dialog.glyph_table, dialog), self._top(dialog.status, dialog))
         if self.project is not None:
@@ -78,10 +81,10 @@ class LegacyToolDialogTests(unittest.TestCase):
         )
 
     def test_glyph_preview_uses_rom_bits_instead_of_host_font(self) -> None:
-        blank = _glyph_pixmap(bytes(18), character="啊", scale=2).toImage()
+        blank = _glyph_pixmap(b"\xff" * 18, character="啊", scale=2).toImage()
         self.assertEqual(blank.pixelColor(0, 0).name(), "#080808")
         self.assertEqual(blank.pixelColor(12, 12).name(), "#080808")
-        marked = _glyph_pixmap(bytes((0x80,)) + bytes(17), character="啊", scale=2).toImage()
+        marked = _glyph_pixmap(bytes((0x7F,)) + b"\xff" * 17, character="啊", scale=2).toImage()
         self.assertEqual(marked.pixelColor(0, 0).name(), "#f5f5f5")
         self.assertEqual(marked.pixelColor(2, 0).name(), "#080808")
 
@@ -92,11 +95,13 @@ class LegacyToolDialogTests(unittest.TestCase):
             ["地图动画", "规律", "动画调用"],
         )
         self.assertGreaterEqual(dialog.animation_list.count(), 20)
+        self.assertEqual(dialog.instruction_table.rowCount(), 0)
+        dialog.reference_examples.setChecked(True)
         self.assertEqual(dialog.instruction_table.rowCount(), 24)
         self.assertIn("参考界面/未从ROM解析", dialog.instruction_table.item(0, 0).text())
         self.assertFalse(dialog.add_button.isEnabled())
         self.assertFalse(dialog.code_button.isEnabled())
-        self.assertIn("参考界面指令", dialog.read_only_status.text())
+        self.assertIn("参考功能示例", dialog.read_only_status.text())
         self._show(dialog)
         self.assertLess(self._top(dialog.animation_list, dialog), self._top(dialog.add_button, dialog))
         self.assertLess(self._top(dialog.add_button, dialog), self._top(dialog.animation_name, dialog))
@@ -301,13 +306,18 @@ class LegacyToolDialogTests(unittest.TestCase):
 
     def test_reference_geometry_is_fixed_and_offscreen_screenshots_render(self) -> None:
         dialogs = (
-            ("font", FontLibraryDialog(project=self.project), (951, 866)),
             ("animation", MapAnimationDialog(project=self.project), (1271, 981)),
             ("converter", TextConverterDialog(), (700, 700)),
             ("calculator", AttributeCalculatorDialog(), (1257, 998)),
             ("save", SaveEditorDialog(), (1175, 834)),
             ("other", OtherSettingsDialog(), (1166, 870)),
         )
+        font_dialog = FontLibraryDialog(project=self.project)
+        self.assertLess(font_dialog.minimumWidth(), font_dialog.maximumWidth())
+        self.assertLess(font_dialog.minimumHeight(), font_dialog.maximumHeight())
+        self._show(font_dialog)
+        self.assertFalse(font_dialog.grab().isNull())
+        font_dialog.reject()
         with tempfile.TemporaryDirectory() as directory:
             for name, dialog, expected in dialogs:
                 with self.subTest(dialog=name):

@@ -12,6 +12,7 @@ from PySide6.QtWidgets import (
     QSplitter,
     QTableWidget,
     QTableWidgetItem,
+    QToolButton,
     QVBoxLayout,
     QWidget,
 )
@@ -35,6 +36,10 @@ class PersuasionPage(ProjectPage):
         )
         layout.addWidget(title)
         layout.addWidget(subtitle)
+        scope_note = QLabel("全局劝降规则表：每条规则独立指定所在关卡、劝说者与目标。切换其他页的关卡不会改变这里的选择。")
+        scope_note.setWordWrap(True)
+        scope_note.setObjectName("hintText")
+        layout.addWidget(scope_note)
 
         splitter = QSplitter()
         self.table = QTableWidget(0, 6)
@@ -44,6 +49,8 @@ class PersuasionPage(ProjectPage):
         self.table.setSelectionBehavior(QTableWidget.SelectionBehavior.SelectRows)
         self.table.setSelectionMode(QTableWidget.SelectionMode.SingleSelection)
         self.table.setAlternatingRowColors(True)
+        self.table.setColumnHidden(4, True)
+        self.table.setColumnHidden(5, True)
         header = self.table.horizontalHeader()
         for column in (0, 4, 5):
             header.setSectionResizeMode(column, QHeaderView.ResizeMode.ResizeToContents)
@@ -73,12 +80,21 @@ class PersuasionPage(ProjectPage):
         form.addRow("所在章节", self.chapter)
         form.addRow("劝说者", self.persuader)
         form.addRow("被劝说目标", self.target)
-        form.addRow("成功脚本", self.script_value)
-        form.addRow("原始3字节", self.raw_value)
         self.pending_state = QLabel("请选择劝降条件")
         self.pending_state.setObjectName("pendingBanner")
         form.addRow("编辑状态", self.pending_state)
         editor_layout.addWidget(group)
+        self.advanced_toggle = QToolButton()
+        self.advanced_toggle.setText("显示脚本地址与原始字节（高级）")
+        self.advanced_toggle.setCheckable(True)
+        self.advanced_toggle.setToolButtonStyle(Qt.ToolButtonStyle.ToolButtonTextBesideIcon)
+        self.advanced_toggle.setArrowType(Qt.ArrowType.RightArrow)
+        self.advanced_panel = QGroupBox("规则原始信息（只读）")
+        advanced_form = QFormLayout(self.advanced_panel)
+        advanced_form.addRow("成功脚本", self.script_value)
+        advanced_form.addRow("原始3字节", self.raw_value)
+        self.advanced_panel.hide()
+        self.advanced_toggle.toggled.connect(self._toggle_advanced)
 
         buttons = QHBoxLayout()
         self.apply_button = QPushButton("应用劝降条件")
@@ -89,6 +105,8 @@ class PersuasionPage(ProjectPage):
         buttons.addWidget(self.apply_button)
         buttons.addWidget(self.reset_button)
         editor_layout.addLayout(buttons)
+        editor_layout.addWidget(self.advanced_toggle)
+        editor_layout.addWidget(self.advanced_panel)
 
         note = QLabel(
             "已确认原ROM有4条可用规则。其余28个表槽位只是占位，"
@@ -107,6 +125,14 @@ class PersuasionPage(ProjectPage):
         self.persuader.currentIndexChanged.connect(self._update_raw_preview)
         self.target.currentIndexChanged.connect(self._update_raw_preview)
         self._set_enabled(False)
+
+    def _toggle_advanced(self, checked: bool) -> None:
+        self.advanced_panel.setVisible(checked)
+        self.table.setColumnHidden(4, not checked)
+        self.table.setColumnHidden(5, not checked)
+        self.advanced_toggle.setArrowType(
+            Qt.ArrowType.DownArrow if checked else Qt.ArrowType.RightArrow
+        )
 
     def _set_enabled(self, enabled: bool) -> None:
         for widget in (

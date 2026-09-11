@@ -131,7 +131,7 @@ def main() -> int:
 
     if not DEFAULT_ROM.is_file() or not window.load_rom(DEFAULT_ROM, quiet=True):
         raise RuntimeError("无法载入默认 ROM，不能生成修改器说明截图。")
-    window.resize(1257, 998)
+    window.resize(1180, 760)
     window.show_page("maps")
     save_capture(application, window, "01-map-editor.png")
     assert window.project is not None

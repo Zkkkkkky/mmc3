@@ -17,7 +17,10 @@ from dc_modifier.legacy_windows import DatabaseDialog, ScenarioDialog
 from fc_rom_editor_core import RomProject
 
 
-class LegacyWindowTests(unittest.TestCase):
+from tests.qt_test_case import QtTestCase
+
+
+class LegacyWindowTests(QtTestCase):
     @classmethod
     def setUpClass(cls) -> None:
         cls.application = QApplication.instance() or QApplication([])
@@ -276,7 +279,10 @@ class LegacyWindowTests(unittest.TestCase):
         shared_context = dialog.chapter_context
         dialog.tabs.setCurrentIndex(4)
         self.application.processEvents()
-        self.assertIs(shared_context.parentWidget(), dialog._splitters[4])
+        self.assertTrue(shared_context.isHidden())
+        dialog.tabs.setCurrentIndex(3)
+        self.assertIs(shared_context.parentWidget(), dialog._splitters[3])
+        self.assertFalse(shared_context.isHidden())
 
     def test_scenario_open_does_not_manufacture_unknown_opcode_drafts(self) -> None:
         dialog = self._show(ScenarioDialog(self.project, initial_scenario_id=0))
@@ -289,8 +295,9 @@ class LegacyWindowTests(unittest.TestCase):
             explicit.chapter_list.currentItem().data(Qt.ItemDataRole.UserRole),
             5,
         )
-        for page in (*explicit.setup_event_pages, explicit.action_event_page, explicit.map_event_page):
+        for page in (*explicit.setup_event_pages, explicit.map_event_page):
             self.assertEqual(page.scenario_filter.currentData(), 5)
+        self.assertIsNone(explicit.action_event_page.scenario_filter.currentData())
 
         parent = QWidget()
         parent.map_page = SimpleNamespace(current_map_id=7)
@@ -436,10 +443,10 @@ class LegacyWindowTests(unittest.TestCase):
         )
         for event_page in (
             *dialog.setup_event_pages,
-            dialog.action_event_page,
             dialog.map_event_page,
         ):
             self.assertEqual(event_page.scenario_filter.currentData(), target_scenario)
+        self.assertIsNone(dialog.action_event_page.scenario_filter.currentData())
 
     def test_scenario_chapter_switch_blocks_invalid_hidden_event_draft(self) -> None:
         dialog = self._show(ScenarioDialog(self.project, initial_scenario_id=0))

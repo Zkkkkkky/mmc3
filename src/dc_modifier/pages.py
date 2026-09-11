@@ -277,23 +277,41 @@ class SearchableRecordPage(ProjectPage):
 
     def populate_records(self) -> None:
         previous = self.current_id
-        self.records.blockSignals(True)
-        self.records.clear()
-        if self.project is not None:
-            for record_id in self.record_ids():
-                item = QListWidgetItem(self.record_text(record_id))
-                item.setData(Qt.ItemDataRole.UserRole, record_id)
-                self.records.addItem(item)
-        self.records.blockSignals(False)
-        self._filter_records(self.search.text())
+        blocked = self.records.blockSignals(True)
+        updates = self.records.updatesEnabled()
+        self.records.setUpdatesEnabled(False)
+        try:
+            record_ids = list(self.record_ids()) if self.project is not None else []
+            existing_ids = [
+                self.records.item(row).data(Qt.ItemDataRole.UserRole)
+                for row in range(self.records.count())
+            ]
+            if existing_ids == record_ids:
+                # Applying a draft can refresh from inside currentItemChanged.
+                # Keep the items alive until that Qt signal has returned.
+                for row, record_id in enumerate(record_ids):
+                    self.records.item(row).setText(self.record_text(record_id))
+            else:
+                self.records.clear()
+                for record_id in record_ids:
+                    item = QListWidgetItem(self.record_text(record_id))
+                    item.setData(Qt.ItemDataRole.UserRole, record_id)
+                    self.records.addItem(item)
+            self._filter_records(self.search.text())
+            if self.records.count():
+                row = 0
+                if previous is not None:
+                    for index in range(self.records.count()):
+                        if self.records.item(index).data(Qt.ItemDataRole.UserRole) == previous:
+                            row = index
+                            break
+                self.records.setCurrentRow(row)
+        finally:
+            self.records.blockSignals(blocked)
+            self.records.setUpdatesEnabled(updates)
         if self.records.count():
-            row = 0
-            if previous is not None:
-                for index in range(self.records.count()):
-                    if self.records.item(index).data(Qt.ItemDataRole.UserRole) == previous:
-                        row = index
-                        break
-            self.records.setCurrentRow(row)
+            # Selection changes during repopulation are not user navigation.
+            # Load once, after the final list is stable.
             self._selection_changed(self.records.currentItem(), None)
         else:
             self.current_id = None
@@ -1271,6 +1289,12 @@ class MusicPage(SearchableRecordPage):
         self.record_heading = QLabel("请选择音乐选择器")
         self.record_heading.setObjectName("sectionTitle")
         detail_layout.addWidget(self.record_heading)
+        self.binding_help = QLabel(
+            "分配战斗曲：选择已有曲目给人物使用，不会导入或替换音乐文件。\n"
+            "要换成自己的曲子，请展开下方“替换扩展曲数据”。"
+        )
+        self.binding_help.setWordWrap(True)
+        detail_layout.addWidget(self.binding_help)
         form = QFormLayout()
         self.attacker = QComboBox()
         self.defender = QComboBox()
@@ -1303,7 +1327,7 @@ class MusicPage(SearchableRecordPage):
         buttons.addStretch()
         detail_layout.addLayout(buttons)
 
-        import_group = QGroupBox("三首扩展曲的数据导入")
+        import_group = QGroupBox("替换曲槽内容（会影响所有使用该曲槽的人物）")
         import_layout = QVBoxLayout(import_group)
         slot_form = QFormLayout()
         self.music_slot = QComboBox()
@@ -1335,7 +1359,18 @@ class MusicPage(SearchableRecordPage):
         safety.setObjectName("hintText")
         safety.setWordWrap(True)
         import_layout.addWidget(safety)
+        self.music_import_toggle = QToolButton()
+        self.music_import_toggle.setText("替换扩展曲数据 / 导入自己的曲子")
+        self.music_import_toggle.setToolButtonStyle(Qt.ToolButtonStyle.ToolButtonTextBesideIcon)
+        self.music_import_toggle.setCheckable(True)
+        self.music_import_toggle.setArrowType(Qt.ArrowType.RightArrow)
+        self.music_import_toggle.toggled.connect(import_group.setVisible)
+        self.music_import_toggle.toggled.connect(lambda expanded: self.music_import_toggle.setArrowType(
+            Qt.ArrowType.DownArrow if expanded else Qt.ArrowType.RightArrow
+        ))
+        detail_layout.addWidget(self.music_import_toggle)
         detail_layout.addWidget(import_group)
+        import_group.hide()
         detail_layout.addStretch()
         splitter.addWidget(detail)
         splitter.setSizes([420, 650])

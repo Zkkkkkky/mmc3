@@ -8,6 +8,7 @@ from typing import Any
 from PySide6.QtCore import QSize, Qt
 from PySide6.QtGui import QColor, QIcon, QPainter, QPixmap
 from PySide6.QtWidgets import (
+    QCheckBox,
     QComboBox,
     QDialog,
     QFileDialog,
@@ -22,6 +23,7 @@ from PySide6.QtWidgets import (
     QListWidget,
     QPlainTextEdit,
     QPushButton,
+    QScrollArea,
     QSpinBox,
     QTableWidget,
     QTableWidgetItem,
@@ -32,6 +34,8 @@ from PySide6.QtWidgets import (
 
 from fc_editor.dc_text import default_dc_text_table
 from fc_editor.text_table import TextTable
+from fc_editor.codecs.dc_font import decode_glyph
+from .font_edit import FontEditingMixin
 
 
 READ_ONLY_NOTICE = "当前数据结构尚未完成单变量差分验证；为保护ROM，本窗口仅提供预览。"
@@ -89,20 +93,19 @@ def _glyph_pixmap(raw: bytes, *, character: str = "", scale: int = 2) -> QPixmap
     painter = QPainter(pixmap)
     painter.setPen(Qt.PenStyle.NoPen)
     painter.setBrush(QColor("#f5f5f5"))
-    for bit_index in range(min(144, len(raw) * 8)):
-        if raw[bit_index // 8] & (0x80 >> (bit_index % 8)):
-            x = bit_index % 12
-            y = bit_index // 12
-            painter.drawRect(x * scale, y * scale, scale, scale)
+    for y, row in enumerate(decode_glyph(raw)):
+        for x, pixel in enumerate(row):
+            if pixel:
+                painter.drawRect(x * scale, y * scale, scale, scale)
     painter.end()
     return pixmap
 
 
-class FontLibraryDialog(QDialog):
+class FontLibraryDialog(FontEditingMixin, QDialog):
     """Legacy 16x16 font browser backed by the verified DC token map.
 
-    The glyph addresses and previews are real.  Writing is deliberately disabled
-    until glyph relocation/reference semantics have a verified codec.
+    Fixed glyph slots are editable on verified DC layouts. Font pointer
+    relocation and automatic character-code insertion are not supported.
     """
 
     def __init__(self, parent: QWidget | None = None, project: Any | None = None) -> None:
@@ -111,8 +114,9 @@ class FontLibraryDialog(QDialog):
         self.text_table = default_dc_text_table()
         self.current_token = bytes((0xC8, 0x00))
         self.setWindowTitle("字库编辑")
-        self.setFixedSize(951, 866)
-        self.setSizeGripEnabled(False)
+        self.resize(1000, 780)
+        self.setMinimumSize(850, 620)
+        self.setSizeGripEnabled(True)
         self.setModal(True)
 
         root = QVBoxLayout(self)
@@ -125,19 +129,23 @@ class FontLibraryDialog(QDialog):
         self.glyph_table.setObjectName("glyphTable")
         self.glyph_table.setHorizontalHeaderLabels([f"{value:02X}" for value in range(16)])
         self.glyph_table.setVerticalHeaderLabels([f"{value:02X}" for value in range(16)])
-        self.glyph_table.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeMode.Fixed)
-        self.glyph_table.verticalHeader().setSectionResizeMode(QHeaderView.ResizeMode.Fixed)
+        self.glyph_table.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeMode.Stretch)
+        self.glyph_table.verticalHeader().setSectionResizeMode(QHeaderView.ResizeMode.Stretch)
+        self.glyph_table.horizontalHeader().setMinimumSectionSize(25)
+        self.glyph_table.verticalHeader().setMinimumSectionSize(25)
         self.glyph_table.horizontalHeader().setDefaultSectionSize(40)
         self.glyph_table.verticalHeader().setDefaultSectionSize(40)
         self.glyph_table.setIconSize(QSize(24, 24))
         self.glyph_table.setSelectionMode(QTableWidget.SelectionMode.SingleSelection)
         self.glyph_table.setSelectionBehavior(QTableWidget.SelectionBehavior.SelectItems)
-        self.glyph_table.cellClicked.connect(self._select_cell)
+        self.glyph_table.currentCellChanged.connect(
+            lambda row, column, _previous_row, _previous_column: self._select_cell(row, column)
+        )
         preview_layout.addWidget(self.glyph_table)
         content.addWidget(preview_group, 1)
 
         edit_group = QGroupBox("文字库修改")
-        edit_group.setFixedWidth(220)
+        edit_group.setFixedWidth(270)
         edit_layout = QVBoxLayout(edit_group)
         edit_layout.addWidget(QLabel("字段选择:"))
         self.page_selector = QComboBox()
@@ -196,7 +204,12 @@ class FontLibraryDialog(QDialog):
         self.status.setMaximumHeight(34)
         self.status.setStyleSheet("color:#9a5b00; font-size:9px;")
         edit_layout.addWidget(self.status)
-        content.addWidget(edit_group)
+        edit_scroll = QScrollArea()
+        edit_scroll.setWidgetResizable(True)
+        edit_scroll.setWidget(edit_group)
+        edit_scroll.setMinimumWidth(294)
+        edit_scroll.setMaximumWidth(310)
+        content.addWidget(edit_scroll)
 
         only_ok = QHBoxLayout()
         only_ok.addStretch()
@@ -204,6 +217,7 @@ class FontLibraryDialog(QDialog):
         self.accept_button.clicked.connect(self.accept)
         only_ok.addWidget(self.accept_button)
         root.addLayout(only_ok)
+        self.initialize_font_editing(edit_layout, only_ok)
         self.refresh_page()
 
     def _token_at(self, row: int, column: int) -> bytes:
@@ -213,6 +227,9 @@ class FontLibraryDialog(QDialog):
     def _raw_glyph(self, token: bytes) -> bytes | None:
         if self.project is None:
             return None
+        canonical = bytes((token[0], token[1] & 0xF0)) if token[1] % 16 >= 14 else token
+        if canonical in getattr(self, "_glyph_drafts", {}):
+            return self._glyph_drafts[canonical]
         offset = _glyph_file_offset(token)
         working = getattr(self.project, "working", None)
         if offset is None or working is None or offset + 18 > len(working):
@@ -220,6 +237,7 @@ class FontLibraryDialog(QDialog):
         return bytes(working[offset : offset + 18])
 
     def refresh_page(self, _index: int | None = None) -> None:
+        blocked = self.glyph_table.blockSignals(True)
         for row in range(16):
             for column in range(16):
                 token = self._token_at(row, column)
@@ -235,9 +253,14 @@ class FontLibraryDialog(QDialog):
                 item.setFlags(item.flags() & ~Qt.ItemFlag.ItemIsEditable)
                 self.glyph_table.setItem(row, column, item)
         self.glyph_table.setCurrentCell(0, 0)
+        self.glyph_table.blockSignals(blocked)
         self._select_cell(0, 0)
 
     def _select_cell(self, row: int, column: int) -> None:
+        if not 0 <= row < 16 or not 0 <= column < 16:
+            return
+        if hasattr(self, "glyph_canvas") and self.write_button.isEnabled():
+            self.stage_current_glyph()
         self.current_token = self._token_at(row, column)
         character = self.text_table.byte_to_text.get(self.current_token, "")
         offset = _glyph_file_offset(self.current_token)
@@ -253,10 +276,17 @@ class FontLibraryDialog(QDialog):
             )
         else:
             self.original_glyph.setText(character[:1])
+        self._font_loading = True
         self.replacement_text.setText(character[:1])
+        self._font_loading = False
+        self._load_font_canvas(raw)
+        blocked = self.glyph_table.blockSignals(True)
+        self.glyph_table.setCurrentCell(row, column)
+        self.glyph_table.blockSignals(blocked)
 
     def _update_replacement_preview(self, text: str) -> None:
         self.replacement_glyph.setText(text[:1])
+        self.preview_font_character(text)
 
 
 class MapAnimationDialog(QDialog):
@@ -329,6 +359,9 @@ class MapAnimationDialog(QDialog):
         banner_layout.addWidget(QLabel("动画菜单"))
         root.addWidget(banner)
 
+        self.reference_examples = QCheckBox("查看参考功能示例（不是当前 ROM 数据，不可保存）")
+        root.addWidget(self.reference_examples)
+
         self.tabs = QTabWidget()
         self.tabs.addTab(self._animation_tab(), "地图动画")
         self.tabs.addTab(self._readonly_tab("规律"), "规律")
@@ -339,6 +372,21 @@ class MapAnimationDialog(QDialog):
         self.read_only_status.setStyleSheet("color:#9a5b00; font-size:9px;")
         root.addWidget(self.read_only_status)
         root.addLayout(_dialog_buttons(self, writable=True))
+        self.reference_examples.toggled.connect(self._toggle_reference_examples)
+        self._toggle_reference_examples(False)
+
+    def _toggle_reference_examples(self, visible: bool) -> None:
+        self.animation_list.setEnabled(visible)
+        if visible:
+            self._refresh_animation_inspector(max(0, self.animation_list.currentRow()))
+            self.read_only_status.setText("参考功能示例：下列指令不属于当前 ROM，不能用于判断其动画内容。")
+        else:
+            self.instruction_table.setRowCount(0)
+            self.animation_name.clear()
+            self.read_only_status.setText("尚未解析当前 ROM 的动画、规律和调用表；没有可编辑的动画记录。参考示例需主动勾选。")
+        self.read_only_status.setWordWrap(True)
+        self.read_only_status.setMaximumHeight(70)
+        self.read_only_status.setStyleSheet("color:#735100;")
 
     def _animation_tab(self) -> QWidget:
         page = QWidget()

@@ -173,7 +173,8 @@ class LauncherWindow(QDialog):
         super().__init__()
         self.main_window: MainWindow | None = None
         self.setWindowTitle(LAUNCHER_TITLE)
-        self.setFixedSize(930, 715)
+        self.resize(520, 360)
+        self.setMinimumSize(400, 240)
         self.setWindowFlag(Qt.WindowType.WindowMaximizeButtonHint, False)
 
         layout = QVBoxLayout(self)
@@ -218,8 +219,11 @@ class MainWindow(QMainWindow):
         self._saved_snapshot: bytes | None = None
         self._saved_allocations: tuple[object, ...] | None = None
         self.setWindowTitle(LEGACY_WINDOW_TITLE)
-        self.resize(1257, 998)
-        self.setMinimumSize(1024, 700)
+        self.resize(1180, 760)
+        self.setMinimumSize(900, 600)
+        self._stale_pages: set[ProjectPage] = set()
+        self._count_snapshot: bytes | None = None
+        self._changed_byte_count = 0
         self.setAcceptDrops(True)
 
         # Keep a non-visual registry for automated functional checks. Only the
@@ -251,10 +255,8 @@ class MainWindow(QMainWindow):
         for label in (self.path_status, self.module_status, self.change_status):
             label.hide()
         self.setStatusBar(self.status)
-        # The reference main window presents coordinates inside the shared
-        # map workspace and has no second status strip.  Keep the status
-        # object for programmatic messages, but do not duplicate that footer.
-        self.status.hide()
+        # Save/errors and completion messages must remain visible to users.
+        self.status.setSizeGripEnabled(True)
 
         self.map_page = self.pages[self.page_index["maps"]]
         assert isinstance(self.map_page, MapPage)
@@ -298,6 +300,10 @@ class MainWindow(QMainWindow):
         """Select a registered page for tests/capture; menus use dialogs."""
         if key not in self.page_stack_index:
             raise KeyError(f"未知页面：{key}")
+        page = self.pages[self.page_index[key]]
+        if page in self._stale_pages and not page.has_pending_draft:
+            page.refresh()
+            self._stale_pages.discard(page)
         self.workspace.setCurrentIndex(self.page_stack_index[key])
         row = self.page_index[key]
         self.navigation.blockSignals(True)
@@ -417,6 +423,8 @@ class MainWindow(QMainWindow):
         self.y_status.setText(f"Y坐标：{y}")
 
     def _run_project_dialog(self, dialog: QDialog, success_message: str) -> int:
+        from .window_layout import fit_dialog_to_screen
+        fit_dialog_to_screen(dialog)
         if hasattr(dialog, "project_changed"):
             dialog.project_changed.connect(self._dialog_edit_notice)
         result = dialog.exec()
@@ -446,6 +454,8 @@ class MainWindow(QMainWindow):
         self._run_project_dialog(ScenarioDialog(self.project, self), "剧情事件修改已确认")
 
     def _run_tool_dialog(self, dialog: QDialog) -> None:
+        from .window_layout import fit_dialog_to_screen
+        fit_dialog_to_screen(dialog)
         result = dialog.exec()
         if result == QDialog.DialogCode.Accepted:
             self._refresh_registered_pages(preserve_map_draft=True)
@@ -645,6 +655,8 @@ class MainWindow(QMainWindow):
         self.project_path = project_path
         self._saved_snapshot = bytes(project.working) if saved_snapshot is None else saved_snapshot
         self._saved_allocations = project.resource_allocator.allocations
+        self._count_snapshot = None
+        self._stale_pages.clear()
         for page in self.pages:
             page.set_project(project)
         self._update_window_state()
@@ -910,20 +922,27 @@ class MainWindow(QMainWindow):
 
     def _after_edit(self, message: str) -> None:
         source = self.sender()
+        self._stale_pages.update(self.pages)
         if isinstance(source, ProjectPage):
             source.refresh()
+            self._stale_pages.discard(source)
         self._update_window_state()
         self.status.showMessage(message, 4000)
 
     def _refresh_registered_pages(self, *, preserve_map_draft: bool) -> None:
+        self._stale_pages.update(self.pages)
         for page in self.pages:
             if (
                 preserve_map_draft
                 and page is self.map_page
-                and self.map_page.apply_button.isEnabled()
+                and self.map_page.has_pending_draft
             ):
                 continue
-            page.refresh()
+            # Hidden editors are refreshed on their next visit. Rebuilding
+            # their tables and previews after every modal close caused stalls.
+            if page is self.workspace.currentWidget():
+                page.refresh()
+                self._stale_pages.discard(page)
 
     def _update_action_state(self) -> None:
         loaded = self.project is not None
@@ -970,13 +989,20 @@ class MainWindow(QMainWindow):
             self.change_status.setText("0 字节修改")
             self.workspace.setCurrentWidget(self.blank_page)
             return
-        marker = " *" if self.has_unsaved_changes else ""
+        unsaved = self.has_unsaved_changes
+        marker = " *" if unsaved else ""
         self.setWindowTitle(f"{LEGACY_WINDOW_TITLE}：{self.project.path}{marker}")
         self.path_status.setText(str(self.project.path))
-        self.session_status.setText(
-            f"{len(self.project.change_rows())} 字节修改" if self.has_unsaved_changes else ""
-        )
-        self.change_status.setText(f"{len(self.project.change_rows())} 字节修改")
+        # Native bytes comparison is inexpensive; avoid enumerating the entire
+        # ROM twice per pointer movement/draft notification.
+        if self._count_snapshot != self.project.working:
+            self._changed_byte_count = len(self.project.change_rows())
+            self._count_snapshot = bytes(self.project.working)
+        summary = f"{self._changed_byte_count} 字节修改"
+        if self.map_page.has_pending_draft:
+            summary += " · 地图有未应用草稿"
+        self.session_status.setText(summary if unsaved else "已载入 · 无未保存修改")
+        self.change_status.setText(summary)
 
     def show_about(self) -> None:
         QMessageBox.information(

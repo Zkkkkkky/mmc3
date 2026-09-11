@@ -31,6 +31,7 @@ from PySide6.QtWidgets import (
 
 from fc_editor.dc_text import dc_map_label, default_dc_text_table
 from fc_editor.codecs.map_trigger import MapTrigger
+from fc_editor.codecs.dc_font import decode_glyph
 
 from fc_editor.models import PlayerPlacement, ScenarioEntity, ScenarioLayout
 
@@ -85,18 +86,20 @@ class TerrainButton(QPushButton):
 
 
 def render_unit_icon_bank(project, bank: int) -> QImage:
-    """Render one verified active 1 KiB CHR bank as 32 legacy map icons."""
+    """Render a raw CHR bank as sixteen 2×2-tile map-icon candidates.
 
-    image = QImage(256, 32, QImage.Format.Format_RGB32)
+    This is a bank preview, not a claimed unit-ID or chapter binding.  The
+    legacy BMP evidence establishes four 8×8 tiles per 16×16 icon.
+    """
+
+    image = QImage(256, 16, QImage.Format.Format_RGB32)
     image.fill(ICON_PALETTE[0])
     first_tile = bank * 64
-    for icon in range(32):
-        column = icon % 16
-        row = icon // 16
-        for half in range(2):
-            pixels = project.chr_tile_pixels(first_tile + icon * 2 + half)
-            origin_x = column * 16 + 4
-            origin_y = row * 16 + half * 8
+    for icon in range(16):
+        for quadrant in range(4):
+            pixels = project.chr_tile_pixels(first_tile + icon * 4 + quadrant)
+            origin_x = icon * 16 + quadrant % 2 * 8
+            origin_y = quadrant // 2 * 8
             for y in range(8):
                 for x in range(8):
                     image.setPixelColor(
@@ -153,16 +156,15 @@ def render_map_title(project, title: str, *, scale: int = 4) -> QPixmap:
             continue
         origin_x = margin + character_index * advance
         raw = project.working[offset : offset + 18]
-        for bit_index in range(144):
-            if raw[bit_index // 8] & (0x80 >> (bit_index % 8)):
-                x = bit_index % 12
-                y = bit_index // 12
-                painter.drawRect(
-                    origin_x + x * scale,
-                    y * scale,
-                    scale,
-                    scale,
-                )
+        for y, row in enumerate(decode_glyph(raw)):
+            for x, ink in enumerate(row):
+                if ink:
+                    painter.drawRect(
+                        origin_x + x * scale,
+                        y * scale,
+                        scale,
+                        scale,
+                    )
     painter.end()
     return pixmap
 
@@ -206,6 +208,8 @@ class MapCanvas(QWidget):
     right_tile_picked = Signal(int)
     coordinate_changed = Signal(int, int)
     overlay_moved = Signal(str, int, int, int)
+    overlay_selected = Signal(str, int)
+    overlay_activated = Signal(str, int)
 
     def __init__(self) -> None:
         super().__init__()
@@ -219,6 +223,9 @@ class MapCanvas(QWidget):
         self.show_tile_ids = False
         self.overlays: list[tuple[str, int, int, str, int]] = []
         self.dragged_overlay: tuple[str, int] | None = None
+        self.selected_overlay: tuple[str, int] | None = None
+        self.overlay_descriptions: dict[tuple[str, int], str] = {}
+        self.paint_enabled = True
         self.setMouseTracking(True)
 
     def sizeHint(self) -> QSize:
@@ -277,7 +284,7 @@ class MapCanvas(QWidget):
             "事": QColor("#7b4dd8"),
             "店": QColor("#07866f"),
         }
-        for side, x, y, label, _row in self.overlays:
+        for side, x, y, label, row in self.overlays:
             if not 0 <= x < self.map_width or not 0 <= y < self.map_height:
                 continue
             margin = max(2, self.cell_size // 7)
@@ -290,6 +297,11 @@ class MapCanvas(QWidget):
             painter.setBrush(side_colors[side])
             painter.setPen(QPen(Qt.GlobalColor.white, 1))
             painter.drawEllipse(rect)
+            if self.selected_overlay == (side, row):
+                painter.setBrush(Qt.BrushStyle.NoBrush)
+                painter.setPen(QPen(QColor("#ffe45e"), 3))
+                painter.drawRect(rect.adjusted(-2, -2, 2, 2))
+                painter.setPen(Qt.GlobalColor.white)
             if self.cell_size >= 20:
                 painter.drawText(rect, Qt.AlignmentFlag.AlignCenter, label)
 
@@ -301,6 +313,8 @@ class MapCanvas(QWidget):
         return None
 
     def _paint_at(self, position: QPoint, tile: int) -> None:
+        if not self.paint_enabled:
+            return
         cell = self._cell_at(position)
         if cell is None:
             return
@@ -338,6 +352,9 @@ class MapCanvas(QWidget):
             )
             if overlay is not None:
                 self.dragged_overlay = overlay
+                self.selected_overlay = overlay
+                self.overlay_selected.emit(*overlay)
+                self.update()
             else:
                 self._paint_at(event.position().toPoint(), self.selected_tile)
         elif event.button() == Qt.MouseButton.RightButton:
@@ -352,6 +369,11 @@ class MapCanvas(QWidget):
         cell = self._cell_at(event.position().toPoint())
         if cell is not None:
             self.coordinate_changed.emit(*cell)
+            descriptions = [
+                self.overlay_descriptions.get((side, row), f"{side} #{row + 1}")
+                for side, x, y, _label, row in self.overlays if cell == (x, y)
+            ]
+            self.setToolTip("\n".join(descriptions))
         if event.buttons() & Qt.MouseButton.LeftButton and self.dragged_overlay is None:
             self._paint_at(event.position().toPoint(), self.selected_tile)
         elif event.buttons() & Qt.MouseButton.RightButton:
@@ -363,7 +385,23 @@ class MapCanvas(QWidget):
             side, row = self.dragged_overlay
             self.dragged_overlay = None
             if cell is not None:
-                self.overlay_moved.emit(side, row, cell[0], cell[1])
+                original = next(
+                    ((x, y) for item_side, x, y, _label, item_row in self.overlays
+                     if (item_side, item_row) == (side, row)), None
+                )
+                if cell != original:
+                    self.overlay_moved.emit(side, row, cell[0], cell[1])
+
+    def mouseDoubleClickEvent(self, event: QMouseEvent) -> None:
+        if event.button() == Qt.MouseButton.LeftButton:
+            cell = self._cell_at(event.position().toPoint())
+            for side, x, y, _label, row in reversed(self.overlays):
+                if cell == (x, y):
+                    self.dragged_overlay = None
+                    self.overlay_activated.emit(side, row)
+                    event.accept()
+                    return
+        super().mouseDoubleClickEvent(event)
 
 
 class MapScrollArea(QScrollArea):
@@ -391,6 +429,7 @@ class ByteEntryTable(QTableWidget):
         self.label_providers = dict(label_providers or {})
         self.max_rows = max_rows
         self.clipboard_row: tuple[int, ...] | None = None
+        self._choice_labels: dict[int, tuple[str, ...]] = {}
         self.setHorizontalHeaderLabels(headers)
         header = self.horizontalHeader()
         header.setSectionResizeMode(QHeaderView.ResizeMode.Interactive)
@@ -402,9 +441,16 @@ class ByteEntryTable(QTableWidget):
         self.setAlternatingRowColors(True)
 
     def set_rows(self, rows: list[tuple[int, ...]]) -> None:
-        self.setRowCount(0)
-        for values in rows:
-            self.add_row(values)
+        previous = self.blockSignals(True)
+        self.setUpdatesEnabled(False)
+        try:
+            self.setRowCount(0)
+            for values in rows:
+                self.add_row(values)
+        finally:
+            self.setUpdatesEnabled(True)
+            self.blockSignals(previous)
+        self.values_changed.emit()
 
     def add_row(
         self,
@@ -422,15 +468,18 @@ class ByteEntryTable(QTableWidget):
             if provider is not None:
                 editor = QComboBox()
                 editor.setMaxVisibleItems(24)
-                for item_value in range(256):
-                    editor.addItem(provider(item_value), item_value)
+                if column not in self._choice_labels:
+                    self._choice_labels[column] = tuple(provider(value) for value in range(256))
+                for item_value, label in enumerate(self._choice_labels[column]):
+                    editor.addItem(label, item_value)
                 editor.setCurrentIndex(editor.findData(value))
                 editor.currentIndexChanged.connect(self.values_changed)
             else:
                 editor = QSpinBox()
                 editor.setRange(0, 255)
-                editor.setDisplayIntegerBase(16 if column >= 2 else 10)
-                editor.setPrefix("$" if column >= 2 else "")
+                hexadecimal = self.headers[column] not in ("X", "Y", "等级")
+                editor.setDisplayIntegerBase(16 if hexadecimal else 10)
+                editor.setPrefix("$" if hexadecimal else "")
                 editor.setValue(value)
                 editor.valueChanged.connect(self.values_changed)
             self.setCellWidget(row, column, editor)
@@ -493,11 +542,15 @@ class ByteEntryTable(QTableWidget):
     def set_row_coordinates(self, row: int, x: int, y: int) -> None:
         if not 0 <= row < self.rowCount():
             return
-        for column, value in ((0, x), (1, y)):
-            editor = self.cellWidget(row, column)
-            if isinstance(editor, QSpinBox):
-                editor.setValue(value)
-        self.setCurrentCell(row, 0)
+        previous = self.blockSignals(True)
+        try:
+            for column, value in ((0, x), (1, y)):
+                editor = self.cellWidget(row, column)
+                if isinstance(editor, QSpinBox):
+                    editor.setValue(value)
+            self.setCurrentCell(row, 0)
+        finally:
+            self.blockSignals(previous)
         self.values_changed.emit()
 
 
@@ -514,6 +567,8 @@ class MapPage(ProjectPage):
         self._loaded_draft_signature: tuple | None = None
         self._commit_error: tuple[tuple, str] | None = None
         self._last_draft_state: tuple[bool, str | None] | None = None
+        self._loading_map = False
+        self._selecting_object = False
         outer = QVBoxLayout(self)
         outer.setContentsMargins(8, 8, 8, 8)
         self.main_splitter = QSplitter(Qt.Orientation.Horizontal)
@@ -524,8 +579,8 @@ class MapPage(ProjectPage):
         # on the left, with the complete battlefield occupying the right side.
         self.navigator = QWidget()
         self.navigator.setObjectName("mapLeftPane")
-        self.navigator.setMinimumWidth(390)
-        self.navigator.setMaximumWidth(490)
+        self.navigator.setMinimumWidth(330)
+        self.navigator.setMaximumWidth(620)
         inspector_layout = QVBoxLayout(self.navigator)
         inspector_layout.setContentsMargins(0, 0, 8, 0)
 
@@ -536,7 +591,7 @@ class MapPage(ProjectPage):
         tile_layout.setContentsMargins(8, 8, 8, 8)
 
         brush_group = QGroupBox("地图图块设置")
-        brush_group.setMinimumHeight(285)
+        brush_group.setMinimumHeight(210)
         brush_layout = QVBoxLayout(brush_group)
         bitmap_row = QHBoxLayout()
         self.bitmap_selector = QComboBox()
@@ -565,8 +620,8 @@ class MapPage(ProjectPage):
             button = TerrainButton(tile)
             button.setObjectName("terrainButton")
             button.setCheckable(True)
-            button.setMinimumSize(42, 42)
-            button.setIconSize(QSize(40, 40))
+            button.setMinimumSize(34, 34)
+            button.setIconSize(QSize(30, 30))
             button.setToolTip(
                 f"位图{tile:X}：左键设为左键画笔，右键设为右键画笔"
             )
@@ -666,7 +721,8 @@ class MapPage(ProjectPage):
         self.title_preview = QLabel("")
         self.title_preview.setObjectName("legacyMapTitlePreview")
         self.title_preview.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.title_preview.setMinimumHeight(72)
+        self.title_preview.setMinimumHeight(48)
+        self.title_preview.setMaximumHeight(64)
         self.title_preview.setStyleSheet(
             "background: #000000; border: 1px solid #202020;"
         )
@@ -684,7 +740,21 @@ class MapPage(ProjectPage):
         initial_tab = QWidget()
         initial_layout = QVBoxLayout(initial_tab)
         initial_layout.setContentsMargins(8, 8, 8, 8)
+        self.deployment_summary = QLabel("选择地图以查看实际部署")
+        self.deployment_summary.setWordWrap(True)
+        initial_layout.addWidget(self.deployment_summary)
+        self.deployment_objects = QListWidget()
+        self.deployment_objects.setAlternatingRowColors(True)
+        self.deployment_objects.currentItemChanged.connect(self._object_list_selected)
+        self.deployment_objects.itemClicked.connect(self._object_list_selected)
+        self.deployment_objects.itemDoubleClicked.connect(self._object_list_activated)
+        initial_layout.addWidget(self.deployment_objects, 1)
+        self.icon_preview_toggle = QPushButton("展开图标图库预览（只读）")
+        self.icon_preview_toggle.setCheckable(True)
+        initial_layout.addWidget(self.icon_preview_toggle)
         icon_group = QGroupBox("机体图标")
+        self.icon_preview_group = icon_group
+        self.icon_preview_toggle.toggled.connect(icon_group.setVisible)
         icon_group_layout = QVBoxLayout(icon_group)
         self.icon_bank_selectors: list[QComboBox] = []
         self.icon_sheet_labels: list[QLabel] = []
@@ -705,14 +775,14 @@ class MapPage(ProjectPage):
             preview = QLabel("尚未载入 ROM")
             preview.setObjectName("legacyIconSheet")
             preview.setAlignment(Qt.AlignmentFlag.AlignCenter)
-            preview.setFixedHeight(64)
+            preview.setFixedHeight(24)
             preview.setStyleSheet("background: #000000; border: 1px solid #4d555c;")
             icon_group_layout.addWidget(preview)
             self.icon_bank_selectors.append(selector)
             self.icon_sheet_labels.append(preview)
-        icon_group.setMinimumHeight(420)
         initial_layout.addWidget(icon_group)
-        self.open_deployment_button = QPushButton("高级部署编辑…")
+        icon_group.hide()
+        self.open_deployment_button = QPushButton("编辑部署 / 添加 / 复制…")
         self.open_deployment_button.setToolTip(
             "扩展功能；图标地址选择本身仍为只读兼容预览，不会猜写绑定。"
         )
@@ -722,15 +792,15 @@ class MapPage(ProjectPage):
             0,
             Qt.AlignmentFlag.AlignRight,
         )
-        initial_layout.addStretch()
 
         self.deployment_dialog = QDialog(self)
-        self.deployment_dialog.setWindowTitle("高级部署编辑")
-        self.deployment_dialog.setModal(True)
+        self.deployment_dialog.setWindowTitle("部署编辑 · 可同时操作地图")
+        self.deployment_dialog.setModal(False)
         self.deployment_dialog.resize(1020, 650)
         deployment_layout = QVBoxLayout(self.deployment_dialog)
         deployment_hint = QLabel(
-            "扩展功能：编辑敌军、客军和我方出击位；机体与人物均显示真实名称。"
+            "选择列表或地图圆点可联动定位；双击圆点编辑，拖动修改坐标。"
+            "敌军最多18、客军3、我方出击位11；黄色边框表示选中对象。关闭窗口保留草稿。"
         )
         deployment_hint.setObjectName("hintText")
         deployment_hint.setWordWrap(True)
@@ -775,8 +845,16 @@ class MapPage(ProjectPage):
         trigger_tab = QWidget()
         trigger_layout = QVBoxLayout(trigger_tab)
         trigger_layout.setContentsMargins(8, 8, 8, 8)
-        trigger_layout.addStretch()
-        self.open_trigger_button = QPushButton("高级事件编辑…")
+        self.trigger_summary = QLabel("选择地图以查看商店与事件")
+        self.trigger_summary.setWordWrap(True)
+        trigger_layout.addWidget(self.trigger_summary)
+        self.trigger_objects = QListWidget()
+        self.trigger_objects.setAlternatingRowColors(True)
+        self.trigger_objects.currentItemChanged.connect(self._object_list_selected)
+        self.trigger_objects.itemClicked.connect(self._object_list_selected)
+        self.trigger_objects.itemDoubleClicked.connect(self._object_list_activated)
+        trigger_layout.addWidget(self.trigger_objects, 1)
+        self.open_trigger_button = QPushButton("编辑事件 / 添加商店…")
         self.open_trigger_button.clicked.connect(self._show_trigger_advanced)
         trigger_layout.addWidget(
             self.open_trigger_button,
@@ -786,7 +864,7 @@ class MapPage(ProjectPage):
 
         self.trigger_dialog = QDialog(self)
         self.trigger_dialog.setWindowTitle("高级地图事件与商店编辑")
-        self.trigger_dialog.setModal(True)
+        self.trigger_dialog.setModal(False)
         self.trigger_dialog.resize(900, 580)
         trigger_dialog_layout = QVBoxLayout(self.trigger_dialog)
         trigger_hint = QLabel(
@@ -820,15 +898,14 @@ class MapPage(ProjectPage):
         search_row.addWidget(self.search, 1)
         search_row.addWidget(self.map_count_label)
         chapter_layout.addLayout(search_row)
-        self.search.hide()
-        self.map_count_label.hide()
         self.map_list = QListWidget()
         self.map_list.setAlternatingRowColors(True)
         self.map_list.setUniformItemSizes(True)
         self.map_list.currentItemChanged.connect(self._map_selected)
         chapter_layout.addWidget(self.map_list)
+        self.chapter_group.setMinimumHeight(190)
         inspector_layout.addWidget(self.editor_tabs, 3)
-        inspector_layout.addWidget(self.chapter_group, 2)
+        inspector_layout.addWidget(self.chapter_group, 3)
         self.editor_tabs.currentChanged.connect(self._editor_mode_changed)
         self.main_splitter.addWidget(self.navigator)
 
@@ -859,20 +936,38 @@ class MapPage(ProjectPage):
         self.canvas.right_tile_picked.connect(self.right_terrain.setCurrentIndex)
         self.canvas.coordinate_changed.connect(self._canvas_coordinate_changed)
         self.canvas.overlay_moved.connect(self._overlay_moved)
+        self.canvas.overlay_selected.connect(self._select_object)
+        self.canvas.overlay_activated.connect(self._activate_object)
         self.map_scroll = MapScrollArea()
         self.map_scroll.setObjectName("mapScrollArea")
         self.map_scroll.setWidget(self.canvas)
         self.map_scroll.setWidgetResizable(False)
         self.map_scroll.setHorizontalScrollBarPolicy(
-            Qt.ScrollBarPolicy.ScrollBarAlwaysOff
+            Qt.ScrollBarPolicy.ScrollBarAsNeeded
         )
         self.map_scroll.setVerticalScrollBarPolicy(
-            Qt.ScrollBarPolicy.ScrollBarAlwaysOff
+            Qt.ScrollBarPolicy.ScrollBarAsNeeded
         )
         self.map_scroll.setAlignment(
             Qt.AlignmentFlag.AlignHCenter | Qt.AlignmentFlag.AlignTop
         )
         self.map_scroll.viewport_resized.connect(self._fit_map_to_viewport)
+        preview_toolbar = QHBoxLayout()
+        preview_toolbar.addWidget(self.fit_view)
+        preview_toolbar.addWidget(QLabel("缩放"))
+        preview_toolbar.addWidget(self.zoom)
+        self.show_all_objects = QCheckBox("叠加全部对象")
+        self.show_all_objects.setToolTip("在地形页同时显示部署、事件和商店；编辑对象页不会误画地形。")
+        self.show_all_objects.toggled.connect(self._update_overlays)
+        preview_toolbar.addWidget(self.show_all_objects)
+        preview_toolbar.addStretch()
+        self.capacity_help_button = QPushButton("容量规划…")
+        self.capacity_help_button.setToolTip(
+            "原记录容量不足时，可在464 KiB版本中规划并接通地图共享池；保留当前地图草稿。"
+        )
+        self.capacity_help_button.clicked.connect(self._open_capacity_planner)
+        preview_toolbar.addWidget(self.capacity_help_button)
+        canvas_layout.addLayout(preview_toolbar)
         canvas_layout.addWidget(self.map_scroll, 1)
 
         info_row = QHBoxLayout()
@@ -888,6 +983,19 @@ class MapPage(ProjectPage):
         self.apply_button.setEnabled(False)
         self.reset_button = QPushButton("还原")
         self.reset_button.clicked.connect(self.reset_current)
+        self.size_label.setWordWrap(True)
+        self.pending_state.setWordWrap(True)
+        canvas_layout.addWidget(self.size_label)
+        status_row = QHBoxLayout()
+        status_row.addWidget(self.pending_state, 1)
+        status_row.addWidget(self.apply_button)
+        canvas_layout.addLayout(status_row)
+        for side, table in (("敌", self.enemy_table), ("客", self.guest_table),
+                            ("我", self.player_table), ("事", self.trigger_table)):
+            table.currentCellChanged.connect(
+                lambda row, _column, _old_row, _old_column, kind=side:
+                    self._table_selection_changed(kind, row)
+            )
         self.main_splitter.addWidget(self.canvas_host)
 
         self.main_splitter.setStretchFactor(0, 0)
@@ -917,27 +1025,16 @@ class MapPage(ProjectPage):
         display_group = QGroupBox("预览与兼容工具")
         display_layout = QVBoxLayout(display_group)
         display_layout.addWidget(self.show_ids)
-        zoom_row = QHBoxLayout()
-        zoom_row.addWidget(self.fit_view)
-        zoom_row.addWidget(QLabel("缩放"))
-        zoom_row.addWidget(self.zoom)
-        zoom_row.addStretch()
-        display_layout.addLayout(zoom_row)
         display_layout.addWidget(self.tileset_meta)
         display_layout.addWidget(self.brush_hint)
         root.addWidget(display_group)
 
-        status_group = QGroupBox("草稿状态")
-        status_layout = QVBoxLayout(status_group)
-        self.size_label.setWordWrap(True)
-        self.pending_state.setWordWrap(True)
-        status_layout.addWidget(self.size_label)
-        status_layout.addWidget(self.pending_state)
-        root.addWidget(status_group)
+        notice = QLabel("缩放、容量和应用按钮位于地图主界面。调整尺寸后会检查部署坐标；超出边界不会直接写入ROM。")
+        notice.setWordWrap(True)
+        root.addWidget(notice)
         root.addStretch()
 
         buttons = QHBoxLayout()
-        buttons.addWidget(self.apply_button)
         buttons.addWidget(self.reset_button)
         buttons.addStretch()
         close_buttons = QDialogButtonBox(QDialogButtonBox.StandardButton.Close)
@@ -949,6 +1046,13 @@ class MapPage(ProjectPage):
         self.map_advanced_dialog.show()
         self.map_advanced_dialog.raise_()
         self.map_advanced_dialog.activateWindow()
+
+    def _open_capacity_planner(self) -> None:
+        self.navigation_requested.emit("resources")
+        # The shell opens a modal planner and intentionally preserves this
+        # page's draft.  Its capacities may have changed while it was open.
+        self._commit_error = None
+        self._update_size_label()
 
     def _show_deployment_advanced(self) -> None:
         self.deployment_dialog.show()
@@ -981,11 +1085,11 @@ class MapPage(ProjectPage):
             lambda: self._add_deployment(table, default_values)
         )
         duplicate_button = QPushButton("复制一份")
-        duplicate_button.clicked.connect(table.duplicate_selected)
+        duplicate_button.clicked.connect(lambda: self._duplicate_deployment(table))
         copy_button = QPushButton("复制")
         copy_button.clicked.connect(table.copy_selected)
         paste_button = QPushButton("粘贴")
-        paste_button.clicked.connect(table.paste_row)
+        paste_button.clicked.connect(lambda: self._paste_deployment(table))
         remove_button = QPushButton("删除选中")
         remove_button.clicked.connect(table.remove_selected)
         up_button = QPushButton("上移")
@@ -1011,6 +1115,117 @@ class MapPage(ProjectPage):
         group_layout.addLayout(buttons)
         layout.addWidget(group, 1)
         return table
+
+    def _duplicate_deployment(self, table: ByteEntryTable) -> None:
+        if table.currentRow() < 0:
+            self.show_error(ValueError("请先选择要复制的记录。"))
+        elif not table.duplicate_selected():
+            self.show_error(ValueError(f"此列表最多允许 {table.max_rows} 条记录。"))
+
+    def _paste_deployment(self, table: ByteEntryTable) -> None:
+        if table.clipboard_row is None:
+            self.show_error(ValueError("请先在此列表复制一条记录。"))
+        elif not table.paste_row():
+            self.show_error(ValueError(f"此列表最多允许 {table.max_rows} 条记录。"))
+
+    def _object_table(self, side: str) -> ByteEntryTable:
+        return {"敌": self.enemy_table, "客": self.guest_table,
+                "我": self.player_table, "事": self.trigger_table,
+                "店": self.trigger_table}[side]
+
+    def _object_list_selected(self, item: QListWidgetItem | None, _previous=None) -> None:
+        if item is not None and not self._selecting_object:
+            self._select_object(*item.data(Qt.ItemDataRole.UserRole))
+
+    def _object_list_activated(self, item: QListWidgetItem) -> None:
+        self._activate_object(*item.data(Qt.ItemDataRole.UserRole))
+
+    def _table_selection_changed(self, side: str, row: int) -> None:
+        if self._loading_map or self._selecting_object or row < 0:
+            return
+        table = self._object_table(side)
+        if side == "事" and row < table.rowCount():
+            side = "店" if table.rows()[row][3] >= 0xF0 else "事"
+        self._select_object(side, row)
+
+    def _select_object(self, side: str, row: int) -> None:
+        table = self._object_table(side)
+        if self._selecting_object or not 0 <= row < table.rowCount():
+            return
+        self._selecting_object = True
+        try:
+            table.setCurrentCell(row, 0)
+            table.scrollTo(table.model().index(row, 0))
+            object_list = self.trigger_objects if side in ("事", "店") else self.deployment_objects
+            for index in range(object_list.count()):
+                item = object_list.item(index)
+                if tuple(item.data(Qt.ItemDataRole.UserRole)) == (side, row):
+                    object_list.setCurrentItem(item)
+                    object_list.scrollToItem(item)
+                    break
+            self.canvas.selected_overlay = (side, row)
+            x, y = table.rows()[row][:2]
+            self.map_scroll.ensureVisible(
+                x * self.canvas.cell_size + self.canvas.cell_size // 2,
+                y * self.canvas.cell_size + self.canvas.cell_size // 2,
+                self.canvas.cell_size, self.canvas.cell_size,
+            )
+            self.canvas.update()
+        finally:
+            self._selecting_object = False
+
+    def _activate_object(self, side: str, row: int) -> None:
+        if side in ("事", "店"):
+            self.editor_tabs.setCurrentIndex(2)
+            self._show_trigger_advanced()
+        else:
+            self.editor_tabs.setCurrentIndex(1)
+            self.deployment_tabs.setCurrentIndex({"敌": 0, "客": 1, "我": 2}[side])
+            self._show_deployment_advanced()
+        self._select_object(side, row)
+
+    def _refresh_object_lists(self) -> None:
+        descriptions: dict[tuple[str, int], str] = {}
+        selected = self.canvas.selected_overlay
+        for object_list in (self.deployment_objects, self.trigger_objects):
+            object_list.blockSignals(True)
+            object_list.clear()
+        for side, table in (("敌", self.enemy_table), ("客", self.guest_table),
+                            ("我", self.player_table), ("事", self.trigger_table)):
+            for row, values in enumerate(table.rows()):
+                x, y = values[:2]
+                kind = "店" if side == "事" and values[3] >= 0xF0 else side
+                if side in ("敌", "客"):
+                    name = self._unit_choice_label(values[2]).split(" · ")[0]
+                    pilot = self._character_choice_label(values[3]).split(" · ")[0]
+                    text = f"{kind}{row + 1:02d}  ({x:02d},{y:02d})  {name} / {pilot}  Lv.{values[4]}"
+                elif side == "我":
+                    text = f"我{row + 1:02d}  ({x:02d},{y:02d})  我方名单位 ${values[2]:02X}"
+                else:
+                    text = (f"{kind}{row + 1:02d}  ({x:02d},{y:02d})  "
+                            f"{self._trigger_event_label(values[3])} / {self._trigger_character_label(values[2])}")
+                descriptions[(kind, row)] = text
+                item = QListWidgetItem(text)
+                item.setToolTip(text + "\n单击联动定位；双击打开编辑。地图圆点可拖动。")
+                item.setData(Qt.ItemDataRole.UserRole, (kind, row))
+                object_list = self.trigger_objects if side == "事" else self.deployment_objects
+                object_list.addItem(item)
+                if selected == (kind, row):
+                    object_list.setCurrentItem(item)
+        for object_list in (self.deployment_objects, self.trigger_objects):
+            object_list.blockSignals(False)
+        self.canvas.overlay_descriptions = descriptions
+        if selected not in descriptions:
+            self.canvas.selected_overlay = None
+        self.deployment_summary.setText(
+            f"敌军 {self.enemy_table.rowCount()}/18 · 客军 {self.guest_table.rowCount()}/3 · "
+            f"我方出击位 {self.player_table.rowCount()}/11\n单击定位、双击编辑；圆点是阵营标记，不是猜测绑定的机体图像。"
+        )
+        count = self.trigger_table.rowCount()
+        self.trigger_summary.setText(
+            f"本关共 {count} 条地图触发记录。紫色=事件，绿色=商店；单击定位、双击编辑。"
+            if count else "本关ROM中没有地图事件或商店记录。可通过下方按钮添加，并在地图上拖动定位。"
+        )
 
     def _add_deployment(
         self,
@@ -1084,6 +1299,8 @@ class MapPage(ProjectPage):
 
     def refresh(self) -> None:
         previous = self.current_map_id
+        for table in (self.enemy_table, self.guest_table, self.player_table, self.trigger_table):
+            table._choice_labels.clear()
         self._refresh_icon_sheets()
         self.map_list.blockSignals(True)
         self.map_list.clear()
@@ -1102,7 +1319,9 @@ class MapPage(ProjectPage):
         self._filter_maps(self.search.text())
         if self.map_list.count():
             row = min(previous or 0, self.map_list.count() - 1)
+            self.map_list.blockSignals(True)
             self.map_list.setCurrentRow(row)
+            self.map_list.blockSignals(False)
             self._map_selected(self.map_list.currentItem(), None)
 
     def _filter_maps(self, text: str) -> None:
@@ -1147,6 +1366,23 @@ class MapPage(ProjectPage):
                 return
             committed_previous = True
         self.current_map_id = next_map_id
+        self._loading_map = True
+        try:
+            self._load_map_record()
+        finally:
+            self._loading_map = False
+        self.canvas.selected_overlay = None
+        self._update_overlays()
+        self._loaded_draft_signature = self._draft_signature()
+        self._commit_error = None
+        self._update_size_label()
+        if committed_previous:
+            self.project_changed.emit(
+                f"已更新地图 ${previous_map_id:02X}、部署与事件"
+            )
+
+    def _load_map_record(self) -> None:
+        assert self.project is not None and self.current_map_id is not None
         record = self.project.get_map(self.current_map_id)
         self.title_preview.setText("")
         self.title_preview.setPixmap(
@@ -1190,14 +1426,6 @@ class MapPage(ProjectPage):
         else:
             self.trigger_table.set_rows([])
             self.trigger_table.setEnabled(False)
-        self._update_overlays()
-        self._loaded_draft_signature = self._draft_signature()
-        self._commit_error = None
-        self._update_size_label()
-        if committed_previous:
-            self.project_changed.emit(
-                f"已更新地图 ${previous_map_id:02X}、部署与事件"
-            )
 
     def _bitmap_selector_changed(self, _index: int) -> None:
         key = self.bitmap_selector.currentData()
@@ -1283,7 +1511,7 @@ class MapPage(ProjectPage):
             preview.setPixmap(
                 QPixmap.fromImage(image).scaled(
                     384,
-                    48,
+                    24,
                     Qt.AspectRatioMode.IgnoreAspectRatio,
                     Qt.TransformationMode.FastTransformation,
                 )
@@ -1392,19 +1620,24 @@ class MapPage(ProjectPage):
         self._update_size_label()
 
     def _update_overlays(self) -> None:
+        if self._loading_map:
+            return
         overlays: list[tuple[str, int, int, str, int]] = []
         mode = self.editor_tabs.currentIndex()
-        if mode == 1:
+        show_all = self.show_all_objects.isChecked()
+        self.canvas.paint_enabled = mode == 0
+        if mode == 1 or show_all:
             for row, values in enumerate(self.enemy_table.rows()):
-                overlays.append(("敌", values[0], values[1], f"{values[2]:X}"[-1], row))
+                overlays.append(("敌", values[0], values[1], str(row + 1), row))
             for row, values in enumerate(self.guest_table.rows()):
-                overlays.append(("客", values[0], values[1], f"{values[2]:X}"[-1], row))
+                overlays.append(("客", values[0], values[1], str(row + 1), row))
             for row, values in enumerate(self.player_table.rows()):
-                overlays.append(("我", values[0], values[1], str(values[2] % 10), row))
-        elif mode == 2 and self.trigger_table.isEnabled():
+                overlays.append(("我", values[0], values[1], str(row + 1), row))
+        if (mode == 2 or show_all) and self.trigger_table.isEnabled():
             for row, values in enumerate(self.trigger_table.rows()):
                 side = "店" if values[3] >= 0xF0 else "事"
                 overlays.append((side, values[0], values[1], side, row))
+        self._refresh_object_lists()
         self.canvas.set_content(
             self.staged_width,
             self.staged_height,
@@ -1565,13 +1798,19 @@ class MapPage(ProjectPage):
         return self._commit_pending_changes(emit_signal=True)
 
     def _update_size_label(self) -> None:
+        if self._loading_map:
+            return
         if self.project is None or self.current_map_id is None:
             self.size_label.setText("—")
             self.pending_state.setText("选择地图后可编辑。")
             self.apply_button.setEnabled(False)
+            self.capacity_help_button.setEnabled(False)
             self._emit_draft_state_changed()
             return
         try:
+            self.capacity_help_button.setEnabled(
+                self.project.profile.key == "dc-kuorong-mmc3-v2"
+            )
             encoded = self.project.map_codec.encode(
                 self.staged_width,
                 self.staged_height,

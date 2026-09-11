@@ -20,7 +20,10 @@ from dc_modifier.map_page import (
 from fc_rom_editor_core import RomProject
 
 
-class LegacyMapUiTests(unittest.TestCase):
+from tests.qt_test_case import QtTestCase
+
+
+class LegacyMapUiTests(QtTestCase):
     @classmethod
     def setUpClass(cls) -> None:
         cls.application = QApplication.instance() or QApplication([])
@@ -51,14 +54,14 @@ class LegacyMapUiTests(unittest.TestCase):
         self.assertEqual(self.page.map_list.item(0).text(), "001：伏击之战")
         self.assertEqual(self.page.title_preview.text(), "")
         self.assertFalse(self.page.title_preview.pixmap().isNull())
-        self.assertFalse(self.page.search.isVisible())
+        self.assertTrue(self.page.search.isVisible())
         self.assertEqual(
             self.page.map_scroll.horizontalScrollBarPolicy(),
-            Qt.ScrollBarPolicy.ScrollBarAlwaysOff,
+            Qt.ScrollBarPolicy.ScrollBarAsNeeded,
         )
         self.assertEqual(
             self.page.map_scroll.verticalScrollBarPolicy(),
-            Qt.ScrollBarPolicy.ScrollBarAlwaysOff,
+            Qt.ScrollBarPolicy.ScrollBarAsNeeded,
         )
         self.assertLessEqual(
             self.page.canvas.width(), self.page.map_scroll.viewport().width()
@@ -73,13 +76,14 @@ class LegacyMapUiTests(unittest.TestCase):
 
     def test_map_title_renders_the_rom_glyph_instead_of_a_host_font(self) -> None:
         working = bytearray(0x70010 + 18)
-        working[0x70010] = 0x80
+        working[0x70010 : 0x70010 + 18] = bytes([0xFF] * 18)
+        working[0x70010] = 0x7F
         pixmap = render_map_title(SimpleNamespace(working=working), "啊", scale=2)
         image = pixmap.toImage()
         self.assertEqual(image.pixelColor(8, 0).name(), "#d8d8d8")
         self.assertEqual(image.pixelColor(10, 0).name(), "#000000")
 
-    def test_battlefield_matches_legacy_controls_and_hides_modern_status(self) -> None:
+    def test_battlefield_keeps_advanced_raw_data_separate_from_visible_save_status(self) -> None:
         self.assertEqual(self.page.bitmap_selector.currentText(), "位图D")
         self.assertEqual(self.page.tileset.currentData(), "D")
         self.assertEqual(len(self.page.terrain_buttons.buttons()), 16)
@@ -90,13 +94,11 @@ class LegacyMapUiTests(unittest.TestCase):
             self.page.height_editor,
             self.page.prelude,
             self.page.show_ids,
-            self.page.zoom,
-            self.page.fit_view,
-            self.page.size_label,
-            self.page.pending_state,
-            self.page.apply_button,
         ):
             self.assertFalse(advanced_control.isVisible())
+        for visible_control in (self.page.zoom, self.page.fit_view, self.page.size_label,
+                                self.page.pending_state, self.page.apply_button):
+            self.assertTrue(visible_control.isVisible())
         self.assertTrue(self.page.open_map_advanced_button.isVisible())
 
     def test_left_and_right_mouse_brushes_are_independent(self) -> None:
@@ -115,6 +117,7 @@ class LegacyMapUiTests(unittest.TestCase):
 
     def test_initial_configuration_defaults_to_real_icon_sheets(self) -> None:
         self.page.editor_tabs.setCurrentIndex(1)
+        self.page.icon_preview_toggle.setChecked(True)
         self.application.processEvents()
         self.assertEqual(
             [selector.currentData() for selector in self.page.icon_bank_selectors],

@@ -1475,6 +1475,22 @@ class RomProject:
         source = self.original if original else bytes(self.working)
         return self.chr_codec.decode_tile(tile_index, source)
 
+    def set_font_glyphs(self, glyphs: dict[bytes, bytes]) -> None:
+        """Replace verified fixed glyph slots atomically, never row padding."""
+        from fc_editor.codecs.dc_font import SUPPORTED_PROFILES, glyph_file_offset
+
+        if self.profile.key not in SUPPORTED_PROFILES:
+            raise ValueError("当前 ROM 的 12×12 字模写入布局尚未验证。")
+        patches: list[tuple[int, bytes]] = []
+        for token, raw in glyphs.items():
+            offset = glyph_file_offset(token, writable=True)
+            if len(raw) != 18 or offset + 18 > len(self.working):
+                raise ValueError("字模必须恰好为 18 字节且位于有效 ROM 内。")
+            patches.append((offset, bytes(raw)))
+        with self.transaction(f"替换 {len(patches)} 个 ROM 字模"):
+            for offset, raw in patches:
+                self.working[offset : offset + 18] = raw
+
     def set_chr_tile_pixels(
         self,
         tile_index: int,
@@ -2456,11 +2472,20 @@ class RomProject:
         return f"机体记录 {compact_ids(ids)}"
 
     def change_rows(self) -> list[tuple[int, int, int]]:
-        return [
-            (offset, old, new)
-            for offset, (old, new) in enumerate(zip(self.original, self.working))
-            if old != new
-        ]
+        rows: list[tuple[int, int, int]] = []
+        # Skip equal blocks with native comparison. A normal form edit changes
+        # only a few bytes in a 1.25 MiB ROM; Python need not visit every byte.
+        for start in range(0, len(self.original), 4096):
+            before = self.original[start : start + 4096]
+            after = self.working[start : start + 4096]
+            if before == after:
+                continue
+            rows.extend(
+                (start + index, old, new)
+                for index, (old, new) in enumerate(zip(before, after))
+                if old != new
+            )
+        return rows
 
     def change_ranges(self) -> tuple[tuple[int, int], ...]:
         rows = self.change_rows()

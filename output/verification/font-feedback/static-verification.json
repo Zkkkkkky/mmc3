@@ -1,0 +1,22 @@
+{
+  "source": "output\\rom\\DC_kuorong_464K.nes",
+  "source_sha256": "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E",
+  "derived": "output\\verification\\font-feedback\\font_probe_DAC2.nes",
+  "derived_sha256": "57B00EA03E065A50217EA81EC119AAE7008600D5D451B4A88C655B9E84100243",
+  "size": 1310736,
+  "token": "DAC2",
+  "glyph_file_offset": "0x76C34",
+  "before": "FFEECAEEEEEE77FF8FEEEDDB756707BBBDDE",
+  "after": "7FEECAEEEEEE77FF8FEEEDDB756707BBBDDE",
+  "changed_file_offsets": [
+    "0x76C34"
+  ],
+  "changed_bits": 1,
+  "header_unchanged": true,
+  "active_chr_unchanged": true,
+  "other_bytes_unchanged": true,
+  "source_unchanged": true,
+  "undo_redo_reopen_passed": true,
+  "runtime_validation": "Run the existing tests/emulator/dc_mesen_smoke.lua on the derived ROM.",
+  "scope": "Boot/audio smoke does not by itself prove the changed glyph was displayed by the game."
+}

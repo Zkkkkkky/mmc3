@@ -12,3 +12,6 @@ output/build/pyinstaller-work/
 .codex-remote-attachments/
 tmp/
 tools/vendor/fceux-2.6.6/fceux.cfg
+
+# Keep the user-provided comparison recording local.
+/录制_2026_09_10_18_51_54_457.mp4

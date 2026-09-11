@@ -18,7 +18,10 @@ ROOT = Path(__file__).resolve().parents[1]
 ROM_PATH = ROOT / "output" / "rom" / "DC_kuorong_464K.nes"
 
 
-class LegacyItemUiTests(unittest.TestCase):
+from tests.qt_test_case import QtTestCase
+
+
+class LegacyItemUiTests(QtTestCase):
     @classmethod
     def setUpClass(cls) -> None:
         cls.application = QApplication.instance() or QApplication([])

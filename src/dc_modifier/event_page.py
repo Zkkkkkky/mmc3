@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import (
+    QApplication,
     QCheckBox,
     QComboBox,
     QFormLayout,
@@ -16,6 +17,7 @@ from PySide6.QtWidgets import (
     QSplitter,
     QTableWidget,
     QTableWidgetItem,
+    QToolButton,
     QVBoxLayout,
     QWidget,
 )
@@ -42,8 +44,13 @@ EVENT_GROUPS = (
 
 
 TEMPLATES_BY_LENGTH = {
-    7: (("客军增援", 0x4A), ("敌军增援", 0x4B)),
-    5: (("我方出击/加入", 0x4C),),
+    7: (
+        ("客军增援", 0x4A),
+        ("敌军增援", 0x4B),
+        ("客军增援（扩展别名）", 0x75),
+        ("敌军增援（扩展别名）", 0x76),
+    ),
+    5: (("我方出击/加入", 0x4C), ("我方出击/加入（扩展别名）", 0x77)),
     4: (("替换人物与机体", 0x4D),),
     3: (("更换机体", 0x4E),),
     2: (("正式加入我方（说得/加入）", 0x69),),
@@ -108,12 +115,17 @@ class EventPage(ProjectPage):
         self.table.setSelectionBehavior(QTableWidget.SelectionBehavior.SelectRows)
         self.table.setSelectionMode(QTableWidget.SelectionMode.SingleSelection)
         self.table.setAlternatingRowColors(True)
+        self.table.setColumnHidden(0, True)
+        self.table.setColumnHidden(4, True)
         header = self.table.horizontalHeader()
-        header.setSectionResizeMode(0, QHeaderView.ResizeMode.ResizeToContents)
+        header.setSectionResizeMode(0, QHeaderView.ResizeMode.Interactive)
         header.setSectionResizeMode(1, QHeaderView.ResizeMode.Stretch)
-        header.setSectionResizeMode(2, QHeaderView.ResizeMode.ResizeToContents)
+        header.setSectionResizeMode(2, QHeaderView.ResizeMode.Interactive)
         header.setSectionResizeMode(3, QHeaderView.ResizeMode.Stretch)
-        header.setSectionResizeMode(4, QHeaderView.ResizeMode.ResizeToContents)
+        header.setSectionResizeMode(4, QHeaderView.ResizeMode.Interactive)
+        self.table.setColumnWidth(0, 76)
+        self.table.setColumnWidth(2, 170)
+        self.table.setColumnWidth(4, 190)
         splitter.addWidget(self.table)
 
         editor = QWidget()
@@ -153,7 +165,6 @@ class EventPage(ProjectPage):
             self.parameters.append(value)
         self.raw = QLineEdit()
         self.raw.setPlaceholderText("例如：4B 10 08 3D A8 20 03")
-        form.addRow("等长原始字节", self.raw)
         editor_layout.addWidget(details)
 
         buttons = QHBoxLayout()
@@ -161,7 +172,6 @@ class EventPage(ProjectPage):
         self.apply_raw_button = QPushButton("应用等长原始字节")
         self.reset_button = QPushButton("还原此指令")
         buttons.addWidget(self.apply_template_button)
-        buttons.addWidget(self.apply_raw_button)
         buttons.addWidget(self.reset_button)
         editor_layout.addLayout(buttons)
         hint = QLabel(
@@ -171,6 +181,27 @@ class EventPage(ProjectPage):
         hint.setObjectName("hintText")
         hint.setWordWrap(True)
         editor_layout.addWidget(hint)
+        self.advanced_toggle = QToolButton()
+        self.advanced_toggle.setText("显示原始字节与地址（高级）")
+        self.advanced_toggle.setCheckable(True)
+        self.advanced_toggle.setArrowType(Qt.ArrowType.RightArrow)
+        self.advanced_toggle.setToolButtonStyle(Qt.ToolButtonStyle.ToolButtonTextBesideIcon)
+        self.advanced_panel = QGroupBox("等长原始指令")
+        advanced_layout = QVBoxLayout(self.advanced_panel)
+        advanced_layout.addWidget(self.raw)
+        advanced_buttons = QHBoxLayout()
+        self.copy_button = QPushButton("复制当前指令")
+        self.paste_button = QPushButton("粘贴为等长草稿")
+        self.copy_button.clicked.connect(self.copy_instruction)
+        self.paste_button.clicked.connect(self.paste_instruction)
+        advanced_buttons.addWidget(self.copy_button)
+        advanced_buttons.addWidget(self.paste_button)
+        advanced_layout.addLayout(advanced_buttons)
+        advanced_layout.addWidget(self.apply_raw_button)
+        self.advanced_panel.hide()
+        self.advanced_toggle.toggled.connect(self._toggle_advanced)
+        editor_layout.addWidget(self.advanced_toggle)
+        editor_layout.addWidget(self.advanced_panel)
         safety = QLabel(
             "安全边界：原脚本区已接近 8 KiB 上限，本页不插入或删除字节。专家模式可修改其余触发器和动作，但新操作码也必须与原槽等长。"
         )
@@ -195,6 +226,59 @@ class EventPage(ProjectPage):
         self.apply_raw_button.clicked.connect(self._apply_raw)
         self.reset_button.clicked.connect(self._reset_instruction)
         self._filter_state = self._current_filter_state()
+
+    def _toggle_advanced(self, checked: bool) -> None:
+        self.advanced_panel.setVisible(checked)
+        self.table.setColumnHidden(0, not checked)
+        self.table.setColumnHidden(4, not checked)
+        self.advanced_toggle.setArrowType(
+            Qt.ArrowType.DownArrow if checked else Qt.ArrowType.RightArrow
+        )
+
+    def _template_replacement(self, instruction) -> bytes:
+        opcode = self.template.currentData()
+        raw_opcode = instruction.opcode if opcode is None else int(opcode)
+        if self.terminal.isChecked():
+            raw_opcode |= 0x80
+        count = (
+            len(instruction.parameters)
+            if opcode is None
+            else len(ACTION_FIELDS.get(opcode, ()))
+        )
+        return bytes((raw_opcode, *(spin.value() for spin in self.parameters[:count])))
+
+    def copy_instruction(self) -> None:
+        instruction = self._selected_instruction()
+        if instruction is None:
+            return
+        if self.pending_draft_error:
+            self.show_error(ValueError(self.pending_draft_error))
+            return
+        raw = (
+            self._parse_hex(self.raw.text())
+            if self._raw_draft_changed
+            else self._template_replacement(instruction)
+        )
+        QApplication.clipboard().setText(raw.hex(" ").upper())
+
+    def paste_instruction(self) -> None:
+        instruction = self._selected_instruction()
+        if instruction is None or self.project is None:
+            return
+        try:
+            if self.has_pending_draft:
+                raise ValueError("当前指令有未应用改动，请先应用或还原，再粘贴。")
+            raw = self._parse_hex(QApplication.clipboard().text())
+            if len(raw) != len(instruction.raw):
+                raise ValueError(f"目标指令为 {len(instruction.raw)} 字节，不能粘贴 {len(raw)} 字节。")
+            codec = self.project.chapter_event_codec
+            assert codec is not None
+            if codec.instruction_length(raw[0], raw, 0) != len(raw):
+                raise ValueError("粘贴内容必须恰好是一条等长指令，不能包含后续指令。")
+            self.raw.setText(raw.hex(" ").upper())
+            self.advanced_toggle.setChecked(True)
+        except Exception as error:
+            self.show_error(error)
 
     @staticmethod
     def _context_text(instruction) -> str:
@@ -343,6 +427,7 @@ class EventPage(ProjectPage):
         previous = self.current_address
         visible = tuple(self._visible_instructions())
         self.result_count.setText(f"{len(visible)} 条")
+        self.table.setUpdatesEnabled(False)
         self.table.blockSignals(True)
         self.table.setRowCount(len(visible))
         selected_row = -1
@@ -357,6 +442,7 @@ class EventPage(ProjectPage):
             if instruction.address == previous:
                 selected_row = row
         self.table.blockSignals(False)
+        self.table.setUpdatesEnabled(True)
         if selected_row < 0 and visible:
             selected_row = 0
         if selected_row >= 0:
@@ -429,7 +515,7 @@ class EventPage(ProjectPage):
             self.context_value.setText(self._context_text(instruction))
             templates = TEMPLATES_BY_LENGTH.get(len(instruction.raw), ())
             if not templates:
-                self.template.addItem("仅可使用原始字节编辑", None)
+                self.template.addItem("保持当前操作码 · 编辑参数字节", None)
             for label, opcode in templates:
                 self.template.addItem(label, opcode)
             current_index = self.template.findData(instruction.opcode)
@@ -454,6 +540,8 @@ class EventPage(ProjectPage):
             opcode = instruction.opcode
         labels = ACTION_FIELDS.get(opcode, ())
         values = instruction.parameters if instruction is not None else ()
+        if not labels and opcode is not None and instruction is not None:
+            labels = tuple(f"原始参数 {index + 1}（语义未验证）" for index in range(len(values)))
         for index, (label_widget, spin) in enumerate(
             zip(self.parameter_labels, self.parameters)
         ):
@@ -485,22 +573,7 @@ class EventPage(ProjectPage):
             self.apply_template_button.setEnabled(False)
             self.apply_raw_button.setEnabled(False)
             return
-        opcode = self.template.currentData()
-        labels = ACTION_FIELDS.get(opcode, ()) if opcode is not None else ()
-        if opcode is None:
-            # The terminal flag is independent from the low seven opcode bits.
-            # Even when an instruction has no verified semantic template, keep
-            # every byte losslessly and allow this single well-understood bit
-            # to be toggled.
-            raw_opcode = instruction.raw[0] & 0x7F
-            if self.terminal.isChecked():
-                raw_opcode |= 0x80
-            template_raw = bytes((raw_opcode,)) + instruction.raw[1:]
-        else:
-            raw_opcode = int(opcode) | (0x80 if self.terminal.isChecked() else 0)
-            template_raw = bytes(
-                (raw_opcode, *(spin.value() for spin in self.parameters[: len(labels)]))
-            )
+        template_raw = self._template_replacement(instruction)
         try:
             raw_editor = self._parse_hex(self.raw.text())
             raw_valid = len(raw_editor) == len(instruction.raw)
@@ -545,6 +618,21 @@ class EventPage(ProjectPage):
             return self.pending_state.text().lstrip("● ")
         if self._template_draft_changed and self._raw_draft_changed:
             return "模板参数和原始字节同时有改动，请先明确应用其中一种。"
+        instruction = self._selected_instruction()
+        if instruction is not None and self.project is not None:
+            raw = (
+                self._parse_hex(self.raw.text())
+                if self._raw_draft_changed
+                else self._template_replacement(instruction)
+            )
+            codec = self.project.chapter_event_codec
+            assert codec is not None
+            try:
+                length = codec.instruction_length(raw[0], raw, 0)
+                if length != len(instruction.raw):
+                    return f"新指令需要 {length} 字节，必须保持原槽 {len(instruction.raw)} 字节。"
+            except (ValueError, IndexError) as error:
+                return str(error)
         return None
 
     def commit_pending_changes(self) -> bool:
@@ -566,20 +654,9 @@ class EventPage(ProjectPage):
 
     def _apply_template(self) -> None:
         instruction = self._selected_instruction()
-        opcode = self.template.currentData()
         if instruction is None or self.project is None:
             return
-        if opcode is None:
-            raw_opcode = instruction.raw[0] & 0x7F
-            if self.terminal.isChecked():
-                raw_opcode |= 0x80
-            replacement = bytes((raw_opcode,)) + instruction.raw[1:]
-        else:
-            labels = ACTION_FIELDS.get(opcode, ())
-            raw_opcode = opcode | (0x80 if self.terminal.isChecked() else 0)
-            replacement = bytes(
-                (raw_opcode, *(spin.value() for spin in self.parameters[: len(labels)]))
-            )
+        replacement = self._template_replacement(instruction)
         try:
             self.project.set_chapter_event_instruction(instruction.address, replacement)
         except Exception as error:

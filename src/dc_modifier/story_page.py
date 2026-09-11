@@ -7,6 +7,7 @@ from pathlib import Path
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import (
     QComboBox,
+    QGroupBox,
     QFileDialog,
     QHBoxLayout,
     QHeaderView,
@@ -62,7 +63,7 @@ class StoryPage(ProjectPage):
         self.selector = QComboBox()
         self.selector.currentIndexChanged.connect(self._selector_changed)
         self.search = QLineEdit()
-        self.search.setPlaceholderText("搜索文本索引…")
+        self.search.setPlaceholderText("搜索中文正文或文本编号…")
         self.search.setClearButtonEnabled(True)
         self.search.textChanged.connect(self._filter_indices)
         search_row = QHBoxLayout()
@@ -111,8 +112,7 @@ class StoryPage(ProjectPage):
         table_row.addWidget(self.table_status, 1)
         table_row.addWidget(load_table_button)
         table_row.addWidget(export_template_button)
-        right_layout.addLayout(table_row)
-        editor_tabs = QTabWidget()
+        self.editor_tabs = QTabWidget()
         self.raw = QPlainTextEdit()
         self.raw.setPlaceholderText("十六进制Token数据")
         self.raw.setMaximumBlockCount(4096)
@@ -122,9 +122,9 @@ class StoryPage(ProjectPage):
             "内置码表会显示Unicode文字；未证实语义的控制参数显示为 ⟦原始字节 $XX⟧。"
         )
         self.decoded.textChanged.connect(self._decoded_changed)
-        editor_tabs.addTab(self.decoded, "Unicode文字")
-        editor_tabs.addTab(self.raw, "原始Token")
-        right_layout.addWidget(editor_tabs, 1)
+        self.editor_tabs.addTab(self.decoded, "文字编辑")
+        self.editor_tabs.addTab(self.raw, "原始Token（高级）")
+        right_layout.addWidget(self.editor_tabs, 3)
         self.length_label = QLabel("—")
         self.length_label.setObjectName("hintText")
         right_layout.addWidget(self.length_label)
@@ -138,8 +138,6 @@ class StoryPage(ProjectPage):
         self.apply_button.clicked.connect(self.apply_text)
         reset_button = QPushButton("还原此文本")
         reset_button.clicked.connect(self.reset_text)
-        buttons.addWidget(parse_button)
-        buttons.addWidget(encode_button)
         buttons.addWidget(self.apply_button)
         buttons.addWidget(reset_button)
         buttons.addStretch()
@@ -150,11 +148,41 @@ class StoryPage(ProjectPage):
         self.tokens.horizontalHeader().setSectionResizeMode(1, QHeaderView.ResizeMode.ResizeToContents)
         self.tokens.horizontalHeader().setSectionResizeMode(2, QHeaderView.ResizeMode.Stretch)
         self.tokens.setAlternatingRowColors(True)
-        right_layout.addWidget(QLabel("Token解析"))
-        right_layout.addWidget(self.tokens, 1)
+        self.advanced_toggle = QToolButton()
+        self.advanced_toggle.setText("显示码表与 Token 解析（高级）")
+        self.advanced_toggle.setCheckable(True)
+        self.advanced_toggle.setToolButtonStyle(Qt.ToolButtonStyle.ToolButtonTextBesideIcon)
+        self.advanced_toggle.setArrowType(Qt.ArrowType.RightArrow)
+        self.advanced_panel = QGroupBox("码表与 Token 解析")
+        advanced_layout = QVBoxLayout(self.advanced_panel)
+        advanced_layout.addLayout(table_row)
+        advanced_buttons = QHBoxLayout()
+        advanced_buttons.addWidget(parse_button)
+        advanced_buttons.addWidget(encode_button)
+        advanced_buttons.addStretch()
+        advanced_layout.addLayout(advanced_buttons)
+        advanced_layout.addWidget(self.tokens)
+        self.advanced_panel.hide()
+        self.advanced_toggle.toggled.connect(self._toggle_advanced)
+        right_layout.addWidget(self.advanced_toggle)
+        right_layout.addWidget(self.advanced_panel, 2)
         splitter.addWidget(right)
         splitter.setSizes([270, 850])
         outer.addWidget(splitter, 1)
+
+    def _toggle_advanced(self, checked: bool) -> None:
+        self.advanced_panel.setVisible(checked)
+        self.advanced_toggle.setArrowType(
+            Qt.ArrowType.DownArrow if checked else Qt.ArrowType.RightArrow
+        )
+        if checked:
+            self._render_tokens()
+
+    def focus_text_editor(self) -> None:
+        """Enter the ordinary text workflow without discarding an advanced draft."""
+
+        self.editor_tabs.setCurrentWidget(self.decoded)
+        self.decoded.setFocus()
 
     def refresh(self) -> None:
         previous_selector = self.current_selector
@@ -210,11 +238,12 @@ class StoryPage(ProjectPage):
             record = self.project.get_story_text(self.current_selector, index)
             suffix = f"{record.capacity} B" if record.capacity else "空/别名哨兵"
             preview = concise_dc_text(record.raw) if record.capacity else ""
-            preview_text = f" · {preview}" if preview else ""
-            item = QListWidgetItem(
-                f"${index:02X}  指针 ${pointer:04X}  ·  {suffix}{preview_text}"
-            )
+            item = QListWidgetItem(f"{index:03d} · {preview or '空文本 / 共享哨兵'}")
             item.setData(Qt.ItemDataRole.UserRole, index)
+            item.setToolTip(
+                f"编号 ${index:02X} · 指针 ${pointer:04X} · {suffix}\n"
+                + (self.text_table.decode(record.raw) if self.text_table else preview)
+            )
             self.indices.addItem(item)
         self.indices.blockSignals(False)
         self._filter_indices(self.search.text())
@@ -232,6 +261,7 @@ class StoryPage(ProjectPage):
             visible = not (
                 bool(query)
                 and query not in item.text().lower()
+                and query not in item.toolTip().lower()
                 and query not in (str(index), f"{index:02x}")
             )
             item.setHidden(not visible)
@@ -302,6 +332,7 @@ class StoryPage(ProjectPage):
             f"共享索引：{aliases}{binding}"
         )
         self.raw.setReadOnly(not bool(record.capacity))
+        self.decoded.setReadOnly(not bool(record.capacity))
         self._set_raw_editor(record.raw, dirty=False)
         self._render_tokens()
 

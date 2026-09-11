@@ -1,0 +1,6 @@
+CAPTURE frame=675 file=font-frame-0675.png pc=F875 glyph_reads=0
+CAPTURE frame=1000 file=font-frame-1000.png pc=F872 glyph_reads=0
+CAPTURE frame=2000 file=font-frame-2000.png pc=F874 glyph_reads=0
+CAPTURE frame=3000 file=font-frame-3000.png pc=F873 glyph_reads=0
+CAPTURE frame=5000 file=font-frame-5000.png pc=F875 glyph_reads=0
+RESULT frames=5000 glyph_reads=0 first_read=-1 last_read=-1 glyph_value=FFFFFFFFFFFFFFFF
