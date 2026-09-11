@@ -129,6 +129,31 @@ class CharacterAttributesCodec:
         return tuple(index for index in range(1, self.COUNT)
                      if self._offset(index, portrait=portrait) == offset)
 
+    def record_offset(
+        self,
+        character_id: int,
+        *,
+        portrait: bool = False,
+        original: bool = False,
+    ) -> int:
+        """Return the verified file offset backing one visible character record."""
+
+        return self._offset(character_id, portrait=portrait, original=original)
+
+    def record_bytes(
+        self,
+        character_id: int,
+        *,
+        portrait: bool = False,
+        original: bool = False,
+    ) -> bytes:
+        """Read the complete variable attribute record or fixed portrait record."""
+
+        source = self._source(original)
+        offset = self._offset(character_id, portrait=portrait, original=original)
+        size = 7 if portrait else 6 + (source[offset + 5] & 0xF8).bit_count()
+        return bytes(source[offset:offset + size])
+
     def read(self, character_id: int, *, original: bool = False) -> CharacterAttributes:
         source = self._source(original)
         offset = self._offset(character_id, original=original)

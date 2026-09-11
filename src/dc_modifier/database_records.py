@@ -134,6 +134,19 @@ class ReadableCharacterPage(CharacterPage):
         assert self.project is not None
         return f"{record_id:03d}  {self.project.character_display_name(record_id)}"
 
+    def preferred_record_id(self) -> int | None:
+        if self.project is None:
+            return None
+        codec = CharacterAttributesCodec(self.project)
+        return next(
+            (
+                character_id
+                for character_id in self.record_ids()
+                if any(codec.record_bytes(character_id))
+            ),
+            None,
+        )
+
     def refresh(self) -> None:
         super().refresh()
         readable_references(self.name_reference)
@@ -224,6 +237,11 @@ class ReadableWeaponPage(WeaponPage):
         self.capability_status.setObjectName("hintText")
         self.capability_status.setWordWrap(True)
         detail.insertWidget(1, self.capability_status)
+        self.rom_summary = QLabel("请选择武器以读取完整原始记录。")
+        self.rom_summary.setObjectName("hintText")
+        self.rom_summary.setWordWrap(True)
+        self.rom_summary.setTextInteractionFlags(Qt.TextInteractionFlag.TextSelectableByMouse)
+        detail.insertWidget(2, self.rom_summary)
         attributes = next(group for group in self.findChildren(QGroupBox) if group.title() == "战斗参数")
         grid = attributes.layout()
         if isinstance(grid, QGridLayout):
@@ -304,11 +322,21 @@ class ReadableWeaponPage(WeaponPage):
                 self.distance_correction.setValue(distance)
                 self._extras_enabled = True
                 self.extra_status.setText("距离补正引用“其他修改1”的第 0—3 号命中表；特技名称与旧修改器一致。")
+                raw = self.project.weapon_record_bytes(record_id)
+                name_raw = self.project.weapon_name_record_bytes(record_id)
+                self.rom_summary.setText(
+                    f"ROM属性 0x{self.project.weapon_codec.record_offset(record_id):06X}："
+                    f"{raw.hex(' ').upper()}；名称Token：{name_raw.hex(' ').upper()}。"
+                    "这里显示的是实际读取值，00 代表ROM原值为零。"
+                )
+            else:
+                self.rom_summary.setText("请选择武器以读取完整原始记录。")
             self.weapon_skill.setEnabled(self._extras_enabled)
             self.distance_correction.setEnabled(self._extras_enabled)
             self.weapon_animation.set_record(self.project, record_id)
         except ValueError as error:
             self.extra_status.setText(str(error))
+            self.rom_summary.setText(f"原始记录读取失败：{error}")
             self.weapon_animation.setEnabled(False)
         finally:
             self._loading_details = False

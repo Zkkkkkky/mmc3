@@ -335,6 +335,7 @@ class MainWindow(QMainWindow):
         self.exit_action = self._action("退出(&X)", self.close, "Ctrl+X")
 
         self.database_action = self._action("数据库(&D)", self.open_database, "Ctrl+D")
+        self.rom_data_action = self._action("完整ROM数据读取", self.open_rom_data_browser)
         self.font_library_action = self._action("文字库(&W)", self.open_font_library, "Ctrl+W")
         self.map_animation_action = self._action("地图动画(&M)", self.open_map_animation, "Ctrl+M")
         self.text_converter_action = self._action("文字转换(&Z)", self.open_text_converter, "Ctrl+Z")
@@ -381,6 +382,7 @@ class MainWindow(QMainWindow):
 
         self.data_menu = self.menuBar().addMenu("数据(&A)")
         self.data_menu.addAction(self.database_action)
+        self.data_menu.addAction(self.rom_data_action)
         self.data_menu.addAction(self.font_library_action)
         self.data_menu.addSeparator()
         self.data_menu.addAction(self.map_animation_action)
@@ -445,6 +447,13 @@ class MainWindow(QMainWindow):
         from .legacy_windows import DatabaseDialog
 
         self._run_project_dialog(DatabaseDialog(self.project, self), "数据库修改已确认")
+
+    def open_rom_data_browser(self) -> None:
+        if self.project is None:
+            return
+        from .rom_data_browser import RomDataBrowserDialog
+
+        self._run_tool_dialog(RomDataBrowserDialog(self.project, self))
 
     def open_scenario(self) -> None:
         if self.project is None:

@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from PySide6.QtCore import Signal
+from PySide6.QtCore import Qt, Signal
 from PySide6.QtGui import QImage, QPixmap
 from PySide6.QtWidgets import (
     QCheckBox, QFileDialog, QFormLayout, QGridLayout, QGroupBox, QHBoxLayout,
@@ -30,6 +30,11 @@ class CharacterDetailsWidget(QWidget):
         self.status = QLabel()
         self.status.setWordWrap(True)
         outer.addWidget(self.status)
+        self.raw_details = QLabel()
+        self.raw_details.setObjectName("hintText")
+        self.raw_details.setWordWrap(True)
+        self.raw_details.setTextInteractionFlags(Qt.TextInteractionFlag.TextSelectableByMouse)
+        outer.addWidget(self.raw_details)
         tabs = QTabWidget()
         outer.addWidget(tabs)
         attributes_page = QWidget()
@@ -163,6 +168,7 @@ class CharacterDetailsWidget(QWidget):
         self._baseline = None
         self._image_drafts.clear()
         if project is None or character_id is None:
+            self.raw_details.clear()
             self.setEnabled(False)
             return
         self._loading = True
@@ -170,6 +176,14 @@ class CharacterDetailsWidget(QWidget):
             codec = CharacterAttributesCodec(project)
             record = codec.read(character_id)
             portrait = codec.read_portrait(character_id)
+            attribute_raw = codec.record_bytes(character_id)
+            portrait_raw = codec.record_bytes(character_id, portrait=True)
+            self.raw_details.setText(
+                f"属性记录 0x{codec.record_offset(character_id):06X}（{len(attribute_raw)}字节）："
+                f"{attribute_raw.hex(' ').upper()}；头像记录 "
+                f"0x{codec.record_offset(character_id, portrait=True):06X}："
+                f"{portrait_raw.hex(' ').upper()}。00 是ROM中的真实零值。"
+            )
             values = dict(zip(("movement", "strength", "defense", "speed", "hp"), record.corrections))
             values.update(spirit=record.spirit, growth=record.growth)
             values["movement"] &= 127
@@ -197,6 +211,7 @@ class CharacterDetailsWidget(QWidget):
             self._render_previews()
         except (ValueError, IndexError) as error:
             self.status.setText(str(error))
+            self.raw_details.setText(f"原始记录读取失败：{error}")
             self.setEnabled(False)
         finally:
             self._loading = False

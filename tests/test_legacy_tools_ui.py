@@ -164,9 +164,15 @@ class LegacyToolDialogTests(QtTestCase):
         dialog = AttributeCalculatorDialog(project=self.project)
         self.assertEqual(dialog.enemy.unit.count(), self.project.unit_count - 1)
         self.assertEqual(dialog.enemy.weapon.count(), self.project.weapon_count)
-        unit = self.project.unit_codec.decode_record(1, bytes(self.project.working))
+        self.assertEqual(dialog.enemy.unit.currentData(), 2)
+        self.assertEqual(dialog.enemy.character.currentData(), 4)
+        self.assertEqual(dialog.enemy.weapon.currentData(), 1)
+        unit = self.project.unit_codec.decode_record(
+            int(dialog.enemy.unit.currentData()), bytes(self.project.working)
+        )
         self.assertEqual(dialog.enemy.strength.value(), unit.get("strength"))
         self.assertEqual(dialog.enemy.hp.value(), unit.get("hp"))
+        self.assertIn("人物属性", dialog.enemy.character_summary.text())
         dialog.close()
 
     def test_save_editor_reads_file_but_never_enables_unverified_writes(self) -> None:

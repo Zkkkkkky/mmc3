@@ -275,6 +275,11 @@ class SearchableRecordPage(ProjectPage):
     def record_ids(self) -> range:
         return range(0)
 
+    def preferred_record_id(self) -> int | None:
+        """Choose a useful initial row while preserving an existing selection."""
+
+        return None
+
     def populate_records(self) -> None:
         previous = self.current_id
         blocked = self.records.blockSignals(True)
@@ -300,9 +305,10 @@ class SearchableRecordPage(ProjectPage):
             self._filter_records(self.search.text())
             if self.records.count():
                 row = 0
-                if previous is not None:
+                target_id = previous if previous is not None else self.preferred_record_id()
+                if target_id is not None:
                     for index in range(self.records.count()):
-                        if self.records.item(index).data(Qt.ItemDataRole.UserRole) == previous:
+                        if self.records.item(index).data(Qt.ItemDataRole.UserRole) == target_id:
                             row = index
                             break
                 self.records.setCurrentRow(row)

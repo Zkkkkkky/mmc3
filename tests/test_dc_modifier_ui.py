@@ -219,6 +219,7 @@ class DesktopEditorSmokeTests(QtTestCase):
             [action.text() for action in data_actions],
             [
                 "数据库(&D)",
+                "完整ROM数据读取",
                 "文字库(&W)",
                 "地图动画(&M)",
                 "文字转换(&Z)",
@@ -232,7 +233,7 @@ class DesktopEditorSmokeTests(QtTestCase):
         )
         self.assertEqual(
             [action.shortcut().toString() for action in data_actions],
-            ["Ctrl+D", "Ctrl+W", "Ctrl+M", "Ctrl+Z", "Ctrl+J", "Ctrl+F", "Ctrl+L", "", "", "Ctrl+T"],
+            ["Ctrl+D", "", "Ctrl+W", "Ctrl+M", "Ctrl+Z", "Ctrl+J", "Ctrl+F", "Ctrl+L", "", "", "Ctrl+T"],
         )
         project_actions = [
             action for action in self.window.project_menu.actions() if not action.isSeparator()

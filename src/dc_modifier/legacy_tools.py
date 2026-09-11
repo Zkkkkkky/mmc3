@@ -35,6 +35,11 @@ from PySide6.QtWidgets import (
 from fc_editor.dc_text import default_dc_text_table
 from fc_editor.text_table import TextTable
 from fc_editor.codecs.dc_font import decode_glyph
+from fc_editor.codecs.character_attributes import (
+    CharacterAttributesCodec,
+    SPIRIT_NAMES,
+    weapon_extra_values,
+)
 from .font_edit import FontEditingMixin
 
 
@@ -407,6 +412,12 @@ class _BattleSide(QWidget):
         self.power_sea = self._spin(0, 999)
         self.multiplier_numerator = self._spin(1, 99)
         self.multiplier_denominator = self._spin(1, 99)
+        self.character_summary = QLabel("人物属性：尚未读取")
+        self.character_summary.setWordWrap(True)
+        self.character_summary.setTextInteractionFlags(Qt.TextInteractionFlag.TextSelectableByMouse)
+        self.weapon_summary = QLabel("武器属性：未选择武器")
+        self.weapon_summary.setWordWrap(True)
+        self.weapon_summary.setTextInteractionFlags(Qt.TextInteractionFlag.TextSelectableByMouse)
 
         controls = (
             ("人物:", self.character, "强度:", self.strength, "伤害倍数:", self._multiplier_widget()),
@@ -424,9 +435,14 @@ class _BattleSide(QWidget):
                     grid.addWidget(QLabel(label), row, pair * 2)
                     grid.addWidget(widget, row, pair * 2 + 1)
 
+        grid.addWidget(self.character_summary, 4, 0, 3, 4)
+        grid.addWidget(self.weapon_summary, 7, 0, 1, 6)
+
         self._populate_records()
+        self.character.currentIndexChanged.connect(self._load_character)
         self.unit.currentIndexChanged.connect(self._load_unit)
         self.weapon.currentIndexChanged.connect(self._load_weapon)
+        self._load_character()
         self._load_unit()
         self._load_weapon()
 
@@ -461,6 +477,29 @@ class _BattleSide(QWidget):
         self.weapon.addItem("无", 0)
         for record_id in range(1, self.project.weapon_count):
             self.weapon.addItem(f"{record_id:03d}：{self.project.weapon_display_name(record_id)}", record_id)
+        self.character.setCurrentIndex(max(0, self.character.findData(4)))
+        self.unit.setCurrentIndex(max(0, self.unit.findData(2)))
+        self.weapon.setCurrentIndex(max(0, self.weapon.findData(1)))
+
+    def _load_character(self, _index: int | None = None) -> None:
+        if self.project is None or self.character.currentData() is None:
+            self.character_summary.setText("人物属性：尚未读取")
+            return
+        character_id = int(self.character.currentData())
+        codec = CharacterAttributesCodec(self.project)
+        record = codec.read(character_id)
+        spirits = tuple(
+            name
+            for index, name in enumerate(SPIRIT_NAMES)
+            if record.spirit_mask & (1 << (23 - index))
+        )
+        raw = codec.record_bytes(character_id)
+        self.character_summary.setText(
+            f"人物属性 0x{codec.record_offset(character_id):06X}：{raw.hex(' ').upper()}\n"
+            f"精神 {record.spirit} · 成长 {record.growth} · "
+            f"补正 机/强/防/速/HP {'/'.join(str(value) for value in record.corrections)} · "
+            f"精神列表 {'、'.join(spirits) if spirits else '无'}"
+        )
 
     def _load_unit(self, _index: int | None = None) -> None:
         if self.project is None or self.unit.currentData() is None:
@@ -472,6 +511,7 @@ class _BattleSide(QWidget):
         self.defense.setValue(record.get("defense"))
         self.speed.setValue(record.get("speed"))
         self.hp.setValue(record.get("hp"))
+        self.skill.setValue(record.get("special"))
 
     def _load_weapon(self, _index: int | None = None) -> None:
         weapon_id = int(self.weapon.currentData() or 0)
@@ -484,13 +524,29 @@ class _BattleSide(QWidget):
                 self.power_sea,
             ):
                 spin.setValue(0)
+            self.skill.setValue(
+                self.project.get_value(int(self.unit.currentData()), "special")
+                if self.project is not None and self.unit.currentData() is not None
+                else 0
+            )
+            self.weapon_summary.setText("武器属性：未选择武器")
             return
         record = self.project.weapon_codec.decode_record(weapon_id, bytes(self.project.working))
+        weapon_skill, distance = weapon_extra_values(self.project, weapon_id)
         self.weapon_hit.setValue(record.get("hit"))
         self.weapon_range.setValue(record.get("max_range"))
         self.power_air.setValue(record.get("power_air"))
         self.power_land.setValue(record.get("power_land"))
         self.power_sea.setValue(record.get("power_sea"))
+        self.weapon_summary.setText(
+            f"武器属性 0x{self.project.weapon_codec.record_offset(weapon_id):06X}："
+            f"{self.project.weapon_record_bytes(weapon_id).hex(' ').upper()} · "
+            f"武器特技 {weapon_skill} · 距离补正表 {distance}"
+        )
+        self.skill.setToolTip(
+            f"当前机体特技为 {self.project.get_value(int(self.unit.currentData()), 'special')}；"
+            f"所选武器特技为 {weapon_skill}。"
+        )
 
 
 class AttributeCalculatorDialog(QDialog):

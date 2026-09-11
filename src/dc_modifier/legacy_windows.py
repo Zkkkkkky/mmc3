@@ -316,6 +316,19 @@ class _LegacyUnitController(UnitPage):
 
     record_loaded = Signal()
 
+    def preferred_record_id(self) -> int | None:
+        if self.project is None:
+            return None
+        return next(
+            (
+                unit_id
+                for unit_id in self.record_ids()
+                if any(self.project.record_bytes(unit_id)[3:])
+                and any(read_unit_appearance(self.project, unit_id).secondary_banks)
+            ),
+            None,
+        )
+
     def record_text(self, record_id: int) -> str:
         assert self.project is not None
         return (
@@ -540,6 +553,17 @@ class LegacyUnitDatabasePage(ProjectPage):
         self.record_meta = self.controller.record_meta
         self.record_meta.setWordWrap(True)
         basic_form.addRow("记录位置", self.record_meta)
+        self.raw_unit_record = QLineEdit()
+        self.raw_unit_record.setReadOnly(True)
+        self.raw_unit_record.setToolTip("当前属性指针实际指向的完整16字节；零值也是ROM中的真实内容。")
+        basic_form.addRow("完整16字节", self.raw_unit_record)
+        self.raw_type_flags = QLineEdit()
+        self.raw_type_flags.setReadOnly(True)
+        basic_form.addRow("类型/标志原码", self.raw_type_flags)
+        self.raw_graphics_index = QLineEdit()
+        self.raw_graphics_index.setReadOnly(True)
+        self.raw_graphics_index.setToolTip("属性记录 +2 的候选地图图形字节；具体绑定仍待验证。")
+        basic_form.addRow("候选地图图形", self.raw_graphics_index)
         row.addWidget(basic, 0, 0)
 
         attributes = QGroupBox("机体属性")
@@ -711,8 +735,21 @@ class LegacyUnitDatabasePage(ProjectPage):
         if self.project is None or self.current_id is None:
             self.body_preview.setText("请选择机体")
             self.fragment_preview.setText("请选择机体")
+            self.raw_unit_record.clear()
+            self.raw_type_flags.clear()
+            self.raw_graphics_index.clear()
             return
         unit_id = self.current_id
+        raw = self.project.record_bytes(unit_id)
+        self.raw_unit_record.setText(raw.hex(" ").upper())
+        self.raw_type_flags.setText(
+            f"${raw[0]:02X} · 地形低2位 {raw[0] & 3} · 其余标志 ${raw[0] & 0xFC:02X}"
+        )
+        self.raw_graphics_index.setText(f"${raw[2]:02X}")
+        self.transform.blockSignals(True)
+        self.transform.clear()
+        self.transform.addItem(f"保留原始高位 ${raw[0] & 0xFC:02X}（关系未解码）")
+        self.transform.blockSignals(False)
         try:
             appearance = read_unit_appearance(self.project, unit_id)
             self.graphics_status.setText(
