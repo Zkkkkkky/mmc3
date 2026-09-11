@@ -1597,8 +1597,7 @@ class RomProject:
     def get_value(self, unit_id: int, field_key: str, *, original: bool = False) -> int:
         field = self.unit_field(field_key)
         record = self.record_bytes(unit_id, original=original)
-        value = record[field.record_offset : field.record_offset + field.width]
-        return int.from_bytes(value, "little")
+        return field.decode(record)
 
     def set_value(self, unit_id: int, field_key: str, value: int) -> None:
         field = self.unit_field(field_key)
@@ -1608,7 +1607,11 @@ class RomProject:
             )
         before = self._mutation_snapshot()
         offset = self.record_file_offset(unit_id) + field.record_offset
-        self.working[offset : offset + field.width] = value.to_bytes(field.width, "little")
+        record = self.record_bytes(unit_id)
+        encoded = field.encode_into(record, value)
+        self.working[offset : offset + field.width] = encoded[
+            field.record_offset : field.record_offset + field.width
+        ]
         self._finish_mutation(before, f"机体 {unit_id:02X} · {field.label}")
 
     def set_record_hex(self, unit_id: int, text: str) -> None:
@@ -2837,6 +2840,14 @@ class RomProject:
             unit_id = ids[0]
             record_offset = self.record_file_offset_from_pointer(pointer)
             for field in FIELDS:
+                if field.mask is not None:
+                    before_record = self.record_bytes(unit_id, original=True)
+                    after_record = self.record_bytes(unit_id)
+                    if ((before_record[field.record_offset] ^ after_record[field.record_offset])
+                            & ~field.mask):
+                        # Preserve simultaneous raw edits to the other bits.
+                        # The generic raw patch below owns the whole byte.
+                        continue
                 original_value = self.get_value(unit_id, field.key, original=True)
                 current_value = self.get_value(unit_id, field.key)
                 if original_value == current_value:
@@ -2862,6 +2873,14 @@ class RomProject:
             seen_weapon_pointers.add(pointer)
             record_offset = self.weapon_record_file_offset(weapon_id)
             for field in WEAPON_FIELDS:
+                if field.mask is not None:
+                    before_record = self.weapon_record_bytes(weapon_id, original=True)
+                    after_record = self.weapon_record_bytes(weapon_id)
+                    if ((before_record[field.record_offset] ^ after_record[field.record_offset])
+                            & ~field.mask):
+                        # Range and skill share a byte. Preserve both with
+                        # a raw patch when bits outside this field also change.
+                        continue
                 original_value = self.get_weapon_value(
                     weapon_id, field.key, original=True
                 )

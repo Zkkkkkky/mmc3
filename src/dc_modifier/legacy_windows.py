@@ -49,6 +49,8 @@ from .pages import CharacterPage, ProjectPage, UnitPage, WeaponPage
 from .persuasion_page import PersuasionPage
 from .story_page import StoryPage
 from .unit_packages import affected_unit_ids, apply_unit_package, package_from_project
+from .unit_appearance_dialog import UnitAppearanceDialog
+from .legacy_text_pages import LegacyGrowthPage, LegacyShopPage, LegacyTextPage, LegacyScenarioEventsPage
 from .workspace import default_export_path, writable_output_path
 
 
@@ -124,20 +126,29 @@ class TransactionalProjectDialog(QDialog):
         """Reject two local drafts that target the same underlying resource."""
 
         source_key = getattr(source, "pending_draft_key", None)
-        if source_key is None:
+        source_keys = set(getattr(source, "pending_draft_keys", ()))
+        if source_key is not None:
+            source_keys.add(source_key)
+        if not source_keys:
             return None
         for sibling in self.pages:
             if sibling is source:
                 continue
-            if getattr(sibling, "pending_draft_key", None) == source_key:
-                if source_key[0] == "chapter_event":
+            sibling_keys = set(getattr(sibling, "pending_draft_keys", ()))
+            sibling_key = getattr(sibling, "pending_draft_key", None)
+            if sibling_key is not None:
+                sibling_keys.add(sibling_key)
+            common = source_keys & sibling_keys
+            if common:
+                conflict_key = next(iter(common))
+                if conflict_key[0] == "chapter_event":
                     return (
-                        f"同一事件指令 ${source_key[1]:04X} 同时存在于多个"
+                        f"同一事件指令 ${conflict_key[1]:04X} 同时存在于多个"
                         "编辑页的未提交草稿中。请先保留其中一份并还原"
                         "另一份，再重试。"
                     )
                 return (
-                    "同一剧情文本同时存在于多个编辑页的未提交草稿中。"
+                    "同一ROM记录同时存在于多个编辑页的未提交草稿中。"
                     "请先保留其中一份并还原另一份，再重试。"
                 )
         return None
@@ -147,6 +158,9 @@ class TransactionalProjectDialog(QDialog):
         self._snapshot = None
         self._session_active = False
         for page in self.pages:
+            discard = getattr(page, "discard_pending_changes", None)
+            if callable(discard):
+                discard()
             page.set_project(project)
         if self.isVisible():
             self._begin_session()
@@ -228,6 +242,10 @@ class TransactionalProjectDialog(QDialog):
             self.project._refresh_dynamic_codecs()
         self._snapshot = None
         self._session_active = False
+        for page in self.pages:
+            discard = getattr(page, "discard_pending_changes", None)
+            if callable(discard):
+                discard()
         self._refresh_pages()
         if restored:
             title = self.windowTitle() or self._dialog_title
@@ -253,6 +271,15 @@ class _LegacyEventController(EventPage):
         if not self.has_pending_draft or self.current_address is None:
             return None
         return self.transaction_sync_group, self.current_address
+
+    @property
+    def pending_draft_keys(self) -> frozenset[tuple[str, int]]:
+        instruction = self._selected_instruction()
+        if not self.has_pending_draft or instruction is None:
+            return frozenset()
+        # The chapter setup pages also expose Bank $1B scripts, but identify
+        # their drafts by file offset because other phases use different banks.
+        return frozenset({("rom_offset", instruction.file_offset)})
 
     def set_transaction_conflict_checker(
         self,
@@ -419,7 +446,7 @@ class LegacyUnitDatabasePage(ProjectPage):
         return button
 
     def _build_graphics_group(self) -> QGroupBox:
-        group = QGroupBox("战斗图库 · ROM 实际资源（只读）")
+        group = QGroupBox("机体图片与碎片图库")
         grid = QGridLayout(group)
         self.graphics_status = QLabel("请选择机体。")
         self.graphics_status.setWordWrap(True)
@@ -438,8 +465,8 @@ class LegacyUnitDatabasePage(ProjectPage):
         self.fragment_preview.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.fragment_preview.setMinimumSize(260, 160)
         self.fragment_preview.setStyleSheet(self.body_preview.styleSheet())
-        grid.addWidget(QLabel("图库 A · 2 KiB 原始图块"), 1, 0)
-        grid.addWidget(QLabel("图库 B · 原始图块"), 1, 1)
+        grid.addWidget(QLabel("机体图库 · 原始图块"), 1, 0)
+        grid.addWidget(QLabel("碎片图库 · 2 KiB 原始图块"), 1, 1)
         grid.addWidget(self.body_preview, 2, 0)
         grid.addWidget(self.fragment_preview, 2, 1)
         self.body_palette_caption = QLabel("记录配色1：—")
@@ -470,7 +497,7 @@ class LegacyUnitDatabasePage(ProjectPage):
         self.icon_address.setReadOnly(True)
         details_layout.addWidget(self.icon_address)
         unsupported = QLabel(
-            "未接通：合成效果图、拼图编辑、图片上传/清除、图标绑定、配色与图库地址写入。"
+            "未接通：合成效果图、拼图编辑、图片上传/清除、图标绑定。"
             "此处展示实际资源和脚本，不表示已兼容旧版五张 BMP 导出。"
         )
         unsupported.setWordWrap(True)
@@ -480,6 +507,9 @@ class LegacyUnitDatabasePage(ProjectPage):
             actions.addWidget(self._disabled_button(caption, "完整图像写入关系尚未验证。"))
         details_layout.addLayout(actions)
         grid.addWidget(collapsible_details("图像技术详情与尚未接通的功能", details), 4, 0, 1, 2)
+        self.edit_appearance_button = QPushButton("修改配色与图库…")
+        self.edit_appearance_button.clicked.connect(self._edit_appearance)
+        grid.addWidget(self.edit_appearance_button, 5, 0, 1, 2)
         grid.setColumnStretch(0, 1)
         grid.setColumnStretch(1, 1)
         return group
@@ -494,9 +524,13 @@ class LegacyUnitDatabasePage(ProjectPage):
         basic_form = QFormLayout(basic)
         basic_form.addRow("机体名称", self.name_reference)
         self.terrain = QComboBox()
-        self.terrain.addItem("字段关系待验证")
-        self.terrain.setEnabled(False)
-        self.terrain.setToolTip("适应地形字段尚未完成差分验证。")
+        for value, label in enumerate(("空", "陆", "海", "保留原码 3")):
+            self.terrain.addItem(label, value)
+        self.terrain.currentIndexChanged.connect(
+            lambda index: self.fields["terrain"].setValue(index) if index >= 0 else None
+        )
+        self.fields["terrain"].valueChanged.connect(self.terrain.setCurrentIndex)
+        self.terrain.setToolTip("仅修改机体类型的低两位，变形和其他标志保持原值。")
         basic_form.addRow("适应地形", self.terrain)
         self.transform = QComboBox()
         self.transform.addItem("字段关系待验证")
@@ -512,14 +546,16 @@ class LegacyUnitDatabasePage(ProjectPage):
         self.attributes_group = attributes
         attribute_grid = QGridLayout(attributes)
         logical_rows: tuple[tuple[str | None, str | None, str | None], ...] = (
-            ("movement", "upgrade", "strength_growth"),
-            ("strength", None, "defense_growth"),
-            ("defense", None, "speed_growth"),
+            ("movement", "experience", "strength_growth"),
+            ("strength", "upgrade", "defense_growth"),
+            ("defense", "special", "speed_growth"),
             ("speed", "hp", "hp_growth"),
         )
         labels = {
             "movement": "机动",
-            "upgrade": "升级还需",
+            "upgrade": "基础金钱",
+            "experience": "基础经验",
+            "special": "特殊技能",
             "strength_growth": "强度成长",
             "strength": "强度",
             "defense_growth": "防御成长",
@@ -654,6 +690,18 @@ class LegacyUnitDatabasePage(ProjectPage):
         offset = self.project.chr_codec.offset + bank * 0x400
         self.icon_address.setText(f"图库 ${bank:02X} · 文件 0x{offset:06X} · 尚未绑定机体ID")
 
+    def _edit_appearance(self) -> None:
+        if self.project is None or self.current_id is None:
+            return
+        try:
+            dialog = UnitAppearanceDialog(self.project, self.current_id, self)
+            if dialog.exec() == QDialog.DialogCode.Accepted and dialog.changed:
+                # Refresh graphics only: an uncommitted attribute form belongs
+                # to the outer page and must not be discarded by this action.
+                self._refresh_visuals()
+        except (ValueError, IndexError) as error:
+            self.show_error(error)
+
     def _refresh_visuals(self) -> None:
         self._refresh_icon_bank()
         self.record_count.setText(
@@ -670,11 +718,12 @@ class LegacyUnitDatabasePage(ProjectPage):
             self.graphics_status.setText(
                 f"已读取当前机体外观：主体脚本 {len(appearance.body_script)} 字节，"
                 f"碎片脚本 {len(appearance.fragment_script)} 字节。"
-                "图库采用灰阶查看像素；主体/碎片对应关系、合成姿势和图像写入尚未接通。"
+                "已按机体/碎片各自配色显示，可修改配色与图库；"
+                "主体合成预览已接通，碎片拼图和图片上传尚未接通。"
             )
             self.appearance_details.setPlainText(
                 f"外观记录文件位置：0x{appearance.file_offset:06X}\n"
-                f"10字节记录：{appearance.configuration.hex(' ').upper()}\n"
+                f"归一化外观记录：{appearance.configuration.hex(' ').upper()}\n"
                 f"主体拼图：{appearance.body_script.hex(' ').upper()}\n"
                 f"碎片拼图：{appearance.fragment_script.hex(' ').upper()}"
             )
@@ -688,9 +737,10 @@ class LegacyUnitDatabasePage(ProjectPage):
                 ))
             for label, banks, palette in (
                 (self.body_preview,
+                 appearance.secondary_banks, appearance.first_palette),
+                (self.fragment_preview,
                  (appearance.primary_bank & 0xFE, (appearance.primary_bank & 0xFE) + 1),
-                 (0x00, 0x10, 0x20)),
-                (self.fragment_preview, appearance.secondary_banks, (0x00, 0x10, 0x20)),
+                 appearance.second_palette),
             ):
                 picture = render_chr_banks(self.project, banks, palette)
                 label.setPixmap(QPixmap.fromImage(picture).scaled(
@@ -842,7 +892,7 @@ class LegacyGlobalTablesPage(ProjectPage):
         root = QVBoxLayout(self)
         notice = QLabel(
             "已接通参考页中的升级累计经验表和武器距离命中补正表。"
-            "系统文字与成长方式仍需独立差分，暂不在此猜写。"
+            "“系统文字”页签可编辑实际系统文本。升级阈值可改，总经验和升级还需随之计算。"
         )
         notice.setWordWrap(True)
         notice.setObjectName("hintText")
@@ -851,8 +901,9 @@ class LegacyGlobalTablesPage(ProjectPage):
         tables = QHBoxLayout()
         experience_group = QGroupBox("升级累计经验 · 等级1—99")
         experience_layout = QVBoxLayout(experience_group)
-        self.experience_table = QTableWidget(99, 2)
-        self.experience_table.setHorizontalHeaderLabels(("等级", "累计经验"))
+        self.experience_table = QTableWidget(99, 4)
+        self.experience_table.setHorizontalHeaderLabels(("等级", "升级阈值", "总经验", "升级还需"))
+        self.experience_table.setColumnWidth(0, 45)
         self.experience_table.verticalHeader().setVisible(False)
         self.experience_table.horizontalHeader().setSectionResizeMode(
             1, QHeaderView.ResizeMode.Stretch
@@ -860,7 +911,7 @@ class LegacyGlobalTablesPage(ProjectPage):
         self.experience_table.setAlternatingRowColors(True)
         self.experience_table.itemChanged.connect(self._update_pending_state)
         experience_layout.addWidget(self.experience_table)
-        tables.addWidget(experience_group, 2)
+        tables.addWidget(experience_group, 3)
 
         distance_group = QGroupBox("武器距离命中补正 · 距离1—16")
         distance_layout = QVBoxLayout(distance_group)
@@ -934,6 +985,10 @@ class LegacyGlobalTablesPage(ProjectPage):
                 level.setFlags(level.flags() & ~Qt.ItemFlag.ItemIsEditable)
                 self.experience_table.setItem(row, 0, level)
                 self.experience_table.setItem(row, 1, self._editable_item(value))
+                for column in (2, 3):
+                    item = QTableWidgetItem()
+                    item.setFlags(item.flags() & ~Qt.ItemFlag.ItemIsEditable)
+                    self.experience_table.setItem(row, column, item)
             for row, values in enumerate(corrections):
                 for column, value in enumerate(values):
                     self.distance_table.setItem(
@@ -1021,6 +1076,16 @@ class LegacyGlobalTablesPage(ProjectPage):
             self.apply_button.setEnabled(False)
             return
         error = self.pending_draft_error
+        if error is None:
+            thresholds, _corrections = self._draft_values()
+            previous = self.experience_table.blockSignals(True)
+            try:
+                for row, threshold in enumerate(thresholds):
+                    total = thresholds[row - 1] if row else 0
+                    self.experience_table.item(row, 2).setText(str(total))
+                    self.experience_table.item(row, 3).setText(str(threshold - total))
+            finally:
+                self.experience_table.blockSignals(previous)
         pending = self.has_pending_draft
         self.apply_button.setEnabled(pending and error is None)
         if error is not None:
@@ -1079,7 +1144,7 @@ class LegacyItemTablePage(ProjectPage):
         root = QVBoxLayout(self)
         notice = QLabel(
             "已接通24项道具名称和价格。价格按参考窗口显示为ROM原值×10；"
-            "说明、F0—FE商店、店员和七段对话尚未完成独立差分，继续只读保护。"
+            "道具说明可在“道具说明”页签编辑。商店与店员对话按对应页面的已验证范围操作。"
         )
         notice.setWordWrap(True)
         notice.setObjectName("hintText")
@@ -1096,15 +1161,6 @@ class LegacyItemTablePage(ProjectPage):
         self.item_table.setAlternatingRowColors(True)
         self.item_table.itemChanged.connect(self._update_pending_state)
         root.addWidget(self.item_table, 1)
-
-        protected = QGroupBox("尚未验证的参考字段")
-        protected_layout = QFormLayout(protected)
-        for label in ("道具说明", "商店 F0—FE", "店员及七段对话"):
-            value = QLineEdit("只读：尚无独立可写记录证据")
-            value.setReadOnly(True)
-            value.setToolTip("需先用参考程序对隔离副本做单变量保存差分。")
-            protected_layout.addRow(label, value)
-        root.addWidget(protected)
 
         footer = QHBoxLayout()
         self.pending_state = QLabel("当前ROM没有已验证的道具表。")
@@ -1327,19 +1383,20 @@ class DatabaseDialog(TransactionalProjectDialog):
         self.unit_page.weapon_requested.connect(self._select_weapon)
         self.weapon_page.unit_requested.connect(self._select_unit)
 
-        self.battle_dialogue_page = self.register_page(
-            RawInspectionPage(
-                "战斗对话",
-                ("进攻战斗对话", "防御战斗对话"),
-                "已确认旧版在此编辑进攻/防御战斗对话，但当前ROM的逐字段结构尚未验证。"
-                "为避免破坏脚本，本页只允许查看原始字节。",
-            )
-        )
+        self.battle_dialogue_page = self.register_page(LegacyTextPage())
         self.other_page_1 = self.register_page(LegacyGlobalTablesPage())
         self.other_page_2 = self.register_page(LegacyItemTablePage())
 
         for label, page in zip(self.TAB_LABELS, self.pages):
             self.tabs.addTab(page, label)
+        self.system_text_page = self.register_page(LegacyTextPage(("system",)))
+        self.item_description_page = self.register_page(LegacyTextPage(("item_description",)))
+        self.growth_page = self.register_page(LegacyGrowthPage())
+        self.shop_page = self.register_page(LegacyShopPage())
+        self._add_detail_tabs(self.other_page_1, "经验与命中补正", self.system_text_page, "系统文字")
+        self.other_page_1.detail_tabs.addTab(self.growth_page, "成长方式")
+        self._add_detail_tabs(self.other_page_2, "道具名称与价格", self.item_description_page, "道具说明")
+        self.other_page_2.detail_tabs.addTab(self.shop_page, "商店与对话")
         layout.addWidget(self.tabs, 1)
 
         footer = QHBoxLayout()
@@ -1359,6 +1416,10 @@ class DatabaseDialog(TransactionalProjectDialog):
             lambda _index: self._sync_active_search(self.database_search.text())
         )
         self.tabs.currentChanged.connect(self._refresh_database_context)
+        for page in (self.other_page_1, self.other_page_2):
+            page.detail_tabs.currentChanged.connect(
+                lambda _index: self._sync_active_search(self.database_search.text())
+            )
         footer.addWidget(self.database_search, 1)
         footer.addWidget(self.find_next_button)
         footer.addWidget(self.find_previous_button)
@@ -1397,6 +1458,18 @@ class DatabaseDialog(TransactionalProjectDialog):
         add_button.setToolTip("新增记录的指针重定位规则尚未验证。")
         selection_layout.addWidget(add_button)
 
+    @staticmethod
+    def _add_detail_tabs(page, original_label: str, extra, extra_label: str) -> None:
+        original = QWidget()
+        original.setLayout(page.layout())
+        layout = QVBoxLayout(page)
+        layout.setContentsMargins(0, 0, 0, 0)
+        tabs = QTabWidget()
+        tabs.addTab(original, original_label)
+        tabs.addTab(extra, extra_label)
+        page.detail_tabs = tabs
+        layout.addWidget(tabs)
+
     def _select_weapon(self, weapon_id: int) -> None:
         self.database_search.clear()
         self.tabs.setCurrentIndex(2)
@@ -1427,11 +1500,14 @@ class DatabaseDialog(TransactionalProjectDialog):
 
     def _active_search_page(self) -> ProjectPage | None:
         current = self.tabs.currentWidget()
+        tabs = getattr(current, "detail_tabs", None)
+        if tabs is not None and isinstance(tabs.currentWidget(), ProjectPage):
+            current = tabs.currentWidget()
         return current if isinstance(current, ProjectPage) else None
 
     def _sync_active_search(self, text: str) -> None:
         page = self._active_search_page()
-        search = getattr(page, "search", None)
+        search = getattr(page, "search", getattr(page, "search_edit", None))
         if isinstance(search, QLineEdit) and search.text() != text:
             search.setText(text)
 
@@ -1507,9 +1583,7 @@ class ScenarioDialog(TransactionalProjectDialog):
         self.resize(1180, 780)
         self.setMinimumSize(900, 600)
 
-        self.setup_event_pages = [
-            self._register_hidden_event_page(phase) for phase in range(3)
-        ]
+        self.setup_event_pages = [self.register_page(LegacyScenarioEventsPage(phase)) for phase in range(3)]
         self.action_event_page = self._register_hidden_page(_LegacyEventController())
         self.persuasion_page = self._register_hidden_page(PersuasionPage())
         self.map_event_page = self._register_hidden_page(_LegacyEventController())
@@ -1649,10 +1723,9 @@ class ScenarioDialog(TransactionalProjectDialog):
         self.setup_event_lists: list[QListWidget] = []
         self.setup_code_buttons: list[QPushButton] = []
         for label, controller in zip(self.EVENT_TAB_LABELS, self.setup_event_pages):
-            host, overview, button = self._event_list_panel(controller)
-            self.setup_event_lists.append(overview)
-            self.setup_code_buttons.append(button)
-            self.setup_event_tabs.addTab(host, label)
+            self.setup_event_lists.append(controller.record_list)
+            self.setup_code_buttons.append(controller.apply_button)
+            self.setup_event_tabs.addTab(controller, label)
         event_layout.addWidget(self.setup_event_tabs)
         page_layout.addWidget(event_group, 1)
         return page
@@ -1810,10 +1883,6 @@ class ScenarioDialog(TransactionalProjectDialog):
         return host
 
     def _configure_event_views(self) -> None:
-        for phase, page in enumerate(self.setup_event_pages):
-            index = page.phase_filter.findData(phase)
-            if index >= 0:
-                page.phase_filter.setCurrentIndex(index)
         action_index = self.action_event_page.kind_filter.findText("行动控制")
         if action_index >= 0:
             self.action_event_page.kind_filter.setCurrentIndex(action_index)
@@ -1966,10 +2035,10 @@ class ScenarioDialog(TransactionalProjectDialog):
         else:
             self.title_preview.setText(label)
 
-        for page in (
-            *self.setup_event_pages,
-            self.map_event_page,
-        ):
+        for page in self.setup_event_pages:
+            if not page.has_pending_draft:
+                page.set_scenario(scenario_id)
+        for page in (self.map_event_page,):
             if page.has_pending_draft:
                 continue
             index = page.scenario_filter.findData(scenario_id)
@@ -2163,8 +2232,6 @@ class ScenarioDialog(TransactionalProjectDialog):
     def _refresh_overviews(self) -> None:
         if not hasattr(self, "setup_event_lists"):
             return
-        for page, overview in zip(self.setup_event_pages, self.setup_event_lists):
-            self._refresh_event_overview(page, overview)
         self._refresh_event_overview(self.action_event_page, self.action_event_list)
         self._refresh_event_overview(self.map_event_page, self.map_event_list)
         self._refresh_persuasion_overview()

@@ -63,7 +63,11 @@ UNIT_FIELDS = (
     FieldSpec("speed", "速度", 0x04, 1, 0, 255, "状态画面的“速度”数值。"),
     FieldSpec("strength", "强度", 0x05, 1, 0, 255, "状态画面的“强度”数值。"),
     FieldSpec("defense", "防卫", 0x06, 1, 0, 255, "状态画面的“防卫”数值。"),
-    FieldSpec("upgrade", "升级还需", 0x07, 1, 0, 255, "状态画面的升级需求值。"),
+    # Keep the historical project-operation key for existing .dcmod files.
+    FieldSpec("upgrade", "基础金钱", 0x07, 1, 0, 255, "击坠金钱的存储值；沿用旧修改器的原值显示。"),
+    FieldSpec("experience", "基础经验", 0x0A, 1, 0, 255, "击坠经验基值；等级差和精神效果另由运行时计算。"),
+    FieldSpec("special", "特殊技能", 0x01, 1, 0, 255, "完整特技字节；保留当前 ROM 自定义的组合位。"),
+    FieldSpec("terrain", "适应地形", 0x00, 1, 0, 3, "机体类型低两位：0空、1陆、2海；3为原码保留值。", mask=0x03),
     FieldSpec("hp", "基础 HP", 0x08, 2, 0, 65535, "16 位小端 HP；魔神Z原值为 360。"),
     FieldSpec(
         "speed_growth",

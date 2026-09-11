@@ -88,20 +88,23 @@ class LegacyToolDialogTests(QtTestCase):
         self.assertEqual(marked.pixelColor(0, 0).name(), "#f5f5f5")
         self.assertEqual(marked.pixelColor(2, 0).name(), "#080808")
 
-    def test_map_animation_has_three_legacy_tabs_and_read_only_guard(self) -> None:
+    def test_map_animation_has_three_legacy_tabs_and_real_rom_instructions(self) -> None:
+        if self.project is None:
+            self.skipTest("测试 ROM 不存在")
         dialog = MapAnimationDialog(project=self.project)
         self.assertEqual(
             [dialog.tabs.tabText(index) for index in range(dialog.tabs.count())],
             ["地图动画", "规律", "动画调用"],
         )
-        self.assertGreaterEqual(dialog.animation_list.count(), 20)
-        self.assertEqual(dialog.instruction_table.rowCount(), 0)
-        dialog.reference_examples.setChecked(True)
-        self.assertEqual(dialog.instruction_table.rowCount(), 24)
-        self.assertIn("参考界面/未从ROM解析", dialog.instruction_table.item(0, 0).text())
+        self.assertEqual(dialog.animation_list.count(), 153)
+        self.assertEqual(dialog.instruction_table.rowCount(), 11)
+        self.assertIn("切换 00 区域图库", dialog.instruction_table.item(0, 0).text())
+        self.assertEqual(dialog.instruction_table.item(0, 1).text(), "E0 0A")
         self.assertFalse(dialog.add_button.isEnabled())
-        self.assertFalse(dialog.code_button.isEnabled())
-        self.assertIn("参考功能示例", dialog.read_only_status.text())
+        self.assertTrue(dialog.code_button.isEnabled())
+        self.assertIn("当前 ROM", dialog.read_only_status.text())
+        self.assertEqual(dialog.rule_lists["movement"].count(), 157)
+        self.assertGreater(dialog.call_table.rowCount(), 50)
         self._show(dialog)
         self.assertLess(self._top(dialog.animation_list, dialog), self._top(dialog.add_button, dialog))
         self.assertLess(self._top(dialog.add_button, dialog), self._top(dialog.animation_name, dialog))
@@ -306,7 +309,6 @@ class LegacyToolDialogTests(QtTestCase):
 
     def test_reference_geometry_is_fixed_and_offscreen_screenshots_render(self) -> None:
         dialogs = (
-            ("animation", MapAnimationDialog(project=self.project), (1271, 981)),
             ("converter", TextConverterDialog(), (700, 700)),
             ("calculator", AttributeCalculatorDialog(), (1257, 998)),
             ("save", SaveEditorDialog(), (1175, 834)),
@@ -318,6 +320,12 @@ class LegacyToolDialogTests(QtTestCase):
         self._show(font_dialog)
         self.assertFalse(font_dialog.grab().isNull())
         font_dialog.reject()
+        animation_dialog = MapAnimationDialog(project=self.project)
+        self.assertLess(animation_dialog.minimumWidth(), animation_dialog.maximumWidth())
+        self.assertLess(animation_dialog.minimumHeight(), animation_dialog.maximumHeight())
+        self._show(animation_dialog)
+        self.assertFalse(animation_dialog.grab().isNull())
+        animation_dialog.reject()
         with tempfile.TemporaryDirectory() as directory:
             for name, dialog, expected in dialogs:
                 with self.subTest(dialog=name):

@@ -340,7 +340,7 @@ class MainWindow(QMainWindow):
         self.text_converter_action = self._action("文字转换(&Z)", self.open_text_converter, "Ctrl+Z")
         self.scenario_action = self._action("剧情事件(&J)", self.open_scenario, "Ctrl+J")
         self.export_unit_action = self._action("导出机体(&P)", self.export_unit, "Ctrl+F")
-        self.export_avatar_action = self._action("导出头像(&L)", self.open_avatar_exporter, "Ctrl+L")
+        self.export_avatar_action = self._action("导出头像(&L)", self.export_avatar, "Ctrl+L")
         self.attribute_calculator_action = self._action("属性计算器", self.open_attribute_calculator)
         self.save_editor_action = self._action("存档修改器", self.open_save_editor)
         self.other_settings_action = self._action("其他(&T)", self.open_other_settings, "Ctrl+T")
@@ -608,15 +608,49 @@ class MainWindow(QMainWindow):
         except Exception as error:
             QMessageBox.critical(self, "导出机体失败", str(error))
 
-    def open_avatar_exporter(self) -> None:
+    def export_avatar(self) -> None:
         if self.project is None:
             return
-        dialog = self._create_extension_dialog("unit_import")
-        dialog.setWindowTitle("导出头像 / CHR图像")
-        page = dialog.page
-        if isinstance(page, UnitImportPage):
-            page.tabs.setCurrentIndex(1)
-        self._run_project_dialog(dialog, "CHR图像操作已确认")
+        from .portrait_export import export_portrait_bitmaps, portrait_export_paths
+
+        root_name = QFileDialog.getExistingDirectory(
+            self,
+            "导出头像 · 选择根目录",
+            str(_default_export_path("头像导出").parent),
+        )
+        if not root_name:
+            return
+        labels = [
+            f"{character_id:03d} · {self.project.character_display_name(character_id)}"
+            for character_id in range(1, self.project.profile.character_name_count)
+        ]
+        selected, accepted = QInputDialog.getItem(
+            self, "导出头像", "选择人物：", labels, 0, False
+        )
+        if not accepted:
+            return
+        character_id = labels.index(selected) + 1
+        try:
+            root = writable_output_path(root_name)
+            paths = portrait_export_paths(self.project, character_id, root)
+            if any(path.exists() for path in paths):
+                answer = QMessageBox.question(
+                    self,
+                    "覆盖头像文件",
+                    f"{paths[0].parent.name} 已有头像文件。是否覆盖？",
+                    QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
+                    QMessageBox.StandardButton.No,
+                )
+                if answer != QMessageBox.StandardButton.Yes:
+                    return
+            back_path, front_path = export_portrait_bitmaps(
+                self.project, character_id, root
+            )
+            self.status.showMessage(
+                f"头像已导出：{back_path.parent.name}（2 个 BMP）", 5000
+            )
+        except Exception as error:
+            QMessageBox.critical(self, "导出头像失败", str(error))
 
     @property
     def has_unsaved_changes(self) -> bool:

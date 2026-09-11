@@ -26,6 +26,7 @@ from dc_modifier.legacy_tools import (
 )
 from dc_modifier.legacy_windows import DatabaseDialog, ScenarioDialog
 from dc_modifier.pages import ChangesPage
+from dc_modifier.unit_appearance_dialog import UnitAppearanceDialog
 from dc_modifier.unit_import_page import UnitImportPage
 
 
@@ -145,6 +146,11 @@ def main() -> int:
     process_layout(application)
     save_capture(application, database_dialog, "02c-item-table.png")
     close_dialog(application, database_dialog)
+    capture_dialog(
+        application,
+        UnitAppearanceDialog(window.project, 11, window),
+        "02d-unit-composition.png",
+    )
     capture_dialog(
         application,
         ScenarioDialog(window.project, window),

@@ -4,13 +4,16 @@ from PySide6.QtCore import Qt, Signal
 from PySide6.QtWidgets import (
     QComboBox,
     QFormLayout,
+    QGridLayout,
     QGroupBox,
     QHBoxLayout,
+    QInputDialog,
     QLabel,
     QListWidget,
     QListWidgetItem,
     QPushButton,
     QScrollArea,
+    QSpinBox,
     QSplitter,
     QToolButton,
     QVBoxLayout,
@@ -18,6 +21,13 @@ from PySide6.QtWidgets import (
 )
 
 from .pages import CharacterPage, WeaponPage
+from .character_editor import CharacterDetailsWidget
+from .animation_editor import WeaponAnimationWidget
+from fc_editor.codecs.character_attributes import (
+    CharacterAttributesCodec, WEAPON_SKILLS, apply_verified_patches,
+    weapon_extra_patches, weapon_extra_values,
+)
+from fc_editor.models import WEAPON_FIELDS
 
 
 def readable_references(combo: QComboBox) -> None:
@@ -92,15 +102,33 @@ def _prepare_readable_page(page) -> QVBoxLayout:
 
 class ReadableCharacterPage(CharacterPage):
     def __init__(self) -> None:
+        self._loading_details = False
         super().__init__()
         detail = _prepare_readable_page(self)
         self.capability_status = QLabel(
-            "可编辑：已有名称引用、我方/敌方战斗音乐。\n"
-            "尚未接通：正反头像、精神/修正值、战斗台词、击破不消失。"
+            "可编辑：名称引用、双方音乐、精神/成长、五项修正、精神与消耗、头像引用/颜色、击落不消失。\n"
+            "战斗台词与变形台词尚未接通。"
         )
         self.capability_status.setObjectName("hintText")
         self.capability_status.setWordWrap(True)
         detail.insertWidget(1, self.capability_status)
+        for label in self.findChildren(QLabel):
+            if label.text().startswith("当前人物属性表、头像索引"):
+                label.hide()
+        self.original_name.setWordWrap(True)
+        identities = [item for item in self.findChildren(QGroupBox) if item.title() in ("名称", "人物战斗音乐")]
+        if len(identities) == 2:
+            identity_row = QWidget()
+            row = QHBoxLayout(identity_row)
+            row.setContentsMargins(0, 0, 0, 0)
+            position = detail.indexOf(identities[0])
+            for group in identities:
+                detail.removeWidget(group)
+                row.addWidget(group, 1)
+            detail.insertWidget(position, identity_row)
+        self.character_details = CharacterDetailsWidget()
+        self.character_details.changed.connect(self._update_pending_state)
+        detail.insertWidget(detail.count() - 2, self.character_details)
 
     def record_text(self, record_id: int) -> str:
         assert self.project is not None
@@ -110,20 +138,131 @@ class ReadableCharacterPage(CharacterPage):
         super().refresh()
         readable_references(self.name_reference)
 
+    def load_record(self, record_id: int | None) -> None:
+        self._loading_details = True
+        try:
+            super().load_record(record_id)
+            self.character_details.set_record(self.project, record_id)
+        finally:
+            self._loading_details = False
+        self._update_pending_state()
+
+    def _update_pending_state(self) -> None:
+        if self._loading_details:
+            return
+        super()._update_pending_state()
+        details = getattr(self, "character_details", None)
+        if details is not None and details.has_pending_changes():
+            self.apply_button.setEnabled(True)
+            self.pending_state.setText("● 有尚未暂存的人物属性、精神或头像改动")
+
+    def apply_record(self) -> None:
+        if self.project is None or self.current_id is None:
+            return
+        try:
+            patches = self.character_details.pending_patches()
+            with self.project.transaction(f"人物 ${self.current_id:02X} · 完整表单"):
+                apply_verified_patches(self.project, patches, "人物属性、精神与头像")
+                self.project.set_character_name_reference(self.current_id, int(self.name_reference.currentData()))
+                if self.ally_music.isEnabled():
+                    self.project.set_battle_music_binding(self.current_id, int(self.ally_music.currentData()), int(self.enemy_music.currentData()))
+            self.load_record(self.current_id)
+            self.project_changed.emit(f"已更新人物 ${self.current_id:02X}")
+        except Exception as error:
+            self.show_error(error)
+
+    def reset_record(self) -> None:
+        if self.project is None or self.current_id is None:
+            return
+        try:
+            with self.project.transaction(f"人物 ${self.current_id:02X} · 还原"):
+                self.character_details.reset_to_original()
+                self.project.reset_character_name(self.current_id)
+                if self.project.supports_battle_music:
+                    self.project.reset_battle_music_binding(self.current_id)
+            self.load_record(self.current_id)
+            self.project_changed.emit(f"已还原人物 ${self.current_id:02X}；全局精神消耗保留当前值")
+        except Exception as error:
+            self.show_error(error)
+
+    def duplicate_record(self) -> None:
+        if self.project is None or self.current_id is None or not self.commit_pending_changes():
+            return
+        options = [f"${item:02X} · {self.project.character_display_name(item)}"
+                   for item in range(1, self.project.profile.character_name_count) if item != self.current_id]
+        selected, accepted = QInputDialog.getItem(self, "复制人物", "复制名称、音乐、属性、精神与头像到：", options, 0, False)
+        if not accepted:
+            return
+        target = int(selected[1:3], 16)
+        try:
+            codec = CharacterAttributesCodec(self.project)
+            patches = codec.patches(target, codec.read(self.current_id)) + codec.portrait_patches(target, codec.read_portrait(self.current_id))
+            sources = self.project.character_name_source_ids(self.current_id)
+            with self.project.transaction(f"复制人物 ${self.current_id:02X} 到 ${target:02X}"):
+                apply_verified_patches(self.project, patches, "复制人物属性与头像")
+                if sources:
+                    self.project.set_character_name_reference(target, sources[0])
+                if self.project.supports_battle_music:
+                    binding = self.project.get_battle_music_binding(self.current_id)
+                    self.project.set_battle_music_binding(target, binding.attacker_command, binding.defender_command)
+            self.project_changed.emit(f"已复制人物到 ${target:02X}")
+        except Exception as error:
+            self.show_error(error)
+
 
 class ReadableWeaponPage(WeaponPage):
     unit_requested = Signal(int)
 
     def __init__(self) -> None:
+        self._loading_details = False
+        self._extras_enabled = False
         super().__init__()
         detail = _prepare_readable_page(self)
         self.capability_status = QLabel(
-            "可编辑：已有名称引用、射程、命中、对空/陆/海攻击力。\n"
-            "动画、特技与效果模式尚未接通；其原始字节保留。"
+            "可编辑：名称引用、射程、命中、距离补正、武器特技、对空/陆/海攻击力及双方动画的已验证参数。"
         )
         self.capability_status.setObjectName("hintText")
         self.capability_status.setWordWrap(True)
         detail.insertWidget(1, self.capability_status)
+        attributes = next(group for group in self.findChildren(QGroupBox) if group.title() == "战斗参数")
+        grid = attributes.layout()
+        if isinstance(grid, QGridLayout):
+            retained = tuple(self.fields.values()) + tuple(self.original_values.values())
+            while grid.count():
+                widget = grid.takeAt(0).widget()
+                if widget is not None and widget not in retained:
+                    widget.hide()
+                    widget.deleteLater()
+            for index, field in enumerate(WEAPON_FIELDS):
+                row, col = index // 3, index % 3 * 3
+                self.fields[field.key].setMaximumWidth(75)
+                grid.addWidget(QLabel(field.label), row, col)
+                grid.addWidget(self.fields[field.key], row, col + 1)
+                self.original_values[field.key].setToolTip("基准 ROM 原值")
+                grid.addWidget(self.original_values[field.key], row, col + 2)
+        extras = QGroupBox("武器特技与距离补正")
+        form = QFormLayout(extras)
+        self.weapon_skill = QComboBox()
+        for index, name in enumerate(WEAPON_SKILLS):
+            self.weapon_skill.addItem(f"{index:02d}：{name}", index)
+        self.weapon_skill.currentIndexChanged.connect(self._update_pending_state)
+        self.distance_correction = QSpinBox()
+        self.distance_correction.setRange(0, 3)
+        self.distance_correction.valueChanged.connect(self._update_pending_state)
+        form.addRow("武器特技", self.weapon_skill)
+        form.addRow("距离补正表", self.distance_correction)
+        self.extra_status = QLabel()
+        self.extra_status.setWordWrap(True)
+        form.addRow(self.extra_status)
+        detail.insertWidget(detail.count() - 2, extras)
+        self.weapon_animation = WeaponAnimationWidget()
+        self.weapon_animation.changed.connect(self._update_pending_state)
+        detail.insertWidget(detail.count() - 2, self.weapon_animation)
+        for button in self.findChildren(QPushButton):
+            if button.text() == "复制到其他ID…":
+                button.setText("复制属性与名称到其他ID…")
+            elif button.text() == "还原此武器":
+                button.setText("还原武器属性与名称")
         group = QGroupBox("使用此武器的机体")
         layout = QVBoxLayout(group)
         self.usage_status = QLabel("请选择武器。")
@@ -143,7 +282,7 @@ class ReadableWeaponPage(WeaponPage):
         row.addWidget(QLabel("双击机体也可跳转；按实际装备槽统计。"))
         row.addStretch()
         layout.addLayout(row)
-        detail.insertWidget(detail.count() - 2, group)
+        self.weapon_animation.addTab(group, "使用此武器的机体")
 
     def record_text(self, record_id: int) -> str:
         assert self.project is not None
@@ -154,8 +293,83 @@ class ReadableWeaponPage(WeaponPage):
         readable_references(self.name_reference)
 
     def load_record(self, record_id: int | None) -> None:
-        super().load_record(record_id)
+        self._loading_details = True
+        try:
+            super().load_record(record_id)
+            self._extras_enabled = False
+            if self.project is not None and record_id is not None:
+                skill, distance = weapon_extra_values(self.project, record_id)
+                weapon_extra_patches(self.project, record_id, skill, distance)
+                self.weapon_skill.setCurrentIndex(skill)
+                self.distance_correction.setValue(distance)
+                self._extras_enabled = True
+                self.extra_status.setText("距离补正引用“其他修改1”的第 0—3 号命中表；特技名称与旧修改器一致。")
+            self.weapon_skill.setEnabled(self._extras_enabled)
+            self.distance_correction.setEnabled(self._extras_enabled)
+            self.weapon_animation.set_record(self.project, record_id)
+        except ValueError as error:
+            self.extra_status.setText(str(error))
+            self.weapon_animation.setEnabled(False)
+        finally:
+            self._loading_details = False
         self.refresh_usage()
+        self._update_pending_state()
+
+    def _update_pending_state(self) -> None:
+        if self._loading_details:
+            return
+        super()._update_pending_state()
+        animation = getattr(self, "weapon_animation", None)
+        if animation is None or self.project is None or self.current_id is None:
+            return
+        extra_pending = self._extras_enabled and weapon_extra_values(self.project, self.current_id) != (self.weapon_skill.currentData(), self.distance_correction.value())
+        if extra_pending or (animation.isEnabled() and animation.has_pending_changes()):
+            self.apply_button.setEnabled(True)
+            self.pending_state.setText("● 有尚未暂存的武器特技、距离补正或动画改动")
+
+    def apply_record(self) -> None:
+        if self.project is None or self.current_id is None:
+            return
+        try:
+            if self.weapon_animation.isEnabled():
+                self.weapon_animation.pending_patches()  # Validate every draft before mutating.
+            with self.project.transaction(f"武器 ${self.current_id:02X} · 完整表单"):
+                for field in WEAPON_FIELDS:
+                    self.project.set_weapon_value(self.current_id, field.key, self.fields[field.key].value())
+                if self._extras_enabled:
+                    apply_verified_patches(self.project, weapon_extra_patches(self.project, self.current_id,
+                                           int(self.weapon_skill.currentData()), self.distance_correction.value()), "武器特技与距离补正")
+                if self.project.supports_weapon_names:
+                    self.project.set_weapon_name_reference(self.current_id, int(self.name_reference.currentData()))
+                if self.weapon_animation.isEnabled():
+                    self.weapon_animation.apply_pending()
+            self.load_record(self.current_id)
+            self.project_changed.emit(f"已更新武器 ${self.current_id:02X}")
+        except Exception as error:
+            self.show_error(error)
+
+    def duplicate_record(self) -> None:
+        if self.project is None or self.current_id is None or not self.commit_pending_changes():
+            return
+        options = [f"${index:02X} · {self.project.weapon_display_name(index)}"
+                   for index in range(1, self.project.weapon_count) if index != self.current_id]
+        selected, accepted = QInputDialog.getItem(self, "复制武器属性与名称", "复制到（目标的共用属性记录同步改变）：", options, 0, False)
+        if not accepted:
+            return
+        target = int(selected[1:3], 16)
+        try:
+            skill, distance = weapon_extra_values(self.project, self.current_id)
+            weapon_extra_patches(self.project, target, skill, distance)
+            sources = self.project.weapon_name_source_ids(self.current_id)
+            with self.project.transaction(f"复制武器 ${self.current_id:02X} 到 ${target:02X}"):
+                for field in WEAPON_FIELDS:
+                    self.project.set_weapon_value(target, field.key, self.project.get_weapon_value(self.current_id, field.key))
+                apply_verified_patches(self.project, weapon_extra_patches(self.project, target, skill, distance), "复制武器特技与距离补正")
+                if sources:
+                    self.project.set_weapon_name_reference(target, sources[0])
+            self.project_changed.emit(f"已复制武器属性与名称到 ${target:02X}")
+        except Exception as error:
+            self.show_error(error)
 
     def refresh_usage(self) -> None:
         if self.project is None or self.current_id is None:

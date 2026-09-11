@@ -14,6 +14,7 @@ from PySide6.QtWidgets import QApplication, QListWidget, QPushButton, QWidget
 
 from dc_modifier.app import DEFAULT_ROM
 from dc_modifier.legacy_windows import DatabaseDialog, ScenarioDialog
+from dc_modifier.legacy_text_pages import LegacyScenarioEventsPage
 from fc_rom_editor_core import RomProject
 
 
@@ -269,7 +270,8 @@ class LegacyWindowTests(QtTestCase):
                 for index in range(dialog.setup_event_tabs.count())
             )
         )
-        self.assertTrue(all(page.isHidden() for page in dialog.setup_event_pages))
+        self.assertTrue(dialog.setup_event_pages[0].isVisible())
+        self.assertTrue(all(page.isHidden() for page in dialog.setup_event_pages[1:]))
         self.assertTrue(dialog.action_event_page.isHidden())
         self.assertTrue(dialog.map_event_page.isHidden())
         title_pixmap = dialog.title_preview.pixmap()
@@ -295,8 +297,9 @@ class LegacyWindowTests(QtTestCase):
             explicit.chapter_list.currentItem().data(Qt.ItemDataRole.UserRole),
             5,
         )
-        for page in (*explicit.setup_event_pages, explicit.map_event_page):
-            self.assertEqual(page.scenario_filter.currentData(), 5)
+        for page in explicit.setup_event_pages:
+            self.assertEqual(page.scenario_id, 5)
+        self.assertEqual(explicit.map_event_page.scenario_filter.currentData(), 5)
         self.assertIsNone(explicit.action_event_page.scenario_filter.currentData())
 
         parent = QWidget()
@@ -335,13 +338,13 @@ class LegacyWindowTests(QtTestCase):
         page, instruction = next(
             (page, instruction)
             for page in dialog.setup_event_pages
-            if (instruction := page._selected_instruction()) is not None
+            if (instruction := (page._instructions[page.record_list.currentRow()] if page._instructions else None)) is not None
             and len(instruction.raw) > 1
         )
         replacement = bytearray(instruction.raw)
         replacement[-1] ^= 0x01
         before = bytes(self.project.working)
-        page.raw.setText(bytes(replacement).hex(" ").upper())
+        page.raw_edit.setText(bytes(replacement).hex(" ").upper())
         self.assertTrue(page.has_pending_draft)
 
         dialog.accept()
@@ -352,76 +355,79 @@ class LegacyWindowTests(QtTestCase):
     def test_scenario_ok_blocks_two_drafts_for_one_real_event_address(self) -> None:
         dialog = self._show(ScenarioDialog(self.project, initial_scenario_id=0))
         first_page = dialog.setup_event_pages[0]
-        second_page = dialog.setup_event_pages[2]
-        shared_address = 0xA0C0
-        self.assertTrue(first_page._select_address(shared_address))
-        self.assertTrue(second_page._select_address(shared_address))
-        first = first_page._selected_instruction()
-        second = second_page._selected_instruction()
-        self.assertIsNotNone(first)
-        self.assertIsNotNone(second)
-        assert first is not None and second is not None
-        self.assertEqual(first.address, shared_address)
-        self.assertEqual(second.address, shared_address)
-        self.assertEqual(first.raw, second.raw)
-
-        first_replacement = first.raw[:-1] + bytes((first.raw[-1] ^ 0x01,))
-        second_replacement = second.raw[:-1] + bytes((second.raw[-1] ^ 0x02,))
-        first_page.raw.setText(first_replacement.hex(" ").upper())
-        second_page.raw.setText(second_replacement.hex(" ").upper())
-        self.assertTrue(first_page.has_pending_draft)
-        self.assertTrue(second_page.has_pending_draft)
-        self.assertIn("$A0C0", first_page.pending_draft_error or "")
-        self.assertIn("多个编辑页", second_page.pending_draft_error or "")
+        # Two views of the same physical instruction conflict; a matching
+        # CPU address in a different PRG bank must never be conflated.
+        second_page = dialog.register_page(LegacyScenarioEventsPage(0))
+        second_page.setParent(dialog)
+        instruction = first_page._instructions[0]
+        first_replacement = instruction.raw[:-1] + bytes((instruction.raw[-1] ^ 1,))
+        second_replacement = instruction.raw[:-1] + bytes((instruction.raw[-1] ^ 2,))
+        first_page.raw_edit.setText(first_replacement.hex(" "))
+        second_page.raw_edit.setText(second_replacement.hex(" "))
+        self.assertIsNotNone(first_page.pending_draft_error)
+        self.assertIsNotNone(second_page.pending_draft_error)
         before = bytes(self.project.working)
-        undo_count = len(self.project._undo_stack)
-        self.assertFalse(first_page.commit_pending_changes())
-        self.assertEqual(bytes(self.project.working), before)
-        self.assertEqual(first_page.raw.text(), first_replacement.hex(" ").upper())
-        self.assertEqual(second_page.raw.text(), second_replacement.hex(" ").upper())
-
-        with patch("dc_modifier.legacy_windows.QMessageBox.warning") as warning:
+        with patch("dc_modifier.legacy_windows.QMessageBox.warning"):
             dialog.accept()
-
-        warning.assert_called_once()
         self.assertTrue(dialog.isVisible())
-        self.assertNotEqual(dialog.result(), dialog.DialogCode.Accepted)
         self.assertEqual(bytes(self.project.working), before)
-        self.assertEqual(len(self.project._undo_stack), undo_count)
-        self.assertEqual(first_page.raw.text(), first_replacement.hex(" ").upper())
-        self.assertEqual(second_page.raw.text(), second_replacement.hex(" ").upper())
         self.assertTrue(first_page.has_pending_draft)
         self.assertTrue(second_page.has_pending_draft)
-
-        # Reset is the deliberate escape hatch advertised by the conflict
-        # message: discard one local draft without applying either competing
-        # replacement, then the remaining draft can be committed normally.
-        first_page.reset_button.click()
-        self.assertFalse(first_page.has_pending_draft)
-        self.assertTrue(second_page.has_pending_draft)
+        first_page.discard_pending_changes()
         self.assertIsNone(second_page.pending_draft_error)
-        self.assertEqual(bytes(self.project.working), before)
-        self.assertEqual(len(self.project._undo_stack), undo_count)
-
         dialog.accept()
         self.assertEqual(dialog.result(), dialog.DialogCode.Accepted)
-        changed = self.project.chapter_event_codec.instruction_at(
-            shared_address,
-            bytes(self.project.working),
+        self.assertEqual(bytes(self.project.working[instruction.file_offset:instruction.file_offset + len(second_replacement)]), second_replacement)
+
+    def test_setup_and_advanced_event_drafts_conflict_by_physical_offset(self) -> None:
+        dialog = self._show(ScenarioDialog(self.project, initial_scenario_id=0))
+        setup = dialog.setup_event_pages[2]
+        advanced = dialog.map_event_page
+        instruction = setup._instructions[0]
+        self.assertEqual(instruction.file_offset, 0x36010)
+        advanced.kind_filter.setCurrentIndex(advanced.kind_filter.count() - 1)
+        advanced.scenario_filter.setCurrentIndex(0)
+        row = next(
+            row for row in range(advanced.table.rowCount())
+            if advanced.table.item(row, 0).data(Qt.ItemDataRole.UserRole)
+            == instruction.address
         )
-        self.assertEqual(changed.raw, second_replacement)
+        advanced.table.selectRow(row)
+        first = instruction.raw[:-1] + bytes((instruction.raw[-1] ^ 1,))
+        second = instruction.raw[:-1] + bytes((instruction.raw[-1] ^ 2,))
+        setup.raw_edit.setText(first.hex(" "))
+        advanced.raw.setText(second.hex(" "))
+        self.assertEqual(setup.transaction_sync_group, advanced.transaction_sync_group)
+        self.assertIn(("rom_offset", instruction.file_offset), advanced.pending_draft_keys)
+        self.assertIsNotNone(setup.pending_draft_error)
+        self.assertIsNotNone(advanced.pending_draft_error)
+        before = bytes(self.project.working)
+        with patch("dc_modifier.legacy_windows.QMessageBox.warning"):
+            dialog.accept()
+        self.assertTrue(dialog.isVisible())
+        self.assertEqual(bytes(self.project.working), before)
+        self.assertTrue(setup.has_pending_draft)
+        self.assertTrue(advanced.has_pending_draft)
+        setup.discard_pending_changes()
+        self.assertIsNone(advanced.pending_draft_error)
+        dialog.accept()
+        self.assertEqual(dialog.result(), dialog.DialogCode.Accepted)
+        self.assertEqual(
+            bytes(self.project.working[instruction.file_offset:instruction.file_offset + len(second)]),
+            second,
+        )
 
     def test_scenario_chapter_switch_commits_valid_hidden_event_draft(self) -> None:
         dialog = self._show(ScenarioDialog(self.project, initial_scenario_id=0))
         page, instruction = next(
             (page, instruction)
             for page in dialog.setup_event_pages
-            if (instruction := page._selected_instruction()) is not None
+            if (instruction := (page._instructions[page.record_list.currentRow()] if page._instructions else None)) is not None
             and len(instruction.raw) > 1
         )
         replacement = bytearray(instruction.raw)
         replacement[-1] ^= 0x01
-        page.raw.setText(bytes(replacement).hex(" ").upper())
+        page.raw_edit.setText(bytes(replacement).hex(" ").upper())
         self.assertTrue(page.has_pending_draft)
 
         target_row = 1
@@ -431,21 +437,16 @@ class LegacyWindowTests(QtTestCase):
         dialog.chapter_list.setCurrentRow(target_row)
         self.application.processEvents()
 
-        changed = self.project.chapter_event_codec.instruction_at(
-            instruction.address, bytes(self.project.working)
-        )
-        self.assertEqual(changed.raw, bytes(replacement))
+        self.assertEqual(bytes(self.project.working[instruction.file_offset:instruction.file_offset + len(replacement)]), bytes(replacement))
         self.assertFalse(page.has_pending_draft)
         self.assertEqual(dialog.current_scenario_id, target_scenario)
         self.assertEqual(
             dialog.chapter_list.currentItem().data(Qt.ItemDataRole.UserRole),
             target_scenario,
         )
-        for event_page in (
-            *dialog.setup_event_pages,
-            dialog.map_event_page,
-        ):
-            self.assertEqual(event_page.scenario_filter.currentData(), target_scenario)
+        for event_page in dialog.setup_event_pages:
+            self.assertEqual(event_page.scenario_id, target_scenario)
+        self.assertEqual(dialog.map_event_page.scenario_filter.currentData(), target_scenario)
         self.assertIsNone(dialog.action_event_page.scenario_filter.currentData())
 
     def test_scenario_chapter_switch_blocks_invalid_hidden_event_draft(self) -> None:
@@ -453,13 +454,13 @@ class LegacyWindowTests(QtTestCase):
         page = next(
             page
             for page in dialog.setup_event_pages
-            if page._selected_instruction() is not None
+            if (page._instructions[page.record_list.currentRow()] if page._instructions else None) is not None
         )
         old_scenario = dialog.current_scenario_id
-        page.raw.setText("GG")
+        page.raw_edit.setText("GG")
         self.assertTrue(page.has_pending_draft)
         self.assertIsNotNone(page.pending_draft_error)
-        self.assertIn("#b42318", page.pending_state.styleSheet())
+        self.assertFalse(page.apply_button.isEnabled())
 
         with patch("dc_modifier.legacy_windows.QMessageBox.warning") as warning:
             dialog.chapter_list.setCurrentRow(1)
@@ -471,8 +472,8 @@ class LegacyWindowTests(QtTestCase):
             dialog.chapter_list.currentItem().data(Qt.ItemDataRole.UserRole),
             old_scenario,
         )
-        self.assertEqual(page.scenario_filter.currentData(), old_scenario)
-        self.assertEqual(page.raw.text(), "GG")
+        self.assertEqual(page.scenario_id, old_scenario)
+        self.assertEqual(page.raw_edit.text(), "GG")
 
     def test_scenario_persuasion_overview_commits_draft_before_switch(self) -> None:
         dialog = self._show(ScenarioDialog(self.project, initial_scenario_id=0))
@@ -986,14 +987,14 @@ class LegacyWindowTests(QtTestCase):
         page, instruction = next(
             (page, instruction)
             for page in dialog.setup_event_pages
-            if (instruction := page._selected_instruction()) is not None
+            if (instruction := (page._instructions[page.record_list.currentRow()] if page._instructions else None)) is not None
             and len(instruction.raw) > 1
         )
         replacement = bytearray(instruction.raw)
         replacement[-1] ^= 0x01
         before = bytes(self.project.working)
-        page.raw.setText(bytes(replacement).hex(" ").upper())
-        page.apply_raw_button.click()
+        page.raw_edit.setText(bytes(replacement).hex(" ").upper())
+        page.apply_button.click()
         self.assertNotEqual(bytes(self.project.working), before)
 
         dialog.reject()

@@ -55,6 +55,98 @@ class UnitAppearance:
                      else self.configuration[8:9])
 
 
+@dataclass(frozen=True)
+class CompositionTile:
+    tile_index: int
+    x: int
+    y: int
+
+
+def _signed_byte(value: int) -> int:
+    return value - 0x100 if value & 0x80 else value
+
+
+def decode_unit_body_script(
+    script: bytes,
+    tile_capacity: int,
+) -> tuple[CompositionTile, ...]:
+    """Decode the verified body-composition commands into an 8x8 tile grid.
+
+    ``F3 dy dx`` moves the cursor and starts a new row, ``FD 20 width``
+    selects the row width, and ``F9 count first`` expands consecutive tiles.
+    Literal bytes draw one tile.  The same row counter is shared by literals
+    and expanded runs, which is required by the large-unit records.
+    """
+
+    if not script:
+        raise ValueError("机体拼图脚本为空。")
+    if not 1 <= tile_capacity <= 0x80:
+        raise ValueError("机体拼图图库容量无效。")
+    x = y = 0
+    row_width = 0x20
+    row_count = 0
+    cursor = 0
+    placements: list[CompositionTile] = []
+
+    def place(tile_index: int) -> None:
+        nonlocal x, y, row_count
+        if not 0 <= tile_index < tile_capacity:
+            raise ValueError(
+                f"机体拼图引用图块 ${tile_index:02X}，超出当前图库容量。"
+            )
+        placements.append(CompositionTile(tile_index, x, y))
+        x += 1
+        row_count += 1
+        if row_count == row_width:
+            x -= row_width
+            y += 1
+            row_count = 0
+
+    while cursor < len(script):
+        opcode = script[cursor]
+        cursor += 1
+        if opcode == 0xFF:
+            if cursor != len(script):
+                raise ValueError("机体拼图结束码后仍有未解析字节。")
+            if placements:
+                width = max(item.x for item in placements) - min(item.x for item in placements) + 1
+                height = max(item.y for item in placements) - min(item.y for item in placements) + 1
+                if width > 16 or height > 16:
+                    raise ValueError(
+                        f"机体拼图范围为 {width}x{height} 图块，超出 128x128 画布。"
+                    )
+            return tuple(placements)
+        if opcode == 0xF3:
+            if cursor + 2 > len(script):
+                raise ValueError("机体拼图的 F3 坐标参数不完整。")
+            y += _signed_byte(script[cursor])
+            x += _signed_byte(script[cursor + 1])
+            cursor += 2
+            row_count = 0
+            continue
+        if opcode == 0xFD:
+            if cursor + 2 > len(script) or script[cursor] != 0x20:
+                raise ValueError("机体拼图只支持已验证的 FD 20 宽度指令。")
+            row_width = script[cursor + 1]
+            cursor += 2
+            row_count = 0
+            if not 1 <= row_width <= 0x20:
+                raise ValueError("机体拼图行宽必须在 1—32 图块之间。")
+            continue
+        if opcode == 0xF9:
+            if cursor + 2 > len(script):
+                raise ValueError("机体拼图的 F9 连续图块参数不完整。")
+            count, first_tile = script[cursor:cursor + 2]
+            cursor += 2
+            for index in range(count):
+                place(first_tile + index)
+            continue
+        if opcode >= 0xF0:
+            raise ValueError(f"机体拼图包含未验证指令 ${opcode:02X}。")
+        place(opcode)
+    raise ValueError("机体拼图缺少 FF 结束码。")
+
+
 def read_unit_appearance(project, unit_id: int) -> UnitAppearance:
     """Read the stock or relocated resources, without guessing write layouts."""
 
@@ -111,4 +203,41 @@ def render_chr_banks(project, banks: tuple[int, ...], colors: tuple[int, ...]) -
             for y in range(8):
                 for x in range(8):
                     image.setPixelColor(x0 + x, y0 + y, palette[pixels[y * 8 + x]])
+    return image
+
+
+def render_unit_body_composition(
+    project,
+    script: bytes,
+    banks: tuple[int, ...],
+    colors: tuple[int, ...],
+) -> QImage:
+    """Render the current unit's body script on the legacy 128x128 canvas."""
+
+    if not banks or len(colors) != 3:
+        raise ValueError("机体拼装预览需要有效图库和三色索引。")
+    if any(bank < 0 or (bank + 1) * 64 > project.chr_tile_count for bank in banks):
+        raise ValueError("机体拼图引用的图库超出活动 CHR。")
+    placements = decode_unit_body_script(script, len(banks) * 64)
+    image = QImage(128, 128, QImage.Format.Format_RGB32)
+    image.fill(QColor("#000000"))
+    if not placements:
+        return image
+    min_x = min(item.x for item in placements)
+    max_x = max(item.x for item in placements)
+    min_y = min(item.y for item in placements)
+    max_y = max(item.y for item in placements)
+    offset_x = (16 - (max_x - min_x + 1)) // 2 - min_x
+    offset_y = (16 - (max_y - min_y + 1)) // 2 - min_y
+    palette = (QColor("#000000"), *(palette_color(value) for value in colors))
+    for placement in placements:
+        bank_index, local_tile = divmod(placement.tile_index, 64)
+        pixels = project.chr_tile_pixels(banks[bank_index] * 64 + local_tile)
+        x0 = (placement.x + offset_x) * 8
+        y0 = (placement.y + offset_y) * 8
+        for y in range(8):
+            for x in range(8):
+                color_index = pixels[y * 8 + x]
+                if color_index:
+                    image.setPixelColor(x0 + x, y0 + y, palette[color_index])
     return image

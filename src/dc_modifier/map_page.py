@@ -748,8 +748,9 @@ class MapPage(ProjectPage):
         self.deployment_objects.currentItemChanged.connect(self._object_list_selected)
         self.deployment_objects.itemClicked.connect(self._object_list_selected)
         self.deployment_objects.itemDoubleClicked.connect(self._object_list_activated)
-        initial_layout.addWidget(self.deployment_objects, 1)
-        self.icon_preview_toggle = QPushButton("展开图标图库预览（只读）")
+        self.deployment_objects.setMinimumHeight(65)
+        self.deployment_objects.setMaximumHeight(150)
+        self.icon_preview_toggle = QPushButton("显示三组图标图库（只读）")
         self.icon_preview_toggle.setCheckable(True)
         initial_layout.addWidget(self.icon_preview_toggle)
         icon_group = QGroupBox("机体图标")
@@ -775,13 +776,14 @@ class MapPage(ProjectPage):
             preview = QLabel("尚未载入 ROM")
             preview.setObjectName("legacyIconSheet")
             preview.setAlignment(Qt.AlignmentFlag.AlignCenter)
-            preview.setFixedHeight(24)
+            preview.setFixedHeight(64)
             preview.setStyleSheet("background: #000000; border: 1px solid #4d555c;")
             icon_group_layout.addWidget(preview)
             self.icon_bank_selectors.append(selector)
             self.icon_sheet_labels.append(preview)
         initial_layout.addWidget(icon_group)
-        icon_group.hide()
+        self.icon_preview_toggle.setChecked(True)
+        initial_layout.addWidget(self.deployment_objects, 1)
         self.open_deployment_button = QPushButton("编辑部署 / 添加 / 复制…")
         self.open_deployment_button.setToolTip(
             "扩展功能；图标地址选择本身仍为只读兼容预览，不会猜写绑定。"
@@ -1506,13 +1508,20 @@ class MapPage(ProjectPage):
                 preview.setPixmap(QPixmap())
                 preview.setText("地址超出活动 CHR")
                 continue
-            image = render_unit_icon_bank(self.project, bank)
+            strip = render_unit_icon_bank(self.project, bank)
+            # Two rows of eight icons make both frames visible at a useful
+            # scale, matching the reference selector's compact bank preview.
+            image = QImage(128, 32, QImage.Format.Format_RGB32)
+            painter = QPainter(image)
+            painter.drawImage(0, 0, strip.copy(0, 0, 128, 16))
+            painter.drawImage(0, 16, strip.copy(128, 0, 128, 16))
+            painter.end()
             preview.setText("")
             preview.setPixmap(
                 QPixmap.fromImage(image).scaled(
-                    384,
-                    24,
-                    Qt.AspectRatioMode.IgnoreAspectRatio,
+                    256,
+                    64,
+                    Qt.AspectRatioMode.KeepAspectRatio,
                     Qt.TransformationMode.FastTransformation,
                 )
             )
