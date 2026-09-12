@@ -22,7 +22,12 @@ a = Analysis(
             "tools/vendor/famistudio-4.5.3/Tools",
         )
     ],
-    datas=[],
+    datas=[
+        (
+            str(ROOT / "src" / "resources" / "default_config" / "行动名称.ini"),
+            "resources/default_config",
+        )
+    ],
     hiddenimports=[],
     hookspath=[],
     hooksconfig={},

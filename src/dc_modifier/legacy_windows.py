@@ -36,6 +36,7 @@ from PySide6.QtWidgets import (
 )
 
 from fc_editor.dc_text import dc_map_label, default_dc_text_table
+from fc_editor.models import UNIT_FIELD_BY_KEY
 from fc_editor.resources import Allocation, BankAllocator
 from fc_editor.unit_package import UnitPackage
 from fc_rom_editor_core import RomProject
@@ -50,7 +51,12 @@ from .database_graphics import (
 from .database_records import (
     ReadableCharacterPage, ReadableWeaponPage, collapsible_details, readable_references,
 )
-from .map_page import NesColorButton, render_map_title, render_unit_icon_bank
+from .map_page import (
+    MAP_ICON_BANK_CANDIDATES,
+    NesColorButton,
+    render_map_title,
+    render_unit_icon_bank,
+)
 from .pages import CharacterPage, ProjectPage, UnitPage, WeaponPage
 from .persuasion_page import PersuasionPage
 from .story_page import StoryPage
@@ -248,11 +254,20 @@ class TransactionalProjectDialog(QDialog):
             self.project._refresh_dynamic_codecs()
         self._snapshot = None
         self._session_active = False
-        for page in self.pages:
+        pending_pages = tuple(page for page in self.pages if page.has_pending_draft)
+        for page in pending_pages:
             discard = getattr(page, "discard_pending_changes", None)
             if callable(discard):
                 discard()
-        self._refresh_pages()
+            else:
+                page.refresh()
+        # An untouched modal used to rebuild every table, text codec and CHR
+        # preview while it was closing.  Besides being unnecessary, that made
+        # Cancel slower than opening the database.  Pending pages restore their
+        # own form above; a complete reload is only required after ROM bytes
+        # were actually rolled back.
+        if restored:
+            self._refresh_pages()
         if restored:
             title = self.windowTitle() or self._dialog_title
             self.project_changed.emit(f"已取消{title}修改并恢复打开前状态")
@@ -345,6 +360,106 @@ class _LegacyUnitController(UnitPage):
     def load_record(self, record_id: int | None) -> None:
         super().load_record(record_id)
         self.record_loaded.emit()
+
+
+UNIT_SPECIAL_FLAGS: tuple[tuple[int, str], ...] = (
+    (0x08, "视层装甲反射系统（反伤）"),
+    (0x10, "先制攻击"),
+    (0x20, "一击脱离（仅限我方）"),
+    (0x40, "异次元连接系统"),
+    (0x80, "扭曲力场"),
+)
+UNIT_SPECIAL_LOW_BITS: tuple[str, ...] = (
+    "无",
+    "T防御系统",
+    "相对转移装甲",
+    "VPS防御系统",
+    "重力波罩",
+    "海市蜃楼隐形系统",
+    "重力漩涡",
+    "用盾防御",
+)
+
+
+def unit_special_names(value: int) -> list[str]:
+    names = [] if not value & 0x07 else [UNIT_SPECIAL_LOW_BITS[value & 0x07]]
+    names.extend(label for mask, label in UNIT_SPECIAL_FLAGS if value & mask)
+    return names
+
+
+def unit_special_summary(value: int) -> str:
+    """Return the reference editor's named unit-special combination."""
+
+    names = unit_special_names(value)
+    return f"${value:02X} · " + ("、".join(names) if names else "无")
+
+
+class UnitSpecialEditorDialog(QDialog):
+    """Visual editor for the verified bit layout of the unit-special byte."""
+
+    def __init__(
+        self,
+        value: int,
+        parent: QWidget | None = None,
+    ) -> None:
+        super().__init__(parent)
+        if not 0 <= value <= 0xFF:
+            raise ValueError("机体特殊技能必须在 $00—$FF 之间。")
+        self.setWindowTitle("机体特殊技能")
+        self.setModal(True)
+        self.setMinimumWidth(390)
+
+        root = QVBoxLayout(self)
+        hint = QLabel("按旧修改器的 $77F7 位定义编辑；下拉项与勾选能力可以组合。")
+        hint.setWordWrap(True)
+        hint.setObjectName("hintText")
+        root.addWidget(hint)
+
+        self.low_bits = QComboBox()
+        for low_value, label in enumerate(UNIT_SPECIAL_LOW_BITS):
+            self.low_bits.addItem(f"{low_value:02X}：{label}", low_value)
+        self.low_bits.setCurrentIndex(value & 0x07)
+        form = QFormLayout()
+        form.addRow("低三位组合", self.low_bits)
+        root.addLayout(form)
+
+        flags = QGroupBox("已命名能力")
+        flags_layout = QVBoxLayout(flags)
+        self.flag_checks: dict[int, QCheckBox] = {}
+        for mask, label in UNIT_SPECIAL_FLAGS:
+            check = QCheckBox(f"{label}（${mask:02X}）")
+            check.setChecked(bool(value & mask))
+            check.toggled.connect(self._refresh_summary)
+            flags_layout.addWidget(check)
+            self.flag_checks[mask] = check
+        root.addWidget(flags)
+
+        self.summary = QLabel()
+        self.summary.setObjectName("pendingState")
+        self.summary.setWordWrap(True)
+        root.addWidget(self.summary)
+
+        buttons = QHBoxLayout()
+        buttons.addStretch()
+        ok_button = QPushButton("确定")
+        cancel_button = QPushButton("取消")
+        ok_button.clicked.connect(self.accept)
+        cancel_button.clicked.connect(self.reject)
+        buttons.addWidget(ok_button)
+        buttons.addWidget(cancel_button)
+        root.addLayout(buttons)
+        self.low_bits.currentIndexChanged.connect(self._refresh_summary)
+        self._refresh_summary()
+
+    def value(self) -> int:
+        value = int(self.low_bits.currentData())
+        for mask, check in self.flag_checks.items():
+            if check.isChecked():
+                value |= mask
+        return value
+
+    def _refresh_summary(self) -> None:
+        self.summary.setText("组合结果：" + unit_special_summary(self.value()))
 
 
 class LegacyUnitDatabasePage(ProjectPage):
@@ -593,7 +708,7 @@ class LegacyUnitDatabasePage(ProjectPage):
         icon_layout = QHBoxLayout(icon_box)
         icon_layout.setContentsMargins(6, 4, 6, 4)
         self.icon_bank = QComboBox()
-        for bank in range(0x34, 0x37):
+        for bank in MAP_ICON_BANK_CANDIDATES:
             self.icon_bank.addItem(f"图库 ${bank:02X}", bank)
         self.icon_bank.currentIndexChanged.connect(self._refresh_icon_bank)
         icon_layout.addWidget(self.icon_bank)
@@ -699,9 +814,13 @@ class LegacyUnitDatabasePage(ProjectPage):
         self.terrain.setToolTip("仅修改机体类型的低两位，变形和其他标志保持原值。")
         basic_form.addRow("适应地形", self.terrain)
         self.transform = QComboBox()
-        self.transform.addItem("字段关系待验证")
-        self.transform.setEnabled(False)
-        self.transform.setToolTip("变形关系尚未完成差分验证。")
+        for value, label in (UNIT_FIELD_BY_KEY["transform"].choices or {}).items():
+            self.transform.addItem(label, value)
+        self.transform.currentIndexChanged.connect(self._transform_changed)
+        self.fields["transform"].valueChanged.connect(self._refresh_transform)
+        self.transform.setToolTip(
+            "只修改机体类型字节的高六位；适应地形低两位保持不变。"
+        )
         basic_form.addRow("变形", self.transform)
         technical = QWidget()
         technical_form = QFormLayout(technical)
@@ -762,7 +881,23 @@ class LegacyUnitDatabasePage(ProjectPage):
                     label = QLabel(labels[field_key])
                     editor = self.fields[field_key]
                 attribute_grid.addWidget(label, grid_row, column)
-                attribute_grid.addWidget(editor, grid_row, column + 1)
+                if field_key == "special":
+                    self.special_skill_button = QPushButton()
+                    self.special_skill_button.setToolTip(
+                        "点击按旧修改器的组合位定义编辑机体特殊技能。"
+                    )
+                    self.special_skill_button.setMaximumWidth(240)
+                    self.special_skill_button.clicked.connect(
+                        self._edit_special_skill
+                    )
+                    editor.hide()
+                    editor.valueChanged.connect(self._refresh_special_skill_button)
+                    self._refresh_special_skill_button(editor.value())
+                    attribute_grid.addWidget(
+                        self.special_skill_button, grid_row, column + 1
+                    )
+                else:
+                    attribute_grid.addWidget(editor, grid_row, column + 1)
         row.addWidget(attributes, 0, 1)
 
         weapons = QGroupBox("机体武器")
@@ -795,6 +930,37 @@ class LegacyUnitDatabasePage(ProjectPage):
         weapons_layout.addStretch()
         row.addWidget(weapons, 1, 0, 1, 2)
         return row
+
+    def _refresh_special_skill_button(self, value: int) -> None:
+        names = unit_special_names(value)
+        if len(names) <= 1:
+            text = unit_special_summary(value)
+        else:
+            text = f"${value:02X} · {len(names)}项：{names[0]}"
+        self.special_skill_button.setText(text)
+        self.special_skill_button.setToolTip(
+            unit_special_summary(value) + "\n点击编辑组合能力。"
+        )
+
+    def _transform_changed(self, index: int) -> None:
+        value = self.transform.itemData(index)
+        if value is not None:
+            self.fields["transform"].setValue(int(value))
+
+    def _refresh_transform(self, value: int) -> None:
+        index = self.transform.findData(value)
+        if index < 0:
+            self.transform.addItem(f"保留原码 ${value << 2:02X}", value)
+            index = self.transform.count() - 1
+        blocked = self.transform.blockSignals(True)
+        self.transform.setCurrentIndex(index)
+        self.transform.blockSignals(blocked)
+
+    def _edit_special_skill(self) -> None:
+        editor = self.fields["special"]
+        dialog = UnitSpecialEditorDialog(editor.value(), self)
+        if dialog.exec() == QDialog.DialogCode.Accepted:
+            editor.setValue(dialog.value())
 
     def _request_weapon(self, slot: int) -> None:
         editor = self.weapon_slots[slot]
@@ -915,10 +1081,7 @@ class LegacyUnitDatabasePage(ProjectPage):
             f"${raw[0]:02X} · 地形低2位 {raw[0] & 3} · 其余标志 ${raw[0] & 0xFC:02X}"
         )
         self.raw_graphics_index.setText(f"${raw[2]:02X}")
-        self.transform.blockSignals(True)
-        self.transform.clear()
-        self.transform.addItem(f"保留原始高位 ${raw[0] & 0xFC:02X}（关系未解码）")
-        self.transform.blockSignals(False)
+        self._refresh_transform(self.fields["transform"].value())
         try:
             appearance = read_unit_appearance(self.project, unit_id)
             self.graphics_status.setText(
@@ -994,7 +1157,11 @@ class LegacyUnitDatabasePage(ProjectPage):
 
         for field_key, editor in self.fields.items():
             base_value = self.project.get_value(unit_id, field_key, original=True)
-            editor.setToolTip(f"{editor.toolTip().split('；基准ROM：')[0]}；基准ROM：{base_value}")
+            scale = self.project.unit_field(field_key).display_scale
+            editor.setToolTip(
+                f"{editor.toolTip().split('；基准ROM：')[0]}；"
+                f"基准ROM：{base_value * scale}"
+            )
 
     def set_project(self, project: RomProject | None) -> None:
         self.project = project
@@ -1727,6 +1894,21 @@ class DatabaseDialog(TransactionalProjectDialog):
                 selected = self.unit_page.records.currentItem()
                 if selected is not None and int(selected.data(Qt.ItemDataRole.UserRole)) == unit_id:
                     self.unit_page.records.scrollToItem(selected)
+                break
+
+    def _select_character(self, character_id: int) -> None:
+        self.database_search.clear()
+        self.tabs.setCurrentIndex(1)
+        for row in range(self.character_page.records.count()):
+            item = self.character_page.records.item(row)
+            if int(item.data(Qt.ItemDataRole.UserRole)) == character_id:
+                self.character_page.records.setCurrentRow(row)
+                selected = self.character_page.records.currentItem()
+                if (
+                    selected is not None
+                    and int(selected.data(Qt.ItemDataRole.UserRole)) == character_id
+                ):
+                    self.character_page.records.scrollToItem(selected)
                 break
 
     def _refresh_database_context(self, index: int) -> None:

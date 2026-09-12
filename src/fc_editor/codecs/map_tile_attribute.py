@@ -38,6 +38,22 @@ class MapTileAttributeCodec:
     }
     PALETTE_BYTES = (0x00, 0x55, 0xAA, 0xFF)
     MAX_MOVE = 0x10
+    # Tile 5 in A and D uses the exact same four CHR water tiles. Archived
+    # ROMs saved by the legacy modifier additionally prove the high-bit sea
+    # flag for C5 and D5; B5 has the same water silhouette. Some expanded
+    # ROMs omitted those flags, so surface the game terrain instead of
+    # presenting a misleading all-empty Sea column. Applying the dialog
+    # repairs the missing high bit in the normal defence byte.
+    VISUAL_SEA_TILES = {
+        "A": frozenset((5,)),
+        "B": frozenset((5,)),
+        "C": frozenset((5,)),
+        "D": frozenset((5,)),
+    }
+
+    @classmethod
+    def is_visual_sea(cls, key: str, tile_index: int) -> bool:
+        return tile_index in cls.VISUAL_SEA_TILES.get(key.upper(), ())
 
     @classmethod
     def record_offset(cls, key: str) -> int:

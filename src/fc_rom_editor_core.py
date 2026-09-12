@@ -7,7 +7,7 @@ import re
 import shutil
 import tempfile
 from contextlib import contextmanager
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from datetime import datetime
 from pathlib import Path
 from collections.abc import Iterable, Iterator
@@ -74,6 +74,8 @@ from fc_editor.expansion_story import (
 )
 from fc_editor.expansion_unit import (
     ATTRIBUTE_TABLE,
+    CONFIGURATION_CAVE_END,
+    CONFIGURATION_CAVE_START,
     CORE_CAVE_END,
     CORE_CAVE_START,
     NAME_TABLE,
@@ -88,6 +90,7 @@ from fc_editor.expansion_unit import (
     UnitExpansionRecords,
     extract_unit_expansion_records,
     pack_unit_expansion,
+    validate_unit_expansion_payload,
 )
 from fc_editor.models import (
     FieldSpec,
@@ -1537,6 +1540,98 @@ class RomProject:
         offset = self.chr_codec.tile_offset(tile_index)
         self.working[offset : offset + 16] = self.chr_codec.encode_tile(pixels)
         self._finish_mutation(before, f"CHR图块 ${tile_index:04X}")
+
+    def set_unit_appearance_scripts(
+        self,
+        unit_id: int,
+        *,
+        body_script: bytes | None = None,
+        fragment_script: bytes | None = None,
+    ) -> None:
+        """Repack one unit's verified composition scripts in the active pool."""
+
+        if not 1 <= unit_id < self.unit_count:
+            raise IndexError("请选择有效机体。")
+        plan = self.expansion_plan
+        if plan is None or not plan.flags & FLAG_UNITS:
+            raise ValueError("拼图脚本写入需要先完成机体扩容绑定。")
+        pairs = self._unit_pairs(plan)
+        records = validate_unit_expansion_payload(self.working, pairs)
+        body = list(records.body_scripts)
+        fragments = list(records.fragment_scripts)
+        if body_script is not None:
+            body[unit_id - 1] = bytes(body_script)
+        if fragment_script is not None:
+            fragments[unit_id - 1] = bytes(fragment_script)
+        updated = replace(
+            records,
+            body_scripts=tuple(body),
+            fragment_scripts=tuple(fragments),
+        )
+        name_source_ids: list[int] = []
+        for current_id in range(1, self.unit_count):
+            pointer = self.unit_name_codec.pointer(current_id, bytes(self.working))
+            source_ids = self.unit_name_codec.source_ids(pointer)
+            if not source_ids:
+                raise ValueError(f"机体 ${current_id:02X} 的名称引用无法识别。")
+            name_source_ids.append(source_ids[0])
+        before = self._mutation_snapshot()
+        try:
+            # Rebuild from the immutable stock mirrors: the active expansion
+            # pairs already contain packed cave data and therefore are not a
+            # valid linker template.  All editable records come from
+            # ``updated`` above, so no record-level work is lost.
+            template = bytearray(self.original)
+            pair_size = PRG_BANK_SIZE * 2
+            for source_pair, active_pair in (
+                (SOURCE_CORE_PAIR, plan.unit_banks[0]),
+                (SOURCE_CONFIGURATION_PAIR, plan.unit_banks[2]),
+            ):
+                source_start = bank_file_offset(source_pair)
+                active_start = bank_file_offset(active_pair)
+                template[source_start:source_start + pair_size] = self.working[
+                    active_start:active_start + pair_size
+                ]
+                # The linker consumes the stock directory shape, while the
+                # active mirror already points at packed cave records.
+                template[source_start:source_start + 0x10] = self.original[
+                    source_start:source_start + 0x10
+                ]
+            for pair, lower, upper in (
+                (SOURCE_CORE_PAIR, CORE_CAVE_START, CORE_CAVE_END),
+                (
+                    SOURCE_CONFIGURATION_PAIR,
+                    CONFIGURATION_CAVE_START,
+                    CONFIGURATION_CAVE_END,
+                ),
+            ):
+                start = bank_file_offset(pair) + lower - 0x8000
+                end = bank_file_offset(pair) + upper - 0x8000
+                template[start:end] = self.original[start:end]
+            packed = pack_unit_expansion(
+                template,
+                pairs,
+                records=updated,
+                name_source_ids=tuple(name_source_ids),
+            )
+            for patch in packed.descriptor_patches:
+                if bytes(self.working[patch.offset:patch.offset + 2]) != patch.after:
+                    raise ValueError(
+                        f"选择器 ${patch.selector:02X} 未指向当前机体扩容资源。"
+                    )
+            for pair_image in packed.pair_images:
+                start = pair_image.file_offset
+                self.working[start:start + len(pair_image.image)] = pair_image.image
+            self._refresh_dynamic_codecs()
+        except Exception:
+            if before is not None:
+                self.working[:] = before.data
+                self.resource_allocator = BankAllocator(
+                    self.profile, self.original, before.allocations
+                )
+                self._refresh_dynamic_codecs()
+            raise
+        self._finish_mutation(before, f"机体 ${unit_id:02X} · 拼图脚本")
 
     def set_chr_range(self, first_tile: int, payload: bytes) -> int:
         if not payload or len(payload) % 16:

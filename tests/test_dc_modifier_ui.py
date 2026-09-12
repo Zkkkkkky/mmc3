@@ -8,7 +8,7 @@ from unittest.mock import patch
 
 os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 
-from PySide6.QtCore import QRect
+from PySide6.QtCore import QRect, Qt
 from PySide6.QtGui import QAction, QImage, QPainter
 from PySide6.QtWidgets import (
     QApplication,
@@ -57,6 +57,62 @@ class DesktopEditorSmokeTests(QtTestCase):
     def setUp(self) -> None:
         self.window = MainWindow(open_default=True)
         self.assertIsNotNone(self.window.project)
+
+    def test_database_window_is_reused_between_openings(self) -> None:
+        with patch.object(
+            DatabaseDialog,
+            "exec",
+            return_value=QDialog.DialogCode.Rejected,
+        ):
+            self.window.open_database()
+            first = self.window._database_dialog
+            self.window.open_database()
+        self.assertIsNotNone(first)
+        self.assertIs(self.window._database_dialog, first)
+
+    def test_map_deployment_opens_preselected_attribute_calculator(self) -> None:
+        opened = []
+        with patch.object(self.window, "_run_tool_dialog", opened.append):
+            self.window._open_deployment_attribute_calculator(4, 2, 12)
+
+        self.assertEqual(len(opened), 1)
+        dialog = opened[0]
+        for side in (dialog.enemy, dialog.ally):
+            self.assertEqual(side.character.currentData(), 4)
+            self.assertEqual(side.unit.currentData(), 2)
+            self.assertEqual(side.level.currentText(), "12")
+        dialog.deleteLater()
+
+    def test_map_deployment_opens_database_at_exact_unit(self) -> None:
+        with patch.object(
+            DatabaseDialog,
+            "exec",
+            return_value=QDialog.DialogCode.Rejected,
+        ):
+            self.window._open_database_record("units", 88)
+
+        dialog = self.window._database_dialog
+        self.assertIsInstance(dialog, DatabaseDialog)
+        self.assertEqual(dialog.tabs.currentIndex(), 0)
+        self.assertEqual(
+            dialog.unit_page.records.currentItem().data(Qt.ItemDataRole.UserRole),
+            88,
+        )
+
+    def test_map_deployment_opens_preselected_experience_calculator(self) -> None:
+        opened = []
+        with patch.object(self.window, "_run_tool_dialog", opened.append):
+            self.window._open_defeat_experience_calculator(88, 54)
+
+        self.assertEqual(len(opened), 1)
+        dialog = opened[0]
+        self.assertEqual(dialog.unit.currentData(), 88)
+        self.assertEqual(dialog.enemy_level.value(), 54)
+        self.assertEqual(
+            dialog.inherent_experience.text(),
+            str(self.window.project.get_value(88, "experience")),
+        )
+        dialog.deleteLater()
 
     def test_numeric_spin_style_draws_large_visible_up_and_down_arrows(self) -> None:
         style = VisibleArrowStyle("Fusion")

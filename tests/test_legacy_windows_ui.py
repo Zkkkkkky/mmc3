@@ -321,6 +321,10 @@ class LegacyWindowTests(QtTestCase):
         self.assertTrue(page.body_layout_button.isEnabled())
         self.assertTrue(page.fragment_layout_button.isEnabled())
         self.assertTrue(page.icon_group.isVisible())
+        self.assertEqual(
+            [page.icon_bank.itemData(index) for index in range(page.icon_bank.count())],
+            [0x34, 0x35, 0x36, 0x3A, 0x3C, 0x3E, 0x40, 0x44, 0x46, 0x47, 0x48],
+        )
         self.assertTrue(page.copy_record_button.isVisible())
         self.assertTrue(page.paste_record_button.isVisible())
         self.assertTrue(page.export_record_button.isVisible())

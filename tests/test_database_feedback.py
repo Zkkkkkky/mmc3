@@ -55,6 +55,11 @@ class DatabaseFeedbackTests(QtTestCase):
         self.dialog.deleteLater()
         self.app.processEvents()
 
+    def test_untouched_close_does_not_rebuild_every_database_page(self) -> None:
+        with patch.object(self.dialog, "_refresh_pages") as refresh_pages:
+            self.dialog.reject()
+        refresh_pages.assert_not_called()
+
     def test_appearance_reads_active_bytes_and_excludes_small_record_trailing_byte(self) -> None:
         appearance = read_unit_appearance(self.project, 2)
         self.assertEqual(appearance.configuration, bytes.fromhex("00 26 06 20 2a 00 10 4e 00 00"))

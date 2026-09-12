@@ -291,6 +291,8 @@ class MainWindow(QMainWindow):
         self._stale_pages: set[ProjectPage] = set()
         self._count_snapshot: bytes | None = None
         self._changed_byte_count = 0
+        self._database_dialog: QDialog | None = None
+        self._database_dialog_snapshot: bytes | None = None
         self.setAcceptDrops(True)
 
         # Keep a non-visual registry for automated functional checks. Only the
@@ -329,6 +331,15 @@ class MainWindow(QMainWindow):
         assert isinstance(self.map_page, MapPage)
         self.map_page.canvas.coordinate_changed.connect(self._map_coordinate_changed)
         self.map_page.draft_state_changed.connect(self._update_window_state)
+        self.map_page.attribute_calculator_requested.connect(
+            self._open_deployment_attribute_calculator
+        )
+        self.map_page.database_record_requested.connect(
+            self._open_database_record
+        )
+        self.map_page.defeat_experience_requested.connect(
+            self._open_defeat_experience_calculator
+        )
 
         self._create_actions()
         self._create_menus()
@@ -509,11 +520,54 @@ class MainWindow(QMainWindow):
         self.status.showMessage(message, 4000)
 
     def open_database(self) -> None:
+        dialog = self._prepare_database_dialog()
+        if dialog is not None:
+            self._execute_database_dialog(dialog)
+
+    def _prepare_database_dialog(self):
         if self.project is None:
-            return
+            return None
         from .legacy_windows import DatabaseDialog
 
-        self._run_project_dialog(DatabaseDialog(self.project, self), "数据库修改已确认")
+        dialog = self._database_dialog
+        current_snapshot = bytes(self.project.working)
+        if not isinstance(dialog, DatabaseDialog):
+            dialog = DatabaseDialog(self.project, self)
+            dialog.project_changed.connect(self._dialog_edit_notice)
+            self._database_dialog = dialog
+        elif (
+            dialog.project is not self.project
+            or self._database_dialog_snapshot != current_snapshot
+        ):
+            # The same window is reused between visits.  Reload it only when
+            # another editor (or a newly opened ROM) changed its backing data.
+            dialog.set_project(self.project)
+        return dialog
+
+    def _execute_database_dialog(self, dialog: QDialog) -> None:
+        if self.project is None:
+            return
+        from .window_layout import fit_dialog_to_screen
+
+        fit_dialog_to_screen(dialog)
+        result = dialog.exec()
+        self._database_dialog_snapshot = bytes(self.project.working)
+        self._refresh_registered_pages(preserve_map_draft=True)
+        self._update_window_state()
+        if result == QDialog.DialogCode.Accepted:
+            self.status.showMessage("数据库修改已确认", 4000)
+
+    def _open_database_record(self, record_kind: str, record_id: int) -> None:
+        dialog = self._prepare_database_dialog()
+        if dialog is None:
+            return
+        if record_kind == "units":
+            dialog._select_unit(record_id)
+        elif record_kind == "characters":
+            dialog._select_character(record_id)
+        else:
+            return
+        self._execute_database_dialog(dialog)
 
     def open_rom_data_browser(self) -> None:
         if self.project is None:
@@ -565,6 +619,36 @@ class MainWindow(QMainWindow):
         from .legacy_tools import AttributeCalculatorDialog
 
         self._run_tool_dialog(AttributeCalculatorDialog(parent=self, project=self.project))
+
+    def _open_deployment_attribute_calculator(
+        self, character_id: int, unit_id: int, level: int
+    ) -> None:
+        if self.project is None:
+            return
+        from .legacy_tools import AttributeCalculatorDialog
+
+        dialog = AttributeCalculatorDialog(parent=self, project=self.project)
+        for side in (dialog.enemy, dialog.ally):
+            side.character.setCurrentIndex(side.character.findData(character_id))
+            side.unit.setCurrentIndex(side.unit.findData(unit_id))
+            side.level.setCurrentIndex(max(0, min(98, level - 1)))
+        self._run_tool_dialog(dialog)
+
+    def _open_defeat_experience_calculator(
+        self, unit_id: int, enemy_level: int
+    ) -> None:
+        if self.project is None:
+            return
+        from .legacy_tools import DefeatExperienceCalculatorDialog
+
+        self._run_tool_dialog(
+            DefeatExperienceCalculatorDialog(
+                parent=self,
+                project=self.project,
+                unit_id=unit_id,
+                enemy_level=enemy_level,
+            )
+        )
 
     def open_save_editor(self) -> None:
         if self.project is None:

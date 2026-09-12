@@ -1,10 +1,19 @@
 Traceback (most recent call last):
+  File "D:\GIT\mmc3\.venv\Lib\site-packages\pywinauto\application.py", line 1038, in start
+    (h_process, _, dw_process_id, _) = win32process.CreateProcess(
+                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+pywintypes.error: (740, 'CreateProcess', '请求的操作需要提升。')
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
   File "D:\GIT\mmc3\tools\audit_legacy_modifier_ui.py", line 497, in <module>
     raise SystemExit(main())
                      ^^^^^^
-  File "D:\GIT\mmc3\tools\audit_legacy_modifier_ui.py", line 207, in main
-    main_window = _main_editor_window(app)
-                  ^^^^^^^^^^^^^^^^^^^^^^^^
-  File "D:\GIT\mmc3\tools\audit_legacy_modifier_ui.py", line 129, in _main_editor_window
-    raise RuntimeError("Unable to reacquire the legacy editor window")
-RuntimeError: Unable to reacquire the legacy editor window
+  File "D:\GIT\mmc3\tools\audit_legacy_modifier_ui.py", line 178, in main
+    app = Application(backend="win32").start(
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\GIT\mmc3\.venv\Lib\site-packages\pywinauto\application.py", line 1052, in start
+    raise AppStartError(message)
+pywinauto.application.AppStartError: Could not create the process "D:\GIT\mmc3\output\build\legacy-diff-audit\SRW2_patched.exe"
+Error returned by CreateProcess: (740, 'CreateProcess', '请求的操作需要提升。')

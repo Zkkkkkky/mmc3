@@ -1,9 +1,11 @@
 from __future__ import annotations
 
+from pathlib import Path
+
 from PySide6.QtCore import QPoint, QRect, QSize, Qt, Signal
 from PySide6.QtGui import (
     QColor, QFont, QFontDatabase, QIcon, QImage, QMouseEvent, QPainter,
-    QPen, QPixmap,
+    QPen, QPixmap, QStandardItemModel,
 )
 from PySide6.QtWidgets import (
     QAbstractItemView,
@@ -31,13 +33,23 @@ from PySide6.QtWidgets import (
     QTableWidget,
     QTableWidgetItem,
     QTabWidget,
+    QToolTip,
     QVBoxLayout,
     QWidget,
 )
 
 from fc_editor.dc_text import dc_map_label
+from fc_editor.codecs.character_attributes import (
+    CharacterAttributesCodec,
+    weapon_extra_values,
+)
+from fc_editor.codecs.legacy_text_growth import LegacyGrowthCodec
 from fc_editor.codecs.map_trigger import MapTrigger
-from fc_editor.codecs.map_tile_attribute import MapTileAttribute, MapTilesetAttributes
+from fc_editor.codecs.map_tile_attribute import (
+    MapTileAttribute,
+    MapTileAttributeCodec,
+    MapTilesetAttributes,
+)
 
 from fc_editor.models import PlayerPlacement, ScenarioEntity, ScenarioLayout
 
@@ -82,7 +94,64 @@ MAP_ICON_PALETTES_NES = {
     "客": (0x0F, 0x30, 0x2A, 0x1A),
     "我": ICON_PALETTE_NES,
 }
-MAP_ICON_BANKS = (0x34, 0x35, 0x36)
+# The three map-icon windows are switched by the scenario loader.  These routes
+# were read row-by-row from the reference editor; they must not be collapsed to
+# one global tuple (in particular, the third page is not always $36 or $3A).
+SCENARIO_MAP_ICON_BANKS = (
+    (0x34, 0x35, 0x36), (0x34, 0x35, 0x36),
+    (0x34, 0x35, 0x36), (0x34, 0x35, 0x3A),
+    (0x34, 0x35, 0x3A), (0x34, 0x35, 0x3C),
+    (0x34, 0x35, 0x3C), (0x34, 0x35, 0x3C),
+    (0x34, 0x35, 0x3C), (0x34, 0x35, 0x3E),
+    (0x34, 0x35, 0x40), (0x34, 0x35, 0x3E),
+    (0x34, 0x35, 0x3E), (0x34, 0x35, 0x36),
+    (0x34, 0x35, 0x36), (0x34, 0x35, 0x3A),
+    (0x34, 0x35, 0x3C), (0x34, 0x35, 0x3C),
+    (0x34, 0x35, 0x3C), (0x34, 0x35, 0x3E),
+    (0x34, 0x35, 0x3E), (0x34, 0x35, 0x3E),
+    (0x34, 0x35, 0x40), (0x34, 0x35, 0x40),
+    (0x34, 0x35, 0x3A), (0x34, 0x35, 0x40),
+    (0x34, 0x35, 0x44), (0x46, 0x47, 0x3C),
+    (0x46, 0x47, 0x48), (0x46, 0x47, 0x48),
+    (0x46, 0x47, 0x48), (0x46, 0x47, 0x48),
+)
+MAP_ICON_BANK_CANDIDATES = tuple(
+    sorted({bank for route in SCENARIO_MAP_ICON_BANKS for bank in route})
+)
+
+
+def scenario_map_icon_banks(map_id: int) -> tuple[int, int, int]:
+    """Return the reference runtime CHR route for one playable scenario."""
+
+    if not 0 <= map_id < len(SCENARIO_MAP_ICON_BANKS):
+        raise IndexError(f"没有地图 ${map_id:02X} 的机体图标路由")
+    return SCENARIO_MAP_ICON_BANKS[map_id]
+
+
+def _load_action_names() -> tuple[str, ...]:
+    """Load the reference action labels while keeping every byte value valid."""
+
+    path = (
+        Path(__file__).resolve().parents[1]
+        / "resources"
+        / "default_config"
+        / "行动名称.ini"
+    )
+    labels: list[str] = []
+    if path.is_file():
+        for encoding in ("utf-8-sig", "gb18030"):
+            try:
+                labels = [line.strip() for line in path.read_text(encoding=encoding).splitlines()]
+                break
+            except UnicodeError:
+                continue
+    return tuple(
+        labels[index] if index < len(labels) and labels[index] else "未命名/保留值"
+        for index in range(256)
+    )
+
+
+ACTION_NAMES = _load_action_names()
 
 
 class TerrainButton(QPushButton):
@@ -128,15 +197,20 @@ def render_unit_icon_bank(project, bank: int) -> QImage:
     return image
 
 
-def render_unit_map_icon(project, unit_id: int, side: str) -> QImage:
+def render_unit_map_icon(
+    project,
+    unit_id: int,
+    side: str,
+    icon_banks: tuple[int, int, int],
+) -> QImage:
     """Render the unit's verified four-tile map icon with its faction palette."""
 
     if not 1 <= unit_id < project.unit_count:
         return QImage()
     first_tile = project.record_bytes(unit_id)[2]
-    if first_tile % 4 or first_tile >= len(MAP_ICON_BANKS) * 64:
+    if first_tile % 4 or first_tile >= len(icon_banks) * 64:
         return QImage()
-    bank = MAP_ICON_BANKS[first_tile // 64]
+    bank = icon_banks[first_tile // 64]
     chr_first_tile = bank * 64 + first_tile % 64
     colors = tuple(
         palette_color(value)
@@ -450,7 +524,8 @@ class TileAttributeDialog(QDialog):
             self.notice.setText(
                 f"图库 {self.tileset_key}：颜色表、防御补正、海属性及空/陆/海移动补正"
                 "已完成字段级差分验证。颜色表2、3为公用表，本窗口只修改颜色表1。"
-                "属性颜色表列保留旧版原码；所有图块预览均按游戏内地形效果显示。"
+                "属性颜色表列保留旧版原码。若扩展 ROM 漏写已确认水面图块的海属性，"
+                "界面会勾选提示，应用时补写。所有图块预览均按游戏内地形效果显示。"
             )
             self._load(project.get_map_tileset_attributes(self.tileset_key))
         else:
@@ -472,7 +547,18 @@ class TileAttributeDialog(QDialog):
         for index, tile in enumerate(value.tiles):
             self.palette_boxes[index].setCurrentIndex(tile.palette)
             self.defense_spins[index].setValue(tile.defense)
-            self.sea_checks[index].setChecked(tile.sea)
+            inferred_sea = (
+                not tile.sea
+                and MapTileAttributeCodec.is_visual_sea(
+                    self.tileset_key, index
+                )
+            )
+            self.sea_checks[index].setChecked(tile.sea or inferred_sea)
+            self.sea_checks[index].setToolTip(
+                "ROM 海属性标志已读取。"
+                if not inferred_sea
+                else "ROM 漏写海属性；已按旧修改器备份与相同水面 CHR 识别。应用后会补写标志。"
+            )
             self.air_boxes[index].setCurrentIndex(tile.air_move)
             self.land_boxes[index].setCurrentIndex(tile.land_move)
             self.sea_boxes[index].setCurrentIndex(tile.sea_move)
@@ -618,6 +704,7 @@ class MapCanvas(QWidget):
         self.selected_overlay: tuple[str, int] | None = None
         self.overlay_descriptions: dict[tuple[str, int], str] = {}
         self.overlay_images: dict[tuple[str, int], QImage] = {}
+        self._visible_tooltip_key: tuple[tuple[int, int], str] | None = None
         self.paint_enabled = True
         self.deployment_edit_enabled = False
         self.trigger_edit_enabled = False
@@ -694,21 +781,20 @@ class MapCanvas(QWidget):
                     self.cell_size,
                     self.cell_size,
                 )
-                # A raw NES sprite uses transparent colour zero.  Drawing it
-                # directly over a detailed map made several factions almost
-                # disappear, so keep the authentic pixels but give them the
-                # same high-contrast black preview plate used by the legacy
-                # modifier.  The coloured rim also communicates the faction
-                # without replacing the real four-tile icon.
+                # Keep the dark plate for visibility on detailed terrain, but
+                # omit permanent faction rims and use the full map cell for
+                # the authentic four-tile sprite.
                 painter.fillRect(icon_rect, QColor(0, 0, 0, 235))
-                painter.setBrush(Qt.BrushStyle.NoBrush)
-                painter.setPen(QPen(side_colors[side], 2))
-                painter.drawRect(icon_rect.adjusted(1, 1, -1, -1))
-                painter.drawImage(icon_rect.adjusted(2, 2, -2, -2), icon)
+                painter.drawImage(icon_rect, icon)
                 if self.selected_overlay == (side, row):
                     painter.setBrush(Qt.BrushStyle.NoBrush)
                     painter.setPen(QPen(QColor("#ffe45e"), 3))
                     painter.drawRect(icon_rect.adjusted(1, 1, -1, -1))
+                continue
+            # Empty runtime party slots do not create a unit in the game.
+            # Keep them in the hit-test collection for right-click editing,
+            # but do not invent a numbered machine marker on the battlefield.
+            if side == "我":
                 continue
             margin = max(2, self.cell_size // 7)
             rect = QRect(
@@ -809,11 +895,30 @@ class MapCanvas(QWidget):
                 self.overlay_descriptions.get((side, row), f"{side} #{row + 1}")
                 for side, x, y, _label, row in self.overlays if cell == (x, y)
             ]
-            self.setToolTip("\n".join(descriptions))
+            tooltip = "\n\n".join(descriptions)
+            self.setToolTip(tooltip)
+            tooltip_key = (cell, tooltip)
+            if tooltip and tooltip_key != self._visible_tooltip_key:
+                # QWidget.toolTip() is updated inside this same move event, so
+                # Windows does not always start Qt's delayed tooltip timer.
+                QToolTip.showText(event.globalPosition().toPoint(), tooltip, self)
+                self._visible_tooltip_key = tooltip_key
+            elif not tooltip and self._visible_tooltip_key is not None:
+                QToolTip.hideText()
+                self._visible_tooltip_key = None
+        elif self._visible_tooltip_key is not None:
+            QToolTip.hideText()
+            self._visible_tooltip_key = None
         if event.buttons() & Qt.MouseButton.LeftButton and self.dragged_overlay is None:
             self._paint_at(event.position().toPoint(), self.selected_tile)
         elif event.buttons() & Qt.MouseButton.RightButton:
             self._paint_at(event.position().toPoint(), self.right_selected_tile)
+
+    def leaveEvent(self, event) -> None:
+        QToolTip.hideText()
+        self._visible_tooltip_key = None
+        self.setToolTip("")
+        super().leaveEvent(event)
 
     def mouseReleaseEvent(self, event: QMouseEvent) -> None:
         if event.button() == Qt.MouseButton.LeftButton and self.dragged_overlay is not None:
@@ -866,6 +971,7 @@ class ByteEntryTable(QTableWidget):
         self.max_rows = max_rows
         self.clipboard_row: tuple[int, ...] | None = None
         self._choice_labels: dict[int, tuple[str, ...]] = {}
+        self._choice_models: dict[int, QStandardItemModel] = {}
         self.setHorizontalHeaderLabels(headers)
         header = self.horizontalHeader()
         header.setSectionResizeMode(QHeaderView.ResizeMode.Interactive)
@@ -880,13 +986,39 @@ class ByteEntryTable(QTableWidget):
         previous = self.blockSignals(True)
         self.setUpdatesEnabled(False)
         try:
-            self.setRowCount(0)
-            for values in rows:
-                self.add_row(values)
+            while self.rowCount() > len(rows):
+                self.removeRow(self.rowCount() - 1)
+            while self.rowCount() < len(rows):
+                self.add_row(rows[self.rowCount()])
+            for row, values in enumerate(rows):
+                for column, value in enumerate(values):
+                    editor = self.cellWidget(row, column)
+                    provider = self.label_providers.get(column)
+                    if isinstance(editor, QComboBox) and provider is not None:
+                        model = self._choice_model(column, provider)
+                        if editor.model() is not model:
+                            editor.setModel(model)
+                        editor.setCurrentIndex(editor.findData(value))
+                    elif isinstance(editor, QSpinBox):
+                        editor.setValue(value)
+            if rows:
+                self.setCurrentCell(0, 0)
         finally:
             self.setUpdatesEnabled(True)
             self.blockSignals(previous)
         self.values_changed.emit()
+
+    def _choice_model(self, column: int, provider) -> QStandardItemModel:
+        if column not in self._choice_labels:
+            self._choice_labels[column] = tuple(provider(value) for value in range(256))
+        if column not in self._choice_models:
+            model = QStandardItemModel(256, 1, self)
+            for item_value, label in enumerate(self._choice_labels[column]):
+                index = model.index(item_value, 0)
+                model.setData(index, label, Qt.ItemDataRole.DisplayRole)
+                model.setData(index, item_value, Qt.ItemDataRole.UserRole)
+            self._choice_models[column] = model
+        return self._choice_models[column]
 
     def add_row(
         self,
@@ -904,10 +1036,7 @@ class ByteEntryTable(QTableWidget):
             if provider is not None:
                 editor = QComboBox()
                 editor.setMaxVisibleItems(24)
-                if column not in self._choice_labels:
-                    self._choice_labels[column] = tuple(provider(value) for value in range(256))
-                for item_value, label in enumerate(self._choice_labels[column]):
-                    editor.addItem(label, item_value)
+                editor.setModel(self._choice_model(column, provider))
                 editor.setCurrentIndex(editor.findData(value))
                 editor.currentIndexChanged.connect(self.values_changed)
             else:
@@ -922,6 +1051,28 @@ class ByteEntryTable(QTableWidget):
         self.setCurrentCell(row, 0)
         self.values_changed.emit()
         return True
+
+    def invalidate_choice_models(self) -> None:
+        """Drop shared choice data after the project or scenario context changes."""
+
+        self._choice_labels.clear()
+        for model in self._choice_models.values():
+            model.deleteLater()
+        self._choice_models.clear()
+
+    def refresh_choice_labels(self, column: int) -> None:
+        """Refresh one context-sensitive shared model without replacing widgets."""
+
+        provider = self.label_providers.get(column)
+        if provider is None:
+            return
+        labels = tuple(provider(value) for value in range(256))
+        self._choice_labels[column] = labels
+        model = self._choice_models.get(column)
+        if model is None:
+            return
+        for item_value, label in enumerate(labels):
+            model.setData(model.index(item_value, 0), label, Qt.ItemDataRole.DisplayRole)
 
     def remove_selected(self) -> None:
         row = self.currentRow()
@@ -1008,6 +1159,9 @@ class ByteEntryTable(QTableWidget):
 
 class MapPage(ProjectPage):
     draft_state_changed = Signal()
+    attribute_calculator_requested = Signal(int, int, int)
+    database_record_requested = Signal(str, int)
+    defeat_experience_requested = Signal(int, int)
 
     def __init__(self) -> None:
         super().__init__()
@@ -1022,6 +1176,22 @@ class MapPage(ProjectPage):
         self._loading_map = False
         self._selecting_object = False
         self._trigger_edit_row: int | None = None
+        self._deployment_edit_source: tuple[str, int] | None = None
+        self._deployment_clipboard: tuple[str, tuple[int, ...]] | None = None
+        self._player_slot_cache_key: tuple | None = None
+        self._player_slot_snapshots: tuple[dict[int, tuple[int, int]], ...] = ()
+        self._icon_sheet_cache: dict[int, QImage] = {}
+        self._map_icon_cache: dict[
+            tuple[tuple[int, int, int], str, int], QImage
+        ] = {}
+        self._tileset_image_cache: dict[str, tuple[QImage, ...]] = {}
+        self._unit_choice_cache: dict[int, str] = {}
+        self._character_choice_cache: dict[int, str] = {}
+        self._deployment_description_cache: dict[
+            tuple[int, str, tuple[int, ...]], str
+        ] = {}
+        self._weapon_description_cache: dict[int, str] = {}
+        self._trigger_payload_cache: tuple[bytes, ...] | None = None
         outer = QVBoxLayout(self)
         outer.setContentsMargins(8, 8, 8, 8)
         self.main_splitter = QSplitter(Qt.Orientation.Horizontal)
@@ -1205,18 +1375,29 @@ class MapPage(ProjectPage):
         self.deployment_objects.setMaximumHeight(120)
         self.icon_preview_toggle = QPushButton("展开机体图标库（只读）")
         self.icon_preview_toggle.setCheckable(True)
+        self.icon_preview_toggle.setMaximumSize(220, 30)
         icon_group = QGroupBox("机体图标（对应地图小图标编号，只读）")
-        icon_group.setMinimumHeight(245)
-        icon_group.setMaximumHeight(285)
+        icon_group.setMaximumHeight(195)
         self.icon_preview_group = icon_group
         self.icon_preview_toggle.toggled.connect(self._toggle_icon_preview)
-        icon_group_layout = QVBoxLayout(icon_group)
+        initial_layout.addWidget(
+            self.icon_preview_toggle,
+            0,
+            Qt.AlignmentFlag.AlignRight,
+        )
+        icon_group_layout = QGridLayout(icon_group)
+        icon_group_layout.setContentsMargins(8, 6, 8, 6)
+        icon_group_layout.setHorizontalSpacing(6)
+        icon_group_layout.setVerticalSpacing(3)
         self.icon_bank_selectors: list[QComboBox] = []
         self.icon_sheet_labels: list[QLabel] = []
-        for slot, default_bank in enumerate((0x34, 0x35, 0x36), start=1):
-            address_row = QHBoxLayout()
-            address_row.addWidget(QLabel(f"图标地址{slot}"))
+        for slot, default_bank in enumerate(SCENARIO_MAP_ICON_BANKS[0], start=1):
+            address_label = QLabel(f"地址{slot}")
+            address_label.setAlignment(
+                Qt.AlignmentFlag.AlignRight | Qt.AlignmentFlag.AlignVCenter
+            )
             selector = QComboBox()
+            selector.setFixedWidth(150)
             selector.setMaxVisibleItems(20)
             selector.setToolTip(
                 "只读兼容选择：切换活动CHR图标预览，不改写关卡图标绑定。"
@@ -1225,37 +1406,43 @@ class MapPage(ProjectPage):
                 selector.addItem(f"[{bank:02X}]{bank:03d}", bank)
             selector.setCurrentIndex(selector.findData(default_bank))
             selector.currentIndexChanged.connect(self._refresh_icon_sheets)
-            address_row.addWidget(selector, 1)
-            icon_group_layout.addLayout(address_row)
             preview = QLabel("尚未载入 ROM")
             preview.setObjectName("legacyIconSheet")
             preview.setAlignment(
                 Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter
             )
-            preview.setFixedHeight(50)
+            preview.setFixedSize(192, 48)
             preview.setToolTip(
                 "16 个 2×2 图块图标，按战场运行时蓝色表 $0F $30 $21 $02 显示。"
             )
             preview.setStyleSheet("background: transparent; border: none;")
-            icon_group_layout.addWidget(preview)
+            row = slot - 1
+            icon_group_layout.addWidget(address_label, row, 0)
+            icon_group_layout.addWidget(selector, row, 1)
+            icon_group_layout.addWidget(preview, row, 2)
             self.icon_bank_selectors.append(selector)
             self.icon_sheet_labels.append(preview)
+        icon_group_layout.setColumnStretch(3, 1)
         initial_layout.addWidget(icon_group)
         self.icon_preview_toggle.setChecked(False)
         icon_group.setVisible(False)
         initial_layout.addWidget(self.deployment_objects, 1)
         self.deployment_list_toggle = QPushButton("展开部署明细列表")
         self.deployment_list_toggle.setCheckable(True)
+        self.deployment_list_toggle.setMaximumSize(180, 30)
         self.deployment_list_toggle.toggled.connect(
             self._toggle_deployment_list
         )
         initial_layout.insertWidget(
             initial_layout.indexOf(self.deployment_objects),
             self.deployment_list_toggle,
+            0,
+            Qt.AlignmentFlag.AlignRight,
         )
         self.deployment_list_toggle.setChecked(True)
         self.deployment_objects.setVisible(True)
         self.open_deployment_button = QPushButton("编辑部署 / 添加 / 复制…")
+        self.open_deployment_button.setMaximumSize(210, 30)
         self.open_deployment_button.setToolTip(
             "扩展功能；图标地址选择本身仍为只读兼容预览，不会猜写绑定。"
         )
@@ -1287,7 +1474,11 @@ class MapPage(ProjectPage):
             enemy_layout,
             "敌军",
             ("X", "Y", "驾驶员", "机体", "等级", "标志"),
-            {2: self._character_choice_label, 3: self._unit_choice_label},
+            {
+                2: self._character_choice_label,
+                3: self._unit_choice_label,
+                5: self._action_choice_label,
+            },
             max_rows=18,
         )
         self.deployment_tabs.addTab(enemy_host, "敌军")
@@ -1297,7 +1488,11 @@ class MapPage(ProjectPage):
             guest_layout,
             "客军",
             ("X", "Y", "驾驶员", "机体", "等级", "标志"),
-            {2: self._character_choice_label, 3: self._unit_choice_label},
+            {
+                2: self._character_choice_label,
+                3: self._unit_choice_label,
+                5: self._action_choice_label,
+            },
             max_rows=3,
         )
         self.deployment_tabs.addTab(guest_host, "客军")
@@ -1306,7 +1501,8 @@ class MapPage(ProjectPage):
         self.player_table = self._deployment_group(
             player_layout,
             "我方出击位",
-            ("X", "Y", "名单位", "标志"),
+            ("X", "Y", "队伍槽", "行动"),
+            {2: self._player_slot_choice_label, 3: self._action_choice_label},
             max_rows=11,
         )
         self.deployment_tabs.addTab(player_host, "我方出击位")
@@ -1314,6 +1510,7 @@ class MapPage(ProjectPage):
         deployment_close = QDialogButtonBox(QDialogButtonBox.StandardButton.Close)
         deployment_close.rejected.connect(self.deployment_dialog.close)
         deployment_layout.addWidget(deployment_close)
+        self._build_deployment_cell_dialog()
         self.editor_tabs.addTab(initial_tab, "初始配置")
 
         trigger_tab = QWidget()
@@ -1360,6 +1557,7 @@ class MapPage(ProjectPage):
             default_values=(0, 0, 0xFF, 0),
         )
         trigger_close = QDialogButtonBox(QDialogButtonBox.StandardButton.Close)
+        trigger_close.button(QDialogButtonBox.StandardButton.Close).setText("关闭")
         trigger_close.rejected.connect(self.trigger_dialog.close)
         trigger_dialog_layout.addWidget(trigger_close)
 
@@ -1411,6 +1609,12 @@ class MapPage(ProjectPage):
             QDialogButtonBox.StandardButton.Ok
             | QDialogButtonBox.StandardButton.Cancel
         )
+        self.trigger_cell_buttons.button(
+            QDialogButtonBox.StandardButton.Ok
+        ).setText("确定")
+        self.trigger_cell_buttons.button(
+            QDialogButtonBox.StandardButton.Cancel
+        ).setText("取消")
         self.trigger_delete_button = self.trigger_cell_buttons.addButton(
             "删除地图事件", QDialogButtonBox.ButtonRole.DestructiveRole
         )
@@ -1598,6 +1802,246 @@ class MapPage(ProjectPage):
         self.deployment_dialog.raise_()
         self.deployment_dialog.activateWindow()
 
+    def _build_deployment_cell_dialog(self) -> None:
+        """Build the compact reference-style editor used from the map menu."""
+
+        self.deployment_cell_dialog = QDialog(self)
+        self.deployment_cell_dialog.setWindowTitle("配置设置")
+        self.deployment_cell_dialog.setModal(False)
+        self.deployment_cell_dialog.setMinimumWidth(500)
+        root = QVBoxLayout(self.deployment_cell_dialog)
+        form = QFormLayout()
+
+        self.deployment_side_combo = QComboBox()
+        for side, label in (("我", "我方配置"), ("敌", "敌方配置"), ("客", "客军配置")):
+            self.deployment_side_combo.addItem(label, side)
+        self.deployment_x_editor = QSpinBox()
+        self.deployment_y_editor = QSpinBox()
+        for editor in (self.deployment_x_editor, self.deployment_y_editor):
+            editor.setRange(0, 255)
+        coordinate_row = QWidget()
+        coordinate_layout = QHBoxLayout(coordinate_row)
+        coordinate_layout.setContentsMargins(0, 0, 0, 0)
+        coordinate_layout.addWidget(QLabel("X"))
+        coordinate_layout.addWidget(self.deployment_x_editor)
+        coordinate_layout.addWidget(QLabel("Y"))
+        coordinate_layout.addWidget(self.deployment_y_editor)
+
+        self.deployment_character_combo = QComboBox()
+        self.deployment_unit_combo = QComboBox()
+        self.deployment_level_editor = QSpinBox()
+        self.deployment_level_editor.setRange(1, 255)
+        self.deployment_action_combo = QComboBox()
+        self.deployment_action_combo.setMaxVisibleItems(24)
+        for action_id, label in enumerate(ACTION_NAMES):
+            self.deployment_action_combo.addItem(
+                f"{action_id:03d}: {label}", action_id
+            )
+        self.deployment_roster_combo = QComboBox()
+        self.deployment_roster_combo.setMaxVisibleItems(24)
+
+        form.addRow("类型", self.deployment_side_combo)
+        form.addRow("坐标", coordinate_row)
+        form.addRow("驾驶员", self.deployment_character_combo)
+        form.addRow("机体", self.deployment_unit_combo)
+        form.addRow("等级", self.deployment_level_editor)
+        form.addRow("行动", self.deployment_action_combo)
+        form.addRow("我方队伍槽", self.deployment_roster_combo)
+        root.addLayout(form)
+
+        self.deployment_editor_status = QLabel()
+        self.deployment_editor_status.setObjectName("hintText")
+        self.deployment_editor_status.setWordWrap(True)
+        root.addWidget(self.deployment_editor_status)
+        self.deployment_capacity_button = QPushButton("容量不足时打开容量规划…")
+        self.deployment_capacity_button.clicked.connect(self._open_capacity_planner)
+        root.addWidget(
+            self.deployment_capacity_button,
+            0,
+            Qt.AlignmentFlag.AlignRight,
+        )
+        buttons = QDialogButtonBox(
+            QDialogButtonBox.StandardButton.Save
+            | QDialogButtonBox.StandardButton.Cancel
+        )
+        buttons.button(QDialogButtonBox.StandardButton.Save).setText("保存配置")
+        buttons.button(QDialogButtonBox.StandardButton.Cancel).setText("取消")
+        buttons.accepted.connect(self._save_deployment_cell_editor)
+        buttons.rejected.connect(self.deployment_cell_dialog.reject)
+        root.addWidget(buttons)
+        self.deployment_side_combo.currentIndexChanged.connect(
+            self._deployment_editor_side_changed
+        )
+
+    def _refresh_deployment_editor_choices(self) -> None:
+        for combo, provider in (
+            (self.deployment_character_combo, self._character_choice_label),
+            (self.deployment_unit_combo, self._unit_choice_label),
+        ):
+            selected = combo.currentData()
+            combo.blockSignals(True)
+            combo.clear()
+            for record_id in range(256):
+                combo.addItem(provider(record_id), record_id)
+            combo.setCurrentIndex(combo.findData(selected if selected is not None else 0))
+            combo.blockSignals(False)
+
+        selected_slot = self.deployment_roster_combo.currentData()
+        self.deployment_roster_combo.clear()
+        for slot in range(256):
+            self.deployment_roster_combo.addItem(
+                self._player_slot_choice_label(slot), slot
+            )
+        self.deployment_roster_combo.setCurrentIndex(
+            self.deployment_roster_combo.findData(
+                selected_slot if selected_slot is not None else 0
+            )
+        )
+
+    def _deployment_editor_side_changed(self) -> None:
+        player = self.deployment_side_combo.currentData() == "我"
+        for widget in (
+            self.deployment_character_combo,
+            self.deployment_unit_combo,
+            self.deployment_level_editor,
+        ):
+            widget.setEnabled(not player)
+        self.deployment_roster_combo.setEnabled(player)
+        self.deployment_editor_status.setText(
+            "我方记录保存队伍槽和行动；驾驶员、机体由当前关卡的队伍状态自动解析。"
+            if player
+            else "敌军/客军记录保存驾驶员、机体、等级和行动；全部选项按原始字节写回。"
+        )
+        self.deployment_editor_status.setStyleSheet("")
+
+    def _open_deployment_cell_editor(
+        self,
+        side: str,
+        x: int,
+        y: int,
+        row: int | None = None,
+    ) -> None:
+        self._refresh_deployment_editor_choices()
+        self._deployment_edit_source = None if row is None else (side, row)
+        values = None
+        if row is not None:
+            table = self._object_table(side)
+            if not 0 <= row < table.rowCount():
+                return
+            values = table.rows()[row]
+        self.deployment_side_combo.setCurrentIndex(
+            self.deployment_side_combo.findData(side)
+        )
+        self.deployment_x_editor.setValue(x)
+        self.deployment_y_editor.setValue(y)
+        if side == "我":
+            roster_index, action_id = (values[2], values[3]) if values else (0, 0)
+            self.deployment_roster_combo.setCurrentIndex(
+                self.deployment_roster_combo.findData(roster_index)
+            )
+            player = self._player_slot_state().get(roster_index)
+            if player is not None:
+                self.deployment_character_combo.setCurrentIndex(
+                    self.deployment_character_combo.findData(player[0])
+                )
+                self.deployment_unit_combo.setCurrentIndex(
+                    self.deployment_unit_combo.findData(player[1])
+                )
+        else:
+            pilot_id, unit_id, level, action_id = (
+                values[2], values[3], values[4], values[5]
+            ) if values else (0, 1, 1, 0)
+            self.deployment_character_combo.setCurrentIndex(
+                self.deployment_character_combo.findData(pilot_id)
+            )
+            self.deployment_unit_combo.setCurrentIndex(
+                self.deployment_unit_combo.findData(unit_id)
+            )
+            self.deployment_level_editor.setValue(level)
+        self.deployment_action_combo.setCurrentIndex(
+            self.deployment_action_combo.findData(action_id)
+        )
+        self._deployment_editor_side_changed()
+        self.deployment_cell_dialog.show()
+        self.deployment_cell_dialog.raise_()
+        self.deployment_cell_dialog.activateWindow()
+
+    def _deployment_editor_values(self, side: str) -> tuple[int, ...]:
+        x = self.deployment_x_editor.value()
+        y = self.deployment_y_editor.value()
+        action_id = int(self.deployment_action_combo.currentData())
+        if side == "我":
+            return (
+                x,
+                y,
+                int(self.deployment_roster_combo.currentData()),
+                action_id,
+            )
+        return (
+            x,
+            y,
+            int(self.deployment_character_combo.currentData()),
+            int(self.deployment_unit_combo.currentData()),
+            self.deployment_level_editor.value(),
+            action_id,
+        )
+
+    def _save_deployment_cell_editor(self) -> None:
+        side = str(self.deployment_side_combo.currentData())
+        target = self._object_table(side)
+        values = self._deployment_editor_values(side)
+        source = self._deployment_edit_source
+        if source is None:
+            if not self._ensure_deployment_growth(len(values)):
+                return
+            if not target.add_row(values):
+                self.show_error(ValueError(f"此阵营最多允许 {target.max_rows} 个部署记录。"))
+                return
+            row = target.rowCount() - 1
+        elif source[0] == side:
+            row = source[1]
+            target.set_row_values(row, values)
+        else:
+            delta = len(values) - len(self._object_table(source[0]).rows()[source[1]])
+            if not self._ensure_deployment_growth(delta):
+                return
+            if not target.add_row(values):
+                self.show_error(ValueError(f"此阵营最多允许 {target.max_rows} 个部署记录。"))
+                return
+            row = target.rowCount() - 1
+            source_table = self._object_table(source[0])
+            source_table.removeRow(source[1])
+            source_table.values_changed.emit()
+        self._deployment_edit_source = (side, row)
+        self._select_object(side, row)
+        self.deployment_cell_dialog.accept()
+
+    def _ensure_deployment_growth(self, extra_bytes: int) -> bool:
+        """Keep fixed-layout ROMs from ending with an unsavable deployment draft."""
+
+        if (
+            extra_bytes <= 0
+            or self.project is None
+            or self.project.expansion_plan is not None
+            or self.current_map_id is None
+            or self.current_map_id >= self.project.scenario_count
+        ):
+            return True
+        layout = self._staged_layout()
+        used = len(self.project.scenario_layout_codec.encode(layout))
+        capacity = self.project.scenario_layout_codec.capacities[self.current_map_id]
+        if used + extra_bytes <= capacity:
+            return True
+        message = (
+            f"本关部署固定槽为 {capacity} 字节，当前已用 {used} 字节；"
+            f"新增记录还需要 {extra_bytes} 字节。请先打开“容量规划”并应用地图扩展容量，"
+            "再保存这条配置。"
+        )
+        self.deployment_editor_status.setText(message)
+        self.deployment_editor_status.setStyleSheet("color:#b42318; font-weight:600;")
+        self.show_error(ValueError(message))
+        return False
+
     def _toggle_icon_preview(self, expanded: bool) -> None:
         self.icon_preview_group.setVisible(expanded)
         self.icon_preview_toggle.setText(
@@ -1605,6 +2049,8 @@ class MapPage(ProjectPage):
             if expanded
             else "展开机体图标库（只读）"
         )
+        if expanded:
+            self._refresh_icon_sheets()
 
     def _toggle_deployment_list(self, expanded: bool) -> None:
         self.deployment_objects.setVisible(expanded)
@@ -1666,6 +2112,9 @@ class MapPage(ProjectPage):
         selector = self.trigger_shop_combo if shop else self.trigger_event_combo
         selector.setCurrentIndex(selector.findData(event_id))
         self.trigger_delete_button.setVisible(row is not None)
+        self.trigger_delete_button.setText(
+            "删除商店" if shop else "删除地图事件"
+        )
         self.trigger_cell_dialog.setWindowTitle(
             "商店设置" if shop else "地图事件设置"
         )
@@ -1776,23 +2225,69 @@ class MapPage(ProjectPage):
         table = self._object_table(side)
         if not 0 <= row < table.rowCount():
             return
-        self.deployment_tabs.setCurrentIndex({"敌": 0, "客": 1, "我": 2}[side])
-        self._show_deployment_advanced()
         self._select_object(side, row)
+        values = table.rows()[row]
+        self._open_deployment_cell_editor(side, values[0], values[1], row)
 
     def _add_deployment_at(self, side: str, x: int, y: int) -> None:
+        self._open_deployment_cell_editor(side, x, y)
+
+    def _copy_deployment_record(self, side: str, row: int, *, cut: bool = False) -> None:
         table = self._object_table(side)
-        defaults = {
-            "敌": (x, y, 0, 1, 1, 0),
-            "客": (x, y, 0, 1, 1, 0),
-            "我": (x, y, 0, 0),
-        }[side]
-        if not table.add_row(defaults):
-            self.show_error(
-                ValueError(f"此阵营最多允许 {table.max_rows} 个部署记录。")
-            )
+        if not 0 <= row < table.rowCount():
             return
-        self._open_deployment_record(side, table.rowCount() - 1)
+        self._deployment_clipboard = (side, table.rows()[row])
+        if cut:
+            self._remove_deployment_row(side, row)
+
+    def _paste_deployment_at(self, x: int, y: int) -> None:
+        if self._deployment_clipboard is None:
+            return
+        side, source = self._deployment_clipboard
+        values = (x, y, *source[2:])
+        table = self._object_table(side)
+        if not self._ensure_deployment_growth(len(values)):
+            return
+        if not table.add_row(values):
+            self.show_error(ValueError(f"此阵营最多允许 {table.max_rows} 个部署记录。"))
+            return
+        self._select_object(side, table.rowCount() - 1)
+
+    def _open_deployment_attributes(self, side: str, row: int) -> None:
+        identity = self._deployment_record_identity(side, row)
+        if identity is None:
+            return
+        pilot_id, unit_id, level = identity
+        self.attribute_calculator_requested.emit(pilot_id, unit_id, level)
+
+    def _deployment_record_identity(
+        self, side: str, row: int
+    ) -> tuple[int, int, int] | None:
+        table = self._object_table(side)
+        if not 0 <= row < table.rowCount():
+            return None
+        values = table.rows()[row]
+        if side == "我":
+            player = self._player_slot_state().get(values[2])
+            if player is None:
+                self.show_error(ValueError("当前队伍槽没有可解析的驾驶员和机体。"))
+                return None
+            pilot_id, unit_id = player
+            level = 1
+        else:
+            pilot_id, unit_id, level = values[2:5]
+        return pilot_id, unit_id, level
+
+    def _open_deployment_database_record(self, side: str, row: int) -> None:
+        identity = self._deployment_record_identity(side, row)
+        if identity is not None:
+            self.database_record_requested.emit("units", identity[1])
+
+    def _open_deployment_experience(self, side: str, row: int) -> None:
+        identity = self._deployment_record_identity(side, row)
+        if identity is not None:
+            _pilot_id, unit_id, level = identity
+            self.defeat_experience_requested.emit(unit_id, level)
 
     def _remove_deployment_row(self, side: str, row: int) -> None:
         table = self._object_table(side)
@@ -1832,7 +2327,7 @@ class MapPage(ProjectPage):
 
         if len(records) == 1:
             side, row, _values = records[0]
-            edit = menu.addAction(f"编辑{side}军初始配置")
+            edit = menu.addAction(f"更改{side}军初始配置")
             edit.triggered.connect(
                 lambda _checked=False, side=side, row=row:
                 self._open_deployment_record(side, row)
@@ -1850,7 +2345,7 @@ class MapPage(ProjectPage):
                     self._open_deployment_record(side, row)
                 )
 
-        add_menu = menu.addMenu("在此格添加初始配置")
+        add_menu = menu.addMenu("在此格添加配置")
         for side, label in (("敌", "敌军"), ("客", "客军"), ("我", "我方出击位")):
             table = self._object_table(side)
             action = add_menu.addAction(label)
@@ -1862,6 +2357,51 @@ class MapPage(ProjectPage):
                     side, x, y
                 )
             )
+
+        menu.addSeparator()
+        if len(records) == 1:
+            side, row, _values = records[0]
+            database = menu.addAction("更改属性")
+            database.triggered.connect(
+                lambda _checked=False, side=side, row=row:
+                self._open_deployment_database_record(side, row)
+            )
+            experience = menu.addAction("击落经验计算器")
+            experience.triggered.connect(
+                lambda _checked=False, side=side, row=row:
+                self._open_deployment_experience(side, row)
+            )
+            attributes = menu.addAction("加到属性计算器")
+            attributes.triggered.connect(
+                lambda _checked=False, side=side, row=row:
+                self._open_deployment_attributes(side, row)
+            )
+            copy = menu.addAction("复制配置")
+            copy.triggered.connect(
+                lambda _checked=False, side=side, row=row:
+                self._copy_deployment_record(side, row)
+            )
+            cut = menu.addAction("剪切配置")
+            cut.triggered.connect(
+                lambda _checked=False, side=side, row=row:
+                self._copy_deployment_record(side, row, cut=True)
+            )
+        else:
+            database = menu.addAction("更改属性")
+            database.setEnabled(False)
+            experience = menu.addAction("击落经验计算器")
+            experience.setEnabled(False)
+            attributes = menu.addAction("加到属性计算器")
+            attributes.setEnabled(False)
+            copy = menu.addAction("复制配置")
+            copy.setEnabled(False)
+            cut = menu.addAction("剪切配置")
+            cut.setEnabled(False)
+        paste = menu.addAction("粘贴配置")
+        paste.setEnabled(self._deployment_clipboard is not None)
+        paste.triggered.connect(
+            lambda _checked=False: self._paste_deployment_at(x, y)
+        )
 
         if len(records) == 1:
             side, row, _values = records[0]
@@ -1942,12 +2482,20 @@ class MapPage(ProjectPage):
     def _duplicate_deployment(self, table: ByteEntryTable) -> None:
         if table.currentRow() < 0:
             self.show_error(ValueError("请先选择要复制的记录。"))
+        elif table.max_rows is not None and table.rowCount() >= table.max_rows:
+            self.show_error(ValueError(f"此列表最多允许 {table.max_rows} 条记录。"))
+        elif not self._ensure_deployment_growth(table.columnCount()):
+            return
         elif not table.duplicate_selected():
             self.show_error(ValueError(f"此列表最多允许 {table.max_rows} 条记录。"))
 
     def _paste_deployment(self, table: ByteEntryTable) -> None:
         if table.clipboard_row is None:
             self.show_error(ValueError("请先在此列表复制一条记录。"))
+        elif table.max_rows is not None and table.rowCount() >= table.max_rows:
+            self.show_error(ValueError(f"此列表最多允许 {table.max_rows} 条记录。"))
+        elif not self._ensure_deployment_growth(table.columnCount()):
+            return
         elif not table.paste_row():
             self.show_error(ValueError(f"此列表最多允许 {table.max_rows} 条记录。"))
 
@@ -2004,13 +2552,73 @@ class MapPage(ProjectPage):
             self._open_trigger_cell_editor(values[0], values[1], row)
         else:
             self.editor_tabs.setCurrentIndex(1)
-            self.deployment_tabs.setCurrentIndex({"敌": 0, "客": 1, "我": 2}[side])
-            self._show_deployment_advanced()
+            values = self._object_table(side).rows()[row]
+            self._open_deployment_cell_editor(side, values[0], values[1], row)
         self._select_object(side, row)
+
+    def _player_slot_state(self) -> dict[int, tuple[int, int]]:
+        """Resolve the ROM-defined player party at the current chapter start.
+
+        The six-entry initial table is only the starting state.  Chapter event
+        opcodes $6F/$6E add and remove runtime party slots, while $4D/$4E can
+        replace their pilot or machine.  Replaying those records up to (but
+        not including) the selected chapter prevents later real machines from
+        falling back to numbered circles.
+        """
+
+        if self.project is None or self.current_map_id is None:
+            return {}
+        roster = tuple(self.project.get_initial_roster())
+        codec = self.project.chapter_event_codec
+        event_bytes = b""
+        if codec is not None:
+            start = codec.data_address_to_file_offset(codec.spec.data_start)
+            size = codec.spec.data_end - codec.spec.data_start
+            event_bytes = bytes(self.project.working[start : start + size])
+        cache_key = (id(self.project), roster, event_bytes)
+        if cache_key != self._player_slot_cache_key:
+            slots = {index: pair for index, pair in enumerate(roster)}
+            snapshots: list[dict[int, tuple[int, int]]] = []
+            instructions = (
+                self.project.chapter_event_instructions()
+                if codec is not None
+                else ()
+            )
+            for scenario_id in range(self.project.scenario_count):
+                snapshots.append(dict(slots))
+                for phase in range(3):
+                    for instruction in instructions:
+                        if not any(
+                            context.scenario_id == scenario_id
+                            and context.phase == phase
+                            for context in instruction.contexts
+                        ):
+                            continue
+                        parameters = instruction.parameters
+                        if instruction.opcode == 0x6F and len(parameters) >= 3:
+                            slots[parameters[0]] = (parameters[1], parameters[2])
+                        elif instruction.opcode == 0x6E and parameters:
+                            slots.pop(parameters[0], None)
+                        elif instruction.opcode == 0x4D and len(parameters) >= 3:
+                            target, pilot_id, unit_id = parameters[:3]
+                            for slot, (current_pilot, _unit) in tuple(slots.items()):
+                                if current_pilot == target:
+                                    slots[slot] = (pilot_id, unit_id)
+                        elif instruction.opcode == 0x4E and len(parameters) >= 2:
+                            target, unit_id = parameters[:2]
+                            for slot, (pilot_id, _unit) in tuple(slots.items()):
+                                if pilot_id == target:
+                                    slots[slot] = (pilot_id, unit_id)
+            self._player_slot_cache_key = cache_key
+            self._player_slot_snapshots = tuple(snapshots)
+        if 0 <= self.current_map_id < len(self._player_slot_snapshots):
+            return self._player_slot_snapshots[self.current_map_id]
+        return {}
 
     def _refresh_object_lists(self) -> None:
         descriptions: dict[tuple[str, int], str] = {}
         selected = self.canvas.selected_overlay
+        player_slots = self._player_slot_state()
         for object_list in (self.deployment_objects, self.trigger_objects):
             object_list.blockSignals(True)
             object_list.clear()
@@ -2022,16 +2630,15 @@ class MapPage(ProjectPage):
                 if side in ("敌", "客"):
                     pilot = self._character_choice_label(values[2]).split(" · ")[0]
                     name = self._unit_choice_label(values[3]).split(" · ")[0]
-                    text = f"{kind}{row + 1:02d}  ({x:02d},{y:02d})  {name} / {pilot}  Lv.{values[4]}"
+                    text = (
+                        f"{kind}{row + 1:02d}  ({x:02d},{y:02d})  "
+                        f"{name} / {pilot}  Lv.{values[4]} · "
+                        f"{ACTION_NAMES[values[5]]}"
+                    )
                 elif side == "我":
                     roster_index = values[2]
-                    roster = (
-                        self.project.get_initial_roster()
-                        if self.project is not None
-                        else ()
-                    )
-                    if roster_index < len(roster):
-                        character_id, unit_id = roster[roster_index]
+                    if roster_index in player_slots:
+                        character_id, unit_id = player_slots[roster_index]
                         text = (
                             f"我{row + 1:02d}  ({x:02d},{y:02d})  "
                             f"{self._unit_choice_label(unit_id).split(' · ')[0]} / "
@@ -2040,15 +2647,20 @@ class MapPage(ProjectPage):
                     else:
                         text = (
                             f"我{row + 1:02d}  ({x:02d},{y:02d})  "
-                            f"队伍动态槽 ${roster_index:02X}"
+                            f"空队伍槽 ${roster_index:02X}（当前ROM无机体）"
                         )
                 else:
                     text = (f"{kind}{row + 1:02d}  ({x:02d},{y:02d})  "
                             f"{self._trigger_event_label(values[3])} / {self._trigger_character_label(values[2])}")
-                descriptions[(kind, row)] = text
+                description = (
+                    self._deployment_description(side, values)
+                    if side in ("敌", "客", "我")
+                    else text
+                )
+                descriptions[(kind, row)] = description
                 item = QListWidgetItem(text)
                 item.setToolTip(
-                    text
+                    description
                     + "\n单击联动定位；双击或在地图上右键打开编辑；图标可拖动。"
                 )
                 item.setData(Qt.ItemDataRole.UserRole, (kind, row))
@@ -2100,6 +2712,8 @@ class MapPage(ProjectPage):
             raise ValueError("新增记录的默认字节数与表列数不一致。")
         if self.hovered_cell is not None:
             values[0], values[1] = self.hovered_cell
+        if not self._ensure_deployment_growth(len(values)):
+            return
         if not table.add_row(tuple(values)):
             self.show_error(
                 ValueError(f"此阵营最多允许 {table.max_rows} 个部署记录。")
@@ -2131,21 +2745,45 @@ class MapPage(ProjectPage):
         table.set_row_coordinates(row, x, y)
 
     def _unit_choice_label(self, unit_id: int) -> str:
+        cached = self._unit_choice_cache.get(unit_id)
+        if cached is not None:
+            return cached
         if unit_id == 0:
             label = "无机体/特殊值"
         elif self.project is not None and unit_id < self.project.unit_count:
             label = self.project.unit_display_name(unit_id)
         else:
             label = "超出已验证机体表"
-        return f"{label} · ${unit_id:02X}"
+        result = f"{label} · ${unit_id:02X}"
+        self._unit_choice_cache[unit_id] = result
+        return result
+
+    @staticmethod
+    def _action_choice_label(action_id: int) -> str:
+        return f"{ACTION_NAMES[action_id]} · ${action_id:02X}"
+
+    def _player_slot_choice_label(self, roster_index: int) -> str:
+        player = self._player_slot_state().get(roster_index)
+        if player is None:
+            return f"空队伍槽 · ${roster_index:02X}"
+        character_id, unit_id = player
+        return (
+            f"{self._character_choice_label(character_id).split(' · ')[0]} / "
+            f"{self._unit_choice_label(unit_id).split(' · ')[0]} · ${roster_index:02X}"
+        )
 
     def _character_choice_label(self, character_id: int) -> str:
+        cached = self._character_choice_cache.get(character_id)
+        if cached is not None:
+            return cached
         label = (
             self.project.character_display_name(character_id)
             if self.project is not None
             else "尚未载入 ROM"
         )
-        return f"{label} · ${character_id:02X}"
+        result = f"{label} · ${character_id:02X}"
+        self._character_choice_cache[character_id] = result
+        return result
 
     def _trigger_character_label(self, character_id: int) -> str:
         if character_id == 0xFF:
@@ -2153,6 +2791,120 @@ class MapPage(ProjectPage):
         if self.project is not None and character_id < self.project.profile.character_name_count:
             return f"{self.project.character_display_name(character_id)} · ${character_id:02X}"
         return f"无效人物ID · ${character_id:02X}"
+
+    def _deployment_description(self, side: str, values: tuple[int, ...]) -> str:
+        """Return a reference-style, ROM-backed battlefield tooltip."""
+
+        if self.project is None:
+            return "尚未载入ROM"
+        cache_key = (self.current_map_id or 0, side, values)
+        cached = self._deployment_description_cache.get(cache_key)
+        if cached is not None:
+            return cached
+        action_id = values[3] if side == "我" else values[5]
+        action = self._action_choice_label(action_id)
+        if side == "我":
+            roster_index = values[2]
+            player = self._player_slot_state().get(roster_index)
+            if player is None:
+                result = (
+                    f"我方出击位 ${roster_index:02X}\n"
+                    "当前关卡队伍状态中没有驾驶员或机体\n"
+                    f"行动：{action}"
+                )
+                self._deployment_description_cache[cache_key] = result
+                return result
+            pilot_id, unit_id = player
+            level = None
+            level_text = "等级：由运行时队伍状态决定"
+        else:
+            pilot_id, unit_id, level = values[2:5]
+            level_text = f"等级：{level}"
+        pilot = self._character_choice_label(pilot_id)
+        unit = self._unit_choice_label(unit_id)
+        lines = [f"驾驶员：{pilot}"]
+        corrections = (0, 0, 0, 0, 0)
+        if 0 <= pilot_id < self.project.profile.character_name_count:
+            try:
+                corrections = CharacterAttributesCodec(self.project).read(
+                    pilot_id
+                ).corrections
+            except (IndexError, ValueError):
+                pass
+        lines.append(
+            "人物补正 机/强/防/速/HP："
+            + "/".join(str(value) for value in corrections)
+        )
+        lines.extend((f"机体：{unit}", level_text))
+        if 0 <= unit_id < self.project.unit_count:
+            stat_values = {
+                key: self.project.get_value(unit_id, key)
+                for key in ("hp", "strength", "defense", "speed", "movement")
+            }
+            lines.append(
+                "机体基础属性："
+                f"HP {stat_values['hp']} · 强度 {stat_values['strength']} · "
+                f"防御 {stat_values['defense']} · 速度 {stat_values['speed']} · "
+                f"移动 {stat_values['movement']}"
+            )
+            if level is not None:
+                growth_codec = LegacyGrowthCodec(bytes(self.project.working))
+
+                def growth_delta(field: str) -> int:
+                    growth = self.project.get_value(unit_id, f"{field}_growth")
+                    count = max(0, min(98, level - 1))
+                    if growth <= 200:
+                        return growth * count
+                    if 201 <= growth <= 253:
+                        return sum(growth_codec.record(growth).values[:count])
+                    return 0
+
+                final_values = {
+                    "movement": stat_values["movement"] + corrections[0],
+                    "strength": stat_values["strength"]
+                    + growth_delta("strength") + corrections[1],
+                    "defense": stat_values["defense"]
+                    + growth_delta("defense") + corrections[2],
+                    "speed": stat_values["speed"]
+                    + growth_delta("speed") + corrections[3],
+                    "hp": stat_values["hp"]
+                    + growth_delta("hp") + corrections[4],
+                }
+                lines.append(
+                    f"Lv.{level} 游戏成长属性：HP {final_values['hp']} · "
+                    f"强度 {final_values['strength']} · 防御 {final_values['defense']} · "
+                    f"速度 {final_values['speed']} · 移动 {final_values['movement']}"
+                )
+            try:
+                weapon_ids = self.project.get_unit_weapons(unit_id)
+            except ValueError:
+                weapon_ids = ()
+            for slot, weapon_id in enumerate(weapon_ids, start=1):
+                if not 0 < weapon_id < self.project.weapon_count:
+                    continue
+                weapon = self.project.weapon_codec.decode_record(
+                    weapon_id, bytes(self.project.working)
+                )
+                weapon_skill, _distance = weapon_extra_values(
+                    self.project, weapon_id
+                )
+                weapon_description = self._weapon_description_cache.get(weapon_id)
+                if weapon_description is None:
+                    weapon_description = (
+                        f"{self.project.weapon_display_name(weapon_id)} · ${weapon_id:02X} "
+                        f"射程 {weapon.get('max_range')} · 命中 {weapon.get('hit')} · "
+                        f"特技 {weapon_skill} · "
+                        f"火力 空/陆/海 {weapon.get('power_air')}/"
+                        f"{weapon.get('power_land')}/{weapon.get('power_sea')}"
+                    )
+                    self._weapon_description_cache[weapon_id] = weapon_description
+                lines.append(
+                    f"武器{slot}：{weapon_description}"
+                )
+        lines.append(f"行动：{action}")
+        result = "\n".join(lines)
+        self._deployment_description_cache[cache_key] = result
+        return result
 
     @staticmethod
     def _trigger_event_label(event_id: int) -> str:
@@ -2162,9 +2914,17 @@ class MapPage(ProjectPage):
 
     def refresh(self) -> None:
         previous = self.current_map_id
+        self._icon_sheet_cache.clear()
+        self._map_icon_cache.clear()
+        self._tileset_image_cache.clear()
+        self._unit_choice_cache.clear()
+        self._character_choice_cache.clear()
+        self._deployment_description_cache.clear()
+        self._weapon_description_cache.clear()
+        self._trigger_payload_cache = None
         self._refresh_trigger_character_choices()
         for table in (self.enemy_table, self.guest_table, self.player_table, self.trigger_table):
-            table._choice_labels.clear()
+            table.invalidate_choice_models()
         self._refresh_icon_sheets()
         self.map_list.blockSignals(True)
         self.map_list.clear()
@@ -2236,10 +2996,9 @@ class MapPage(ProjectPage):
         finally:
             self._loading_map = False
         self.canvas.selected_overlay = None
-        self._update_overlays()
         self._loaded_draft_signature = self._draft_signature()
+        self._update_overlays()
         self._commit_error = None
-        self._update_size_label()
         if committed_previous:
             self.project_changed.emit(
                 f"已更新地图 ${previous_map_id:02X}、部署与事件"
@@ -2264,10 +3023,23 @@ class MapPage(ProjectPage):
         self.height_editor.setValue(record.height)
         self.width_display.setValue(record.width)
         self.height_display.setValue(record.height)
+        if self.current_map_id < len(SCENARIO_MAP_ICON_BANKS):
+            for selector, bank in zip(
+                self.icon_bank_selectors,
+                scenario_map_icon_banks(self.current_map_id),
+                strict=True,
+            ):
+                selector.blockSignals(True)
+                selector.setCurrentIndex(selector.findData(bank))
+                selector.blockSignals(False)
+        self._refresh_icon_sheets()
         if self.current_map_id < self.project.scenario_count:
             layout = self.project.get_scenario_layout(self.current_map_id)
             self.prelude.setEnabled(True)
             self.prelude.setText(bytes(layout.prelude).hex(" ").upper())
+            # Player-slot labels are chapter-dependent; only this small shared
+            # model needs rebuilding when the selected chapter changes.
+            self.player_table.refresh_choice_labels(2)
             self.enemy_table.set_rows([tuple(entry.to_bytes()) for entry in layout.enemies])
             self.guest_table.set_rows([tuple(entry.to_bytes()) for entry in layout.guests])
             self.player_table.set_rows([tuple(entry.to_bytes()) for entry in layout.player_placements])
@@ -2371,7 +3143,12 @@ class MapPage(ProjectPage):
                 preview.setPixmap(QPixmap())
                 preview.setText("地址超出活动 CHR")
                 continue
-            strip = render_unit_icon_bank(self.project, bank)
+            if not self.icon_preview_group.isVisible():
+                continue
+            strip = self._icon_sheet_cache.get(bank)
+            if strip is None:
+                strip = render_unit_icon_bank(self.project, bank)
+                self._icon_sheet_cache[bank] = strip
             image = QImage(128, 32, QImage.Format.Format_RGB32)
             painter = QPainter(image)
             painter.drawImage(0, 0, strip.copy(0, 0, 128, 16))
@@ -2399,7 +3176,10 @@ class MapPage(ProjectPage):
         previous = self.bitmap_selector.blockSignals(True)
         self.bitmap_selector.setCurrentIndex(self.bitmap_selector.findData(key))
         self.bitmap_selector.blockSignals(previous)
-        images = render_tileset(self.project, key)
+        images = self._tileset_image_cache.get(key)
+        if images is None:
+            images = render_tileset(self.project, key)
+            self._tileset_image_cache[key] = images
         self.canvas.set_tile_images(images)
         for tile, image in enumerate(images):
             button = self.terrain_buttons.button(tile)
@@ -2494,40 +3274,44 @@ class MapPage(ProjectPage):
             return
         overlays: list[tuple[str, int, int, str, int]] = []
         overlay_images: dict[tuple[str, int], QImage] = {}
-        icon_cache: dict[tuple[str, int], QImage] = {}
+        icon_cache = self._map_icon_cache
         mode = self.editor_tabs.currentIndex()
         show_all = self.show_all_objects.isChecked()
         self.canvas.paint_enabled = mode == 0
         self.canvas.deployment_edit_enabled = mode == 1
         self.canvas.trigger_edit_enabled = mode == 2
+        icon_banks = (
+            scenario_map_icon_banks(self.current_map_id)
+            if self.current_map_id is not None
+            and self.current_map_id < len(SCENARIO_MAP_ICON_BANKS)
+            else None
+        )
         if mode == 1 or show_all:
             for side, table in (("敌", self.enemy_table), ("客", self.guest_table)):
                 for row, values in enumerate(table.rows()):
                     overlays.append((side, values[0], values[1], str(row + 1), row))
                     if self.project is not None:
                         unit_id = values[3]
-                        key = (side, unit_id)
-                        if key not in icon_cache:
+                        key = (icon_banks, side, unit_id)
+                        if key not in icon_cache and icon_banks is not None:
                             icon_cache[key] = render_unit_map_icon(
-                                self.project, unit_id, side
+                                self.project, unit_id, side, icon_banks
                             )
-                        overlay_images[(side, row)] = icon_cache[key]
-            initial_roster = (
-                self.project.get_initial_roster()
-                if self.project is not None
-                else ()
-            )
+                        if key in icon_cache:
+                            overlay_images[(side, row)] = icon_cache[key]
+            player_slots = self._player_slot_state()
             for row, values in enumerate(self.player_table.rows()):
                 overlays.append(("我", values[0], values[1], str(row + 1), row))
                 roster_index = values[2]
-                if roster_index < len(initial_roster):
-                    unit_id = initial_roster[roster_index][1]
-                    key = ("我", unit_id)
-                    if key not in icon_cache:
+                if roster_index in player_slots:
+                    unit_id = player_slots[roster_index][1]
+                    key = (icon_banks, "我", unit_id)
+                    if key not in icon_cache and icon_banks is not None:
                         icon_cache[key] = render_unit_map_icon(
-                            self.project, unit_id, "我"
+                            self.project, unit_id, "我", icon_banks
                         )
-                    overlay_images[("我", row)] = icon_cache[key]
+                    if key in icon_cache:
+                        overlay_images[("我", row)] = icon_cache[key]
         if (mode == 2 or show_all) and self.trigger_table.isEnabled():
             for row, values in enumerate(self.trigger_table.rows()):
                 side = "店" if values[3] >= 0xF0 else "事"
@@ -2558,6 +3342,29 @@ class MapPage(ProjectPage):
             tuple(self.player_table.rows()),
             tuple(self.trigger_table.rows()),
         )
+
+    def _trigger_storage_used_after(
+        self, entries: tuple[MapTrigger, ...]
+    ) -> int:
+        """Measure the trigger pool without decoding every chapter repeatedly."""
+
+        assert self.project is not None and self.current_map_id is not None
+        codec = self.project.map_trigger_codec
+        assert codec is not None
+        if self._trigger_payload_cache is None:
+            self._trigger_payload_cache = tuple(
+                codec.encode_entries(layout.entries)
+                for layout in codec.layouts(self.project.working)
+            )
+        payloads = list(self._trigger_payload_cache)
+        payloads[self.current_map_id] = codec.encode_entries(entries)
+        used = sum(len(payload) for payload in set(payloads))
+        if used > codec.pool_capacity:
+            raise ValueError(
+                f"地图触发器压缩后需要 {used} 字节，"
+                f"托管池只有 {codec.pool_capacity} 字节。"
+            )
+        return used
 
     @property
     def has_pending_draft(self) -> bool:
@@ -2611,11 +3418,7 @@ class MapPage(ProjectPage):
                 self.staged_height,
             )
             if not expanded:
-                trigger_used = self.project.map_trigger_codec.storage_used_after(
-                    self.project.working,
-                    self.current_map_id,
-                    staged_triggers,
-                )
+                trigger_used = self._trigger_storage_used_after(staged_triggers)
                 if trigger_used > self.project.map_trigger_codec.pool_capacity:
                     raise ValueError("地图事件与商店数据超出全局池容量。")
 
@@ -2758,9 +3561,7 @@ class MapPage(ProjectPage):
                 if expanded:
                     details += f" · 事件/商店 {len(staged_triggers)} 条"
                 else:
-                    trigger_used = self.project.map_trigger_codec.storage_used_after(
-                        self.project.working, self.current_map_id, staged_triggers
-                    )
+                    trigger_used = self._trigger_storage_used_after(staged_triggers)
                     trigger_capacity = self.project.map_trigger_codec.pool_capacity
                     details += (
                         f" · 事件/商店 {len(staged_triggers)} 条 · "

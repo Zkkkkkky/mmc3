@@ -573,7 +573,11 @@ class UnitPage(SearchableRecordPage):
         self.original_values: dict[str, QLabel] = {}
         for row, field in enumerate(UNIT_FIELDS, 1):
             editor = QSpinBox()
-            editor.setRange(field.minimum, field.maximum)
+            editor.setRange(
+                field.minimum * field.display_scale,
+                field.maximum * field.display_scale,
+            )
+            editor.setSingleStep(field.display_scale)
             editor.setToolTip(field.description)
             editor.valueChanged.connect(self._update_pending_state)
             self.fields[field.key] = editor
@@ -707,10 +711,14 @@ class UnitPage(SearchableRecordPage):
         for field in UNIT_FIELDS:
             spec = self.project.unit_field(field.key)
             editor = self.fields[field.key]
-            editor.setRange(spec.minimum, spec.maximum)
-            editor.setValue(record.get(field.key))
+            editor.setRange(
+                spec.minimum * spec.display_scale,
+                spec.maximum * spec.display_scale,
+            )
+            editor.setSingleStep(spec.display_scale)
+            editor.setValue(record.get(field.key) * spec.display_scale)
             base_value = self.project.get_value(record_id, field.key, original=True)
-            self.original_values[field.key].setText(str(base_value))
+            self.original_values[field.key].setText(str(base_value * spec.display_scale))
             self.original_values[field.key].setStyleSheet(
                 "color: #b05a00; font-weight: 650;"
                 if record.get(field.key) != base_value
@@ -736,6 +744,7 @@ class UnitPage(SearchableRecordPage):
         pending = any(
             self.fields[field.key].value()
             != self.project.get_value(self.current_id, field.key)
+            * self.project.unit_field(field.key).display_scale
             for field in UNIT_FIELDS
         )
         source_ids = self.project.unit_name_source_ids(self.current_id)
@@ -831,10 +840,16 @@ class UnitPage(SearchableRecordPage):
                 return
             with self.project.transaction(f"机体 ${self.current_id:02X} · 批量属性"):
                 for field in UNIT_FIELDS:
+                    spec = self.project.unit_field(field.key)
+                    shown_value = self.fields[field.key].value()
+                    if shown_value % spec.display_scale:
+                        raise ValueError(
+                            f"{spec.label}必须是 {spec.display_scale} 的整数倍。"
+                        )
                     self.project.set_value(
                         self.current_id,
                         field.key,
-                        self.fields[field.key].value(),
+                        shown_value // spec.display_scale,
                     )
                 source_id = int(self.name_reference.currentData())
                 self.project.set_unit_name_reference(self.current_id, source_id)

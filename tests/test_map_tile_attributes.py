@@ -45,6 +45,28 @@ class MapTileAttributeCodecTests(unittest.TestCase):
             )
             self.assertEqual(len(value.tiles), 16)
 
+    def test_water_tile_sea_property_is_read_and_repairs_omitted_rom_flags(self) -> None:
+        self.assertTrue(self.project.get_map_tileset_attributes("A").tiles[5].sea)
+        current = self.project.get_map_tileset_attributes("D")
+        self.assertFalse(current.tiles[5].sea)
+        for key in "ABCD":
+            self.assertTrue(MapTileAttributeCodec.is_visual_sea(key, 5))
+        base = MapTileAttributeCodec.record_offset("D")
+        repaired = replace(
+            current,
+            tiles=current.tiles[:5]
+            + (replace(current.tiles[5], sea=True),)
+            + current.tiles[6:],
+        )
+        patches = MapTileAttributeCodec.patches(
+            self.project.working, "D", repaired
+        )
+        sea_patch = next(
+            patch for patch in patches if patch[0] == base + 20 + 5
+        )
+        self.assertEqual(sea_patch[1][0] & 0x80, 0)
+        self.assertEqual(sea_patch[2][0] & 0x80, 0x80)
+
     def test_shared_battlefield_palettes_match_verified_rom_template(self) -> None:
         self.assertEqual(
             VERIFIED_BATTLEFIELD_PALETTES,

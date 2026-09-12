@@ -550,6 +550,88 @@ class _BattleSide(QWidget):
         )
 
 
+class DefeatExperienceCalculatorDialog(QDialog):
+    """Reference-style calculator backed by the selected unit's ROM EXP value."""
+
+    def __init__(
+        self,
+        parent: QWidget | None = None,
+        project: Any | None = None,
+        *,
+        unit_id: int = 1,
+        enemy_level: int = 1,
+        ally_level: int = 1,
+    ) -> None:
+        super().__init__(parent)
+        self.project = project
+        self.setWindowTitle("击落经验计算器")
+        self.setMinimumWidth(460)
+        root = QVBoxLayout(self)
+        form = QFormLayout()
+        self.unit = QComboBox()
+        if project is not None:
+            for record_id in range(1, project.unit_count):
+                self.unit.addItem(
+                    f"{record_id:03d}：{project.unit_display_name(record_id)}",
+                    record_id,
+                )
+        self.enemy_level = QSpinBox()
+        self.ally_level = QSpinBox()
+        for editor, value in (
+            (self.enemy_level, enemy_level),
+            (self.ally_level, ally_level),
+        ):
+            editor.setRange(1, 99)
+            editor.setValue(max(1, min(99, value)))
+        self.multiplier = QSpinBox()
+        self.multiplier.setRange(1, 999)
+        self.multiplier.setValue(100)
+        self.multiplier.setSuffix(" %")
+        self.inherent_experience = QLabel("0")
+        self.actual_experience = QLabel("0 EXP")
+        self.actual_experience.setStyleSheet("font-weight:700; font-size:18px;")
+        form.addRow("敌方机体", self.unit)
+        form.addRow("敌方等级", self.enemy_level)
+        form.addRow("我方等级", self.ally_level)
+        form.addRow("获得经验倍数", self.multiplier)
+        form.addRow("固有经验", self.inherent_experience)
+        form.addRow("实际经验", self.actual_experience)
+        root.addLayout(form)
+        note = QLabel(
+            "按当前已验证字段估算：固有经验 × 敌方等级 ÷ 我方等级 × 经验倍数；"
+            "结果至少为 1 EXP。旧版的特殊舍入边界仍需黄金样本核验。"
+        )
+        note.setWordWrap(True)
+        note.setObjectName("hintText")
+        root.addWidget(note)
+        close_button = QPushButton("关闭")
+        close_button.clicked.connect(self.accept)
+        close_row = QHBoxLayout()
+        close_row.addStretch()
+        close_row.addWidget(close_button)
+        root.addLayout(close_row)
+        if self.unit.count():
+            index = self.unit.findData(unit_id)
+            self.unit.setCurrentIndex(max(0, index))
+        self.unit.currentIndexChanged.connect(self._recalculate)
+        self.enemy_level.valueChanged.connect(self._recalculate)
+        self.ally_level.valueChanged.connect(self._recalculate)
+        self.multiplier.valueChanged.connect(self._recalculate)
+        self._recalculate()
+
+    def _recalculate(self, _value: int | None = None) -> None:
+        if self.project is None or self.unit.currentData() is None:
+            base = 0
+            result = 0
+        else:
+            base = self.project.get_value(int(self.unit.currentData()), "experience")
+            numerator = base * self.enemy_level.value() * self.multiplier.value()
+            denominator = self.ally_level.value() * 100
+            result = max(1, numerator // denominator)
+        self.inherent_experience.setText(str(base))
+        self.actual_experience.setText(f"{result} EXP")
+
+
 class AttributeCalculatorDialog(QDialog):
     """Non-mutating comparison calculator with an explicit estimation formula."""
 
@@ -961,6 +1043,7 @@ class OtherSettingsDialog(QDialog):
 
 __all__ = [
     "AttributeCalculatorDialog",
+    "DefeatExperienceCalculatorDialog",
     "FontLibraryDialog",
     "MapAnimationDialog",
     "OtherSettingsDialog",

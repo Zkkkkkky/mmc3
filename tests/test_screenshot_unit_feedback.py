@@ -19,8 +19,19 @@ from dc_modifier.database_graphics import (
     render_unit_battle_preview,
     render_unit_body_composition,
 )
-from dc_modifier.legacy_windows import DatabaseDialog
-from dc_modifier.unit_appearance_dialog import UnitAppearanceDialog, appearance_patch
+from dc_modifier.legacy_windows import (
+    DatabaseDialog,
+    UnitSpecialEditorDialog,
+    unit_special_summary,
+)
+from dc_modifier.unit_appearance_dialog import (
+    UnitAppearanceDialog,
+    appearance_patch,
+    flip_fragment_script,
+    move_body_script,
+    move_fragment_script,
+    parse_hex_script,
+)
 from fc_rom_editor_core import RomProject
 from tests.qt_test_case import QtTestCase
 
@@ -88,16 +99,60 @@ class ScreenshotUnitTests(QtTestCase):
         self.assertEqual(self.project.get_value(2, "upgrade"), 130)
         self.assertEqual(self.project.get_value(2, "experience"), 100)
         self.project.set_value(2, "terrain", 2)
+        self.project.set_value(2, "transform", 14)
         self.project.set_value(2, "special", 0x86)
         self.project.set_value(2, "experience", 90)
         after = self.project.record_bytes(2)
-        self.assertEqual(after[0], (raw[0] & 0xFC) | 2)
+        self.assertEqual(after[0], (14 << 2) | 2)
         self.assertEqual(after[1], 0x86)
         self.assertEqual(after[10], 90)
         self.assertEqual(after[2:10], raw[2:10])
         self.assertEqual(after[11:], raw[11:])
         with self.assertRaises(ValueError):
             self.project.set_value(2, "terrain", 4)
+        with self.assertRaises(ValueError):
+            self.project.set_value(2, "transform", 64)
+
+    def test_base_money_uses_legacy_game_value_scale_in_form(self) -> None:
+        database = DatabaseDialog(self.project)
+        self.addCleanup(database.close)
+        page = database.unit_page
+        for row in range(page.records.count()):
+            if int(page.records.item(row).data(256)) == 2:
+                page.records.setCurrentRow(row)
+                break
+        self.app.processEvents()
+        self.assertEqual(self.project.get_value(2, "upgrade"), 130)
+        self.assertEqual(page.fields["upgrade"].value(), 1300)
+        self.assertEqual(page.fields["upgrade"].singleStep(), 10)
+        page.fields["upgrade"].setValue(1210)
+        page.apply_record()
+        self.assertEqual(self.project.get_value(2, "upgrade"), 121)
+
+    def test_unit_special_byte_has_reference_style_visual_editor(self) -> None:
+        dialog = UnitSpecialEditorDialog(0x16)
+        self.addCleanup(dialog.close)
+        self.assertEqual(dialog.value(), 0x16)
+        self.assertTrue(dialog.flag_checks[0x10].isChecked())
+        self.assertIn("先制攻击", dialog.summary.text())
+        dialog.flag_checks[0x20].setChecked(True)
+        dialog.low_bits.setCurrentIndex(3)
+        self.assertEqual(dialog.value(), 0x33)
+        self.assertIn("一击脱离", dialog.summary.text())
+        self.assertIn("VPS防御系统", unit_special_summary(dialog.value()))
+
+        database = DatabaseDialog(self.project)
+        self.addCleanup(database.close)
+        page = database.unit_page
+        page.fields["special"].setValue(0xD8)
+        self.assertIn("视层装甲反射", page.special_skill_button.text())
+        self.assertIn("先制攻击", page.special_skill_button.toolTip())
+        self.assertIn("异次元连接系统", page.special_skill_button.toolTip())
+        self.assertIn("扭曲力场", page.special_skill_button.toolTip())
+        page.fields["terrain"].setValue(2)
+        page.transform.setCurrentIndex(page.transform.findData(14))
+        self.assertEqual(page.fields["transform"].value(), 14)
+        self.assertEqual(page.fields["terrain"].value(), 2)
 
     def test_masked_field_and_raw_flag_changes_survive_project_replay(self) -> None:
         raw = bytearray(self.project.record_bytes(2))
@@ -125,6 +180,34 @@ class ScreenshotUnitTests(QtTestCase):
         self.assertEqual(changed, {offset + 1, offset + 7})
         self.project.undo()
         self.assertEqual(bytes(self.project.working), before)
+
+    def test_expanded_scripts_move_flip_repack_and_round_trip(self) -> None:
+        self.project.configure_expansion(288, 64, 112)
+        before = read_unit_appearance(self.project, 0x09)
+        moved_body = move_body_script(before.body_script, 1, -1)
+        moved_fragment = move_fragment_script(before.fragment_script, 2, 3)
+        flipped_fragment = flip_fragment_script(moved_fragment, 0x40)
+        decode_unit_body_script(moved_body, len(before.secondary_banks) * 64)
+        decode_unit_fragment_script(flipped_fragment)
+        self.project.set_unit_appearance_scripts(
+            0x09,
+            body_script=moved_body,
+            fragment_script=flipped_fragment,
+        )
+        after = read_unit_appearance(self.project, 0x09)
+        self.assertEqual(after.body_script, moved_body)
+        self.assertEqual(after.fragment_script, flipped_fragment)
+        self.assertEqual(
+            parse_hex_script(after.body_script.hex(" "), "主体拼图脚本"),
+            moved_body,
+        )
+        self.assertFalse(
+            [issue for issue in self.project.validate() if issue.severity == "error"]
+        )
+        self.project.undo()
+        restored = read_unit_appearance(self.project, 0x09)
+        self.assertEqual(restored.body_script, before.body_script)
+        self.assertEqual(restored.fragment_script, before.fragment_script)
 
     def test_appearance_colors_use_visual_palette_buttons_and_stay_in_sync(self) -> None:
         dialog = UnitAppearanceDialog(self.project, 0x09)

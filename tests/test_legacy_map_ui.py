@@ -202,6 +202,9 @@ class LegacyMapUiTests(QtTestCase):
         dialog = TileAttributeDialog(
             self.project, "D", self.page.canvas.tile_images, self.page
         )
+        self.assertTrue(dialog.sea_checks[5].isChecked())
+        self.assertIn("ROM 漏写海属性", dialog.sea_checks[5].toolTip())
+        self.assertIn("应用后会补写标志", dialog.sea_checks[5].toolTip())
         tile_zero = dialog.table.item(0, 0).icon().pixmap(16, 16).toImage()
         expected_zero = render_map_tile(
             self.project,
@@ -257,11 +260,16 @@ class LegacyMapUiTests(QtTestCase):
             strict=True,
         ):
             self.assertIn(":", selector.currentText())
-            self.assertFalse(preview.pixmap().isNull())
-            self.assertEqual(preview.height(), 50)
-            self.assertEqual(preview.pixmap().size(), QSize(192, 48))
+            self.assertEqual(selector.width(), 150)
+            self.assertEqual(preview.size(), QSize(192, 48))
+            self.assertTrue(preview.pixmap().isNull())
             self.assertFalse(preview.isVisible())
         self.assertFalse(self.page.icon_preview_group.isVisible())
+        self.assertEqual(self.page.icon_preview_group.maximumHeight(), 195)
+        self.assertLessEqual(self.page.icon_preview_toggle.maximumWidth(), 220)
+        self.assertLessEqual(self.page.deployment_list_toggle.maximumWidth(), 180)
+        self.assertLessEqual(self.page.open_deployment_button.maximumWidth(), 210)
+        self.assertTrue(self.page.icon_preview_toggle.isVisible())
         self.assertIn("展开", self.page.icon_preview_toggle.text())
         self.page.icon_preview_toggle.setChecked(True)
         self.application.processEvents()
@@ -269,6 +277,21 @@ class LegacyMapUiTests(QtTestCase):
         self.assertIn("收起", self.page.icon_preview_toggle.text())
         for preview in self.page.icon_sheet_labels:
             self.assertTrue(preview.isVisible())
+            self.assertFalse(preview.pixmap().isNull())
+            self.assertEqual(preview.pixmap().size(), QSize(192, 48))
+        self.assertIn("10D810", self.page.icon_bank_selectors[2].currentText())
+        self.page.map_list.setCurrentRow(3)
+        self.application.processEvents()
+        self.assertEqual(
+            [selector.currentData() for selector in self.page.icon_bank_selectors],
+            [0x34, 0x35, 0x3A],
+        )
+        self.page.map_list.setCurrentRow(27)
+        self.application.processEvents()
+        self.assertEqual(
+            [selector.currentData() for selector in self.page.icon_bank_selectors],
+            [0x46, 0x47, 0x3C],
+        )
         self.assertTrue(self.page.deployment_objects.isVisible())
         self.assertIn("收起", self.page.deployment_list_toggle.text())
         self.page.deployment_list_toggle.setChecked(False)

@@ -40,6 +40,12 @@
     "1": "不补正",
     "2-16": "补正1格至补正15格"
   },
+  "sea_flag_repair": {
+    "raw_encoding": "防御字节最高位 0x80",
+    "affected_visual_water_tiles": "图库 A-D 的位图5",
+    "evidence": "旧修改器自动备份中的 A5/C5/D5 标志与 A5/D5 完全一致的四图块 CHR；B5具有相同水面轮廓",
+    "behavior": "原始解码不伪造数据；界面标出扩展ROM漏写项，用户应用后才补写最高位"
+  },
   "safety": {
     "supported_tilesets": "A-G",
     "unsupported_tilesets": "H",
