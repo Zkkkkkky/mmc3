@@ -1,0 +1,39 @@
+{
+  "status": "verified",
+  "display_palette": {
+    "source": "tools/vendor/fceux-2.6.6/palettes/FCEUX.pal",
+    "verification": "src/dc_modifier/database_graphics.py FCEUX_RGB is byte-identical",
+    "entries": 64
+  },
+  "battlefield": {
+    "runtime_buffer": "$0490-$049F",
+    "rom_template_file_offset": "$3B2C0",
+    "palette_0": ["$0F", "$30", "$10", "$00"],
+    "palette_1": "background $0F plus the active A-G tileset record's first three bytes",
+    "palette_2": ["$0F", "$30", "$21", "$02"],
+    "palette_3": ["$0F", "$37", "$27", "$16"],
+    "preview_correction": "removed approximate RGB terrain colors; reference-editor and emulator screenshots establish a game-effect terrain route for all visual surfaces; the editable 00/55/AA/FF legacy property field remains visible but does not directly recolor a whole metatile",
+    "bitmap_zero": "tilesets A-H use background palette $0F $30 $10 $00 on every preview surface"
+  },
+  "map_icons": {
+    "palette": ["$0F", "$30", "$21", "$02"],
+    "source": "verified battlefield blue palette",
+    "status": "exact NES colors"
+  },
+  "unit_and_fragment_previews": {
+    "source": "six palette bytes loaded from the active unit appearance record",
+    "background": "$0F",
+    "status": "exact NES colors"
+  },
+  "portrait_previews": {
+    "front": "three ROM palette bytes with $0F transparency",
+    "back": "fixed grayscale working layer used by the portrait composition format",
+    "status": "game preview and working layer kept distinct"
+  },
+  "non_game_palettes": {
+    "portrait_bmp_material_palette": "legacy import/export identification colors",
+    "generic_chr_editor_palette": "2bpp plane working colors",
+    "font_editor_palette": "monochrome editing aid",
+    "status": "intentionally excluded from claims about in-game colors"
+  }
+}

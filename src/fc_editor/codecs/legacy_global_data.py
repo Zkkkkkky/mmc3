@@ -34,8 +34,10 @@ class LegacyGlobalDataCodec:
     DOUBLE_HIT_CONTEXTS: tuple[OperandContext, ...] = (
         (0x78109, bytes.fromhex("A5 B1 85 01 A9"), bytes.fromhex("85 08 20 0C C0")),
         (0x7815A, bytes.fromhex("A5 B3 85 01 A9"), bytes.fromhex("85 08 20 0C C0")),
+        (0x7FF03, bytes.fromhex("A6 BB A9"), bytes.fromhex("20 12 FF A5 10 85 B0")),
         (0x78127, bytes.fromhex("A5 B3 85 01 A9"), bytes.fromhex("85 08 20 0C C0")),
         (0x78178, bytes.fromhex("A5 B1 85 01 A9"), bytes.fromhex("85 08 20 0C C0")),
+        (0x7FF12, bytes.fromhex("A6 BC A9"), bytes.fromhex("20 12 FF A5 10 18")),
         (
             0x78138,
             bytes.fromhex("A5 10 18 69"),
@@ -46,6 +48,7 @@ class LegacyGlobalDataCodec:
             bytes.fromhex("A5 10 18 69"),
             bytes.fromhex("85 00 A5 11 69 00 85 01"),
         ),
+        (0x7FF1A, bytes.fromhex("A5 10 18 69"), bytes.fromhex("85 B2 A5 11 4C 9B FE")),
     )
     DAMAGE_FORMULA_CONTEXTS: tuple[OperandContext, ...] = (
         (
@@ -167,8 +170,8 @@ class LegacyGlobalDataCodec:
         for label, offsets in (
             ("双击公式操作数", tuple(
                 offset
-                for pair in self.spec.double_hit_operand_pairs
-                for offset in pair
+                for group in self.spec.double_hit_operand_groups
+                for offset in group
             )),
             ("伤害公式操作数", self.spec.damage_formula_operand_offsets),
             ("道具效果操作数", self.spec.item_effect_operand_offsets),
@@ -225,8 +228,8 @@ class LegacyGlobalDataCodec:
     def _validate_double_hit_contexts(self, data: bytes | bytearray) -> None:
         offsets = tuple(
             offset
-            for pair in self.spec.double_hit_operand_pairs
-            for offset in pair
+            for group in self.spec.double_hit_operand_groups
+            for offset in group
         )
         self._validate_operand_contexts(
             data,
@@ -308,12 +311,14 @@ class LegacyGlobalDataCodec:
     ) -> tuple[int, int, int]:
         source = self.rom.data if data is None else data
         values: list[int] = []
-        for index, (first, mirror) in enumerate(self.spec.double_hit_operand_pairs):
+        for index, group in enumerate(self.spec.double_hit_operand_groups):
+            first, *mirrors = group
             self._require_range(source, first, 1, "双击公式操作数")
-            self._require_range(source, mirror, 1, "双击公式镜像操作数")
-            if source[first] != source[mirror]:
+            for mirror in mirrors:
+                self._require_range(source, mirror, 1, "双击公式镜像操作数")
+            if any(source[first] != source[mirror] for mirror in mirrors):
                 raise RomFormatError(
-                    f"双击公式第 {index + 1} 项的两个镜像操作数不一致。"
+                    f"双击公式第 {index + 1} 项的镜像操作数不一致。"
                 )
             values.append(source[first])
         return values[0], values[1], values[2]
@@ -324,10 +329,14 @@ class LegacyGlobalDataCodec:
         normalized = self._u8_values(values, 3, "双击公式")
         offsets = tuple(
             offset
-            for pair in self.spec.double_hit_operand_pairs
-            for offset in pair
+            for group in self.spec.double_hit_operand_groups
+            for offset in group
         )
-        mirrored_values = tuple(value for value in normalized for _ in range(2))
+        mirrored_values = tuple(
+            value
+            for value, group in zip(normalized, self.spec.double_hit_operand_groups)
+            for _ in group
+        )
         self._validate_boundaries(data)
         self._validate_double_hit_contexts(data)
         return self._operand_patches(data, offsets, mirrored_values)

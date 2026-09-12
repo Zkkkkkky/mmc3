@@ -314,8 +314,9 @@ class TextConverterDialog(QDialog):
         self.project = project
         self.text_table = text_table or default_dc_text_table()
         self.setWindowTitle("文字转换")
-        self.setFixedSize(700, 700)
-        self.setSizeGripEnabled(False)
+        self.resize(600, 620)
+        self.setMinimumSize(500, 500)
+        self.setSizeGripEnabled(True)
         self.setModal(True)
         root = QVBoxLayout(self)
         root.addWidget(QLabel("文字:"))
@@ -556,8 +557,9 @@ class AttributeCalculatorDialog(QDialog):
         super().__init__(parent)
         self.project = project
         self.setWindowTitle("战斗属性计算器")
-        self.setFixedSize(1257, 998)
-        self.setSizeGripEnabled(False)
+        self.resize(1120, 780)
+        self.setMinimumSize(900, 650)
+        self.setSizeGripEnabled(True)
         root = QVBoxLayout(self)
         sides = QHBoxLayout()
         self.enemy = _BattleSide("敌方", project)
@@ -568,14 +570,23 @@ class AttributeCalculatorDialog(QDialog):
 
         result_group = QGroupBox("属性计算")
         result_layout = QVBoxLayout(result_group)
-        self.results = QTableWidget(0, 5)
-        self.results.setHorizontalHeaderLabels(("攻击方", "目标", "命中率", "估算伤害", "命中后HP"))
+        self.results = QTableWidget(0, 6)
+        self.results.setHorizontalHeaderLabels(
+            ("攻击方", "目标", "命中率", "最低命中速度", "估算伤害", "命中后HP")
+        )
         self.results.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeMode.Stretch)
         self.results.horizontalHeader().hide()
         self.results.verticalHeader().hide()
         self.results.setShowGrid(False)
         self.results.setEditTriggers(QTableWidget.EditTrigger.NoEditTriggers)
         result_layout.addWidget(self.results, 1)
+        formula_notice = QLabel(
+            "最低命中速度表示按当前估算公式达到 1% 命中所需的攻方速度；"
+            "旧修改器的完整战斗公式仍需黄金样本验证。"
+        )
+        formula_notice.setObjectName("hintText")
+        formula_notice.setWordWrap(True)
+        result_layout.addWidget(formula_notice)
         root.addWidget(result_group, 1)
         self.calculate_button = QPushButton("开始计算")
         self.calculate_button.setToolTip(
@@ -586,8 +597,11 @@ class AttributeCalculatorDialog(QDialog):
         root.addWidget(self.calculate_button, 0, Qt.AlignmentFlag.AlignHCenter)
 
     @staticmethod
-    def calculate_attack(attacker: _BattleSide, defender: _BattleSide) -> tuple[int, int, int]:
+    def calculate_attack(
+        attacker: _BattleSide, defender: _BattleSide
+    ) -> tuple[int, int, int, int]:
         hit = max(0, min(100, attacker.weapon_hit.value() + attacker.speed.value() - defender.speed.value()))
+        minimum_hit_speed = max(0, defender.speed.value() - attacker.weapon_hit.value() + 1)
         scaled = (
             (attacker.strength.value() + attacker.power_land.value())
             * attacker.multiplier_numerator.value()
@@ -595,7 +609,7 @@ class AttributeCalculatorDialog(QDialog):
         )
         damage = max(1, scaled - defender.defense.value())
         remaining_hp = max(0, defender.hp.value() - damage)
-        return hit, damage, remaining_hp
+        return hit, minimum_hit_speed, damage, remaining_hp
 
     def calculate(self) -> None:
         rows = (
@@ -606,7 +620,14 @@ class AttributeCalculatorDialog(QDialog):
         self.results.horizontalHeader().show()
         self.results.setShowGrid(True)
         for row, values in enumerate(rows):
-            display = (values[0], values[1], f"{values[2]}%", str(values[3]), str(values[4]))
+            display = (
+                values[0],
+                values[1],
+                f"{values[2]}%",
+                str(values[3]),
+                str(values[4]),
+                str(values[5]),
+            )
             for column, value in enumerate(display):
                 item = QTableWidgetItem(value)
                 item.setTextAlignment(Qt.AlignmentFlag.AlignCenter)

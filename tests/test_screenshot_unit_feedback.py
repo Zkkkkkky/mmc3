@@ -12,9 +12,11 @@ from PySide6.QtWidgets import QApplication
 from dc_modifier.app import DEFAULT_ROM
 from dc_modifier.database_graphics import (
     decode_unit_body_script,
+    decode_unit_fragment_script,
     palette_color,
     read_unit_appearance,
     render_chr_banks,
+    render_unit_battle_preview,
     render_unit_body_composition,
 )
 from dc_modifier.legacy_windows import DatabaseDialog
@@ -124,6 +126,19 @@ class ScreenshotUnitTests(QtTestCase):
         self.project.undo()
         self.assertEqual(bytes(self.project.working), before)
 
+    def test_appearance_colors_use_visual_palette_buttons_and_stay_in_sync(self) -> None:
+        dialog = UnitAppearanceDialog(self.project, 0x09)
+        self.addCleanup(dialog.close)
+        self.assertEqual(len(dialog.color_buttons), 6)
+        self.assertEqual(dialog.color_buttons[0].value, dialog.editors[0].value())
+        self.assertIn("background:", dialog.color_buttons[0].styleSheet())
+        self.assertIn("点击展开64色", dialog.color_buttons[0].toolTip())
+
+        dialog.color_buttons[0].set_value(0x2A)
+        self.assertEqual(dialog.editors[0].value(), 0x2A)
+        dialog.editors[1].setValue(0x16)
+        self.assertEqual(dialog.color_buttons[1].value, 0x16)
+
     def test_appearance_validation_and_outer_database_cancel(self) -> None:
         before = bytes(self.project.working)
         database = DatabaseDialog(self.project)
@@ -176,6 +191,57 @@ class ScreenshotUnitTests(QtTestCase):
                 16,
             )
 
+    def test_fragment_composition_decodes_and_renders_all_unit_records(self) -> None:
+        for unit_id in range(1, self.project.unit_count):
+            appearance = read_unit_appearance(self.project, unit_id)
+            placements = decode_unit_fragment_script(appearance.fragment_script)
+            self.assertTrue(all(0 <= item.tile_index < 0x80 for item in placements))
+            image = render_unit_battle_preview(self.project, appearance)
+            self.assertEqual((image.width(), image.height()), (128, 128))
+
+        appearance = read_unit_appearance(self.project, 0x11)
+        composite = render_unit_battle_preview(self.project, appearance)
+        colors = {
+            composite.pixelColor(x, y).name()
+            for y in range(composite.height()) for x in range(composite.width())
+        }
+        self.assertTrue(colors & {
+            palette_color(value).name() for value in appearance.first_palette
+        })
+        self.assertTrue(colors & {
+            palette_color(value).name() for value in appearance.second_palette
+        })
+
+    def test_fragment_leading_coordinates_follow_battle_axes(self) -> None:
+        # $09 begins at X=-1, Y=$C4+128=68.  These two bytes were previously
+        # interpreted in the opposite order, detaching the sprite layer.
+        appearance = read_unit_appearance(self.project, 0x09)
+        first = decode_unit_fragment_script(appearance.fragment_script)[0]
+        self.assertEqual((first.x, first.y, first.tile_index), (-1, 68, 0x68))
+
+    def test_battle_preview_uses_both_side_origins(self) -> None:
+        friendly = render_unit_battle_preview(
+            self.project, read_unit_appearance(self.project, 0x09)
+        )
+        opposing = render_unit_battle_preview(
+            self.project, read_unit_appearance(self.project, 0x51)
+        )
+
+        def visible_bounds(image):
+            background = palette_color(0x0F).rgb()
+            points = [
+                (x, y)
+                for y in range(image.height())
+                for x in range(image.width())
+                if image.pixel(x, y) != background
+            ]
+            return (
+                min(x for x, _y in points), min(y for _x, y in points),
+                max(x for x, _y in points), max(y for _x, y in points),
+            )
+
+        self.assertEqual(visible_bounds(friendly), (0, 48, 81, 127))
+        self.assertEqual(visible_bounds(opposing), (72, 63, 127, 125))
     def test_body_composition_expands_shared_rows_and_renders_current_chr(self) -> None:
         placements = decode_unit_body_script(
             bytes.fromhex("F3 F9 00 FD 20 08 F9 40 00 FF"), 64
@@ -215,7 +281,7 @@ class ScreenshotUnitTests(QtTestCase):
                          ["$22", "$02", "$20", "$28", "$18", "$00"])
         self.assertIn("#5c94fc", dialog.color_swatches[0].styleSheet())
         self.assertIn("#f0bc3c", dialog.color_swatches[3].styleSheet())
-        self.assertEqual(dialog.preview_tabs.tabText(0), "主体拼图")
+        self.assertEqual(dialog.preview_tabs.tabText(0), "战斗合成")
         self.assertEqual(dialog.preview_tabs.tabText(1), "碎片原始图库")
         self.assertEqual(dialog.preview_tabs.tabText(2), "拼图脚本原码")
         self.assertEqual(

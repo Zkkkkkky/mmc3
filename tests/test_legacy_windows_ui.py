@@ -10,7 +10,13 @@ from unittest.mock import patch
 os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 
 from PySide6.QtCore import Qt
-from PySide6.QtWidgets import QApplication, QListWidget, QPushButton, QWidget
+from PySide6.QtWidgets import (
+    QApplication,
+    QListWidget,
+    QMessageBox,
+    QPushButton,
+    QWidget,
+)
 
 from dc_modifier.app import DEFAULT_ROM
 from dc_modifier.legacy_windows import DatabaseDialog, ScenarioDialog
@@ -69,6 +75,81 @@ class LegacyWindowTests(QtTestCase):
         )
         self.assertEqual(dialog.ok_button.text(), "确定")
         self.assertEqual(dialog.cancel_button.text(), "取消")
+
+    def test_database_record_lists_support_right_click_copy_and_paste(self) -> None:
+        dialog = self._show(DatabaseDialog(self.project))
+        pages = (dialog.unit_page.controller, dialog.character_page, dialog.weapon_page)
+        for page in pages:
+            with self.subTest(page=type(page).__name__):
+                self.assertEqual(
+                    page.records.contextMenuPolicy(),
+                    Qt.ContextMenuPolicy.CustomContextMenu,
+                )
+                self.assertIn("右键", page.records.toolTip())
+
+        page = dialog.unit_page.controller
+        self.assertTrue(page.select_record_id(1))
+        source_record = self.project.record_bytes(1)
+        source_name = self.project.unit_name_source_ids(1)
+        source_weapons = self.project.get_unit_weapons(1)
+        page.copy_selected_record()
+        self.assertEqual(page._copied_record_id, 1)
+        self.assertTrue(page.select_record_id(2))
+        with patch(
+            "dc_modifier.pages.QMessageBox.question",
+            return_value=QMessageBox.StandardButton.Yes,
+        ):
+            page.paste_copied_record()
+        self.assertEqual(self.project.record_bytes(2), source_record)
+        self.assertEqual(self.project.unit_name_source_ids(2)[0], source_name[0])
+        self.assertEqual(self.project.get_unit_weapons(2), source_weapons)
+        self.assertEqual(page.current_id, 2)
+
+    def test_database_names_can_be_edited_directly_with_shared_warning(self) -> None:
+        dialog = self._show(DatabaseDialog(self.project))
+        cases = (
+            (dialog.unit_page.controller, 0x01, "查理", self.project.unit_display_name),
+            (dialog.character_page, 0x13, "查理", self.project.character_display_name),
+            (dialog.weapon_page, 0x0B, "光束军刀", self.project.weapon_display_name),
+        )
+        for page, record_id, replacement, display_name in cases:
+            with self.subTest(page=type(page).__name__):
+                self.assertTrue(page.select_record_id(record_id))
+                page.name_text.setText(replacement)
+                self.assertTrue(page.apply_button.isEnabled())
+                with patch(
+                    "dc_modifier.pages.QMessageBox.question",
+                    return_value=QMessageBox.StandardButton.Yes,
+                ):
+                    page.apply_record()
+                self.assertEqual(display_name(record_id), replacement)
+
+    def test_database_context_exports_use_verified_formats(self) -> None:
+        dialog = self._show(DatabaseDialog(self.project))
+        unit = dialog.unit_page.controller
+        character = dialog.character_page
+        self.assertTrue(unit.supports_record_export())
+        self.assertTrue(character.supports_record_export())
+        self.assertFalse(dialog.weapon_page.supports_record_export())
+        with tempfile.TemporaryDirectory() as directory:
+            unit_path = Path(directory) / "current.dcunit"
+            with patch(
+                "dc_modifier.pages.QFileDialog.getSaveFileName",
+                return_value=(str(unit_path), ""),
+            ):
+                unit.export_selected_record()
+            self.assertTrue(unit_path.is_file())
+
+            with patch(
+                "dc_modifier.database_records.QFileDialog.getExistingDirectory",
+                return_value=directory,
+            ):
+                character.export_selected_record()
+            portrait_directory = next(
+                path for path in Path(directory).iterdir() if path.is_dir()
+            )
+            self.assertTrue((portrait_directory / "[背面].bmp").is_file())
+            self.assertTrue((portrait_directory / "[正面].bmp").is_file())
 
     def test_global_tables_load_all_verified_rom_defaults(self) -> None:
         project = RomProject.load(DEFAULT_ROM)
@@ -236,6 +317,15 @@ class LegacyWindowTests(QtTestCase):
         page = dialog.unit_page
         self.assertTrue(page.records.item(0).text().startswith("[01]001: "))
         self.assertIn("background: #000000", page.body_preview.styleSheet())
+        self.assertTrue(page.name_text.isVisible())
+        self.assertTrue(page.body_layout_button.isEnabled())
+        self.assertTrue(page.fragment_layout_button.isEnabled())
+        self.assertTrue(page.icon_group.isVisible())
+        self.assertTrue(page.copy_record_button.isVisible())
+        self.assertTrue(page.paste_record_button.isVisible())
+        self.assertTrue(page.export_record_button.isVisible())
+        self.assertTrue(page.import_record_button.isVisible())
+        self.assertFalse(page.add_button.isEnabled())
         icon = page.icon_preview.pixmap()
         self.assertIsNotNone(icon)
         assert icon is not None
@@ -248,6 +338,20 @@ class LegacyWindowTests(QtTestCase):
         }
         self.assertEqual(len(disabled_actions), 4)
         self.assertTrue(all(not button.isEnabled() for button in disabled_actions.values()))
+        self.assertTrue(all(not button.isEnabled()
+                            for button in page.unsupported_graphics_buttons))
+        page._arrange_data_groups()
+        positions = {
+            group: page.data_grid.getItemPosition(page.data_grid.indexOf(group))
+            for group in (page.basic_group, page.attributes_group, page.weapons_group)
+        }
+        if page._compact_data_layout == "wide":
+            self.assertEqual({position[0] for position in positions.values()}, {0})
+            self.assertEqual({position[1] for position in positions.values()}, {0, 1, 2})
+        else:
+            self.assertEqual(positions[page.basic_group][:2], (0, 0))
+            self.assertEqual(positions[page.attributes_group][:2], (0, 1))
+            self.assertEqual(positions[page.weapons_group][:2], (1, 0))
 
     def test_scenario_has_six_tabs_and_three_nested_event_tabs(self) -> None:
         dialog = self._show(ScenarioDialog(self.project))

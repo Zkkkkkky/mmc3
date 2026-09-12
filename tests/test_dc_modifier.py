@@ -387,10 +387,13 @@ class EditorProjectTests(unittest.TestCase):
         self.assertEqual(campaign_tileset_key(12), "G")
         self.assertEqual(campaign_tileset_key(31), "C")
         self.assertIsNone(campaign_tileset_key(32))
-        grass = render_map_tile(project, "D", 1)
-        water = render_map_tile(project, "D", 5)
-        self.assertEqual((grass.width(), grass.height()), (16, 16))
-        self.assertNotEqual(grass.pixelColor(0, 0), water.pixelColor(0, 0))
+        background = render_map_tile(project, "D", 0)
+        palette_one = render_map_tile(project, "D", 1)
+        self.assertEqual((background.width(), background.height()), (16, 16))
+        self.assertNotEqual(
+            {background.pixelColor(x, y).name() for y in range(16) for x in range(16)},
+            {palette_one.pixelColor(x, y).name() for y in range(16) for x in range(16)},
+        )
 
     def test_weapon_character_and_music_names_are_resolved_from_rom(self) -> None:
         project = RomProject.load(TARGET_ROM)
@@ -470,6 +473,30 @@ class EditorProjectTests(unittest.TestCase):
             self.assertEqual(reopened.character_display_name(0x13), "查理")
         project.reset_character_name(0x13)
         self.assertEqual(project.get_character_name_pointer(0x13), original_pointer)
+
+    def test_direct_names_use_existing_slots_and_round_trip(self) -> None:
+        project = RomProject.load(TARGET_ROM)
+        project.set_unit_name_text(0x01, "查理")
+        project.set_character_name_text(0x13, "查理")
+        project.set_weapon_name_text(0x0B, "光束军刀")
+        self.assertEqual(project.unit_display_name(0x01), "查理")
+        self.assertEqual(project.character_display_name(0x13), "查理")
+        self.assertEqual(project.weapon_display_name(0x0B), "光束军刀")
+        self.assertEqual(project.unit_name_record_bytes(0x01)[-1], 0xFF)
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "direct-names.dcmod"
+            project.save_project(path)
+            reopened = RomProject.load_project(path, TARGET_ROM)
+            self.assertEqual(reopened.unit_display_name(0x01), "查理")
+            self.assertEqual(reopened.character_display_name(0x13), "查理")
+            self.assertEqual(reopened.weapon_display_name(0x0B), "光束军刀")
+
+    def test_direct_name_rejects_overflow_without_mutation(self) -> None:
+        project = RomProject.load(TARGET_ROM)
+        before = bytes(project.working)
+        with self.assertRaisesRegex(ValueError, "当前原槽只有"):
+            project.set_unit_name_text(0x01, "这是一个肯定放不下的超长机体名称")
+        self.assertEqual(bytes(project.working), before)
 
     def test_dc_unit_names_match_verified_labels_and_deduplicate_shared_pointers(self) -> None:
         project = RomProject.load(TARGET_ROM)

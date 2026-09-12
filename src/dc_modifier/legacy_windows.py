@@ -9,6 +9,7 @@ from PySide6.QtCore import Qt, Signal
 from PySide6.QtGui import QPixmap, QShowEvent
 from PySide6.QtWidgets import (
     QAbstractItemView,
+    QCheckBox,
     QComboBox,
     QDialog,
     QFileDialog,
@@ -44,17 +45,17 @@ from .database_graphics import (
     palette_color,
     read_unit_appearance,
     render_chr_banks,
-    render_unit_body_composition,
+    render_unit_battle_preview,
 )
 from .database_records import (
     ReadableCharacterPage, ReadableWeaponPage, collapsible_details, readable_references,
 )
-from .map_page import render_map_title, render_unit_icon_bank
+from .map_page import NesColorButton, render_map_title, render_unit_icon_bank
 from .pages import CharacterPage, ProjectPage, UnitPage, WeaponPage
 from .persuasion_page import PersuasionPage
 from .story_page import StoryPage
 from .unit_packages import affected_unit_ids, apply_unit_package, package_from_project
-from .unit_appearance_dialog import UnitAppearanceDialog
+from .unit_appearance_dialog import UnitAppearanceDialog, appearance_patch
 from .legacy_text_pages import LegacyGrowthPage, LegacyShopPage, LegacyTextPage, LegacyScenarioEventsPage
 from .workspace import default_export_path, writable_output_path
 
@@ -366,6 +367,7 @@ class LegacyUnitDatabasePage(ProjectPage):
         self.search_panel = self.controller.search_panel
         self.fields = self.controller.fields
         self.name_reference = self.controller.name_reference
+        self.name_text = self.controller.name_text
         self.weapon_slots = self.controller.weapon_slots
         self.apply_button = self.controller.apply_button
         self.apply_button.setText("暂存当前机体")
@@ -389,6 +391,31 @@ class LegacyUnitDatabasePage(ProjectPage):
         self.record_count.setWordWrap(True)
         self.record_count.setObjectName("hintText")
         selection_layout.addWidget(self.record_count)
+        record_actions = QGridLayout()
+        self.copy_record_button = QPushButton("复制")
+        self.copy_record_button.setToolTip("复制当前机体；随后在目标机体上点“粘贴”。")
+        self.copy_record_button.clicked.connect(self.controller.copy_selected_record)
+        self.paste_record_button = QPushButton("粘贴")
+        self.paste_record_button.setToolTip("把已复制机体的已验证数据粘贴到当前ID。")
+        self.paste_record_button.clicked.connect(self.controller.paste_copied_record)
+        self.export_record_button = QPushButton("导出")
+        self.export_record_button.setToolTip("导出当前机体 .dcunit 数据包。")
+        self.export_record_button.clicked.connect(self._export_current_package)
+        self.import_record_button = QPushButton("导入")
+        self.import_record_button.setToolTip("把 .dcunit 数据包导入到当前机体。")
+        self.import_record_button.clicked.connect(self._import_current_package)
+        self.reset_record_button = QPushButton("还原")
+        self.reset_record_button.setToolTip("还原当前机体已验证字段。")
+        self.reset_record_button.clicked.connect(self.controller.reset_record)
+        for index, button in enumerate((
+            self.copy_record_button,
+            self.paste_record_button,
+            self.export_record_button,
+            self.import_record_button,
+            self.reset_record_button,
+        )):
+            record_actions.addWidget(button, index // 2, index % 2)
+        selection_layout.addLayout(record_actions)
         self.add_button = QPushButton("添加")
         self.add_button.setEnabled(False)
         self.add_button.setToolTip("新增机体所需的指针重定位规则尚未完成验证。")
@@ -409,20 +436,16 @@ class LegacyUnitDatabasePage(ProjectPage):
         staged_row.addWidget(self.apply_button, 0, 0)
         duplicate = QPushButton("复制到其他ID…")
         duplicate.clicked.connect(self.controller.duplicate_record)
-        reset = QPushButton("还原此机体")
-        reset.clicked.connect(self.controller.reset_record)
         staged_row.addWidget(duplicate, 0, 1)
-        staged_row.addWidget(reset, 0, 2)
-        self.export_package_button = QPushButton("导出当前 .dcunit…")
-        self.export_package_button.clicked.connect(self._export_current_package)
-        self.import_package_button = QPushButton("导入到当前机体…")
-        self.import_package_button.clicked.connect(self._import_current_package)
-        staged_row.addWidget(self.export_package_button, 1, 0)
-        staged_row.addWidget(self.import_package_button, 1, 1)
+        # Keep the former public attributes as aliases.  Their actions now live
+        # beside the record list, matching the compact reference layout.
+        self.export_package_button = self.export_record_button
+        self.import_package_button = self.import_record_button
         self.session_hint = QLabel("页内暂存后仍可用右下角“取消”完整撤销。")
         self.session_hint.setObjectName("hintText")
         self.session_hint.setWordWrap(True)
-        staged_row.addWidget(self.session_hint, 2, 0, 1, 3)
+        staged_row.addWidget(self.session_hint, 0, 2)
+        staged_row.setColumnStretch(2, 1)
         detail_layout.addLayout(staged_row)
         self.detail_scroll = QScrollArea()
         self.detail_scroll.setWidgetResizable(True)
@@ -430,7 +453,7 @@ class LegacyUnitDatabasePage(ProjectPage):
         splitter.addWidget(self.detail_scroll)
         splitter.setSizes([280, 1080])
         splitter.splitterMoved.connect(lambda *_args: self._arrange_data_groups())
-        self._compact_data_layout: bool | None = None
+        self._compact_data_layout: str | None = None
 
     def resizeEvent(self, event) -> None:  # noqa: N802 - Qt API
         super().resizeEvent(event)
@@ -439,19 +462,34 @@ class LegacyUnitDatabasePage(ProjectPage):
     def _arrange_data_groups(self) -> None:
         if not hasattr(self, "detail_scroll"):
             return
-        compact = self.detail_scroll.viewport().width() < 820
-        if compact == self._compact_data_layout:
+        viewport_width = self.detail_scroll.viewport().width()
+        mode = "compact" if viewport_width < 760 else (
+            "medium" if viewport_width < 1260 else "wide"
+        )
+        if mode == self._compact_data_layout:
             return
-        self._compact_data_layout = compact
+        self._compact_data_layout = mode
         for group in (self.basic_group, self.attributes_group, self.weapons_group):
             self.data_grid.removeWidget(group)
-        if compact:
+        for column in range(3):
+            self.data_grid.setColumnStretch(column, 0)
+        if mode == "compact":
             for index, group in enumerate((self.basic_group, self.attributes_group, self.weapons_group)):
                 self.data_grid.addWidget(group, index, 0)
-        else:
+            self.data_grid.setColumnStretch(0, 1)
+        elif mode == "medium":
             self.data_grid.addWidget(self.basic_group, 0, 0)
             self.data_grid.addWidget(self.attributes_group, 0, 1)
             self.data_grid.addWidget(self.weapons_group, 1, 0, 1, 2)
+            self.data_grid.setColumnStretch(0, 2)
+            self.data_grid.setColumnStretch(1, 3)
+        else:
+            self.data_grid.addWidget(self.basic_group, 0, 0)
+            self.data_grid.addWidget(self.attributes_group, 0, 1)
+            self.data_grid.addWidget(self.weapons_group, 0, 2)
+            self.data_grid.setColumnStretch(0, 2)
+            self.data_grid.setColumnStretch(1, 3)
+            self.data_grid.setColumnStretch(2, 2)
 
     @property
     def current_id(self) -> int | None:
@@ -472,31 +510,110 @@ class LegacyUnitDatabasePage(ProjectPage):
         self.body_preview = QLabel("请选择机体")
         self.body_preview.setObjectName("legacyUnitBodyPreview")
         self.body_preview.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.body_preview.setMinimumSize(300, 260)
+        # Match the legacy editor's square 128x128 battle viewport at 2x.
+        # The former 340x256 label added a wide black gutter that made the
+        # unit look displaced even when its game coordinates were correct.
+        self.body_preview.setFixedSize(256, 256)
         self.body_preview.setStyleSheet(
             "background: #000000; color: #d2d2d2; border: 1px solid #202020;"
         )
         self.body_preview.setToolTip(
-            "使用当前机体主体脚本、主体图库和机体三色合成的 128×128 完整机体。"
+            "按战斗画面顺序叠加主体背景层与碎片精灵层。"
         )
         grid.addWidget(QLabel("按主体拼图脚本合成"), 1, 0)
-        grid.addWidget(self.body_preview, 2, 0, 5, 1)
+        grid.addWidget(self.body_preview, 2, 0, 4, 1)
 
         self.appearance_summary = QLabel("外观记录：—")
         self.appearance_summary.setWordWrap(True)
         self.appearance_summary.setAlignment(
             Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignTop
         )
+        self.appearance_summary.setMinimumHeight(66)
+        self.appearance_summary.setStyleSheet(
+            "background:#F5F8FA; border:1px solid #D9E2E8; padding:6px;"
+        )
         grid.addWidget(self.appearance_summary, 1, 1)
-        self.body_palette_caption = QLabel("机体三色：—")
-        self.fragment_palette_caption = QLabel("碎片三色：—")
-        for caption in (self.body_palette_caption, self.fragment_palette_caption):
-            caption.setWordWrap(True)
-        grid.addWidget(self.body_palette_caption, 2, 1)
-        grid.addWidget(self.fragment_palette_caption, 3, 1)
-        self.edit_appearance_button = QPushButton("打开机体拼图与配色…")
-        self.edit_appearance_button.clicked.connect(self._edit_appearance)
+
+        self.appearance_color_buttons: list[NesColorButton] = []
+        palette_rows = []
+        for group_index, caption in enumerate(("机体三色", "碎片三色")):
+            palette_row = QWidget()
+            palette_layout = QHBoxLayout(palette_row)
+            palette_layout.setContentsMargins(0, 0, 0, 0)
+            palette_layout.setSpacing(6)
+            label = QLabel(caption)
+            label.setMinimumWidth(64)
+            palette_layout.addWidget(label)
+            for local_index in range(3):
+                color_index = group_index * 3 + local_index
+                button = NesColorButton()
+                button.setMinimumSize(82, 34)
+                button.value_changed.connect(
+                    lambda value, index=color_index: self._set_appearance_color(index, value)
+                )
+                self.appearance_color_buttons.append(button)
+                palette_layout.addWidget(button)
+            palette_layout.addStretch(1)
+            palette_rows.append(palette_row)
+            grid.addWidget(palette_row, 2 + group_index, 1)
+        # Keep these public labels for status/error reporting used elsewhere.
+        self.body_palette_caption = palette_rows[0].findChildren(QLabel)[0]
+        self.fragment_palette_caption = palette_rows[1].findChildren(QLabel)[0]
+        self.edit_appearance_button = QPushButton("调整配色与图库…")
+        self.edit_appearance_button.clicked.connect(
+            lambda _checked=False: self._edit_appearance(0)
+        )
         grid.addWidget(self.edit_appearance_button, 4, 1)
+
+        appearance_actions = QGridLayout()
+        self.body_layout_button = QPushButton("机体拼图")
+        self.body_layout_button.setToolTip("打开主体原始图库与脚本合成预览。")
+        self.body_layout_button.clicked.connect(
+            lambda _checked=False: self._edit_appearance(0)
+        )
+        self.fragment_layout_button = QPushButton("碎片图库")
+        self.fragment_layout_button.setToolTip("打开碎片原始图库与碎片配色预览。")
+        self.fragment_layout_button.clicked.connect(
+            lambda _checked=False: self._edit_appearance(1)
+        )
+        appearance_actions.addWidget(self.body_layout_button, 0, 0)
+        appearance_actions.addWidget(self.fragment_layout_button, 0, 1)
+        self.show_body_check = QCheckBox("显示机体")
+        self.show_body_check.setChecked(True)
+        self.show_body_check.toggled.connect(self._refresh_visuals)
+        self.show_fragment_check = QCheckBox("显示碎片")
+        self.show_fragment_check.setChecked(True)
+        self.show_fragment_check.toggled.connect(self._refresh_visuals)
+        appearance_actions.addWidget(self.show_body_check, 1, 0)
+        appearance_actions.addWidget(self.show_fragment_check, 1, 1)
+        grid.addLayout(appearance_actions, 5, 1)
+
+        icon_box = QGroupBox("机体图标（候选，只读）")
+        self.icon_group = icon_box
+        icon_layout = QHBoxLayout(icon_box)
+        icon_layout.setContentsMargins(6, 4, 6, 4)
+        self.icon_bank = QComboBox()
+        for bank in range(0x34, 0x37):
+            self.icon_bank.addItem(f"图库 ${bank:02X}", bank)
+        self.icon_bank.currentIndexChanged.connect(self._refresh_icon_bank)
+        icon_layout.addWidget(self.icon_bank)
+        self.icon_index = QComboBox()
+        for index in range(16):
+            self.icon_index.addItem(f"图标 {index:X}", index)
+        self.icon_index.currentIndexChanged.connect(self._refresh_icon_bank)
+        icon_layout.addWidget(self.icon_index)
+        self.icon_preview = QLabel("—")
+        self.icon_preview.setObjectName("legacyUnitIconPreview")
+        self.icon_preview.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.icon_preview.setFixedSize(36, 36)
+        self.icon_preview.setStyleSheet(
+            "background: #000000; color: white; border: 1px solid #4d555c;"
+        )
+        icon_layout.addWidget(self.icon_preview)
+        self.icon_address = QLineEdit()
+        self.icon_address.setReadOnly(True)
+        icon_layout.addWidget(self.icon_address)
+        grid.addWidget(icon_box, 6, 1)
 
         self.raw_body_preview = QLabel("请选择机体")
         self.raw_body_preview.setAlignment(Qt.AlignmentFlag.AlignCenter)
@@ -519,22 +636,6 @@ class LegacyUnitDatabasePage(ProjectPage):
         self.appearance_details.setReadOnly(True)
         self.appearance_details.setMaximumHeight(130)
         details_layout.addWidget(self.appearance_details)
-        details_layout.addWidget(QLabel("地图图标图库浏览（尚未建立机体 ID 绑定）"))
-        self.icon_bank = QComboBox()
-        for bank in range(0x34, 0x37):
-            self.icon_bank.addItem(f"图库 ${bank:02X} · 16 个 2×2 图块候选图标", bank)
-        self.icon_bank.currentIndexChanged.connect(self._refresh_icon_bank)
-        details_layout.addWidget(self.icon_bank)
-        self.icon_preview = QLabel("—")
-        self.icon_preview.setObjectName("legacyUnitIconPreview")
-        self.icon_preview.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.icon_preview.setStyleSheet(
-            "background: #000000; color: white; border: 1px solid #4d555c;"
-        )
-        details_layout.addWidget(self.icon_preview)
-        self.icon_address = QLineEdit()
-        self.icon_address.setReadOnly(True)
-        details_layout.addWidget(self.icon_address)
         unsupported = QLabel(
             "未接通：拼图脚本编辑、图片上传/清除、图标绑定。"
             "此处展示实际资源和脚本，不表示已兼容旧版五张 BMP 导出。"
@@ -542,13 +643,42 @@ class LegacyUnitDatabasePage(ProjectPage):
         unsupported.setWordWrap(True)
         details_layout.addWidget(unsupported)
         actions = QHBoxLayout()
-        for caption in ("上传机体", "清除机体", "上传碎片", "清除碎片"):
-            actions.addWidget(self._disabled_button(caption, "完整图像写入关系尚未验证。"))
+        self.unsupported_graphics_buttons: list[QPushButton] = []
+        for caption in ("上传机体", "清除机体", "上传碎片", "清除碎片", "更改图标"):
+            button = self._disabled_button(
+                caption, "完整图像或图标绑定写入关系尚未验证。"
+            )
+            self.unsupported_graphics_buttons.append(button)
+            actions.addWidget(button)
         details_layout.addLayout(actions)
-        grid.addWidget(collapsible_details("原始图库、脚本与技术详情", details), 7, 0, 1, 2)
-        grid.setColumnStretch(0, 3)
-        grid.setColumnStretch(1, 2)
+        grid.addWidget(collapsible_details("原始图库、脚本与技术详情", details), 7, 1)
+        grid.setColumnStretch(1, 1)
+        grid.setRowStretch(8, 1)
+        group.setMaximumHeight(390)
         return group
+
+    def _set_appearance_color(self, color_index: int, value: int) -> None:
+        """Apply a palette-cell choice inside the outer database transaction."""
+
+        if self.project is None or self.current_id is None:
+            return
+        try:
+            appearance = read_unit_appearance(self.project, self.current_id)
+            count = 9 if appearance.configuration[0] & 0x80 else 8
+            values = list(appearance.configuration[1:1 + count])
+            if values[color_index] == value:
+                return
+            values[color_index] = value
+            offset, before, after = appearance_patch(
+                self.project, self.current_id, tuple(values)
+            )
+            with self.project.transaction(
+                f"机体 ${self.current_id:02X} · 颜色{color_index + 1}"
+            ):
+                self.project.working[offset:offset + len(after)] = after
+            self._refresh_visuals()
+        except (ValueError, IndexError) as error:
+            self.show_error(error)
 
     def _build_data_row(self) -> QGridLayout:
         row = QGridLayout()
@@ -558,7 +688,7 @@ class LegacyUnitDatabasePage(ProjectPage):
         basic = QGroupBox("基本设置")
         self.basic_group = basic
         basic_form = QFormLayout(basic)
-        basic_form.addRow("机体名称", self.name_reference)
+        basic_form.addRow("机体名称", self.name_text)
         self.terrain = QComboBox()
         for value, label in enumerate(("空", "陆", "海", "保留原码 3")):
             self.terrain.addItem(label, value)
@@ -573,20 +703,27 @@ class LegacyUnitDatabasePage(ProjectPage):
         self.transform.setEnabled(False)
         self.transform.setToolTip("变形关系尚未完成差分验证。")
         basic_form.addRow("变形", self.transform)
+        technical = QWidget()
+        technical_form = QFormLayout(technical)
+        technical_form.setContentsMargins(0, 0, 0, 0)
+        technical_form.addRow("名称引用", self.name_reference)
         self.record_meta = self.controller.record_meta
         self.record_meta.setWordWrap(True)
-        basic_form.addRow("记录位置", self.record_meta)
+        technical_form.addRow("记录位置", self.record_meta)
         self.raw_unit_record = QLineEdit()
         self.raw_unit_record.setReadOnly(True)
         self.raw_unit_record.setToolTip("当前属性指针实际指向的完整16字节；零值也是ROM中的真实内容。")
-        basic_form.addRow("完整16字节", self.raw_unit_record)
+        technical_form.addRow("完整16字节", self.raw_unit_record)
         self.raw_type_flags = QLineEdit()
         self.raw_type_flags.setReadOnly(True)
-        basic_form.addRow("类型/标志原码", self.raw_type_flags)
+        technical_form.addRow("类型/标志原码", self.raw_type_flags)
         self.raw_graphics_index = QLineEdit()
         self.raw_graphics_index.setReadOnly(True)
-        self.raw_graphics_index.setToolTip("属性记录 +2 的候选地图图形字节；具体绑定仍待验证。")
-        basic_form.addRow("候选地图图形", self.raw_graphics_index)
+        self.raw_graphics_index.setToolTip(
+            "属性记录 +2 的地图小图标首图块；每个图标连续使用四个 8×8 图块。"
+        )
+        technical_form.addRow("地图小图标", self.raw_graphics_index)
+        basic_form.addRow(collapsible_details("名称引用与原始记录", technical))
         row.addWidget(basic, 0, 0)
 
         attributes = QGroupBox("机体属性")
@@ -729,19 +866,21 @@ class LegacyUnitDatabasePage(ProjectPage):
         if (bank + 1) * 64 > self.project.chr_tile_count:
             self.icon_preview.setText("图库超出活动CHR")
             return
-        image = render_unit_icon_bank(self.project, bank)
+        index = int(self.icon_index.currentData())
+        image = render_unit_icon_bank(self.project, bank).copy(index * 16, 0, 16, 16)
         self.icon_preview.setPixmap(QPixmap.fromImage(image).scaled(
-            512, 32, Qt.AspectRatioMode.KeepAspectRatio,
+            32, 32, Qt.AspectRatioMode.KeepAspectRatio,
             Qt.TransformationMode.FastTransformation,
         ))
-        offset = self.project.chr_codec.offset + bank * 0x400
-        self.icon_address.setText(f"图库 ${bank:02X} · 文件 0x{offset:06X} · 尚未绑定机体ID")
+        offset = self.project.chr_codec.offset + bank * 0x400 + index * 0x40
+        self.icon_address.setText(f"文件 0x{offset:06X} · 尚未绑定机体ID")
 
-    def _edit_appearance(self) -> None:
+    def _edit_appearance(self, tab_index: int = 0) -> None:
         if self.project is None or self.current_id is None:
             return
         try:
             dialog = UnitAppearanceDialog(self.project, self.current_id, self)
+            dialog.preview_tabs.setCurrentIndex(tab_index)
             if dialog.exec() == QDialog.DialogCode.Accepted and dialog.changed:
                 # Refresh graphics only: an uncommitted attribute form belongs
                 # to the outer page and must not be discarded by this action.
@@ -762,6 +901,8 @@ class LegacyUnitDatabasePage(ProjectPage):
             self.appearance_summary.setText("外观记录：—")
             self.body_palette_caption.setText("机体三色：—")
             self.fragment_palette_caption.setText("碎片三色：—")
+            for button in self.appearance_color_buttons:
+                button.setEnabled(False)
             self.appearance_details.clear()
             self.raw_unit_record.clear()
             self.raw_type_flags.clear()
@@ -783,7 +924,7 @@ class LegacyUnitDatabasePage(ProjectPage):
             self.graphics_status.setText(
                 f"已读取当前机体外观：主体脚本 {len(appearance.body_script)} 字节，"
                 f"碎片脚本 {len(appearance.fragment_script)} 字节。"
-                "主画面已按主体脚本合成；原始图库与完整脚本收在技术详情中。"
+                "主画面按主体背景层和碎片精灵层合成。"
             )
             fragment_bank = appearance.primary_bank & 0xFE
             unit_type = "大型机" if appearance.configuration[0] & 0x80 else "小型机"
@@ -803,15 +944,19 @@ class LegacyUnitDatabasePage(ProjectPage):
                 ("机体三色", self.body_palette_caption, appearance.first_palette),
                 ("碎片三色", self.fragment_palette_caption, appearance.second_palette),
             ):
-                label.setText(caption + "： " + "  ".join(
-                    f'<span style="color:{palette_color(value).name()}; background:#222">'
-                    f'■</span> ${value:02X}' for value in colors
-                ))
-            body_picture = render_unit_body_composition(
-                self.project,
-                appearance.body_script,
-                appearance.secondary_banks,
-                appearance.first_palette,
+                label.setText(caption)
+            for button, value in zip(
+                self.appearance_color_buttons,
+                (*appearance.first_palette, *appearance.second_palette),
+            ):
+                button.blockSignals(True)
+                button.set_value(value)
+                button.setEnabled(True)
+                button.blockSignals(False)
+            body_picture = render_unit_battle_preview(
+                self.project, appearance,
+                show_body=self.show_body_check.isChecked(),
+                show_fragments=self.show_fragment_check.isChecked(),
             )
             self.body_preview.setPixmap(QPixmap.fromImage(body_picture).scaled(
                 256, 256,
@@ -819,8 +964,9 @@ class LegacyUnitDatabasePage(ProjectPage):
                 Qt.TransformationMode.FastTransformation,
             ))
             self.body_preview.setToolTip(
-                "主体脚本合成结果 · 图库 "
+                "战斗合成预览 · 主体图库 "
                 + " / ".join(f"${bank:02X}" for bank in appearance.secondary_banks)
+                + f" · 碎片图库 ${fragment_bank:02X}/${fragment_bank + 1:02X}"
             )
             for label, banks, palette in (
                 (self.raw_body_preview, appearance.secondary_banks, appearance.first_palette),
@@ -843,6 +989,8 @@ class LegacyUnitDatabasePage(ProjectPage):
             self.appearance_summary.setText("外观记录：未读取")
             self.body_palette_caption.setText("机体三色：未读取")
             self.fragment_palette_caption.setText("碎片三色：未读取")
+            for button in self.appearance_color_buttons:
+                button.setEnabled(False)
 
         for field_key, editor in self.fields.items():
             base_value = self.project.get_value(unit_id, field_key, original=True)
@@ -2118,7 +2266,7 @@ class ScenarioDialog(TransactionalProjectDialog):
         )
         self.title_preview.clear()
         if self.project is not None:
-            self.title_preview.setPixmap(render_map_title(self.project, label, scale=4))
+            self.title_preview.setPixmap(render_map_title(self.project, label))
         else:
             self.title_preview.setText(label)
 

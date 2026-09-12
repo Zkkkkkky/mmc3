@@ -20,6 +20,8 @@ from fc_editor.codecs import (
     CustomMusicCodec,
     LegacyGlobalDataCodec,
     MapCodec,
+    MapTileAttributeCodec,
+    MapTilesetAttributes,
     MapTrigger,
     MapTriggerCodec,
     PersuasionRule,
@@ -40,7 +42,7 @@ from fc_editor.constants import (
     WEAPON_RECORD_SIZE,
 )
 from fc_editor.errors import ProjectFormatError, RomFormatError
-from fc_editor.dc_text import concise_dc_text
+from fc_editor.dc_text import concise_dc_text, default_dc_text_table
 from fc_editor.expansion import (
     AUTO_ALLOCATION_PREFIX,
     EXPANSION_METADATA_OFFSET,
@@ -534,6 +536,11 @@ class RomProject:
         self.legacy_global_data_codec = (
             LegacyGlobalDataCodec(self.rom_image)
             if self.rom_image.profile.legacy_global_data is not None
+            else None
+        )
+        self.map_tile_attribute_codec = (
+            MapTileAttributeCodec
+            if MapTileAttributeCodec.supports(self.original)
             else None
         )
         if initial_plan is not None and initial_plan.flags & FLAG_MAPS:
@@ -1077,6 +1084,36 @@ class RomProject:
             self.working, self.get_item_prices(original=True)
         )
         self._apply_legacy_global_patches(patches, "道具价格 · 还原")
+
+    @property
+    def supports_map_tile_attributes(self) -> bool:
+        return self.map_tile_attribute_codec is not None
+
+    def _require_map_tile_attribute_codec(self) -> type[MapTileAttributeCodec]:
+        if self.map_tile_attribute_codec is None:
+            raise ValueError("当前 ROM 的图块属性表尚未完成差分验证。")
+        return self.map_tile_attribute_codec
+
+    def get_map_tileset_attributes(
+        self, key: str, *, original: bool = False
+    ) -> MapTilesetAttributes:
+        codec = self._require_map_tile_attribute_codec()
+        return codec.decode(self.original if original else self.working, key)
+
+    def set_map_tileset_attributes(
+        self, key: str, value: MapTilesetAttributes
+    ) -> None:
+        codec = self._require_map_tile_attribute_codec()
+        patches = codec.patches(self.working, key, value)
+        self._apply_legacy_global_patches(patches, f"图库 {key.upper()} 图块属性")
+
+    def reset_map_tileset_attributes(self, key: str) -> None:
+        original = self.get_map_tileset_attributes(key, original=True)
+        codec = self._require_map_tile_attribute_codec()
+        patches = codec.patches(self.working, key, original)
+        self._apply_legacy_global_patches(
+            patches, f"图库 {key.upper()} 图块属性 · 还原"
+        )
 
     def get_initial_roster(
         self, *, original: bool = False
@@ -1710,6 +1747,50 @@ class RomProject:
         source = self.original if original else bytes(self.working)
         return self.weapon_name_codec.record_bytes(weapon_id, source)
 
+    def _replace_terminated_name(
+        self,
+        offset: int,
+        capacity: int,
+        text: str,
+        description: str,
+    ) -> None:
+        """Replace one name without moving its pointer or crossing its slot."""
+
+        value = text.strip()
+        if not value:
+            raise ValueError("名称不能为空。")
+        encoded = default_dc_text_table().encode(value) + b"\xFF"
+        if len(encoded) > capacity:
+            raise ValueError(
+                f"名称编码需要 {len(encoded)} 字节，当前原槽只有 {capacity} 字节；"
+                "请缩短名称。"
+            )
+        before_snapshot = self._mutation_snapshot()
+        self.working[offset : offset + capacity] = encoded + b"\xFF" * (
+            capacity - len(encoded)
+        )
+        self._finish_mutation(before_snapshot, description)
+
+    @staticmethod
+    def _terminated_capacity(raw: bytes, label: str) -> int:
+        terminator = raw.find(b"\xFF")
+        if terminator < 0:
+            raise RomFormatError(f"{label}没有 $FF 结束码。")
+        return terminator + 1
+
+    def set_weapon_name_text(self, weapon_id: int, text: str) -> None:
+        if self.weapon_name_codec is None:
+            raise ValueError("当前 ROM 的武器名称表尚未验证。")
+        pointer = self.weapon_name_codec.pointer(weapon_id, bytes(self.working))
+        offset = self.weapon_name_codec.pointer_to_file_offset(pointer)
+        raw = self.weapon_name_codec.record_bytes(weapon_id, bytes(self.working))
+        self._replace_terminated_name(
+            offset,
+            self._terminated_capacity(raw, "武器名称"),
+            text,
+            f"武器 {weapon_id:02X} · 直接修改名称",
+        )
+
     def weapon_display_name(self, weapon_id: int) -> str:
         if self.weapon_name_codec is None:
             return f"武器记录 ${weapon_id:02X}"
@@ -1769,6 +1850,21 @@ class RomProject:
             raise ValueError("当前 ROM 的人物名称表尚未验证。")
         source = self.original if original else self.working
         return self.character_name_codec.record_bytes(character_id, source)
+
+    def set_character_name_text(self, character_id: int, text: str) -> None:
+        if self.character_name_codec is None:
+            raise ValueError("当前 ROM 的人物名称表尚未验证。")
+        pointer = self.character_name_codec.pointer(character_id, self.working)
+        if not pointer:
+            raise ValueError("空人物名称槽没有可安全写入的原记录。")
+        offset = self.character_name_codec.pointer_to_file_offset(pointer)
+        raw = self.character_name_codec.record_bytes(character_id, self.working)
+        self._replace_terminated_name(
+            offset,
+            self._terminated_capacity(raw, "人物名称"),
+            text,
+            f"人物 {character_id:02X} · 直接修改名称",
+        )
 
     def character_name_reference_options(
         self,
@@ -1946,8 +2042,49 @@ class RomProject:
             return " / ".join(names)
         return " / ".join(f"原生名称 {source_id:02X}" for source_id in source_ids)
 
+    def unit_name_record_bytes(
+        self,
+        unit_id: int,
+        *,
+        original: bool = False,
+    ) -> bytes:
+        codec = self.base_unit_name_codec if original else self.unit_name_codec
+        source = self.original if original else bytes(self.working)
+        pointer = codec.pointer(unit_id, source)
+        bank = (
+            codec.pair_first_bank
+            if codec.pair_first_bank is not None
+            else (codec.pointer_table_offset - 16) // PRG_BANK_SIZE
+        )
+        offset = bank_file_offset(bank) + pointer - 0x8000
+        limit = min(len(source), bank_file_offset(bank) + 2 * PRG_BANK_SIZE)
+        terminator = source.find(b"\xFF", offset, limit)
+        if terminator < 0:
+            raise RomFormatError(f"机体 ${unit_id:02X} 名称没有 $FF 结束码。")
+        return bytes(source[offset : terminator + 1])
+
     def unit_display_name(self, unit_id: int) -> str:
-        return self.unit_name_pointer_display_name(self.get_unit_name_pointer(unit_id))
+        label = concise_dc_text(self.unit_name_record_bytes(unit_id))
+        if label and label.strip("-_ "):
+            return label
+        return "空白/未分配机体槽"
+
+    def set_unit_name_text(self, unit_id: int, text: str) -> None:
+        codec = self.unit_name_codec
+        pointer = codec.pointer(unit_id, bytes(self.working))
+        bank = (
+            codec.pair_first_bank
+            if codec.pair_first_bank is not None
+            else (codec.pointer_table_offset - 16) // PRG_BANK_SIZE
+        )
+        offset = bank_file_offset(bank) + pointer - 0x8000
+        raw = self.unit_name_record_bytes(unit_id)
+        self._replace_terminated_name(
+            offset,
+            len(raw),
+            text,
+            f"机体 {unit_id:02X} · 直接修改名称",
+        )
 
     def unit_name_reference_options(
         self,

@@ -204,7 +204,7 @@ class LegacyGlobalDataSpec:
     item_price_table_offset: int
     item_count: int
     initial_roster_offset: int
-    double_hit_operand_pairs: tuple[tuple[int, int], ...]
+    double_hit_operand_groups: tuple[tuple[int, ...], ...]
     damage_formula_operand_offsets: tuple[int, ...]
     hit_threshold_operand_offset: int
     item_effect_operand_offsets: tuple[int, ...]
@@ -223,7 +223,9 @@ class LegacyGlobalDataSpec:
         )
         if item_name_cpu_end > 0x10000:
             raise ValueError("道具名称文本池无法用 16 位 CPU 指针表示。")
-        if len(self.double_hit_operand_pairs) != 3:
+        if len(self.double_hit_operand_groups) != 3 or any(
+            len(group) < 2 for group in self.double_hit_operand_groups
+        ):
             raise ValueError("双击公式必须有 3 组镜像操作数。")
         if len(self.damage_formula_operand_offsets) != 5:
             raise ValueError("伤害公式必须有 5 个操作数。")
@@ -241,7 +243,11 @@ class LegacyGlobalDataSpec:
             self.hit_threshold_operand_offset,
             *self.damage_formula_operand_offsets,
             *self.item_effect_operand_offsets,
-            *(offset for pair in self.double_hit_operand_pairs for offset in pair),
+            *(
+                offset
+                for group in self.double_hit_operand_groups
+                for offset in group
+            ),
         )
         if any(offset < 0 for offset in offsets):
             raise ValueError("全局数据文件偏移不能为负数。")
@@ -487,10 +493,10 @@ MMC5_LEGACY_GLOBAL_DATA = LegacyGlobalDataSpec(
     item_price_table_offset=0x15723,
     item_count=24,
     initial_roster_offset=0x3965D,
-    double_hit_operand_pairs=(
-        (0x78109, 0x7815A),
-        (0x78127, 0x78178),
-        (0x78138, 0x78189),
+    double_hit_operand_groups=(
+        (0x78109, 0x7815A, 0x7FF03),
+        (0x78127, 0x78178, 0x7FF12),
+        (0x78138, 0x78189, 0x7FF1A),
     ),
     damage_formula_operand_offsets=(0x780E4, 0x780C5, 0x780EB, 0x9999, 0x99A0),
     hit_threshold_operand_offset=0xA44E,

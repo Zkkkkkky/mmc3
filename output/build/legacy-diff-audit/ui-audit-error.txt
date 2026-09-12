@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "D:\GIT\mmc3\tools\audit_legacy_modifier_ui.py", line 497, in <module>
+    raise SystemExit(main())
+                     ^^^^^^
+  File "D:\GIT\mmc3\tools\audit_legacy_modifier_ui.py", line 207, in main
+    main_window = _main_editor_window(app)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\GIT\mmc3\tools\audit_legacy_modifier_ui.py", line 129, in _main_editor_window
+    raise RuntimeError("Unable to reacquire the legacy editor window")
+RuntimeError: Unable to reacquire the legacy editor window

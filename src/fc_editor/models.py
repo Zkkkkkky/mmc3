@@ -129,13 +129,13 @@ UNIT_CANDIDATE_FIELDS = (
     ),
     FieldSpec(
         "candidate_02",
-        "候选：地图图形",
+        "地图小图标",
         0x02,
         1,
         0,
         255,
-        "疑似地图图标或外观索引，尚未确认。",
-        evidence="candidate",
+        "地图小图标的首个 8×8 图块编号；每个图标连续使用四块。",
+        evidence="confirmed",
     ),
     FieldSpec(
         "candidate_0a",
@@ -345,20 +345,20 @@ class MapRecord:
 class ScenarioEntity:
     x: int
     y: int
-    unit_id: int
     pilot_id: int
+    unit_id: int
     level: int
     flags: int
 
     def __post_init__(self) -> None:
         if any(
             not 0 <= value <= 0xFF
-            for value in (self.x, self.y, self.unit_id, self.pilot_id, self.level, self.flags)
+            for value in (self.x, self.y, self.pilot_id, self.unit_id, self.level, self.flags)
         ):
             raise ValueError("部署对象的所有字段必须是 0—255 的字节。")
 
     def to_bytes(self) -> bytes:
-        return bytes((self.x, self.y, self.unit_id, self.pilot_id, self.level, self.flags))
+        return bytes((self.x, self.y, self.pilot_id, self.unit_id, self.level, self.flags))
 
 
 @dataclass(frozen=True)

@@ -1,22 +1,26 @@
 from __future__ import annotations
 
 import os
-from types import SimpleNamespace
 import unittest
 
 os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 
-from PySide6.QtCore import Qt
+from PySide6.QtCore import QSize, Qt
 from PySide6.QtTest import QTest
-from PySide6.QtWidgets import QApplication
+from PySide6.QtWidgets import QApplication, QDialogButtonBox
 
 from dc_modifier.app import DEFAULT_ROM
 from dc_modifier.map_page import (
     MapPage,
+    NesColorButton,
+    NesPaletteDialog,
     TerrainButton,
+    TileAttributeDialog,
     _glyph_file_offset,
     render_map_title,
 )
+from dc_modifier.map_tiles import render_map_tile
+from fc_editor.dc_text import dc_map_label
 from fc_rom_editor_core import RomProject
 
 
@@ -74,14 +78,46 @@ class LegacyMapUiTests(QtTestCase):
         self.assertEqual(_glyph_file_offset(bytes.fromhex("C908")), 0x710A0)
         self.assertEqual(_glyph_file_offset(bytes.fromhex("DAC2")), 0x76C34)
 
-    def test_map_title_renders_the_rom_glyph_instead_of_a_host_font(self) -> None:
-        working = bytearray(0x70010 + 18)
-        working[0x70010 : 0x70010 + 18] = bytes([0xFF] * 18)
-        working[0x70010] = 0x7F
-        pixmap = render_map_title(SimpleNamespace(working=working), "啊", scale=2)
+    def test_map_title_renderer_covers_every_map_slot_without_missing_cells(self) -> None:
+        for map_id in range(self.project.map_count):
+            title = dc_map_label(map_id)
+            image = render_map_title(self.project, title).toImage()
+            self.assertEqual((image.width(), image.height()),
+                             (16 + len(title) * 40, 48))
+            for index, character in enumerate(title):
+                if character.isspace():
+                    continue
+                cell_has_ink = any(
+                    image.pixelColor(8 + index * 40 + x, y).name() != "#000000"
+                    for y in range(image.height()) for x in range(40)
+                )
+                self.assertTrue(cell_has_ink, f"地图 ${map_id:02X} 漏字：{character}")
+        stage_two = render_map_title(self.project, "街上追击战").toImage()
+        signatures = {
+            bytes(stage_two.copy(8 + index * 40, 0, 40, 48).bits())
+            for index in range(5)
+        }
+        self.assertGreaterEqual(len(signatures), 4, "标题字体退化成了相同的缺字方框")
+
+    def test_map_title_default_scale_matches_game_preview(self) -> None:
+        pixmap = render_map_title(self.project, "伏击之战")
+        self.assertEqual((pixmap.width(), pixmap.height()), (176, 48))
         image = pixmap.toImage()
-        self.assertEqual(image.pixelColor(8, 0).name(), "#d8d8d8")
-        self.assertEqual(image.pixelColor(10, 0).name(), "#000000")
+        ink = [
+            (x, y)
+            for y in range(image.height()) for x in range(image.width())
+            if image.pixelColor(x, y).name() != "#000000"
+        ]
+        self.assertEqual(
+            (min(x for x, _y in ink), min(y for _x, y in ink),
+             max(x for x, _y in ink), max(y for _x, y in ink)),
+            (8, 4, 165, 43),
+        )
+        self.assertEqual(
+            (self.page.title_preview.pixmap().width(),
+             self.page.title_preview.pixmap().height()),
+            (176, 48),
+        )
 
     def test_battlefield_keeps_advanced_raw_data_separate_from_visible_save_status(self) -> None:
         self.assertEqual(self.page.bitmap_selector.currentText(), "位图D")
@@ -114,10 +150,102 @@ class LegacyMapUiTests(QtTestCase):
         self.assertEqual(self.page.right_terrain.currentData(), 7)
         self.assertEqual(self.page.left_brush_preview.pixmap().size().width(), 56)
         self.assertEqual(self.page.right_brush_preview.pixmap().size().height(), 56)
+        for preview, tile in (
+            (self.page.left_brush_preview, 3),
+            (self.page.right_brush_preview, 7),
+        ):
+            expected = self.page.canvas.tile_images[tile].scaled(
+                56,
+                56,
+                Qt.AspectRatioMode.KeepAspectRatio,
+                Qt.TransformationMode.FastTransformation,
+            )
+            self.assertEqual(preview.pixmap().toImage(), expected)
+
+    def test_tile_attribute_dialog_applies_one_transaction_and_cancel_is_clean(self) -> None:
+        original = self.project.get_map_tileset_attributes("D")
+        undo_count = len(self.project._undo_stack)
+        dialog = TileAttributeDialog(
+            self.project, "D", self.page.canvas.tile_images, self.page
+        )
+        self.assertTrue(dialog._supported)
+        self.assertEqual(dialog.table.rowCount(), 16)
+        dialog.defense_spins[1].setValue((original.tiles[1].defense + 1) & 0x7F)
+        dialog.reject()
+        self.assertEqual(self.project.get_map_tileset_attributes("D"), original)
+
+        dialog = TileAttributeDialog(
+            self.project, "D", self.page.canvas.tile_images, self.page
+        )
+        changed = (original.tiles[1].defense + 1) & 0x7F
+        dialog.defense_spins[1].setValue(changed)
+        dialog.accept()
+        self.assertEqual(
+            self.project.get_map_tileset_attributes("D").tiles[1].defense, changed
+        )
+        self.assertEqual(len(self.project._undo_stack), undo_count + 1)
+
+    def test_tile_attribute_palette_is_visual_and_previews_draft_without_writing(self) -> None:
+        button = NesColorButton(0x2A)
+        self.assertEqual(button.value, 0x2A)
+        self.assertEqual(button.text(), "$2A")
+        self.assertIn("#4CDC48", button.toolTip())
+        picker = NesPaletteDialog(0x2A)
+        picker_layout = picker.layout()
+        self.assertIsNotNone(picker_layout.itemAtPosition(0, 15))
+        self.assertIsNotNone(picker_layout.itemAtPosition(1, 0))
+        self.assertIsNotNone(picker_layout.itemAtPosition(3, 15))
+        picker._select(0x1A)
+        self.assertEqual(picker.selected_value, 0x1A)
+
+        before_rom = bytes(self.project.working)
+        dialog = TileAttributeDialog(
+            self.project, "D", self.page.canvas.tile_images, self.page
+        )
+        tile_zero = dialog.table.item(0, 0).icon().pixmap(16, 16).toImage()
+        expected_zero = render_map_tile(
+            self.project,
+            "D",
+            0,
+            attributes=self.project.get_map_tileset_attributes("D"),
+        )
+        self.assertEqual(tile_zero, expected_zero)
+        before_icon = dialog.table.item(1, 0).icon().pixmap(16, 16).toImage()
+        dialog.color_spins[1].setValue(0x0F)
+        after_icon = dialog.table.item(1, 0).icon().pixmap(16, 16).toImage()
+        self.assertNotEqual(before_icon, after_icon)
+        self.assertEqual(bytes(self.project.working), before_rom)
+        self.assertEqual(dialog.color_buttons[1].value, 0x0F)
+        for palette_index in (2, 3):
+            preview = dialog.shared_palette_previews[palette_index]
+            self.assertFalse(preview.pixmap().isNull())
+            self.assertIn("只读", preview.toolTip())
+            self.assertIn("真实 NES 色号", preview.toolTip())
+            expected = (
+                "$0F · $30 · $21 · $02"
+                if palette_index == 2
+                else "$0F · $37 · $27 · $16"
+            )
+            self.assertIn(expected, dialog.shared_palette_tiles[palette_index].text())
+            self.assertIn(
+                "属性原码引用图块",
+                dialog.shared_palette_tiles[palette_index].text(),
+            )
+            self.assertFalse(
+                dialog.palette_boxes[0].itemIcon(palette_index).isNull()
+            )
+
+    def test_unverified_tileset_h_stays_read_only(self) -> None:
+        dialog = TileAttributeDialog(
+            self.project, "H", self.page.canvas.tile_images, self.page
+        )
+        self.assertFalse(dialog._supported)
+        self.assertFalse(
+            dialog.buttons.button(QDialogButtonBox.StandardButton.Save).isEnabled()
+        )
 
     def test_initial_configuration_defaults_to_real_icon_sheets(self) -> None:
         self.page.editor_tabs.setCurrentIndex(1)
-        self.page.icon_preview_toggle.setChecked(True)
         self.application.processEvents()
         self.assertEqual(
             [selector.currentData() for selector in self.page.icon_bank_selectors],
@@ -130,7 +258,25 @@ class LegacyMapUiTests(QtTestCase):
         ):
             self.assertIn(":", selector.currentText())
             self.assertFalse(preview.pixmap().isNull())
+            self.assertEqual(preview.height(), 50)
+            self.assertEqual(preview.pixmap().size(), QSize(192, 48))
+            self.assertFalse(preview.isVisible())
+        self.assertFalse(self.page.icon_preview_group.isVisible())
+        self.assertIn("展开", self.page.icon_preview_toggle.text())
+        self.page.icon_preview_toggle.setChecked(True)
+        self.application.processEvents()
+        self.assertTrue(self.page.icon_preview_group.isVisible())
+        self.assertIn("收起", self.page.icon_preview_toggle.text())
+        for preview in self.page.icon_sheet_labels:
             self.assertTrue(preview.isVisible())
+        self.assertTrue(self.page.deployment_objects.isVisible())
+        self.assertIn("收起", self.page.deployment_list_toggle.text())
+        self.page.deployment_list_toggle.setChecked(False)
+        self.application.processEvents()
+        self.assertFalse(self.page.deployment_objects.isVisible())
+        self.page.deployment_list_toggle.setChecked(True)
+        self.application.processEvents()
+        self.assertTrue(self.page.deployment_objects.isVisible())
         self.assertTrue(self.page.open_deployment_button.isVisible())
         self.assertFalse(self.page.deployment_tabs.isVisible())
 

@@ -62,6 +62,15 @@ class CompositionTile:
     y: int
 
 
+@dataclass(frozen=True)
+class FragmentTile:
+    tile_index: int
+    x: int
+    y: int
+    flip_horizontal: bool = False
+    flip_vertical: bool = False
+
+
 def _signed_byte(value: int) -> int:
     return value - 0x100 if value & 0x80 else value
 
@@ -147,6 +156,96 @@ def decode_unit_body_script(
     raise ValueError("机体拼图缺少 FF 结束码。")
 
 
+def decode_unit_fragment_script(script: bytes) -> tuple[FragmentTile, ...]:
+    """Decode the documented unit-fragment sprite composition language.
+
+    The first three bytes are ``X, Y, tile``.  The stored Y value is the
+    signed offset from the bottom of the 128-pixel battle viewport.  Every
+    following command draws
+    that tile, optionally flips it, then describes the next tile/position.
+    Bit $40 is horizontal flip and bit $80 is vertical flip.  The command
+    families are the ones documented by the original editor's
+    ``机体碎片组合方式`` reference.
+    """
+
+    if len(script) < 4 or script[-1] != 0xFF:
+        raise ValueError("机体碎片脚本不完整或缺少 FF 结束码。")
+    # The stock empty record is a sentinel rather than a drawable sprite.
+    if script == bytes.fromhex("00 F0 00 00 FF"):
+        return ()
+    # The two leading coordinates are easy to misread in the old reference:
+    # they are X followed by Y, not Y followed by X.  X is already relative
+    # to the unit-side viewport, while Y is stored as a signed displacement
+    # from its bottom edge.  Keeping this conversion here makes every caller
+    # (main database page and the appearance dialog) use the game geometry.
+    x = _signed_byte(script[0])
+    y = _signed_byte(script[1]) + 0x80
+    tile = script[2]
+    cursor = 3
+    placements: list[FragmentTile] = []
+    parameter_counts = {
+        0x02: 0, 0x03: 0,
+        0x06: 1, 0x07: 1,
+        0x0A: 1, 0x0B: 1,
+        0x0E: 2, 0x0F: 2,
+        0x22: 1, 0x23: 1,
+        0x26: 2, 0x27: 2,
+        0x2A: 2, 0x2B: 2,
+        0x2E: 3, 0x2F: 3,
+    }
+    while cursor < len(script):
+        command = script[cursor]
+        cursor += 1
+        if command == 0xFF:
+            if cursor != len(script):
+                raise ValueError("机体碎片结束码后仍有未解析字节。")
+            return tuple(placements)
+        base = command & 0x3F
+        count = parameter_counts.get(base)
+        if count is None:
+            raise ValueError(f"机体碎片包含未验证指令 ${command:02X}。")
+        if cursor + count > len(script):
+            raise ValueError(f"机体碎片指令 ${command:02X} 参数不完整。")
+        parameters = script[cursor:cursor + count]
+        cursor += count
+        if not 0 <= tile < 0x80:
+            raise ValueError(f"机体碎片引用图块 ${tile:02X}，超出 2 KiB 图库。")
+        placements.append(FragmentTile(
+            tile, x, y, bool(command & 0x40), bool(command & 0x80)
+        ))
+        # $02/$03 continue horizontally.  $06/$07 use an explicit horizontal
+        # delta; $0A/$0B do the same after advancing one 8-pixel sprite row;
+        # $0E/$0F provide both deltas.  This is the distinction described by
+        # the legacy physical-sprite reference as "上一图块" versus
+        # "上一图块的下一格位置".
+        if base in (0x02, 0x03):
+            x += 8
+        elif base in (0x06, 0x07):
+            x += _signed_byte(parameters[0])
+        elif base in (0x0A, 0x0B):
+            x += _signed_byte(parameters[0])
+            y += 8
+        elif base in (0x0E, 0x0F):
+            x += _signed_byte(parameters[0])
+            y += _signed_byte(parameters[1])
+        elif base in (0x22, 0x23):
+            tile = parameters[0] - 1
+            x += 8
+        elif base in (0x26, 0x27):
+            tile = parameters[0] - 1
+            x += _signed_byte(parameters[1])
+        elif base in (0x2A, 0x2B):
+            tile = parameters[0] - 1
+            x += _signed_byte(parameters[1])
+            y += 8
+        else:  # $2E/$2F: next tile plus both position deltas.
+            tile = parameters[0] - 1
+            x += _signed_byte(parameters[1])
+            y += _signed_byte(parameters[2])
+        tile += 1
+    raise ValueError("机体碎片脚本缺少 FF 结束码。")
+
+
 def read_unit_appearance(project, unit_id: int) -> UnitAppearance:
     """Read the stock or relocated resources, without guessing write layouts."""
 
@@ -206,8 +305,9 @@ def render_chr_banks(
         raise ValueError("图库预览列数无效。")
     rows = (len(banks) + columns - 1) // columns
     image = QImage(64 * columns, 64 * rows, QImage.Format.Format_RGB32)
-    image.fill(QColor("#000000"))
-    palette = (QColor("#000000"), *(palette_color(value) for value in colors))
+    background = palette_color(0x0F)
+    image.fill(background)
+    palette = (background, *(palette_color(value) for value in colors))
     for bank_index, bank in enumerate(banks):
         bank_column = bank_index % columns
         bank_row = bank_index // columns
@@ -243,7 +343,7 @@ def render_unit_body_composition(
     banks: tuple[int, ...],
     colors: tuple[int, ...],
 ) -> QImage:
-    """Render the current unit's body script on the legacy 128x128 canvas."""
+    """Render the verified background/body composition."""
 
     if not banks or len(colors) != 3:
         raise ValueError("机体拼装预览需要有效图库和三色索引。")
@@ -251,7 +351,7 @@ def render_unit_body_composition(
         raise ValueError("机体拼图引用的图库超出活动 CHR。")
     placements = decode_unit_body_script(script, len(banks) * 64)
     image = QImage(128, 128, QImage.Format.Format_RGB32)
-    image.fill(QColor("#000000"))
+    image.fill(palette_color(0x0F))
     if not placements:
         return image
     min_x = min(item.x for item in placements)
@@ -260,7 +360,7 @@ def render_unit_body_composition(
     max_y = max(item.y for item in placements)
     offset_x = (16 - (max_x - min_x + 1)) // 2 - min_x
     offset_y = (16 - (max_y - min_y + 1)) // 2 - min_y
-    palette = (QColor("#000000"), *(palette_color(value) for value in colors))
+    palette = (palette_color(0x0F), *(palette_color(value) for value in colors))
     for placement in placements:
         bank_index, local_tile = divmod(placement.tile_index, 64)
         pixels = project.chr_tile_pixels(banks[bank_index] * 64 + local_tile)
@@ -271,4 +371,67 @@ def render_unit_body_composition(
                 color_index = pixels[y * 8 + x]
                 if color_index:
                     image.setPixelColor(x0 + x, y0 + y, palette[color_index])
+    return image
+
+
+def render_unit_battle_preview(
+    project,
+    appearance: UnitAppearance,
+    *,
+    show_body: bool = True,
+    show_fragments: bool = True,
+) -> QImage:
+    """Render the body background and fragment sprites as the game layers them.
+
+    The 128x128 viewport is the unit-side crop used by the battle screen.  The
+    body script uses its battle baseline at Y=120; fragment coordinates are
+    converted by :func:`decode_unit_fragment_script` from the same runtime
+    coordinate system.
+    """
+
+    body = decode_unit_body_script(
+        appearance.body_script, len(appearance.secondary_banks) * 64
+    )
+    fragments = decode_unit_fragment_script(appearance.fragment_script)
+    image = QImage(128, 128, QImage.Format.Format_RGB32)
+    image.fill(palette_color(0x0F))
+    body_palette = (
+        palette_color(0x0F),
+        *(palette_color(value) for value in appearance.first_palette),
+    )
+    # Bit $40 is the opposing-side layout.  Its scripts use negative X tile
+    # coordinates and the game anchors that background at tile column 15.
+    body_origin_x = 15 if appearance.configuration[0] & 0x40 else 0
+    for placement in body if show_body else ():
+        bank_index, local_tile = divmod(placement.tile_index, 64)
+        pixels = project.chr_tile_pixels(
+            appearance.secondary_banks[bank_index] * 64 + local_tile
+        )
+        x0 = (placement.x + body_origin_x) * 8
+        y0 = (placement.y + 15) * 8
+        for y in range(8):
+            for x in range(8):
+                color_index = pixels[y * 8 + x]
+                if color_index and 0 <= x0 + x < 128 and 0 <= y0 + y < 128:
+                    image.setPixelColor(x0 + x, y0 + y, body_palette[color_index])
+    fragment_bank = appearance.primary_bank & 0xFE
+    fragment_palette = (
+        palette_color(0x0F),
+        *(palette_color(value) for value in appearance.second_palette),
+    )
+    # Opposing-side sprite X values occupy the right-hand half of the battle
+    # viewport.  The signed script coordinate deliberately wraps at 128.
+    fragment_origin_x = 0x80 if appearance.configuration[0] & 0x40 else 0
+    for placement in fragments if show_fragments else ():
+        bank_index, local_tile = divmod(placement.tile_index, 64)
+        pixels = project.chr_tile_pixels((fragment_bank + bank_index) * 64 + local_tile)
+        for y in range(8):
+            source_y = 7 - y if placement.flip_vertical else y
+            for x in range(8):
+                source_x = 7 - x if placement.flip_horizontal else x
+                color_index = pixels[source_y * 8 + source_x]
+                target_x = placement.x + fragment_origin_x + x
+                target_y = placement.y + y
+                if color_index and 0 <= target_x < 128 and 0 <= target_y < 128:
+                    image.setPixelColor(target_x, target_y, fragment_palette[color_index])
     return image

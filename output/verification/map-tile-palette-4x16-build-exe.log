@@ -1,0 +1,80 @@
+������ӳ�����D:\GIT\mmc3\output\mappings
+319 INFO: PyInstaller: 6.22.2, contrib hooks: 2026.7
+320 INFO: Python: 3.12.14
+391 INFO: Platform: Windows-11-10.0.22000-SP0
+391 INFO: Python environment: D:\GIT\mmc3\.venv
+395 INFO: Removing temporary files and cleaning cache in C:\Users\hu\AppData\Local\pyinstaller
+422 INFO: Module search paths (PYTHONPATH):
+['D:\\GIT\\mmc3',
+ 'C:\\Users\\hu\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python312.zip',
+ 'C:\\Users\\hu\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\DLLs',
+ 'C:\\Users\\hu\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\Lib',
+ 'C:\\Users\\hu\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python',
+ 'D:\\GIT\\mmc3\\.venv',
+ 'D:\\GIT\\mmc3\\.venv\\Lib\\site-packages',
+ 'D:\\GIT\\mmc3\\.venv\\Lib\\site-packages\\win32',
+ 'D:\\GIT\\mmc3\\.venv\\Lib\\site-packages\\win32\\lib',
+ 'D:\\GIT\\mmc3\\.venv\\Lib\\site-packages\\pythonwin',
+ 'D:\\GIT\\mmc3',
+ 'D:\\GIT\\mmc3\\src']
+1111 INFO: Appending 'binaries' from .spec
+1112 INFO: checking Analysis
+1112 INFO: Building Analysis because Analysis-00.toc is non existent
+1112 INFO: Looking for Python shared library...
+1112 INFO: Using Python shared library: C:\Users\hu\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python312.dll
+1112 INFO: Running Analysis Analysis-00.toc
+1112 INFO: Target bytecode optimization level: 0
+1112 INFO: Initializing module dependency graph...
+1114 INFO: Initializing module graph hook caches...
+1138 INFO: Analyzing modules for base_library.zip ...
+3279 INFO: Processing standard module hook 'hook-heapq.py' from 'D:\\GIT\\mmc3\\.venv\\Lib\\site-packages\\PyInstaller\\hooks'
+3403 INFO: Processing standard module hook 'hook-encodings.py' from 'D:\\GIT\\mmc3\\.venv\\Lib\\site-packages\\PyInstaller\\hooks'
+5606 INFO: Processing standard module hook 'hook-math.py' from 'D:\\GIT\\mmc3\\.venv\\Lib\\site-packages\\PyInstaller\\hooks'
+5917 INFO: Processing standard module hook 'hook-pickle.py' from 'D:\\GIT\\mmc3\\.venv\\Lib\\site-packages\\PyInstaller\\hooks'
+8225 INFO: Caching module dependency graph...
+8345 INFO: Analyzing D:\GIT\mmc3\tools\run_dc_modifier.py
+8531 INFO: Processing standard module hook 'hook-PySide6.py' from 'D:\\GIT\\mmc3\\.venv\\Lib\\site-packages\\PyInstaller\\hooks'
+9142 INFO: Processing standard module hook 'hook-shiboken6.py' from 'D:\\GIT\\mmc3\\.venv\\Lib\\site-packages\\PyInstaller\\hooks'
+9384 INFO: Processing standard module hook 'hook-PySide6.QtNetwork.py' from 'D:\\GIT\\mmc3\\.venv\\Lib\\site-packages\\PyInstaller\\hooks'
+15672 INFO: Processing standard module hook 'hook-PySide6.QtCore.py' from 'D:\\GIT\\mmc3\\.venv\\Lib\\site-packages\\PyInstaller\\hooks'
+26196 INFO: Processing standard module hook 'hook-PySide6.QtGui.py' from 'D:\\GIT\\mmc3\\.venv\\Lib\\site-packages\\PyInstaller\\hooks'
+72058 INFO: Processing standard module hook 'hook-PySide6.QtWidgets.py' from 'D:\\GIT\\mmc3\\.venv\\Lib\\site-packages\\PyInstaller\\hooks'
+77730 INFO: Processing standard module hook 'hook-difflib.py' from 'D:\\GIT\\mmc3\\.venv\\Lib\\site-packages\\PyInstaller\\hooks'
+78768 INFO: Processing module hooks (post-graph stage)...
+78778 INFO: Performing binary vs. data reclassification (123 entries)
+78833 INFO: Looking for ctypes DLLs
+78844 INFO: Analyzing run-time hooks ...
+78846 INFO: Including run-time hook 'pyi_rth_inspect.py' from 'D:\\GIT\\mmc3\\.venv\\Lib\\site-packages\\PyInstaller\\hooks\\rthooks'
+78849 INFO: Including run-time hook 'pyi_rth_pyside6.py' from 'D:\\GIT\\mmc3\\.venv\\Lib\\site-packages\\PyInstaller\\hooks\\rthooks'
+78854 INFO: Processing pre-find-module-path hook 'hook-_pyi_rth_utils.py' from 'D:\\GIT\\mmc3\\.venv\\Lib\\site-packages\\PyInstaller\\hooks\\pre_find_module_path'
+78857 INFO: Processing standard module hook 'hook-_pyi_rth_utils.py' from 'D:\\GIT\\mmc3\\.venv\\Lib\\site-packages\\PyInstaller\\hooks'
+78868 INFO: Creating base_library.zip...
+78897 INFO: Looking for dynamic libraries
+79346 INFO: Extra DLL search directories (AddDllDirectory): ['D:\\GIT\\mmc3\\.venv\\Lib\\site-packages\\shiboken6']
+79346 INFO: Extra DLL search directories (PATH): ['D:\\GIT\\mmc3\\.venv\\Lib\\site-packages\\PySide6']
+81783 INFO: Warnings written to D:\GIT\mmc3\output\build\pyinstaller-work\dc_modifier\warn-dc_modifier.txt
+81810 INFO: Graph cross-reference written to D:\GIT\mmc3\output\build\pyinstaller-work\dc_modifier\xref-dc_modifier.html
+81842 INFO: checking PYZ
+81842 INFO: Building PYZ because PYZ-00.toc is non existent
+81842 INFO: Building PYZ (ZlibArchive) D:\GIT\mmc3\output\build\pyinstaller-work\dc_modifier\PYZ-00.pyz
+82081 INFO: Building PYZ (ZlibArchive) D:\GIT\mmc3\output\build\pyinstaller-work\dc_modifier\PYZ-00.pyz completed successfully.
+82092 INFO: checking PKG
+82092 INFO: Building PKG because PKG-00.toc is non existent
+82092 INFO: Building PKG (CArchive) ��DCƪ�����޸���.pkg
+97185 INFO: Building PKG (CArchive) ��DCƪ�����޸���.pkg completed successfully.
+97194 INFO: Bootloader D:\GIT\mmc3\.venv\Lib\site-packages\PyInstaller\bootloader\Windows-64bit-intel\runw.exe
+97194 INFO: checking EXE
+97194 INFO: Building EXE because EXE-00.toc is non existent
+97194 INFO: Building EXE from EXE-00.toc
+97201 INFO: Copying bootloader EXE to D:\GIT\mmc3\output\app\��DCƪ�����޸���.exe
+97212 INFO: Copying icon to EXE
+97222 INFO: Copying 0 resources to EXE
+97223 INFO: Embedding manifest in EXE
+97231 INFO: Appending PKG archive to EXE
+97288 INFO: Fixing EXE headers
+97878 INFO: Building EXE from EXE-00.toc completed successfully.
+97891 INFO: Build complete! The results are available in: D:\GIT\mmc3\output\app
+EXE: D:\GIT\mmc3\output\app\新DC篇完整修改器.exe
+SHA-256: E3E36651A085886A39F98712B844BEAE989FFB8104CFDDAE477E797AA917DEDB
+Checksum: D:\GIT\mmc3\output\app\新DC篇完整修改器.exe.sha256.txt
+Mappings: D:\GIT\mmc3\output\app\修改器映射表

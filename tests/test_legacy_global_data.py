@@ -214,8 +214,8 @@ class LegacyGlobalDataTests(unittest.TestCase):
         modified = bytearray(self.project.working)
 
         double_values = (0x31, 0x32, 0x33)
-        for value, pair in zip(double_values, spec.double_hit_operand_pairs):
-            for offset in pair:
+        for value, group in zip(double_values, spec.double_hit_operand_groups):
+            for offset in group:
                 modified[offset] = value
         damage_values = (0x41, 0x42, 0x43, 0x44, 0x45)
         for offset, value in zip(spec.damage_formula_operand_offsets, damage_values):
@@ -438,7 +438,17 @@ class LegacyGlobalDataTests(unittest.TestCase):
              0x140F9, 0x14100, 0x14107, 0x1410E, 0x14115)
         )
         expected_offsets.update(
-            (0x78109, 0x7815A, 0x78127, 0x78178, 0x78138, 0x78189)
+            (
+                0x78109,
+                0x7815A,
+                0x7FF03,
+                0x78127,
+                0x78178,
+                0x7FF12,
+                0x78138,
+                0x78189,
+                0x7FF1A,
+            )
         )
         actual_offsets = {
             offset
@@ -449,10 +459,10 @@ class LegacyGlobalDataTests(unittest.TestCase):
         }
         self.assertEqual(actual_offsets, expected_offsets)
         self.assertEqual(self.project.working[0x3965D + 12], 0xFF)
-        for value, pair in zip(new_double, spec.double_hit_operand_pairs):
+        for value, group in zip(new_double, spec.double_hit_operand_groups):
             self.assertEqual(
-                tuple(self.project.working[offset] for offset in pair),
-                (value, value),
+                tuple(self.project.working[offset] for offset in group),
+                (value,) * len(group),
             )
 
     def test_all_verified_global_tables_survive_rom_save_and_reopen(self) -> None:

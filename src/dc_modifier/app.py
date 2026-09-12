@@ -3,8 +3,11 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
-from PySide6.QtCore import Qt, Signal
-from PySide6.QtGui import QAction, QCloseEvent, QDragEnterEvent, QDropEvent, QFont, QKeySequence
+from PySide6.QtCore import QPoint, QRect, Qt, Signal
+from PySide6.QtGui import (
+    QAction, QCloseEvent, QColor, QDragEnterEvent, QDropEvent, QFont,
+    QKeySequence, QPolygon,
+)
 from PySide6.QtWidgets import (
     QApplication,
     QDialog,
@@ -18,8 +21,10 @@ from PySide6.QtWidgets import (
     QMainWindow,
     QMessageBox,
     QPushButton,
+    QProxyStyle,
     QStackedWidget,
     QStatusBar,
+    QStyle,
     QTabWidget,
     QVBoxLayout,
     QWidget,
@@ -56,6 +61,68 @@ from .workspace import (
 APP_TITLE = "新DC篇完整修改器"
 LEGACY_WINDOW_TITLE = "SRW2扩容版修改器V1.0"
 LAUNCHER_TITLE = "SRW2修改器V1.5"
+
+
+class VisibleArrowStyle(QProxyStyle):
+    """Draw high-contrast arrows for every numeric spin control."""
+
+    def drawPrimitive(self, element, option, painter, widget=None) -> None:  # noqa: N802
+        arrows = (
+            QStyle.PrimitiveElement.PE_IndicatorArrowUp,
+            QStyle.PrimitiveElement.PE_IndicatorArrowDown,
+            QStyle.PrimitiveElement.PE_IndicatorSpinUp,
+            QStyle.PrimitiveElement.PE_IndicatorSpinDown,
+            QStyle.PrimitiveElement.PE_IndicatorSpinPlus,
+            QStyle.PrimitiveElement.PE_IndicatorSpinMinus,
+        )
+        if element not in arrows:
+            super().drawPrimitive(element, option, painter, widget)
+            return
+        rect = option.rect
+        half_width = max(3, min(5, rect.width() // 3))
+        half_height = max(2, min(4, rect.height() // 3))
+        center_x = rect.center().x()
+        center_y = rect.center().y()
+        if element in (
+            QStyle.PrimitiveElement.PE_IndicatorArrowUp,
+            QStyle.PrimitiveElement.PE_IndicatorSpinUp,
+            QStyle.PrimitiveElement.PE_IndicatorSpinPlus,
+        ):
+            points = QPolygon((
+                QPoint(center_x, center_y - half_height),
+                QPoint(center_x - half_width, center_y + half_height),
+                QPoint(center_x + half_width, center_y + half_height),
+            ))
+        else:
+            points = QPolygon((
+                QPoint(center_x - half_width, center_y - half_height),
+                QPoint(center_x + half_width, center_y - half_height),
+                QPoint(center_x, center_y + half_height),
+            ))
+        painter.save()
+        painter.setPen(Qt.PenStyle.NoPen)
+        painter.setBrush(QColor("#26343D") if option.state & QStyle.StateFlag.State_Enabled
+                         else QColor("#98A3AA"))
+        painter.drawPolygon(points)
+        painter.restore()
+
+    def subControlRect(self, control, option, sub_control, widget=None):  # noqa: N802
+        result = super().subControlRect(control, option, sub_control, widget)
+        if control != QStyle.ComplexControl.CC_SpinBox:
+            return result
+        button_width = min(24, max(16, option.rect.width() // 4))
+        button_x = option.rect.right() - button_width + 1
+        upper_height = option.rect.height() // 2
+        if sub_control == QStyle.SubControl.SC_SpinBoxUp:
+            return QRect(button_x, option.rect.top(), button_width, upper_height)
+        if sub_control == QStyle.SubControl.SC_SpinBoxDown:
+            return QRect(
+                button_x, option.rect.top() + upper_height,
+                button_width, option.rect.height() - upper_height,
+            )
+        if sub_control == QStyle.SubControl.SC_SpinBoxEditField:
+            result.setRight(button_x - 2)
+        return result
 
 
 STYLE_SHEET = """
@@ -146,14 +213,14 @@ QPushButton:disabled, QToolButton:disabled {
 QPushButton#primaryButton { font-weight: 600; }
 QPushButton#terrainButton { min-width: 38px; min-height: 34px; padding: 1px; }
 QPushButton#terrainButton:checked { border: 2px solid #164a9a; background: #b9e9ff; }
-QLineEdit, QSpinBox, QComboBox, QPlainTextEdit, QTableWidget, QListWidget {
+QLineEdit, QSpinBox, QDoubleSpinBox, QComboBox, QPlainTextEdit, QTableWidget, QListWidget {
     background: white;
     border: 1px solid #77b8d4;
     border-radius: 0;
     padding: 3px;
     selection-background-color: #1686c4;
 }
-QLineEdit:focus, QSpinBox:focus, QComboBox:focus, QPlainTextEdit:focus,
+QLineEdit:focus, QSpinBox:focus, QDoubleSpinBox:focus, QComboBox:focus, QPlainTextEdit:focus,
 QTableWidget:focus, QListWidget:focus { border: 1px solid #1879ac; }
 QHeaderView::section {
     background: #e9f5fb;
@@ -1091,7 +1158,7 @@ def run() -> int:
     application = QApplication(arguments)
     application.setApplicationName(APP_TITLE)
     application.setOrganizationName("NewDCModding")
-    application.setStyle("Fusion")
+    application.setStyle(VisibleArrowStyle("Fusion"))
     application.setFont(QFont("Microsoft YaHei UI", 10))
     application.setStyleSheet(STYLE_SHEET)
     if self_test:

@@ -1,0 +1,57 @@
+{
+  "feature": "地图图块属性",
+  "status": "字段级差分验证完成",
+  "verified_date": "2026-09-12",
+  "reference_executable": "references/legacy_modifier/SRW2_patched.exe",
+  "reference_ui_evidence": {
+    "method": "静态窗体字符串与控件清单",
+    "fields": [
+      "颜色表：背景色/颜色表1/颜色表2/颜色表3",
+      "颜色表1三个NES色号",
+      "防御补正",
+      "机动补正(空)",
+      "机动补正(陆)",
+      "机动补正(海)",
+      "海"
+    ],
+    "limitation": "参考程序的图块属性子窗体未能通过自动化稳定弹出；未把参考程序单字段保存冒充为完成证据。"
+  },
+  "records": {
+    "A": {"offset": "0x6060", "graphic_selector": "0x04"},
+    "B": {"offset": "0x60B4", "graphic_selector": "0x05"},
+    "C": {"offset": "0x6108", "graphic_selector": "0x06"},
+    "D": {"offset": "0x615C", "graphic_selector": "0x3D"},
+    "E": {"offset": "0x61B0", "graphic_selector": "0x3F"},
+    "F": {"offset": "0x6204", "graphic_selector": "0x07"},
+    "G": {"offset": "0x6258", "graphic_selector": "0x41"}
+  },
+  "record_size": 84,
+  "layout": [
+    {"relative": "0x00-0x02", "count": 3, "meaning": "颜色表1 NES色号"},
+    {"relative": "0x03", "count": 1, "meaning": "图形/CHR选择器（校验并保留，不由窗口修改）"},
+    {"relative": "0x04-0x13", "count": 16, "meaning": "每图块颜色表选择", "encoding": {"0x00": 0, "0x55": 1, "0xAA": 2, "0xFF": 3}},
+    {"relative": "0x14-0x23", "count": 16, "meaning": "防御低7位；海属性为最高位"},
+    {"relative": "0x24-0x33", "count": 16, "meaning": "空中移动补正"},
+    {"relative": "0x34-0x43", "count": 16, "meaning": "陆地移动补正"},
+    {"relative": "0x44-0x53", "count": 16, "meaning": "海上移动补正"}
+  ],
+  "movement_encoding": {
+    "0": "不能移动",
+    "1": "不补正",
+    "2-16": "补正1格至补正15格"
+  },
+  "safety": {
+    "supported_tilesets": "A-G",
+    "unsupported_tilesets": "H",
+    "unknown_palette_or_movement_encoding": "拒绝写入",
+    "graphic_selector": "必须匹配当前扩容ROM图库绑定并保持不变",
+    "write_granularity": "只写实际变化字段"
+  },
+  "automated_verification": [
+    "A-G偏移与图形选择器校验",
+    "颜色、颜色表、防御、海属性、空/陆/海移动逐字段单字节隔离",
+    "异常编码失败关闭",
+    "应用单事务、取消零写入、撤销、重做、还原",
+    "派生ROM保存后重新打开一致"
+  ]
+}

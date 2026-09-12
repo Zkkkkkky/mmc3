@@ -3,6 +3,7 @@ from __future__ import annotations
 from PySide6.QtCore import Qt, Signal
 from PySide6.QtWidgets import (
     QComboBox,
+    QFileDialog,
     QFormLayout,
     QGridLayout,
     QGroupBox,
@@ -23,6 +24,7 @@ from PySide6.QtWidgets import (
 from .pages import CharacterPage, WeaponPage
 from .character_editor import CharacterDetailsWidget
 from .animation_editor import WeaponAnimationWidget
+from fc_editor.dc_text import concise_dc_text
 from fc_editor.codecs.character_attributes import (
     CharacterAttributesCodec, WEAPON_SKILLS, apply_verified_patches,
     weapon_extra_patches, weapon_extra_values,
@@ -147,6 +149,30 @@ class ReadableCharacterPage(CharacterPage):
             None,
         )
 
+    def supports_record_export(self) -> bool:
+        return True
+
+    def record_export_label(self) -> str:
+        return "导出当前正面/背面头像…"
+
+    def export_selected_record(self) -> None:
+        if self.project is None or self.current_id is None:
+            return
+        directory = QFileDialog.getExistingDirectory(self, "选择头像导出根目录")
+        if not directory:
+            return
+        try:
+            if not self.commit_pending_changes():
+                return
+            from .portrait_export import export_portrait_bitmaps
+            from .workspace import writable_output_path
+
+            root = writable_output_path(directory)
+            back, front = export_portrait_bitmaps(self.project, self.current_id, root)
+            self.records.setToolTip(f"已导出：{back.name}、{front.name}")
+        except Exception as error:
+            self.show_error(error)
+
     def refresh(self) -> None:
         super().refresh()
         readable_references(self.name_reference)
@@ -173,10 +199,21 @@ class ReadableCharacterPage(CharacterPage):
         if self.project is None or self.current_id is None:
             return
         try:
+            reference_pending, text_pending, _music_pending = self._pending_values()
+            if reference_pending and text_pending:
+                raise ValueError("名称引用和名称文字不能同时修改；请先应用其中一项。")
+            if text_pending and not self.confirm_shared_name_edit(
+                "人物", self.project.character_name_source_ids(self.current_id)
+            ):
+                return
             patches = self.character_details.pending_patches()
             with self.project.transaction(f"人物 ${self.current_id:02X} · 完整表单"):
                 apply_verified_patches(self.project, patches, "人物属性、精神与头像")
                 self.project.set_character_name_reference(self.current_id, int(self.name_reference.currentData()))
+                if text_pending:
+                    self.project.set_character_name_text(
+                        self.current_id, self.name_text.text()
+                    )
                 if self.ally_music.isEnabled():
                     self.project.set_battle_music_binding(self.current_id, int(self.ally_music.currentData()), int(self.enemy_music.currentData()))
             self.load_record(self.current_id)
@@ -207,20 +244,27 @@ class ReadableCharacterPage(CharacterPage):
         if not accepted:
             return
         target = int(selected[1:3], 16)
+        self.copy_record_to(self.current_id, target)
+
+    def copy_record_to(self, source_id: int, target_id: int) -> bool:
+        if self.project is None or source_id == target_id:
+            return False
         try:
             codec = CharacterAttributesCodec(self.project)
-            patches = codec.patches(target, codec.read(self.current_id)) + codec.portrait_patches(target, codec.read_portrait(self.current_id))
-            sources = self.project.character_name_source_ids(self.current_id)
-            with self.project.transaction(f"复制人物 ${self.current_id:02X} 到 ${target:02X}"):
+            patches = codec.patches(target_id, codec.read(source_id)) + codec.portrait_patches(target_id, codec.read_portrait(source_id))
+            sources = self.project.character_name_source_ids(source_id)
+            with self.project.transaction(f"复制人物 ${source_id:02X} 到 ${target_id:02X}"):
                 apply_verified_patches(self.project, patches, "复制人物属性与头像")
                 if sources:
-                    self.project.set_character_name_reference(target, sources[0])
+                    self.project.set_character_name_reference(target_id, sources[0])
                 if self.project.supports_battle_music:
-                    binding = self.project.get_battle_music_binding(self.current_id)
-                    self.project.set_battle_music_binding(target, binding.attacker_command, binding.defender_command)
-            self.project_changed.emit(f"已复制人物到 ${target:02X}")
+                    binding = self.project.get_battle_music_binding(source_id)
+                    self.project.set_battle_music_binding(target_id, binding.attacker_command, binding.defender_command)
+            self.project_changed.emit(f"已复制人物 ${source_id:02X} 到 ${target_id:02X}")
+            return True
         except Exception as error:
             self.show_error(error)
+            return False
 
 
 class ReadableWeaponPage(WeaponPage):
@@ -359,6 +403,20 @@ class ReadableWeaponPage(WeaponPage):
         if self.project is None or self.current_id is None:
             return
         try:
+            name_sources = self.project.weapon_name_source_ids(self.current_id)
+            reference_pending = bool(
+                name_sources
+                and self.name_reference.currentData() is not None
+                and int(self.name_reference.currentData()) != name_sources[0]
+            )
+            text_pending = (
+                self.name_text.text().strip()
+                != concise_dc_text(self.project.weapon_name_record_bytes(self.current_id))
+            )
+            if reference_pending and text_pending:
+                raise ValueError("名称引用和名称文字不能同时修改；请先应用其中一项。")
+            if text_pending and not self.confirm_shared_name_edit("武器", name_sources):
+                return
             if self.weapon_animation.isEnabled():
                 self.weapon_animation.pending_patches()  # Validate every draft before mutating.
             with self.project.transaction(f"武器 ${self.current_id:02X} · 完整表单"):
@@ -369,6 +427,10 @@ class ReadableWeaponPage(WeaponPage):
                                            int(self.weapon_skill.currentData()), self.distance_correction.value()), "武器特技与距离补正")
                 if self.project.supports_weapon_names:
                     self.project.set_weapon_name_reference(self.current_id, int(self.name_reference.currentData()))
+                    if text_pending:
+                        self.project.set_weapon_name_text(
+                            self.current_id, self.name_text.text()
+                        )
                 if self.weapon_animation.isEnabled():
                     self.weapon_animation.apply_pending()
             self.load_record(self.current_id)
@@ -385,19 +447,26 @@ class ReadableWeaponPage(WeaponPage):
         if not accepted:
             return
         target = int(selected[1:3], 16)
+        self.copy_record_to(self.current_id, target)
+
+    def copy_record_to(self, source_id: int, target_id: int) -> bool:
+        if self.project is None or source_id == target_id:
+            return False
         try:
-            skill, distance = weapon_extra_values(self.project, self.current_id)
-            weapon_extra_patches(self.project, target, skill, distance)
-            sources = self.project.weapon_name_source_ids(self.current_id)
-            with self.project.transaction(f"复制武器 ${self.current_id:02X} 到 ${target:02X}"):
+            skill, distance = weapon_extra_values(self.project, source_id)
+            weapon_extra_patches(self.project, target_id, skill, distance)
+            sources = self.project.weapon_name_source_ids(source_id)
+            with self.project.transaction(f"复制武器 ${source_id:02X} 到 ${target_id:02X}"):
                 for field in WEAPON_FIELDS:
-                    self.project.set_weapon_value(target, field.key, self.project.get_weapon_value(self.current_id, field.key))
-                apply_verified_patches(self.project, weapon_extra_patches(self.project, target, skill, distance), "复制武器特技与距离补正")
+                    self.project.set_weapon_value(target_id, field.key, self.project.get_weapon_value(source_id, field.key))
+                apply_verified_patches(self.project, weapon_extra_patches(self.project, target_id, skill, distance), "复制武器特技与距离补正")
                 if sources:
-                    self.project.set_weapon_name_reference(target, sources[0])
-            self.project_changed.emit(f"已复制武器属性与名称到 ${target:02X}")
+                    self.project.set_weapon_name_reference(target_id, sources[0])
+            self.project_changed.emit(f"已复制武器属性与名称 ${source_id:02X} 到 ${target_id:02X}")
+            return True
         except Exception as error:
             self.show_error(error)
+            return False
 
     def refresh_usage(self) -> None:
         if self.project is None or self.current_id is None:

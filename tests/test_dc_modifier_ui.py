@@ -8,18 +8,24 @@ from unittest.mock import patch
 
 os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 
-from PySide6.QtGui import QAction
+from PySide6.QtCore import QRect
+from PySide6.QtGui import QAction, QImage, QPainter
 from PySide6.QtWidgets import (
     QApplication,
     QDialog,
     QFileDialog,
     QLabel,
     QPushButton,
+    QStyle,
+    QStyleOptionSpinBox,
     QToolBar,
 )
 
 import dc_modifier.workspace as workspace_module
-from dc_modifier.app import LEGACY_ROM, LEGACY_WINDOW_TITLE, LauncherWindow, MainWindow
+from dc_modifier.app import (
+    LEGACY_ROM, LEGACY_WINDOW_TITLE, LauncherWindow, MainWindow,
+    VisibleArrowStyle,
+)
 from dc_modifier.event_page import EventPage
 from dc_modifier.legacy_windows import DatabaseDialog, ScenarioDialog
 from dc_modifier.map_page import MapPage
@@ -51,6 +57,36 @@ class DesktopEditorSmokeTests(QtTestCase):
     def setUp(self) -> None:
         self.window = MainWindow(open_default=True)
         self.assertIsNotNone(self.window.project)
+
+    def test_numeric_spin_style_draws_large_visible_up_and_down_arrows(self) -> None:
+        style = VisibleArrowStyle("Fusion")
+        option = QStyleOptionSpinBox()
+        option.rect = QRect(0, 0, 100, 36)
+        option.state = QStyle.StateFlag.State_Enabled
+        up = style.subControlRect(
+            QStyle.ComplexControl.CC_SpinBox, option,
+            QStyle.SubControl.SC_SpinBoxUp,
+        )
+        down = style.subControlRect(
+            QStyle.ComplexControl.CC_SpinBox, option,
+            QStyle.SubControl.SC_SpinBoxDown,
+        )
+        self.assertGreaterEqual(up.width(), 16)
+        self.assertEqual(up.width(), down.width())
+        self.assertLess(up.center().y(), down.center().y())
+
+        image = QImage(24, 18, QImage.Format.Format_RGB32)
+        image.fill(0xFFFFFFFF)
+        painter = QPainter(image)
+        option.rect = image.rect()
+        style.drawPrimitive(
+            QStyle.PrimitiveElement.PE_IndicatorSpinUp, option, painter
+        )
+        painter.end()
+        self.assertTrue(any(
+            image.pixelColor(x, y).lightness() < 100
+            for y in range(image.height()) for x in range(image.width())
+        ))
 
     def tearDown(self) -> None:
         if self.window.project is not None:
@@ -865,6 +901,9 @@ class DesktopEditorSmokeTests(QtTestCase):
         self.assertIs(page.main_splitter.widget(1), page.canvas_host)
         self.assertEqual(page.navigator.layout().indexOf(page.editor_tabs), 0)
         self.assertLess(page.editor_tabs.geometry().bottom(), page.chapter_group.geometry().top())
+        self.assertGreaterEqual(page.chapter_group.minimumHeight(), 260)
+        self.assertFalse(page.icon_preview_toggle.isChecked())
+        self.assertFalse(page.icon_preview_group.isVisible())
         self.assertTrue(page.fit_view.isChecked())
         self.assertFalse(page.zoom.isEnabled())
 

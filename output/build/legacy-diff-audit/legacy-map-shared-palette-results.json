@@ -1,0 +1,41 @@
+{
+  "status": "verified_read_only",
+  "verified_at": "2026-09-12",
+  "palette_template": {
+    "file_offset": "0x3B2C0",
+    "cpu_pointer": "0xB2B0",
+    "loader_pc": "0xB13F",
+    "loader_prg_offset": "0x3B13F",
+    "raw_prefix": "0F 30 10 00 80 81 82 30 21 02 37 27 16 30 23 0F",
+    "notes": "80-82 are runtime substitutions for the active tileset's editable palette-1 colors."
+  },
+  "background_palettes": {
+    "0": ["0x0F", "0x30", "0x10", "0x00"],
+    "1_example_tileset_B": ["0x0F", "0x27", "0x2A", "0x1A"],
+    "2_shared": ["0x0F", "0x30", "0x21", "0x02"],
+    "3_shared": ["0x0F", "0x37", "0x27", "0x16"]
+  },
+  "runtime_evidence": [
+    {
+      "rom": "output/rom/DC_kuorong_464K.nes",
+      "frame": 800,
+      "palette_ram_0490_049f": "0F 30 10 00 0F 27 2A 1A 0F 30 21 02 0F 37 27 16",
+      "terrain_record_reads": 36,
+      "screenshot": "output/build/legacy-diff-audit/mesen-palette-probe-5-expanded/palette-frame-0800.png",
+      "log": "output/build/legacy-diff-audit/mesen-palette-probe-5-expanded/stdout.txt"
+    },
+    {
+      "rom": "references/rom/baselines/DC_kuorong.nes",
+      "frame": 800,
+      "palette_ram_0490_049f": "0F 30 10 00 0F 27 2A 1A 0F 30 21 02 0F 37 27 16",
+      "terrain_record_reads": 36,
+      "screenshot": "output/build/legacy-diff-audit/mesen-palette-probe-6-baseline/palette-frame-0800.png",
+      "log": "output/build/legacy-diff-audit/mesen-palette-probe-6-baseline/stdout.txt"
+    }
+  ],
+  "scope": {
+    "editable_palette_1": "stored in each verified A-G tileset record",
+    "shared_palettes_2_3": "verified global battlefield values; displayed read-only",
+    "tileset_H": "attribute record remains unverified"
+  }
+}

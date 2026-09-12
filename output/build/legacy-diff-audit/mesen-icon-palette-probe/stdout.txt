@@ -1,0 +1,227 @@
+INPUT frame=1 poll=1 requested_down=false requested_a=false
+INPUT frame=2 poll=2 requested_down=false requested_a=false
+INPUT frame=3 poll=3 requested_down=false requested_a=false
+INPUT frame=4 poll=4 requested_down=false requested_a=false
+PALETTE_WRITE frame=5 address=0490 value=00 pc=F85C prg=FF85C x=FF ptr=0000 ptr_prg=FFFFFFFFFFFFFFFF
+PALETTE_WRITE frame=5 address=0491 value=00 pc=F85C prg=FF85C x=FF ptr=0000 ptr_prg=FFFFFFFFFFFFFFFF
+PALETTE_WRITE frame=5 address=0492 value=00 pc=F85C prg=FF85C x=FF ptr=0000 ptr_prg=FFFFFFFFFFFFFFFF
+PALETTE_WRITE frame=5 address=0493 value=00 pc=F85C prg=FF85C x=FF ptr=0000 ptr_prg=FFFFFFFFFFFFFFFF
+PALETTE_WRITE frame=5 address=0494 value=00 pc=F85C prg=FF85C x=FF ptr=0000 ptr_prg=FFFFFFFFFFFFFFFF
+PALETTE_WRITE frame=5 address=0495 value=00 pc=F85C prg=FF85C x=FF ptr=0000 ptr_prg=FFFFFFFFFFFFFFFF
+PALETTE_WRITE frame=5 address=0496 value=00 pc=F85C prg=FF85C x=FF ptr=0000 ptr_prg=FFFFFFFFFFFFFFFF
+PALETTE_WRITE frame=5 address=0497 value=00 pc=F85C prg=FF85C x=FF ptr=0000 ptr_prg=FFFFFFFFFFFFFFFF
+PALETTE_WRITE frame=5 address=0498 value=00 pc=F85C prg=FF85C x=FF ptr=0000 ptr_prg=FFFFFFFFFFFFFFFF
+PALETTE_WRITE frame=5 address=0499 value=00 pc=F85C prg=FF85C x=FF ptr=0000 ptr_prg=FFFFFFFFFFFFFFFF
+PALETTE_WRITE frame=5 address=049A value=00 pc=F85C prg=FF85C x=FF ptr=0000 ptr_prg=FFFFFFFFFFFFFFFF
+PALETTE_WRITE frame=5 address=049B value=00 pc=F85C prg=FF85C x=FF ptr=0000 ptr_prg=FFFFFFFFFFFFFFFF
+PALETTE_WRITE frame=5 address=049C value=00 pc=F85C prg=FF85C x=FF ptr=0000 ptr_prg=FFFFFFFFFFFFFFFF
+PALETTE_WRITE frame=5 address=049D value=00 pc=F85C prg=FF85C x=FF ptr=0000 ptr_prg=FFFFFFFFFFFFFFFF
+PALETTE_WRITE frame=5 address=049E value=00 pc=F85C prg=FF85C x=FF ptr=0000 ptr_prg=FFFFFFFFFFFFFFFF
+PALETTE_WRITE frame=5 address=049F value=00 pc=F85C prg=FF85C x=FF ptr=0000 ptr_prg=FFFFFFFFFFFFFFFF
+PALETTE_WRITE frame=5 address=04A0 value=00 pc=F85C prg=FF85C x=FF ptr=0000 ptr_prg=FFFFFFFFFFFFFFFF
+PALETTE_WRITE frame=5 address=04A1 value=00 pc=F85C prg=FF85C x=FF ptr=0000 ptr_prg=FFFFFFFFFFFFFFFF
+PALETTE_WRITE frame=5 address=04A2 value=00 pc=F85C prg=FF85C x=FF ptr=0000 ptr_prg=FFFFFFFFFFFFFFFF
+PALETTE_WRITE frame=5 address=04A3 value=00 pc=F85C prg=FF85C x=FF ptr=0000 ptr_prg=FFFFFFFFFFFFFFFF
+PALETTE_WRITE frame=5 address=04A4 value=00 pc=F85C prg=FF85C x=FF ptr=0000 ptr_prg=FFFFFFFFFFFFFFFF
+PALETTE_WRITE frame=5 address=04A5 value=00 pc=F85C prg=FF85C x=FF ptr=0000 ptr_prg=FFFFFFFFFFFFFFFF
+PALETTE_WRITE frame=5 address=04A6 value=00 pc=F85C prg=FF85C x=FF ptr=0000 ptr_prg=FFFFFFFFFFFFFFFF
+PALETTE_WRITE frame=5 address=04A7 value=00 pc=F85C prg=FF85C x=FF ptr=0000 ptr_prg=FFFFFFFFFFFFFFFF
+PALETTE_WRITE frame=5 address=04A8 value=00 pc=F85C prg=FF85C x=FF ptr=0000 ptr_prg=FFFFFFFFFFFFFFFF
+PALETTE_WRITE frame=5 address=04A9 value=00 pc=F85C prg=FF85C x=FF ptr=0000 ptr_prg=FFFFFFFFFFFFFFFF
+PALETTE_WRITE frame=5 address=04AA value=00 pc=F85C prg=FF85C x=FF ptr=0000 ptr_prg=FFFFFFFFFFFFFFFF
+PALETTE_WRITE frame=5 address=04AB value=00 pc=F85C prg=FF85C x=FF ptr=0000 ptr_prg=FFFFFFFFFFFFFFFF
+PALETTE_WRITE frame=5 address=04AC value=00 pc=F85C prg=FF85C x=FF ptr=0000 ptr_prg=FFFFFFFFFFFFFFFF
+PALETTE_WRITE frame=5 address=04AD value=00 pc=F85C prg=FF85C x=FF ptr=0000 ptr_prg=FFFFFFFFFFFFFFFF
+PALETTE_WRITE frame=5 address=04AE value=00 pc=F85C prg=FF85C x=FF ptr=0000 ptr_prg=FFFFFFFFFFFFFFFF
+PALETTE_WRITE frame=5 address=04AF value=00 pc=F85C prg=FF85C x=FF ptr=0000 ptr_prg=FFFFFFFFFFFFFFFF
+PALETTE_WRITE frame=20 address=0490 value=0F pc=B135 prg=3B135 x=00 ptr=B33A ptr_prg=3B33A
+PALETTE_WRITE frame=20 address=0491 value=30 pc=B13F prg=3B13F x=00 ptr=B33A ptr_prg=3B33A
+PALETTE_WRITE frame=20 address=0492 value=10 pc=B13F prg=3B13F x=01 ptr=B33A ptr_prg=3B33A
+PALETTE_WRITE frame=20 address=0493 value=00 pc=B13F prg=3B13F x=02 ptr=B33A ptr_prg=3B33A
+PALETTE_WRITE frame=20 address=0494 value=0F pc=B135 prg=3B135 x=04 ptr=B33A ptr_prg=3B33A
+PALETTE_WRITE frame=20 address=0495 value=28 pc=B13F prg=3B13F x=04 ptr=B33A ptr_prg=3B33A
+PALETTE_WRITE frame=20 address=0496 value=0F pc=B13F prg=3B13F x=05 ptr=B33A ptr_prg=3B33A
+PALETTE_WRITE frame=20 address=0497 value=30 pc=B13F prg=3B13F x=06 ptr=B33A ptr_prg=3B33A
+PALETTE_WRITE frame=20 address=0498 value=0F pc=B135 prg=3B135 x=08 ptr=B33A ptr_prg=3B33A
+PALETTE_WRITE frame=20 address=0499 value=16 pc=B13F prg=3B13F x=08 ptr=B33A ptr_prg=3B33A
+PALETTE_WRITE frame=20 address=049A value=0F pc=B13F prg=3B13F x=09 ptr=B33A ptr_prg=3B33A
+PALETTE_WRITE frame=20 address=049B value=28 pc=B13F prg=3B13F x=0A ptr=B33A ptr_prg=3B33A
+PALETTE_WRITE frame=20 address=049C value=0F pc=B135 prg=3B135 x=0C ptr=B33A ptr_prg=3B33A
+PALETTE_WRITE frame=20 address=049D value=28 pc=B13F prg=3B13F x=0C ptr=B33A ptr_prg=3B33A
+PALETTE_WRITE frame=20 address=049E value=06 pc=B13F prg=3B13F x=0D ptr=B33A ptr_prg=3B33A
+PALETTE_WRITE frame=20 address=049F value=28 pc=B13F prg=3B13F x=0E ptr=B33A ptr_prg=3B33A
+PALETTE_WRITE frame=20 address=04A0 value=0F pc=B135 prg=3B135 x=10 ptr=B33A ptr_prg=3B33A
+PALETTE_WRITE frame=20 address=04A1 value=30 pc=B13F prg=3B13F x=10 ptr=B33A ptr_prg=3B33A
+PALETTE_WRITE frame=20 address=04A2 value=23 pc=B13F prg=3B13F x=11 ptr=B33A ptr_prg=3B33A
+PALETTE_WRITE frame=20 address=04A3 value=0F pc=B13F prg=3B13F x=12 ptr=B33A ptr_prg=3B33A
+PALETTE_WRITE frame=20 address=04A4 value=0F pc=B135 prg=3B135 x=14 ptr=B33A ptr_prg=3B33A
+PALETTE_WRITE frame=20 address=04A5 value=30 pc=B13F prg=3B13F x=14 ptr=B33A ptr_prg=3B33A
+PALETTE_WRITE frame=20 address=04A6 value=30 pc=B13F prg=3B13F x=15 ptr=B33A ptr_prg=3B33A
+PALETTE_WRITE frame=20 address=04A7 value=30 pc=B13F prg=3B13F x=16 ptr=B33A ptr_prg=3B33A
+PALETTE_WRITE frame=20 address=04A8 value=0F pc=B135 prg=3B135 x=18 ptr=B33A ptr_prg=3B33A
+PALETTE_WRITE frame=20 address=04A9 value=30 pc=B13F prg=3B13F x=18 ptr=B33A ptr_prg=3B33A
+PALETTE_WRITE frame=20 address=04AA value=30 pc=B13F prg=3B13F x=19 ptr=B33A ptr_prg=3B33A
+PALETTE_WRITE frame=20 address=04AB value=30 pc=B13F prg=3B13F x=1A ptr=B33A ptr_prg=3B33A
+PALETTE_WRITE frame=20 address=04AC value=0F pc=B135 prg=3B135 x=1C ptr=B33A ptr_prg=3B33A
+PALETTE_WRITE frame=20 address=04AD value=30 pc=B13F prg=3B13F x=1C ptr=B33A ptr_prg=3B33A
+PALETTE_WRITE frame=20 address=04AE value=30 pc=B13F prg=3B13F x=1D ptr=B33A ptr_prg=3B33A
+PALETTE_WRITE frame=20 address=04AF value=30 pc=B13F prg=3B13F x=1E ptr=B33A ptr_prg=3B33A
+SNAP frame=675 label=checkpoint pc=F875 prg=FF875 ram=0F 30 10 00 0F 28 16 30 0F 28 16 38 0F 16 06 28 0F 30 23 0F 0F 30 30 30 0F 30 30 30 0F 30 30 30 ppu=0F 30 10 00 0F 28 16 30 0F 28 16 38 0F 16 06 28 0F 30 23 0F 0F 30 30 30 0F 30 30 30 0F 30 30 30 reads=0 writes=145
+INPUT frame=690 poll=690 requested_down=true requested_a=false
+RECORD_READ frame=741 cpu=A10C prg=610C value=64
+RECORD_READ frame=741 cpu=A10D prg=610D value=64
+RECORD_READ frame=741 cpu=A10E prg=610E value=5F
+RECORD_READ frame=741 cpu=A10F prg=610F value=5A
+RECORD_READ frame=741 cpu=A110 prg=6110 value=50
+RECORD_READ frame=741 cpu=A111 prg=6111 value=55
+RECORD_READ frame=741 cpu=A112 prg=6112 value=5F
+RECORD_READ frame=741 cpu=A113 prg=6113 value=5A
+RECORD_READ frame=741 cpu=A114 prg=6114 value=64
+RECORD_READ frame=741 cpu=A115 prg=6115 value=55
+RECORD_READ frame=741 cpu=A116 prg=6116 value=50
+RECORD_READ frame=741 cpu=A117 prg=6117 value=64
+RECORD_READ frame=741 cpu=A118 prg=6118 value=64
+RECORD_READ frame=741 cpu=A119 prg=6119 value=64
+RECORD_READ frame=741 cpu=A11A prg=611A value=64
+RECORD_READ frame=741 cpu=A11B prg=611B value=64
+RECORD_READ frame=743 cpu=A0FC prg=60FC value=00
+RECORD_READ frame=743 cpu=A0FD prg=60FD value=55
+RECORD_READ frame=743 cpu=A0FE prg=60FE value=00
+RECORD_READ frame=743 cpu=A0FF prg=60FF value=00
+RECORD_READ frame=743 cpu=A100 prg=6100 value=FF
+RECORD_READ frame=743 cpu=A101 prg=6101 value=AA
+RECORD_READ frame=743 cpu=A102 prg=6102 value=55
+RECORD_READ frame=743 cpu=A103 prg=6103 value=55
+SNAP frame=750 label=checkpoint pc=9A6F prg=5A6F ram=0F 30 10 00 0F 28 16 30 0F 28 16 38 0F 16 06 28 0F 30 23 0F 0F 30 30 30 0F 30 30 30 0F 30 30 30 ppu=0F 30 10 00 0F 28 16 30 0F 28 16 38 0F 16 06 28 0F 30 23 0F 0F 30 30 30 0F 30 30 30 0F 30 30 30 reads=32 writes=145
+PALETTE_WRITE frame=752 address=0490 value=0F pc=B135 prg=3B135 x=00 ptr=B2B0 ptr_prg=3B2B0
+PALETTE_WRITE frame=752 address=0491 value=30 pc=B13F prg=3B13F x=00 ptr=B2B0 ptr_prg=3B2B0
+PALETTE_WRITE frame=752 address=0492 value=10 pc=B13F prg=3B13F x=01 ptr=B2B0 ptr_prg=3B2B0
+PALETTE_WRITE frame=752 address=0493 value=00 pc=B13F prg=3B13F x=02 ptr=B2B0 ptr_prg=3B2B0
+PALETTE_WRITE frame=752 address=0494 value=0F pc=B135 prg=3B135 x=04 ptr=B2B0 ptr_prg=3B2B0
+PALETTE_WRITE frame=752 address=0495 value=27 pc=B13F prg=3B13F x=04 ptr=B2B0 ptr_prg=3B2B0
+PALETTE_WRITE frame=752 address=0496 value=2A pc=B13F prg=3B13F x=05 ptr=B2B0 ptr_prg=3B2B0
+PALETTE_WRITE frame=752 address=0497 value=1A pc=B13F prg=3B13F x=06 ptr=B2B0 ptr_prg=3B2B0
+PALETTE_WRITE frame=752 address=0498 value=0F pc=B135 prg=3B135 x=08 ptr=B2B0 ptr_prg=3B2B0
+PALETTE_WRITE frame=752 address=0499 value=30 pc=B13F prg=3B13F x=08 ptr=B2B0 ptr_prg=3B2B0
+PALETTE_WRITE frame=752 address=049A value=21 pc=B13F prg=3B13F x=09 ptr=B2B0 ptr_prg=3B2B0
+PALETTE_WRITE frame=752 address=049B value=02 pc=B13F prg=3B13F x=0A ptr=B2B0 ptr_prg=3B2B0
+PALETTE_WRITE frame=752 address=049C value=0F pc=B135 prg=3B135 x=0C ptr=B2B0 ptr_prg=3B2B0
+PALETTE_WRITE frame=752 address=049D value=37 pc=B13F prg=3B13F x=0C ptr=B2B0 ptr_prg=3B2B0
+PALETTE_WRITE frame=752 address=049E value=27 pc=B13F prg=3B13F x=0D ptr=B2B0 ptr_prg=3B2B0
+PALETTE_WRITE frame=752 address=049F value=16 pc=B13F prg=3B13F x=0E ptr=B2B0 ptr_prg=3B2B0
+PALETTE_WRITE frame=752 address=04A0 value=0F pc=B135 prg=3B135 x=10 ptr=B2B0 ptr_prg=3B2B0
+PALETTE_WRITE frame=752 address=04A1 value=30 pc=B13F prg=3B13F x=10 ptr=B2B0 ptr_prg=3B2B0
+PALETTE_WRITE frame=752 address=04A2 value=23 pc=B13F prg=3B13F x=11 ptr=B2B0 ptr_prg=3B2B0
+PALETTE_WRITE frame=752 address=04A3 value=0F pc=B13F prg=3B13F x=12 ptr=B2B0 ptr_prg=3B2B0
+PALETTE_WRITE frame=752 address=04A4 value=0F pc=B135 prg=3B135 x=14 ptr=B2B0 ptr_prg=3B2B0
+PALETTE_WRITE frame=752 address=04A5 value=00 pc=B13F prg=3B13F x=14 ptr=B2B0 ptr_prg=3B2B0
+PALETTE_WRITE frame=752 address=04A6 value=00 pc=B13F prg=3B13F x=15 ptr=B2B0 ptr_prg=3B2B0
+PALETTE_WRITE frame=752 address=04A7 value=00 pc=B13F prg=3B13F x=16 ptr=B2B0 ptr_prg=3B2B0
+PALETTE_WRITE frame=752 address=04A8 value=0F pc=B135 prg=3B135 x=18 ptr=B2B0 ptr_prg=3B2B0
+PALETTE_WRITE frame=752 address=04A9 value=30 pc=B13F prg=3B13F x=18 ptr=B2B0 ptr_prg=3B2B0
+PALETTE_WRITE frame=752 address=04AA value=21 pc=B13F prg=3B13F x=19 ptr=B2B0 ptr_prg=3B2B0
+PALETTE_WRITE frame=752 address=04AB value=02 pc=B13F prg=3B13F x=1A ptr=B2B0 ptr_prg=3B2B0
+PALETTE_WRITE frame=752 address=04AC value=0F pc=B135 prg=3B135 x=1C ptr=B2B0 ptr_prg=3B2B0
+PALETTE_WRITE frame=752 address=04AD value=37 pc=B13F prg=3B13F x=1C ptr=B2B0 ptr_prg=3B2B0
+PALETTE_WRITE frame=752 address=04AE value=27 pc=B13F prg=3B13F x=1D ptr=B2B0 ptr_prg=3B2B0
+PALETTE_WRITE frame=752 address=04AF value=16 pc=B13F prg=3B13F x=1E ptr=B2B0 ptr_prg=3B2B0
+PALETTE_WRITE frame=753 address=0490 value=0F pc=91F3 prg=391F3 x=00 ptr=91DF ptr_prg=391DF
+PALETTE_WRITE frame=753 address=0491 value=0F pc=91F3 prg=391F3 x=01 ptr=91DF ptr_prg=391DF
+PALETTE_WRITE frame=753 address=0492 value=0F pc=91F3 prg=391F3 x=02 ptr=91DF ptr_prg=391DF
+PALETTE_WRITE frame=753 address=0493 value=0F pc=91F3 prg=391F3 x=03 ptr=91DF ptr_prg=391DF
+PALETTE_WRITE frame=753 address=0494 value=0F pc=91F3 prg=391F3 x=04 ptr=91DF ptr_prg=391DF
+PALETTE_WRITE frame=753 address=0495 value=0F pc=91F3 prg=391F3 x=05 ptr=91DF ptr_prg=391DF
+PALETTE_WRITE frame=753 address=0496 value=0F pc=91F3 prg=391F3 x=06 ptr=91DF ptr_prg=391DF
+PALETTE_WRITE frame=753 address=0497 value=0F pc=91F3 prg=391F3 x=07 ptr=91DF ptr_prg=391DF
+PALETTE_WRITE frame=753 address=0498 value=0F pc=91F3 prg=391F3 x=08 ptr=91DF ptr_prg=391DF
+PALETTE_WRITE frame=753 address=0499 value=0F pc=91F3 prg=391F3 x=09 ptr=91DF ptr_prg=391DF
+PALETTE_WRITE frame=753 address=049A value=0F pc=91F3 prg=391F3 x=0A ptr=91DF ptr_prg=391DF
+PALETTE_WRITE frame=753 address=049B value=0F pc=91F3 prg=391F3 x=0B ptr=91DF ptr_prg=391DF
+PALETTE_WRITE frame=753 address=049C value=0F pc=91F3 prg=391F3 x=0C ptr=91DF ptr_prg=391DF
+PALETTE_WRITE frame=753 address=049D value=0F pc=91F3 prg=391F3 x=0D ptr=91DF ptr_prg=391DF
+PALETTE_WRITE frame=753 address=049E value=0F pc=91F3 prg=391F3 x=0E ptr=91DF ptr_prg=391DF
+PALETTE_WRITE frame=753 address=049F value=0F pc=91F3 prg=391F3 x=0F ptr=91DF ptr_prg=391DF
+PALETTE_WRITE frame=753 address=04A0 value=0F pc=91F3 prg=391F3 x=10 ptr=91DF ptr_prg=391DF
+PALETTE_WRITE frame=753 address=04A1 value=0F pc=91F3 prg=391F3 x=11 ptr=91DF ptr_prg=391DF
+PALETTE_WRITE frame=753 address=04A2 value=0F pc=91F3 prg=391F3 x=12 ptr=91DF ptr_prg=391DF
+PALETTE_WRITE frame=753 address=04A3 value=0F pc=91F3 prg=391F3 x=13 ptr=91DF ptr_prg=391DF
+PALETTE_WRITE frame=753 address=04A4 value=0F pc=91F3 prg=391F3 x=14 ptr=91DF ptr_prg=391DF
+PALETTE_WRITE frame=753 address=04A5 value=0F pc=91F3 prg=391F3 x=15 ptr=91DF ptr_prg=391DF
+PALETTE_WRITE frame=753 address=04A6 value=0F pc=91F3 prg=391F3 x=16 ptr=91DF ptr_prg=391DF
+PALETTE_WRITE frame=753 address=04A7 value=0F pc=91F3 prg=391F3 x=17 ptr=91DF ptr_prg=391DF
+PALETTE_WRITE frame=753 address=04A8 value=0F pc=91F3 prg=391F3 x=18 ptr=91DF ptr_prg=391DF
+PALETTE_WRITE frame=753 address=04A9 value=0F pc=91F3 prg=391F3 x=19 ptr=91DF ptr_prg=391DF
+PALETTE_WRITE frame=753 address=04AA value=0F pc=91F3 prg=391F3 x=1A ptr=91DF ptr_prg=391DF
+PALETTE_WRITE frame=753 address=04AB value=0F pc=91F3 prg=391F3 x=1B ptr=91DF ptr_prg=391DF
+PALETTE_WRITE frame=753 address=04AC value=0F pc=91F3 prg=391F3 x=1C ptr=91DF ptr_prg=391DF
+PALETTE_WRITE frame=753 address=04AD value=0F pc=91F3 prg=391F3 x=1D ptr=91DF ptr_prg=391DF
+PALETTE_WRITE frame=753 address=04AE value=0F pc=91F3 prg=391F3 x=1E ptr=91DF ptr_prg=391DF
+PALETTE_WRITE frame=753 address=04AF value=0F pc=91F3 prg=391F3 x=1F ptr=91DF ptr_prg=391DF
+PALETTE_WRITE frame=756 address=0491 value=00 pc=924B prg=3924B x=10 ptr=91DF ptr_prg=391DF
+PALETTE_WRITE frame=756 address=0492 value=00 pc=924B prg=3924B x=10 ptr=91DF ptr_prg=391DF
+PALETTE_WRITE frame=756 address=0493 value=00 pc=924B prg=3924B x=10 ptr=91DF ptr_prg=391DF
+PALETTE_WRITE frame=756 address=0495 value=07 pc=924B prg=3924B x=10 ptr=91DF ptr_prg=391DF
+PALETTE_WRITE frame=756 address=0496 value=0A pc=924B prg=3924B x=10 ptr=91DF ptr_prg=391DF
+PALETTE_WRITE frame=756 address=0497 value=0A pc=924B prg=3924B x=10 ptr=91DF ptr_prg=391DF
+PALETTE_WRITE frame=756 address=0499 value=00 pc=924B prg=3924B x=10 ptr=91DF ptr_prg=391DF
+PALETTE_WRITE frame=756 address=049A value=01 pc=924B prg=3924B x=10 ptr=91DF ptr_prg=391DF
+PALETTE_WRITE frame=756 address=049B value=02 pc=924B prg=3924B x=10 ptr=91DF ptr_prg=391DF
+PALETTE_WRITE frame=756 address=049D value=07 pc=924B prg=3924B x=10 ptr=91DF ptr_prg=391DF
+PALETTE_WRITE frame=756 address=049E value=07 pc=924B prg=3924B x=10 ptr=91DF ptr_prg=391DF
+PALETTE_WRITE frame=756 address=049F value=06 pc=924B prg=3924B x=10 ptr=91DF ptr_prg=391DF
+PALETTE_WRITE frame=756 address=04A1 value=00 pc=924B prg=3924B x=10 ptr=91DF ptr_prg=391DF
+PALETTE_WRITE frame=756 address=04A2 value=03 pc=924B prg=3924B x=10 ptr=91DF ptr_prg=391DF
+PALETTE_WRITE frame=756 address=04A5 value=00 pc=924B prg=3924B x=10 ptr=91DF ptr_prg=391DF
+PALETTE_WRITE frame=756 address=04A6 value=00 pc=924B prg=3924B x=10 ptr=91DF ptr_prg=391DF
+PALETTE_WRITE frame=756 address=04A7 value=00 pc=924B prg=3924B x=10 ptr=91DF ptr_prg=391DF
+PALETTE_WRITE frame=756 address=04A9 value=00 pc=924B prg=3924B x=10 ptr=91DF ptr_prg=391DF
+PALETTE_WRITE frame=756 address=04AA value=01 pc=924B prg=3924B x=10 ptr=91DF ptr_prg=391DF
+PALETTE_WRITE frame=756 address=04AB value=02 pc=924B prg=3924B x=10 ptr=91DF ptr_prg=391DF
+PALETTE_WRITE frame=756 address=04AD value=07 pc=924B prg=3924B x=10 ptr=91DF ptr_prg=391DF
+PALETTE_WRITE frame=756 address=04AE value=07 pc=924B prg=3924B x=10 ptr=91DF ptr_prg=391DF
+PALETTE_WRITE frame=756 address=04AF value=06 pc=924B prg=3924B x=10 ptr=91DF ptr_prg=391DF
+PALETTE_WRITE frame=764 address=0491 value=10 pc=924B prg=3924B x=10 ptr=91DF ptr_prg=391DF
+PALETTE_WRITE frame=764 address=0492 value=10 pc=924B prg=3924B x=10 ptr=91DF ptr_prg=391DF
+PALETTE_WRITE frame=764 address=0495 value=17 pc=924B prg=3924B x=10 ptr=91DF ptr_prg=391DF
+PALETTE_WRITE frame=764 address=0496 value=1A pc=924B prg=3924B x=10 ptr=91DF ptr_prg=391DF
+PALETTE_WRITE frame=764 address=0497 value=1A pc=924B prg=3924B x=10 ptr=91DF ptr_prg=391DF
+PALETTE_WRITE frame=764 address=0499 value=10 pc=924B prg=3924B x=10 ptr=91DF ptr_prg=391DF
+PALETTE_WRITE frame=764 address=049A value=11 pc=924B prg=3924B x=10 ptr=91DF ptr_prg=391DF
+PALETTE_WRITE frame=764 address=049D value=17 pc=924B prg=3924B x=10 ptr=91DF ptr_prg=391DF
+PALETTE_WRITE frame=764 address=049E value=17 pc=924B prg=3924B x=10 ptr=91DF ptr_prg=391DF
+PALETTE_WRITE frame=764 address=049F value=16 pc=924B prg=3924B x=10 ptr=91DF ptr_prg=391DF
+PALETTE_WRITE frame=764 address=04A1 value=10 pc=924B prg=3924B x=10 ptr=91DF ptr_prg=391DF
+PALETTE_WRITE frame=764 address=04A2 value=13 pc=924B prg=3924B x=10 ptr=91DF ptr_prg=391DF
+PALETTE_WRITE frame=764 address=04A9 value=10 pc=924B prg=3924B x=10 ptr=91DF ptr_prg=391DF
+PALETTE_WRITE frame=764 address=04AA value=11 pc=924B prg=3924B x=10 ptr=91DF ptr_prg=391DF
+PALETTE_WRITE frame=764 address=04AD value=17 pc=924B prg=3924B x=10 ptr=91DF ptr_prg=391DF
+PALETTE_WRITE frame=764 address=04AE value=17 pc=924B prg=3924B x=10 ptr=91DF ptr_prg=391DF
+PALETTE_WRITE frame=764 address=04AF value=16 pc=924B prg=3924B x=10 ptr=91DF ptr_prg=391DF
+PALETTE_WRITE frame=772 address=0491 value=20 pc=924B prg=3924B x=10 ptr=91DF ptr_prg=391DF
+PALETTE_WRITE frame=772 address=0495 value=27 pc=924B prg=3924B x=10 ptr=91DF ptr_prg=391DF
+PALETTE_WRITE frame=772 address=0496 value=2A pc=924B prg=3924B x=10 ptr=91DF ptr_prg=391DF
+PALETTE_WRITE frame=772 address=0499 value=20 pc=924B prg=3924B x=10 ptr=91DF ptr_prg=391DF
+PALETTE_WRITE frame=772 address=049A value=21 pc=924B prg=3924B x=10 ptr=91DF ptr_prg=391DF
+PALETTE_WRITE frame=772 address=049D value=27 pc=924B prg=3924B x=10 ptr=91DF ptr_prg=391DF
+PALETTE_WRITE frame=772 address=049E value=27 pc=924B prg=3924B x=10 ptr=91DF ptr_prg=391DF
+PALETTE_WRITE frame=772 address=04A1 value=20 pc=924B prg=3924B x=10 ptr=91DF ptr_prg=391DF
+PALETTE_WRITE frame=772 address=04A2 value=23 pc=924B prg=3924B x=10 ptr=91DF ptr_prg=391DF
+PALETTE_WRITE frame=772 address=04A9 value=20 pc=924B prg=3924B x=10 ptr=91DF ptr_prg=391DF
+PALETTE_WRITE frame=772 address=04AA value=21 pc=924B prg=3924B x=10 ptr=91DF ptr_prg=391DF
+PALETTE_WRITE frame=772 address=04AD value=27 pc=924B prg=3924B x=10 ptr=91DF ptr_prg=391DF
+PALETTE_WRITE frame=772 address=04AE value=27 pc=924B prg=3924B x=10 ptr=91DF ptr_prg=391DF
+PALETTE_WRITE frame=780 address=0491 value=30 pc=924B prg=3924B x=10 ptr=91DF ptr_prg=391DF
+PALETTE_WRITE frame=780 address=0499 value=30 pc=924B prg=3924B x=10 ptr=91DF ptr_prg=391DF
+PALETTE_WRITE frame=780 address=049D value=37 pc=924B prg=3924B x=10 ptr=91DF ptr_prg=391DF
+PALETTE_WRITE frame=780 address=04A1 value=30 pc=924B prg=3924B x=10 ptr=91DF ptr_prg=391DF
+PALETTE_WRITE frame=780 address=04A9 value=30 pc=924B prg=3924B x=10 ptr=91DF ptr_prg=391DF
+PALETTE_WRITE frame=780 address=04AD value=37 pc=924B prg=3924B x=10 ptr=91DF ptr_prg=391DF
+SNAP frame=800 label=checkpoint pc=F97F prg=FF97F ram=0F 30 10 00 0F 27 2A 1A 0F 30 21 02 0F 37 27 16 0F 30 23 0F 0F 00 00 00 0F 30 21 02 0F 37 27 16 ppu=0F 30 10 00 0F 27 2A 1A 0F 30 21 02 0F 37 27 16 0F 30 23 0F 0F 00 00 00 0F 30 21 02 0F 37 27 16 reads=36 writes=268
+OAM sprite=00 x=7F y=7F tile=02 attr=00 palette=0
+OAM sprite=01 x=87 y=7F tile=02 attr=40 palette=0
+OAM sprite=02 x=7F y=87 tile=02 attr=80 palette=0
+OAM sprite=03 x=87 y=87 tile=02 attr=C0 palette=0
+INPUT frame=850 poll=850 requested_down=false requested_a=false
+SNAP frame=1000 label=checkpoint pc=F97F prg=FF97F ram=0F 30 10 00 0F 27 2A 1A 0F 30 21 02 0F 37 27 16 0F 30 23 0F 0F 00 00 00 0F 30 21 02 0F 37 27 16 ppu=0F 30 10 00 0F 27 2A 1A 0F 30 21 02 0F 37 27 16 0F 30 23 0F 0F 00 00 00 0F 30 21 02 0F 37 27 16 reads=36 writes=268
+SNAP frame=1500 label=checkpoint pc=F97F prg=FF97F ram=0F 30 10 00 0F 27 2A 1A 0F 30 21 02 0F 37 27 16 0F 30 23 0F 0F 00 00 00 0F 30 21 02 0F 37 27 16 ppu=0F 30 10 00 0F 27 2A 1A 0F 30 21 02 0F 37 27 16 0F 30 23 0F 0F 00 00 00 0F 30 21 02 0F 37 27 16 reads=52 writes=268
+RESULT frames=1500 record_reads=52 palette_writes=268 snapshots=5 input_polls=1499

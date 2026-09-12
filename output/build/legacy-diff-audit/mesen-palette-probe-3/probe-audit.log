@@ -1,0 +1,6 @@
+INPUT frame=1 poll=1 requested_a=false requested_start=false
+INPUT frame=2 poll=2 requested_a=false requested_start=false
+INPUT frame=3 poll=3 requested_a=false requested_start=false
+INPUT frame=4 poll=4 requested_a=false requested_start=false
+INPUT frame=690 poll=690 requested_a=true requested_start=false
+INPUT frame=850 poll=850 requested_a=false requested_start=false

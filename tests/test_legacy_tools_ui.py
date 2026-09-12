@@ -144,8 +144,9 @@ class LegacyToolDialogTests(QtTestCase):
         dialog.calculate_button.click()
         self.assertEqual(dialog.results.rowCount(), 2)
         self.assertEqual(dialog.results.item(0, 2).text(), "75%")
-        self.assertEqual(dialog.results.item(0, 3).text(), "60")
-        self.assertEqual(dialog.results.item(0, 4).text(), "40")
+        self.assertEqual(dialog.results.item(0, 3).text(), "0")
+        self.assertEqual(dialog.results.item(0, 4).text(), "60")
+        self.assertEqual(dialog.results.item(0, 5).text(), "40")
         self.assertFalse(dialog.results.horizontalHeader().isHidden())
         dialog.close()
 
@@ -313,10 +314,12 @@ class LegacyToolDialogTests(QtTestCase):
         self.assertEqual(dialog.initial_units[1].currentData(), 0)
         dialog.reject()
 
-    def test_reference_geometry_is_fixed_and_offscreen_screenshots_render(self) -> None:
-        dialogs = (
-            ("converter", TextConverterDialog(), (700, 700)),
-            ("calculator", AttributeCalculatorDialog(), (1257, 998)),
+    def test_tool_geometry_and_offscreen_screenshots_render(self) -> None:
+        flexible_dialogs = (
+            ("converter", TextConverterDialog(), (600, 620)),
+            ("calculator", AttributeCalculatorDialog(), (1120, 780)),
+        )
+        fixed_dialogs = (
             ("save", SaveEditorDialog(), (1175, 834)),
             ("other", OtherSettingsDialog(), (1166, 870)),
         )
@@ -333,7 +336,18 @@ class LegacyToolDialogTests(QtTestCase):
         self.assertFalse(animation_dialog.grab().isNull())
         animation_dialog.reject()
         with tempfile.TemporaryDirectory() as directory:
-            for name, dialog, expected in dialogs:
+            for name, dialog, expected in flexible_dialogs:
+                with self.subTest(dialog=name):
+                    self.assertLess(dialog.minimumWidth(), dialog.maximumWidth())
+                    self.assertLess(dialog.minimumHeight(), dialog.maximumHeight())
+                    self._show(dialog)
+                    self.assertEqual((dialog.width(), dialog.height()), expected)
+                    screenshot = Path(directory) / f"{name}.png"
+                    pixmap = dialog.grab()
+                    self.assertTrue(pixmap.save(str(screenshot), "PNG"))
+                    self.assertGreater(screenshot.stat().st_size, 2000)
+                    dialog.close()
+            for name, dialog, expected in fixed_dialogs:
                 with self.subTest(dialog=name):
                     self.assertEqual(
                         (dialog.minimumWidth(), dialog.minimumHeight()), expected
@@ -356,6 +370,22 @@ class LegacyToolDialogTests(QtTestCase):
                     }
                     self.assertGreater(len(sample_colors), 1)
                     dialog.close()
+
+    def test_calculator_reports_minimum_hit_speed_from_visible_formula(self) -> None:
+        dialog = AttributeCalculatorDialog()
+        dialog.enemy.weapon_hit.setValue(70)
+        dialog.enemy.speed.setValue(20)
+        dialog.ally.speed.setValue(100)
+        hit, minimum_speed, _damage, _remaining = dialog.calculate_attack(
+            dialog.enemy, dialog.ally
+        )
+        self.assertEqual(hit, 0)
+        self.assertEqual(minimum_speed, 31)
+        dialog.calculate()
+        self.assertEqual(dialog.results.columnCount(), 6)
+        self.assertEqual(dialog.results.horizontalHeaderItem(3).text(), "最低命中速度")
+        self.assertEqual(dialog.results.item(0, 3).text(), "31")
+        dialog.close()
 
 
 if __name__ == "__main__":

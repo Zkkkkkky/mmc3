@@ -14,10 +14,11 @@ import shiboken6
 
 from dc_modifier.app import DEFAULT_ROM
 from dc_modifier.database_graphics import (
+    FCEUX_RGB,
     palette_color,
     read_unit_appearance,
     render_chr_banks,
-    render_unit_body_composition,
+    render_unit_battle_preview,
 )
 from dc_modifier.legacy_windows import DatabaseDialog
 from dc_modifier.unit_packages import package_from_project
@@ -40,6 +41,14 @@ class DatabaseFeedbackTests(QtTestCase):
         self.dialog = DatabaseDialog(self.project)
         self.dialog.show()
         self.app.processEvents()
+
+    def test_display_colors_match_the_bundled_fceux_palette_byte_for_byte(self) -> None:
+        palette_path = (
+            Path(__file__).resolve().parents[1]
+            / "tools" / "vendor" / "fceux-2.6.6" / "palettes" / "FCEUX.pal"
+        )
+        self.assertEqual(FCEUX_RGB, palette_path.read_bytes())
+        self.assertEqual(palette_color(0x0F).name().upper(), "#000000")
 
     def tearDown(self) -> None:
         self.dialog.reject()
@@ -80,16 +89,11 @@ class DatabaseFeedbackTests(QtTestCase):
                     self.assertEqual(image.pixel(tile % 8 * 8 + x, tile // 8 * 8 + y), colors[pixels[y * 8 + x]])
         self.assertEqual(before, bytes(self.project.working))
 
-    def test_database_main_picture_is_script_composition_not_raw_chr(self) -> None:
+    def test_database_main_picture_layers_body_and_fragments_like_battle(self) -> None:
         self.dialog._select_unit(11)
         page = self.dialog.unit_page
         appearance = read_unit_appearance(self.project, 11)
-        expected = render_unit_body_composition(
-            self.project,
-            appearance.body_script,
-            appearance.secondary_banks,
-            appearance.first_palette,
-        )
+        expected = render_unit_battle_preview(self.project, appearance)
         actual = page.body_preview.pixmap().toImage()
         self.assertEqual((actual.width(), actual.height()), (256, 256))
         expected_colors = {
@@ -101,10 +105,29 @@ class DatabaseFeedbackTests(QtTestCase):
             for y in range(actual.height()) for x in range(actual.width())
         }
         self.assertEqual(actual_colors, expected_colors)
-        self.assertIn("主体脚本合成结果", page.body_preview.toolTip())
+        self.assertIn("战斗合成预览", page.body_preview.toolTip())
         self.assertIn("大型机", page.appearance_summary.text())
         self.assertFalse(page.raw_body_preview.isVisible())
         self.assertFalse(page.fragment_preview.isVisible())
+
+    def test_database_unit_palette_buttons_apply_visually_and_cancel_rolls_back(self) -> None:
+        self.dialog._select_unit(0x09)
+        page = self.dialog.unit_page
+        before = bytes(self.project.working)
+        old_value = read_unit_appearance(self.project, 0x09).first_palette[0]
+        replacement = (old_value + 1) & 0x3F
+
+        self.assertEqual(len(page.appearance_color_buttons), 6)
+        self.assertEqual(page.appearance_color_buttons[0].value, old_value)
+        self.assertIn("点击展开64色", page.appearance_color_buttons[0].toolTip())
+        page.appearance_color_buttons[0].set_value(replacement)
+        self.assertEqual(
+            read_unit_appearance(self.project, 0x09).first_palette[0], replacement
+        )
+        self.assertFalse(page.body_preview.pixmap().isNull())
+
+        self.dialog.reject()
+        self.assertEqual(bytes(self.project.working), before)
 
     def test_weapon_usage_lists_real_units_and_both_slots_once(self) -> None:
         self.project.set_unit_weapon(2, 0, 1)
@@ -193,6 +216,14 @@ class DatabaseFeedbackTests(QtTestCase):
         self.app.processEvents()
         self.assertLess(self.dialog.ok_button.geometry().bottom(), self.dialog.height())
         self.assertEqual(self.dialog.unit_page.detail_scroll.horizontalScrollBar().maximum(), 0)
+
+    def test_medium_database_width_moves_weapons_below_without_horizontal_scroll(self) -> None:
+        self.dialog.resize(1525, 900)
+        self.app.processEvents()
+        page = self.dialog.unit_page
+        self.assertEqual(page._compact_data_layout, "medium")
+        self.assertEqual(page.detail_scroll.horizontalScrollBar().maximum(), 0)
+        self.assertGreater(page.weapons_group.geometry().top(), page.basic_group.geometry().top())
 
     def test_weapon_usage_jump_keeps_target_when_commit_rebuilds_usage_items(self) -> None:
         self.dialog._select_weapon(1)

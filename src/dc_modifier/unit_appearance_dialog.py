@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from dataclasses import replace
+
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QPixmap
 from PySide6.QtWidgets import (
@@ -12,8 +14,9 @@ from .database_graphics import (
     read_unit_appearance,
     render_chr_banks,
     render_tile_grid,
-    render_unit_body_composition,
+    render_unit_battle_preview,
 )
+from .map_page import NesColorButton
 
 
 def appearance_patch(project, unit_id: int, values: tuple[int, ...]):
@@ -61,7 +64,8 @@ class UnitAppearanceDialog(QDialog):
         hint.setWordWrap(True)
         root.addWidget(hint)
         self.editors: list[QSpinBox] = []
-        self.color_swatches: list[QLabel] = []
+        self.color_swatches: list[NesColorButton] = []
+        self.color_buttons = self.color_swatches
         grid = QGridLayout()
         root.addLayout(grid)
         for group_index, title in enumerate((
@@ -71,14 +75,15 @@ class UnitAppearanceDialog(QDialog):
             group = QGroupBox(title)
             row = QGridLayout(group)
             for color in range(3):
-                swatch = QLabel()
-                swatch.setFixedSize(24, 24)
+                value = self.appearance.configuration[1 + group_index * 3 + color]
+                swatch = NesColorButton(value)
+                swatch.setMinimumWidth(82)
                 self.color_swatches.append(swatch)
                 editor = HexByteSpinBox()
                 editor.setRange(0, 63)
                 editor.setDisplayIntegerBase(16)
                 editor.setPrefix("$")
-                editor.setValue(self.appearance.configuration[1 + group_index * 3 + color])
+                editor.setValue(value)
                 editor.setMinimumWidth(72)
                 editor.setToolTip(
                     f"外观记录 +{1 + group_index * 3 + color}；"
@@ -87,6 +92,8 @@ class UnitAppearanceDialog(QDialog):
                 row.addWidget(swatch, 0, color * 2)
                 row.addWidget(editor, 0, color * 2 + 1)
                 self.editors.append(editor)
+                swatch.value_changed.connect(editor.setValue)
+                editor.valueChanged.connect(swatch.set_value)
             grid.addWidget(group, 0, group_index)
         bank_form = QGridLayout()
         root.addLayout(bank_form)
@@ -107,7 +114,7 @@ class UnitAppearanceDialog(QDialog):
         body_tab = QWidget()
         body_grid = QGridLayout(body_tab)
         body_grid.addWidget(QLabel("主体图库（8×8 原始图块）"), 0, 0)
-        body_grid.addWidget(QLabel("拼图结果（128×128 脚本合成）"), 0, 1)
+        body_grid.addWidget(QLabel("战斗效果（主体＋碎片，128×128）"), 0, 1)
         self.body_library_preview = QLabel()
         self.body_composition_preview = QLabel()
         for preview in (self.body_library_preview, self.body_composition_preview):
@@ -119,7 +126,7 @@ class UnitAppearanceDialog(QDialog):
         body_grid.addWidget(self.body_composition_preview, 1, 1)
         body_grid.setColumnStretch(0, 2)
         body_grid.setColumnStretch(1, 3)
-        preview_tabs.addTab(body_tab, "主体拼图")
+        preview_tabs.addTab(body_tab, "战斗合成")
 
         fragment_tab = QWidget()
         fragment_layout = QVBoxLayout(fragment_tab)
@@ -177,13 +184,7 @@ class UnitAppearanceDialog(QDialog):
     def refresh_preview(self) -> None:
         values = self.values()
         for swatch, value in zip(self.color_swatches, values[:6]):
-            color = palette_color(value)
-            swatch.setStyleSheet(
-                f"background:{color.name()}; border:1px solid #666;"
-            )
-            swatch.setToolTip(
-                f"NES 色号 ${value:02X} · RGB {color.name().upper()}（FCEUX.pal）"
-            )
+            swatch.set_value(value)
         body_banks = tuple(values[7:])
         fragment_bank = values[6] & 0xFE
         body_library = render_chr_banks(
@@ -196,9 +197,11 @@ class UnitAppearanceDialog(QDialog):
             Qt.AspectRatioMode.KeepAspectRatio,
             Qt.TransformationMode.FastTransformation,
         ))
-        body_picture = render_unit_body_composition(
-            self.project, self.appearance.body_script, body_banks, values[:3]
+        preview_appearance = replace(
+            self.appearance,
+            configuration=bytes((self.appearance.configuration[0], *values)),
         )
+        body_picture = render_unit_battle_preview(self.project, preview_appearance)
         self.body_composition_preview.setPixmap(QPixmap.fromImage(
             render_tile_grid(body_picture)
         ).scaled(
@@ -218,7 +221,8 @@ class UnitAppearanceDialog(QDialog):
             "主体图库：" + " / ".join(f"${bank:02X}" for bank in body_banks)
         )
         self.body_composition_preview.setToolTip(
-            f"主体脚本 {len(self.appearance.body_script)} 字节的合成结果"
+            f"主体脚本 {len(self.appearance.body_script)} 字节＋"
+            f"碎片脚本 {len(self.appearance.fragment_script)} 字节的战斗合成结果"
         )
         self.fragment_library_preview.setToolTip(
             f"碎片图库：${fragment_bank:02X} / ${fragment_bank + 1:02X}"
@@ -226,8 +230,7 @@ class UnitAppearanceDialog(QDialog):
         self.status.setText(
             f"当前记录 0x{self.appearance.file_offset:06X}；"
             + ("大型机：两个主体图库。" if len(values) == 9 else "小型机：一个主体图库。")
-            + f" 主体按 {len(self.appearance.body_script)} 字节脚本合成；"
-            + f"碎片脚本 {len(self.appearance.fragment_script)} 字节；"
+            + f" 主体与碎片已按两段实际脚本叠加；"
             + f"碎片图库 ${fragment_bank:02X}/${fragment_bank + 1:02X}。"
         )
 
