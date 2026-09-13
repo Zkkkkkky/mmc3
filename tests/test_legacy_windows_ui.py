@@ -321,6 +321,26 @@ class LegacyWindowTests(QtTestCase):
         self.assertTrue(page.body_layout_button.isEnabled())
         self.assertTrue(page.fragment_layout_button.isEnabled())
         self.assertTrue(page.icon_group.isVisible())
+        self.assertFalse(page.appearance_summary.isVisible())
+        self.assertTrue(page.appearance_type.isVisible())
+        self.assertEqual(len(page.appearance_bank_editors), 3)
+        self.assertTrue(all(editor.isVisible()
+                            for editor in page.appearance_bank_editors[:2]))
+        self.assertEqual(
+            page.appearance_type.height(), page.appearance_bank_editors[0].height()
+        )
+        self.assertRegex(
+            page.appearance_bank_editors[1].currentText(),
+            r"^\[[0-9A-F]{2}\]\d{3}: [0-9A-F]{6}$",
+        )
+        self.assertGreaterEqual(page.icon_group.height(), 55)
+        self.assertFalse(page.icon_bank.isVisible())
+        self.assertFalse(page.icon_index.isVisible())
+        self.assertFalse(page.icon_address.isVisible())
+        self.assertLessEqual(
+            page.icon_group.mapTo(page.graphics_group, page.icon_group.rect().bottomLeft()).y(),
+            page.graphics_group.contentsRect().bottom(),
+        )
         self.assertEqual(
             [page.icon_bank.itemData(index) for index in range(page.icon_bank.count())],
             [0x34, 0x35, 0x36, 0x3A, 0x3C, 0x3E, 0x40, 0x44, 0x46, 0x47, 0x48],
@@ -335,15 +355,22 @@ class LegacyWindowTests(QtTestCase):
         assert icon is not None
         self.assertFalse(icon.isNull())
         self.assertTrue(page.icon_address.text())
-        disabled_actions = {
-            button.text(): button
-            for button in page.findChildren(QPushButton)
-            if button.text() in {"上传机体", "清除机体", "上传碎片", "清除碎片"}
-        }
-        self.assertEqual(len(disabled_actions), 4)
-        self.assertTrue(all(not button.isEnabled() for button in disabled_actions.values()))
-        self.assertTrue(all(not button.isEnabled()
-                            for button in page.unsupported_graphics_buttons))
+        button_texts = {button.text() for button in page.findChildren(QPushButton)}
+        self.assertNotIn("调整配色与图库…", button_texts)
+        self.assertNotIn("原始图库、脚本与技术详情", button_texts)
+        self.assertNotIn("名称引用与原始记录", button_texts)
+        self.assertIn("更改图标", button_texts)
+        self.assertIn("上传图标", button_texts)
+        self.assertEqual(page.icon_group.width(), 310)
+        self.assertEqual(page.icon_preview.width(), 48)
+        self.assertEqual(page.icon_preview.height(), 48)
+        self.assertEqual(page.edit_icon_button.width(), 92)
+        self.assertEqual(page.edit_icon_button.height(), 28)
+        self.assertGreater(
+            page.bind_icon_button.geometry().top(),
+            page.edit_icon_button.geometry().top(),
+        )
+        self.assertEqual(page.unsupported_graphics_buttons, [])
         page._arrange_data_groups()
         positions = {
             group: page.data_grid.getItemPosition(page.data_grid.indexOf(group))

@@ -148,15 +148,17 @@ class LegacyMapUiTests(QtTestCase):
         self.assertEqual(self.page.canvas.right_selected_tile, 7)
         self.assertEqual(self.page.terrain.currentData(), 3)
         self.assertEqual(self.page.right_terrain.currentData(), 7)
-        self.assertEqual(self.page.left_brush_preview.pixmap().size().width(), 56)
-        self.assertEqual(self.page.right_brush_preview.pixmap().size().height(), 56)
+        self.assertEqual(self.page.left_brush_preview.size(), QSize(40, 40))
+        self.assertEqual(self.page.right_brush_preview.size(), QSize(40, 40))
+        self.assertEqual(self.page.left_brush_preview.pixmap().size().width(), 32)
+        self.assertEqual(self.page.right_brush_preview.pixmap().size().height(), 32)
         for preview, tile in (
             (self.page.left_brush_preview, 3),
             (self.page.right_brush_preview, 7),
         ):
             expected = self.page.canvas.tile_images[tile].scaled(
-                56,
-                56,
+                32,
+                32,
                 Qt.AspectRatioMode.KeepAspectRatio,
                 Qt.TransformationMode.FastTransformation,
             )

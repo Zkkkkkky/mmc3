@@ -76,6 +76,7 @@ from fc_editor.expansion_unit import (
     ATTRIBUTE_TABLE,
     CONFIGURATION_CAVE_END,
     CONFIGURATION_CAVE_START,
+    CONFIGURATION_TABLE,
     CORE_CAVE_END,
     CORE_CAVE_START,
     NAME_TABLE,
@@ -1632,6 +1633,90 @@ class RomProject:
                 self._refresh_dynamic_codecs()
             raise
         self._finish_mutation(before, f"机体 ${unit_id:02X} · 拼图脚本")
+
+    def set_unit_appearance_configuration(
+        self,
+        unit_id: int,
+        configuration: bytes,
+    ) -> None:
+        """Write a battle-appearance record without damaging its neighbour.
+
+        Stock small-unit records expose nine bytes.  When their type changes
+        to large, relocate the shared record into the verified Bank $04/$05
+        cave and redirect every alias before writing the tenth byte.
+        Expanded records are already fixed-width and update in place.
+        """
+
+        if not 1 <= unit_id < self.unit_count:
+            raise IndexError("请选择有效机体。")
+        value = bytes(configuration)
+        if len(value) != 10:
+            raise ValueError("战斗外观记录必须是10字节。")
+        if value[0] not in (0x00, 0x40, 0x80, 0xC0):
+            raise ValueError("机体类型必须是我方/敌方的小型机或大型机。")
+        if any(color > 0x3F for color in value[1:7]):
+            raise ValueError("配色索引必须在 $00—$3F 之间。")
+        bank_count = self.chr_tile_count // 64
+        bank_values = value[7:10] if value[0] & 0x80 else value[7:9]
+        if any(bank >= bank_count for bank in bank_values):
+            raise ValueError("图片地址超出活动 CHR。")
+
+        plan = self.expansion_plan
+        expanded = plan is not None and bool(plan.flags & FLAG_UNITS)
+        pair = plan.unit_banks[2] if expanded else SOURCE_CONFIGURATION_PAIR
+        pair_offset = bank_file_offset(pair)
+        pointer_table_offset = pair_offset + CONFIGURATION_TABLE - 0x8000
+        pointer_offset = pointer_table_offset + unit_id * 2
+        pointer = int.from_bytes(
+            self.working[pointer_offset:pointer_offset + 2], "little"
+        )
+        record_offset = pair_offset + pointer - 0x8000
+        old_type = self.working[record_offset]
+        old_size = 10 if old_type & 0x80 else 9
+        new_size = 10 if value[0] & 0x80 else 9
+
+        with self.transaction(f"机体 ${unit_id:02X} · 类型与图片地址"):
+            if expanded or new_size <= old_size:
+                self.working[record_offset:record_offset + new_size] = value[:new_size]
+                return
+
+            # A stock 9-byte record has no writable tenth byte.  Find a clean,
+            # unclaimed 10-byte slot in the verified configuration cave.
+            pointers = tuple(
+                int.from_bytes(
+                    self.working[pointer_table_offset + index * 2:
+                                 pointer_table_offset + index * 2 + 2],
+                    "little",
+                )
+                for index in range(0x100)
+            )
+            occupied = {
+                position
+                for current in pointers[1:]
+                if CONFIGURATION_CAVE_START <= current <= CONFIGURATION_CAVE_END - 10
+                for position in range(current, current + 10)
+            }
+            relocated = None
+            for candidate in range(
+                CONFIGURATION_CAVE_START, CONFIGURATION_CAVE_END - 9
+            ):
+                candidate_offset = pair_offset + candidate - 0x8000
+                if (not any(position in occupied
+                            for position in range(candidate, candidate + 10))
+                        and not any(self.working[
+                            candidate_offset:candidate_offset + 10
+                        ])):
+                    relocated = candidate
+                    break
+            if relocated is None:
+                raise ValueError("战斗外观扩展区没有可用的10字节空间。")
+            relocated_offset = pair_offset + relocated - 0x8000
+            self.working[relocated_offset:relocated_offset + 10] = value
+            encoded_pointer = relocated.to_bytes(2, "little")
+            for index, current in enumerate(pointers):
+                if index and current == pointer:
+                    start = pointer_table_offset + index * 2
+                    self.working[start:start + 2] = encoded_pointer
 
     def set_chr_range(self, first_tile: int, payload: bytes) -> int:
         if not payload or len(payload) % 16:
