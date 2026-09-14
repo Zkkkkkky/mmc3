@@ -1,0 +1,32 @@
+{
+  "tag": "CLEAN__iext3_CTi",
+  "hwnd": 12783896,
+  "title": "_iext3_CTipWnd",
+  "class": "Afx:400000:0:10003:0:0",
+  "rect": {
+    "left": 0,
+    "top": 0,
+    "right": 0,
+    "bottom": 0,
+    "width": 0,
+    "height": 0
+  },
+  "pid": 41916,
+  "tree": {
+    "hwnd": 12783896,
+    "class": "Afx:400000:0:10003:0:0",
+    "text": "_iext3_CTipWnd",
+    "ctrl_id": 0,
+    "rect": {
+      "left": 0,
+      "top": 0,
+      "right": 0,
+      "bottom": 0,
+      "width": 0,
+      "height": 0
+    },
+    "visible": false,
+    "enabled": true,
+    "children": []
+  }
+}

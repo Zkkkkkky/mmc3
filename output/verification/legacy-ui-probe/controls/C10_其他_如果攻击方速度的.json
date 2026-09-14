@@ -1,0 +1,1677 @@
+{
+  "tag": "C10_其他_如果攻击方速度的",
+  "hwnd": 4986268,
+  "title": "其他",
+  "class": "WTWindow",
+  "rect": {
+    "left": 1335,
+    "top": 648,
+    "right": 2501,
+    "bottom": 1518,
+    "width": 1166,
+    "height": 870
+  },
+  "pid": 33688,
+  "tree": {
+    "hwnd": 4986268,
+    "class": "WTWindow",
+    "text": "其他",
+    "ctrl_id": 0,
+    "rect": {
+      "left": 1335,
+      "top": 648,
+      "right": 2501,
+      "bottom": 1518,
+      "width": 1166,
+      "height": 870
+    },
+    "visible": true,
+    "enabled": true,
+    "children": [
+      {
+        "hwnd": 268530,
+        "class": "Button",
+        "text": "命中计算公式",
+        "ctrl_id": 810,
+        "rect": {
+          "left": 1350,
+          "top": 971,
+          "right": 1950,
+          "bottom": 1079,
+          "width": 600,
+          "height": 108
+        },
+        "visible": true,
+        "enabled": true,
+        "children": [
+          {
+            "hwnd": 3018874,
+            "class": "Afx:400000:b:10003:900015:0",
+            "text": "命中临界值：",
+            "ctrl_id": 840,
+            "rect": {
+              "left": 1374,
+              "top": 1019,
+              "right": 1518,
+              "bottom": 1043,
+              "width": 144,
+              "height": 24
+            },
+            "visible": true,
+            "enabled": true,
+            "children": []
+          },
+          {
+            "hwnd": 203190,
+            "class": "msctls_updown32",
+            "text": "",
+            "ctrl_id": 834,
+            "rect": {
+              "left": 1578,
+              "top": 1014,
+              "right": 1605,
+              "bottom": 1050,
+              "width": 27,
+              "height": 36
+            },
+            "visible": true,
+            "enabled": true,
+            "children": []
+          },
+          {
+            "hwnd": 5640100,
+            "class": "Edit",
+            "text": "70",
+            "ctrl_id": 830,
+            "rect": {
+              "left": 1518,
+              "top": 1014,
+              "right": 1578,
+              "bottom": 1050,
+              "width": 60,
+              "height": 36
+            },
+            "visible": true,
+            "enabled": true,
+            "children": []
+          },
+          {
+            "hwnd": 2364334,
+            "class": "Afx:400000:b:10003:900015:0",
+            "text": "",
+            "ctrl_id": 820,
+            "rect": {
+              "left": 1362,
+              "top": 989,
+              "right": 1938,
+              "bottom": 1042,
+              "width": 576,
+              "height": 53
+            },
+            "visible": false,
+            "enabled": true,
+            "children": []
+          }
+        ]
+      },
+      {
+        "hwnd": 10619898,
+        "class": "Button",
+        "text": "伤害计算公式",
+        "ctrl_id": 740,
+        "rect": {
+          "left": 1350,
+          "top": 839,
+          "right": 2490,
+          "bottom": 959,
+          "width": 1140,
+          "height": 120
+        },
+        "visible": true,
+        "enabled": true,
+        "children": [
+          {
+            "hwnd": 1316846,
+            "class": "msctls_updown32",
+            "text": "",
+            "ctrl_id": 804,
+            "rect": {
+              "left": 2262,
+              "top": 887,
+              "right": 2289,
+              "bottom": 923,
+              "width": 27,
+              "height": 36
+            },
+            "visible": true,
+            "enabled": true,
+            "children": []
+          },
+          {
+            "hwnd": 3675240,
+            "class": "Edit",
+            "text": "1",
+            "ctrl_id": 800,
+            "rect": {
+              "left": 2202,
+              "top": 887,
+              "right": 2262,
+              "bottom": 923,
+              "width": 60,
+              "height": 36
+            },
+            "visible": true,
+            "enabled": true,
+            "children": []
+          },
+          {
+            "hwnd": 6689082,
+            "class": "Afx:400000:b:10003:900015:0",
+            "text": "/",
+            "ctrl_id": 790,
+            "rect": {
+              "left": 2171,
+              "top": 899,
+              "right": 2195,
+              "bottom": 923,
+              "width": 24,
+              "height": 24
+            },
+            "visible": true,
+            "enabled": true,
+            "children": []
+          },
+          {
+            "hwnd": 3346524,
+            "class": "Afx:400000:b:10003:900015:0",
+            "text": "- 防御×",
+            "ctrl_id": 780,
+            "rect": {
+              "left": 1950,
+              "top": 891,
+              "right": 2070,
+              "bottom": 927,
+              "width": 120,
+              "height": 36
+            },
+            "visible": true,
+            "enabled": true,
+            "children": []
+          },
+          {
+            "hwnd": 2821836,
+            "class": "msctls_updown32",
+            "text": "",
+            "ctrl_id": 774,
+            "rect": {
+              "left": 1914,
+              "top": 887,
+              "right": 1941,
+              "bottom": 923,
+              "width": 27,
+              "height": 36
+            },
+            "visible": true,
+            "enabled": true,
+            "children": []
+          },
+          {
+            "hwnd": 1317480,
+            "class": "Edit",
+            "text": "3",
+            "ctrl_id": 770,
+            "rect": {
+              "left": 1854,
+              "top": 887,
+              "right": 1914,
+              "bottom": 923,
+              "width": 60,
+              "height": 36
+            },
+            "visible": true,
+            "enabled": true,
+            "children": []
+          },
+          {
+            "hwnd": 2166976,
+            "class": "Afx:400000:b:10003:900015:0",
+            "text": "武器火力×",
+            "ctrl_id": 760,
+            "rect": {
+              "left": 1710,
+              "top": 899,
+              "right": 1854,
+              "bottom": 923,
+              "width": 144,
+              "height": 24
+            },
+            "visible": true,
+            "enabled": true,
+            "children": []
+          },
+          {
+            "hwnd": 2300132,
+            "class": "Afx:400000:b:10003:900015:0",
+            "text": "+",
+            "ctrl_id": 750,
+            "rect": {
+              "left": 1686,
+              "top": 894,
+              "right": 1722,
+              "bottom": 930,
+              "width": 36,
+              "height": 36
+            },
+            "visible": true,
+            "enabled": true,
+            "children": []
+          },
+          {
+            "hwnd": 1317210,
+            "class": "msctls_updown32",
+            "text": "",
+            "ctrl_id": 734,
+            "rect": {
+              "left": 2130,
+              "top": 887,
+              "right": 2157,
+              "bottom": 923,
+              "width": 27,
+              "height": 36
+            },
+            "visible": true,
+            "enabled": true,
+            "children": []
+          },
+          {
+            "hwnd": 3673022,
+            "class": "Edit",
+            "text": "1",
+            "ctrl_id": 730,
+            "rect": {
+              "left": 2070,
+              "top": 887,
+              "right": 2130,
+              "bottom": 923,
+              "width": 60,
+              "height": 36
+            },
+            "visible": true,
+            "enabled": true,
+            "children": []
+          },
+          {
+            "hwnd": 989806,
+            "class": "msctls_updown32",
+            "text": "",
+            "ctrl_id": 724,
+            "rect": {
+              "left": 1650,
+              "top": 887,
+              "right": 1677,
+              "bottom": 923,
+              "width": 27,
+              "height": 36
+            },
+            "visible": true,
+            "enabled": true,
+            "children": []
+          },
+          {
+            "hwnd": 2365672,
+            "class": "Edit",
+            "text": "10",
+            "ctrl_id": 720,
+            "rect": {
+              "left": 1590,
+              "top": 887,
+              "right": 1650,
+              "bottom": 923,
+              "width": 60,
+              "height": 36
+            },
+            "visible": true,
+            "enabled": true,
+            "children": []
+          },
+          {
+            "hwnd": 3872970,
+            "class": "Afx:400000:b:10003:900015:0",
+            "text": "/",
+            "ctrl_id": 710,
+            "rect": {
+              "left": 1559,
+              "top": 899,
+              "right": 1583,
+              "bottom": 923,
+              "width": 24,
+              "height": 24
+            },
+            "visible": true,
+            "enabled": true,
+            "children": []
+          },
+          {
+            "hwnd": 47977436,
+            "class": "Afx:400000:b:10003:900015:0",
+            "text": "强度×",
+            "ctrl_id": 700,
+            "rect": {
+              "left": 1362,
+              "top": 899,
+              "right": 1446,
+              "bottom": 923,
+              "width": 84,
+              "height": 24
+            },
+            "visible": true,
+            "enabled": true,
+            "children": []
+          },
+          {
+            "hwnd": 4918430,
+            "class": "msctls_updown32",
+            "text": "",
+            "ctrl_id": 694,
+            "rect": {
+              "left": 1518,
+              "top": 887,
+              "right": 1545,
+              "bottom": 923,
+              "width": 27,
+              "height": 36
+            },
+            "visible": true,
+            "enabled": true,
+            "children": []
+          },
+          {
+            "hwnd": 7278744,
+            "class": "Edit",
+            "text": "13",
+            "ctrl_id": 690,
+            "rect": {
+              "left": 1458,
+              "top": 887,
+              "right": 1518,
+              "bottom": 923,
+              "width": 60,
+              "height": 36
+            },
+            "visible": true,
+            "enabled": true,
+            "children": []
+          }
+        ]
+      },
+      {
+        "hwnd": 2561640,
+        "class": "Button",
+        "text": "初始机体",
+        "ctrl_id": 370,
+        "rect": {
+          "left": 1962,
+          "top": 971,
+          "right": 2490,
+          "bottom": 1451,
+          "width": 528,
+          "height": 480
+        },
+        "visible": true,
+        "enabled": true,
+        "children": [
+          {
+            "hwnd": 1513974,
+            "class": "Afx:400000:b:10003:900015:0",
+            "text": "机体6：",
+            "ctrl_id": 610,
+            "rect": {
+              "left": 2238,
+              "top": 1367,
+              "right": 2334,
+              "bottom": 1391,
+              "width": 96,
+              "height": 24
+            },
+            "visible": true,
+            "enabled": true,
+            "children": []
+          },
+          {
+            "hwnd": 1709292,
+            "class": "ComboBox",
+            "text": "034：ASH救世主",
+            "ctrl_id": 600,
+            "rect": {
+              "left": 2238,
+              "top": 1391,
+              "right": 2478,
+              "bottom": 1427,
+              "width": 240,
+              "height": 36
+            },
+            "visible": true,
+            "enabled": true,
+            "combo_count": 251,
+            "combo_selected": 33,
+            "children": []
+          },
+          {
+            "hwnd": 2233946,
+            "class": "Afx:400000:b:10003:900015:0",
+            "text": "机体5：",
+            "ctrl_id": 590,
+            "rect": {
+              "left": 2238,
+              "top": 1295,
+              "right": 2334,
+              "bottom": 1319,
+              "width": 96,
+              "height": 24
+            },
+            "visible": true,
+            "enabled": true,
+            "children": []
+          },
+          {
+            "hwnd": 97784272,
+            "class": "ComboBox",
+            "text": "009：空中霸王闪电装",
+            "ctrl_id": 580,
+            "rect": {
+              "left": 2238,
+              "top": 1319,
+              "right": 2478,
+              "bottom": 1355,
+              "width": 240,
+              "height": 36
+            },
+            "visible": true,
+            "enabled": true,
+            "combo_count": 251,
+            "combo_selected": 8,
+            "children": []
+          },
+          {
+            "hwnd": 1382948,
+            "class": "Afx:400000:b:10003:900015:0",
+            "text": "机体4：",
+            "ctrl_id": 570,
+            "rect": {
+              "left": 2238,
+              "top": 1223,
+              "right": 2334,
+              "bottom": 1247,
+              "width": 96,
+              "height": 24
+            },
+            "visible": true,
+            "enabled": true,
+            "children": []
+          },
+          {
+            "hwnd": 1448400,
+            "class": "ComboBox",
+            "text": "054：正义高达",
+            "ctrl_id": 560,
+            "rect": {
+              "left": 2238,
+              "top": 1247,
+              "right": 2478,
+              "bottom": 1283,
+              "width": 240,
+              "height": 36
+            },
+            "visible": true,
+            "enabled": true,
+            "combo_count": 251,
+            "combo_selected": 53,
+            "children": []
+          },
+          {
+            "hwnd": 2496820,
+            "class": "Afx:400000:b:10003:900015:0",
+            "text": "机体3：",
+            "ctrl_id": 550,
+            "rect": {
+              "left": 2238,
+              "top": 1151,
+              "right": 2334,
+              "bottom": 1175,
+              "width": 96,
+              "height": 24
+            },
+            "visible": true,
+            "enabled": true,
+            "children": []
+          },
+          {
+            "hwnd": 1578146,
+            "class": "ComboBox",
+            "text": "076：强袭IWSP",
+            "ctrl_id": 540,
+            "rect": {
+              "left": 2238,
+              "top": 1175,
+              "right": 2478,
+              "bottom": 1211,
+              "width": 240,
+              "height": 36
+            },
+            "visible": true,
+            "enabled": true,
+            "combo_count": 251,
+            "combo_selected": 75,
+            "children": []
+          },
+          {
+            "hwnd": 1513604,
+            "class": "Afx:400000:b:10003:900015:0",
+            "text": "机体2：",
+            "ctrl_id": 530,
+            "rect": {
+              "left": 2238,
+              "top": 1079,
+              "right": 2334,
+              "bottom": 1103,
+              "width": 96,
+              "height": 24
+            },
+            "visible": true,
+            "enabled": true,
+            "children": []
+          },
+          {
+            "hwnd": 1709270,
+            "class": "ComboBox",
+            "text": "062：盖亚高达",
+            "ctrl_id": 520,
+            "rect": {
+              "left": 2238,
+              "top": 1103,
+              "right": 2478,
+              "bottom": 1139,
+              "width": 240,
+              "height": 36
+            },
+            "visible": true,
+            "enabled": true,
+            "combo_count": 251,
+            "combo_selected": 61,
+            "children": []
+          },
+          {
+            "hwnd": 1643804,
+            "class": "Afx:400000:b:10003:900015:0",
+            "text": "机体1：",
+            "ctrl_id": 510,
+            "rect": {
+              "left": 2238,
+              "top": 1007,
+              "right": 2334,
+              "bottom": 1031,
+              "width": 96,
+              "height": 24
+            },
+            "visible": true,
+            "enabled": true,
+            "children": []
+          },
+          {
+            "hwnd": 5705594,
+            "class": "ComboBox",
+            "text": "025：永恒号",
+            "ctrl_id": 500,
+            "rect": {
+              "left": 2238,
+              "top": 1031,
+              "right": 2478,
+              "bottom": 1067,
+              "width": 240,
+              "height": 36
+            },
+            "visible": true,
+            "enabled": true,
+            "combo_count": 251,
+            "combo_selected": 24,
+            "children": []
+          },
+          {
+            "hwnd": 1710352,
+            "class": "Afx:400000:b:10003:900015:0",
+            "text": "人物6：",
+            "ctrl_id": 490,
+            "rect": {
+              "left": 1974,
+              "top": 1367,
+              "right": 2070,
+              "bottom": 1391,
+              "width": 96,
+              "height": 24
+            },
+            "visible": true,
+            "enabled": true,
+            "children": []
+          },
+          {
+            "hwnd": 3213426,
+            "class": "ComboBox",
+            "text": "012：蕾蒙",
+            "ctrl_id": 480,
+            "rect": {
+              "left": 1974,
+              "top": 1391,
+              "right": 2214,
+              "bottom": 1427,
+              "width": 240,
+              "height": 36
+            },
+            "visible": true,
+            "enabled": true,
+            "combo_count": 200,
+            "combo_selected": 11,
+            "children": []
+          },
+          {
+            "hwnd": 8723058,
+            "class": "Afx:400000:b:10003:900015:0",
+            "text": "人物5：",
+            "ctrl_id": 470,
+            "rect": {
+              "left": 1974,
+              "top": 1295,
+              "right": 2070,
+              "bottom": 1319,
+              "width": 96,
+              "height": 24
+            },
+            "visible": true,
+            "enabled": true,
+            "children": []
+          },
+          {
+            "hwnd": 15668668,
+            "class": "ComboBox",
+            "text": "015：穆",
+            "ctrl_id": 460,
+            "rect": {
+              "left": 1974,
+              "top": 1319,
+              "right": 2214,
+              "bottom": 1355,
+              "width": 240,
+              "height": 36
+            },
+            "visible": true,
+            "enabled": true,
+            "combo_count": 200,
+            "combo_selected": 14,
+            "children": []
+          },
+          {
+            "hwnd": 1381560,
+            "class": "Afx:400000:b:10003:900015:0",
+            "text": "人物4：",
+            "ctrl_id": 450,
+            "rect": {
+              "left": 1974,
+              "top": 1223,
+              "right": 2070,
+              "bottom": 1247,
+              "width": 96,
+              "height": 24
+            },
+            "visible": true,
+            "enabled": true,
+            "children": []
+          },
+          {
+            "hwnd": 1903216,
+            "class": "ComboBox",
+            "text": "005：阿斯兰",
+            "ctrl_id": 440,
+            "rect": {
+              "left": 1974,
+              "top": 1247,
+              "right": 2214,
+              "bottom": 1283,
+              "width": 240,
+              "height": 36
+            },
+            "visible": true,
+            "enabled": true,
+            "combo_count": 200,
+            "combo_selected": 4,
+            "children": []
+          },
+          {
+            "hwnd": 1186102,
+            "class": "Afx:400000:b:10003:900015:0",
+            "text": "人物3：",
+            "ctrl_id": 430,
+            "rect": {
+              "left": 1974,
+              "top": 1151,
+              "right": 2070,
+              "bottom": 1175,
+              "width": 96,
+              "height": 24
+            },
+            "visible": true,
+            "enabled": true,
+            "children": []
+          },
+          {
+            "hwnd": 21761160,
+            "class": "ComboBox",
+            "text": "008：基拉",
+            "ctrl_id": 420,
+            "rect": {
+              "left": 1974,
+              "top": 1175,
+              "right": 2214,
+              "bottom": 1211,
+              "width": 240,
+              "height": 36
+            },
+            "visible": true,
+            "enabled": true,
+            "combo_count": 200,
+            "combo_selected": 7,
+            "children": []
+          },
+          {
+            "hwnd": 1579248,
+            "class": "Afx:400000:b:10003:900015:0",
+            "text": "人物2：",
+            "ctrl_id": 410,
+            "rect": {
+              "left": 1974,
+              "top": 1079,
+              "right": 2070,
+              "bottom": 1103,
+              "width": 96,
+              "height": 24
+            },
+            "visible": true,
+            "enabled": true,
+            "children": []
+          },
+          {
+            "hwnd": 1905882,
+            "class": "ComboBox",
+            "text": "009：卡嘉莉",
+            "ctrl_id": 400,
+            "rect": {
+              "left": 1974,
+              "top": 1103,
+              "right": 2214,
+              "bottom": 1139,
+              "width": 240,
+              "height": 36
+            },
+            "visible": true,
+            "enabled": true,
+            "combo_count": 200,
+            "combo_selected": 8,
+            "children": []
+          },
+          {
+            "hwnd": 9049784,
+            "class": "Afx:400000:b:10003:900015:0",
+            "text": "人物1：",
+            "ctrl_id": 390,
+            "rect": {
+              "left": 1974,
+              "top": 1007,
+              "right": 2070,
+              "bottom": 1031,
+              "width": 96,
+              "height": 24
+            },
+            "visible": true,
+            "enabled": true,
+            "children": []
+          },
+          {
+            "hwnd": 1579162,
+            "class": "ComboBox",
+            "text": "013：玛琉",
+            "ctrl_id": 380,
+            "rect": {
+              "left": 1974,
+              "top": 1031,
+              "right": 2214,
+              "bottom": 1067,
+              "width": 240,
+              "height": 36
+            },
+            "visible": true,
+            "enabled": true,
+            "combo_count": 200,
+            "combo_selected": 12,
+            "children": []
+          }
+        ]
+      },
+      {
+        "hwnd": 1382734,
+        "class": "Button",
+        "text": "取消",
+        "ctrl_id": 330,
+        "rect": {
+          "left": 2370,
+          "top": 1463,
+          "right": 2490,
+          "bottom": 1499,
+          "width": 120,
+          "height": 36
+        },
+        "visible": true,
+        "enabled": true,
+        "children": []
+      },
+      {
+        "hwnd": 3608696,
+        "class": "Button",
+        "text": "确定",
+        "ctrl_id": 320,
+        "rect": {
+          "left": 2238,
+          "top": 1463,
+          "right": 2358,
+          "bottom": 1499,
+          "width": 120,
+          "height": 36
+        },
+        "visible": true,
+        "enabled": true,
+        "children": []
+      },
+      {
+        "hwnd": 1448402,
+        "class": "Button",
+        "text": "道具相关修改",
+        "ctrl_id": 130,
+        "rect": {
+          "left": 1350,
+          "top": 1091,
+          "right": 1950,
+          "bottom": 1451,
+          "width": 600,
+          "height": 360
+        },
+        "visible": true,
+        "enabled": true,
+        "children": [
+          {
+            "hwnd": 989808,
+            "class": "msctls_updown32",
+            "text": "",
+            "ctrl_id": 364,
+            "rect": {
+              "left": 1710,
+              "top": 1151,
+              "right": 1737,
+              "bottom": 1187,
+              "width": 27,
+              "height": 36
+            },
+            "visible": true,
+            "enabled": true,
+            "children": []
+          },
+          {
+            "hwnd": 7211604,
+            "class": "Edit",
+            "text": "1",
+            "ctrl_id": 360,
+            "rect": {
+              "left": 1566,
+              "top": 1151,
+              "right": 1710,
+              "bottom": 1187,
+              "width": 144,
+              "height": 36
+            },
+            "visible": true,
+            "enabled": true,
+            "children": []
+          },
+          {
+            "hwnd": 1512676,
+            "class": "msctls_updown32",
+            "text": "",
+            "ctrl_id": 354,
+            "rect": {
+              "left": 1506,
+              "top": 1151,
+              "right": 1533,
+              "bottom": 1187,
+              "width": 27,
+              "height": 36
+            },
+            "visible": true,
+            "enabled": true,
+            "children": []
+          },
+          {
+            "hwnd": 7213484,
+            "class": "Edit",
+            "text": "1",
+            "ctrl_id": 350,
+            "rect": {
+              "left": 1362,
+              "top": 1151,
+              "right": 1506,
+              "bottom": 1187,
+              "width": 144,
+              "height": 36
+            },
+            "visible": true,
+            "enabled": true,
+            "children": []
+          },
+          {
+            "hwnd": 1771406,
+            "class": "msctls_updown32",
+            "text": "",
+            "ctrl_id": 314,
+            "rect": {
+              "left": 1710,
+              "top": 1367,
+              "right": 1737,
+              "bottom": 1403,
+              "width": 27,
+              "height": 36
+            },
+            "visible": true,
+            "enabled": true,
+            "children": []
+          },
+          {
+            "hwnd": 3148054,
+            "class": "Edit",
+            "text": "100",
+            "ctrl_id": 310,
+            "rect": {
+              "left": 1566,
+              "top": 1367,
+              "right": 1710,
+              "bottom": 1403,
+              "width": 144,
+              "height": 36
+            },
+            "visible": true,
+            "enabled": true,
+            "children": []
+          },
+          {
+            "hwnd": 2429334,
+            "class": "Afx:400000:b:10003:900015:0",
+            "text": "医治恢复精神量：",
+            "ctrl_id": 300,
+            "rect": {
+              "left": 1566,
+              "top": 1343,
+              "right": 1734,
+              "bottom": 1367,
+              "width": 168,
+              "height": 24
+            },
+            "visible": true,
+            "enabled": true,
+            "children": []
+          },
+          {
+            "hwnd": 9048962,
+            "class": "Afx:400000:b:10003:900015:0",
+            "text": "正义恢复精神量：",
+            "ctrl_id": 290,
+            "rect": {
+              "left": 1362,
+              "top": 1343,
+              "right": 1530,
+              "bottom": 1367,
+              "width": 168,
+              "height": 24
+            },
+            "visible": true,
+            "enabled": true,
+            "children": []
+          },
+          {
+            "hwnd": 4789262,
+            "class": "msctls_updown32",
+            "text": "",
+            "ctrl_id": 284,
+            "rect": {
+              "left": 1506,
+              "top": 1367,
+              "right": 1533,
+              "bottom": 1403,
+              "width": 27,
+              "height": 36
+            },
+            "visible": true,
+            "enabled": true,
+            "children": []
+          },
+          {
+            "hwnd": 1186290,
+            "class": "Edit",
+            "text": "20",
+            "ctrl_id": 280,
+            "rect": {
+              "left": 1362,
+              "top": 1367,
+              "right": 1506,
+              "bottom": 1403,
+              "width": 144,
+              "height": 36
+            },
+            "visible": true,
+            "enabled": true,
+            "children": []
+          },
+          {
+            "hwnd": 1120734,
+            "class": "Afx:400000:b:10003:900015:0",
+            "text": "电子盾血量增加：",
+            "ctrl_id": 270,
+            "rect": {
+              "left": 1770,
+              "top": 1271,
+              "right": 1938,
+              "bottom": 1295,
+              "width": 168,
+              "height": 24
+            },
+            "visible": true,
+            "enabled": true,
+            "children": []
+          },
+          {
+            "hwnd": 2627292,
+            "class": "msctls_updown32",
+            "text": "",
+            "ctrl_id": 264,
+            "rect": {
+              "left": 1914,
+              "top": 1295,
+              "right": 1941,
+              "bottom": 1331,
+              "width": 27,
+              "height": 36
+            },
+            "visible": true,
+            "enabled": true,
+            "children": []
+          },
+          {
+            "hwnd": 1775766,
+            "class": "Edit",
+            "text": "10",
+            "ctrl_id": 260,
+            "rect": {
+              "left": 1770,
+              "top": 1295,
+              "right": 1914,
+              "bottom": 1331,
+              "width": 144,
+              "height": 36
+            },
+            "visible": true,
+            "enabled": true,
+            "children": []
+          },
+          {
+            "hwnd": 1186250,
+            "class": "msctls_updown32",
+            "text": "",
+            "ctrl_id": 254,
+            "rect": {
+              "left": 1710,
+              "top": 1295,
+              "right": 1737,
+              "bottom": 1331,
+              "width": 27,
+              "height": 36
+            },
+            "visible": true,
+            "enabled": true,
+            "children": []
+          },
+          {
+            "hwnd": 1972708,
+            "class": "Edit",
+            "text": "3",
+            "ctrl_id": 250,
+            "rect": {
+              "left": 1566,
+              "top": 1295,
+              "right": 1710,
+              "bottom": 1331,
+              "width": 144,
+              "height": 36
+            },
+            "visible": true,
+            "enabled": true,
+            "children": []
+          },
+          {
+            "hwnd": 2953994,
+            "class": "Afx:400000:b:10003:900015:0",
+            "text": "M合金速度增加：",
+            "ctrl_id": 240,
+            "rect": {
+              "left": 1566,
+              "top": 1271,
+              "right": 1734,
+              "bottom": 1295,
+              "width": 168,
+              "height": 24
+            },
+            "visible": true,
+            "enabled": true,
+            "children": []
+          },
+          {
+            "hwnd": 1251656,
+            "class": "Afx:400000:b:10003:900015:0",
+            "text": "传感器2强度增加：",
+            "ctrl_id": 230,
+            "rect": {
+              "left": 1362,
+              "top": 1271,
+              "right": 1530,
+              "bottom": 1295,
+              "width": 168,
+              "height": 24
+            },
+            "visible": true,
+            "enabled": true,
+            "children": []
+          },
+          {
+            "hwnd": 2232386,
+            "class": "msctls_updown32",
+            "text": "",
+            "ctrl_id": 224,
+            "rect": {
+              "left": 1506,
+              "top": 1295,
+              "right": 1533,
+              "bottom": 1331,
+              "width": 27,
+              "height": 36
+            },
+            "visible": true,
+            "enabled": true,
+            "children": []
+          },
+          {
+            "hwnd": 5052514,
+            "class": "Edit",
+            "text": "3",
+            "ctrl_id": 220,
+            "rect": {
+              "left": 1362,
+              "top": 1295,
+              "right": 1506,
+              "bottom": 1331,
+              "width": 144,
+              "height": 36
+            },
+            "visible": true,
+            "enabled": true,
+            "children": []
+          },
+          {
+            "hwnd": 4133620,
+            "class": "Afx:400000:b:10003:900015:0",
+            "text": "助推器机动增加：",
+            "ctrl_id": 210,
+            "rect": {
+              "left": 1770,
+              "top": 1199,
+              "right": 1938,
+              "bottom": 1223,
+              "width": 168,
+              "height": 24
+            },
+            "visible": true,
+            "enabled": true,
+            "children": []
+          },
+          {
+            "hwnd": 1378188,
+            "class": "msctls_updown32",
+            "text": "",
+            "ctrl_id": 204,
+            "rect": {
+              "left": 1914,
+              "top": 1223,
+              "right": 1941,
+              "bottom": 1259,
+              "width": 27,
+              "height": 36
+            },
+            "visible": true,
+            "enabled": true,
+            "children": []
+          },
+          {
+            "hwnd": 2103412,
+            "class": "Edit",
+            "text": "1",
+            "ctrl_id": 200,
+            "rect": {
+              "left": 1770,
+              "top": 1223,
+              "right": 1914,
+              "bottom": 1259,
+              "width": 144,
+              "height": 36
+            },
+            "visible": true,
+            "enabled": true,
+            "children": []
+          },
+          {
+            "hwnd": 1513976,
+            "class": "Afx:400000:b:10003:900015:0",
+            "text": "超合金W防御增加：",
+            "ctrl_id": 190,
+            "rect": {
+              "left": 1566,
+              "top": 1199,
+              "right": 1734,
+              "bottom": 1223,
+              "width": 168,
+              "height": 24
+            },
+            "visible": true,
+            "enabled": true,
+            "children": []
+          },
+          {
+            "hwnd": 1316094,
+            "class": "msctls_updown32",
+            "text": "",
+            "ctrl_id": 184,
+            "rect": {
+              "left": 1710,
+              "top": 1223,
+              "right": 1737,
+              "bottom": 1259,
+              "width": 27,
+              "height": 36
+            },
+            "visible": true,
+            "enabled": true,
+            "children": []
+          },
+          {
+            "hwnd": 12323466,
+            "class": "Edit",
+            "text": "3",
+            "ctrl_id": 180,
+            "rect": {
+              "left": 1566,
+              "top": 1223,
+              "right": 1710,
+              "bottom": 1259,
+              "width": 144,
+              "height": 36
+            },
+            "visible": true,
+            "enabled": true,
+            "children": []
+          },
+          {
+            "hwnd": 1513882,
+            "class": "Afx:400000:b:10003:900015:0",
+            "text": "C装甲血量增加：",
+            "ctrl_id": 170,
+            "rect": {
+              "left": 1362,
+              "top": 1199,
+              "right": 1530,
+              "bottom": 1223,
+              "width": 168,
+              "height": 24
+            },
+            "visible": true,
+            "enabled": true,
+            "children": []
+          },
+          {
+            "hwnd": 2431090,
+            "class": "msctls_updown32",
+            "text": "",
+            "ctrl_id": 164,
+            "rect": {
+              "left": 1914,
+              "top": 1151,
+              "right": 1941,
+              "bottom": 1187,
+              "width": 27,
+              "height": 36
+            },
+            "visible": true,
+            "enabled": true,
+            "children": []
+          },
+          {
+            "hwnd": 2300264,
+            "class": "Edit",
+            "text": "1",
+            "ctrl_id": 160,
+            "rect": {
+              "left": 1770,
+              "top": 1151,
+              "right": 1914,
+              "bottom": 1187,
+              "width": 144,
+              "height": 36
+            },
+            "visible": true,
+            "enabled": true,
+            "children": []
+          },
+          {
+            "hwnd": 2428850,
+            "class": "Afx:400000:b:10003:900015:0",
+            "text": "传感器强度增加：",
+            "ctrl_id": 150,
+            "rect": {
+              "left": 1770,
+              "top": 1127,
+              "right": 1938,
+              "bottom": 1151,
+              "width": 168,
+              "height": 24
+            },
+            "visible": true,
+            "enabled": true,
+            "children": []
+          },
+          {
+            "hwnd": 10754116,
+            "class": "Afx:400000:b:10003:900015:0",
+            "text": "雌性涂料速度增加：",
+            "ctrl_id": 140,
+            "rect": {
+              "left": 1566,
+              "top": 1127,
+              "right": 1734,
+              "bottom": 1151,
+              "width": 168,
+              "height": 24
+            },
+            "visible": true,
+            "enabled": true,
+            "children": []
+          },
+          {
+            "hwnd": 5901178,
+            "class": "msctls_updown32",
+            "text": "",
+            "ctrl_id": 124,
+            "rect": {
+              "left": 1506,
+              "top": 1223,
+              "right": 1533,
+              "bottom": 1259,
+              "width": 27,
+              "height": 36
+            },
+            "visible": true,
+            "enabled": true,
+            "children": []
+          },
+          {
+            "hwnd": 2169148,
+            "class": "Edit",
+            "text": "5",
+            "ctrl_id": 120,
+            "rect": {
+              "left": 1362,
+              "top": 1223,
+              "right": 1506,
+              "bottom": 1259,
+              "width": 144,
+              "height": 36
+            },
+            "visible": true,
+            "enabled": true,
+            "children": []
+          },
+          {
+            "hwnd": 922836,
+            "class": "Afx:400000:b:10003:900015:0",
+            "text": "超合金Z防御增加：",
+            "ctrl_id": 110,
+            "rect": {
+              "left": 1362,
+              "top": 1127,
+              "right": 1530,
+              "bottom": 1151,
+              "width": 168,
+              "height": 24
+            },
+            "visible": true,
+            "enabled": true,
+            "children": []
+          }
+        ]
+      },
+      {
+        "hwnd": 4066370,
+        "class": "Button",
+        "text": "双击公式",
+        "ctrl_id": 100,
+        "rect": {
+          "left": 1350,
+          "top": 707,
+          "right": 2490,
+          "bottom": 827,
+          "width": 1140,
+          "height": 120
+        },
+        "visible": true,
+        "enabled": true,
+        "children": [
+          {
+            "hwnd": 7149806,
+            "class": "Afx:400000:b:10003:900015:0",
+            "text": "则双击",
+            "ctrl_id": 680,
+            "rect": {
+              "left": 2058,
+              "top": 767,
+              "right": 2202,
+              "bottom": 791,
+              "width": 144,
+              "height": 24
+            },
+            "visible": true,
+            "enabled": true,
+            "children": []
+          },
+          {
+            "hwnd": 5118030,
+            "class": "msctls_updown32",
+            "text": "",
+            "ctrl_id": 674,
+            "rect": {
+              "left": 2022,
+              "top": 755,
+              "right": 2049,
+              "bottom": 791,
+              "width": 27,
+              "height": 36
+            },
+            "visible": true,
+            "enabled": true,
+            "children": []
+          },
+          {
+            "hwnd": 1448398,
+            "class": "Edit",
+            "text": "20",
+            "ctrl_id": 670,
+            "rect": {
+              "left": 1962,
+              "top": 755,
+              "right": 2022,
+              "bottom": 791,
+              "width": 60,
+              "height": 36
+            },
+            "visible": true,
+            "enabled": true,
+            "children": []
+          },
+          {
+            "hwnd": 1120742,
+            "class": "Afx:400000:b:10003:900015:0",
+            "text": "% +",
+            "ctrl_id": 660,
+            "rect": {
+              "left": 1902,
+              "top": 767,
+              "right": 1962,
+              "bottom": 791,
+              "width": 60,
+              "height": 24
+            },
+            "visible": true,
+            "enabled": true,
+            "children": []
+          },
+          {
+            "hwnd": 4397528,
+            "class": "msctls_updown32",
+            "text": "",
+            "ctrl_id": 654,
+            "rect": {
+              "left": 1866,
+              "top": 755,
+              "right": 1893,
+              "bottom": 791,
+              "width": 27,
+              "height": 36
+            },
+            "visible": true,
+            "enabled": true,
+            "children": []
+          },
+          {
+            "hwnd": 6230492,
+            "class": "Edit",
+            "text": "90",
+            "ctrl_id": 650,
+            "rect": {
+              "left": 1806,
+              "top": 755,
+              "right": 1866,
+              "bottom": 791,
+              "width": 60,
+              "height": 36
+            },
+            "visible": true,
+            "enabled": true,
+            "children": []
+          },
+          {
+            "hwnd": 2234774,
+            "class": "Afx:400000:b:10003:900015:0",
+            "text": "被攻击方速度的",
+            "ctrl_id": 640,
+            "rect": {
+              "left": 1674,
+              "top": 767,
+              "right": 1818,
+              "bottom": 791,
+              "width": 144,
+              "height": 24
+            },
+            "visible": true,
+            "enabled": true,
+            "children": []
+          },
+          {
+            "hwnd": 2429314,
+            "class": "Afx:400000:b:10003:900015:0",
+            "text": "% ＞",
+            "ctrl_id": 630,
+            "rect": {
+              "left": 1614,
+              "top": 767,
+              "right": 1674,
+              "bottom": 791,
+              "width": 60,
+              "height": 24
+            },
+            "visible": true,
+            "enabled": true,
+            "children": []
+          },
+          {
+            "hwnd": 6097762,
+            "class": "Afx:400000:b:10003:900015:0",
+            "text": "如果攻击方速度的",
+            "ctrl_id": 620,
+            "rect": {
+              "left": 1362,
+              "top": 767,
+              "right": 1506,
+              "bottom": 791,
+              "width": 144,
+              "height": 24
+            },
+            "visible": true,
+            "enabled": true,
+            "children": []
+          },
+          {
+            "hwnd": 3545022,
+            "class": "msctls_updown32",
+            "text": "",
+            "ctrl_id": 344,
+            "rect": {
+              "left": 1578,
+              "top": 755,
+              "right": 1605,
+              "bottom": 791,
+              "width": 27,
+              "height": 36
+            },
+            "visible": true,
+            "enabled": true,
+            "children": []
+          },
+          {
+            "hwnd": 1645136,
+            "class": "Edit",
+            "text": "70",
+            "ctrl_id": 340,
+            "rect": {
+              "left": 1518,
+              "top": 755,
+              "right": 1578,
+              "bottom": 791,
+              "width": 60,
+              "height": 36
+            },
+            "visible": true,
+            "enabled": true,
+            "children": []
+          }
+        ]
+      }
+    ]
+  }
+}

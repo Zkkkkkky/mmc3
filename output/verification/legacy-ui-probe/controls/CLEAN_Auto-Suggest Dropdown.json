@@ -1,0 +1,104 @@
+{
+  "tag": "CLEAN_Auto-Suggest Dropdown",
+  "hwnd": 8196410,
+  "title": "",
+  "class": "Auto-Suggest Dropdown",
+  "rect": {
+    "left": 0,
+    "top": 0,
+    "right": 150,
+    "bottom": 360,
+    "width": 150,
+    "height": 360
+  },
+  "pid": 41916,
+  "tree": {
+    "hwnd": 8196410,
+    "class": "Auto-Suggest Dropdown",
+    "text": "",
+    "ctrl_id": 0,
+    "rect": {
+      "left": 0,
+      "top": 0,
+      "right": 150,
+      "bottom": 360,
+      "width": 150,
+      "height": 360
+    },
+    "visible": false,
+    "enabled": true,
+    "children": [
+      {
+        "hwnd": 4069084,
+        "class": "ScrollBar",
+        "text": "",
+        "ctrl_id": 0,
+        "rect": {
+          "left": 123,
+          "top": 2,
+          "right": 149,
+          "bottom": 334,
+          "width": 26,
+          "height": 332
+        },
+        "visible": false,
+        "enabled": true,
+        "children": []
+      },
+      {
+        "hwnd": 2889710,
+        "class": "ScrollBar",
+        "text": "",
+        "ctrl_id": 0,
+        "rect": {
+          "left": 123,
+          "top": 333,
+          "right": 149,
+          "bottom": 359,
+          "width": 26,
+          "height": 26
+        },
+        "visible": false,
+        "enabled": true,
+        "children": []
+      },
+      {
+        "hwnd": 2824690,
+        "class": "SysListView32",
+        "text": "Internet Explorer",
+        "ctrl_id": 0,
+        "rect": {
+          "left": 2,
+          "top": 2,
+          "right": 45257,
+          "bottom": 359,
+          "width": 45255,
+          "height": 357
+        },
+        "visible": false,
+        "enabled": true,
+        "list_items": 0,
+        "list_selected": 0,
+        "children": [
+          {
+            "hwnd": 5179870,
+            "class": "SysHeader32",
+            "text": "",
+            "ctrl_id": 0,
+            "rect": {
+              "left": 2,
+              "top": 2,
+              "right": 45257,
+              "bottom": 2,
+              "width": 45255,
+              "height": 0
+            },
+            "visible": false,
+            "enabled": true,
+            "children": []
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,133 @@
+[
+ {
+  "index": 0,
+  "text": "文件&(F)",
+  "id": null,
+  "items": [
+   {
+    "index": 0,
+    "text": "打开&(O)\tCtrl+O",
+    "id": 20001
+   },
+   {
+    "index": 1,
+    "text": "",
+    "id": 20003
+   },
+   {
+    "index": 2,
+    "text": "保存&(S)\tCtrl+S",
+    "id": 20004
+   },
+   {
+    "index": 3,
+    "text": "",
+    "id": 20005
+   },
+   {
+    "index": 4,
+    "text": "退出&(X)\tCtrl+X",
+    "id": 20006
+   }
+  ]
+ },
+ {
+  "index": 1,
+  "text": "数据&(A)",
+  "id": null,
+  "items": [
+   {
+    "index": 0,
+    "text": "数据库&(D)\tCtrl+D",
+    "id": 20008
+   },
+   {
+    "index": 1,
+    "text": "文字库&(W)\tCtrl+W",
+    "id": 20009
+   },
+   {
+    "index": 2,
+    "text": "",
+    "id": 20010
+   },
+   {
+    "index": 3,
+    "text": "地图动画&(M)\tCtrl+M",
+    "id": 20011
+   },
+   {
+    "index": 4,
+    "text": "",
+    "id": 20012
+   },
+   {
+    "index": 5,
+    "text": "文字转换&(Z)\tCtrl+Z",
+    "id": 20013
+   },
+   {
+    "index": 6,
+    "text": "",
+    "id": 20014
+   },
+   {
+    "index": 7,
+    "text": "剧情事件&(J)\tCtrl+J",
+    "id": 20015
+   },
+   {
+    "index": 8,
+    "text": "",
+    "id": 20016
+   },
+   {
+    "index": 9,
+    "text": "导出机体&(P)\tCtrl+F",
+    "id": 20017
+   },
+   {
+    "index": 10,
+    "text": "导出头像&(L)\tCtrl+L",
+    "id": 20018
+   },
+   {
+    "index": 11,
+    "text": "",
+    "id": 20019
+   },
+   {
+    "index": 12,
+    "text": "属性计算器",
+    "id": 20020
+   },
+   {
+    "index": 13,
+    "text": "存档修改器",
+    "id": 20021
+   },
+   {
+    "index": 14,
+    "text": "",
+    "id": 20022
+   },
+   {
+    "index": 15,
+    "text": "其他&(T)\tCtrl+T",
+    "id": 20023
+   }
+  ]
+ },
+ {
+  "index": 2,
+  "text": "帮助&(H)",
+  "id": null,
+  "items": [
+   {
+    "index": 0,
+    "text": "关于",
+    "id": 20025
+   }
+  ]
+ }
+]

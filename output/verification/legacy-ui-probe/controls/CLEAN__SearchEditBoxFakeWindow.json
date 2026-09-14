@@ -1,0 +1,32 @@
+{
+  "tag": "CLEAN__SearchEditBoxFakeWindow",
+  "hwnd": 3017538,
+  "title": "",
+  "class": "_SearchEditBoxFakeWindow",
+  "rect": {
+    "left": 0,
+    "top": 0,
+    "right": 0,
+    "bottom": 0,
+    "width": 0,
+    "height": 0
+  },
+  "pid": 41916,
+  "tree": {
+    "hwnd": 3017538,
+    "class": "_SearchEditBoxFakeWindow",
+    "text": "",
+    "ctrl_id": 0,
+    "rect": {
+      "left": 0,
+      "top": 0,
+      "right": 0,
+      "bottom": 0,
+      "width": 0,
+      "height": 0
+    },
+    "visible": false,
+    "enabled": true,
+    "children": []
+  }
+}

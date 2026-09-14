@@ -1,0 +1,5206 @@
+{
+  "tag": "CLEAN_数据库",
+  "hwnd": 5901470,
+  "title": "数据库",
+  "class": "WTWindow",
+  "rect": {
+    "left": 1130,
+    "top": 557,
+    "right": 2711,
+    "bottom": 1603,
+    "width": 1581,
+    "height": 1046
+  },
+  "pid": 41916,
+  "tree": {
+    "hwnd": 5901470,
+    "class": "WTWindow",
+    "text": "数据库",
+    "ctrl_id": 0,
+    "rect": {
+      "left": 1130,
+      "top": 557,
+      "right": 2711,
+      "bottom": 1603,
+      "width": 1581,
+      "height": 1046
+    },
+    "visible": false,
+    "enabled": true,
+    "children": [
+      {
+        "hwnd": 1114332,
+        "class": "Button",
+        "text": "查找上一个",
+        "ctrl_id": 2170,
+        "rect": {
+          "left": 1661,
+          "top": 1551,
+          "right": 1817,
+          "bottom": 1587,
+          "width": 156,
+          "height": 36
+        },
+        "visible": false,
+        "enabled": true,
+        "children": []
+      },
+      {
+        "hwnd": 10291072,
+        "class": "Button",
+        "text": "查找下一个",
+        "ctrl_id": 2160,
+        "rect": {
+          "left": 1505,
+          "top": 1551,
+          "right": 1661,
+          "bottom": 1587,
+          "width": 156,
+          "height": 36
+        },
+        "visible": false,
+        "enabled": true,
+        "children": []
+      },
+      {
+        "hwnd": 9634014,
+        "class": "Edit",
+        "text": "",
+        "ctrl_id": 2150,
+        "rect": {
+          "left": 1157,
+          "top": 1551,
+          "right": 1505,
+          "bottom": 1587,
+          "width": 348,
+          "height": 36
+        },
+        "visible": false,
+        "enabled": true,
+        "children": []
+      },
+      {
+        "hwnd": 1710210,
+        "class": "Button",
+        "text": "取消",
+        "ctrl_id": 600,
+        "rect": {
+          "left": 2573,
+          "top": 1551,
+          "right": 2681,
+          "bottom": 1587,
+          "width": 108,
+          "height": 36
+        },
+        "visible": false,
+        "enabled": true,
+        "children": []
+      },
+      {
+        "hwnd": 1513194,
+        "class": "Button",
+        "text": "确定",
+        "ctrl_id": 590,
+        "rect": {
+          "left": 2453,
+          "top": 1551,
+          "right": 2561,
+          "bottom": 1587,
+          "width": 108,
+          "height": 36
+        },
+        "visible": false,
+        "enabled": true,
+        "children": []
+      },
+      {
+        "hwnd": 4458610,
+        "class": "CPageControl",
+        "text": "",
+        "ctrl_id": 100,
+        "rect": {
+          "left": 1133,
+          "top": 615,
+          "right": 2693,
+          "bottom": 1539,
+          "width": 1560,
+          "height": 924
+        },
+        "visible": false,
+        "enabled": true,
+        "children": [
+          {
+            "hwnd": 1116148,
+            "class": "Button",
+            "text": "动画测试",
+            "ctrl_id": 2710,
+            "rect": {
+              "left": 1661,
+              "top": 1467,
+              "right": 1781,
+              "bottom": 1515,
+              "width": 120,
+              "height": 48
+            },
+            "visible": false,
+            "enabled": true,
+            "children": []
+          },
+          {
+            "hwnd": 10751000,
+            "class": "Button",
+            "text": "成长方式",
+            "ctrl_id": 2640,
+            "rect": {
+              "left": 1709,
+              "top": 663,
+              "right": 2009,
+              "bottom": 1527,
+              "width": 300,
+              "height": 864
+            },
+            "visible": false,
+            "enabled": true,
+            "children": [
+              {
+                "hwnd": 1183030,
+                "class": "Button",
+                "text": "成长修改(16进制快捷修改)",
+                "ctrl_id": 2650,
+                "rect": {
+                  "left": 1733,
+                  "top": 1371,
+                  "right": 1997,
+                  "bottom": 1419,
+                  "width": 264,
+                  "height": 48
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 921028,
+                "class": "Afx:400000:b:10003:900015:0",
+                "text": "选择：",
+                "ctrl_id": 2630,
+                "rect": {
+                  "left": 1721,
+                  "top": 687,
+                  "right": 1769,
+                  "bottom": 723,
+                  "width": 48,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 5180348,
+                "class": "ComboBox",
+                "text": "",
+                "ctrl_id": 2620,
+                "rect": {
+                  "left": 1781,
+                  "top": 687,
+                  "right": 1997,
+                  "bottom": 717,
+                  "width": 216,
+                  "height": 30
+                },
+                "visible": false,
+                "enabled": true,
+                "combo_count": 0,
+                "combo_selected": 4294967295,
+                "children": []
+              },
+              {
+                "hwnd": 14553700,
+                "class": "SysListView32",
+                "text": "",
+                "ctrl_id": 2610,
+                "rect": {
+                  "left": 1721,
+                  "top": 735,
+                  "right": 1997,
+                  "bottom": 1335,
+                  "width": 276,
+                  "height": 600
+                },
+                "visible": false,
+                "enabled": true,
+                "list_items": 0,
+                "list_selected": 0,
+                "children": [
+                  {
+                    "hwnd": 986562,
+                    "class": "SysHeader32",
+                    "text": "",
+                    "ctrl_id": 0,
+                    "rect": {
+                      "left": 1722,
+                      "top": 737,
+                      "right": 1998,
+                      "bottom": 773,
+                      "width": 276,
+                      "height": 36
+                    },
+                    "visible": false,
+                    "enabled": true,
+                    "children": []
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "hwnd": 3805140,
+            "class": "Button",
+            "text": "代码编辑",
+            "ctrl_id": 2560,
+            "rect": {
+              "left": 1529,
+              "top": 1467,
+              "right": 1649,
+              "bottom": 1515,
+              "width": 120,
+              "height": 48
+            },
+            "visible": false,
+            "enabled": true,
+            "children": []
+          },
+          {
+            "hwnd": 7671190,
+            "class": "Button",
+            "text": "规律",
+            "ctrl_id": 2550,
+            "rect": {
+              "left": 2561,
+              "top": 1479,
+              "right": 2681,
+              "bottom": 1527,
+              "width": 120,
+              "height": 48
+            },
+            "visible": false,
+            "enabled": true,
+            "children": []
+          },
+          {
+            "hwnd": 1310936,
+            "class": "CPageControl",
+            "text": "",
+            "ctrl_id": 2540,
+            "rect": {
+              "left": 1529,
+              "top": 891,
+              "right": 2681,
+              "bottom": 1467,
+              "width": 1152,
+              "height": 576
+            },
+            "visible": false,
+            "enabled": true,
+            "children": [
+              {
+                "hwnd": 1969456,
+                "class": "ListBox",
+                "text": "",
+                "ctrl_id": 2740,
+                "rect": {
+                  "left": 1529,
+                  "top": 927,
+                  "right": 2681,
+                  "bottom": 1467,
+                  "width": 1152,
+                  "height": 540
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 1446144,
+                "class": "ListBox",
+                "text": "",
+                "ctrl_id": 2530,
+                "rect": {
+                  "left": 1529,
+                  "top": 927,
+                  "right": 2681,
+                  "bottom": 1467,
+                  "width": 1152,
+                  "height": 540
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 6229114,
+                "class": "ListBox",
+                "text": "",
+                "ctrl_id": 2520,
+                "rect": {
+                  "left": 1529,
+                  "top": 927,
+                  "right": 2681,
+                  "bottom": 1467,
+                  "width": 1152,
+                  "height": 540
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 2429820,
+                "class": "AfxWnd42s",
+                "text": "<",
+                "ctrl_id": 1008,
+                "rect": {
+                  "left": 1529,
+                  "top": 891,
+                  "right": 1529,
+                  "bottom": 891,
+                  "width": 0,
+                  "height": 0
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 985186,
+                "class": "AfxWnd42s",
+                "text": ">",
+                "ctrl_id": 1009,
+                "rect": {
+                  "left": 1529,
+                  "top": 891,
+                  "right": 1529,
+                  "bottom": 891,
+                  "width": 0,
+                  "height": 0
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              }
+            ]
+          },
+          {
+            "hwnd": 2299074,
+            "class": "Button",
+            "text": "商店",
+            "ctrl_id": 1800,
+            "rect": {
+              "left": 1913,
+              "top": 663,
+              "right": 2681,
+              "bottom": 1527,
+              "width": 768,
+              "height": 864
+            },
+            "visible": false,
+            "enabled": true,
+            "children": [
+              {
+                "hwnd": 1052084,
+                "class": "Button",
+                "text": "店员对话",
+                "ctrl_id": 1950,
+                "rect": {
+                  "left": 1925,
+                  "top": 1119,
+                  "right": 2669,
+                  "bottom": 1515,
+                  "width": 744,
+                  "height": 396
+                },
+                "visible": false,
+                "enabled": true,
+                "children": [
+                  {
+                    "hwnd": 921030,
+                    "class": "Afx:400000:b:10003:900015:0",
+                    "text": "注：店员对话为7个顺序\r\n\r\n对话段编号",
+                    "ctrl_id": 2100,
+                    "rect": {
+                      "left": 2429,
+                      "top": 1299,
+                      "right": 2657,
+                      "bottom": 1503,
+                      "width": 228,
+                      "height": 204
+                    },
+                    "visible": false,
+                    "enabled": true,
+                    "children": []
+                  },
+                  {
+                    "hwnd": 4134298,
+                    "class": "Edit",
+                    "text": "",
+                    "ctrl_id": 2090,
+                    "rect": {
+                      "left": 2417,
+                      "top": 1179,
+                      "right": 2645,
+                      "bottom": 1263,
+                      "width": 228,
+                      "height": 84
+                    },
+                    "visible": false,
+                    "enabled": true,
+                    "children": []
+                  },
+                  {
+                    "hwnd": 1312630,
+                    "class": "Afx:400000:b:10003:900015:0",
+                    "text": "离开商店对话：",
+                    "ctrl_id": 2080,
+                    "rect": {
+                      "left": 2417,
+                      "top": 1143,
+                      "right": 2549,
+                      "bottom": 1179,
+                      "width": 132,
+                      "height": 36
+                    },
+                    "visible": false,
+                    "enabled": true,
+                    "children": []
+                  },
+                  {
+                    "hwnd": 10883826,
+                    "class": "Afx:400000:b:10003:900015:0",
+                    "text": "数量超限对话：",
+                    "ctrl_id": 2070,
+                    "rect": {
+                      "left": 2177,
+                      "top": 1143,
+                      "right": 2309,
+                      "bottom": 1179,
+                      "width": 132,
+                      "height": 36
+                    },
+                    "visible": false,
+                    "enabled": true,
+                    "children": []
+                  },
+                  {
+                    "hwnd": 3936888,
+                    "class": "Edit",
+                    "text": "",
+                    "ctrl_id": 2060,
+                    "rect": {
+                      "left": 2177,
+                      "top": 1179,
+                      "right": 2405,
+                      "bottom": 1263,
+                      "width": 228,
+                      "height": 84
+                    },
+                    "visible": false,
+                    "enabled": true,
+                    "children": []
+                  },
+                  {
+                    "hwnd": 13043578,
+                    "class": "Afx:400000:b:10003:900015:0",
+                    "text": "是否购买对话：",
+                    "ctrl_id": 2050,
+                    "rect": {
+                      "left": 2177,
+                      "top": 1263,
+                      "right": 2309,
+                      "bottom": 1299,
+                      "width": 132,
+                      "height": 36
+                    },
+                    "visible": false,
+                    "enabled": true,
+                    "children": []
+                  },
+                  {
+                    "hwnd": 5640464,
+                    "class": "Edit",
+                    "text": "",
+                    "ctrl_id": 2040,
+                    "rect": {
+                      "left": 2177,
+                      "top": 1299,
+                      "right": 2405,
+                      "bottom": 1383,
+                      "width": 228,
+                      "height": 84
+                    },
+                    "visible": false,
+                    "enabled": true,
+                    "children": []
+                  },
+                  {
+                    "hwnd": 11736976,
+                    "class": "Afx:400000:b:10003:900015:0",
+                    "text": "购买之后对话：",
+                    "ctrl_id": 2030,
+                    "rect": {
+                      "left": 2177,
+                      "top": 1383,
+                      "right": 2309,
+                      "bottom": 1419,
+                      "width": 132,
+                      "height": 36
+                    },
+                    "visible": false,
+                    "enabled": true,
+                    "children": []
+                  },
+                  {
+                    "hwnd": 4721942,
+                    "class": "Edit",
+                    "text": "",
+                    "ctrl_id": 2020,
+                    "rect": {
+                      "left": 2177,
+                      "top": 1419,
+                      "right": 2405,
+                      "bottom": 1503,
+                      "width": 228,
+                      "height": 84
+                    },
+                    "visible": false,
+                    "enabled": true,
+                    "children": []
+                  },
+                  {
+                    "hwnd": 1576106,
+                    "class": "Edit",
+                    "text": "",
+                    "ctrl_id": 2010,
+                    "rect": {
+                      "left": 1937,
+                      "top": 1419,
+                      "right": 2165,
+                      "bottom": 1503,
+                      "width": 228,
+                      "height": 84
+                    },
+                    "visible": false,
+                    "enabled": true,
+                    "children": []
+                  },
+                  {
+                    "hwnd": 9243044,
+                    "class": "Afx:400000:b:10003:900015:0",
+                    "text": "金钱不够对话：",
+                    "ctrl_id": 2000,
+                    "rect": {
+                      "left": 1937,
+                      "top": 1383,
+                      "right": 2069,
+                      "bottom": 1419,
+                      "width": 132,
+                      "height": 36
+                    },
+                    "visible": false,
+                    "enabled": true,
+                    "children": []
+                  },
+                  {
+                    "hwnd": 6690590,
+                    "class": "Edit",
+                    "text": "",
+                    "ctrl_id": 1990,
+                    "rect": {
+                      "left": 1937,
+                      "top": 1299,
+                      "right": 2165,
+                      "bottom": 1383,
+                      "width": 228,
+                      "height": 84
+                    },
+                    "visible": false,
+                    "enabled": true,
+                    "children": []
+                  },
+                  {
+                    "hwnd": 1902570,
+                    "class": "Afx:400000:b:10003:900015:0",
+                    "text": "准备购买对话：",
+                    "ctrl_id": 1980,
+                    "rect": {
+                      "left": 1937,
+                      "top": 1263,
+                      "right": 2069,
+                      "bottom": 1299,
+                      "width": 132,
+                      "height": 36
+                    },
+                    "visible": false,
+                    "enabled": true,
+                    "children": []
+                  },
+                  {
+                    "hwnd": 3408150,
+                    "class": "Edit",
+                    "text": "",
+                    "ctrl_id": 1970,
+                    "rect": {
+                      "left": 1937,
+                      "top": 1179,
+                      "right": 2165,
+                      "bottom": 1263,
+                      "width": 228,
+                      "height": 84
+                    },
+                    "visible": false,
+                    "enabled": true,
+                    "children": []
+                  },
+                  {
+                    "hwnd": 3936414,
+                    "class": "Afx:400000:b:10003:900015:0",
+                    "text": "进入商店对话：",
+                    "ctrl_id": 1960,
+                    "rect": {
+                      "left": 1937,
+                      "top": 1143,
+                      "right": 2069,
+                      "bottom": 1179,
+                      "width": 132,
+                      "height": 36
+                    },
+                    "visible": false,
+                    "enabled": true,
+                    "children": []
+                  }
+                ]
+              },
+              {
+                "hwnd": 4852382,
+                "class": "Button",
+                "text": "商店设置",
+                "ctrl_id": 1820,
+                "rect": {
+                  "left": 2165,
+                  "top": 687,
+                  "right": 2669,
+                  "bottom": 1107,
+                  "width": 504,
+                  "height": 420
+                },
+                "visible": false,
+                "enabled": true,
+                "children": [
+                  {
+                    "hwnd": 2102922,
+                    "class": "ComboBox",
+                    "text": "",
+                    "ctrl_id": 1940,
+                    "rect": {
+                      "left": 2249,
+                      "top": 1035,
+                      "right": 2609,
+                      "bottom": 1071,
+                      "width": 360,
+                      "height": 36
+                    },
+                    "visible": false,
+                    "enabled": true,
+                    "combo_count": 0,
+                    "combo_selected": 4294967295,
+                    "children": []
+                  },
+                  {
+                    "hwnd": 3610510,
+                    "class": "Afx:400000:b:10003:900015:0",
+                    "text": "对话：",
+                    "ctrl_id": 1930,
+                    "rect": {
+                      "left": 2189,
+                      "top": 1035,
+                      "right": 2249,
+                      "bottom": 1071,
+                      "width": 60,
+                      "height": 36
+                    },
+                    "visible": false,
+                    "enabled": true,
+                    "children": []
+                  },
+                  {
+                    "hwnd": 4131828,
+                    "class": "ComboBox",
+                    "text": "",
+                    "ctrl_id": 1920,
+                    "rect": {
+                      "left": 2249,
+                      "top": 975,
+                      "right": 2609,
+                      "bottom": 1011,
+                      "width": 360,
+                      "height": 36
+                    },
+                    "visible": false,
+                    "enabled": true,
+                    "combo_count": 0,
+                    "combo_selected": 4294967295,
+                    "children": []
+                  },
+                  {
+                    "hwnd": 3607516,
+                    "class": "Afx:400000:b:10003:900015:0",
+                    "text": "店员：",
+                    "ctrl_id": 1910,
+                    "rect": {
+                      "left": 2189,
+                      "top": 975,
+                      "right": 2249,
+                      "bottom": 1011,
+                      "width": 60,
+                      "height": 36
+                    },
+                    "visible": false,
+                    "enabled": true,
+                    "children": []
+                  },
+                  {
+                    "hwnd": 2232730,
+                    "class": "ComboBox",
+                    "text": "",
+                    "ctrl_id": 1900,
+                    "rect": {
+                      "left": 2249,
+                      "top": 915,
+                      "right": 2609,
+                      "bottom": 951,
+                      "width": 360,
+                      "height": 36
+                    },
+                    "visible": false,
+                    "enabled": true,
+                    "combo_count": 0,
+                    "combo_selected": 4294967295,
+                    "children": []
+                  },
+                  {
+                    "hwnd": 3540742,
+                    "class": "ComboBox",
+                    "text": "",
+                    "ctrl_id": 1890,
+                    "rect": {
+                      "left": 2249,
+                      "top": 855,
+                      "right": 2609,
+                      "bottom": 891,
+                      "width": 360,
+                      "height": 36
+                    },
+                    "visible": false,
+                    "enabled": true,
+                    "combo_count": 0,
+                    "combo_selected": 4294967295,
+                    "children": []
+                  },
+                  {
+                    "hwnd": 1251970,
+                    "class": "ComboBox",
+                    "text": "",
+                    "ctrl_id": 1880,
+                    "rect": {
+                      "left": 2249,
+                      "top": 795,
+                      "right": 2609,
+                      "bottom": 831,
+                      "width": 360,
+                      "height": 36
+                    },
+                    "visible": false,
+                    "enabled": true,
+                    "combo_count": 0,
+                    "combo_selected": 4294967295,
+                    "children": []
+                  },
+                  {
+                    "hwnd": 1710288,
+                    "class": "ComboBox",
+                    "text": "",
+                    "ctrl_id": 1870,
+                    "rect": {
+                      "left": 2249,
+                      "top": 735,
+                      "right": 2609,
+                      "bottom": 771,
+                      "width": 360,
+                      "height": 36
+                    },
+                    "visible": false,
+                    "enabled": true,
+                    "combo_count": 0,
+                    "combo_selected": 4294967295,
+                    "children": []
+                  },
+                  {
+                    "hwnd": 1514116,
+                    "class": "Afx:400000:b:10003:900015:0",
+                    "text": "道具1：",
+                    "ctrl_id": 1860,
+                    "rect": {
+                      "left": 2189,
+                      "top": 735,
+                      "right": 2249,
+                      "bottom": 771,
+                      "width": 60,
+                      "height": 36
+                    },
+                    "visible": false,
+                    "enabled": true,
+                    "children": []
+                  },
+                  {
+                    "hwnd": 4332014,
+                    "class": "Afx:400000:b:10003:900015:0",
+                    "text": "道具2：",
+                    "ctrl_id": 1850,
+                    "rect": {
+                      "left": 2189,
+                      "top": 795,
+                      "right": 2249,
+                      "bottom": 831,
+                      "width": 60,
+                      "height": 36
+                    },
+                    "visible": false,
+                    "enabled": true,
+                    "children": []
+                  },
+                  {
+                    "hwnd": 3608052,
+                    "class": "Afx:400000:b:10003:900015:0",
+                    "text": "道具3：",
+                    "ctrl_id": 1840,
+                    "rect": {
+                      "left": 2189,
+                      "top": 855,
+                      "right": 2249,
+                      "bottom": 891,
+                      "width": 60,
+                      "height": 36
+                    },
+                    "visible": false,
+                    "enabled": true,
+                    "children": []
+                  },
+                  {
+                    "hwnd": 3935724,
+                    "class": "Afx:400000:b:10003:900015:0",
+                    "text": "道具4：",
+                    "ctrl_id": 1830,
+                    "rect": {
+                      "left": 2189,
+                      "top": 915,
+                      "right": 2249,
+                      "bottom": 951,
+                      "width": 60,
+                      "height": 36
+                    },
+                    "visible": false,
+                    "enabled": true,
+                    "children": []
+                  }
+                ]
+              },
+              {
+                "hwnd": 1512738,
+                "class": "ListBox",
+                "text": "",
+                "ctrl_id": 1810,
+                "rect": {
+                  "left": 1925,
+                  "top": 699,
+                  "right": 2141,
+                  "bottom": 1107,
+                  "width": 216,
+                  "height": 408
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              }
+            ]
+          },
+          {
+            "hwnd": 8653052,
+            "class": "Button",
+            "text": "系统文字（谨慎修改）",
+            "ctrl_id": 1760,
+            "rect": {
+              "left": 1145,
+              "top": 663,
+              "right": 1697,
+              "bottom": 1527,
+              "width": 552,
+              "height": 864
+            },
+            "visible": false,
+            "enabled": true,
+            "children": [
+              {
+                "hwnd": 2756354,
+                "class": "Button",
+                "text": "添加",
+                "ctrl_id": 2140,
+                "rect": {
+                  "left": 1157,
+                  "top": 1335,
+                  "right": 1685,
+                  "bottom": 1383,
+                  "width": 528,
+                  "height": 48
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 1378200,
+                "class": "Afx:400000:b:10003:900015:0",
+                "text": "注：\"{\"加3字节16进制代码等于直接写入3字节16进制\r\n    \"[\"为直接写入2字节16进制， \"|\"为直接写入1字节16进制",
+                "ctrl_id": 2110,
+                "rect": {
+                  "left": 1157,
+                  "top": 687,
+                  "right": 1661,
+                  "bottom": 735,
+                  "width": 504,
+                  "height": 48
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 3741312,
+                "class": "Edit",
+                "text": "",
+                "ctrl_id": 1770,
+                "rect": {
+                  "left": 1157,
+                  "top": 1395,
+                  "right": 1685,
+                  "bottom": 1515,
+                  "width": 528,
+                  "height": 120
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 2824362,
+                "class": "ListBox",
+                "text": "",
+                "ctrl_id": 1750,
+                "rect": {
+                  "left": 1157,
+                  "top": 735,
+                  "right": 1685,
+                  "bottom": 1335,
+                  "width": 528,
+                  "height": 600
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              }
+            ]
+          },
+          {
+            "hwnd": 1186058,
+            "class": "Button",
+            "text": "道具",
+            "ctrl_id": 1740,
+            "rect": {
+              "left": 1145,
+              "top": 663,
+              "right": 1901,
+              "bottom": 1527,
+              "width": 756,
+              "height": 864
+            },
+            "visible": false,
+            "enabled": true,
+            "children": [
+              {
+                "hwnd": 33886766,
+                "class": "Afx:400000:b:10003:900015:0",
+                "text": "道具说明：",
+                "ctrl_id": 1790,
+                "rect": {
+                  "left": 1361,
+                  "top": 1347,
+                  "right": 1457,
+                  "bottom": 1383,
+                  "width": 96,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 3086780,
+                "class": "Edit",
+                "text": "",
+                "ctrl_id": 1780,
+                "rect": {
+                  "left": 1361,
+                  "top": 1383,
+                  "right": 1889,
+                  "bottom": 1503,
+                  "width": 528,
+                  "height": 120
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 855530,
+                "class": "Edit",
+                "text": "",
+                "ctrl_id": 1730,
+                "rect": {
+                  "left": 1157,
+                  "top": 1467,
+                  "right": 1349,
+                  "bottom": 1503,
+                  "width": 192,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 1051988,
+                "class": "Afx:400000:b:10003:900015:0",
+                "text": "价格修改：",
+                "ctrl_id": 1720,
+                "rect": {
+                  "left": 1157,
+                  "top": 1431,
+                  "right": 1253,
+                  "bottom": 1467,
+                  "width": 96,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 3213218,
+                "class": "Edit",
+                "text": "",
+                "ctrl_id": 1710,
+                "rect": {
+                  "left": 1157,
+                  "top": 1383,
+                  "right": 1349,
+                  "bottom": 1419,
+                  "width": 192,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 11865610,
+                "class": "Afx:400000:b:10003:900015:0",
+                "text": "名称修改：",
+                "ctrl_id": 1700,
+                "rect": {
+                  "left": 1157,
+                  "top": 1347,
+                  "right": 1253,
+                  "bottom": 1383,
+                  "width": 96,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 2295634,
+                "class": "SysListView32",
+                "text": "",
+                "ctrl_id": 1690,
+                "rect": {
+                  "left": 1157,
+                  "top": 699,
+                  "right": 1889,
+                  "bottom": 1335,
+                  "width": 732,
+                  "height": 636
+                },
+                "visible": false,
+                "enabled": true,
+                "list_items": 0,
+                "list_selected": 0,
+                "children": [
+                  {
+                    "hwnd": 919644,
+                    "class": "SysHeader32",
+                    "text": "",
+                    "ctrl_id": 0,
+                    "rect": {
+                      "left": 1158,
+                      "top": 701,
+                      "right": 1890,
+                      "bottom": 737,
+                      "width": 732,
+                      "height": 36
+                    },
+                    "visible": false,
+                    "enabled": true,
+                    "children": []
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "hwnd": 4853702,
+            "class": "Button",
+            "text": "武器距离命中补正",
+            "ctrl_id": 1560,
+            "rect": {
+              "left": 2381,
+              "top": 663,
+              "right": 2681,
+              "bottom": 1527,
+              "width": 300,
+              "height": 864
+            },
+            "visible": false,
+            "enabled": true,
+            "children": [
+              {
+                "hwnd": 9965932,
+                "class": "Afx:400000:b:10003:900015:0",
+                "text": "%",
+                "ctrl_id": 1670,
+                "rect": {
+                  "left": 2589,
+                  "top": 1383,
+                  "right": 2625,
+                  "bottom": 1419,
+                  "width": 36,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 1775798,
+                "class": "Edit",
+                "text": "",
+                "ctrl_id": 1640,
+                "rect": {
+                  "left": 2393,
+                  "top": 1383,
+                  "right": 2585,
+                  "bottom": 1419,
+                  "width": 192,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 3217768,
+                "class": "Afx:400000:b:10003:900015:0",
+                "text": "命中修改：",
+                "ctrl_id": 1630,
+                "rect": {
+                  "left": 2393,
+                  "top": 1347,
+                  "right": 2489,
+                  "bottom": 1383,
+                  "width": 96,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 1052082,
+                "class": "ComboBox",
+                "text": "",
+                "ctrl_id": 1600,
+                "rect": {
+                  "left": 2465,
+                  "top": 687,
+                  "right": 2669,
+                  "bottom": 717,
+                  "width": 204,
+                  "height": 30
+                },
+                "visible": false,
+                "enabled": true,
+                "combo_count": 0,
+                "combo_selected": 4294967295,
+                "children": []
+              },
+              {
+                "hwnd": 1117604,
+                "class": "Afx:400000:b:10003:900015:0",
+                "text": "选择：",
+                "ctrl_id": 1590,
+                "rect": {
+                  "left": 2405,
+                  "top": 687,
+                  "right": 2453,
+                  "bottom": 723,
+                  "width": 48,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 2103522,
+                "class": "SysListView32",
+                "text": "",
+                "ctrl_id": 1580,
+                "rect": {
+                  "left": 2393,
+                  "top": 735,
+                  "right": 2669,
+                  "bottom": 1335,
+                  "width": 276,
+                  "height": 600
+                },
+                "visible": false,
+                "enabled": true,
+                "list_items": 0,
+                "list_selected": 0,
+                "children": [
+                  {
+                    "hwnd": 3149016,
+                    "class": "SysHeader32",
+                    "text": "",
+                    "ctrl_id": 0,
+                    "rect": {
+                      "left": 2394,
+                      "top": 737,
+                      "right": 2670,
+                      "bottom": 773,
+                      "width": 276,
+                      "height": 36
+                    },
+                    "visible": false,
+                    "enabled": true,
+                    "children": []
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "hwnd": 4985790,
+            "class": "Button",
+            "text": "升级经验",
+            "ctrl_id": 1550,
+            "rect": {
+              "left": 2021,
+              "top": 663,
+              "right": 2369,
+              "bottom": 1527,
+              "width": 348,
+              "height": 864
+            },
+            "visible": false,
+            "enabled": true,
+            "children": [
+              {
+                "hwnd": 5509876,
+                "class": "Button",
+                "text": "更改等级上限",
+                "ctrl_id": 1680,
+                "rect": {
+                  "left": 2033,
+                  "top": 1335,
+                  "right": 2357,
+                  "bottom": 1383,
+                  "width": 324,
+                  "height": 48
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 4331454,
+                "class": "Afx:400000:b:10003:900015:0",
+                "text": "升级还需：",
+                "ctrl_id": 1660,
+                "rect": {
+                  "left": 2213,
+                  "top": 1419,
+                  "right": 2309,
+                  "bottom": 1455,
+                  "width": 96,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 3741162,
+                "class": "Edit",
+                "text": "",
+                "ctrl_id": 1650,
+                "rect": {
+                  "left": 2213,
+                  "top": 1455,
+                  "right": 2357,
+                  "bottom": 1491,
+                  "width": 144,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 985058,
+                "class": "Edit",
+                "text": "",
+                "ctrl_id": 1620,
+                "rect": {
+                  "left": 2033,
+                  "top": 1455,
+                  "right": 2177,
+                  "bottom": 1491,
+                  "width": 144,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 1312742,
+                "class": "Afx:400000:b:10003:900015:0",
+                "text": "总经验：",
+                "ctrl_id": 1610,
+                "rect": {
+                  "left": 2033,
+                  "top": 1419,
+                  "right": 2129,
+                  "bottom": 1455,
+                  "width": 96,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 2299522,
+                "class": "SysListView32",
+                "text": "",
+                "ctrl_id": 1570,
+                "rect": {
+                  "left": 2033,
+                  "top": 735,
+                  "right": 2357,
+                  "bottom": 1335,
+                  "width": 324,
+                  "height": 600
+                },
+                "visible": false,
+                "enabled": true,
+                "list_items": 0,
+                "list_selected": 0,
+                "children": [
+                  {
+                    "hwnd": 1707504,
+                    "class": "SysHeader32",
+                    "text": "",
+                    "ctrl_id": 0,
+                    "rect": {
+                      "left": 2034,
+                      "top": 737,
+                      "right": 2358,
+                      "bottom": 773,
+                      "width": 324,
+                      "height": 36
+                    },
+                    "visible": false,
+                    "enabled": true,
+                    "children": []
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "hwnd": 5244726,
+            "class": "Button",
+            "text": "对话段选择",
+            "ctrl_id": 1400,
+            "rect": {
+              "left": 1145,
+              "top": 663,
+              "right": 1637,
+              "bottom": 1527,
+              "width": 492,
+              "height": 864
+            },
+            "visible": false,
+            "enabled": true,
+            "children": [
+              {
+                "hwnd": 2691332,
+                "class": "ComboBox",
+                "text": "00",
+                "ctrl_id": 1410,
+                "rect": {
+                  "left": 1157,
+                  "top": 699,
+                  "right": 1409,
+                  "bottom": 735,
+                  "width": 252,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "combo_count": 5,
+                "combo_selected": 0,
+                "children": []
+              },
+              {
+                "hwnd": 1050308,
+                "class": "ListBox",
+                "text": "",
+                "ctrl_id": 1390,
+                "rect": {
+                  "left": 1157,
+                  "top": 747,
+                  "right": 1625,
+                  "bottom": 1467,
+                  "width": 468,
+                  "height": 720
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              }
+            ]
+          },
+          {
+            "hwnd": 1048794,
+            "class": "Button",
+            "text": "文字编辑",
+            "ctrl_id": 1380,
+            "rect": {
+              "left": 1649,
+              "top": 663,
+              "right": 2681,
+              "bottom": 1527,
+              "width": 1032,
+              "height": 864
+            },
+            "visible": false,
+            "enabled": true,
+            "children": [
+              {
+                "hwnd": 3413340,
+                "class": "CPageControl",
+                "text": "",
+                "ctrl_id": 2570,
+                "rect": {
+                  "left": 1661,
+                  "top": 699,
+                  "right": 2525,
+                  "bottom": 999,
+                  "width": 864,
+                  "height": 300
+                },
+                "visible": false,
+                "enabled": true,
+                "children": [
+                  {
+                    "hwnd": 2757382,
+                    "class": "Edit",
+                    "text": "",
+                    "ctrl_id": 2590,
+                    "rect": {
+                      "left": 1661,
+                      "top": 747,
+                      "right": 2525,
+                      "bottom": 999,
+                      "width": 864,
+                      "height": 252
+                    },
+                    "visible": false,
+                    "enabled": true,
+                    "children": []
+                  },
+                  {
+                    "hwnd": 3277298,
+                    "class": "ListBox",
+                    "text": "",
+                    "ctrl_id": 2580,
+                    "rect": {
+                      "left": 1661,
+                      "top": 747,
+                      "right": 2525,
+                      "bottom": 987,
+                      "width": 864,
+                      "height": 240
+                    },
+                    "visible": false,
+                    "enabled": true,
+                    "children": []
+                  },
+                  {
+                    "hwnd": 986522,
+                    "class": "AfxWnd42s",
+                    "text": "<",
+                    "ctrl_id": 1008,
+                    "rect": {
+                      "left": 1661,
+                      "top": 699,
+                      "right": 1661,
+                      "bottom": 699,
+                      "width": 0,
+                      "height": 0
+                    },
+                    "visible": false,
+                    "enabled": true,
+                    "children": []
+                  },
+                  {
+                    "hwnd": 1577222,
+                    "class": "AfxWnd42s",
+                    "text": ">",
+                    "ctrl_id": 1009,
+                    "rect": {
+                      "left": 1661,
+                      "top": 699,
+                      "right": 1661,
+                      "bottom": 699,
+                      "width": 0,
+                      "height": 0
+                    },
+                    "visible": false,
+                    "enabled": true,
+                    "children": []
+                  }
+                ]
+              },
+              {
+                "hwnd": 984978,
+                "class": "Edit",
+                "text": "",
+                "ctrl_id": 1370,
+                "rect": {
+                  "left": 1661,
+                  "top": 1011,
+                  "right": 2525,
+                  "bottom": 1467,
+                  "width": 864,
+                  "height": 456
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              }
+            ]
+          },
+          {
+            "hwnd": 2300250,
+            "class": "Button",
+            "text": "精神列表(双击可修改精神消耗)",
+            "ctrl_id": 1260,
+            "rect": {
+              "left": 1529,
+              "top": 1191,
+              "right": 2105,
+              "bottom": 1443,
+              "width": 576,
+              "height": 252
+            },
+            "visible": false,
+            "enabled": true,
+            "children": [
+              {
+                "hwnd": 3740426,
+                "class": "ListBox",
+                "text": "",
+                "ctrl_id": 1270,
+                "rect": {
+                  "left": 1541,
+                  "top": 1227,
+                  "right": 2093,
+                  "bottom": 1431,
+                  "width": 552,
+                  "height": 204
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              }
+            ]
+          },
+          {
+            "hwnd": 3937650,
+            "class": "Button",
+            "text": "基本属性",
+            "ctrl_id": 1170,
+            "rect": {
+              "left": 1529,
+              "top": 663,
+              "right": 2681,
+              "bottom": 879,
+              "width": 1152,
+              "height": 216
+            },
+            "visible": false,
+            "enabled": true,
+            "children": [
+              {
+                "hwnd": 1181412,
+                "class": "Afx:400000:b:10003:900015:0",
+                "text": "对空攻击：     对陆攻击：     对海攻击：",
+                "ctrl_id": 2490,
+                "rect": {
+                  "left": 1973,
+                  "top": 771,
+                  "right": 2345,
+                  "bottom": 807,
+                  "width": 372,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 8000422,
+                "class": "Afx:400000:b:10003:900015:0",
+                "text": "射程：         命中：        距离补正：",
+                "ctrl_id": 2480,
+                "rect": {
+                  "left": 1973,
+                  "top": 687,
+                  "right": 2345,
+                  "bottom": 723,
+                  "width": 372,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 3278934,
+                "class": "Afx:400000:b:10003:900015:0",
+                "text": "武器特技：",
+                "ctrl_id": 2470,
+                "rect": {
+                  "left": 1541,
+                  "top": 771,
+                  "right": 1673,
+                  "bottom": 807,
+                  "width": 132,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 986424,
+                "class": "Afx:400000:b:10003:900015:0",
+                "text": "名称：",
+                "ctrl_id": 2460,
+                "rect": {
+                  "left": 1541,
+                  "top": 687,
+                  "right": 1673,
+                  "bottom": 723,
+                  "width": 132,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 2164620,
+                "class": "msctls_updown32",
+                "text": "",
+                "ctrl_id": 1254,
+                "rect": {
+                  "left": 2321,
+                  "top": 807,
+                  "right": 2348,
+                  "bottom": 843,
+                  "width": 27,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 8001774,
+                "class": "Edit",
+                "text": "",
+                "ctrl_id": 1250,
+                "rect": {
+                  "left": 2237,
+                  "top": 807,
+                  "right": 2321,
+                  "bottom": 843,
+                  "width": 84,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 2624112,
+                "class": "msctls_updown32",
+                "text": "",
+                "ctrl_id": 1244,
+                "rect": {
+                  "left": 2189,
+                  "top": 807,
+                  "right": 2216,
+                  "bottom": 843,
+                  "width": 27,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 2364644,
+                "class": "Edit",
+                "text": "",
+                "ctrl_id": 1240,
+                "rect": {
+                  "left": 2105,
+                  "top": 807,
+                  "right": 2189,
+                  "bottom": 843,
+                  "width": 84,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 2824342,
+                "class": "msctls_updown32",
+                "text": "",
+                "ctrl_id": 1234,
+                "rect": {
+                  "left": 2057,
+                  "top": 807,
+                  "right": 2084,
+                  "bottom": 843,
+                  "width": 27,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 1382842,
+                "class": "Edit",
+                "text": "",
+                "ctrl_id": 1230,
+                "rect": {
+                  "left": 1973,
+                  "top": 807,
+                  "right": 2057,
+                  "bottom": 843,
+                  "width": 84,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 5904462,
+                "class": "msctls_updown32",
+                "text": "",
+                "ctrl_id": 1224,
+                "rect": {
+                  "left": 2321,
+                  "top": 723,
+                  "right": 2348,
+                  "bottom": 759,
+                  "width": 27,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 5838236,
+                "class": "Edit",
+                "text": "",
+                "ctrl_id": 1220,
+                "rect": {
+                  "left": 2237,
+                  "top": 723,
+                  "right": 2321,
+                  "bottom": 759,
+                  "width": 84,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 1972682,
+                "class": "msctls_updown32",
+                "text": "",
+                "ctrl_id": 1214,
+                "rect": {
+                  "left": 2189,
+                  "top": 723,
+                  "right": 2216,
+                  "bottom": 759,
+                  "width": 27,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 1317242,
+                "class": "Edit",
+                "text": "",
+                "ctrl_id": 1210,
+                "rect": {
+                  "left": 2105,
+                  "top": 723,
+                  "right": 2189,
+                  "bottom": 759,
+                  "width": 84,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 2562464,
+                "class": "msctls_updown32",
+                "text": "",
+                "ctrl_id": 1204,
+                "rect": {
+                  "left": 2057,
+                  "top": 723,
+                  "right": 2084,
+                  "bottom": 759,
+                  "width": 27,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 7346172,
+                "class": "Edit",
+                "text": "",
+                "ctrl_id": 1200,
+                "rect": {
+                  "left": 1973,
+                  "top": 723,
+                  "right": 2057,
+                  "bottom": 759,
+                  "width": 84,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 1116504,
+                "class": "ComboBox",
+                "text": "",
+                "ctrl_id": 1190,
+                "rect": {
+                  "left": 1541,
+                  "top": 807,
+                  "right": 1949,
+                  "bottom": 843,
+                  "width": 408,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "combo_count": 16,
+                "combo_selected": 4294967295,
+                "children": []
+              },
+              {
+                "hwnd": 3279324,
+                "class": "Edit",
+                "text": "",
+                "ctrl_id": 1180,
+                "rect": {
+                  "left": 1541,
+                  "top": 723,
+                  "right": 1949,
+                  "bottom": 771,
+                  "width": 408,
+                  "height": 48
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              }
+            ]
+          },
+          {
+            "hwnd": 3413240,
+            "class": "Button",
+            "text": "防御对话",
+            "ctrl_id": 1160,
+            "rect": {
+              "left": 2129,
+              "top": 1119,
+              "right": 2681,
+              "bottom": 1443,
+              "width": 552,
+              "height": 324
+            },
+            "visible": false,
+            "enabled": true,
+            "children": [
+              {
+                "hwnd": 1643674,
+                "class": "Button",
+                "text": "按钮",
+                "ctrl_id": 1520,
+                "rect": {
+                  "left": 2261,
+                  "top": 1395,
+                  "right": 2633,
+                  "bottom": 1431,
+                  "width": 372,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 1249502,
+                "class": "Button",
+                "text": "按钮",
+                "ctrl_id": 1510,
+                "rect": {
+                  "left": 2261,
+                  "top": 1347,
+                  "right": 2633,
+                  "bottom": 1383,
+                  "width": 372,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 920892,
+                "class": "Button",
+                "text": "按钮",
+                "ctrl_id": 1500,
+                "rect": {
+                  "left": 2261,
+                  "top": 1299,
+                  "right": 2633,
+                  "bottom": 1335,
+                  "width": 372,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 1117512,
+                "class": "Button",
+                "text": "按钮",
+                "ctrl_id": 1490,
+                "rect": {
+                  "left": 2261,
+                  "top": 1251,
+                  "right": 2633,
+                  "bottom": 1287,
+                  "width": 372,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 6755438,
+                "class": "Button",
+                "text": "按钮",
+                "ctrl_id": 1480,
+                "rect": {
+                  "left": 2261,
+                  "top": 1203,
+                  "right": 2633,
+                  "bottom": 1239,
+                  "width": 372,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 1378174,
+                "class": "Button",
+                "text": "按钮",
+                "ctrl_id": 1470,
+                "rect": {
+                  "left": 2261,
+                  "top": 1155,
+                  "right": 2633,
+                  "bottom": 1191,
+                  "width": 372,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 1447136,
+                "class": "Afx:400000:b:10003:900015:0",
+                "text": "  被击落：",
+                "ctrl_id": 1150,
+                "rect": {
+                  "left": 2153,
+                  "top": 1407,
+                  "right": 2249,
+                  "bottom": 1431,
+                  "width": 96,
+                  "height": 24
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 1709262,
+                "class": "Afx:400000:b:10003:900015:0",
+                "text": "重度损伤：",
+                "ctrl_id": 1140,
+                "rect": {
+                  "left": 2153,
+                  "top": 1359,
+                  "right": 2249,
+                  "bottom": 1383,
+                  "width": 96,
+                  "height": 24
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 13240970,
+                "class": "Afx:400000:b:10003:900015:0",
+                "text": "中度损伤：",
+                "ctrl_id": 1130,
+                "rect": {
+                  "left": 2153,
+                  "top": 1311,
+                  "right": 2249,
+                  "bottom": 1335,
+                  "width": 96,
+                  "height": 24
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 1513812,
+                "class": "Afx:400000:b:10003:900015:0",
+                "text": "轻微损伤：",
+                "ctrl_id": 1120,
+                "rect": {
+                  "left": 2153,
+                  "top": 1263,
+                  "right": 2249,
+                  "bottom": 1287,
+                  "width": 96,
+                  "height": 24
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 1117502,
+                "class": "Afx:400000:b:10003:900015:0",
+                "text": "未受损伤：",
+                "ctrl_id": 1110,
+                "rect": {
+                  "left": 2153,
+                  "top": 1215,
+                  "right": 2249,
+                  "bottom": 1239,
+                  "width": 96,
+                  "height": 24
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 1052026,
+                "class": "Afx:400000:b:10003:900015:0",
+                "text": "防御成功：",
+                "ctrl_id": 1100,
+                "rect": {
+                  "left": 2153,
+                  "top": 1167,
+                  "right": 2249,
+                  "bottom": 1191,
+                  "width": 96,
+                  "height": 24
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              }
+            ]
+          },
+          {
+            "hwnd": 1509278,
+            "class": "Button",
+            "text": "攻击对话",
+            "ctrl_id": 1090,
+            "rect": {
+              "left": 2129,
+              "top": 807,
+              "right": 2681,
+              "bottom": 1107,
+              "width": 552,
+              "height": 300
+            },
+            "visible": false,
+            "enabled": true,
+            "children": [
+              {
+                "hwnd": 984964,
+                "class": "Button",
+                "text": "按钮",
+                "ctrl_id": 1460,
+                "rect": {
+                  "left": 2261,
+                  "top": 1035,
+                  "right": 2633,
+                  "bottom": 1071,
+                  "width": 372,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 1250592,
+                "class": "Button",
+                "text": "按钮",
+                "ctrl_id": 1450,
+                "rect": {
+                  "left": 2261,
+                  "top": 987,
+                  "right": 2633,
+                  "bottom": 1023,
+                  "width": 372,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 986494,
+                "class": "Button",
+                "text": "按钮",
+                "ctrl_id": 1440,
+                "rect": {
+                  "left": 2261,
+                  "top": 939,
+                  "right": 2633,
+                  "bottom": 975,
+                  "width": 372,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 1183116,
+                "class": "Button",
+                "text": "按钮",
+                "ctrl_id": 1430,
+                "rect": {
+                  "left": 2261,
+                  "top": 891,
+                  "right": 2633,
+                  "bottom": 927,
+                  "width": 372,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 1316632,
+                "class": "Button",
+                "text": "按钮",
+                "ctrl_id": 1420,
+                "rect": {
+                  "left": 2261,
+                  "top": 843,
+                  "right": 2633,
+                  "bottom": 879,
+                  "width": 372,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 1641014,
+                "class": "Afx:400000:b:10003:900015:0",
+                "text": "攻击受阻：",
+                "ctrl_id": 1080,
+                "rect": {
+                  "left": 2153,
+                  "top": 1047,
+                  "right": 2249,
+                  "bottom": 1071,
+                  "width": 96,
+                  "height": 24
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 1380550,
+                "class": "Afx:400000:b:10003:900015:0",
+                "text": "无力反击：",
+                "ctrl_id": 1070,
+                "rect": {
+                  "left": 2153,
+                  "top": 999,
+                  "right": 2249,
+                  "bottom": 1023,
+                  "width": 96,
+                  "height": 24
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 7143572,
+                "class": "Afx:400000:b:10003:900015:0",
+                "text": "可以反击：",
+                "ctrl_id": 1060,
+                "rect": {
+                  "left": 2153,
+                  "top": 951,
+                  "right": 2249,
+                  "bottom": 975,
+                  "width": 96,
+                  "height": 24
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 6754620,
+                "class": "Afx:400000:b:10003:900015:0",
+                "text": "二次攻击：",
+                "ctrl_id": 1050,
+                "rect": {
+                  "left": 2153,
+                  "top": 903,
+                  "right": 2249,
+                  "bottom": 927,
+                  "width": 96,
+                  "height": 24
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 1117660,
+                "class": "Afx:400000:b:10003:900015:0",
+                "text": "一次攻击：",
+                "ctrl_id": 1040,
+                "rect": {
+                  "left": 2153,
+                  "top": 855,
+                  "right": 2249,
+                  "bottom": 879,
+                  "width": 96,
+                  "height": 24
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              }
+            ]
+          },
+          {
+            "hwnd": 3936592,
+            "class": "Button",
+            "text": "变形起飞对话",
+            "ctrl_id": 1030,
+            "rect": {
+              "left": 1529,
+              "top": 1443,
+              "right": 2681,
+              "bottom": 1527,
+              "width": 1152,
+              "height": 84
+            },
+            "visible": false,
+            "enabled": true,
+            "children": [
+              {
+                "hwnd": 3542318,
+                "class": "Button",
+                "text": "清空",
+                "ctrl_id": 2180,
+                "rect": {
+                  "left": 1901,
+                  "top": 1479,
+                  "right": 1997,
+                  "bottom": 1515,
+                  "width": 96,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 1248582,
+                "class": "ComboBox",
+                "text": "",
+                "ctrl_id": 1540,
+                "rect": {
+                  "left": 1661,
+                  "top": 1479,
+                  "right": 1901,
+                  "bottom": 1515,
+                  "width": 240,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "combo_count": 0,
+                "combo_selected": 4294967295,
+                "children": []
+              },
+              {
+                "hwnd": 4657642,
+                "class": "Button",
+                "text": "按钮",
+                "ctrl_id": 1530,
+                "rect": {
+                  "left": 2261,
+                  "top": 1467,
+                  "right": 2633,
+                  "bottom": 1515,
+                  "width": 372,
+                  "height": 48
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 15795338,
+                "class": "Afx:400000:b:10003:900015:0",
+                "text": "变形对话：",
+                "ctrl_id": 1020,
+                "rect": {
+                  "left": 2153,
+                  "top": 1491,
+                  "right": 2249,
+                  "bottom": 1515,
+                  "width": 96,
+                  "height": 24
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 6099862,
+                "class": "Afx:400000:b:10003:900015:0",
+                "text": "对话选择：",
+                "ctrl_id": 1010,
+                "rect": {
+                  "left": 1553,
+                  "top": 1491,
+                  "right": 1649,
+                  "bottom": 1515,
+                  "width": 96,
+                  "height": 24
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              }
+            ]
+          },
+          {
+            "hwnd": 2955744,
+            "class": "Button",
+            "text": "人物属性",
+            "ctrl_id": 860,
+            "rect": {
+              "left": 1817,
+              "top": 819,
+              "right": 2105,
+              "bottom": 1179,
+              "width": 288,
+              "height": 360
+            },
+            "visible": false,
+            "enabled": true,
+            "children": [
+              {
+                "hwnd": 1446292,
+                "class": "Button",
+                "text": "击落不消失",
+                "ctrl_id": 2660,
+                "rect": {
+                  "left": 1961,
+                  "top": 1119,
+                  "right": 2093,
+                  "bottom": 1155,
+                  "width": 132,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 920908,
+                "class": "msctls_updown32",
+                "text": "",
+                "ctrl_id": 1004,
+                "rect": {
+                  "left": 2057,
+                  "top": 1047,
+                  "right": 2084,
+                  "bottom": 1083,
+                  "width": 27,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 986446,
+                "class": "Edit",
+                "text": "",
+                "ctrl_id": 1000,
+                "rect": {
+                  "left": 1985,
+                  "top": 1047,
+                  "right": 2057,
+                  "bottom": 1083,
+                  "width": 72,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 3408160,
+                "class": "msctls_updown32",
+                "text": "",
+                "ctrl_id": 994,
+                "rect": {
+                  "left": 1901,
+                  "top": 1131,
+                  "right": 1928,
+                  "bottom": 1167,
+                  "width": 27,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 1116250,
+                "class": "Edit",
+                "text": "",
+                "ctrl_id": 990,
+                "rect": {
+                  "left": 1829,
+                  "top": 1131,
+                  "right": 1901,
+                  "bottom": 1167,
+                  "width": 72,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 3409944,
+                "class": "msctls_updown32",
+                "text": "",
+                "ctrl_id": 984,
+                "rect": {
+                  "left": 1901,
+                  "top": 1047,
+                  "right": 1928,
+                  "bottom": 1083,
+                  "width": 27,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 1120726,
+                "class": "Edit",
+                "text": "",
+                "ctrl_id": 980,
+                "rect": {
+                  "left": 1829,
+                  "top": 1047,
+                  "right": 1901,
+                  "bottom": 1083,
+                  "width": 72,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 1116020,
+                "class": "msctls_updown32",
+                "text": "",
+                "ctrl_id": 974,
+                "rect": {
+                  "left": 1901,
+                  "top": 963,
+                  "right": 1928,
+                  "bottom": 999,
+                  "width": 27,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 1509094,
+                "class": "Edit",
+                "text": "",
+                "ctrl_id": 970,
+                "rect": {
+                  "left": 1829,
+                  "top": 963,
+                  "right": 1901,
+                  "bottom": 999,
+                  "width": 72,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 9503788,
+                "class": "msctls_updown32",
+                "text": "",
+                "ctrl_id": 964,
+                "rect": {
+                  "left": 2057,
+                  "top": 963,
+                  "right": 2084,
+                  "bottom": 999,
+                  "width": 27,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 3867212,
+                "class": "Edit",
+                "text": "",
+                "ctrl_id": 960,
+                "rect": {
+                  "left": 1985,
+                  "top": 963,
+                  "right": 2057,
+                  "bottom": 999,
+                  "width": 72,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 38666820,
+                "class": "Afx:400000:b:10003:900015:0",
+                "text": "机动补正：",
+                "ctrl_id": 950,
+                "rect": {
+                  "left": 1985,
+                  "top": 939,
+                  "right": 2069,
+                  "bottom": 963,
+                  "width": 84,
+                  "height": 24
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 6558208,
+                "class": "Afx:400000:b:10003:900015:0",
+                "text": "HP补正：",
+                "ctrl_id": 940,
+                "rect": {
+                  "left": 1985,
+                  "top": 1023,
+                  "right": 2069,
+                  "bottom": 1047,
+                  "width": 84,
+                  "height": 24
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 1052108,
+                "class": "Afx:400000:b:10003:900015:0",
+                "text": "强度补正：",
+                "ctrl_id": 930,
+                "rect": {
+                  "left": 1829,
+                  "top": 939,
+                  "right": 1913,
+                  "bottom": 963,
+                  "width": 84,
+                  "height": 24
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 985298,
+                "class": "Afx:400000:b:10003:900015:0",
+                "text": "防御补正：",
+                "ctrl_id": 920,
+                "rect": {
+                  "left": 1829,
+                  "top": 1023,
+                  "right": 1913,
+                  "bottom": 1047,
+                  "width": 84,
+                  "height": 24
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 1771778,
+                "class": "msctls_updown32",
+                "text": "",
+                "ctrl_id": 914,
+                "rect": {
+                  "left": 2057,
+                  "top": 879,
+                  "right": 2084,
+                  "bottom": 915,
+                  "width": 27,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 2038070,
+                "class": "Edit",
+                "text": "",
+                "ctrl_id": 910,
+                "rect": {
+                  "left": 1985,
+                  "top": 879,
+                  "right": 2057,
+                  "bottom": 915,
+                  "width": 72,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 3348242,
+                "class": "Afx:400000:b:10003:900015:0",
+                "text": "精神成长：",
+                "ctrl_id": 900,
+                "rect": {
+                  "left": 1985,
+                  "top": 855,
+                  "right": 2069,
+                  "bottom": 879,
+                  "width": 84,
+                  "height": 24
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 4069056,
+                "class": "msctls_updown32",
+                "text": "",
+                "ctrl_id": 894,
+                "rect": {
+                  "left": 1901,
+                  "top": 879,
+                  "right": 1928,
+                  "bottom": 915,
+                  "width": 27,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 2167992,
+                "class": "Edit",
+                "text": "",
+                "ctrl_id": 890,
+                "rect": {
+                  "left": 1829,
+                  "top": 879,
+                  "right": 1901,
+                  "bottom": 915,
+                  "width": 72,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 3150230,
+                "class": "Afx:400000:b:10003:900015:0",
+                "text": "速度补正：",
+                "ctrl_id": 880,
+                "rect": {
+                  "left": 1829,
+                  "top": 1107,
+                  "right": 1913,
+                  "bottom": 1131,
+                  "width": 84,
+                  "height": 24
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 2365926,
+                "class": "Afx:400000:b:10003:900015:0",
+                "text": "精神值：",
+                "ctrl_id": 870,
+                "rect": {
+                  "left": 1829,
+                  "top": 855,
+                  "right": 1913,
+                  "bottom": 879,
+                  "width": 84,
+                  "height": 24
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              }
+            ]
+          },
+          {
+            "hwnd": 3348716,
+            "class": "Button",
+            "text": "基本设置",
+            "ctrl_id": 810,
+            "rect": {
+              "left": 1529,
+              "top": 819,
+              "right": 1805,
+              "bottom": 1179,
+              "width": 276,
+              "height": 360
+            },
+            "visible": false,
+            "enabled": true,
+            "children": [
+              {
+                "hwnd": 2099230,
+                "class": "Afx:400000:b:10003:900015:0",
+                "text": "敌方战斗音乐：",
+                "ctrl_id": 2450,
+                "rect": {
+                  "left": 1541,
+                  "top": 1095,
+                  "right": 1673,
+                  "bottom": 1131,
+                  "width": 132,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 17503362,
+                "class": "Afx:400000:b:10003:900015:0",
+                "text": "我方战斗音乐：",
+                "ctrl_id": 2440,
+                "rect": {
+                  "left": 1541,
+                  "top": 1011,
+                  "right": 1673,
+                  "bottom": 1047,
+                  "width": 132,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 2232626,
+                "class": "Edit",
+                "text": "",
+                "ctrl_id": 2200,
+                "rect": {
+                  "left": 1541,
+                  "top": 963,
+                  "right": 1793,
+                  "bottom": 1011,
+                  "width": 252,
+                  "height": 48
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 2168066,
+                "class": "Afx:400000:b:10003:900015:0",
+                "text": "战斗名称：",
+                "ctrl_id": 2190,
+                "rect": {
+                  "left": 1541,
+                  "top": 927,
+                  "right": 1625,
+                  "bottom": 963,
+                  "width": 84,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 2103578,
+                "class": "ComboBox",
+                "text": "",
+                "ctrl_id": 850,
+                "rect": {
+                  "left": 1541,
+                  "top": 1047,
+                  "right": 1793,
+                  "bottom": 1083,
+                  "width": 252,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "combo_count": 0,
+                "combo_selected": 4294967295,
+                "children": []
+              },
+              {
+                "hwnd": 3346498,
+                "class": "ComboBox",
+                "text": "",
+                "ctrl_id": 840,
+                "rect": {
+                  "left": 1541,
+                  "top": 1131,
+                  "right": 1793,
+                  "bottom": 1167,
+                  "width": 252,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "combo_count": 0,
+                "combo_selected": 4294967295,
+                "children": []
+              },
+              {
+                "hwnd": 3412160,
+                "class": "Edit",
+                "text": "",
+                "ctrl_id": 830,
+                "rect": {
+                  "left": 1541,
+                  "top": 879,
+                  "right": 1793,
+                  "bottom": 927,
+                  "width": 252,
+                  "height": 48
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 2562266,
+                "class": "Afx:400000:b:10003:900015:0",
+                "text": "名称：",
+                "ctrl_id": 820,
+                "rect": {
+                  "left": 1541,
+                  "top": 843,
+                  "right": 1589,
+                  "bottom": 879,
+                  "width": 48,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              }
+            ]
+          },
+          {
+            "hwnd": 8853168,
+            "class": "Button",
+            "text": "头像设置",
+            "ctrl_id": 660,
+            "rect": {
+              "left": 1529,
+              "top": 663,
+              "right": 2681,
+              "bottom": 807,
+              "width": 1152,
+              "height": 144
+            },
+            "visible": false,
+            "enabled": true,
+            "children": [
+              {
+                "hwnd": 8787520,
+                "class": "Afx:400000:b:10003:900015:0",
+                "text": "头像颜色3：",
+                "ctrl_id": 2430,
+                "rect": {
+                  "left": 2525,
+                  "top": 711,
+                  "right": 2633,
+                  "bottom": 747,
+                  "width": 108,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 2298890,
+                "class": "Afx:400000:b:10003:900015:0",
+                "text": "头像颜色2：",
+                "ctrl_id": 2420,
+                "rect": {
+                  "left": 2357,
+                  "top": 711,
+                  "right": 2465,
+                  "bottom": 747,
+                  "width": 108,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 19010360,
+                "class": "Afx:400000:b:10003:900015:0",
+                "text": "头像颜色1：",
+                "ctrl_id": 2410,
+                "rect": {
+                  "left": 2189,
+                  "top": 711,
+                  "right": 2297,
+                  "bottom": 747,
+                  "width": 108,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 2427494,
+                "class": "Afx:400000:b:10003:900015:0",
+                "text": "背景图库：",
+                "ctrl_id": 2400,
+                "rect": {
+                  "left": 2057,
+                  "top": 687,
+                  "right": 2165,
+                  "bottom": 723,
+                  "width": 108,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 9640428,
+                "class": "Afx:400000:b:10003:900015:0",
+                "text": "正面图库：",
+                "ctrl_id": 2390,
+                "rect": {
+                  "left": 1913,
+                  "top": 687,
+                  "right": 2021,
+                  "bottom": 723,
+                  "width": 108,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 1512594,
+                "class": "_EL_PicBox",
+                "text": "",
+                "ctrl_id": 1360,
+                "rect": {
+                  "left": 1541,
+                  "top": 699,
+                  "right": 1637,
+                  "bottom": 795,
+                  "width": 96,
+                  "height": 96
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 2300528,
+                "class": "Button",
+                "text": "背景上传",
+                "ctrl_id": 800,
+                "rect": {
+                  "left": 1781,
+                  "top": 747,
+                  "right": 1877,
+                  "bottom": 783,
+                  "width": 96,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 1710106,
+                "class": "Button",
+                "text": "正面上传",
+                "ctrl_id": 790,
+                "rect": {
+                  "left": 1781,
+                  "top": 699,
+                  "right": 1877,
+                  "bottom": 735,
+                  "width": 96,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 2496408,
+                "class": "_EL_Label",
+                "text": "",
+                "ctrl_id": 780,
+                "rect": {
+                  "left": 2189,
+                  "top": 747,
+                  "right": 2225,
+                  "bottom": 783,
+                  "width": 36,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 2824708,
+                "class": "_EL_Label",
+                "text": "",
+                "ctrl_id": 770,
+                "rect": {
+                  "left": 2357,
+                  "top": 747,
+                  "right": 2393,
+                  "bottom": 783,
+                  "width": 36,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 989558,
+                "class": "_EL_Label",
+                "text": "",
+                "ctrl_id": 760,
+                "rect": {
+                  "left": 2525,
+                  "top": 747,
+                  "right": 2561,
+                  "bottom": 783,
+                  "width": 36,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 7280814,
+                "class": "Edit",
+                "text": "",
+                "ctrl_id": 750,
+                "rect": {
+                  "left": 2573,
+                  "top": 747,
+                  "right": 2633,
+                  "bottom": 783,
+                  "width": 60,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 1055390,
+                "class": "Edit",
+                "text": "",
+                "ctrl_id": 740,
+                "rect": {
+                  "left": 2405,
+                  "top": 747,
+                  "right": 2465,
+                  "bottom": 783,
+                  "width": 60,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 3479784,
+                "class": "Edit",
+                "text": "",
+                "ctrl_id": 730,
+                "rect": {
+                  "left": 2237,
+                  "top": 747,
+                  "right": 2297,
+                  "bottom": 783,
+                  "width": 60,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 2562396,
+                "class": "ComboBox",
+                "text": "图库：000",
+                "ctrl_id": 720,
+                "rect": {
+                  "left": 2057,
+                  "top": 723,
+                  "right": 2177,
+                  "bottom": 753,
+                  "width": 120,
+                  "height": 30
+                },
+                "visible": false,
+                "enabled": true,
+                "combo_count": 512,
+                "combo_selected": 0,
+                "children": []
+              },
+              {
+                "hwnd": 2627760,
+                "class": "ComboBox",
+                "text": "",
+                "ctrl_id": 710,
+                "rect": {
+                  "left": 2057,
+                  "top": 759,
+                  "right": 2177,
+                  "bottom": 789,
+                  "width": 120,
+                  "height": 30
+                },
+                "visible": false,
+                "enabled": true,
+                "combo_count": 4,
+                "combo_selected": 4294967295,
+                "children": []
+              },
+              {
+                "hwnd": 2758810,
+                "class": "ComboBox",
+                "text": "",
+                "ctrl_id": 700,
+                "rect": {
+                  "left": 1913,
+                  "top": 759,
+                  "right": 2033,
+                  "bottom": 789,
+                  "width": 120,
+                  "height": 30
+                },
+                "visible": false,
+                "enabled": true,
+                "combo_count": 4,
+                "combo_selected": 4294967295,
+                "children": []
+              },
+              {
+                "hwnd": 12916840,
+                "class": "ComboBox",
+                "text": "图库：000",
+                "ctrl_id": 690,
+                "rect": {
+                  "left": 1913,
+                  "top": 723,
+                  "right": 2033,
+                  "bottom": 753,
+                  "width": 120,
+                  "height": 30
+                },
+                "visible": false,
+                "enabled": true,
+                "combo_count": 512,
+                "combo_selected": 0,
+                "children": []
+              },
+              {
+                "hwnd": 5445356,
+                "class": "Button",
+                "text": "显示正面",
+                "ctrl_id": 680,
+                "rect": {
+                  "left": 1661,
+                  "top": 723,
+                  "right": 1781,
+                  "bottom": 747,
+                  "width": 120,
+                  "height": 24
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 4200562,
+                "class": "Button",
+                "text": "显示背景",
+                "ctrl_id": 670,
+                "rect": {
+                  "left": 1661,
+                  "top": 759,
+                  "right": 1781,
+                  "bottom": 783,
+                  "width": 120,
+                  "height": 24
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              }
+            ]
+          },
+          {
+            "hwnd": 3999400,
+            "class": "Button",
+            "text": "人物选择",
+            "ctrl_id": 640,
+            "rect": {
+              "left": 1145,
+              "top": 663,
+              "right": 1517,
+              "bottom": 1527,
+              "width": 372,
+              "height": 864
+            },
+            "visible": false,
+            "enabled": true,
+            "children": [
+              {
+                "hwnd": 920898,
+                "class": "Button",
+                "text": "添加",
+                "ctrl_id": 2120,
+                "rect": {
+                  "left": 1157,
+                  "top": 1467,
+                  "right": 1505,
+                  "bottom": 1515,
+                  "width": 348,
+                  "height": 48
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 10752898,
+                "class": "ListBox",
+                "text": "",
+                "ctrl_id": 630,
+                "rect": {
+                  "left": 1157,
+                  "top": 687,
+                  "right": 1505,
+                  "bottom": 1467,
+                  "width": 348,
+                  "height": 780
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              }
+            ]
+          },
+          {
+            "hwnd": 8067212,
+            "class": "Button",
+            "text": "武器选择",
+            "ctrl_id": 620,
+            "rect": {
+              "left": 1145,
+              "top": 663,
+              "right": 1517,
+              "bottom": 1527,
+              "width": 372,
+              "height": 864
+            },
+            "visible": false,
+            "enabled": true,
+            "children": [
+              {
+                "hwnd": 1840308,
+                "class": "Button",
+                "text": "添加",
+                "ctrl_id": 2130,
+                "rect": {
+                  "left": 1157,
+                  "top": 1467,
+                  "right": 1505,
+                  "bottom": 1515,
+                  "width": 348,
+                  "height": 48
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 2561186,
+                "class": "ListBox",
+                "text": "",
+                "ctrl_id": 610,
+                "rect": {
+                  "left": 1157,
+                  "top": 687,
+                  "right": 1505,
+                  "bottom": 1467,
+                  "width": 348,
+                  "height": 780
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              }
+            ]
+          },
+          {
+            "hwnd": 2165946,
+            "class": "Button",
+            "text": "机体武器",
+            "ctrl_id": 520,
+            "rect": {
+              "left": 2357,
+              "top": 1107,
+              "right": 2681,
+              "bottom": 1527,
+              "width": 324,
+              "height": 420
+            },
+            "visible": false,
+            "enabled": true,
+            "children": [
+              {
+                "hwnd": 2561658,
+                "class": "Button",
+                "text": "转到武器2",
+                "ctrl_id": 2730,
+                "rect": {
+                  "left": 2501,
+                  "top": 1235,
+                  "right": 2621,
+                  "bottom": 1271,
+                  "width": 120,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 6166112,
+                "class": "Button",
+                "text": "转到武器1",
+                "ctrl_id": 2720,
+                "rect": {
+                  "left": 2501,
+                  "top": 1151,
+                  "right": 2621,
+                  "bottom": 1187,
+                  "width": 120,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 41290798,
+                "class": "Afx:400000:b:10003:900015:0",
+                "text": "提示：\r\n如果我方机体选择敌方方向的武器，可能出现死机或者动画显示不正常！！！\r\n\r\n反之，敌方选择我方方向武器同理！！！",
+                "ctrl_id": 2500,
+                "rect": {
+                  "left": 2369,
+                  "top": 1323,
+                  "right": 2645,
+                  "bottom": 1479,
+                  "width": 276,
+                  "height": 156
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 11538998,
+                "class": "Afx:400000:b:10003:900015:0",
+                "text": "武器1：",
+                "ctrl_id": 2290,
+                "rect": {
+                  "left": 2369,
+                  "top": 1155,
+                  "right": 2477,
+                  "bottom": 1179,
+                  "width": 108,
+                  "height": 24
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 2691358,
+                "class": "Afx:400000:b:10003:900015:0",
+                "text": "武器2：",
+                "ctrl_id": 2280,
+                "rect": {
+                  "left": 2369,
+                  "top": 1239,
+                  "right": 2477,
+                  "bottom": 1263,
+                  "width": 108,
+                  "height": 24
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 1052048,
+                "class": "ComboBox",
+                "text": "",
+                "ctrl_id": 560,
+                "rect": {
+                  "left": 2369,
+                  "top": 1275,
+                  "right": 2633,
+                  "bottom": 1311,
+                  "width": 264,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "combo_count": 0,
+                "combo_selected": 4294967295,
+                "children": []
+              },
+              {
+                "hwnd": 1117658,
+                "class": "ComboBox",
+                "text": "",
+                "ctrl_id": 550,
+                "rect": {
+                  "left": 2369,
+                  "top": 1191,
+                  "right": 2633,
+                  "bottom": 1227,
+                  "width": 264,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "combo_count": 0,
+                "combo_selected": 4294967295,
+                "children": []
+              }
+            ]
+          },
+          {
+            "hwnd": 1446056,
+            "class": "Button",
+            "text": "机体属性",
+            "ctrl_id": 400,
+            "rect": {
+              "left": 1877,
+              "top": 1107,
+              "right": 2345,
+              "bottom": 1527,
+              "width": 468,
+              "height": 420
+            },
+            "visible": false,
+            "enabled": true,
+            "children": [
+              {
+                "hwnd": 4456976,
+                "class": "Button",
+                "text": "按钮",
+                "ctrl_id": 2600,
+                "rect": {
+                  "left": 2057,
+                  "top": 1371,
+                  "right": 2177,
+                  "bottom": 1419,
+                  "width": 120,
+                  "height": 48
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 3080458,
+                "class": "Afx:400000:b:10003:900015:0",
+                "text": "速度：             HP：               HP成长：",
+                "ctrl_id": 2270,
+                "rect": {
+                  "left": 1889,
+                  "top": 1431,
+                  "right": 2333,
+                  "bottom": 1467,
+                  "width": 444,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 26349278,
+                "class": "Afx:400000:b:10003:900015:0",
+                "text": "防御：             特殊技能：         速度成长：",
+                "ctrl_id": 2260,
+                "rect": {
+                  "left": 1889,
+                  "top": 1335,
+                  "right": 2333,
+                  "bottom": 1371,
+                  "width": 444,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 1317314,
+                "class": "Afx:400000:b:10003:900015:0",
+                "text": "强度：             基础金钱：         防御成长：",
+                "ctrl_id": 2250,
+                "rect": {
+                  "left": 1889,
+                  "top": 1239,
+                  "right": 2333,
+                  "bottom": 1275,
+                  "width": 444,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 16517784,
+                "class": "Afx:400000:b:10003:900015:0",
+                "text": "机动：             基础经验：         强度成长：",
+                "ctrl_id": 2240,
+                "rect": {
+                  "left": 1889,
+                  "top": 1143,
+                  "right": 2309,
+                  "bottom": 1179,
+                  "width": 420,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 2821366,
+                "class": "msctls_updown32",
+                "text": "",
+                "ctrl_id": 514,
+                "rect": {
+                  "left": 1973,
+                  "top": 1179,
+                  "right": 2000,
+                  "bottom": 1215,
+                  "width": 27,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 921086,
+                "class": "Edit",
+                "text": "",
+                "ctrl_id": 510,
+                "rect": {
+                  "left": 1889,
+                  "top": 1179,
+                  "right": 1973,
+                  "bottom": 1215,
+                  "width": 84,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 855548,
+                "class": "msctls_updown32",
+                "text": "",
+                "ctrl_id": 504,
+                "rect": {
+                  "left": 2141,
+                  "top": 1179,
+                  "right": 2168,
+                  "bottom": 1215,
+                  "width": 27,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 1247500,
+                "class": "Edit",
+                "text": "",
+                "ctrl_id": 500,
+                "rect": {
+                  "left": 2057,
+                  "top": 1179,
+                  "right": 2141,
+                  "bottom": 1215,
+                  "width": 84,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 1379532,
+                "class": "msctls_updown32",
+                "text": "",
+                "ctrl_id": 494,
+                "rect": {
+                  "left": 2309,
+                  "top": 1179,
+                  "right": 2336,
+                  "bottom": 1215,
+                  "width": 27,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 1247204,
+                "class": "Edit",
+                "text": "",
+                "ctrl_id": 490,
+                "rect": {
+                  "left": 2225,
+                  "top": 1179,
+                  "right": 2309,
+                  "bottom": 1215,
+                  "width": 84,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 8720492,
+                "class": "msctls_updown32",
+                "text": "",
+                "ctrl_id": 484,
+                "rect": {
+                  "left": 1973,
+                  "top": 1275,
+                  "right": 2000,
+                  "bottom": 1311,
+                  "width": 27,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 1445320,
+                "class": "Edit",
+                "text": "",
+                "ctrl_id": 480,
+                "rect": {
+                  "left": 1889,
+                  "top": 1275,
+                  "right": 1973,
+                  "bottom": 1311,
+                  "width": 84,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 2494658,
+                "class": "msctls_updown32",
+                "text": "",
+                "ctrl_id": 474,
+                "rect": {
+                  "left": 2141,
+                  "top": 1275,
+                  "right": 2168,
+                  "bottom": 1311,
+                  "width": 27,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 1841150,
+                "class": "Edit",
+                "text": "",
+                "ctrl_id": 470,
+                "rect": {
+                  "left": 2057,
+                  "top": 1275,
+                  "right": 2141,
+                  "bottom": 1311,
+                  "width": 84,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 5117646,
+                "class": "msctls_updown32",
+                "text": "",
+                "ctrl_id": 464,
+                "rect": {
+                  "left": 2309,
+                  "top": 1275,
+                  "right": 2336,
+                  "bottom": 1311,
+                  "width": 27,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 21041970,
+                "class": "Edit",
+                "text": "",
+                "ctrl_id": 460,
+                "rect": {
+                  "left": 2225,
+                  "top": 1275,
+                  "right": 2309,
+                  "bottom": 1311,
+                  "width": 84,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 3214194,
+                "class": "msctls_updown32",
+                "text": "",
+                "ctrl_id": 454,
+                "rect": {
+                  "left": 1973,
+                  "top": 1371,
+                  "right": 2000,
+                  "bottom": 1407,
+                  "width": 27,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 4853224,
+                "class": "Edit",
+                "text": "",
+                "ctrl_id": 450,
+                "rect": {
+                  "left": 1889,
+                  "top": 1371,
+                  "right": 1973,
+                  "bottom": 1407,
+                  "width": 84,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 8914930,
+                "class": "msctls_updown32",
+                "text": "",
+                "ctrl_id": 444,
+                "rect": {
+                  "left": 2309,
+                  "top": 1371,
+                  "right": 2336,
+                  "bottom": 1407,
+                  "width": 27,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 921094,
+                "class": "Edit",
+                "text": "",
+                "ctrl_id": 440,
+                "rect": {
+                  "left": 2225,
+                  "top": 1371,
+                  "right": 2309,
+                  "bottom": 1407,
+                  "width": 84,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 3281658,
+                "class": "msctls_updown32",
+                "text": "",
+                "ctrl_id": 434,
+                "rect": {
+                  "left": 1973,
+                  "top": 1467,
+                  "right": 2000,
+                  "bottom": 1503,
+                  "width": 27,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 1052112,
+                "class": "Edit",
+                "text": "",
+                "ctrl_id": 430,
+                "rect": {
+                  "left": 1889,
+                  "top": 1467,
+                  "right": 1973,
+                  "bottom": 1503,
+                  "width": 84,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 2428172,
+                "class": "msctls_updown32",
+                "text": "",
+                "ctrl_id": 424,
+                "rect": {
+                  "left": 2141,
+                  "top": 1467,
+                  "right": 2168,
+                  "bottom": 1503,
+                  "width": 27,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 7802032,
+                "class": "Edit",
+                "text": "",
+                "ctrl_id": 420,
+                "rect": {
+                  "left": 2057,
+                  "top": 1467,
+                  "right": 2141,
+                  "bottom": 1503,
+                  "width": 84,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 9505958,
+                "class": "msctls_updown32",
+                "text": "",
+                "ctrl_id": 414,
+                "rect": {
+                  "left": 2309,
+                  "top": 1467,
+                  "right": 2336,
+                  "bottom": 1503,
+                  "width": 27,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 2099736,
+                "class": "Edit",
+                "text": "",
+                "ctrl_id": 410,
+                "rect": {
+                  "left": 2225,
+                  "top": 1467,
+                  "right": 2309,
+                  "bottom": 1503,
+                  "width": 84,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              }
+            ]
+          },
+          {
+            "hwnd": 1378912,
+            "class": "Button",
+            "text": "基本设置",
+            "ctrl_id": 380,
+            "rect": {
+              "left": 1529,
+              "top": 1107,
+              "right": 1865,
+              "bottom": 1527,
+              "width": 336,
+              "height": 420
+            },
+            "visible": false,
+            "enabled": true,
+            "children": [
+              {
+                "hwnd": 1247842,
+                "class": "Afx:400000:b:10003:900015:0",
+                "text": "变形：",
+                "ctrl_id": 2230,
+                "rect": {
+                  "left": 1541,
+                  "top": 1407,
+                  "right": 1637,
+                  "bottom": 1431,
+                  "width": 96,
+                  "height": 24
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 1707102,
+                "class": "Afx:400000:b:10003:900015:0",
+                "text": "适应地形：",
+                "ctrl_id": 2220,
+                "rect": {
+                  "left": 1541,
+                  "top": 1287,
+                  "right": 1637,
+                  "bottom": 1311,
+                  "width": 96,
+                  "height": 24
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 1575518,
+                "class": "Afx:400000:b:10003:900015:0",
+                "text": "机体名称：",
+                "ctrl_id": 2210,
+                "rect": {
+                  "left": 1541,
+                  "top": 1155,
+                  "right": 1649,
+                  "bottom": 1179,
+                  "width": 108,
+                  "height": 24
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 1182646,
+                "class": "ComboBox",
+                "text": "",
+                "ctrl_id": 540,
+                "rect": {
+                  "left": 1541,
+                  "top": 1323,
+                  "right": 1853,
+                  "bottom": 1364,
+                  "width": 312,
+                  "height": 41
+                },
+                "visible": false,
+                "enabled": true,
+                "combo_count": 3,
+                "combo_selected": 4294967295,
+                "children": []
+              },
+              {
+                "hwnd": 1903834,
+                "class": "ComboBox",
+                "text": "",
+                "ctrl_id": 530,
+                "rect": {
+                  "left": 1541,
+                  "top": 1440,
+                  "right": 1853,
+                  "bottom": 1481,
+                  "width": 312,
+                  "height": 41
+                },
+                "visible": false,
+                "enabled": true,
+                "combo_count": 11,
+                "combo_selected": 4294967295,
+                "children": []
+              },
+              {
+                "hwnd": 2886868,
+                "class": "Edit",
+                "text": "",
+                "ctrl_id": 390,
+                "rect": {
+                  "left": 1541,
+                  "top": 1191,
+                  "right": 1853,
+                  "bottom": 1239,
+                  "width": 312,
+                  "height": 48
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              }
+            ]
+          },
+          {
+            "hwnd": 3609102,
+            "class": "Button",
+            "text": "机体图片",
+            "ctrl_id": 140,
+            "rect": {
+              "left": 1529,
+              "top": 663,
+              "right": 2681,
+              "bottom": 1083,
+              "width": 1152,
+              "height": 420
+            },
+            "visible": false,
+            "enabled": true,
+            "children": [
+              {
+                "hwnd": 1052074,
+                "class": "Button",
+                "text": "舰长",
+                "ctrl_id": 2700,
+                "rect": {
+                  "left": 2549,
+                  "top": 687,
+                  "right": 2645,
+                  "bottom": 723,
+                  "width": 96,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 1052162,
+                "class": "Button",
+                "text": "调换图库",
+                "ctrl_id": 2690,
+                "rect": {
+                  "left": 1937,
+                  "top": 831,
+                  "right": 2057,
+                  "bottom": 855,
+                  "width": 120,
+                  "height": 24
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 1381754,
+                "class": "Button",
+                "text": "清除碎片",
+                "ctrl_id": 2680,
+                "rect": {
+                  "left": 2081,
+                  "top": 711,
+                  "right": 2177,
+                  "bottom": 747,
+                  "width": 96,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 9573512,
+                "class": "Button",
+                "text": "清除机体",
+                "ctrl_id": 2670,
+                "rect": {
+                  "left": 1937,
+                  "top": 711,
+                  "right": 2033,
+                  "bottom": 747,
+                  "width": 96,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 31591488,
+                "class": "Button",
+                "text": "上传图标",
+                "ctrl_id": 2510,
+                "rect": {
+                  "left": 2117,
+                  "top": 999,
+                  "right": 2216,
+                  "bottom": 1035,
+                  "width": 99,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 986560,
+                "class": "Afx:400000:b:10003:900015:0",
+                "text": "机体碎片地址：",
+                "ctrl_id": 2380,
+                "rect": {
+                  "left": 2405,
+                  "top": 975,
+                  "right": 2537,
+                  "bottom": 1011,
+                  "width": 132,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 2492014,
+                "class": "Afx:400000:b:10003:900015:0",
+                "text": "机体图片地址2：",
+                "ctrl_id": 2370,
+                "rect": {
+                  "left": 2405,
+                  "top": 879,
+                  "right": 2537,
+                  "bottom": 915,
+                  "width": 132,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 1443068,
+                "class": "Afx:400000:b:10003:900015:0",
+                "text": "机体图片地址1：",
+                "ctrl_id": 2360,
+                "rect": {
+                  "left": 2405,
+                  "top": 783,
+                  "right": 2537,
+                  "bottom": 819,
+                  "width": 132,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 7149090,
+                "class": "Afx:400000:b:10003:900015:0",
+                "text": "机体类型：",
+                "ctrl_id": 2350,
+                "rect": {
+                  "left": 2405,
+                  "top": 687,
+                  "right": 2513,
+                  "bottom": 723,
+                  "width": 108,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 1052066,
+                "class": "Afx:400000:b:10003:900015:0",
+                "text": "碎片三色：",
+                "ctrl_id": 2340,
+                "rect": {
+                  "left": 2225,
+                  "top": 879,
+                  "right": 2333,
+                  "bottom": 915,
+                  "width": 108,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 920990,
+                "class": "Afx:400000:b:10003:900015:0",
+                "text": "机体三色：",
+                "ctrl_id": 2330,
+                "rect": {
+                  "left": 2225,
+                  "top": 687,
+                  "right": 2333,
+                  "bottom": 723,
+                  "width": 108,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 2230864,
+                "class": "Afx:400000:b:10003:900015:0",
+                "text": "机体图标：",
+                "ctrl_id": 2320,
+                "rect": {
+                  "left": 1937,
+                  "top": 1035,
+                  "right": 2021,
+                  "bottom": 1071,
+                  "width": 84,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 41357484,
+                "class": "Afx:400000:b:10003:900015:0",
+                "text": "导图偏移：",
+                "ctrl_id": 2310,
+                "rect": {
+                  "left": 2081,
+                  "top": 747,
+                  "right": 2189,
+                  "bottom": 783,
+                  "width": 108,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 4001924,
+                "class": "Afx:400000:b:10003:900015:0",
+                "text": "导图偏移：",
+                "ctrl_id": 2300,
+                "rect": {
+                  "left": 1937,
+                  "top": 747,
+                  "right": 2045,
+                  "bottom": 783,
+                  "width": 108,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 1709386,
+                "class": "Button",
+                "text": "更改图标",
+                "ctrl_id": 1350,
+                "rect": {
+                  "left": 2117,
+                  "top": 1035,
+                  "right": 2216,
+                  "bottom": 1071,
+                  "width": 99,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 8261810,
+                "class": "_EL_DrawPanel",
+                "text": "",
+                "ctrl_id": 1340,
+                "rect": {
+                  "left": 2033,
+                  "top": 999,
+                  "right": 2110,
+                  "bottom": 1076,
+                  "width": 77,
+                  "height": 77
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 8129332,
+                "class": "_EL_Label",
+                "text": "",
+                "ctrl_id": 1330,
+                "rect": {
+                  "left": 2213,
+                  "top": 675,
+                  "right": 2216,
+                  "bottom": 987,
+                  "width": 3,
+                  "height": 312
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 11016680,
+                "class": "_EL_Label",
+                "text": "",
+                "ctrl_id": 1320,
+                "rect": {
+                  "left": 1925,
+                  "top": 987,
+                  "right": 2213,
+                  "bottom": 990,
+                  "width": 288,
+                  "height": 3
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 2627696,
+                "class": "Button",
+                "text": "上传碎片",
+                "ctrl_id": 1310,
+                "rect": {
+                  "left": 2081,
+                  "top": 675,
+                  "right": 2177,
+                  "bottom": 711,
+                  "width": 96,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 793028,
+                "class": "Edit",
+                "text": "0",
+                "ctrl_id": 1300,
+                "rect": {
+                  "left": 2081,
+                  "top": 783,
+                  "right": 2153,
+                  "bottom": 819,
+                  "width": 72,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 987434,
+                "class": "Button",
+                "text": "压缩上传",
+                "ctrl_id": 1290,
+                "rect": {
+                  "left": 2081,
+                  "top": 843,
+                  "right": 2201,
+                  "bottom": 879,
+                  "width": 120,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 5904482,
+                "class": "_EL_Label",
+                "text": "",
+                "ctrl_id": 1280,
+                "rect": {
+                  "left": 2061,
+                  "top": 675,
+                  "right": 2064,
+                  "bottom": 987,
+                  "width": 3,
+                  "height": 312
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 3411352,
+                "class": "Afx:400000:8:10003:900015:0",
+                "text": "",
+                "ctrl_id": 650,
+                "rect": {
+                  "left": 1601,
+                  "top": 747,
+                  "right": 1625,
+                  "bottom": 771,
+                  "width": 24,
+                  "height": 24
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 7804946,
+                "class": "Afx:400000:8:10003:900015:0",
+                "text": "",
+                "ctrl_id": 580,
+                "rect": {
+                  "left": 1697,
+                  "top": 759,
+                  "right": 1721,
+                  "bottom": 783,
+                  "width": 24,
+                  "height": 24
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 3605758,
+                "class": "ComboBox",
+                "text": "",
+                "ctrl_id": 570,
+                "rect": {
+                  "left": 2405,
+                  "top": 723,
+                  "right": 2657,
+                  "bottom": 756,
+                  "width": 252,
+                  "height": 33
+                },
+                "visible": false,
+                "enabled": true,
+                "combo_count": 4,
+                "combo_selected": 4294967295,
+                "children": []
+              },
+              {
+                "hwnd": 5772788,
+                "class": "ComboBox",
+                "text": "",
+                "ctrl_id": 370,
+                "rect": {
+                  "left": 2405,
+                  "top": 1011,
+                  "right": 2657,
+                  "bottom": 1047,
+                  "width": 252,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "combo_count": 256,
+                "combo_selected": 4294967295,
+                "children": []
+              },
+              {
+                "hwnd": 2428058,
+                "class": "ComboBox",
+                "text": "",
+                "ctrl_id": 360,
+                "rect": {
+                  "left": 2405,
+                  "top": 915,
+                  "right": 2657,
+                  "bottom": 951,
+                  "width": 252,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "combo_count": 256,
+                "combo_selected": 4294967295,
+                "children": []
+              },
+              {
+                "hwnd": 70653394,
+                "class": "ComboBox",
+                "text": "",
+                "ctrl_id": 350,
+                "rect": {
+                  "left": 2405,
+                  "top": 819,
+                  "right": 2657,
+                  "bottom": 855,
+                  "width": 252,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "combo_count": 256,
+                "combo_selected": 4294967295,
+                "children": []
+              },
+              {
+                "hwnd": 5379500,
+                "class": "_EL_Label",
+                "text": "",
+                "ctrl_id": 340,
+                "rect": {
+                  "left": 2225,
+                  "top": 915,
+                  "right": 2261,
+                  "bottom": 951,
+                  "width": 36,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 1644310,
+                "class": "_EL_Label",
+                "text": "",
+                "ctrl_id": 330,
+                "rect": {
+                  "left": 2225,
+                  "top": 963,
+                  "right": 2261,
+                  "bottom": 999,
+                  "width": 36,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 1315116,
+                "class": "_EL_Label",
+                "text": "",
+                "ctrl_id": 320,
+                "rect": {
+                  "left": 2225,
+                  "top": 1011,
+                  "right": 2261,
+                  "bottom": 1047,
+                  "width": 36,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 986594,
+                "class": "Edit",
+                "text": "",
+                "ctrl_id": 310,
+                "rect": {
+                  "left": 2285,
+                  "top": 915,
+                  "right": 2345,
+                  "bottom": 951,
+                  "width": 60,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 4264764,
+                "class": "Edit",
+                "text": "",
+                "ctrl_id": 300,
+                "rect": {
+                  "left": 2285,
+                  "top": 963,
+                  "right": 2345,
+                  "bottom": 999,
+                  "width": 60,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 2821342,
+                "class": "Edit",
+                "text": "",
+                "ctrl_id": 290,
+                "rect": {
+                  "left": 2285,
+                  "top": 1011,
+                  "right": 2345,
+                  "bottom": 1047,
+                  "width": 60,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 1051924,
+                "class": "_EL_Label",
+                "text": "",
+                "ctrl_id": 280,
+                "rect": {
+                  "left": 2225,
+                  "top": 723,
+                  "right": 2261,
+                  "bottom": 759,
+                  "width": 36,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 855512,
+                "class": "_EL_Label",
+                "text": "",
+                "ctrl_id": 270,
+                "rect": {
+                  "left": 2225,
+                  "top": 771,
+                  "right": 2261,
+                  "bottom": 807,
+                  "width": 36,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 921044,
+                "class": "_EL_Label",
+                "text": "",
+                "ctrl_id": 260,
+                "rect": {
+                  "left": 2225,
+                  "top": 819,
+                  "right": 2261,
+                  "bottom": 855,
+                  "width": 36,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 3740624,
+                "class": "Edit",
+                "text": "",
+                "ctrl_id": 250,
+                "rect": {
+                  "left": 2285,
+                  "top": 723,
+                  "right": 2345,
+                  "bottom": 759,
+                  "width": 60,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 3869396,
+                "class": "Edit",
+                "text": "",
+                "ctrl_id": 240,
+                "rect": {
+                  "left": 2285,
+                  "top": 771,
+                  "right": 2345,
+                  "bottom": 807,
+                  "width": 60,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 3999666,
+                "class": "Edit",
+                "text": "",
+                "ctrl_id": 230,
+                "rect": {
+                  "left": 2285,
+                  "top": 819,
+                  "right": 2345,
+                  "bottom": 855,
+                  "width": 60,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 921016,
+                "class": "Button",
+                "text": "碎片拼图",
+                "ctrl_id": 220,
+                "rect": {
+                  "left": 2081,
+                  "top": 903,
+                  "right": 2189,
+                  "bottom": 939,
+                  "width": 108,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 8000852,
+                "class": "Button",
+                "text": "显示碎片",
+                "ctrl_id": 210,
+                "rect": {
+                  "left": 2093,
+                  "top": 951,
+                  "right": 2213,
+                  "bottom": 987,
+                  "width": 120,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 2559102,
+                "class": "Button",
+                "text": "显示机体",
+                "ctrl_id": 200,
+                "rect": {
+                  "left": 1937,
+                  "top": 951,
+                  "right": 2057,
+                  "bottom": 987,
+                  "width": 120,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 1968372,
+                "class": "Button",
+                "text": "机体拼图",
+                "ctrl_id": 190,
+                "rect": {
+                  "left": 1937,
+                  "top": 903,
+                  "right": 2045,
+                  "bottom": 939,
+                  "width": 108,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 986478,
+                "class": "Button",
+                "text": "压缩上传",
+                "ctrl_id": 180,
+                "rect": {
+                  "left": 1937,
+                  "top": 867,
+                  "right": 2057,
+                  "bottom": 891,
+                  "width": 120,
+                  "height": 24
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 36766134,
+                "class": "Edit",
+                "text": "0",
+                "ctrl_id": 170,
+                "rect": {
+                  "left": 1937,
+                  "top": 783,
+                  "right": 2009,
+                  "bottom": 819,
+                  "width": 72,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 3214366,
+                "class": "Button",
+                "text": "上传机体",
+                "ctrl_id": 160,
+                "rect": {
+                  "left": 1937,
+                  "top": 675,
+                  "right": 2033,
+                  "bottom": 711,
+                  "width": 96,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 1772092,
+                "class": "Afx:400000:b:10003:900015:0",
+                "text": "",
+                "ctrl_id": 150,
+                "rect": {
+                  "left": 1541,
+                  "top": 687,
+                  "right": 1925,
+                  "bottom": 1071,
+                  "width": 384,
+                  "height": 384
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              }
+            ]
+          },
+          {
+            "hwnd": 1052076,
+            "class": "Button",
+            "text": "机体选择",
+            "ctrl_id": 110,
+            "rect": {
+              "left": 1145,
+              "top": 663,
+              "right": 1517,
+              "bottom": 1527,
+              "width": 372,
+              "height": 864
+            },
+            "visible": false,
+            "enabled": true,
+            "children": [
+              {
+                "hwnd": 1379474,
+                "class": "Button",
+                "text": "添加",
+                "ctrl_id": 130,
+                "rect": {
+                  "left": 1157,
+                  "top": 1467,
+                  "right": 1505,
+                  "bottom": 1515,
+                  "width": 348,
+                  "height": 48
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 46928166,
+                "class": "ListBox",
+                "text": "",
+                "ctrl_id": 120,
+                "rect": {
+                  "left": 1157,
+                  "top": 687,
+                  "right": 1505,
+                  "bottom": 1467,
+                  "width": 348,
+                  "height": 780
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              }
+            ]
+          },
+          {
+            "hwnd": 1903916,
+            "class": "AfxWnd42s",
+            "text": "<",
+            "ctrl_id": 1008,
+            "rect": {
+              "left": 1133,
+              "top": 615,
+              "right": 1133,
+              "bottom": 615,
+              "width": 0,
+              "height": 0
+            },
+            "visible": false,
+            "enabled": true,
+            "children": []
+          },
+          {
+            "hwnd": 2031864,
+            "class": "AfxWnd42s",
+            "text": ">",
+            "ctrl_id": 1009,
+            "rect": {
+              "left": 1133,
+              "top": 615,
+              "right": 1133,
+              "bottom": 615,
+              "width": 0,
+              "height": 0
+            },
+            "visible": false,
+            "enabled": true,
+            "children": []
+          }
+        ]
+      }
+    ]
+  }
+}

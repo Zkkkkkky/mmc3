@@ -1,0 +1,32 @@
+{
+  "tag": "CLEAN_WorkerW",
+  "hwnd": 197562,
+  "title": "",
+  "class": "WorkerW",
+  "rect": {
+    "left": 0,
+    "top": 0,
+    "right": 204,
+    "bottom": 66,
+    "width": 204,
+    "height": 66
+  },
+  "pid": 41916,
+  "tree": {
+    "hwnd": 197562,
+    "class": "WorkerW",
+    "text": "",
+    "ctrl_id": 0,
+    "rect": {
+      "left": 0,
+      "top": 0,
+      "right": 204,
+      "bottom": 66,
+      "width": 204,
+      "height": 66
+    },
+    "visible": false,
+    "enabled": true,
+    "children": []
+  }
+}
