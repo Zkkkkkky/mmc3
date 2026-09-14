@@ -150,6 +150,7 @@ class LegacyWindowTests(QtTestCase):
             )
             self.assertTrue((portrait_directory / "[背面].bmp").is_file())
             self.assertTrue((portrait_directory / "[正面].bmp").is_file())
+            self.assertTrue((portrait_directory / "[效果].bmp").is_file())
 
     def test_global_tables_load_all_verified_rom_defaults(self) -> None:
         project = RomProject.load(DEFAULT_ROM)

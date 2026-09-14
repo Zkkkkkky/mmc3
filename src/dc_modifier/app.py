@@ -803,11 +803,11 @@ class MainWindow(QMainWindow):
                 )
                 if answer != QMessageBox.StandardButton.Yes:
                     return
-            back_path, front_path = export_portrait_bitmaps(
+            back_path, front_path, effect_path = export_portrait_bitmaps(
                 self.project, character_id, root
             )
             self.status.showMessage(
-                f"头像已导出：{back_path.parent.name}（2 个 BMP）", 5000
+                f"头像已导出：{back_path.parent.name}（3 个 BMP）", 5000
             )
         except Exception as error:
             QMessageBox.critical(self, "导出头像失败", str(error))

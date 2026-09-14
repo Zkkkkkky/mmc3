@@ -153,7 +153,7 @@ class ReadableCharacterPage(CharacterPage):
         return True
 
     def record_export_label(self) -> str:
-        return "导出当前正面/背面头像…"
+        return "导出当前正面/背面/效果头像…"
 
     def export_selected_record(self) -> None:
         if self.project is None or self.current_id is None:
@@ -168,8 +168,12 @@ class ReadableCharacterPage(CharacterPage):
             from .workspace import writable_output_path
 
             root = writable_output_path(directory)
-            back, front = export_portrait_bitmaps(self.project, self.current_id, root)
-            self.records.setToolTip(f"已导出：{back.name}、{front.name}")
+            back, front, effect = export_portrait_bitmaps(
+                self.project, self.current_id, root
+            )
+            self.records.setToolTip(
+                f"已导出：{back.name}、{front.name}、{effect.name}"
+            )
         except Exception as error:
             self.show_error(error)
 

@@ -32,9 +32,12 @@ class PortraitExportTests(unittest.TestCase):
 
     def test_paths_match_confirmed_legacy_names_and_sanitize_only_component(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
-            back, front = portrait_export_paths(self.project, 4, directory)
+            back, front, effect = portrait_export_paths(self.project, 4, directory)
             self.assertEqual(back.parent.name, "4：琉妮")
-            self.assertEqual((back.name, front.name), ("[背面].bmp", "[正面].bmp"))
+            self.assertEqual(
+                (back.name, front.name, effect.name),
+                ("[背面].bmp", "[正面].bmp", "[效果].bmp"),
+            )
         self.assertEqual(safe_portrait_directory_name(7, ' A/B:*?"<>|. '), "7：A_B_______")
         self.assertEqual(safe_portrait_directory_name(8, "CON"), "8：_CON")
 
@@ -54,7 +57,20 @@ class PortraitExportTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             portrait_layer_pixels(self.project, 4, "composite")
 
-    def test_export_writes_two_32_pixel_bottom_up_bmps_without_mutating_rom(self) -> None:
+    def test_effect_composites_nonzero_front_pixels_over_back(self) -> None:
+        back = portrait_layer_pixels(self.project, 4, "back")
+        front = portrait_layer_pixels(self.project, 4, "front")
+        effect = portrait_layer_pixels(self.project, 4, "effect")
+        transparent = LEGACY_MATERIAL_PALETTE_RGB[0]
+        self.assertEqual(
+            effect,
+            tuple(
+                front_pixel if front_pixel != transparent else back_pixel
+                for back_pixel, front_pixel in zip(back, front, strict=True)
+            ),
+        )
+
+    def test_export_writes_three_32_pixel_bottom_up_bmps_without_mutating_rom(self) -> None:
         before = bytes(self.project.working)
         with tempfile.TemporaryDirectory() as directory:
             paths = export_portrait_bitmaps(self.project, 4, directory)
@@ -92,8 +108,10 @@ class PortraitExportUiTests(QtTestCase):
             window.export_avatar()
             back = Path(directory) / "4：琉妮" / "[背面].bmp"
             front = Path(directory) / "4：琉妮" / "[正面].bmp"
+            effect = Path(directory) / "4：琉妮" / "[效果].bmp"
             self.assertTrue(back.is_file())
             self.assertTrue(front.is_file())
+            self.assertTrue(effect.is_file())
         self.assertEqual(bytes(window.project.working), before)
 
 

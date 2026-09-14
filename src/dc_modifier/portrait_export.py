@@ -12,6 +12,7 @@ PORTRAIT_TILE_COUNT = 16
 PORTRAIT_FILENAMES = {
     "back": "[背面].bmp",
     "front": "[正面].bmp",
+    "effect": "[效果].bmp",
 }
 _INVALID_FILENAME_CHARACTERS = re.compile(r'[<>:"/\\|?*\x00-\x1F]')
 _RESERVED_WINDOWS_NAMES = {
@@ -30,20 +31,41 @@ def safe_portrait_directory_name(character_id: int, name: str) -> str:
     return f"{character_id}：{cleaned}"
 
 
-def portrait_export_paths(project, character_id: int, root: str | Path) -> tuple[Path, Path]:
+def portrait_export_paths(
+    project,
+    character_id: int,
+    root: str | Path,
+) -> tuple[Path, Path, Path]:
     codec = CharacterAttributesCodec(project)
     codec.read_portrait(character_id)
     directory = Path(root) / safe_portrait_directory_name(
         character_id, project.character_display_name(character_id)
     )
-    return directory / PORTRAIT_FILENAMES["back"], directory / PORTRAIT_FILENAMES["front"]
+    return tuple(directory / filename for filename in PORTRAIT_FILENAMES.values())
 
 
 def portrait_layer_pixels(project, character_id: int, layer: str) -> tuple[tuple[int, int, int], ...]:
     """Render one verified 4x4 portrait layer with the legacy material palette."""
 
     if layer not in PORTRAIT_FILENAMES:
-        raise ValueError("头像层必须是 front 或 back。")
+        raise ValueError("头像层必须是 front、back 或 effect。")
+    if layer == "effect":
+        back = _portrait_layer_indices(project, character_id, "back")
+        front = _portrait_layer_indices(project, character_id, "front")
+        indices = tuple(
+            front_pixel if front_pixel else back_pixel
+            for back_pixel, front_pixel in zip(back, front, strict=True)
+        )
+    else:
+        indices = _portrait_layer_indices(project, character_id, layer)
+    return tuple(LEGACY_MATERIAL_PALETTE_RGB[index] for index in indices)
+
+
+def _portrait_layer_indices(
+    project,
+    character_id: int,
+    layer: str,
+) -> tuple[int, ...]:
     record = CharacterAttributesCodec(project).read_portrait(character_id)
     first_tile = (
         record.front_bank * 64 + record.front_slot * 16
@@ -51,16 +73,14 @@ def portrait_layer_pixels(project, character_id: int, layer: str) -> tuple[tuple
         else (record.back_bank & 0xFE) * 64 + record.back_slot * 16
     )
     project.chr_codec.range_bytes(first_tile, PORTRAIT_TILE_COUNT, bytes(project.working))
-    pixels = [LEGACY_MATERIAL_PALETTE_RGB[0]] * (PORTRAIT_SIZE * PORTRAIT_SIZE)
+    pixels = [0] * (PORTRAIT_SIZE * PORTRAIT_SIZE)
     for tile_index in range(PORTRAIT_TILE_COUNT):
         tile = project.chr_tile_pixels(first_tile + tile_index)
         tile_x = tile_index % 4 * 8
         tile_y = tile_index // 4 * 8
         for y in range(8):
             for x in range(8):
-                pixels[(tile_y + y) * PORTRAIT_SIZE + tile_x + x] = (
-                    LEGACY_MATERIAL_PALETTE_RGB[tile[y * 8 + x]]
-                )
+                pixels[(tile_y + y) * PORTRAIT_SIZE + tile_x + x] = tile[y * 8 + x]
     return tuple(pixels)
 
 
@@ -76,17 +96,17 @@ def export_portrait_bitmaps(
     project,
     character_id: int,
     root: str | Path,
-) -> tuple[Path, Path]:
-    """Export the legacy ``[背面].bmp`` and ``[正面].bmp`` files."""
+) -> tuple[Path, Path, Path]:
+    """Export the back, front, and composited 32x32 portrait BMP files."""
 
-    back_path, front_path = portrait_export_paths(project, character_id, root)
-    payloads = (
-        (back_path, portrait_bitmap_bytes(project, character_id, "back")),
-        (front_path, portrait_bitmap_bytes(project, character_id, "front")),
+    paths = portrait_export_paths(project, character_id, root)
+    payloads = tuple(
+        (path, portrait_bitmap_bytes(project, character_id, layer))
+        for layer, path in zip(PORTRAIT_FILENAMES, paths, strict=True)
     )
-    back_path.parent.mkdir(parents=True, exist_ok=True)
+    paths[0].parent.mkdir(parents=True, exist_ok=True)
     for destination, payload in payloads:
         temporary = destination.with_name(destination.name + ".tmp")
         temporary.write_bytes(payload)
         temporary.replace(destination)
-    return back_path, front_path
+    return paths
