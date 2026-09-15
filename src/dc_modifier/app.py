@@ -917,17 +917,30 @@ class MainWindow(QMainWindow):
         try:
             project = RomProject.load(path)
             if not project.rom_image.is_reference_base:
-                if project.expansion_plan is None:
+                plan = project.expansion_plan
+                if (
+                    plan is None
+                    and project.profile.key != "dc-kuorong-mmc3-v2"
+                ):
                     raise ValueError(
                         f"该ROM布局兼容，但不是“{project.profile.label}”的基准哈希。"
-                        "只有带有效自动容量表的修改器输出ROM可以直接续改。"
+                        "当前版本只能直接续改带有效自动容量表的输出ROM。"
                     )
+                if plan is None:
+                    for region in project.profile.free_prg_regions:
+                        start = 16 + region.first_bank * 0x2000
+                        end = 16 + region.end_bank * 0x2000
+                        if any(project.original[start:end]):
+                            raise ValueError(
+                                f"无容量规划表的输出ROM在预留区域 {region.display} "
+                                "含未登记的数据，不能安全直接续改。"
+                            )
                 errors = tuple(
                     issue for issue in project.validate() if issue.severity == "error"
                 )
                 if errors:
                     detail = "；".join(issue.message for issue in errors[:3])
-                    raise ValueError(f"输出ROM的自动容量布局校验失败：{detail}")
+                    raise ValueError(f"输出ROM完整性校验失败：{detail}")
             self._activate_project(project)
             self.status.showMessage("ROM已安全载入", 4000)
             return True
@@ -1218,7 +1231,7 @@ class MainWindow(QMainWindow):
         if self.project is None:
             self.setWindowTitle(LEGACY_WINDOW_TITLE)
             self.path_status.setText("尚未载入ROM")
-            self.session_status.setText("")
+            self.session_status.setText("尚未载入ROM · 按 Ctrl+O 或“文件→打开”")
             self.change_status.setText("0 字节修改")
             self.map_page.setEnabled(False)
             self.workspace.setCurrentWidget(self.map_page)

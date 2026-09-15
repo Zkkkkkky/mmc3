@@ -223,6 +223,18 @@ class DesktopEditorSmokeTests(QtTestCase):
             self.assertIs(empty.workspace.currentWidget(), empty.map_page)
             self.assertFalse(empty.map_page.isEnabled())
             self.assertEqual(empty.map_page.map_list.count(), 0)
+            self.assertEqual(empty.map_page.canvas.map_width, 0)
+            self.assertEqual(empty.map_page.canvas.map_height, 0)
+            self.assertEqual(empty.map_page.canvas.tiles, [])
+            self.assertEqual(empty.map_page.canvas.tile_images, ())
+            self.assertTrue(all(
+                button.icon().isNull()
+                for button in empty.map_page.terrain_buttons.buttons()
+            ))
+            self.assertEqual(empty.map_page.left_brush_preview.text(), "暂无图块")
+            self.assertEqual(empty.map_page.right_brush_preview.text(), "暂无图块")
+            self.assertIn("Ctrl+O", empty.map_page.pending_state.text())
+            self.assertIn("Ctrl+O", empty.session_status.text())
             self.assertEqual(
                 [empty.map_page.editor_tabs.tabText(index)
                  for index in range(empty.map_page.editor_tabs.count())],
@@ -256,6 +268,20 @@ class DesktopEditorSmokeTests(QtTestCase):
             self.assertFalse(empty.data_menu.menuAction().isVisible())
             self.assertFalse(empty.extension_menu.menuAction().isVisible())
             self.assertFalse(empty.project_menu.menuAction().isVisible())
+            self.assertTrue(empty.load_rom(workspace_module.DEFAULT_ROM, quiet=True))
+            self.assertTrue(empty.map_page.isEnabled())
+            self.assertGreater(empty.map_page.map_list.count(), 0)
+            self.assertTrue(empty.map_page.tileset.isEnabled())
+            self.assertTrue(empty.map_page.width_display.isEnabled())
+            self.assertEqual(len(empty.map_page.canvas.tile_images), 16)
+            self.assertFalse(empty.map_page.canvas.tile_images[0].isNull())
+            self.assertTrue(all(
+                not button.icon().isNull()
+                for button in empty.map_page.terrain_buttons.buttons()
+            ))
+            self.assertGreater(empty.map_page.canvas.map_width, 0)
+            self.assertIn("：", empty.windowTitle())
+            self.assertTrue(empty.data_menu.menuAction().isVisible())
         finally:
             empty.close()
 
@@ -336,6 +362,71 @@ class DesktopEditorSmokeTests(QtTestCase):
             finally:
                 window._saved_snapshot = None
                 window.close()
+
+            reopened = MainWindow(open_default=False)
+            try:
+                self.assertTrue(reopened.load_rom(derived_rom, quiet=True))
+                assert reopened.project is not None
+                self.assertFalse(reopened.project.rom_image.is_reference_base)
+                self.assertIsNone(reopened.project.expansion_plan)
+                self.assertEqual(reopened.project.get_hit_threshold(), 69)
+                self.assertEqual(
+                    reopened.windowTitle(),
+                    f"{LEGACY_WINDOW_TITLE}：{derived_rom.resolve()}",
+                )
+            finally:
+                reopened._saved_snapshot = None
+                reopened.close()
+
+    def test_unplanned_derived_rom_with_corrupt_fixed_code_is_rejected(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            output = Path(directory) / "corrupt-fixed-code.nes"
+            data = bytearray(workspace_module.DEFAULT_ROM.read_bytes())
+            data[16 + 0x7E * 0x2000] ^= 0x01
+            output.write_bytes(data)
+            window = MainWindow(open_default=False)
+            try:
+                self.assertFalse(window.load_rom(output, quiet=True))
+                self.assertIsNone(window.project)
+            finally:
+                window.close()
+
+    def test_unplanned_derived_rom_with_unregistered_resource_is_rejected(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            output = Path(directory) / "unregistered-resource.nes"
+            data = bytearray(workspace_module.DEFAULT_ROM.read_bytes())
+            data[16 + 0x40 * 0x2000] = 0x01
+            output.write_bytes(data)
+            window = MainWindow(open_default=False)
+            try:
+                with patch("dc_modifier.app.QMessageBox.critical") as error:
+                    self.assertFalse(window.load_rom(output))
+                self.assertIsNone(window.project)
+                self.assertIn("未登记的数据", error.call_args.args[2])
+            finally:
+                window.close()
+
+    def test_unplanned_map_edit_saved_rom_reopens_with_the_saved_tile(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            output = Path(directory) / "map-edit-derived.nes"
+            _record, index, tile = self._stage_capacity_safe_tile_draft(
+                self.window.map_page
+            )
+            with patch("dc_modifier.app.QMessageBox.critical") as error:
+                self.window._write_rom(output)
+            error.assert_not_called()
+            self.assertTrue(output.is_file())
+
+            reopened = MainWindow(open_default=False)
+            try:
+                self.assertTrue(reopened.load_rom(output, quiet=True))
+                assert reopened.project is not None
+                self.assertIsNone(reopened.project.expansion_plan)
+                self.assertEqual(reopened.project.get_map(0).tiles[index], tile)
+                self.assertEqual(reopened.map_page.canvas.tiles[index], tile)
+            finally:
+                reopened._saved_snapshot = None
+                reopened.close()
 
     def test_reference_rom_save_uses_derived_route_without_writing_reference(self) -> None:
         window = MainWindow(open_default=False)

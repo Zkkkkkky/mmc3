@@ -691,9 +691,10 @@ class MapCanvas(QWidget):
 
     def __init__(self) -> None:
         super().__init__()
-        self.map_width = 1
-        self.map_height = 1
-        self.tiles = [0]
+        # A new session has no map data; do not render a synthetic green tile.
+        self.map_width = 0
+        self.map_height = 0
+        self.tiles: list[int] = []
         self.cell_size = 24
         self.selected_tile = 0
         self.right_selected_tile = 0
@@ -1239,7 +1240,7 @@ class MapPage(ProjectPage):
         palette.setSpacing(2)
         self.terrain_buttons = QButtonGroup(self)
         self.terrain_buttons.setExclusive(True)
-        for tile, color in enumerate(TERRAIN_COLORS):
+        for tile in range(16):
             button = TerrainButton(tile)
             button.setObjectName("terrainButton")
             button.setCheckable(True)
@@ -1249,9 +1250,8 @@ class MapPage(ProjectPage):
                 f"位图{tile:X}：左键设为左键画笔，右键设为右键画笔"
             )
             button.setStyleSheet(
-                "QPushButton { background: %s; color: %s; }"
+                "QPushButton { background: #e8edf2; color: #475569; }"
                 "QPushButton:checked { border: 3px solid #082f49; }"
-                % (color.name(), "#ffffff" if color.lightness() < 135 else "#13293a")
             )
             self.terrain_buttons.addButton(button, tile)
             button.clicked.connect(lambda _checked=False, value=tile: self.terrain.setCurrentIndex(value))
@@ -1264,10 +1264,12 @@ class MapPage(ProjectPage):
         left_brush = QVBoxLayout()
         left_caption = QLabel("左键")
         left_caption.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.left_brush_preview = QLabel("位图0")
+        self.left_brush_preview = QLabel("暂无图块")
         self.left_brush_preview.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.left_brush_preview.setFixedSize(64, 64)
-        self.left_brush_preview.setStyleSheet("background: black; border: 1px solid #7d8790;")
+        self.left_brush_preview.setStyleSheet(
+            "background: #e8edf2; color: #475569; border: 1px solid #7d8790;"
+        )
         left_brush.addWidget(left_caption)
         left_brush.addWidget(self.left_brush_preview)
         brush_row.addLayout(left_brush)
@@ -1287,10 +1289,12 @@ class MapPage(ProjectPage):
         right_brush = QVBoxLayout()
         right_caption = QLabel("右键")
         right_caption.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.right_brush_preview = QLabel("位图0")
+        self.right_brush_preview = QLabel("暂无图块")
         self.right_brush_preview.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.right_brush_preview.setFixedSize(64, 64)
-        self.right_brush_preview.setStyleSheet("background: black; border: 1px solid #7d8790;")
+        self.right_brush_preview.setStyleSheet(
+            "background: #e8edf2; color: #475569; border: 1px solid #7d8790;"
+        )
         right_brush.addWidget(right_caption)
         right_brush.addWidget(self.right_brush_preview)
         brush_row.addLayout(right_brush)
@@ -1341,13 +1345,13 @@ class MapPage(ProjectPage):
         self.prelude.textChanged.connect(self._update_size_label)
         tile_layout.addWidget(dimensions)
 
-        self.title_preview = QLabel("")
+        self.title_preview = QLabel("未载入ROM")
         self.title_preview.setObjectName("legacyMapTitlePreview")
         self.title_preview.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.title_preview.setMinimumHeight(48)
         self.title_preview.setMaximumHeight(64)
         self.title_preview.setStyleSheet(
-            "background: #000000; border: 1px solid #202020;"
+            "background: #000000; color: #dce6f0; border: 1px solid #202020;"
         )
         tile_layout.addWidget(self.title_preview)
         self.open_map_advanced_button = QPushButton("高级地图数据…")
@@ -1718,7 +1722,7 @@ class MapPage(ProjectPage):
         info_row.addWidget(self.y_position_label, 1)
         canvas_layout.addLayout(info_row)
 
-        self.pending_state = QLabel("选择地图后可编辑。")
+        self.pending_state = QLabel("尚未载入ROM：按 Ctrl+O 或“文件→打开”选择基准ROM。")
         self.pending_state.setObjectName("editState")
         self.apply_button = QPushButton("应用地图、部署与事件")
         self.apply_button.setObjectName("primaryButton")
@@ -3102,9 +3106,10 @@ class MapPage(ProjectPage):
                 )
                 label.setPixmap(pixmap)
                 label.setToolTip(f"位图{tile:X}")
+                label.setStyleSheet("background: black; border: 1px solid #7d8790;")
             else:
                 label.setPixmap(QPixmap())
-                label.setText(f"位图{tile:X}")
+                label.setText("暂无图块" if self.project is None else f"位图{tile:X}")
 
     def _open_tile_attributes(self) -> None:
         key = str(self.tileset.currentData() or "—")
@@ -3516,7 +3521,11 @@ class MapPage(ProjectPage):
             return
         if self.project is None or self.current_map_id is None:
             self.size_label.setText("—")
-            self.pending_state.setText("选择地图后可编辑。")
+            self.pending_state.setText(
+                "尚未载入ROM：按 Ctrl+O 或“文件→打开”选择基准ROM。"
+                if self.project is None
+                else "选择地图后可编辑。"
+            )
             self.apply_button.setEnabled(False)
             self.capacity_help_button.setEnabled(False)
             self._emit_draft_state_changed()
