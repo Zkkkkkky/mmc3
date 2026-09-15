@@ -2885,9 +2885,7 @@ class RomProject:
             raise ValueError("不能覆盖当前载入的基准 ROM，请使用新文件名。")
         destination.parent.mkdir(parents=True, exist_ok=True)
         if make_backup and destination.exists():
-            timestamp = datetime.now().strftime("%Y%m%d-%H%M%S")
-            backup = destination.with_name(destination.name + f".{timestamp}.bak")
-            shutil.copy2(destination, backup)
+            self._backup_existing(destination)
         atomic_write_bytes(destination, bytes(self.working))
         return destination
 
@@ -2902,10 +2900,14 @@ class RomProject:
     def _backup_existing(path: Path) -> Path | None:
         if not path.exists():
             return None
-        timestamp = datetime.now().strftime("%Y%m%d-%H%M%S")
-        backup = path.with_name(path.name + f".{timestamp}.bak")
-        shutil.copy2(path, backup)
-        return backup
+        timestamp = datetime.now().strftime("%Y%m%d-%H%M%S-%f")
+        for index in range(1000):
+            suffix = f"-{index}" if index else ""
+            backup = path.with_name(path.name + f".{timestamp}{suffix}.bak")
+            if not backup.exists():
+                shutil.copy2(path, backup)
+                return backup
+        raise FileExistsError(f"无法为 {path} 建立唯一备份文件名")
 
     def build_release(self, output_dir: str | Path, name: str) -> BuildArtifacts:
         if not name.strip() or Path(name).name != name:

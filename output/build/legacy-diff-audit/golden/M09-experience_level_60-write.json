@@ -24,6 +24,7 @@
   "reopen_value": 65535,
   "original_value": 65535,
   "reopen_matches_request": false,
+  "reopen_mode": "historical_result",
   "expected_offsets": [],
   "required_offsets": [],
   "optional_offsets": [],

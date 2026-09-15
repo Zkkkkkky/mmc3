@@ -113,7 +113,9 @@ def capture_extension_dialog(
 
 
 def main() -> int:
-    application = QApplication.instance() or QApplication(sys.argv)
+    m01_m02_only = "--m01-m02-only" in sys.argv
+    arguments = [argument for argument in sys.argv if argument != "--m01-m02-only"]
+    application = QApplication.instance() or QApplication(arguments)
     application.setApplicationName("新DC篇完整修改器 3.0 说明截图")
     application.setStyle("Fusion")
     configure_font(application)
@@ -124,11 +126,8 @@ def main() -> int:
     # launcher -> empty editor -> explicit ROM open -> persistent map shell.
     launcher = LauncherWindow()
     save_capture(application, launcher, "00-launcher.png")
-    launcher.enter_editor()
+    window = launcher.enter_editor()
     process_layout(application)
-    window = launcher.main_window
-    if window is None:
-        raise RuntimeError("启动器未能创建主窗口。")
     save_capture(application, window, "00b-empty-main.png")
 
     if not DEFAULT_ROM.is_file() or not window.load_rom(DEFAULT_ROM, quiet=True):
@@ -137,6 +136,10 @@ def main() -> int:
     window.show_page("maps")
     save_capture(application, window, "01-map-editor.png")
     assert window.project is not None
+    if m01_m02_only:
+        window._saved_snapshot = None
+        window.close()
+        return 0
 
     database_dialog = DatabaseDialog(window.project, window)
     database_dialog._select_unit(12)

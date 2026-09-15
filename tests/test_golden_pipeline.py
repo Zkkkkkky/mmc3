@@ -404,13 +404,13 @@ class GoldenArchiveSchemaTests(unittest.TestCase):
     def test_sample_archives_match_registry_entries(self) -> None:
         registry = load_json(REGISTRY_PATH)
         by_field = {
-            (entry["module"], entry["field"]): entry
+            (entry["module"], entry["field"], entry["case_id"]): entry
             for entry in registry["entries"]
         }
         for name in SCHEMA_SAMPLES:
             with self.subTest(archive=name):
                 payload = load_json(GOLDEN_DIR / name)
-                entry = by_field[(payload["module"], payload["field"])]
+                entry = by_field[(payload["module"], payload["field"], payload["case_id"])]
                 self.assertEqual(
                     payload["expected_offsets"], entry["expected_offsets"]
                 )
@@ -469,7 +469,15 @@ class GoldenArchiveSchemaTests(unittest.TestCase):
                     required_offsets=tuple(payload["required_offsets"]),
                     optional_offsets=tuple(payload["optional_offsets"]),
                 )
-                self.assertIs(entry["passed"], payload["passed"])
+                expected_passed = entry["passed"]
+                if payload["case_kind"] == "golden":
+                    expected_passed = bool(
+                        expected_passed
+                        and payload["reopen_matches_request"] is True
+                        and (payload["duration_seconds"] is None
+                             or payload["duration_seconds"] <= 30)
+                    )
+                self.assertIs(expected_passed, payload["passed"])
 
 
 # ---------------------------------------------------------------------------
@@ -497,7 +505,7 @@ class GoldenIndexConsistencyTests(unittest.TestCase):
         referenced: dict[str, str] = {}
         for key, info in fields.items():
             with self.subTest(field=key):
-                self.assertEqual(key, f"{info['module']}/{info['field']}")
+                self.assertEqual(key, f"{info['module']}/{info['field']}/{info['case_id']}")
                 archive = info["archive"]
                 # 无缺失：index 引用的档案必须存在。
                 self.assertIn(archive, archive_files)
@@ -827,15 +835,16 @@ class CoverageReportConsistencyTests(unittest.TestCase):
             counts["archived_cases"],
             counts["golden_cases"] + counts["discovery_cases"],
         )
-        discovery_fields = {
-            f"{info['module']}/{info['field']}"
-            for info in index["fields"].values()
+        discovery_infos = [
+            info for info in index["fields"].values()
             if info["case_kind"] == "discovery"
+        ]
+        discovery_fields = {
+            f"{info['module']}/{info['field']}" for info in discovery_infos
         }
         self.assertEqual(discovery_fields, EXPECTED_DISCOVERY_FIELDS)
         # discovery 用例不参与 G2 判定：passed 为 null、expected 未知。
-        for key in discovery_fields:
-            info = index["fields"][key]
+        for info in discovery_infos:
             self.assertIsNone(info["passed"])
             self.assertFalse(info["expected_known"])
         # discovery 字段也不得进入 G1 分子：全部列入待解释清单。
@@ -1042,6 +1051,16 @@ class UnregisteredSnapshotPathTests(unittest.TestCase):
                 orphans,
                 [(core.AUDIT_DIR_RELATIVE / "cases" / "legacy_globals" / "Ghost").as_posix()],
             )
+
+    def test_failed_live_attempt_is_retained_but_not_reported_as_orphan(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            repo = Path(tmp)
+            case_dir = repo / core.AUDIT_DIR_RELATIVE / "cases" / "legacy_live" / "M17" / "field" / "attempt"
+            case_dir.mkdir(parents=True)
+            (case_dir / "before.nes").write_bytes(b"\x00")
+            (case_dir / "after.nes").write_bytes(b"\x00")
+            (case_dir / "error.json").write_text("{}", encoding="utf-8")
+            self.assertEqual(core.find_unregistered_snapshots(repo, []), [])
 
 
 class OrphanArchiveTests(unittest.TestCase):

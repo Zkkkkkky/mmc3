@@ -119,12 +119,14 @@ class LegacyMapUiTests(QtTestCase):
             (176, 48),
         )
 
-    def test_battlefield_keeps_advanced_raw_data_separate_from_visible_save_status(self) -> None:
+    def test_battlefield_keeps_advanced_raw_data_separate_from_visible_dimensions(self) -> None:
         self.assertEqual(self.page.bitmap_selector.currentText(), "位图D")
         self.assertEqual(self.page.tileset.currentData(), "D")
         self.assertEqual(len(self.page.terrain_buttons.buttons()), 16)
-        self.assertTrue(self.page.width_display.isReadOnly())
-        self.assertTrue(self.page.height_display.isReadOnly())
+        self.assertFalse(self.page.width_display.isReadOnly())
+        self.assertFalse(self.page.height_display.isReadOnly())
+        self.assertTrue(self.page.width_display.isVisible())
+        self.assertTrue(self.page.height_display.isVisible())
         for advanced_control in (
             self.page.width_editor,
             self.page.height_editor,
@@ -136,6 +138,32 @@ class LegacyMapUiTests(QtTestCase):
                                 self.page.pending_state, self.page.apply_button):
             self.assertTrue(visible_control.isVisible())
         self.assertTrue(self.page.open_map_advanced_button.isVisible())
+
+    def test_main_dimension_spins_stage_rle_resize_and_update_canvas(self) -> None:
+        original_width = self.page.staged_width
+        original_height = self.page.staged_height
+        original_tiles = tuple(self.page.staged_tiles)
+        original_rom = bytes(self.project.working)
+        self.assertEqual((self.page.width_display.minimum(), self.page.width_display.maximum()), (1, 32))
+        self.assertEqual((self.page.height_display.minimum(), self.page.height_display.maximum()), (1, 32))
+        self.assertGreater(original_width, 1)
+        self.page.width_display.setValue(original_width - 1)
+        self.application.processEvents()
+        self.assertEqual(self.page.staged_width, original_width - 1)
+        self.assertEqual(self.page.width_editor.value(), original_width - 1)
+        self.assertEqual(self.page.canvas.map_width, original_width - 1)
+        self.assertEqual(self.page.canvas.map_height, original_height)
+        self.assertEqual(
+            tuple(self.page.staged_tiles[: original_width - 1]),
+            original_tiles[: original_width - 1],
+        )
+        self.assertTrue(self.page.has_pending_draft)
+        self.page.height_display.setValue(original_height - 1)
+        self.application.processEvents()
+        self.assertEqual(self.page.staged_height, original_height - 1)
+        self.assertEqual(self.page.height_editor.value(), original_height - 1)
+        self.assertEqual(self.page.canvas.map_height, original_height - 1)
+        self.assertEqual(bytes(self.project.working), original_rom)
 
     def test_left_and_right_mouse_brushes_are_independent(self) -> None:
         left_button = self.page.terrain_buttons.button(3)

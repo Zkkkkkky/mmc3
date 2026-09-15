@@ -86,6 +86,9 @@ FAMILY_RESULT_JSON: dict[str, str] = {
     "level-cap": "legacy-level-cap-result.json",
 }
 
+# New online cases are optional until the first live collection succeeds.
+LIVE_RESULT_JSON = "legacy-live-results.json"
+
 #: 差分族 -> cases/ 下的快照分组目录名。
 FAMILY_CASE_GROUPS: dict[str, str] = {
     "global-fields": "legacy_globals",
@@ -208,9 +211,9 @@ class GoldenRecord:
     field: str
     case_id: str
     case_kind: str
-    requested_value: int | None
-    original_value: int | None
-    reopen_value: int | None
+    requested_value: int | str | None
+    original_value: int | str | None
+    reopen_value: int | str | None
     expected_offsets: tuple[int, ...]
     extra_allowed: tuple[int, ...]
     required_offsets: tuple[int, ...]
@@ -222,6 +225,10 @@ class GoldenRecord:
     source_json: str
     snapshot_dir: str | None
     notes: tuple[str, ...]
+    duration_seconds: float | None = None
+    reopen_mode: str | None = None
+    within_budget: bool | None = None
+    stored_passed: bool | None = None
 
 
 def _stored_diff_entries(
@@ -450,8 +457,52 @@ FAMILY_ADAPTERS: dict[str, Callable[[Any], list[GoldenRecord]]] = {
 }
 
 
+def _adapt_live(payload: list[dict[str, Any]]) -> list[GoldenRecord]:
+    """Adapt new-process cases into the same registry/archive contract."""
+    records: list[GoldenRecord] = []
+    for item in payload:
+        before_path = Path(item["snapshots"]["before"]["path"])
+        after_path = Path(item["snapshots"]["after"]["path"])
+        if before_path.parent != after_path.parent:
+            raise ValueError("Live before/after snapshots must share a case directory")
+        expected = tuple(int(offset) for offset in item["expected_offsets"])
+        required = tuple(int(offset) for offset in item["required_offsets"])
+        optional = tuple(int(offset) for offset in item.get("optional_offsets", []))
+        if not required or set(required) | set(optional) != set(expected):
+            raise ValueError("Live required/optional offsets do not partition expected")
+        entries = _stored_diff_entries(item["diffs"])
+        records.append(
+            GoldenRecord(
+                family="live",
+                module=str(item["module"]),
+                field=str(item["field"]),
+                case_id=str(item["case_id"]),
+                case_kind=str(item["case_kind"]),
+                requested_value=item["requested_value"],
+                original_value=item["original_value"],
+                reopen_value=item["reopen_value"],
+                expected_offsets=expected,
+                extra_allowed=tuple(int(offset) for offset in item.get("extra_allowed", [])),
+                required_offsets=required,
+                optional_offsets=optional,
+                changed_offsets=tuple(sorted(entry.offset for entry in entries)),
+                stored_diff_entries=entries,
+                stored_unexpected_offsets=tuple(int(offset) for offset in item["unexpected_offsets"]),
+                stored_after_sha256=item["snapshots"]["after"]["sha256"],
+                source_json=_audit_relative(LIVE_RESULT_JSON),
+                snapshot_dir=before_path.parent.as_posix(),
+                notes=("在线单字段采集：保存后关闭进程，再以不同 PID 冷启动重开",),
+                duration_seconds=float(item["duration_seconds"]),
+                reopen_mode=str(item["reopen_mode"]),
+                within_budget=bool(item["within_budget"]),
+                stored_passed=bool(item["passed"]),
+            )
+        )
+    return records
+
+
 def load_family_records(repo_root: Path | None = None) -> list[GoldenRecord]:
-    """读取 5 个存量差分族 JSON 并适配为统一记录（按模块/字段/用例稳定排序）。"""
+    """Read five historical families and any new live cases, sorted stably."""
     repo = repo_root if repo_root is not None else default_repo_root()
     audit_dir = repo / AUDIT_DIR_RELATIVE
     records: list[GoldenRecord] = []
@@ -461,6 +512,12 @@ def load_family_records(repo_root: Path | None = None) -> list[GoldenRecord]:
             raise FileNotFoundError(f"存量差分结果 JSON 不存在：{result_path}")
         payload = json.loads(result_path.read_text(encoding="utf-8"))
         records.extend(FAMILY_ADAPTERS[family](payload))
+    live_path = audit_dir / LIVE_RESULT_JSON
+    if live_path.is_file():
+        records.extend(_adapt_live(json.loads(live_path.read_text(encoding="utf-8"))))
+    identities = [(record.module, record.field, record.case_id) for record in records]
+    if len(set(identities)) != len(identities):
+        raise ValueError("Duplicate module/field/case_id in golden records")
     records.sort(key=lambda record: (record.module, record.field, record.case_id))
     return records
 
@@ -493,7 +550,7 @@ class RegistryEntry:
 
 
 def derive_registry(repo_root: Path | None = None) -> list[RegistryEntry]:
-    """从 5 个存量 JSON 与 cases/ 快照目录自动派生注册表条目。
+    """从存量 JSON、在线用例和 cases/ 快照目录派生注册表条目。
 
     快照缺失（目录或文件不存在）的条目 snapshot_before/snapshot_after 记
     ``None``，由 archive 汇总显式报告，不静默。
@@ -575,6 +632,12 @@ def write_registry(path: Path, entries: Sequence[RegistryEntry]) -> None:
         },
         "entries": [_registry_entry_payload(entry) for entry in ordered],
     }
+    if any(entry.source_json.endswith(LIVE_RESULT_JSON) for entry in ordered):
+        payload["families"]["live"] = {
+            "module": "M01-M18",
+            "result_json": _audit_relative(LIVE_RESULT_JSON),
+            "case_group": _audit_relative("cases", "legacy_live"),
+        }
     write_json_atomic(path, payload)
 
 
@@ -602,6 +665,10 @@ def find_unregistered_snapshots(
     for before in sorted(cases_root.rglob("before.nes")):
         case_dir = before.parent
         if not (case_dir / "after.nes").is_file():
+            continue
+        # A failed live attempt is deliberately retained as diagnostic evidence,
+        # but it is not an unregistered golden case waiting to be archived.
+        if (case_dir / "error.json").is_file():
             continue
         relative = case_dir.relative_to(repo).as_posix()
         if relative.lower() not in registered:

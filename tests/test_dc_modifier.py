@@ -306,6 +306,25 @@ class EditorProjectTests(unittest.TestCase):
                 project.build_release(reference_root / "release", "blocked")
             self.assertFalse(reference_root.exists())
 
+    def test_fast_derived_rom_saves_keep_distinct_recoverable_backups(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            derived_rom = Path(directory) / "m01-derived.nes"
+            project = RomProject.load(TARGET_ROM)
+            with self.assertRaisesRegex(ValueError, "不能覆盖当前载入"):
+                project.save_as(TARGET_ROM, make_backup=False)
+            project.set_hit_threshold(71)
+            project.save_as(derived_rom)
+            first_saved = derived_rom.read_bytes()
+            project.set_hit_threshold(69)
+            project.save_as(derived_rom)
+            second_saved = derived_rom.read_bytes()
+            project.set_hit_threshold(70)
+            project.save_as(derived_rom)
+            backups = sorted(derived_rom.parent.glob(derived_rom.name + ".*.bak"))
+            self.assertEqual(len(backups), 2)
+            self.assertEqual({path.read_bytes() for path in backups}, {first_saved, second_saved})
+            self.assertEqual(RomProject.load(derived_rom).get_hit_threshold(), 70)
+
     def test_managed_resource_import_undo_validation_and_project_round_trip(self) -> None:
         project = RomProject.load(TARGET_ROM)
         payload = bytes((index * 17 + 3) & 0xFF for index in range(0x2100))

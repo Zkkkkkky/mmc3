@@ -1,7 +1,10 @@
 from __future__ import annotations
 
 import os
+import ctypes
+from ctypes import wintypes
 from pathlib import Path
+import shutil
 import tempfile
 import unittest
 from unittest.mock import patch
@@ -20,6 +23,7 @@ from PySide6.QtWidgets import (
     QStyleOptionSpinBox,
     QToolBar,
 )
+from shiboken6 import isValid
 
 import dc_modifier.workspace as workspace_module
 from dc_modifier.app import (
@@ -216,7 +220,14 @@ class DesktopEditorSmokeTests(QtTestCase):
         empty = MainWindow(open_default=False)
         try:
             self.assertIsNone(empty.project)
-            self.assertIs(empty.workspace.currentWidget(), empty.blank_page)
+            self.assertIs(empty.workspace.currentWidget(), empty.map_page)
+            self.assertFalse(empty.map_page.isEnabled())
+            self.assertEqual(empty.map_page.map_list.count(), 0)
+            self.assertEqual(
+                [empty.map_page.editor_tabs.tabText(index)
+                 for index in range(empty.map_page.editor_tabs.count())],
+                ["战场地图", "初始配置", "商店事件"],
+            )
             self.assertEqual(empty.windowTitle(), LEGACY_WINDOW_TITLE)
             self.assertEqual(
                 [action.text() for action in empty.menuBar().actions() if action.isVisible()],
@@ -229,7 +240,7 @@ class DesktopEditorSmokeTests(QtTestCase):
             ]
             self.assertEqual(
                 [action.text() for action in file_actions],
-                ["打开(&O)…", "保存(&S)", "退出(&X)"],
+                ["打开(&O)", "保存(&S)", "退出(&X)"],
             )
             self.assertEqual(
                 [action.shortcut().toString() for action in file_actions],
@@ -238,6 +249,10 @@ class DesktopEditorSmokeTests(QtTestCase):
             self.assertTrue(empty.open_rom_action.isEnabled())
             self.assertFalse(empty.save_rom_action.isEnabled())
             self.assertTrue(empty.exit_action.isEnabled())
+            self.assertEqual(
+                [action.data() for action in file_menu.actions()],
+                [20001, 20003, 20004, 20005, 20006],
+            )
             self.assertFalse(empty.data_menu.menuAction().isVisible())
             self.assertFalse(empty.extension_menu.menuAction().isVisible())
             self.assertFalse(empty.project_menu.menuAction().isVisible())
@@ -261,7 +276,80 @@ class DesktopEditorSmokeTests(QtTestCase):
         finally:
             launcher.close()
 
-    def test_closing_main_window_closes_hidden_launcher_session(self) -> None:
+    def test_reference_command_ids_dispatch_only_enabled_actions(self) -> None:
+        self.assertFalse(self.window.dispatch_legacy_command(19999))
+        with patch("dc_modifier.app.QMessageBox.information") as about:
+            self.assertTrue(self.window.dispatch_legacy_command(20025))
+        about.assert_called_once()
+        empty = MainWindow(open_default=False)
+        try:
+            self.assertFalse(empty.dispatch_legacy_command(20008))
+        finally:
+            empty.close()
+
+    @unittest.skipUnless(os.name == "nt", "Win32 WM_COMMAND only")
+    def test_native_wm_command_accepts_reference_about_id(self) -> None:
+        message = wintypes.MSG()
+        message.message = 0x0111
+        message.wParam = 20025
+        message.lParam = 0
+        with patch("dc_modifier.app.QMessageBox.information") as about:
+            handled, result = self.window.nativeEvent(
+                b"windows_generic_MSG", ctypes.addressof(message)
+            )
+        self.assertTrue(handled)
+        self.assertEqual(result, 0)
+        about.assert_called_once()
+
+    def test_file_save_keeps_loaded_rom_and_reopens_derived_output(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            work_rom = Path(directory) / "m01-work.nes"
+            derived_rom = Path(directory) / "m01-derived.nes"
+            original = workspace_module.DEFAULT_ROM.read_bytes()
+            shutil.copy2(workspace_module.DEFAULT_ROM, work_rom)
+            window = MainWindow(open_default=False)
+            try:
+                self.assertTrue(window.load_rom(work_rom, quiet=True))
+                assert window.project is not None
+                window.project.set_hit_threshold(71)
+                window._update_window_state()
+                with patch(
+                    "dc_modifier.app.QFileDialog.getSaveFileName",
+                    return_value=(str(derived_rom), "NES ROM (*.nes)"),
+                ) as chooser, patch(
+                    "dc_modifier.app.QMessageBox.critical"
+                ) as error:
+                    window.save_rom()
+                    window.project.set_hit_threshold(69)
+                    window.save_rom()
+                chooser.assert_called_once()
+                error.assert_not_called()
+                self.assertEqual(window.rom_output_path, derived_rom.resolve())
+                self.assertEqual(work_rom.read_bytes(), original)
+                self.assertEqual(RomProject.load(derived_rom).get_hit_threshold(), 69)
+                backups = list(derived_rom.parent.glob(derived_rom.name + ".*.bak"))
+                self.assertEqual(len(backups), 1)
+                self.assertEqual(RomProject.load(backups[0]).get_hit_threshold(), 71)
+                self.assertEqual(
+                    window.windowTitle(), f"{LEGACY_WINDOW_TITLE}：{work_rom.resolve()}"
+                )
+            finally:
+                window._saved_snapshot = None
+                window.close()
+
+    def test_reference_rom_save_uses_derived_route_without_writing_reference(self) -> None:
+        window = MainWindow(open_default=False)
+        try:
+            self.assertTrue(window.load_rom(LEGACY_ROM, quiet=True))
+            with patch.object(window, "save_rom_as") as derived:
+                window.save_rom()
+            derived.assert_called_once()
+            self.assertIsNone(window.rom_output_path)
+        finally:
+            window._saved_snapshot = None
+            window.close()
+
+    def test_enter_destroys_launcher_and_main_closes_normally(self) -> None:
         class TrackingLauncher(LauncherWindow):
             def __init__(self) -> None:
                 self.close_event_count = 0
@@ -273,31 +361,31 @@ class DesktopEditorSmokeTests(QtTestCase):
 
         launcher = TrackingLauncher()
         launcher.show()
+        main = None
         try:
-            launcher.enter_editor()
+            main = launcher.enter_editor()
+            self.assertEqual(launcher.close_event_count, 1)
             self.application.processEvents()
-            self.assertIsNotNone(launcher.main_window)
-            assert launcher.main_window is not None
+            self.assertFalse(isValid(launcher))
+            self.assertIsNotNone(main)
+            assert main is not None
             closed_events: list[bool] = []
-            launcher.main_window.closed.connect(lambda: closed_events.append(True))
+            main.closed.connect(lambda: closed_events.append(True))
 
-            with patch.object(launcher.main_window, "_confirm_discard", return_value=False):
-                self.assertFalse(launcher.main_window.close())
+            with patch.object(main, "_confirm_discard", return_value=False):
+                self.assertFalse(main.close())
             self.application.processEvents()
             self.assertEqual(closed_events, [])
-            self.assertEqual(launcher.close_event_count, 0)
-            self.assertTrue(launcher.main_window.isVisible())
+            self.assertTrue(main.isVisible())
 
-            launcher.main_window.close()
+            main.close()
             self.application.processEvents()
             self.assertEqual(closed_events, [True])
-            self.assertEqual(launcher.close_event_count, 1)
-            self.assertFalse(launcher.isVisible())
+            self.assertFalse(main.isVisible())
         finally:
-            if launcher.main_window is not None and launcher.main_window.isVisible():
-                launcher.main_window._saved_snapshot = None
-                launcher.main_window.close()
-            launcher.close()
+            if main is not None and main.isVisible():
+                main._saved_snapshot = None
+                main.close()
 
         self.assertEqual(
             [action.text() for action in self.window.menuBar().actions() if action.isVisible()],
@@ -311,7 +399,6 @@ class DesktopEditorSmokeTests(QtTestCase):
             [action.text() for action in data_actions],
             [
                 "数据库(&D)",
-                "完整ROM数据读取",
                 "文字库(&W)",
                 "地图动画(&M)",
                 "文字转换(&Z)",
@@ -325,8 +412,16 @@ class DesktopEditorSmokeTests(QtTestCase):
         )
         self.assertEqual(
             [action.shortcut().toString() for action in data_actions],
-            ["Ctrl+D", "", "Ctrl+W", "Ctrl+M", "Ctrl+Z", "Ctrl+J", "Ctrl+F", "Ctrl+L", "", "", "Ctrl+T"],
+            ["Ctrl+D", "Ctrl+W", "Ctrl+M", "Ctrl+Z", "Ctrl+J", "Ctrl+F", "Ctrl+L", "", "", "Ctrl+T"],
         )
+        self.assertEqual(
+            [action.data() for action in self.window.data_menu.actions()],
+            [20008, 20009, 20010, 20011, 20012, 20013, 20014,
+             20015, 20016, 20017, 20018, 20019, 20020, 20021,
+             20022, 20023],
+        )
+        self.assertEqual(self.window.extension_menu.actions()[0], self.window.rom_data_action)
+        self.assertEqual(self.window.about_action.text(), "关于")
         project_actions = [
             action for action in self.window.project_menu.actions() if not action.isSeparator()
         ]
@@ -752,13 +847,14 @@ class DesktopEditorSmokeTests(QtTestCase):
         page = self.window.pages[self.window.page_index["maps"]]
         assert isinstance(page, MapPage)
         self.assertFalse(self.window.has_unsaved_changes)
-        self.assertFalse(self.window.windowTitle().endswith(" *"))
+        title = f"{LEGACY_WINDOW_TITLE}：{self.window.project.path}"
+        self.assertEqual(self.window.windowTitle(), title)
 
         self._stage_capacity_safe_tile_draft(page)
         self.application.processEvents()
 
         self.assertTrue(self.window.has_unsaved_changes)
-        self.assertTrue(self.window.windowTitle().endswith(" *"))
+        self.assertEqual(self.window.windowTitle(), title)
         self.assertIn("0 字节修改", self.window.session_status.text())
         self.assertIn("未应用草稿", self.window.session_status.text())
         self.assertTrue(self.window.undo_action.isEnabled())
@@ -767,14 +863,14 @@ class DesktopEditorSmokeTests(QtTestCase):
         self.application.processEvents()
         self.assertFalse(page.has_pending_draft)
         self.assertFalse(self.window.has_unsaved_changes)
-        self.assertFalse(self.window.windowTitle().endswith(" *"))
+        self.assertEqual(self.window.windowTitle(), title)
         self.assertFalse(self.window.undo_action.isEnabled())
 
         page.prelude.setText("0")
         self.application.processEvents()
         self.assertIsNotNone(page.pending_draft_error)
         self.assertTrue(self.window.has_unsaved_changes)
-        self.assertTrue(self.window.windowTitle().endswith(" *"))
+        self.assertEqual(self.window.windowTitle(), title)
 
     def test_undo_commits_valid_map_draft_then_undoes_it(self) -> None:
         assert self.window.project is not None

@@ -1,4 +1,4 @@
-"""M00 黄金对照流水线 CLI（阶段 A+B）。
+"""M00 golden audit CLI: live collection, diff, archive, stats and verify.
 
 子命令：
 
@@ -11,8 +11,11 @@
   （``output/reports/golden-coverage-report.json`` 与 ``.md``）；
 - ``verify``：对 cases/ 快照复算差分并与存量 JSON 已存档结果比对，
   输出逐用例 pass/fail 汇总与总体退出码（0=全一致，1=有差异，2=有缺失）。
+- ``collect``：按 JSON 操作配方驱动隔离参考 EXE，单字段保存后关闭进程，
+  以新进程重开读取，再自动归档与统计。
 
-仅使用 Python 标准库。仓库根路径由 ``Path(__file__).resolve().parent.parent``
+离线子命令仅使用 Python 标准库；``collect`` 在线驱动需要开发依赖
+``pywinauto``。仓库根路径由 ``Path(__file__).resolve().parent.parent``
 派生，不硬编码绝对路径。
 """
 
@@ -212,6 +215,47 @@ def cmd_diff(args: argparse.Namespace) -> int:
 # ---------------------------------------------------------------------------
 
 
+def cmd_collect(args: argparse.Namespace) -> int:
+    try:
+        from golden_pipeline_collect import CaseSpec, Win32LegacyDriver, collect_case
+    except ImportError:
+        from tools.golden_pipeline_collect import (  # type: ignore
+            CaseSpec,
+            Win32LegacyDriver,
+            collect_case,
+        )
+
+    try:
+        repo = default_repo_root()
+        config_path = Path(args.case_config).resolve()
+        spec = CaseSpec.from_payload(json.loads(config_path.read_text(encoding="utf-8")))
+        audit = repo / AUDIT_DIR_RELATIVE
+        baseline = Path(args.baseline).resolve() if args.baseline else audit / "audit.nes"
+        executable = (
+            Path(args.legacy_exe).resolve() if args.legacy_exe else audit / "SRW2_patched.exe"
+        )
+        case_dir, report = collect_case(
+            repo,
+            spec,
+            baseline,
+            executable,
+            Win32LegacyDriver,
+            budget_seconds=args.budget_seconds,
+        )
+    except (OSError, RuntimeError, ValueError, json.JSONDecodeError) as error:
+        print(f"在线采集失败：{error}", file=sys.stderr)
+        return 2
+    print(
+        f"在线采集完成：{spec.module}/{spec.field}/{spec.case_id} "
+        f"PID {report['first_pid']}→{report['second_pid']}，"
+        f"耗时 {report['duration_seconds']}s，passed={report['passed']}"
+    )
+    print(f"- 用例目录：{case_dir}")
+    if cmd_archive(args) or cmd_stats(args):
+        return 2
+    return 0 if report["passed"] else 1
+
+
 def cmd_archive(args: argparse.Namespace) -> int:
     started = time.perf_counter()
     repo = default_repo_root()
@@ -278,14 +322,19 @@ def cmd_archive(args: argparse.Namespace) -> int:
                 }
             )
 
+        reopen_matches_request: bool | None = None
+        if record.reopen_value is not None and record.requested_value is not None:
+            reopen_matches_request = record.reopen_value == record.requested_value
         passed: bool | None = None
         if entry.case_kind == "golden":
-            # passed 判定（对齐 audit_legacy_global_fields 的
-            # target_offsets_changed 检查）：无未解释偏移 + 必写偏移全部写入。
+            # Diff, mandatory bytes and saved-value reopen are all required.
             passed = (
                 (not result.unexplained)
                 and bool(required)
                 and not required_missing
+                and reopen_matches_request is True
+                and record.within_budget is not False
+                and record.stored_passed is not False
             )
         pending_reason: str | None = None
         if entry.case_kind == "discovery":
@@ -293,7 +342,13 @@ def cmd_archive(args: argparse.Namespace) -> int:
                 record.notes[0] if record.notes else "发现型用例，待在线采集补证"
             )
         elif passed is False:
-            if result.unexplained:
+            if reopen_matches_request is not True:
+                pending_reason = "重开读取值不等于请求值，或缺少重开证据"
+            elif record.within_budget is False:
+                pending_reason = "在线采集超出每字段 30 秒性能预算"
+            elif record.stored_passed is False:
+                pending_reason = "在线采集原始判定未通过"
+            elif result.unexplained:
                 pending_reason = f"存在 {len(result.unexplained)} 处未被解释的偏移"
             elif not required:
                 pending_reason = "required_offsets 为空，无法判定"
@@ -304,9 +359,6 @@ def cmd_archive(args: argparse.Namespace) -> int:
                 )
 
         archive_name = f"{entry.module}-{entry.field}-{entry.case_id}.json"
-        reopen_matches_request: bool | None = None
-        if record.reopen_value is not None and record.requested_value is not None:
-            reopen_matches_request = record.reopen_value == record.requested_value
         payload: dict[str, Any] = {
             "schema_version": SCHEMA_VERSION,
             "module": entry.module,
@@ -321,6 +373,7 @@ def cmd_archive(args: argparse.Namespace) -> int:
             # 判定与解释
             "original_value": record.original_value,
             "reopen_matches_request": reopen_matches_request,
+            "reopen_mode": record.reopen_mode or "historical_result",
             "expected_offsets": list(entry.expected_offsets),
             "required_offsets": list(entry.required_offsets),
             "optional_offsets": list(entry.optional_offsets),
@@ -352,19 +405,18 @@ def cmd_archive(args: argparse.Namespace) -> int:
             ],
             # 原始四步闭环未计时（存量档案离线复算）；REQ-NFR-PERF-005 的
             # ≤30s/字段预算适用于在线采集闭环，不适用于本离线流程。
-            "duration_seconds": None,
+            "duration_seconds": record.duration_seconds,
             "duration_note": (
+                None if record.duration_seconds is not None else
                 "存量档案离线复算：原始四步闭环未计时；"
                 "REQ-NFR-PERF-005 的 ≤30s/字段预算适用于在线采集闭环"
             ),
         }
         write_json_atomic(golden_dir / archive_name, payload)
 
-        index_key = f"{entry.module}/{entry.field}"
+        index_key = f"{entry.module}/{entry.field}/{entry.case_id}"
         if index_key in fields_index:
-            raise RuntimeError(
-                f"索引键冲突：{index_key} 已存在；多用例字段需先扩展 index 结构"
-            )
+            raise RuntimeError(f"索引键冲突：{index_key} 已存在")
         fields_index[index_key] = {
             "module": entry.module,
             "field": entry.field,
@@ -827,7 +879,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="report_golden_coverage",
         description=(
-            "M00 黄金对照流水线 CLI：独立差分 / 黄金档案归档 / G1·G2 统计 / 存量复算校验"
+            "M00 黄金对照流水线 CLI：在线采集 / 差分 / 归档 / G1·G2 统计 / 复算"
         ),
     )
     subparsers = parser.add_subparsers(dest="command", required=True)
@@ -878,6 +930,15 @@ def build_parser() -> argparse.ArgumentParser:
         help="对 cases 快照复算差分并与存量 JSON 已存档结果比对",
     )
     verify_parser.set_defaults(handler=cmd_verify)
+
+    collect_parser = subparsers.add_parser(
+        "collect", help="隔离参考 EXE 单字段采集、保存、冷启动重开、归档和统计"
+    )
+    collect_parser.add_argument("--case-config", required=True, help="白名单操作步骤 JSON")
+    collect_parser.add_argument("--baseline", help="基准 ROM；默认 output/build/legacy-diff-audit/audit.nes")
+    collect_parser.add_argument("--legacy-exe", help="隔离参考 EXE；默认 output/build/legacy-diff-audit/SRW2_patched.exe")
+    collect_parser.add_argument("--budget-seconds", type=float, default=30.0)
+    collect_parser.set_defaults(handler=cmd_collect)
     return parser
 
 

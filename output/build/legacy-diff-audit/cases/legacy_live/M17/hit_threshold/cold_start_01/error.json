@@ -1,0 +1,8 @@
+{
+  "module": "M17",
+  "field": "hit_threshold",
+  "case_id": "cold_start_01",
+  "error": "RuntimeError: Legacy window did not appear before timeout",
+  "first_pid": null,
+  "second_pid": null
+}

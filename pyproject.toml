@@ -16,6 +16,7 @@ dependencies = [
 dev = [
     "pyinstaller>=6.10,<7",
     "py65>=1.2,<2",
+    "pywinauto==0.6.9",
     "reportlab>=4,<5",
 ]
 

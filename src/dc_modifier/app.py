@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import sys
+from ctypes import wintypes
 from pathlib import Path
 
 from PySide6.QtCore import QPoint, QRect, Qt, Signal
@@ -19,6 +20,7 @@ from PySide6.QtWidgets import (
     QListWidget,
     QListWidgetItem,
     QMainWindow,
+    QMenu,
     QMessageBox,
     QPushButton,
     QProxyStyle,
@@ -61,6 +63,12 @@ from .workspace import (
 APP_TITLE = "新DC篇完整修改器"
 LEGACY_WINDOW_TITLE = "SRW2扩容版修改器V1.0"
 LAUNCHER_TITLE = "SRW2修改器V1.5"
+_ACTIVE_EDITOR_WINDOW: MainWindow | None = None
+
+
+def _forget_active_editor() -> None:
+    global _ACTIVE_EDITOR_WINDOW
+    _ACTIVE_EDITOR_WINDOW = None
 
 
 class VisibleArrowStyle(QProxyStyle):
@@ -243,6 +251,7 @@ class LauncherWindow(QDialog):
         self.resize(520, 360)
         self.setMinimumSize(400, 240)
         self.setWindowFlag(Qt.WindowType.WindowMaximizeButtonHint, False)
+        self.setAttribute(Qt.WidgetAttribute.WA_DeleteOnClose, True)
 
         layout = QVBoxLayout(self)
         layout.setContentsMargins(15, 20, 15, 20)
@@ -262,15 +271,20 @@ class LauncherWindow(QDialog):
         enter_row.addStretch()
         layout.addLayout(enter_row)
 
-    def enter_editor(self) -> None:
+    def enter_editor(self) -> MainWindow:
+        global _ACTIVE_EDITOR_WINDOW
         if self.main_window is not None:
             self.main_window.raise_()
             self.main_window.activateWindow()
-            return
+            return self.main_window
         self.main_window = MainWindow(open_default=False)
-        self.main_window.closed.connect(self.close)
-        self.main_window.show()
-        self.hide()
+        main = self.main_window
+        _ACTIVE_EDITOR_WINDOW = main
+        main.closed.connect(_forget_active_editor)
+        main.show()
+        # The launch window is not part of the editor's hidden-window session.
+        self.close()
+        return main
 
 
 class MainWindow(QMainWindow):
@@ -344,8 +358,9 @@ class MainWindow(QMainWindow):
         self._create_actions()
         self._create_menus()
         self.navigation.currentRowChanged.connect(self._show_page_by_index)
-        self.workspace.setCurrentWidget(self.blank_page)
+        self.workspace.setCurrentWidget(self.map_page)
         self._update_action_state()
+        self._update_window_state()
 
         if open_default and DEFAULT_ROM.exists():
             self.load_rom(DEFAULT_ROM, quiet=True)
@@ -408,7 +423,7 @@ class MainWindow(QMainWindow):
         return action
 
     def _create_actions(self) -> None:
-        self.open_rom_action = self._action("打开(&O)…", self.open_rom_dialog, "Ctrl+O")
+        self.open_rom_action = self._action("打开(&O)", self.open_rom_dialog, "Ctrl+O")
         self.save_rom_action = self._action("保存(&S)", self.save_rom, "Ctrl+S")
         self.exit_action = self._action("退出(&X)", self.close, "Ctrl+X")
 
@@ -436,7 +451,7 @@ class MainWindow(QMainWindow):
         self.undo_action = self._action("撤销", self.undo, "Ctrl+Alt+Z")
         self.redo_action = self._action("重做", self.redo, "Ctrl+Alt+Y")
         self.validate_action = self._action("完整检查", self.validate_project, "F7")
-        self.about_action = self._action("关于与安全说明", self.show_about)
+        self.about_action = self._action("关于", self.show_about)
         self.page_actions = {
             key: self._action(
                 text,
@@ -450,31 +465,54 @@ class MainWindow(QMainWindow):
                 ("changes", "变更与验证"),
             )
         }
+        self.legacy_commands = {
+            command_id: action
+            for command_id, action in (
+                (20001, self.open_rom_action), (20004, self.save_rom_action),
+                (20006, self.exit_action), (20008, self.database_action),
+                (20009, self.font_library_action), (20011, self.map_animation_action),
+                (20013, self.text_converter_action), (20015, self.scenario_action),
+                (20017, self.export_unit_action), (20018, self.export_avatar_action),
+                (20020, self.attribute_calculator_action), (20021, self.save_editor_action),
+                (20023, self.other_settings_action), (20025, self.about_action),
+            )
+        }
+        for command_id, action in self.legacy_commands.items():
+            action.setData(command_id)
+
+    @staticmethod
+    def _legacy_separator(menu: QMenu, command_id: int) -> None:
+        menu.addSeparator().setData(command_id)
 
     def _create_menus(self) -> None:
         file_menu = self.menuBar().addMenu("文件(&F)")
         file_menu.addAction(self.open_rom_action)
+        self._legacy_separator(file_menu, 20003)
         file_menu.addAction(self.save_rom_action)
-        file_menu.addSeparator()
+        self._legacy_separator(file_menu, 20005)
         file_menu.addAction(self.exit_action)
 
         self.data_menu = self.menuBar().addMenu("数据(&A)")
         self.data_menu.addAction(self.database_action)
-        self.data_menu.addAction(self.rom_data_action)
         self.data_menu.addAction(self.font_library_action)
-        self.data_menu.addSeparator()
+        self._legacy_separator(self.data_menu, 20010)
         self.data_menu.addAction(self.map_animation_action)
+        self._legacy_separator(self.data_menu, 20012)
         self.data_menu.addAction(self.text_converter_action)
-        self.data_menu.addSeparator()
+        self._legacy_separator(self.data_menu, 20014)
         self.data_menu.addAction(self.scenario_action)
+        self._legacy_separator(self.data_menu, 20016)
         self.data_menu.addAction(self.export_unit_action)
         self.data_menu.addAction(self.export_avatar_action)
-        self.data_menu.addSeparator()
+        self._legacy_separator(self.data_menu, 20019)
         self.data_menu.addAction(self.attribute_calculator_action)
         self.data_menu.addAction(self.save_editor_action)
+        self._legacy_separator(self.data_menu, 20022)
         self.data_menu.addAction(self.other_settings_action)
 
         self.extension_menu = self.menuBar().addMenu("扩展功能")
+        self.extension_menu.addAction(self.rom_data_action)
+        self.extension_menu.addSeparator()
         self.extension_menu.addAction(self.page_actions["music"])
         self.extension_menu.addAction(self.page_actions["unit_import"])
         self.extension_menu.addAction(self.page_actions["resources"])
@@ -1148,6 +1186,7 @@ class MainWindow(QMainWindow):
             self.export_ips_action,
             self.build_action,
             self.validate_action,
+            self.rom_data_action,
             self.database_action,
             self.font_library_action,
             self.map_animation_action,
@@ -1181,11 +1220,12 @@ class MainWindow(QMainWindow):
             self.path_status.setText("尚未载入ROM")
             self.session_status.setText("")
             self.change_status.setText("0 字节修改")
-            self.workspace.setCurrentWidget(self.blank_page)
+            self.map_page.setEnabled(False)
+            self.workspace.setCurrentWidget(self.map_page)
             return
+        self.map_page.setEnabled(True)
         unsaved = self.has_unsaved_changes
-        marker = " *" if unsaved else ""
-        self.setWindowTitle(f"{LEGACY_WINDOW_TITLE}：{self.project.path}{marker}")
+        self.setWindowTitle(f"{LEGACY_WINDOW_TITLE}：{self.project.path}")
         self.path_status.setText(str(self.project.path))
         # Native bytes comparison is inexpensive; avoid enumerating the entire
         # ROM twice per pointer movement/draft notification.
@@ -1234,6 +1274,23 @@ class MainWindow(QMainWindow):
             self.closed.emit()
         else:
             event.ignore()
+
+    def dispatch_legacy_command(self, command_id: int) -> bool:
+        """Accept the reference editor's command IDs for Win32 automation."""
+        action = self.legacy_commands.get(command_id)
+        if action is None or not action.isEnabled():
+            return False
+        action.trigger()
+        return True
+
+    def nativeEvent(self, event_type, message):  # noqa: N802
+        if sys.platform == "win32" and bytes(event_type) == b"windows_generic_MSG":
+            native_message = wintypes.MSG.from_address(int(message))
+            if native_message.message == 0x0111 and native_message.lParam == 0:
+                command_id = native_message.wParam & 0xFFFF
+                if self.dispatch_legacy_command(command_id):
+                    return True, 0
+        return super().nativeEvent(event_type, message)
 
 
 def run() -> int:

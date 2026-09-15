@@ -3796,6 +3796,7 @@
   "reopen_value": 61,
   "original_value": 60,
   "reopen_matches_request": true,
+  "reopen_mode": "historical_result",
   "expected_offsets": [],
   "required_offsets": [],
   "optional_offsets": [],

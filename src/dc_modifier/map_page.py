@@ -1324,12 +1324,12 @@ class MapPage(ProjectPage):
         self.height_editor.setRange(1, 32)
         self.width_display = QSpinBox()
         self.width_display.setRange(1, 32)
-        self.width_display.setReadOnly(True)
-        self.width_display.setButtonSymbols(QSpinBox.ButtonSymbols.NoButtons)
         self.height_display = QSpinBox()
         self.height_display.setRange(1, 32)
-        self.height_display.setReadOnly(True)
-        self.height_display.setButtonSymbols(QSpinBox.ButtonSymbols.NoButtons)
+        self.width_display.setAccessibleName("地图宽度")
+        self.height_display.setAccessibleName("地图高度")
+        self.width_display.valueChanged.connect(self._resize_map_from_main)
+        self.height_display.valueChanged.connect(self._resize_map_from_main)
         self.resize_button = QPushButton("调整尺寸")
         self.resize_button.clicked.connect(self._resize_map)
         dimensions_layout.addWidget(QLabel("地图高度"), 0, 0)
@@ -3254,6 +3254,17 @@ class MapPage(ProjectPage):
     def _tile_painted(self, _x: int, _y: int, _tile: int) -> None:
         self._update_size_label()
 
+    def _resize_map_from_main(self, _value: int) -> None:
+        if self._loading_map or self.project is None or self.current_map_id is None:
+            return
+        width = self.width_display.value()
+        height = self.height_display.value()
+        if (width, height) == (self.staged_width, self.staged_height):
+            return
+        self.width_editor.setValue(width)
+        self.height_editor.setValue(height)
+        self._resize_map()
+
     def _resize_map(self) -> None:
         new_width = self.width_editor.value()
         new_height = self.height_editor.value()
@@ -3264,8 +3275,12 @@ class MapPage(ProjectPage):
         self.staged_width = new_width
         self.staged_height = new_height
         self.staged_tiles = resized
+        previous_width = self.width_display.blockSignals(True)
+        previous_height = self.height_display.blockSignals(True)
         self.width_display.setValue(new_width)
         self.height_display.setValue(new_height)
+        self.width_display.blockSignals(previous_width)
+        self.height_display.blockSignals(previous_height)
         self._update_overlays()
         self._update_size_label()
 
