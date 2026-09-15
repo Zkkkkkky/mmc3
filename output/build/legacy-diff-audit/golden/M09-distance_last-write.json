@@ -1,0 +1,98 @@
+{
+  "schema_version": 1,
+  "module": "M09",
+  "field": "distance_last",
+  "case_id": "write",
+  "case_kind": "golden",
+  "requested_value": 5,
+  "changed_offsets": [
+    46721,
+    303361,
+    303362,
+    306730,
+    306731,
+    496952,
+    496953
+  ],
+  "removed_normalization": [
+    303361,
+    303362,
+    306730,
+    306731,
+    496952,
+    496953
+  ],
+  "reopen_value": 5,
+  "original_value": 4,
+  "reopen_matches_request": true,
+  "expected_offsets": [
+    46721
+  ],
+  "required_offsets": [
+    46721
+  ],
+  "optional_offsets": [],
+  "extra_allowed": [],
+  "unexpected_offsets": [],
+  "target_changed": [
+    46721
+  ],
+  "expected_not_changed": [],
+  "passed": true,
+  "pending_reason": null,
+  "notes": [],
+  "provenance": {
+    "source_json": "output/build/legacy-diff-audit/legacy-other1-results.json"
+  },
+  "snapshots": {
+    "before": {
+      "path": "output/build/legacy-diff-audit/cases/legacy_other1/distance_last/before.nes",
+      "sha256": "c0f6fb15dbcc9f04d35ec97b9558df85d099c661c35d54d3a2aae4966d2ed5b2",
+      "size": 786448
+    },
+    "after": {
+      "path": "output/build/legacy-diff-audit/cases/legacy_other1/distance_last/after.nes",
+      "sha256": "bedf668b6cf63cf980a9f7741d22f834d0e8e012690a3a87a1c29e4c135b1b0c",
+      "size": 786448
+    }
+  },
+  "diff_entries": [
+    {
+      "offset": 46721,
+      "before_value": 4,
+      "after_value": 5
+    },
+    {
+      "offset": 303361,
+      "before_value": 201,
+      "after_value": 216
+    },
+    {
+      "offset": 303362,
+      "before_value": 2,
+      "after_value": 71
+    },
+    {
+      "offset": 306730,
+      "before_value": 201,
+      "after_value": 216
+    },
+    {
+      "offset": 306731,
+      "before_value": 2,
+      "after_value": 71
+    },
+    {
+      "offset": 496952,
+      "before_value": 201,
+      "after_value": 216
+    },
+    {
+      "offset": 496953,
+      "before_value": 2,
+      "after_value": 71
+    }
+  ],
+  "duration_seconds": null,
+  "duration_note": "存量档案离线复算：原始四步闭环未计时；REQ-NFR-PERF-005 的 ≤30s/字段预算适用于在线采集闭环"
+}

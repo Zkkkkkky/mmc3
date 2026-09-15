@@ -1,0 +1,119 @@
+{
+  "schema_version": 1,
+  "module": "M17",
+  "field": "double_hit_bonus",
+  "case_id": "write",
+  "case_kind": "golden",
+  "requested_value": 21,
+  "changed_offsets": [
+    303361,
+    303362,
+    306730,
+    306731,
+    491832,
+    491913,
+    496952,
+    496953,
+    524058
+  ],
+  "removed_normalization": [
+    303361,
+    303362,
+    306730,
+    306731,
+    496952,
+    496953
+  ],
+  "reopen_value": 21,
+  "original_value": 20,
+  "reopen_matches_request": true,
+  "expected_offsets": [
+    491832,
+    491913
+  ],
+  "required_offsets": [
+    491832,
+    491913
+  ],
+  "optional_offsets": [],
+  "extra_allowed": [
+    524035,
+    524050,
+    524058
+  ],
+  "unexpected_offsets": [],
+  "target_changed": [
+    491832,
+    491913
+  ],
+  "expected_not_changed": [],
+  "passed": true,
+  "pending_reason": null,
+  "notes": [
+    "双击公式字段：审计 CASES 仅登记前两镜像，存量 JSON 的 unexpected_offsets 即第三镜像；extra_allowed 预填 0x7FF03/0x7FF12/0x7FF1A，来源 src/fc_editor/profiles.py 的 double_hit_operand_groups（REQ-GLOB-001 三镜像同步）"
+  ],
+  "provenance": {
+    "source_json": "output/build/legacy-diff-audit/legacy-global-field-results.json"
+  },
+  "snapshots": {
+    "before": {
+      "path": "output/build/legacy-diff-audit/cases/legacy_globals/double_hit_bonus/before.nes",
+      "sha256": "c0f6fb15dbcc9f04d35ec97b9558df85d099c661c35d54d3a2aae4966d2ed5b2",
+      "size": 786448
+    },
+    "after": {
+      "path": "output/build/legacy-diff-audit/cases/legacy_globals/double_hit_bonus/after.nes",
+      "sha256": "6d9fc1f1d924228c94d2f3c113ad7f7be0ac8a881aae338aac572fe1d9199b27",
+      "size": 786448
+    }
+  },
+  "diff_entries": [
+    {
+      "offset": 303361,
+      "before_value": 201,
+      "after_value": 216
+    },
+    {
+      "offset": 303362,
+      "before_value": 2,
+      "after_value": 71
+    },
+    {
+      "offset": 306730,
+      "before_value": 201,
+      "after_value": 216
+    },
+    {
+      "offset": 306731,
+      "before_value": 2,
+      "after_value": 71
+    },
+    {
+      "offset": 491832,
+      "before_value": 20,
+      "after_value": 21
+    },
+    {
+      "offset": 491913,
+      "before_value": 20,
+      "after_value": 21
+    },
+    {
+      "offset": 496952,
+      "before_value": 201,
+      "after_value": 216
+    },
+    {
+      "offset": 496953,
+      "before_value": 2,
+      "after_value": 71
+    },
+    {
+      "offset": 524058,
+      "before_value": 20,
+      "after_value": 21
+    }
+  ],
+  "duration_seconds": null,
+  "duration_note": "存量档案离线复算：原始四步闭环未计时；REQ-NFR-PERF-005 的 ≤30s/字段预算适用于在线采集闭环"
+}

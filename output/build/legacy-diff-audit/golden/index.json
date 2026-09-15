@@ -1,0 +1,1166 @@
+{
+  "schema_version": 1,
+  "archive_dir": "output/build/legacy-diff-audit/golden",
+  "registry": "tools/golden_pipeline/cases/field_registry.json",
+  "summary": {
+    "total_cases": 61,
+    "archived_cases": 61,
+    "golden_cases": 58,
+    "discovery_cases": 3,
+    "passed_golden_cases": 58,
+    "failed_golden_cases": 0,
+    "missing_snapshots": [],
+    "unregistered_snapshots": [
+      "output/build/legacy-diff-audit/cases/global_hit_threshold",
+      "output/build/legacy-diff-audit/cases/item_price_01",
+      "output/build/legacy-diff-audit/cases/legacy_other1/experience_level_98"
+    ],
+    "orphan_archives": [],
+    "stored_diff_mismatches": []
+  },
+  "fields": {
+    "M09/distance_first": {
+      "module": "M09",
+      "field": "distance_first",
+      "case_id": "write",
+      "case_kind": "golden",
+      "archive": "M09-distance_first-write.json",
+      "sha256": "c43dcb3fcaa894e24a3d8a3c80ce57573400180aee0c47258f3c28c2ed303b60",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        46658
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 7,
+      "removed_normalization_count": 6,
+      "pending_reason": null
+    },
+    "M09/distance_last": {
+      "module": "M09",
+      "field": "distance_last",
+      "case_id": "write",
+      "case_kind": "golden",
+      "archive": "M09-distance_last-write.json",
+      "sha256": "3372de5175b83c99543387aa0c8aba4e05a65fbdc7a701130acabb431a93b676",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        46721
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 7,
+      "removed_normalization_count": 6,
+      "pending_reason": null
+    },
+    "M09/experience_level_2": {
+      "module": "M09",
+      "field": "experience_level_2",
+      "case_id": "write",
+      "case_kind": "discovery",
+      "archive": "M09-experience_level_2-write.json",
+      "sha256": "73e2b1e9d89d86cd78a586f15f4dc77c2205ecf04afb2b35b66a328075893be3",
+      "passed": null,
+      "expected_known": false,
+      "required_offsets": [],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 6,
+      "removed_normalization_count": 6,
+      "pending_reason": "发现型用例：存量 expected_offset=0（写入偏移未知）且重开读取值不等于请求值，需在线采集补证"
+    },
+    "M09/experience_level_60": {
+      "module": "M09",
+      "field": "experience_level_60",
+      "case_id": "write",
+      "case_kind": "discovery",
+      "archive": "M09-experience_level_60-write.json",
+      "sha256": "017138973739764a33c3e25261d2b4636aab5f3accbfe63966b2e98054c9265e",
+      "passed": null,
+      "expected_known": false,
+      "required_offsets": [],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 6,
+      "removed_normalization_count": 6,
+      "pending_reason": "发现型用例：存量 expected_offset=0（写入偏移未知）且重开读取值不等于请求值，需在线采集补证"
+    },
+    "M09/level_cap": {
+      "module": "M09",
+      "field": "level_cap",
+      "case_id": "write",
+      "case_kind": "discovery",
+      "archive": "M09-level_cap-write.json",
+      "sha256": "c1478f81e5fe8148c2d4e813f4916f4acd659cb11cc2fd7f2bf934a7ad2be8e4",
+      "passed": null,
+      "expected_known": false,
+      "required_offsets": [],
+      "optional_offsets": [],
+      "unexpected_count": 3772,
+      "changed_count": 3778,
+      "removed_normalization_count": 6,
+      "pending_reason": "发现型用例：等级上限 60→61 触发成长曲线等联动重写（3778 处偏移），无单一预期偏移集，待在线采集拆解（D5 决策）"
+    },
+    "M10/item_price_01": {
+      "module": "M10",
+      "field": "item_price_01",
+      "case_id": "write",
+      "case_kind": "golden",
+      "archive": "M10-item_price_01-write.json",
+      "sha256": "20a7cd2705d4c27e41f119e14609f13118349b5da43cb32e704c60fdaa448cac",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        87843
+      ],
+      "optional_offsets": [
+        87844
+      ],
+      "unexpected_count": 0,
+      "changed_count": 7,
+      "removed_normalization_count": 6,
+      "pending_reason": null
+    },
+    "M10/item_price_02": {
+      "module": "M10",
+      "field": "item_price_02",
+      "case_id": "write",
+      "case_kind": "golden",
+      "archive": "M10-item_price_02-write.json",
+      "sha256": "3639aaae08ac88bdce96cd11d6be54791115f5efc3eea2a20d9efe11b80f2320",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        87845
+      ],
+      "optional_offsets": [
+        87846
+      ],
+      "unexpected_count": 0,
+      "changed_count": 7,
+      "removed_normalization_count": 6,
+      "pending_reason": null
+    },
+    "M10/item_price_03": {
+      "module": "M10",
+      "field": "item_price_03",
+      "case_id": "write",
+      "case_kind": "golden",
+      "archive": "M10-item_price_03-write.json",
+      "sha256": "693803ec384fa00f1f5322296bda237bf8717bdaf69145378f70b7c7a70cd1a2",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        87847
+      ],
+      "optional_offsets": [
+        87848
+      ],
+      "unexpected_count": 0,
+      "changed_count": 7,
+      "removed_normalization_count": 6,
+      "pending_reason": null
+    },
+    "M10/item_price_04": {
+      "module": "M10",
+      "field": "item_price_04",
+      "case_id": "write",
+      "case_kind": "golden",
+      "archive": "M10-item_price_04-write.json",
+      "sha256": "6bcc89a67d796cfd241abaf929bf97c13fd965be28efa3f5205d78bbe85dc21d",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        87849
+      ],
+      "optional_offsets": [
+        87850
+      ],
+      "unexpected_count": 0,
+      "changed_count": 7,
+      "removed_normalization_count": 6,
+      "pending_reason": null
+    },
+    "M10/item_price_05": {
+      "module": "M10",
+      "field": "item_price_05",
+      "case_id": "write",
+      "case_kind": "golden",
+      "archive": "M10-item_price_05-write.json",
+      "sha256": "b92736ccf906965b4c21c48410e6e0b33c6dfc1460657833c87995a439de9db6",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        87851
+      ],
+      "optional_offsets": [
+        87852
+      ],
+      "unexpected_count": 0,
+      "changed_count": 7,
+      "removed_normalization_count": 6,
+      "pending_reason": null
+    },
+    "M10/item_price_06": {
+      "module": "M10",
+      "field": "item_price_06",
+      "case_id": "write",
+      "case_kind": "golden",
+      "archive": "M10-item_price_06-write.json",
+      "sha256": "004391c6108add28c9872288ed147c4b76db957373c516c0aba8ad5f6ac1b904",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        87853
+      ],
+      "optional_offsets": [
+        87854
+      ],
+      "unexpected_count": 0,
+      "changed_count": 7,
+      "removed_normalization_count": 6,
+      "pending_reason": null
+    },
+    "M10/item_price_07": {
+      "module": "M10",
+      "field": "item_price_07",
+      "case_id": "write",
+      "case_kind": "golden",
+      "archive": "M10-item_price_07-write.json",
+      "sha256": "8d691eb72b529df48dd4fd5473034bd515fd3e217b83f7c4b226832dd9367df0",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        87855
+      ],
+      "optional_offsets": [
+        87856
+      ],
+      "unexpected_count": 0,
+      "changed_count": 7,
+      "removed_normalization_count": 6,
+      "pending_reason": null
+    },
+    "M10/item_price_08": {
+      "module": "M10",
+      "field": "item_price_08",
+      "case_id": "write",
+      "case_kind": "golden",
+      "archive": "M10-item_price_08-write.json",
+      "sha256": "ff3893b475e21e3594902f3f2a46b995fef3c01d08d2bca2a771fb16016ace3c",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        87857
+      ],
+      "optional_offsets": [
+        87858
+      ],
+      "unexpected_count": 0,
+      "changed_count": 7,
+      "removed_normalization_count": 6,
+      "pending_reason": null
+    },
+    "M10/item_price_09": {
+      "module": "M10",
+      "field": "item_price_09",
+      "case_id": "write",
+      "case_kind": "golden",
+      "archive": "M10-item_price_09-write.json",
+      "sha256": "7dedfd4d6af416eb0f775026ded6437f832c334795b280372c71238fd82bc1e5",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        87859
+      ],
+      "optional_offsets": [
+        87860
+      ],
+      "unexpected_count": 0,
+      "changed_count": 7,
+      "removed_normalization_count": 6,
+      "pending_reason": null
+    },
+    "M10/item_price_10": {
+      "module": "M10",
+      "field": "item_price_10",
+      "case_id": "write",
+      "case_kind": "golden",
+      "archive": "M10-item_price_10-write.json",
+      "sha256": "74fd45ab006c9ea51651b6e7ca39d90b0ae73ccbace839eb7dbaa643b56eeb41",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        87861
+      ],
+      "optional_offsets": [
+        87862
+      ],
+      "unexpected_count": 0,
+      "changed_count": 7,
+      "removed_normalization_count": 6,
+      "pending_reason": null
+    },
+    "M10/item_price_11": {
+      "module": "M10",
+      "field": "item_price_11",
+      "case_id": "write",
+      "case_kind": "golden",
+      "archive": "M10-item_price_11-write.json",
+      "sha256": "bfcb0e77896f16b91d047e74f61abaf3471ce8d254eeab8536155441bcca3c20",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        87863
+      ],
+      "optional_offsets": [
+        87864
+      ],
+      "unexpected_count": 0,
+      "changed_count": 7,
+      "removed_normalization_count": 6,
+      "pending_reason": null
+    },
+    "M10/item_price_12": {
+      "module": "M10",
+      "field": "item_price_12",
+      "case_id": "write",
+      "case_kind": "golden",
+      "archive": "M10-item_price_12-write.json",
+      "sha256": "2307bab7826c14d4b1414dc63c7786d6084d2addce9e4744df750eaf3d5fa8c6",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        87865
+      ],
+      "optional_offsets": [
+        87866
+      ],
+      "unexpected_count": 0,
+      "changed_count": 7,
+      "removed_normalization_count": 6,
+      "pending_reason": null
+    },
+    "M10/item_price_13": {
+      "module": "M10",
+      "field": "item_price_13",
+      "case_id": "write",
+      "case_kind": "golden",
+      "archive": "M10-item_price_13-write.json",
+      "sha256": "51f3fdfedd49f560d8a37f31d78c1d835ae2e5e76fe178ad3b6d7f894271b1d2",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        87867
+      ],
+      "optional_offsets": [
+        87868
+      ],
+      "unexpected_count": 0,
+      "changed_count": 7,
+      "removed_normalization_count": 6,
+      "pending_reason": null
+    },
+    "M10/item_price_14": {
+      "module": "M10",
+      "field": "item_price_14",
+      "case_id": "write",
+      "case_kind": "golden",
+      "archive": "M10-item_price_14-write.json",
+      "sha256": "1ca3673dedcfe41c5f585c1f01161f2c3e0506309054bb83aa4beafa341a5698",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        87869
+      ],
+      "optional_offsets": [
+        87870
+      ],
+      "unexpected_count": 0,
+      "changed_count": 7,
+      "removed_normalization_count": 6,
+      "pending_reason": null
+    },
+    "M10/item_price_15": {
+      "module": "M10",
+      "field": "item_price_15",
+      "case_id": "write",
+      "case_kind": "golden",
+      "archive": "M10-item_price_15-write.json",
+      "sha256": "3b33c52d31420c207d5f4f06e32fab92e0df9cd05232533d4a08666784e85e79",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        87871
+      ],
+      "optional_offsets": [
+        87872
+      ],
+      "unexpected_count": 0,
+      "changed_count": 7,
+      "removed_normalization_count": 6,
+      "pending_reason": null
+    },
+    "M10/item_price_16": {
+      "module": "M10",
+      "field": "item_price_16",
+      "case_id": "write",
+      "case_kind": "golden",
+      "archive": "M10-item_price_16-write.json",
+      "sha256": "4c96af6934ab4413631d11a06746af98e19579d762ededac453b5c2877782cb7",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        87873
+      ],
+      "optional_offsets": [
+        87874
+      ],
+      "unexpected_count": 0,
+      "changed_count": 7,
+      "removed_normalization_count": 6,
+      "pending_reason": null
+    },
+    "M10/item_price_17": {
+      "module": "M10",
+      "field": "item_price_17",
+      "case_id": "write",
+      "case_kind": "golden",
+      "archive": "M10-item_price_17-write.json",
+      "sha256": "e4404bee4e71e2aaf56a667225cff78882ea35cdef3419ebaefdd805db65ec12",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        87875
+      ],
+      "optional_offsets": [
+        87876
+      ],
+      "unexpected_count": 0,
+      "changed_count": 7,
+      "removed_normalization_count": 6,
+      "pending_reason": null
+    },
+    "M10/item_price_18": {
+      "module": "M10",
+      "field": "item_price_18",
+      "case_id": "write",
+      "case_kind": "golden",
+      "archive": "M10-item_price_18-write.json",
+      "sha256": "c02265911402a11aac8cc4f7bb0f0bdc630ca12636473fea8b1466b71b0b57cf",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        87877
+      ],
+      "optional_offsets": [
+        87878
+      ],
+      "unexpected_count": 0,
+      "changed_count": 7,
+      "removed_normalization_count": 6,
+      "pending_reason": null
+    },
+    "M10/item_price_19": {
+      "module": "M10",
+      "field": "item_price_19",
+      "case_id": "write",
+      "case_kind": "golden",
+      "archive": "M10-item_price_19-write.json",
+      "sha256": "71dbc4559ae8fdd135703d6a220e2600ca2e7d482fc7aa35b25f22ff759bc10f",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        87879
+      ],
+      "optional_offsets": [
+        87880
+      ],
+      "unexpected_count": 0,
+      "changed_count": 7,
+      "removed_normalization_count": 6,
+      "pending_reason": null
+    },
+    "M10/item_price_20": {
+      "module": "M10",
+      "field": "item_price_20",
+      "case_id": "write",
+      "case_kind": "golden",
+      "archive": "M10-item_price_20-write.json",
+      "sha256": "ea20580d5f928199281fe127de74b7716fed4f3749513a9dd306e3b210a92d7d",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        87881
+      ],
+      "optional_offsets": [
+        87882
+      ],
+      "unexpected_count": 0,
+      "changed_count": 7,
+      "removed_normalization_count": 6,
+      "pending_reason": null
+    },
+    "M10/item_price_21": {
+      "module": "M10",
+      "field": "item_price_21",
+      "case_id": "write",
+      "case_kind": "golden",
+      "archive": "M10-item_price_21-write.json",
+      "sha256": "63a7a36ca430a071b77937cdd841f66aa863bbab4cc0cfa7cc385b7d786a3c3d",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        87883
+      ],
+      "optional_offsets": [
+        87884
+      ],
+      "unexpected_count": 0,
+      "changed_count": 7,
+      "removed_normalization_count": 6,
+      "pending_reason": null
+    },
+    "M10/item_price_22": {
+      "module": "M10",
+      "field": "item_price_22",
+      "case_id": "write",
+      "case_kind": "golden",
+      "archive": "M10-item_price_22-write.json",
+      "sha256": "0c77e7fbccd94f754a29b28eb5a244ba65617f2926652212e699b7aed0410ca7",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        87885
+      ],
+      "optional_offsets": [
+        87886
+      ],
+      "unexpected_count": 0,
+      "changed_count": 7,
+      "removed_normalization_count": 6,
+      "pending_reason": null
+    },
+    "M10/item_price_23": {
+      "module": "M10",
+      "field": "item_price_23",
+      "case_id": "write",
+      "case_kind": "golden",
+      "archive": "M10-item_price_23-write.json",
+      "sha256": "9f3651d410d904adee58008fbb98b3918fb2ebf2456bd7428d0b146d76d3df6a",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        87887
+      ],
+      "optional_offsets": [
+        87888
+      ],
+      "unexpected_count": 0,
+      "changed_count": 7,
+      "removed_normalization_count": 6,
+      "pending_reason": null
+    },
+    "M10/item_price_24": {
+      "module": "M10",
+      "field": "item_price_24",
+      "case_id": "write",
+      "case_kind": "golden",
+      "archive": "M10-item_price_24-write.json",
+      "sha256": "1d93ff4b8aa09318b08a4e4dc8e6506a5922d62c7d36d7525aa0f47b2083104c",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        87889
+      ],
+      "optional_offsets": [
+        87890
+      ],
+      "unexpected_count": 0,
+      "changed_count": 7,
+      "removed_normalization_count": 6,
+      "pending_reason": null
+    },
+    "M17/damage_defense_divisor": {
+      "module": "M17",
+      "field": "damage_defense_divisor",
+      "case_id": "write",
+      "case_kind": "golden",
+      "archive": "M17-damage_defense_divisor-write.json",
+      "sha256": "7f3680ce9976a18edf541422c3f81e2f4638d97a3d7b724402410bff51eab508",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        39328
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 7,
+      "removed_normalization_count": 6,
+      "pending_reason": null
+    },
+    "M17/damage_defense_multiplier": {
+      "module": "M17",
+      "field": "damage_defense_multiplier",
+      "case_id": "write",
+      "case_kind": "golden",
+      "archive": "M17-damage_defense_multiplier-write.json",
+      "sha256": "4fbddcb0ad93995802c116e4a44a283184e9ecd496e00373e5ad95939bf6f267",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        39321
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 7,
+      "removed_normalization_count": 6,
+      "pending_reason": null
+    },
+    "M17/damage_strength_divisor": {
+      "module": "M17",
+      "field": "damage_strength_divisor",
+      "case_id": "write",
+      "case_kind": "golden",
+      "archive": "M17-damage_strength_divisor-write.json",
+      "sha256": "7e42e9746f4085bc3c8c799f58c6fb278d5eb72f7554a1231293aafdc566d1ec",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        491755
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 7,
+      "removed_normalization_count": 6,
+      "pending_reason": null
+    },
+    "M17/damage_strength_multiplier": {
+      "module": "M17",
+      "field": "damage_strength_multiplier",
+      "case_id": "write",
+      "case_kind": "golden",
+      "archive": "M17-damage_strength_multiplier-write.json",
+      "sha256": "eccd3bc52dbc92f65d24e4604af8c2f8fd5a3b17e07e89de84b46f984ea926d0",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        491748
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 7,
+      "removed_normalization_count": 6,
+      "pending_reason": null
+    },
+    "M17/damage_weapon_multiplier": {
+      "module": "M17",
+      "field": "damage_weapon_multiplier",
+      "case_id": "write",
+      "case_kind": "golden",
+      "archive": "M17-damage_weapon_multiplier-write.json",
+      "sha256": "57b78ccc92cb64133f9d5708f9b5999153dda718b2ebdb71717128b19516038e",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        491717
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 7,
+      "removed_normalization_count": 6,
+      "pending_reason": null
+    },
+    "M17/double_hit_attack_percent": {
+      "module": "M17",
+      "field": "double_hit_attack_percent",
+      "case_id": "write",
+      "case_kind": "golden",
+      "archive": "M17-double_hit_attack_percent-write.json",
+      "sha256": "c0b617ad5d8ae3c991a90af1ba810b167d40dea7fa9ccf26ab853912b5b54474",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        491785,
+        491866
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 9,
+      "removed_normalization_count": 6,
+      "pending_reason": null
+    },
+    "M17/double_hit_bonus": {
+      "module": "M17",
+      "field": "double_hit_bonus",
+      "case_id": "write",
+      "case_kind": "golden",
+      "archive": "M17-double_hit_bonus-write.json",
+      "sha256": "288835e4d7e6e2fa5ba19c07536f850f061cd9d0d3691063696eb9a20848c335",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        491832,
+        491913
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 9,
+      "removed_normalization_count": 6,
+      "pending_reason": null
+    },
+    "M17/double_hit_defense_percent": {
+      "module": "M17",
+      "field": "double_hit_defense_percent",
+      "case_id": "write",
+      "case_kind": "golden",
+      "archive": "M17-double_hit_defense_percent-write.json",
+      "sha256": "e815c8df1ad4fb9f999949867d8df297f07eb90eb6077fab7458d8502de46665",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        491815,
+        491896
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 9,
+      "removed_normalization_count": 6,
+      "pending_reason": null
+    },
+    "M17/hit_threshold": {
+      "module": "M17",
+      "field": "hit_threshold",
+      "case_id": "write",
+      "case_kind": "golden",
+      "archive": "M17-hit_threshold-write.json",
+      "sha256": "49914d0579d7f9192e73f8700534f817bf61c1617aad3d76a18e07b7693ecb78",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        42062
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 7,
+      "removed_normalization_count": 6,
+      "pending_reason": null
+    },
+    "M17/item_01": {
+      "module": "M17",
+      "field": "item_01",
+      "case_id": "write",
+      "case_kind": "golden",
+      "archive": "M17-item_01-write.json",
+      "sha256": "a4d2f813a3ed5096a017cf944fca949ddd32edf5a13af1004f67e5f59c819cf6",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        82127
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 7,
+      "removed_normalization_count": 6,
+      "pending_reason": null
+    },
+    "M17/item_02": {
+      "module": "M17",
+      "field": "item_02",
+      "case_id": "write",
+      "case_kind": "golden",
+      "archive": "M17-item_02-write.json",
+      "sha256": "b200e53f2531ab380816ec30bbec740ade58a2fb70c734fe4dc62d27b71c5e15",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        82134
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 7,
+      "removed_normalization_count": 6,
+      "pending_reason": null
+    },
+    "M17/item_03": {
+      "module": "M17",
+      "field": "item_03",
+      "case_id": "write",
+      "case_kind": "golden",
+      "archive": "M17-item_03-write.json",
+      "sha256": "5fe61ea10f47be5c444d2a118162d4fe979de9f3a798e3a54dbaa5e5cab6f826",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        82141
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 7,
+      "removed_normalization_count": 6,
+      "pending_reason": null
+    },
+    "M17/item_04": {
+      "module": "M17",
+      "field": "item_04",
+      "case_id": "write",
+      "case_kind": "golden",
+      "archive": "M17-item_04-write.json",
+      "sha256": "c0b204f0949790f8979cac93f43f6d0e9acf8f995e7ef0a932dc3d9001ad8460",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        82148
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 7,
+      "removed_normalization_count": 6,
+      "pending_reason": null
+    },
+    "M17/item_05": {
+      "module": "M17",
+      "field": "item_05",
+      "case_id": "write",
+      "case_kind": "golden",
+      "archive": "M17-item_05-write.json",
+      "sha256": "273e7d013bb785f0b79d635c903c6c1038e1a5d91a3783e238fd4ab1d3b480fa",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        82155
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 7,
+      "removed_normalization_count": 6,
+      "pending_reason": null
+    },
+    "M17/item_06": {
+      "module": "M17",
+      "field": "item_06",
+      "case_id": "write",
+      "case_kind": "golden",
+      "archive": "M17-item_06-write.json",
+      "sha256": "44affc88aa186f5b4939c9c0ffe8c2258e1cbbd256452dbe9444ef9f753855f3",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        82162
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 7,
+      "removed_normalization_count": 6,
+      "pending_reason": null
+    },
+    "M17/item_07": {
+      "module": "M17",
+      "field": "item_07",
+      "case_id": "write",
+      "case_kind": "golden",
+      "archive": "M17-item_07-write.json",
+      "sha256": "ea95a0364294ea08182dd6edbb72a20f0c500f3cefa966a9ce9834277e9d2cf7",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        82169
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 7,
+      "removed_normalization_count": 6,
+      "pending_reason": null
+    },
+    "M17/item_08": {
+      "module": "M17",
+      "field": "item_08",
+      "case_id": "write",
+      "case_kind": "golden",
+      "archive": "M17-item_08-write.json",
+      "sha256": "02e158a2db4502704514a7459362dbcaa2157f792f96f2379c487fde1e850644",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        82176
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 7,
+      "removed_normalization_count": 6,
+      "pending_reason": null
+    },
+    "M17/item_09": {
+      "module": "M17",
+      "field": "item_09",
+      "case_id": "write",
+      "case_kind": "golden",
+      "archive": "M17-item_09-write.json",
+      "sha256": "5d962da1d713b22a49f9967a3641514cce24c3a583320fbe98d94dca2c3dd80d",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        82183
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 7,
+      "removed_normalization_count": 6,
+      "pending_reason": null
+    },
+    "M17/item_10": {
+      "module": "M17",
+      "field": "item_10",
+      "case_id": "write",
+      "case_kind": "golden",
+      "archive": "M17-item_10-write.json",
+      "sha256": "39cdb64f086292706334aff9982cdff947097c2839096eb3e08437069468370c",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        82190
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 7,
+      "removed_normalization_count": 6,
+      "pending_reason": null
+    },
+    "M17/item_11": {
+      "module": "M17",
+      "field": "item_11",
+      "case_id": "write",
+      "case_kind": "golden",
+      "archive": "M17-item_11-write.json",
+      "sha256": "8367eb1ef39a201da95541b17c134c97b92c5d249a26460b0f507220f5f156f4",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        82197
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 7,
+      "removed_normalization_count": 6,
+      "pending_reason": null
+    },
+    "M17/slot_1_character": {
+      "module": "M17",
+      "field": "slot_1_character",
+      "case_id": "write",
+      "case_kind": "golden",
+      "archive": "M17-slot_1_character-write.json",
+      "sha256": "1ffddee56a3d7519db2646ae1f69222d24d477649a5c933d7a76ed0e2b380fa5",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        235101
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 7,
+      "removed_normalization_count": 6,
+      "pending_reason": null
+    },
+    "M17/slot_1_unit": {
+      "module": "M17",
+      "field": "slot_1_unit",
+      "case_id": "write",
+      "case_kind": "golden",
+      "archive": "M17-slot_1_unit-write.json",
+      "sha256": "3e5e200e519b39c1e334702c0eabc677c0b6cce77ae03eb4a4323ceeaca482f2",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        235102
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 7,
+      "removed_normalization_count": 6,
+      "pending_reason": null
+    },
+    "M17/slot_2_character": {
+      "module": "M17",
+      "field": "slot_2_character",
+      "case_id": "write",
+      "case_kind": "golden",
+      "archive": "M17-slot_2_character-write.json",
+      "sha256": "1012dd2aa966e2ca887e28032573a2005dacc3168babd9ae03157bbaba0aa92a",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        235103
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 7,
+      "removed_normalization_count": 6,
+      "pending_reason": null
+    },
+    "M17/slot_2_unit": {
+      "module": "M17",
+      "field": "slot_2_unit",
+      "case_id": "write",
+      "case_kind": "golden",
+      "archive": "M17-slot_2_unit-write.json",
+      "sha256": "dc1b406229581960428a1208799badfa1aa943b1afd439b3717aac30a44e14cc",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        235104
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 7,
+      "removed_normalization_count": 6,
+      "pending_reason": null
+    },
+    "M17/slot_3_character": {
+      "module": "M17",
+      "field": "slot_3_character",
+      "case_id": "write",
+      "case_kind": "golden",
+      "archive": "M17-slot_3_character-write.json",
+      "sha256": "24b12a07c37b765ba03255620440da7de8fe414b5a63901c48ad7b7f9129ea15",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        235105
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 7,
+      "removed_normalization_count": 6,
+      "pending_reason": null
+    },
+    "M17/slot_3_unit": {
+      "module": "M17",
+      "field": "slot_3_unit",
+      "case_id": "write",
+      "case_kind": "golden",
+      "archive": "M17-slot_3_unit-write.json",
+      "sha256": "164a9f74ccdc352735ceb27ce3176ea96a6245a5d7ce86101ac73d6c4d3b5e41",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        235106
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 7,
+      "removed_normalization_count": 6,
+      "pending_reason": null
+    },
+    "M17/slot_4_character": {
+      "module": "M17",
+      "field": "slot_4_character",
+      "case_id": "write",
+      "case_kind": "golden",
+      "archive": "M17-slot_4_character-write.json",
+      "sha256": "c2d8d2521de2e37471f39a6451897438bfa92bc60fae6a657e349f4385001953",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        235107
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 7,
+      "removed_normalization_count": 6,
+      "pending_reason": null
+    },
+    "M17/slot_4_unit": {
+      "module": "M17",
+      "field": "slot_4_unit",
+      "case_id": "write",
+      "case_kind": "golden",
+      "archive": "M17-slot_4_unit-write.json",
+      "sha256": "5169dae56b1c1367bcef0cdb58c5a8b9f57d1cde63709a63108c468270f94d7a",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        235108
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 7,
+      "removed_normalization_count": 6,
+      "pending_reason": null
+    },
+    "M17/slot_5_character": {
+      "module": "M17",
+      "field": "slot_5_character",
+      "case_id": "write",
+      "case_kind": "golden",
+      "archive": "M17-slot_5_character-write.json",
+      "sha256": "fa68ba569e99c862df0d6df99a2f75720352d9ecebe852e4f0a45ce17bb6c0c0",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        235109
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 7,
+      "removed_normalization_count": 6,
+      "pending_reason": null
+    },
+    "M17/slot_5_unit": {
+      "module": "M17",
+      "field": "slot_5_unit",
+      "case_id": "write",
+      "case_kind": "golden",
+      "archive": "M17-slot_5_unit-write.json",
+      "sha256": "5c023f9bb0e65fef77ee3c3068061bf3739ed864a5cafcd4ad8edb9433ae8780",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        235110
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 7,
+      "removed_normalization_count": 6,
+      "pending_reason": null
+    },
+    "M17/slot_6_character": {
+      "module": "M17",
+      "field": "slot_6_character",
+      "case_id": "write",
+      "case_kind": "golden",
+      "archive": "M17-slot_6_character-write.json",
+      "sha256": "54804465eb360531fd12584d20f973881789fbdf2b946e5d0a3b8531bcd33bf7",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        235111
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 7,
+      "removed_normalization_count": 6,
+      "pending_reason": null
+    },
+    "M17/slot_6_unit": {
+      "module": "M17",
+      "field": "slot_6_unit",
+      "case_id": "write",
+      "case_kind": "golden",
+      "archive": "M17-slot_6_unit-write.json",
+      "sha256": "7845b64589ab6a881e042309eb3b94dd1286bd35e4609cef1acbf9742a4d8589",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        235112
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 7,
+      "removed_normalization_count": 6,
+      "pending_reason": null
+    }
+  }
+}
