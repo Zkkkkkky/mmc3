@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import os
 import tempfile
 import unittest
 from pathlib import Path
@@ -195,9 +196,11 @@ class LiveCollectionTests(unittest.TestCase):
         driver.app.windows.return_value = []
         driver.pid = 9001
         driver.current_rom = self.baseline
+        previous_mtime = self.baseline.stat().st_mtime_ns
 
         def save_to_disk(_: str) -> None:
             self.baseline.write_bytes(bytes([0] * 10 + [71] + [0] * 10))
+            os.utime(self.baseline, ns=(previous_mtime, previous_mtime))
 
         main = Mock()
         main.menu_select.side_effect = save_to_disk

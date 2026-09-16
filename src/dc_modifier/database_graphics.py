@@ -160,8 +160,9 @@ def decode_unit_fragment_script(script: bytes) -> tuple[FragmentTile, ...]:
     """Decode the documented unit-fragment sprite composition language.
 
     The first three bytes are ``X, Y, tile``.  The stored Y value is the
-    signed offset from the bottom of the 128-pixel battle viewport.  Every
-    following command draws
+    signed offset from the bottom of the 128-pixel battle viewport and is
+    written to the NES OAM Y field, whose visible sprite begins one scanline
+    below that value.  Every following command draws
     that tile, optionally flips it, then describes the next tile/position.
     Bit $40 is horizontal flip and bit $80 is vertical flip.  The command
     families are the ones documented by the original editor's
@@ -176,10 +177,12 @@ def decode_unit_fragment_script(script: bytes) -> tuple[FragmentTile, ...]:
     # The two leading coordinates are easy to misread in the old reference:
     # they are X followed by Y, not Y followed by X.  X is already relative
     # to the unit-side viewport, while Y is stored as a signed displacement
-    # from its bottom edge.  Keeping this conversion here makes every caller
-    # (main database page and the appearance dialog) use the game geometry.
+    # from its bottom edge.  NES OAM defines Y as the scanline immediately
+    # above the sprite, so the visible pixels need one extra line.  Keeping
+    # this conversion here makes every caller (main database page and the
+    # appearance dialog) use the same geometry as the running game.
     x = _signed_byte(script[0])
-    y = _signed_byte(script[1]) + 0x80
+    y = _signed_byte(script[1]) + 0x80 + 1
     tile = script[2]
     cursor = 3
     placements: list[FragmentTile] = []
@@ -292,6 +295,7 @@ def render_chr_banks(
     colors: tuple[int, ...],
     *,
     columns: int | None = None,
+    display_palette: tuple[QColor, QColor, QColor, QColor] | None = None,
 ) -> QImage:
     """Render actual CHR banks in tile order, not a fabricated battle pose."""
 
@@ -305,9 +309,13 @@ def render_chr_banks(
         raise ValueError("图库预览列数无效。")
     rows = (len(banks) + columns - 1) // columns
     image = QImage(64 * columns, 64 * rows, QImage.Format.Format_RGB32)
-    background = palette_color(0x0F)
+    background = display_palette[0] if display_palette is not None else palette_color(0x0F)
     image.fill(background)
-    palette = (background, *(palette_color(value) for value in colors))
+    palette = (
+        display_palette
+        if display_palette is not None
+        else (background, *(palette_color(value) for value in colors))
+    )
     for bank_index, bank in enumerate(banks):
         bank_column = bank_index % columns
         bank_row = bank_index // columns
@@ -380,6 +388,7 @@ def render_unit_battle_preview(
     *,
     show_body: bool = True,
     show_fragments: bool = True,
+    display_palette: tuple[QColor, QColor, QColor, QColor] | None = None,
 ) -> QImage:
     """Render the body background and fragment sprites as the game layers them.
 
@@ -394,10 +403,10 @@ def render_unit_battle_preview(
     )
     fragments = decode_unit_fragment_script(appearance.fragment_script)
     image = QImage(128, 128, QImage.Format.Format_RGB32)
-    image.fill(palette_color(0x0F))
-    body_palette = (
-        palette_color(0x0F),
-        *(palette_color(value) for value in appearance.first_palette),
+    background = display_palette[0] if display_palette is not None else palette_color(0x0F)
+    image.fill(background)
+    body_palette = display_palette or (
+        background, *(palette_color(value) for value in appearance.first_palette),
     )
     # Bit $40 is the opposing-side layout.  Its scripts use negative X tile
     # coordinates and the game anchors that background at tile column 15.
@@ -415,13 +424,13 @@ def render_unit_battle_preview(
                 if color_index and 0 <= x0 + x < 128 and 0 <= y0 + y < 128:
                     image.setPixelColor(x0 + x, y0 + y, body_palette[color_index])
     fragment_bank = appearance.primary_bank & 0xFE
-    fragment_palette = (
-        palette_color(0x0F),
-        *(palette_color(value) for value in appearance.second_palette),
+    fragment_palette = display_palette or (
+        background, *(palette_color(value) for value in appearance.second_palette),
     )
-    # Opposing-side sprite X values occupy the right-hand half of the battle
-    # viewport.  The signed script coordinate deliberately wraps at 128.
-    fragment_origin_x = 0x80 if appearance.configuration[0] & 0x40 else 0
+    # Opposing-side sprites use the final 8-pixel column as their hardware
+    # anchor.  The former $80 origin placed every fragment one tile too far
+    # right; the legacy/game capture for unit $87 confirms the $78 anchor.
+    fragment_origin_x = 0x78 if appearance.configuration[0] & 0x40 else 0
     for placement in fragments if show_fragments else ():
         bank_index, local_tile = divmod(placement.tile_index, 64)
         pixels = project.chr_tile_pixels((fragment_bank + bank_index) * 64 + local_tile)

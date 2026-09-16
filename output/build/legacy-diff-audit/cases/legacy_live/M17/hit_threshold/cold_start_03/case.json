@@ -1,0 +1,93 @@
+{
+  "schema_version": 1,
+  "module": "M17",
+  "field": "hit_threshold",
+  "case_id": "cold_start_03",
+  "case_kind": "golden",
+  "requested_value": 71,
+  "original_value": 70,
+  "reopen_value": 71,
+  "reopen_matches_request": true,
+  "reopen_mode": "new_process",
+  "first_pid": 16024,
+  "second_pid": 15692,
+  "changed_offsets": [
+    42062,
+    303361,
+    303362,
+    306730,
+    306731,
+    496952,
+    496953
+  ],
+  "removed_normalization": [
+    303361,
+    303362,
+    306730,
+    306731,
+    496952,
+    496953
+  ],
+  "unexpected_offsets": [],
+  "expected_offsets": [
+    42062
+  ],
+  "required_offsets": [
+    42062
+  ],
+  "optional_offsets": [],
+  "extra_allowed": [],
+  "expected_not_changed": [],
+  "diffs": [
+    {
+      "offset": 42062,
+      "before": 70,
+      "after": 71
+    },
+    {
+      "offset": 303361,
+      "before": 201,
+      "after": 216
+    },
+    {
+      "offset": 303362,
+      "before": 2,
+      "after": 71
+    },
+    {
+      "offset": 306730,
+      "before": 201,
+      "after": 216
+    },
+    {
+      "offset": 306731,
+      "before": 2,
+      "after": 71
+    },
+    {
+      "offset": 496952,
+      "before": 201,
+      "after": 216
+    },
+    {
+      "offset": 496953,
+      "before": 2,
+      "after": 71
+    }
+  ],
+  "snapshots": {
+    "before": {
+      "path": "output/build/legacy-diff-audit/cases/legacy_live/M17/hit_threshold/cold_start_03/before.nes",
+      "sha256": "c0f6fb15dbcc9f04d35ec97b9558df85d099c661c35d54d3a2aae4966d2ed5b2"
+    },
+    "after": {
+      "path": "output/build/legacy-diff-audit/cases/legacy_live/M17/hit_threshold/cold_start_03/after.nes",
+      "sha256": "cdcd8d641acc5c62f7d92ce49a1d5535ee65520c49a0a5976fd8c433fd2925f6"
+    }
+  },
+  "duration_seconds": 12.312,
+  "budget_seconds": 30.0,
+  "within_budget": true,
+  "passed": true,
+  "pending_reason": null
+}

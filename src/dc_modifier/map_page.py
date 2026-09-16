@@ -172,15 +172,20 @@ class TerrainButton(QPushButton):
         super().mousePressEvent(event)
 
 
-def render_unit_icon_bank(project, bank: int) -> QImage:
+def render_unit_icon_bank(
+    project,
+    bank: int,
+    palette_values: tuple[int, int, int, int] = ICON_PALETTE_NES,
+) -> QImage:
     """Render a raw CHR bank as sixteen 2×2-tile map-icon candidates.
 
     This is a bank preview, not a claimed unit-ID or chapter binding.  The
     legacy BMP evidence establishes four 8×8 tiles per 16×16 icon.
     """
 
+    colors = tuple(palette_color(value) for value in palette_values)
     image = QImage(256, 16, QImage.Format.Format_RGB32)
-    image.fill(ICON_PALETTE[0])
+    image.fill(colors[0])
     first_tile = bank * 64
     for icon in range(16):
         for quadrant in range(4):
@@ -192,7 +197,7 @@ def render_unit_icon_bank(project, bank: int) -> QImage:
                     image.setPixelColor(
                         origin_x + x,
                         origin_y + y,
-                        ICON_PALETTE[pixels[y * 8 + x]],
+                        colors[pixels[y * 8 + x]],
                     )
     return image
 
@@ -1266,7 +1271,7 @@ class MapPage(ProjectPage):
         left_caption.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.left_brush_preview = QLabel("暂无图块")
         self.left_brush_preview.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.left_brush_preview.setFixedSize(64, 64)
+        self.left_brush_preview.setFixedSize(40, 40)
         self.left_brush_preview.setStyleSheet(
             "background: #e8edf2; color: #475569; border: 1px solid #7d8790;"
         )
@@ -1291,7 +1296,7 @@ class MapPage(ProjectPage):
         right_caption.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.right_brush_preview = QLabel("暂无图块")
         self.right_brush_preview.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.right_brush_preview.setFixedSize(64, 64)
+        self.right_brush_preview.setFixedSize(40, 40)
         self.right_brush_preview.setStyleSheet(
             "background: #e8edf2; color: #475569; border: 1px solid #7d8790;"
         )
@@ -3099,8 +3104,8 @@ class MapPage(ProjectPage):
         ):
             if 0 <= tile < len(images):
                 pixmap = QPixmap.fromImage(images[tile]).scaled(
-                    56,
-                    56,
+                    32,
+                    32,
                     Qt.AspectRatioMode.KeepAspectRatio,
                     Qt.TransformationMode.FastTransformation,
                 )

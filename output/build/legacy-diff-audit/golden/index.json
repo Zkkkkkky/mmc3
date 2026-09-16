@@ -3,11 +3,11 @@
   "archive_dir": "output/build/legacy-diff-audit/golden",
   "registry": "tools/golden_pipeline/cases/field_registry.json",
   "summary": {
-    "total_cases": 61,
-    "archived_cases": 61,
-    "golden_cases": 58,
+    "total_cases": 62,
+    "archived_cases": 62,
+    "golden_cases": 59,
     "discovery_cases": 3,
-    "passed_golden_cases": 58,
+    "passed_golden_cases": 59,
     "failed_golden_cases": 0,
     "missing_snapshots": [],
     "unregistered_snapshots": [
@@ -727,6 +727,24 @@
       "optional_offsets": [],
       "unexpected_count": 0,
       "changed_count": 9,
+      "removed_normalization_count": 6,
+      "pending_reason": null
+    },
+    "M17/hit_threshold/cold_start_03": {
+      "module": "M17",
+      "field": "hit_threshold",
+      "case_id": "cold_start_03",
+      "case_kind": "golden",
+      "archive": "M17-hit_threshold-cold_start_03.json",
+      "sha256": "acf13421d4416ade1cd5f957fd3aff1d46c0181794d1bc7a61392047847e5bd8",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        42062
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 7,
       "removed_normalization_count": 6,
       "pending_reason": null
     },

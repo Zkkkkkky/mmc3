@@ -8,7 +8,7 @@
 | 指标 | 数值 | 目标 |
 | --- | --- | --- |
 | G1 黄金对照覆盖率 | 58/61 = 95.08% | >=95% |
-| G2 逐字段差分通过率 | 58/58 = 100.00% | =100% |
+| G2 逐字段差分通过率 | 59/59 = 100.00% | =100% |
 
 > G1 分母口径 `denominator_scope=registered_fields`：当前分母为 field_registry.json 登记字段数；最终口径为参考版全部可编辑字段数（主文档第 4/5 章字段清单，M00 第 5 节统计职责），全量采集完成后需以全量字段数重算分母
 
@@ -18,9 +18,9 @@
 | --- | --- |
 | 注册字段（登记用例） | 61 |
 | 已归档字段 | 61 |
-| golden 用例 | 58 |
+| golden 用例 | 59 |
 | discovery 用例 | 3 |
-| 通过 golden 用例 | 58 |
+| 通过 golden 用例 | 59 |
 | 未通过 golden 用例 | 0 |
 | 待解释用例 | 3 |
 
@@ -73,6 +73,7 @@
 | M17 | double_hit_attack_percent | golden | true | 9 | 6 | 0 | M17-double_hit_attack_percent-write.json |
 | M17 | double_hit_bonus | golden | true | 9 | 6 | 0 | M17-double_hit_bonus-write.json |
 | M17 | double_hit_defense_percent | golden | true | 9 | 6 | 0 | M17-double_hit_defense_percent-write.json |
+| M17 | hit_threshold | golden | true | 7 | 6 | 0 | M17-hit_threshold-cold_start_03.json |
 | M17 | hit_threshold | golden | true | 7 | 6 | 0 | M17-hit_threshold-write.json |
 | M17 | item_01 | golden | true | 7 | 6 | 0 | M17-item_01-write.json |
 | M17 | item_02 | golden | true | 7 | 6 | 0 | M17-item_02-write.json |

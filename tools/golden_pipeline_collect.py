@@ -442,7 +442,8 @@ class Win32LegacyDriver:
     def save(self) -> None:
         if self.current_rom is None:
             raise RuntimeError("No ROM is open for saving")
-        previous_mtime = self.current_rom.stat().st_mtime_ns
+        previous_stat = self.current_rom.stat()
+        previous_bytes = self.current_rom.read_bytes()
         self._main().menu_select("文件->保存")
         deadline = time.monotonic() + 5.0
         while time.monotonic() < deadline:
@@ -457,8 +458,19 @@ class Win32LegacyDriver:
                     if buttons:
                         buttons[0].click()
                         break
-            if self.current_rom.stat().st_mtime_ns != previous_mtime:
-                return
+            try:
+                current_stat = self.current_rom.stat()
+                current_bytes = self.current_rom.read_bytes()
+            except OSError:
+                time.sleep(0.1)
+                continue
+            if current_stat.st_size == previous_stat.st_size and (
+                current_stat.st_mtime_ns != previous_stat.st_mtime_ns
+                or current_bytes != previous_bytes
+            ):
+                time.sleep(0.1)
+                if self.current_rom.read_bytes() == current_bytes:
+                    return
             time.sleep(0.1)
         raise RuntimeError("Legacy save did not update the isolated ROM before timeout")
 

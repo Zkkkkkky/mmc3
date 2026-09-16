@@ -285,6 +285,28 @@ def _read_fixed_records(
     return tuple(records)
 
 
+def _read_fixed_records_from_spans(
+    image: bytes,
+    pointers: tuple[int, ...],
+    size: int,
+    *,
+    spans: tuple[tuple[int, int], ...],
+    label: str,
+) -> tuple[bytes, ...]:
+    """Read fixed records from one of several verified storage spans."""
+
+    records: list[bytes] = []
+    for record_id, pointer in enumerate(pointers[1:], 1):
+        if not any(lower <= pointer and pointer + size <= upper
+                   for lower, upper in spans):
+            raise ValueError(
+                f"{label} ${record_id:02X} 指针 ${pointer:04X} 超出已验证数据池。"
+            )
+        start = _cpu_offset(pointer)
+        records.append(bytes(image[start:start + size]))
+    return tuple(records)
+
+
 def _read_terminated_names(
     image: bytes,
     pointers: tuple[int, ...],
@@ -360,12 +382,14 @@ def extract_unit_expansion_records(
         # Several small-unit records are physically nine bytes, but verified
         # callers read offsets 1..9 unconditionally.  Capture ten observable
         # bytes per ID so relocation cannot change that trailing read.
-        configurations=_read_fixed_records(
+        configurations=_read_fixed_records_from_spans(
             configuration,
             configuration_pointers,
             CONFIGURATION_RECORD_SIZE,
-            lower=CONFIGURATION_OLD_DATA_START,
-            upper=CONFIGURATION_OLD_DATA_END,
+            spans=(
+                (CONFIGURATION_OLD_DATA_START, CONFIGURATION_OLD_DATA_END),
+                (CONFIGURATION_CAVE_START, CONFIGURATION_CAVE_END),
+            ),
             label="战斗外观",
         ),
         body_scripts=_read_pointer_bounded_scripts(
@@ -643,14 +667,24 @@ def pack_unit_expansion(
     configuration = bytearray(_pair_slice(source, SOURCE_CONFIGURATION_PAIR))
     if struct.unpack_from("<H", configuration, 6 * 2)[0] != CONFIGURATION_TABLE:
         raise ValueError("原 Bank $04/$05 的战斗外观目录已变化。")
-    if any(
-        configuration[
-            _cpu_offset(CONFIGURATION_CAVE_START) : _cpu_offset(
-                CONFIGURATION_CAVE_END
-            )
-        ]
-    ):
-        raise ValueError("原 Bank $04/$05 的已验证空洞不再为空。")
+    # The editor may safely relocate a stock record here when changing a
+    # small unit into a large unit (nine observable bytes become ten).  Accept
+    # only bytes covered by active configuration pointers; unrelated cave
+    # content remains a hard stop.
+    source_configuration_pointers = _read_pointers(
+        configuration, CONFIGURATION_TABLE
+    )
+    claimed_cave_offsets: set[int] = set()
+    for pointer in source_configuration_pointers[1:]:
+        if CONFIGURATION_CAVE_START <= pointer <= CONFIGURATION_CAVE_END - 10:
+            start = _cpu_offset(pointer)
+            claimed_cave_offsets.update(range(start, start + 10))
+    cave_start = _cpu_offset(CONFIGURATION_CAVE_START)
+    cave_end = _cpu_offset(CONFIGURATION_CAVE_END)
+    if any(value and index not in claimed_cave_offsets
+           for index, value in enumerate(configuration)
+           if cave_start <= index < cave_end):
+        raise ValueError("原 Bank $04/$05 的已验证空洞含有未知数据。")
     configuration_pool_spans = (
         (CONFIGURATION_OLD_DATA_START, CONFIGURATION_OLD_DATA_END),
         (CONFIGURATION_CAVE_START, CONFIGURATION_CAVE_END),

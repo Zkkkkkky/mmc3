@@ -15,18 +15,18 @@
   },
   "g2": {
     "definition": "unexplained 为空且 expected 已知的 golden 用例占比",
-    "numerator": 58,
-    "denominator": 58,
+    "numerator": 59,
+    "denominator": 59,
     "value": 1.0,
     "target": "=100%"
   },
   "counts": {
     "registered_fields": 61,
     "archived_fields": 61,
-    "archived_cases": 61,
-    "golden_cases": 58,
+    "archived_cases": 62,
+    "golden_cases": 59,
     "discovery_cases": 3,
-    "passed_golden_cases": 58,
+    "passed_golden_cases": 59,
     "failed_golden_cases": 0,
     "pending_cases": 3
   },
@@ -460,6 +460,17 @@
       "removed_normalization_count": 6,
       "unexpected_count": 0,
       "archive": "M17-double_hit_defense_percent-write.json"
+    },
+    {
+      "module": "M17",
+      "field": "hit_threshold",
+      "case_id": "cold_start_03",
+      "case_kind": "golden",
+      "passed": true,
+      "changed_count": 7,
+      "removed_normalization_count": 6,
+      "unexpected_count": 0,
+      "archive": "M17-hit_threshold-cold_start_03.json"
     },
     {
       "module": "M17",
