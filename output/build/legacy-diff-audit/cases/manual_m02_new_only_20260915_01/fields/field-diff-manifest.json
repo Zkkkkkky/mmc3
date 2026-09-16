@@ -1,0 +1,172 @@
+{
+  "base": "before.nes",
+  "base_sha256": "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E",
+  "samples": [
+    {
+      "file": "A-color1.nes",
+      "gallery": "A",
+      "field": "color1",
+      "changed_bytes": 1,
+      "difference": {
+        "offset": 24672,
+        "before": "27",
+        "after": "28"
+      },
+      "sha256": "F465C2A989C69D5BD9B20007DF31EAE7F80A1524B5D9D439B7843CD26B28F3FA"
+    },
+    {
+      "file": "A-defense.nes",
+      "gallery": "A",
+      "field": "tile0.defense",
+      "changed_bytes": 1,
+      "difference": {
+        "offset": 24692,
+        "before": "5A",
+        "after": "5B"
+      },
+      "sha256": "2B4AFEE9FC6C9F2648C5BC269F996D9DA49889CDAE39E6B146F832D1C81A2152"
+    },
+    {
+      "file": "A-sea.nes",
+      "gallery": "A",
+      "field": "tile0.sea",
+      "changed_bytes": 1,
+      "difference": {
+        "offset": 24692,
+        "before": "5A",
+        "after": "DA"
+      },
+      "sha256": "EE063A0481F16A2BB1D5784C4F5E029ED3696E327B5493EEB46AF06EA741D2EC"
+    },
+    {
+      "file": "A-air_move.nes",
+      "gallery": "A",
+      "field": "tile0.air_move",
+      "changed_bytes": 1,
+      "difference": {
+        "offset": 24708,
+        "before": "01",
+        "after": "02"
+      },
+      "sha256": "2EB4E3D8C34BDC7C278E8D601554EA7E414BBD6933ED4EC959A4270FEBEF4335"
+    },
+    {
+      "file": "A-land_move.nes",
+      "gallery": "A",
+      "field": "tile0.land_move",
+      "changed_bytes": 1,
+      "difference": {
+        "offset": 24724,
+        "before": "02",
+        "after": "03"
+      },
+      "sha256": "45C2B8AB89B06E48DDABCE68B57F0C78FBA62E36912D447C78BBD97EF4D4162C"
+    },
+    {
+      "file": "A-sea_move.nes",
+      "gallery": "A",
+      "field": "tile0.sea_move",
+      "changed_bytes": 1,
+      "difference": {
+        "offset": 24740,
+        "before": "01",
+        "after": "02"
+      },
+      "sha256": "180C4EBA640139BC7F04102F2EDDF95BD197D392DB877B5B2D02E2E4DCD286BF"
+    },
+    {
+      "file": "B-color1.nes",
+      "gallery": "B",
+      "field": "color1",
+      "changed_bytes": 1,
+      "difference": {
+        "offset": 24756,
+        "before": "27",
+        "after": "28"
+      },
+      "sha256": "E0C2606FA20383F7654F69002AE6895687D1504A07C9292720B5DC05B9B78552"
+    },
+    {
+      "file": "C-color1.nes",
+      "gallery": "C",
+      "field": "color1",
+      "changed_bytes": 1,
+      "difference": {
+        "offset": 24840,
+        "before": "28",
+        "after": "29"
+      },
+      "sha256": "601490320837400AB7A07F12A9FF86A2FE024F339EC6349F0A4E4B5087A5558B"
+    },
+    {
+      "file": "D-color1.nes",
+      "gallery": "D",
+      "field": "color1",
+      "changed_bytes": 1,
+      "difference": {
+        "offset": 24924,
+        "before": "27",
+        "after": "28"
+      },
+      "sha256": "843D5CB07B6C7F938C7A527DE1243158178A462C18B9DC6C3067CD8F5E25E521"
+    },
+    {
+      "file": "E-color1.nes",
+      "gallery": "E",
+      "field": "color1",
+      "changed_bytes": 1,
+      "difference": {
+        "offset": 25008,
+        "before": "28",
+        "after": "29"
+      },
+      "sha256": "8DC4456EF96621F93DF0566EAD9411AA54C63BE19C896BF6E0157C6EF373D717"
+    },
+    {
+      "file": "F-color1.nes",
+      "gallery": "F",
+      "field": "color1",
+      "changed_bytes": 1,
+      "difference": {
+        "offset": 25092,
+        "before": "23",
+        "after": "24"
+      },
+      "sha256": "39FA011D5315C16F1D2DE31789512585E84BF463B65BF96A19F82B7C56D2BDCF"
+    },
+    {
+      "file": "G-color1.nes",
+      "gallery": "G",
+      "field": "color1",
+      "changed_bytes": 1,
+      "difference": {
+        "offset": 25176,
+        "before": "23",
+        "after": "24"
+      },
+      "sha256": "74E734B2D7B930AA35529DB93C8D4D2400C4D2A290A1C8DC9F4E61BB3F1CE303"
+    }
+  ],
+  "ui_observed_samples": [
+    {
+      "file": "B-color1-ui.nes",
+      "gallery": "B",
+      "requested_field": "color1",
+      "automatic_repair": "tile5.sea",
+      "changed_bytes": 2,
+      "differences": [
+        {
+          "offset": 24756,
+          "before": "27",
+          "after": "28"
+        },
+        {
+          "offset": 24781,
+          "before": "50",
+          "after": "D0"
+        }
+      ],
+      "sha256": "FB409D3225FC72F1FA586E27953538107751AAEC99E08198E31F8BE25ACB4DF6"
+    }
+  ]
+}
