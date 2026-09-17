@@ -1,0 +1,21 @@
+{
+  "source_sha256": "A7656C6ECE9B463DCC26C8C62F280BDAADE55DC39F0A120B8CFFDEB54E8CFC2F",
+  "normalization_pid": 34668,
+  "normalization_changed_count": 38,
+  "normalized_sha256": "C5D2C1DFBE0DC39AFC9EFFD314C082F121B98C9AD67C4825B1C9DD4B9E991954",
+  "source_value": 8,
+  "selected_row": 1,
+  "selected_name": "弓天使",
+  "first_pid": 25740,
+  "second_pid": 20676,
+  "original": 8,
+  "requested": 7,
+  "reopened": 7,
+  "changed": [
+    {
+      "offset": 297551,
+      "before": 8,
+      "after": 7
+    }
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "successful_input": {
+    "rom_sha256": "A7656C6ECE9B463DCC26C8C62F280BDAADE55DC39F0A120B8CFFDEB54E8CFC2F",
+    "cdl_sha256": "599C1BB5FFD4B87229A81958F33F1060821CD01CD7AA7CCAFA0D862F4522F3F6",
+    "default_config_present": true,
+    "result": "three distinct main-window pages captured"
+  },
+  "failed_inputs_before_default_config_was_copied": [
+    {
+      "rom_sha256": "C0F6FB15DBCC9F04D35EC97B9558DF85D099C661C35D54D3A2AAE4966D2ED5B2",
+      "result": "runtime error code 1: array index out of bounds; 67859708, 3091"
+    },
+    {
+      "rom_sha256": "1DDD4F74B2D3ACEAA8A0BC4A6846BE8E6148C858C2D8EA5A1F6E0A04F0AD4A75",
+      "result": "runtime error code 1: array index out of bounds; 67859708, 3091"
+    },
+    {
+      "rom_sha256": "E91776B6635E53C733F032476319A1E529070FE5199886376C947B738BDDE874",
+      "result": "runtime error code 1: array index out of bounds; 67859708, 3091"
+    }
+  ]
+}

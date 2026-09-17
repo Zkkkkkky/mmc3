@@ -21,6 +21,7 @@ from __future__ import annotations
 import argparse
 import ctypes
 import json
+import re
 import subprocess
 import sys
 import time
@@ -592,10 +593,13 @@ def capture_screen_region(rect: dict, path: Path, pad: int = 0) -> bool:
 
 
 class ProbeSession:
-    def __init__(self, repo: Path):
+    def __init__(self, repo: Path, evidence_tag: str = ""):
         self.repo = repo
         self.work = repo / "output" / "build" / "legacy-ui-probe"
-        self.out = repo / "output" / "verification" / "legacy-ui-probe"
+        evidence_name = "legacy-ui-probe" + (
+            f"-{evidence_tag}" if evidence_tag else ""
+        )
+        self.out = repo / "output" / "verification" / evidence_name
         self.shots = self.out / "screenshots"
         self.controls = self.out / "controls"
         self.shots.mkdir(parents=True, exist_ok=True)
@@ -648,10 +652,20 @@ class ProbeSession:
         if not handle:
             return False
         kernel32.CloseHandle(handle)
-        return True
+        # A persisted PID may have been reused by Windows after an earlier
+        # probe exited.  Resume only a process that still owns a legacy editor
+        # WTWindow; otherwise launch a fresh isolated copy.
+        return any(
+            window["class"] == "WTWindow"
+            for window in self.top_windows(visible_only=False)
+        )
 
     def terminate(self) -> None:
         if self.pid:
+            if not self.owns_process and not self.process_alive():
+                log(f"stale/unverified pid={self.pid}; skip termination")
+                self.pid = None
+                return
             subprocess.run(
                 ["taskkill", "/PID", str(self.pid), "/T", "/F"],
                 capture_output=True,
@@ -908,6 +922,7 @@ def stage_a(session: ProbeSession) -> None:
         click_control(enter_hwnd)
         main_window = None
         deadline = time.monotonic() + 20.0
+        real_click_retried = False
         while time.monotonic() < deadline:
             for window in session.top_windows():
                 if window["hwnd"] == launcher["hwnd"]:
@@ -917,6 +932,18 @@ def stage_a(session: ProbeSession) -> None:
                     break
             if main_window:
                 break
+            if not real_click_retried and time.monotonic() + 15.0 >= deadline:
+                button_rect = get_window_rect(enter_hwnd)
+                launcher_rect = get_window_rect(launcher["hwnd"])
+                client_x, client_y = _client_offset(launcher["hwnd"])
+                real_click_at(
+                    launcher["hwnd"],
+                    (button_rect["left"] + button_rect["right"]) // 2
+                    - launcher_rect["left"] - client_x,
+                    (button_rect["top"] + button_rect["bottom"]) // 2
+                    - launcher_rect["top"] - client_y,
+                )
+                real_click_retried = True
             time.sleep(0.4)
         if not main_window:
             raise RuntimeError("main window did not appear after entering")
@@ -1035,15 +1062,15 @@ def stage_b(session: ProbeSession) -> None:
         count = 3  # CPageControl does not expose tab count via TCM messages
         log("tab count unknown (CPageControl); assuming 3")
     log(f"main window tabs: {count} (class={tab['class']})")
-    for index in range(count):
-        click_tab_generic(session, tab, index, count)
-        time.sleep(0.8)
-        session.dump_window(session.main_hwnd, f"B04_主窗口_页签{index}", menu=False)
-        # re-locate tab in case the tree changed
-        fresh = enum_child_tree(session.main_hwnd)
-        fresh_tab = find_tab(fresh)
-        if fresh_tab:
-            tab = fresh_tab
+    # CPageControl ignores posted TCM/click messages and spans far more width
+    # than its three owner-drawn headers.  Sweep the actual header band and
+    # archive only distinct page content; old B04 synthetic dumps are retained
+    # as failure evidence instead of being overwritten.
+    pages = sweep_tabs(
+        session, session.main_hwnd, "B04_主窗口_实际页签", max_pages=count
+    )
+    if pages != count:
+        log(f"main tab sweep found {pages}/{count} distinct pages; no inferred control IDs")
 
 
 # ------------------------------------------------------------------- stage C
@@ -1198,6 +1225,35 @@ def stage_c(session: ProbeSession) -> None:
             time.sleep(0.5)
 
 
+def stage_m05(session: ProbeSession) -> None:
+    """Load the compatible probe ROM and capture only 数据->数据库.
+
+    This avoids the owner-drawn main-tab sweep used by stage B.  Some legacy
+    builds raise a delayed array-bounds error after that sweep, which can kill
+    the process before the database window is opened.
+    """
+
+    log("=== stage M05: focused database capture ===")
+    if not session.main_hwnd or not is_window(session.main_hwnd):
+        raise RuntimeError("main window not alive; run stage A first")
+    if not session.rom_is_loaded():
+        rom = (
+            session.probe_rom
+            if session.probe_rom.exists()
+            else session.probe_rom_fallback
+        )
+        if not session.open_rom_via_menu(rom, "M05_打开ROM对话框"):
+            raise RuntimeError(f"ROM load failed for {rom.name}")
+        session.dump_window(session.main_hwnd, "M05_主窗口_载入后")
+    window = _open_data_window(session, 20008, "数据库")
+    if not window:
+        raise RuntimeError("database window did not appear")
+    try:
+        session.dump_window(window["hwnd"], "M05_数据库_机体修改")
+    finally:
+        close_window_safely(session, window["hwnd"])
+
+
 # ------------------------------------------------------- stage CT (tab sweep)
 
 
@@ -1209,57 +1265,9 @@ def _client_offset(hwnd: int) -> tuple[int, int]:
     return point.x - rect["left"], point.y - rect["top"]
 
 
-def _window_pixel_sig(hwnd: int) -> bytes:
-    """Hash of a downscaled grayscale capture (cheap content fingerprint)."""
-    import hashlib
-
-    rect = get_window_rect(hwnd)
-    width, height = max(1, rect["width"]), max(1, rect["height"])
-    hdc_window = user32.GetWindowDC(hwnd)
-    if not hdc_window:
-        return b""
-    try:
-        memdc = gdi32.CreateCompatibleDC(hdc_window)
-        bitmap = gdi32.CreateCompatibleBitmap(hdc_window, width, height)
-        old = gdi32.SelectObject(memdc, bitmap)
-        try:
-            user32.PrintWindow(hwnd, memdc, PW_RENDERFULLCONTENT)
-            bmi = BITMAPINFO()
-            bmi.bmiHeader.biSize = sizeof(BITMAPINFOHEADER)
-            bmi.bmiHeader.biWidth = width
-            bmi.bmiHeader.biHeight = -height
-            bmi.bmiHeader.biPlanes = 1
-            bmi.bmiHeader.biBitCount = 32
-            bmi.bmiHeader.biCompression = 0
-            buffer = ctypes.create_string_buffer(width * height * 4)
-            got = gdi32.GetDIBits(
-                memdc, bitmap, 0, height, buffer, ctypes.byref(bmi), DIB_RGB_COLORS
-            )
-            if got != height:
-                return b""
-            from PySide6.QtCore import Qt
-            from PySide6.QtGui import QImage
-
-            image = QImage(buffer, width, height, width * 4, QImage.Format.Format_ARGB32)
-            thumb = image.scaled(
-                48, 32, Qt.AspectRatioMode.IgnoreAspectRatio, Qt.TransformationMode.FastTransformation
-            ).convertToFormat(QImage.Format.Format_Grayscale8)
-            return hashlib.md5(bytes(thumb.constBits())).digest()
-        finally:
-            gdi32.SelectObject(memdc, old)
-            gdi32.DeleteObject(bitmap)
-            gdi32.DeleteDC(memdc)
-    finally:
-        user32.ReleaseDC(hwnd, hdc_window)
-
-
 def _window_ctrl_sig(hwnd: int) -> tuple:
     items = [item for item in flatten_tree(enum_child_tree(hwnd)) if item.get("visible")]
     return tuple((i["class"], i["text"], i["ctrl_id"]) for i in items)
-
-
-def _content_signature(hwnd: int) -> tuple:
-    return (_window_ctrl_sig(hwnd), _window_pixel_sig(hwnd))
 
 
 def sweep_tabs(
@@ -1314,13 +1322,15 @@ def sweep_tabs(
     time.sleep(0.7)
     dismiss_new_tops()
     session.dump_window(hwnd, f"{tag}_页签A", menu=False)
-    sig = _content_signature(hwnd)
+    # PrintWindow occasionally returns a partially blank frame for this legacy
+    # process.  Visible control identity is stable and changes with real pages.
+    sig = _window_ctrl_sig(hwnd)
     pages = 1
     for x in range(x_start, x_end, x_step):
         real_click_at(hwnd, x - dx, tab_y - dy)
         time.sleep(0.5)
         dismiss_new_tops()
-        new_sig = _content_signature(hwnd)
+        new_sig = _window_ctrl_sig(hwnd)
         if new_sig != sig:
             sig = new_sig
             pages += 1
@@ -1460,15 +1470,26 @@ def stage_ct(session: ProbeSession) -> None:
 
 def main() -> int:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--stage", default="A,B", help="comma separated A/B/C/D")
+    parser.add_argument(
+        "--stage", default="A,B", help="comma separated A/B/C/CT/M05"
+    )
     parser.add_argument("--pid", type=int, help="attach to a running probe process")
     parser.add_argument("--rom", help="override ROM path used by stage B")
+    parser.add_argument(
+        "--evidence-tag",
+        default="",
+        help="write a new evidence directory instead of replacing prior captures",
+    )
     parser.add_argument("--keep-open", action="store_true", help="do not kill target")
     parser.add_argument("--keep-open-attach", action="store_true")
     args = parser.parse_args()
+    if args.evidence_tag and not re.fullmatch(
+        r"[a-z0-9][a-z0-9-]{0,40}", args.evidence_tag
+    ):
+        parser.error("--evidence-tag must be a short lowercase slug")
 
     repo = Path(__file__).resolve().parents[2]
-    session = ProbeSession(repo)
+    session = ProbeSession(repo, args.evidence_tag)
     session.load()
     if args.rom:
         session.probe_rom = Path(args.rom).resolve()
@@ -1485,7 +1506,13 @@ def main() -> int:
             session.main_hwnd = None
             session.launch()
         # else: resumed session with a live pid from session.json
-        handlers = {"A": stage_a, "B": stage_b, "C": stage_c, "CT": stage_ct}
+        handlers = {
+            "A": stage_a,
+            "B": stage_b,
+            "C": stage_c,
+            "CT": stage_ct,
+            "M05": stage_m05,
+        }
         for name in stages:
             handler = handlers.get(name)
             if not handler:

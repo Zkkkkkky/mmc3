@@ -834,6 +834,28 @@ class UnitPage(SearchableRecordPage):
             current_name = self.project.unit_display_name(self.current_id)
             edited_name = self.name_text.text().strip()
             name_changed = edited_name != current_name
+            changed_fields = tuple(
+                field.label
+                for field in UNIT_FIELDS
+                if self.fields[field.key].value()
+                != self.project.get_value(self.current_id, field.key)
+                * self.project.unit_field(field.key).display_scale
+            )
+            shared_ids = self.project.unit_codec.decode_record(
+                self.current_id, bytes(self.project.working)
+            ).ids
+            if changed_fields and len(shared_ids) > 1:
+                answer = QMessageBox.question(
+                    self,
+                    "共享机体属性确认",
+                    f"属性记录由 {compact_ids(shared_ids)} 共用。\n"
+                    f"修改 {'、'.join(changed_fields)} 会同时影响这些机体；"
+                    "名称和武器仅按当前 ID 修改。是否继续？",
+                    QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.Cancel,
+                    QMessageBox.StandardButton.Cancel,
+                )
+                if answer != QMessageBox.StandardButton.Yes:
+                    return
             if name_changed and not self.confirm_shared_name_edit(
                 "机体", self.project.unit_name_source_ids(self.current_id)
             ):
@@ -867,10 +889,21 @@ class UnitPage(SearchableRecordPage):
     def apply_raw_record(self) -> None:
         if self.project is None or self.current_id is None:
             return
+        shared_ids = self.project.unit_codec.decode_record(
+            self.current_id, bytes(self.project.working)
+        ).ids
+        shared_note = (
+            f"\n\n该属性记录由 {compact_ids(shared_ids)} 共用，写入会同时影响这些机体。"
+            if len(shared_ids) > 1
+            else ""
+        )
         answer = QMessageBox.question(
             self,
             "确认高级修改",
-            "原始记录包含尚未确认的标志位。确定写入这16字节吗？",
+            "原始记录包含尚未确认的标志位。确定写入这16字节吗？"
+            + shared_note,
+            QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.Cancel,
+            QMessageBox.StandardButton.Cancel,
         )
         if answer != QMessageBox.StandardButton.Yes:
             return

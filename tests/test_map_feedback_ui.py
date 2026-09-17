@@ -10,7 +10,7 @@ os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 from PySide6.QtCore import QPoint, Qt
 from PySide6.QtGui import QImage
 from PySide6.QtTest import QSignalSpy, QTest
-from PySide6.QtWidgets import QApplication
+from PySide6.QtWidgets import QApplication, QDialogButtonBox
 
 from dc_modifier.app import DEFAULT_ROM
 from dc_modifier.database_graphics import palette_color
@@ -41,6 +41,10 @@ class MapFeedbackUiTests(QtTestCase):
     def setUp(self) -> None:
         self.project = RomProject.load(DEFAULT_ROM)
         self.page = MapPage()
+        # Preserve coverage of the already built editor behind the D3 gate.
+        # The shipped page keeps these writes disabled until golden evidence.
+        self.page._deployment_write_verified = True
+        self.page._trigger_write_verified = True
         self.page.resize(1280, 820)
         self.page.set_project(self.project)
         self.page.show()
@@ -50,6 +54,35 @@ class MapFeedbackUiTests(QtTestCase):
         self.page.close()
         self.page.deleteLater()
         self.application.processEvents()
+
+    def test_default_page_blocks_unverified_record_writes_but_keeps_map_editing(self) -> None:
+        guarded_project = RomProject.load(DEFAULT_ROM)
+        guarded = MapPage()
+        guarded.set_project(guarded_project)
+        guarded.show()
+        self.application.processEvents()
+        try:
+            self.assertTrue(guarded.enemy_table.isEnabled())
+            self.assertFalse(guarded.enemy_table.editing_enabled)
+            self.assertFalse(guarded.trigger_table.editing_enabled)
+            self.assertFalse(guarded.canvas.deployment_edit_enabled)
+            self.assertFalse(guarded.canvas.overlay_move_enabled)
+            self.assertFalse(guarded.trigger_cell_buttons.button(
+                QDialogButtonBox.StandardButton.Ok
+            ).isEnabled())
+            before = bytes(guarded_project.working)
+            guarded.trigger_table.set_rows([(3, 4, 0xFF, 0xF2)])
+            self.assertFalse(guarded.commit_pending_changes())
+            self.assertIn("黄金对照", guarded.pending_draft_error)
+            self.assertEqual(bytes(guarded_project.working), before)
+            guarded.trigger_table.set_rows([])
+            original_tile = guarded.staged_tiles[0]
+            guarded.staged_tiles[0] = (original_tile + 1) & 0x0F
+            self.assertTrue(guarded.commit_pending_changes())
+            self.assertEqual(guarded_project.get_map(0).tiles[0], guarded.staged_tiles[0])
+        finally:
+            guarded.close()
+            guarded.deleteLater()
 
     def test_icon_bank_uses_all_four_quadrants_without_inventing_unit_bindings(self) -> None:
         self.assertEqual(ICON_PALETTE_NES, (0x0F, 0x30, 0x21, 0x02))

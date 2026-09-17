@@ -35,8 +35,23 @@ LIVE_CASES_RELATIVE = AUDIT_DIR_RELATIVE / "cases" / "legacy_live"
 LIVE_RESULTS_RELATIVE = AUDIT_DIR_RELATIVE / "legacy-live-results.json"
 SAFE_NAME = re.compile(r"^[A-Za-z][A-Za-z0-9_]*$")
 STEP_OPERATIONS = frozenset(
-    {"menu", "window", "click_id", "set_text", "select_index", "list_double_click", "click_coords"}
+    {
+        "menu",
+        "window",
+        "click_id",
+        "set_text",
+        "select_index",
+        "list_select",
+        "list_double_click",
+        "click_coords",
+    }
 )
+LEGACY_MENU_COMMANDS = {
+    "文件->打开": 20001,
+    "文件->保存": 20004,
+    "数据->数据库": 20008,
+    "数据->其他": 20023,
+}
 
 
 class LegacyDriver(Protocol):
@@ -146,6 +161,13 @@ def _validate_steps(raw: Any) -> tuple[dict[str, Any], ...]:
             raise ValueError("list_double_click requires integer control_id/row/column")
         if op == "list_double_click" and (item["row"] < 0 or item["column"] < 0):
             raise ValueError("list_double_click row/column must be nonnegative")
+        if op == "list_select" and not (
+            isinstance(item.get("control_id"), int)
+            and isinstance(item.get("row"), int)
+            and not isinstance(item["row"], bool)
+            and item["row"] >= 0
+        ):
+            raise ValueError("list_select requires a nonnegative row and integer control_id")
         if op == "click_coords" and not all(isinstance(item.get(key), int) for key in ("x", "y")):
             raise ValueError("click_coords requires integer x/y")
         steps.append(dict(item))
@@ -188,6 +210,15 @@ def collect_case(
     before_bytes = baseline.read_bytes()
     before_path.write_bytes(before_bytes)
     after_path.write_bytes(before_bytes)
+    cdl_source = executable.parent / "默认配置文件" / "测试.cdl"
+    cdl_path = after_path.with_suffix(".cdl")
+    cdl_bytes: bytes | None = None
+    if cdl_source.is_file():
+        # The reference editor requires a same-stem CDL beside each opened ROM.
+        # It is an input sidecar only; keep its tracked source/hash in the report
+        # and remove the per-case copy after both legacy processes exit.
+        cdl_bytes = cdl_source.read_bytes()
+        cdl_path.write_bytes(cdl_bytes)
     first_pid: int | None = None
     second_pid: int | None = None
     original: int | str | None = None
@@ -221,6 +252,7 @@ def collect_case(
         finally:
             second.stop()
     except Exception as error:
+        cdl_path.unlink(missing_ok=True)
         write_json_atomic(
             run_dir / "error.json",
             {"module": spec.module, "field": spec.field, "case_id": spec.case_id,
@@ -233,6 +265,7 @@ def collect_case(
         after_bytes = after_path.read_bytes()
         diff = diff_roms(before_bytes, after_bytes)
     except (OSError, ValueError) as error:
+        cdl_path.unlink(missing_ok=True)
         write_json_atomic(
             run_dir / "error.json",
             {"module": spec.module, "field": spec.field, "case_id": spec.case_id,
@@ -290,6 +323,14 @@ def collect_case(
             "before": {"path": f"{relative}/before.nes", "sha256": sha256_bytes(before_bytes)},
             "after": {"path": f"{relative}/after.nes", "sha256": sha256_bytes(after_bytes)},
         },
+        "supporting_cdl": (
+            {
+                "source": cdl_source.relative_to(repo).as_posix(),
+                "sha256": sha256_bytes(cdl_bytes),
+            }
+            if cdl_bytes is not None
+            else None
+        ),
         "duration_seconds": round(elapsed, 3),
         "budget_seconds": budget_seconds,
         "within_budget": within_budget,
@@ -304,6 +345,7 @@ def collect_case(
     results.append(report)
     results.sort(key=lambda item: (item["module"], item["field"], item["case_id"]))
     write_json_atomic(results_path, results)
+    cdl_path.unlink(missing_ok=True)
     return run_dir, report
 
 
@@ -318,20 +360,28 @@ class Win32LegacyDriver:
 
     def _wait_window(self, predicate: Callable[[Any], bool], timeout: float = 12.0) -> Any:
         from pywinauto import Desktop
+        import win32gui
+        import win32process
 
+        desktop = Desktop(backend="win32")
         deadline = time.monotonic() + timeout
         seen: list[str] = []
         while time.monotonic() < deadline:
-            windows = Desktop(backend="win32").windows(visible_only=False)
-            if self.app is not None:
+            handles: list[int] = []
+
+            def visit(hwnd: int, _extra: object) -> bool:
                 try:
-                    windows.extend(self.app.windows(visible_only=False))
+                    _thread, process_id = win32process.GetWindowThreadProcessId(hwnd)
+                    if process_id == self.pid:
+                        handles.append(hwnd)
                 except Exception:
                     pass
-            for window in windows:
+                return True
+
+            win32gui.EnumWindows(visit, None)
+            for hwnd in handles:
                 try:
-                    if window.process_id() != self.pid:
-                        continue
+                    window = desktop.window(handle=hwnd).wrapper_object()
                     summary = f"{window.class_name()}:{window.window_text()}"
                     if summary not in seen:
                         seen.append(summary)
@@ -345,10 +395,27 @@ class Win32LegacyDriver:
         )
 
     def _main(self) -> Any:
-        return self._wait_window(
-            lambda item: item.is_visible()
-            and item.window_text().startswith("SRW2扩容版修改器")
-        )
+        def is_main_window(item: Any) -> bool:
+            if not item.is_visible():
+                return False
+            # A clean launch can keep an empty title, while the 786 KiB audit
+            # baseline changes it to "SRW2修改器V1.5" after opening.  Identify
+            # both states by the real main menu instead of a versioned title.
+            # The launcher and modal WTWindows do not expose both menu groups.
+            if item.class_name() != "WTWindow":
+                return False
+            try:
+                import win32gui
+
+                menu_handle = win32gui.GetMenu(item.handle)
+                return bool(menu_handle and win32gui.GetMenuItemCount(menu_handle) >= 2)
+            except Exception:
+                return False
+
+        # The legacy launcher can create the WTWindow several seconds before
+        # attaching its menu.  Wait through that intermediate state instead of
+        # mistaking the visible shell for a failed launch.
+        return self._wait_window(is_main_window, timeout=25.0)
 
     def launch(self, executable: Path, work_dir: Path) -> int:
         from pywinauto.application import Application
@@ -360,40 +427,133 @@ class Win32LegacyDriver:
         landing = self._wait_window(
             lambda item: item.is_visible()
             and any(
-                button.window_text() == "进入修改器"
+                button.control_id() == 110
                 for button in item.descendants(class_name="Button")
             )
         )
         button = next(
             item for item in landing.descendants(class_name="Button")
-            if item.window_text() == "进入修改器"
+            if item.control_id() == 110
         )
-        button.click_input()
+        # The launcher intermittently ignores synthesized mouse input but
+        # consistently handles the same BM_CLICK used by the probe tool.
+        button.click()
         self.current_window = self._main()
+        # The main WTWindow becomes visible before the launcher finishes
+        # closing.  Menu commands posted during that overlap are swallowed.
+        import win32gui
+
+        deadline = time.monotonic() + 10.0
+        while time.monotonic() < deadline:
+            if not win32gui.IsWindow(landing.handle) or not win32gui.IsWindowVisible(
+                landing.handle
+            ):
+                break
+            time.sleep(0.1)
+        time.sleep(0.2)
         return self.pid
 
     def open_rom(self, rom_path: Path) -> None:
         import win32con
         import win32gui
+        import win32process
 
         main = self._main()
-        main.menu_select("文件->打开")
-        dialog = self._wait_window(
-            lambda item: item.class_name() == "#32770"
-            and item.window_text().startswith("打开")
-        )
-        if not dialog.is_visible():
-            win32gui.ShowWindow(dialog.handle, win32con.SW_SHOW)
-        edits = [
-            item for item in dialog.descendants(class_name="Edit")
-            if item.is_visible() and item.is_enabled()
-        ]
+        known_dialogs: set[int] = set()
+        seen_top_windows: list[str] = []
+
+        def process_dialogs() -> list[int]:
+            matches: list[int] = []
+
+            def visit(hwnd: int, _extra: object) -> bool:
+                try:
+                    _thread, process_id = win32process.GetWindowThreadProcessId(hwnd)
+                    if process_id == self.pid:
+                        summary = (
+                            f"{hwnd}:{win32gui.GetClassName(hwnd)}:"
+                            f"{win32gui.GetWindowText(hwnd)!r}:"
+                            f"visible={bool(win32gui.IsWindowVisible(hwnd))}"
+                        )
+                        if summary not in seen_top_windows:
+                            seen_top_windows.append(summary)
+                    if (
+                        process_id == self.pid
+                        and win32gui.GetClassName(hwnd) == "#32770"
+                        and win32gui.IsWindowVisible(hwnd)
+                    ):
+                        matches.append(hwnd)
+                except Exception:
+                    pass
+                return True
+
+            win32gui.EnumWindows(visit, None)
+            return matches
+
+        known_dialogs.update(process_dialogs())
+        dialog_hwnd = 0
+        deadline = time.monotonic() + 12.0
+        next_command_at = 0.0
+        commands_sent = 0
+        while time.monotonic() < deadline:
+            now = time.monotonic()
+            if commands_sent < 3 and now >= next_command_at:
+                self._menu_command(main, "文件->打开")
+                commands_sent += 1
+                next_command_at = now + 3.0
+            dialogs = [
+                hwnd for hwnd in process_dialogs()
+                if hwnd not in known_dialogs and win32gui.IsWindow(hwnd)
+            ]
+            if dialogs:
+                dialog_hwnd = dialogs[-1]
+                break
+            time.sleep(0.1)
+        if not dialog_hwnd:
+            raise RuntimeError(
+                "ROM picker did not appear; process windows="
+                + repr(seen_top_windows[:12])
+            )
+        if not win32gui.IsWindowVisible(dialog_hwnd):
+            win32gui.ShowWindow(dialog_hwnd, win32con.SW_SHOW)
+        edits: list[int] = []
+
+        def visit_child(hwnd: int, _extra: object) -> bool:
+            try:
+                if (
+                    win32gui.GetClassName(hwnd) == "Edit"
+                    and win32gui.IsWindowVisible(hwnd)
+                    and win32gui.IsWindowEnabled(hwnd)
+                ):
+                    edits.append(hwnd)
+            except Exception:
+                pass
+            return True
+
+        win32gui.EnumChildWindows(dialog_hwnd, visit_child, None)
         if not edits:
             raise RuntimeError("ROM picker has no enabled filename Edit")
-        edits[-1].set_edit_text(str(rom_path))
-        dialog.type_keys("{ENTER}")
+        win32gui.SendMessage(edits[-1], win32con.WM_SETTEXT, 0, str(rom_path))
+        ok_button = win32gui.GetDlgItem(dialog_hwnd, 1)  # IDOK
+        if not ok_button:
+            raise RuntimeError("ROM picker has no IDOK button")
+        win32gui.PostMessage(ok_button, 0x00F5, 0, 0)  # BM_CLICK
+        deadline = time.monotonic() + 10.0
+        while time.monotonic() < deadline and win32gui.IsWindow(dialog_hwnd):
+            time.sleep(0.1)
+        if win32gui.IsWindow(dialog_hwnd):
+            raise RuntimeError("ROM picker did not close after IDOK")
+        deadline = time.monotonic() + 15.0
+        loaded_main = None
+        while time.monotonic() < deadline:
+            loaded_main = self._main()
+            menu_handle = win32gui.GetMenu(loaded_main.handle)
+            if menu_handle and win32gui.GetMenuItemCount(menu_handle) >= 3:
+                break
+            time.sleep(0.1)
+        else:
+            raise RuntimeError("Legacy main menu did not expose Data after ROM load")
         self.current_rom = rom_path
-        self.current_window = self._main()
+        self.current_window = loaded_main
 
     def _control(self, control_id: int, class_name: str | None = None) -> Any:
         if self.current_window is None:
@@ -409,24 +569,68 @@ class Win32LegacyDriver:
             raise RuntimeError(f"Control ID {control_id} matched {len(matches)} descendants")
         return matches[0]
 
+    @staticmethod
+    def _menu_command(window: Any, path: str) -> None:
+        """Dispatch verified legacy menu IDs without cross-bitness menu wrappers."""
+
+        import ctypes
+        import win32con
+
+        try:
+            command_id = LEGACY_MENU_COMMANDS[path]
+        except KeyError as error:
+            raise ValueError(f"Unsupported legacy menu path: {path}") from error
+        posted = ctypes.windll.user32.PostMessageW(
+            int(window.handle), win32con.WM_COMMAND, command_id, 0
+        )
+        if not posted:
+            raise RuntimeError(f"Legacy menu command was rejected: {path}")
+
     def perform(self, steps: tuple[dict[str, Any], ...], requested: int | str) -> None:
         for step in steps:
             op = step["op"]
             if op == "menu":
-                self._main().menu_select(step["path"])
+                self._menu_command(self._main(), step["path"])
             elif op == "window":
                 title = step["title"]
-                self.current_window = self._wait_window(
-                    lambda item: item.is_visible() and item.window_text() == title
-                )
+                if title == "数据库":
+                    self.current_window = self._wait_window(
+                        lambda item: item.class_name() == "WTWindow"
+                        and any(
+                            control.control_id() == 590
+                            for control in item.descendants(class_name="Button")
+                        )
+                    )
+                else:
+                    self.current_window = self._wait_window(
+                        lambda item: item.window_text() == title
+                    )
+                if not self.current_window.is_visible():
+                    import win32con
+                    import win32gui
+
+                    win32gui.ShowWindow(self.current_window.handle, win32con.SW_SHOW)
             elif op == "click_id":
-                self._control(step["control_id"], step.get("class")).click_input()
+                self._control(step["control_id"], step.get("class")).click()
             elif op == "set_text":
                 value = requested if step["value"] == "$requested" else step["value"]
                 self._control(step["control_id"], step.get("class", "Edit")).set_edit_text(str(value))
             elif op == "select_index":
                 value = requested if step["value"] == "$requested" else step["value"]
                 self._control(step["control_id"], step.get("class", "ComboBox")).select(int(value))
+            elif op == "list_select":
+                import win32con
+                import win32gui
+
+                listbox = self._control(step["control_id"], step.get("class", "ListBox"))
+                row = int(step["row"])
+                result = win32gui.SendMessage(listbox.handle, 0x0186, row, 0)  # LB_SETCURSEL
+                if result == -1:
+                    raise RuntimeError(f"ListBox row {row} is out of range")
+                parent = win32gui.GetParent(listbox.handle)
+                wparam = int(step["control_id"]) | (1 << 16)  # LBN_SELCHANGE
+                win32gui.SendMessage(parent, win32con.WM_COMMAND, wparam, listbox.handle)
+                time.sleep(0.2)
             elif op == "list_double_click":
                 table = self._control(step["control_id"], step.get("class", "SysListView32"))
                 table.get_item(step["row"], step["column"]).double_click_input()
@@ -444,7 +648,7 @@ class Win32LegacyDriver:
             raise RuntimeError("No ROM is open for saving")
         previous_stat = self.current_rom.stat()
         previous_bytes = self.current_rom.read_bytes()
-        self._main().menu_select("文件->保存")
+        self._menu_command(self._main(), "文件->保存")
         deadline = time.monotonic() + 5.0
         while time.monotonic() < deadline:
             for window in self.app.windows(visible_only=True):

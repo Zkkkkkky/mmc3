@@ -714,6 +714,7 @@ class MapCanvas(QWidget):
         self.paint_enabled = True
         self.deployment_edit_enabled = False
         self.trigger_edit_enabled = False
+        self.overlay_move_enabled = False
         self.setMouseTracking(True)
 
     def sizeHint(self) -> QSize:
@@ -866,7 +867,7 @@ class MapCanvas(QWidget):
                 None,
             )
             if overlay is not None:
-                self.dragged_overlay = overlay
+                self.dragged_overlay = overlay if self.overlay_move_enabled else None
                 self.selected_overlay = overlay
                 self.overlay_selected.emit(*overlay)
                 self.update()
@@ -976,6 +977,8 @@ class ByteEntryTable(QTableWidget):
         self.label_providers = dict(label_providers or {})
         self.max_rows = max_rows
         self.clipboard_row: tuple[int, ...] | None = None
+        self.editing_enabled = True
+        self.editing_buttons: tuple[QPushButton, ...] = ()
         self._choice_labels: dict[int, tuple[str, ...]] = {}
         self._choice_models: dict[int, QStandardItemModel] = {}
         self.setHorizontalHeaderLabels(headers)
@@ -1013,6 +1016,19 @@ class ByteEntryTable(QTableWidget):
             self.setUpdatesEnabled(True)
             self.blockSignals(previous)
         self.values_changed.emit()
+        self.set_editing_enabled(self.editing_enabled)
+
+    def set_editing_enabled(self, enabled: bool) -> None:
+        """Keep row selection available while locking unverified record fields."""
+
+        self.editing_enabled = enabled
+        for row in range(self.rowCount()):
+            for column in range(self.columnCount()):
+                editor = self.cellWidget(row, column)
+                if editor is not None:
+                    editor.setEnabled(enabled)
+        for button in self.editing_buttons:
+            button.setEnabled(enabled)
 
     def _choice_model(self, column: int, provider) -> QStandardItemModel:
         if column not in self._choice_labels:
@@ -1054,6 +1070,7 @@ class ByteEntryTable(QTableWidget):
                 editor.setValue(value)
                 editor.valueChanged.connect(self.values_changed)
             self.setCellWidget(row, column, editor)
+            editor.setEnabled(self.editing_enabled)
         self.setCurrentCell(row, 0)
         self.values_changed.emit()
         return True
@@ -1184,6 +1201,11 @@ class MapPage(ProjectPage):
         self._trigger_edit_row: int | None = None
         self._deployment_edit_source: tuple[str, int] | None = None
         self._deployment_clipboard: tuple[str, tuple[int, ...]] | None = None
+        # D3: legacy deployment/trigger controls and single-field save layouts
+        # have not passed the reference-editor audit.  Keep the verified decoder
+        # visible, but do not let the product commit guessed record edits.
+        self._deployment_write_verified = False
+        self._trigger_write_verified = False
         self._player_slot_cache_key: tuple | None = None
         self._player_slot_snapshots: tuple[dict[int, tuple[int, int]], ...] = ()
         self._icon_sheet_cache: dict[int, QImage] = {}
@@ -1592,8 +1614,17 @@ class MapPage(ProjectPage):
         self.trigger_shop_combo = QComboBox()
         for shop_id in range(0xF0, 0x100):
             self.trigger_shop_combo.addItem(
-                f"{shop_id - 0xEF:02d}：商店 ${shop_id:02X}", shop_id
+                (
+                    f"${shop_id:02X}：无效商店目录（指向地图触发表）"
+                    if 0xF5 <= shop_id <= 0xFE
+                    else f"{shop_id - 0xF0:02d}：商店 ${shop_id:02X}"
+                ),
+                shop_id,
             )
+        shop_model = self.trigger_shop_combo.model()
+        if isinstance(shop_model, QStandardItemModel):
+            for shop_id in range(0xF5, 0xFF):
+                shop_model.item(self.trigger_shop_combo.findData(shop_id)).setEnabled(False)
         trigger_cell_form.addRow("商店选择", self.trigger_shop_combo)
         self.trigger_event_combo = QComboBox()
         self.trigger_event_combo.setMaxVisibleItems(24)
@@ -1878,6 +1909,7 @@ class MapPage(ProjectPage):
         buttons.accepted.connect(self._save_deployment_cell_editor)
         buttons.rejected.connect(self.deployment_cell_dialog.reject)
         root.addWidget(buttons)
+        self.deployment_cell_buttons = buttons
         self.deployment_side_combo.currentIndexChanged.connect(
             self._deployment_editor_side_changed
         )
@@ -1914,13 +1946,20 @@ class MapPage(ProjectPage):
             self.deployment_unit_combo,
             self.deployment_level_editor,
         ):
-            widget.setEnabled(not player)
-        self.deployment_roster_combo.setEnabled(player)
-        self.deployment_editor_status.setText(
-            "我方记录保存队伍槽和行动；驾驶员、机体由当前关卡的队伍状态自动解析。"
-            if player
-            else "敌军/客军记录保存驾驶员、机体、等级和行动；全部选项按原始字节写回。"
+            widget.setEnabled(self._deployment_write_verified and not player)
+        self.deployment_roster_combo.setEnabled(
+            self._deployment_write_verified and player
         )
+        if not self._deployment_write_verified:
+            self.deployment_editor_status.setText(
+                "当前仅供核对；逐字段黄金对照完成前不能修改或写回部署记录。"
+            )
+        else:
+            self.deployment_editor_status.setText(
+                "我方记录保存队伍槽和行动；驾驶员、机体由当前关卡的队伍状态自动解析。"
+                if player
+                else "敌军/客军记录保存驾驶员、机体、等级和行动；全部选项按原始字节写回。"
+            )
         self.deployment_editor_status.setStyleSheet("")
 
     def _open_deployment_cell_editor(
@@ -1996,6 +2035,8 @@ class MapPage(ProjectPage):
         )
 
     def _save_deployment_cell_editor(self) -> None:
+        if not self._deployment_write_verified:
+            return
         side = str(self.deployment_side_combo.currentData())
         target = self._object_table(side)
         values = self._deployment_editor_values(side)
@@ -2074,8 +2115,10 @@ class MapPage(ProjectPage):
 
     def _trigger_kind_changed(self, _checked: bool = False) -> None:
         is_shop = self.trigger_shop_radio.isChecked()
-        self.trigger_shop_combo.setEnabled(is_shop)
-        self.trigger_event_combo.setEnabled(not is_shop)
+        self.trigger_shop_combo.setEnabled(self._trigger_write_verified and is_shop)
+        self.trigger_event_combo.setEnabled(
+            self._trigger_write_verified and not is_shop
+        )
 
     def _refresh_trigger_character_choices(self) -> None:
         selected = self.trigger_character_combo.currentData()
@@ -2133,6 +2176,8 @@ class MapPage(ProjectPage):
         self.trigger_cell_dialog.activateWindow()
 
     def _save_trigger_cell_editor(self) -> None:
+        if not self._trigger_write_verified:
+            return
         event_id = int(
             self.trigger_shop_combo.currentData()
             if self.trigger_shop_radio.isChecked()
@@ -2157,6 +2202,8 @@ class MapPage(ProjectPage):
         self.trigger_cell_dialog.accept()
 
     def _remove_trigger_row(self, row: int) -> None:
+        if not self._trigger_write_verified:
+            return
         if not 0 <= row < self.trigger_table.rowCount():
             return
         self.trigger_table.removeRow(row)
@@ -2172,7 +2219,11 @@ class MapPage(ProjectPage):
     def _show_trigger_context_menu(
         self, x: int, y: int, global_position: QPoint
     ) -> None:
-        if self.editor_tabs.currentIndex() != 2 or not self.trigger_table.isEnabled():
+        if (
+            self.editor_tabs.currentIndex() != 2
+            or not self._trigger_write_verified
+            or not self.trigger_table.isEnabled()
+        ):
             return
         rows = [
             row
@@ -2299,6 +2350,8 @@ class MapPage(ProjectPage):
             self.defeat_experience_requested.emit(unit_id, level)
 
     def _remove_deployment_row(self, side: str, row: int) -> None:
+        if not self._deployment_write_verified:
+            return
         table = self._object_table(side)
         if not 0 <= row < table.rowCount():
             return
@@ -2312,6 +2365,8 @@ class MapPage(ProjectPage):
         """Legacy-style map context menu for initial configurations."""
 
         if self.editor_tabs.currentIndex() != 1:
+            return
+        if not self._deployment_write_verified:
             return
         if not all(
             table.isEnabled()
@@ -2483,6 +2538,10 @@ class MapPage(ProjectPage):
             )
         ):
             buttons.addWidget(button, index // 3, index % 3)
+        table.editing_buttons = (
+            add_button, duplicate_button, paste_button, remove_button,
+            cursor_button, up_button, down_button,
+        )
         group_layout.addWidget(table)
         group_layout.addLayout(buttons)
         layout.addWidget(group, 1)
@@ -2670,7 +2729,14 @@ class MapPage(ProjectPage):
                 item = QListWidgetItem(text)
                 item.setToolTip(
                     description
-                    + "\n单击联动定位；双击或在地图上右键打开编辑；图标可拖动。"
+                    + (
+                        "\n单击联动定位；双击可查看原始记录。"
+                        if (
+                            side in ("敌", "客", "我")
+                            and not self._deployment_write_verified
+                        ) or (side == "事" and not self._trigger_write_verified)
+                        else "\n单击联动定位；双击或在地图上右键打开编辑；图标可拖动。"
+                    )
                 )
                 item.setData(Qt.ItemDataRole.UserRole, (kind, row))
                 object_list = self.trigger_objects if side == "事" else self.deployment_objects
@@ -2703,12 +2769,30 @@ class MapPage(ProjectPage):
             self.deployment_summary.setText(
                 f"敌军 {self.enemy_table.rowCount()}/18 · 客军 {self.guest_table.rowCount()}/3 · "
                 f"我方出击位 {self.player_table.rowCount()}/11\n"
-                "地图显示ROM四图块机体图标；右键可编辑、新增或删除，左键拖动可改坐标。"
+                "地图显示ROM四图块机体图标；"
+                + (
+                    "右键可编辑、新增或删除，左键拖动可改坐标。"
+                    if self._deployment_write_verified
+                    else "部署记录只读；单击可定位，双击可查看原码。"
+                )
             )
         count = self.trigger_table.rowCount()
         self.trigger_summary.setText(
-            f"本关共 {count} 条地图触发记录。紫色=事件，绿色=商店；在地图上右键添加、编辑或删除。"
-            if count else "本关ROM中没有地图事件或商店记录。在右侧地图任意格右键即可添加。"
+            (
+                f"本关共 {count} 条地图触发记录。紫色=事件，绿色=商店；"
+                + (
+                    "在地图上右键添加、编辑或删除。"
+                    if self._trigger_write_verified
+                    else "记录只读；选择条目可定位。"
+                )
+            ) if count else (
+                "本关ROM中没有地图事件或商店记录。"
+                + (
+                    "在右侧地图任意格右键即可添加。"
+                    if self._trigger_write_verified
+                    else "空表不代表读取失败；当前仅可查看。"
+                )
+            )
         )
 
     def _add_deployment(
@@ -2716,6 +2800,8 @@ class MapPage(ProjectPage):
         table: ByteEntryTable,
         default_values: tuple[int, ...] | None = None,
     ) -> None:
+        if not self._deployment_write_verified:
+            return
         values = list(default_values or (0 for _ in table.headers))
         if len(values) != len(table.headers):
             raise ValueError("新增记录的默认字节数与表列数不一致。")
@@ -2744,6 +2830,10 @@ class MapPage(ProjectPage):
         self.y_position_label.setText(f"Y坐标：{y}")
 
     def _overlay_moved(self, side: str, row: int, x: int, y: int) -> None:
+        if side in ("敌", "客", "我") and not self._deployment_write_verified:
+            return
+        if side in ("事", "店") and not self._trigger_write_verified:
+            return
         table = {
             "敌": self.enemy_table,
             "客": self.guest_table,
@@ -2917,6 +3007,8 @@ class MapPage(ProjectPage):
 
     @staticmethod
     def _trigger_event_label(event_id: int) -> str:
+        if 0xF5 <= event_id <= 0xFE:
+            return f"无效商店目录（指向地图触发表）· ${event_id:02X}"
         if event_id >= 0xF0:
             return f"商店 {event_id & 0x0F} · ${event_id:02X}"
         return f"地图事件 ${event_id:02X}"
@@ -3071,6 +3163,56 @@ class MapPage(ProjectPage):
         else:
             self.trigger_table.set_rows([])
             self.trigger_table.setEnabled(False)
+        self._sync_record_write_state()
+
+    def _sync_record_write_state(self) -> None:
+        """Apply D3 to the visible editor while preserving record inspection."""
+
+        deployment_enabled = (
+            self.project is not None and self._deployment_write_verified
+        )
+        trigger_enabled = self.project is not None and self._trigger_write_verified
+        for table in (self.enemy_table, self.guest_table, self.player_table):
+            table.set_editing_enabled(deployment_enabled and table.isEnabled())
+        self.trigger_table.set_editing_enabled(
+            trigger_enabled and self.trigger_table.isEnabled()
+        )
+        self.prelude.setEnabled(
+            deployment_enabled
+            and self.current_map_id is not None
+            and self.current_map_id < self.project.scenario_count
+        )
+        self.deployment_cell_buttons.button(
+            QDialogButtonBox.StandardButton.Save
+        ).setEnabled(deployment_enabled)
+        self.trigger_cell_buttons.button(
+            QDialogButtonBox.StandardButton.Ok
+        ).setEnabled(trigger_enabled)
+        self.trigger_delete_button.setEnabled(trigger_enabled)
+        for widget in (
+            self.deployment_side_combo, self.deployment_x_editor,
+            self.deployment_y_editor, self.deployment_action_combo,
+        ):
+            widget.setEnabled(deployment_enabled)
+        self._deployment_editor_side_changed()
+        for widget in (
+            self.trigger_x_editor, self.trigger_y_editor,
+            self.trigger_character_combo, self.trigger_shop_radio,
+            self.trigger_event_radio,
+        ):
+            widget.setEnabled(trigger_enabled)
+        self._trigger_kind_changed()
+        self.open_deployment_button.setText(
+            "编辑部署 / 添加 / 复制…" if deployment_enabled else "查看部署记录…"
+        )
+        self.open_trigger_button.setText(
+            "打开全部事件记录…" if trigger_enabled else "查看事件与商店记录…"
+        )
+        notice = "写入需先完成参考版控件枚举和逐字段保存对照。"
+        if not deployment_enabled:
+            self.open_deployment_button.setToolTip(notice)
+        if not trigger_enabled:
+            self.open_trigger_button.setToolTip(notice)
 
     def _bitmap_selector_changed(self, _index: int) -> None:
         key = self.bitmap_selector.currentData()
@@ -3303,8 +3445,16 @@ class MapPage(ProjectPage):
         mode = self.editor_tabs.currentIndex()
         show_all = self.show_all_objects.isChecked()
         self.canvas.paint_enabled = mode == 0
-        self.canvas.deployment_edit_enabled = mode == 1
-        self.canvas.trigger_edit_enabled = mode == 2
+        self.canvas.deployment_edit_enabled = (
+            mode == 1 and self._deployment_write_verified
+        )
+        self.canvas.trigger_edit_enabled = (
+            mode == 2 and self._trigger_write_verified
+        )
+        self.canvas.overlay_move_enabled = (
+            (mode == 1 and self._deployment_write_verified)
+            or (mode == 2 and self._trigger_write_verified)
+        )
         icon_banks = (
             scenario_map_icon_banks(self.current_map_id)
             if self.current_map_id is not None
@@ -3401,6 +3551,22 @@ class MapPage(ProjectPage):
     def _validate_pending_draft(self) -> None:
         if self.project is None or self.current_map_id is None:
             return
+        if self.current_map_id < self.project.scenario_count:
+            if (
+                not self._deployment_write_verified
+                and self._staged_layout()
+                != self.project.get_scenario_layout(self.current_map_id)
+            ):
+                raise ValueError("初始配置写入须先完成控件枚举与逐字段黄金对照。")
+        if (
+            self.project.map_trigger_codec is not None
+            and self.current_map_id
+            < self.project.map_trigger_codec.spec.scenario_count
+            and not self._trigger_write_verified
+            and self._staged_triggers()
+            != self.project.get_map_triggers(self.current_map_id)
+        ):
+            raise ValueError("商店事件写入须先完成控件枚举与逐字段黄金对照。")
         encoded = self.project.map_codec.encode(
             self.staged_width,
             self.staged_height,
@@ -3492,9 +3658,14 @@ class MapPage(ProjectPage):
                     self.staged_height,
                     tuple(self.staged_tiles),
                 )
-                if self.current_map_id < self.project.scenario_count:
+                if (
+                    self._deployment_write_verified
+                    and self.current_map_id < self.project.scenario_count
+                ):
                     self.project.set_scenario_layout(self._staged_layout())
                 if (
+                    self._trigger_write_verified
+                    and
                     self.project.map_trigger_codec is not None
                     and self.current_map_id
                     < self.project.map_trigger_codec.spec.scenario_count
@@ -3690,9 +3861,14 @@ class MapPage(ProjectPage):
         try:
             with self.project.transaction(f"地图 ${self.current_map_id:02X} · 完整还原"):
                 self.project.reset_map(self.current_map_id)
-                if self.current_map_id < self.project.scenario_count:
+                if (
+                    self._deployment_write_verified
+                    and self.current_map_id < self.project.scenario_count
+                ):
                     self.project.reset_scenario_layout(self.current_map_id)
                 if (
+                    self._trigger_write_verified
+                    and
                     self.project.map_trigger_codec is not None
                     and self.current_map_id
                     < self.project.map_trigger_codec.spec.scenario_count

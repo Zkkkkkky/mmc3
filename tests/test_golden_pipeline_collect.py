@@ -190,6 +190,17 @@ class LiveCollectionTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             collector.CaseSpec.from_payload(payload)
 
+    def test_listbox_selection_is_whitelisted_but_rejects_bad_row(self) -> None:
+        payload = case_payload()
+        payload["navigation"] = [
+            {"op": "list_select", "class": "ListBox", "control_id": 120, "row": 1}
+        ]
+        spec = collector.CaseSpec.from_payload(payload)
+        self.assertEqual(spec.navigation[0]["row"], 1)
+        payload["navigation"][0]["row"] = -1
+        with self.assertRaises(ValueError):
+            collector.CaseSpec.from_payload(payload)
+
     def test_win32_adapter_waits_for_disk_save_and_process_exit(self) -> None:
         driver = collector.Win32LegacyDriver()
         driver.app = Mock()
@@ -198,17 +209,18 @@ class LiveCollectionTests(unittest.TestCase):
         driver.current_rom = self.baseline
         previous_mtime = self.baseline.stat().st_mtime_ns
 
-        def save_to_disk(_: str) -> None:
+        def save_to_disk(_window: object, _path: str) -> None:
             self.baseline.write_bytes(bytes([0] * 10 + [71] + [0] * 10))
             os.utime(self.baseline, ns=(previous_mtime, previous_mtime))
 
         main = Mock()
-        main.menu_select.side_effect = save_to_disk
-        with patch.object(driver, "_main", return_value=main):
+        with patch.object(driver, "_main", return_value=main), patch.object(
+            driver, "_menu_command", side_effect=save_to_disk
+        ) as menu_command:
             driver.save()
         app = driver.app
         driver.stop()
-        main.menu_select.assert_called_once_with("文件->保存")
+        menu_command.assert_called_once_with(main, "文件->保存")
         app.wait_for_process_exit.assert_called_once_with(timeout=5)
         self.assertIsNone(driver.app)
         self.assertIsNone(driver.pid)

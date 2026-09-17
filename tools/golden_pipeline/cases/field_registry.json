@@ -45,6 +45,26 @@
   },
   "entries": [
     {
+      "module": "M05",
+      "field": "movement",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "source_json": "output/build/legacy-diff-audit/legacy-live-results.json",
+      "snapshot_before": "output/build/legacy-diff-audit/cases/legacy_live/M05/movement/cold_start_01/before.nes",
+      "snapshot_after": "output/build/legacy-diff-audit/cases/legacy_live/M05/movement/cold_start_01/after.nes",
+      "expected_offsets": [
+        297551
+      ],
+      "required_offsets": [
+        297551
+      ],
+      "optional_offsets": [],
+      "extra_allowed": [],
+      "notes": [
+        "在线单字段采集：保存后关闭进程，再以不同 PID 冷启动重开"
+      ]
+    },
+    {
       "module": "M09",
       "field": "distance_first",
       "case_id": "write",

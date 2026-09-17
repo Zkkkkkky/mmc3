@@ -3,12 +3,12 @@
   "archive_dir": "output/build/legacy-diff-audit/golden",
   "registry": "tools/golden_pipeline/cases/field_registry.json",
   "summary": {
-    "total_cases": 62,
-    "archived_cases": 62,
-    "golden_cases": 59,
+    "total_cases": 63,
+    "archived_cases": 63,
+    "golden_cases": 60,
     "discovery_cases": 3,
     "passed_golden_cases": 59,
-    "failed_golden_cases": 0,
+    "failed_golden_cases": 1,
     "missing_snapshots": [],
     "unregistered_snapshots": [
       "output/build/legacy-diff-audit/cases/global_hit_threshold",
@@ -19,6 +19,24 @@
     "stored_diff_mismatches": []
   },
   "fields": {
+    "M05/movement/cold_start_01": {
+      "module": "M05",
+      "field": "movement",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "archive": "M05-movement-cold_start_01.json",
+      "sha256": "5c3d46cad47a424eba066660460849c61cfb8858f776e1a3a0cba62e9c0c22b2",
+      "passed": false,
+      "expected_known": true,
+      "required_offsets": [
+        297551
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 1,
+      "removed_normalization_count": 0,
+      "pending_reason": "在线采集超出每字段 30 秒性能预算"
+    },
     "M09/distance_first/write": {
       "module": "M09",
       "field": "distance_first",

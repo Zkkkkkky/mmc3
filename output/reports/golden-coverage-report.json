@@ -7,30 +7,37 @@
   "g1": {
     "definition": "已通过黄金对照的字段数 / 登记字段数",
     "numerator": 58,
-    "denominator": 61,
-    "value": 0.9508,
+    "denominator": 62,
+    "value": 0.9355,
     "denominator_scope": "registered_fields",
     "denominator_scope_note": "当前分母为 field_registry.json 登记字段数；最终口径为参考版全部可编辑字段数（主文档第 4/5 章字段清单，M00 第 5 节统计职责），全量采集完成后需以全量字段数重算分母",
     "target": ">=95%"
   },
   "g2": {
     "definition": "unexplained 为空且 expected 已知的 golden 用例占比",
-    "numerator": 59,
-    "denominator": 59,
+    "numerator": 60,
+    "denominator": 60,
     "value": 1.0,
     "target": "=100%"
   },
   "counts": {
-    "registered_fields": 61,
-    "archived_fields": 61,
-    "archived_cases": 62,
-    "golden_cases": 59,
+    "registered_fields": 62,
+    "archived_fields": 62,
+    "archived_cases": 63,
+    "golden_cases": 60,
     "discovery_cases": 3,
     "passed_golden_cases": 59,
-    "failed_golden_cases": 0,
-    "pending_cases": 3
+    "failed_golden_cases": 1,
+    "pending_cases": 4
   },
   "pending_cases": [
+    {
+      "module": "M05",
+      "field": "movement",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "reason": "在线采集超出每字段 30 秒性能预算"
+    },
     {
       "module": "M09",
       "field": "experience_level_2",
@@ -54,6 +61,17 @@
     }
   ],
   "field_details": [
+    {
+      "module": "M05",
+      "field": "movement",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "passed": false,
+      "changed_count": 1,
+      "removed_normalization_count": 0,
+      "unexpected_count": 0,
+      "archive": "M05-movement-cold_start_01.json"
+    },
     {
       "module": "M09",
       "field": "distance_first",

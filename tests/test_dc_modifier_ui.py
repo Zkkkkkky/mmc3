@@ -18,6 +18,7 @@ from PySide6.QtWidgets import (
     QDialog,
     QFileDialog,
     QLabel,
+    QMessageBox,
     QPushButton,
     QStyle,
     QStyleOptionSpinBox,
@@ -41,6 +42,7 @@ from dc_modifier.pages import (
     ResourcePage,
     UnitPage,
     WeaponPage,
+    compact_ids,
     parse_id_expression,
 )
 from dc_modifier.story_page import StoryPage
@@ -846,10 +848,68 @@ class DesktopEditorSmokeTests(QtTestCase):
         old_value = self.window.project.get_value(unit_id, "movement")
         new_value = (old_value + 1) & 0xFF
         page.fields["movement"].setValue(new_value)
-        page.apply_record()
+        with patch(
+            "dc_modifier.pages.QMessageBox.question",
+            return_value=QMessageBox.StandardButton.Yes,
+        ):
+            page.apply_record()
         self.assertEqual(self.window.project.get_value(unit_id, "movement"), new_value)
         self.window.undo()
         self.assertEqual(self.window.project.get_value(unit_id, "movement"), old_value)
+
+    def test_shared_unit_stat_edit_requires_confirmation_before_writing(self) -> None:
+        assert self.window.project is not None
+        page = self.window.pages[self.window.page_index["units"]]
+        assert isinstance(page, UnitPage)
+        page.records.setCurrentRow(0)
+        unit_id = page.current_id
+        assert unit_id is not None
+        shared_ids = self.window.project.unit_codec.decode_record(
+            unit_id, bytes(self.window.project.working)
+        ).ids
+        self.assertGreater(len(shared_ids), 1)
+        old_value = self.window.project.get_value(unit_id, "movement")
+        page.fields["movement"].setValue(old_value + 1)
+        before = bytes(self.window.project.working)
+        with patch(
+            "dc_modifier.pages.QMessageBox.question",
+            return_value=QMessageBox.StandardButton.Cancel,
+        ) as prompt:
+            page.apply_record()
+        prompt.assert_called_once()
+        self.assertIn("移动力", prompt.call_args.args[2])
+        self.assertEqual(bytes(self.window.project.working), before)
+        self.assertTrue(page.apply_button.isEnabled())
+        with patch(
+            "dc_modifier.pages.QMessageBox.question",
+            return_value=QMessageBox.StandardButton.Yes,
+        ):
+            page.apply_record()
+        self.assertTrue(all(
+            self.window.project.get_value(shared_id, "movement") == old_value + 1
+            for shared_id in shared_ids
+        ))
+
+    def test_shared_unit_raw_edit_names_all_affected_ids(self) -> None:
+        assert self.window.project is not None
+        page = self.window.pages[self.window.page_index["units"]]
+        assert isinstance(page, UnitPage)
+        page.records.setCurrentRow(0)
+        unit_id = page.current_id
+        assert unit_id is not None
+        shared_ids = self.window.project.unit_codec.decode_record(
+            unit_id, bytes(self.window.project.working)
+        ).ids
+        self.assertGreater(len(shared_ids), 1)
+        before = bytes(self.window.project.working)
+        with patch(
+            "dc_modifier.pages.QMessageBox.question",
+            return_value=QMessageBox.StandardButton.Cancel,
+        ) as prompt:
+            page.apply_raw_record()
+        prompt.assert_called_once()
+        self.assertIn(compact_ids(shared_ids), prompt.call_args.args[2])
+        self.assertEqual(bytes(self.window.project.working), before)
 
     def test_music_binding_and_validation_page(self) -> None:
         assert self.window.project is not None
@@ -1166,6 +1226,9 @@ class DesktopEditorSmokeTests(QtTestCase):
         assert self.window.project is not None
         page = self.window.pages[self.window.page_index["maps"]]
         assert isinstance(page, MapPage)
+        page._trigger_write_verified = True
+        page._sync_record_write_state()
+        page._update_overlays()
         self.assertEqual(self.window.project.get_map_triggers(0), ())
         page.trigger_table.set_rows([(3, 4, 0xFF, 0xF2)])
         self.assertTrue(page.apply_button.isEnabled())

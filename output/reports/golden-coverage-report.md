@@ -7,8 +7,8 @@
 
 | 指标 | 数值 | 目标 |
 | --- | --- | --- |
-| G1 黄金对照覆盖率 | 58/61 = 95.08% | >=95% |
-| G2 逐字段差分通过率 | 59/59 = 100.00% | =100% |
+| G1 黄金对照覆盖率 | 58/62 = 93.55% | >=95% |
+| G2 逐字段差分通过率 | 60/60 = 100.00% | =100% |
 
 > G1 分母口径 `denominator_scope=registered_fields`：当前分母为 field_registry.json 登记字段数；最终口径为参考版全部可编辑字段数（主文档第 4/5 章字段清单，M00 第 5 节统计职责），全量采集完成后需以全量字段数重算分母
 
@@ -16,18 +16,19 @@
 
 | 类别 | 数量 |
 | --- | --- |
-| 注册字段（登记用例） | 61 |
-| 已归档字段 | 61 |
-| golden 用例 | 59 |
+| 注册字段（登记用例） | 62 |
+| 已归档字段 | 62 |
+| golden 用例 | 60 |
 | discovery 用例 | 3 |
 | 通过 golden 用例 | 59 |
-| 未通过 golden 用例 | 0 |
-| 待解释用例 | 3 |
+| 未通过 golden 用例 | 1 |
+| 待解释用例 | 4 |
 
 ## 待解释用例清单
 
 | 模块 | 字段 | 用例 | 类型 | 原因 |
 | --- | --- | --- | --- | --- |
+| M05 | movement | cold_start_01 | golden | 在线采集超出每字段 30 秒性能预算 |
 | M09 | experience_level_2 | write | discovery | 发现型用例：存量 expected_offset=0（写入偏移未知）且重开读取值不等于请求值，需在线采集补证 |
 | M09 | experience_level_60 | write | discovery | 发现型用例：存量 expected_offset=0（写入偏移未知）且重开读取值不等于请求值，需在线采集补证 |
 | M09 | level_cap | write | discovery | 发现型用例：等级上限 60→61 触发成长曲线等联动重写（3778 处偏移），无单一预期偏移集，待在线采集拆解（D5 决策） |
@@ -36,6 +37,7 @@
 
 | 模块 | 字段 | 类型 | passed | 变化偏移 | 剔除归一化 | 未知偏移 | 档案 |
 | --- | --- | --- | --- | --- | --- | --- | --- |
+| M05 | movement | golden | false | 1 | 0 | 0 | M05-movement-cold_start_01.json |
 | M09 | distance_first | golden | true | 7 | 6 | 0 | M09-distance_first-write.json |
 | M09 | distance_last | golden | true | 7 | 6 | 0 | M09-distance_last-write.json |
 | M09 | experience_level_2 | discovery | - | 6 | 6 | 0 | M09-experience_level_2-write.json |
