@@ -6,7 +6,7 @@ from PySide6.QtWidgets import (
     QListWidgetItem, QMessageBox, QPlainTextEdit, QPushButton,
     QSplitter, QVBoxLayout, QWidget,
     QTableWidget, QTableWidgetItem, QHeaderView,
-    QSpinBox, QFormLayout, QTabWidget,
+    QSpinBox, QFormLayout, QTabWidget, QDialog, QDialogButtonBox,
 )
 
 from fc_editor.codecs.legacy_scenario import LegacyScenarioCodec
@@ -33,9 +33,11 @@ class LegacyTextPage(ProjectPage):
         left = QWidget()
         left_layout = QVBoxLayout(left)
         self.group_combo = QComboBox()
+        self.group_combo.setObjectName("legacyDialogueGroup")
         self.search_edit = QLineEdit()
         self.search_edit.setPlaceholderText("查找文字或编号")
         self.record_list = QListWidget()
+        self.record_list.setObjectName("legacyDialogueRecords")
         self.record_list.setAlternatingRowColors(True)
         left_layout.addWidget(QLabel("对话段 / 文字记录"))
         left_layout.addWidget(self.group_combo)
@@ -44,13 +46,24 @@ class LegacyTextPage(ProjectPage):
         right = QWidget()
         right_layout = QVBoxLayout(right)
         self.variant_list = QListWidget()
-        self.variant_list.setMaximumHeight(180)
+        self.variant_list.setObjectName("legacyDialogueVariants")
         self.text_edit = QPlainTextEdit()
+        self.text_edit.setObjectName("legacyDialogueEditor")
+        self.content_edit = QPlainTextEdit()
+        self.content_edit.setObjectName("legacyDialogueContent")
+        self.content_edit.setReadOnly(True)
+        self.content_edit.setToolTip(
+            "按参考版“按内容”视图汇总当前对话段；随机分支之间以 ++ 分隔。"
+        )
+        self.view_tabs = QTabWidget()
+        self.view_tabs.setObjectName("legacyDialogueViews")
+        self.view_tabs.addTab(self.variant_list, "按列表")
+        self.view_tabs.addTab(self.content_edit, "按内容")
         self.status_label = QLabel()
         self.status_label.setWordWrap(True)
-        right_layout.addWidget(QLabel("文字编辑 · 随机对话的各条正文"))
-        right_layout.addWidget(self.variant_list)
-        right_layout.addWidget(self.text_edit, 1)
+        right_layout.addWidget(QLabel("文字编辑"))
+        right_layout.addWidget(self.text_edit, 2)
+        right_layout.addWidget(self.view_tabs, 1)
         right_layout.addWidget(self.status_label)
         splitter.addWidget(left)
         splitter.addWidget(right)
@@ -59,6 +72,21 @@ class LegacyTextPage(ProjectPage):
         buttons = QHBoxLayout()
         self.apply_button = QPushButton("暂存文字修改")
         self.reset_button = QPushButton("还原当前文字")
+        self.system_note = QLabel(
+            '注："{"加3字节16进制代码等于直接写入3字节16进制\n'
+            '    "["为直接写入2字节16进制， "|"为直接写入1字节16进制'
+        )
+        self.system_note.setObjectName("legacySystemTextNote")
+        self.system_note.setStyleSheet("color: #b00020;")
+        self.system_note.setVisible(group_keys == ("system",))
+        self.add_button = QPushButton("添加")
+        self.add_button.setEnabled(False)
+        self.add_button.setVisible(group_keys == ("system",))
+        self.add_button.setToolTip(
+            "系统文字池没有经过黄金对照验证的追加/搬移规则；当前只允许原记录容量内修改。"
+        )
+        buttons.addWidget(self.system_note, 1)
+        buttons.addWidget(self.add_button)
         buttons.addStretch()
         buttons.addWidget(self.apply_button)
         buttons.addWidget(self.reset_button)
@@ -83,6 +111,7 @@ class LegacyTextPage(ProjectPage):
         self.record_list.clear()
         self.variant_list.clear()
         self.text_edit.clear()
+        self.content_edit.clear()
         if self.project is not None:
             try:
                 self.codec = LegacyTextCodec(self.project.working)
@@ -124,6 +153,7 @@ class LegacyTextPage(ProjectPage):
             for variant in range(self.codec.variant_count(key, index)):
                 text = self._drafts.get((key, index, variant), self.codec.record(key, index, variant).text)
                 self.variant_list.addItem(f"{variant:03d}: {text.replace(chr(10), ' ↵ ').replace('⟦结束⟧', '')}")
+        self._update_content_view()
         self._loading = False
         self.variant_list.setCurrentRow(0 if self.variant_list.count() else -1)
         self._select_variant()
@@ -148,7 +178,35 @@ class LegacyTextPage(ProjectPage):
             self._drafts.pop(self._selected, None)
         else:
             self._drafts[self._selected] = text
+        key, index, variant = self._selected
+        variant_item = self.variant_list.item(variant)
+        if variant_item is not None:
+            variant_item.setText(
+                f"{variant:03d}: {text.replace(chr(10), ' ↵ ').replace('⟦结束⟧', '')}"
+            )
+        if variant == 0:
+            record_item = self.record_list.item(index)
+            if record_item is not None:
+                record_item.setText(
+                    f"{index:03d}: {text.replace(chr(10), ' ↵ ').replace('⟦结束⟧', '')}"
+                )
+        self._update_content_view()
         self._update_status()
+
+    def _update_content_view(self) -> None:
+        key = self.group_combo.currentData()
+        index = self.record_list.currentRow()
+        if self.codec is None or key is None or index < 0:
+            self.content_edit.clear()
+            return
+        texts = (
+            self._drafts.get(
+                (key, index, variant),
+                self.codec.record(key, index, variant).text,
+            ).replace("⟦结束⟧", "")
+            for variant in range(self.codec.variant_count(key, index))
+        )
+        self.content_edit.setPlainText("++".join(texts))
 
     def _filter(self, *_args) -> None:
         query = self.search_edit.text().casefold()
@@ -402,6 +460,64 @@ class LegacyScenarioEventsPage(ProjectPage):
         self.refresh()
 
 
+class GrowthHexDialog(QDialog):
+    """Reference-shaped editor for the first 60 growth nibbles."""
+
+    VALUE_COUNT = 60
+
+    def __init__(
+        self,
+        values: tuple[int, ...],
+        parent: QWidget | None = None,
+    ) -> None:
+        super().__init__(parent)
+        if len(values) < self.VALUE_COUNT:
+            raise ValueError("成长方式至少需要60级数据。")
+        self.setWindowTitle("成长属性")
+        self._tail = tuple(values[self.VALUE_COUNT :])
+        layout = QVBoxLayout(self)
+        layout.addWidget(QLabel("请输入60位十六进制成长串（每位0—F）："))
+        self.hex_edit = QLineEdit(
+            "".join(f"{value:X}" for value in values[: self.VALUE_COUNT])
+        )
+        self.hex_edit.setMaxLength(self.VALUE_COUNT)
+        self.hex_edit.setObjectName("legacyGrowthHex")
+        layout.addWidget(self.hex_edit)
+        self.length_label = QLabel()
+        self.length_label.setObjectName("legacyGrowthHexLength")
+        layout.addWidget(self.length_label)
+        self.buttons = QDialogButtonBox(
+            QDialogButtonBox.StandardButton.Ok
+            | QDialogButtonBox.StandardButton.Cancel
+        )
+        self.buttons.button(QDialogButtonBox.StandardButton.Ok).setText("确定")
+        self.buttons.button(QDialogButtonBox.StandardButton.Cancel).setText("取消")
+        self.buttons.accepted.connect(self.accept)
+        self.buttons.rejected.connect(self.reject)
+        layout.addWidget(self.buttons)
+        self.hex_edit.textChanged.connect(self._validate)
+        self._validate()
+
+    def _validate(self) -> None:
+        text = self.hex_edit.text().strip()
+        valid = len(text) == self.VALUE_COUNT and all(
+            character in "0123456789abcdefABCDEF" for character in text
+        )
+        self.length_label.setText(
+            f"当前长度：{len(text)} / {self.VALUE_COUNT}"
+            + ("" if valid else "（必须为60位十六进制）")
+        )
+        self.buttons.button(QDialogButtonBox.StandardButton.Ok).setEnabled(valid)
+
+    def values(self) -> tuple[int, ...]:
+        text = self.hex_edit.text().strip()
+        if len(text) != self.VALUE_COUNT or any(
+            character not in "0123456789abcdefABCDEF" for character in text
+        ):
+            raise ValueError("成长属性必须是60位十六进制字符串。")
+        return tuple(int(character, 16) for character in text) + self._tail
+
+
 class LegacyGrowthPage(ProjectPage):
     transaction_sync_group = "growth_table"
 
@@ -423,16 +539,19 @@ class LegacyGrowthPage(ProjectPage):
         self.status_label.setWordWrap(True)
         self.apply_button = QPushButton("暂存成长方式")
         self.reset_button = QPushButton("还原当前成长")
+        self.hex_button = QPushButton("成长修改(16进制快捷修改)")
         layout.addWidget(QLabel("成长方式 · 每级数值 0—15"))
         layout.addWidget(self.growth_combo)
         layout.addWidget(self.growth_table, 1)
         layout.addWidget(self.status_label)
+        layout.addWidget(self.hex_button)
         layout.addWidget(self.apply_button)
         layout.addWidget(self.reset_button)
         self.growth_combo.currentIndexChanged.connect(self._load)
         self.growth_table.itemChanged.connect(self._changed)
         self.apply_button.clicked.connect(self.apply_changes)
         self.reset_button.clicked.connect(self.reset_current)
+        self.hex_button.clicked.connect(self._open_hex_editor)
 
     def refresh(self) -> None:
         if self.has_pending_draft:
@@ -474,6 +593,26 @@ class LegacyGrowthPage(ProjectPage):
         if error:
             self.status_label.setText(error)
         self.apply_button.setEnabled(self.has_pending_draft and error is None)
+
+    def _open_hex_editor(self) -> None:
+        if self.codec is None:
+            return
+        growth_id = self.growth_combo.currentIndex() + 201
+        source = self._drafts.get(
+            growth_id,
+            tuple(map(str, self.codec.record(growth_id).values)),
+        )
+        try:
+            values = tuple(int(value) for value in source)
+        except ValueError as error:
+            QMessageBox.warning(self, "无法打开成长属性", str(error))
+            return
+        dialog = GrowthHexDialog(values, self)
+        if dialog.exec() != QDialog.DialogCode.Accepted:
+            return
+        edited = dialog.values()
+        self._drafts[growth_id] = tuple(map(str, edited))
+        self._load()
 
     @property
     def has_pending_draft(self) -> bool:

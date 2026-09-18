@@ -21,6 +21,7 @@ from dc_modifier.legacy_tools import (
     _glyph_file_offset,
     _glyph_pixmap,
 )
+from fc_editor.dc_text import reference_dc_text_table
 from fc_editor.text_table import TextTable
 from fc_rom_editor_core import RomProject
 
@@ -129,6 +130,25 @@ class LegacyToolDialogTests(QtTestCase):
         self.assertLess(dialog.encode_button.mapTo(dialog, QPoint(0, 0)).x(), dialog.decode_button.mapTo(dialog, QPoint(0, 0)).x())
         self.assertLess(self._top(dialog.decode_button, dialog), self._top(dialog.code_edit, dialog))
         dialog.close()
+
+    def test_text_converter_uses_all_nonempty_legacy_table_entries(self) -> None:
+        source = ROOT / "src" / "resources" / "default_config" / "码表.ini"
+        entries = []
+        for line in source.read_text(encoding="gbk").splitlines():
+            _address, code, value = line.split("=", 2)
+            if code and value:
+                entries.append((bytes.fromhex(code), value))
+        table = reference_dc_text_table()
+        self.assertEqual(len(entries), 2713)
+        self.assertEqual(len(table.byte_to_text), 2713)
+        for code, value in entries:
+            self.assertEqual(table.byte_to_text.get(code), value, code.hex().upper())
+            self.assertEqual(table.decode(code), value, code.hex().upper())
+        self.assertEqual(table.decode(b"\xF2"), "\\")
+        dialog = TextConverterDialog()
+        dialog.code_edit.setPlainText("F1 F2 F6 F9")
+        dialog.decode_button.click()
+        self.assertEqual(dialog.text_edit.toPlainText(), "@\\】【")
 
     def test_attribute_calculator_uses_documented_deterministic_formula(self) -> None:
         dialog = AttributeCalculatorDialog()

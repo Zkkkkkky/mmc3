@@ -1702,6 +1702,17 @@ class LegacyGlobalTablesPage(ProjectPage):
         self.experience_table.setAlternatingRowColors(True)
         self.experience_table.itemChanged.connect(self._update_pending_state)
         experience_layout.addWidget(self.experience_table)
+        level_cap_row = QHBoxLayout()
+        self.level_cap_value = QLabel("当前等级上限：60")
+        self.level_cap_button = QPushButton("更改等级上限")
+        self.level_cap_button.setEnabled(False)
+        self.level_cap_button.setToolTip(
+            "等级上限60→61会联动重写3778字节；D5要求算法复原并完成黄金对照前保持禁用。"
+        )
+        level_cap_row.addWidget(self.level_cap_value)
+        level_cap_row.addStretch()
+        level_cap_row.addWidget(self.level_cap_button)
+        experience_layout.addLayout(level_cap_row)
         tables.addWidget(experience_group, 3)
 
         distance_group = QGroupBox("武器距离命中补正 · 距离1—16")
@@ -1821,6 +1832,11 @@ class LegacyGlobalTablesPage(ProjectPage):
             )
             for row in range(99)
         )
+        for row in range(1, len(experience)):
+            if experience[row] < experience[row - 1]:
+                raise ValueError(
+                    f"等级{row + 1}累计经验不能小于等级{row}累计经验。"
+                )
         corrections = tuple(
             tuple(
                 self._parse_cell(

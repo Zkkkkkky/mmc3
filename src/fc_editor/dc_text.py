@@ -370,7 +370,15 @@ def dc_map_label(map_id: int) -> str:
 
 
 @lru_cache(maxsize=1)
-def default_dc_text_table() -> TextTable:
+def reference_dc_text_table() -> TextTable:
+    """Return the exact non-empty mappings shipped with the legacy editor.
+
+    This presentation is used by the M13 conversion utility, where control
+    bytes such as F2 must remain the reference editor's visible ``\\`` token.
+    ROM editors use :func:`default_dc_text_table` below, which adds safer
+    visible placeholders while retaining the same glyph-code source.
+    """
+
     raw = zlib.decompress(base64.b85decode(_DC_CODE_TABLE_B85))
     mapping: dict[bytes, str] = {}
     for source_line in raw.decode("gbk").splitlines():
@@ -381,6 +389,12 @@ def default_dc_text_table() -> TextTable:
         if not code_text or not value:
             continue
         mapping[bytes.fromhex(code_text)] = value
+    return TextTable(mapping)
+
+
+@lru_cache(maxsize=1)
+def default_dc_text_table() -> TextTable:
+    mapping = dict(reference_dc_text_table().byte_to_text)
 
     # The old editor rendered F2 as a backslash; in dialogue records it is the
     # confirmed visual line separator.  Keep the terminator visible so users

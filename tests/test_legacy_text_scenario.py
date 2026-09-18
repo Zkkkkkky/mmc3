@@ -7,9 +7,15 @@ from tempfile import TemporaryDirectory
 
 os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 
-from PySide6.QtWidgets import QApplication
+from PySide6.QtWidgets import QApplication, QDialogButtonBox
 
-from dc_modifier.legacy_text_pages import LegacyGrowthPage, LegacyScenarioEventsPage, LegacyShopPage, LegacyTextPage
+from dc_modifier.legacy_text_pages import (
+    GrowthHexDialog,
+    LegacyGrowthPage,
+    LegacyScenarioEventsPage,
+    LegacyShopPage,
+    LegacyTextPage,
+)
 from fc_editor.codecs.legacy_scenario import LegacyScenarioCodec
 from fc_editor.codecs.legacy_text import LegacyTextCodec
 from fc_editor.codecs.legacy_text_growth import LegacyGrowthCodec
@@ -46,6 +52,26 @@ class LegacyTextScenarioCodecTests(unittest.TestCase):
         self.assertEqual(record.file_offset, 0x54020)
         self.assertIn("嘿嘿！小毛贼！往哪", record.text)
         self.assertIn("投靠我们联邦不好吗", codec.record("battle_00", 0, 5).text)
+
+    def test_battle_group_boundaries_roundtrip_in_original_capacity(self) -> None:
+        codec = LegacyTextCodec(self.data)
+        for key, last_index in (
+            ("battle_00", 255),
+            ("battle_01", 15),
+            ("battle_04", 255),
+            ("battle_05", 63),
+        ):
+            for variant in range(codec.variant_count(key, last_index)):
+                record = codec.record(key, last_index, variant)
+                offset, before, after = codec.replacement_patch(
+                    key, last_index, variant, record.text
+                )
+                self.assertEqual(before, after)
+                self.assertEqual(
+                    self.data[offset : offset + len(before)],
+                    before,
+                    (key, last_index, variant),
+                )
 
     def test_system_ff_operands_are_preserved_and_not_record_terminators(self) -> None:
         codec = LegacyTextCodec(self.data)
@@ -161,6 +187,50 @@ class LegacyTextScenarioUiTests(QtTestCase):
         self.assertIn("哈哈", LegacyTextCodec(self.project.working).record("battle_00", 0).text)
         self.project.undo()
         self.assertEqual(bytes(self.project.working), before)
+
+    def test_battle_page_exposes_reference_list_and_content_views(self) -> None:
+        page = LegacyTextPage()
+        self.widgets.append(page)
+        page.set_project(self.project)
+        self.assertEqual(
+            [page.view_tabs.tabText(index) for index in range(page.view_tabs.count())],
+            ["按列表", "按内容"],
+        )
+        self.assertEqual(page.group_combo.count(), 4)
+        self.assertEqual(page.variant_list.count(), 6)
+        self.assertEqual(page.content_edit.toPlainText().count("++"), 5)
+        self.assertIn("嘿嘿！小毛贼", page.content_edit.toPlainText())
+        self.assertIn("投靠我们联邦不好吗", page.content_edit.toPlainText())
+        page.text_edit.setPlainText(page.text_edit.toPlainText().replace("嘿嘿", "哈哈"))
+        self.assertIn("哈哈！小毛贼", page.content_edit.toPlainText())
+        self.assertIn("哈哈！小毛贼", page.variant_list.item(0).text())
+        self.assertIn("哈哈！小毛贼", page.record_list.item(0).text())
+
+    def test_system_text_page_shows_reference_escape_note_and_disables_append(self) -> None:
+        page = LegacyTextPage(("system",))
+        self.widgets.append(page)
+        page.set_project(self.project)
+        self.assertTrue(page.system_note.isVisibleTo(page))
+        self.assertIn('"{"加3字节16进制', page.system_note.text())
+        self.assertTrue(page.add_button.isVisibleTo(page))
+        self.assertFalse(page.add_button.isEnabled())
+        self.assertIn("原记录容量", page.add_button.toolTip())
+
+    def test_growth_hex_dialog_edits_first_60_values_and_preserves_tail(self) -> None:
+        values = tuple(index % 16 for index in range(99))
+        dialog = GrowthHexDialog(values)
+        self.widgets.append(dialog)
+        self.assertEqual(dialog.hex_edit.text(), "".join(f"{value:X}" for value in values[:60]))
+        self.assertEqual(dialog.values(), values)
+        dialog.hex_edit.setText("F" * 60)
+        self.assertEqual(dialog.values()[:60], (15,) * 60)
+        self.assertEqual(dialog.values()[60:], values[60:])
+        dialog.hex_edit.setText("F" * 59)
+        self.assertFalse(
+            dialog.buttons.button(QDialogButtonBox.StandardButton.Ok).isEnabled()
+        )
+        with self.assertRaisesRegex(ValueError, "60位"):
+            dialog.values()
 
     def test_event_page_uses_real_bank_and_dialogue_previews(self) -> None:
         page = LegacyScenarioEventsPage(0)

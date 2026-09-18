@@ -183,6 +183,19 @@ class LegacyWindowTests(QtTestCase):
                 (100, 90, 80, 70, 60, 50, 40, 30, 20, 10, 9, 8, 7, 6, 5, 4),
             ),
         )
+        self.assertEqual(page.level_cap_value.text(), "当前等级上限：60")
+        self.assertFalse(page.level_cap_button.isEnabled())
+        self.assertIn("3778字节", page.level_cap_button.toolTip())
+
+    def test_experience_table_rejects_non_monotonic_thresholds(self) -> None:
+        project = RomProject.load(DEFAULT_ROM)
+        dialog = self._show(DatabaseDialog(project))
+        page = dialog.other_page_1
+        page.experience_table.item(1, 1).setText("10")
+        self.application.processEvents()
+        self.assertTrue(page.has_pending_draft)
+        self.assertIn("不能小于", page.pending_draft_error or "")
+        self.assertFalse(page.apply_button.isEnabled())
 
     def test_database_ok_commits_global_table_drafts_and_undo_restores_both(self) -> None:
         project = RomProject.load(DEFAULT_ROM)

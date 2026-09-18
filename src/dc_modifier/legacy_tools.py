@@ -32,7 +32,7 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-from fc_editor.dc_text import default_dc_text_table
+from fc_editor.dc_text import default_dc_text_table, reference_dc_text_table
 from fc_editor.text_table import TextTable
 from fc_editor.codecs.dc_font import decode_glyph
 from fc_editor.codecs.character_attributes import (
@@ -312,7 +312,7 @@ class TextConverterDialog(QDialog):
     ) -> None:
         super().__init__(parent)
         self.project = project
-        self.text_table = text_table or default_dc_text_table()
+        self.text_table = text_table or reference_dc_text_table()
         self.setWindowTitle("文字转换")
         self.resize(600, 620)
         self.setMinimumSize(500, 500)
