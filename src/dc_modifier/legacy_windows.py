@@ -1677,6 +1677,12 @@ class RawInspectionPage(ProjectPage):
 class LegacyGlobalTablesPage(ProjectPage):
     """Verified cumulative-EXP and distance-hit tables from database page five."""
 
+    VERIFIED_LEVEL_CAP_TOOLTIP = (
+        "当前受支持 ROM 已是99级布局（运行时 CMP #$62、累计经验表99项、"
+        "成长记录50字节）。3778字节的60→61样本来自产品不支持的audit.nes，"
+        "不能套用；超过99级的表重排协议尚未验证。"
+    )
+
     def __init__(self) -> None:
         super().__init__()
         self._loading = False
@@ -1703,12 +1709,10 @@ class LegacyGlobalTablesPage(ProjectPage):
         self.experience_table.itemChanged.connect(self._update_pending_state)
         experience_layout.addWidget(self.experience_table)
         level_cap_row = QHBoxLayout()
-        self.level_cap_value = QLabel("当前等级上限：60")
+        self.level_cap_value = QLabel("当前等级上限：—")
         self.level_cap_button = QPushButton("更改等级上限")
         self.level_cap_button.setEnabled(False)
-        self.level_cap_button.setToolTip(
-            "等级上限60→61会联动重写3778字节；D5要求算法复原并完成黄金对照前保持禁用。"
-        )
+        self.level_cap_button.setToolTip("当前ROM的等级上限布局尚未验证。")
         level_cap_row.addWidget(self.level_cap_value)
         level_cap_row.addStretch()
         level_cap_row.addWidget(self.level_cap_button)
@@ -1774,6 +1778,9 @@ class LegacyGlobalTablesPage(ProjectPage):
             )
             self.apply_button.setEnabled(False)
             self.reset_button.setEnabled(supported)
+            self.level_cap_value.setText("当前等级上限：—")
+            self.level_cap_button.setEnabled(False)
+            self.level_cap_button.setToolTip("当前ROM的等级上限布局尚未验证。")
             if not supported:
                 self.experience_table.clearContents()
                 self.distance_table.clearContents()
@@ -1781,6 +1788,16 @@ class LegacyGlobalTablesPage(ProjectPage):
                 return
             experience = self.project.get_experience_totals()
             corrections = self.project.get_distance_hit_corrections()
+            try:
+                level_cap = self.project.get_verified_level_cap()
+            except ValueError as error:
+                self.level_cap_value.setText("当前等级上限：未验证")
+                self.level_cap_button.setToolTip(
+                    f"{error} 等级上限写入已禁用。"
+                )
+            else:
+                self.level_cap_value.setText(f"当前等级上限：{level_cap}")
+                self.level_cap_button.setToolTip(self.VERIFIED_LEVEL_CAP_TOOLTIP)
             for row, value in enumerate(experience):
                 level = QTableWidgetItem(str(row + 1))
                 level.setTextAlignment(Qt.AlignmentFlag.AlignCenter)

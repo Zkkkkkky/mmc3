@@ -127,6 +127,8 @@ class LegacyTextScenarioCodecTests(unittest.TestCase):
 
     def test_growth_reader_nibble_order_shared_records_and_last_padding(self) -> None:
         codec = LegacyGrowthCodec(self.data)
+        self.assertEqual(codec.verified_level_cap, 99)
+        self.assertEqual(codec.LEVEL_CAPACITY, 99)
         for growth_id in range(201, 254):
             record = codec.record(growth_id)
             self.assertEqual(codec.replacement_patch(growth_id, record.values)[1:], (record.raw, record.raw))
@@ -141,6 +143,14 @@ class LegacyTextScenarioCodecTests(unittest.TestCase):
         self.assertEqual(codec.record(214).shared_ids, tuple(range(214, 254)))
         with self.assertRaises(ValueError):
             codec.replacement_patch(201, [16] * 99)
+
+    def test_growth_reader_rejects_runtime_cap_that_does_not_match_records(self) -> None:
+        data = bytearray(self.data)
+        data[LegacyGrowthCodec.LEVEL_CAP_COMPARE_OFFSET + 1] = 0x3B
+        codec = LegacyGrowthCodec(data)
+
+        with self.assertRaisesRegex(ValueError, "运行时等级上限60.*容量99"):
+            _ = codec.verified_level_cap
 
     def test_shop_metadata_matches_screenshot_and_unused_pointers_cannot_write(self) -> None:
         codec = LegacyShopCodec(self.data)

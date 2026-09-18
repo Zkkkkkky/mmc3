@@ -184,9 +184,10 @@ class LegacyWindowTests(QtTestCase):
                 (100, 90, 80, 70, 60, 50, 40, 30, 20, 10, 9, 8, 7, 6, 5, 4),
             ),
         )
-        self.assertEqual(page.level_cap_value.text(), "当前等级上限：60")
+        self.assertEqual(page.level_cap_value.text(), "当前等级上限：99")
         self.assertFalse(page.level_cap_button.isEnabled())
-        self.assertIn("3778字节", page.level_cap_button.toolTip())
+        self.assertIn("99级布局", page.level_cap_button.toolTip())
+        self.assertIn("audit.nes", page.level_cap_button.toolTip())
 
     def test_experience_table_rejects_non_monotonic_thresholds(self) -> None:
         project = RomProject.load(DEFAULT_ROM)

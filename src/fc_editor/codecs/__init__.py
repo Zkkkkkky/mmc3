@@ -12,6 +12,7 @@ from .chapter_event import ChapterEventCodec
 from .custom_music import CustomMusicCodec
 from .event import EventScriptCodec
 from .legacy_global_data import LegacyGlobalDataCodec
+from .legacy_text_growth import LegacyGrowthCodec
 from .map import MapCodec
 from .map_tile_attribute import MapTileAttribute, MapTileAttributeCodec, MapTilesetAttributes
 from .map_trigger import MapTrigger, MapTriggerCodec, MapTriggerLayout
@@ -48,6 +49,7 @@ __all__ = [
     "PersuasionRuleCodec",
     "EventScriptCodec",
     "LegacyGlobalDataCodec",
+    "LegacyGrowthCodec",
     "ScenarioLayoutCodec",
     "StoryTextCodec",
     "UnitCodec",

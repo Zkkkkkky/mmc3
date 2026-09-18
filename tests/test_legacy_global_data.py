@@ -132,6 +132,7 @@ class LegacyGlobalDataTests(unittest.TestCase):
         self.assertEqual(len(self.project.get_experience_totals()), 99)
         self.assertEqual(self.project.get_experience_totals()[49], 15200)
         self.assertEqual(self.project.get_experience_totals()[97:], (64350, 65535))
+        self.assertEqual(self.project.get_verified_level_cap(), 99)
 
     def test_code_context_signatures_match_all_three_verified_roms(self) -> None:
         codec = self.project.legacy_global_data_codec

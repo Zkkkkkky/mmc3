@@ -19,6 +19,8 @@ class LegacyGrowthCodec:
     COUNT = 53
     FIRST_ID = 201
     RECORD_SIZE = 50
+    LEVEL_CAPACITY = RECORD_SIZE * 2 - 1
+    LEVEL_CAP_COMPARE_OFFSET = 0x8D0B
     POOL_START = 0xA78A
     POOL_END = 0xAA46
     READER = bytes.fromhex("C9 C9 B0 05 85 BA 4C 23 98 E9 C9 85 19 A9 73 85 18 20 0B C1")
@@ -30,6 +32,23 @@ class LegacyGrowthCodec:
         self.offsets = tuple(0x10 + int.from_bytes(self.data[self.POINTER_TABLE + 2 * index:self.POINTER_TABLE + 2 * index + 2], "little") for index in range(self.COUNT))
         if any(not self.POOL_START <= offset <= self.POOL_END - self.RECORD_SIZE for offset in self.offsets):
             raise RomFormatError("成长方式指针超出已验证数据区。")
+
+    @property
+    def verified_level_cap(self) -> int:
+        """Return the level cap only when runtime code and table capacity agree."""
+
+        instruction = self.data[
+            self.LEVEL_CAP_COMPARE_OFFSET : self.LEVEL_CAP_COMPARE_OFFSET + 2
+        ]
+        if len(instruction) != 2 or instruction[0] != 0xC9:
+            raise RomFormatError("等级上限运行时比较指令不匹配。")
+        runtime_cap = instruction[1] + 1
+        if runtime_cap != self.LEVEL_CAPACITY:
+            raise RomFormatError(
+                f"运行时等级上限{runtime_cap}与成长表容量"
+                f"{self.LEVEL_CAPACITY}不一致。"
+            )
+        return runtime_cap
 
     def record(self, growth_id: int) -> LegacyGrowthRecord:
         if not self.FIRST_ID <= growth_id < self.FIRST_ID + self.COUNT:

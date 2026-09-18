@@ -20,6 +20,7 @@ from fc_editor.codecs import (
     ChrCodec,
     CustomMusicCodec,
     LegacyGlobalDataCodec,
+    LegacyGrowthCodec,
     MapCodec,
     MapTileAttributeCodec,
     MapTilesetAttributes,
@@ -1169,6 +1170,20 @@ class RomProject:
         codec = self._require_legacy_global_data_codec()
         source = self.original if original else self.working
         return codec.experience_totals(source)
+
+    def get_verified_level_cap(self, *, original: bool = False) -> int:
+        """Read the current ROM's cap and reject mismatched fixed table layouts."""
+
+        self._require_legacy_global_data_codec()
+        source = self.original if original else self.working
+        level_cap = LegacyGrowthCodec(source).verified_level_cap
+        experience_count = len(self.get_experience_totals(original=original))
+        if level_cap != experience_count:
+            raise RomFormatError(
+                f"运行时等级上限{level_cap}与累计经验表"
+                f"{experience_count}项不一致。"
+            )
+        return level_cap
 
     def set_experience_totals(self, values: Iterable[int]) -> None:
         codec = self._require_legacy_global_data_codec()
