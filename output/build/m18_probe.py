@@ -192,6 +192,55 @@ def main() -> None:
         ]
         print("pixel differences", unit_id, kind, differences[:80])
 
+    palette_units: dict[str, list[int]] = {"我": [], "敌": [], "客": [], "ambiguous": []}
+    print("icon1 unique palette evidence")
+    for unit_id in range(1, 256):
+        expected_image = QImage.fromData(samples[unit_id, "图标1"], "BMP")
+        exact_pairs = [
+            (bank, label)
+            for bank in MAP_ICON_BANK_CANDIDATES
+            for label in ("我", "敌", "客")
+            if mismatch(icon_image(project, unit_id, bank, palettes[label]), expected_image) == 0
+        ]
+        labels = sorted({label for _bank, label in exact_pairs})
+        label = labels[0] if len(labels) == 1 else "ambiguous"
+        palette_units[label].append(unit_id)
+        if label != "ambiguous":
+            print(
+                f"{unit_id:03d}", label,
+                project.record_bytes(unit_id).hex(" ").upper(),
+                f"appearance={read_unit_appearance(project, unit_id).configuration[0]:02X}",
+                f"pairs={exact_pairs}",
+            )
+    print("icon1 palette groups", palette_units)
+
+    from dc_modifier.legacy_unit_export import legacy_unit_export_bitmaps
+    for unit_id in (9, 10):
+        appearance = read_unit_appearance(project, unit_id)
+        body = render_unit_battle_preview(
+            project, appearance, show_fragments=False, display_palette=WORK_PALETTE
+        )
+        generated = legacy_unit_export_bitmaps(project, unit_id)
+        print(
+            "blank diagnosis", unit_id,
+            all(body.pixelColor(x, y).rgb() == QColor(0, 0, 0).rgb()
+                for y in range(128) for x in range(128)),
+            sorted({body.pixelColor(x, y).name() for y in range(128) for x in range(128)}),
+            {
+                kind: hashlib.sha256(generated[kind]).hexdigest().upper()
+                == hashlib.sha256(samples[unit_id, kind]).hexdigest().upper()
+                for kind in ("机体", "碎片", "效果")
+            },
+        )
+
+    module_failures = [
+        (unit_id, kind)
+        for unit_id in range(1, 256)
+        for kind, payload in legacy_unit_export_bitmaps(project, unit_id).items()
+        if payload != samples[unit_id, kind]
+    ]
+    print("module full-byte failures", len(module_failures), module_failures)
+
 
 if __name__ == "__main__":
     main()

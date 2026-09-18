@@ -15,7 +15,12 @@ from PySide6.QtGui import QColor, QImage
 from fc_editor.dc_text import concise_dc_text
 from fc_editor.legacy_bitmap import LEGACY_MATERIAL_PALETTE_RGB, encode_legacy_bmp24
 
-from .database_graphics import palette_color, read_unit_appearance, render_unit_battle_preview
+from .database_graphics import (
+    decode_unit_fragment_script,
+    palette_color,
+    read_unit_appearance,
+    render_unit_battle_preview,
+)
 from .map_page import MAP_ICON_PALETTES_NES
 from .unit_appearance_dialog import WORK_PALETTE
 
@@ -24,6 +29,18 @@ LEGACY_UNIT_EXPORT_DIRECTORY = "导出的机体"
 LEGACY_UNIT_EXPORT_SUFFIXES = ("效果", "机体", "碎片", "图标1", "图标2")
 _BLACK = QColor(0, 0, 0)
 _INVALID_FILENAME_CHARACTERS = '<>:"/\\|?*'
+# The stock exporter does not derive map-icon colours from the battle-picture
+# direction bit.  Its 255-slot catalogue has a fixed enemy-colour lookup.  The
+# complete B3 export gives a unique palette match for every slot, including
+# duplicates and otherwise empty records, so keep that exact slot protocol.
+LEGACY_ENEMY_ICON_UNIT_IDS = frozenset((
+    *range(9, 13), *range(15, 21), 23, 25, *range(27, 31), *range(33, 38),
+    82, 83, 85, 86, 88, 89, 91, 92, 94, 96, 97, *range(99, 102),
+    *range(104, 107), *range(108, 113), 115, 118, 120, *range(124, 127),
+    128, 129, 138, 139, 141, *range(146, 150), *range(152, 155), 156,
+    158, 159, 161, 162, 164, 165, 167, 168, *range(171, 176),
+    *range(177, 180), *range(182, 187),
+))
 
 
 @dataclass(frozen=True)
@@ -53,41 +70,63 @@ def _image_to_bmp(image: QImage) -> bytes:
     )
 
 
-def _is_black(image: QImage) -> bool:
-    return all(
-        image.pixelColor(x, y).rgb() == _BLACK.rgb()
-        for y in range(image.height())
-        for x in range(image.width())
-    )
-
-
 def _blank_image(width: int, height: int) -> QImage:
     image = QImage(width, height, QImage.Format.Format_RGB32)
     image.fill(_BLACK)
     return image
 
 
+def _legacy_fragment_image(
+    project,
+    appearance,
+    display_palette: tuple[QColor, QColor, QColor, QColor] | None = None,
+) -> QImage:
+    """Render fragments with the stock exporter's whole-tile clipping rule."""
+
+    background = display_palette[0] if display_palette is not None else palette_color(0x0F)
+    colors = display_palette or (
+        background,
+        *(palette_color(value) for value in appearance.second_palette),
+    )
+    image = QImage(128, 128, QImage.Format.Format_RGB32)
+    image.fill(background)
+    fragment_bank = appearance.primary_bank & 0xFE
+    origin_x = 0x78 if appearance.configuration[0] & 0x40 else 0
+    for placement in decode_unit_fragment_script(appearance.fragment_script):
+        target_x = placement.x + origin_x
+        target_y = placement.y
+        # The reference BMP path rejects a tile whose origin lies outside the
+        # 128x128 canvas instead of clipping its visible tail.  Slots 009/010
+        # prove this distinction with their first placement at X=-1.
+        if not (0 <= target_x < 128 and 0 <= target_y < 128):
+            continue
+        bank_index, local_tile = divmod(placement.tile_index, 64)
+        pixels = project.chr_tile_pixels((fragment_bank + bank_index) * 64 + local_tile)
+        for y in range(8):
+            source_y = 7 - y if placement.flip_vertical else y
+            for x in range(8):
+                source_x = 7 - x if placement.flip_horizontal else x
+                color_index = pixels[source_y * 8 + source_x]
+                x_at = target_x + x
+                y_at = target_y + y
+                if color_index and x_at < 128 and y_at < 128:
+                    image.setPixelColor(x_at, y_at, colors[color_index])
+    return image
+
+
 def _legacy_effect_image(project, appearance, body_material: QImage) -> tuple[QImage, QImage]:
     """Return material fragments and the legacy game-colour composition.
 
-    The legacy exporter treats a unit with an empty body as an entirely empty
-    appearance, even if a stale/shared fragment script remains addressable.
-    During composition it treats rendered black as transparent.  The latter
+    The reference path skips a whole fragment tile when its origin is outside
+    the canvas, while the shared game renderer clips it pixel-by-pixel.  During
+    composition it also treats rendered black as transparent.  The latter
     matters for the two slots whose fragment palette explicitly maps a
     non-zero CHR pixel value to NES black.
     """
 
-    if _is_black(body_material):
-        blank = _blank_image(128, 128)
-        return blank, blank.copy()
-    fragments_material = render_unit_battle_preview(
-        project,
-        appearance,
-        show_body=False,
-        display_palette=WORK_PALETTE,
-    )
     body = render_unit_battle_preview(project, appearance, show_fragments=False)
-    fragments = render_unit_battle_preview(project, appearance, show_body=False)
+    fragments_material = _legacy_fragment_image(project, appearance, WORK_PALETTE)
+    fragments = _legacy_fragment_image(project, appearance)
     effect = body.copy()
     for y in range(128):
         for x in range(128):
@@ -137,6 +176,12 @@ def legacy_unit_icon_bank(project, unit_id: int) -> tuple[int, int]:
     return bank, local_tile
 
 
+def legacy_unit_icon_side(unit_id: int) -> str:
+    if not 1 <= unit_id <= 0xFF:
+        raise ValueError("旧版机体图标编号必须在 001—255。")
+    return "敌" if unit_id in LEGACY_ENEMY_ICON_UNIT_IDS else "我"
+
+
 def _legacy_icon_image(project, unit_id: int, colors: tuple[QColor, ...]) -> QImage:
     bank, local_tile = legacy_unit_icon_bank(project, unit_id)
     image = _blank_image(16, 16)
@@ -161,7 +206,7 @@ def legacy_unit_export_bitmaps(project, unit_id: int) -> dict[str, bytes]:
         display_palette=WORK_PALETTE,
     )
     fragments_material, effect = _legacy_effect_image(project, appearance, body_material)
-    side = "敌" if appearance.configuration[0] & 0x40 else "我"
+    side = legacy_unit_icon_side(unit_id)
     icon_game_colors = tuple(palette_color(value) for value in MAP_ICON_PALETTES_NES[side])
     icon_material_colors = tuple(QColor(*rgb) for rgb in LEGACY_MATERIAL_PALETTE_RGB)
     images = {

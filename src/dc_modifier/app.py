@@ -435,6 +435,14 @@ class MainWindow(QMainWindow):
         self.scenario_action = self._action("剧情事件(&J)", self.open_scenario, "Ctrl+J")
         self.export_unit_action = self._action("导出机体(&P)", self.export_unit, "Ctrl+F")
         self.export_avatar_action = self._action("导出头像(&L)", self.export_avatar, "Ctrl+L")
+        self.export_avatar_action.setEnabled(False)
+        self.export_avatar_action.setStatusTip(
+            "参考版此入口不可触发；增强头像 BMP 导出已移至“扩展功能”。"
+        )
+        self.export_avatar_action.setToolTip(self.export_avatar_action.statusTip())
+        self.export_avatar_extended_action = self._action(
+            "导出头像 BMP（增强）", self.export_avatar
+        )
         self.attribute_calculator_action = self._action("属性计算器", self.open_attribute_calculator)
         self.save_editor_action = self._action("存档修改器", self.open_save_editor)
         self.other_settings_action = self._action("其他(&T)", self.open_other_settings, "Ctrl+T")
@@ -512,6 +520,7 @@ class MainWindow(QMainWindow):
 
         self.extension_menu = self.menuBar().addMenu("扩展功能")
         self.extension_menu.addAction(self.rom_data_action)
+        self.extension_menu.addAction(self.export_avatar_extended_action)
         self.extension_menu.addSeparator()
         self.extension_menu.addAction(self.page_actions["music"])
         self.extension_menu.addAction(self.page_actions["unit_import"])
@@ -776,33 +785,69 @@ class MainWindow(QMainWindow):
     def export_unit(self) -> None:
         if self.project is None:
             return
-        from .unit_packages import package_from_project
-
-        labels = [
-            f"${unit_id:02X} · {self.project.unit_display_name(unit_id)}"
-            for unit_id in range(1, self.project.unit_count)
-        ]
-        selected, accepted = QInputDialog.getItem(
-            self, "导出机体", "选择机体：", labels, 0, False
+        from .legacy_unit_export import (
+            LEGACY_UNIT_EXPORT_DIRECTORY,
+            export_legacy_unit_bitmaps,
         )
-        if not accepted:
-            return
-        unit_id = labels.index(selected) + 1
+
         destination, _ = QFileDialog.getSaveFileName(
             self,
             "导出机体",
-            str(_default_export_path(f"unit_{unit_id:02X}.dcunit")),
-            "新DC机体包 (*.dcunit)",
+            str(_default_export_path(LEGACY_UNIT_EXPORT_DIRECTORY)),
+            "导出位置 (*)",
         )
         if not destination:
             return
         try:
-            path = Path(destination)
-            if path.suffix.lower() != ".dcunit":
-                path = path.with_suffix(".dcunit")
-            path = writable_output_path(path)
-            package_from_project(self.project, unit_id).save(path)
-            self.status.showMessage(f"机体已导出：{path.name}", 5000)
+            # The reference uses a native Save dialog as a location picker;
+            # the typed file component is only a marker.  The actual protocol
+            # always creates the fixed “导出的机体” directory beside it.
+            root = writable_output_path(Path(destination).parent)
+            output_root = root / LEGACY_UNIT_EXPORT_DIRECTORY
+            if output_root.exists():
+                answer = QMessageBox.question(
+                    self,
+                    "覆盖机体导出",
+                    "“导出的机体”目录已存在。是否覆盖其中同名的 1275 个 BMP？\n"
+                    "其他文件不会被删除。",
+                    QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
+                    QMessageBox.StandardButton.No,
+                )
+                if answer != QMessageBox.StandardButton.Yes:
+                    return
+
+            before = bytes(self.project.working)
+
+            def show_progress(done: int, total: int) -> None:
+                self.status.showMessage(f"正在导出机体：{done}/{total}")
+                QApplication.processEvents()
+
+            result = export_legacy_unit_bitmaps(
+                self.project,
+                root,
+                progress=show_progress,
+            )
+            if bytes(self.project.working) != before:
+                raise RuntimeError("机体导出意外改动了当前 ROM，结果已标记为失败。")
+            if result.failures:
+                details = "\n".join(
+                    f"{unit_id:03d}：{message}"
+                    for unit_id, message in result.failures[:12]
+                )
+                QMessageBox.warning(
+                    self,
+                    "机体导出部分失败",
+                    f"已写入 {len(result.written_files)} 个文件，"
+                    f"{len(result.failures)} 个机体失败：\n{details}",
+                )
+                self.status.showMessage(
+                    f"机体导出完成但有 {len(result.failures)} 项失败", 8000
+                )
+                return
+            self.status.showMessage(
+                f"机体已导出：{result.root}（{len(result.written_files)} 个 BMP）",
+                8000,
+            )
         except Exception as error:
             QMessageBox.critical(self, "导出机体失败", str(error))
 
@@ -1206,7 +1251,7 @@ class MainWindow(QMainWindow):
             self.text_converter_action,
             self.scenario_action,
             self.export_unit_action,
-            self.export_avatar_action,
+            self.export_avatar_extended_action,
             self.attribute_calculator_action,
             self.save_editor_action,
             self.other_settings_action,
@@ -1214,6 +1259,9 @@ class MainWindow(QMainWindow):
             action.setEnabled(loaded)
         for key, action in self.page_actions.items():
             action.setEnabled(loaded)
+        # D2: preserve the reference command and Ctrl+L binding, but never
+        # route it to the extension exporter because the stock entry is inert.
+        self.export_avatar_action.setEnabled(False)
         self.undo_action.setEnabled(
             loaded
             and bool(

@@ -105,7 +105,7 @@ class PortraitExportUiTests(QtTestCase):
         with tempfile.TemporaryDirectory() as directory, \
                 patch("dc_modifier.app.QFileDialog.getExistingDirectory", return_value=directory), \
                 patch("dc_modifier.app.QInputDialog.getItem", return_value=("004 · 琉妮", True)):
-            window.export_avatar()
+            window.export_avatar_extended_action.trigger()
             back = Path(directory) / "4：琉妮" / "[背面].bmp"
             front = Path(directory) / "4：琉妮" / "[正面].bmp"
             effect = Path(directory) / "4：琉妮" / "[效果].bmp"
