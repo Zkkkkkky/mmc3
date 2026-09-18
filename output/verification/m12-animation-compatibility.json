@@ -1,0 +1,200 @@
+{
+  "generated_at": "2026-09-19T01:37:39+08:00",
+  "passed": true,
+  "rom": {
+    "path": "output/rom/DC_kuorong_464K.nes",
+    "size": 1310736,
+    "sha256": "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E"
+  },
+  "evidence": {
+    "renderer_cpu_range": "$D194-$D2EF",
+    "renderer_file_offset": "0x07D1A4",
+    "table_counts": {
+      "map": 153,
+      "ally": 256,
+      "enemy": 256,
+      "background": 106,
+      "movement": 157,
+      "sprite": 249
+    },
+    "sprite_records": 249,
+    "complete_sprite_records": 249,
+    "runtime_tile_records": [
+      "04",
+      "05",
+      "07",
+      "28",
+      "29",
+      "2A",
+      "2B",
+      "2C",
+      "2D",
+      "2E",
+      "2F",
+      "6A",
+      "6E"
+    ],
+    "frame_rules": 81,
+    "offline_complete_frame_rules": 79,
+    "runtime_dependent_frame_rules": {
+      "12": "循环次数来自运行时参数，离线预览不猜测。",
+      "21": "规律使用运行时指针页切换，离线预览不猜测目标记录。"
+    },
+    "sample": {
+      "raw": "08 00 18 00 08 F4 00 08 F4 00 08 F8 00 28 1E F8 80 A8 1C F8 80 A8 1A FC 80 A8 18 FC 80 80 FF",
+      "anchor": [
+        8,
+        0
+      ],
+      "placements": [
+        {
+          "command_offset": 3,
+          "x": 8,
+          "y": 0,
+          "tile_index": 24,
+          "tile_token": 24,
+          "attributes": 0
+        },
+        {
+          "command_offset": 4,
+          "x": 16,
+          "y": 0,
+          "tile_index": 25,
+          "tile_token": 25,
+          "attributes": 0
+        },
+        {
+          "command_offset": 6,
+          "x": 4,
+          "y": 8,
+          "tile_index": 26,
+          "tile_token": 26,
+          "attributes": 0
+        },
+        {
+          "command_offset": 7,
+          "x": 12,
+          "y": 8,
+          "tile_index": 27,
+          "tile_token": 27,
+          "attributes": 0
+        },
+        {
+          "command_offset": 9,
+          "x": 0,
+          "y": 16,
+          "tile_index": 28,
+          "tile_token": 28,
+          "attributes": 0
+        },
+        {
+          "command_offset": 10,
+          "x": 8,
+          "y": 16,
+          "tile_index": 29,
+          "tile_token": 29,
+          "attributes": 0
+        },
+        {
+          "command_offset": 12,
+          "x": 0,
+          "y": 24,
+          "tile_index": 30,
+          "tile_token": 30,
+          "attributes": 0
+        },
+        {
+          "command_offset": 13,
+          "x": 8,
+          "y": 24,
+          "tile_index": 31,
+          "tile_token": 31,
+          "attributes": 0
+        },
+        {
+          "command_offset": 16,
+          "x": 0,
+          "y": 32,
+          "tile_index": 30,
+          "tile_token": 30,
+          "attributes": 128
+        },
+        {
+          "command_offset": 17,
+          "x": 8,
+          "y": 32,
+          "tile_index": 31,
+          "tile_token": 31,
+          "attributes": 128
+        },
+        {
+          "command_offset": 20,
+          "x": 0,
+          "y": 40,
+          "tile_index": 28,
+          "tile_token": 28,
+          "attributes": 128
+        },
+        {
+          "command_offset": 21,
+          "x": 8,
+          "y": 40,
+          "tile_index": 29,
+          "tile_token": 29,
+          "attributes": 128
+        },
+        {
+          "command_offset": 24,
+          "x": 4,
+          "y": 48,
+          "tile_index": 26,
+          "tile_token": 26,
+          "attributes": 128
+        },
+        {
+          "command_offset": 25,
+          "x": 12,
+          "y": 48,
+          "tile_index": 27,
+          "tile_token": 27,
+          "attributes": 128
+        },
+        {
+          "command_offset": 28,
+          "x": 8,
+          "y": 56,
+          "tile_index": 24,
+          "tile_token": 24,
+          "attributes": 128
+        },
+        {
+          "command_offset": 29,
+          "x": 16,
+          "y": 56,
+          "tile_index": 25,
+          "tile_token": 25,
+          "attributes": 128
+        }
+      ]
+    },
+    "anchor_patch": {
+      "offset": "0x031C82",
+      "before": "00 00 00 00 FF",
+      "after": "01 00 00 00 FF"
+    }
+  },
+  "checks": {
+    "interpreter_signature": true,
+    "six_table_counts": true,
+    "all_sprite_records_complete": true,
+    "sample_matches_16_tile_walk": true,
+    "anchor_patch_is_first_byte_only": true,
+    "frame_rules_classified": true,
+    "offline_timelines_complete_or_explicit_runtime_dependency": true
+  },
+  "limitations": [
+    "13 个组图记录含 $F0-$FF 运行时图块令牌；预览明确画为未解析占位，不猜测 RAM 表。",
+    "运行规律 $12 的循环次数来自运行时参数，$21 会切换运行时指针页；两项保留明确门禁。",
+    "预览图库、00/80 映射和整图翻转只影响可视验证，不写 ROM。"
+  ]
+}

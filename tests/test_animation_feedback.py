@@ -10,7 +10,12 @@ os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 
 from PySide6.QtWidgets import QApplication, QDialog
 
-from fc_editor.codecs.animation import AnimationCodec, apply_animation_patches
+from fc_editor.codecs.animation import (
+    AnimationCodec,
+    apply_animation_patches,
+    decode_sprite_composition,
+    decode_sprite_timeline,
+)
 from fc_rom_editor_core import RomProject
 from dc_modifier.animation_editor import (
     AnimationPointerDialog,
@@ -106,6 +111,80 @@ class AnimationCodecTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             self.codec.rule_patch(sprite, sprite.raw[:2] + b"\x7f" + sprite.raw[3:])
 
+    def test_physical_puzzle_decoder_matches_verified_tile_walk(self):
+        raw = bytes.fromhex(
+            "08 00 18 00 08 F4 00 08 F4 00 08 F8 00 28 1E F8 "
+            "80 A8 1C F8 80 A8 1A FC 80 A8 18 FC 80 80 FF"
+        )
+        composition = decode_sprite_composition(raw)
+        self.assertTrue(composition.complete)
+        self.assertEqual((composition.anchor_x, composition.anchor_y), (8, 0))
+        self.assertEqual(len(composition.placements), 16)
+        self.assertEqual(
+            [
+                (tile.tile_index, tile.x, tile.y, tile.vertical_flip)
+                for tile in composition.placements
+            ],
+            [
+                (0x18, 8, 0, False), (0x19, 16, 0, False),
+                (0x1A, 4, 8, False), (0x1B, 12, 8, False),
+                (0x1C, 0, 16, False), (0x1D, 8, 16, False),
+                (0x1E, 0, 24, False), (0x1F, 8, 24, False),
+                (0x1E, 0, 32, True), (0x1F, 8, 32, True),
+                (0x1C, 0, 40, True), (0x1D, 8, 40, True),
+                (0x1A, 4, 48, True), (0x1B, 12, 48, True),
+                (0x18, 8, 56, True), (0x19, 16, 56, True),
+            ],
+        )
+        self.assertFalse(decode_sprite_composition(raw[:-1]).complete)
+
+    def test_every_sprite_record_decodes_and_frame_streams_fail_closed(self):
+        compositions = [
+            decode_sprite_composition(
+                self.codec.record("sprite", index).raw,
+                self.codec.record("sprite", index).offset,
+            )
+            for index in range(self.codec.count("sprite"))
+        ]
+        self.assertTrue(all(item.complete for item in compositions))
+        self.assertEqual(
+            sum(
+                any(tile.tile_index is None for tile in item.placements)
+                for item in compositions
+            ),
+            13,
+        )
+        roles = self.codec.movement_roles()
+        frame_rules = sorted(
+            index for index, role in roles.items() if role == {"frames"}
+        )
+        timelines = {
+            index: decode_sprite_timeline(
+                self.codec.record("movement", index).raw,
+                self.codec.count("sprite"),
+            )
+            for index in frame_rules
+        }
+        self.assertEqual(len(frame_rules), 81)
+        self.assertEqual(
+            {index for index, timeline in timelines.items() if not timeline.complete},
+            {18, 33},
+        )
+        self.assertTrue(all(timeline.frames for timeline in timelines.values()))
+
+    def test_frame_timeline_expands_wait_and_detects_loop(self):
+        timeline = decode_sprite_timeline(
+            bytes.fromhex("01 FE 02 02 FF"), self.codec.count("sprite")
+        )
+        self.assertEqual(timeline.frames, (1, 1, 1, 2))
+        self.assertTrue(timeline.terminated)
+        loop = decode_sprite_timeline(
+            bytes.fromhex("01 F8"), self.codec.count("sprite")
+        )
+        self.assertTrue(loop.complete)
+        self.assertEqual(loop.frames, (1, 1))
+        self.assertEqual(loop.loop_start, 1)
+
     def test_call_edit_changes_one_existing_operand_and_rejects_invalid_id(self):
         self.assertIn((0x3BB93, 0x2C), self.codec.calls())
         patch = self.codec.call_patch(0x3BB93, 2)
@@ -200,11 +279,17 @@ class AnimationUiTests(QtTestCase):
         self.assertEqual(bytes(dialog.draft), before)
 
         sprite = dialog.codec.record("sprite", dialog.rule_lists["sprite"].currentRow())
-        preview = SpritePuzzlePreviewDialog(sprite, dialog)
+        preview = SpritePuzzlePreviewDialog(
+            sprite, self.project, dialog.codec, dialog
+        )
         self.assertEqual(preview.windowTitle(), "物理拼图")
         self.assertEqual(preview.code_view.toPlainText(), sprite.raw.hex(" ").upper())
-        self.assertEqual((preview.preview_grid.rowCount(), preview.preview_grid.columnCount()), (16, 16))
-        self.assertFalse(preview.library_combo.isEnabled())
+        self.assertTrue(preview.library_combo.isEnabled())
+        self.assertEqual(preview.library_combo.currentData(), 8)
+        self.assertEqual(preview.library_list.count(), 256)
+        self.assertGreater(preview.placement_table.rowCount(), 0)
+        self.assertFalse(preview.preview_label.pixmap().isNull())
+        self.assertGreater(preview.timeline_combo.count(), 1)
         preview.reject()
         dialog.reject()
 
@@ -215,7 +300,7 @@ class AnimationUiTests(QtTestCase):
             self.assertEqual(dialog.rule_name_edits[kind].text(), dialog.rule_names[kind][row])
             self.assertTrue(dialog.rule_name_edits[kind].isReadOnly())
         self.assertEqual(dialog.sprite_preview_library.currentText(), "[08]008：82010")
-        self.assertFalse(dialog.sprite_preview_library.isEnabled())
+        self.assertTrue(dialog.sprite_preview_library.isEnabled())
         rule_add_buttons = [
             button
             for button in dialog.tabs.widget(1).findChildren(type(dialog.add_button))

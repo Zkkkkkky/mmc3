@@ -47,6 +47,275 @@ class AnimationTable:
         return 16 + self.pair * 0x2000 + pointer - 0x8000
 
 
+@dataclass(frozen=True)
+class SpriteTilePlacement:
+    """One OAM tile emitted by the verified physical-puzzle interpreter."""
+
+    command_offset: int
+    x: int
+    y: int
+    tile_index: int | None
+    tile_token: int
+    attributes: int
+
+    @property
+    def horizontal_flip(self) -> bool:
+        return bool(self.attributes & 0x40)
+
+    @property
+    def vertical_flip(self) -> bool:
+        return bool(self.attributes & 0x80)
+
+    @property
+    def palette(self) -> int:
+        return self.attributes & 0x03
+
+
+@dataclass(frozen=True)
+class SpriteComposition:
+    anchor_x: int
+    anchor_y: int
+    placements: tuple[SpriteTilePlacement, ...]
+    complete: bool
+    consumed: int
+    error: str = ""
+
+
+@dataclass(frozen=True)
+class SpriteTimeline:
+    frames: tuple[int, ...]
+    loop_start: int | None
+    terminated: bool
+    complete: bool
+    error: str = ""
+
+
+def _signed_byte(value: int) -> int:
+    return value - 0x100 if value & 0x80 else value
+
+
+def decode_sprite_composition(
+    raw: bytes,
+    start: int = 0,
+) -> SpriteComposition:
+    """Decode the exact tile walk used by the current ROM at $D194-$D2EF.
+
+    The first two bytes are signed X/Y anchors and the third byte selects the
+    first tile.  Each following byte both describes the current OAM tile and
+    controls how the next tile, X and Y values are obtained.  Runtime tile
+    tokens $F0-$FF depend on RAM lookup tables; they remain explicit unresolved
+    placements instead of being replaced with guessed graphics.
+    """
+
+    if len(raw) < 3:
+        return SpriteComposition(
+            0,
+            0,
+            (),
+            False,
+            len(raw),
+            "组图规律少于 X、Y 和首图块三个字节。",
+        )
+    anchor_x = _signed_byte(raw[0])
+    anchor_y = _signed_byte(raw[1])
+    x = anchor_x
+    y = anchor_y
+    tile_token = raw[2]
+    tile_index: int | None = tile_token if tile_token < 0xF0 else None
+    cursor = 3
+    placements: list[SpriteTilePlacement] = []
+
+    def truncated(label: str) -> SpriteComposition:
+        return SpriteComposition(
+            anchor_x,
+            anchor_y,
+            tuple(placements),
+            False,
+            cursor,
+            f"{label}在 +${cursor:04X} 截断。",
+        )
+
+    while cursor < len(raw):
+        command_offset = cursor
+        command = raw[cursor]
+        cursor += 1
+        if command == 0xFF:
+            return SpriteComposition(
+                anchor_x,
+                anchor_y,
+                tuple(placements),
+                True,
+                cursor,
+            )
+        placements.append(
+            SpriteTilePlacement(
+                command_offset=start + command_offset,
+                x=x,
+                y=y,
+                tile_index=tile_index,
+                tile_token=tile_token,
+                attributes=command & 0xC3,
+            )
+        )
+
+        if command & 0x20:
+            if cursor >= len(raw):
+                return truncated("显式图块参数")
+            tile_token = raw[cursor]
+            cursor += 1
+            tile_index = tile_token if tile_token < 0xF8 else None
+        elif not command & 0x10:
+            if tile_index is not None:
+                tile_index = (tile_index + 1) & 0xFF
+            tile_token = (tile_token + 1) & 0xFF
+
+        if command & 0x08:
+            if cursor >= len(raw):
+                return truncated("X 位移参数")
+            x += _signed_byte(raw[cursor])
+            cursor += 1
+            if command & 0x04:
+                if cursor >= len(raw):
+                    return truncated("Y 位移参数")
+                y += _signed_byte(raw[cursor])
+                cursor += 1
+            else:
+                y += 8
+        elif command & 0x04:
+            if cursor >= len(raw):
+                return truncated("X 位移参数")
+            x += _signed_byte(raw[cursor])
+            cursor += 1
+        else:
+            x += 8
+
+    return SpriteComposition(
+        anchor_x,
+        anchor_y,
+        tuple(placements),
+        False,
+        cursor,
+        "组图规律缺少 $FF 结束码。",
+    )
+
+
+def decode_sprite_timeline(
+    raw: bytes,
+    sprite_count: int,
+    *,
+    max_frames: int = 360,
+) -> SpriteTimeline:
+    """Run one verified frame-sequence movement rule without mutating ROM.
+
+    This mirrors the $E8CC-$EA34 interpreter.  Axis rules and runtime-dependent
+    pointer/table switches fail closed; finite and repeating frame streams are
+    returned with a deterministic loop boundary for preview playback.
+    """
+
+    if max_frames <= 0:
+        raise ValueError("预览帧上限必须大于零。")
+    pc = 0
+    repeat_counter = 0
+    delay = 0
+    current: int | None = None
+    selector = 0x40
+    frames: list[int] = []
+    seen: dict[tuple[int, int, int, int | None, int], int] = {}
+    instruction_budget = max(1024, max_frames * 32)
+
+    def fail(message: str) -> SpriteTimeline:
+        return SpriteTimeline(tuple(frames), None, False, False, message)
+
+    for _ in range(max_frames):
+        state = (pc, repeat_counter, delay, current, selector)
+        if state in seen and frames:
+            return SpriteTimeline(
+                tuple(frames), seen[state], False, True, ""
+            )
+        seen[state] = len(frames)
+        if delay:
+            delay -= 1
+            if current is None:
+                return fail("等待指令出现在首个组图帧之前。")
+            frames.append(current)
+            continue
+
+        while instruction_budget:
+            instruction_budget -= 1
+            if not 0 <= pc < len(raw):
+                return fail(f"运行规律跳转到记录外 +${pc & 0xFF:02X}。")
+            opcode = raw[pc]
+            if opcode < 0xF7:
+                if selector != 0x40:
+                    return fail(
+                        f"规律切换到资源选择器 ${selector:02X}，不属于当前组图表。"
+                    )
+                if opcode >= sprite_count:
+                    return fail(f"组图编号 ${opcode:02X} 超出当前指针表。")
+                current = opcode
+                frames.append(current)
+                pc += 1
+                break
+            if opcode == 0xF7:
+                if pc + 1 >= len(raw):
+                    return fail("资源选择器指令截断。")
+                selector = raw[pc + 1]
+                pc += 2
+                continue
+            if opcode == 0xF8:
+                pc = 0
+                continue
+            if opcode == 0xF9:
+                if pc + 1 >= len(raw):
+                    return fail("绝对跳转指令截断。")
+                pc = raw[pc + 1]
+                continue
+            if opcode == 0xFA:
+                return fail("规律使用运行时指针页切换，离线预览不猜测目标记录。")
+            if opcode == 0xFB:
+                if pc + 2 >= len(raw):
+                    return fail("循环指令截断。")
+                count = raw[pc + 1]
+                if not repeat_counter:
+                    if count >= 0xFC:
+                        return fail("循环次数来自运行时参数，离线预览不猜测。")
+                    repeat_counter = count
+                repeat_counter = (repeat_counter - 1) & 0xFF
+                if not repeat_counter:
+                    pc += 3
+                else:
+                    pc = (pc + 3 + _signed_byte(raw[pc + 2])) & 0xFF
+                continue
+            if opcode == 0xFC:
+                if pc + 2 >= len(raw):
+                    return fail("音效指令截断。")
+                pc += 3
+                continue
+            if opcode == 0xFD:
+                if pc + 1 >= len(raw):
+                    return fail("音效指令截断。")
+                pc += 2
+                continue
+            if opcode == 0xFE:
+                if pc + 1 >= len(raw):
+                    return fail("等待指令截断。")
+                wait = raw[pc + 1]
+                pc += 2
+                if wait:
+                    if current is None:
+                        return fail("等待指令出现在首个组图帧之前。")
+                    frames.append(current)
+                    delay = wait - 1
+                    break
+                continue
+            if opcode == 0xFF:
+                return SpriteTimeline(tuple(frames), None, True, True, "")
+        else:
+            return fail("运行规律控制流超过安全步数。")
+
+    return fail(f"运行规律在 {max_frames} 帧内未终止或形成稳定循环。")
+
+
 TABLES = (
     AnimationTable("map", 0x28, 2, 0x9FFC, 153, 0xC000, 0x62, b"\xf2\x28"),
     AnimationTable("ally", 0x22, 0, 0x8020, 256, 0xC000, 0x60, b"\xf0\x22"),
@@ -224,7 +493,7 @@ class AnimationCodec:
             raise ValueError("规律原值已变化，请重新载入。")
         if len(replacement) != len(record.raw):
             raise ValueError(f"规律必须保持 {len(record.raw)} 字节。")
-        # Sprite first two bytes are the verified signed Y/X anchor. The
+        # Sprite first two bytes are the verified signed X/Y anchor. The
         # command stream (including FF values used as coordinates) is retained.
         if record.kind == "movement":
             roles = self.movement_roles().get(record.index, set())

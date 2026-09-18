@@ -17,6 +17,7 @@ from PySide6.QtWidgets import QApplication, QDialog, QWidget
 import shiboken6
 
 from dc_modifier.app import DEFAULT_ROM, LauncherWindow, MainWindow, STYLE_SHEET
+from dc_modifier.animation_editor import SpritePuzzlePreviewDialog
 from dc_modifier.legacy_tools import (
     AttributeCalculatorDialog,
     FontLibraryDialog,
@@ -172,11 +173,19 @@ def main() -> int:
         FontLibraryDialog(parent=window, project=window.project),
         "04-font-library.png",
     )
-    capture_dialog(
-        application,
-        MapAnimationDialog(parent=window, project=window.project),
-        "05-map-animation.png",
+    animation_dialog = MapAnimationDialog(parent=window, project=window.project)
+    save_capture(application, animation_dialog, "05-map-animation.png")
+    sprite_record = animation_dialog.codec.record("sprite", 0x32)
+    puzzle_dialog = SpritePuzzlePreviewDialog(
+        sprite_record,
+        window.project,
+        animation_dialog.codec,
+        animation_dialog,
+        initial_library=8,
     )
+    save_capture(application, puzzle_dialog, "05b-animation-puzzle.png")
+    close_dialog(application, puzzle_dialog)
+    close_dialog(application, animation_dialog)
     capture_dialog(
         application,
         TextConverterDialog(parent=window, project=window.project),

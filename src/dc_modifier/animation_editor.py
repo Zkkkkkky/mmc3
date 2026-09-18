@@ -1,14 +1,17 @@
 from __future__ import annotations
 
-from PySide6.QtCore import Qt, Signal
+from PySide6.QtCore import QSize, Qt, QTimer, Signal
+from PySide6.QtGui import QColor, QIcon, QImage, QPainter, QPen, QPixmap
 from PySide6.QtWidgets import (
-    QComboBox, QDialog, QDialogButtonBox, QFormLayout, QGroupBox, QHBoxLayout, QHeaderView,
-    QLabel, QLineEdit, QListWidget, QMenu, QPlainTextEdit, QPushButton, QSpinBox,
-    QTableWidget, QTableWidgetItem, QTabWidget, QVBoxLayout, QWidget,
+    QCheckBox, QComboBox, QDialog, QDialogButtonBox, QFormLayout, QGroupBox,
+    QHBoxLayout, QHeaderView, QLabel, QLineEdit, QListView, QListWidget,
+    QListWidgetItem, QMenu, QPlainTextEdit, QPushButton, QSpinBox, QTableWidget,
+    QTableWidgetItem, QTabWidget, QVBoxLayout, QWidget,
 )
 
 from fc_editor.codecs.animation import (
-    AnimationCodec, AnimationRecord, apply_animation_patches,
+    AnimationCodec, AnimationRecord, SpriteComposition, apply_animation_patches,
+    decode_sprite_composition, decode_sprite_timeline,
 )
 from .workspace import ROOT
 
@@ -54,53 +57,390 @@ class AnimationPointerDialog(QDialog):
 
 
 class SpritePuzzlePreviewDialog(QDialog):
-    """Read-only entry for the legacy physical-puzzle secondary window."""
+    """Render the verified physical-puzzle stream against real CHR tiles."""
 
-    def __init__(self, record: AnimationRecord, parent: QWidget | None = None) -> None:
+    _PALETTES = (
+        ("#151922", "#86A8D9", "#D7E5F4", "#FFFFFF"),
+        ("#151922", "#72B58A", "#B8E3A8", "#F0FFD8"),
+        ("#151922", "#C99163", "#F3C77D", "#FFF0C2"),
+        ("#151922", "#B57DB6", "#E0B4D8", "#FFE7FA"),
+    )
+
+    def __init__(
+        self,
+        record: AnimationRecord,
+        project,
+        codec: AnimationCodec,
+        parent: QWidget | None = None,
+        *,
+        initial_library: int = 8,
+    ) -> None:
         super().__init__(parent)
+        self.project = project
+        self.codec = codec
+        self.initial_record = record
+        self.current_record = record
+        self.timeline_frames: tuple[int, ...] = (record.index,)
+        self.timeline_loop_start: int | None = None
+        self.timeline_terminated = True
+        self.frame_index = 0
         self.setWindowTitle("物理拼图")
-        self.resize(840, 590)
+        self.resize(1180, 760)
         root = QVBoxLayout(self)
 
         settings = QGroupBox("参考设置")
         form = QFormLayout(settings)
         self.library_combo = QComboBox()
-        self.library_combo.addItem("[08]008：82010")
-        self.library_combo.setEnabled(False)
+        bank_count = self.project.chr_tile_count // 64
+        for bank in range(max(0, bank_count - 3)):
+            self.library_combo.addItem(
+                f"[{bank:02X}]{bank:03d}：{0x80010 + bank * 0x400:05X}",
+                bank,
+            )
+        selected = self.library_combo.findData(initial_library)
+        self.library_combo.setCurrentIndex(max(0, selected))
         form.addRow("图库地址：", self.library_combo)
+        offsets = QHBoxLayout()
+        self.zero_start = QSpinBox()
+        self.high_start = QSpinBox()
+        for spin in (self.zero_start, self.high_start):
+            spin.setRange(0, 0xFF)
+            spin.setDisplayIntegerBase(16)
+            spin.setPrefix("$")
+        self.high_start.setValue(0x80)
+        offsets.addWidget(QLabel("00 开始"))
+        offsets.addWidget(self.zero_start)
+        offsets.addWidget(QLabel("80 开始"))
+        offsets.addWidget(self.high_start)
+        self.show_numbers = QCheckBox("显示图块编号")
+        self.show_numbers.setChecked(True)
+        offsets.addWidget(self.show_numbers)
+        offsets.addStretch()
+        form.addRow("映射：", offsets)
+        flips = QHBoxLayout()
+        self.flip_horizontal = QCheckBox("图片水平翻转")
+        self.flip_vertical = QCheckBox("图片垂直翻转")
+        flips.addWidget(self.flip_horizontal)
+        flips.addWidget(self.flip_vertical)
+        flips.addStretch()
+        form.addRow("效果图片：", flips)
         root.addWidget(settings)
 
         content = QHBoxLayout()
-        source = QGroupBox("组图规律原码（只读）")
+        source = QGroupBox("组图规律与解释")
         source_layout = QVBoxLayout(source)
         self.code_view = QPlainTextEdit(record.raw.hex(" ").upper())
         self.code_view.setReadOnly(True)
+        self.code_view.setMaximumHeight(92)
         source_layout.addWidget(self.code_view)
-        content.addWidget(source, 1)
+        self.placement_table = QTableWidget(0, 5)
+        self.placement_table.setHorizontalHeaderLabels(
+            ("指令", "图块", "X", "Y", "属性")
+        )
+        self.placement_table.verticalHeader().hide()
+        self.placement_table.horizontalHeader().setSectionResizeMode(
+            QHeaderView.ResizeMode.Stretch
+        )
+        self.placement_table.setEditTriggers(
+            QTableWidget.EditTrigger.NoEditTriggers
+        )
+        source_layout.addWidget(self.placement_table, 1)
+        content.addWidget(source, 3)
 
-        preview = QGroupBox("效果图片（只读入口）")
+        library = QGroupBox("图库")
+        library_layout = QVBoxLayout(library)
+        self.library_list = QListWidget()
+        self.library_list.setViewMode(QListView.ViewMode.IconMode)
+        self.library_list.setResizeMode(QListView.ResizeMode.Adjust)
+        self.library_list.setMovement(QListView.Movement.Static)
+        self.library_list.setIconSize(QSize(32, 32))
+        self.library_list.setGridSize(QSize(48, 50))
+        self.library_list.setSelectionMode(QListWidget.SelectionMode.NoSelection)
+        library_layout.addWidget(self.library_list)
+        content.addWidget(library, 3)
+
+        preview = QGroupBox("效果图片")
         preview_layout = QVBoxLayout(preview)
-        self.preview_grid = QTableWidget(16, 16)
-        self.preview_grid.horizontalHeader().hide()
-        self.preview_grid.verticalHeader().hide()
-        self.preview_grid.setEditTriggers(QTableWidget.EditTrigger.NoEditTriggers)
-        self.preview_grid.setSelectionMode(QTableWidget.SelectionMode.NoSelection)
-        self.preview_grid.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeMode.Stretch)
-        self.preview_grid.verticalHeader().setSectionResizeMode(QHeaderView.ResizeMode.Stretch)
-        self.preview_grid.setStyleSheet("QTableWidget { background:#080808; gridline-color:#7c8a93; }")
-        preview_layout.addWidget(self.preview_grid)
-        note = QLabel("已接通参考版次级窗口动线；图块组装与翻转协议未完成黄金对照，当前不写入。")
-        note.setWordWrap(True)
-        preview_layout.addWidget(note)
-        content.addWidget(preview, 2)
+        self.preview_label = QLabel()
+        self.preview_label.setMinimumSize(390, 390)
+        self.preview_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.preview_label.setStyleSheet("background:#151922; border:1px solid #66717a;")
+        preview_layout.addWidget(self.preview_label, 1)
+        self.preview_status = QLabel()
+        self.preview_status.setWordWrap(True)
+        preview_layout.addWidget(self.preview_status)
+        content.addWidget(preview, 4)
         root.addLayout(content, 1)
+
+        playback = QGroupBox("运行规律播放（只影响预览）")
+        playback_layout = QHBoxLayout(playback)
+        self.timeline_combo = QComboBox()
+        self.timeline_combo.addItem(
+            f"单帧：组图 ${record.index:02X}", None
+        )
+        movement_names = animation_names(
+            "地图动画运行规律名称.ini", codec.count("movement"), 1
+        )
+        roles = codec.movement_roles()
+        for index in sorted(
+            value for value, role in roles.items() if role == {"frames"}
+        ):
+            self.timeline_combo.addItem(
+                f"[{index:02X}]{index:03d}：{movement_names[index]}", index
+            )
+        playback_layout.addWidget(self.timeline_combo, 1)
+        self.previous_button = QPushButton("上一帧")
+        self.play_button = QPushButton("播放")
+        self.next_button = QPushButton("下一帧")
+        playback_layout.addWidget(self.previous_button)
+        playback_layout.addWidget(self.play_button)
+        playback_layout.addWidget(self.next_button)
+        self.frame_status = QLabel()
+        playback_layout.addWidget(self.frame_status, 1)
+        root.addWidget(playback)
+
+        self.timer = QTimer(self)
+        self.timer.setInterval(1000 // 12)
+        self.timer.timeout.connect(self._advance_frame)
+        self.library_combo.currentIndexChanged.connect(self._refresh_all)
+        self.zero_start.valueChanged.connect(self._refresh_all)
+        self.high_start.valueChanged.connect(self._refresh_all)
+        self.show_numbers.toggled.connect(self._render_preview)
+        self.flip_horizontal.toggled.connect(self._render_preview)
+        self.flip_vertical.toggled.connect(self._render_preview)
+        self.timeline_combo.currentIndexChanged.connect(self._timeline_changed)
+        self.previous_button.clicked.connect(lambda: self._step_frame(-1))
+        self.next_button.clicked.connect(lambda: self._step_frame(1))
+        self.play_button.clicked.connect(self._toggle_playback)
 
         buttons = QDialogButtonBox(
             QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel
         )
+        buttons.button(QDialogButtonBox.StandardButton.Ok).setText("确定")
+        buttons.button(QDialogButtonBox.StandardButton.Cancel).setText("取消")
         buttons.accepted.connect(self.accept)
         buttons.rejected.connect(self.reject)
         root.addWidget(buttons)
+        self._timeline_changed()
+        self._populate_library()
+
+    def _mapped_tile(self, logical: int) -> int:
+        if logical < 0x80:
+            return (self.zero_start.value() + logical) & 0xFF
+        return (self.high_start.value() + (logical & 0x7F)) & 0xFF
+
+    def _tile_image(self, logical: int, palette: int = 0) -> QImage:
+        mapped = self._mapped_tile(logical)
+        bank = int(self.library_combo.currentData() or 0)
+        pixels = self.project.chr_tile_pixels(bank * 64 + mapped)
+        image = QImage(8, 8, QImage.Format.Format_RGB32)
+        colors = tuple(QColor(value) for value in self._PALETTES[palette & 3])
+        for y in range(8):
+            for x in range(8):
+                image.setPixelColor(x, y, colors[pixels[y * 8 + x]])
+        return image
+
+    def _populate_library(self) -> None:
+        self.library_list.setUpdatesEnabled(False)
+        try:
+            self.library_list.clear()
+            for logical in range(256):
+                icon = QPixmap.fromImage(self._tile_image(logical)).scaled(
+                    32,
+                    32,
+                    Qt.AspectRatioMode.KeepAspectRatio,
+                    Qt.TransformationMode.FastTransformation,
+                )
+                item = QListWidgetItem(QIcon(icon), f"{logical:02X}")
+                item.setToolTip(
+                    f"逻辑图块 ${logical:02X} → 图库内 ${self._mapped_tile(logical):02X}"
+                )
+                self.library_list.addItem(item)
+        finally:
+            self.library_list.setUpdatesEnabled(True)
+
+    def _composition(self) -> SpriteComposition:
+        return decode_sprite_composition(
+            self.current_record.raw, self.current_record.offset
+        )
+
+    def _fill_placement_table(self, composition: SpriteComposition) -> None:
+        self.placement_table.setRowCount(len(composition.placements))
+        for row, placement in enumerate(composition.placements):
+            tile = (
+                f"${placement.tile_index:02X}"
+                if placement.tile_index is not None
+                else f"运行时 ${placement.tile_token:02X}"
+            )
+            flags = []
+            if placement.horizontal_flip:
+                flags.append("H")
+            if placement.vertical_flip:
+                flags.append("V")
+            flags.append(f"P{placement.palette}")
+            for column, value in enumerate(
+                (
+                    f"${placement.command_offset:06X}",
+                    tile,
+                    str(placement.x),
+                    str(placement.y),
+                    "/".join(flags),
+                )
+            ):
+                self.placement_table.setItem(row, column, QTableWidgetItem(value))
+
+    def _render_preview(self, _checked: bool | None = None) -> None:
+        composition = self._composition()
+        self._fill_placement_table(composition)
+        if not composition.placements:
+            self.preview_label.setPixmap(QPixmap())
+            self.preview_label.setText(composition.error or "该组图没有可显示的图块。")
+            self.preview_status.setText(composition.error)
+            return
+        min_x = min(item.x for item in composition.placements)
+        max_x = max(item.x for item in composition.placements)
+        min_y = min(item.y for item in composition.placements)
+        max_y = max(item.y for item in composition.placements)
+        width = max(24, max_x - min_x + 24)
+        height = max(24, max_y - min_y + 24)
+        image = QImage(width, height, QImage.Format.Format_RGB32)
+        image.fill(QColor("#151922"))
+        unresolved = 0
+        for placement in composition.placements:
+            x = placement.x
+            y = placement.y
+            horizontal = placement.horizontal_flip
+            vertical = placement.vertical_flip
+            if self.flip_horizontal.isChecked():
+                x = min_x + max_x - x
+                horizontal = not horizontal
+            if self.flip_vertical.isChecked():
+                y = min_y + max_y - y
+                vertical = not vertical
+            target_x = x - min_x + 8
+            target_y = y - min_y + 8
+            if placement.tile_index is None:
+                unresolved += 1
+                painter = QPainter(image)
+                painter.setPen(QPen(QColor("#FF4FD8"), 1))
+                painter.drawRect(target_x, target_y, 7, 7)
+                painter.drawLine(target_x, target_y, target_x + 7, target_y + 7)
+                painter.drawLine(target_x + 7, target_y, target_x, target_y + 7)
+                painter.end()
+                continue
+            tile = self._tile_image(placement.tile_index, placement.palette)
+            for py in range(8):
+                source_y = 7 - py if vertical else py
+                for px in range(8):
+                    source_x = 7 - px if horizontal else px
+                    color = tile.pixelColor(source_x, source_y)
+                    if color != QColor(self._PALETTES[placement.palette][0]):
+                        image.setPixelColor(target_x + px, target_y + py, color)
+            if self.show_numbers.isChecked():
+                painter = QPainter(image)
+                painter.fillRect(target_x, target_y, 8, 4, QColor(0, 0, 0, 190))
+                painter.setPen(QColor("white"))
+                font = painter.font()
+                font.setPixelSize(4)
+                painter.setFont(font)
+                painter.drawText(target_x, target_y, 8, 4, Qt.AlignmentFlag.AlignCenter,
+                                 f"{placement.tile_index:02X}")
+                painter.end()
+        pixmap = QPixmap.fromImage(image).scaled(
+            self.preview_label.size(),
+            Qt.AspectRatioMode.KeepAspectRatio,
+            Qt.TransformationMode.FastTransformation,
+        )
+        self.preview_label.setText("")
+        self.preview_label.setPixmap(pixmap)
+        state = "完整" if composition.complete else f"不完整：{composition.error}"
+        runtime = f"；{unresolved} 块依赖运行时图块表" if unresolved else ""
+        self.preview_status.setText(
+            f"组图 ${self.current_record.index:02X} · {len(composition.placements)} 块 · "
+            f"锚点 X={composition.anchor_x} / Y={composition.anchor_y} · {state}{runtime}。"
+        )
+
+    def _refresh_all(self, _value: int | None = None) -> None:
+        self._populate_library()
+        self._render_preview()
+
+    def _timeline_changed(self, _index: int | None = None) -> None:
+        self.timer.stop()
+        self.play_button.setText("播放")
+        movement = self.timeline_combo.currentData()
+        if movement is None:
+            self.timeline_frames = (self.initial_record.index,)
+            self.timeline_loop_start = None
+            self.timeline_terminated = True
+            error = ""
+        else:
+            record = self.codec.record("movement", int(movement))
+            timeline = decode_sprite_timeline(
+                record.raw, self.codec.count("sprite")
+            )
+            self.timeline_frames = timeline.frames or (self.initial_record.index,)
+            self.timeline_loop_start = timeline.loop_start
+            self.timeline_terminated = timeline.terminated
+            error = timeline.error
+        self.frame_index = 0
+        self._show_frame()
+        if error:
+            self.frame_status.setToolTip(error)
+
+    def _show_frame(self) -> None:
+        sprite = self.timeline_frames[self.frame_index]
+        self.current_record = (
+            self.initial_record
+            if sprite == self.initial_record.index
+            else self.codec.record("sprite", sprite)
+        )
+        self.code_view.setPlainText(self.current_record.raw.hex(" ").upper())
+        loop = (
+            f" · 循环起点 {self.timeline_loop_start + 1}"
+            if self.timeline_loop_start is not None
+            else ""
+        )
+        self.frame_status.setText(
+            f"帧 {self.frame_index + 1}/{len(self.timeline_frames)} · 组图 ${sprite:02X}{loop}"
+        )
+        self._render_preview()
+
+    def _step_frame(self, delta: int) -> None:
+        if not self.timeline_frames:
+            return
+        self.frame_index = (self.frame_index + delta) % len(self.timeline_frames)
+        self._show_frame()
+
+    def _advance_frame(self) -> None:
+        if not self.timeline_frames:
+            return
+        if self.frame_index + 1 < len(self.timeline_frames):
+            self.frame_index += 1
+        elif self.timeline_loop_start is not None:
+            self.frame_index = self.timeline_loop_start
+        elif self.timeline_terminated:
+            self.timer.stop()
+            self.play_button.setText("播放")
+            return
+        else:
+            self.frame_index = 0
+        self._show_frame()
+
+    def _toggle_playback(self) -> None:
+        if self.timer.isActive():
+            self.timer.stop()
+            self.play_button.setText("播放")
+        else:
+            self.timer.start()
+            self.play_button.setText("暂停")
+
+    def accept(self) -> None:
+        self.timer.stop()
+        super().accept()
+
+    def reject(self) -> None:
+        self.timer.stop()
+        super().reject()
 
 
 class AnimationScriptWidget(QWidget):
@@ -442,9 +782,18 @@ class MapAnimationEditorDialog(QDialog):
             box.addWidget(code, 2)
             if kind == "sprite":
                 preview_library = QComboBox()
-                preview_library.addItem("[08]008：82010")
-                preview_library.setEnabled(False)
-                preview_library.setToolTip("预览图库绑定尚未完成写回差分验证。")
+                bank_count = self.project.chr_tile_count // 64
+                for bank in range(max(0, bank_count - 3)):
+                    preview_library.addItem(
+                        f"[{bank:02X}]{bank:03d}：{0x80010 + bank * 0x400:05X}",
+                        bank,
+                    )
+                preview_library.setCurrentIndex(
+                    max(0, preview_library.findData(8))
+                )
+                preview_library.setToolTip(
+                    "只选择物理拼图使用的 4 KiB CHR 预览窗口，不写入 ROM。"
+                )
                 self.sprite_preview_library = preview_library
                 preview_row = QFormLayout()
                 preview_row.addRow("预览图库", preview_library)
@@ -500,16 +849,23 @@ class MapAnimationEditorDialog(QDialog):
                                              if len(roles) == 1 else "运行方式未唯一确认，只读"))
         if kind == "sprite":
             self._loading = True
-            self.sprite_y.setValue(int.from_bytes(record.raw[:1], signed=True))
-            self.sprite_x.setValue(int.from_bytes(record.raw[1:2], signed=True))
+            self.sprite_x.setValue(int.from_bytes(record.raw[:1], signed=True))
+            self.sprite_y.setValue(int.from_bytes(record.raw[1:2], signed=True))
             self._loading = False
 
     def _open_sprite_puzzle(self) -> None:
         row = self.rule_lists["sprite"].currentRow()
         if row < 0:
             return
-        record = AnimationCodec(self.draft).record("sprite", row)
-        SpritePuzzlePreviewDialog(record, self).exec()
+        codec = AnimationCodec(self.draft)
+        record = codec.record("sprite", row)
+        SpritePuzzlePreviewDialog(
+            record,
+            self.project,
+            codec,
+            self,
+            initial_library=int(self.sprite_preview_library.currentData() or 0),
+        ).exec()
 
     def _apply_movement_code(self, row: int | None = None) -> bool:
         try:
@@ -536,7 +892,7 @@ class MapAnimationEditorDialog(QDialog):
             return
         codec = AnimationCodec(self.draft)
         record = codec.record("sprite", row)
-        changed = bytes((self.sprite_y.value() & 255, self.sprite_x.value() & 255)) + record.raw[2:]
+        changed = bytes((self.sprite_x.value() & 255, self.sprite_y.value() & 255)) + record.raw[2:]
         offset, _before, after = codec.rule_patch(record, changed)
         self.draft[offset:offset + len(after)] = after
         self.rule_codes["sprite"].setPlainText(after.hex(" ").upper())
