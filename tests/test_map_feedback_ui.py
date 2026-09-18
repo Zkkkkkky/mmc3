@@ -289,11 +289,18 @@ class MapFeedbackUiTests(QtTestCase):
         table.set_rows([(1, 2, 3), (4, 5, 6), (7, 8, 9)])
         self.assertEqual(spy.count(), 1)
         self.assertEqual(len(labels), 256)
+        recycled = tuple(table.cellWidget(2, column) for column in range(3))
         table.set_rows([(1, 2, 4), (5, 6, 8)])
         self.assertEqual(spy.count(), 2)
         self.assertEqual(len(labels), 256)
-        table.set_row_coordinates(0, 8, 9)
+        table.set_rows([(1, 2, 4), (5, 6, 8), (7, 8, 9)])
         self.assertEqual(spy.count(), 3)
+        self.assertEqual(
+            tuple(table.cellWidget(2, column) for column in range(3)),
+            recycled,
+        )
+        table.set_row_coordinates(0, 8, 9)
+        self.assertEqual(spy.count(), 4)
         table.deleteLater()
 
     def test_chapter_load_populates_once_and_does_not_validate_partial_tables(self) -> None:

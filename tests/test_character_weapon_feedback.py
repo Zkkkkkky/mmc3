@@ -189,6 +189,32 @@ class CharacterCodecFeedbackTests(unittest.TestCase):
         self.project.undo()
         self.assertEqual(bytes(self.project.working), before)
 
+    def test_character_name_capacity_scan_is_cached_until_pointer_tables_change(self) -> None:
+        codec = self.project.character_name_codec
+        self.assertIsNotNone(codec)
+        assert codec is not None
+        codec._capacity_cache.clear()
+        with patch.object(
+            codec, "_current_pointers", wraps=codec._current_pointers
+        ) as scan:
+            for record_id in range(1, self.project.profile.character_name_count):
+                codec.record_bytes(record_id, self.project.working)
+            self.assertEqual(scan.call_count, 1)
+
+            changed = bytearray(self.project.working)
+            first_pointer = codec.pointer(1, changed)
+            replacement_id = next(
+                record_id
+                for record_id in range(2, self.project.profile.character_name_count)
+                if codec.pointer(record_id, changed) != first_pointer
+            )
+            offset = codec.pointer_offset(1)
+            changed[offset : offset + 2] = codec.pointer(
+                replacement_id, changed
+            ).to_bytes(2, "little")
+            codec.record_bytes(1, changed)
+            self.assertEqual(scan.call_count, 2)
+
     def test_character_name_pool_overflow_is_atomic(self) -> None:
         before = bytes(self.project.working)
         with self.assertRaisesRegex(ValueError, "容量不足"):

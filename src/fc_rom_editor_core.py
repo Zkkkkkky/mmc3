@@ -1907,7 +1907,7 @@ class RomProject:
     ) -> int:
         if self.weapon_name_codec is None:
             raise ValueError("当前 ROM 的武器名称表尚未验证。")
-        source = self.original if original else bytes(self.working)
+        source = self.original if original else self.working
         return self.weapon_name_codec.pointer(weapon_id, source)
 
     def weapon_name_source_ids(
@@ -1930,7 +1930,7 @@ class RomProject:
     ) -> bytes:
         if self.weapon_name_codec is None:
             raise ValueError("当前 ROM 的武器名称表尚未验证。")
-        source = self.original if original else bytes(self.working)
+        source = self.original if original else self.working
         return self.weapon_name_codec.record_bytes(weapon_id, source)
 
     def _replace_terminated_name(
@@ -2358,7 +2358,7 @@ class RomProject:
         original: bool = False,
     ) -> bytes:
         codec = self.base_unit_name_codec if original else self.unit_name_codec
-        source = self.original if original else bytes(self.working)
+        source = self.original if original else self.working
         pointer = codec.pointer(unit_id, source)
         bank = (
             codec.pair_first_bank

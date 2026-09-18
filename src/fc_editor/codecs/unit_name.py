@@ -60,7 +60,7 @@ class UnitNameReferenceCodec:
             raise IndexError("名称 ID 必须在 00—FF 之间。")
         return self.pointer_table_offset + unit_id * 2
 
-    def pointer(self, unit_id: int, data: bytes | None = None) -> int:
+    def pointer(self, unit_id: int, data: bytes | bytearray | None = None) -> int:
         source = self._source if data is None else data
         offset = self.pointer_offset(unit_id)
         return int.from_bytes(source[offset : offset + 2], "little")

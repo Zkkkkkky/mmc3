@@ -41685,6 +41685,71 @@
         254
       ],
       "nameTokens": "CA 6D CA 40 FF"
+    },
+    {
+      "id": 255,
+      "hexId": "$FF",
+      "name": "不可用",
+      "attributePointer": "$91AF",
+      "attributeSharedIds": [
+        49,
+        50,
+        51,
+        52,
+        53,
+        54,
+        55,
+        56,
+        57,
+        58,
+        59,
+        60,
+        61,
+        62,
+        63,
+        64,
+        65,
+        66,
+        67,
+        68,
+        69,
+        70,
+        71,
+        72,
+        73,
+        74,
+        75,
+        76,
+        77,
+        78,
+        79,
+        80,
+        81,
+        82,
+        83,
+        84,
+        85,
+        86,
+        87,
+        88,
+        89,
+        90,
+        91,
+        92,
+        93,
+        94,
+        95,
+        96,
+        97,
+        98,
+        99,
+        255
+      ],
+      "namePointer": "$A40E",
+      "nameSharedIds": [
+        255
+      ],
+      "nameTokens": "CA F7 CB 61 CA FB FF"
     }
   ],
   "characters": [
@@ -41845,9 +41910,9 @@
     {
       "id": 22,
       "hexId": "$16",
-      "name": "诺索利博士可用",
+      "name": "诺索利博士",
       "pointer": "$9649",
-      "tokens": "C9 6C CA D2 C9 BD C9 F6 C9 87 FF CB 61 CA FB FF"
+      "tokens": "C9 6C CA D2 C9 BD C9 F6 C9 87 FF"
     },
     {
       "id": 23,
@@ -41943,9 +42008,9 @@
     {
       "id": 36,
       "hexId": "$24",
-      "name": "艾玛三段变形人物备用",
+      "name": "艾玛",
       "pointer": "$9684",
-      "tokens": "C9 D6 C9 D7 FF CA 72 DB 7A C9 0B C9 0C CA B2 CB 93 CB 8B CA FB FF"
+      "tokens": "C9 D6 C9 D7 FF"
     },
     {
       "id": 37,
@@ -44056,7 +44121,7 @@
     {
       "id": 22,
       "hexId": "$16",
-      "label": "诺索利博士可用",
+      "label": "诺索利博士",
       "attackerCommand": "$00",
       "attackerTrack": "$00 · 无专属曲（按游戏规则回退）",
       "defenderCommand": "$00",
@@ -44182,7 +44247,7 @@
     {
       "id": 36,
       "hexId": "$24",
-      "label": "艾玛三段变形人物备用",
+      "label": "艾玛",
       "attackerCommand": "$00",
       "attackerTrack": "$00 · 无专属曲（按游戏规则回退）",
       "defenderCommand": "$00",

@@ -981,6 +981,7 @@ class ByteEntryTable(QTableWidget):
         self.editing_buttons: tuple[QPushButton, ...] = ()
         self._choice_labels: dict[int, tuple[str, ...]] = {}
         self._choice_models: dict[int, QStandardItemModel] = {}
+        self._editor_pool: dict[int, list[QWidget]] = {}
         self.setHorizontalHeaderLabels(headers)
         header = self.horizontalHeader()
         header.setSectionResizeMode(QHeaderView.ResizeMode.Interactive)
@@ -996,7 +997,7 @@ class ByteEntryTable(QTableWidget):
         self.setUpdatesEnabled(False)
         try:
             while self.rowCount() > len(rows):
-                self.removeRow(self.rowCount() - 1)
+                self._recycle_row(self.rowCount() - 1)
             while self.rowCount() < len(rows):
                 self.add_row(rows[self.rowCount()])
             for row, values in enumerate(rows):
@@ -1017,6 +1018,36 @@ class ByteEntryTable(QTableWidget):
             self.blockSignals(previous)
         self.values_changed.emit()
         self.set_editing_enabled(self.editing_enabled)
+
+    def _recycle_row(self, row: int) -> None:
+        """Retain cell editors for the next chapter instead of recreating them."""
+
+        for column in range(self.columnCount()):
+            editor = self.cellWidget(row, column)
+            if editor is None:
+                continue
+            self.removeCellWidget(row, column)
+            editor.hide()
+            editor.setParent(self)
+            self._editor_pool.setdefault(column, []).append(editor)
+        self.removeRow(row)
+
+    def _take_editor(self, column: int, provider) -> QWidget:
+        pool = self._editor_pool.get(column)
+        if pool:
+            return pool.pop()
+        if provider is not None:
+            editor = QComboBox()
+            editor.setMaxVisibleItems(24)
+            editor.currentIndexChanged.connect(self.values_changed)
+            return editor
+        editor = QSpinBox()
+        editor.setRange(0, 255)
+        hexadecimal = self.headers[column] not in ("X", "Y", "等级")
+        editor.setDisplayIntegerBase(16 if hexadecimal else 10)
+        editor.setPrefix("$" if hexadecimal else "")
+        editor.valueChanged.connect(self.values_changed)
+        return editor
 
     def set_editing_enabled(self, enabled: bool) -> None:
         """Keep row selection available while locking unverified record fields."""
@@ -1055,21 +1086,18 @@ class ByteEntryTable(QTableWidget):
         self.insertRow(row)
         for column, value in enumerate(values):
             provider = self.label_providers.get(column)
+            editor = self._take_editor(column, provider)
+            previous = editor.blockSignals(True)
             if provider is not None:
-                editor = QComboBox()
-                editor.setMaxVisibleItems(24)
+                assert isinstance(editor, QComboBox)
                 editor.setModel(self._choice_model(column, provider))
                 editor.setCurrentIndex(editor.findData(value))
-                editor.currentIndexChanged.connect(self.values_changed)
             else:
-                editor = QSpinBox()
-                editor.setRange(0, 255)
-                hexadecimal = self.headers[column] not in ("X", "Y", "等级")
-                editor.setDisplayIntegerBase(16 if hexadecimal else 10)
-                editor.setPrefix("$" if hexadecimal else "")
+                assert isinstance(editor, QSpinBox)
                 editor.setValue(value)
-                editor.valueChanged.connect(self.values_changed)
+            editor.blockSignals(previous)
             self.setCellWidget(row, column, editor)
+            editor.show()
             editor.setEnabled(self.editing_enabled)
         self.setCurrentCell(row, 0)
         self.values_changed.emit()
@@ -1219,6 +1247,7 @@ class MapPage(ProjectPage):
             tuple[int, str, tuple[int, ...]], str
         ] = {}
         self._weapon_description_cache: dict[int, str] = {}
+        self._growth_codec_cache: LegacyGrowthCodec | None = None
         self._trigger_payload_cache: tuple[bytes, ...] | None = None
         outer = QVBoxLayout(self)
         outer.setContentsMargins(8, 8, 8, 8)
@@ -2947,7 +2976,11 @@ class MapPage(ProjectPage):
                 f"移动 {stat_values['movement']}"
             )
             if level is not None:
-                growth_codec = LegacyGrowthCodec(bytes(self.project.working))
+                if self._growth_codec_cache is None:
+                    self._growth_codec_cache = LegacyGrowthCodec(
+                        self.project.working
+                    )
+                growth_codec = self._growth_codec_cache
 
                 def growth_delta(field: str) -> int:
                     growth = self.project.get_value(unit_id, f"{field}_growth")
@@ -2982,7 +3015,7 @@ class MapPage(ProjectPage):
                 if not 0 < weapon_id < self.project.weapon_count:
                     continue
                 weapon = self.project.weapon_codec.decode_record(
-                    weapon_id, bytes(self.project.working)
+                    weapon_id, self.project.working
                 )
                 weapon_skill, _distance = weapon_extra_values(
                     self.project, weapon_id
@@ -3022,6 +3055,7 @@ class MapPage(ProjectPage):
         self._character_choice_cache.clear()
         self._deployment_description_cache.clear()
         self._weapon_description_cache.clear()
+        self._growth_codec_cache = None
         self._trigger_payload_cache = None
         self._refresh_trigger_character_choices()
         for table in (self.enemy_table, self.guest_table, self.player_table, self.trigger_table):

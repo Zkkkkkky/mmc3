@@ -63,6 +63,7 @@ class CharacterNameCodec:
         if any(capacity <= 0 for capacity in self.capacities.values()):
             raise RomFormatError("人物名称记录容量无效。")
         self.normal_pointers: tuple[int, ...] = ()
+        self._capacity_cache: dict[bytes, dict[int, int]] = {}
         if profile.character_normal_name_pointer_table_offset is not None:
             if profile.character_normal_name_count <= 0:
                 raise RomFormatError("人物显示名称数量无效。")
@@ -121,17 +122,60 @@ class CharacterNameCodec:
             )
         return tuple(pointer for pointer in pointers if pointer)
 
-    def _capacity(self, pointer: int, data: bytes | bytearray) -> int:
+    def _pointer_table_signature(self, data: bytes | bytearray) -> bytes:
+        """Return the small mutable region that determines name capacities."""
+
+        profile = self.rom.profile
+        battle_offset = profile.character_name_pointer_table_offset
+        assert battle_offset is not None
+        parts = [
+            bytes(
+                data[
+                    battle_offset : battle_offset + profile.character_name_count * 2
+                ]
+            )
+        ]
+        normal_offset = profile.character_normal_name_pointer_table_offset
+        if normal_offset is not None:
+            parts.append(
+                bytes(
+                    data[
+                        normal_offset : normal_offset
+                        + profile.character_normal_name_count * 2
+                    ]
+                )
+            )
+        return b"".join(parts)
+
+    def _current_capacities(self, data: bytes | bytearray) -> dict[int, int]:
+        signature = self._pointer_table_signature(data)
+        cached = self._capacity_cache.get(signature)
+        if cached is not None:
+            return cached
         profile = self.rom.profile
         assert profile.character_name_data_end_pointer is not None
         pointers = sorted(set(self._current_pointers(data)))
-        if pointer not in pointers:
+        capacities = {
+            pointer: (
+                pointers[index + 1]
+                if index + 1 < len(pointers)
+                else profile.character_name_data_end_pointer
+            )
+            - pointer
+            for index, pointer in enumerate(pointers)
+        }
+        # Project undo/redo and name repacks only create a few signatures. Keep
+        # the cache bounded so temporary validation buffers cannot grow it forever.
+        if len(self._capacity_cache) >= 8:
+            self._capacity_cache.pop(next(iter(self._capacity_cache)))
+        self._capacity_cache[signature] = capacities
+        return capacities
+
+    def _capacity(self, pointer: int, data: bytes | bytearray) -> int:
+        capacities = self._current_capacities(data)
+        if pointer not in capacities:
             raise ValueError(f"人物名称 CPU 指针 ${pointer:04X} 未被当前名称表引用。")
-        following = next(
-            (candidate for candidate in pointers if candidate > pointer),
-            profile.character_name_data_end_pointer,
-        )
-        return following - pointer
+        return capacities[pointer]
 
     def _terminated_record(self, pointer: int, data: bytes | bytearray) -> bytes:
         offset = self.pointer_to_file_offset(pointer)
