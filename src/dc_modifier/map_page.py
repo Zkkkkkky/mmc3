@@ -981,7 +981,6 @@ class ByteEntryTable(QTableWidget):
         self.editing_buttons: tuple[QPushButton, ...] = ()
         self._choice_labels: dict[int, tuple[str, ...]] = {}
         self._choice_models: dict[int, QStandardItemModel] = {}
-        self._editor_pool: dict[int, list[QWidget]] = {}
         self.setHorizontalHeaderLabels(headers)
         header = self.horizontalHeader()
         header.setSectionResizeMode(QHeaderView.ResizeMode.Interactive)
@@ -997,7 +996,7 @@ class ByteEntryTable(QTableWidget):
         self.setUpdatesEnabled(False)
         try:
             while self.rowCount() > len(rows):
-                self._recycle_row(self.rowCount() - 1)
+                self.removeRow(self.rowCount() - 1)
             while self.rowCount() < len(rows):
                 self.add_row(rows[self.rowCount()])
             for row, values in enumerate(rows):
@@ -1019,23 +1018,7 @@ class ByteEntryTable(QTableWidget):
         self.values_changed.emit()
         self.set_editing_enabled(self.editing_enabled)
 
-    def _recycle_row(self, row: int) -> None:
-        """Retain cell editors for the next chapter instead of recreating them."""
-
-        for column in range(self.columnCount()):
-            editor = self.cellWidget(row, column)
-            if editor is None:
-                continue
-            self.removeCellWidget(row, column)
-            editor.hide()
-            editor.setParent(self)
-            self._editor_pool.setdefault(column, []).append(editor)
-        self.removeRow(row)
-
     def _take_editor(self, column: int, provider) -> QWidget:
-        pool = self._editor_pool.get(column)
-        if pool:
-            return pool.pop()
         if provider is not None:
             editor = QComboBox()
             editor.setMaxVisibleItems(24)

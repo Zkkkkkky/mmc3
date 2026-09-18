@@ -289,19 +289,46 @@ class MapFeedbackUiTests(QtTestCase):
         table.set_rows([(1, 2, 3), (4, 5, 6), (7, 8, 9)])
         self.assertEqual(spy.count(), 1)
         self.assertEqual(len(labels), 256)
-        recycled = tuple(table.cellWidget(2, column) for column in range(3))
         table.set_rows([(1, 2, 4), (5, 6, 8)])
         self.assertEqual(spy.count(), 2)
         self.assertEqual(len(labels), 256)
+        self.application.processEvents()
         table.set_rows([(1, 2, 4), (5, 6, 8), (7, 8, 9)])
         self.assertEqual(spy.count(), 3)
-        self.assertEqual(
-            tuple(table.cellWidget(2, column) for column in range(3)),
-            recycled,
-        )
+        self.assertEqual(table.rows(), [(1, 2, 4), (5, 6, 8), (7, 8, 9)])
+        self.assertTrue(all(
+            table.cellWidget(row, column) is not None
+            for row in range(table.rowCount())
+            for column in range(table.columnCount())
+        ))
+        self.assertIs(table.cellWidget(0, 2).model(), table.cellWidget(2, 2).model())
         table.set_row_coordinates(0, 8, 9)
         self.assertEqual(spy.count(), 4)
         table.deleteLater()
+
+    def test_backstage_reveal_can_switch_to_other_chapters_and_back(self) -> None:
+        backstage_row = next(
+            row
+            for row in range(self.page.map_list.count())
+            if "幕后浮现" in self.page.map_list.item(row).text()
+        )
+        route = (backstage_row, 0, 11, backstage_row, 4)
+        for row in route:
+            self.page.map_list.setCurrentRow(row)
+            self.application.processEvents()
+            self.assertEqual(self.page.map_list.currentRow(), row)
+            self.assertEqual(self.page.current_map_id, row)
+            for table in (
+                self.page.enemy_table,
+                self.page.guest_table,
+                self.page.player_table,
+            ):
+                self.assertTrue(all(
+                    table.cellWidget(table_row, column) is not None
+                    for table_row in range(table.rowCount())
+                    for column in range(table.columnCount())
+                ))
+                table.rows()
 
     def test_chapter_load_populates_once_and_does_not_validate_partial_tables(self) -> None:
         with patch.object(self.page, "_load_map_record", wraps=self.page._load_map_record) as load:
