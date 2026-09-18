@@ -12,6 +12,14 @@ from .chapter_event import ChapterEventCodec
 from .custom_music import CustomMusicCodec
 from .event import EventScriptCodec
 from .legacy_global_data import LegacyGlobalDataCodec
+from .legacy_save import (
+    LegacyBattleEntry,
+    LegacySaveCodec,
+    LegacySaveDocument,
+    LegacySaveFormatError,
+    LegacySaveRosterEntry,
+    LegacySaveSlot,
+)
 from .legacy_text_growth import LegacyGrowthCodec
 from .map import MapCodec
 from .map_tile_attribute import MapTileAttribute, MapTileAttributeCodec, MapTilesetAttributes
@@ -49,6 +57,12 @@ __all__ = [
     "PersuasionRuleCodec",
     "EventScriptCodec",
     "LegacyGlobalDataCodec",
+    "LegacyBattleEntry",
+    "LegacySaveCodec",
+    "LegacySaveDocument",
+    "LegacySaveFormatError",
+    "LegacySaveRosterEntry",
+    "LegacySaveSlot",
     "LegacyGrowthCodec",
     "ScenarioLayoutCodec",
     "StoryTextCodec",

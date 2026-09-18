@@ -1,12 +1,17 @@
 from __future__ import annotations
 
+from dataclasses import replace
+from datetime import datetime
 import hashlib
+import os
 import re
+import shutil
+import tempfile
 from pathlib import Path
 from typing import Any
 
 from PySide6.QtCore import QSize, Qt
-from PySide6.QtGui import QColor, QIcon, QPainter, QPixmap
+from PySide6.QtGui import QColor, QCloseEvent, QIcon, QPainter, QPixmap
 from PySide6.QtWidgets import (
     QCheckBox,
     QComboBox,
@@ -21,6 +26,7 @@ from PySide6.QtWidgets import (
     QLabel,
     QLineEdit,
     QListWidget,
+    QMessageBox,
     QPlainTextEdit,
     QPushButton,
     QScrollArea,
@@ -41,6 +47,14 @@ from fc_editor.codecs.character_attributes import (
     weapon_extra_values,
 )
 from fc_editor.codecs.legacy_text_growth import LegacyGrowthCodec
+from fc_editor.codecs.legacy_save import (
+    LegacyBattleEntry,
+    LegacySaveCodec,
+    LegacySaveDocument,
+    LegacySaveFormatError,
+    LegacySaveRosterEntry,
+    LegacySaveSlot,
+)
 from .battle_calculator import (
     BattleAttackResult,
     BattleFormulaParameters,
@@ -917,18 +931,34 @@ class AttributeCalculatorDialog(QDialog):
 
 
 class SaveEditorDialog(QDialog):
-    """Legacy save-editor shell with an honest, isolated file lifecycle."""
+    """Reference-shaped editor for the verified DC 8 KiB SRAM layout."""
 
-    MAX_SAVE_SIZE = 4 * 1024 * 1024
-    ALLY_HEADERS = ("序号", "人物", "机体", "等级", "机动", "强度", "防御", "速度", "HP", "EXP", "双击速度")
-    ENEMY_HEADERS = ("序号", "人物", "机体", "等级", "机动", "强度", "防御", "速度", "HP", "金钱", "双击速度")
+    ALLY_HEADERS = (
+        "序号", "人物", "机体", "等级", "机动", "强度", "防御", "速度", "HP", "EXP", "双击速度"
+    )
+    ENEMY_HEADERS = (
+        "序号", "人物", "机体", "等级", "机动", "强度", "防御", "速度", "HP", "金钱", "双击速度"
+    )
+    _NORMAL_STATUS = "color:#356b42; font-size:9px;"
+    _WARNING_STATUS = "color:#9a5b00; font-size:9px;"
+    _ERROR_STATUS = "color:#a32222; font-size:9px;"
 
     def __init__(self, parent: QWidget | None = None, project: Any | None = None) -> None:
         super().__init__(parent)
         self.project = project
         self.save_path: Path | None = None
         self.save_bytes: bytes | None = None
-        self.setWindowTitle("存档编辑器")
+        self.document: LegacySaveDocument | None = None
+        self.last_backup_path: Path | None = None
+        self._display_roster: list[LegacySaveRosterEntry] = []
+        self._display_enemies: list[LegacyBattleEntry] = []
+        self._upper_display_values: dict[int, tuple[int, int, int, int, int]] = {}
+        self._upper_raw_rows: set[int] = set()
+        self._resolved_enemy_units: dict[int, int | None] = {}
+        self._loading_tables = False
+        self._staged = False
+        self._table_draft = False
+        self.setWindowTitle("存档编辑器：")
         self.setFixedSize(1175, 834)
         self.setSizeGripEnabled(False)
         root = QVBoxLayout(self)
@@ -937,11 +967,14 @@ class SaveEditorDialog(QDialog):
         controls.addWidget(QLabel("存档:"))
         self.slot_selector = QComboBox()
         self.slot_selector.addItems(("1：没有数据", "2：没有数据", "3：没有数据"))
+        self.slot_selector.setMinimumWidth(265)
         controls.addWidget(self.slot_selector)
-        controls.addSpacing(50)
+        controls.addSpacing(30)
         controls.addWidget(QLabel("关卡:"))
         self.chapter_selector = QComboBox()
-        self.chapter_selector.addItems([f"{value:02d}" for value in range(1, 33)])
+        self.chapter_selector.addItems(
+            [f"{value:02d}" for value in range(1, LegacySaveCodec.CHAPTER_COUNT + 1)]
+        )
         controls.addWidget(self.chapter_selector)
         self.open_button = QPushButton("打开存档文件")
         self.read_button = QPushButton("读取存档")
@@ -949,10 +982,12 @@ class SaveEditorDialog(QDialog):
         self.save_button = QPushButton("保存存档文件")
         self.open_button.clicked.connect(self.open_file)
         self.read_button.clicked.connect(self.read_save)
-        self.read_button.setEnabled(False)
-        for button in (self.write_button, self.save_button):
-            button.setEnabled(False)
-            button.setToolTip("存档编解码器尚未验证，禁止写入。")
+        self.write_button.clicked.connect(self.write_save)
+        self.save_button.clicked.connect(self.save_file)
+        self.open_button.setToolTip("选择恰好 8192 字节的 FCEUX/Mesen 电池存档。")
+        self.read_button.setToolTip("检查三个槽位的校验和并填充两张表。")
+        self.write_button.setToolTip("把当前表格写入内存中的存档副本，并重算所选槽校验和。")
+        self.save_button.setToolTip("把已写入的内存副本原子保存到文件；覆盖前建立时间戳备份。")
         controls.addWidget(self.open_button)
         controls.addWidget(self.read_button)
         controls.addWidget(self.write_button)
@@ -962,12 +997,25 @@ class SaveEditorDialog(QDialog):
 
         self.ally_table = self._save_table(self.ALLY_HEADERS)
         self.enemy_table = self._save_table(self.ENEMY_HEADERS)
+        self.ally_table.setToolTip(
+            "上表为所选槽位的 16 格常驻队伍；空槽以活动记录为模板。"
+            "人物/机体编号、等级、最终属性和 EXP 可双击编辑。"
+        )
+        self.enemy_table.setToolTip(
+            "下表为活动战场的敌方快照。机体与金钱由当前 ROM 关卡部署推导并只读；"
+            "人物、等级、机动、强度、防御、速度和当前 HP 对应已验证 SRAM 地址。"
+        )
+        self.ally_table.itemChanged.connect(self._mark_table_draft)
+        self.enemy_table.itemChanged.connect(self._mark_table_draft)
+        self.chapter_selector.currentIndexChanged.connect(self._mark_table_draft)
         root.addWidget(self.ally_table, 1)
         root.addWidget(self.enemy_table, 1)
-        self.status = QLabel("尚未打开存档。存档编解码器尚未验证，写入和保存功能保持禁用。")
+        self.status = QLabel(
+            "尚未打开存档。四个按钮按参考窗口常驻；请依次打开、读取、写入内存、保存文件。"
+        )
         self.status.setWordWrap(True)
-        self.status.setMaximumHeight(22)
-        self.status.setStyleSheet("color:#9a5b00; font-size:9px;")
+        self.status.setMaximumHeight(42)
+        self.status.setStyleSheet(self._WARNING_STATUS)
         root.addWidget(self.status)
 
     @staticmethod
@@ -976,39 +1024,639 @@ class SaveEditorDialog(QDialog):
         table.setHorizontalHeaderLabels(headers)
         table.verticalHeader().hide()
         table.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeMode.Stretch)
-        table.setEditTriggers(QTableWidget.EditTrigger.NoEditTriggers)
+        table.setEditTriggers(
+            QTableWidget.EditTrigger.DoubleClicked
+            | QTableWidget.EditTrigger.EditKeyPressed
+        )
         return table
 
+    def _set_status(self, text: str, style: str | None = None) -> None:
+        self.status.setText(text)
+        self.status.setStyleSheet(style or self._NORMAL_STATUS)
+
+    def _mark_table_draft(self, _value: object | None = None) -> None:
+        if self._loading_tables or self.document is None:
+            return
+        self._table_draft = True
+        self._set_status(
+            "表格或关卡有尚未写入内存的改动；请点击“写入存档”。",
+            self._WARNING_STATUS,
+        )
+
+    @staticmethod
+    def _set_item(
+        table: QTableWidget,
+        row: int,
+        column: int,
+        text: str,
+        *,
+        editable: bool,
+        tooltip: str = "",
+    ) -> QTableWidgetItem:
+        item = QTableWidgetItem(text)
+        flags = item.flags()
+        if editable:
+            flags |= Qt.ItemFlag.ItemIsEditable
+            item.setBackground(QColor("#fffbea"))
+        else:
+            flags &= ~Qt.ItemFlag.ItemIsEditable
+        item.setFlags(flags)
+        if tooltip:
+            item.setToolTip(tooltip)
+        table.setItem(row, column, item)
+        return item
+
+    def _clear_tables(self) -> None:
+        self._loading_tables = True
+        try:
+            for table in (self.ally_table, self.enemy_table):
+                table.clearContents()
+                table.setRowCount(12)
+        finally:
+            self._loading_tables = False
+
+    def _display_name(self, kind: str, value: int) -> str:
+        if self.project is None:
+            return f"${value:02X}"
+        try:
+            if kind == "character":
+                return f"${value:02X} {self.project.character_display_name(value)}"
+            if not 0 <= value < self.project.unit_count:
+                return f"${value:02X} 超出机体表"
+            return f"${value:02X} {self.project.unit_display_name(value)}"
+        except (IndexError, ValueError):
+            return f"${value:02X}"
+
+    def _growth_delta(self, unit_id: int, field: str, level: int) -> int:
+        if self.project is None:
+            return 0
+        growth = self.project.get_value(unit_id, f"{field}_growth")
+        count = max(0, min(98, level - 1))
+        if growth <= 200:
+            return growth * count
+        if 201 <= growth <= 253:
+            return sum(LegacyGrowthCodec(self.project.working).record(growth).values[:count])
+        return 0
+
+    def _base_roster_stats(
+        self, character_id: int, unit_id: int, level: int
+    ) -> tuple[int, int, int, int, int]:
+        if self.project is None or not 0 < unit_id < self.project.unit_count:
+            raise ValueError("没有可用于推导最终属性的当前 ROM。")
+        corrections = (0, 0, 0, 0, 0)
+        try:
+            corrections = CharacterAttributesCodec(self.project).read(
+                character_id
+            ).corrections
+        except (IndexError, ValueError):
+            pass
+        return (
+            self.project.get_value(unit_id, "movement") + corrections[0],
+            self.project.get_value(unit_id, "strength")
+            + self._growth_delta(unit_id, "strength", level)
+            + corrections[1],
+            self.project.get_value(unit_id, "defense")
+            + self._growth_delta(unit_id, "defense", level)
+            + corrections[2],
+            self.project.get_value(unit_id, "speed")
+            + self._growth_delta(unit_id, "speed", level)
+            + corrections[3],
+            self.project.get_value(unit_id, "hp")
+            + self._growth_delta(unit_id, "hp", level)
+            + corrections[4],
+        )
+
+    def _roster_display_stats(
+        self, entry: LegacySaveRosterEntry
+    ) -> tuple[tuple[int, int, int, int, int], bool]:
+        bonuses = (
+            entry.movement_bonus,
+            entry.strength_bonus,
+            entry.defense_bonus,
+            entry.speed_bonus,
+            entry.hp_bonus,
+        )
+        try:
+            base = self._base_roster_stats(
+                entry.character_id, entry.unit_id, entry.level
+            )
+        except (IndexError, ValueError):
+            return bonuses, True
+        limits = (0xFF, 0xFF, 0xFF, 0xFF, 0xFFFF)
+        return tuple(
+            min(limit, base_value + bonus)
+            for base_value, bonus, limit in zip(base, bonuses, limits, strict=True)
+        ), False
+
+    def _double_speed(self, speed: int) -> int:
+        try:
+            attack_percent, defense_percent, bonus = (
+                self.project.get_double_hit_values()
+                if self.project is not None
+                else (70, 90, 20)
+            )
+        except ValueError:
+            attack_percent, defense_percent, bonus = (70, 90, 20)
+        attack_percent = max(1, attack_percent)
+        defense_value = speed * defense_percent // 100 + bonus
+        return ((defense_value + 1) * 100 + attack_percent - 1) // attack_percent
+
+    def _selected_source(self, document: LegacySaveDocument) -> LegacySaveSlot:
+        slot = document.slots[self.slot_selector.currentIndex()]
+        return slot if slot.occupied else document.active
+
+    def _refresh_slot_labels(self, document: LegacySaveDocument) -> None:
+        current = self.slot_selector.currentIndex()
+        self.slot_selector.blockSignals(True)
+        try:
+            for index, slot in enumerate(document.slots):
+                if slot.occupied:
+                    label = (
+                        f"{slot.number}：第{slot.chapter_number:02d}关 · "
+                        f"{len(slot.occupied_roster)}人"
+                    )
+                else:
+                    label = f"{slot.number}：没有数据"
+                self.slot_selector.setItemText(index, label)
+            self.slot_selector.setCurrentIndex(max(0, current))
+        finally:
+            self.slot_selector.blockSignals(False)
+
+    def _resolve_enemy_units_for_active(
+        self, document: LegacySaveDocument
+    ) -> dict[int, int | None]:
+        result = {entry.index: None for entry in document.enemies}
+        if self.project is None or document.active.chapter_number is None:
+            return result
+        map_id = document.active.chapter_number - 1
+        try:
+            candidates = list(self.project.get_scenario_layout(map_id).enemies)
+        except (IndexError, ValueError):
+            return result
+        used: set[int] = set()
+        for entry in document.enemies:
+            exact = [
+                index
+                for index, candidate in enumerate(candidates)
+                if index not in used
+                and candidate.pilot_id == entry.character_id
+                and candidate.level == entry.level
+            ]
+            matched = exact[0] if len(exact) == 1 else None
+            if matched is None and not exact:
+                same_pilot = [
+                    index
+                    for index, candidate in enumerate(candidates)
+                    if index not in used
+                    and candidate.pilot_id == entry.character_id
+                ]
+                matched = same_pilot[0] if len(same_pilot) == 1 else None
+            if matched is not None:
+                used.add(matched)
+                result[entry.index] = candidates[matched].unit_id
+        return result
+
+    def _populate_tables(self, document: LegacySaveDocument) -> None:
+        source = self._selected_source(document)
+        self._loading_tables = True
+        try:
+            self.chapter_selector.setCurrentIndex(
+                (source.chapter_number or 1) - 1
+            )
+            self._display_roster = list(source.occupied_roster)
+            self._display_enemies = list(document.enemies)
+            self._upper_display_values.clear()
+            self._upper_raw_rows.clear()
+            self._resolved_enemy_units = self._resolve_enemy_units_for_active(document)
+
+            self.ally_table.clearContents()
+            self.ally_table.setRowCount(max(12, len(self._display_roster)))
+            for row, entry in enumerate(self._display_roster):
+                self._set_item(
+                    self.ally_table, row, 0, f"{entry.index:02d}", editable=False
+                ).setData(Qt.ItemDataRole.UserRole, entry.index)
+                self._set_item(
+                    self.ally_table,
+                    row,
+                    1,
+                    self._display_name("character", entry.character_id),
+                    editable=True,
+                    tooltip="编辑时保留或输入 $00—$FF 人物编号。",
+                )
+                self._set_item(
+                    self.ally_table,
+                    row,
+                    2,
+                    self._display_name("unit", entry.unit_id),
+                    editable=True,
+                    tooltip="编辑时保留或输入 $00—$FF 机体编号。",
+                )
+                self._set_item(
+                    self.ally_table, row, 3, str(entry.level), editable=True
+                )
+                displayed, raw_mode = self._roster_display_stats(entry)
+                self._upper_display_values[entry.index] = displayed
+                if raw_mode:
+                    self._upper_raw_rows.add(entry.index)
+                stat_tooltip = (
+                    "未载入匹配 ROM，当前数字是存档中的原始道具附加值。"
+                    if raw_mode
+                    else "显示最终属性；写入时反算为存档中的道具附加值。"
+                )
+                for column, value in enumerate(displayed, 4):
+                    self._set_item(
+                        self.ally_table,
+                        row,
+                        column,
+                        str(value),
+                        editable=True,
+                        tooltip=stat_tooltip,
+                    )
+                self._set_item(
+                    self.ally_table, row, 9, str(entry.experience), editable=True
+                )
+                self._set_item(
+                    self.ally_table,
+                    row,
+                    10,
+                    str(self._double_speed(displayed[3])),
+                    editable=False,
+                    tooltip="按当前“其他”双击公式计算的对手最低速度。",
+                )
+
+            self.enemy_table.clearContents()
+            self.enemy_table.setRowCount(max(12, len(self._display_enemies)))
+            for row, entry in enumerate(self._display_enemies):
+                unit_id = self._resolved_enemy_units.get(entry.index)
+                self._set_item(
+                    self.enemy_table, row, 0, f"{entry.index:02d}", editable=False
+                ).setData(Qt.ItemDataRole.UserRole, entry.index)
+                self._set_item(
+                    self.enemy_table,
+                    row,
+                    1,
+                    self._display_name("character", entry.character_id),
+                    editable=True,
+                    tooltip="此列对应活动战场人物图像字节。",
+                )
+                unit_text = (
+                    self._display_name("unit", unit_id)
+                    if unit_id is not None
+                    else f"未解析（图像 ${entry.unit_image:02X}）"
+                )
+                self._set_item(
+                    self.enemy_table,
+                    row,
+                    2,
+                    unit_text,
+                    editable=False,
+                    tooltip="活动 SRAM 不保存机体 ID；仅在当前 ROM 关卡部署可唯一匹配时显示。",
+                )
+                for column, value in enumerate(
+                    (
+                        entry.level,
+                        entry.movement,
+                        entry.strength,
+                        entry.defense,
+                        entry.speed,
+                        entry.hp,
+                    ),
+                    3,
+                ):
+                    self._set_item(
+                        self.enemy_table, row, column, str(value), editable=True
+                    )
+                money = ""
+                if unit_id is not None and self.project is not None:
+                    try:
+                        money = str(self.project.get_value(unit_id, "upgrade") * 10)
+                    except (IndexError, ValueError):
+                        money = ""
+                self._set_item(
+                    self.enemy_table,
+                    row,
+                    9,
+                    money,
+                    editable=False,
+                    tooltip="由当前 ROM 的机体基础金钱推导；SRAM 中没有逐敌金钱字段。",
+                )
+                self._set_item(
+                    self.enemy_table,
+                    row,
+                    10,
+                    str(self._double_speed(entry.speed)),
+                    editable=False,
+                )
+        finally:
+            self._loading_tables = False
+        self._table_draft = False
+
+    @staticmethod
+    def _parse_id(text: str, label: str) -> int:
+        match = re.match(r"\s*(?:\$|0x)?([0-9A-Fa-f]{1,2})(?=\s|：|:|$)", text)
+        if match is None:
+            raise ValueError(f"{label}必须以 $00—$FF 十六进制编号开头。")
+        return int(match.group(1), 16)
+
+    @staticmethod
+    def _parse_number(
+        table: QTableWidget,
+        row: int,
+        column: int,
+        label: str,
+        maximum: int,
+    ) -> int:
+        item = table.item(row, column)
+        if item is None:
+            raise ValueError(f"{label}缺少数值。")
+        try:
+            value = int(item.text().strip(), 10)
+        except ValueError as exc:
+            raise ValueError(f"{label}必须为十进制整数。") from exc
+        if not 0 <= value <= maximum:
+            raise ValueError(f"{label}必须在 0—{maximum} 之间。")
+        return value
+
+    def _roster_from_table(self) -> tuple[LegacySaveRosterEntry, ...]:
+        result: list[LegacySaveRosterEntry] = []
+        for row, original in enumerate(self._display_roster):
+            character_item = self.ally_table.item(row, 1)
+            unit_item = self.ally_table.item(row, 2)
+            if character_item is None or unit_item is None:
+                raise ValueError(f"上表第 {row + 1} 行缺少人物或机体。")
+            character_id = self._parse_id(character_item.text(), "人物编号")
+            unit_id = self._parse_id(unit_item.text(), "机体编号")
+            level = self._parse_number(self.ally_table, row, 3, "等级", 99)
+            displayed = tuple(
+                self._parse_number(
+                    self.ally_table,
+                    row,
+                    column,
+                    self.ALLY_HEADERS[column],
+                    0xFFFF if column == 8 else 0xFF,
+                )
+                for column in range(4, 9)
+            )
+            original_displayed = self._upper_display_values[original.index]
+            identity_unchanged = (
+                character_id == original.character_id
+                and unit_id == original.unit_id
+                and level == original.level
+            )
+            if original.index in self._upper_raw_rows:
+                bonuses = displayed
+            elif identity_unchanged and displayed == original_displayed:
+                bonuses = (
+                    original.movement_bonus,
+                    original.strength_bonus,
+                    original.defense_bonus,
+                    original.speed_bonus,
+                    original.hp_bonus,
+                )
+            else:
+                base = self._base_roster_stats(character_id, unit_id, level)
+                bonuses = tuple(
+                    value - base_value
+                    for value, base_value in zip(displayed, base, strict=True)
+                )
+                limits = (0xFF, 0xFF, 0xFF, 0xFF, 0xFFFF)
+                if any(
+                    not 0 <= value <= limit
+                    for value, limit in zip(bonuses, limits, strict=True)
+                ):
+                    raise ValueError(
+                        f"上表第 {row + 1} 行最终属性无法反算为非负的存档附加值。"
+                    )
+            experience = self._parse_number(
+                self.ally_table, row, 9, "EXP", 0xFFFF
+            )
+            result.append(
+                replace(
+                    original,
+                    character_id=character_id,
+                    unit_id=unit_id,
+                    level=level,
+                    movement_bonus=bonuses[0],
+                    strength_bonus=bonuses[1],
+                    defense_bonus=bonuses[2],
+                    speed_bonus=bonuses[3],
+                    hp_bonus=bonuses[4],
+                    experience=experience,
+                )
+            )
+        return tuple(result)
+
+    def _enemies_from_table(self) -> tuple[LegacyBattleEntry, ...]:
+        result: list[LegacyBattleEntry] = []
+        for row, original in enumerate(self._display_enemies):
+            character_item = self.enemy_table.item(row, 1)
+            if character_item is None:
+                raise ValueError(f"下表第 {row + 1} 行缺少人物。")
+            result.append(
+                replace(
+                    original,
+                    character_id=self._parse_id(character_item.text(), "人物编号"),
+                    level=self._parse_number(self.enemy_table, row, 3, "等级", 0xFF),
+                    movement=self._parse_number(self.enemy_table, row, 4, "机动", 0xFF),
+                    strength=self._parse_number(self.enemy_table, row, 5, "强度", 0xFF),
+                    defense=self._parse_number(self.enemy_table, row, 6, "防御", 0xFF),
+                    speed=self._parse_number(self.enemy_table, row, 7, "速度", 0xFF),
+                    hp=self._parse_number(self.enemy_table, row, 8, "HP", 0xFFFF),
+                )
+            )
+        return tuple(result)
+
     def open_file(self) -> None:
+        if self._staged or self._table_draft:
+            answer = QMessageBox.question(
+                self,
+                "尚未保存",
+                "表格或内存中的存档改动尚未保存。"
+                "放弃改动并打开其他文件吗？",
+                QMessageBox.StandardButton.Discard
+                | QMessageBox.StandardButton.Cancel,
+                QMessageBox.StandardButton.Cancel,
+            )
+            if answer != QMessageBox.StandardButton.Discard:
+                return
         filename, _filter = QFileDialog.getOpenFileName(
-            self, "打开存档文件", str(Path.cwd()), "存档文件 (*.sav *.srm *.dat);;所有文件 (*)"
+            self,
+            "打开存档",
+            str(Path.cwd()),
+            "存档文件 (*.sav);;所有文件 (*)",
         )
         if filename:
-            self.load_path(Path(filename))
+            try:
+                self.load_path(Path(filename))
+            except (OSError, ValueError) as exc:
+                self._set_status(f"打开失败：{exc}", self._ERROR_STATUS)
 
     def load_path(self, path: str | Path) -> None:
         candidate = Path(path).expanduser().resolve()
+        if not candidate.is_file():
+            raise ValueError("所选存档文件不存在。")
         size = candidate.stat().st_size
-        if size > self.MAX_SAVE_SIZE:
-            raise ValueError("存档文件超过4 MiB安全读取上限。")
+        if size != LegacySaveCodec.SAVE_SIZE:
+            raise LegacySaveFormatError(
+                f"存档必须恰好为 {LegacySaveCodec.SAVE_SIZE} 字节，当前为 {size} 字节。"
+            )
         self.save_path = candidate
         self.save_bytes = None
-        self.read_button.setEnabled(True)
-        self.status.setText(f"已打开 {candidate.name}（{size} 字节），请点击“读取存档”。")
+        self.document = None
+        self._staged = False
+        self._table_draft = False
+        self.last_backup_path = None
+        self._clear_tables()
+        self._set_status(
+            f"已打开 {candidate.name}（{size} 字节），请点击“读取存档”。",
+            self._WARNING_STATUS,
+        )
 
     def read_save(self) -> None:
         if self.save_path is None:
+            self._set_status("请先点击“打开存档文件”。", self._WARNING_STATUS)
             return
-        data = self.save_path.read_bytes()
-        if len(data) > self.MAX_SAVE_SIZE:
-            raise ValueError("存档文件超过4 MiB安全读取上限。")
+        if self._table_draft:
+            self._set_status(
+                "表格仍有未写入内存的改动；请先点击“写入存档”。",
+                self._WARNING_STATUS,
+            )
+            return
+        try:
+            from_memory = self._staged and self.save_bytes is not None
+            data = self.save_bytes if from_memory else self.save_path.read_bytes()
+            document = LegacySaveCodec.decode(data)
+        except (OSError, ValueError) as exc:
+            self._set_status(f"读取失败：{exc}", self._ERROR_STATUS)
+            return
         self.save_bytes = data
+        self.document = document
+        self._staged = from_memory
+        self._refresh_slot_labels(document)
+        self._populate_tables(document)
         digest = hashlib.sha256(data).hexdigest().upper()
-        self.status.setText(
-            f"已读取 {self.save_path.name}：{len(data)} 字节，SHA-256 {digest[:16]}…。"
-            "尚无经过验证的存档编解码器，因此不会填充猜测数据，写入和保存保持禁用。"
+        valid_slots = sum(slot.occupied for slot in document.slots)
+        source = self._selected_source(document)
+        source_label = (
+            f"槽 {source.number}" if source.number else "活动记录（所选槽无数据）"
         )
-        self.status.setStyleSheet("color:#9a5b00; font-size:9px;")
+        self._set_status(
+            f"已读取 {self.save_path.name}：SHA-256 {digest[:16]}…；"
+            f"有效槽 {valid_slots}/3，当前显示{source_label}。"
+        )
+
+    def write_save(self) -> None:
+        if self.save_bytes is None or self.document is None:
+            self._set_status("请先打开并读取存档。", self._WARNING_STATUS)
+            return
+        try:
+            staged = LegacySaveCodec.replace_slot(
+                self.save_bytes,
+                self.slot_selector.currentIndex() + 1,
+                chapter_number=self.chapter_selector.currentIndex() + 1,
+                roster=self._roster_from_table(),
+            )
+            staged = LegacySaveCodec.replace_battle_entries(
+                staged, "enemy", self._enemies_from_table()
+            )
+            document = LegacySaveCodec.decode(staged)
+        except (IndexError, ValueError) as exc:
+            self._set_status(f"写入内存失败：{exc}", self._ERROR_STATUS)
+            return
+        self.save_bytes = staged
+        self.document = document
+        self._staged = True
+        self._table_draft = False
+        self._refresh_slot_labels(document)
+        self._populate_tables(document)
+        slot = document.slots[self.slot_selector.currentIndex()]
+        self._set_status(
+            f"已写入内存：槽 {slot.number} 校验和 ${slot.calculated_checksum:04X}；"
+            "磁盘文件尚未改变，请点击“保存存档文件”。",
+            self._WARNING_STATUS,
+        )
+
+    @staticmethod
+    def _backup_existing(path: Path) -> Path:
+        timestamp = datetime.now().strftime("%Y%m%d-%H%M%S")
+        suffix = 0
+        while True:
+            tail = "" if suffix == 0 else f"-{suffix:02d}"
+            backup = path.with_name(path.name + f".{timestamp}{tail}.bak")
+            if not backup.exists():
+                shutil.copy2(path, backup)
+                return backup
+            suffix += 1
+
+    def save_file(self) -> None:
+        if self.save_path is None or self.save_bytes is None:
+            self._set_status("请先打开、读取并写入存档。", self._WARNING_STATUS)
+            return
+        if self._table_draft:
+            self._set_status(
+                "表格仍有未写入内存的改动；请先点击“写入存档”。",
+                self._WARNING_STATUS,
+            )
+            return
+        if not self._staged:
+            self._set_status("当前没有需要保存的内存改动。", self._WARNING_STATUS)
+            return
+        temporary: Path | None = None
+        try:
+            self.last_backup_path = self._backup_existing(self.save_path)
+            descriptor, temporary_name = tempfile.mkstemp(
+                prefix=f".{self.save_path.name}.",
+                suffix=".tmp",
+                dir=self.save_path.parent,
+            )
+            temporary = Path(temporary_name)
+            with os.fdopen(descriptor, "wb") as stream:
+                stream.write(self.save_bytes)
+                stream.flush()
+                os.fsync(stream.fileno())
+            os.replace(temporary, self.save_path)
+            temporary = None
+        except OSError as exc:
+            self._set_status(f"保存失败：{exc}", self._ERROR_STATUS)
+            return
+        finally:
+            if temporary is not None:
+                try:
+                    temporary.unlink()
+                except OSError:
+                    pass
+        self._staged = False
+        digest = hashlib.sha256(self.save_bytes).hexdigest().upper()
+        self._set_status(
+            f"已保存 {self.save_path.name}，SHA-256 {digest[:16]}…；"
+            f"备份：{self.last_backup_path.name if self.last_backup_path else '无'}。"
+        )
+
+    def closeEvent(self, event: QCloseEvent) -> None:
+        if not self._staged and not self._table_draft:
+            event.accept()
+            return
+        answer = QMessageBox.question(
+            self,
+            "尚未保存",
+            "表格或内存中的存档改动尚未保存。",
+            QMessageBox.StandardButton.Save
+            | QMessageBox.StandardButton.Discard
+            | QMessageBox.StandardButton.Cancel,
+            QMessageBox.StandardButton.Cancel,
+        )
+        if answer == QMessageBox.StandardButton.Save:
+            if self._table_draft:
+                self.write_save()
+            self.save_file()
+            if self._staged or self._table_draft:
+                event.ignore()
+            else:
+                event.accept()
+        elif answer == QMessageBox.StandardButton.Discard:
+            event.accept()
+        else:
+            event.ignore()
 
 
 class OtherSettingsDialog(QDialog):

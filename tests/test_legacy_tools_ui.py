@@ -3,6 +3,7 @@ from __future__ import annotations
 import os
 from pathlib import Path
 import tempfile
+from types import SimpleNamespace
 import unittest
 
 os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
@@ -22,6 +23,7 @@ from dc_modifier.legacy_tools import (
     _glyph_pixmap,
 )
 from fc_editor.dc_text import reference_dc_text_table
+from fc_editor.codecs.legacy_save import LegacySaveCodec, LegacySaveFormatError
 from fc_editor.text_table import TextTable
 from fc_rom_editor_core import RomProject
 
@@ -268,23 +270,131 @@ class LegacyToolDialogTests(QtTestCase):
         self.assertNotEqual(before_calculation, after_parameter_change)
         dialog.close()
 
-    def test_save_editor_reads_file_but_never_enables_unverified_writes(self) -> None:
+    def test_save_editor_keeps_reference_buttons_and_independent_title(self) -> None:
+        dialog = SaveEditorDialog()
+        self.assertEqual(dialog.windowTitle(), "存档编辑器：")
+        self.assertTrue(dialog.open_button.isEnabled())
+        self.assertTrue(dialog.read_button.isEnabled())
+        self.assertTrue(dialog.write_button.isEnabled())
+        self.assertTrue(dialog.save_button.isEnabled())
+        self.assertEqual(dialog.ally_table.columnCount(), 11)
+        self.assertEqual(dialog.enemy_table.columnCount(), 11)
+        dialog.close()
+
+    def test_save_editor_reads_stages_and_atomically_saves_verified_slot(self) -> None:
         dialog = SaveEditorDialog(project=self.project)
         with tempfile.TemporaryDirectory() as directory:
             path = Path(directory) / "sample.sav"
-            payload = bytes(range(256))
+            payload = bytearray(LegacySaveCodec.SAVE_SIZE)
+            active = bytearray(LegacySaveCodec.SLOT_LENGTH)
+            active[LegacySaveCodec.CHAPTER_OFFSET] = 4
+            active[LegacySaveCodec.CHARACTER_OFFSET] = 4
+            active[LegacySaveCodec.UNIT_OFFSET] = 9
+            active[LegacySaveCodec.LEVEL_OFFSET] = 8
+            active[LegacySaveCodec.EXP_LOW_OFFSET] = 0x34
+            active[LegacySaveCodec.EXP_HIGH_OFFSET] = 0x12
+            payload[
+                LegacySaveCodec.ACTIVE_OFFSET : LegacySaveCodec.ACTIVE_OFFSET
+                + LegacySaveCodec.SLOT_LENGTH
+            ] = active
+            slot_offset = LegacySaveCodec.SLOT_DATA_OFFSETS[0]
+            checksum_offset = LegacySaveCodec.SLOT_CHECKSUM_OFFSETS[0]
+            payload[slot_offset : slot_offset + LegacySaveCodec.SLOT_LENGTH] = active
+            payload[checksum_offset : checksum_offset + 2] = (
+                LegacySaveCodec.checksum(active).to_bytes(2, "little")
+            )
+            payload = bytes(payload)
             path.write_bytes(payload)
             dialog.load_path(path)
-            self.assertTrue(dialog.read_button.isEnabled())
             dialog.read_button.click()
             self.assertEqual(dialog.save_bytes, payload)
-            self.assertIn("256 字节", dialog.status.text())
-            self.assertEqual(dialog.ally_table.rowCount(), 12)
-            self.assertEqual(dialog.enemy_table.rowCount(), 12)
-            self.assertFalse(dialog.write_button.isEnabled())
-            self.assertFalse(dialog.save_button.isEnabled())
+            self.assertIn("有效槽 1/3", dialog.status.text())
+            self.assertEqual(dialog.ally_table.item(0, 1).text().split()[0], "$04")
+            self.assertEqual(dialog.ally_table.item(0, 2).text().split()[0], "$09")
+            dialog.ally_table.item(0, 9).setText("1000")
+            self.assertTrue(dialog._table_draft)
+            dialog.write_button.click()
+            self.assertTrue(dialog._staged)
+            self.assertEqual(path.read_bytes(), payload)
+            staged = LegacySaveCodec.decode(dialog.save_bytes)
+            self.assertTrue(staged.slots[0].checksum_valid)
+            self.assertEqual(staged.slots[0].roster[0].experience, 1000)
+            dialog.slot_selector.setCurrentIndex(1)
+            dialog.read_button.click()
+            self.assertTrue(dialog._staged)
+            self.assertEqual(
+                LegacySaveCodec.decode(dialog.save_bytes).slots[0].roster[0].experience,
+                1000,
+            )
+            dialog.slot_selector.setCurrentIndex(0)
+            dialog.read_button.click()
+            self.assertEqual(dialog.ally_table.item(0, 9).text(), "1000")
+            dialog.save_button.click()
+            self.assertFalse(dialog._staged)
+            self.assertEqual(path.read_bytes(), dialog.save_bytes)
+            self.assertIsNotNone(dialog.last_backup_path)
+            self.assertEqual(dialog.last_backup_path.read_bytes(), payload)
             self._show(dialog)
             self.assertLess(self._top(dialog.ally_table, dialog), self._top(dialog.enemy_table, dialog))
+        dialog.close()
+
+    def test_save_editor_does_not_silently_drop_an_unwritten_table_draft(self) -> None:
+        dialog = SaveEditorDialog(project=self.project)
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "sample.sav"
+            payload = bytearray(LegacySaveCodec.SAVE_SIZE)
+            active = bytearray(LegacySaveCodec.SLOT_LENGTH)
+            active[LegacySaveCodec.CHAPTER_OFFSET] = 4
+            active[LegacySaveCodec.CHARACTER_OFFSET] = 4
+            active[LegacySaveCodec.UNIT_OFFSET] = 9
+            active[LegacySaveCodec.LEVEL_OFFSET] = 8
+            slot_offset = LegacySaveCodec.SLOT_DATA_OFFSETS[0]
+            checksum_offset = LegacySaveCodec.SLOT_CHECKSUM_OFFSETS[0]
+            payload[slot_offset : slot_offset + LegacySaveCodec.SLOT_LENGTH] = active
+            payload[checksum_offset : checksum_offset + 2] = (
+                LegacySaveCodec.checksum(active).to_bytes(2, "little")
+            )
+            path.write_bytes(payload)
+            dialog.load_path(path)
+            dialog.read_save()
+            dialog.ally_table.item(0, 9).setText("123")
+            dialog.read_save()
+            self.assertEqual(dialog.ally_table.item(0, 9).text(), "123")
+            self.assertIn("未写入内存", dialog.status.text())
+        dialog._table_draft = False
+        dialog.close()
+
+    def test_save_editor_only_derives_enemy_unit_from_a_unique_rom_match(self) -> None:
+        data = bytearray(LegacySaveCodec.SAVE_SIZE)
+        data[LegacySaveCodec.ACTIVE_OFFSET + LegacySaveCodec.CHAPTER_OFFSET] = 4
+        layout = LegacySaveCodec._BATTLE_LAYOUT["enemy"]
+        base = LegacySaveCodec.ACTIVE_OFFSET
+        data[base + layout["character"]] = 0x2F
+        data[base + layout["level"]] = 12
+        document = LegacySaveCodec.decode(data)
+
+        class Project:
+            def __init__(self, enemies) -> None:
+                self.enemies = enemies
+
+            def get_scenario_layout(self, _map_id):
+                return SimpleNamespace(enemies=self.enemies)
+
+        matching = SimpleNamespace(pilot_id=0x2F, level=12, unit_id=9)
+        duplicate = SimpleNamespace(pilot_id=0x2F, level=12, unit_id=10)
+        dialog = SaveEditorDialog(project=Project([matching, duplicate]))
+        self.assertIsNone(dialog._resolve_enemy_units_for_active(document)[0])
+        dialog.project = Project([matching])
+        self.assertEqual(dialog._resolve_enemy_units_for_active(document)[0], 9)
+        dialog.close()
+
+    def test_save_editor_rejects_non_8k_files_before_reading(self) -> None:
+        dialog = SaveEditorDialog()
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "bad.sav"
+            path.write_bytes(bytes(256))
+            with self.assertRaisesRegex(LegacySaveFormatError, "8192"):
+                dialog.load_path(path)
         dialog.close()
 
     def test_other_settings_loads_real_defaults_and_cancel_discards_drafts(self) -> None:

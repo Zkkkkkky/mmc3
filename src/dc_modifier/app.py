@@ -698,8 +698,6 @@ class MainWindow(QMainWindow):
         )
 
     def open_save_editor(self) -> None:
-        if self.project is None:
-            return
         from .legacy_tools import SaveEditorDialog
 
         self._run_tool_dialog(SaveEditorDialog(parent=self, project=self.project))
@@ -1253,10 +1251,13 @@ class MainWindow(QMainWindow):
             self.export_unit_action,
             self.export_avatar_extended_action,
             self.attribute_calculator_action,
-            self.save_editor_action,
             self.other_settings_action,
         ):
             action.setEnabled(loaded)
+        # The save editor owns an independent SRAM file lifecycle and remains
+        # usable before a ROM is loaded.  ROM-backed names/stat derivation is
+        # added when a project is available, but is not required to open it.
+        self.save_editor_action.setEnabled(True)
         for key, action in self.page_actions.items():
             action.setEnabled(loaded)
         # D2: preserve the reference command and Ctrl+L binding, but never
@@ -1270,7 +1271,7 @@ class MainWindow(QMainWindow):
             )
         )
         self.redo_action.setEnabled(loaded and bool(self.project and self.project.can_redo))
-        self.data_menu.menuAction().setVisible(loaded)
+        self.data_menu.menuAction().setVisible(True)
         self.extension_menu.menuAction().setVisible(loaded)
         self.project_menu.menuAction().setVisible(loaded)
 

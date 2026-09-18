@@ -245,7 +245,7 @@ class DesktopEditorSmokeTests(QtTestCase):
             self.assertEqual(empty.windowTitle(), LEGACY_WINDOW_TITLE)
             self.assertEqual(
                 [action.text() for action in empty.menuBar().actions() if action.isVisible()],
-                ["文件(&F)", "帮助(&H)"],
+                ["文件(&F)", "数据(&A)", "帮助(&H)"],
             )
             file_menu = empty.menuBar().actions()[0].menu()
             assert file_menu is not None
@@ -267,7 +267,9 @@ class DesktopEditorSmokeTests(QtTestCase):
                 [action.data() for action in file_menu.actions()],
                 [20001, 20003, 20004, 20005, 20006],
             )
-            self.assertFalse(empty.data_menu.menuAction().isVisible())
+            self.assertTrue(empty.data_menu.menuAction().isVisible())
+            self.assertTrue(empty.save_editor_action.isEnabled())
+            self.assertFalse(empty.database_action.isEnabled())
             self.assertFalse(empty.extension_menu.menuAction().isVisible())
             self.assertFalse(empty.project_menu.menuAction().isVisible())
             self.assertTrue(empty.load_rom(workspace_module.DEFAULT_ROM, quiet=True))
