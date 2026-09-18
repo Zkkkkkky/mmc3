@@ -12,6 +12,7 @@ os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import (
     QApplication,
+    QLineEdit,
     QListWidget,
     QMessageBox,
     QPushButton,
@@ -419,8 +420,23 @@ class LegacyWindowTests(QtTestCase):
                 for index in range(dialog.setup_event_tabs.count())
             )
         )
-        self.assertTrue(dialog.setup_event_pages[0].isVisible())
-        self.assertTrue(all(page.isHidden() for page in dialog.setup_event_pages[1:]))
+        self.assertTrue(all(page.isHidden() for page in dialog.setup_event_pages))
+        self.assertTrue(
+            all(
+                dialog.setup_event_tabs.widget(index).findChild(QLineEdit) is None
+                for index in range(dialog.setup_event_tabs.count())
+            )
+        )
+        self.assertTrue(
+            all(
+                overview is not page.record_list
+                for overview, page in zip(
+                    dialog.setup_event_lists, dialog.setup_event_pages
+                )
+            )
+        )
+        self.assertEqual(dialog.space_button.text(), ScenarioDialog.SPACE_BUTTON_TEXT)
+        self.assertFalse(dialog.space_button.isEnabled())
         self.assertTrue(dialog.action_event_page.isHidden())
         self.assertTrue(dialog.map_event_page.isHidden())
         title_pixmap = dialog.title_preview.pixmap()
@@ -434,6 +450,20 @@ class LegacyWindowTests(QtTestCase):
         dialog.tabs.setCurrentIndex(3)
         self.assertIs(shared_context.parentWidget(), dialog._splitters[3])
         self.assertFalse(shared_context.isHidden())
+
+    def test_scenario_setup_projection_tracks_hidden_event_editor(self) -> None:
+        dialog = self._show(ScenarioDialog(self.project, initial_scenario_id=0))
+        overview = dialog.setup_event_lists[0]
+        controller = dialog.setup_event_pages[0]
+        self.assertEqual(overview.count(), controller.record_list.count())
+        self.assertGreater(overview.count(), 1)
+
+        overview.setCurrentRow(1)
+        self.application.processEvents()
+
+        self.assertEqual(controller.record_list.currentRow(), 1)
+        self.assertEqual(overview.item(1).text(), controller.record_list.item(1).text())
+        self.assertIn("双击", overview.item(1).toolTip())
 
     def test_scenario_open_does_not_manufacture_unknown_opcode_drafts(self) -> None:
         dialog = self._show(ScenarioDialog(self.project, initial_scenario_id=0))

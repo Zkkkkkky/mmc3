@@ -2520,6 +2520,10 @@ class ScenarioDialog(TransactionalProjectDialog):
         "胜利文字",
     )
     EVENT_TAB_LABELS = ("界面事件", "回合事件", "即时事件")
+    SPACE_BUTTON_TEXT = (
+        "检查剧情；界面事件和回合事件；即时事件；"
+        "行动事件，劝降事件和地图事件剩余空间"
+    )
 
     def __init__(
         self,
@@ -2536,7 +2540,10 @@ class ScenarioDialog(TransactionalProjectDialog):
         self.resize(1180, 780)
         self.setMinimumSize(900, 600)
 
-        self.setup_event_pages = [self.register_page(LegacyScenarioEventsPage(phase)) for phase in range(3)]
+        self.setup_event_pages = [
+            self._register_hidden_page(LegacyScenarioEventsPage(phase))
+            for phase in range(3)
+        ]
         self.action_event_page = self._register_hidden_page(_LegacyEventController())
         self.persuasion_page = self._register_hidden_page(PersuasionPage())
         self.map_event_page = self._register_hidden_page(_LegacyEventController())
@@ -2586,8 +2593,12 @@ class ScenarioDialog(TransactionalProjectDialog):
         layout.addWidget(self.tabs, 1)
 
         footer = QHBoxLayout()
-        self.space_button = QPushButton("检查剧情剩余空间")
-        self.space_button.clicked.connect(self._show_story_capacity)
+        self.space_button = QPushButton(self.SPACE_BUTTON_TEXT)
+        self.space_button.setEnabled(False)
+        self.space_button.setToolTip(
+            "参考版点击后的显示形态与六类事件分区口径尚未取得动态证据；"
+            "为避免给出错误容量结论，当前保持禁用。"
+        )
         self.ok_button = QPushButton("确定")
         self.cancel_button = QPushButton("取消")
         self.ok_button.setDefault(True)
@@ -2674,14 +2685,34 @@ class ScenarioDialog(TransactionalProjectDialog):
         self.setup_event_tabs = QTabWidget()
         self.setup_event_tabs.setObjectName("legacyScenarioEventTabs")
         self.setup_event_lists: list[QListWidget] = []
-        self.setup_code_buttons: list[QPushButton] = []
         for label, controller in zip(self.EVENT_TAB_LABELS, self.setup_event_pages):
-            self.setup_event_lists.append(controller.record_list)
-            self.setup_code_buttons.append(controller.apply_button)
-            self.setup_event_tabs.addTab(controller, label)
+            panel, overview = self._setup_event_list_panel(controller)
+            self.setup_event_lists.append(overview)
+            self.setup_event_tabs.addTab(panel, label)
         event_layout.addWidget(self.setup_event_tabs)
         page_layout.addWidget(event_group, 1)
         return page
+
+    def _setup_event_list_panel(
+        self, controller: LegacyScenarioEventsPage
+    ) -> tuple[QWidget, QListWidget]:
+        """Expose the reference list while keeping raw editing in a dialog."""
+
+        host = QWidget()
+        layout = QVBoxLayout(host)
+        layout.setContentsMargins(3, 3, 3, 3)
+        overview = QListWidget()
+        overview.setAlternatingRowColors(True)
+        overview.setUniformItemSizes(True)
+        overview.setToolTip("双击事件指令打开等长参数编辑。")
+        overview.currentRowChanged.connect(controller.record_list.setCurrentRow)
+        overview.itemDoubleClicked.connect(
+            lambda _item, page=controller: self._open_advanced_editor(
+                page, "事件指令编辑"
+            )
+        )
+        layout.addWidget(overview, 1)
+        return host, overview
 
     def _event_list_panel(
         self, controller: EventPage
@@ -3033,6 +3064,29 @@ class ScenarioDialog(TransactionalProjectDialog):
             self._select_event_item(page, overview.currentItem())
 
     @staticmethod
+    def _refresh_setup_event_overview(
+        page: LegacyScenarioEventsPage, overview: QListWidget
+    ) -> None:
+        selected_row = page.record_list.currentRow()
+        overview.blockSignals(True)
+        overview.clear()
+        for row in range(page.record_list.count()):
+            source = page.record_list.item(row)
+            item = QListWidgetItem(source.text())
+            if row < len(page._instructions):
+                instruction = page._instructions[row]
+                item.setToolTip(
+                    f"Bank ${instruction.bank:02X} · ${instruction.address:04X} · "
+                    f"{instruction.raw.hex(' ').upper()}\n双击打开等长参数编辑。"
+                )
+            overview.addItem(item)
+        if overview.count():
+            overview.setCurrentRow(min(max(selected_row, 0), overview.count() - 1))
+        overview.blockSignals(False)
+        if overview.currentRow() >= 0:
+            page.record_list.setCurrentRow(overview.currentRow())
+
+    @staticmethod
     def _select_event_item(page: EventPage, item: QListWidgetItem | None) -> None:
         if item is not None:
             page._select_address(int(item.data(Qt.ItemDataRole.UserRole)))
@@ -3185,6 +3239,8 @@ class ScenarioDialog(TransactionalProjectDialog):
     def _refresh_overviews(self) -> None:
         if not hasattr(self, "setup_event_lists"):
             return
+        for page, overview in zip(self.setup_event_pages, self.setup_event_lists):
+            self._refresh_setup_event_overview(page, overview)
         self._refresh_event_overview(self.action_event_page, self.action_event_list)
         self._refresh_event_overview(self.map_event_page, self.map_event_list)
         self._refresh_persuasion_overview()
@@ -3213,26 +3269,6 @@ class ScenarioDialog(TransactionalProjectDialog):
             page.hide()
             page.setParent(self)
             self._refresh_overviews()
-
-    def _show_story_capacity(self) -> None:
-        if self.project is None:
-            return
-        plan = self.project.expansion_plan
-        if plan is None:
-            detail = "尚未建立扩展容量规划。"
-        else:
-            capacity = len(plan.story_banks) * 0x2000
-            used = len(plan.expanded_story_selectors) * 0x4000
-            detail = (
-                f"剧情专用配额：{capacity // 1024} KiB\n"
-                f"已绑定文本组：{len(plan.expanded_story_selectors)} 组（{used // 1024} KiB）\n"
-                f"尚可绑定：{max(0, capacity - used) // 1024} KiB"
-            )
-        QMessageBox.information(
-            self,
-            "剧情剩余空间",
-            detail + "\n具体占用和冲突请以完整检查结果为准。",
-        )
 
     def set_project(self, project: RomProject | None) -> None:
         super().set_project(project)
