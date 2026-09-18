@@ -14,6 +14,7 @@ os.environ.setdefault("QT_SCALE_FACTOR", "1")
 
 from PySide6.QtGui import QFont, QFontDatabase
 from PySide6.QtWidgets import QApplication, QDialog, QWidget
+import shiboken6
 
 from dc_modifier.app import DEFAULT_ROM, LauncherWindow, MainWindow, STYLE_SHEET
 from dc_modifier.legacy_tools import (
@@ -241,7 +242,8 @@ def main() -> int:
 
     window._saved_snapshot = bytes(window.project.working)
     window.close()
-    launcher.close()
+    if shiboken6.isValid(launcher):
+        launcher.close()
     process_layout(application)
     return 0
 

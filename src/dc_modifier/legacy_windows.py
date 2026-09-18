@@ -1948,6 +1948,7 @@ class LegacyItemTablePage(ProjectPage):
         self._text_table = default_dc_text_table()
         self._loaded_name_records: tuple[bytes, ...] = ()
         self._loaded_name_texts: tuple[str, ...] = ()
+        self._description_page: LegacyTextPage | None = None
         root = QVBoxLayout(self)
         notice = QLabel(
             "已接通24项道具名称和价格。价格按参考窗口显示为ROM原值×10；"
@@ -1966,8 +1967,33 @@ class LegacyItemTablePage(ProjectPage):
         self.item_table.setColumnWidth(0, 78)
         self.item_table.setColumnWidth(2, 150)
         self.item_table.setAlternatingRowColors(True)
-        self.item_table.itemChanged.connect(self._update_pending_state)
+        self.item_table.setSelectionBehavior(QAbstractItemView.SelectionBehavior.SelectRows)
+        self.item_table.setSelectionMode(QAbstractItemView.SelectionMode.SingleSelection)
+        self.item_table.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
+        self.item_table.itemChanged.connect(self._table_item_changed)
+        self.item_table.currentCellChanged.connect(self._selected_item_changed)
         root.addWidget(self.item_table, 1)
+
+        editors = QHBoxLayout()
+        name_column = QVBoxLayout()
+        name_column.addWidget(QLabel("名称修改："))
+        self.name_edit = QLineEdit()
+        self.name_edit.setObjectName("legacyItemNameEdit")
+        name_column.addWidget(self.name_edit)
+        price_column = QVBoxLayout()
+        price_column.addWidget(QLabel("价格修改："))
+        self.price_edit = QLineEdit()
+        self.price_edit.setObjectName("legacyItemPriceEdit")
+        price_column.addWidget(self.price_edit)
+        self.name_edit.textChanged.connect(self._selected_name_changed)
+        self.price_edit.textChanged.connect(self._selected_price_changed)
+        editors.addLayout(name_column, 2)
+        editors.addLayout(price_column, 1)
+        root.addLayout(editors)
+
+        self.description_group = QGroupBox("道具说明：")
+        self.description_layout = QVBoxLayout(self.description_group)
+        root.addWidget(self.description_group)
 
         footer = QHBoxLayout()
         self.pending_state = QLabel("当前ROM没有已验证的道具表。")
@@ -2001,10 +2027,10 @@ class LegacyItemTablePage(ProjectPage):
         try:
             supported = self._is_supported
             self.item_table.setEditTriggers(
-                QAbstractItemView.EditTrigger.AllEditTriggers
-                if supported
-                else QAbstractItemView.EditTrigger.NoEditTriggers
+                QAbstractItemView.EditTrigger.NoEditTriggers
             )
+            self.name_edit.setEnabled(supported)
+            self.price_edit.setEnabled(supported)
             self.apply_button.setEnabled(False)
             self.reset_button.setEnabled(supported)
             if not supported:
@@ -2026,7 +2052,70 @@ class LegacyItemTablePage(ProjectPage):
                 self.item_table.setItem(row, 2, price)
         finally:
             self._loading = False
+        current_row = self.item_table.currentRow()
+        self.item_table.setCurrentCell(
+            current_row if 0 <= current_row < self.ITEM_COUNT else 0,
+            0,
+        )
+        self._selected_item_changed(self.item_table.currentRow(), 0, -1, -1)
         self._update_pending_state()
+
+    def bind_description_page(self, page: LegacyTextPage) -> None:
+        self._description_page = page
+        page.set_embedded_single_record_mode()
+        self.description_layout.addWidget(page)
+        self._selected_item_changed(self.item_table.currentRow(), 0, -1, -1)
+
+    def _selected_item_changed(
+        self,
+        current_row: int,
+        _current_column: int,
+        _previous_row: int,
+        _previous_column: int,
+    ) -> None:
+        if current_row < 0:
+            self.name_edit.clear()
+            self.price_edit.clear()
+            return
+        self._loading = True
+        try:
+            name = self.item_table.item(current_row, 1)
+            price = self.item_table.item(current_row, 2)
+            self.name_edit.setText("" if name is None else name.text())
+            self.price_edit.setText("" if price is None else price.text())
+        finally:
+            self._loading = False
+        if (
+            self._description_page is not None
+            and self._description_page.record_list.count() > current_row
+        ):
+            self._description_page.record_list.setCurrentRow(current_row)
+
+    def _table_item_changed(self, item: QTableWidgetItem) -> None:
+        if not self._loading and item.row() == self.item_table.currentRow():
+            self._loading = True
+            try:
+                if item.column() == 1:
+                    self.name_edit.setText(item.text())
+                elif item.column() == 2:
+                    self.price_edit.setText(item.text())
+            finally:
+                self._loading = False
+        self._update_pending_state()
+
+    def _selected_name_changed(self, text: str) -> None:
+        if self._loading:
+            return
+        item = self.item_table.item(self.item_table.currentRow(), 1)
+        if item is not None and item.text() != text:
+            item.setText(text)
+
+    def _selected_price_changed(self, text: str) -> None:
+        if self._loading:
+            return
+        item = self.item_table.item(self.item_table.currentRow(), 2)
+        if item is not None and item.text() != text:
+            item.setText(text)
 
     def _draft_values(self) -> tuple[tuple[bytes, ...], tuple[int, ...]]:
         names: list[bytes] = []
@@ -2202,8 +2291,8 @@ class DatabaseDialog(TransactionalProjectDialog):
         self.shop_page = self.register_page(LegacyShopPage())
         self._add_detail_tabs(self.other_page_1, "经验与命中补正", self.system_text_page, "系统文字")
         self.other_page_1.detail_tabs.addTab(self.growth_page, "成长方式")
-        self._add_detail_tabs(self.other_page_2, "道具名称与价格", self.item_description_page, "道具说明")
-        self.other_page_2.detail_tabs.addTab(self.shop_page, "商店与对话")
+        self.other_page_2.bind_description_page(self.item_description_page)
+        self._compose_other2(self.other_page_2, self.shop_page)
         layout.addWidget(self.tabs, 1)
 
         footer = QHBoxLayout()
@@ -2223,10 +2312,9 @@ class DatabaseDialog(TransactionalProjectDialog):
             lambda _index: self._sync_active_search(self.database_search.text())
         )
         self.tabs.currentChanged.connect(self._refresh_database_context)
-        for page in (self.other_page_1, self.other_page_2):
-            page.detail_tabs.currentChanged.connect(
-                lambda _index: self._sync_active_search(self.database_search.text())
-            )
+        self.other_page_1.detail_tabs.currentChanged.connect(
+            lambda _index: self._sync_active_search(self.database_search.text())
+        )
         footer.addWidget(self.database_search, 1)
         footer.addWidget(self.find_next_button)
         footer.addWidget(self.find_previous_button)
@@ -2287,6 +2375,38 @@ class DatabaseDialog(TransactionalProjectDialog):
         tabs.addTab(extra, extra_label)
         page.detail_tabs = tabs
         layout.addWidget(tabs)
+
+    @staticmethod
+    def _compose_other2(page: LegacyItemTablePage, shop_page: LegacyShopPage) -> None:
+        """Restore the reference M10 two-column, three-panel presentation."""
+
+        item_contents = QWidget()
+        item_contents.setLayout(page.layout())
+
+        item_group = QGroupBox("道具")
+        item_layout = QVBoxLayout(item_group)
+        item_layout.setContentsMargins(6, 6, 6, 6)
+        item_layout.addWidget(item_contents)
+
+        shop_group = QGroupBox("商店")
+        shop_layout = QVBoxLayout(shop_group)
+        shop_layout.setContentsMargins(6, 6, 6, 6)
+        shop_layout.addWidget(shop_page)
+
+        splitter = QSplitter(Qt.Orientation.Horizontal)
+        splitter.setObjectName("legacyOther2Panels")
+        splitter.addWidget(item_group)
+        splitter.addWidget(shop_group)
+        splitter.setStretchFactor(0, 1)
+        splitter.setStretchFactor(1, 1)
+        splitter.setSizes((590, 610))
+
+        layout = QVBoxLayout(page)
+        layout.setContentsMargins(0, 0, 0, 0)
+        layout.addWidget(splitter)
+        page.other2_splitter = splitter
+        page.item_group = item_group
+        page.shop_group = shop_group
 
     def _select_weapon(self, weapon_id: int) -> None:
         self.database_search.clear()

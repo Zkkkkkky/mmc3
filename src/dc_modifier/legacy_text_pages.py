@@ -7,6 +7,7 @@ from PySide6.QtWidgets import (
     QSplitter, QVBoxLayout, QWidget,
     QTableWidget, QTableWidgetItem, QHeaderView,
     QSpinBox, QFormLayout, QTabWidget, QDialog, QDialogButtonBox,
+    QGridLayout, QGroupBox,
 )
 
 from fc_editor.codecs.legacy_scenario import LegacyScenarioCodec
@@ -30,6 +31,7 @@ class LegacyTextPage(ProjectPage):
         self._transaction_conflict_checker = None
         layout = QVBoxLayout(self)
         splitter = QSplitter()
+        self.splitter = splitter
         left = QWidget()
         left_layout = QVBoxLayout(left)
         self.group_combo = QComboBox()
@@ -61,7 +63,8 @@ class LegacyTextPage(ProjectPage):
         self.view_tabs.addTab(self.content_edit, "按内容")
         self.status_label = QLabel()
         self.status_label.setWordWrap(True)
-        right_layout.addWidget(QLabel("文字编辑"))
+        self.editor_title = QLabel("文字编辑")
+        right_layout.addWidget(self.editor_title)
         right_layout.addWidget(self.text_edit, 2)
         right_layout.addWidget(self.view_tabs, 1)
         right_layout.addWidget(self.status_label)
@@ -98,6 +101,19 @@ class LegacyTextPage(ProjectPage):
         self.search_edit.textChanged.connect(self._filter)
         self.apply_button.clicked.connect(self.apply_changes)
         self.reset_button.clicked.connect(self.reset_current)
+
+    def set_embedded_single_record_mode(self) -> None:
+        """Reduce the generic text page to the editor used by M10's item panel."""
+
+        self.splitter.widget(0).hide()
+        self.editor_title.hide()
+        self.view_tabs.hide()
+        self.system_note.hide()
+        self.add_button.hide()
+        self.apply_button.hide()
+        self.reset_button.hide()
+        self.text_edit.setMinimumHeight(86)
+        self.text_edit.setMaximumHeight(124)
 
     def refresh(self) -> None:
         if self.has_pending_draft:
@@ -705,7 +721,12 @@ class LegacyShopPage(ProjectPage):
         layout = QVBoxLayout(self)
         self.shop_combo = QComboBox()
         self.shop_combo.addItems([f"商店 {value:02X}" for value in range(0xF0, 0xFF)])
-        layout.addWidget(self.shop_combo)
+        self.shop_combo.hide()
+        self.shop_list = QListWidget()
+        self.shop_list.setObjectName("legacyShopList")
+        self.shop_list.addItems([f"{value:02X}" for value in range(0xF0, 0xFF)])
+        self.shop_list.setMaximumWidth(130)
+        self.shop_list.setAlternatingRowColors(True)
         self.fields = QWidget()
         form = QFormLayout(self.fields)
         self.item_combos = [QComboBox() for _ in range(4)]
@@ -717,15 +738,32 @@ class LegacyShopPage(ProjectPage):
         self.dialogue_spin.setRange(0, 214)
         form.addRow("店员", self.clerk_combo)
         form.addRow("对话起始编号", self.dialogue_spin)
-        layout.addWidget(self.fields)
-        self.dialogue_tabs = QTabWidget()
+        settings_group = QGroupBox("商店设置")
+        settings_layout = QVBoxLayout(settings_group)
+        settings_layout.addWidget(self.fields)
+        upper = QHBoxLayout()
+        upper.addWidget(self.shop_list)
+        upper.addWidget(settings_group, 1)
+        layout.addLayout(upper)
+
+        self.dialogue_group = QGroupBox("店员对话")
+        dialogue_layout = QGridLayout(self.dialogue_group)
         self.dialogue_edits = []
         for index, label in enumerate(LegacyShopCodec.LABELS):
             edit = QPlainTextEdit()
+            edit.setObjectName(f"legacyShopDialogue{index}")
+            edit.setMinimumHeight(72)
             edit.textChanged.connect(lambda index=index: self._text_changed(index))
             self.dialogue_edits.append(edit)
-            self.dialogue_tabs.addTab(edit, label)
-        layout.addWidget(self.dialogue_tabs, 1)
+            column = index // 3
+            slot = index % 3
+            dialogue_layout.addWidget(QLabel(f"{label}对话："), slot * 2, column)
+            dialogue_layout.addWidget(edit, slot * 2 + 1, column)
+        dialogue_note = QLabel("注：店员对话为 7 个顺序对话段，由对话起始编号连续取用。")
+        dialogue_note.setWordWrap(True)
+        dialogue_layout.addWidget(dialogue_note, 2, 2, 3, 1)
+        self.dialogue_tabs = self.dialogue_group
+        layout.addWidget(self.dialogue_group, 1)
         self.status_label = QLabel()
         self.status_label.setWordWrap(True)
         layout.addWidget(self.status_label)
@@ -734,10 +772,21 @@ class LegacyShopPage(ProjectPage):
         self.discard_button = QPushButton("放弃本页草稿")
         layout.addWidget(self.discard_button)
         self.shop_combo.currentIndexChanged.connect(self._load)
+        self.shop_combo.currentIndexChanged.connect(self._sync_shop_list)
+        self.shop_list.currentRowChanged.connect(self._shop_row_changed)
         self.clerk_combo.currentIndexChanged.connect(self._metadata_changed)
         self.dialogue_spin.valueChanged.connect(self._dialogue_changed)
         self.apply_button.clicked.connect(self.apply_changes)
         self.discard_button.clicked.connect(self.discard_pending_changes)
+        self.shop_list.setCurrentRow(0)
+
+    def _shop_row_changed(self, row: int) -> None:
+        if row >= 0 and self.shop_combo.currentIndex() != row:
+            self.shop_combo.setCurrentIndex(row)
+
+    def _sync_shop_list(self, index: int) -> None:
+        if index >= 0 and self.shop_list.currentRow() != index:
+            self.shop_list.setCurrentRow(index)
 
     def refresh(self) -> None:
         if self.has_pending_draft:

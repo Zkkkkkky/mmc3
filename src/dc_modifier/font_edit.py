@@ -3,7 +3,7 @@ from __future__ import annotations
 
 from PySide6.QtCore import QRect, Qt, Signal
 from PySide6.QtGui import QColor, QFont, QFontMetrics, QImage, QPainter
-from PySide6.QtWidgets import QFileDialog, QFontDialog, QHBoxLayout, QMessageBox, QPushButton, QWidget
+from PySide6.QtWidgets import QFileDialog, QFontDialog, QMenu, QMessageBox, QPushButton, QWidget
 
 from fc_editor.codecs.dc_font import (
     GLYPH_PAGE_LEADS, PAGE_PAYLOAD_SIZE, SUPPORTED_PROFILES, decode_glyph, encode_glyph,
@@ -88,27 +88,40 @@ class FontEditingMixin:
         self.glyph_canvas.changed.connect(self._font_pixels_changed)
         self.write_button.clicked.connect(self.stage_current_glyph)
         self.choose_font_button.clicked.connect(self.choose_font)
-        self.replace_all_button.setText("用选定字体替换本页")
+        # Keep the legacy caption; the verified implementation currently
+        # applies it to the selected font page without relocating glyphs.
+        self.replace_all_button.setText("替换全部字体")
         self.replace_all_button.clicked.connect(self.replace_font_page)
         self.clear_page_button.clicked.connect(self.clear_font_page)
         for button in (self.choose_font_button, self.replace_all_button, self.clear_page_button):
             button.setEnabled(self._font_writable)
-            button.setToolTip("仅修改固定字模，不新增字符编码；所有修改在确定后一次提交，取消可放弃。")
-        self.import_page_button = QPushButton("导入本页点阵")
-        self.export_page_button = QPushButton("导出本页点阵")
+            button.setToolTip("仅修改固定字模，不新增字符编码；所有修改在确定后一次提交，关闭窗口可放弃。")
+
+        # The legacy dialog exposes only the bottom OK button. Keep the
+        # verified per-page interchange extension off the visible layout and
+        # offer it from the glyph grid's context menu instead.
+        self.import_page_button = QPushButton("导入本页点阵", self)
+        self.export_page_button = QPushButton("导出本页点阵", self)
         self.import_page_button.clicked.connect(self.import_font_page)
         self.export_page_button.clicked.connect(self.export_font_page)
         self.import_page_button.setEnabled(self._font_writable)
         self.export_page_button.setEnabled(self._font_writable)
-        row = QHBoxLayout()
-        row.addWidget(self.import_page_button)
-        row.addWidget(self.export_page_button)
-        edit_layout.addLayout(row)
-        self.cancel_button = QPushButton("取消")
-        self.cancel_button.clicked.connect(self.reject)
-        button_row.addWidget(self.cancel_button)
+        self.import_page_button.hide()
+        self.export_page_button.hide()
+        self.glyph_table.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
+        self.glyph_table.customContextMenuRequested.connect(self._show_font_page_menu)
         self.status.setMaximumHeight(16777215)
         self.status.setStyleSheet("color:#735100;")
+
+    def _show_font_page_menu(self, position) -> None:
+        menu = QMenu(self.glyph_table)
+        import_action = menu.addAction("导入本页点阵…")
+        export_action = menu.addAction("导出本页点阵…")
+        import_action.setEnabled(self.import_page_button.isEnabled())
+        export_action.setEnabled(self.export_page_button.isEnabled())
+        import_action.triggered.connect(self.import_font_page)
+        export_action.triggered.connect(self.export_font_page)
+        menu.exec(self.glyph_table.viewport().mapToGlobal(position))
 
     def _load_font_canvas(self, raw: bytes | None) -> None:
         if not hasattr(self, "glyph_canvas"):
@@ -119,7 +132,7 @@ class FontEditingMixin:
         self.write_button.setEnabled(False)
         self.replacement_text.setEnabled(writable)
         self.status.setText(
-            f"已暂存 {len(self._glyph_drafts)} 个字模。点阵左画右擦；确定提交，取消放弃。"
+            f"已暂存 {len(self._glyph_drafts)} 个字模。点阵左画右擦；确定提交，关闭窗口放弃。"
             if writable else "E/F 列引用同一行 0 列，请在 0 列编辑。" if self._font_writable
             else "当前 ROM 的字模写入布局未经验证，仅预览。"
         )
@@ -186,7 +199,7 @@ class FontEditingMixin:
 
     def _confirm_font_page(self, action: str) -> bool:
         return QMessageBox.question(
-            self, action, f"{action}会影响本页所有引用这些字模的名称和对话。\n确定后才写入工程，仍可取消整个窗口。",
+            self, action, f"{action}会影响本页所有引用这些字模的名称和对话。\n确定后才写入工程，提交前可关闭窗口放弃。",
             QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
             QMessageBox.StandardButton.No,
         ) == QMessageBox.StandardButton.Yes

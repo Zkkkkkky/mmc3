@@ -2,8 +2,8 @@ from __future__ import annotations
 
 from PySide6.QtCore import Qt, Signal
 from PySide6.QtWidgets import (
-    QComboBox, QDialog, QFormLayout, QGroupBox, QHBoxLayout, QHeaderView,
-    QLabel, QLineEdit, QListWidget, QPlainTextEdit, QPushButton, QSpinBox,
+    QComboBox, QDialog, QDialogButtonBox, QFormLayout, QGroupBox, QHBoxLayout, QHeaderView,
+    QLabel, QLineEdit, QListWidget, QMenu, QPlainTextEdit, QPushButton, QSpinBox,
     QTableWidget, QTableWidgetItem, QTabWidget, QVBoxLayout, QWidget,
 )
 
@@ -26,12 +26,90 @@ def animation_names(filename: str, count: int, first: int = 0) -> tuple[str, ...
     return tuple(lines[i-first] if 0 <= i-first < len(lines) else "未命名" for i in range(count))
 
 
+class AnimationPointerDialog(QDialog):
+    """Reference-shaped pointer prompt kept read-only until its protocol is known."""
+
+    def __init__(self, parent: QWidget | None = None) -> None:
+        super().__init__(parent)
+        self.setWindowTitle("请输入：")
+        self.setModal(True)
+        self.setFixedSize(380, 170)
+        root = QVBoxLayout(self)
+        root.addWidget(QLabel("请输入动画指针"))
+        self.pointer_edit = QLineEdit("0080")
+        self.pointer_edit.setInputMask("HHHH;_")
+        self.pointer_edit.selectAll()
+        root.addWidget(self.pointer_edit)
+        buttons = QDialogButtonBox(
+            QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel
+        )
+        buttons.button(QDialogButtonBox.StandardButton.Ok).setText("确认输入(&O)")
+        buttons.button(QDialogButtonBox.StandardButton.Cancel).setText("取消(&C)")
+        buttons.accepted.connect(self.accept)
+        buttons.rejected.connect(self.reject)
+        root.addWidget(buttons)
+
+    def value(self) -> str:
+        return self.pointer_edit.text().upper()
+
+
+class SpritePuzzlePreviewDialog(QDialog):
+    """Read-only entry for the legacy physical-puzzle secondary window."""
+
+    def __init__(self, record: AnimationRecord, parent: QWidget | None = None) -> None:
+        super().__init__(parent)
+        self.setWindowTitle("物理拼图")
+        self.resize(840, 590)
+        root = QVBoxLayout(self)
+
+        settings = QGroupBox("参考设置")
+        form = QFormLayout(settings)
+        self.library_combo = QComboBox()
+        self.library_combo.addItem("[08]008：82010")
+        self.library_combo.setEnabled(False)
+        form.addRow("图库地址：", self.library_combo)
+        root.addWidget(settings)
+
+        content = QHBoxLayout()
+        source = QGroupBox("组图规律原码（只读）")
+        source_layout = QVBoxLayout(source)
+        self.code_view = QPlainTextEdit(record.raw.hex(" ").upper())
+        self.code_view.setReadOnly(True)
+        source_layout.addWidget(self.code_view)
+        content.addWidget(source, 1)
+
+        preview = QGroupBox("效果图片（只读入口）")
+        preview_layout = QVBoxLayout(preview)
+        self.preview_grid = QTableWidget(16, 16)
+        self.preview_grid.horizontalHeader().hide()
+        self.preview_grid.verticalHeader().hide()
+        self.preview_grid.setEditTriggers(QTableWidget.EditTrigger.NoEditTriggers)
+        self.preview_grid.setSelectionMode(QTableWidget.SelectionMode.NoSelection)
+        self.preview_grid.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeMode.Stretch)
+        self.preview_grid.verticalHeader().setSectionResizeMode(QHeaderView.ResizeMode.Stretch)
+        self.preview_grid.setStyleSheet("QTableWidget { background:#080808; gridline-color:#7c8a93; }")
+        preview_layout.addWidget(self.preview_grid)
+        note = QLabel("已接通参考版次级窗口动线；图块组装与翻转协议未完成黄金对照，当前不写入。")
+        note.setWordWrap(True)
+        preview_layout.addWidget(note)
+        content.addWidget(preview, 2)
+        root.addLayout(content, 1)
+
+        buttons = QDialogButtonBox(
+            QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel
+        )
+        buttons.accepted.connect(self.accept)
+        buttons.rejected.connect(self.reject)
+        root.addWidget(buttons)
+
+
 class AnimationScriptWidget(QWidget):
     """A draft script editor; the caller owns its enclosing transaction."""
     changed = Signal()
 
-    def __init__(self, parent: QWidget | None = None) -> None:
+    def __init__(self, parent: QWidget | None = None, *, legacy_pointer_dialog: bool = False) -> None:
         super().__init__(parent)
+        self.legacy_pointer_dialog = legacy_pointer_dialog
         self.codec: AnimationCodec | None = None
         self.record: AnimationRecord | None = None
         root = QVBoxLayout(self)
@@ -48,6 +126,9 @@ class AnimationScriptWidget(QWidget):
         self.instruction_table.setAlternatingRowColors(True)
         self.instruction_table.setSelectionBehavior(QTableWidget.SelectionBehavior.SelectRows)
         self.instruction_table.currentCellChanged.connect(self._select_instruction)
+        if self.legacy_pointer_dialog:
+            self.instruction_table.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
+            self.instruction_table.customContextMenuRequested.connect(self._show_code_context_menu)
         self.instruction_table.setMinimumHeight(200)
         root.addWidget(self.instruction_table, 1)
         self.parameters = QWidget()
@@ -96,9 +177,27 @@ class AnimationScriptWidget(QWidget):
         self.code_edit.blockSignals(blocked)
 
     def _toggle_code(self) -> None:
+        if self.legacy_pointer_dialog:
+            dialog = AnimationPointerDialog(self)
+            if dialog.exec() == QDialog.DialogCode.Accepted:
+                self.status.setText(
+                    f"已输入指针 {dialog.value()}；参考版指针协议尚未完成差分验证，本次不改写 ROM。"
+                )
+            return
+        self._toggle_raw_code()
+
+    def _toggle_raw_code(self) -> None:
         self.code_edit.setVisible(not self.code_edit.isVisible())
         if self.code_edit.isVisible():
             self.code_edit.setFocus()
+
+    def _show_code_context_menu(self, position) -> None:
+        menu = QMenu(self.instruction_table)
+        action = menu.addAction(
+            "隐藏等长代码编辑区" if self.code_edit.isVisible() else "显示等长代码编辑区"
+        )
+        action.triggered.connect(self._toggle_raw_code)
+        menu.exec(self.instruction_table.viewport().mapToGlobal(position))
 
     def _code_changed(self) -> None:
         if self.record is not None:
@@ -270,7 +369,7 @@ class MapAnimationEditorDialog(QDialog):
         left.addWidget(self.animation_name)
         group.setMaximumWidth(320)
         layout.addWidget(group, 1)
-        self.script_editor = AnimationScriptWidget()
+        self.script_editor = AnimationScriptWidget(legacy_pointer_dialog=True)
         self.instruction_table = self.script_editor.instruction_table
         self.code_button = self.script_editor.code_button
         layout.addWidget(self.script_editor, 3)
@@ -306,6 +405,8 @@ class MapAnimationEditorDialog(QDialog):
         self.rule_lists: dict[str, QListWidget] = {}
         self.rule_codes: dict[str, QPlainTextEdit] = {}
         self.rule_statuses: dict[str, QLabel] = {}
+        self.rule_names: dict[str, tuple[str, ...]] = {}
+        self.rule_name_edits: dict[str, QLineEdit] = {}
         self._movement_roles = self.codec.movement_roles()
         for kind, title, filename, first in (
             ("background", "背景规律", "背景规律名称.ini", 0),
@@ -316,10 +417,21 @@ class MapAnimationEditorDialog(QDialog):
             box = QVBoxLayout(group)
             listing = QListWidget()
             names = animation_names(filename, self.codec.count(kind), first)
+            self.rule_names[kind] = names
             listing.addItems(f"[{i:02X}]{i:03d}：{name}" for i, name in enumerate(names))
             self.rule_lists[kind] = listing
             listing.currentRowChanged.connect(lambda row, key=kind: self._select_rule(key, row))
             box.addWidget(listing, 3)
+            if kind in ("movement", "sprite"):
+                add_button = QPushButton("添加")
+                add_button.setEnabled(False)
+                add_button.setToolTip("新增指针与记录搬移尚未完成容量黄金对照。")
+                box.addWidget(add_button)
+            name_edit = QLineEdit()
+            name_edit.setReadOnly(True)
+            self.rule_name_edits[kind] = name_edit
+            box.addWidget(QLabel("规律名称"))
+            box.addWidget(name_edit)
             status = QLabel()
             status.setWordWrap(True)
             self.rule_statuses[kind] = status
@@ -329,6 +441,17 @@ class MapAnimationEditorDialog(QDialog):
             self.rule_codes[kind] = code
             box.addWidget(code, 2)
             if kind == "sprite":
+                preview_library = QComboBox()
+                preview_library.addItem("[08]008：82010")
+                preview_library.setEnabled(False)
+                preview_library.setToolTip("预览图库绑定尚未完成写回差分验证。")
+                self.sprite_preview_library = preview_library
+                preview_row = QFormLayout()
+                preview_row.addRow("预览图库", preview_library)
+                box.addLayout(preview_row)
+                self.animation_puzzle_button = QPushButton("动画拼图")
+                self.animation_puzzle_button.clicked.connect(self._open_sprite_puzzle)
+                box.addWidget(self.animation_puzzle_button)
                 form = QFormLayout()
                 self.sprite_y, self.sprite_x = QSpinBox(), QSpinBox()
                 for spin in (self.sprite_y, self.sprite_x):
@@ -364,6 +487,7 @@ class MapAnimationEditorDialog(QDialog):
             listing.blockSignals(blocked)
             return
         record = AnimationCodec(self.draft).record(kind, row)
+        self.rule_name_edits[kind].setText(self.rule_names[kind][row])
         self.rule_codes[kind].setPlainText(record.raw.hex(" ").upper())
         self.rule_statuses[kind].setText(f"当前 ROM · ${record.offset:06X} · {len(record.raw)} 字节"
                                          + (f" · 与 {len(record.aliases)} 项共享" if record.aliases else ""))
@@ -379,6 +503,13 @@ class MapAnimationEditorDialog(QDialog):
             self.sprite_y.setValue(int.from_bytes(record.raw[:1], signed=True))
             self.sprite_x.setValue(int.from_bytes(record.raw[1:2], signed=True))
             self._loading = False
+
+    def _open_sprite_puzzle(self) -> None:
+        row = self.rule_lists["sprite"].currentRow()
+        if row < 0:
+            return
+        record = AnimationCodec(self.draft).record("sprite", row)
+        SpritePuzzlePreviewDialog(record, self).exec()
 
     def _apply_movement_code(self, row: int | None = None) -> bool:
         try:

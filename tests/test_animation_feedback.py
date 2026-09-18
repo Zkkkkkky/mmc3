@@ -4,6 +4,7 @@ import os
 from pathlib import Path
 import tempfile
 import unittest
+from unittest.mock import patch
 
 os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 
@@ -11,7 +12,12 @@ from PySide6.QtWidgets import QApplication, QDialog
 
 from fc_editor.codecs.animation import AnimationCodec, apply_animation_patches
 from fc_rom_editor_core import RomProject
-from dc_modifier.animation_editor import MapAnimationEditorDialog, WeaponAnimationWidget
+from dc_modifier.animation_editor import (
+    AnimationPointerDialog,
+    MapAnimationEditorDialog,
+    SpritePuzzlePreviewDialog,
+    WeaponAnimationWidget,
+)
 from tests.qt_test_case import QtTestCase
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -177,6 +183,47 @@ class AnimationUiTests(QtTestCase):
         dialog.accept()
         self.assertEqual(dialog.result(), 0)
         self.assertFalse(self.project.can_undo)
+        dialog.reject()
+
+    def test_reference_secondary_dialog_entries_do_not_guess_unverified_writes(self):
+        dialog = MapAnimationEditorDialog(project=self.project)
+        before = bytes(dialog.draft)
+        self.assertFalse(dialog.script_editor.code_edit.isVisible())
+        with patch.object(
+            AnimationPointerDialog,
+            "exec",
+            return_value=QDialog.DialogCode.Accepted,
+        ):
+            dialog.code_button.click()
+        self.assertFalse(dialog.script_editor.code_edit.isVisible())
+        self.assertIn("0080", dialog.script_editor.status.text())
+        self.assertEqual(bytes(dialog.draft), before)
+
+        sprite = dialog.codec.record("sprite", dialog.rule_lists["sprite"].currentRow())
+        preview = SpritePuzzlePreviewDialog(sprite, dialog)
+        self.assertEqual(preview.windowTitle(), "物理拼图")
+        self.assertEqual(preview.code_view.toPlainText(), sprite.raw.hex(" ").upper())
+        self.assertEqual((preview.preview_grid.rowCount(), preview.preview_grid.columnCount()), (16, 16))
+        self.assertFalse(preview.library_combo.isEnabled())
+        preview.reject()
+        dialog.reject()
+
+    def test_rule_panels_show_reference_names_and_keep_unverified_add_disabled(self):
+        dialog = MapAnimationEditorDialog(project=self.project)
+        for kind in ("background", "movement", "sprite"):
+            row = dialog.rule_lists[kind].currentRow()
+            self.assertEqual(dialog.rule_name_edits[kind].text(), dialog.rule_names[kind][row])
+            self.assertTrue(dialog.rule_name_edits[kind].isReadOnly())
+        self.assertEqual(dialog.sprite_preview_library.currentText(), "[08]008：82010")
+        self.assertFalse(dialog.sprite_preview_library.isEnabled())
+        rule_add_buttons = [
+            button
+            for button in dialog.tabs.widget(1).findChildren(type(dialog.add_button))
+            if button.text() == "添加"
+        ]
+        self.assertEqual(len(rule_add_buttons), 2)
+        self.assertTrue(all(not button.isEnabled() for button in rule_add_buttons))
+        self.assertTrue(dialog.animation_puzzle_button.isEnabled())
         dialog.reject()
 
     def test_weapon_widget_applies_both_sides_in_one_transaction(self):

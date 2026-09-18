@@ -9,7 +9,7 @@ os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 
 from PySide6.QtCore import QPoint
 from PySide6.QtGui import QFont, QFontDatabase
-from PySide6.QtWidgets import QApplication, QGroupBox
+from PySide6.QtWidgets import QApplication, QGroupBox, QPushButton
 
 from dc_modifier.legacy_tools import (
     AttributeCalculatorDialog,
@@ -66,6 +66,18 @@ class LegacyToolDialogTests(QtTestCase):
         self.assertFalse(dialog.write_button.isEnabled())
         self.assertEqual(dialog.replace_all_button.isEnabled(), self.project is not None)
         self._show(dialog)
+        visible_buttons = {
+            button.text()
+            for button in dialog.findChildren(QPushButton)
+            if button.isVisible()
+        }
+        self.assertEqual(
+            visible_buttons,
+            {"写入文字", "选择字体", "替换全部字体", "清空本页", "确定"},
+        )
+        self.assertFalse(dialog.import_page_button.isVisible())
+        self.assertFalse(dialog.export_page_button.isVisible())
+        self.assertFalse(hasattr(dialog, "cancel_button"))
         self.assertLess(self._top(dialog.glyph_table, dialog), self._top(dialog.status, dialog))
         if self.project is not None:
             self.assertFalse(dialog.glyph_table.item(0, 0).icon().isNull())

@@ -158,6 +158,36 @@ class LegacyTextScenarioCodecTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, "地图事件"):
                 codec.record(shop_id)
 
+    def test_all_m10_text_and_shop_records_roundtrip_without_hidden_changes(self) -> None:
+        text_codec = LegacyTextCodec(self.data)
+        for index in range(24):
+            for variant in range(text_codec.variant_count("item_description", index)):
+                record = text_codec.record("item_description", index, variant)
+                offset, before, after = text_codec.replacement_patch(
+                    "item_description", index, variant, record.text
+                )
+                self.assertEqual(before, after, (index, variant))
+                self.assertEqual(self.data[offset : offset + len(before)], before)
+
+        shop_codec = LegacyShopCodec(self.data)
+        for shop_id in range(0xF0, 0xF5):
+            record = shop_codec.record(shop_id)
+            offset, before, after = shop_codec.replacement_patch(
+                shop_id,
+                record.clerk_id,
+                record.dialogue_id,
+                record.items,
+            )
+            self.assertEqual(before, after, shop_id)
+            self.assertEqual(self.data[offset : offset + len(before)], before)
+            for dialogue_index in range(7):
+                text_id = record.dialogue_id + dialogue_index
+                dialogue = text_codec.record("system", text_id)
+                patch = text_codec.replacement_patch(
+                    "system", text_id, 0, dialogue.text
+                )
+                self.assertEqual(patch[1], patch[2], (shop_id, dialogue_index))
+
 
 class LegacyTextScenarioUiTests(QtTestCase):
     @classmethod
