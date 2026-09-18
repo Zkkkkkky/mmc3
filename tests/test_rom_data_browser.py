@@ -45,7 +45,7 @@ class RomDataBrowserTests(QtTestCase):
         )
         self.assertEqual(
             tuple(len(sheet.rows) for sheet in sheets),
-            (255, 199, 254, 100, 1258, 1177, 6911),
+            (255, 199, 255, 100, 1258, 1177, 6911),
         )
         self.assertEqual(sheets[0].rows[0][4], "08 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00")
         self.assertEqual(sheets[0].rows[1][4], "18 00 00 08 3C 84 36 82 90 01 64 00 02 CA 02 0A")

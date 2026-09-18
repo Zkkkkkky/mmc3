@@ -1,5 +1,12 @@
 from .battle_music import BattleMusicCodec
 from .character_name import CharacterNameCodec
+from .character_dialogue import (
+    CharacterDialogueCodec,
+    CharacterDialogueRecord,
+    DialogueBinding,
+    DialogueRule,
+    TransformDialogueBinding,
+)
 from .chr import CHR_TILE_BYTES, CHR_TILE_PIXELS, ChrCodec
 from .chapter_event import ChapterEventCodec
 from .custom_music import CustomMusicCodec
@@ -20,6 +27,11 @@ from .weapon_name import WeaponNameReferenceCodec
 __all__ = [
     "BattleMusicCodec",
     "CharacterNameCodec",
+    "CharacterDialogueCodec",
+    "CharacterDialogueRecord",
+    "DialogueBinding",
+    "DialogueRule",
+    "TransformDialogueBinding",
     "CHR_TILE_BYTES",
     "CHR_TILE_PIXELS",
     "ChrCodec",

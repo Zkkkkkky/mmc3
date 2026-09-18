@@ -4,14 +4,329 @@ from PySide6.QtCore import Qt, Signal
 from PySide6.QtGui import QImage, QPixmap
 from PySide6.QtWidgets import (
     QCheckBox, QFileDialog, QFormLayout, QGridLayout, QGroupBox, QHBoxLayout,
-    QLabel, QMessageBox, QPushButton, QSpinBox, QTabWidget, QVBoxLayout, QWidget,
+    QComboBox, QHeaderView, QLabel, QMessageBox, QPushButton, QSpinBox,
+    QTableWidget, QTableWidgetItem, QTabWidget, QVBoxLayout, QWidget,
 )
 
 from fc_editor.codecs.character_attributes import (
     CharacterAttributes, CharacterAttributesCodec, PortraitRecord, SPIRIT_NAMES,
     apply_verified_patches,
 )
+from fc_editor.codecs.character_dialogue import (
+    CharacterDialogueRecord, DialogueBinding, DialogueRule,
+    TransformDialogueBinding, VALID_SEGMENTS,
+)
 from .database_graphics import palette_color
+
+
+class CharacterDialogueWidget(QGroupBox):
+    changed = Signal()
+
+    DIRECT_LABELS = (
+        "攻击命中", "攻击受阻", "防御成功", "防御未受伤",
+        "防御轻伤", "防御中伤", "防御重伤", "被击落",
+    )
+    RULE_LABELS = ("一次攻击", "二次攻击", "三次攻击")
+
+    def __init__(self) -> None:
+        super().__init__("战斗台词绑定")
+        self.project = None
+        self.character_id = None
+        self.codec = None
+        self._baseline = None
+        self._loading = False
+        outer = QVBoxLayout(self)
+        self.status = QLabel(
+            "文字段与对话编号指向“战斗对话”页正文；特殊攻击保留现有规则条数。"
+        )
+        self.status.setObjectName("hintText")
+        self.status.setWordWrap(True)
+        outer.addWidget(self.status)
+        tabs = QTabWidget()
+        outer.addWidget(tabs)
+
+        direct_page = QWidget()
+        grid = QGridLayout(direct_page)
+        self.direct_controls: list[tuple[QComboBox, QSpinBox]] = []
+        for index, label in enumerate(self.DIRECT_LABELS):
+            segment = QComboBox()
+            for value in VALID_SEGMENTS:
+                segment.addItem(f"文字段 ${value:02X}", value)
+            dialogue = QSpinBox()
+            dialogue.setRange(0, 0xFF)
+            dialogue.setPrefix("$")
+            dialogue.setDisplayIntegerBase(16)
+            segment.currentIndexChanged.connect(self._changed)
+            dialogue.valueChanged.connect(self._changed)
+            row, column = index % 4, (index // 4) * 3
+            grid.addWidget(QLabel(label), row, column)
+            grid.addWidget(segment, row, column + 1)
+            grid.addWidget(dialogue, row, column + 2)
+            self.direct_controls.append((segment, dialogue))
+        tabs.addTab(direct_page, "直接台词（2攻/6防）")
+
+        self.rule_tables: list[QTableWidget] = []
+        for label in self.RULE_LABELS:
+            table = QTableWidget(0, 4)
+            table.setHorizontalHeaderLabels(
+                ("人物/机体条件", "武器/机体条件", "文字段", "对话编号")
+            )
+            table.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeMode.Stretch)
+            table.verticalHeader().setVisible(False)
+            table.cellChanged.connect(self._changed)
+            self.rule_tables.append(table)
+            tabs.addTab(table, label)
+
+        transform_page = QWidget()
+        transform_layout = QVBoxLayout(transform_page)
+        transform_layout.setContentsMargins(4, 4, 4, 4)
+        self.transform_table = QTableWidget(0, 3)
+        self.transform_table.setHorizontalHeaderLabels(
+            ("起始机体", "终止机体", "05 段对话编号")
+        )
+        self.transform_table.horizontalHeader().setSectionResizeMode(
+            QHeaderView.ResizeMode.Stretch
+        )
+        self.transform_table.verticalHeader().setVisible(False)
+        self.transform_table.cellChanged.connect(self._changed)
+        transform_layout.addWidget(self.transform_table)
+        buttons = QHBoxLayout()
+        add = QPushButton("添加变形台词绑定")
+        remove = QPushButton("清空选中绑定")
+        add.clicked.connect(self._add_transform)
+        remove.clicked.connect(self._remove_transform)
+        buttons.addWidget(add)
+        buttons.addWidget(remove)
+        buttons.addStretch()
+        transform_layout.addLayout(buttons)
+        hint = QLabel(
+            "正文使用“战斗对话”页的 05 · 防御特殊对话；这里编辑人物、机体范围和正文编号。"
+        )
+        hint.setObjectName("hintText")
+        hint.setWordWrap(True)
+        transform_layout.addWidget(hint)
+        tabs.addTab(transform_page, "变形起飞")
+
+    @staticmethod
+    def _hex_item(value: int) -> QTableWidgetItem:
+        item = QTableWidgetItem(f"{value:02X}")
+        item.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
+        return item
+
+    @staticmethod
+    def _parse_hex(item: QTableWidgetItem | None, label: str) -> int:
+        if item is None:
+            raise ValueError(f"{label}不能为空。")
+        text = item.text().strip().removeprefix("$")
+        try:
+            value = int(text, 16)
+        except ValueError as error:
+            raise ValueError(f"{label}必须是 00—FF 的十六进制数。") from error
+        if not 0 <= value <= 0xFF:
+            raise ValueError(f"{label}必须是 00—FF 的十六进制数。")
+        return value
+
+    def _changed(self, *_args) -> None:
+        if not self._loading:
+            self.changed.emit()
+
+    def _dialogue_state(self):
+        direct = tuple(
+            (int(segment.currentData()), dialogue.value())
+            for segment, dialogue in self.direct_controls
+        )
+        rules = tuple(
+            tuple(
+                table.item(row, column).text().strip()
+                if table.item(row, column) is not None
+                else ""
+                for column in range(4)
+            )
+            for table in self.rule_tables
+            for row in range(table.rowCount())
+        )
+        shape = tuple(table.rowCount() for table in self.rule_tables)
+        return direct, shape, rules
+
+    def _transform_state(self):
+        return tuple(
+            tuple(
+                self.transform_table.item(row, column).text().strip()
+                if self.transform_table.item(row, column) is not None
+                else ""
+                for column in range(3)
+            )
+            for row in range(self.transform_table.rowCount())
+        )
+
+    def _state(self):
+        return self._dialogue_state(), self._transform_state()
+
+    def _add_transform(self) -> None:
+        if self._loading or self.character_id is None:
+            return
+        row = self.transform_table.rowCount()
+        self.transform_table.insertRow(row)
+        for column, value in enumerate((0x00, 0xFF, 0x00)):
+            self.transform_table.setItem(row, column, self._hex_item(value))
+        self.transform_table.setCurrentCell(row, 0)
+        self._changed()
+
+    def _remove_transform(self) -> None:
+        row = self.transform_table.currentRow()
+        if row < 0 and self.transform_table.rowCount():
+            row = self.transform_table.rowCount() - 1
+        if row >= 0:
+            self.transform_table.removeRow(row)
+            self._changed()
+
+    def set_record(self, project, character_id: int | None) -> None:
+        self.project, self.character_id = project, character_id
+        self.codec = None
+        self._baseline = None
+        if (
+            project is None
+            or character_id is None
+            or project.character_dialogue_codec is None
+        ):
+            self.setEnabled(False)
+            return
+        self._loading = True
+        try:
+            codec = project.character_dialogue_codec
+            record = codec.read(character_id, project.working)
+            for (segment, dialogue), binding in zip(self.direct_controls, record.direct):
+                segment.setCurrentIndex(segment.findData(binding.segment))
+                dialogue.setValue(binding.dialogue)
+            for table, rules in zip(self.rule_tables, record.rules):
+                table.setRowCount(len(rules))
+                for row, rule in enumerate(rules):
+                    for column, value in enumerate((
+                        rule.actor_or_unit, rule.weapon_or_unit,
+                        rule.segment, rule.dialogue,
+                    )):
+                        table.setItem(row, column, self._hex_item(value))
+            transforms = codec.character_transform_bindings(
+                character_id, project.working
+            )
+            self.transform_table.setRowCount(len(transforms))
+            for row, binding in enumerate(transforms):
+                for column, value in enumerate((
+                    binding.unit_start, binding.unit_end, binding.dialogue,
+                )):
+                    self.transform_table.setItem(row, column, self._hex_item(value))
+            aliases = codec.shared_ids(character_id, project.working)
+            self.status.setText(
+                "现有规则可逐字节编辑；为保持已验证记录边界，暂不增删规则。"
+                f" 共用此台词记录：{'、'.join(f'{item:03d}' for item in aliases)}。"
+            )
+            self.codec = codec
+            self._baseline = self._state()
+            self.setEnabled(True)
+        except (ValueError, IndexError) as error:
+            self.status.setText(str(error))
+            self.setEnabled(False)
+        finally:
+            self._loading = False
+
+    def record(self) -> CharacterDialogueRecord:
+        direct = tuple(
+            DialogueBinding(int(segment.currentData()), dialogue.value())
+            for segment, dialogue in self.direct_controls
+        )
+        groups: list[tuple[DialogueRule, ...]] = []
+        for table in self.rule_tables:
+            rules = []
+            for row in range(table.rowCount()):
+                values = tuple(
+                    self._parse_hex(
+                        table.item(row, column),
+                        table.horizontalHeaderItem(column).text(),
+                    )
+                    for column in range(4)
+                )
+                rules.append(DialogueRule(*values))
+            groups.append(tuple(rules))
+        return CharacterDialogueRecord(direct, tuple(groups))
+
+    def transform_records(self) -> tuple[TransformDialogueBinding, ...]:
+        if self.character_id is None:
+            return ()
+        result = []
+        for row in range(self.transform_table.rowCount()):
+            values = tuple(
+                self._parse_hex(
+                    self.transform_table.item(row, column),
+                    self.transform_table.horizontalHeaderItem(column).text(),
+                )
+                for column in range(3)
+            )
+            result.append(
+                TransformDialogueBinding(self.character_id, *values)
+            )
+        return tuple(result)
+
+    def has_pending_changes(self) -> bool:
+        return (
+            self.codec is not None
+            and self._baseline is not None
+            and self._state() != self._baseline
+        )
+
+    def pending_patches(self):
+        if self.codec is None or self.character_id is None:
+            return ()
+        patch = self.codec.patch(
+            self.project.working, self.character_id, self.record()
+        )
+        transform_patch = self.codec.transform_patch(
+            self.project.working, self.character_id, self.transform_records()
+        )
+        return tuple(
+            item for item in (patch, transform_patch) if item is not None
+        )
+
+    def shared_change_impacts(self):
+        if (
+            self.codec is None
+            or self._baseline is None
+            or self._dialogue_state() == self._baseline[0]
+        ):
+            return ()
+        aliases = self.codec.shared_ids(self.character_id, self.project.working)
+        return (("人物战斗台词记录", aliases),) if len(aliases) > 1 else ()
+
+    def reset_change_impacts(self):
+        if self.codec is None or self.character_id is None:
+            return ()
+        if self.codec.read(
+            self.character_id, self.project.working
+        ) == self.codec.read(self.character_id, self.project.original):
+            return ()
+        aliases = self.codec.shared_ids(self.character_id, self.project.working)
+        return (("人物战斗台词记录", aliases),) if len(aliases) > 1 else ()
+
+    def reset_to_original(self) -> None:
+        if self.codec is None or self.character_id is None:
+            return
+        patch = self.codec.patch(
+            self.project.working,
+            self.character_id,
+            self.codec.read(self.character_id, self.project.original),
+        )
+        if patch is not None:
+            apply_verified_patches(self.project, (patch,), "还原人物战斗台词绑定")
+        transform_patch = self.codec.transform_patch(
+            self.project.working,
+            self.character_id,
+            self.codec.character_transform_bindings(
+                self.character_id, self.project.original
+            ),
+        )
+        if transform_patch is not None:
+            apply_verified_patches(
+                self.project, (transform_patch,), "还原人物变形台词绑定"
+            )
 
 
 class CharacterDetailsWidget(QWidget):
@@ -161,6 +476,55 @@ class CharacterDetailsWidget(QWidget):
 
     def has_pending_changes(self) -> bool:
         return self.codec is not None and self._baseline is not None and (self._state() != self._baseline or bool(self._image_drafts))
+
+    def shared_change_impacts(self) -> tuple[tuple[str, tuple[int, ...]], ...]:
+        """Describe drafts that intentionally affect more than one character ID."""
+
+        if self.codec is None or self.character_id is None:
+            return ()
+        impacts: list[tuple[str, tuple[int, ...]]] = []
+        if (
+            self.shared_attributes.isChecked()
+            and self.attribute_record() != self.codec.read(self.character_id)
+        ):
+            ids = self.codec.shared_ids(self.character_id)
+            if len(ids) > 1:
+                impacts.append(("人物属性记录", ids))
+        if (
+            self.shared_portrait.isChecked()
+            and self.portrait_record() != self.codec.read_portrait(self.character_id)
+        ):
+            ids = self.codec.shared_ids(self.character_id, portrait=True)
+            if len(ids) > 1:
+                impacts.append(("头像记录", ids))
+        for kind, (first_tile, _payload) in self._image_drafts.items():
+            ids = self._portrait_tile_users(first_tile)
+            if len(ids) > 1:
+                impacts.append(
+                    ("正面头像 CHR 图块" if kind == "front" else "背景头像 CHR 图块", ids)
+                )
+        return tuple(impacts)
+
+    def _portrait_tile_users(self, first_tile: int) -> tuple[int, ...]:
+        if self.codec is None:
+            return ()
+        affected: set[int] = set()
+        for character_id in range(1, self.codec.COUNT):
+            portrait = self.codec.read_portrait(character_id)
+            starts = (
+                portrait.front_bank * 64 + portrait.front_slot * 16,
+                (portrait.back_bank & 0xFE) * 64 + portrait.back_slot * 16,
+            )
+            if first_tile in starts:
+                affected.add(character_id)
+        if self.character_id is not None:
+            affected.add(self.character_id)
+        return tuple(sorted(affected))
+
+    @staticmethod
+    def _format_ids(ids: tuple[int, ...]) -> str:
+        shown = "、".join(f"{value:03d}" for value in ids[:24])
+        return shown + (f"…共 {len(ids)} 个" if len(ids) > 24 else "")
 
     def set_record(self, project, character_id: int | None) -> None:
         self.project, self.character_id = project, character_id
@@ -320,7 +684,11 @@ class CharacterDetailsWidget(QWidget):
                         pixels.append(min(range(4), key=lambda index: sum((a-b)**2 for a, b in zip(color.getRgb()[:3], colors[index].getRgb()[:3]))))
             payload.extend(self.project.chr_codec.encode_tile(pixels))
         self._image_drafts[kind] = first_tile, bytes(payload)
-        self.status.setText("头像图片已暂存，按当前四色量化；上传会影响所有使用这些 CHR 图块的人物。确定后写入，取消可放弃。")
+        affected = self._portrait_tile_users(first_tile)
+        self.status.setText(
+            "头像图片已暂存，按当前四色量化；将影响使用这些 CHR 图块的人物："
+            f"{self._format_ids(affected)}。确定后写入，取消可放弃。"
+        )
         self._changed()
 
     def _upload_image(self, kind: str) -> None:

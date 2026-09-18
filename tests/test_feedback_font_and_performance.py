@@ -156,7 +156,12 @@ class FontFeedbackTests(QtTestCase):
         unit_id = page.current_id
         old_hp = page.fields["hp"].value()
         page.fields["hp"].setValue(old_hp + 1)
-        page.records.setCurrentRow(1)
+        with patch.object(
+            QMessageBox,
+            "question",
+            return_value=QMessageBox.StandardButton.Yes,
+        ):
+            page.records.setCurrentRow(1)
         self.assertEqual(self.project.get_value(unit_id, "hp"), old_hp + 1)
         self.assertEqual(page.current_id, 2)
         self.assertTrue(persistent.isValid())

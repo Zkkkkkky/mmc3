@@ -2246,7 +2246,18 @@ class DatabaseDialog(TransactionalProjectDialog):
             return
         add_button = QPushButton("添加")
         add_button.setEnabled(False)
-        add_button.setToolTip("新增记录的指针重定位规则尚未验证。")
+        if isinstance(page, ReadableCharacterPage):
+            add_button.setToolTip(
+                "当前已列出人物 $01—$C8。参考版继续添加会重排多个全局数据区；"
+                "固定名称、属性和头像池均无剩余容量，因此安全模式拒绝新增。"
+            )
+        elif isinstance(page, ReadableWeaponPage):
+            add_button.setToolTip(
+                "当前已列出完整的 8 位武器 ID $01—$FF；没有可新增的 ID，"
+                "参考版在此容量下点击添加也不产生记录。"
+            )
+        else:
+            add_button.setToolTip("当前记录表没有可安全新增的槽位。")
         selection_layout.addWidget(add_button)
 
     @staticmethod

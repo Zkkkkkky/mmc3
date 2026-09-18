@@ -14,6 +14,7 @@ from collections.abc import Iterable, Iterator
 
 from fc_editor.codecs import (
     BattleMusicCodec,
+    CharacterDialogueCodec,
     CharacterNameCodec,
     ChapterEventCodec,
     ChrCodec,
@@ -535,6 +536,11 @@ class RomProject:
         self.character_name_codec = (
             CharacterNameCodec(self.rom_image)
             if self.rom_image.profile.character_name_pointer_table_offset is not None
+            else None
+        )
+        self.character_dialogue_codec = (
+            CharacterDialogueCodec(self.rom_image)
+            if self.rom_image.profile.character_dialogue_pointer_table_offset is not None
             else None
         )
         self.legacy_global_data_codec = (
@@ -1997,6 +2003,28 @@ class RomProject:
             return f"占位/未命名人物槽（原ROM“{label}”）"
         return label
 
+    def character_normal_display_name(self, character_id: int) -> str:
+        """Return the database display name from the first shared name table."""
+        if self.profile.character_normal_name_pointer_table_offset is None:
+            return self.character_display_name(character_id)
+        if character_id == 0:
+            return "无人物/特殊上下文"
+        if (
+            self.character_name_codec is None
+            or not 1
+            <= character_id
+            <= self.profile.character_normal_name_count
+        ):
+            return "超出已验证人物表"
+        label = concise_dc_text(
+            self.character_name_codec.normal_record_bytes(
+                character_id, self.working
+            )
+        )
+        if not label or not label.strip("-_ "):
+            return "空白/未分配人物槽"
+        return label
+
     def get_character_name_pointer(
         self,
         character_id: int,
@@ -2017,8 +2045,25 @@ class RomProject:
         if self.character_name_codec is None:
             raise ValueError("当前 ROM 的人物名称表尚未验证。")
         return self.character_name_codec.source_ids(
-            self.get_character_name_pointer(character_id, original=original)
+            self.get_character_name_pointer(character_id, original=original),
+            self.original if original else self.working,
         )
+
+    def character_normal_name_source_ids(
+        self,
+        character_id: int,
+        *,
+        original: bool = False,
+    ) -> tuple[int, ...]:
+        if self.character_name_codec is None:
+            raise ValueError("当前 ROM 的人物显示名称表尚未验证。")
+        if self.profile.character_normal_name_pointer_table_offset is None:
+            return self.character_name_source_ids(
+                character_id, original=original
+            )
+        source = self.original if original else self.working
+        pointer = self.character_name_codec.normal_pointer(character_id, source)
+        return self.character_name_codec.normal_source_ids(pointer, source)
 
     def character_name_record_bytes(
         self,
@@ -2031,20 +2076,72 @@ class RomProject:
         source = self.original if original else self.working
         return self.character_name_codec.record_bytes(character_id, source)
 
-    def set_character_name_text(self, character_id: int, text: str) -> None:
+    def character_normal_name_record_bytes(
+        self,
+        character_id: int,
+        *,
+        original: bool = False,
+    ) -> bytes:
+        if self.character_name_codec is None:
+            raise ValueError("当前 ROM 的人物显示名称表尚未验证。")
+        if self.profile.character_normal_name_pointer_table_offset is None:
+            return self.character_name_record_bytes(
+                character_id, original=original
+            )
+        source = self.original if original else self.working
+        return self.character_name_codec.normal_record_bytes(character_id, source)
+
+    def set_character_name_texts(
+        self,
+        character_id: int,
+        *,
+        normal_text: str | None = None,
+        battle_text: str | None = None,
+    ) -> None:
         if self.character_name_codec is None:
             raise ValueError("当前 ROM 的人物名称表尚未验证。")
-        pointer = self.character_name_codec.pointer(character_id, self.working)
-        if not pointer:
-            raise ValueError("空人物名称槽没有可安全写入的原记录。")
-        offset = self.character_name_codec.pointer_to_file_offset(pointer)
-        raw = self.character_name_codec.record_bytes(character_id, self.working)
-        self._replace_terminated_name(
-            offset,
-            self._terminated_capacity(raw, "人物名称"),
-            text,
-            f"人物 {character_id:02X} · 直接修改名称",
+        if self.profile.character_normal_name_pointer_table_offset is None:
+            if (
+                normal_text is not None
+                and battle_text is not None
+                and normal_text != battle_text
+            ):
+                raise ValueError("当前 ROM 只有一套人物名称，不能分别写入两个名称。")
+            text = battle_text if battle_text is not None else normal_text
+            if text is None:
+                return
+            pointer = self.character_name_codec.pointer(character_id, self.working)
+            if not pointer:
+                raise ValueError("空人物名称槽没有可安全写入的原记录。")
+            offset = self.character_name_codec.pointer_to_file_offset(pointer)
+            raw = self.character_name_codec.record_bytes(
+                character_id, self.working
+            )
+            self._replace_terminated_name(
+                offset,
+                self._terminated_capacity(raw, "人物名称"),
+                text,
+                f"人物 {character_id:02X} · 修改名称",
+            )
+            return
+        before = self._mutation_snapshot()
+        patches = self.character_name_codec.repack_names(
+            self.working,
+            character_id,
+            normal_text=normal_text,
+            battle_text=battle_text,
         )
+        for offset, expected, replacement in patches:
+            if bytes(self.working[offset : offset + len(expected)]) != expected:
+                raise ValueError("人物名称池已变化，请重新载入后再试。")
+            self.working[offset : offset + len(replacement)] = replacement
+        self._finish_mutation(before, f"人物 {character_id:02X} · 名称与战斗名称")
+
+    def set_character_name_text(self, character_id: int, text: str) -> None:
+        self.set_character_name_texts(character_id, battle_text=text)
+
+    def set_character_normal_name_text(self, character_id: int, text: str) -> None:
+        self.set_character_name_texts(character_id, normal_text=text)
 
     def character_name_reference_options(
         self,
@@ -2052,8 +2149,14 @@ class RomProject:
         if self.character_name_codec is None:
             return ()
         options: list[tuple[int, int, str, tuple[int, ...]]] = []
-        for pointer in sorted(self.character_name_codec.ids_by_pointer):
-            source_ids = self.character_name_codec.source_ids(pointer)
+        pointers = sorted(
+            {
+                self.character_name_codec.pointer(character_id, self.working)
+                for character_id in range(1, self.profile.character_name_count)
+            }
+        )
+        for pointer in pointers:
+            source_ids = self.character_name_codec.source_ids(pointer, self.working)
             if not source_ids:
                 continue
             source_id = source_ids[0]
@@ -2095,6 +2198,32 @@ class RomProject:
         offset = self.character_name_codec.pointer_offset(character_id)
         self.working[offset : offset + 2] = self.original[offset : offset + 2]
         self._finish_mutation(before, f"人物 {character_id:02X} · 还原名称")
+
+    def reset_character_names(self, character_id: int) -> None:
+        if self.character_name_codec is None:
+            raise ValueError("当前 ROM 的人物名称表尚未验证。")
+        if self.profile.character_normal_name_pointer_table_offset is None:
+            self.reset_character_name(character_id)
+            return
+        normal = concise_dc_text(
+            self.character_name_codec.normal_record_bytes(
+                character_id, self.original
+            )
+        )
+        battle = (
+            concise_dc_text(
+                self.character_name_codec.record_bytes(
+                    character_id, self.original
+                )
+            )
+            if character_id < self.profile.character_name_count
+            else None
+        )
+        self.set_character_name_texts(
+            character_id,
+            normal_text=normal,
+            battle_text=battle,
+        )
 
     def battle_music_selector_label(self, selector: int) -> str:
         spec = self.profile.battle_music
@@ -3267,7 +3396,30 @@ class RomProject:
             offset = self.unit_name_codec.pointer_offset(unit_id)
             covered_offsets.update(range(offset, offset + 2))
 
+        character_name_pool_repacked = False
         if self.character_name_codec is not None:
+            profile = self.profile
+            if (
+                profile.character_normal_name_pointer_table_offset is not None
+                and profile.character_name_first_pointer is not None
+                and profile.character_name_data_end_pointer is not None
+            ):
+                normal_start = profile.character_normal_name_pointer_table_offset
+                normal_end = normal_start + profile.character_normal_name_count * 2
+                pool_start = self.character_name_codec.pointer_to_file_offset(
+                    profile.character_name_first_pointer
+                )
+                pool_end = pool_start + (
+                    profile.character_name_data_end_pointer
+                    - profile.character_name_first_pointer
+                )
+                character_name_pool_repacked = (
+                    self.working[normal_start:normal_end]
+                    != self.original[normal_start:normal_end]
+                    or self.working[pool_start:pool_end]
+                    != self.original[pool_start:pool_end]
+                )
+        if self.character_name_codec is not None and not character_name_pool_repacked:
             for character_id in range(1, self.profile.character_name_count):
                 original_pointer = self.get_character_name_pointer(
                     character_id, original=True
@@ -3275,7 +3427,9 @@ class RomProject:
                 current_pointer = self.get_character_name_pointer(character_id)
                 if original_pointer == current_pointer:
                     continue
-                source_ids = self.character_name_codec.source_ids(current_pointer)
+                source_ids = self.character_name_codec.source_ids(
+                    current_pointer, self.working
+                )
                 if not source_ids:
                     continue
                 document.add_character_name_reference(
