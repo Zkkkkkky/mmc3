@@ -164,6 +164,19 @@ class LegacyToolDialogTests(QtTestCase):
         dialog.decode_button.click()
         self.assertEqual(dialog.text_edit.toPlainText(), "@\\】【")
 
+    def test_text_converter_uses_project_local_font_assignment(self) -> None:
+        if not ROM_PATH.is_file():
+            self.skipTest("测试 ROM 不存在")
+        project = RomProject.load(ROM_PATH)
+        project.replace_font_character_overrides({bytes.fromhex("BAE3"): "龘"})
+        dialog = TextConverterDialog(project=project)
+        dialog.text_edit.setPlainText("龘")
+        dialog.encode_button.click()
+        self.assertEqual(dialog.code_edit.toPlainText(), "BA E3")
+        dialog.text_edit.clear()
+        dialog.decode_button.click()
+        self.assertEqual(dialog.text_edit.toPlainText(), "龘")
+
     def test_attribute_calculator_uses_live_formula_and_legacy_result_lines(self) -> None:
         dialog = AttributeCalculatorDialog()
         dialog.enemy.strength.setValue(30)

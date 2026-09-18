@@ -410,6 +410,29 @@ def default_dc_text_table() -> TextTable:
     return TextTable(mapping)
 
 
+def dc_text_table_with_overrides(
+    overrides: dict[bytes, str],
+    *,
+    reference: bool = False,
+) -> TextTable:
+    """Return the shared DC table plus project-local character assignments."""
+
+    mapping = dict(
+        reference_dc_text_table().byte_to_text
+        if reference
+        else default_dc_text_table().byte_to_text
+    )
+    for token, character in overrides.items():
+        if len(token) != 2 or len(character) != 1:
+            raise ValueError("工程字库映射必须是双字节代码和一枚 Unicode 字符。")
+        if token in mapping:
+            raise ValueError(f"工程字库映射不能覆盖内置代码 {token.hex().upper()}。")
+        mapping[token] = character
+    if len(set(overrides.values())) != len(overrides):
+        raise ValueError("工程字库映射不能把多个代码分配给同一字符。")
+    return TextTable(mapping)
+
+
 def decode_dc_text(raw: bytes) -> str:
     return default_dc_text_table().decode(raw)
 

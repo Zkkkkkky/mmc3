@@ -132,14 +132,19 @@ def _glyph_pixmap(raw: bytes, *, character: str = "", scale: int = 2) -> QPixmap
 class FontLibraryDialog(FontEditingMixin, QDialog):
     """Legacy 16x16 font browser backed by the verified DC token map.
 
-    Fixed glyph slots are editable on verified DC layouts. Font pointer
-    relocation and automatic character-code insertion are not supported.
+    Fixed glyph slots are editable on verified DC layouts. Project-local
+    character assignments use conservative unused slots and never relocate
+    the ROM font layout.
     """
 
     def __init__(self, parent: QWidget | None = None, project: Any | None = None) -> None:
         super().__init__(parent)
         self.project = project
-        self.text_table = default_dc_text_table()
+        self.text_table = (
+            project.dc_text_table()
+            if project is not None
+            else default_dc_text_table()
+        )
         self.current_token = bytes((0xC8, 0x00))
         self.setWindowTitle("字库编辑")
         self.resize(1000, 780)
@@ -335,7 +340,11 @@ class TextConverterDialog(QDialog):
     ) -> None:
         super().__init__(parent)
         self.project = project
-        self.text_table = text_table or reference_dc_text_table()
+        self.text_table = text_table or (
+            project.dc_text_table(reference=True)
+            if project is not None
+            else reference_dc_text_table()
+        )
         self.setWindowTitle("文字转换")
         self.resize(600, 620)
         self.setMinimumSize(500, 500)

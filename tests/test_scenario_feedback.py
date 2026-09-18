@@ -102,6 +102,14 @@ class ScenarioFeedbackTests(QtTestCase):
         page.focus_text_editor()
         self.assertIs(page.editor_tabs.currentWidget(), page.decoded)
 
+    def test_story_page_uses_project_local_font_assignment(self) -> None:
+        token = bytes.fromhex("BAE3")
+        self.project.replace_font_character_overrides({token: "龘"})
+        page = self.show(StoryPage())
+        page.set_project(self.project)
+        self.assertEqual(page.text_table.encode("龘"), token)
+        self.assertIn("工程码表", page.table_status.text())
+
     def event_page(self) -> EventPage:
         page = self.show(EventPage())
         page.set_project(self.project)

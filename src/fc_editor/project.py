@@ -7,6 +7,7 @@ from typing import Any
 
 from .changes import ChangeSet
 from .codecs.battle_music import BattleMusicCodec
+from .codecs.dc_font import glyph_file_offset
 from .codecs.character_name import CharacterNameCodec
 from .codecs.map import MapCodec
 from .codecs.map_trigger import MapTrigger, MapTriggerCodec
@@ -240,6 +241,41 @@ class ProjectDocument:
                 "data": data.hex().upper(),
             }
         )
+
+    def add_font_character_mapping(self, token: bytes, character: str) -> None:
+        glyph_file_offset(token, writable=True)
+        if len(character) != 1:
+            raise ValueError("工程字库映射必须是一枚 Unicode 字符。")
+        self.operations.append(
+            {
+                "kind": "font.set_mapping",
+                "token": token.hex().upper(),
+                "character": character,
+            }
+        )
+
+    def font_character_overrides(self, rom: RomImage) -> dict[bytes, str]:
+        """Read project-only code assignments; they do not alter ROM bytes."""
+
+        self._validate_base(rom)
+        result: dict[bytes, str] = {}
+        for index, operation in enumerate(self.operations):
+            if not isinstance(operation, dict) or operation.get("kind") != "font.set_mapping":
+                continue
+            try:
+                token = bytes.fromhex(str(operation["token"]))
+                character = str(operation["character"])
+                glyph_file_offset(token, writable=True)
+                if len(character) != 1:
+                    raise ValueError("映射值必须是一枚 Unicode 字符。")
+                result[token] = character
+            except (KeyError, TypeError, ValueError) as error:
+                raise ProjectFormatError(
+                    f"第 {index + 1} 条工程字库映射无效：{error}"
+                ) from error
+        if len(set(result.values())) != len(result):
+            raise ProjectFormatError("工程字库映射含重复字符。")
+        return result
 
     @staticmethod
     def _decode_resource_allocation(
@@ -912,6 +948,14 @@ class ProjectDocument:
                         description=f"扩展资源 · {allocation.label}",
                         expected=rom.data[allocation.offset : allocation.end],
                     )
+                elif kind == "font.set_mapping":
+                    token = bytes.fromhex(str(operation["token"]))
+                    character = str(operation["character"])
+                    glyph_file_offset(token, writable=True)
+                    if len(character) != 1:
+                        raise ProjectFormatError(
+                            "工程字库映射值必须是一枚 Unicode 字符。"
+                        )
                 elif kind == "raw.patch":
                     offset = int(operation["offset"])
                     before = bytes.fromhex(str(operation["before"]))

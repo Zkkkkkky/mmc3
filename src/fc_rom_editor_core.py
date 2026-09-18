@@ -44,7 +44,11 @@ from fc_editor.constants import (
     WEAPON_RECORD_SIZE,
 )
 from fc_editor.errors import ProjectFormatError, RomFormatError
-from fc_editor.dc_text import concise_dc_text, default_dc_text_table
+from fc_editor.dc_text import (
+    concise_dc_text,
+    dc_text_table_with_overrides,
+    default_dc_text_table,
+)
 from fc_editor.expansion import (
     AUTO_ALLOCATION_PREFIX,
     EXPANSION_METADATA_OFFSET,
@@ -109,6 +113,7 @@ from fc_editor.project import ProjectDocument
 from fc_editor.resources import Allocation, BankAllocator
 from fc_editor.rom_image import RomImage
 from fc_editor.services.validation import ValidationIssue, validate_project
+from fc_editor.text_table import TextTable
 
 FIELDS = UNIT_FIELDS
 FIELD_BY_KEY = UNIT_FIELD_BY_KEY
@@ -128,12 +133,15 @@ class EditHistoryEntry:
     patches: tuple[EditPatch, ...]
     allocations_before: tuple[Allocation, ...] = ()
     allocations_after: tuple[Allocation, ...] = ()
+    font_mappings_before: tuple[tuple[bytes, str], ...] = ()
+    font_mappings_after: tuple[tuple[bytes, str], ...] = ()
 
 
 @dataclass(frozen=True)
 class ProjectSnapshot:
     data: bytes
     allocations: tuple[Allocation, ...]
+    font_mappings: tuple[tuple[bytes, str], ...] = ()
 
 
 @dataclass(frozen=True)
@@ -472,6 +480,7 @@ class RomProject:
         self.rom_image = RomImage(data, path)
         self.original = self.rom_image.data
         self.working = bytearray(self.original)
+        self.font_character_overrides: dict[bytes, str] = {}
         initial_plan = ExpansionPlan.from_bytes(self.working)
         self._initial_expansion_plan = initial_plan
         self._unit_name_baseline_pointers: tuple[int, ...] | None = None
@@ -660,6 +669,13 @@ class RomProject:
         document = ProjectDocument.load(project_path)
         project = cls.load(base_rom_path)
         project.working[:] = document.materialize(project.rom_image)
+        project.font_character_overrides = document.font_character_overrides(
+            project.rom_image
+        )
+        try:
+            project.dc_text_table()
+        except ValueError as error:
+            raise ProjectFormatError(f"工程字库映射无效：{error}") from error
         project.resource_allocator = BankAllocator(
             project.profile,
             project.original,
@@ -703,14 +719,23 @@ class RomProject:
     def _mutation_snapshot(self) -> ProjectSnapshot | None:
         if self._transaction_depth:
             return None
-        return ProjectSnapshot(bytes(self.working), self.resource_allocator.allocations)
+        return ProjectSnapshot(
+            bytes(self.working),
+            self.resource_allocator.allocations,
+            tuple(sorted(self.font_character_overrides.items())),
+        )
 
     def _finish_mutation(self, before: ProjectSnapshot | None, description: str) -> None:
         if before is None:
             return
         allocations_after = self.resource_allocator.allocations
+        font_mappings_after = tuple(sorted(self.font_character_overrides.items()))
         patches = self._diff_patches(before.data, bytes(self.working))
-        if not patches and before.allocations == allocations_after:
+        if (
+            not patches
+            and before.allocations == allocations_after
+            and before.font_mappings == font_mappings_after
+        ):
             return
         self._undo_stack.append(
             EditHistoryEntry(
@@ -718,6 +743,8 @@ class RomProject:
                 patches,
                 before.allocations,
                 allocations_after,
+                before.font_mappings,
+                font_mappings_after,
             )
         )
         self._redo_stack.clear()
@@ -727,7 +754,9 @@ class RomProject:
         outermost = self._transaction_depth == 0
         if outermost:
             self._transaction_before = ProjectSnapshot(
-                bytes(self.working), self.resource_allocator.allocations
+                bytes(self.working),
+                self.resource_allocator.allocations,
+                tuple(sorted(self.font_character_overrides.items())),
             )
             self._transaction_description = description
         self._transaction_depth += 1
@@ -740,6 +769,9 @@ class RomProject:
                     self.profile,
                     self.original,
                     self._transaction_before.allocations,
+                )
+                self.font_character_overrides = dict(
+                    self._transaction_before.font_mappings
                 )
                 self._refresh_dynamic_codecs()
             raise
@@ -778,6 +810,7 @@ class RomProject:
         self.resource_allocator = BankAllocator(
             self.profile, self.original, entry.allocations_before
         )
+        self.font_character_overrides = dict(entry.font_mappings_before)
         self._refresh_dynamic_codecs()
         self._redo_stack.append(entry)
         return entry.description
@@ -791,6 +824,7 @@ class RomProject:
         self.resource_allocator = BankAllocator(
             self.profile, self.original, entry.allocations_after
         )
+        self.font_character_overrides = dict(entry.font_mappings_after)
         self._refresh_dynamic_codecs()
         self._undo_stack.append(entry)
         return entry.description
@@ -1552,6 +1586,39 @@ class RomProject:
         with self.transaction(f"替换 {len(patches)} 个 ROM 字模"):
             for offset, raw in patches:
                 self.working[offset : offset + 18] = raw
+
+    def dc_text_table(self, *, reference: bool = False) -> TextTable:
+        return dc_text_table_with_overrides(
+            self.font_character_overrides,
+            reference=reference,
+        )
+
+    def replace_font_character_overrides(
+        self,
+        mappings: dict[bytes, str],
+    ) -> None:
+        """Replace project-local code assignments without modifying ROM bytes."""
+
+        from fc_editor.codecs.dc_font import glyph_file_offset
+        from fc_editor.dc_text import reference_dc_text_table
+
+        built_in = reference_dc_text_table().byte_to_text
+        checked: dict[bytes, str] = {}
+        for token, character in mappings.items():
+            glyph_file_offset(token, writable=True)
+            if len(character) != 1:
+                raise ValueError("工程字库映射必须是一枚 Unicode 字符。")
+            if token in built_in:
+                raise ValueError(
+                    f"不能覆盖内置字库代码 {token.hex().upper()}。"
+                )
+            checked[bytes(token)] = character
+        if len(set(checked.values())) != len(checked):
+            raise ValueError("工程字库映射不能把多个代码分配给同一字符。")
+        before = self._mutation_snapshot()
+        self.font_character_overrides = checked
+        self.dc_text_table()
+        self._finish_mutation(before, f"更新 {len(checked)} 条工程字库映射")
 
     def set_chr_tile_pixels(
         self,
@@ -3287,6 +3354,8 @@ class RomProject:
 
     def to_project_document(self) -> ProjectDocument:
         document = ProjectDocument.create(self.rom_image)
+        for token, character in sorted(self.font_character_overrides.items()):
+            document.add_font_character_mapping(token, character)
         covered_offsets: set[int] = set()
         plan = self.expansion_plan
         units_are_linked = bool(plan is not None and plan.flags & FLAG_UNITS)
