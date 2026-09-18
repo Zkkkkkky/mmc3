@@ -19,7 +19,12 @@ from .pages import ProjectPage
 
 
 class LegacyTextPage(ProjectPage):
-    """Shared real-ROM text editor for battle dialogue, system and item text."""
+    """Shared real-ROM text editor for battle dialogue, system and item text.
+
+    Battle dialogue can repack its verified fixed-bank arenas.  System and item
+    text retain their original-record capacity because their relocation rules
+    are separate and have not been verified.
+    """
 
     def __init__(self, group_keys: tuple[str, ...] = ("battle_00", "battle_01", "battle_04", "battle_05")) -> None:
         super().__init__()
@@ -238,7 +243,16 @@ class LegacyTextPage(ProjectPage):
 
     @property
     def pending_draft_keys(self) -> frozenset[tuple[str, int]]:
-        return frozenset(("rom_offset", self.codec.record(*key).file_offset) for key in self._drafts) if self.codec else frozenset()
+        if self.codec is None:
+            return frozenset()
+        result: set[tuple[str, int]] = set()
+        for identity in self._drafts:
+            key, _index, _variant = identity
+            if key.startswith("battle_"):
+                result.add(("battle_text_bank", self.codec.group_by_key[key].bank))
+            else:
+                result.add(("rom_offset", self.codec.record(*identity).file_offset))
+        return frozenset(result)
 
     @property
     def pending_draft_key(self):
@@ -251,10 +265,13 @@ class LegacyTextPage(ProjectPage):
         if self.project is None:
             return ()
         codec = LegacyTextCodec(self.project.working, capacity_data=self.project.original)
-        by_offset = {}
         for identity, text in self._drafts.items():
             if self.codec is not None and codec.record(*identity).raw != self.codec.record(*identity).raw:
                 raise ValueError("当前文字已在其他页面修改，请先还原本页草稿再重新编辑。")
+        if self._drafts and all(key.startswith("battle_") for key, _index, _variant in self._drafts):
+            return codec.battle_repack_patches(self._drafts)
+        by_offset = {}
+        for identity, text in self._drafts.items():
             patch = codec.replacement_patch(*identity, text)
             if patch[0] in by_offset and by_offset[patch[0]] != patch:
                 raise ValueError("共用同一文字的两个编号存在不同草稿，请保留一份修改。")
@@ -283,7 +300,22 @@ class LegacyTextPage(ProjectPage):
             self.status_label.setText(error)
         elif self.codec is not None and self._selected is not None:
             record = self.codec.record(*self._selected)
-            self.status_label.setText(f"原记录 {len(record.raw)} 字节；保留控制码和结束码，可在原容量内修改正文。共用此正文的条目：{len(record.shared_by)}。")
+            key, _index, _variant = self._selected
+            if key.startswith("battle_"):
+                group = self.codec.group_by_key[key]
+                usage = self.codec.battle_usage(group.bank, self._drafts)
+                self.status_label.setText(
+                    f"当前记录 {len(record.raw)} 字节；Bank ${group.bank:02X} "
+                    f"安全文字段 {usage.used}/{usage.capacity} 字节，剩余 {usage.free} 字节。"
+                    "缩短一条后，释放空间可供同 Bank 其他对话增长；暂存时会整体重排指针。"
+                    f"共用此正文的条目：{len(record.shared_by)}。"
+                )
+            else:
+                self.status_label.setText(
+                    f"原记录 {len(record.raw)} 字节；保留控制码和结束码，"
+                    "可在原容量内修改正文。"
+                    f"共用此正文的条目：{len(record.shared_by)}。"
+                )
 
     def apply_changes(self) -> bool:
         if self.project is None:
