@@ -40,6 +40,15 @@ from fc_editor.codecs.character_attributes import (
     SPIRIT_NAMES,
     weapon_extra_values,
 )
+from fc_editor.codecs.legacy_text_growth import LegacyGrowthCodec
+from .battle_calculator import (
+    BattleAttackResult,
+    BattleFormulaParameters,
+    BattleSideState,
+    calculate_battle_attack,
+    normalized_special_code,
+    reference_firepower,
+)
 from .font_edit import FontEditingMixin
 
 
@@ -388,8 +397,15 @@ class TextConverterDialog(QDialog):
 class _BattleSide(QWidget):
     def __init__(self, title: str, project: Any | None) -> None:
         super().__init__()
-        self.setFixedHeight(390)
+        self.setFixedHeight(330)
         self.project = project
+        self._growth_codec: LegacyGrowthCodec | None = None
+        self._raw_weapon_powers = (0, 0, 0)
+        self._power_is_auto = True
+        self._loading = True
+        self.terrain_value = 1
+        self.raw_special = 0
+        self.distance_table = 0
         group = QGroupBox(title)
         outer = QVBoxLayout(self)
         outer.setContentsMargins(0, 0, 0, 0)
@@ -400,7 +416,7 @@ class _BattleSide(QWidget):
         self.unit = QComboBox()
         self.weapon = QComboBox()
         self.level = QComboBox()
-        self.level.addItems([str(value) for value in range(1, 100)])
+        self.level.addItems([str(value) for value in range(1, 61)])
         self.strength = self._spin(0, 999)
         self.defense = self._spin(0, 999)
         self.speed = self._spin(0, 999)
@@ -413,36 +429,48 @@ class _BattleSide(QWidget):
         self.power_sea = self._spin(0, 999)
         self.multiplier_numerator = self._spin(1, 99)
         self.multiplier_denominator = self._spin(1, 99)
+        self.multiplier_numerator.hide()
+        self.multiplier_denominator.hide()
+        self.multiplier_edit = QLineEdit("1/1")
+        self.multiplier_edit.setMaximumWidth(76)
+        self.change_multiplier_button = QPushButton("更改倍数")
+        self.change_multiplier_button.setEnabled(False)
+        self.change_multiplier_button.setToolTip(
+            "参考版此功能损坏；按 D6 决策禁用，不复刻运行时错误。"
+        )
         self.character_summary = QLabel("人物属性：尚未读取")
-        self.character_summary.setWordWrap(True)
-        self.character_summary.setTextInteractionFlags(Qt.TextInteractionFlag.TextSelectableByMouse)
+        self.character_summary.hide()
         self.weapon_summary = QLabel("武器属性：未选择武器")
-        self.weapon_summary.setWordWrap(True)
-        self.weapon_summary.setTextInteractionFlags(Qt.TextInteractionFlag.TextSelectableByMouse)
+        self.weapon_summary.hide()
 
         controls = (
-            ("人物:", self.character, "强度:", self.strength, "伤害倍数:", self._multiplier_widget()),
-            ("机体:", self.unit, "防御:", self.defense, "武器命中:", self.weapon_hit),
-            ("武器:", self.weapon, "速度:", self.speed, "武器射程:", self.weapon_range),
-            ("等级:", self.level, "HP:", self.hp, "机体特技:", self.skill),
-            ("", QWidget(), "", QWidget(), "火力·空:", self.power_air),
-            ("", QWidget(), "", QWidget(), "火力·陆:", self.power_land),
-            ("", QWidget(), "", QWidget(), "火力·海:", self.power_sea),
+            (("人物：", self.character), ("强度：", self.strength), ("伤害倍数：", self._multiplier_widget()), ("", None)),
+            (("机体：", self.unit), ("防御：", self.defense), ("武器命中：", self.weapon_hit), ("火力：空", self.power_air)),
+            (("武器：", self.weapon), ("速度：", self.speed), ("武器射程：", self.weapon_range), ("火力：陆", self.power_land)),
+            (("等级：", self.level), ("HP：", self.hp), ("机体特技：", self.skill), ("火力：海", self.power_sea)),
         )
-        for row, values in enumerate(controls):
-            for pair in range(3):
-                label, widget = values[pair * 2], values[pair * 2 + 1]
-                if label:
-                    grid.addWidget(QLabel(label), row, pair * 2)
-                    grid.addWidget(widget, row, pair * 2 + 1)
-
-        grid.addWidget(self.character_summary, 4, 0, 3, 4)
-        grid.addWidget(self.weapon_summary, 7, 0, 1, 6)
+        for logical_row, fields in enumerate(controls):
+            for column, (label, widget) in enumerate(fields):
+                if widget is None:
+                    continue
+                grid.addWidget(QLabel(label), logical_row * 2, column)
+                grid.addWidget(widget, logical_row * 2 + 1, column)
+        grid.setColumnStretch(0, 3)
+        grid.setColumnStretch(1, 2)
+        grid.setColumnStretch(2, 2)
+        grid.setColumnStretch(3, 2)
 
         self._populate_records()
         self.character.currentIndexChanged.connect(self._load_character)
         self.unit.currentIndexChanged.connect(self._load_unit)
         self.weapon.currentIndexChanged.connect(self._load_weapon)
+        self.level.currentIndexChanged.connect(self._refresh_stats)
+        self.multiplier_edit.editingFinished.connect(self._parse_multiplier)
+        self.multiplier_numerator.valueChanged.connect(self._sync_multiplier_from_parts)
+        self.multiplier_denominator.valueChanged.connect(self._sync_multiplier_from_parts)
+        for editor in (self.power_air, self.power_land, self.power_sea):
+            editor.valueChanged.connect(self._mark_power_override)
+        self._loading = False
         self._load_character()
         self._load_unit()
         self._load_weapon()
@@ -457,9 +485,8 @@ class _BattleSide(QWidget):
         widget = QWidget()
         row = QHBoxLayout(widget)
         row.setContentsMargins(0, 0, 0, 0)
-        row.addWidget(self.multiplier_numerator)
-        row.addWidget(QLabel("/"))
-        row.addWidget(self.multiplier_denominator)
+        row.addWidget(self.multiplier_edit)
+        row.addWidget(self.change_multiplier_button)
         return widget
 
     def _populate_records(self) -> None:
@@ -469,22 +496,60 @@ class _BattleSide(QWidget):
             self.weapon.addItem("无", 0)
             return
         character_count = getattr(getattr(self.project, "profile", None), "character_name_count", 1)
-        for record_id in range(1, character_count):
+        for record_id in range(1, character_count + 1):
             self.character.addItem(
                 f"{record_id:03d}：{self.project.character_display_name(record_id)}", record_id
             )
         for record_id in range(1, self.project.unit_count):
             self.unit.addItem(f"{record_id:03d}：{self.project.unit_display_name(record_id)}", record_id)
-        self.weapon.addItem("无", 0)
-        for record_id in range(1, self.project.weapon_count):
-            self.weapon.addItem(f"{record_id:03d}：{self.project.weapon_display_name(record_id)}", record_id)
         self.character.setCurrentIndex(max(0, self.character.findData(4)))
-        self.unit.setCurrentIndex(max(0, self.unit.findData(2)))
-        self.weapon.setCurrentIndex(max(0, self.weapon.findData(1)))
+        default_unit = next(
+            (
+                record_id
+                for record_id in range(1, self.project.unit_count)
+                if any(
+                    0 < weapon_id < self.project.weapon_count
+                    for weapon_id in self.project.get_unit_weapons(record_id)
+                )
+            ),
+            1,
+        )
+        self.unit.setCurrentIndex(max(0, self.unit.findData(default_unit)))
+        self._rebuild_weapons()
+
+    def _rebuild_weapons(self) -> None:
+        previous = int(self.weapon.currentData() or 0)
+        self.weapon.blockSignals(True)
+        self.weapon.clear()
+        unit_id = int(self.unit.currentData() or 0)
+        weapon_ids: list[int] = []
+        if self.project is not None and unit_id:
+            try:
+                candidates = self.project.get_unit_weapons(unit_id)
+            except ValueError:
+                candidates = ()
+            for weapon_id in candidates:
+                if (
+                    0 < weapon_id < self.project.weapon_count
+                    and weapon_id not in weapon_ids
+                ):
+                    weapon_ids.append(weapon_id)
+        if weapon_ids:
+            for weapon_id in weapon_ids:
+                self.weapon.addItem(
+                    f"{weapon_id:03d}：{self.project.weapon_display_name(weapon_id)}",
+                    weapon_id,
+                )
+        else:
+            self.weapon.addItem("无", 0)
+        selected = self.weapon.findData(previous)
+        self.weapon.setCurrentIndex(selected if selected >= 0 else 0)
+        self.weapon.blockSignals(False)
 
     def _load_character(self, _index: int | None = None) -> None:
         if self.project is None or self.character.currentData() is None:
             self.character_summary.setText("人物属性：尚未读取")
+            self.character.setToolTip(self.character_summary.text())
             return
         character_id = int(self.character.currentData())
         codec = CharacterAttributesCodec(self.project)
@@ -501,18 +566,76 @@ class _BattleSide(QWidget):
             f"补正 机/强/防/速/HP {'/'.join(str(value) for value in record.corrections)} · "
             f"精神列表 {'、'.join(spirits) if spirits else '无'}"
         )
+        self.character.setToolTip(self.character_summary.text())
+        if not self._loading:
+            self._refresh_stats()
 
     def _load_unit(self, _index: int | None = None) -> None:
         if self.project is None or self.unit.currentData() is None:
             return
-        record = self.project.unit_codec.decode_record(
-            int(self.unit.currentData()), bytes(self.project.working)
+        unit_id = int(self.unit.currentData())
+        record = self.project.unit_codec.decode_record(unit_id, bytes(self.project.working))
+        self.terrain_value = record.get("terrain")
+        self.raw_special = record.get("special")
+        shown_special = normalized_special_code(self.raw_special)
+        self.skill.setValue(shown_special)
+        self.skill.setToolTip(
+            f"ROM 机体特技原码 ${self.raw_special:02X}；计算器显示值 {shown_special}。"
         )
-        self.strength.setValue(record.get("strength"))
-        self.defense.setValue(record.get("defense"))
-        self.speed.setValue(record.get("speed"))
-        self.hp.setValue(record.get("hp"))
-        self.skill.setValue(record.get("special"))
+        self._rebuild_weapons()
+        self._power_is_auto = True
+        self._refresh_stats()
+        self._load_weapon()
+
+    def _growth_delta(self, unit_id: int, field: str, level: int) -> int:
+        growth = self.project.get_value(unit_id, f"{field}_growth")
+        count = max(0, min(98, level - 1))
+        if growth <= 200:
+            return growth * count
+        if 201 <= growth <= 253:
+            if self._growth_codec is None:
+                self._growth_codec = LegacyGrowthCodec(self.project.working)
+            return sum(self._growth_codec.record(growth).values[:count])
+        return 0
+
+    def _refresh_stats(self, _index: int | None = None) -> None:
+        if self.project is None or self.unit.currentData() is None:
+            return
+        unit_id = int(self.unit.currentData())
+        level = int(self.level.currentText() or "1")
+        corrections = (0, 0, 0, 0, 0)
+        if self.character.currentData() is not None:
+            corrections = CharacterAttributesCodec(self.project).read(
+                int(self.character.currentData())
+            ).corrections
+        values = {
+            "strength": min(
+                255,
+                self.project.get_value(unit_id, "strength")
+                + self._growth_delta(unit_id, "strength", level)
+                + corrections[1],
+            ),
+            "defense": min(
+                255,
+                self.project.get_value(unit_id, "defense")
+                + self._growth_delta(unit_id, "defense", level)
+                + corrections[2],
+            ),
+            "speed": min(
+                255,
+                self.project.get_value(unit_id, "speed")
+                + self._growth_delta(unit_id, "speed", level)
+                + corrections[3],
+            ),
+            "hp": min(
+                9999,
+                self.project.get_value(unit_id, "hp")
+                + self._growth_delta(unit_id, "hp", level)
+                + corrections[4],
+            ),
+        }
+        for key, value in values.items():
+            getattr(self, key).setValue(value)
 
     def _load_weapon(self, _index: int | None = None) -> None:
         weapon_id = int(self.weapon.currentData() or 0)
@@ -525,28 +648,84 @@ class _BattleSide(QWidget):
                 self.power_sea,
             ):
                 spin.setValue(0)
-            self.skill.setValue(
-                self.project.get_value(int(self.unit.currentData()), "special")
-                if self.project is not None and self.unit.currentData() is not None
-                else 0
-            )
+            self._raw_weapon_powers = (0, 0, 0)
+            self.distance_table = 0
             self.weapon_summary.setText("武器属性：未选择武器")
+            self.weapon.setToolTip(self.weapon_summary.text())
             return
         record = self.project.weapon_codec.decode_record(weapon_id, bytes(self.project.working))
         weapon_skill, distance = weapon_extra_values(self.project, weapon_id)
         self.weapon_hit.setValue(record.get("hit"))
         self.weapon_range.setValue(record.get("max_range"))
-        self.power_air.setValue(record.get("power_air"))
-        self.power_land.setValue(record.get("power_land"))
-        self.power_sea.setValue(record.get("power_sea"))
+        self._raw_weapon_powers = tuple(
+            record.get(key) for key in ("power_air", "power_land", "power_sea")
+        )
+        self.distance_table = distance
+        self._power_is_auto = True
+        self.sync_formula_parameters(BattleFormulaParameters.from_project(self.project))
         self.weapon_summary.setText(
             f"武器属性 0x{self.project.weapon_codec.record_offset(weapon_id):06X}："
             f"{self.project.weapon_record_bytes(weapon_id).hex(' ').upper()} · "
             f"武器特技 {weapon_skill} · 距离补正表 {distance}"
         )
+        self.weapon.setToolTip(self.weapon_summary.text())
         self.skill.setToolTip(
-            f"当前机体特技为 {self.project.get_value(int(self.unit.currentData()), 'special')}；"
+            f"当前机体特技原码为 ${self.raw_special:02X}；"
             f"所选武器特技为 {weapon_skill}。"
+        )
+
+    def _mark_power_override(self, _value: int) -> None:
+        if not self._loading:
+            self._power_is_auto = False
+
+    def sync_formula_parameters(self, parameters: BattleFormulaParameters) -> None:
+        if not self._power_is_auto:
+            return
+        self._loading = True
+        for editor, raw_power in zip(
+            (self.power_air, self.power_land, self.power_sea),
+            self._raw_weapon_powers,
+        ):
+            editor.setValue(reference_firepower(raw_power, parameters.weapon_multiplier))
+        self._loading = False
+
+    def _parse_multiplier(self) -> None:
+        match = re.fullmatch(r"\s*(\d+)\s*/\s*(\d+)\s*", self.multiplier_edit.text())
+        if match is None or int(match.group(2)) == 0:
+            self.multiplier_edit.setText(
+                f"{self.multiplier_numerator.value()}/{self.multiplier_denominator.value()}"
+            )
+            self.multiplier_edit.setToolTip("倍数格式必须为“正整数/正整数”，分母不能为 0。")
+            return
+        numerator = max(1, min(99, int(match.group(1))))
+        denominator = max(1, min(99, int(match.group(2))))
+        self.multiplier_numerator.setValue(numerator)
+        self.multiplier_denominator.setValue(denominator)
+        self.multiplier_edit.setText(f"{numerator}/{denominator}")
+        self.multiplier_edit.setToolTip("")
+
+    def _sync_multiplier_from_parts(self, _value: int) -> None:
+        self.multiplier_edit.setText(
+            f"{self.multiplier_numerator.value()}/{self.multiplier_denominator.value()}"
+        )
+
+    def state(self) -> BattleSideState:
+        self._parse_multiplier()
+        return BattleSideState(
+            strength=self.strength.value(),
+            defense=self.defense.value(),
+            speed=self.speed.value(),
+            hp=self.hp.value(),
+            weapon_hit=self.weapon_hit.value(),
+            weapon_range=self.weapon_range.value(),
+            power_air=self.power_air.value(),
+            power_land=self.power_land.value(),
+            power_sea=self.power_sea.value(),
+            terrain=self.terrain_value,
+            special=self.skill.value(),
+            distance_table=self.distance_table,
+            damage_numerator=self.multiplier_numerator.value(),
+            damage_denominator=self.multiplier_denominator.value(),
         )
 
 
@@ -633,7 +812,7 @@ class DefeatExperienceCalculatorDialog(QDialog):
 
 
 class AttributeCalculatorDialog(QDialog):
-    """Non-mutating comparison calculator with an explicit estimation formula."""
+    """Reference-style, non-mutating battle calculator backed by live ROM data."""
 
     def __init__(self, parent: QWidget | None = None, project: Any | None = None) -> None:
         super().__init__(parent)
@@ -652,19 +831,12 @@ class AttributeCalculatorDialog(QDialog):
 
         result_group = QGroupBox("属性计算")
         result_layout = QVBoxLayout(result_group)
-        self.results = QTableWidget(0, 6)
-        self.results.setHorizontalHeaderLabels(
-            ("攻击方", "目标", "命中率", "最低命中速度", "估算伤害", "命中后HP")
-        )
-        self.results.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeMode.Stretch)
-        self.results.horizontalHeader().hide()
-        self.results.verticalHeader().hide()
-        self.results.setShowGrid(False)
-        self.results.setEditTriggers(QTableWidget.EditTrigger.NoEditTriggers)
+        self.results = QListWidget()
+        self.results.setAlternatingRowColors(True)
         result_layout.addWidget(self.results, 1)
         formula_notice = QLabel(
-            "最低命中速度表示按当前估算公式达到 1% 命中所需的攻方速度；"
-            "旧修改器的完整战斗公式仍需黄金样本验证。"
+            "只读模拟：强度/武器/防御、双击和命中临界值每次计算都从当前工程的“其他”公式参数读取；"
+            "武器按目标空/陆/海类型取火力，并使用所选武器距离补正表的最大射程列。本窗口不写 ROM。"
         )
         formula_notice.setObjectName("hintText")
         formula_notice.setWordWrap(True)
@@ -672,48 +844,76 @@ class AttributeCalculatorDialog(QDialog):
         root.addWidget(result_group, 1)
         self.calculate_button = QPushButton("开始计算")
         self.calculate_button.setToolTip(
-            "安全估算（非已验证游戏公式）：命中率=clamp(武器命中+攻方速度-守方速度,0,100)；"
-            "伤害=max(1,floor((攻方强度+对陆火力)×倍率)-守方防御)。"
+            "按当前 M17 公式参数计算双向命中、双击、预计伤害、特技减伤和击落次数。"
         )
         self.calculate_button.clicked.connect(self.calculate)
         root.addWidget(self.calculate_button, 0, Qt.AlignmentFlag.AlignHCenter)
+        self.last_results: dict[str, BattleAttackResult] = {}
 
-    @staticmethod
     def calculate_attack(
-        attacker: _BattleSide, defender: _BattleSide
-    ) -> tuple[int, int, int, int]:
-        hit = max(0, min(100, attacker.weapon_hit.value() + attacker.speed.value() - defender.speed.value()))
-        minimum_hit_speed = max(0, defender.speed.value() - attacker.weapon_hit.value() + 1)
-        scaled = (
-            (attacker.strength.value() + attacker.power_land.value())
-            * attacker.multiplier_numerator.value()
-            // attacker.multiplier_denominator.value()
+        self,
+        attacker: _BattleSide,
+        defender: _BattleSide,
+        parameters: BattleFormulaParameters | None = None,
+    ) -> BattleAttackResult:
+        live_parameters = parameters or BattleFormulaParameters.from_project(self.project)
+        attacker.sync_formula_parameters(live_parameters)
+        defender.sync_formula_parameters(live_parameters)
+        return calculate_battle_attack(
+            attacker.state(), defender.state(), live_parameters
         )
-        damage = max(1, scaled - defender.defense.value())
-        remaining_hp = max(0, defender.hp.value() - damage)
-        return hit, minimum_hit_speed, damage, remaining_hp
+
+    def _append_result(
+        self,
+        attacker_name: str,
+        defender_name: str,
+        result: BattleAttackResult,
+    ) -> None:
+        self.results.addItem(f"--------{attacker_name}计算----------------")
+        hit_boundary = result.minimum_hit_speed - 1
+        if result.minimum_hit_speed >= 99999:
+            self.results.addItem("命中最低速度计算：当前距离补正为 0，无法命中")
+        else:
+            self.results.addItem(
+                f"命中最低速度计算：速度至少大于 {hit_boundary} 才能命中"
+            )
+        self.results.addItem(
+            f"计算结果：{' 可以命中' if result.can_hit else ' 无法命中'}"
+            f"（命中值 {result.hit_score}，临界 {result.hit_threshold}，"
+            f"距离补正 {result.distance_percent}%）"
+        )
+        self.results.addItem(
+            f"双击最低速度计算：速度至少大于 {result.minimum_double_speed - 1} 才能双击"
+        )
+        self.results.addItem(
+            f"计算结果：{' 可以双击' if result.can_double else ' 无法双击'}"
+        )
+        self.results.addItem(
+            f"预计伤害计算：{attacker_name} 对 {defender_name} 造成预计伤害 "
+            f"{result.predicted_damage}（对{result.terrain_name}火力 {result.firepower}）"
+        )
+        if result.defensive_effect is not None:
+            self.results.addItem(
+                f"{defender_name} 拥有{result.defensive_effect.name}"
+            )
+        self.results.addItem(
+            f"实际伤害计算：{attacker_name} 对 {defender_name} 造成实际伤害 "
+            f"{result.actual_damage}，命中后 HP {result.remaining_hp}"
+        )
+        self.results.addItem(
+            f"{result.hits_to_defeat}次 可以击落 {defender_name}"
+        )
 
     def calculate(self) -> None:
-        rows = (
-            ("敌方", "我方", *self.calculate_attack(self.enemy, self.ally)),
-            ("我方", "敌方", *self.calculate_attack(self.ally, self.enemy)),
-        )
-        self.results.setRowCount(len(rows))
-        self.results.horizontalHeader().show()
-        self.results.setShowGrid(True)
-        for row, values in enumerate(rows):
-            display = (
-                values[0],
-                values[1],
-                f"{values[2]}%",
-                str(values[3]),
-                str(values[4]),
-                str(values[5]),
-            )
-            for column, value in enumerate(display):
-                item = QTableWidgetItem(value)
-                item.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
-                self.results.setItem(row, column, item)
+        parameters = BattleFormulaParameters.from_project(self.project)
+        self.enemy.sync_formula_parameters(parameters)
+        self.ally.sync_formula_parameters(parameters)
+        ally_result = self.calculate_attack(self.ally, self.enemy, parameters)
+        enemy_result = self.calculate_attack(self.enemy, self.ally, parameters)
+        self.last_results = {"我方": ally_result, "敌方": enemy_result}
+        self.results.clear()
+        self._append_result("我方", "敌方", ally_result)
+        self._append_result("敌方", "我方", enemy_result)
 
 
 class SaveEditorDialog(QDialog):

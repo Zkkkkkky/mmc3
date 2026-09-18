@@ -162,30 +162,35 @@ class LegacyToolDialogTests(QtTestCase):
         dialog.decode_button.click()
         self.assertEqual(dialog.text_edit.toPlainText(), "@\\】【")
 
-    def test_attribute_calculator_uses_documented_deterministic_formula(self) -> None:
+    def test_attribute_calculator_uses_live_formula_and_legacy_result_lines(self) -> None:
         dialog = AttributeCalculatorDialog()
         dialog.enemy.strength.setValue(30)
         dialog.enemy.power_land.setValue(20)
         dialog.enemy.weapon_hit.setValue(70)
         dialog.enemy.speed.setValue(25)
+        dialog.enemy.weapon_range.setValue(1)
         dialog.enemy.multiplier_numerator.setValue(3)
         dialog.enemy.multiplier_denominator.setValue(2)
         dialog.ally.defense.setValue(15)
         dialog.ally.speed.setValue(20)
         dialog.ally.hp.setValue(100)
+        dialog.ally.terrain_value = 1
+        dialog.ally.skill.setValue(0)
         dialog.calculate_button.click()
-        self.assertEqual(dialog.results.rowCount(), 2)
-        self.assertEqual(dialog.results.item(0, 2).text(), "75%")
-        self.assertEqual(dialog.results.item(0, 3).text(), "0")
-        self.assertEqual(dialog.results.item(0, 4).text(), "60")
-        self.assertEqual(dialog.results.item(0, 5).text(), "40")
-        self.assertFalse(dialog.results.horizontalHeader().isHidden())
+        self.assertEqual(dialog.last_results["敌方"].hit_score, 75)
+        self.assertEqual(dialog.last_results["敌方"].minimum_hit_speed, 20)
+        self.assertEqual(dialog.last_results["敌方"].predicted_damage, 66)
+        self.assertEqual(dialog.last_results["敌方"].remaining_hp, 34)
+        result_lines = [
+            dialog.results.item(row).text() for row in range(dialog.results.count())
+        ]
+        self.assertIn("预计伤害计算：敌方 对 我方 造成预计伤害 66（对陆火力 20）", result_lines)
+        self.assertTrue(any("计算结果： 可以命中" in line for line in result_lines))
         dialog.close()
 
     def test_attribute_calculator_opens_with_empty_lower_result_area(self) -> None:
         dialog = AttributeCalculatorDialog()
-        self.assertEqual(dialog.results.rowCount(), 0)
-        self.assertTrue(dialog.results.horizontalHeader().isHidden())
+        self.assertEqual(dialog.results.count(), 0)
         self._show(dialog)
         self.assertLess(self._top(dialog.enemy, dialog), self._top(dialog.results, dialog))
         self.assertLess(self._top(dialog.results, dialog), self._top(dialog.calculate_button, dialog))
@@ -196,16 +201,71 @@ class LegacyToolDialogTests(QtTestCase):
             self.skipTest("测试ROM不存在")
         dialog = AttributeCalculatorDialog(project=self.project)
         self.assertEqual(dialog.enemy.unit.count(), self.project.unit_count - 1)
-        self.assertEqual(dialog.enemy.weapon.count(), self.project.weapon_count)
-        self.assertEqual(dialog.enemy.unit.currentData(), 2)
+        self.assertEqual(dialog.enemy.character.count(), 200)
+        self.assertEqual(dialog.enemy.unit.currentData(), 9)
         self.assertEqual(dialog.enemy.character.currentData(), 4)
-        self.assertEqual(dialog.enemy.weapon.currentData(), 1)
+        self.assertEqual(
+            tuple(dialog.enemy.weapon.itemData(index) for index in range(dialog.enemy.weapon.count())),
+            (7, 11),
+        )
+        self.assertEqual(dialog.enemy.weapon.currentData(), 7)
         unit = self.project.unit_codec.decode_record(
             int(dialog.enemy.unit.currentData()), bytes(self.project.working)
         )
         self.assertEqual(dialog.enemy.strength.value(), unit.get("strength"))
         self.assertEqual(dialog.enemy.hp.value(), unit.get("hp"))
+        weapon = self.project.weapon_codec.decode_record(
+            int(dialog.enemy.weapon.currentData()), bytes(self.project.working)
+        )
+        self.assertEqual(
+            dialog.enemy.power_land.value(),
+            weapon.get("power_land") * self.project.get_damage_formula_values()[1] + 8,
+        )
         self.assertIn("人物属性", dialog.enemy.character_summary.text())
+        dialog.close()
+
+    def test_attribute_calculator_applies_level_growth_and_character_corrections(self) -> None:
+        if self.project is None:
+            self.skipTest("测试ROM不存在")
+        dialog = AttributeCalculatorDialog(project=self.project)
+        side = dialog.enemy
+        unit_id = int(side.unit.currentData())
+        base_strength = self.project.get_value(unit_id, "strength")
+        side.level.setCurrentIndex(9)
+        self.assertGreaterEqual(side.strength.value(), base_strength)
+        self.assertLessEqual(side.strength.value(), 255)
+        side.level.setCurrentIndex(59)
+        self.assertLessEqual(side.strength.value(), 255)
+        self.assertLessEqual(side.hp.value(), 9999)
+        dialog.close()
+
+    def test_attribute_calculator_disables_broken_multiplier_buttons(self) -> None:
+        dialog = AttributeCalculatorDialog(project=self.project)
+        for side in (dialog.enemy, dialog.ally):
+            self.assertFalse(side.change_multiplier_button.isEnabled())
+            self.assertIn("参考版此功能损坏", side.change_multiplier_button.toolTip())
+            self.assertEqual(side.level.count(), 60)
+        dialog.close()
+
+    def test_attribute_calculator_reads_changed_m17_parameters_without_writing_rom(self) -> None:
+        if not ROM_PATH.is_file():
+            self.skipTest("测试ROM不存在")
+        project = RomProject.load(ROM_PATH)
+        dialog = AttributeCalculatorDialog(project=project)
+        before_calculation = bytes(project.working)
+        raw_power = dialog.enemy._raw_weapon_powers[1]
+        changed = list(project.get_damage_formula_values())
+        changed[1] += 1
+        project.set_damage_formula_values(changed)
+        after_parameter_change = bytes(project.working)
+
+        dialog.calculate()
+
+        self.assertEqual(
+            dialog.enemy.power_land.value(), raw_power * changed[1] + 8
+        )
+        self.assertEqual(bytes(project.working), after_parameter_change)
+        self.assertNotEqual(before_calculation, after_parameter_change)
         dialog.close()
 
     def test_save_editor_reads_file_but_never_enables_unverified_writes(self) -> None:
@@ -408,15 +468,19 @@ class LegacyToolDialogTests(QtTestCase):
         dialog.enemy.weapon_hit.setValue(70)
         dialog.enemy.speed.setValue(20)
         dialog.ally.speed.setValue(100)
-        hit, minimum_speed, _damage, _remaining = dialog.calculate_attack(
+        result = dialog.calculate_attack(
             dialog.enemy, dialog.ally
         )
-        self.assertEqual(hit, 0)
-        self.assertEqual(minimum_speed, 31)
+        self.assertEqual(result.hit_score, 0)
+        self.assertEqual(result.minimum_hit_speed, 100)
         dialog.calculate()
-        self.assertEqual(dialog.results.columnCount(), 6)
-        self.assertEqual(dialog.results.horizontalHeaderItem(3).text(), "最低命中速度")
-        self.assertEqual(dialog.results.item(0, 3).text(), "31")
+        self.assertTrue(
+            any(
+                "命中最低速度计算：速度至少大于 99 才能命中"
+                in dialog.results.item(row).text()
+                for row in range(dialog.results.count())
+            )
+        )
         dialog.close()
 
 

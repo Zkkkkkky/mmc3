@@ -678,7 +678,7 @@ class MainWindow(QMainWindow):
         for side in (dialog.enemy, dialog.ally):
             side.character.setCurrentIndex(side.character.findData(character_id))
             side.unit.setCurrentIndex(side.unit.findData(unit_id))
-            side.level.setCurrentIndex(max(0, min(98, level - 1)))
+            side.level.setCurrentIndex(max(0, min(59, level - 1)))
         self._run_tool_dialog(dialog)
 
     def _open_defeat_experience_calculator(
