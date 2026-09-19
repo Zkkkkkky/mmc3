@@ -163,11 +163,12 @@ def main() -> int:
         UnitAppearanceDialog(window.project, 12, window),
         "02d-unit-composition.png",
     )
-    capture_dialog(
-        application,
-        ScenarioDialog(window.project, window),
-        "03-scenario-editor.png",
-    )
+    scenario_dialog = ScenarioDialog(window.project, window)
+    save_capture(application, scenario_dialog, "03-scenario-editor.png")
+    scenario_dialog.tabs.setCurrentIndex(1)
+    process_layout(application)
+    save_capture(application, scenario_dialog, "03b-action-events.png")
+    close_dialog(application, scenario_dialog)
     capture_dialog(
         application,
         FontLibraryDialog(parent=window, project=window.project),

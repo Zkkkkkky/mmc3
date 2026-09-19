@@ -44,12 +44,15 @@ STEP_OPERATIONS = frozenset(
         "list_select",
         "list_double_click",
         "click_coords",
+        "click_control_coords",
+        "assert_value",
     }
 )
 LEGACY_MENU_COMMANDS = {
     "文件->打开": 20001,
     "文件->保存": 20004,
     "数据->数据库": 20008,
+    "数据->地图动画": 20011,
     "数据->其他": 20023,
 }
 
@@ -170,6 +173,27 @@ def _validate_steps(raw: Any) -> tuple[dict[str, Any], ...]:
             raise ValueError("list_select requires a nonnegative row and integer control_id")
         if op == "click_coords" and not all(isinstance(item.get(key), int) for key in ("x", "y")):
             raise ValueError("click_coords requires integer x/y")
+        if op == "click_control_coords" and not (
+            isinstance(item.get("control_id"), int)
+            and all(isinstance(item.get(key), int) for key in ("x", "y"))
+        ):
+            raise ValueError(
+                "click_control_coords requires integer control_id/x/y"
+            )
+        if (
+            op == "click_control_coords"
+            and "wait_control_id" in item
+            and not isinstance(item["wait_control_id"], int)
+        ):
+            raise ValueError("wait_control_id must be an integer")
+        if op == "assert_value" and not (
+            isinstance(item.get("control_id"), int)
+            and item.get("value_type", "str") in {"int", "str"}
+            and "value" in item
+        ):
+            raise ValueError(
+                "assert_value requires control_id, value and int/str value_type"
+            )
         steps.append(dict(item))
     return tuple(steps)
 
@@ -394,7 +418,7 @@ class Win32LegacyDriver:
             f"Legacy window did not appear before timeout (pid={self.pid}; seen={seen[:12]})"
         )
 
-    def _main(self) -> Any:
+    def _main(self, timeout: float = 25.0) -> Any:
         def is_main_window(item: Any) -> bool:
             if not item.is_visible():
                 return False
@@ -415,7 +439,7 @@ class Win32LegacyDriver:
         # The legacy launcher can create the WTWindow several seconds before
         # attaching its menu.  Wait through that intermediate state instead of
         # mistaking the visible shell for a failed launch.
-        return self._wait_window(is_main_window, timeout=25.0)
+        return self._wait_window(is_main_window, timeout=timeout)
 
     def launch(self, executable: Path, work_dir: Path) -> int:
         from pywinauto.application import Application
@@ -437,8 +461,28 @@ class Win32LegacyDriver:
         )
         # The launcher intermittently ignores synthesized mouse input but
         # consistently handles the same BM_CLICK used by the probe tool.
-        button.click()
-        self.current_window = self._main()
+        last_error: RuntimeError | None = None
+        for attempt in range(3):
+            # The launcher occasionally ignores one synthesized click after a
+            # prior legacy process has just exited.  BM_CLICK is the primary
+            # path; a real click is used only for the retry while the same
+            # verified launcher button remains visible.
+            if attempt == 0:
+                button.click()
+            else:
+                try:
+                    button.click_input()
+                except Exception:
+                    button.click()
+            try:
+                self.current_window = self._main(timeout=9.0)
+                break
+            except RuntimeError as error:
+                last_error = error
+                time.sleep(0.3)
+        else:
+            assert last_error is not None
+            raise last_error
         # The main WTWindow becomes visible before the launcher finishes
         # closing.  Menu commands posted during that overlap are swallowed.
         import win32gui
@@ -636,6 +680,108 @@ class Win32LegacyDriver:
                 table.get_item(step["row"], step["column"]).double_click_input()
             elif op == "click_coords":
                 self.current_window.click_input(coords=(step["x"], step["y"]))
+                # Owner-drawn CPageControl pages rebuild their child controls
+                # asynchronously after the real click.  Do not query the next
+                # page immediately or pywinauto can still see the old page.
+                time.sleep(0.6)
+            elif op == "click_control_coords":
+                import ctypes
+                import win32con
+                import win32gui
+                import win32process
+
+                control = self._control(step["control_id"], step.get("class"))
+                target = int(self.current_window.handle)
+                foreground = int(win32gui.GetForegroundWindow())
+                foreground_tid, _foreground_pid = (
+                    win32process.GetWindowThreadProcessId(foreground)
+                )
+                target_tid, _target_pid = win32process.GetWindowThreadProcessId(
+                    target
+                )
+                current_tid = int(ctypes.windll.kernel32.GetCurrentThreadId())
+                attached_foreground = False
+                attached_target = False
+                try:
+                    if foreground_tid and foreground_tid != current_tid:
+                        attached_foreground = bool(
+                            ctypes.windll.user32.AttachThreadInput(
+                                current_tid, foreground_tid, True
+                            )
+                        )
+                    if target_tid and target_tid != current_tid:
+                        attached_target = bool(
+                            ctypes.windll.user32.AttachThreadInput(
+                                current_tid, target_tid, True
+                            )
+                        )
+                    win32gui.ShowWindow(target, win32con.SW_RESTORE)
+                    win32gui.BringWindowToTop(target)
+                    win32gui.SetForegroundWindow(target)
+                finally:
+                    if attached_target:
+                        ctypes.windll.user32.AttachThreadInput(
+                            current_tid, target_tid, False
+                        )
+                    if attached_foreground:
+                        ctypes.windll.user32.AttachThreadInput(
+                            current_tid, foreground_tid, False
+                        )
+                time.sleep(0.2)
+                left, top, _right, _bottom = win32gui.GetWindowRect(control.handle)
+                point = (left + int(step["x"]), top + int(step["y"]))
+                hit = int(win32gui.WindowFromPoint(point))
+                root = int(win32gui.GetAncestor(hit, win32con.GA_ROOT)) if hit else 0
+                if root != target:
+                    raise RuntimeError(
+                        "Control-relative click is covered by another window: "
+                        f"point={point}, hit={hit}, root={root}, target={target}, "
+                        f"foreground={int(win32gui.GetForegroundWindow())}"
+                    )
+                ctypes.windll.user32.SetCursorPos(*point)
+                ctypes.windll.user32.mouse_event(0x0002, 0, 0, 0, 0)
+                time.sleep(0.05)
+                ctypes.windll.user32.mouse_event(0x0004, 0, 0, 0, 0)
+                wait_control_id = step.get("wait_control_id")
+                deadline = time.monotonic() + 3.0
+                while wait_control_id is not None and time.monotonic() < deadline:
+                    if any(
+                        item.control_id() == wait_control_id
+                        and item.is_visible()
+                        and item.is_enabled()
+                        for item in self.current_window.descendants()
+                    ):
+                        break
+                    time.sleep(0.1)
+                else:
+                    if wait_control_id is not None:
+                        visible_ids = sorted(
+                            {
+                                int(item.control_id())
+                                for item in self.current_window.descendants()
+                                if item.is_visible() and item.is_enabled()
+                            }
+                        )
+                        raise RuntimeError(
+                            f"Control-relative click did not expose {wait_control_id}; "
+                            f"visible_ids={visible_ids}"
+                        )
+                time.sleep(0.2)
+            elif op == "assert_value":
+                expected = (
+                    requested if step["value"] == "$requested" else step["value"]
+                )
+                actual: int | str = self._control(
+                    step["control_id"], step.get("class")
+                ).window_text()
+                if step.get("value_type", "str") == "int":
+                    actual = int(actual)
+                    expected = int(expected)
+                if actual != expected:
+                    raise RuntimeError(
+                        f"Control ID {step['control_id']} value did not change: "
+                        f"expected {expected!r}, got {actual!r}"
+                    )
             else:
                 raise ValueError(f"Unsupported operation: {op}")
 

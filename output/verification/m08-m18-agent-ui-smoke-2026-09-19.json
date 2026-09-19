@@ -1,0 +1,109 @@
+{
+  "generatedAt": "2026-09-19T16:59:37+08:00",
+  "operator": "codex_computer_use",
+  "method": "Windows native UI smoke against the packaged executable",
+  "executable": {
+    "path": "output/app/新DC篇完整修改器.exe",
+    "sha256": "A0675C1A165590056DFB350C1F72B9D818BE28982D2AE8D796C3FC0BFCF8B1C0",
+    "selfTestExitCode": 0
+  },
+  "rom": {
+    "path": "output/rom/DC_kuorong_464K.nes",
+    "sha256": "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E"
+  },
+  "precondition": {
+    "launcherEntered": true,
+    "romLoaded": true,
+    "initialUnsavedChanges": false
+  },
+  "regressions": [
+    {
+      "id": "map_switch_after_behind_the_scenes",
+      "steps": "Select 011 幕后浮现, then select 012 激战大魔神",
+      "observed": "Both maps rendered with real tiles; the second selection changed immediately without traceback, freeze, or stale data",
+      "passed": true
+    }
+  ],
+  "modules": [
+    {
+      "module": "M08",
+      "observed": "Ctrl+D opened the database; the battle-dialogue tab displayed real records and editable text controls",
+      "persistentWritePerformed": false,
+      "passed": true
+    },
+    {
+      "module": "M09",
+      "observed": "Other 1 displayed the level 1-99 table plus hit and distance tables",
+      "persistentWritePerformed": false,
+      "passed": true
+    },
+    {
+      "module": "M10",
+      "observed": "Other 2 displayed 24 items, prices and descriptions, shops F0-FE, and clerk-dialogue controls",
+      "persistentWritePerformed": false,
+      "passed": true
+    },
+    {
+      "module": "M11",
+      "observed": "Ctrl+W opened the character-library editor with the 16x16 glyph grid and real glyph data (啊 at C8/070010)",
+      "persistentWritePerformed": false,
+      "passed": true
+    },
+    {
+      "module": "M12",
+      "observed": "Ctrl+M opened decoded map-animation data; background rule $02 was visibly marked dynamic/incomplete and read-only",
+      "persistentWritePerformed": false,
+      "passed": true
+    },
+    {
+      "module": "M13",
+      "observed": "The text converter completed an in-memory round trip: 啊 -> C8 00 -> 啊",
+      "persistentWritePerformed": false,
+      "passed": true
+    },
+    {
+      "module": "M14",
+      "observed": "Ctrl+J opened all six event tabs with real map records; the action-event tab showed 256/256 actions and 2541/2751 bytes used",
+      "persistentWritePerformed": false,
+      "passed": true
+    },
+    {
+      "module": "M15",
+      "observed": "The attribute calculator opened and produced both-side hit, double-hit, expected-damage, and post-hit HP results",
+      "persistentWritePerformed": false,
+      "passed": true
+    },
+    {
+      "module": "M16",
+      "observed": "The save editor opened with slot/chapter selectors, four workflow buttons, and two 11-column tables",
+      "persistentWritePerformed": false,
+      "passed": true
+    },
+    {
+      "module": "M17",
+      "observed": "Ctrl+T opened the Other window with double-hit, damage, hit, item-effect, and initial-mecha controls populated from the ROM",
+      "persistentWritePerformed": false,
+      "passed": true
+    },
+    {
+      "module": "M18",
+      "observed": "Ctrl+F opened the native unit-export save dialog; Data -> Export Portrait remained disabled and Ctrl+L performed no action per D2; Extensions -> Export Portrait BMP (Enhanced) opened its folder chooser",
+      "persistentWritePerformed": false,
+      "passed": true
+    }
+  ],
+  "postcondition": {
+    "applicationResponsive": true,
+    "unsavedChanges": false,
+    "romOrSaveWritePerformed": false
+  },
+  "limitations": [
+    "This smoke test validates packaged UI entry points, rendering, read-only flows, and cancellation paths only.",
+    "It does not replace the per-module save/reopen, emulator, visual-quality, or reference-golden steps in the user acceptance checklists.",
+    "M12 remains a declared safe-subset implementation; passing this smoke test does not upgrade it to full implementation.",
+    "No user acceptance fields were filled by this run."
+  ],
+  "agentUiSmokePassed": true,
+  "userAcceptance": false,
+  "overallDeliveryComplete": false
+}

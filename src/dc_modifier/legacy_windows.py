@@ -37,11 +37,15 @@ from PySide6.QtWidgets import (
 )
 
 from fc_editor.dc_text import dc_map_label, default_dc_text_table
+from fc_editor.codecs.chapter_title import ChapterTitleCodec
+from fc_editor.codecs.legacy_scenario import LegacyScenarioCodec
+from fc_editor.errors import RomFormatError
 from fc_editor.models import UNIT_FIELD_BY_KEY
 from fc_editor.resources import Allocation, BankAllocator
 from fc_editor.unit_package import UnitPackage
 from fc_rom_editor_core import RomProject
 
+from .action_event_page import ActionEventPage
 from .event_page import EventPage
 from .database_graphics import (
     decode_unit_body_script,
@@ -58,7 +62,8 @@ from .map_page import (
     MAP_ICON_BANK_CANDIDATES,
     SCENARIO_MAP_ICON_BANKS,
     NesColorButton,
-    render_map_title,
+    render_chapter_title,
+    render_title_segment,
     render_unit_icon_bank,
 )
 from .unit_icon_dialog import UnitIconBindingDialog, UnitIconDialog
@@ -2525,6 +2530,183 @@ class DatabaseDialog(TransactionalProjectDialog):
         super().accept()
 
 
+class ChapterTitleDialog(QDialog):
+    """Safe fixed-capacity editor for one verified title tile script."""
+
+    def __init__(
+        self,
+        project: RomProject,
+        scenario_id: int,
+        parent: QWidget | None = None,
+    ) -> None:
+        super().__init__(parent)
+        self.project = project
+        self.scenario_id = scenario_id
+        self.record = project.get_chapter_title(scenario_id)
+        self.setWindowTitle("标题拼图")
+        self.resize(780, 650)
+
+        layout = QVBoxLayout(self)
+        summary = QLabel(
+            f"关卡 {scenario_id + 1:03d} · Bank $0B:${self.record.pointer:04X} · "
+            f"文件 0x{self.record.file_offset:05X} · "
+            f"固定 {self.record.capacity} 字节"
+        )
+        summary.setObjectName("hintText")
+        layout.addWidget(summary)
+
+        bank_group = QGroupBox("三个 CHR 图库（每页 64 图块）")
+        bank_layout = QGridLayout(bank_group)
+        self.bank_spins: list[QSpinBox] = []
+        self.bank_previews: list[QLabel] = []
+        bank_limit = max(0, project.chr_tile_count // 64 - 1)
+        for index, value in enumerate(self.record.chr_banks):
+            spin = QSpinBox()
+            spin.setRange(0, bank_limit)
+            spin.setDisplayIntegerBase(16)
+            spin.setPrefix("$")
+            spin.setValue(value)
+            spin.valueChanged.connect(self._refresh_preview)
+            preview = QLabel()
+            preview.setAlignment(Qt.AlignmentFlag.AlignCenter)
+            preview.setMinimumSize(136, 136)
+            preview.setStyleSheet("background: black; border: 1px solid #404040;")
+            bank_layout.addWidget(QLabel(f"图库 {index + 1}"), 0, index)
+            bank_layout.addWidget(spin, 1, index)
+            bank_layout.addWidget(preview, 2, index)
+            self.bank_spins.append(spin)
+            self.bank_previews.append(preview)
+        layout.addWidget(bank_group)
+
+        preview_group = QGroupBox("标题预览（脚本最后一段）")
+        preview_layout = QVBoxLayout(preview_group)
+        self.title_preview = QLabel()
+        self.title_preview.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.title_preview.setMinimumHeight(72)
+        self.title_preview.setStyleSheet("background: black; border: 1px solid #202020;")
+        preview_layout.addWidget(self.title_preview)
+        layout.addWidget(preview_group)
+
+        self.segment_table = QTableWidget(0, 5)
+        self.segment_table.setHorizontalHeaderLabels(
+            ("段", "X", "Y", "宽度", "图块数")
+        )
+        self.segment_table.horizontalHeader().setSectionResizeMode(
+            QHeaderView.ResizeMode.Stretch
+        )
+        self.segment_table.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
+        self.segment_table.setMaximumHeight(130)
+        layout.addWidget(self.segment_table)
+
+        layout.addWidget(QLabel("拼图代码（FE X Y 宽度 + 两行图块；FF 结束）"))
+        self.code_edit = QPlainTextEdit(self.record.raw.hex(" ").upper())
+        self.code_edit.setObjectName("chapterTitleCode")
+        self.code_edit.setMaximumHeight(120)
+        self.code_edit.textChanged.connect(self._refresh_preview)
+        layout.addWidget(self.code_edit)
+        self.status = QLabel()
+        self.status.setObjectName("hintText")
+        self.status.setWordWrap(True)
+        layout.addWidget(self.status)
+
+        buttons = QHBoxLayout()
+        self.refresh_button = QPushButton("刷新预览")
+        self.ok_button = QPushButton("确定")
+        self.cancel_button = QPushButton("取消")
+        self.refresh_button.clicked.connect(self._refresh_preview)
+        self.ok_button.clicked.connect(self.accept)
+        self.cancel_button.clicked.connect(self.reject)
+        buttons.addWidget(self.refresh_button)
+        buttons.addStretch(1)
+        buttons.addWidget(self.ok_button)
+        buttons.addWidget(self.cancel_button)
+        layout.addLayout(buttons)
+        self._refresh_preview()
+
+    def _banks(self) -> tuple[int, int, int]:
+        values = tuple(spin.value() for spin in self.bank_spins)
+        return values  # type: ignore[return-value]
+
+    def _raw(self) -> bytes:
+        compact = "".join(self.code_edit.toPlainText().split())
+        if not compact:
+            raise ValueError("标题拼图代码不能为空。")
+        try:
+            return bytes.fromhex(compact)
+        except ValueError as error:
+            raise ValueError("标题拼图代码必须是成对的十六进制字节。") from error
+
+    def _refresh_preview(self) -> None:
+        try:
+            raw = self._raw()
+            codec = self.project.chapter_title_codec
+            if codec is None:
+                raise ValueError("当前 ROM 没有已验证的关卡标题表。")
+            segments = ChapterTitleCodec.parse_segments(raw)
+            codec.replacement_patches(
+                self.project.working,
+                self.scenario_id,
+                self._banks(),
+                raw,
+            )
+            for preview, bank in zip(
+                self.bank_previews,
+                self._banks(),
+                strict=True,
+            ):
+                image = render_chr_banks(
+                    self.project,
+                    (bank,),
+                    (0x00, 0x10, 0x20),
+                )
+                preview.setPixmap(
+                    QPixmap.fromImage(image).scaled(
+                        128,
+                        128,
+                        Qt.AspectRatioMode.KeepAspectRatio,
+                        Qt.TransformationMode.FastTransformation,
+                    )
+                )
+            self.title_preview.setPixmap(
+                render_title_segment(
+                    self.project,
+                    self._banks(),
+                    segments[-1],
+                )
+            )
+            self.segment_table.setRowCount(len(segments))
+            for row, segment in enumerate(segments):
+                for column, value in enumerate(
+                    (row + 1, segment.x, segment.y, segment.width, len(segment.tiles))
+                ):
+                    text = str(value) if column in (0, 3, 4) else f"${value:02X}"
+                    self.segment_table.setItem(row, column, QTableWidgetItem(text))
+            self.status.setStyleSheet("color: #18794e;")
+            self.status.setText(
+                f"结构有效 · {len(raw)} / {self.record.capacity} 字节 · "
+                f"{len(segments)} 段 · 指针保持不变"
+            )
+            self.ok_button.setEnabled(True)
+        except (RomFormatError, ValueError) as error:
+            self.title_preview.clear()
+            self.segment_table.setRowCount(0)
+            self.status.setStyleSheet("color: #b42318;")
+            self.status.setText(str(error))
+            self.ok_button.setEnabled(False)
+
+    def accept(self) -> None:
+        try:
+            self.project.set_chapter_title(
+                self.scenario_id,
+                self._banks(),
+                self._raw(),
+            )
+        except (RomFormatError, ValueError) as error:
+            QMessageBox.warning(self, "无法保存标题拼图", str(error))
+            return
+        super().accept()
+
+
 class ScenarioDialog(TransactionalProjectDialog):
     """Reference-shaped scenario window backed by hidden verified editors."""
 
@@ -2554,6 +2736,9 @@ class ScenarioDialog(TransactionalProjectDialog):
         requested = initial_scenario_id if initial_scenario_id is not None else inherited
         self.initial_scenario_id = int(requested) if requested is not None else 0
         self.current_scenario_id: int | None = None
+        self._victory_source_body = b""
+        self._victory_source_text = ""
+        self._victory_dirty = False
         self.resize(1180, 780)
         self.setMinimumSize(900, 600)
 
@@ -2561,13 +2746,13 @@ class ScenarioDialog(TransactionalProjectDialog):
             self._register_hidden_page(LegacyScenarioEventsPage(phase))
             for phase in range(3)
         ]
-        self.action_event_page = self._register_hidden_page(_LegacyEventController())
+        self.action_event_page = self.register_page(ActionEventPage())
         self.persuasion_page = self._register_hidden_page(PersuasionPage())
         self.map_event_page = self._register_hidden_page(_LegacyEventController())
         self.story_page = self._register_hidden_page(StoryPage())
         self.victory_page = self._register_hidden_page(StoryPage())
 
-        assert isinstance(self.action_event_page, EventPage)
+        assert isinstance(self.action_event_page, ActionEventPage)
         assert isinstance(self.persuasion_page, PersuasionPage)
         assert isinstance(self.map_event_page, EventPage)
         assert isinstance(self.story_page, StoryPage)
@@ -2575,9 +2760,9 @@ class ScenarioDialog(TransactionalProjectDialog):
 
         self.chapter_context = self._build_chapter_context()
         setup = self._build_setup_page()
-        action = self._build_event_overview(
-            "行动事件 · 全局指令索引", self.action_event_page, "action_event_list"
-        )
+        action = self.action_event_page
+        self.action_event_list = self.action_event_page.action_list
+        self.action_event_list_code_button = self.action_event_page.apply_button
         persuasion = self._build_persuasion_overview()
         map_events = self._build_event_overview(
             "地图事件", self.map_event_page, "map_event_list"
@@ -2611,11 +2796,12 @@ class ScenarioDialog(TransactionalProjectDialog):
 
         footer = QHBoxLayout()
         self.space_button = QPushButton(self.SPACE_BUTTON_TEXT)
-        self.space_button.setEnabled(False)
+        self.space_button.setEnabled(project is not None)
         self.space_button.setToolTip(
-            "参考版点击后的显示形态与六类事件分区口径尚未取得动态证据；"
-            "为避免给出错误容量结论，当前保持禁用。"
+            "显示八组剧情文本、三组章节事件池和 Bank $26 "
+            "独立行动表的占用、容量和剩余字节。"
         )
+        self.space_button.clicked.connect(self._show_space_report)
         self.ok_button = QPushButton("确定")
         self.cancel_button = QPushButton("取消")
         self.ok_button.setDefault(True)
@@ -2632,6 +2818,101 @@ class ScenarioDialog(TransactionalProjectDialog):
         self._configure_event_views()
         self._move_chapter_context(0)
         self._populate_chapters()
+
+    @staticmethod
+    def _script_pool_usage(
+        codec: LegacyScenarioCodec,
+        phases: tuple[int, ...],
+    ) -> dict[int, int]:
+        records = {
+            (instruction.bank, instruction.file_offset): instruction
+            for scenario_id in range(0x20)
+            for phase in phases
+            for instruction in codec.instructions(scenario_id, phase)
+        }
+        banks = sorted({bank for bank, _offset in records})
+        return {
+            bank: sum(
+                len(instruction.raw)
+                for (record_bank, _offset), instruction in records.items()
+                if record_bank == bank
+            )
+            for bank in banks
+        }
+
+    def scenario_space_report_text(self) -> str:
+        """Return the evidence-bounded capacity report shown by button 690."""
+
+        if self.project is None:
+            raise ValueError("请先载入兼容 ROM。")
+
+        project = self.project
+        story_codec = project.story_text_codec
+        story_lines = []
+        for group in project.story_text_groups:
+            used = 0
+            for _pointer, indices in story_codec.ids_by_pointer(
+                group.selector
+            ).items():
+                record = story_codec.decode(
+                    group.selector,
+                    indices[0],
+                    bytes(project.working),
+                )
+                used += len(record.raw)
+            capacity = group.data_end - group.data_start
+            location = (
+                "扩展 Bank pair"
+                if group.selector in story_codec.relocated_selectors
+                else "原位数据池"
+            )
+            story_lines.append(
+                f"剧情 ${group.selector:02X}（{location}）："
+                f"{used} / {capacity} 字节，剩余 {capacity - used} 字节"
+            )
+
+        scenario_codec = LegacyScenarioCodec(bytes(project.working))
+        setup_usage = self._script_pool_usage(scenario_codec, (0, 1))
+        immediate_usage = self._script_pool_usage(scenario_codec, (2,))
+        bank_capacity = 0x2000
+        event_lines = []
+        for bank, used in setup_usage.items():
+            event_lines.append(
+                f"界面事件和回合事件（Bank ${bank:02X}）："
+                f"{used} / {bank_capacity} 字节，"
+                f"剩余 {bank_capacity - used} 字节"
+            )
+        for bank, used in immediate_usage.items():
+            event_lines.append(
+                f"即时事件（Bank ${bank:02X}）：{used} / {bank_capacity} 字节，"
+                f"剩余 {bank_capacity - used} 字节"
+            )
+
+        action_usage = project.action_event_usage()
+        persuasion_slots = 0
+        if project.persuasion_rule_codec is not None:
+            persuasion_slots = project.persuasion_rule_codec.spec.editable_count
+        event_lines.extend(
+            (
+                "独立行动事件（Bank $26）："
+                f"{action_usage.used} / {action_usage.capacity} 字节，"
+                f"剩余 {action_usage.free} 字节；256 项指针 / "
+                f"{action_usage.physical_records} 个有效物理脚本",
+                f"边界说明：劝降事件为 {persuasion_slots} 个已验证等长槽；"
+                "地图事件为分 Bank 章节脚本的条件索引。",
+            )
+        )
+        return "剧情文本\n" + "\n".join(story_lines) + "\n\n事件脚本\n" + "\n".join(event_lines)
+
+    def _show_space_report(self) -> None:
+        if not self._commit_pending_pages():
+            return
+        try:
+            report = self.scenario_space_report_text()
+        except (ValueError, RomFormatError) as error:
+            QMessageBox.warning(self, "无法检查剩余空间", str(error))
+            return
+        QMessageBox.information(self, "提示", report)
 
     def _register_hidden_page(self, page: ProjectPage) -> ProjectPage:
         registered = self.register_page(page)
@@ -2662,9 +2943,13 @@ class ScenarioDialog(TransactionalProjectDialog):
         settings_layout.addWidget(self.chapter_title)
         settings_layout.addWidget(QLabel("初始胜利文字:"))
         self.initial_victory = QPlainTextEdit()
-        self.initial_victory.setReadOnly(True)
         self.initial_victory.setMaximumHeight(118)
+        self.initial_victory.textChanged.connect(self._victory_text_changed)
         settings_layout.addWidget(self.initial_victory)
+        self.initial_victory_status = QLabel("—")
+        self.initial_victory_status.setObjectName("hintText")
+        self.initial_victory_status.setWordWrap(True)
+        settings_layout.addWidget(self.initial_victory_status)
         context_layout.addWidget(settings)
 
         selector = QGroupBox("关卡选择")
@@ -2691,8 +2976,9 @@ class ScenarioDialog(TransactionalProjectDialog):
         self.title_code_button = QPushButton("代码编辑")
         self.title_code_button.setEnabled(False)
         self.title_code_button.setToolTip(
-            "标题拼图脚本地址和写入规则尚未完成差分验证。"
+            "编辑三个 CHR 图库和当前固定容量的 FE/FF 标题拼图脚本。"
         )
+        self.title_code_button.clicked.connect(self._open_title_editor)
         title_layout.addWidget(self.title_preview, 1)
         title_layout.addWidget(self.title_code_button)
         page_layout.addWidget(title_art)
@@ -2884,9 +3170,6 @@ class ScenarioDialog(TransactionalProjectDialog):
         return host
 
     def _configure_event_views(self) -> None:
-        action_index = self.action_event_page.kind_filter.findText("行动控制")
-        if action_index >= 0:
-            self.action_event_page.kind_filter.setCurrentIndex(action_index)
         map_index = self.map_event_page.kind_filter.findText("触发条件与行动判定")
         if map_index >= 0:
             self.map_event_page.kind_filter.setCurrentIndex(map_index)
@@ -3010,6 +3293,9 @@ class ScenarioDialog(TransactionalProjectDialog):
             restore = lambda: self._select_list_data(
                 self.chapter_list, previous_scenario_id
             )
+            if not self._commit_initial_victory():
+                restore()
+                return
             synchronized_pages = (
                 *self.setup_event_pages,
                 self.map_event_page,
@@ -3027,12 +3313,19 @@ class ScenarioDialog(TransactionalProjectDialog):
         self.current_scenario_id = scenario_id
         label = dc_map_label(scenario_id)
         self.chapter_title.setText(label)
-        self.initial_victory.setPlainText(
-            "胜利文字关卡索引尚未验证；请在“胜利文字”页按原始文本组定位。"
-        )
+        self._load_initial_victory(scenario_id)
         self.title_preview.clear()
+        title_supported = (
+            self.project is not None
+            and self.project.supports_chapter_titles
+            and self.project.chapter_title_codec is not None
+            and scenario_id < self.project.chapter_title_codec.count
+        )
+        self.title_code_button.setEnabled(title_supported)
         if self.project is not None:
-            self.title_preview.setPixmap(render_map_title(self.project, label))
+            self.title_preview.setPixmap(
+                render_chapter_title(self.project, scenario_id)
+            )
         else:
             self.title_preview.setText(label)
 
@@ -3046,6 +3339,147 @@ class ScenarioDialog(TransactionalProjectDialog):
             if index >= 0:
                 page.scenario_filter.setCurrentIndex(index)
         self._refresh_overviews()
+
+    def _open_title_editor(self) -> None:
+        if self.project is None or self.current_scenario_id is None:
+            return
+        if not self.project.supports_chapter_titles:
+            QMessageBox.warning(
+                self,
+                "无法编辑标题拼图",
+                "当前 ROM 没有已验证的关卡标题表。",
+            )
+            return
+        dialog = ChapterTitleDialog(
+            self.project,
+            self.current_scenario_id,
+            self,
+        )
+        if dialog.exec() != QDialog.DialogCode.Accepted:
+            return
+        self.title_preview.setPixmap(
+            render_chapter_title(self.project, self.current_scenario_id)
+        )
+        self.project_changed.emit(
+            f"已更新关卡 {self.current_scenario_id + 1:03d} 标题拼图"
+        )
+
+    @staticmethod
+    def _victory_editor_text(text: str) -> str:
+        """Match the reference editor's visible line before each ``@`` break."""
+
+        return text.replace("@", "\n@")
+
+    @staticmethod
+    def _victory_encoded_text(text: str) -> str:
+        return text.replace("\r\n@", "@").replace("\n@", "@")
+
+    def _load_initial_victory(self, scenario_id: int) -> None:
+        supported = (
+            self.project is not None
+            and self.project.supports_chapter_victory
+            and self.project.chapter_victory_codec is not None
+            and scenario_id < self.project.chapter_victory_codec.count
+        )
+        previous = self.initial_victory.blockSignals(True)
+        try:
+            self.initial_victory_status.setStyleSheet("")
+            if not supported:
+                self._victory_source_body = b""
+                self._victory_source_text = ""
+                self._victory_dirty = False
+                self.initial_victory.setPlainText(
+                    "该备用关卡没有已验证的初始胜利文字记录。"
+                )
+                self.initial_victory.setReadOnly(True)
+                self.initial_victory_status.setText("只读 · 不会写入 ROM")
+                return
+            assert self.project is not None
+            record = self.project.get_chapter_victory(scenario_id)
+            decoded = self.project.dc_text_table().decode(record.body)
+            display = self._victory_editor_text(decoded)
+            self._victory_source_body = record.body
+            self._victory_source_text = display
+            self._victory_dirty = False
+            self.initial_victory.setReadOnly(False)
+            self.initial_victory.setPlainText(display)
+            self.initial_victory_status.setText(
+                f"ROM $3D:${0x8000 + record.file_offset - 0x7A010:04X} · "
+                f"正文 {record.body_capacity} 字节 · 当前固定容量"
+            )
+        finally:
+            self.initial_victory.blockSignals(previous)
+
+    def _pending_initial_victory_body(self) -> bytes:
+        if self.project is None or self.current_scenario_id is None:
+            return b""
+        normalized = self._victory_encoded_text(
+            self.initial_victory.toPlainText()
+        )
+        source_text = self.project.dc_text_table().decode(self._victory_source_body)
+        if normalized == source_text:
+            return self._victory_source_body
+        return self.project.dc_text_table().encode_preserving_tokens(
+            self._victory_source_body,
+            normalized,
+        )
+
+    def _victory_text_changed(self) -> None:
+        if self.initial_victory.isReadOnly() or self.current_scenario_id is None:
+            self._victory_dirty = False
+            return
+        self._victory_dirty = (
+            self.initial_victory.toPlainText() != self._victory_source_text
+        )
+        if not self._victory_dirty:
+            return
+        try:
+            body = self._pending_initial_victory_body()
+            if self.project is None or self.project.chapter_victory_codec is None:
+                raise ValueError("当前 ROM 没有已验证的初始胜利文字表。")
+            record = self.project.get_chapter_victory(self.current_scenario_id)
+            self.project.chapter_victory_codec.replacement_patch(
+                self.project.working,
+                self.current_scenario_id,
+                body,
+            )
+            self.initial_victory_status.setText(
+                f"正文 {len(body)} / {record.body_capacity} 字节 · 有尚未应用的改动"
+            )
+            self.initial_victory_status.setStyleSheet(
+                "color: #b45309; font-weight: 650;"
+            )
+        except (RomFormatError, ValueError) as error:
+            self.initial_victory_status.setText(str(error))
+            self.initial_victory_status.setStyleSheet("color: #b42318;")
+
+    def _commit_initial_victory(self) -> bool:
+        if not self._victory_dirty:
+            return True
+        if self.project is None or self.current_scenario_id is None:
+            return False
+        try:
+            body = self._pending_initial_victory_body()
+            self.project.set_chapter_victory_body(self.current_scenario_id, body)
+        except (RomFormatError, ValueError) as error:
+            QMessageBox.warning(self, "无法应用初始胜利文字", str(error))
+            return False
+        self._victory_source_body = body
+        self._victory_source_text = self.initial_victory.toPlainText()
+        self._victory_dirty = False
+        self.initial_victory_status.setStyleSheet("")
+        self.initial_victory_status.setText(
+            f"正文 {len(body)} 字节 · 已应用到当前工程"
+        )
+        self.project_changed.emit(
+            f"已更新关卡 {self.current_scenario_id + 1:03d} 初始胜利文字"
+        )
+        return True
+
+    def accept(self) -> None:
+        if not self._commit_initial_victory():
+            return
+        super().accept()
 
     @staticmethod
     def _event_semantic_text(page: EventPage, instruction: Any, index: int) -> str:
@@ -3258,7 +3692,7 @@ class ScenarioDialog(TransactionalProjectDialog):
             return
         for page, overview in zip(self.setup_event_pages, self.setup_event_lists):
             self._refresh_setup_event_overview(page, overview)
-        self._refresh_event_overview(self.action_event_page, self.action_event_list)
+        self.action_event_page.refresh()
         self._refresh_event_overview(self.map_event_page, self.map_event_list)
         self._refresh_persuasion_overview()
         self._refresh_story_overview(self.story_page, self.story_overview_list)
@@ -3289,6 +3723,7 @@ class ScenarioDialog(TransactionalProjectDialog):
 
     def set_project(self, project: RomProject | None) -> None:
         super().set_project(project)
+        self.space_button.setEnabled(project is not None)
         self._configure_event_views()
         self._populate_chapters()
         self._refresh_overviews()

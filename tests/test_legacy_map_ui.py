@@ -116,7 +116,7 @@ class LegacyMapUiTests(QtTestCase):
         self.assertEqual(
             (self.page.title_preview.pixmap().width(),
              self.page.title_preview.pixmap().height()),
-            (176, 48),
+            (192, 48),
         )
 
     def test_battlefield_keeps_advanced_raw_data_separate_from_visible_dimensions(self) -> None:

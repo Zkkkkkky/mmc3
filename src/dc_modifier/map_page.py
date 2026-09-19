@@ -39,6 +39,7 @@ from PySide6.QtWidgets import (
 )
 
 from fc_editor.dc_text import dc_map_label
+from fc_editor.errors import RomFormatError
 from fc_editor.codecs.character_attributes import (
     CharacterAttributesCodec,
     weapon_extra_values,
@@ -312,6 +313,73 @@ def render_map_title(_project, title: str, *, scale: float = 10 / 3) -> QPixmap:
         )
     painter.end()
     return pixmap
+
+
+def render_title_segment(
+    project,
+    chr_banks: tuple[int, int, int],
+    segment,
+    *,
+    scale: int = 3,
+) -> QPixmap:
+    """Render one two-row title segment against its three 64-tile pages."""
+
+    image = QImage(
+        segment.width * 8,
+        16,
+        QImage.Format.Format_ARGB32,
+    )
+    image.fill(QColor("#000000"))
+    colors = (
+        QColor("#000000"),
+        QColor("#686868"),
+        QColor("#B0B0B0"),
+        QColor("#F0F0F0"),
+    )
+    for index, tile_code in enumerate(segment.tiles):
+        # The title runtime leaves 00-3F on its shared episode-number page
+        # and maps the three per-chapter pages to 40-7F/80-BF/C0-FF.
+        bank_index = max(0, tile_code // 0x40 - 1)
+        bank = chr_banks[bank_index]
+        pixels = project.chr_tile_pixels(bank * 0x40 + tile_code % 0x40)
+        origin_x = (index % segment.width) * 8
+        origin_y = (index // segment.width) * 8
+        for y in range(8):
+            for x in range(8):
+                image.setPixelColor(
+                    origin_x + x,
+                    origin_y + y,
+                    colors[pixels[y * 8 + x]],
+                )
+    pixmap = QPixmap.fromImage(image)
+    return pixmap.scaled(
+        image.width() * scale,
+        image.height() * scale,
+        Qt.AspectRatioMode.IgnoreAspectRatio,
+        Qt.TransformationMode.FastTransformation,
+    )
+
+
+def render_chapter_title(project, scenario_id: int, *, scale: int = 3) -> QPixmap:
+    """Render the verified in-ROM title tile script for one chapter.
+
+    The legacy preview intentionally shows the last draw segment: the earlier
+    segment is the episode-number art, while the final segment is the actual
+    chapter title displayed in the black preview box.
+    """
+
+    if not getattr(project, "supports_chapter_titles", False):
+        return render_map_title(project, dc_map_label(scenario_id))
+    try:
+        record = project.get_chapter_title(scenario_id)
+    except (IndexError, RomFormatError, ValueError):
+        return render_map_title(project, dc_map_label(scenario_id))
+    return render_title_segment(
+        project,
+        record.chr_banks,
+        record.title_segment,
+        scale=scale,
+    )
 
 
 class NesPaletteDialog(QDialog):
@@ -3127,7 +3195,7 @@ class MapPage(ProjectPage):
         record = self.project.get_map(self.current_map_id)
         self.title_preview.setText("")
         self.title_preview.setPixmap(
-            render_map_title(self.project, dc_map_label(self.current_map_id))
+            render_chapter_title(self.project, self.current_map_id)
         )
         self.staged_width = record.width
         self.staged_height = record.height

@@ -1,0 +1,69 @@
+{
+  "generated_at": "2026-09-19T17:35:00+08:00",
+  "module": "M12",
+  "reference_dynamic_evidence_passed": true,
+  "user_acceptance": "pending",
+  "reference_executable": {
+    "path": "references/legacy_modifier/SRW2_patched.exe",
+    "sha256": "FF1C1C5799FDB8F34DF355D761B382C6946CDADC6810772862947E892E8B4C27",
+    "execution_copy": "output/build/legacy-diff-audit/SRW2_patched.exe"
+  },
+  "reference_rom": {
+    "path": "output/build/legacy-diff-audit/默认配置文件/测试.nes",
+    "sha256": "A7656C6ECE9B463DCC26C8C62F280BDAADE55DC39F0A120B8CFFDEB54E8CFC2F",
+    "references_area_modified": false
+  },
+  "tab_sweep": {
+    "passed": true,
+    "evidence_root": "output/verification/legacy-ui-probe-m12-dynamic-20260919",
+    "pages": [
+      {
+        "name": "地图动画",
+        "controls": "controls/M12_地图动画_页签A.json",
+        "sha256": "8BD2D806BDF7BFC28F9C73347CFAE5A29DDC9033BF0B450FA783F0F68333F421"
+      },
+      {
+        "name": "规律",
+        "controls": "controls/M12_地图动画_页签B_x113.json",
+        "sha256": "1C862584DCDB98648B1F2D1D0CE2504ADC7616EE2218EDE5E3A04E5457E7C31A"
+      },
+      {
+        "name": "动画调用",
+        "controls": "controls/M12_地图动画_页签C_x177.json",
+        "sha256": "36C1CEFEF870DE77EE567F8A20474B73C2C1D87E06901C34F4A58A75D02A06D8"
+      }
+    ]
+  },
+  "positive_golden": {
+    "field": "sprite_code_first_tile",
+    "case": "output/build/legacy-diff-audit/cases/legacy_live/M12/sprite_code_first_tile/cold_start_02/case.json",
+    "case_sha256": "C40EA906E3B777AF22EF75E228B81C7134C44930223B0C5E9992CADB8B6C4C69",
+    "first_pid": 29148,
+    "second_pid": 31628,
+    "duration_seconds": 24.119,
+    "within_30_second_budget": true,
+    "requested_value": "01 00 FF ",
+    "reopen_value": "01 00 FF ",
+    "target_offset": "0x031C84",
+    "target_before": "00",
+    "target_after": "01",
+    "fixed_normalization_offsets": [
+      "0x04A12C",
+      "0x04A12D",
+      "0x04A621",
+      "0x04A622",
+      "0x04A779",
+      "0x04A77A"
+    ],
+    "passed": true
+  },
+  "negative_golden": {
+    "field": "sprite_anchor_x",
+    "case": "output/build/legacy-diff-audit/cases/legacy_live/M12/sprite_anchor_x/cold_start_07/case.json",
+    "case_sha256": "012E5F72FBB84FB059A3019C157FDD61514BAF673E31DA26FEC502FBD4DDBAFF",
+    "observed": "界面 X 可由 0 调为 1，但确定/保存不改锚点字节，全新进程重开仍为 0。",
+    "supported_rom_confirmation": "cold_start_09 在旧版随附 768 KiB ROM 上于确认前断言界面值为 1；保存后目标字节仍为 0，仅出现固定归一化。第二进程启动失败，故该轮保留为诊断证据。",
+    "product_decision": "X/Y 仅展示且保持只读，不把旧版非持久化控件冒充可写字段。"
+  },
+  "conclusion": "参考窗口三页签已动态采集；组图首图块完成单字段保存、不同 PID 冷启动重开和字节差分闭环；X/Y 非持久化行为已转为产品只读门禁。该证据不等于用户签收。"
+}

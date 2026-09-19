@@ -10,7 +10,7 @@ os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 
 from PySide6.QtCore import QPoint
 from PySide6.QtGui import QFont, QFontDatabase
-from PySide6.QtWidgets import QApplication, QGroupBox, QPushButton
+from PySide6.QtWidgets import QApplication, QGroupBox, QPushButton, QWidget
 
 from dc_modifier.legacy_tools import (
     AttributeCalculatorDialog,
@@ -115,7 +115,8 @@ class LegacyToolDialogTests(QtTestCase):
         self.assertEqual(dialog.instruction_table.rowCount(), 11)
         self.assertIn("切换 00 区域图库", dialog.instruction_table.item(0, 0).text())
         self.assertEqual(dialog.instruction_table.item(0, 1).text(), "E0 0A")
-        self.assertFalse(dialog.add_button.isEnabled())
+        self.assertTrue(dialog.add_button.isEnabled())
+        self.assertIn("预留槽", dialog.add_button.toolTip())
         self.assertTrue(dialog.code_button.isEnabled())
         self.assertIn("当前 ROM", dialog.read_only_status.text())
         self.assertEqual(dialog.rule_lists["movement"].count(), 157)
@@ -138,8 +139,22 @@ class LegacyToolDialogTests(QtTestCase):
         self.assertEqual(TextConverterDialog.parse_code("<10>, $11 0xFF"), b"\x10\x11\xFF")
         dialog.code_edit.setPlainText("123")
         dialog.decode_button.click()
-        self.assertIn("转换失败", dialog.status.text())
+        self.assertIn("转换失败", dialog.last_status)
         self._show(dialog)
+        visible_children = [
+            widget
+            for widget in dialog.findChildren(QWidget)
+            if widget.parent() is dialog and widget.isVisible()
+        ]
+        self.assertEqual(len(visible_children), 6)
+        self.assertEqual(
+            sorted(type(widget).__name__ for widget in visible_children),
+            ["QLabel", "QLabel", "QPlainTextEdit", "QPlainTextEdit", "QPushButton", "QPushButton"],
+        )
+        self.assertEqual(dialog.text_edit.placeholderText(), "")
+        self.assertEqual(dialog.code_edit.placeholderText(), "")
+        self.assertEqual(dialog.encode_button.size().toTuple(), (80, 32))
+        self.assertEqual(dialog.decode_button.size().toTuple(), (80, 32))
         self.assertLess(self._top(dialog.text_edit, dialog), self._top(dialog.encode_button, dialog))
         self.assertLess(dialog.encode_button.mapTo(dialog, QPoint(0, 0)).x(), dialog.decode_button.mapTo(dialog, QPoint(0, 0)).x())
         self.assertLess(self._top(dialog.decode_button, dialog), self._top(dialog.code_edit, dialog))
@@ -531,7 +546,7 @@ class LegacyToolDialogTests(QtTestCase):
 
     def test_tool_geometry_and_offscreen_screenshots_render(self) -> None:
         flexible_dialogs = (
-            ("converter", TextConverterDialog(), (600, 620)),
+            ("converter", TextConverterDialog(), (473, 483)),
             ("calculator", AttributeCalculatorDialog(), (1120, 780)),
         )
         fixed_dialogs = (

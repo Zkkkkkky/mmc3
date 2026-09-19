@@ -7,6 +7,7 @@ from typing import Any
 
 from .changes import ChangeSet
 from .codecs.battle_music import BattleMusicCodec
+from .codecs.animation import AnimationCodec
 from .codecs.dc_font import glyph_file_offset
 from .codecs.character_name import CharacterNameCodec
 from .codecs.map import MapCodec
@@ -254,6 +255,25 @@ class ProjectDocument:
             }
         )
 
+    def add_animation_label(self, kind: str, index: int, label: str) -> None:
+        """Persist a project-local animation/rule label without changing ROM bytes."""
+
+        if kind not in {"map", "background", "movement", "sprite"}:
+            raise ValueError(f"未知动画名称类型：{kind}")
+        if not 0 <= index <= 0xFF:
+            raise ValueError("动画名称序号必须在 00—FF 之间。")
+        normalized = label.strip()
+        if not normalized or len(normalized) > 80 or "\n" in normalized or "\r" in normalized:
+            raise ValueError("动画名称必须为 1—80 个单行字符。")
+        self.operations.append(
+            {
+                "kind": "animation.set_label",
+                "animationKind": kind,
+                "index": index,
+                "label": normalized,
+            }
+        )
+
     def font_character_overrides(self, rom: RomImage) -> dict[bytes, str]:
         """Read project-only code assignments; they do not alter ROM bytes."""
 
@@ -275,6 +295,34 @@ class ProjectDocument:
                 ) from error
         if len(set(result.values())) != len(result):
             raise ProjectFormatError("工程字库映射含重复字符。")
+        return result
+
+    def animation_label_overrides(self, rom: RomImage) -> dict[tuple[str, int], str]:
+        """Read project-only animation labels; they do not alter ROM bytes."""
+
+        self._validate_base(rom)
+        codec = AnimationCodec(rom.data)
+        result: dict[tuple[str, int], str] = {}
+        for index, operation in enumerate(self.operations):
+            if not isinstance(operation, dict) or operation.get("kind") != "animation.set_label":
+                continue
+            try:
+                kind = str(operation["animationKind"])
+                entry_index = int(operation["index"])
+                label = str(operation["label"])
+                if kind not in {"map", "background", "movement", "sprite"}:
+                    raise ValueError(f"未知类型 {kind!r}")
+                if not 0 <= entry_index < codec.count(kind):
+                    raise ValueError("序号越界")
+                if not label.strip() or label != label.strip() or len(label) > 80:
+                    raise ValueError("名称必须为 1—80 个无首尾空白的字符")
+                if "\n" in label or "\r" in label:
+                    raise ValueError("名称必须为单行文本")
+                result[(kind, entry_index)] = label
+            except (KeyError, TypeError, ValueError) as error:
+                raise ProjectFormatError(
+                    f"第 {index + 1} 条动画名称配置无效：{error}"
+                ) from error
         return result
 
     @staticmethod
@@ -956,6 +1004,22 @@ class ProjectDocument:
                         raise ProjectFormatError(
                             "工程字库映射值必须是一枚 Unicode 字符。"
                         )
+                elif kind == "animation.set_label":
+                    animation_kind = str(operation["animationKind"])
+                    entry_index = int(operation["index"])
+                    label = str(operation["label"])
+                    if animation_kind not in {"map", "background", "movement", "sprite"}:
+                        raise ProjectFormatError("工程动画名称类型无效。")
+                    if not 0 <= entry_index <= 0xFF:
+                        raise ProjectFormatError("工程动画名称序号越界。")
+                    if (
+                        not label.strip()
+                        or label != label.strip()
+                        or len(label) > 80
+                        or "\n" in label
+                        or "\r" in label
+                    ):
+                        raise ProjectFormatError("工程动画名称必须为 1—80 个单行字符。")
                 elif kind == "raw.patch":
                     offset = int(operation["offset"])
                     before = bytes.fromhex(str(operation["before"]))

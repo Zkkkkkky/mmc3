@@ -7,8 +7,8 @@
 
 | 指标 | 数值 | 目标 |
 | --- | --- | --- |
-| G1 黄金对照覆盖率 | 58/62 = 93.55% | >=95% |
-| G2 逐字段差分通过率 | 60/60 = 100.00% | =100% |
+| G1 黄金对照覆盖率 | 59/64 = 92.19% | >=95% |
+| G2 逐字段差分通过率 | 61/61 = 100.00% | =100% |
 
 > G1 分母口径 `denominator_scope=registered_fields`：当前分母为 field_registry.json 登记字段数；最终口径为参考版全部可编辑字段数（主文档第 4/5 章字段清单，M00 第 5 节统计职责），全量采集完成后需以全量字段数重算分母
 
@@ -16,13 +16,13 @@
 
 | 类别 | 数量 |
 | --- | --- |
-| 注册字段（登记用例） | 62 |
-| 已归档字段 | 62 |
-| golden 用例 | 60 |
-| discovery 用例 | 3 |
-| 通过 golden 用例 | 59 |
+| 注册字段（登记用例） | 64 |
+| 已归档字段 | 64 |
+| golden 用例 | 61 |
+| discovery 用例 | 5 |
+| 通过 golden 用例 | 60 |
 | 未通过 golden 用例 | 1 |
-| 待解释用例 | 4 |
+| 待解释用例 | 6 |
 
 ## 待解释用例清单
 
@@ -32,6 +32,8 @@
 | M09 | experience_level_2 | write | discovery | 发现型用例：存量 expected_offset=0（写入偏移未知）且重开读取值不等于请求值，需在线采集补证 |
 | M09 | experience_level_60 | write | discovery | 发现型用例：存量 expected_offset=0（写入偏移未知）且重开读取值不等于请求值，需在线采集补证 |
 | M09 | level_cap | write | discovery | 发现型用例：等级上限 60→61 触发成长曲线等联动重写（3778 处偏移），无单一预期偏移集，待在线采集拆解（D5 决策） |
+| M12 | sprite_anchor_x | cold_start_07 | discovery | 在线单字段采集：保存后关闭进程，再以不同 PID 冷启动重开 |
+| M12 | sprite_code_first_tile | cold_start_01 | discovery | 在线单字段采集：保存后关闭进程，再以不同 PID 冷启动重开 |
 
 ## 逐字段明细
 
@@ -67,6 +69,9 @@
 | M10 | item_price_22 | golden | true | 7 | 6 | 0 | M10-item_price_22-write.json |
 | M10 | item_price_23 | golden | true | 7 | 6 | 0 | M10-item_price_23-write.json |
 | M10 | item_price_24 | golden | true | 7 | 6 | 0 | M10-item_price_24-write.json |
+| M12 | sprite_anchor_x | discovery | - | 0 | 0 | 0 | M12-sprite_anchor_x-cold_start_07.json |
+| M12 | sprite_code_first_tile | discovery | - | 7 | 0 | 6 | M12-sprite_code_first_tile-cold_start_01.json |
+| M12 | sprite_code_first_tile | golden | true | 7 | 0 | 0 | M12-sprite_code_first_tile-cold_start_02.json |
 | M17 | damage_defense_divisor | golden | true | 7 | 6 | 0 | M17-damage_defense_divisor-write.json |
 | M17 | damage_defense_multiplier | golden | true | 7 | 6 | 0 | M17-damage_defense_multiplier-write.json |
 | M17 | damage_strength_divisor | golden | true | 7 | 6 | 0 | M17-damage_strength_divisor-write.json |

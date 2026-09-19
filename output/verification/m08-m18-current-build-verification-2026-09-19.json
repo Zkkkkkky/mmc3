@@ -1,0 +1,60 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-09-19T18:02:17+08:00",
+  "formalExecutable": {
+    "path": "output/app/新DC篇完整修改器.exe",
+    "sha256": "F7784D2DE361621AC43B551B7759C8E9D5AB7FE63F8058DA7951A97CFDA6DA9D",
+    "checksumFileMatches": true,
+    "selfTestExitCode": 0
+  },
+  "fullRegression": {
+    "command": ".\\.venv\\Scripts\\python.exe -m unittest discover -s tests -t . -p \"test_*.py\"",
+    "testsRun": 647,
+    "failures": 0,
+    "errors": 0,
+    "durationSeconds": 341.058,
+    "passed": true
+  },
+  "deliveryGate": {
+    "path": "output/verification/m08-m18-delivery-gate.json",
+    "machineGatePassed": true,
+    "implementationScopeComplete": "11/11",
+    "userAccepted": "0/11"
+  },
+  "m12ReferenceEvidence": {
+    "path": "output/verification/m12-reference-dynamic-2026-09-19.json",
+    "positiveGolden": "sprite_code_first_tile/cold_start_02",
+    "negativeGolden": "sprite_anchor_x/cold_start_07",
+    "productRule": "组图首物理图块可写，X/Y 锚点按参考版非持久化行为只读"
+  },
+  "packagedProcessHealth": {
+    "launched": true,
+    "remainedRunningAfterFiveSeconds": true,
+    "responding": true,
+    "testProcessesClosedAfterProbe": true
+  },
+  "mesenRuntime": {
+    "path": "output/verification/m08-m18-mesen-2026-09-19/result.json",
+    "romSha256": "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E",
+    "checks": 17,
+    "failures": 0,
+    "frames": 11309,
+    "exitCode": 0,
+    "passed": true,
+    "scope": "当前推荐 ROM 的 Mapper 194、扩展 Bank、双音频引擎、3 首扩展曲、56 个音效与旧引擎切回基线"
+  },
+  "nativeUiAutomation": {
+    "availableInCurrentSession": false,
+    "observed": "Computer Use inventory exposed browser surfaces only; native Windows app enumeration and launch APIs were unavailable.",
+    "currentBuildClickSmokePerformed": false,
+    "reason": "无法读取或点击 Qt 原生窗口，因此不将启动进程冒充记为界面验收。"
+  },
+  "priorPackagedUiSmoke": {
+    "path": "output/verification/m08-m18-agent-ui-smoke-2026-09-19.json",
+    "executableSha256": "A0675C1A165590056DFB350C1F72B9D818BE28982D2AE8D796C3FC0BFCF8B1C0",
+    "passed": true,
+    "appliesToCurrentExecutableHash": false
+  },
+  "userAcceptance": false,
+  "overallDeliveryComplete": false
+}

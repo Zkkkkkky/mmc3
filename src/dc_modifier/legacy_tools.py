@@ -10,7 +10,7 @@ import tempfile
 from pathlib import Path
 from typing import Any
 
-from PySide6.QtCore import QSize, Qt
+from PySide6.QtCore import QPoint, QSize, Qt
 from PySide6.QtGui import QColor, QCloseEvent, QIcon, QPainter, QPixmap
 from PySide6.QtWidgets import (
     QCheckBox,
@@ -34,6 +34,7 @@ from PySide6.QtWidgets import (
     QTableWidget,
     QTableWidgetItem,
     QTabWidget,
+    QToolTip,
     QVBoxLayout,
     QWidget,
 )
@@ -346,14 +347,12 @@ class TextConverterDialog(QDialog):
             else reference_dc_text_table()
         )
         self.setWindowTitle("文字转换")
-        self.resize(600, 620)
-        self.setMinimumSize(500, 500)
-        self.setSizeGripEnabled(True)
+        self.resize(473, 483)
+        self.setMinimumSize(400, 400)
         self.setModal(True)
         root = QVBoxLayout(self)
-        root.addWidget(QLabel("文字:"))
+        root.addWidget(QLabel("文字："))
         self.text_edit = QPlainTextEdit()
-        self.text_edit.setPlaceholderText("输入中文、控制码名称或 <FF> 形式的原始Token")
         root.addWidget(self.text_edit, 1)
 
         buttons = QHBoxLayout()
@@ -362,28 +361,37 @@ class TextConverterDialog(QDialog):
         self.decode_button = QPushButton("代码转文字")
         self.encode_button.clicked.connect(self.encode_text)
         self.decode_button.clicked.connect(self.decode_code)
+        self.encode_button.setFixedSize(80, 32)
+        self.decode_button.setFixedSize(80, 32)
         buttons.addWidget(self.encode_button)
         buttons.addWidget(self.decode_button)
         buttons.addStretch()
         root.addLayout(buttons)
 
-        root.addWidget(QLabel("代码:"))
+        root.addWidget(QLabel("代码："))
         self.code_edit = QPlainTextEdit()
-        self.code_edit.setPlaceholderText("示例：C9 0D C9 10 F2 FF")
         root.addWidget(self.code_edit, 1)
-        self.status = QLabel("使用新DC内置Token字库；本工具不修改ROM。")
-        self.status.setWordWrap(True)
-        self.status.setMaximumHeight(30)
-        self.status.setStyleSheet("font-size:9px;")
-        root.addWidget(self.status)
+        # The reference window has exactly six visible children: two labels,
+        # two edit controls, and two buttons.  Keep diagnostic state off the
+        # permanent layout; invalid input is reported with a transient tooltip.
+        self.last_status = ""
 
     def _set_error(self, error: Exception) -> None:
-        self.status.setText(f"转换失败：{error}")
-        self.status.setStyleSheet("color:#b42318; font-size:9px;")
+        self.last_status = f"转换失败：{error}"
+        self.setAccessibleDescription(self.last_status)
+        if self.isVisible():
+            target = self.focusWidget() or self.code_edit
+            QToolTip.showText(
+                target.mapToGlobal(QPoint(0, target.height())),
+                self.last_status,
+                target,
+                target.rect(),
+                5000,
+            )
 
     def _set_success(self, message: str) -> None:
-        self.status.setText(message)
-        self.status.setStyleSheet("color:#2e7d4f; font-size:9px;")
+        self.last_status = message
+        self.setAccessibleDescription(message)
 
     @staticmethod
     def parse_code(code: str) -> bytes:

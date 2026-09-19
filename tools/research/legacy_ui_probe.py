@@ -596,6 +596,7 @@ class ProbeSession:
     def __init__(self, repo: Path, evidence_tag: str = ""):
         self.repo = repo
         self.work = repo / "output" / "build" / "legacy-ui-probe"
+        self.work.mkdir(parents=True, exist_ok=True)
         evidence_name = "legacy-ui-probe" + (
             f"-{evidence_tag}" if evidence_tag else ""
         )
@@ -630,6 +631,22 @@ class ProbeSession:
     def attach(self, pid: int) -> None:
         self.pid = pid
         self.owns_process = False
+        candidates = [
+            window
+            for window in self.top_windows(visible_only=False)
+            if window["title"].startswith("SRW2扩容版修改器")
+        ]
+        if not candidates:
+            candidates = [
+                window
+                for window in enum_top_windows(0, visible_only=False)
+                if window["title"].startswith("SRW2扩容版修改器")
+            ]
+            if candidates:
+                self.pid = candidates[0]["pid"]
+                log(f"attach redirected to GUI child pid={self.pid}")
+        if candidates:
+            self.main_hwnd = candidates[0]["hwnd"]
         log(f"attached pid={pid}")
 
     def load(self) -> None:
@@ -1465,13 +1482,30 @@ def stage_ct(session: ProbeSession) -> None:
         log("process killed by delayed export error (expected for 导出头像)")
 
 
+def stage_m12(session: ProbeSession) -> None:
+    """Capture only the reference map-animation window and its tab pages."""
+    log("=== stage M12: map-animation tab sweep ===")
+    if not session.main_hwnd or not is_window(session.main_hwnd):
+        raise RuntimeError("main window not alive")
+    if not session.rom_is_loaded():
+        raise RuntimeError("ROM not loaded")
+
+    window = _open_data_window(session, 20011, "地图动画")
+    if not window:
+        raise RuntimeError("map-animation window did not appear")
+    try:
+        sweep_tabs(session, window["hwnd"], "M12_地图动画")
+    finally:
+        close_window_safely(session, window["hwnd"])
+
+
 # ----------------------------------------------------------------------- main
 
 
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        "--stage", default="A,B", help="comma separated A/B/C/CT/M05"
+        "--stage", default="A,B", help="comma separated A/B/C/CT/M05/M12"
     )
     parser.add_argument("--pid", type=int, help="attach to a running probe process")
     parser.add_argument("--rom", help="override ROM path used by stage B")
@@ -1512,6 +1546,7 @@ def main() -> int:
             "C": stage_c,
             "CT": stage_ct,
             "M05": stage_m05,
+            "M12": stage_m12,
         }
         for name in stages:
             handler = handlers.get(name)

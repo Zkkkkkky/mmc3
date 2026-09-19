@@ -4085,6 +4085,73 @@
       ]
     },
     {
+      "module": "M12",
+      "field": "sprite_anchor_x",
+      "case_id": "cold_start_07",
+      "case_kind": "discovery",
+      "source_json": "output/build/legacy-diff-audit/legacy-live-results.json",
+      "snapshot_before": "output/build/legacy-diff-audit/cases/legacy_live/M12/sprite_anchor_x/cold_start_07/before.nes",
+      "snapshot_after": "output/build/legacy-diff-audit/cases/legacy_live/M12/sprite_anchor_x/cold_start_07/after.nes",
+      "expected_offsets": [
+        203906
+      ],
+      "required_offsets": [
+        203906
+      ],
+      "optional_offsets": [],
+      "extra_allowed": [],
+      "notes": [
+        "在线单字段采集：保存后关闭进程，再以不同 PID 冷启动重开"
+      ]
+    },
+    {
+      "module": "M12",
+      "field": "sprite_code_first_tile",
+      "case_id": "cold_start_01",
+      "case_kind": "discovery",
+      "source_json": "output/build/legacy-diff-audit/legacy-live-results.json",
+      "snapshot_before": "output/build/legacy-diff-audit/cases/legacy_live/M12/sprite_code_first_tile/cold_start_01/before.nes",
+      "snapshot_after": "output/build/legacy-diff-audit/cases/legacy_live/M12/sprite_code_first_tile/cold_start_01/after.nes",
+      "expected_offsets": [
+        203908
+      ],
+      "required_offsets": [
+        203908
+      ],
+      "optional_offsets": [],
+      "extra_allowed": [],
+      "notes": [
+        "在线单字段采集：保存后关闭进程，再以不同 PID 冷启动重开"
+      ]
+    },
+    {
+      "module": "M12",
+      "field": "sprite_code_first_tile",
+      "case_id": "cold_start_02",
+      "case_kind": "golden",
+      "source_json": "output/build/legacy-diff-audit/legacy-live-results.json",
+      "snapshot_before": "output/build/legacy-diff-audit/cases/legacy_live/M12/sprite_code_first_tile/cold_start_02/before.nes",
+      "snapshot_after": "output/build/legacy-diff-audit/cases/legacy_live/M12/sprite_code_first_tile/cold_start_02/after.nes",
+      "expected_offsets": [
+        203908
+      ],
+      "required_offsets": [
+        203908
+      ],
+      "optional_offsets": [],
+      "extra_allowed": [
+        303404,
+        303405,
+        304673,
+        304674,
+        305017,
+        305018
+      ],
+      "notes": [
+        "在线单字段采集：保存后关闭进程，再以不同 PID 冷启动重开"
+      ]
+    },
+    {
       "module": "M17",
       "field": "damage_defense_divisor",
       "case_id": "write",

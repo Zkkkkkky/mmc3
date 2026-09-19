@@ -1,0 +1,231 @@
+{
+  "generated_at": "2026-09-19T13:44:04+08:00",
+  "passed": true,
+  "delivery_status": "implementation_complete_reference_and_user_pending",
+  "conclusion": "M09 当前 99 级安全范围、经验/命中表、系统文字和成长编辑均通过实现侧门禁；参考 EXE 的系统文字/成长保存黄金与用户签收仍待完成。",
+  "rom": {
+    "path": "output/rom/DC_kuorong_464K.nes",
+    "size": 1310736,
+    "sha256": "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E",
+    "unchanged_after_analysis": true
+  },
+  "evidence": {
+    "distance_hit": {
+      "shape": [
+        4,
+        16
+      ],
+      "offset": "0x00B4D8",
+      "sample_changed_indices": [
+        15
+      ]
+    },
+    "experience": {
+      "entries": 99,
+      "level_50": 15200,
+      "level_98": 64350,
+      "level_99": 65535,
+      "offset": "0x00B530",
+      "sample_changed_indices": [
+        98
+      ]
+    },
+    "system_text": {
+      "indices": 221,
+      "variants": 221,
+      "no_op_roundtrips": 221,
+      "sample_id": 9,
+      "sample_offset": "0x0559C5",
+      "sample_changed_indices": [
+        16,
+        17
+      ]
+    },
+    "growth": {
+      "slots": 53,
+      "unique_records": 14,
+      "values_per_record": 99,
+      "record_bytes": 50,
+      "no_op_roundtrips": 53,
+      "single_nibble_patch_offset": "0x00A78A",
+      "single_nibble_changed_indices": [
+        0
+      ],
+      "quick_edit_values": 60,
+      "quick_edit_changed_record_bytes": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29
+      ],
+      "shared_ids_214_253": [
+        214,
+        215,
+        216,
+        217,
+        218,
+        219,
+        220,
+        221,
+        222,
+        223,
+        224,
+        225,
+        226,
+        227,
+        228,
+        229,
+        230,
+        231,
+        232,
+        233,
+        234,
+        235,
+        236,
+        237,
+        238,
+        239,
+        240,
+        241,
+        242,
+        243,
+        244,
+        245,
+        246,
+        247,
+        248,
+        249,
+        250,
+        251,
+        252,
+        253
+      ],
+      "invalid_length_rejection": "成长方式需要 99 个 0—15 的整数。",
+      "invalid_value_rejection": "成长方式需要 99 个 0—15 的整数。"
+    },
+    "level_cap": {
+      "generated_at": "2026-09-19T13:44:04+08:00",
+      "passed": true,
+      "conclusion": "当前受支持 ROM 已是固定 99 级布局；旧版 audit.nes 的 60→61 3778 字节重排不兼容，不能应用到当前产品。",
+      "supported_rom": {
+        "path": "output/rom/DC_kuorong_464K.nes",
+        "sha256": "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E",
+        "runtime_compare": "C9 62",
+        "runtime_level_cap": 99,
+        "verified_level_cap": 99,
+        "experience_entries": 99,
+        "growth_record_bytes": 50,
+        "growth_capacity": 99,
+        "first_growth_offsets": [
+          "0xA78A",
+          "0xA7BC",
+          "0xA7EE",
+          "0xA820",
+          "0xA852",
+          "0xA884",
+          "0xA8B6",
+          "0xA8E8",
+          "0xA91A",
+          "0xA94C",
+          "0xA97E"
+        ],
+        "first_growth_widths": [
+          50,
+          50,
+          50,
+          50,
+          50,
+          50,
+          50,
+          50,
+          50,
+          50
+        ]
+      },
+      "legacy_audit": {
+        "before_path": "output/build/legacy-diff-audit/audit.nes",
+        "before_sha256": "C0F6FB15DBCC9F04D35EC97B9558DF85D099C661C35D54D3A2AAE4966D2ED5B2",
+        "after_path": "output/build/legacy-diff-audit/cases/legacy_level_cap/after.nes",
+        "after_sha256": "F2E7D9FB9F272101886050426441DC05A1D08A3E09C8379A2CFBA7FDA616946A",
+        "before_runtime_compare": "C9 3B",
+        "before_runtime_level_cap": 60,
+        "after_runtime_compare": "C9 3C",
+        "after_runtime_level_cap": 61,
+        "before_growth_widths": [
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30
+        ],
+        "after_growth_widths": [
+          31,
+          31,
+          31,
+          31,
+          31,
+          31,
+          31,
+          31,
+          31,
+          31
+        ],
+        "changed_bytes": 3778,
+        "changed_prg_banks": {
+          "0x04": 19,
+          "0x05": 3753
+        },
+        "normalization_changes": 6,
+        "accepted_by_current_product": false,
+        "rejection": "机体名称指针表起始标记不正确。"
+      }
+    }
+  },
+  "checks": {
+    "distance_table_4x16_single_field": true,
+    "experience_99_single_field": true,
+    "system_text_all_roundtrip_and_sample_confined": true,
+    "growth_53_slots_and_99_values": true,
+    "growth_single_nibble_preserves_neighbor_and_reserved": true,
+    "growth_quick_60_preserves_levels_61_99": true,
+    "growth_invalid_input_rejected": true,
+    "shared_growth_ids_explicit": true,
+    "level_cap_compatibility_report_passed": true,
+    "source_rom_unchanged": true
+  },
+  "pending_acceptance": [
+    "参考 EXE：系统文字单字段、成长单半字节和 60 位快捷编辑保存/重开黄金。",
+    "正式 EXE 人工执行 M09 验收清单并由用户签收。"
+  ]
+}

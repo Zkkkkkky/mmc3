@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "module": "M12",
+  "field": "sprite_anchor_x",
+  "case_id": "cold_start_07",
+  "case_kind": "discovery",
+  "requested_value": 1,
+  "original_value": 0,
+  "reopen_value": 0,
+  "reopen_matches_request": false,
+  "reopen_mode": "new_process",
+  "first_pid": 30872,
+  "second_pid": 23788,
+  "changed_offsets": [],
+  "removed_normalization": [],
+  "unexpected_offsets": [],
+  "expected_offsets": [
+    203906
+  ],
+  "required_offsets": [
+    203906
+  ],
+  "optional_offsets": [],
+  "extra_allowed": [],
+  "expected_not_changed": [
+    203906
+  ],
+  "diffs": [],
+  "snapshots": {
+    "before": {
+      "path": "output/build/legacy-diff-audit/cases/legacy_live/M12/sprite_anchor_x/cold_start_07/before.nes",
+      "sha256": "1ddd4f74b2d3aceaa8a0bc4a6846be8e6148c858c2d8ea5a1f6e0a04f0ad4a75"
+    },
+    "after": {
+      "path": "output/build/legacy-diff-audit/cases/legacy_live/M12/sprite_anchor_x/cold_start_07/after.nes",
+      "sha256": "1ddd4f74b2d3aceaa8a0bc4a6846be8e6148c858c2d8ea5a1f6e0a04f0ad4a75"
+    }
+  },
+  "supporting_cdl": {
+    "source": "output/build/legacy-diff-audit/默认配置文件/测试.cdl",
+    "sha256": "599c1bb5ffd4b87229a81958f33f1060821cd01cd7aa7ccafa0d862f4522f3f6"
+  },
+  "duration_seconds": 24.369,
+  "budget_seconds": 30.0,
+  "within_budget": true,
+  "passed": false,
+  "pending_reason": "否定发现：旧版界面值可改，但确定/保存不写锚点字节，冷启动回读仍为 0。"
+}

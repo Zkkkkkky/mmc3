@@ -6,29 +6,29 @@
   },
   "g1": {
     "definition": "已通过黄金对照的字段数 / 登记字段数",
-    "numerator": 58,
-    "denominator": 62,
-    "value": 0.9355,
+    "numerator": 59,
+    "denominator": 64,
+    "value": 0.9219,
     "denominator_scope": "registered_fields",
     "denominator_scope_note": "当前分母为 field_registry.json 登记字段数；最终口径为参考版全部可编辑字段数（主文档第 4/5 章字段清单，M00 第 5 节统计职责），全量采集完成后需以全量字段数重算分母",
     "target": ">=95%"
   },
   "g2": {
     "definition": "unexplained 为空且 expected 已知的 golden 用例占比",
-    "numerator": 60,
-    "denominator": 60,
+    "numerator": 61,
+    "denominator": 61,
     "value": 1.0,
     "target": "=100%"
   },
   "counts": {
-    "registered_fields": 62,
-    "archived_fields": 62,
-    "archived_cases": 63,
-    "golden_cases": 60,
-    "discovery_cases": 3,
-    "passed_golden_cases": 59,
+    "registered_fields": 64,
+    "archived_fields": 64,
+    "archived_cases": 66,
+    "golden_cases": 61,
+    "discovery_cases": 5,
+    "passed_golden_cases": 60,
     "failed_golden_cases": 1,
-    "pending_cases": 4
+    "pending_cases": 6
   },
   "pending_cases": [
     {
@@ -58,6 +58,20 @@
       "case_id": "write",
       "case_kind": "discovery",
       "reason": "发现型用例：等级上限 60→61 触发成长曲线等联动重写（3778 处偏移），无单一预期偏移集，待在线采集拆解（D5 决策）"
+    },
+    {
+      "module": "M12",
+      "field": "sprite_anchor_x",
+      "case_id": "cold_start_07",
+      "case_kind": "discovery",
+      "reason": "在线单字段采集：保存后关闭进程，再以不同 PID 冷启动重开"
+    },
+    {
+      "module": "M12",
+      "field": "sprite_code_first_tile",
+      "case_id": "cold_start_01",
+      "case_kind": "discovery",
+      "reason": "在线单字段采集：保存后关闭进程，再以不同 PID 冷启动重开"
     }
   ],
   "field_details": [
@@ -390,6 +404,39 @@
       "removed_normalization_count": 6,
       "unexpected_count": 0,
       "archive": "M10-item_price_24-write.json"
+    },
+    {
+      "module": "M12",
+      "field": "sprite_anchor_x",
+      "case_id": "cold_start_07",
+      "case_kind": "discovery",
+      "passed": null,
+      "changed_count": 0,
+      "removed_normalization_count": 0,
+      "unexpected_count": 0,
+      "archive": "M12-sprite_anchor_x-cold_start_07.json"
+    },
+    {
+      "module": "M12",
+      "field": "sprite_code_first_tile",
+      "case_id": "cold_start_01",
+      "case_kind": "discovery",
+      "passed": null,
+      "changed_count": 7,
+      "removed_normalization_count": 0,
+      "unexpected_count": 6,
+      "archive": "M12-sprite_code_first_tile-cold_start_01.json"
+    },
+    {
+      "module": "M12",
+      "field": "sprite_code_first_tile",
+      "case_id": "cold_start_02",
+      "case_kind": "golden",
+      "passed": true,
+      "changed_count": 7,
+      "removed_normalization_count": 0,
+      "unexpected_count": 0,
+      "archive": "M12-sprite_code_first_tile-cold_start_02.json"
     },
     {
       "module": "M17",

@@ -13,10 +13,17 @@ from pathlib import Path
 from collections.abc import Iterable, Iterator
 
 from fc_editor.codecs import (
+    ActionEventCodec,
+    ActionEventRecord,
+    ActionEventUsage,
     BattleMusicCodec,
     CharacterDialogueCodec,
     CharacterNameCodec,
     ChapterEventCodec,
+    ChapterTitleCodec,
+    ChapterTitleRecord,
+    ChapterVictoryCodec,
+    ChapterVictoryRecord,
     ChrCodec,
     CustomMusicCodec,
     LegacyGlobalDataCodec,
@@ -74,6 +81,7 @@ from fc_editor.expansion_map import (
 from fc_editor.expansion_story import (
     STORY_DATA_CAPACITY,
     STORY_DATA_START,
+    VERIFIED_STORY_SELECTORS,
     build_story_group,
     extract_story_group,
     pack_story_group,
@@ -135,6 +143,8 @@ class EditHistoryEntry:
     allocations_after: tuple[Allocation, ...] = ()
     font_mappings_before: tuple[tuple[bytes, str], ...] = ()
     font_mappings_after: tuple[tuple[bytes, str], ...] = ()
+    animation_labels_before: tuple[tuple[tuple[str, int], str], ...] = ()
+    animation_labels_after: tuple[tuple[tuple[str, int], str], ...] = ()
 
 
 @dataclass(frozen=True)
@@ -142,6 +152,7 @@ class ProjectSnapshot:
     data: bytes
     allocations: tuple[Allocation, ...]
     font_mappings: tuple[tuple[bytes, str], ...] = ()
+    animation_labels: tuple[tuple[tuple[str, int], str], ...] = ()
 
 
 @dataclass(frozen=True)
@@ -481,6 +492,7 @@ class RomProject:
         self.original = self.rom_image.data
         self.working = bytearray(self.original)
         self.font_character_overrides: dict[bytes, str] = {}
+        self.animation_label_overrides: dict[tuple[str, int], str] = {}
         initial_plan = ExpansionPlan.from_bytes(self.working)
         self._initial_expansion_plan = initial_plan
         self._unit_name_baseline_pointers: tuple[int, ...] | None = None
@@ -598,6 +610,21 @@ class RomProject:
             if self.rom_image.profile.chapter_events is not None
             else None
         )
+        self.action_event_codec = (
+            ActionEventCodec(self.rom_image, self.original)
+            if ActionEventCodec.supports(self.original)
+            else None
+        )
+        self.chapter_title_codec = (
+            ChapterTitleCodec(self.rom_image, self.original)
+            if ChapterTitleCodec.supports(self.original)
+            else None
+        )
+        self.chapter_victory_codec = (
+            ChapterVictoryCodec(self.rom_image, self.original)
+            if ChapterVictoryCodec.supports(self.original)
+            else None
+        )
         self.persuasion_rule_codec = (
             PersuasionRuleCodec(self.rom_image)
             if self.rom_image.profile.persuasion_rules is not None
@@ -672,6 +699,9 @@ class RomProject:
         project.font_character_overrides = document.font_character_overrides(
             project.rom_image
         )
+        project.animation_label_overrides = document.animation_label_overrides(
+            project.rom_image
+        )
         try:
             project.dc_text_table()
         except ValueError as error:
@@ -723,6 +753,7 @@ class RomProject:
             bytes(self.working),
             self.resource_allocator.allocations,
             tuple(sorted(self.font_character_overrides.items())),
+            tuple(sorted(self.animation_label_overrides.items())),
         )
 
     def _finish_mutation(self, before: ProjectSnapshot | None, description: str) -> None:
@@ -730,11 +761,13 @@ class RomProject:
             return
         allocations_after = self.resource_allocator.allocations
         font_mappings_after = tuple(sorted(self.font_character_overrides.items()))
+        animation_labels_after = tuple(sorted(self.animation_label_overrides.items()))
         patches = self._diff_patches(before.data, bytes(self.working))
         if (
             not patches
             and before.allocations == allocations_after
             and before.font_mappings == font_mappings_after
+            and before.animation_labels == animation_labels_after
         ):
             return
         self._undo_stack.append(
@@ -745,6 +778,8 @@ class RomProject:
                 allocations_after,
                 before.font_mappings,
                 font_mappings_after,
+                before.animation_labels,
+                animation_labels_after,
             )
         )
         self._redo_stack.clear()
@@ -757,6 +792,7 @@ class RomProject:
                 bytes(self.working),
                 self.resource_allocator.allocations,
                 tuple(sorted(self.font_character_overrides.items())),
+                tuple(sorted(self.animation_label_overrides.items())),
             )
             self._transaction_description = description
         self._transaction_depth += 1
@@ -772,6 +808,9 @@ class RomProject:
                 )
                 self.font_character_overrides = dict(
                     self._transaction_before.font_mappings
+                )
+                self.animation_label_overrides = dict(
+                    self._transaction_before.animation_labels
                 )
                 self._refresh_dynamic_codecs()
             raise
@@ -811,6 +850,7 @@ class RomProject:
             self.profile, self.original, entry.allocations_before
         )
         self.font_character_overrides = dict(entry.font_mappings_before)
+        self.animation_label_overrides = dict(entry.animation_labels_before)
         self._refresh_dynamic_codecs()
         self._redo_stack.append(entry)
         return entry.description
@@ -825,6 +865,7 @@ class RomProject:
             self.profile, self.original, entry.allocations_after
         )
         self.font_character_overrides = dict(entry.font_mappings_after)
+        self.animation_label_overrides = dict(entry.animation_labels_after)
         self._refresh_dynamic_codecs()
         self._undo_stack.append(entry)
         return entry.description
@@ -1619,6 +1660,34 @@ class RomProject:
         self.font_character_overrides = checked
         self.dc_text_table()
         self._finish_mutation(before, f"更新 {len(checked)} 条工程字库映射")
+
+    def replace_animation_label_overrides(
+        self,
+        labels: dict[tuple[str, int], str],
+    ) -> None:
+        """Replace project-local animation labels without modifying ROM bytes."""
+
+        from fc_editor.codecs.animation import AnimationCodec
+
+        codec = AnimationCodec(self.working)
+        checked: dict[tuple[str, int], str] = {}
+        for key, label in labels.items():
+            if not isinstance(key, tuple) or len(key) != 2:
+                raise ValueError("动画名称键必须为 (类型, 序号)。")
+            kind, index = key
+            if kind not in {"map", "background", "movement", "sprite"}:
+                raise ValueError(f"未知动画名称类型：{kind}")
+            if not isinstance(index, int) or not 0 <= index < codec.count(kind):
+                raise ValueError(f"{kind} 动画名称序号越界：{index}")
+            normalized = label.strip()
+            if not normalized or normalized != label or len(normalized) > 80:
+                raise ValueError("动画名称必须为 1—80 个无首尾空白的字符。")
+            if "\n" in normalized or "\r" in normalized:
+                raise ValueError("动画名称必须为单行文本。")
+            checked[(kind, index)] = normalized
+        before = self._mutation_snapshot()
+        self.animation_label_overrides = checked
+        self._finish_mutation(before, f"更新 {len(checked)} 条动画名称")
 
     def set_chr_tile_pixels(
         self,
@@ -2817,6 +2886,192 @@ class RomProject:
         self.working[current.file_offset : current.file_offset + len(current.raw)] = original.raw
         self._finish_mutation(before, f"还原章节事件 ${address:04X}")
 
+    @property
+    def supports_action_events(self) -> bool:
+        return self.action_event_codec is not None
+
+    def action_event_records(
+        self,
+        *,
+        original: bool = False,
+    ) -> tuple[ActionEventRecord, ...]:
+        if self.action_event_codec is None:
+            raise ValueError("当前 ROM 没有已验证的独立行动事件表。")
+        source = self.original if original else self.working
+        return self.action_event_codec.records(source)
+
+    def get_action_event(
+        self,
+        action_id: int,
+        *,
+        original: bool = False,
+    ) -> ActionEventRecord:
+        if not 0 <= action_id < 0x100:
+            raise IndexError(f"行动 ID ${action_id:02X} 超出范围。")
+        return self.action_event_records(original=original)[action_id]
+
+    def action_event_usage(self) -> ActionEventUsage:
+        if self.action_event_codec is None:
+            raise ValueError("当前 ROM 没有已验证的独立行动事件表。")
+        return self.action_event_codec.usage(self.working)
+
+    def _apply_action_event_patches(
+        self,
+        patches: Iterable[tuple[int, bytes, bytes]],
+        description: str,
+    ) -> None:
+        normalized = tuple(patches)
+        before_snapshot = self._mutation_snapshot()
+        for offset, before, _after in normalized:
+            current = bytes(self.working[offset:offset + len(before)])
+            if current != before:
+                raise RomFormatError("行动事件数据已变化，请重新载入。")
+        for offset, _before, after in normalized:
+            self.working[offset:offset + len(after)] = after
+        self._finish_mutation(before_snapshot, description)
+
+    def set_action_event_instruction(
+        self,
+        action_id: int,
+        instruction_index: int,
+        raw: bytes,
+    ) -> None:
+        if self.action_event_codec is None:
+            raise ValueError("当前 ROM 没有已验证的独立行动事件表。")
+        patches = self.action_event_codec.replacement_patches(
+            self.working,
+            action_id,
+            instruction_index,
+            raw,
+        )
+        self._apply_action_event_patches(
+            patches,
+            f"行动 ${action_id:02X} · 编辑指令 {instruction_index + 1}",
+        )
+
+    def insert_action_event_instruction(
+        self,
+        action_id: int,
+        instruction_index: int,
+        raw: bytes,
+        *,
+        after: bool,
+    ) -> None:
+        if self.action_event_codec is None:
+            raise ValueError("当前 ROM 没有已验证的独立行动事件表。")
+        patches = self.action_event_codec.insertion_patches(
+            self.working,
+            action_id,
+            instruction_index,
+            raw,
+            after=after,
+        )
+        self._apply_action_event_patches(
+            patches,
+            f"行动 ${action_id:02X} · 插入指令",
+        )
+
+    def delete_action_event_instruction(
+        self,
+        action_id: int,
+        instruction_index: int,
+    ) -> None:
+        if self.action_event_codec is None:
+            raise ValueError("当前 ROM 没有已验证的独立行动事件表。")
+        patches = self.action_event_codec.deletion_patches(
+            self.working,
+            action_id,
+            instruction_index,
+        )
+        self._apply_action_event_patches(
+            patches,
+            f"行动 ${action_id:02X} · 删除指令 {instruction_index + 1}",
+        )
+
+    def reset_action_event(self, action_id: int) -> None:
+        if self.action_event_codec is None:
+            raise ValueError("当前 ROM 没有已验证的独立行动事件表。")
+        original = self.get_action_event(action_id, original=True)
+        patches = self.action_event_codec.record_replacement_patches(
+            self.working,
+            action_id,
+            original.raw,
+            source_pointer=original.pointer,
+        )
+        self._apply_action_event_patches(
+            patches,
+            f"行动 ${action_id:02X} · 还原记录",
+        )
+
+    @property
+    def supports_chapter_titles(self) -> bool:
+        return self.chapter_title_codec is not None
+
+    def get_chapter_title(
+        self,
+        scenario_id: int,
+        *,
+        original: bool = False,
+    ) -> ChapterTitleRecord:
+        if self.chapter_title_codec is None:
+            raise ValueError("当前 ROM 没有已验证的关卡标题拼图表。")
+        source = self.original if original else self.working
+        return self.chapter_title_codec.decode(scenario_id, source)
+
+    def set_chapter_title(
+        self,
+        scenario_id: int,
+        chr_banks: tuple[int, int, int],
+        raw: bytes,
+    ) -> None:
+        if self.chapter_title_codec is None:
+            raise ValueError("当前 ROM 没有已验证的关卡标题拼图表。")
+        before = self._mutation_snapshot()
+        patches = self.chapter_title_codec.replacement_patches(
+            self.working,
+            scenario_id,
+            chr_banks,
+            raw,
+        )
+        for offset, _old, after in patches:
+            self.working[offset : offset + len(after)] = after
+        self._finish_mutation(before, f"关卡 {scenario_id + 1:03d} · 标题拼图")
+
+    def reset_chapter_title(self, scenario_id: int) -> None:
+        original = self.get_chapter_title(scenario_id, original=True)
+        self.set_chapter_title(scenario_id, original.chr_banks, original.raw)
+
+    @property
+    def supports_chapter_victory(self) -> bool:
+        return self.chapter_victory_codec is not None
+
+    def get_chapter_victory(
+        self,
+        scenario_id: int,
+        *,
+        original: bool = False,
+    ) -> ChapterVictoryRecord:
+        if self.chapter_victory_codec is None:
+            raise ValueError("当前 ROM 没有已验证的初始胜利文字表。")
+        source = self.original if original else self.working
+        return self.chapter_victory_codec.decode(scenario_id, source)
+
+    def set_chapter_victory_body(self, scenario_id: int, body: bytes) -> None:
+        if self.chapter_victory_codec is None:
+            raise ValueError("当前 ROM 没有已验证的初始胜利文字表。")
+        before = self._mutation_snapshot()
+        offset, _old, after = self.chapter_victory_codec.replacement_patch(
+            self.working,
+            scenario_id,
+            body,
+        )
+        self.working[offset : offset + len(after)] = after
+        self._finish_mutation(before, f"关卡 {scenario_id + 1:03d} · 初始胜利文字")
+
+    def reset_chapter_victory(self, scenario_id: int) -> None:
+        original = self.get_chapter_victory(scenario_id, original=True)
+        self.set_chapter_victory_body(scenario_id, original.body)
+
     def get_story_text(
         self,
         selector: int,
@@ -2837,7 +3092,7 @@ class RomProject:
         """Dry-run a text replacement and return used/available group bytes."""
 
         plan = self.expansion_plan
-        if plan is None:
+        if plan is None or selector not in VERIFIED_STORY_SELECTORS:
             record = self.get_story_text(selector, index)
             if len(data) != record.capacity:
                 raise ValueError(f"当前记录必须保持 {record.capacity} 字节。")
@@ -2853,7 +3108,7 @@ class RomProject:
 
     def set_story_text_raw(self, selector: int, index: int, data: bytes) -> None:
         plan = self.expansion_plan
-        if plan is not None:
+        if plan is not None and selector in VERIFIED_STORY_SELECTORS:
             records = extract_story_group(
                 self.story_text_codec, selector, self.working
             )
@@ -2918,7 +3173,10 @@ class RomProject:
         )
 
     def reset_story_text(self, selector: int, index: int) -> None:
-        if self.expansion_plan is not None:
+        if (
+            self.expansion_plan is not None
+            and selector in VERIFIED_STORY_SELECTORS
+        ):
             original = extract_story_group(
                 self.base_story_text_codec, selector, self.original
             ).record_for_index(index)
@@ -3356,6 +3614,8 @@ class RomProject:
         document = ProjectDocument.create(self.rom_image)
         for token, character in sorted(self.font_character_overrides.items()):
             document.add_font_character_mapping(token, character)
+        for (kind, index), label in sorted(self.animation_label_overrides.items()):
+            document.add_animation_label(kind, index, label)
         covered_offsets: set[int] = set()
         plan = self.expansion_plan
         units_are_linked = bool(plan is not None and plan.flags & FLAG_UNITS)

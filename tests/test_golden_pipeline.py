@@ -101,12 +101,14 @@ SNAPSHOT_SAMPLES = (
 )
 SNAPSHOT_ROOT = AUDIT_DIR / "cases" / "legacy_globals"
 
-#: 当前快照中的 3 个 discovery 字段（M00 计划：G2 分母排除、G1 不计分子）。
+#: 当前快照中的 5 个 discovery 字段（G2 分母排除、G1 不计分子）。
 EXPECTED_DISCOVERY_FIELDS = frozenset(
     {
         "M09/experience_level_2",
         "M09/experience_level_60",
         "M09/level_cap",
+        "M12/sprite_anchor_x",
+        "M12/sprite_code_first_tile",
     }
 )
 
@@ -843,10 +845,11 @@ class CoverageReportConsistencyTests(unittest.TestCase):
             f"{info['module']}/{info['field']}" for info in discovery_infos
         }
         self.assertEqual(discovery_fields, EXPECTED_DISCOVERY_FIELDS)
-        # discovery 用例不参与 G2 判定：passed 为 null、expected 未知。
+        # discovery 用例不参与 G2 判定：passed 统一为 null。
+        # 其中既可以包含未知偏移的探索样本，也可以包含已知偏移但
+        # 尚未达到正式黄金标准（如伴随额外归一化）的调查样本。
         for info in discovery_infos:
             self.assertIsNone(info["passed"])
-            self.assertFalse(info["expected_known"])
         # discovery 字段也不得进入 G1 分子：全部列入待解释清单。
         pending = {
             (item["module"], item["field"]) for item in report["pending_cases"]

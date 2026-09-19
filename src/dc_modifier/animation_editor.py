@@ -659,6 +659,8 @@ class MapAnimationEditorDialog(QDialog):
         self.setMinimumSize(850, 620)
         self._selected = -1
         self._movement_index = -1
+        self._background_index = -1
+        self._sprite_index = -1
         self._loading = False
         self.base = bytes(project.working) if project is not None else b""
         self.draft = bytearray(self.base)
@@ -683,7 +685,14 @@ class MapAnimationEditorDialog(QDialog):
             self.read_only_status.setText(str(error))
             self.accept_button.setEnabled(False)
             return
-        self.names = animation_names("地图动画名称.ini", self.codec.count("map"), 1)
+        map_defaults = animation_names("地图动画名称.ini", self.codec.count("map"), 1)
+        self.default_names: dict[str, tuple[str, ...]] = {"map": map_defaults}
+        self.name_overrides = dict(
+            getattr(project, "animation_label_overrides", {})
+        )
+        self.names = list(map_defaults)
+        for index in range(len(self.names)):
+            self.names[index] = self.name_overrides.get(("map", index), self.names[index])
         self.tabs.addTab(self._animation_tab(), "地图动画")
         self.tabs.addTab(self._rules_tab(), "规律")
         self.tabs.addTab(self._calls_tab(), "动画调用")
@@ -700,12 +709,15 @@ class MapAnimationEditorDialog(QDialog):
         self.animation_list.currentRowChanged.connect(self._select_animation)
         left.addWidget(self.animation_list, 1)
         self.add_button = QPushButton("添加")
-        self.add_button.setEnabled(False)
-        self.add_button.setToolTip("当前实现编辑既有记录；新增指针和搬移空间尚未开放。")
+        self.add_button.setToolTip(
+            "复制当前动画到下一个预留槽；内部循环指针会同步重定位。"
+        )
+        self.add_button.clicked.connect(self._add_animation)
         left.addWidget(self.add_button)
         left.addWidget(QLabel("动画名称（配置标签）"))
         self.animation_name = QLineEdit()
-        self.animation_name.setReadOnly(True)
+        self.animation_name.setMaxLength(80)
+        self.animation_name.textEdited.connect(self._change_animation_name)
         left.addWidget(self.animation_name)
         group.setMaximumWidth(320)
         layout.addWidget(group, 1)
@@ -739,14 +751,63 @@ class MapAnimationEditorDialog(QDialog):
         self.animation_name.setText(self.names[row])
         self.script_editor.set_record(self.draft, "map", row)
 
+    def _change_animation_name(self, text: str) -> None:
+        row = self.animation_list.currentRow()
+        if row < 0:
+            return
+        self.names[row] = text
+        if text == self.default_names["map"][row]:
+            self.name_overrides.pop(("map", row), None)
+        else:
+            self.name_overrides[("map", row)] = text
+        self.animation_list.item(row).setText(f"[{row:02X}]{row:03d}：{text}")
+        if hasattr(self, "call_combos"):
+            for combo in self.call_combos.values():
+                combo.setItemText(row, f"[{row:02X}]{row:03d}：{text}")
+
+    def _add_animation(self) -> None:
+        source_index = self.animation_list.currentRow()
+        if source_index < 0 or not self._flush_script():
+            return
+        try:
+            codec = AnimationCodec(self.draft)
+            new_index, patches = codec.clone_map_animation_patches(source_index)
+            for offset, before, after in patches:
+                if bytes(self.draft[offset:offset + len(before)]) != before:
+                    raise ValueError("动画草稿已变化，请重新打开窗口。")
+                self.draft[offset:offset + len(after)] = after
+            base_name = self.names[source_index]
+            new_name = f"{base_name} 副本"
+            if len(new_name) > 80:
+                new_name = f"动画 {new_index:03d} 副本"
+            self.names[new_index] = new_name
+            self.name_overrides[("map", new_index)] = new_name
+            self.animation_list.item(new_index).setText(
+                f"[{new_index:02X}]{new_index:03d}：{new_name}"
+            )
+            if hasattr(self, "call_combos"):
+                for combo in self.call_combos.values():
+                    combo.setItemText(
+                        new_index,
+                        f"[{new_index:02X}]{new_index:03d}：{new_name}",
+                    )
+            self.animation_list.setCurrentRow(new_index)
+            self.read_only_status.setText(
+                f"已把动画 ${source_index:02X} 复制到预留槽 ${new_index:02X}；"
+                "点击确定后写入工程。"
+            )
+        except ValueError as error:
+            self.read_only_status.setText(f"未添加动画：{error}")
+
     def _rules_tab(self) -> QWidget:
         page = QWidget()
         layout = QHBoxLayout(page)
         self.rule_lists: dict[str, QListWidget] = {}
         self.rule_codes: dict[str, QPlainTextEdit] = {}
         self.rule_statuses: dict[str, QLabel] = {}
-        self.rule_names: dict[str, tuple[str, ...]] = {}
+        self.rule_names: dict[str, list[str]] = {}
         self.rule_name_edits: dict[str, QLineEdit] = {}
+        self.rule_add_buttons: dict[str, QPushButton] = {}
         self._movement_roles = self.codec.movement_roles()
         for kind, title, filename, first in (
             ("background", "背景规律", "背景规律名称.ini", 0),
@@ -756,7 +817,12 @@ class MapAnimationEditorDialog(QDialog):
             group = QGroupBox(title)
             box = QVBoxLayout(group)
             listing = QListWidget()
-            names = animation_names(filename, self.codec.count(kind), first)
+            defaults = animation_names(filename, self.codec.count(kind), first)
+            self.default_names[kind] = defaults
+            names = [
+                self.name_overrides.get((kind, index), default)
+                for index, default in enumerate(defaults)
+            ]
             self.rule_names[kind] = names
             listing.addItems(f"[{i:02X}]{i:03d}：{name}" for i, name in enumerate(names))
             self.rule_lists[kind] = listing
@@ -764,11 +830,27 @@ class MapAnimationEditorDialog(QDialog):
             box.addWidget(listing, 3)
             if kind in ("movement", "sprite"):
                 add_button = QPushButton("添加")
-                add_button.setEnabled(False)
-                add_button.setToolTip("新增指针与记录搬移尚未完成容量黄金对照。")
+                self.rule_add_buttons[kind] = add_button
+                if kind == "sprite":
+                    add_button.setToolTip(
+                        "复制当前完整组图到 $EB—$F6 可调用预留槽；使用尾部 88 字节安全池。"
+                    )
+                    add_button.clicked.connect(
+                        lambda _checked=False: self._add_sprite_rule()
+                    )
+                else:
+                    add_button.setToolTip(
+                        "复制当前规律到 $7D—$9C，并同时改绑当前地图动画中唯一一处同角色引用。"
+                    )
+                    add_button.clicked.connect(
+                        lambda _checked=False: self._add_movement_rule()
+                    )
                 box.addWidget(add_button)
             name_edit = QLineEdit()
-            name_edit.setReadOnly(True)
+            name_edit.setMaxLength(80)
+            name_edit.textEdited.connect(
+                lambda text, key=kind: self._change_rule_name(key, text)
+            )
             self.rule_name_edits[kind] = name_edit
             box.addWidget(QLabel("规律名称"))
             box.addWidget(name_edit)
@@ -781,6 +863,13 @@ class MapAnimationEditorDialog(QDialog):
             self.rule_codes[kind] = code
             box.addWidget(code, 2)
             if kind == "sprite":
+                code.setReadOnly(False)
+                apply = QPushButton("应用首图块")
+                apply.setToolTip(
+                    "仅首图块字节已有参考版保存/全新进程重开黄金；X/Y 与后续拼图指令保持只读。"
+                )
+                apply.clicked.connect(self._apply_sprite_code)
+                box.addWidget(apply)
                 preview_library = QComboBox()
                 bank_count = self.project.chr_tile_count // 64
                 for bank in range(max(0, bank_count - 3)):
@@ -805,11 +894,15 @@ class MapAnimationEditorDialog(QDialog):
                 self.sprite_y, self.sprite_x = QSpinBox(), QSpinBox()
                 for spin in (self.sprite_y, self.sprite_x):
                     spin.setRange(-128, 127)
-                    spin.valueChanged.connect(self._change_sprite_anchor)
+                    spin.setReadOnly(True)
+                    spin.setButtonSymbols(QSpinBox.ButtonSymbols.NoButtons)
+                    spin.setToolTip(
+                        "参考版现场采集证明：界面值会变化，但确定/保存不写 ROM，故保持只读。"
+                    )
                 form.addRow("起始 X", self.sprite_x)
                 form.addRow("起始 Y", self.sprite_y)
                 box.addLayout(form)
-                box.addWidget(QLabel("可调整组图起始坐标；拼图指令保持原值。"))
+                box.addWidget(QLabel("X/Y 仅展示；可编辑代码仅限黄金验证的首图块字节。"))
             elif kind == "movement":
                 apply = QPushButton("应用等长代码")
                 apply.clicked.connect(self._apply_movement_code)
@@ -818,7 +911,12 @@ class MapAnimationEditorDialog(QDialog):
                 notice.setWordWrap(True)
                 box.addWidget(notice)
             else:
-                notice = QLabel("显示真实指针范围内的代码；此类规律的代码改写尚未开放。")
+                apply = QPushButton("应用等长代码")
+                apply.clicked.connect(self._apply_background_code)
+                box.addWidget(apply)
+                notice = QLabel(
+                    "仅完整到达唯一结束码的背景记录可改已验证绘制参数；控制码、资源引用、变长/运行时参数、FE 布局头和 FF 结束码保持原值。"
+                )
                 notice.setWordWrap(True)
                 box.addWidget(notice)
             layout.addWidget(group, 1)
@@ -826,8 +924,96 @@ class MapAnimationEditorDialog(QDialog):
             listing.setCurrentRow(1 if kind == "movement" else 0)
         return page
 
+    def _change_rule_name(self, kind: str, text: str) -> None:
+        row = self.rule_lists[kind].currentRow()
+        if row < 0:
+            return
+        self.rule_names[kind][row] = text
+        if text == self.default_names[kind][row]:
+            self.name_overrides.pop((kind, row), None)
+        else:
+            self.name_overrides[(kind, row)] = text
+        self.rule_lists[kind].item(row).setText(
+            f"[{row:02X}]{row:03d}：{text}"
+        )
+
+    def _add_sprite_rule(self) -> None:
+        source_index = self.rule_lists["sprite"].currentRow()
+        if source_index < 0:
+            return
+        try:
+            codec = AnimationCodec(self.draft)
+            new_index, patches = codec.clone_sprite_rule_patches(source_index)
+            for offset, before, after in patches:
+                if bytes(self.draft[offset:offset + len(before)]) != before:
+                    raise ValueError("组图草稿已变化，请重新打开窗口。")
+                self.draft[offset:offset + len(after)] = after
+            base_name = self.rule_names["sprite"][source_index]
+            new_name = f"{base_name} 副本"
+            if len(new_name) > 80:
+                new_name = f"组图 {new_index:03d} 副本"
+            self.rule_names["sprite"][new_index] = new_name
+            self.name_overrides[("sprite", new_index)] = new_name
+            self.rule_lists["sprite"].item(new_index).setText(
+                f"[{new_index:02X}]{new_index:03d}：{new_name}"
+            )
+            self.rule_lists["sprite"].setCurrentRow(new_index)
+            self.read_only_status.setText(
+                f"已把组图 ${source_index:02X} 复制到预留槽 ${new_index:02X}；"
+                "点击确定后写入工程。"
+            )
+        except ValueError as error:
+            self.read_only_status.setText(f"未添加组图：{error}")
+
+    def _add_movement_rule(self) -> None:
+        source_index = self.rule_lists["movement"].currentRow()
+        map_index = self.animation_list.currentRow()
+        if source_index < 0 or map_index < 0 or not self._flush_script():
+            return
+        try:
+            codec = AnimationCodec(self.draft)
+            new_index, role, patches = codec.clone_movement_rule_patches(
+                source_index,
+                map_index,
+            )
+            for offset, before, after in patches:
+                if bytes(self.draft[offset:offset + len(before)]) != before:
+                    raise ValueError("运行规律草稿已变化，请重新打开窗口。")
+                self.draft[offset:offset + len(after)] = after
+            self._movement_roles = AnimationCodec(self.draft).movement_roles()
+            base_name = self.rule_names["movement"][source_index]
+            new_name = f"{base_name} 副本"
+            if len(new_name) > 80:
+                new_name = f"运行规律 {new_index:03d} 副本"
+            self.rule_names["movement"][new_index] = new_name
+            self.name_overrides[("movement", new_index)] = new_name
+            self.rule_lists["movement"].item(new_index).setText(
+                f"[{new_index:02X}]{new_index:03d}：{new_name}"
+            )
+            # Refresh the visible map record so returning to the first tab does
+            # not retain the pre-bind operand in its local editor snapshot.
+            self.script_editor.set_record(self.draft, "map", map_index)
+            self.rule_lists["movement"].setCurrentRow(new_index)
+            role_text = "组图帧序列" if role == "frames" else "坐标位移"
+            self.read_only_status.setText(
+                f"已把{role_text} ${source_index:02X} 复制到 ${new_index:02X}，"
+                f"并改绑地图动画 ${map_index:02X} 的唯一引用；点击确定后写入工程。"
+            )
+        except ValueError as error:
+            self.read_only_status.setText(f"未添加运行规律：{error}")
+
     def _select_rule(self, kind: str, row: int) -> None:
         if row < 0:
+            return
+        if (
+            kind == "background"
+            and self._background_index >= 0
+            and not self._apply_background_code(self._background_index)
+        ):
+            listing = self.rule_lists[kind]
+            blocked = listing.blockSignals(True)
+            listing.setCurrentRow(self._background_index)
+            listing.blockSignals(blocked)
             return
         if kind == "movement" and self._movement_index >= 0 and not self._apply_movement_code(self._movement_index):
             listing = self.rule_lists[kind]
@@ -835,11 +1021,25 @@ class MapAnimationEditorDialog(QDialog):
             listing.setCurrentRow(self._movement_index)
             listing.blockSignals(blocked)
             return
+        if kind == "sprite" and self._sprite_index >= 0 and not self._apply_sprite_code(self._sprite_index):
+            listing = self.rule_lists[kind]
+            blocked = listing.blockSignals(True)
+            listing.setCurrentRow(self._sprite_index)
+            listing.blockSignals(blocked)
+            return
         record = AnimationCodec(self.draft).record(kind, row)
         self.rule_name_edits[kind].setText(self.rule_names[kind][row])
         self.rule_codes[kind].setPlainText(record.raw.hex(" ").upper())
         self.rule_statuses[kind].setText(f"当前 ROM · ${record.offset:06X} · {len(record.raw)} 字节"
                                          + (f" · 与 {len(record.aliases)} 项共享" if record.aliases else ""))
+        if kind == "background":
+            self._background_index = row
+            editable = row in AnimationCodec(self.draft).background_editable_indices()
+            self.rule_codes[kind].setReadOnly(not editable)
+            self.rule_statuses[kind].setText(
+                self.rule_statuses[kind].text()
+                + (" · 指令边界完整，仅已验证绘制参数可改" if editable else " · 含动态/不完整边界，只读")
+            )
         if kind == "movement":
             self._movement_index = row
             roles = self._movement_roles.get(row, set())
@@ -848,6 +1048,12 @@ class MapAnimationEditorDialog(QDialog):
                                             ({"frames": "组图帧序列", "axis": "坐标位移"}.get(next(iter(roles)), "")
                                              if len(roles) == 1 else "运行方式未唯一确认，只读"))
         if kind == "sprite":
+            self._sprite_index = row
+            self.rule_codes[kind].setPlainText(record.raw[2:].hex(" ").upper())
+            self.rule_statuses[kind].setText(
+                self.rule_statuses[kind].text()
+                + " · X/Y 参考版不持久化，只读；首图块已有动态黄金"
+            )
             self._loading = True
             self.sprite_x.setValue(int.from_bytes(record.raw[:1], signed=True))
             self.sprite_y.setValue(int.from_bytes(record.raw[1:2], signed=True))
@@ -884,18 +1090,46 @@ class MapAnimationEditorDialog(QDialog):
             self.read_only_status.setText(f"运行规律未应用：{error}")
             return False
 
-    def _change_sprite_anchor(self) -> None:
-        if self._loading:
-            return
-        row = self.rule_lists["sprite"].currentRow()
-        if row < 0:
-            return
-        codec = AnimationCodec(self.draft)
-        record = codec.record("sprite", row)
-        changed = bytes((self.sprite_x.value() & 255, self.sprite_y.value() & 255)) + record.raw[2:]
-        offset, _before, after = codec.rule_patch(record, changed)
-        self.draft[offset:offset + len(after)] = after
-        self.rule_codes["sprite"].setPlainText(after.hex(" ").upper())
+    def _apply_background_code(self, row: int | None = None) -> bool:
+        try:
+            codec = AnimationCodec(self.draft)
+            if row is None or isinstance(row, bool):
+                row = self.rule_lists["background"].currentRow()
+            record = codec.record("background", row)
+            changed = bytes.fromhex(self.rule_codes["background"].toPlainText())
+            if changed == record.raw:
+                return True
+            offset, _before, after = codec.rule_patch(record, changed)
+            self.draft[offset:offset + len(after)] = after
+            self.read_only_status.setText(
+                "背景规律已验证绘制参数已应用到窗口草稿，点击确定后写入工程。"
+            )
+            return True
+        except ValueError as error:
+            self.read_only_status.setText(f"背景规律未应用：{error}")
+            return False
+
+    def _apply_sprite_code(self, row: int | None = None) -> bool:
+        try:
+            codec = AnimationCodec(self.draft)
+            if row is None or isinstance(row, bool):
+                row = self.rule_lists["sprite"].currentRow()
+            record = codec.record("sprite", row)
+            changed = record.raw[:2] + bytes.fromhex(
+                self.rule_codes["sprite"].toPlainText()
+            )
+            if changed == record.raw:
+                return True
+            offset, _before, after = codec.rule_patch(record, changed)
+            self.draft[offset:offset + len(after)] = after
+            self.read_only_status.setText(
+                "组图首图块已应用到窗口草稿，点击确定后写入工程。"
+            )
+            return True
+        except ValueError as error:
+            self.read_only_status.setText(f"组图规律未应用：{error}")
+            return False
+            return False
 
     def _calls_tab(self) -> QWidget:
         page = QWidget()
@@ -920,6 +1154,8 @@ class MapAnimationEditorDialog(QDialog):
             if not self.codec.call_is_editable(offset):
                 combo.setEnabled(False)
                 combo.setToolTip("此处已识别到调用字节，但事件上下文未验证；保留只读。")
+            else:
+                combo.setToolTip(f"已核对：{self.codec.call_evidence(offset)}；仅改动画编号字节。")
             combo.currentIndexChanged.connect(lambda selected, address=offset: self._change_call(address, selected))
             self.call_table.setCellWidget(row, 1, combo)
             self.call_combos[offset] = combo
@@ -947,7 +1183,8 @@ class MapAnimationEditorDialog(QDialog):
 
     def accept(self) -> None:
         if (self.project is None or not hasattr(self, "script_editor") or not self._flush_script()
-                or not self._apply_movement_code()):
+                or not self._apply_movement_code() or not self._apply_background_code()
+                or not self._apply_sprite_code()):
             return
         try:
             # Small changed runs retain optimistic conflict checks without
@@ -962,7 +1199,13 @@ class MapAnimationEditorDialog(QDialog):
                 while cursor < len(self.base) and self.base[cursor] != self.draft[cursor]:
                     cursor += 1
                 patches.append((start, self.base[start:cursor], bytes(self.draft[start:cursor])))
-            apply_animation_patches(self.project, tuple(patches), "地图动画、规律与调用")
+            with self.project.transaction("地图动画、规律、调用与名称"):
+                apply_animation_patches(
+                    self.project,
+                    tuple(patches),
+                    "地图动画、规律与调用",
+                )
+                self.project.replace_animation_label_overrides(self.name_overrides)
         except ValueError as error:
             self.read_only_status.setText(f"未写入：{error}")
             return

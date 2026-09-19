@@ -1,0 +1,46 @@
+{
+  "module": "M12",
+  "field": "sprite_anchor_x",
+  "case_id": "cold_start_09",
+  "requested_value": 1,
+  "expected_before": 0,
+  "expected_offsets": [203906],
+  "required_offsets": [203906],
+  "optional_offsets": [],
+  "extra_allowed": [],
+  "navigation": [
+    {"op": "menu", "path": "数据->地图动画"},
+    {"op": "window", "title": "地图动画"},
+    {
+      "op": "click_control_coords",
+      "class": "CPageControl",
+      "control_id": 100,
+      "x": 110,
+      "y": 24,
+      "wait_control_id": 220
+    },
+    {"op": "list_select", "class": "ListBox", "control_id": 220, "row": 0}
+  ],
+  "edit_steps": [
+    {
+      "op": "click_control_coords",
+      "class": "msctls_updown32",
+      "control_id": 654,
+      "x": 13,
+      "y": 8
+    },
+    {
+      "op": "assert_value",
+      "class": "Edit",
+      "control_id": 650,
+      "value": "$requested",
+      "value_type": "int"
+    },
+    {"op": "click_id", "class": "Button", "control_id": 310}
+  ],
+  "read_selector": {
+    "class": "Edit",
+    "control_id": 650,
+    "value_type": "int"
+  }
+}

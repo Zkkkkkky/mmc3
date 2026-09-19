@@ -201,6 +201,42 @@ class LiveCollectionTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             collector.CaseSpec.from_payload(payload)
 
+    def test_control_relative_click_is_whitelisted_and_bounded(self) -> None:
+        payload = case_payload()
+        payload["navigation"] = [
+            {
+                "op": "click_control_coords",
+                "class": "CPageControl",
+                "control_id": 100,
+                "x": 140,
+                "y": 30,
+                "wait_control_id": 220,
+            }
+        ]
+        spec = collector.CaseSpec.from_payload(payload)
+        self.assertEqual(spec.navigation[0]["control_id"], 100)
+        self.assertEqual(spec.navigation[0]["wait_control_id"], 220)
+        del payload["navigation"][0]["x"]
+        with self.assertRaises(ValueError):
+            collector.CaseSpec.from_payload(payload)
+
+    def test_assert_value_is_whitelisted_but_requires_a_value(self) -> None:
+        payload = case_payload()
+        payload["edit_steps"] = [
+            {
+                "op": "assert_value",
+                "class": "Edit",
+                "control_id": 650,
+                "value": "$requested",
+                "value_type": "int",
+            }
+        ]
+        spec = collector.CaseSpec.from_payload(payload)
+        self.assertEqual(spec.edit_steps[0]["value_type"], "int")
+        del payload["edit_steps"][0]["value"]
+        with self.assertRaises(ValueError):
+            collector.CaseSpec.from_payload(payload)
+
     def test_win32_adapter_waits_for_disk_save_and_process_exit(self) -> None:
         driver = collector.Win32LegacyDriver()
         driver.app = Mock()
@@ -233,6 +269,9 @@ class LiveCollectionTests(unittest.TestCase):
         driver.pid = 9001
         with self.assertRaisesRegex(RuntimeError, "did not exit"):
             driver.stop()
+
+    def test_map_animation_menu_is_a_whitelisted_legacy_command(self) -> None:
+        self.assertEqual(collector.LEGACY_MENU_COMMANDS["数据->地图动画"], 20011)
 
 
 if __name__ == "__main__":

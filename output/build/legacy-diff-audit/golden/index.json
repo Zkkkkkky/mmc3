@@ -3,11 +3,11 @@
   "archive_dir": "output/build/legacy-diff-audit/golden",
   "registry": "tools/golden_pipeline/cases/field_registry.json",
   "summary": {
-    "total_cases": 63,
-    "archived_cases": 63,
-    "golden_cases": 60,
-    "discovery_cases": 3,
-    "passed_golden_cases": 59,
+    "total_cases": 66,
+    "archived_cases": 66,
+    "golden_cases": 61,
+    "discovery_cases": 5,
+    "passed_golden_cases": 60,
     "failed_golden_cases": 1,
     "missing_snapshots": [],
     "unregistered_snapshots": [
@@ -599,6 +599,60 @@
       "unexpected_count": 0,
       "changed_count": 7,
       "removed_normalization_count": 6,
+      "pending_reason": null
+    },
+    "M12/sprite_anchor_x/cold_start_07": {
+      "module": "M12",
+      "field": "sprite_anchor_x",
+      "case_id": "cold_start_07",
+      "case_kind": "discovery",
+      "archive": "M12-sprite_anchor_x-cold_start_07.json",
+      "sha256": "10d350f7624387d6da719e3246334113da8b873ccd9efd9a708eb3d7b6094b15",
+      "passed": null,
+      "expected_known": true,
+      "required_offsets": [
+        203906
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 0,
+      "removed_normalization_count": 0,
+      "pending_reason": "在线单字段采集：保存后关闭进程，再以不同 PID 冷启动重开"
+    },
+    "M12/sprite_code_first_tile/cold_start_01": {
+      "module": "M12",
+      "field": "sprite_code_first_tile",
+      "case_id": "cold_start_01",
+      "case_kind": "discovery",
+      "archive": "M12-sprite_code_first_tile-cold_start_01.json",
+      "sha256": "e1e3de6091bf5f450b89f46345204546d35f8d5f20b07daf796643e3f042489e",
+      "passed": null,
+      "expected_known": true,
+      "required_offsets": [
+        203908
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 6,
+      "changed_count": 7,
+      "removed_normalization_count": 0,
+      "pending_reason": "在线单字段采集：保存后关闭进程，再以不同 PID 冷启动重开"
+    },
+    "M12/sprite_code_first_tile/cold_start_02": {
+      "module": "M12",
+      "field": "sprite_code_first_tile",
+      "case_id": "cold_start_02",
+      "case_kind": "golden",
+      "archive": "M12-sprite_code_first_tile-cold_start_02.json",
+      "sha256": "196a0332f6c95f83b916d66c367eb68809b6c22a26985a863ce980ae5a72b52b",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        203908
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 7,
+      "removed_normalization_count": 0,
       "pending_reason": null
     },
     "M17/damage_defense_divisor/write": {

@@ -1,3 +1,9 @@
+from .action_event import (
+    ActionEventCodec,
+    ActionEventInstruction,
+    ActionEventRecord,
+    ActionEventUsage,
+)
 from .battle_music import BattleMusicCodec
 from .character_name import CharacterNameCodec
 from .character_dialogue import (
@@ -9,6 +15,8 @@ from .character_dialogue import (
 )
 from .chr import CHR_TILE_BYTES, CHR_TILE_PIXELS, ChrCodec
 from .chapter_event import ChapterEventCodec
+from .chapter_title import ChapterTitleCodec, ChapterTitleRecord, ChapterTitleSegment
+from .chapter_victory import ChapterVictoryCodec, ChapterVictoryRecord
 from .custom_music import CustomMusicCodec
 from .event import EventScriptCodec
 from .legacy_global_data import LegacyGlobalDataCodec
@@ -34,6 +42,10 @@ from .weapon import WeaponCodec
 from .weapon_name import WeaponNameReferenceCodec
 
 __all__ = [
+    "ActionEventCodec",
+    "ActionEventInstruction",
+    "ActionEventRecord",
+    "ActionEventUsage",
     "BattleMusicCodec",
     "CharacterNameCodec",
     "CharacterDialogueCodec",
@@ -45,6 +57,11 @@ __all__ = [
     "CHR_TILE_PIXELS",
     "ChrCodec",
     "ChapterEventCodec",
+    "ChapterTitleCodec",
+    "ChapterTitleRecord",
+    "ChapterTitleSegment",
+    "ChapterVictoryCodec",
+    "ChapterVictoryRecord",
     "CustomMusicCodec",
     "MapCodec",
     "MapTileAttribute",

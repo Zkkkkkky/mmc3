@@ -398,11 +398,27 @@ V51_STORY_TEXT_GROUPS = (
     StoryTextGroupSpec(0x3B, 22, 0x8010, 255, 0x820E, 0xC000, "剧情文本 H", last_pointer_writable=False),
 )
 
-# DC's selector $37 uses a split pointer/data layout that the current exact-size
-# text writer cannot safely represent.  Keep the other seven verified groups
-# available and leave $37 untouched until the relocatable text editor lands.
+# DC's selector $37 keeps its 52-entry pointer table after the text pool.  Slot
+# $00 points at a non-text structure and is deliberately outside the writable
+# data range; slots $01-$33 point at 34 FF-terminated physical records in
+# $9B4A-$9E27.  The ordinary exact-size codec can therefore expose the real
+# indices while treating slot $00 as a read-only sentinel.  This split group is
+# safe for in-place replacement, but is intentionally not one of the seven
+# relocatable 16 KiB story pairs in ``expansion_story``.
+MMC5_SPLIT_STORY_TEXT_GROUP = StoryTextGroupSpec(
+    0x37,
+    14,
+    0x9E28,
+    52,
+    0x9B4A,
+    0x9E28,
+    "剧情文本 D",
+    first_pointer=0x9E90,
+    last_pointer_writable=False,
+)
 MMC5_STORY_TEXT_GROUPS = tuple(
-    group for group in V51_STORY_TEXT_GROUPS if group.selector != 0x37
+    MMC5_SPLIT_STORY_TEXT_GROUP if group.selector == 0x37 else group
+    for group in V51_STORY_TEXT_GROUPS
 )
 
 

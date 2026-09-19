@@ -42,8 +42,9 @@ class ScenarioFeedbackTests(QtTestCase):
 
     def test_global_tabs_do_not_inherit_chapter_context_or_selection(self) -> None:
         dialog = self.show(ScenarioDialog(self.project, initial_scenario_id=0))
-        action_addresses = tuple(
-            item.address for item in dialog.action_event_page._visible_instructions()
+        action_pointers = tuple(
+            self.project.get_action_event(action_id).pointer
+            for action_id in range(0x100)
         )
         persuasion_slot = dialog.persuasion_page.current_slot
         self.assertTrue(dialog.persuasion_page.advanced_panel.isHidden())
@@ -53,10 +54,13 @@ class ScenarioFeedbackTests(QtTestCase):
             self.assertTrue(dialog.chapter_context.isHidden())
         dialog.chapter_list.setCurrentRow(5)
         self.assertEqual(dialog.persuasion_page.current_slot, persuasion_slot)
-        self.assertIsNone(dialog.action_event_page.scenario_filter.currentData())
+        self.assertEqual(dialog.action_event_page.current_action_id, 0)
         self.assertEqual(
-            tuple(item.address for item in dialog.action_event_page._visible_instructions()),
-            action_addresses,
+            tuple(
+                self.project.get_action_event(action_id).pointer
+                for action_id in range(0x100)
+            ),
+            action_pointers,
         )
         dialog.tabs.setCurrentIndex(3)
         self.assertFalse(dialog.chapter_context.isHidden())

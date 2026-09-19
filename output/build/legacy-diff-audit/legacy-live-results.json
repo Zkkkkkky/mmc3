@@ -55,6 +55,248 @@
   },
   {
     "schema_version": 1,
+    "module": "M12",
+    "field": "sprite_anchor_x",
+    "case_id": "cold_start_07",
+    "case_kind": "discovery",
+    "requested_value": 1,
+    "original_value": 0,
+    "reopen_value": 0,
+    "reopen_matches_request": false,
+    "reopen_mode": "new_process",
+    "first_pid": 30872,
+    "second_pid": 23788,
+    "changed_offsets": [],
+    "removed_normalization": [],
+    "unexpected_offsets": [],
+    "expected_offsets": [
+      203906
+    ],
+    "required_offsets": [
+      203906
+    ],
+    "optional_offsets": [],
+    "extra_allowed": [],
+    "expected_not_changed": [
+      203906
+    ],
+    "diffs": [],
+    "snapshots": {
+      "before": {
+        "path": "output/build/legacy-diff-audit/cases/legacy_live/M12/sprite_anchor_x/cold_start_07/before.nes",
+        "sha256": "1ddd4f74b2d3aceaa8a0bc4a6846be8e6148c858c2d8ea5a1f6e0a04f0ad4a75"
+      },
+      "after": {
+        "path": "output/build/legacy-diff-audit/cases/legacy_live/M12/sprite_anchor_x/cold_start_07/after.nes",
+        "sha256": "1ddd4f74b2d3aceaa8a0bc4a6846be8e6148c858c2d8ea5a1f6e0a04f0ad4a75"
+      }
+    },
+    "supporting_cdl": {
+      "source": "output/build/legacy-diff-audit/默认配置文件/测试.cdl",
+      "sha256": "599c1bb5ffd4b87229a81958f33f1060821cd01cd7aa7ccafa0d862f4522f3f6"
+    },
+    "duration_seconds": 24.369,
+    "budget_seconds": 30.0,
+    "within_budget": true,
+    "passed": false,
+    "pending_reason": "否定发现：旧版界面值可改，但确定/保存不写锚点字节，冷启动回读仍为 0。"
+  },
+  {
+    "schema_version": 1,
+    "module": "M12",
+    "field": "sprite_code_first_tile",
+    "case_id": "cold_start_01",
+    "case_kind": "discovery",
+    "requested_value": "01 00 FF ",
+    "original_value": "00 00 FF ",
+    "reopen_value": "01 00 FF ",
+    "reopen_matches_request": true,
+    "reopen_mode": "new_process",
+    "first_pid": 820,
+    "second_pid": 12452,
+    "changed_offsets": [
+      203908,
+      303404,
+      303405,
+      304673,
+      304674,
+      305017,
+      305018
+    ],
+    "removed_normalization": [],
+    "unexpected_offsets": [
+      303404,
+      303405,
+      304673,
+      304674,
+      305017,
+      305018
+    ],
+    "expected_offsets": [
+      203908
+    ],
+    "required_offsets": [
+      203908
+    ],
+    "optional_offsets": [],
+    "extra_allowed": [],
+    "expected_not_changed": [],
+    "diffs": [
+      {
+        "offset": 203908,
+        "before": 0,
+        "after": 1
+      },
+      {
+        "offset": 303404,
+        "before": 201,
+        "after": 216
+      },
+      {
+        "offset": 303405,
+        "before": 2,
+        "after": 71
+      },
+      {
+        "offset": 304673,
+        "before": 201,
+        "after": 216
+      },
+      {
+        "offset": 304674,
+        "before": 2,
+        "after": 71
+      },
+      {
+        "offset": 305017,
+        "before": 201,
+        "after": 216
+      },
+      {
+        "offset": 305018,
+        "before": 2,
+        "after": 71
+      }
+    ],
+    "snapshots": {
+      "before": {
+        "path": "output/build/legacy-diff-audit/cases/legacy_live/M12/sprite_code_first_tile/cold_start_01/before.nes",
+        "sha256": "a7656c6ece9b463dcc26c8c62f280bdaade55dc39f0a120b8cffdeb54e8cfc2f"
+      },
+      "after": {
+        "path": "output/build/legacy-diff-audit/cases/legacy_live/M12/sprite_code_first_tile/cold_start_01/after.nes",
+        "sha256": "8d46a2f55cb671d17c1b6c7713084dc2a73d003d684c478d7a524aecc70254e5"
+      }
+    },
+    "supporting_cdl": {
+      "source": "output/build/legacy-diff-audit/默认配置文件/测试.cdl",
+      "sha256": "599c1bb5ffd4b87229a81958f33f1060821cd01cd7aa7ccafa0d862f4522f3f6"
+    },
+    "duration_seconds": 23.311,
+    "budget_seconds": 30.0,
+    "within_budget": true,
+    "passed": false,
+    "pending_reason": "发现旧版保存会额外归一化 6 个固定指针字节；正式允许集由 cold_start_02 复验。"
+  },
+  {
+    "schema_version": 1,
+    "module": "M12",
+    "field": "sprite_code_first_tile",
+    "case_id": "cold_start_02",
+    "case_kind": "golden",
+    "requested_value": "01 00 FF ",
+    "original_value": "00 00 FF ",
+    "reopen_value": "01 00 FF ",
+    "reopen_matches_request": true,
+    "reopen_mode": "new_process",
+    "first_pid": 29148,
+    "second_pid": 31628,
+    "changed_offsets": [
+      203908,
+      303404,
+      303405,
+      304673,
+      304674,
+      305017,
+      305018
+    ],
+    "removed_normalization": [],
+    "unexpected_offsets": [],
+    "expected_offsets": [
+      203908
+    ],
+    "required_offsets": [
+      203908
+    ],
+    "optional_offsets": [],
+    "extra_allowed": [
+      303404,
+      303405,
+      304673,
+      304674,
+      305017,
+      305018
+    ],
+    "expected_not_changed": [],
+    "diffs": [
+      {
+        "offset": 203908,
+        "before": 0,
+        "after": 1
+      },
+      {
+        "offset": 303404,
+        "before": 201,
+        "after": 216
+      },
+      {
+        "offset": 303405,
+        "before": 2,
+        "after": 71
+      },
+      {
+        "offset": 304673,
+        "before": 201,
+        "after": 216
+      },
+      {
+        "offset": 304674,
+        "before": 2,
+        "after": 71
+      },
+      {
+        "offset": 305017,
+        "before": 201,
+        "after": 216
+      },
+      {
+        "offset": 305018,
+        "before": 2,
+        "after": 71
+      }
+    ],
+    "snapshots": {
+      "before": {
+        "path": "output/build/legacy-diff-audit/cases/legacy_live/M12/sprite_code_first_tile/cold_start_02/before.nes",
+        "sha256": "a7656c6ece9b463dcc26c8c62f280bdaade55dc39f0a120b8cffdeb54e8cfc2f"
+      },
+      "after": {
+        "path": "output/build/legacy-diff-audit/cases/legacy_live/M12/sprite_code_first_tile/cold_start_02/after.nes",
+        "sha256": "8d46a2f55cb671d17c1b6c7713084dc2a73d003d684c478d7a524aecc70254e5"
+      }
+    },
+    "supporting_cdl": {
+      "source": "output/build/legacy-diff-audit/默认配置文件/测试.cdl",
+      "sha256": "599c1bb5ffd4b87229a81958f33f1060821cd01cd7aa7ccafa0d862f4522f3f6"
+    },
+    "duration_seconds": 24.119,
+    "budget_seconds": 30.0,
+    "within_budget": true,
+    "passed": true,
+    "pending_reason": null
+  },
+  {
+    "schema_version": 1,
     "module": "M17",
     "field": "hit_threshold",
     "case_id": "cold_start_03",

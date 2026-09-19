@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "module": "M12",
+  "field": "sprite_anchor_x",
+  "case_id": "cold_start_07",
+  "case_kind": "discovery",
+  "requested_value": 1,
+  "changed_offsets": [],
+  "removed_normalization": [],
+  "reopen_value": 0,
+  "original_value": 0,
+  "reopen_matches_request": false,
+  "reopen_mode": "new_process",
+  "expected_offsets": [
+    203906
+  ],
+  "required_offsets": [
+    203906
+  ],
+  "optional_offsets": [],
+  "extra_allowed": [],
+  "unexpected_offsets": [],
+  "target_changed": [],
+  "expected_not_changed": [
+    203906
+  ],
+  "passed": null,
+  "pending_reason": "在线单字段采集：保存后关闭进程，再以不同 PID 冷启动重开",
+  "notes": [
+    "在线单字段采集：保存后关闭进程，再以不同 PID 冷启动重开"
+  ],
+  "provenance": {
+    "source_json": "output/build/legacy-diff-audit/legacy-live-results.json"
+  },
+  "snapshots": {
+    "before": {
+      "path": "output/build/legacy-diff-audit/cases/legacy_live/M12/sprite_anchor_x/cold_start_07/before.nes",
+      "sha256": "1ddd4f74b2d3aceaa8a0bc4a6846be8e6148c858c2d8ea5a1f6e0a04f0ad4a75",
+      "size": 1310736
+    },
+    "after": {
+      "path": "output/build/legacy-diff-audit/cases/legacy_live/M12/sprite_anchor_x/cold_start_07/after.nes",
+      "sha256": "1ddd4f74b2d3aceaa8a0bc4a6846be8e6148c858c2d8ea5a1f6e0a04f0ad4a75",
+      "size": 1310736
+    }
+  },
+  "diff_entries": [],
+  "duration_seconds": 24.369,
+  "duration_note": null
+}
