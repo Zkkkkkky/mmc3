@@ -4,7 +4,7 @@ import sys
 from ctypes import wintypes
 from pathlib import Path
 
-from PySide6.QtCore import QPoint, QRect, Qt, Signal
+from PySide6.QtCore import QPoint, QRect, Qt, QTimer, Signal
 from PySide6.QtGui import (
     QAction, QCloseEvent, QColor, QDragEnterEvent, QDropEvent, QFont,
     QKeySequence, QPolygon,
@@ -64,6 +64,14 @@ APP_TITLE = "新DC篇完整修改器"
 LEGACY_WINDOW_TITLE = "SRW2扩容版修改器V1.0"
 LAUNCHER_TITLE = "SRW2修改器V1.5"
 _ACTIVE_EDITOR_WINDOW: MainWindow | None = None
+
+
+def startup_rom_from_arguments(arguments: list[str]) -> Path | None:
+    """Return the one ROM passed by Windows when it is dropped on the EXE."""
+    if len(arguments) != 2:
+        return None
+    candidate = Path(arguments[1])
+    return candidate if candidate.suffix.lower() == ".nes" else None
 
 
 def _forget_active_editor() -> None:
@@ -242,7 +250,7 @@ QHeaderView::section {
 
 
 class LauncherWindow(QDialog):
-    """Reference-compatible launch screen shown before the editor session."""
+    """ROM-first launch screen shown before the editor session."""
 
     def __init__(self) -> None:
         super().__init__()
@@ -252,6 +260,7 @@ class LauncherWindow(QDialog):
         self.setMinimumSize(400, 240)
         self.setWindowFlag(Qt.WindowType.WindowMaximizeButtonHint, False)
         self.setAttribute(Qt.WidgetAttribute.WA_DeleteOnClose, True)
+        self.setAcceptDrops(True)
 
         layout = QVBoxLayout(self)
         layout.setContentsMargins(15, 20, 15, 20)
@@ -261,30 +270,70 @@ class LauncherWindow(QDialog):
         introduction.setAlignment(Qt.AlignmentFlag.AlignTop | Qt.AlignmentFlag.AlignLeft)
         layout.addWidget(introduction, 1)
 
-        enter = QPushButton("进入修改器")
-        enter.setObjectName("launcherEnterButton")
-        enter.setMinimumSize(160, 58)
-        enter.clicked.connect(self.enter_editor)
-        enter_row = QHBoxLayout()
-        enter_row.addStretch()
-        enter_row.addWidget(enter)
-        enter_row.addStretch()
-        layout.addLayout(enter_row)
+        open_rom = QPushButton("打开ROM")
+        open_rom.setObjectName("launcherOpenRomButton")
+        open_rom.setMinimumSize(160, 58)
+        open_rom.clicked.connect(self.choose_rom)
+        open_row = QHBoxLayout()
+        open_row.addStretch()
+        open_row.addWidget(open_rom)
+        open_row.addStretch()
+        layout.addLayout(open_row)
 
-    def enter_editor(self) -> MainWindow:
+    @staticmethod
+    def _rom_path_from_urls(urls: list[object]) -> Path | None:
+        if len(urls) != 1:
+            return None
+        path_text = urls[0].toLocalFile()
+        if not path_text:
+            return None
+        path = Path(path_text)
+        if path.suffix.lower() != ".nes":
+            return None
+        return path
+
+    def choose_rom(self) -> MainWindow | None:
+        filename, _ = QFileDialog.getOpenFileName(
+            self,
+            "打开ROM",
+            str(DEFAULT_ROM.parent),
+            "NES ROM (*.nes);;所有文件 (*)",
+        )
+        if not filename:
+            return None
+        return self.open_rom(filename)
+
+    def open_rom(self, path: str | Path) -> MainWindow | None:
         global _ACTIVE_EDITOR_WINDOW
         if self.main_window is not None:
             self.main_window.raise_()
             self.main_window.activateWindow()
             return self.main_window
-        self.main_window = MainWindow(open_default=False)
-        main = self.main_window
+        main = MainWindow(open_default=False)
+        if not main.load_rom(path, error_parent=self):
+            main.close()
+            main.deleteLater()
+            return None
+        self.main_window = main
         _ACTIVE_EDITOR_WINDOW = main
         main.closed.connect(_forget_active_editor)
         main.show()
-        # The launch window is not part of the editor's hidden-window session.
+        # The launch window is not part of the editor's hidden-window session and
+        # only disappears after the selected ROM has been loaded successfully.
         self.close()
         return main
+
+    def dragEnterEvent(self, event: QDragEnterEvent) -> None:  # noqa: N802
+        path = self._rom_path_from_urls(list(event.mimeData().urls()))
+        if path is not None:
+            event.acceptProposedAction()
+
+    def dropEvent(self, event: QDropEvent) -> None:  # noqa: N802
+        path = self._rom_path_from_urls(list(event.mimeData().urls()))
+        if path is None:
+            return
+        if self.open_rom(path) is not None:
+            event.acceptProposedAction()
 
 
 class MainWindow(QMainWindow):
@@ -956,7 +1005,13 @@ class MainWindow(QMainWindow):
                 8000,
             )
 
-    def load_rom(self, path: str | Path, *, quiet: bool = False) -> bool:
+    def load_rom(
+        self,
+        path: str | Path,
+        *,
+        quiet: bool = False,
+        error_parent: QWidget | None = None,
+    ) -> bool:
         try:
             project = RomProject.load(path)
             if not project.rom_image.is_reference_base:
@@ -989,7 +1044,7 @@ class MainWindow(QMainWindow):
             return True
         except Exception as error:
             if not quiet:
-                QMessageBox.critical(self, "无法打开ROM", str(error))
+                QMessageBox.critical(error_parent or self, "无法打开ROM", str(error))
             return False
 
     def open_rom_dialog(self) -> None:
@@ -1357,7 +1412,10 @@ class MainWindow(QMainWindow):
 
 def run() -> int:
     self_test = "--self-test" in sys.argv
-    arguments = [argument for argument in sys.argv if argument != "--self-test"]
+    startup_self_test = "--self-test-startup-rom" in sys.argv
+    internal_flags = {"--self-test", "--self-test-startup-rom"}
+    arguments = [argument for argument in sys.argv if argument not in internal_flags]
+    startup_rom = startup_rom_from_arguments(arguments)
     application = QApplication(arguments)
     application.setApplicationName(APP_TITLE)
     application.setOrganizationName("NewDCModding")
@@ -1382,4 +1440,21 @@ def run() -> int:
         return 0 if valid else 91
     launcher = LauncherWindow()
     launcher.show()
+    if startup_self_test:
+        main = launcher.open_rom(startup_rom) if startup_rom is not None else None
+        valid = (
+            main is not None
+            and main.project is not None
+            and main.project.path.resolve() == startup_rom.resolve()
+            and not launcher.isVisible()
+        )
+        if main is not None:
+            main._saved_snapshot = bytes(main.project.working) if main.project is not None else None
+            main.close()
+        if launcher.isVisible():
+            launcher.close()
+        application.processEvents()
+        return 0 if valid else 92
+    if startup_rom is not None:
+        QTimer.singleShot(0, lambda: launcher.open_rom(startup_rom))
     return application.exec()

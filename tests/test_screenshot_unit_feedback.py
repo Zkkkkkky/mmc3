@@ -326,6 +326,33 @@ class ScreenshotUnitTests(QtTestCase):
         bank = dialog.values()[7]
         self.assertEqual(dialog._draft_tiles[bank * 64 + 63], (0,) * 64)
 
+    def test_body_import_offset_and_uncompressed_mode_change_first_tile(self) -> None:
+        dialog = UnitAppearanceDialog(self.project, 0x09)
+        self.addCleanup(dialog.close)
+        dialog.body_compress_upload.setChecked(False)
+        dialog.body_import_offset.setValue(2)
+        image = QImage(16, 8, QImage.Format.Format_RGB32)
+        image.fill(WORK_PALETTE[1])
+        dialog._import_body_image(image)
+        placements = decode_unit_body_script(dialog.body_script, 64)
+        self.assertEqual([item.tile_index for item in placements], [2, 3])
+        bank = dialog.values()[7]
+        self.assertNotIn(bank * 64, dialog._draft_tiles)
+        self.assertNotIn(bank * 64 + 1, dialog._draft_tiles)
+        self.assertEqual(dialog._draft_tiles[bank * 64 + 2], (1,) * 64)
+        self.assertIn("偏移 $02", dialog.status.text())
+
+    def test_body_import_offset_rejects_overflow_without_draft(self) -> None:
+        dialog = UnitAppearanceDialog(self.project, 0x09)
+        self.addCleanup(dialog.close)
+        dialog.body_compress_upload.setChecked(False)
+        dialog.body_import_offset.setValue(63)
+        image = QImage(16, 8, QImage.Format.Format_RGB32)
+        image.fill(WORK_PALETTE[1])
+        with self.assertRaisesRegex(ValueError, "无法容纳"):
+            dialog._import_body_image(image)
+        self.assertEqual(dialog._draft_tiles, {})
+
     def test_appearance_bmp_export_matches_legacy_library_dimensions(self) -> None:
         dialog = UnitAppearanceDialog(self.project, 0x09)
         self.addCleanup(dialog.close)
@@ -666,8 +693,12 @@ class ScreenshotUnitTests(QtTestCase):
         self.assertEqual(dialog.color_swatches, [])
         self.assertEqual(dialog.windowTitle(), "机体拼图")
         self.assertFalse(dialog.preview_tabs.tabBar().isVisible())
-        self.assertFalse(dialog.body_import_button.isVisible())
-        self.assertFalse(dialog.body_export_button.isVisible())
+        self.assertTrue(dialog.body_import_button.isVisible())
+        self.assertTrue(dialog.body_export_button.isVisible())
+        self.assertEqual(dialog.body_import_offset.value(), 0)
+        self.assertTrue(dialog.body_compress_upload.isChecked())
+        self.assertEqual(dialog.fragment_import_offset.value(), 0)
+        self.assertTrue(dialog.fragment_compress_upload.isChecked())
         self.assertEqual(dialog.preview_tabs.tabText(0), "战斗合成")
         self.assertEqual(dialog.preview_tabs.tabText(1), "碎片原始图库")
         self.assertEqual(dialog.preview_tabs.tabText(2), "拼图脚本原码")

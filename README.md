@@ -11,8 +11,8 @@
 仓库包含 Windows 交付版：
 
 1. 双击 `启动DC修改器.bat`，或直接运行 `output/app/新DC篇完整修改器.exe`。
-2. 在精简启动页点击“进入修改器”。
-3. 按 `Ctrl+O` 打开推荐 ROM：`output/rom/DC_kuorong_464K.nes`。
+2. 在精简启动页点击“打开ROM”选择 `output/rom/DC_kuorong_464K.nes`，或把一个 `.nes` 文件直接拖入启动页/拖到 EXE 图标上。
+3. ROM 通过校验后会直接进入已载入的主窗口；取消选择或载入失败时仍留在启动页。
 4. 完成编辑后按 `F7` 运行完整检查。
 5. 保存 `.dcmod` 工程，或输出新的 `.nes`/`.ips`。不要覆盖 `references/` 中的任何 ROM。
 

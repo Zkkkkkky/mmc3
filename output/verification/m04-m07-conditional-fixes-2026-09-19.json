@@ -1,0 +1,87 @@
+{
+  "schema_version": 1,
+  "date": "2026-09-19",
+  "source_acceptance": {
+    "branch": "origin/youhua_hu",
+    "commit": "c54ab50c8283a29200d8fb7befe01e000372003e",
+    "exe_sha256": "A80366B68C357E2C2327F9C81CD792E6B4E5B6EE50BCC9FF64127D3A10DD0D1C",
+    "result": "M03 passed in its read-only scope; M04-M07 conditionally passed"
+  },
+  "current_build": {
+    "exe": "output/app/新DC篇完整修改器.exe",
+    "exe_sha256": "2127FC82D8C1A4C14F52672E90BB519A1821D0CAB755EE22A81FF32E6BF3A76E",
+    "rom": "output/rom/DC_kuorong_464K.nes",
+    "rom_sha256": "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E",
+    "self_test_exit_code": 0,
+    "startup_rom_self_test_exit_code": 0
+  },
+  "fixes": {
+    "M04": {
+      "feedback": "商店事件还不可编辑",
+      "implemented": [
+        "enable editing, adding and deleting fixed four-byte trigger records",
+        "preserve coordinate, F5-FE invalid-shop and 300-byte managed-pool guards",
+        "retain draft on invalid or over-capacity changes"
+      ],
+      "status": "implementation_fixed_pending_user_retest",
+      "remaining": "reference modifier per-field cold-start golden comparison"
+    },
+    "M05": {
+      "feedback": "导图未完全参照旧修改器",
+      "implemented": [
+        "restore visible import offset and compression controls on body and fragment resource pages",
+        "apply body offset 0-63 and fragment offset 0-127",
+        "validate compressed and uncompressed input dimensions, reject body overflow atomically and limit fragment writes to the remaining destination range",
+        "keep body library and composition preview tops aligned"
+      ],
+      "status": "implementation_fixed_pending_user_retest",
+      "remaining": "reference modifier field-level graphics golden comparisons"
+    },
+    "M06": {
+      "feedback": "人物头像预览错误",
+      "implemented": [
+        "fold background raw positions 5-8 into the next displayed four-portrait library",
+        "inverse-convert selectors while preserving the ignored raw background bank bit",
+        "preserve the seven-byte portrait record on an unchanged round trip"
+      ],
+      "reference_probe": {
+        "character_id": 6,
+        "raw": [27, 1, 25, 4],
+        "legacy_selectors": [27, 2, 25, 1]
+      },
+      "status": "implementation_fixed_pending_user_retest",
+      "remaining": "visual user retest and remaining portrait field goldens"
+    },
+    "M07": {
+      "feedback": "武器规律应该有单独的规律库",
+      "implemented": [
+        "replace the shared M12 dialog with a dedicated weapon rule library",
+        "read four real ROM pointer tables and show ids, names, pointers, offsets, aliases and code",
+        "keep rule code read-only until write semantics have per-field goldens"
+      ],
+      "tabs": {
+        "光束组图规律": 255,
+        "物理运行规律1": 252,
+        "物理运行规律2": 250,
+        "物理图片": 255
+      },
+      "status": "implementation_fixed_pending_user_retest",
+      "remaining": "user retest; per-field write goldens before enabling edits"
+    }
+  },
+  "verification": {
+    "targeted_tests": {
+      "count": 167,
+      "result": "passed"
+    },
+    "full_tests": {
+      "count": 659,
+      "seconds": 356.841,
+      "result": "passed"
+    },
+    "syntax_check": "passed",
+    "git_diff_check": "passed_with_line_ending_warnings_only",
+    "reference_probe_report": "output/build/legacy-diff-audit/cases/exploratory-m06-m07/report.json"
+  },
+  "user_acceptance_complete": false
+}

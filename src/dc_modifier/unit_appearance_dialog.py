@@ -798,11 +798,34 @@ class UnitAppearanceDialog(QDialog):
         library_layout.setContentsMargins(4, 5, 4, 7)
         library_layout.setSpacing(4)
         library_layout.setAlignment(Qt.AlignmentFlag.AlignTop)
+        body_header = QWidget()
+        body_header.setFixedHeight(64)
+        body_header_layout = QVBoxLayout(body_header)
+        body_header_layout.setContentsMargins(0, 0, 0, 0)
+        body_header_layout.setSpacing(4)
         self.body_selection = QLabel("当前选择的图块编号：00")
         self.body_selection.setStyleSheet("color:#d00000; font-weight:600;")
         self.body_selection.setFixedHeight(24)
-        library_layout.addWidget(self.body_selection)
-        library_layout.addSpacing(31)
+        body_header_layout.addWidget(self.body_selection)
+        body_import_options = QHBoxLayout()
+        body_import_options.setSpacing(4)
+        body_import_options.addWidget(QLabel("导图偏移"))
+        self.body_import_offset = QSpinBox()
+        self.body_import_offset.setRange(0, 63)
+        self.body_import_offset.setFixedWidth(48)
+        self.body_import_offset.setToolTip(
+            "导入的第一个图块写到当前主体图库的此编号。"
+        )
+        body_import_options.addWidget(self.body_import_offset)
+        self.body_compress_upload = QCheckBox("压缩上传")
+        self.body_compress_upload.setChecked(True)
+        self.body_compress_upload.setToolTip(
+            "勾选时等比缩放并居中；取消时要求图片为8像素整数倍且不超过64×64。"
+        )
+        body_import_options.addWidget(self.body_compress_upload)
+        body_header_layout.addLayout(body_import_options)
+        body_header_layout.addStretch()
+        library_layout.addWidget(body_header)
         self.body_library_preview = InteractivePreviewLabel()
         self.body_composition_preview = InteractivePreviewLabel()
         for preview in (self.body_library_preview, self.body_composition_preview):
@@ -826,6 +849,23 @@ class UnitAppearanceDialog(QDialog):
         self.swap_body_library.toggled.connect(self._swap_body_library_toggled)
         body_tools.addWidget(self.swap_body_library)
         library_layout.addLayout(body_tools)
+        body_import_actions = QHBoxLayout()
+        body_import_actions.setSpacing(4)
+        self.body_import_button = QPushButton("上传机体…")
+        self.body_import_button.setToolTip(
+            "按导图偏移和压缩上传选项导入图片，并生成主体拼图代码。"
+        )
+        self.body_import_button.clicked.connect(lambda: self._import_library("body"))
+        self.body_export_button = QPushButton("导出BMP…")
+        self.body_export_button.setToolTip("导出当前显示的 64×64 主体图库")
+        self.body_export_button.clicked.connect(lambda: self._export_library("body"))
+        clear_body_library = QPushButton("清除机体")
+        clear_body_library.clicked.connect(lambda: self._clear_library("body"))
+        for button in (
+            self.body_import_button, self.body_export_button, clear_body_library
+        ):
+            body_import_actions.addWidget(button)
+        library_layout.addLayout(body_import_actions)
         self.body_library_group = library_group
         body_grid.addWidget(library_group, 0, 0)
 
@@ -836,7 +876,8 @@ class UnitAppearanceDialog(QDialog):
         composition_grid.setContentsMargins(4, 5, 4, 7)
         composition_grid.setHorizontalSpacing(8)
         composition_grid.setVerticalSpacing(4)
-        composition_grid.setRowMinimumHeight(0, 24)
+        composition_grid.setAlignment(Qt.AlignmentFlag.AlignTop)
+        composition_grid.setRowMinimumHeight(0, 64)
         composition_grid.setRowMinimumHeight(1, 384)
         composition_grid.setRowMinimumHeight(2, 24)
         composition_grid.setColumnMinimumWidth(0, 24)
@@ -866,14 +907,6 @@ class UnitAppearanceDialog(QDialog):
             self.body_move_buttons[key] = button
         self.body_composition_group = composition_group
         body_grid.addWidget(composition_group, 0, 1)
-        self.body_import_button = QPushButton("导入BMP…")
-        self.body_import_button.setToolTip("导入任意尺寸图片，自动压缩、切分图块并生成主体拼图代码")
-        self.body_import_button.clicked.connect(lambda: self._import_library("body"))
-        self.body_import_button.hide()
-        self.body_export_button = QPushButton("导出BMP…")
-        self.body_export_button.setToolTip("导出当前显示的 64×64 主体图库")
-        self.body_export_button.clicked.connect(lambda: self._export_library("body"))
-        self.body_export_button.hide()
         body_grid.setColumnStretch(0, 0)
         body_grid.setColumnStretch(1, 1)
         preview_tabs.addTab(body_tab, "战斗合成")
@@ -909,6 +942,20 @@ class UnitAppearanceDialog(QDialog):
         fragment_tools.addWidget(self.show_fragment_numbers, 0, 0)
         self.fragment_selection = QLabel("已选碎片图块 $00")
         fragment_tools.addWidget(self.fragment_selection, 0, 1, 1, 3)
+        fragment_tools.addWidget(QLabel("导图偏移"), 0, 4)
+        self.fragment_import_offset = QSpinBox()
+        self.fragment_import_offset.setRange(0, 127)
+        self.fragment_import_offset.setFixedWidth(58)
+        self.fragment_import_offset.setToolTip(
+            "导入的第一个图块写到碎片2KB图库的此编号。"
+        )
+        fragment_tools.addWidget(self.fragment_import_offset, 0, 5)
+        self.fragment_compress_upload = QCheckBox("压缩上传")
+        self.fragment_compress_upload.setChecked(True)
+        self.fragment_compress_upload.setToolTip(
+            "勾选时等比缩放到64×128；取消时要求图片正好为64×128。"
+        )
+        fragment_tools.addWidget(self.fragment_compress_upload, 0, 6, 1, 2)
         for column, (caption, dx, dy) in enumerate(
             (("←", -1, 0), ("→", 1, 0), ("↑", 0, -1), ("↓", 0, 1))
         ):
@@ -1082,10 +1129,12 @@ class UnitAppearanceDialog(QDialog):
     def _move_body(self, dx: int, dy: int) -> None:
         self._replace_script("body", move_body_script(self.body_script, dx, dy))
 
-    def _apply_body_grid(self, width: int, height: int) -> None:
+    def _apply_body_grid(
+        self, width: int, height: int, *, import_offset: int = 0
+    ) -> None:
         """Apply one legacy continuous-tile body layout to the visible bank."""
 
-        first_tile = self._body_display_offset()
+        first_tile = self._body_display_offset() + import_offset
         count = min(width * height, 64)
         start_x = -width + 1 if self._type_code() & 0x40 else 0
         start_y = -height + 1
@@ -1263,22 +1312,26 @@ class UnitAppearanceDialog(QDialog):
             )
             return
         if kind == "body":
-            self._import_body_image(image)
+            try:
+                self._import_body_image(image)
+            except ValueError as error:
+                QMessageBox.warning(self, "无法导入", str(error))
             return
-        indices = self._library_local_indices(kind)
-        valid_full_sizes = {(64, len(indices) // 64 * 64)}
-        if kind == "body" and len(self._library_banks("body")) > 1:
-            valid_full_sizes.add((64, 128))
+        offset = self.fragment_import_offset.value()
+        indices = self._library_local_indices(kind)[offset:]
+        valid_full_sizes = {(64, 128)}
         compressed_from: tuple[int, int] | None = None
         if (image.width(), image.height()) not in valid_full_sizes:
+            if not self.fragment_compress_upload.isChecked():
+                QMessageBox.warning(
+                    self,
+                    "无法导入",
+                    "未勾选“压缩上传”时，碎片图片必须为 64×128。",
+                )
+                return
             compressed_from = image.width(), image.height()
-            target_height = 64 if kind == "body" else 128
-            image = compress_image_for_chr(image, 64, target_height)
-        import_indices = (
-            tuple(range(128))
-            if kind == "body" and image.height() == 128
-            else indices
-        )
+            image = compress_image_for_chr(image, 64, 128)
+        import_indices = indices
         for source_index, index in enumerate(import_indices):
             tile_x = (source_index % 8) * 8
             tile_y = (source_index // 64) * 64 + ((source_index % 64) // 8) * 8
@@ -1293,7 +1346,8 @@ class UnitAppearanceDialog(QDialog):
             if compressed_from else ""
         )
         self.status.setText(
-            f"已导入 {len(import_indices)} 个图块{compression}；确定后才写入 ROM。"
+            f"已从偏移 ${offset:02X} 导入 {len(import_indices)} 个图块"
+            f"{compression}；确定后才写入 ROM。"
         )
 
     def _export_bitmap_bytes(self, kind: str, *, selected_only: bool = False) -> bytes:
@@ -1346,28 +1400,50 @@ class UnitAppearanceDialog(QDialog):
         self.status.setText(f"已导出 {dimensions} BMP：{output_path}")
 
     def _import_body_image(self, image: QImage) -> None:
-        width, height = choose_body_layout(image.width(), image.height())
-        compressed = compress_image_for_chr(image, width * 8, height * 8)
+        if self.body_compress_upload.isChecked():
+            width, height = choose_body_layout(image.width(), image.height())
+            compressed = compress_image_for_chr(image, width * 8, height * 8)
+        else:
+            if (
+                image.width() % 8
+                or image.height() % 8
+                or not 8 <= image.width() <= 64
+                or not 8 <= image.height() <= 64
+            ):
+                raise ValueError(
+                    "未勾选“压缩上传”时，机体图片须为8像素整数倍且不超过64×64。"
+                )
+            width, height = image.width() // 8, image.height() // 8
+            compressed = image
         indices = self._library_local_indices("body")
-        first = indices[0]
+        import_offset = self.body_import_offset.value()
+        first = indices[0] + import_offset
         tile_count = width * height
+        if import_offset + tile_count > len(indices):
+            raise ValueError(
+                f"导图偏移 ${import_offset:02X} 后只剩 {len(indices) - import_offset} 个图块，"
+                f"无法容纳 {tile_count} 个图块。"
+            )
         for local_index in indices:
             absolute = self._absolute_tile("body", local_index)
             self._remember_original_tile(absolute)
             relative = local_index - first
-            if relative < tile_count:
+            if 0 <= relative < tile_count:
                 tile_x = relative % width * 8
                 tile_y = relative // width * 8
                 pixels = image_to_palette_pixels(
                     compressed.copy(tile_x, tile_y, 8, 8), WORK_PALETTE
                 )
-            else:
+            elif local_index >= first:
                 pixels = (0,) * 64
+            else:
+                continue
             self._draft_tiles[absolute] = pixels
-        self._apply_body_grid(width, height)
+        self._apply_body_grid(width, height, import_offset=import_offset)
         self.status.setText(
-            f"已将 {image.width()}×{image.height()} 图片等比压缩为 "
-            f"{width}×{height} 图块，并生成对应主体拼图脚本；确定后才写入 ROM。"
+            f"已将 {image.width()}×{image.height()} 图片转换为 "
+            f"{width}×{height} 图块，从偏移 ${import_offset:02X} 写入并生成对应主体拼图脚本；"
+            "确定后才写入 ROM。"
         )
 
     def _show_library_menu(self, kind: str, point: QPoint) -> None:

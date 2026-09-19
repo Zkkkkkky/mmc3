@@ -222,6 +222,72 @@ def choice_state(window, control_id: int, class_name: str) -> dict[str, object]:
     }
 
 
+def visible_choice_states(window) -> list[dict[str, object]]:
+    """Capture every visible legacy list/combo selection without mutating it."""
+
+    result: list[dict[str, object]] = []
+    for class_name in ("ComboBox", "ListBox"):
+        for item in window.descendants(class_name=class_name):
+            try:
+                control_id = int(item.control_id())
+                if control_id and item.is_visible():
+                    result.append(choice_state(window, control_id, class_name))
+                    result[-1]["class"] = class_name
+            except Exception as error:
+                result.append(
+                    {
+                        "class": class_name,
+                        "id": int(item.control_id()),
+                        "error": f"{type(error).__name__}: {error}",
+                    }
+                )
+    return sorted(result, key=lambda row: (int(row["id"]), str(row["class"])))
+
+
+def sweep_page_control(window, control_id: int, assumed_count: int) -> list[dict[str, object]]:
+    """Select each owner-drawn legacy page and inventory its visible controls."""
+
+    page = next(
+        item
+        for item in window.descendants(class_name="CPageControl")
+        if int(item.control_id()) == control_id
+    )
+    pages: list[dict[str, object]] = []
+    for index in range(assumed_count):
+        win32gui.SendMessage(page.handle, 0x130C, index, 0)
+        point = win32api.MAKELONG(85 + index * 160, 24)
+        win32gui.SendMessage(page.handle, win32con.WM_LBUTTONDOWN, 1, point)
+        win32gui.SendMessage(page.handle, win32con.WM_LBUTTONUP, 0, point)
+        time.sleep(0.5)
+        pages.append(
+            {
+                "index": index,
+                "controls": visible_controls_for_window(window),
+                "choices": visible_choice_states(window),
+            }
+        )
+    return pages
+
+
+def visible_controls_for_window(window) -> list[dict[str, object]]:
+    result = []
+    for item in window.descendants():
+        try:
+            control_id = int(item.control_id())
+            if control_id and item.is_visible():
+                result.append(
+                    {
+                        "id": control_id,
+                        "class": item.class_name(),
+                        "text": item.window_text(),
+                        "enabled": bool(item.is_enabled()),
+                    }
+                )
+        except Exception:
+            pass
+    return sorted(result, key=lambda row: (int(row["id"]), str(row["class"])))
+
+
 def edit_person_dialogue(
     driver: Win32LegacyDriver, control_id: int, selection: int | None
 ) -> dict[str, object]:
@@ -335,6 +401,8 @@ def main() -> int:
         None,
     )
     transform_clear = "--transform-clear" in sys.argv
+    portrait_audit = "--portrait-audit" in sys.argv
+    weapon_rules_audit = "--weapon-rules-audit" in sys.argv
     RUN.mkdir(parents=True, exist_ok=True)
     baseline_path = (
         ROOT / "references" / "rom" / "baselines" / "DC_kuorong.nes"
@@ -375,6 +443,11 @@ def main() -> int:
             }],
             "add": None if skip_add else click_and_observe(driver, 2120),
         }
+        if portrait_audit:
+            report["person"]["all_controls"] = person_controls
+            report["person"]["all_choices"] = visible_choice_states(
+                driver.current_window
+            )
         if transform_select is not None:
             combo = driver._control(1540, "ComboBox")
             before_transform = choice_state(driver.current_window, 1540, "ComboBox")
@@ -452,9 +525,25 @@ def main() -> int:
                 "add": None if skip_add else click_and_observe(driver, 2130),
             }
             if click_weapon is not None:
-                report["weapon"]["clicked_control"] = click_control_and_observe(
-                    driver, click_weapon
-                )
+                if weapon_rules_audit:
+                    control = driver._control(click_weapon)
+                    win32gui.PostMessage(control.handle, win32con.BM_CLICK, 0, 0)
+                    time.sleep(1.2)
+                    rules = next(
+                        item
+                        for item in driver.app.windows(visible_only=True)
+                        if int(item.handle) != int(driver.current_window.handle)
+                        and item.window_text() == "规律"
+                    )
+                    report["weapon"]["rules_pages"] = sweep_page_control(
+                        rules, 120, 4
+                    )
+                    win32gui.PostMessage(rules.handle, win32con.WM_CLOSE, 0, 0)
+                    time.sleep(0.4)
+                else:
+                    report["weapon"]["clicked_control"] = click_control_and_observe(
+                        driver, click_weapon
+                    )
         driver._control(590, "Button").click()
         time.sleep(0.8)
         driver.save()

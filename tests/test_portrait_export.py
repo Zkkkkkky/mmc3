@@ -12,6 +12,7 @@ os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 from PySide6.QtWidgets import QApplication
 
 from dc_modifier.app import DEFAULT_ROM, MainWindow
+from dc_modifier.character_editor import CharacterDetailsWidget, legacy_portrait_selectors
 from dc_modifier.portrait_export import (
     PORTRAIT_FILENAMES,
     export_portrait_bitmaps,
@@ -91,11 +92,30 @@ class PortraitExportTests(unittest.TestCase):
         self.assertEqual(portrait_layer_pixels(self.project, 4, "front")[0], LEGACY_MATERIAL_PALETTE_RGB[3])
         self.assertEqual(len(portrait_bitmap_bytes(self.project, 4, "front")), 3_126)
 
+    def test_legacy_four_per_library_selector_conversion_matches_reference(self) -> None:
+        record = CharacterAttributesCodec(self.project).read_portrait(6)
+        self.assertEqual(
+            (record.front_bank, record.front_slot, record.back_bank, record.back_slot),
+            (27, 1, 25, 4),
+        )
+        self.assertEqual(legacy_portrait_selectors(record), (27, 2, 25, 1))
 
 class PortraitExportUiTests(QtTestCase):
     @classmethod
     def setUpClass(cls) -> None:
         cls.app = QApplication.instance() or QApplication([])
+
+    def test_character_widget_selector_round_trip_preserves_raw_portrait(self) -> None:
+        project = RomProject.load(DEFAULT_ROM)
+        widget = CharacterDetailsWidget()
+        self.addCleanup(widget.deleteLater)
+        widget.set_record(project, 6)
+        self.assertEqual(widget.portrait_fields["back_bank"].value(), 25)
+        self.assertEqual(widget.portrait_fields["back_slot"].value(), 1)
+        self.assertEqual(
+            widget.portrait_record(),
+            CharacterAttributesCodec(project).read_portrait(6),
+        )
 
     def test_menu_export_uses_selected_character_and_root_directory(self) -> None:
         window = MainWindow(open_default=True)

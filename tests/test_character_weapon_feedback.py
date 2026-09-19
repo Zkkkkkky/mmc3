@@ -602,26 +602,15 @@ class CharacterWeaponUiFeedbackTests(QtTestCase):
         self.assertEqual(weapon_ids[-1], 0xFF)
         self.assertEqual(len(weapon_ids), 0xFF)
 
-    def test_weapon_rules_button_opens_the_shared_rules_tab(self) -> None:
+    def test_weapon_rules_button_opens_the_dedicated_weapon_library(self) -> None:
         page = self.dialog.weapon_page
-
-        class FakeTabs:
-            current = None
-
-            def setCurrentIndex(self, value):
-                self.current = value
 
         class FakeDialog:
             instance = None
 
             def __init__(self, *args, **kwargs):
                 type(self).instance = self
-                self.tabs = FakeTabs()
-                self.title = ""
                 self.deleted = False
-
-            def setWindowTitle(self, title):
-                self.title = title
 
             def exec(self):
                 return 0
@@ -629,12 +618,10 @@ class CharacterWeaponUiFeedbackTests(QtTestCase):
             def deleteLater(self):
                 self.deleted = True
 
-        with patch("dc_modifier.legacy_tools.MapAnimationDialog", FakeDialog):
+        with patch("dc_modifier.weapon_rule_library.WeaponRuleLibraryDialog", FakeDialog):
             page.animation_rules_button.click()
         fake = FakeDialog.instance
         self.assertIsNotNone(fake)
-        self.assertEqual(fake.title, "规律")
-        self.assertEqual(fake.tabs.current, 1)
         self.assertTrue(fake.deleted)
 
     def test_weapon_animation_test_exports_current_rom_and_starts_mesen(self) -> None:

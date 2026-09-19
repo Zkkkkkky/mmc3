@@ -124,15 +124,14 @@ def main() -> int:
     application.setStyleSheet(STYLE_SHEET)
     OUTPUT_DIRECTORY.mkdir(parents=True, exist_ok=True)
 
-    # Capture the actual 3.0 route instead of the removed flat page deck:
-    # launcher -> empty editor -> explicit ROM open -> persistent map shell.
+    # Capture the actual ROM-first route:
+    # launcher -> select ROM -> persistent map shell.
     launcher = LauncherWindow()
     save_capture(application, launcher, "00-launcher.png")
-    window = launcher.enter_editor()
-    process_layout(application)
-    save_capture(application, window, "00b-empty-main.png")
-
-    if not DEFAULT_ROM.is_file() or not window.load_rom(DEFAULT_ROM, quiet=True):
+    if not DEFAULT_ROM.is_file():
+        raise RuntimeError("无法载入默认 ROM，不能生成修改器说明截图。")
+    window = launcher.open_rom(DEFAULT_ROM)
+    if window is None:
         raise RuntimeError("无法载入默认 ROM，不能生成修改器说明截图。")
     window.resize(1180, 760)
     window.show_page("maps")

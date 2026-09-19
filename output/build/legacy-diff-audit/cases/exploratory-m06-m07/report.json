@@ -30,7 +30,7 @@
       {
         "id": 1420,
         "class": "Button",
-        "text": "不是任何人的错，只是\\\r\n因为那里是战场。",
+        "text": "居然出现在我面前…太\\\r\n愚蠢了！",
         "enabled": true
       },
       {
@@ -119,8 +119,738 @@
       }
     ],
     "add": null,
-    "transform_clear": {
-      "before": {
+    "all_controls": [
+      {
+        "id": 100,
+        "class": "CPageControl",
+        "text": "",
+        "enabled": true
+      },
+      {
+        "id": 590,
+        "class": "Button",
+        "text": "确定",
+        "enabled": true
+      },
+      {
+        "id": 600,
+        "class": "Button",
+        "text": "取消",
+        "enabled": true
+      },
+      {
+        "id": 630,
+        "class": "ListBox",
+        "text": "",
+        "enabled": true
+      },
+      {
+        "id": 640,
+        "class": "Button",
+        "text": "人物选择",
+        "enabled": true
+      },
+      {
+        "id": 660,
+        "class": "Button",
+        "text": "头像设置",
+        "enabled": true
+      },
+      {
+        "id": 670,
+        "class": "Button",
+        "text": "显示背景",
+        "enabled": true
+      },
+      {
+        "id": 680,
+        "class": "Button",
+        "text": "显示正面",
+        "enabled": true
+      },
+      {
+        "id": 690,
+        "class": "ComboBox",
+        "text": "图库：025",
+        "enabled": true
+      },
+      {
+        "id": 700,
+        "class": "ComboBox",
+        "text": "头像1",
+        "enabled": true
+      },
+      {
+        "id": 710,
+        "class": "ComboBox",
+        "text": "头像2",
+        "enabled": true
+      },
+      {
+        "id": 720,
+        "class": "ComboBox",
+        "text": "图库：027",
+        "enabled": true
+      },
+      {
+        "id": 730,
+        "class": "Edit",
+        "text": "17",
+        "enabled": true
+      },
+      {
+        "id": 740,
+        "class": "Edit",
+        "text": "07",
+        "enabled": true
+      },
+      {
+        "id": 750,
+        "class": "Edit",
+        "text": "37",
+        "enabled": true
+      },
+      {
+        "id": 760,
+        "class": "_EL_Label",
+        "text": "",
+        "enabled": true
+      },
+      {
+        "id": 770,
+        "class": "_EL_Label",
+        "text": "",
+        "enabled": true
+      },
+      {
+        "id": 780,
+        "class": "_EL_Label",
+        "text": "",
+        "enabled": true
+      },
+      {
+        "id": 790,
+        "class": "Button",
+        "text": "正面上传",
+        "enabled": true
+      },
+      {
+        "id": 800,
+        "class": "Button",
+        "text": "背景上传",
+        "enabled": true
+      },
+      {
+        "id": 810,
+        "class": "Button",
+        "text": "基本设置",
+        "enabled": true
+      },
+      {
+        "id": 820,
+        "class": "Afx:400000:b:10003:900015:0",
+        "text": "名称：",
+        "enabled": true
+      },
+      {
+        "id": 830,
+        "class": "Edit",
+        "text": "夏亚",
+        "enabled": true
+      },
+      {
+        "id": 840,
+        "class": "ComboBox",
+        "text": "默认音乐",
+        "enabled": true
+      },
+      {
+        "id": 850,
+        "class": "ComboBox",
+        "text": "大卫音乐",
+        "enabled": true
+      },
+      {
+        "id": 860,
+        "class": "Button",
+        "text": "人物属性",
+        "enabled": true
+      },
+      {
+        "id": 870,
+        "class": "Afx:400000:b:10003:900015:0",
+        "text": "精神值：",
+        "enabled": true
+      },
+      {
+        "id": 880,
+        "class": "Afx:400000:b:10003:900015:0",
+        "text": "速度补正：",
+        "enabled": true
+      },
+      {
+        "id": 890,
+        "class": "Edit",
+        "text": "33",
+        "enabled": true
+      },
+      {
+        "id": 894,
+        "class": "msctls_updown32",
+        "text": "",
+        "enabled": true
+      },
+      {
+        "id": 900,
+        "class": "Afx:400000:b:10003:900015:0",
+        "text": "精神成长：",
+        "enabled": true
+      },
+      {
+        "id": 910,
+        "class": "Edit",
+        "text": "201",
+        "enabled": true
+      },
+      {
+        "id": 914,
+        "class": "msctls_updown32",
+        "text": "",
+        "enabled": true
+      },
+      {
+        "id": 920,
+        "class": "Afx:400000:b:10003:900015:0",
+        "text": "防御补正：",
+        "enabled": true
+      },
+      {
+        "id": 930,
+        "class": "Afx:400000:b:10003:900015:0",
+        "text": "强度补正：",
+        "enabled": true
+      },
+      {
+        "id": 940,
+        "class": "Afx:400000:b:10003:900015:0",
+        "text": "HP补正：",
+        "enabled": true
+      },
+      {
+        "id": 950,
+        "class": "Afx:400000:b:10003:900015:0",
+        "text": "机动补正：",
+        "enabled": true
+      },
+      {
+        "id": 960,
+        "class": "Edit",
+        "text": "0",
+        "enabled": true
+      },
+      {
+        "id": 964,
+        "class": "msctls_updown32",
+        "text": "",
+        "enabled": true
+      },
+      {
+        "id": 970,
+        "class": "Edit",
+        "text": "0",
+        "enabled": true
+      },
+      {
+        "id": 974,
+        "class": "msctls_updown32",
+        "text": "",
+        "enabled": true
+      },
+      {
+        "id": 980,
+        "class": "Edit",
+        "text": "0",
+        "enabled": true
+      },
+      {
+        "id": 984,
+        "class": "msctls_updown32",
+        "text": "",
+        "enabled": true
+      },
+      {
+        "id": 990,
+        "class": "Edit",
+        "text": "0",
+        "enabled": true
+      },
+      {
+        "id": 994,
+        "class": "msctls_updown32",
+        "text": "",
+        "enabled": true
+      },
+      {
+        "id": 1000,
+        "class": "Edit",
+        "text": "0",
+        "enabled": true
+      },
+      {
+        "id": 1004,
+        "class": "msctls_updown32",
+        "text": "",
+        "enabled": true
+      },
+      {
+        "id": 1010,
+        "class": "Afx:400000:b:10003:900015:0",
+        "text": "对话选择：",
+        "enabled": true
+      },
+      {
+        "id": 1020,
+        "class": "Afx:400000:b:10003:900015:0",
+        "text": "变形对话：",
+        "enabled": true
+      },
+      {
+        "id": 1030,
+        "class": "Button",
+        "text": "变形起飞对话",
+        "enabled": true
+      },
+      {
+        "id": 1040,
+        "class": "Afx:400000:b:10003:900015:0",
+        "text": "一次攻击：",
+        "enabled": true
+      },
+      {
+        "id": 1050,
+        "class": "Afx:400000:b:10003:900015:0",
+        "text": "二次攻击：",
+        "enabled": true
+      },
+      {
+        "id": 1060,
+        "class": "Afx:400000:b:10003:900015:0",
+        "text": "可以反击：",
+        "enabled": true
+      },
+      {
+        "id": 1070,
+        "class": "Afx:400000:b:10003:900015:0",
+        "text": "无力反击：",
+        "enabled": true
+      },
+      {
+        "id": 1080,
+        "class": "Afx:400000:b:10003:900015:0",
+        "text": "攻击受阻：",
+        "enabled": true
+      },
+      {
+        "id": 1090,
+        "class": "Button",
+        "text": "攻击对话",
+        "enabled": true
+      },
+      {
+        "id": 1100,
+        "class": "Afx:400000:b:10003:900015:0",
+        "text": "防御成功：",
+        "enabled": true
+      },
+      {
+        "id": 1110,
+        "class": "Afx:400000:b:10003:900015:0",
+        "text": "未受损伤：",
+        "enabled": true
+      },
+      {
+        "id": 1120,
+        "class": "Afx:400000:b:10003:900015:0",
+        "text": "轻微损伤：",
+        "enabled": true
+      },
+      {
+        "id": 1130,
+        "class": "Afx:400000:b:10003:900015:0",
+        "text": "中度损伤：",
+        "enabled": true
+      },
+      {
+        "id": 1140,
+        "class": "Afx:400000:b:10003:900015:0",
+        "text": "重度损伤：",
+        "enabled": true
+      },
+      {
+        "id": 1150,
+        "class": "Afx:400000:b:10003:900015:0",
+        "text": "  被击落：",
+        "enabled": true
+      },
+      {
+        "id": 1160,
+        "class": "Button",
+        "text": "防御对话",
+        "enabled": true
+      },
+      {
+        "id": 1260,
+        "class": "Button",
+        "text": "精神列表(双击可修改精神消耗)",
+        "enabled": true
+      },
+      {
+        "id": 1270,
+        "class": "ListBox",
+        "text": "",
+        "enabled": true
+      },
+      {
+        "id": 1360,
+        "class": "_EL_PicBox",
+        "text": "",
+        "enabled": true
+      },
+      {
+        "id": 1420,
+        "class": "Button",
+        "text": "居然出现在我面前…太\\\r\n愚蠢了！",
+        "enabled": true
+      },
+      {
+        "id": 1430,
+        "class": "Button",
+        "text": "再补一下！",
+        "enabled": true
+      },
+      {
+        "id": 1440,
+        "class": "Button",
+        "text": "不想被打就那么自己就\\\r\n不要犯错误！",
+        "enabled": true
+      },
+      {
+        "id": 1450,
+        "class": "Button",
+        "text": "想打败我就光明正大的决斗！",
+        "enabled": true
+      },
+      {
+        "id": 1460,
+        "class": "Button",
+        "text": "想打败我就光明正大的决斗！",
+        "enabled": true
+      },
+      {
+        "id": 1470,
+        "class": "Button",
+        "text": "太不熟练了，这种程\\\r\n度休想伤我！",
+        "enabled": true
+      },
+      {
+        "id": 1480,
+        "class": "Button",
+        "text": "太不熟练了，这种程\\\r\n度休想伤我！",
+        "enabled": true
+      },
+      {
+        "id": 1490,
+        "class": "Button",
+        "text": "干得不错，居然能\\\r\n给予我如此伤害…",
+        "enabled": true
+      },
+      {
+        "id": 1500,
+        "class": "Button",
+        "text": "光有勇气可不行呢…\\\r\n技术还差了点！",
+        "enabled": true
+      },
+      {
+        "id": 1510,
+        "class": "Button",
+        "text": "干得不错，居然能\\\r\n给予我如此伤害…",
+        "enabled": true
+      },
+      {
+        "id": 1520,
+        "class": "Button",
+        "text": "不管创造多少希望，灵魂\\\r\n被地球重力束缚的人都会去\\\r\n破坏。",
+        "enabled": true
+      },
+      {
+        "id": 1530,
+        "class": "Button",
+        "text": "_",
+        "enabled": true
+      },
+      {
+        "id": 1540,
+        "class": "ComboBox",
+        "text": "变形对话1",
+        "enabled": true
+      },
+      {
+        "id": 2120,
+        "class": "Button",
+        "text": "添加",
+        "enabled": true
+      },
+      {
+        "id": 2150,
+        "class": "Edit",
+        "text": "",
+        "enabled": true
+      },
+      {
+        "id": 2160,
+        "class": "Button",
+        "text": "查找下一个",
+        "enabled": true
+      },
+      {
+        "id": 2170,
+        "class": "Button",
+        "text": "查找上一个",
+        "enabled": true
+      },
+      {
+        "id": 2180,
+        "class": "Button",
+        "text": "清空",
+        "enabled": true
+      },
+      {
+        "id": 2190,
+        "class": "Afx:400000:b:10003:900015:0",
+        "text": "战斗名称：",
+        "enabled": true
+      },
+      {
+        "id": 2200,
+        "class": "Edit",
+        "text": "夏亚",
+        "enabled": true
+      },
+      {
+        "id": 2390,
+        "class": "Afx:400000:b:10003:900015:0",
+        "text": "正面图库：",
+        "enabled": true
+      },
+      {
+        "id": 2400,
+        "class": "Afx:400000:b:10003:900015:0",
+        "text": "背景图库：",
+        "enabled": true
+      },
+      {
+        "id": 2410,
+        "class": "Afx:400000:b:10003:900015:0",
+        "text": "头像颜色1：",
+        "enabled": true
+      },
+      {
+        "id": 2420,
+        "class": "Afx:400000:b:10003:900015:0",
+        "text": "头像颜色2：",
+        "enabled": true
+      },
+      {
+        "id": 2430,
+        "class": "Afx:400000:b:10003:900015:0",
+        "text": "头像颜色3：",
+        "enabled": true
+      },
+      {
+        "id": 2440,
+        "class": "Afx:400000:b:10003:900015:0",
+        "text": "我方战斗音乐：",
+        "enabled": true
+      },
+      {
+        "id": 2450,
+        "class": "Afx:400000:b:10003:900015:0",
+        "text": "敌方战斗音乐：",
+        "enabled": true
+      },
+      {
+        "id": 2660,
+        "class": "Button",
+        "text": "击落不消失",
+        "enabled": true
+      }
+    ],
+    "all_choices": [
+      {
+        "id": 630,
+        "selected": 5,
+        "count": 200,
+        "first": [
+          "[01]001：_",
+          "[02]002：查理",
+          "[03]003：联邦士兵",
+          "[04]004：琉妮",
+          "[05]005：白河愁"
+        ],
+        "selected_text": "[06]006：夏亚",
+        "last": [
+          "[C4]196：",
+          "[C5]197：",
+          "[C6]198：",
+          "[C7]199：",
+          "[C8]200："
+        ],
+        "class": "ListBox"
+      },
+      {
+        "id": 690,
+        "selected": 25,
+        "count": 512,
+        "first": [
+          "图库：000",
+          "图库：001",
+          "图库：002",
+          "图库：003",
+          "图库：004"
+        ],
+        "selected_text": "图库：025",
+        "last": [
+          "图库251",
+          "图库252",
+          "图库253",
+          "图库254",
+          "图库255"
+        ],
+        "class": "ComboBox"
+      },
+      {
+        "id": 700,
+        "selected": 0,
+        "count": 4,
+        "first": [
+          "头像1",
+          "头像2",
+          "头像3",
+          "头像4"
+        ],
+        "selected_text": "头像1",
+        "last": [
+          "头像1",
+          "头像2",
+          "头像3",
+          "头像4"
+        ],
+        "class": "ComboBox"
+      },
+      {
+        "id": 710,
+        "selected": 1,
+        "count": 4,
+        "first": [
+          "头像1",
+          "头像2",
+          "头像3",
+          "头像4"
+        ],
+        "selected_text": "头像2",
+        "last": [
+          "头像1",
+          "头像2",
+          "头像3",
+          "头像4"
+        ],
+        "class": "ComboBox"
+      },
+      {
+        "id": 720,
+        "selected": 27,
+        "count": 512,
+        "first": [
+          "图库：000",
+          "图库：001",
+          "图库：002",
+          "图库：003",
+          "图库：004"
+        ],
+        "selected_text": "图库：027",
+        "last": [
+          "图库251",
+          "图库252",
+          "图库253",
+          "图库254",
+          "图库255"
+        ],
+        "class": "ComboBox"
+      },
+      {
+        "id": 840,
+        "selected": 0,
+        "count": 129,
+        "first": [
+          "默认音乐",
+          "大卫音乐",
+          "盖塔音乐",
+          "加代音乐",
+          "古莲音乐"
+        ],
+        "selected_text": "默认音乐",
+        "last": [
+          "音乐FB",
+          "音乐FC",
+          "音乐FD",
+          "音乐FE",
+          "音乐FF"
+        ],
+        "class": "ComboBox"
+      },
+      {
+        "id": 850,
+        "selected": 1,
+        "count": 129,
+        "first": [
+          "默认音乐",
+          "大卫音乐",
+          "盖塔音乐",
+          "加代音乐",
+          "古莲音乐"
+        ],
+        "selected_text": "大卫音乐",
+        "last": [
+          "音乐FB",
+          "音乐FC",
+          "音乐FD",
+          "音乐FE",
+          "音乐FF"
+        ],
+        "class": "ComboBox"
+      },
+      {
+        "id": 1270,
+        "selected": 0,
+        "count": 24,
+        "first": [
+          "毅力：10",
+          "疾风：50",
+          "共感：10",
+          "防守：20",
+          "强攻：40"
+        ],
+        "selected_text": "毅力：10",
+        "last": [
+          "直击：90",
+          "努力：100",
+          "狙击：10",
+          "援攻：60",
+          "援防：40"
+        ],
+        "class": "ListBox"
+      },
+      {
         "id": 1540,
         "selected": 0,
         "count": 5,
@@ -138,708 +868,10 @@
           "变形对话3",
           "变形对话4",
           "添加"
-        ]
-      },
-      "after": {
-        "id": 1540,
-        "selected": 0,
-        "count": 1,
-        "first": [
-          "添加"
         ],
-        "selected_text": "添加",
-        "last": [
-          "添加"
-        ]
-      },
-      "text": "无",
-      "windows": [
-        {
-          "handle": 1510900,
-          "class": "WTWindow",
-          "title": "数据库",
-          "controls": [
-            {
-              "id": 2170,
-              "class": "Button",
-              "text": "查找上一个"
-            },
-            {
-              "id": 2160,
-              "class": "Button",
-              "text": "查找下一个"
-            },
-            {
-              "id": 2150,
-              "class": "Edit",
-              "text": ""
-            },
-            {
-              "id": 600,
-              "class": "Button",
-              "text": "取消"
-            },
-            {
-              "id": 590,
-              "class": "Button",
-              "text": "确定"
-            },
-            {
-              "id": 100,
-              "class": "CPageControl",
-              "text": ""
-            },
-            {
-              "id": 1260,
-              "class": "Button",
-              "text": "精神列表(双击可修改精神消耗)"
-            },
-            {
-              "id": 1270,
-              "class": "ListBox",
-              "text": ""
-            },
-            {
-              "id": 1160,
-              "class": "Button",
-              "text": "防御对话"
-            },
-            {
-              "id": 1520,
-              "class": "Button",
-              "text": "不管创造多少希望，灵魂\\\r\n被地球重力束缚的人都会去\\\r\n破坏。"
-            },
-            {
-              "id": 1510,
-              "class": "Button",
-              "text": "干得不错，居然能\\\r\n给予我如此伤害…"
-            },
-            {
-              "id": 1500,
-              "class": "Button",
-              "text": "光有勇气可不行呢…\\\r\n技术还差了点！"
-            },
-            {
-              "id": 1490,
-              "class": "Button",
-              "text": "干得不错，居然能\\\r\n给予我如此伤害…"
-            },
-            {
-              "id": 1480,
-              "class": "Button",
-              "text": "太不熟练了，这种程\\\r\n度休想伤我！"
-            },
-            {
-              "id": 1470,
-              "class": "Button",
-              "text": "太不熟练了，这种程\\\r\n度休想伤我！"
-            },
-            {
-              "id": 1150,
-              "class": "Afx:400000:b:10003:900015:0",
-              "text": "  被击落："
-            },
-            {
-              "id": 1140,
-              "class": "Afx:400000:b:10003:900015:0",
-              "text": "重度损伤："
-            },
-            {
-              "id": 1130,
-              "class": "Afx:400000:b:10003:900015:0",
-              "text": "中度损伤："
-            },
-            {
-              "id": 1120,
-              "class": "Afx:400000:b:10003:900015:0",
-              "text": "轻微损伤："
-            },
-            {
-              "id": 1110,
-              "class": "Afx:400000:b:10003:900015:0",
-              "text": "未受损伤："
-            },
-            {
-              "id": 1100,
-              "class": "Afx:400000:b:10003:900015:0",
-              "text": "防御成功："
-            },
-            {
-              "id": 1090,
-              "class": "Button",
-              "text": "攻击对话"
-            },
-            {
-              "id": 1460,
-              "class": "Button",
-              "text": "想打败我就光明正大的决斗！"
-            },
-            {
-              "id": 1450,
-              "class": "Button",
-              "text": "想打败我就光明正大的决斗！"
-            },
-            {
-              "id": 1440,
-              "class": "Button",
-              "text": "不想被打就那么自己就\\\r\n不要犯错误！"
-            },
-            {
-              "id": 1430,
-              "class": "Button",
-              "text": "再补一下！"
-            },
-            {
-              "id": 1420,
-              "class": "Button",
-              "text": "不是任何人的错，只是\\\r\n因为那里是战场。"
-            },
-            {
-              "id": 1080,
-              "class": "Afx:400000:b:10003:900015:0",
-              "text": "攻击受阻："
-            },
-            {
-              "id": 1070,
-              "class": "Afx:400000:b:10003:900015:0",
-              "text": "无力反击："
-            },
-            {
-              "id": 1060,
-              "class": "Afx:400000:b:10003:900015:0",
-              "text": "可以反击："
-            },
-            {
-              "id": 1050,
-              "class": "Afx:400000:b:10003:900015:0",
-              "text": "二次攻击："
-            },
-            {
-              "id": 1040,
-              "class": "Afx:400000:b:10003:900015:0",
-              "text": "一次攻击："
-            },
-            {
-              "id": 1030,
-              "class": "Button",
-              "text": "变形起飞对话"
-            },
-            {
-              "id": 2180,
-              "class": "Button",
-              "text": "清空"
-            },
-            {
-              "id": 1540,
-              "class": "ComboBox",
-              "text": "添加"
-            },
-            {
-              "id": 1530,
-              "class": "Button",
-              "text": "无"
-            },
-            {
-              "id": 1020,
-              "class": "Afx:400000:b:10003:900015:0",
-              "text": "变形对话："
-            },
-            {
-              "id": 1010,
-              "class": "Afx:400000:b:10003:900015:0",
-              "text": "对话选择："
-            },
-            {
-              "id": 860,
-              "class": "Button",
-              "text": "人物属性"
-            },
-            {
-              "id": 2660,
-              "class": "Button",
-              "text": "击落不消失"
-            },
-            {
-              "id": 1004,
-              "class": "msctls_updown32",
-              "text": ""
-            },
-            {
-              "id": 1000,
-              "class": "Edit",
-              "text": "0"
-            },
-            {
-              "id": 994,
-              "class": "msctls_updown32",
-              "text": ""
-            },
-            {
-              "id": 990,
-              "class": "Edit",
-              "text": "0"
-            },
-            {
-              "id": 984,
-              "class": "msctls_updown32",
-              "text": ""
-            },
-            {
-              "id": 980,
-              "class": "Edit",
-              "text": "0"
-            },
-            {
-              "id": 974,
-              "class": "msctls_updown32",
-              "text": ""
-            },
-            {
-              "id": 970,
-              "class": "Edit",
-              "text": "0"
-            },
-            {
-              "id": 964,
-              "class": "msctls_updown32",
-              "text": ""
-            },
-            {
-              "id": 960,
-              "class": "Edit",
-              "text": "0"
-            },
-            {
-              "id": 950,
-              "class": "Afx:400000:b:10003:900015:0",
-              "text": "机动补正："
-            },
-            {
-              "id": 940,
-              "class": "Afx:400000:b:10003:900015:0",
-              "text": "HP补正："
-            },
-            {
-              "id": 930,
-              "class": "Afx:400000:b:10003:900015:0",
-              "text": "强度补正："
-            },
-            {
-              "id": 920,
-              "class": "Afx:400000:b:10003:900015:0",
-              "text": "防御补正："
-            },
-            {
-              "id": 914,
-              "class": "msctls_updown32",
-              "text": ""
-            },
-            {
-              "id": 910,
-              "class": "Edit",
-              "text": "201"
-            },
-            {
-              "id": 900,
-              "class": "Afx:400000:b:10003:900015:0",
-              "text": "精神成长："
-            },
-            {
-              "id": 894,
-              "class": "msctls_updown32",
-              "text": ""
-            },
-            {
-              "id": 890,
-              "class": "Edit",
-              "text": "33"
-            },
-            {
-              "id": 880,
-              "class": "Afx:400000:b:10003:900015:0",
-              "text": "速度补正："
-            },
-            {
-              "id": 870,
-              "class": "Afx:400000:b:10003:900015:0",
-              "text": "精神值："
-            },
-            {
-              "id": 810,
-              "class": "Button",
-              "text": "基本设置"
-            },
-            {
-              "id": 2450,
-              "class": "Afx:400000:b:10003:900015:0",
-              "text": "敌方战斗音乐："
-            },
-            {
-              "id": 2440,
-              "class": "Afx:400000:b:10003:900015:0",
-              "text": "我方战斗音乐："
-            },
-            {
-              "id": 2200,
-              "class": "Edit",
-              "text": "夏亚"
-            },
-            {
-              "id": 2190,
-              "class": "Afx:400000:b:10003:900015:0",
-              "text": "战斗名称："
-            },
-            {
-              "id": 850,
-              "class": "ComboBox",
-              "text": "大卫音乐"
-            },
-            {
-              "id": 840,
-              "class": "ComboBox",
-              "text": "默认音乐"
-            },
-            {
-              "id": 830,
-              "class": "Edit",
-              "text": "夏亚"
-            },
-            {
-              "id": 820,
-              "class": "Afx:400000:b:10003:900015:0",
-              "text": "名称："
-            },
-            {
-              "id": 660,
-              "class": "Button",
-              "text": "头像设置"
-            },
-            {
-              "id": 2430,
-              "class": "Afx:400000:b:10003:900015:0",
-              "text": "头像颜色3："
-            },
-            {
-              "id": 2420,
-              "class": "Afx:400000:b:10003:900015:0",
-              "text": "头像颜色2："
-            },
-            {
-              "id": 2410,
-              "class": "Afx:400000:b:10003:900015:0",
-              "text": "头像颜色1："
-            },
-            {
-              "id": 2400,
-              "class": "Afx:400000:b:10003:900015:0",
-              "text": "背景图库："
-            },
-            {
-              "id": 2390,
-              "class": "Afx:400000:b:10003:900015:0",
-              "text": "正面图库："
-            },
-            {
-              "id": 1360,
-              "class": "_EL_PicBox",
-              "text": ""
-            },
-            {
-              "id": 800,
-              "class": "Button",
-              "text": "背景上传"
-            },
-            {
-              "id": 790,
-              "class": "Button",
-              "text": "正面上传"
-            },
-            {
-              "id": 780,
-              "class": "_EL_Label",
-              "text": ""
-            },
-            {
-              "id": 770,
-              "class": "_EL_Label",
-              "text": ""
-            },
-            {
-              "id": 760,
-              "class": "_EL_Label",
-              "text": ""
-            },
-            {
-              "id": 750,
-              "class": "Edit",
-              "text": "37"
-            },
-            {
-              "id": 740,
-              "class": "Edit",
-              "text": "07"
-            },
-            {
-              "id": 730,
-              "class": "Edit",
-              "text": "17"
-            },
-            {
-              "id": 720,
-              "class": "ComboBox",
-              "text": "图库：027"
-            },
-            {
-              "id": 710,
-              "class": "ComboBox",
-              "text": "头像2"
-            },
-            {
-              "id": 700,
-              "class": "ComboBox",
-              "text": "头像1"
-            },
-            {
-              "id": 690,
-              "class": "ComboBox",
-              "text": "图库：025"
-            },
-            {
-              "id": 680,
-              "class": "Button",
-              "text": "显示正面"
-            },
-            {
-              "id": 670,
-              "class": "Button",
-              "text": "显示背景"
-            },
-            {
-              "id": 640,
-              "class": "Button",
-              "text": "人物选择"
-            },
-            {
-              "id": 2120,
-              "class": "Button",
-              "text": "添加"
-            },
-            {
-              "id": 630,
-              "class": "ListBox",
-              "text": ""
-            }
-          ]
-        },
-        {
-          "handle": 462262,
-          "class": "WTWindow",
-          "title": "SRW2扩容版修改器V1.0：D:\\LLM\\项目\\FC\\扩容MMC3\\output\\build\\legacy-diff-audit\\cases\\exploratory-m06-m07\\probe.nes",
-          "controls": [
-            {
-              "id": 600,
-              "class": "Afx:400000:b:10003:900015:0",
-              "text": ""
-            },
-            {
-              "id": 590,
-              "class": "Afx:400000:b:10003:900015:0",
-              "text": ""
-            },
-            {
-              "id": 580,
-              "class": "Afx:400000:b:10003:900015:0",
-              "text": ""
-            },
-            {
-              "id": 500,
-              "class": "Afx:400000:b:10003:900015:0",
-              "text": ""
-            },
-            {
-              "id": 120,
-              "class": "CPageControl",
-              "text": ""
-            },
-            {
-              "id": 530,
-              "class": "_EL_PicBox",
-              "text": ""
-            },
-            {
-              "id": 490,
-              "class": "msctls_updown32",
-              "text": ""
-            },
-            {
-              "id": 480,
-              "class": "msctls_updown32",
-              "text": ""
-            },
-            {
-              "id": 470,
-              "class": "Afx:400000:b:10003:900015:0",
-              "text": "地图高度："
-            },
-            {
-              "id": 460,
-              "class": "Edit",
-              "text": "26"
-            },
-            {
-              "id": 450,
-              "class": "Afx:400000:b:10003:900015:0",
-              "text": "地图宽度："
-            },
-            {
-              "id": 440,
-              "class": "Edit",
-              "text": "27"
-            },
-            {
-              "id": 430,
-              "class": "Button",
-              "text": "地图图块设置"
-            },
-            {
-              "id": 680,
-              "class": "ComboBox",
-              "text": "[3D]061：8F410"
-            },
-            {
-              "id": 670,
-              "class": "Afx:400000:b:10003:900015:0",
-              "text": "图库选择："
-            },
-            {
-              "id": 660,
-              "class": "Button",
-              "text": "编辑图块属性"
-            },
-            {
-              "id": 420,
-              "class": "Afx:400000:b:10003:900015:0",
-              "text": "右键"
-            },
-            {
-              "id": 410,
-              "class": "Afx:400000:b:10003:900015:0",
-              "text": "左键"
-            },
-            {
-              "id": 400,
-              "class": "Afx:400000:b:10003:900015:0",
-              "text": "位图选择："
-            },
-            {
-              "id": 390,
-              "class": "_EL_PicBox",
-              "text": ""
-            },
-            {
-              "id": 380,
-              "class": "_EL_PicBox",
-              "text": ""
-            },
-            {
-              "id": 370,
-              "class": "_EL_PicBox",
-              "text": ""
-            },
-            {
-              "id": 360,
-              "class": "_EL_PicBox",
-              "text": ""
-            },
-            {
-              "id": 350,
-              "class": "_EL_PicBox",
-              "text": ""
-            },
-            {
-              "id": 340,
-              "class": "_EL_PicBox",
-              "text": ""
-            },
-            {
-              "id": 330,
-              "class": "_EL_PicBox",
-              "text": ""
-            },
-            {
-              "id": 320,
-              "class": "_EL_PicBox",
-              "text": ""
-            },
-            {
-              "id": 310,
-              "class": "_EL_PicBox",
-              "text": ""
-            },
-            {
-              "id": 300,
-              "class": "_EL_PicBox",
-              "text": ""
-            },
-            {
-              "id": 290,
-              "class": "_EL_PicBox",
-              "text": ""
-            },
-            {
-              "id": 280,
-              "class": "_EL_PicBox",
-              "text": ""
-            },
-            {
-              "id": 270,
-              "class": "_EL_PicBox",
-              "text": ""
-            },
-            {
-              "id": 260,
-              "class": "_EL_PicBox",
-              "text": ""
-            },
-            {
-              "id": 250,
-              "class": "_EL_PicBox",
-              "text": ""
-            },
-            {
-              "id": 240,
-              "class": "_EL_PicBox",
-              "text": ""
-            },
-            {
-              "id": 230,
-              "class": "_EL_PicBox",
-              "text": ""
-            },
-            {
-              "id": 220,
-              "class": "_EL_PicBox",
-              "text": ""
-            },
-            {
-              "id": 210,
-              "class": "ComboBox",
-              "text": "位图D"
-            },
-            {
-              "id": 110,
-              "class": "Button",
-              "text": "关卡选择"
-            },
-            {
-              "id": 100,
-              "class": "ListBox",
-              "text": ""
-            }
-          ]
-        }
-      ]
-    }
+        "class": "ComboBox"
+      }
+    ]
   },
   "weapon": {
     "list": {
@@ -948,953 +980,629 @@
         "enabled": true
       }
     ],
-    "add": null
-  },
-  "save_diff": {
-    "count": 455,
-    "ranges": [
-      [
-        87359,
-        87359
-      ],
-      [
-        87365,
-        87365
-      ],
-      [
-        87371,
-        87371
-      ],
-      [
-        87610,
-        87610
-      ],
-      [
-        87615,
-        87615
-      ],
-      [
-        88429,
-        88429
-      ],
-      [
-        88432,
-        88433
-      ],
-      [
-        88436,
-        88437
-      ],
-      [
-        88440,
-        88441
-      ],
-      [
-        88444,
-        88445
-      ],
-      [
-        88448,
-        88449
-      ],
-      [
-        88452,
-        88453
-      ],
-      [
-        88456,
-        88457
-      ],
-      [
-        88460,
-        88461
-      ],
-      [
-        88464,
-        88465
-      ],
-      [
-        88468,
-        88469
-      ],
-      [
-        88472,
-        88474
-      ],
-      [
-        88476,
-        88507
-      ],
-      [
-        88509,
-        88516
-      ],
-      [
-        88524,
-        88529
-      ],
-      [
-        88531,
-        88534
-      ],
-      [
-        88536,
-        88536
-      ],
-      [
-        88539,
-        88539
-      ],
-      [
-        88542,
-        88543
-      ],
-      [
-        88545,
-        88560
-      ],
-      [
-        88562,
-        88572
-      ],
-      [
-        88574,
-        88590
-      ],
-      [
-        88592,
-        88592
-      ],
-      [
-        88594,
-        88594
-      ],
-      [
-        88596,
-        88596
-      ],
-      [
-        88598,
-        88598
-      ],
-      [
-        88604,
-        88622
-      ],
-      [
-        88626,
-        88629
-      ],
-      [
-        88632,
-        88632
-      ],
-      [
-        88634,
-        88638
-      ],
-      [
-        88640,
-        88656
-      ],
-      [
-        88658,
-        88662
-      ],
-      [
-        88665,
-        88685
-      ],
-      [
-        88687,
-        88688
-      ],
-      [
-        88695,
-        88696
-      ],
-      [
-        88701,
-        88702
-      ],
-      [
-        88707,
-        88724
-      ],
-      [
-        88726,
-        88726
-      ],
-      [
-        88728,
-        88734
-      ],
-      [
-        88736,
-        88739
-      ],
-      [
-        88741,
-        88741
-      ],
-      [
-        88743,
-        88744
-      ],
-      [
-        88746,
-        88760
-      ],
-      [
-        88762,
-        88772
-      ],
-      [
-        88774,
-        88791
-      ],
-      [
-        88793,
-        88794
-      ],
-      [
-        88796,
-        88796
-      ],
-      [
-        88798,
-        88798
-      ],
-      [
-        88800,
-        88807
-      ],
-      [
-        88810,
-        88825
-      ],
-      [
-        88830,
-        88833
-      ],
-      [
-        88836,
-        88836
-      ],
-      [
-        88838,
-        88842
-      ],
-      [
-        88844,
-        88860
-      ],
-      [
-        88862,
-        88866
-      ],
-      [
-        88869,
-        88889
-      ],
-      [
-        88891,
-        88892
-      ],
-      [
-        88899,
-        88900
-      ],
-      [
-        88905,
-        88906
-      ],
-      [
-        88911,
-        88928
-      ],
-      [
-        88930,
-        88930
-      ],
-      [
-        88932,
-        88938
-      ],
-      [
-        88940,
-        88943
-      ],
-      [
-        88945,
-        88945
-      ],
-      [
-        88947,
-        88948
-      ],
-      [
-        88950,
-        88964
-      ],
-      [
-        88966,
-        88976
-      ],
-      [
-        88978,
-        88987
-      ],
-      [
-        88989,
-        88992
-      ],
-      [
-        88994,
-        89002
-      ]
-    ],
-    "bytes": [
-      {
-        "offset": 87359,
-        "before": 158,
-        "after": 142
-      },
-      {
-        "offset": 87365,
-        "before": 159,
-        "after": 143
-      },
-      {
-        "offset": 87371,
-        "before": 160,
-        "after": 144
-      },
-      {
-        "offset": 87610,
-        "before": 202,
-        "after": 186
-      },
-      {
-        "offset": 87615,
-        "before": 203,
-        "after": 187
-      },
-      {
-        "offset": 88429,
-        "before": 6,
-        "after": 8
-      },
-      {
-        "offset": 88432,
-        "before": 36,
-        "after": 34
-      },
-      {
-        "offset": 88433,
-        "before": 6,
-        "after": 9
-      },
-      {
-        "offset": 88436,
-        "before": 36,
-        "after": 28
-      },
-      {
-        "offset": 88437,
-        "before": 6,
-        "after": 10
-      },
-      {
-        "offset": 88440,
-        "before": 36,
-        "after": 29
-      },
-      {
-        "offset": 88441,
-        "before": 6,
-        "after": 10
-      },
-      {
-        "offset": 88444,
-        "before": 36,
-        "after": 29
-      },
-      {
-        "offset": 88445,
-        "before": 8,
-        "after": 10
-      },
-      {
-        "offset": 88448,
-        "before": 34,
-        "after": 29
-      },
-      {
-        "offset": 88449,
-        "before": 9,
-        "after": 10
-      },
-      {
-        "offset": 88452,
-        "before": 28,
-        "after": 29
-      },
-      {
-        "offset": 88453,
-        "before": 10,
-        "after": 16
-      },
-      {
-        "offset": 88456,
-        "before": 29,
-        "after": 41
-      },
-      {
-        "offset": 88457,
-        "before": 10,
-        "after": 16
-      },
-      {
-        "offset": 88460,
-        "before": 29,
-        "after": 41
-      },
-      {
-        "offset": 88461,
-        "before": 10,
-        "after": 38
-      },
-      {
-        "offset": 88464,
-        "before": 29,
-        "after": 1
-      },
-      {
-        "offset": 88465,
-        "before": 10,
-        "after": 39
-      },
-      {
-        "offset": 88468,
-        "before": 29,
-        "after": 5
-      },
-      {
-        "offset": 88469,
-        "before": 16,
-        "after": 40
-      },
-      {
-        "offset": 88472,
-        "before": 41,
-        "after": 2
-      },
-      {
-        "offset": 88473,
-        "before": 16,
-        "after": 255
-      },
-      {
-        "offset": 88474,
-        "before": 0,
-        "after": 255
-      },
-      {
-        "offset": 88476,
-        "before": 41,
-        "after": 255
-      },
-      {
-        "offset": 88477,
-        "before": 38,
-        "after": 255
-      },
-      {
-        "offset": 88478,
-        "before": 0,
-        "after": 92
-      },
-      {
-        "offset": 88479,
-        "before": 255,
-        "after": 93
-      },
-      {
-        "offset": 88480,
-        "before": 1,
-        "after": 94
-      },
-      {
-        "offset": 88481,
-        "before": 39,
-        "after": 92
-      },
-      {
-        "offset": 88482,
-        "before": 0,
-        "after": 93
-      },
-      {
-        "offset": 88483,
-        "before": 255,
-        "after": 94
-      },
-      {
-        "offset": 88484,
-        "before": 5,
-        "after": 92
-      },
-      {
-        "offset": 88485,
-        "before": 40,
-        "after": 93
-      },
-      {
-        "offset": 88486,
-        "before": 0,
-        "after": 94
-      },
-      {
-        "offset": 88487,
-        "before": 255,
-        "after": 92
-      },
-      {
-        "offset": 88488,
-        "before": 2,
-        "after": 93
-      },
-      {
-        "offset": 88489,
-        "before": 255,
-        "after": 94
-      },
-      {
-        "offset": 88490,
-        "before": 255,
-        "after": 92
-      },
-      {
-        "offset": 88491,
-        "before": 255,
-        "after": 93
-      },
-      {
-        "offset": 88492,
-        "before": 255,
-        "after": 94
-      },
-      {
-        "offset": 88493,
-        "before": 255,
-        "after": 93
-      },
-      {
-        "offset": 88494,
-        "before": 92,
-        "after": 94
-      },
-      {
-        "offset": 88495,
-        "before": 93,
-        "after": 92
-      },
-      {
-        "offset": 88496,
-        "before": 94,
-        "after": 92
-      },
-      {
-        "offset": 88497,
-        "before": 92,
-        "after": 93
-      },
-      {
-        "offset": 88498,
-        "before": 93,
-        "after": 92
-      },
-      {
-        "offset": 88499,
-        "before": 94,
-        "after": 93
-      },
-      {
-        "offset": 88500,
-        "before": 92,
-        "after": 94
-      },
-      {
-        "offset": 88501,
-        "before": 93,
-        "after": 92
-      },
-      {
-        "offset": 88502,
-        "before": 94,
-        "after": 93
-      },
-      {
-        "offset": 88503,
-        "before": 92,
-        "after": 94
-      },
-      {
-        "offset": 88504,
-        "before": 93,
-        "after": 92
-      },
-      {
-        "offset": 88505,
-        "before": 94,
-        "after": 93
-      },
-      {
-        "offset": 88506,
-        "before": 92,
-        "after": 94
-      },
-      {
-        "offset": 88507,
-        "before": 93,
-        "after": 92
-      },
-      {
-        "offset": 88509,
-        "before": 93,
-        "after": 95
-      },
-      {
-        "offset": 88510,
-        "before": 94,
-        "after": 92
-      },
-      {
-        "offset": 88511,
-        "before": 92,
-        "after": 93
-      },
-      {
-        "offset": 88512,
-        "before": 92,
-        "after": 94
-      },
-      {
-        "offset": 88513,
-        "before": 93,
-        "after": 92
-      },
-      {
-        "offset": 88514,
-        "before": 92,
-        "after": 94
-      },
-      {
-        "offset": 88515,
-        "before": 93,
-        "after": 95
-      },
-      {
-        "offset": 88516,
-        "before": 94,
-        "after": 92
-      },
-      {
-        "offset": 88524,
-        "before": 94,
-        "after": 93
-      },
-      {
-        "offset": 88525,
-        "before": 95,
-        "after": 94
-      },
-      {
-        "offset": 88526,
-        "before": 92,
-        "after": 93
-      },
-      {
-        "offset": 88527,
-        "before": 93,
-        "after": 94
-      },
-      {
-        "offset": 88528,
-        "before": 94,
-        "after": 92
-      },
-      {
-        "offset": 88529,
-        "before": 92,
-        "after": 93
-      },
-      {
-        "offset": 88531,
-        "before": 95,
-        "after": 92
-      },
-      {
-        "offset": 88532,
-        "before": 92,
-        "after": 93
-      },
-      {
-        "offset": 88533,
-        "before": 92,
-        "after": 94
-      },
-      {
-        "offset": 88534,
-        "before": 93,
-        "after": 92
-      },
-      {
-        "offset": 88536,
-        "before": 92,
-        "after": 95
-      },
-      {
-        "offset": 88539,
-        "before": 92,
-        "after": 95
-      },
-      {
-        "offset": 88542,
-        "before": 93,
-        "after": 95
-      },
-      {
-        "offset": 88543,
-        "before": 94,
-        "after": 93
-      },
-      {
-        "offset": 88545,
-        "before": 93,
-        "after": 95
-      },
-      {
-        "offset": 88546,
-        "before": 94,
-        "after": 93
-      },
-      {
-        "offset": 88547,
-        "before": 92,
-        "after": 95
-      },
-      {
-        "offset": 88548,
-        "before": 93,
-        "after": 96
-      },
-      {
-        "offset": 88549,
-        "before": 94,
-        "after": 93
-      },
-      {
-        "offset": 88550,
-        "before": 92,
-        "after": 95
-      },
-      {
-        "offset": 88551,
-        "before": 94,
-        "after": 96
-      },
-      {
-        "offset": 88552,
-        "before": 95,
-        "after": 93
-      },
-      {
-        "offset": 88553,
-        "before": 93,
-        "after": 94
-      },
-      {
-        "offset": 88554,
-        "before": 94,
-        "after": 96
-      },
-      {
-        "offset": 88555,
-        "before": 95,
-        "after": 93
-      },
-      {
-        "offset": 88556,
-        "before": 93,
-        "after": 96
-      },
-      {
-        "offset": 88557,
-        "before": 94,
-        "after": 97
-      },
-      {
-        "offset": 88558,
-        "before": 95,
-        "after": 93
-      },
-      {
-        "offset": 88559,
-        "before": 93,
-        "after": 97
-      },
-      {
-        "offset": 88560,
-        "before": 92,
-        "after": 94
-      },
-      {
-        "offset": 88562,
-        "before": 93,
-        "after": 92
-      },
-      {
-        "offset": 88563,
-        "before": 95,
-        "after": 93
-      },
-      {
-        "offset": 88564,
-        "before": 96,
-        "after": 94
-      },
-      {
-        "offset": 88565,
-        "before": 93,
-        "after": 95
-      },
-      {
-        "offset": 88566,
-        "before": 95,
-        "after": 96
-      },
-      {
-        "offset": 88567,
-        "before": 96,
-        "after": 92
-      },
-      {
-        "offset": 88568,
-        "before": 93,
-        "after": 175
-      },
-      {
-        "offset": 88569,
-        "before": 94,
-        "after": 176
-      },
-      {
-        "offset": 88570,
-        "before": 96,
-        "after": 92
-      },
-      {
-        "offset": 88571,
-        "before": 93,
-        "after": 97
-      },
-      {
-        "offset": 88572,
-        "before": 96,
-        "after": 97
-      },
-      {
-        "offset": 88574,
-        "before": 93,
-        "after": 188
-      },
-      {
-        "offset": 88575,
-        "before": 97,
-        "after": 154
-      },
-      {
-        "offset": 88576,
-        "before": 94,
-        "after": 196
-      },
-      {
-        "offset": 88577,
-        "before": 95,
-        "after": 154
-      },
-      {
-        "offset": 88578,
-        "before": 92,
-        "after": 204
-      },
-      {
-        "offset": 88579,
-        "before": 93,
-        "after": 154
-      },
-      {
-        "offset": 88580,
-        "before": 94,
-        "after": 212
-      },
-      {
-        "offset": 88581,
-        "before": 95,
-        "after": 154
-      },
-      {
-        "offset": 88582,
-        "before": 96,
-        "after": 220
-      },
-      {
-        "offset": 88583,
-        "before": 92,
-        "after": 154
-      },
-      {
-        "offset": 88584,
-        "before": 175,
-        "after": 225
-      },
-      {
-        "offset": 88585,
-        "before": 176,
-        "after": 154
-      },
-      {
-        "offset": 88586,
-        "before": 92,
-        "after": 225
-      },
-      {
-        "offset": 88587,
-        "before": 97,
-        "after": 154
-      },
-      {
-        "offset": 88588,
-        "before": 97,
-        "after": 225
-      },
-      {
-        "offset": 88589,
-        "before": 97,
-        "after": 154
-      },
-      {
-        "offset": 88590,
-        "before": 188,
-        "after": 225
-      },
-      {
-        "offset": 88592,
-        "before": 196,
-        "after": 225
+    "add": null,
+    "rules_pages": [
+      {
+        "index": 0,
+        "controls": [
+          {
+            "id": 100,
+            "class": "Button",
+            "text": "确定",
+            "enabled": true
+          },
+          {
+            "id": 110,
+            "class": "Button",
+            "text": "取消",
+            "enabled": true
+          },
+          {
+            "id": 120,
+            "class": "CPageControl",
+            "text": "",
+            "enabled": true
+          },
+          {
+            "id": 130,
+            "class": "Afx:400000:b:10003:900015:0",
+            "text": "代码：",
+            "enabled": true
+          },
+          {
+            "id": 140,
+            "class": "Button",
+            "text": "光束组图规律",
+            "enabled": true
+          },
+          {
+            "id": 220,
+            "class": "Button",
+            "text": "规律选择",
+            "enabled": true
+          },
+          {
+            "id": 230,
+            "class": "ListBox",
+            "text": "",
+            "enabled": true
+          },
+          {
+            "id": 240,
+            "class": "Edit",
+            "text": "FD 20 20 F8 FF 00 FF ",
+            "enabled": true
+          },
+          {
+            "id": 250,
+            "class": "Edit",
+            "text": "消除屏幕1",
+            "enabled": true
+          },
+          {
+            "id": 260,
+            "class": "Afx:400000:b:10003:900015:0",
+            "text": "规律名称：",
+            "enabled": true
+          },
+          {
+            "id": 270,
+            "class": "Button",
+            "text": "基本设置",
+            "enabled": true
+          },
+          {
+            "id": 380,
+            "class": "Button",
+            "text": "光束规律拼图",
+            "enabled": true
+          },
+          {
+            "id": 400,
+            "class": "Button",
+            "text": "设置初始坐标",
+            "enabled": true
+          },
+          {
+            "id": 410,
+            "class": "Button",
+            "text": "设置下一张图片坐标",
+            "enabled": true
+          },
+          {
+            "id": 420,
+            "class": "Button",
+            "text": "",
+            "enabled": true
+          },
+          {
+            "id": 430,
+            "class": "Edit",
+            "text": "6",
+            "enabled": true
+          },
+          {
+            "id": 434,
+            "class": "msctls_updown32",
+            "text": "",
+            "enabled": true
+          },
+          {
+            "id": 440,
+            "class": "Afx:400000:b:10003:900015:0",
+            "text": "Y：",
+            "enabled": true
+          },
+          {
+            "id": 450,
+            "class": "Afx:400000:b:10003:900015:0",
+            "text": "X：",
+            "enabled": true
+          },
+          {
+            "id": 460,
+            "class": "Edit",
+            "text": "16",
+            "enabled": true
+          },
+          {
+            "id": 464,
+            "class": "msctls_updown32",
+            "text": "",
+            "enabled": true
+          },
+          {
+            "id": 570,
+            "class": "Button",
+            "text": "复制\r\n\r\n完整\r\n\r\n代码",
+            "enabled": true
+          },
+          {
+            "id": 590,
+            "class": "Afx:400000:b:10003:900015:0",
+            "text": "预览图库：",
+            "enabled": true
+          },
+          {
+            "id": 600,
+            "class": "ComboBox",
+            "text": "[00]000：80010",
+            "enabled": true
+          },
+          {
+            "id": 710,
+            "class": "Button",
+            "text": "运动规律模拟器",
+            "enabled": true
+          }
+        ],
+        "choices": [
+          {
+            "id": 230,
+            "selected": 0,
+            "count": 255,
+            "first": [
+              "[01]001：消除屏幕1",
+              "[02]002：消除屏幕2",
+              "[03]003：消除屏幕3",
+              "[04]004：消除屏幕4",
+              "[05]005：消除屏幕5"
+            ],
+            "selected_text": "[01]001：消除屏幕1",
+            "last": [
+              "[FB]251：未命名",
+              "[FC]252：未命名",
+              "[FD]253：未命名",
+              "[FE]254：未命名",
+              "[FF]255：未命名"
+            ],
+            "class": "ListBox"
+          },
+          {
+            "id": 600,
+            "selected": 0,
+            "count": 256,
+            "first": [
+              "[00]000：80010",
+              "[01]001：80410",
+              "[02]002：80810",
+              "[03]003：80C10",
+              "[04]004：81010"
+            ],
+            "selected_text": "[00]000：80010",
+            "last": [
+              "[FB]251：BEC10",
+              "[FC]252：BF010",
+              "[FD]253：BF410",
+              "[FE]254：BF810",
+              "[FF]255：BFC10"
+            ],
+            "class": "ComboBox"
+          }
+        ]
+      },
+      {
+        "index": 1,
+        "controls": [
+          {
+            "id": 100,
+            "class": "Button",
+            "text": "确定",
+            "enabled": true
+          },
+          {
+            "id": 110,
+            "class": "Button",
+            "text": "取消",
+            "enabled": true
+          },
+          {
+            "id": 120,
+            "class": "CPageControl",
+            "text": "",
+            "enabled": true
+          },
+          {
+            "id": 150,
+            "class": "Edit",
+            "text": "00 83 F0 FC 00 83 F0 FC ",
+            "enabled": true
+          },
+          {
+            "id": 160,
+            "class": "Afx:400000:b:10003:900015:0",
+            "text": "代码：",
+            "enabled": true
+          },
+          {
+            "id": 170,
+            "class": "Button",
+            "text": "物理运行规律",
+            "enabled": true
+          },
+          {
+            "id": 280,
+            "class": "Button",
+            "text": "规律选择",
+            "enabled": true
+          },
+          {
+            "id": 290,
+            "class": "ListBox",
+            "text": "",
+            "enabled": true
+          },
+          {
+            "id": 300,
+            "class": "Afx:400000:b:10003:900015:0",
+            "text": "规律名称：",
+            "enabled": true
+          },
+          {
+            "id": 310,
+            "class": "Button",
+            "text": "基本设置",
+            "enabled": true
+          },
+          {
+            "id": 320,
+            "class": "Edit",
+            "text": "静止1E0H帧",
+            "enabled": true
+          },
+          {
+            "id": 710,
+            "class": "Button",
+            "text": "运动规律模拟器",
+            "enabled": true
+          },
+          {
+            "id": 720,
+            "class": "Button",
+            "text": "图块编号增加：",
+            "enabled": true
+          },
+          {
+            "id": 730,
+            "class": "Edit",
+            "text": "",
+            "enabled": true
+          }
+        ],
+        "choices": [
+          {
+            "id": 290,
+            "selected": 0,
+            "count": 252,
+            "first": [
+              "[01]001：静止1E0H帧",
+              "[02]002：光束军刀规律1（我方）",
+              "[03]003：光束军刀规律2（我方）",
+              "[04]004：光束军刀规律1（敌方）",
+              "[05]005：光束军刀规律2（敌方）"
+            ],
+            "selected_text": "[01]001：静止1E0H帧",
+            "last": [
+              "[F8]248：未命名",
+              "[F9]249：未命名",
+              "[FA]250：未命名",
+              "[FB]251：未命名",
+              "[FC]252：没有用"
+            ],
+            "class": "ListBox"
+          }
+        ]
+      },
+      {
+        "index": 2,
+        "controls": [
+          {
+            "id": 100,
+            "class": "Button",
+            "text": "确定",
+            "enabled": true
+          },
+          {
+            "id": 110,
+            "class": "Button",
+            "text": "取消",
+            "enabled": true
+          },
+          {
+            "id": 120,
+            "class": "CPageControl",
+            "text": "",
+            "enabled": true
+          },
+          {
+            "id": 630,
+            "class": "Edit",
+            "text": "00 83 F0 FC 00 83 F0 FC ",
+            "enabled": true
+          },
+          {
+            "id": 640,
+            "class": "Afx:400000:b:10003:900015:0",
+            "text": "代码：",
+            "enabled": true
+          },
+          {
+            "id": 650,
+            "class": "Button",
+            "text": "物理运行规律",
+            "enabled": true
+          },
+          {
+            "id": 660,
+            "class": "Afx:400000:b:10003:900015:0",
+            "text": "规律名称：",
+            "enabled": true
+          },
+          {
+            "id": 670,
+            "class": "Edit",
+            "text": "静止1E0H帧",
+            "enabled": true
+          },
+          {
+            "id": 680,
+            "class": "Button",
+            "text": "基本设置",
+            "enabled": true
+          },
+          {
+            "id": 690,
+            "class": "ListBox",
+            "text": "",
+            "enabled": true
+          },
+          {
+            "id": 700,
+            "class": "Button",
+            "text": "规律选择",
+            "enabled": true
+          },
+          {
+            "id": 710,
+            "class": "Button",
+            "text": "运动规律模拟器",
+            "enabled": true
+          },
+          {
+            "id": 740,
+            "class": "Button",
+            "text": "图块编号增加：",
+            "enabled": true
+          },
+          {
+            "id": 750,
+            "class": "Edit",
+            "text": "",
+            "enabled": true
+          }
+        ],
+        "choices": [
+          {
+            "id": 690,
+            "selected": 0,
+            "count": 250,
+            "first": [
+              "[01]001：静止1E0H帧",
+              "[02]002：次元歪曲刃组图规律（敌我）",
+              "[03]003：次元歪曲刃规律（敌）X",
+              "[04]004：次元歪曲刃组图规律（敌我）",
+              "[05]005：次元歪曲刃规律（敌）Y"
+            ],
+            "selected_text": "[01]001：静止1E0H帧",
+            "last": [
+              "[F6]246：未命名",
+              "[F7]247：未命名",
+              "[F8]248：未命名",
+              "[F9]249：未命名",
+              "[FA]250：未命名"
+            ],
+            "class": "ListBox"
+          }
+        ]
+      },
+      {
+        "index": 3,
+        "controls": [
+          {
+            "id": 100,
+            "class": "Button",
+            "text": "确定",
+            "enabled": true
+          },
+          {
+            "id": 110,
+            "class": "Button",
+            "text": "取消",
+            "enabled": true
+          },
+          {
+            "id": 120,
+            "class": "CPageControl",
+            "text": "",
+            "enabled": true
+          },
+          {
+            "id": 180,
+            "class": "Edit",
+            "text": "01 00 00 08 F0 00 00 00 28 04 E8 80 80 80 A8 01 E8 80 80 80 FF ",
+            "enabled": true
+          },
+          {
+            "id": 190,
+            "class": "Afx:400000:b:10003:900015:0",
+            "text": "代码：",
+            "enabled": true
+          },
+          {
+            "id": 200,
+            "class": "Button",
+            "text": "拼图预览",
+            "enabled": true
+          },
+          {
+            "id": 210,
+            "class": "Button",
+            "text": "物体图片",
+            "enabled": true
+          },
+          {
+            "id": 330,
+            "class": "Button",
+            "text": "规律选择",
+            "enabled": true
+          },
+          {
+            "id": 340,
+            "class": "ListBox",
+            "text": "",
+            "enabled": true
+          },
+          {
+            "id": 350,
+            "class": "Afx:400000:b:10003:900015:0",
+            "text": "规律名称：",
+            "enabled": true
+          },
+          {
+            "id": 360,
+            "class": "Button",
+            "text": "基本设置",
+            "enabled": true
+          },
+          {
+            "id": 370,
+            "class": "Edit",
+            "text": "新爆炸点拼图1（我方）",
+            "enabled": true
+          },
+          {
+            "id": 390,
+            "class": "Button",
+            "text": "物理图片拼图",
+            "enabled": true
+          },
+          {
+            "id": 520,
+            "class": "Button",
+            "text": "",
+            "enabled": true
+          },
+          {
+            "id": 530,
+            "class": "Afx:400000:b:10003:900015:0",
+            "text": "X：",
+            "enabled": true
+          },
+          {
+            "id": 540,
+            "class": "Edit",
+            "text": "0",
+            "enabled": true
+          },
+          {
+            "id": 544,
+            "class": "msctls_updown32",
+            "text": "",
+            "enabled": true
+          },
+          {
+            "id": 550,
+            "class": "Afx:400000:b:10003:900015:0",
+            "text": "Y：",
+            "enabled": true
+          },
+          {
+            "id": 560,
+            "class": "Edit",
+            "text": "0",
+            "enabled": true
+          },
+          {
+            "id": 564,
+            "class": "msctls_updown32",
+            "text": "",
+            "enabled": true
+          },
+          {
+            "id": 580,
+            "class": "Button",
+            "text": "复制\r\n\r\n完整\r\n\r\n代码",
+            "enabled": true
+          },
+          {
+            "id": 610,
+            "class": "Afx:400000:b:10003:900015:0",
+            "text": "预览图库：",
+            "enabled": true
+          },
+          {
+            "id": 620,
+            "class": "ComboBox",
+            "text": "[00]000：80010",
+            "enabled": true
+          },
+          {
+            "id": 710,
+            "class": "Button",
+            "text": "运动规律模拟器",
+            "enabled": true
+          }
+        ],
+        "choices": [
+          {
+            "id": 340,
+            "selected": 0,
+            "count": 255,
+            "first": [
+              "[01]001：新爆炸点拼图1（我方）",
+              "[02]002：新爆炸点拼图2（我方）",
+              "[03]003：新爆炸点拼图3（我方）",
+              "[04]004：新爆炸点拼图4（我方）",
+              "[05]005：新爆炸点拼图1（敌方）"
+            ],
+            "selected_text": "[01]001：新爆炸点拼图1（我方）",
+            "last": [
+              "[FB]251：未命名",
+              "[FC]252：未命名",
+              "[FD]253：未命名",
+              "[FE]254：未命名",
+              "[FF]255：没用"
+            ],
+            "class": "ListBox"
+          },
+          {
+            "id": 620,
+            "selected": 0,
+            "count": 256,
+            "first": [
+              "[00]000：80010",
+              "[01]001：80410",
+              "[02]002：80810",
+              "[03]003：80C10",
+              "[04]004：81010"
+            ],
+            "selected_text": "[00]000：80010",
+            "last": [
+              "[FB]251：BEC10",
+              "[FC]252：BF010",
+              "[FD]253：BF410",
+              "[FE]254：BF810",
+              "[FF]255：BFC10"
+            ],
+            "class": "ComboBox"
+          }
+        ]
       }
     ]
+  },
+  "save_diff": {
+    "count": 0,
+    "ranges": [],
+    "bytes": []
   }
 }

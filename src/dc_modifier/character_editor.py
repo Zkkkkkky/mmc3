@@ -19,6 +19,22 @@ from fc_editor.codecs.character_dialogue import (
 from .database_graphics import palette_color
 
 
+def legacy_portrait_selectors(record: PortraitRecord) -> tuple[int, int, int, int]:
+    """Return the four-per-library selectors displayed by the legacy editor.
+
+    Background portraits address eight positions in a 2 KiB even-bank window.
+    The reference UI folds positions 5--8 into the following displayed 1 KiB
+    library and always presents positions 1--4.
+    """
+
+    return (
+        record.front_bank,
+        record.front_slot + 1,
+        (record.back_bank & 0xFE) + record.back_slot // 4,
+        record.back_slot % 4 + 1,
+    )
+
+
 class CharacterDialogueWidget(QGroupBox):
     changed = Signal()
 
@@ -415,8 +431,8 @@ class CharacterDetailsWidget(QWidget):
         portrait_grid.setContentsMargins(0, 0, 0, 0)
         self.portrait_fields = {}
         for index, (key, label, minimum, maximum) in enumerate((
-            ("front_bank", "正面图库", 0, 255), ("front_slot", "正面位置", 1, 4),
-            ("back_bank", "背景图库寄存器", 0, 255), ("back_slot", "背景位置（2KB内）", 1, 8),
+            ("front_bank", "正面图库", 0, 255), ("front_slot", "正面头像", 1, 4),
+            ("back_bank", "背景图库", 0, 255), ("back_slot", "背景头像", 1, 4),
             ("color0", "头像颜色1", 0, 63), ("color1", "头像颜色2", 0, 63),
             ("color2", "头像颜色3", 0, 63),
         )):
@@ -458,7 +474,10 @@ class CharacterDetailsWidget(QWidget):
             row.addWidget(button)
         row.addStretch()
         form.addRow(uploads)
-        hint = QLabel("头像由真实 CHR 图块预览。背景使用 2KB 图库窗口，寄存器低位由硬件忽略；位置 5—8 使用后半个 1KB。")
+        hint = QLabel(
+            "头像由真实 CHR 图块预览。与旧修改器一致，每个图库显示头像 1—4；"
+            "背景记录的 2KB 后半页会自动换算为下一图库，不再显示成位置 5—8。"
+        )
         hint.setWordWrap(True)
         form.addRow(hint)
         tabs.addTab(portrait, "头像设置与上传")
@@ -558,9 +577,17 @@ class CharacterDetailsWidget(QWidget):
                 check.setChecked(bool(record.spirit_mask & (1 << (23 - index))))
             for cost, value in zip(self.costs, codec.costs()):
                 cost.setValue(value)
+            selector_values = dict(zip(
+                ("front_bank", "front_slot", "back_bank", "back_slot"),
+                legacy_portrait_selectors(portrait),
+            ))
             for key, spin in self.portrait_fields.items():
-                value = portrait.colors[int(key[-1])] if key.startswith("color") else getattr(portrait, key)
-                spin.setValue(value + (1 if key.endswith("slot") else 0))
+                value = (
+                    portrait.colors[int(key[-1])]
+                    if key.startswith("color")
+                    else selector_values[key]
+                )
+                spin.setValue(value)
             self.shared_attributes.setChecked(False)
             self.shared_portrait.setChecked(False)
             for label, is_portrait in ((self.attribute_sharing, False), (self.portrait_sharing, True)):
@@ -591,8 +618,16 @@ class CharacterDetailsWidget(QWidget):
 
     def portrait_record(self) -> PortraitRecord:
         values = {key: spin.value() for key, spin in self.portrait_fields.items()}
+        original = self.codec.read_portrait(self.character_id)
+        background_bank = (
+            (values["back_bank"] & 0xFE) | (original.back_bank & 0x01)
+        )
+        background_slot = (
+            (values["back_bank"] & 0x01) * 4 + values["back_slot"] - 1
+        )
         return PortraitRecord(tuple(values[f"color{index}"] for index in range(3)),
-                              values["front_bank"], values["back_bank"], values["front_slot"] - 1, values["back_slot"] - 1)
+                              values["front_bank"], background_bank,
+                              values["front_slot"] - 1, background_slot)
 
     def pending_patches(self):
         if self.codec is None or self.character_id is None:

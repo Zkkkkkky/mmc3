@@ -403,7 +403,7 @@ class ReadableWeaponPage(WeaponPage):
         self.animation_code_button.clicked.connect(self._open_animation_code)
         self.animation_rules_button = QPushButton("规律…")
         self.animation_rules_button.setToolTip(
-            "打开与地图动画共用的背景规律、运行规律、组图规律和调用编辑器。"
+            "打开武器专用的光束组图、两套物理运行规律和物理图片库。"
         )
         self.animation_rules_button.clicked.connect(self._open_animation_rules)
         self.animation_test_button = QPushButton("动画测试")
@@ -455,14 +455,10 @@ class ReadableWeaponPage(WeaponPage):
     def _open_animation_rules(self) -> None:
         if self.project is None:
             return
-        from .legacy_tools import MapAnimationDialog
+        from .weapon_rule_library import WeaponRuleLibraryDialog
 
-        dialog = MapAnimationDialog(parent=self.window(), project=self.project)
-        dialog.setWindowTitle("规律")
-        dialog.tabs.setCurrentIndex(1)
-        if dialog.exec():
-            self.load_record(self.current_id)
-            self.project_changed.emit("已更新动画规律")
+        dialog = WeaponRuleLibraryDialog(self.project, self.window())
+        dialog.exec()
         dialog.deleteLater()
 
     def _launch_animation_test(self) -> None:

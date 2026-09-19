@@ -11,7 +11,7 @@ from unittest.mock import patch
 
 os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 
-from PySide6.QtCore import QRect, Qt
+from PySide6.QtCore import QRect, Qt, QUrl
 from PySide6.QtGui import QAction, QImage, QPainter
 from PySide6.QtWidgets import (
     QApplication,
@@ -29,7 +29,7 @@ from shiboken6 import isValid
 import dc_modifier.workspace as workspace_module
 from dc_modifier.app import (
     LEGACY_ROM, LEGACY_WINDOW_TITLE, LauncherWindow, MainWindow,
-    VisibleArrowStyle,
+    VisibleArrowStyle, startup_rom_from_arguments,
 )
 from dc_modifier.event_page import EventPage
 from dc_modifier.legacy_windows import DatabaseDialog, ScenarioDialog
@@ -289,22 +289,155 @@ class DesktopEditorSmokeTests(QtTestCase):
         finally:
             empty.close()
 
-    def test_launcher_only_shows_author_and_enter_button(self) -> None:
+    def test_launcher_only_shows_author_and_open_rom_button(self) -> None:
         launcher = LauncherWindow()
         try:
             author = launcher.findChild(QLabel, "launcherAuthor")
-            enter = launcher.findChild(QPushButton, "launcherEnterButton")
+            open_rom = launcher.findChild(QPushButton, "launcherOpenRomButton")
             self.assertIsNotNone(author)
-            self.assertIsNotNone(enter)
+            self.assertIsNotNone(open_rom)
             assert author is not None
             self.assertEqual(author.text(), "作者 断月残心")
             self.assertIn("#ef4e4e", author.styleSheet())
+            self.assertTrue(launcher.acceptDrops())
             self.assertEqual(
                 [button.text() for button in launcher.findChildren(QPushButton)],
-                ["进入修改器"],
+                ["打开ROM"],
             )
         finally:
             launcher.close()
+
+    def test_exe_drop_argument_selects_exactly_one_nes_rom(self) -> None:
+        rom = workspace_module.DEFAULT_ROM
+        self.assertEqual(
+            startup_rom_from_arguments(["modifier.exe", str(rom)]),
+            rom,
+        )
+        self.assertEqual(
+            startup_rom_from_arguments(["modifier.exe", str(rom).upper()]),
+            Path(str(rom).upper()),
+        )
+        self.assertIsNone(startup_rom_from_arguments(["modifier.exe"]))
+        self.assertIsNone(
+            startup_rom_from_arguments(["modifier.exe", "readme.txt"])
+        )
+        self.assertIsNone(
+            startup_rom_from_arguments(["modifier.exe", str(rom), str(rom)])
+        )
+        self.assertIsNone(
+            startup_rom_from_arguments(["modifier.exe", str(rom), "readme.txt"])
+        )
+
+    def test_launcher_open_rom_cancel_keeps_launcher(self) -> None:
+        launcher = LauncherWindow()
+        launcher.show()
+        try:
+            with patch.object(QFileDialog, "getOpenFileName", return_value=("", "")):
+                self.assertIsNone(launcher.choose_rom())
+            self.application.processEvents()
+            self.assertTrue(isValid(launcher))
+            self.assertTrue(launcher.isVisible())
+            self.assertIsNone(launcher.main_window)
+        finally:
+            launcher.close()
+
+    def test_launcher_button_selects_and_opens_rom(self) -> None:
+        launcher = LauncherWindow()
+        main = None
+        try:
+            open_button = launcher.findChild(QPushButton, "launcherOpenRomButton")
+            assert open_button is not None
+            selected = str(workspace_module.DEFAULT_ROM)
+            with patch.object(
+                QFileDialog,
+                "getOpenFileName",
+                return_value=(selected, "NES ROM (*.nes)"),
+            ):
+                open_button.click()
+            main = launcher.main_window
+            self.assertIsNotNone(main)
+            assert main is not None
+            self.assertIsNotNone(main.project)
+            assert main.project is not None
+            self.assertEqual(main.project.path.resolve(), Path(selected).resolve())
+        finally:
+            if main is not None:
+                main._saved_snapshot = None
+                main.close()
+            if isValid(launcher):
+                launcher.close()
+
+    def test_launcher_invalid_rom_reports_error_and_stays_open(self) -> None:
+        launcher = LauncherWindow()
+        launcher.show()
+        with tempfile.TemporaryDirectory() as directory:
+            invalid_rom = Path(directory) / "invalid.nes"
+            invalid_rom.write_bytes(b"not an ines rom")
+            try:
+                with patch.object(QMessageBox, "critical") as critical:
+                    self.assertIsNone(launcher.open_rom(invalid_rom))
+                self.application.processEvents()
+                critical.assert_called_once()
+                self.assertIs(critical.call_args.args[0], launcher)
+                self.assertTrue(isValid(launcher))
+                self.assertTrue(launcher.isVisible())
+                self.assertIsNone(launcher.main_window)
+            finally:
+                if isValid(launcher):
+                    launcher.close()
+
+    def test_launcher_drag_filter_and_drop_open_rom(self) -> None:
+        class FakeMimeData:
+            def __init__(self, paths: list[Path]) -> None:
+                self._urls = [QUrl.fromLocalFile(str(path)) for path in paths]
+
+            def urls(self):
+                return self._urls
+
+        class FakeDropEvent:
+            def __init__(self, paths: list[Path]) -> None:
+                self.accepted = False
+                self._mime_data = FakeMimeData(paths)
+
+            def mimeData(self):
+                return self._mime_data
+
+            def acceptProposedAction(self) -> None:
+                self.accepted = True
+
+        launcher = LauncherWindow()
+        main = None
+        try:
+            invalid = FakeDropEvent([Path("not-a-rom.txt")])
+            launcher.dragEnterEvent(invalid)
+            self.assertFalse(invalid.accepted)
+
+            multiple = FakeDropEvent([
+                workspace_module.DEFAULT_ROM,
+                workspace_module.DEFAULT_ROM,
+            ])
+            launcher.dragEnterEvent(multiple)
+            self.assertFalse(multiple.accepted)
+
+            valid = FakeDropEvent([workspace_module.DEFAULT_ROM])
+            launcher.dragEnterEvent(valid)
+            self.assertTrue(valid.accepted)
+
+            dropped = FakeDropEvent([workspace_module.DEFAULT_ROM])
+            launcher.dropEvent(dropped)
+            main = launcher.main_window
+            self.assertTrue(dropped.accepted)
+            self.assertIsNotNone(main)
+            assert main is not None
+            self.assertIsNotNone(main.project)
+            assert main.project is not None
+            self.assertEqual(main.project.path.resolve(), workspace_module.DEFAULT_ROM.resolve())
+        finally:
+            if main is not None:
+                main._saved_snapshot = None
+                main.close()
+            if isValid(launcher):
+                launcher.close()
 
     def test_reference_command_ids_dispatch_only_enabled_actions(self) -> None:
         self.assertFalse(self.window.dispatch_legacy_command(19999))
@@ -444,7 +577,7 @@ class DesktopEditorSmokeTests(QtTestCase):
             window._saved_snapshot = None
             window.close()
 
-    def test_enter_destroys_launcher_and_main_closes_normally(self) -> None:
+    def test_open_rom_destroys_launcher_and_main_closes_normally(self) -> None:
         class TrackingLauncher(LauncherWindow):
             def __init__(self) -> None:
                 self.close_event_count = 0
@@ -458,7 +591,7 @@ class DesktopEditorSmokeTests(QtTestCase):
         launcher.show()
         main = None
         try:
-            main = launcher.enter_editor()
+            main = launcher.open_rom(workspace_module.DEFAULT_ROM)
             self.assertEqual(launcher.close_event_count, 1)
             self.application.processEvents()
             self.assertFalse(isValid(launcher))
@@ -1234,9 +1367,6 @@ class DesktopEditorSmokeTests(QtTestCase):
         assert self.window.project is not None
         page = self.window.pages[self.window.page_index["maps"]]
         assert isinstance(page, MapPage)
-        page._trigger_write_verified = True
-        page._sync_record_write_state()
-        page._update_overlays()
         self.assertEqual(self.window.project.get_map_triggers(0), ())
         page.trigger_table.set_rows([(3, 4, 0xFF, 0xF2)])
         self.assertTrue(page.apply_button.isEnabled())
