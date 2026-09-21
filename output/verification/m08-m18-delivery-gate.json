@@ -1,10 +1,10 @@
 {
-  "generated_at": "2026-09-21T22:06:50+08:00",
+  "generated_at": "2026-09-21T23:32:47+08:00",
   "machine_gate_passed": true,
   "implementation_complete": true,
-  "user_acceptance_complete": false,
-  "overall_delivery_complete": false,
-  "conclusion": "M08—M18 共 11 个模块的机器门禁与当前声明实现范围均通过；M12 已用参考动态黄金把组图首图块开放、X/Y 非持久化锁为只读，其余无安全协议或双证据范围继续门禁。M18 已由用户现场确认通过；其余模块仍待用户签收，因此总交付不得标记为已完成。",
+  "user_acceptance_complete": true,
+  "overall_delivery_complete": true,
+  "conclusion": "M08—M18 共 11 个模块的机器门禁与当前声明实现范围均通过；M12 已用参考动态黄金把组图首图块开放、X/Y 非持久化锁为只读，其余无安全协议或双证据范围继续门禁。M08—M17 已由用户明确按当前实现范围签收，M18 已由用户现场确认通过；既有只读、延期和参考不可达边界继续保留。",
   "formal_executable": {
     "path": "output/app/新DC篇完整修改器.exe",
     "sha256": "72E78D4900BAA7AF64187346A8B51EF20D4D7FF616517E5426B4F6542B98A752",
@@ -13,7 +13,7 @@
   },
   "current_build_verification": {
     "path": "output/verification/m08-m18-current-build-verification-2026-09-19.json",
-    "sha256": "9BB6E9D7F83E1FC70E5D638622B70FDCB1C02752B25833BAE2AABB218DF1BD10",
+    "sha256": "B5D31F44855D8C77B1FF5AE9B49A5CC274ABF304AE4728289676E27C06C1D6AA",
     "full_regression_passed": true,
     "full_regression_tests": 728,
     "self_test_exit_code": 0,
@@ -38,108 +38,108 @@
     "modules": 11,
     "machine_gate_passed": 11,
     "implementation_scope_complete": 11,
-    "user_accepted": 1
+    "user_accepted": 11
   },
   "modules": {
     "M08": {
-      "status": "implementation_complete_reference_and_user_pending",
+      "status": "user_accepted_current_scope",
       "implementation_scope_complete": true,
       "machine_gate_passed": true,
       "evidence": "output/verification/m08-battle-text-compatibility.json",
-      "evidence_sha256": "0100CF9A4D7BD0AD58CBC10DD245D7CCDDF7269C7B9EBF761D8C856E3484DE74",
+      "evidence_sha256": "07B495C8EE16EC227C72FF1AED0E5DABD760F036ECC5FECE1BFB25E5099C3528",
       "checklist": "docs/M08验收清单.md",
       "checklist_exists": true,
-      "user_acceptance": "pending"
+      "user_acceptance": "accepted"
     },
     "M09": {
-      "status": "implementation_complete_reference_and_user_pending",
+      "status": "user_accepted_current_scope",
       "implementation_scope_complete": true,
       "machine_gate_passed": true,
       "evidence": "output/verification/m09-other1-compatibility.json",
-      "evidence_sha256": "B9CC257C36B6FB004044B746666310363F93EFCEA253391F85322DDDB312A4A9",
+      "evidence_sha256": "59902AB4B2AFA5BA4EAFD792894AE8255CDBA329993DA400BA4025141235DFC8",
       "checklist": "docs/M09验收清单.md",
       "checklist_exists": true,
-      "user_acceptance": "pending"
+      "user_acceptance": "accepted"
     },
     "M10": {
-      "status": "implementation_complete_reference_and_user_pending",
+      "status": "user_accepted_current_scope",
       "implementation_scope_complete": true,
       "machine_gate_passed": true,
       "evidence": "output/verification/m10-other2-compatibility.json",
-      "evidence_sha256": "3E1CBCF66854E61BDF0687951704127B89973A885D89514AC4EFE52137A5A7B5",
+      "evidence_sha256": "E6598163B051CC1C81919BAAEBCA6A208E659F4EFF1F4E60F50A5EA5340C923A",
       "checklist": "docs/M10验收清单.md",
       "checklist_exists": true,
-      "user_acceptance": "pending"
+      "user_acceptance": "accepted"
     },
     "M11": {
-      "status": "implementation_complete_reference_and_user_pending",
+      "status": "user_accepted_current_scope",
       "implementation_scope_complete": true,
       "machine_gate_passed": true,
       "evidence": "output/verification/m11-font-compatibility.json",
-      "evidence_sha256": "B4439B09592127A919A9DEFCAD01244DDB92E45A3373A1EFA65DF156065735BC",
+      "evidence_sha256": "B90278DC55B74A6D1815B84D14585BF942F923D36C8746D382B734987E86D582",
       "checklist": "docs/M11验收清单.md",
       "checklist_exists": true,
-      "user_acceptance": "pending"
+      "user_acceptance": "accepted"
     },
     "M12": {
-      "status": "implementation_complete_guarded_reference_and_user_pending",
+      "status": "user_accepted_guarded_scope",
       "implementation_scope_complete": true,
       "machine_gate_passed": true,
       "evidence": "output/verification/m12-animation-compatibility.json",
-      "evidence_sha256": "502B78335BF8BC7D3B0B61F7DA3FA0A79F0FACC6ECD460BBDC9F2C4FD24044EA",
+      "evidence_sha256": "020C3F0F804FECF2E6C251A3FE79ED42B5429925008874192D250DAC1D318D60",
       "checklist": "docs/M12验收清单.md",
       "checklist_exists": true,
-      "user_acceptance": "pending"
+      "user_acceptance": "accepted"
     },
     "M13": {
-      "status": "implementation_complete_reference_and_user_pending",
+      "status": "user_accepted_current_scope",
       "implementation_scope_complete": true,
       "machine_gate_passed": true,
       "evidence": "output/verification/m13-text-conversion.json",
-      "evidence_sha256": "CF1F0B4DD5B0B53E6B93CDA809C8678FFA5BE951FD398C11C013DC2F0C96BE13",
+      "evidence_sha256": "85CD140CAE937D255774AE3D73D46A98AB9253964DB59ABCBF44A1E320344673",
       "checklist": "docs/M13验收清单.md",
       "checklist_exists": true,
-      "user_acceptance": "pending"
+      "user_acceptance": "accepted"
     },
     "M14": {
-      "status": "implementation_complete_reference_and_user_pending",
+      "status": "user_accepted_current_scope",
       "implementation_scope_complete": true,
       "machine_gate_passed": true,
       "evidence": "output/verification/m14-scenario-compatibility.json",
-      "evidence_sha256": "5C172341FA431DAAD61EAEFE607C9572EFEE457CC93A4E3EDB4E4C598409BCB8",
+      "evidence_sha256": "088D74625C6D45BD7723FB3C444EAFB12AAF8BBE54468FB0CFBBA79180A04744",
       "checklist": "docs/M14验收清单.md",
       "checklist_exists": true,
-      "user_acceptance": "pending"
+      "user_acceptance": "accepted"
     },
     "M15": {
-      "status": "implementation_complete_reference_and_user_pending",
+      "status": "user_accepted_current_scope",
       "implementation_scope_complete": true,
       "machine_gate_passed": true,
       "evidence": "output/verification/m15-attribute-calculator.json",
-      "evidence_sha256": "32CEED70A5099B52550FA2EF31F63C2FD499846EFE2C8581E4F36DF354044A02",
+      "evidence_sha256": "30F77C98100A679D470FFD5ABC4AA813DB919BF342C2CA7C0114773DC78CB39A",
       "checklist": "docs/M15验收清单.md",
       "checklist_exists": true,
-      "user_acceptance": "pending"
+      "user_acceptance": "accepted"
     },
     "M16": {
-      "status": "implementation_complete_reference_and_user_pending",
+      "status": "user_accepted_guarded_scope",
       "implementation_scope_complete": true,
       "machine_gate_passed": true,
       "evidence": "output/verification/m16-save-compatibility.json",
-      "evidence_sha256": "68458FC04AC9D0C286CA5C511B09B4C39D82B4C1A26E9A17DB0988D7BC27F396",
+      "evidence_sha256": "E4F0B99636A8DEF15524C26C8B7474894F3B60D97B4DC0466643C2BD400B289D",
       "checklist": "docs/M16验收清单.md",
       "checklist_exists": true,
-      "user_acceptance": "pending"
+      "user_acceptance": "accepted"
     },
     "M17": {
-      "status": "aligned_regression_guard_user_checklist_pending",
+      "status": "user_accepted_current_scope",
       "implementation_scope_complete": true,
       "machine_gate_passed": true,
       "evidence": "output/verification/m17-global-compatibility.json",
-      "evidence_sha256": "BCC75E2F8EA293A67AFA7E74527737D99DFDA19B753456D0366913764B5DFB3A",
+      "evidence_sha256": "FB3E9C65F859196A89F970C9FA08F7A65E6F05D21940DBD8361480A02F802BA6",
       "checklist": "docs/需求拆分/M17_其他窗口.md",
       "checklist_exists": true,
-      "user_acceptance": "pending"
+      "user_acceptance": "accepted"
     },
     "M18": {
       "status": "user_accepted",
@@ -154,7 +154,7 @@
   },
   "blocking_reasons": [
     "M12 的 6 条无安全参数、31 条动态/不完整背景、三表任意通用搬移和 10 个已逐项审计但证据冲突/不足的调用均按需求保持只读；这是完成态安全门禁，不是待猜写功能。",
-    "前一构建 A0675C1…B1C0 与当前构建 72E78D4…98A752 均已完成 Windows 原生代理烟测；当前构建另通过 728/728 全量回归、隐藏自检及 Mesen 17/17 运行时基线。代理烟测不替代用户最终签收。M12 参考窗口三页签及组图首图块保存/冷启动重开已取得动态证据。",
-    "用户最终签收表必须由用户明确填写，实现侧自验不等于用户验收。"
+    "前一构建 A0675C1…B1C0 与当前构建 72E78D4…98A752 均已完成 Windows 原生代理烟测；当前构建另通过 728/728 全量回归、隐藏自检及 Mesen 17/17 运行时基线。M12 参考窗口三页签及组图首图块保存/冷启动重开已取得动态证据。",
+    "2026-09-21 用户明确确认 M03—M17 按当前实现范围通过；本报告据此记录 M08—M17 用户签收，不扩大任何模块的声明实现范围。"
   ]
 }

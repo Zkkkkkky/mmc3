@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-21T21:46:18+08:00",
+  "generated_at": "2026-09-21T23:15:21+08:00",
   "passed": true,
   "delivery_status": "implementation_complete_reference_and_user_pending",
   "conclusion": "M15 机体/人物/武器/等级联动、完整命中/双击/伤害公式、M17 实时参数和 D6 禁用按钮均通过实现侧门禁；参考 EXE 逐行动态黄金与用户签收仍待完成。",

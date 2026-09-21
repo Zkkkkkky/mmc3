@@ -32,61 +32,61 @@ MODULES: dict[str, dict[str, object]] = {
         "evidence": "output/verification/m08-battle-text-compatibility.json",
         "checklist": "docs/M08验收清单.md",
         "implementation_scope_complete": True,
-        "status": "implementation_complete_reference_and_user_pending",
+        "status": "user_accepted_current_scope",
     },
     "M09": {
         "evidence": "output/verification/m09-other1-compatibility.json",
         "checklist": "docs/M09验收清单.md",
         "implementation_scope_complete": True,
-        "status": "implementation_complete_reference_and_user_pending",
+        "status": "user_accepted_current_scope",
     },
     "M10": {
         "evidence": "output/verification/m10-other2-compatibility.json",
         "checklist": "docs/M10验收清单.md",
         "implementation_scope_complete": True,
-        "status": "implementation_complete_reference_and_user_pending",
+        "status": "user_accepted_current_scope",
     },
     "M11": {
         "evidence": "output/verification/m11-font-compatibility.json",
         "checklist": "docs/M11验收清单.md",
         "implementation_scope_complete": True,
-        "status": "implementation_complete_reference_and_user_pending",
+        "status": "user_accepted_current_scope",
     },
     "M12": {
         "evidence": "output/verification/m12-animation-compatibility.json",
         "checklist": "docs/M12验收清单.md",
         "implementation_scope_complete": True,
-        "status": "implementation_complete_guarded_reference_and_user_pending",
+        "status": "user_accepted_guarded_scope",
     },
     "M13": {
         "evidence": "output/verification/m13-text-conversion.json",
         "checklist": "docs/M13验收清单.md",
         "implementation_scope_complete": True,
-        "status": "implementation_complete_reference_and_user_pending",
+        "status": "user_accepted_current_scope",
     },
     "M14": {
         "evidence": "output/verification/m14-scenario-compatibility.json",
         "checklist": "docs/M14验收清单.md",
         "implementation_scope_complete": True,
-        "status": "implementation_complete_reference_and_user_pending",
+        "status": "user_accepted_current_scope",
     },
     "M15": {
         "evidence": "output/verification/m15-attribute-calculator.json",
         "checklist": "docs/M15验收清单.md",
         "implementation_scope_complete": True,
-        "status": "implementation_complete_reference_and_user_pending",
+        "status": "user_accepted_current_scope",
     },
     "M16": {
         "evidence": "output/verification/m16-save-compatibility.json",
         "checklist": "docs/M16验收清单.md",
         "implementation_scope_complete": True,
-        "status": "implementation_complete_reference_and_user_pending",
+        "status": "user_accepted_guarded_scope",
     },
     "M17": {
         "evidence": "output/verification/m17-global-compatibility.json",
         "checklist": "docs/需求拆分/M17_其他窗口.md",
         "implementation_scope_complete": True,
-        "status": "aligned_regression_guard_user_checklist_pending",
+        "status": "user_accepted_current_scope",
     },
     "M18": {
         "evidence": "output/verification/m18-unit-export-verification.json",
@@ -97,6 +97,16 @@ MODULES: dict[str, dict[str, object]] = {
 }
 
 USER_ACCEPTANCE = {
+    "M08": "accepted",
+    "M09": "accepted",
+    "M10": "accepted",
+    "M11": "accepted",
+    "M12": "accepted",
+    "M13": "accepted",
+    "M14": "accepted",
+    "M15": "accepted",
+    "M16": "accepted",
+    "M17": "accepted",
     "M18": "accepted",
 }
 
@@ -162,7 +172,8 @@ def analyze() -> dict[str, object]:
         "conclusion": (
             "M08—M18 共 11 个模块的机器门禁与当前声明实现范围均通过；M12 已用参考动态黄金"
             "把组图首图块开放、X/Y 非持久化锁为只读，其余无安全协议或双证据范围继续门禁。"
-            "M18 已由用户现场确认通过；其余模块仍待用户签收，因此总交付不得标记为已完成。"
+            "M08—M17 已由用户明确按当前实现范围签收，M18 已由用户现场确认通过；"
+            "既有只读、延期和参考不可达边界继续保留。"
         ),
         "formal_executable": {
             "path": EXE.resolve().relative_to(ROOT).as_posix(),
@@ -220,8 +231,8 @@ def analyze() -> dict[str, object]:
         "modules": modules,
         "blocking_reasons": [
             "M12 的 6 条无安全参数、31 条动态/不完整背景、三表任意通用搬移和 10 个已逐项审计但证据冲突/不足的调用均按需求保持只读；这是完成态安全门禁，不是待猜写功能。",
-            "前一构建 A0675C1…B1C0 与当前构建 72E78D4…98A752 均已完成 Windows 原生代理烟测；当前构建另通过 728/728 全量回归、隐藏自检及 Mesen 17/17 运行时基线。代理烟测不替代用户最终签收。M12 参考窗口三页签及组图首图块保存/冷启动重开已取得动态证据。",
-            "用户最终签收表必须由用户明确填写，实现侧自验不等于用户验收。",
+            "前一构建 A0675C1…B1C0 与当前构建 72E78D4…98A752 均已完成 Windows 原生代理烟测；当前构建另通过 728/728 全量回归、隐藏自检及 Mesen 17/17 运行时基线。M12 参考窗口三页签及组图首图块保存/冷启动重开已取得动态证据。",
+            "2026-09-21 用户明确确认 M03—M17 按当前实现范围通过；本报告据此记录 M08—M17 用户签收，不扩大任何模块的声明实现范围。",
         ],
     }
 

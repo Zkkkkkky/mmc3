@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-21T21:46:19+08:00",
+  "generated_at": "2026-09-21T23:15:23+08:00",
   "passed": true,
   "delivery_status": "aligned_regression_guard_user_checklist_pending",
   "conclusion": "M17 的 20 个公式/道具字段和 12 个初始阵容字段均通过产品侧单字段差分、撤销、镜像/哨兵和拒绝边界；33 个参考黄金用例档案完整、共覆盖 32 个逻辑字段。",
