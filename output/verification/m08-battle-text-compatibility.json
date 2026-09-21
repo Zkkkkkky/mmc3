@@ -1,0 +1,130 @@
+{
+  "generated_at": "2026-09-19T13:44:04+08:00",
+  "passed": true,
+  "rom": {
+    "path": "output/rom/DC_kuorong_464K.nes",
+    "size": 1310736,
+    "sha256": "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E"
+  },
+  "arenas": {
+    "2A": {
+      "groups": [
+        "battle_00",
+        "battle_01"
+      ],
+      "ranges": [
+        "$8010-$9031",
+        "$9232-$973F",
+        "$9760-$9767"
+      ],
+      "capacity": 5432,
+      "used": 5432,
+      "free": 0,
+      "text_records": 155,
+      "random_directories": 148
+    },
+    "0E": {
+      "groups": [
+        "battle_04",
+        "battle_05"
+      ],
+      "ranges": [
+        "$8010-$9395",
+        "$9596-$97E3",
+        "$97FB-$9AA5",
+        "$9B26-$9B3C"
+      ],
+      "capacity": 6294,
+      "used": 6294,
+      "free": 0,
+      "text_records": 215,
+      "random_directories": 75
+    }
+  },
+  "repack_2a": {
+    "shortened": [
+      "battle_00",
+      0,
+      0
+    ],
+    "grown": [
+      "battle_00",
+      0,
+      1
+    ],
+    "pointer_before": "$802E",
+    "pointer_after": "$802A",
+    "patches": [
+      {
+        "offset": "0x054020",
+        "bytes": 4130,
+        "changed_bytes": 22
+      },
+      {
+        "offset": "0x055242",
+        "bytes": 1294,
+        "changed_bytes": 1
+      }
+    ]
+  },
+  "repack_0e": {
+    "free_after_shorten": 4,
+    "free_after_grow": 0,
+    "first_patches": [
+      {
+        "offset": "0x01C020",
+        "bytes": 4998,
+        "changed_bytes": 17
+      }
+    ],
+    "second_patches": [
+      {
+        "offset": "0x01C020",
+        "bytes": 4998,
+        "changed_bytes": 6
+      },
+      {
+        "offset": "0x01D5A6",
+        "bytes": 590,
+        "changed_bytes": 1
+      }
+    ],
+    "protected_non_text_gaps": [
+      {
+        "cpu_range": "$97E4-$97FA",
+        "bytes": 23,
+        "sha256_before": "534A46A9B1129FF5E7C7712E5A9F4AC9C0EADF6FDDDB74A3081EB28544DDF5D9",
+        "sha256_after": "534A46A9B1129FF5E7C7712E5A9F4AC9C0EADF6FDDDB74A3081EB28544DDF5D9",
+        "unchanged": true
+      },
+      {
+        "cpu_range": "$9B3D-$9E27",
+        "bytes": 747,
+        "sha256_before": "F8340E16A59CA78D70C73BCBDAF43A0A106263D8871D42236ED1634CC483EB4E",
+        "sha256_after": "F8340E16A59CA78D70C73BCBDAF43A0A106263D8871D42236ED1634CC483EB4E",
+        "unchanged": true
+      }
+    ]
+  },
+  "overflow": {
+    "rejected": true,
+    "message": "Bank $2A 战斗文字需要 5434 字节，安全池容量为 5432 字节，超出 2 字节。请先缩短同 Bank 的其他对话。"
+  },
+  "checks": {
+    "supported_rom_hash": true,
+    "baseline_arenas_exactly_full": true,
+    "2a_shorter_and_longer_roundtrip": true,
+    "2a_other_records_preserved": true,
+    "2a_alias_topology_preserved": true,
+    "2a_system_table_and_pool_unchanged": true,
+    "2a_reopened_no_op": true,
+    "0e_shorter_then_reopen_then_longer": true,
+    "0e_non_text_gaps_unchanged": true,
+    "capacity_overflow_rejected": true
+  },
+  "limitations": [
+    "搬移只在同一运行时 Bank 的已验证正文/随机目录段内进行，不跨 Bank，也不占用扩展 PRG。",
+    "Bank $0E 的 $97E4-$97FA 与 $9B3D-$9E27 含非文字数据，始终排除在重排补丁之外。",
+    "若同 Bank 总字节超容，整个事务拒绝；必须先缩短其他对话或还原草稿。"
+  ]
+}

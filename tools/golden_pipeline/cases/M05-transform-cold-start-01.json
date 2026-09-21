@@ -1,0 +1,16 @@
+{
+  "module": "M05", "field": "transform", "case_id": "cold_start_01",
+  "requested_value": "二段变形1号机", "expected_before": "无",
+  "expected_offsets": [297548], "required_offsets": [297548],
+  "optional_offsets": [], "extra_allowed": [],
+  "navigation": [
+    {"op": "menu", "path": "数据->数据库"},
+    {"op": "window", "title": "数据库"},
+    {"op": "list_select", "class": "ListBox", "control_id": 120, "row": 1}
+  ],
+  "edit_steps": [
+    {"op": "select_index", "class": "ComboBox", "control_id": 530, "value": 1},
+    {"op": "click_id", "class": "Button", "control_id": 590}
+  ],
+  "read_selector": {"class": "ComboBox", "control_id": 530, "value_type": "str"}
+}

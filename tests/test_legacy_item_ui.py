@@ -55,6 +55,59 @@ class LegacyItemUiTests(QtTestCase):
             self.project.get_item_prices(),
         )
 
+    def test_other2_restores_reference_two_column_panels_and_linked_editors(self) -> None:
+        self.dialog.tabs.setCurrentWidget(self.dialog.other_page_2)
+        self.application.processEvents()
+        page = self.dialog.other_page_2
+
+        self.assertEqual(page.other2_splitter.count(), 2)
+        self.assertEqual(page.item_group.title(), "道具")
+        self.assertEqual(page.shop_group.title(), "商店")
+        self.assertTrue(page.item_group.isVisibleTo(self.dialog))
+        self.assertTrue(page.shop_group.isVisibleTo(self.dialog))
+        self.assertFalse(hasattr(page, "detail_tabs"))
+
+        page.item_table.setCurrentCell(1, 0)
+        self.application.processEvents()
+        self.assertEqual(page.name_edit.text(), page.item_table.item(1, 1).text())
+        self.assertEqual(page.price_edit.text(), page.item_table.item(1, 2).text())
+        self.assertEqual(self.dialog.item_description_page.record_list.currentRow(), 1)
+        self.assertIn(
+            self.dialog.item_description_page.text_edit.toPlainText()
+            .replace("⟦结束⟧", "")
+            .replace("\n", " ↵ "),
+            self.dialog.item_description_page.record_list.item(1).text(),
+        )
+
+        page.name_edit.setText(page.item_table.item(0, 1).text())
+        page.price_edit.setText("5010")
+        self.assertEqual(page.item_table.item(1, 1).text(), page.name_edit.text())
+        self.assertEqual(page.item_table.item(1, 2).text(), "5010")
+        self.assertTrue(page.has_pending_draft)
+
+    def test_shop_panel_lists_all_slots_and_shows_seven_dialogues_together(self) -> None:
+        self.dialog.tabs.setCurrentWidget(self.dialog.other_page_2)
+        self.application.processEvents()
+        shop = self.dialog.shop_page
+
+        self.assertEqual(shop.shop_list.count(), 15)
+        self.assertEqual(shop.shop_list.item(0).text(), "F0")
+        self.assertEqual(shop.shop_list.item(14).text(), "FE")
+        self.assertEqual(len(shop.dialogue_edits), 7)
+        self.assertTrue(
+            all(edit.isVisibleTo(self.dialog) for edit in shop.dialogue_edits)
+        )
+        shop.shop_list.setCurrentRow(5)
+        self.application.processEvents()
+        self.assertEqual(shop.shop_combo.currentIndex(), 5)
+        self.assertFalse(shop.fields.isEnabled())
+        self.assertFalse(shop.dialogue_group.isEnabled())
+        self.assertIn("地图事件", shop.status_label.text())
+        shop.shop_list.setCurrentRow(0)
+        self.application.processEvents()
+        self.assertTrue(shop.fields.isEnabled())
+        self.assertTrue(shop.dialogue_group.isEnabled())
+
     def test_database_ok_repackages_names_and_prices_as_one_undo_entry(self) -> None:
         page = self.dialog.other_page_2
         original = bytes(self.project.working)

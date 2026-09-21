@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "reason": "发现证据确认曲线编码与固定成长共用锁定副作用，首次32.677秒超门槛；提升正式后冷却重试",
+  "timestamp": "20260920T042726",
+  "moved": [
+    {
+      "module": "M06",
+      "field": "growth_curve",
+      "case_id": "cold_start_01",
+      "from": "output/build/legacy-diff-audit/cases/legacy_live/M06/growth_curve/cold_start_01",
+      "to": "output/build/legacy-diff-audit/cases/diagnostic/retry_history/20260920T042726/M06/growth_curve/cold_start_01",
+      "had_case_json": true,
+      "had_error_json": false
+    }
+  ],
+  "live_result_rows_removed": 1
+}

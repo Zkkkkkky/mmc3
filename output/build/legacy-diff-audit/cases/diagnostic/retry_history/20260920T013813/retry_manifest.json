@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "reason": "combo 130 navigation alone is nonpersistent; actual binding requires clicking owner-drawn icon grid",
+  "timestamp": "20260920T013813",
+  "moved": [
+    {
+      "module": "M05",
+      "field": "icon_bank",
+      "case_id": "cold_start_01",
+      "from": "output/build/legacy-diff-audit/cases/legacy_live/M05/icon_bank/cold_start_01",
+      "to": "output/build/legacy-diff-audit/cases/diagnostic/retry_history/20260920T013813/M05/icon_bank/cold_start_01",
+      "had_case_json": true,
+      "had_error_json": false
+    }
+  ],
+  "live_result_rows_removed": 1
+}

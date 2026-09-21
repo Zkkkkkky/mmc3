@@ -1,4 +1,4 @@
-$ErrorActionPreference = "Stop"
+﻿$ErrorActionPreference = "Stop"
 
 $root = (Resolve-Path -LiteralPath (Join-Path $PSScriptRoot "..")).Path
 $python = Join-Path $root ".venv\Scripts\python.exe"

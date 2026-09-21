@@ -38,6 +38,7 @@ class StoryPage(ProjectPage):
         self.current_selector: int | None = None
         self.current_index: int | None = None
         self.text_table: TextTable | None = default_dc_text_table()
+        self._external_text_table = False
         self._raw_dirty = False
         self._decoded_dirty = False
         self._syncing_raw = False
@@ -184,7 +185,17 @@ class StoryPage(ProjectPage):
         self.editor_tabs.setCurrentWidget(self.decoded)
         self.decoded.setFocus()
 
+    def set_project(self, project) -> None:
+        if project is not self.project:
+            self._external_text_table = False
+        super().set_project(project)
+
     def refresh(self) -> None:
+        if self.project is not None and not self._external_text_table:
+            self.text_table = self.project.dc_text_table()
+            self.table_status.setText(
+                f"工程码表 · {len(self.text_table.byte_to_text)} 条有效映射"
+            )
         previous_selector = self.current_selector
         self.selector.blockSignals(True)
         self.selector.clear()
@@ -709,6 +720,7 @@ class StoryPage(ProjectPage):
                     or "Unicode文本草稿无法在重载码表前提交，请修正后重试。"
                 )
             self.text_table = table
+            self._external_text_table = True
             self.table_status.setText(
                 f"已载入 {Path(filename).name} · {len(self.text_table.byte_to_text)} 条映射"
             )

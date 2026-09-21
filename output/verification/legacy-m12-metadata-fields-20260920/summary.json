@@ -1,0 +1,18 @@
+{
+  "passed": true,
+  "logical_fields": 497,
+  "completed": 497,
+  "statuses": {
+    "no_effect": 497
+  },
+  "family_probe_counts": {
+    "background_name": 32,
+    "map_name": 152,
+    "movement_name": 114,
+    "sprite_name": 198,
+    "sprite_preview_selector": 1
+  },
+  "rom_unchanged": true,
+  "cold_process_logical_readback_passed": 497,
+  "evidence": "output/verification/legacy-m12-metadata-fields-20260920/field-save-chain.jsonl"
+}

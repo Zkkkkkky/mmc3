@@ -55,7 +55,7 @@ class WeaponCodec:
     def decode_record(
         self,
         weapon_id: int,
-        data: bytes | None = None,
+        data: bytes | bytearray | None = None,
     ) -> WeaponRecord:
         source = self.rom.data if data is None else data
         pointer = self.pointers[weapon_id]

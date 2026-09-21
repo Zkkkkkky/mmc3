@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "reason": "collector launch stalled before first PID; preserved incomplete snapshots",
+  "timestamp": "20260920T061921",
+  "moved": [
+    {
+      "module": "M06",
+      "field": "transform_dialogue_add",
+      "case_id": "cold_start_02",
+      "from": "output/build/legacy-diff-audit/cases/legacy_live/M06/transform_dialogue_add/cold_start_02",
+      "to": "output/build/legacy-diff-audit/cases/diagnostic/retry_history/20260920T061921/M06/transform_dialogue_add/cold_start_02",
+      "had_case_json": false,
+      "had_error_json": false
+    }
+  ],
+  "live_result_rows_removed": 0
+}

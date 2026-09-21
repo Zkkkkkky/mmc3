@@ -1,0 +1,6 @@
+{
+  "schema_version": 1,
+  "source_case": "output/build/legacy-diff-audit/cases/diagnostic/retry_history/20260920T070029/M06/portrait_back_upload/cold_start_01/case.json",
+  "source_case_sha256": "295AC9FDE412086EB0101437E7E21BD721DA670733773A86D7F23D21B63F804A",
+  "exclude_offsets": [561680]
+}

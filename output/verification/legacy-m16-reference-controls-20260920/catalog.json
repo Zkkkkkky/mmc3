@@ -1,0 +1,742 @@
+{
+  "passed": true,
+  "input_rom": "output/build/legacy-diff-audit/默认配置文件/测试.nes",
+  "input_save": "references/emulator-state/fceux/sav/DC_kuorong.sav",
+  "rom_sha256_before": "a7656c6ece9b463dcc26c8c62f280bdaade55dc39f0a120b8cffdeb54e8cfc2f",
+  "save_sha256_before": "e0cd4a176707d7d3103f11cf3836e99a9db193a153e536c826009c05fc07ebc3",
+  "upper": {
+    "column_count": 11,
+    "headers": [
+      "序号",
+      "人物",
+      "机体",
+      "等级",
+      "机动",
+      "强度",
+      "防御",
+      "速度",
+      "HP",
+      "EXP",
+      "双击速度"
+    ],
+    "rows": [
+      [
+        "00",
+        "阿克塞尔",
+        "Z高达",
+        "24",
+        "7",
+        "307",
+        "221",
+        "309",
+        "1701",
+        "3884",
+        ""
+      ],
+      [
+        "01",
+        "诺里斯",
+        "重型",
+        "26",
+        "6",
+        "343",
+        "345",
+        "210",
+        "1875",
+        "4558",
+        ""
+      ],
+      [
+        "02",
+        "拉米亚",
+        "海牛",
+        "24",
+        "7",
+        "291",
+        "234",
+        "340",
+        "1478",
+        "4095",
+        ""
+      ],
+      [
+        "03",
+        "美雪",
+        "斯佩沙",
+        "25",
+        "8",
+        "267",
+        "208",
+        "316",
+        "1514",
+        "4214",
+        ""
+      ],
+      [
+        "04",
+        "格雷米",
+        "泰坦",
+        "28",
+        "6",
+        "367",
+        "327",
+        "233",
+        "1984",
+        "5095",
+        ""
+      ],
+      [
+        "05",
+        "明人",
+        "斯佩沙",
+        "24",
+        "8",
+        "234",
+        "180",
+        "309",
+        "1409",
+        "3870",
+        ""
+      ],
+      [
+        "06",
+        "玛丽梅亚",
+        "斯佩沙",
+        "24",
+        "8",
+        "234",
+        "180",
+        "309",
+        "1409",
+        "3968",
+        ""
+      ],
+      [
+        "07",
+        "阿姆罗",
+        "龙骑",
+        "26",
+        "7",
+        "333",
+        "248",
+        "288",
+        "1680",
+        "4425",
+        ""
+      ],
+      [
+        "08",
+        "龙马",
+        "大魔神",
+        "25",
+        "7",
+        "334",
+        "380",
+        "196",
+        "1792",
+        "4324",
+        ""
+      ],
+      [
+        "09",
+        "雷蒙",
+        "沙扎比",
+        "26",
+        "7",
+        "353",
+        "255",
+        "333",
+        "1645",
+        "4680",
+        ""
+      ],
+      [
+        "0A",
+        "多蒙",
+        "诺贝尔",
+        "25",
+        "7",
+        "346",
+        "218",
+        "306",
+        "1490",
+        "4170",
+        ""
+      ],
+      [
+        "0B",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        ""
+      ]
+    ]
+  },
+  "lower": {
+    "column_count": 11,
+    "headers": [
+      "序号",
+      "人物",
+      "机体",
+      "等级",
+      "机动",
+      "强度",
+      "防御",
+      "速度",
+      "HP",
+      "金钱",
+      "双击速度"
+    ],
+    "rows": []
+  },
+  "upper_column_probes": [
+    {
+      "column": 0,
+      "cell_text": "00",
+      "new_controls": [],
+      "new_edit_or_combo": [],
+      "windows_before": [
+        {
+          "handle": 38013400,
+          "class": "#32770",
+          "title": "错误"
+        },
+        {
+          "handle": 89261532,
+          "class": "WTWindow",
+          "title": "存档编辑器："
+        },
+        {
+          "handle": 32181050,
+          "class": "WTWindow",
+          "title": "SRW2扩容版修改器V1.0：D:\\GIT\\mmc3\\output\\verification\\legacy-m16-reference-controls-20260920\\probe.nes"
+        }
+      ],
+      "windows_after": [
+        {
+          "handle": 38013400,
+          "class": "#32770",
+          "title": "错误"
+        },
+        {
+          "handle": 89261532,
+          "class": "WTWindow",
+          "title": "存档编辑器："
+        },
+        {
+          "handle": 32181050,
+          "class": "WTWindow",
+          "title": "SRW2扩容版修改器V1.0：D:\\GIT\\mmc3\\output\\verification\\legacy-m16-reference-controls-20260920\\probe.nes"
+        }
+      ],
+      "new_window_details": []
+    },
+    {
+      "column": 1,
+      "cell_text": "阿克塞尔",
+      "new_controls": [],
+      "new_edit_or_combo": [],
+      "windows_before": [
+        {
+          "handle": 38013400,
+          "class": "#32770",
+          "title": "错误"
+        },
+        {
+          "handle": 89261532,
+          "class": "WTWindow",
+          "title": "存档编辑器："
+        },
+        {
+          "handle": 32181050,
+          "class": "WTWindow",
+          "title": "SRW2扩容版修改器V1.0：D:\\GIT\\mmc3\\output\\verification\\legacy-m16-reference-controls-20260920\\probe.nes"
+        }
+      ],
+      "windows_after": [
+        {
+          "handle": 38013400,
+          "class": "#32770",
+          "title": "错误"
+        },
+        {
+          "handle": 89261532,
+          "class": "WTWindow",
+          "title": "存档编辑器："
+        },
+        {
+          "handle": 32181050,
+          "class": "WTWindow",
+          "title": "SRW2扩容版修改器V1.0：D:\\GIT\\mmc3\\output\\verification\\legacy-m16-reference-controls-20260920\\probe.nes"
+        }
+      ],
+      "new_window_details": []
+    },
+    {
+      "column": 2,
+      "cell_text": "Z高达",
+      "new_controls": [],
+      "new_edit_or_combo": [],
+      "windows_before": [
+        {
+          "handle": 38013400,
+          "class": "#32770",
+          "title": "错误"
+        },
+        {
+          "handle": 89261532,
+          "class": "WTWindow",
+          "title": "存档编辑器："
+        },
+        {
+          "handle": 32181050,
+          "class": "WTWindow",
+          "title": "SRW2扩容版修改器V1.0：D:\\GIT\\mmc3\\output\\verification\\legacy-m16-reference-controls-20260920\\probe.nes"
+        }
+      ],
+      "windows_after": [
+        {
+          "handle": 38013400,
+          "class": "#32770",
+          "title": "错误"
+        },
+        {
+          "handle": 89261532,
+          "class": "WTWindow",
+          "title": "存档编辑器："
+        },
+        {
+          "handle": 32181050,
+          "class": "WTWindow",
+          "title": "SRW2扩容版修改器V1.0：D:\\GIT\\mmc3\\output\\verification\\legacy-m16-reference-controls-20260920\\probe.nes"
+        }
+      ],
+      "new_window_details": []
+    },
+    {
+      "column": 3,
+      "cell_text": "24",
+      "new_controls": [],
+      "new_edit_or_combo": [],
+      "windows_before": [
+        {
+          "handle": 38013400,
+          "class": "#32770",
+          "title": "错误"
+        },
+        {
+          "handle": 89261532,
+          "class": "WTWindow",
+          "title": "存档编辑器："
+        },
+        {
+          "handle": 32181050,
+          "class": "WTWindow",
+          "title": "SRW2扩容版修改器V1.0：D:\\GIT\\mmc3\\output\\verification\\legacy-m16-reference-controls-20260920\\probe.nes"
+        }
+      ],
+      "windows_after": [
+        {
+          "handle": 38013400,
+          "class": "#32770",
+          "title": "错误"
+        },
+        {
+          "handle": 89261532,
+          "class": "WTWindow",
+          "title": "存档编辑器："
+        },
+        {
+          "handle": 32181050,
+          "class": "WTWindow",
+          "title": "SRW2扩容版修改器V1.0：D:\\GIT\\mmc3\\output\\verification\\legacy-m16-reference-controls-20260920\\probe.nes"
+        }
+      ],
+      "new_window_details": []
+    },
+    {
+      "column": 4,
+      "cell_text": "7",
+      "new_controls": [],
+      "new_edit_or_combo": [],
+      "windows_before": [
+        {
+          "handle": 38013400,
+          "class": "#32770",
+          "title": "错误"
+        },
+        {
+          "handle": 89261532,
+          "class": "WTWindow",
+          "title": "存档编辑器："
+        },
+        {
+          "handle": 32181050,
+          "class": "WTWindow",
+          "title": "SRW2扩容版修改器V1.0：D:\\GIT\\mmc3\\output\\verification\\legacy-m16-reference-controls-20260920\\probe.nes"
+        }
+      ],
+      "windows_after": [
+        {
+          "handle": 38013400,
+          "class": "#32770",
+          "title": "错误"
+        },
+        {
+          "handle": 89261532,
+          "class": "WTWindow",
+          "title": "存档编辑器："
+        },
+        {
+          "handle": 32181050,
+          "class": "WTWindow",
+          "title": "SRW2扩容版修改器V1.0：D:\\GIT\\mmc3\\output\\verification\\legacy-m16-reference-controls-20260920\\probe.nes"
+        }
+      ],
+      "new_window_details": []
+    },
+    {
+      "column": 5,
+      "cell_text": "307",
+      "new_controls": [],
+      "new_edit_or_combo": [],
+      "windows_before": [
+        {
+          "handle": 38013400,
+          "class": "#32770",
+          "title": "错误"
+        },
+        {
+          "handle": 89261532,
+          "class": "WTWindow",
+          "title": "存档编辑器："
+        },
+        {
+          "handle": 32181050,
+          "class": "WTWindow",
+          "title": "SRW2扩容版修改器V1.0：D:\\GIT\\mmc3\\output\\verification\\legacy-m16-reference-controls-20260920\\probe.nes"
+        }
+      ],
+      "windows_after": [
+        {
+          "handle": 38013400,
+          "class": "#32770",
+          "title": "错误"
+        },
+        {
+          "handle": 89261532,
+          "class": "WTWindow",
+          "title": "存档编辑器："
+        },
+        {
+          "handle": 32181050,
+          "class": "WTWindow",
+          "title": "SRW2扩容版修改器V1.0：D:\\GIT\\mmc3\\output\\verification\\legacy-m16-reference-controls-20260920\\probe.nes"
+        }
+      ],
+      "new_window_details": []
+    },
+    {
+      "column": 6,
+      "cell_text": "221",
+      "new_controls": [],
+      "new_edit_or_combo": [],
+      "windows_before": [
+        {
+          "handle": 38013400,
+          "class": "#32770",
+          "title": "错误"
+        },
+        {
+          "handle": 89261532,
+          "class": "WTWindow",
+          "title": "存档编辑器："
+        },
+        {
+          "handle": 32181050,
+          "class": "WTWindow",
+          "title": "SRW2扩容版修改器V1.0：D:\\GIT\\mmc3\\output\\verification\\legacy-m16-reference-controls-20260920\\probe.nes"
+        }
+      ],
+      "windows_after": [
+        {
+          "handle": 38013400,
+          "class": "#32770",
+          "title": "错误"
+        },
+        {
+          "handle": 89261532,
+          "class": "WTWindow",
+          "title": "存档编辑器："
+        },
+        {
+          "handle": 32181050,
+          "class": "WTWindow",
+          "title": "SRW2扩容版修改器V1.0：D:\\GIT\\mmc3\\output\\verification\\legacy-m16-reference-controls-20260920\\probe.nes"
+        }
+      ],
+      "new_window_details": []
+    },
+    {
+      "column": 7,
+      "cell_text": "309",
+      "new_controls": [],
+      "new_edit_or_combo": [],
+      "windows_before": [
+        {
+          "handle": 38013400,
+          "class": "#32770",
+          "title": "错误"
+        },
+        {
+          "handle": 89261532,
+          "class": "WTWindow",
+          "title": "存档编辑器："
+        },
+        {
+          "handle": 32181050,
+          "class": "WTWindow",
+          "title": "SRW2扩容版修改器V1.0：D:\\GIT\\mmc3\\output\\verification\\legacy-m16-reference-controls-20260920\\probe.nes"
+        }
+      ],
+      "windows_after": [
+        {
+          "handle": 38013400,
+          "class": "#32770",
+          "title": "错误"
+        },
+        {
+          "handle": 89261532,
+          "class": "WTWindow",
+          "title": "存档编辑器："
+        },
+        {
+          "handle": 32181050,
+          "class": "WTWindow",
+          "title": "SRW2扩容版修改器V1.0：D:\\GIT\\mmc3\\output\\verification\\legacy-m16-reference-controls-20260920\\probe.nes"
+        }
+      ],
+      "new_window_details": []
+    },
+    {
+      "column": 8,
+      "cell_text": "1701",
+      "new_controls": [],
+      "new_edit_or_combo": [],
+      "windows_before": [
+        {
+          "handle": 38013400,
+          "class": "#32770",
+          "title": "错误"
+        },
+        {
+          "handle": 89261532,
+          "class": "WTWindow",
+          "title": "存档编辑器："
+        },
+        {
+          "handle": 32181050,
+          "class": "WTWindow",
+          "title": "SRW2扩容版修改器V1.0：D:\\GIT\\mmc3\\output\\verification\\legacy-m16-reference-controls-20260920\\probe.nes"
+        }
+      ],
+      "windows_after": [
+        {
+          "handle": 38013400,
+          "class": "#32770",
+          "title": "错误"
+        },
+        {
+          "handle": 89261532,
+          "class": "WTWindow",
+          "title": "存档编辑器："
+        },
+        {
+          "handle": 32181050,
+          "class": "WTWindow",
+          "title": "SRW2扩容版修改器V1.0：D:\\GIT\\mmc3\\output\\verification\\legacy-m16-reference-controls-20260920\\probe.nes"
+        }
+      ],
+      "new_window_details": []
+    },
+    {
+      "column": 9,
+      "cell_text": "3884",
+      "new_controls": [],
+      "new_edit_or_combo": [],
+      "windows_before": [
+        {
+          "handle": 38013400,
+          "class": "#32770",
+          "title": "错误"
+        },
+        {
+          "handle": 89261532,
+          "class": "WTWindow",
+          "title": "存档编辑器："
+        },
+        {
+          "handle": 32181050,
+          "class": "WTWindow",
+          "title": "SRW2扩容版修改器V1.0：D:\\GIT\\mmc3\\output\\verification\\legacy-m16-reference-controls-20260920\\probe.nes"
+        }
+      ],
+      "windows_after": [
+        {
+          "handle": 38013400,
+          "class": "#32770",
+          "title": "错误"
+        },
+        {
+          "handle": 89261532,
+          "class": "WTWindow",
+          "title": "存档编辑器："
+        },
+        {
+          "handle": 32181050,
+          "class": "WTWindow",
+          "title": "SRW2扩容版修改器V1.0：D:\\GIT\\mmc3\\output\\verification\\legacy-m16-reference-controls-20260920\\probe.nes"
+        }
+      ],
+      "new_window_details": []
+    },
+    {
+      "column": 10,
+      "cell_text": "",
+      "new_controls": [],
+      "new_edit_or_combo": [],
+      "windows_before": [
+        {
+          "handle": 38013400,
+          "class": "#32770",
+          "title": "错误"
+        },
+        {
+          "handle": 89261532,
+          "class": "WTWindow",
+          "title": "存档编辑器："
+        },
+        {
+          "handle": 32181050,
+          "class": "WTWindow",
+          "title": "SRW2扩容版修改器V1.0：D:\\GIT\\mmc3\\output\\verification\\legacy-m16-reference-controls-20260920\\probe.nes"
+        }
+      ],
+      "windows_after": [
+        {
+          "handle": 38013400,
+          "class": "#32770",
+          "title": "错误"
+        },
+        {
+          "handle": 89261532,
+          "class": "WTWindow",
+          "title": "存档编辑器："
+        },
+        {
+          "handle": 32181050,
+          "class": "WTWindow",
+          "title": "SRW2扩容版修改器V1.0：D:\\GIT\\mmc3\\output\\verification\\legacy-m16-reference-controls-20260920\\probe.nes"
+        }
+      ],
+      "new_window_details": []
+    }
+  ],
+  "lower_column_probes": [],
+  "visible_controls": [
+    {
+      "handle": 59771174,
+      "class": "Button",
+      "control_id": 190,
+      "text": "读取存档",
+      "enabled": true
+    },
+    {
+      "handle": 60033308,
+      "class": "Button",
+      "control_id": 180,
+      "text": "保存存档文件",
+      "enabled": true
+    },
+    {
+      "handle": 31262280,
+      "class": "Button",
+      "control_id": 170,
+      "text": "写入存档",
+      "enabled": true
+    },
+    {
+      "handle": 60164324,
+      "class": "Button",
+      "control_id": 160,
+      "text": "打开存档文件",
+      "enabled": true
+    },
+    {
+      "handle": 60164332,
+      "class": "Afx:400000:b:10003:900015:0",
+      "control_id": 150,
+      "text": "存档：",
+      "enabled": true
+    },
+    {
+      "handle": 60754162,
+      "class": "ComboBox",
+      "control_id": 140,
+      "text": "1：没有数据",
+      "enabled": true
+    },
+    {
+      "handle": 59836670,
+      "class": "Afx:400000:b:10003:900015:0",
+      "control_id": 130,
+      "text": "关卡：",
+      "enabled": true
+    },
+    {
+      "handle": 60229882,
+      "class": "ComboBox",
+      "control_id": 120,
+      "text": "27",
+      "enabled": true
+    },
+    {
+      "handle": 121701664,
+      "class": "SysListView32",
+      "control_id": 110,
+      "text": "",
+      "enabled": true
+    },
+    {
+      "handle": 59902210,
+      "class": "SysHeader32",
+      "control_id": 0,
+      "text": "",
+      "enabled": true
+    },
+    {
+      "handle": 36177364,
+      "class": "SysListView32",
+      "control_id": 100,
+      "text": "",
+      "enabled": true
+    },
+    {
+      "handle": 90899910,
+      "class": "SysHeader32",
+      "control_id": 0,
+      "text": "",
+      "enabled": true
+    }
+  ],
+  "rom_sha256_after": "a7656c6ece9b463dcc26c8c62f280bdaade55dc39f0a120b8cffdeb54e8cfc2f",
+  "save_sha256_after": "e0cd4a176707d7d3103f11cf3836e99a9db193a153e536c826009c05fc07ebc3",
+  "rom_unchanged": true,
+  "save_unchanged": true
+}

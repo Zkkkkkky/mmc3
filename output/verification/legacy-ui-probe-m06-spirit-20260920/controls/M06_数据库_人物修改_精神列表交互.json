@@ -1,0 +1,5992 @@
+{
+  "pid": 2512,
+  "list_rect": [
+    644,
+    663,
+    1104,
+    833
+  ],
+  "before_image": "output/verification/legacy-ui-probe-m06-spirit-20260920/screenshots/M06_精神列表_点击前.png",
+  "before": {
+    "count": 24,
+    "selected_index": 0,
+    "item_texts": [
+      "毅力：10",
+      "疾风：15",
+      "共感：5",
+      "防守：15",
+      "强攻：30",
+      "友情：15",
+      "速行：40",
+      "魂：110",
+      "回避：25",
+      "觉醒：40",
+      "热血：60",
+      "再动：50",
+      "奇迹：120",
+      "援助：30",
+      "破击：120",
+      "斗志：120",
+      "干扰：130",
+      "鼓舞：130",
+      "爱心：80",
+      "直击：40",
+      "努力：50",
+      "狙击：5",
+      "援攻：35",
+      "援防：20"
+    ],
+    "item_data": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "style": 1417741265
+  },
+  "after_image": "output/verification/legacy-ui-probe-m06-spirit-20260920/screenshots/M06_精神列表_勾选后.png",
+  "single_click_diff_box": [
+    0,
+    0,
+    460,
+    170
+  ],
+  "after_single_click": {
+    "count": 24,
+    "selected_index": 0,
+    "item_texts": [
+      "毅力：10",
+      "疾风：15",
+      "共感：5",
+      "防守：15",
+      "强攻：30",
+      "友情：15",
+      "速行：40",
+      "魂：110",
+      "回避：25",
+      "觉醒：40",
+      "热血：60",
+      "再动：50",
+      "奇迹：120",
+      "援助：30",
+      "破击：120",
+      "斗志：120",
+      "干扰：130",
+      "鼓舞：130",
+      "爱心：80",
+      "直击：40",
+      "努力：50",
+      "狙击：5",
+      "援攻：35",
+      "援防：20"
+    ],
+    "item_data": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "style": 1417741265
+  },
+  "reverted_image": "output/verification/legacy-ui-probe-m06-spirit-20260920/screenshots/M06_精神列表_恢复后.png",
+  "reverted_pixels_equal": false,
+  "after_revert_click": {
+    "count": 24,
+    "selected_index": 0,
+    "item_texts": [
+      "毅力：10",
+      "疾风：15",
+      "共感：5",
+      "防守：15",
+      "强攻：30",
+      "友情：15",
+      "速行：40",
+      "魂：110",
+      "回避：25",
+      "觉醒：40",
+      "热血：60",
+      "再动：50",
+      "奇迹：120",
+      "援助：30",
+      "破击：120",
+      "斗志：120",
+      "干扰：130",
+      "鼓舞：130",
+      "爱心：80",
+      "直击：40",
+      "努力：50",
+      "狙击：5",
+      "援攻：35",
+      "援防：20"
+    ],
+    "item_data": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "style": 1417741265
+  },
+  "after_double_click_windows": [
+    {
+      "hwnd": 22610914,
+      "class": "NativeHWNDHost",
+      "title": "Mode Indicator",
+      "rect": [
+        0,
+        0,
+        43,
+        43
+      ],
+      "visible": false,
+      "enabled": true,
+      "children": [
+        {
+          "hwnd": 24183874,
+          "class": "Mode Indicator Button",
+          "text": "",
+          "control_id": 0,
+          "rect": [
+            0,
+            0,
+            43,
+            43
+          ],
+          "visible": false,
+          "enabled": true
+        }
+      ]
+    },
+    {
+      "hwnd": 18483838,
+      "class": "CPPToolTip",
+      "title": "",
+      "rect": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "visible": false,
+      "enabled": true,
+      "children": []
+    },
+    {
+      "hwnd": 20384472,
+      "class": "WTWindow",
+      "title": "精神修改",
+      "rect": [
+        723,
+        464,
+        1196,
+        622
+      ],
+      "visible": true,
+      "enabled": true,
+      "children": [
+        {
+          "hwnd": 28050418,
+          "class": "Edit",
+          "text": "",
+          "control_id": 150,
+          "rect": [
+            815,
+            563,
+            1025,
+            603
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "hwnd": 25035764,
+          "class": "Afx:400000:b:10003:900015:0",
+          "text": "精神消耗：",
+          "control_id": 140,
+          "rect": [
+            735,
+            573,
+            805,
+            603
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "hwnd": 26476794,
+          "class": "Edit",
+          "text": "",
+          "control_id": 130,
+          "rect": [
+            815,
+            513,
+            1025,
+            553
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "hwnd": 20579306,
+          "class": "Afx:400000:b:10003:900015:0",
+          "text": "精神名称：",
+          "control_id": 120,
+          "rect": [
+            735,
+            523,
+            805,
+            553
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "hwnd": 24445994,
+          "class": "Button",
+          "text": "取消",
+          "control_id": 110,
+          "rect": [
+            1075,
+            553,
+            1185,
+            583
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "hwnd": 24904310,
+          "class": "Button",
+          "text": "确定",
+          "control_id": 100,
+          "rect": [
+            1075,
+            513,
+            1185,
+            543
+          ],
+          "visible": true,
+          "enabled": true
+        }
+      ]
+    },
+    {
+      "hwnd": 24642498,
+      "class": "_EL_HideOwner",
+      "title": "",
+      "rect": [
+        0,
+        0,
+        28,
+        49
+      ],
+      "visible": false,
+      "enabled": true,
+      "children": []
+    },
+    {
+      "hwnd": 23266446,
+      "class": "WTWindow",
+      "title": "数据库",
+      "rect": [
+        301,
+        104,
+        1616,
+        982
+      ],
+      "visible": true,
+      "enabled": false,
+      "children": [
+        {
+          "hwnd": 17303816,
+          "class": "Button",
+          "text": "查找上一个",
+          "control_id": 2170,
+          "rect": [
+            744,
+            933,
+            874,
+            963
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "hwnd": 17303814,
+          "class": "Button",
+          "text": "查找下一个",
+          "control_id": 2160,
+          "rect": [
+            614,
+            933,
+            744,
+            963
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "hwnd": 17303812,
+          "class": "Edit",
+          "text": "",
+          "control_id": 2150,
+          "rect": [
+            324,
+            933,
+            614,
+            963
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "hwnd": 18876006,
+          "class": "Button",
+          "text": "取消",
+          "control_id": 600,
+          "rect": [
+            1504,
+            933,
+            1594,
+            963
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "hwnd": 18744932,
+          "class": "Button",
+          "text": "确定",
+          "control_id": 590,
+          "rect": [
+            1404,
+            933,
+            1494,
+            963
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "hwnd": 22283412,
+          "class": "CPageControl",
+          "text": "",
+          "control_id": 100,
+          "rect": [
+            304,
+            153,
+            1604,
+            923
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "hwnd": 18286980,
+          "class": "Button",
+          "text": "动画测试",
+          "control_id": 2710,
+          "rect": [
+            744,
+            863,
+            844,
+            903
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 18221434,
+          "class": "Button",
+          "text": "成长方式",
+          "control_id": 2640,
+          "rect": [
+            784,
+            193,
+            1034,
+            913
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 18549118,
+          "class": "Button",
+          "text": "成长修改(16进制快捷修改)",
+          "control_id": 2650,
+          "rect": [
+            804,
+            783,
+            1024,
+            823
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 18286968,
+          "class": "Afx:400000:b:10003:900015:0",
+          "text": "选择：",
+          "control_id": 2630,
+          "rect": [
+            794,
+            213,
+            834,
+            243
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 18352496,
+          "class": "ComboBox",
+          "text": "",
+          "control_id": 2620,
+          "rect": [
+            844,
+            213,
+            1024,
+            238
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 18024810,
+          "class": "SysListView32",
+          "text": "",
+          "control_id": 2610,
+          "rect": [
+            794,
+            253,
+            1024,
+            753
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 18221420,
+          "class": "SysHeader32",
+          "text": "",
+          "control_id": 0,
+          "rect": [
+            795,
+            254,
+            1004,
+            284
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 17893722,
+          "class": "Button",
+          "text": "代码编辑",
+          "control_id": 2560,
+          "rect": [
+            634,
+            863,
+            734,
+            903
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 17959262,
+          "class": "Button",
+          "text": "规律",
+          "control_id": 2550,
+          "rect": [
+            1494,
+            873,
+            1594,
+            913
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 17631570,
+          "class": "CPageControl",
+          "text": "",
+          "control_id": 2540,
+          "rect": [
+            634,
+            383,
+            1594,
+            863
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 18745738,
+          "class": "ListBox",
+          "text": "",
+          "control_id": 2740,
+          "rect": [
+            634,
+            413,
+            1594,
+            863
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 17631568,
+          "class": "ListBox",
+          "text": "",
+          "control_id": 2530,
+          "rect": [
+            634,
+            413,
+            1594,
+            863
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 17697102,
+          "class": "ListBox",
+          "text": "",
+          "control_id": 2520,
+          "rect": [
+            634,
+            413,
+            1594,
+            863
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 17828180,
+          "class": "AfxWnd42s",
+          "text": "<",
+          "control_id": 1008,
+          "rect": [
+            634,
+            383,
+            634,
+            383
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 17434966,
+          "class": "AfxWnd42s",
+          "text": ">",
+          "control_id": 1009,
+          "rect": [
+            634,
+            383,
+            634,
+            383
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 18417840,
+          "class": "Button",
+          "text": "商店",
+          "control_id": 1800,
+          "rect": [
+            954,
+            193,
+            1594,
+            913
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 17303772,
+          "class": "Button",
+          "text": "店员对话",
+          "control_id": 1950,
+          "rect": [
+            964,
+            573,
+            1584,
+            903
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 17369338,
+          "class": "Afx:400000:b:10003:900015:0",
+          "text": "注：店员对话为7个顺序\r\n\r\n对话段编号",
+          "control_id": 2100,
+          "rect": [
+            1384,
+            723,
+            1574,
+            893
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 17303800,
+          "class": "Edit",
+          "text": "",
+          "control_id": 2090,
+          "rect": [
+            1374,
+            623,
+            1564,
+            693
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 17434870,
+          "class": "Afx:400000:b:10003:900015:0",
+          "text": "离开商店对话：",
+          "control_id": 2080,
+          "rect": [
+            1374,
+            593,
+            1484,
+            623
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 17369332,
+          "class": "Afx:400000:b:10003:900015:0",
+          "text": "数量超限对话：",
+          "control_id": 2070,
+          "rect": [
+            1174,
+            593,
+            1284,
+            623
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 17303794,
+          "class": "Edit",
+          "text": "",
+          "control_id": 2060,
+          "rect": [
+            1174,
+            623,
+            1364,
+            693
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 17303792,
+          "class": "Afx:400000:b:10003:900015:0",
+          "text": "是否购买对话：",
+          "control_id": 2050,
+          "rect": [
+            1174,
+            693,
+            1284,
+            723
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 17303790,
+          "class": "Edit",
+          "text": "",
+          "control_id": 2040,
+          "rect": [
+            1174,
+            723,
+            1364,
+            793
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 17303788,
+          "class": "Afx:400000:b:10003:900015:0",
+          "text": "购买之后对话：",
+          "control_id": 2030,
+          "rect": [
+            1174,
+            793,
+            1284,
+            823
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 17303786,
+          "class": "Edit",
+          "text": "",
+          "control_id": 2020,
+          "rect": [
+            1174,
+            823,
+            1364,
+            893
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 17303784,
+          "class": "Edit",
+          "text": "",
+          "control_id": 2010,
+          "rect": [
+            974,
+            823,
+            1164,
+            893
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 17369318,
+          "class": "Afx:400000:b:10003:900015:0",
+          "text": "金钱不够对话：",
+          "control_id": 2000,
+          "rect": [
+            974,
+            793,
+            1084,
+            823
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 17303780,
+          "class": "Edit",
+          "text": "",
+          "control_id": 1990,
+          "rect": [
+            974,
+            723,
+            1164,
+            793
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 17303778,
+          "class": "Afx:400000:b:10003:900015:0",
+          "text": "准备购买对话：",
+          "control_id": 1980,
+          "rect": [
+            974,
+            693,
+            1084,
+            723
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 17369312,
+          "class": "Edit",
+          "text": "",
+          "control_id": 1970,
+          "rect": [
+            974,
+            623,
+            1164,
+            693
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 17369310,
+          "class": "Afx:400000:b:10003:900015:0",
+          "text": "进入商店对话：",
+          "control_id": 1960,
+          "rect": [
+            974,
+            593,
+            1084,
+            623
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 18417842,
+          "class": "Button",
+          "text": "商店设置",
+          "control_id": 1820,
+          "rect": [
+            1164,
+            213,
+            1584,
+            563
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 17369304,
+          "class": "ComboBox",
+          "text": "",
+          "control_id": 1940,
+          "rect": [
+            1234,
+            503,
+            1534,
+            533
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 17434838,
+          "class": "Afx:400000:b:10003:900015:0",
+          "text": "对话：",
+          "control_id": 1930,
+          "rect": [
+            1184,
+            503,
+            1234,
+            533
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 17434834,
+          "class": "ComboBox",
+          "text": "",
+          "control_id": 1920,
+          "rect": [
+            1234,
+            453,
+            1534,
+            483
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 17434832,
+          "class": "Afx:400000:b:10003:900015:0",
+          "text": "店员：",
+          "control_id": 1910,
+          "rect": [
+            1184,
+            453,
+            1234,
+            483
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 17565900,
+          "class": "ComboBox",
+          "text": "",
+          "control_id": 1900,
+          "rect": [
+            1234,
+            403,
+            1534,
+            433
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 17369288,
+          "class": "ComboBox",
+          "text": "",
+          "control_id": 1890,
+          "rect": [
+            1234,
+            353,
+            1534,
+            383
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 17696964,
+          "class": "ComboBox",
+          "text": "",
+          "control_id": 1880,
+          "rect": [
+            1234,
+            303,
+            1534,
+            333
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 18286784,
+          "class": "ComboBox",
+          "text": "",
+          "control_id": 1870,
+          "rect": [
+            1234,
+            253,
+            1534,
+            283
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 18548926,
+          "class": "Afx:400000:b:10003:900015:0",
+          "text": "道具1：",
+          "control_id": 1860,
+          "rect": [
+            1184,
+            253,
+            1234,
+            283
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 18679996,
+          "class": "Afx:400000:b:10003:900015:0",
+          "text": "道具2：",
+          "control_id": 1850,
+          "rect": [
+            1184,
+            303,
+            1234,
+            333
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 19728570,
+          "class": "Afx:400000:b:10003:900015:0",
+          "text": "道具3：",
+          "control_id": 1840,
+          "rect": [
+            1184,
+            353,
+            1234,
+            383
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 19138744,
+          "class": "Afx:400000:b:10003:900015:0",
+          "text": "道具4：",
+          "control_id": 1830,
+          "rect": [
+            1184,
+            403,
+            1234,
+            433
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 18811060,
+          "class": "ListBox",
+          "text": "",
+          "control_id": 1810,
+          "rect": [
+            964,
+            223,
+            1144,
+            563
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 19204256,
+          "class": "Button",
+          "text": "系统文字（谨慎修改）",
+          "control_id": 1760,
+          "rect": [
+            314,
+            193,
+            774,
+            913
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 17303810,
+          "class": "Button",
+          "text": "添加",
+          "control_id": 2140,
+          "rect": [
+            324,
+            753,
+            764,
+            793
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 17500412,
+          "class": "Afx:400000:b:10003:900015:0",
+          "text": "注：\"{\"加3字节16进制代码等于直接写入3字节16进制\r\n    \"[\"为直接写入2字节16进制， \"|\"为直接写入1字节16进制",
+          "control_id": 2110,
+          "rect": [
+            324,
+            213,
+            744,
+            253
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 18942120,
+          "class": "Edit",
+          "text": "",
+          "control_id": 1770,
+          "rect": [
+            324,
+            803,
+            764,
+            903
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 20646042,
+          "class": "ListBox",
+          "text": "",
+          "control_id": 1750,
+          "rect": [
+            324,
+            253,
+            764,
+            753
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 19597486,
+          "class": "Button",
+          "text": "道具",
+          "control_id": 1740,
+          "rect": [
+            314,
+            193,
+            944,
+            913
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 18286764,
+          "class": "Afx:400000:b:10003:900015:0",
+          "text": "道具说明：",
+          "control_id": 1790,
+          "rect": [
+            494,
+            763,
+            574,
+            793
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 18221226,
+          "class": "Edit",
+          "text": "",
+          "control_id": 1780,
+          "rect": [
+            494,
+            793,
+            934,
+            893
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 19138726,
+          "class": "Edit",
+          "text": "",
+          "control_id": 1730,
+          "rect": [
+            324,
+            863,
+            484,
+            893
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 19531940,
+          "class": "Afx:400000:b:10003:900015:0",
+          "text": "价格修改：",
+          "control_id": 1720,
+          "rect": [
+            324,
+            833,
+            404,
+            863
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 19925150,
+          "class": "Edit",
+          "text": "",
+          "control_id": 1710,
+          "rect": [
+            324,
+            793,
+            484,
+            823
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 20383896,
+          "class": "Afx:400000:b:10003:900015:0",
+          "text": "名称修改：",
+          "control_id": 1700,
+          "rect": [
+            324,
+            763,
+            404,
+            793
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 21301394,
+          "class": "SysListView32",
+          "text": "",
+          "control_id": 1690,
+          "rect": [
+            324,
+            223,
+            934,
+            753
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 21301396,
+          "class": "SysHeader32",
+          "text": "",
+          "control_id": 0,
+          "rect": [
+            325,
+            224,
+            914,
+            254
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 18942058,
+          "class": "Button",
+          "text": "武器距离命中补正",
+          "control_id": 1560,
+          "rect": [
+            1344,
+            193,
+            1594,
+            913
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 20842638,
+          "class": "Afx:400000:b:10003:900015:0",
+          "text": "%",
+          "control_id": 1670,
+          "rect": [
+            1518,
+            793,
+            1548,
+            823
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 20187270,
+          "class": "Edit",
+          "text": "",
+          "control_id": 1640,
+          "rect": [
+            1354,
+            793,
+            1514,
+            823
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 20187268,
+          "class": "Afx:400000:b:10003:900015:0",
+          "text": "命中修改：",
+          "control_id": 1630,
+          "rect": [
+            1354,
+            763,
+            1434,
+            793
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 20318330,
+          "class": "ComboBox",
+          "text": "",
+          "control_id": 1600,
+          "rect": [
+            1414,
+            213,
+            1584,
+            238
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 19597432,
+          "class": "Afx:400000:b:10003:900015:0",
+          "text": "选择：",
+          "control_id": 1590,
+          "rect": [
+            1364,
+            213,
+            1404,
+            243
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 19269746,
+          "class": "SysListView32",
+          "text": "",
+          "control_id": 1580,
+          "rect": [
+            1354,
+            253,
+            1584,
+            753
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 20383860,
+          "class": "SysHeader32",
+          "text": "",
+          "control_id": 0,
+          "rect": [
+            1355,
+            254,
+            1585,
+            284
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 19138664,
+          "class": "Button",
+          "text": "升级经验",
+          "control_id": 1550,
+          "rect": [
+            1044,
+            193,
+            1334,
+            913
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 20973712,
+          "class": "Button",
+          "text": "更改等级上限",
+          "control_id": 1680,
+          "rect": [
+            1054,
+            753,
+            1324,
+            793
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 20318348,
+          "class": "Afx:400000:b:10003:900015:0",
+          "text": "升级还需：",
+          "control_id": 1660,
+          "rect": [
+            1204,
+            823,
+            1284,
+            853
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 20383880,
+          "class": "Edit",
+          "text": "",
+          "control_id": 1650,
+          "rect": [
+            1204,
+            853,
+            1324,
+            883
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 19400834,
+          "class": "Edit",
+          "text": "",
+          "control_id": 1620,
+          "rect": [
+            1054,
+            853,
+            1174,
+            883
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 19269758,
+          "class": "Afx:400000:b:10003:900015:0",
+          "text": "总经验：",
+          "control_id": 1610,
+          "rect": [
+            1054,
+            823,
+            1134,
+            853
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 18679916,
+          "class": "SysListView32",
+          "text": "",
+          "control_id": 1570,
+          "rect": [
+            1054,
+            253,
+            1324,
+            753
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 18942062,
+          "class": "SysHeader32",
+          "text": "",
+          "control_id": 0,
+          "rect": [
+            1055,
+            254,
+            1304,
+            284
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 18221124,
+          "class": "Button",
+          "text": "对话段选择",
+          "control_id": 1400,
+          "rect": [
+            314,
+            193,
+            724,
+            913
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 17827910,
+          "class": "ComboBox",
+          "text": "",
+          "control_id": 1410,
+          "rect": [
+            324,
+            223,
+            534,
+            253
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 17827906,
+          "class": "ListBox",
+          "text": "",
+          "control_id": 1390,
+          "rect": [
+            324,
+            263,
+            714,
+            863
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 17500224,
+          "class": "Button",
+          "text": "文字编辑",
+          "control_id": 1380,
+          "rect": [
+            734,
+            193,
+            1594,
+            913
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 17828188,
+          "class": "CPageControl",
+          "text": "",
+          "control_id": 2570,
+          "rect": [
+            744,
+            223,
+            1464,
+            473
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 17303910,
+          "class": "Edit",
+          "text": "",
+          "control_id": 2590,
+          "rect": [
+            744,
+            263,
+            1464,
+            473
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 17893732,
+          "class": "ListBox",
+          "text": "",
+          "control_id": 2580,
+          "rect": [
+            744,
+            263,
+            1464,
+            463
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 33883144,
+          "class": "AfxWnd42s",
+          "text": "<",
+          "control_id": 1008,
+          "rect": [
+            744,
+            223,
+            744,
+            223
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 18090336,
+          "class": "AfxWnd42s",
+          "text": ">",
+          "control_id": 1009,
+          "rect": [
+            744,
+            223,
+            744,
+            223
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 17565758,
+          "class": "Edit",
+          "text": "",
+          "control_id": 1370,
+          "rect": [
+            744,
+            483,
+            1464,
+            863
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 17434664,
+          "class": "Button",
+          "text": "精神列表(双击可修改精神消耗)",
+          "control_id": 1260,
+          "rect": [
+            634,
+            633,
+            1114,
+            843
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "hwnd": 17434666,
+          "class": "ListBox",
+          "text": "",
+          "control_id": 1270,
+          "rect": [
+            644,
+            663,
+            1104,
+            833
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "hwnd": 17958878,
+          "class": "Button",
+          "text": "基本属性",
+          "control_id": 1170,
+          "rect": [
+            634,
+            193,
+            1594,
+            373
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 17762632,
+          "class": "Afx:400000:b:10003:900015:0",
+          "text": "对空攻击：     对陆攻击：     对海攻击：",
+          "control_id": 2490,
+          "rect": [
+            1004,
+            283,
+            1314,
+            313
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 17697094,
+          "class": "Afx:400000:b:10003:900015:0",
+          "text": "射程：         命中：        距离补正：",
+          "control_id": 2480,
+          "rect": [
+            1004,
+            213,
+            1314,
+            243
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 17631556,
+          "class": "Afx:400000:b:10003:900015:0",
+          "text": "武器特技：",
+          "control_id": 2470,
+          "rect": [
+            644,
+            283,
+            754,
+            313
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 17500482,
+          "class": "Afx:400000:b:10003:900015:0",
+          "text": "名称：",
+          "control_id": 2460,
+          "rect": [
+            644,
+            213,
+            754,
+            243
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 19400736,
+          "class": "msctls_updown32",
+          "text": "",
+          "control_id": 1254,
+          "rect": [
+            1294,
+            313,
+            1317,
+            343
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 18614298,
+          "class": "Edit",
+          "text": "",
+          "control_id": 1250,
+          "rect": [
+            1224,
+            313,
+            1294,
+            343
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 17434648,
+          "class": "msctls_updown32",
+          "text": "",
+          "control_id": 1244,
+          "rect": [
+            1184,
+            313,
+            1207,
+            343
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 17696790,
+          "class": "Edit",
+          "text": "",
+          "control_id": 1240,
+          "rect": [
+            1114,
+            313,
+            1184,
+            343
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 17434644,
+          "class": "msctls_updown32",
+          "text": "",
+          "control_id": 1234,
+          "rect": [
+            1074,
+            313,
+            1097,
+            343
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 17500174,
+          "class": "Edit",
+          "text": "",
+          "control_id": 1230,
+          "rect": [
+            1004,
+            313,
+            1074,
+            343
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 17565708,
+          "class": "msctls_updown32",
+          "text": "",
+          "control_id": 1224,
+          "rect": [
+            1294,
+            243,
+            1317,
+            273
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 17565706,
+          "class": "Edit",
+          "text": "",
+          "control_id": 1220,
+          "rect": [
+            1224,
+            243,
+            1294,
+            273
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 18155528,
+          "class": "msctls_updown32",
+          "text": "",
+          "control_id": 1214,
+          "rect": [
+            1184,
+            243,
+            1207,
+            273
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 17500166,
+          "class": "Edit",
+          "text": "",
+          "control_id": 1210,
+          "rect": [
+            1114,
+            243,
+            1184,
+            273
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 18352124,
+          "class": "msctls_updown32",
+          "text": "",
+          "control_id": 1204,
+          "rect": [
+            1074,
+            243,
+            1097,
+            273
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 21563386,
+          "class": "Edit",
+          "text": "",
+          "control_id": 1200,
+          "rect": [
+            1004,
+            243,
+            1074,
+            273
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 32376822,
+          "class": "ComboBox",
+          "text": "",
+          "control_id": 1190,
+          "rect": [
+            644,
+            313,
+            984,
+            343
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 20645874,
+          "class": "Edit",
+          "text": "",
+          "control_id": 1180,
+          "rect": [
+            644,
+            243,
+            984,
+            283
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 20645886,
+          "class": "Button",
+          "text": "防御对话",
+          "control_id": 1160,
+          "rect": [
+            1134,
+            573,
+            1594,
+            843
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "hwnd": 18352224,
+          "class": "Button",
+          "text": "得调整战斗策略！",
+          "control_id": 1520,
+          "rect": [
+            1244,
+            803,
+            1554,
+            833
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "hwnd": 18090076,
+          "class": "Button",
+          "text": "展示一下老兵的韧性！",
+          "control_id": 1510,
+          "rect": [
+            1244,
+            763,
+            1554,
+            793
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "hwnd": 18286682,
+          "class": "Button",
+          "text": "可恶…不会放过你！",
+          "control_id": 1500,
+          "rect": [
+            1244,
+            723,
+            1554,
+            753
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "hwnd": 20842584,
+          "class": "Button",
+          "text": "可恶…不会放过你！",
+          "control_id": 1490,
+          "rect": [
+            1244,
+            683,
+            1554,
+            713
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "hwnd": 18155606,
+          "class": "Button",
+          "text": "展示一下老兵的韧性！",
+          "control_id": 1480,
+          "rect": [
+            1244,
+            643,
+            1554,
+            673
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "hwnd": 18221140,
+          "class": "Button",
+          "text": "展示一下老兵的韧性！",
+          "control_id": 1470,
+          "rect": [
+            1244,
+            603,
+            1554,
+            633
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "hwnd": 21628912,
+          "class": "Afx:400000:b:10003:900015:0",
+          "text": "  被击落：",
+          "control_id": 1150,
+          "rect": [
+            1154,
+            813,
+            1234,
+            833
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "hwnd": 21759982,
+          "class": "Afx:400000:b:10003:900015:0",
+          "text": "重度损伤：",
+          "control_id": 1140,
+          "rect": [
+            1154,
+            773,
+            1234,
+            793
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "hwnd": 19400680,
+          "class": "Afx:400000:b:10003:900015:0",
+          "text": "中度损伤：",
+          "control_id": 1130,
+          "rect": [
+            1154,
+            733,
+            1234,
+            753
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "hwnd": 21104604,
+          "class": "Afx:400000:b:10003:900015:0",
+          "text": "轻微损伤：",
+          "control_id": 1120,
+          "rect": [
+            1154,
+            693,
+            1234,
+            713
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "hwnd": 20514766,
+          "class": "Afx:400000:b:10003:900015:0",
+          "text": "未受损伤：",
+          "control_id": 1110,
+          "rect": [
+            1154,
+            653,
+            1234,
+            673
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "hwnd": 22218720,
+          "class": "Afx:400000:b:10003:900015:0",
+          "text": "防御成功：",
+          "control_id": 1100,
+          "rect": [
+            1154,
+            613,
+            1234,
+            633
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "hwnd": 19204058,
+          "class": "Button",
+          "text": "攻击对话",
+          "control_id": 1090,
+          "rect": [
+            1134,
+            313,
+            1594,
+            563
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "hwnd": 18548818,
+          "class": "Button",
+          "text": "得调整战斗策略！",
+          "control_id": 1460,
+          "rect": [
+            1244,
+            503,
+            1554,
+            533
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "hwnd": 18286670,
+          "class": "Button",
+          "text": "展示一下老兵的韧性！",
+          "control_id": 1450,
+          "rect": [
+            1244,
+            463,
+            1554,
+            493
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "hwnd": 18614352,
+          "class": "Button",
+          "text": "得调整战斗策略！",
+          "control_id": 1440,
+          "rect": [
+            1244,
+            423,
+            1554,
+            453
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "hwnd": 18221128,
+          "class": "Button",
+          "text": "展示一下老兵的韧性！",
+          "control_id": 1430,
+          "rect": [
+            1244,
+            383,
+            1554,
+            413
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "hwnd": 18221132,
+          "class": "Button",
+          "text": "可恶…不会放过你！",
+          "control_id": 1420,
+          "rect": [
+            1244,
+            343,
+            1554,
+            373
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "hwnd": 20645844,
+          "class": "Afx:400000:b:10003:900015:0",
+          "text": "攻击受阻：",
+          "control_id": 1080,
+          "rect": [
+            1154,
+            513,
+            1234,
+            533
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "hwnd": 20449228,
+          "class": "Afx:400000:b:10003:900015:0",
+          "text": "无力反击：",
+          "control_id": 1070,
+          "rect": [
+            1154,
+            473,
+            1234,
+            493
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "hwnd": 18679752,
+          "class": "Afx:400000:b:10003:900015:0",
+          "text": "可以反击：",
+          "control_id": 1060,
+          "rect": [
+            1154,
+            433,
+            1234,
+            453
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "hwnd": 35260358,
+          "class": "Afx:400000:b:10003:900015:0",
+          "text": "二次攻击：",
+          "control_id": 1050,
+          "rect": [
+            1154,
+            393,
+            1234,
+            413
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "hwnd": 21497792,
+          "class": "Afx:400000:b:10003:900015:0",
+          "text": "一次攻击：",
+          "control_id": 1040,
+          "rect": [
+            1154,
+            353,
+            1234,
+            373
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "hwnd": 18876346,
+          "class": "Button",
+          "text": "变形起飞对话",
+          "control_id": 1030,
+          "rect": [
+            634,
+            843,
+            1594,
+            913
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "hwnd": 17303818,
+          "class": "Button",
+          "text": "清空",
+          "control_id": 2180,
+          "rect": [
+            944,
+            873,
+            1024,
+            903
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "hwnd": 18745444,
+          "class": "ComboBox",
+          "text": "",
+          "control_id": 1540,
+          "rect": [
+            744,
+            873,
+            944,
+            903
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "hwnd": 18614370,
+          "class": "Button",
+          "text": "无",
+          "control_id": 1530,
+          "rect": [
+            1244,
+            863,
+            1554,
+            903
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "hwnd": 20645808,
+          "class": "Afx:400000:b:10003:900015:0",
+          "text": "变形对话：",
+          "control_id": 1020,
+          "rect": [
+            1154,
+            883,
+            1234,
+            903
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "hwnd": 17827756,
+          "class": "Afx:400000:b:10003:900015:0",
+          "text": "对话选择：",
+          "control_id": 1010,
+          "rect": [
+            654,
+            883,
+            734,
+            903
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "hwnd": 19728190,
+          "class": "Button",
+          "text": "人物属性",
+          "control_id": 860,
+          "rect": [
+            874,
+            323,
+            1114,
+            623
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "hwnd": 18090370,
+          "class": "Button",
+          "text": "击落不消失",
+          "control_id": 2660,
+          "rect": [
+            994,
+            573,
+            1104,
+            603
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "hwnd": 18614184,
+          "class": "msctls_updown32",
+          "text": "",
+          "control_id": 1004,
+          "rect": [
+            1074,
+            513,
+            1097,
+            543
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "hwnd": 19728292,
+          "class": "Edit",
+          "text": "",
+          "control_id": 1000,
+          "rect": [
+            1014,
+            513,
+            1074,
+            543
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "hwnd": 17696666,
+          "class": "msctls_updown32",
+          "text": "",
+          "control_id": 994,
+          "rect": [
+            944,
+            583,
+            967,
+            613
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "hwnd": 21432216,
+          "class": "Edit",
+          "text": "",
+          "control_id": 990,
+          "rect": [
+            884,
+            583,
+            944,
+            613
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "hwnd": 25757588,
+          "class": "msctls_updown32",
+          "text": "",
+          "control_id": 984,
+          "rect": [
+            944,
+            513,
+            967,
+            543
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "hwnd": 19466130,
+          "class": "Edit",
+          "text": "",
+          "control_id": 980,
+          "rect": [
+            884,
+            513,
+            944,
+            543
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "hwnd": 21104522,
+          "class": "msctls_updown32",
+          "text": "",
+          "control_id": 974,
+          "rect": [
+            944,
+            443,
+            967,
+            473
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "hwnd": 26937222,
+          "class": "Edit",
+          "text": "",
+          "control_id": 970,
+          "rect": [
+            884,
+            443,
+            944,
+            473
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "hwnd": 17893240,
+          "class": "msctls_updown32",
+          "text": "",
+          "control_id": 964,
+          "rect": [
+            1074,
+            443,
+            1097,
+            473
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "hwnd": 20055922,
+          "class": "Edit",
+          "text": "",
+          "control_id": 960,
+          "rect": [
+            1014,
+            443,
+            1074,
+            473
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "hwnd": 20711276,
+          "class": "Afx:400000:b:10003:900015:0",
+          "text": "机动补正：",
+          "control_id": 950,
+          "rect": [
+            1014,
+            423,
+            1084,
+            443
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "hwnd": 18417514,
+          "class": "Afx:400000:b:10003:900015:0",
+          "text": "HP补正：",
+          "control_id": 940,
+          "rect": [
+            1014,
+            493,
+            1084,
+            513
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "hwnd": 18679656,
+          "class": "Afx:400000:b:10003:900015:0",
+          "text": "强度补正：",
+          "control_id": 930,
+          "rect": [
+            884,
+            423,
+            954,
+            443
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "hwnd": 20907864,
+          "class": "Afx:400000:b:10003:900015:0",
+          "text": "防御补正：",
+          "control_id": 920,
+          "rect": [
+            884,
+            493,
+            954,
+            513
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "hwnd": 21890900,
+          "class": "msctls_updown32",
+          "text": "",
+          "control_id": 914,
+          "rect": [
+            1074,
+            373,
+            1097,
+            403
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "hwnd": 21366608,
+          "class": "Edit",
+          "text": "",
+          "control_id": 910,
+          "rect": [
+            1014,
+            373,
+            1074,
+            403
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "hwnd": 22415182,
+          "class": "Afx:400000:b:10003:900015:0",
+          "text": "精神成长：",
+          "control_id": 900,
+          "rect": [
+            1014,
+            353,
+            1084,
+            373
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "hwnd": 19662668,
+          "class": "msctls_updown32",
+          "text": "",
+          "control_id": 894,
+          "rect": [
+            944,
+            373,
+            967,
+            403
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "hwnd": 23070534,
+          "class": "Edit",
+          "text": "",
+          "control_id": 890,
+          "rect": [
+            884,
+            373,
+            944,
+            403
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "hwnd": 19400516,
+          "class": "Afx:400000:b:10003:900015:0",
+          "text": "速度补正：",
+          "control_id": 880,
+          "rect": [
+            884,
+            563,
+            954,
+            583
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "hwnd": 21104450,
+          "class": "Afx:400000:b:10003:900015:0",
+          "text": "精神值：",
+          "control_id": 870,
+          "rect": [
+            884,
+            353,
+            954,
+            373
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "hwnd": 18614034,
+          "class": "Button",
+          "text": "基本设置",
+          "control_id": 810,
+          "rect": [
+            634,
+            323,
+            864,
+            623
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "hwnd": 17566016,
+          "class": "Afx:400000:b:10003:900015:0",
+          "text": "敌方战斗音乐：",
+          "control_id": 2450,
+          "rect": [
+            644,
+            553,
+            754,
+            583
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "hwnd": 17434942,
+          "class": "Afx:400000:b:10003:900015:0",
+          "text": "我方战斗音乐：",
+          "control_id": 2440,
+          "rect": [
+            644,
+            483,
+            754,
+            513
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "hwnd": 17303822,
+          "class": "Edit",
+          "text": "",
+          "control_id": 2200,
+          "rect": [
+            644,
+            443,
+            854,
+            483
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "hwnd": 17303820,
+          "class": "Afx:400000:b:10003:900015:0",
+          "text": "战斗名称：",
+          "control_id": 2190,
+          "rect": [
+            644,
+            413,
+            714,
+            443
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "hwnd": 27068208,
+          "class": "ComboBox",
+          "text": "",
+          "control_id": 850,
+          "rect": [
+            644,
+            513,
+            854,
+            543
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "hwnd": 19466024,
+          "class": "ComboBox",
+          "text": "",
+          "control_id": 840,
+          "rect": [
+            644,
+            583,
+            854,
+            613
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "hwnd": 18482982,
+          "class": "Edit",
+          "text": "",
+          "control_id": 830,
+          "rect": [
+            644,
+            373,
+            854,
+            413
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "hwnd": 19466014,
+          "class": "Afx:400000:b:10003:900015:0",
+          "text": "名称：",
+          "control_id": 820,
+          "rect": [
+            644,
+            343,
+            684,
+            373
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "hwnd": 19596960,
+          "class": "Button",
+          "text": "头像设置",
+          "control_id": 660,
+          "rect": [
+            634,
+            193,
+            1594,
+            313
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "hwnd": 17303868,
+          "class": "Afx:400000:b:10003:900015:0",
+          "text": "头像颜色3：",
+          "control_id": 2430,
+          "rect": [
+            1464,
+            233,
+            1554,
+            263
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "hwnd": 17434938,
+          "class": "Afx:400000:b:10003:900015:0",
+          "text": "头像颜色2：",
+          "control_id": 2420,
+          "rect": [
+            1324,
+            233,
+            1414,
+            263
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "hwnd": 17434936,
+          "class": "Afx:400000:b:10003:900015:0",
+          "text": "头像颜色1：",
+          "control_id": 2410,
+          "rect": [
+            1184,
+            233,
+            1274,
+            263
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "hwnd": 17369398,
+          "class": "Afx:400000:b:10003:900015:0",
+          "text": "背景图库：",
+          "control_id": 2400,
+          "rect": [
+            1074,
+            213,
+            1164,
+            243
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "hwnd": 17434932,
+          "class": "Afx:400000:b:10003:900015:0",
+          "text": "正面图库：",
+          "control_id": 2390,
+          "rect": [
+            954,
+            213,
+            1044,
+            243
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "hwnd": 17565756,
+          "class": "_EL_PicBox",
+          "text": "",
+          "control_id": 1360,
+          "rect": [
+            644,
+            223,
+            724,
+            303
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "hwnd": 20317962,
+          "class": "Button",
+          "text": "背景上传",
+          "control_id": 800,
+          "rect": [
+            844,
+            263,
+            924,
+            293
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "hwnd": 20449030,
+          "class": "Button",
+          "text": "正面上传",
+          "control_id": 790,
+          "rect": [
+            844,
+            223,
+            924,
+            253
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "hwnd": 26347256,
+          "class": "_EL_Label",
+          "text": "",
+          "control_id": 780,
+          "rect": [
+            1184,
+            263,
+            1214,
+            293
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "hwnd": 18614006,
+          "class": "_EL_Label",
+          "text": "",
+          "control_id": 770,
+          "rect": [
+            1324,
+            263,
+            1354,
+            293
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "hwnd": 20842228,
+          "class": "_EL_Label",
+          "text": "",
+          "control_id": 760,
+          "rect": [
+            1464,
+            263,
+            1494,
+            293
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "hwnd": 20776682,
+          "class": "Edit",
+          "text": "",
+          "control_id": 750,
+          "rect": [
+            1504,
+            263,
+            1554,
+            293
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "hwnd": 26609376,
+          "class": "Edit",
+          "text": "",
+          "control_id": 740,
+          "rect": [
+            1364,
+            263,
+            1414,
+            293
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "hwnd": 20252380,
+          "class": "Edit",
+          "text": "",
+          "control_id": 730,
+          "rect": [
+            1224,
+            263,
+            1274,
+            293
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "hwnd": 18810572,
+          "class": "ComboBox",
+          "text": "",
+          "control_id": 720,
+          "rect": [
+            1074,
+            243,
+            1174,
+            268
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "hwnd": 20186808,
+          "class": "ComboBox",
+          "text": "",
+          "control_id": 710,
+          "rect": [
+            1074,
+            273,
+            1174,
+            298
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "hwnd": 19138226,
+          "class": "ComboBox",
+          "text": "",
+          "control_id": 700,
+          "rect": [
+            954,
+            273,
+            1054,
+            298
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "hwnd": 21300912,
+          "class": "ComboBox",
+          "text": "",
+          "control_id": 690,
+          "rect": [
+            954,
+            243,
+            1054,
+            268
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "hwnd": 21431966,
+          "class": "Button",
+          "text": "显示正面",
+          "control_id": 680,
+          "rect": [
+            744,
+            243,
+            844,
+            263
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "hwnd": 19138210,
+          "class": "Button",
+          "text": "显示背景",
+          "control_id": 670,
+          "rect": [
+            744,
+            273,
+            844,
+            293
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "hwnd": 21104268,
+          "class": "Button",
+          "text": "人物选择",
+          "control_id": 640,
+          "rect": [
+            314,
+            193,
+            624,
+            913
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "hwnd": 17303806,
+          "class": "Button",
+          "text": "添加",
+          "control_id": 2120,
+          "rect": [
+            324,
+            863,
+            614,
+            903
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "hwnd": 32376452,
+          "class": "ListBox",
+          "text": "",
+          "control_id": 630,
+          "rect": [
+            324,
+            213,
+            614,
+            863
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "hwnd": 22480500,
+          "class": "Button",
+          "text": "武器选择",
+          "control_id": 620,
+          "rect": [
+            314,
+            193,
+            624,
+            913
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 17303808,
+          "class": "Button",
+          "text": "添加",
+          "control_id": 2130,
+          "rect": [
+            324,
+            863,
+            614,
+            903
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 18024048,
+          "class": "ListBox",
+          "text": "",
+          "control_id": 610,
+          "rect": [
+            324,
+            213,
+            614,
+            863
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 23004734,
+          "class": "Button",
+          "text": "机体武器",
+          "control_id": 520,
+          "rect": [
+            1324,
+            563,
+            1594,
+            913
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 19138952,
+          "class": "Button",
+          "text": "转到武器2",
+          "control_id": 2730,
+          "rect": [
+            1444,
+            669,
+            1544,
+            699
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 19073414,
+          "class": "Button",
+          "text": "转到武器1",
+          "control_id": 2720,
+          "rect": [
+            1444,
+            599,
+            1544,
+            629
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 17697098,
+          "class": "Afx:400000:b:10003:900015:0",
+          "text": "提示：\r\n如果我方机体选择敌方方向的武器，可能出现死机或者动画显示不正常！！！\r\n\r\n反之，敌方选择我方方向武器同理！！！",
+          "control_id": 2500,
+          "rect": [
+            1334,
+            743,
+            1564,
+            873
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 17303840,
+          "class": "Afx:400000:b:10003:900015:0",
+          "text": "武器1：",
+          "control_id": 2290,
+          "rect": [
+            1334,
+            603,
+            1424,
+            623
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 17369374,
+          "class": "Afx:400000:b:10003:900015:0",
+          "text": "武器2：",
+          "control_id": 2280,
+          "rect": [
+            1334,
+            673,
+            1424,
+            693
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 18744918,
+          "class": "ComboBox",
+          "text": "",
+          "control_id": 560,
+          "rect": [
+            1334,
+            703,
+            1554,
+            733
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 18810452,
+          "class": "ComboBox",
+          "text": "",
+          "control_id": 550,
+          "rect": [
+            1334,
+            633,
+            1554,
+            663
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 20383178,
+          "class": "Button",
+          "text": "机体属性",
+          "control_id": 400,
+          "rect": [
+            924,
+            563,
+            1314,
+            913
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 17828200,
+          "class": "Button",
+          "text": "0",
+          "control_id": 2600,
+          "rect": [
+            1074,
+            783,
+            1174,
+            823
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 17434908,
+          "class": "Afx:400000:b:10003:900015:0",
+          "text": "速度：             HP：               HP成长：",
+          "control_id": 2270,
+          "rect": [
+            934,
+            833,
+            1304,
+            863
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 17303834,
+          "class": "Afx:400000:b:10003:900015:0",
+          "text": "防御：             特殊技能：         速度成长：",
+          "control_id": 2260,
+          "rect": [
+            934,
+            753,
+            1304,
+            783
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 17303832,
+          "class": "Afx:400000:b:10003:900015:0",
+          "text": "强度：             基础金钱：         防御成长：",
+          "control_id": 2250,
+          "rect": [
+            934,
+            673,
+            1304,
+            703
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 17303830,
+          "class": "Afx:400000:b:10003:900015:0",
+          "text": "机动：             基础经验：         强度成长：",
+          "control_id": 2240,
+          "rect": [
+            934,
+            593,
+            1284,
+            623
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 36308536,
+          "class": "msctls_updown32",
+          "text": "",
+          "control_id": 514,
+          "rect": [
+            1004,
+            623,
+            1027,
+            653
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 19007024,
+          "class": "Edit",
+          "text": "",
+          "control_id": 510,
+          "rect": [
+            934,
+            623,
+            1004,
+            653
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 20514346,
+          "class": "msctls_updown32",
+          "text": "",
+          "control_id": 504,
+          "rect": [
+            1144,
+            623,
+            1167,
+            653
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 22808104,
+          "class": "Edit",
+          "text": "",
+          "control_id": 500,
+          "rect": [
+            1074,
+            623,
+            1144,
+            653
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 19007012,
+          "class": "msctls_updown32",
+          "text": "",
+          "control_id": 494,
+          "rect": [
+            1284,
+            623,
+            1307,
+            653
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 19269154,
+          "class": "Edit",
+          "text": "",
+          "control_id": 490,
+          "rect": [
+            1214,
+            623,
+            1284,
+            653
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 23594528,
+          "class": "msctls_updown32",
+          "text": "",
+          "control_id": 484,
+          "rect": [
+            1004,
+            703,
+            1027,
+            733
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 21628446,
+          "class": "Edit",
+          "text": "",
+          "control_id": 480,
+          "rect": [
+            934,
+            703,
+            1004,
+            733
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 18220570,
+          "class": "msctls_updown32",
+          "text": "",
+          "control_id": 474,
+          "rect": [
+            1144,
+            703,
+            1167,
+            733
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 18875928,
+          "class": "Edit",
+          "text": "",
+          "control_id": 470,
+          "rect": [
+            1074,
+            703,
+            1144,
+            733
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 18810388,
+          "class": "msctls_updown32",
+          "text": "",
+          "control_id": 464,
+          "rect": [
+            1284,
+            703,
+            1307,
+            733
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 22349328,
+          "class": "Edit",
+          "text": "",
+          "control_id": 460,
+          "rect": [
+            1214,
+            703,
+            1284,
+            733
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 36898312,
+          "class": "msctls_updown32",
+          "text": "",
+          "control_id": 454,
+          "rect": [
+            1004,
+            783,
+            1027,
+            813
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 18810368,
+          "class": "Edit",
+          "text": "",
+          "control_id": 450,
+          "rect": [
+            934,
+            783,
+            1004,
+            813
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 19793406,
+          "class": "msctls_updown32",
+          "text": "",
+          "control_id": 444,
+          "rect": [
+            1284,
+            783,
+            1307,
+            813
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 18220540,
+          "class": "Edit",
+          "text": "",
+          "control_id": 440,
+          "rect": [
+            1214,
+            783,
+            1284,
+            813
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 27788790,
+          "class": "msctls_updown32",
+          "text": "",
+          "control_id": 434,
+          "rect": [
+            1004,
+            863,
+            1027,
+            893
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 21038570,
+          "class": "Edit",
+          "text": "",
+          "control_id": 430,
+          "rect": [
+            934,
+            863,
+            1004,
+            893
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 23921934,
+          "class": "msctls_updown32",
+          "text": "",
+          "control_id": 424,
+          "rect": [
+            1144,
+            863,
+            1167,
+            893
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 18613734,
+          "class": "Edit",
+          "text": "",
+          "control_id": 420,
+          "rect": [
+            1074,
+            863,
+            1144,
+            893
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 18482652,
+          "class": "msctls_updown32",
+          "text": "",
+          "control_id": 414,
+          "rect": [
+            1284,
+            863,
+            1307,
+            893
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 19072464,
+          "class": "Edit",
+          "text": "",
+          "control_id": 410,
+          "rect": [
+            1214,
+            863,
+            1284,
+            893
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 20186566,
+          "class": "Button",
+          "text": "基本设置",
+          "control_id": 380,
+          "rect": [
+            634,
+            563,
+            914,
+            913
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 17303828,
+          "class": "Afx:400000:b:10003:900015:0",
+          "text": "变形：",
+          "control_id": 2230,
+          "rect": [
+            644,
+            813,
+            724,
+            833
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 17303826,
+          "class": "Afx:400000:b:10003:900015:0",
+          "text": "适应地形：",
+          "control_id": 2220,
+          "rect": [
+            644,
+            713,
+            724,
+            733
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 17303824,
+          "class": "Afx:400000:b:10003:900015:0",
+          "text": "机体名称：",
+          "control_id": 2210,
+          "rect": [
+            644,
+            603,
+            734,
+            623
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 19662416,
+          "class": "ComboBox",
+          "text": "",
+          "control_id": 540,
+          "rect": [
+            644,
+            743,
+            904,
+            777
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 21038666,
+          "class": "ComboBox",
+          "text": "",
+          "control_id": 530,
+          "rect": [
+            644,
+            840,
+            904,
+            874
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 21497288,
+          "class": "Edit",
+          "text": "",
+          "control_id": 390,
+          "rect": [
+            644,
+            633,
+            904,
+            673
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 27919636,
+          "class": "Button",
+          "text": "机体图片",
+          "control_id": 140,
+          "rect": [
+            634,
+            193,
+            1594,
+            543
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 18221430,
+          "class": "Button",
+          "text": "舰长",
+          "control_id": 2700,
+          "rect": [
+            1484,
+            213,
+            1564,
+            243
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 18221436,
+          "class": "Button",
+          "text": "调换图库",
+          "control_id": 2690,
+          "rect": [
+            974,
+            333,
+            1074,
+            353
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 18286962,
+          "class": "Button",
+          "text": "清除碎片",
+          "control_id": 2680,
+          "rect": [
+            1094,
+            233,
+            1174,
+            263
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 18483584,
+          "class": "Button",
+          "text": "清除机体",
+          "control_id": 2670,
+          "rect": [
+            974,
+            233,
+            1054,
+            263
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 17566028,
+          "class": "Button",
+          "text": "上传图标",
+          "control_id": 2510,
+          "rect": [
+            1124,
+            473,
+            1207,
+            503
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 17500466,
+          "class": "Afx:400000:b:10003:900015:0",
+          "text": "机体碎片地址：",
+          "control_id": 2380,
+          "rect": [
+            1364,
+            453,
+            1474,
+            483
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 17303856,
+          "class": "Afx:400000:b:10003:900015:0",
+          "text": "机体图片地址2：",
+          "control_id": 2370,
+          "rect": [
+            1364,
+            373,
+            1474,
+            403
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 17369390,
+          "class": "Afx:400000:b:10003:900015:0",
+          "text": "机体图片地址1：",
+          "control_id": 2360,
+          "rect": [
+            1364,
+            293,
+            1474,
+            323
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 17303852,
+          "class": "Afx:400000:b:10003:900015:0",
+          "text": "机体类型：",
+          "control_id": 2350,
+          "rect": [
+            1364,
+            213,
+            1454,
+            243
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 17303850,
+          "class": "Afx:400000:b:10003:900015:0",
+          "text": "碎片三色：",
+          "control_id": 2340,
+          "rect": [
+            1214,
+            373,
+            1304,
+            403
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 17303848,
+          "class": "Afx:400000:b:10003:900015:0",
+          "text": "机体三色：",
+          "control_id": 2330,
+          "rect": [
+            1214,
+            213,
+            1304,
+            243
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 17303846,
+          "class": "Afx:400000:b:10003:900015:0",
+          "text": "机体图标：",
+          "control_id": 2320,
+          "rect": [
+            974,
+            503,
+            1044,
+            533
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 17369380,
+          "class": "Afx:400000:b:10003:900015:0",
+          "text": "导图偏移：",
+          "control_id": 2310,
+          "rect": [
+            1094,
+            263,
+            1184,
+            293
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 18745634,
+          "class": "Afx:400000:b:10003:900015:0",
+          "text": "导图偏移：",
+          "control_id": 2300,
+          "rect": [
+            974,
+            263,
+            1064,
+            293
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 17369146,
+          "class": "Button",
+          "text": "更改图标",
+          "control_id": 1350,
+          "rect": [
+            1124,
+            503,
+            1207,
+            533
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 17565752,
+          "class": "_EL_DrawPanel",
+          "text": "",
+          "control_id": 1340,
+          "rect": [
+            1054,
+            473,
+            1118,
+            537
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 17500214,
+          "class": "_EL_Label",
+          "text": "",
+          "control_id": 1330,
+          "rect": [
+            1204,
+            203,
+            1207,
+            463
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 17500212,
+          "class": "_EL_Label",
+          "text": "",
+          "control_id": 1320,
+          "rect": [
+            964,
+            463,
+            1204,
+            466
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 17500210,
+          "class": "Button",
+          "text": "上传碎片",
+          "control_id": 1310,
+          "rect": [
+            1094,
+            203,
+            1174,
+            233
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 17434672,
+          "class": "Edit",
+          "text": "0",
+          "control_id": 1300,
+          "rect": [
+            1094,
+            293,
+            1154,
+            323
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 17434670,
+          "class": "Button",
+          "text": "压缩上传",
+          "control_id": 1290,
+          "rect": [
+            1094,
+            343,
+            1194,
+            373
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 17500204,
+          "class": "_EL_Label",
+          "text": "",
+          "control_id": 1280,
+          "rect": [
+            1078,
+            203,
+            1081,
+            463
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 20055696,
+          "class": "Afx:400000:8:10003:900015:0",
+          "text": "",
+          "control_id": 650,
+          "rect": [
+            694,
+            263,
+            714,
+            283
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 53282402,
+          "class": "Afx:400000:8:10003:900015:0",
+          "text": "",
+          "control_id": 580,
+          "rect": [
+            774,
+            273,
+            794,
+            293
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 31000156,
+          "class": "ComboBox",
+          "text": "",
+          "control_id": 570,
+          "rect": [
+            1364,
+            243,
+            1574,
+            271
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 19858862,
+          "class": "ComboBox",
+          "text": "",
+          "control_id": 370,
+          "rect": [
+            1364,
+            483,
+            1574,
+            513
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 20383140,
+          "class": "ComboBox",
+          "text": "",
+          "control_id": 360,
+          "rect": [
+            1364,
+            403,
+            1574,
+            433
+          ],
+          "visible": false,
+          "enabled": false
+        },
+        {
+          "hwnd": 18482578,
+          "class": "ComboBox",
+          "text": "",
+          "control_id": 350,
+          "rect": [
+            1364,
+            323,
+            1574,
+            353
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 36242832,
+          "class": "_EL_Label",
+          "text": "",
+          "control_id": 340,
+          "rect": [
+            1214,
+            403,
+            1244,
+            433
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 24708492,
+          "class": "_EL_Label",
+          "text": "",
+          "control_id": 330,
+          "rect": [
+            1214,
+            443,
+            1244,
+            473
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 19727744,
+          "class": "_EL_Label",
+          "text": "",
+          "control_id": 320,
+          "rect": [
+            1214,
+            483,
+            1244,
+            513
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 32114046,
+          "class": "Edit",
+          "text": "",
+          "control_id": 310,
+          "rect": [
+            1264,
+            403,
+            1314,
+            433
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 19596664,
+          "class": "Edit",
+          "text": "",
+          "control_id": 300,
+          "rect": [
+            1264,
+            443,
+            1314,
+            473
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 24380776,
+          "class": "Edit",
+          "text": "",
+          "control_id": 290,
+          "rect": [
+            1264,
+            483,
+            1314,
+            513
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 25232736,
+          "class": "_EL_Label",
+          "text": "",
+          "control_id": 280,
+          "rect": [
+            1214,
+            243,
+            1244,
+            273
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 22545758,
+          "class": "_EL_Label",
+          "text": "",
+          "control_id": 270,
+          "rect": [
+            1214,
+            283,
+            1244,
+            313
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 19989848,
+          "class": "_EL_Label",
+          "text": "",
+          "control_id": 260,
+          "rect": [
+            1214,
+            323,
+            1244,
+            353
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 19268946,
+          "class": "Edit",
+          "text": "",
+          "control_id": 250,
+          "rect": [
+            1264,
+            243,
+            1314,
+            273
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 21169488,
+          "class": "Edit",
+          "text": "",
+          "control_id": 240,
+          "rect": [
+            1264,
+            283,
+            1314,
+            313
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 24118604,
+          "class": "Edit",
+          "text": "",
+          "control_id": 230,
+          "rect": [
+            1264,
+            323,
+            1314,
+            353
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 20972868,
+          "class": "Button",
+          "text": "碎片拼图",
+          "control_id": 220,
+          "rect": [
+            1094,
+            393,
+            1184,
+            423
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 27329858,
+          "class": "Button",
+          "text": "显示碎片",
+          "control_id": 210,
+          "rect": [
+            1104,
+            433,
+            1204,
+            463
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 20776256,
+          "class": "Button",
+          "text": "显示机体",
+          "control_id": 200,
+          "rect": [
+            974,
+            433,
+            1074,
+            463
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 18154814,
+          "class": "Button",
+          "text": "机体拼图",
+          "control_id": 190,
+          "rect": [
+            974,
+            393,
+            1064,
+            423
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 29558068,
+          "class": "Button",
+          "text": "压缩上传",
+          "control_id": 180,
+          "rect": [
+            974,
+            363,
+            1074,
+            383
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 24577328,
+          "class": "Edit",
+          "text": "0",
+          "control_id": 170,
+          "rect": [
+            974,
+            293,
+            1034,
+            323
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 27723040,
+          "class": "Button",
+          "text": "上传机体",
+          "control_id": 160,
+          "rect": [
+            974,
+            203,
+            1054,
+            233
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 21169436,
+          "class": "Afx:400000:b:10003:900015:0",
+          "text": "",
+          "control_id": 150,
+          "rect": [
+            644,
+            213,
+            964,
+            533
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 19072244,
+          "class": "Button",
+          "text": "机体选择",
+          "control_id": 110,
+          "rect": [
+            314,
+            193,
+            624,
+            913
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 21955846,
+          "class": "Button",
+          "text": "添加",
+          "control_id": 130,
+          "rect": [
+            324,
+            863,
+            614,
+            903
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 21234940,
+          "class": "ListBox",
+          "text": "",
+          "control_id": 120,
+          "rect": [
+            324,
+            213,
+            614,
+            863
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 21562572,
+          "class": "AfxWnd42s",
+          "text": "<",
+          "control_id": 1008,
+          "rect": [
+            304,
+            153,
+            304,
+            153
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 23856336,
+          "class": "AfxWnd42s",
+          "text": ">",
+          "control_id": 1009,
+          "rect": [
+            304,
+            153,
+            304,
+            153
+          ],
+          "visible": false,
+          "enabled": true
+        }
+      ]
+    },
+    {
+      "hwnd": 18680206,
+      "class": "WTWindow",
+      "title": "SRW2扩容版修改器V1.0：D:\\GIT\\mmc3\\output\\build\\legacy-diff-audit\\m05-reference-baseline.nes",
+      "rect": [
+        429,
+        124,
+        1477,
+        955
+      ],
+      "visible": true,
+      "enabled": false,
+      "children": [
+        {
+          "hwnd": 21760688,
+          "class": "_EL_ServerSock",
+          "text": "",
+          "control_id": 690,
+          "rect": [
+            571,
+            164,
+            604,
+            197
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 18680448,
+          "class": "Afx:400000:b:10003:900010:0",
+          "text": "",
+          "control_id": 650,
+          "rect": [
+            911,
+            894,
+            944,
+            927
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 19794546,
+          "class": "Afx:400000:b:10003:0:0",
+          "text": "",
+          "control_id": 640,
+          "rect": [
+            1031,
+            274,
+            1064,
+            307
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 19925600,
+          "class": "Afx:400000:b:10003:900015:0",
+          "text": "",
+          "control_id": 600,
+          "rect": [
+            1161,
+            914,
+            1391,
+            944
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "hwnd": 21105244,
+          "class": "Afx:400000:b:10003:900015:0",
+          "text": "",
+          "control_id": 590,
+          "rect": [
+            901,
+            914,
+            1131,
+            944
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "hwnd": 21891670,
+          "class": "Afx:400000:b:10003:900015:0",
+          "text": "",
+          "control_id": 580,
+          "rect": [
+            881,
+            874,
+            941,
+            894
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "hwnd": 15993428,
+          "class": "_EL_Label",
+          "text": "",
+          "control_id": 570,
+          "rect": [
+            431,
+            404,
+            1491,
+            734
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 24382032,
+          "class": "Afx:400000:8:10003:900015:0",
+          "text": "",
+          "control_id": 560,
+          "rect": [
+            931,
+            344,
+            951,
+            364
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 24906308,
+          "class": "Afx:400000:8:10003:900015:0",
+          "text": "",
+          "control_id": 540,
+          "rect": [
+            1001,
+            354,
+            1021,
+            374
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 17566266,
+          "class": "Afx:400000:8:10003:900015:0",
+          "text": "",
+          "control_id": 520,
+          "rect": [
+            951,
+            394,
+            971,
+            414
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 19401272,
+          "class": "Afx:400000:8:10003:900015:0",
+          "text": "",
+          "control_id": 510,
+          "rect": [
+            891,
+            444,
+            911,
+            464
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 18483762,
+          "class": "Afx:400000:b:10003:900015:0",
+          "text": "",
+          "control_id": 500,
+          "rect": [
+            821,
+            224,
+            1401,
+            784
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "hwnd": 18155924,
+          "class": "CPageControl",
+          "text": "",
+          "control_id": 120,
+          "rect": [
+            431,
+            204,
+            811,
+            634
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "hwnd": 19794510,
+          "class": "ListBox",
+          "text": "",
+          "control_id": 550,
+          "rect": [
+            441,
+            244,
+            801,
+            624
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 17959484,
+          "class": "_EL_PicBox",
+          "text": "",
+          "control_id": 530,
+          "rect": [
+            441,
+            564,
+            801,
+            624
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "hwnd": 23005740,
+          "class": "msctls_updown32",
+          "text": "",
+          "control_id": 490,
+          "rect": [
+            581,
+            504,
+            606,
+            534
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "hwnd": 19532328,
+          "class": "msctls_updown32",
+          "text": "",
+          "control_id": 480,
+          "rect": [
+            771,
+            504,
+            801,
+            534
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "hwnd": 19008038,
+          "class": "Afx:400000:b:10003:900015:0",
+          "text": "地图高度：",
+          "control_id": 470,
+          "rect": [
+            451,
+            504,
+            521,
+            534
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "hwnd": 20646434,
+          "class": "Edit",
+          "text": "",
+          "control_id": 460,
+          "rect": [
+            521,
+            504,
+            581,
+            534
+          ],
+          "visible": true,
+          "enabled": false
+        },
+        {
+          "hwnd": 18352658,
+          "class": "Afx:400000:b:10003:900015:0",
+          "text": "地图宽度：",
+          "control_id": 450,
+          "rect": [
+            641,
+            504,
+            711,
+            534
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "hwnd": 19859974,
+          "class": "Edit",
+          "text": "",
+          "control_id": 440,
+          "rect": [
+            711,
+            504,
+            771,
+            534
+          ],
+          "visible": true,
+          "enabled": false
+        },
+        {
+          "hwnd": 17172996,
+          "class": "Button",
+          "text": "地图图块设置",
+          "control_id": 430,
+          "rect": [
+            441,
+            244,
+            801,
+            494
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "hwnd": 22678174,
+          "class": "ComboBox",
+          "text": "",
+          "control_id": 680,
+          "rect": [
+            551,
+            444,
+            691,
+            469
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "hwnd": 21301914,
+          "class": "Afx:400000:b:10003:900015:0",
+          "text": "图库选择：",
+          "control_id": 670,
+          "rect": [
+            581,
+            414,
+            641,
+            434
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "hwnd": 24447624,
+          "class": "Button",
+          "text": "编辑图块属性",
+          "control_id": 660,
+          "rect": [
+            661,
+            264,
+            781,
+            294
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "hwnd": 17893880,
+          "class": "Afx:400000:b:10003:900015:0",
+          "text": "右键",
+          "control_id": 420,
+          "rect": [
+            721,
+            394,
+            761,
+            424
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "hwnd": 17697270,
+          "class": "Afx:400000:b:10003:900015:0",
+          "text": "左键",
+          "control_id": 410,
+          "rect": [
+            481,
+            394,
+            521,
+            424
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "hwnd": 19139060,
+          "class": "Afx:400000:b:10003:900015:0",
+          "text": "位图选择：",
+          "control_id": 400,
+          "rect": [
+            461,
+            274,
+            521,
+            294
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "hwnd": 22284786,
+          "class": "_EL_PicBox",
+          "text": "",
+          "control_id": 390,
+          "rect": [
+            741,
+            344,
+            781,
+            384
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "hwnd": 21957100,
+          "class": "_EL_PicBox",
+          "text": "",
+          "control_id": 380,
+          "rect": [
+            701,
+            344,
+            741,
+            384
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "hwnd": 18614760,
+          "class": "_EL_PicBox",
+          "text": "",
+          "control_id": 370,
+          "rect": [
+            661,
+            344,
+            701,
+            384
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "hwnd": 19597798,
+          "class": "_EL_PicBox",
+          "text": "",
+          "control_id": 360,
+          "rect": [
+            621,
+            344,
+            661,
+            384
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "hwnd": 19794404,
+          "class": "_EL_PicBox",
+          "text": "",
+          "control_id": 350,
+          "rect": [
+            581,
+            344,
+            621,
+            384
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "hwnd": 18483682,
+          "class": "_EL_PicBox",
+          "text": "",
+          "control_id": 340,
+          "rect": [
+            541,
+            344,
+            581,
+            384
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "hwnd": 18942432,
+          "class": "_EL_PicBox",
+          "text": "",
+          "control_id": 330,
+          "rect": [
+            501,
+            344,
+            541,
+            384
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "hwnd": 18483676,
+          "class": "_EL_PicBox",
+          "text": "",
+          "control_id": 320,
+          "rect": [
+            461,
+            344,
+            501,
+            384
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "hwnd": 17631702,
+          "class": "_EL_PicBox",
+          "text": "",
+          "control_id": 310,
+          "rect": [
+            741,
+            304,
+            781,
+            344
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "hwnd": 26216910,
+          "class": "_EL_PicBox",
+          "text": "",
+          "control_id": 300,
+          "rect": [
+            701,
+            304,
+            741,
+            344
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "hwnd": 19597790,
+          "class": "_EL_PicBox",
+          "text": "",
+          "control_id": 290,
+          "rect": [
+            661,
+            304,
+            701,
+            344
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "hwnd": 18549202,
+          "class": "_EL_PicBox",
+          "text": "",
+          "control_id": 280,
+          "rect": [
+            621,
+            304,
+            661,
+            344
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "hwnd": 17303984,
+          "class": "_EL_PicBox",
+          "text": "",
+          "control_id": 270,
+          "rect": [
+            581,
+            304,
+            621,
+            344
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "hwnd": 18155980,
+          "class": "_EL_PicBox",
+          "text": "",
+          "control_id": 260,
+          "rect": [
+            541,
+            304,
+            581,
+            344
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "hwnd": 20646336,
+          "class": "_EL_PicBox",
+          "text": "",
+          "control_id": 250,
+          "rect": [
+            501,
+            304,
+            541,
+            344
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "hwnd": 18287046,
+          "class": "_EL_PicBox",
+          "text": "",
+          "control_id": 240,
+          "rect": [
+            461,
+            304,
+            501,
+            344
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "hwnd": 18680250,
+          "class": "_EL_PicBox",
+          "text": "",
+          "control_id": 230,
+          "rect": [
+            721,
+            424,
+            761,
+            464
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "hwnd": 18352634,
+          "class": "_EL_PicBox",
+          "text": "",
+          "control_id": 220,
+          "rect": [
+            481,
+            424,
+            521,
+            464
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "hwnd": 20253112,
+          "class": "ComboBox",
+          "text": "",
+          "control_id": 210,
+          "rect": [
+            531,
+            274,
+            651,
+            299
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "hwnd": 20449718,
+          "class": "Button",
+          "text": "机体图标",
+          "control_id": 200,
+          "rect": [
+            441,
+            234,
+            801,
+            624
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 18549360,
+          "class": "Afx:400000:b:10003:900015:0",
+          "text": "图标地址3：",
+          "control_id": 630,
+          "rect": [
+            461,
+            499,
+            541,
+            519
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 22022760,
+          "class": "Afx:400000:b:10003:900015:0",
+          "text": "图标地址2：",
+          "control_id": 620,
+          "rect": [
+            461,
+            379,
+            541,
+            399
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 28445282,
+          "class": "Afx:400000:b:10003:900015:0",
+          "text": "图标地址1：",
+          "control_id": 610,
+          "rect": [
+            461,
+            259,
+            541,
+            279
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 18483636,
+          "class": "Afx:400000:8:10003:900015:0",
+          "text": "",
+          "control_id": 190,
+          "rect": [
+            541,
+            304,
+            581,
+            344
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 16910762,
+          "class": "ComboBox",
+          "text": "",
+          "control_id": 180,
+          "rect": [
+            541,
+            494,
+            701,
+            522
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 17303972,
+          "class": "Afx:400000:b:10003:900015:0",
+          "text": "",
+          "control_id": 170,
+          "rect": [
+            461,
+            524,
+            781,
+            604
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 17303968,
+          "class": "ComboBox",
+          "text": "",
+          "control_id": 160,
+          "rect": [
+            541,
+            374,
+            701,
+            402
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 17303966,
+          "class": "Afx:400000:b:10003:900015:0",
+          "text": "",
+          "control_id": 150,
+          "rect": [
+            461,
+            404,
+            781,
+            484
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 17238434,
+          "class": "ComboBox",
+          "text": "",
+          "control_id": 140,
+          "rect": [
+            541,
+            254,
+            701,
+            282
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 17369500,
+          "class": "Afx:400000:b:10003:900015:0",
+          "text": "",
+          "control_id": 130,
+          "rect": [
+            461,
+            284,
+            781,
+            364
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 18090390,
+          "class": "AfxWnd42s",
+          "text": "<",
+          "control_id": 1008,
+          "rect": [
+            431,
+            204,
+            431,
+            204
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 18024856,
+          "class": "AfxWnd42s",
+          "text": ">",
+          "control_id": 1009,
+          "rect": [
+            431,
+            204,
+            431,
+            204
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "hwnd": 18680210,
+          "class": "Button",
+          "text": "关卡选择",
+          "control_id": 110,
+          "rect": [
+            431,
+            644,
+            811,
+            944
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "hwnd": 18090384,
+          "class": "ListBox",
+          "text": "",
+          "control_id": 100,
+          "rect": [
+            441,
+            664,
+            801,
+            934
+          ],
+          "visible": true,
+          "enabled": true
+        }
+      ]
+    },
+    {
+      "hwnd": 25365154,
+      "class": "ComboLBox",
+      "title": "",
+      "rect": [
+        0,
+        25,
+        140,
+        515
+      ],
+      "visible": false,
+      "enabled": true,
+      "children": []
+    },
+    {
+      "hwnd": 33098174,
+      "class": "ComboLBox",
+      "title": "",
+      "rect": [
+        0,
+        25,
+        120,
+        158
+      ],
+      "visible": false,
+      "enabled": true,
+      "children": []
+    },
+    {
+      "hwnd": 19073452,
+      "class": "ComboLBox",
+      "title": "",
+      "rect": [
+        0,
+        28,
+        160,
+        593
+      ],
+      "visible": false,
+      "enabled": true,
+      "children": []
+    },
+    {
+      "hwnd": 17303974,
+      "class": "ComboLBox",
+      "title": "",
+      "rect": [
+        0,
+        28,
+        160,
+        593
+      ],
+      "visible": false,
+      "enabled": true,
+      "children": []
+    },
+    {
+      "hwnd": 17303976,
+      "class": "ComboLBox",
+      "title": "",
+      "rect": [
+        0,
+        28,
+        160,
+        593
+      ],
+      "visible": false,
+      "enabled": true,
+      "children": []
+    },
+    {
+      "hwnd": 17369498,
+      "class": "Afx:400000:0:10003:0:0",
+      "title": "_iext3_CTipWnd",
+      "rect": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "visible": false,
+      "enabled": true,
+      "children": []
+    },
+    {
+      "hwnd": 18155892,
+      "class": "ComboLBox",
+      "title": "",
+      "rect": [
+        0,
+        25,
+        180,
+        515
+      ],
+      "visible": false,
+      "enabled": true,
+      "children": []
+    },
+    {
+      "hwnd": 17959278,
+      "class": "tooltips_class32",
+      "title": "",
+      "rect": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "visible": false,
+      "enabled": true,
+      "children": []
+    },
+    {
+      "hwnd": 17959266,
+      "class": "Afx:400000:0:10003:0:0",
+      "title": "_iext3_CTipWnd",
+      "rect": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "visible": false,
+      "enabled": true,
+      "children": []
+    },
+    {
+      "hwnd": 17434968,
+      "class": "Afx:400000:0:10003:0:0",
+      "title": "_iext3_CTipWnd",
+      "rect": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "visible": false,
+      "enabled": true,
+      "children": []
+    },
+    {
+      "hwnd": 17434842,
+      "class": "ComboLBox",
+      "title": "",
+      "rect": [
+        0,
+        30,
+        300,
+        708
+      ],
+      "visible": false,
+      "enabled": true,
+      "children": []
+    },
+    {
+      "hwnd": 17369300,
+      "class": "ComboLBox",
+      "title": "",
+      "rect": [
+        0,
+        30,
+        300,
+        708
+      ],
+      "visible": false,
+      "enabled": true,
+      "children": []
+    },
+    {
+      "hwnd": 15927502,
+      "class": "ComboLBox",
+      "title": "",
+      "rect": [
+        0,
+        30,
+        300,
+        595
+      ],
+      "visible": false,
+      "enabled": true,
+      "children": []
+    },
+    {
+      "hwnd": 17500362,
+      "class": "ComboLBox",
+      "title": "",
+      "rect": [
+        0,
+        30,
+        300,
+        595
+      ],
+      "visible": false,
+      "enabled": true,
+      "children": []
+    },
+    {
+      "hwnd": 17565894,
+      "class": "ComboLBox",
+      "title": "",
+      "rect": [
+        0,
+        30,
+        300,
+        595
+      ],
+      "visible": false,
+      "enabled": true,
+      "children": []
+    },
+    {
+      "hwnd": 18090178,
+      "class": "ComboLBox",
+      "title": "",
+      "rect": [
+        0,
+        30,
+        300,
+        595
+      ],
+      "visible": false,
+      "enabled": true,
+      "children": []
+    },
+    {
+      "hwnd": 20580502,
+      "class": "tooltips_class32",
+      "title": "",
+      "rect": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "visible": false,
+      "enabled": true,
+      "children": []
+    },
+    {
+      "hwnd": 19794044,
+      "class": "ComboLBox",
+      "title": "",
+      "rect": [
+        0,
+        25,
+        170,
+        109
+      ],
+      "visible": false,
+      "enabled": true,
+      "children": []
+    },
+    {
+      "hwnd": 19728502,
+      "class": "tooltips_class32",
+      "title": "",
+      "rect": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "visible": false,
+      "enabled": true,
+      "children": []
+    },
+    {
+      "hwnd": 21301360,
+      "class": "tooltips_class32",
+      "title": "",
+      "rect": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "visible": false,
+      "enabled": true,
+      "children": []
+    },
+    {
+      "hwnd": 18679910,
+      "class": "ComboLBox",
+      "title": "",
+      "rect": [
+        0,
+        30,
+        200,
+        54
+      ],
+      "visible": false,
+      "enabled": true,
+      "children": []
+    },
+    {
+      "hwnd": 18483274,
+      "class": "ComboLBox",
+      "title": "",
+      "rect": [
+        0,
+        30,
+        210,
+        139
+      ],
+      "visible": false,
+      "enabled": true,
+      "children": []
+    },
+    {
+      "hwnd": 18483192,
+      "class": "ComboLBox",
+      "title": "",
+      "rect": [
+        0,
+        30,
+        340,
+        373
+      ],
+      "visible": false,
+      "enabled": true,
+      "children": []
+    },
+    {
+      "hwnd": 17827644,
+      "class": "ComboLBox",
+      "title": "",
+      "rect": [
+        0,
+        30,
+        210,
+        670
+      ],
+      "visible": false,
+      "enabled": true,
+      "children": []
+    },
+    {
+      "hwnd": 21956396,
+      "class": "ComboLBox",
+      "title": "",
+      "rect": [
+        0,
+        30,
+        210,
+        670
+      ],
+      "visible": false,
+      "enabled": true,
+      "children": []
+    },
+    {
+      "hwnd": 19269330,
+      "class": "ComboLBox",
+      "title": "",
+      "rect": [
+        0,
+        25,
+        100,
+        515
+      ],
+      "visible": false,
+      "enabled": true,
+      "children": []
+    },
+    {
+      "hwnd": 32966336,
+      "class": "ComboLBox",
+      "title": "",
+      "rect": [
+        0,
+        25,
+        100,
+        93
+      ],
+      "visible": false,
+      "enabled": true,
+      "children": []
+    },
+    {
+      "hwnd": 22087350,
+      "class": "ComboLBox",
+      "title": "",
+      "rect": [
+        0,
+        25,
+        100,
+        93
+      ],
+      "visible": false,
+      "enabled": true,
+      "children": []
+    },
+    {
+      "hwnd": 18810540,
+      "class": "ComboLBox",
+      "title": "",
+      "rect": [
+        0,
+        25,
+        100,
+        515
+      ],
+      "visible": false,
+      "enabled": true,
+      "children": []
+    },
+    {
+      "hwnd": 20383328,
+      "class": "ComboLBox",
+      "title": "",
+      "rect": [
+        0,
+        28,
+        210,
+        106
+      ],
+      "visible": false,
+      "enabled": true,
+      "children": []
+    },
+    {
+      "hwnd": 21628504,
+      "class": "ComboLBox",
+      "title": "",
+      "rect": [
+        0,
+        30,
+        220,
+        670
+      ],
+      "visible": false,
+      "enabled": true,
+      "children": []
+    },
+    {
+      "hwnd": 21955760,
+      "class": "ComboLBox",
+      "title": "",
+      "rect": [
+        0,
+        30,
+        220,
+        670
+      ],
+      "visible": false,
+      "enabled": true,
+      "children": []
+    },
+    {
+      "hwnd": 22349394,
+      "class": "ComboLBox",
+      "title": "",
+      "rect": [
+        0,
+        34,
+        260,
+        112
+      ],
+      "visible": false,
+      "enabled": true,
+      "children": []
+    },
+    {
+      "hwnd": 19138126,
+      "class": "ComboLBox",
+      "title": "",
+      "rect": [
+        0,
+        34,
+        260,
+        312
+      ],
+      "visible": false,
+      "enabled": true,
+      "children": []
+    },
+    {
+      "hwnd": 20186550,
+      "class": "ComboLBox",
+      "title": "",
+      "rect": [
+        0,
+        30,
+        210,
+        670
+      ],
+      "visible": false,
+      "enabled": true,
+      "children": []
+    },
+    {
+      "hwnd": 20055464,
+      "class": "ComboLBox",
+      "title": "",
+      "rect": [
+        0,
+        30,
+        210,
+        670
+      ],
+      "visible": false,
+      "enabled": false,
+      "children": []
+    },
+    {
+      "hwnd": 20514210,
+      "class": "ComboLBox",
+      "title": "",
+      "rect": [
+        0,
+        30,
+        210,
+        670
+      ],
+      "visible": false,
+      "enabled": true,
+      "children": []
+    },
+    {
+      "hwnd": 19530962,
+      "class": "Afx:400000:0:10003:0:0",
+      "title": "_iext3_CTipWnd",
+      "rect": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "visible": false,
+      "enabled": true,
+      "children": []
+    },
+    {
+      "hwnd": 25166924,
+      "class": "MSCTFIME UI",
+      "title": "MSCTFIME UI",
+      "rect": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "visible": false,
+      "enabled": false,
+      "children": []
+    },
+    {
+      "hwnd": 21759092,
+      "class": "IME",
+      "title": "Default IME",
+      "rect": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "visible": false,
+      "enabled": false,
+      "children": []
+    }
+  ]
+}

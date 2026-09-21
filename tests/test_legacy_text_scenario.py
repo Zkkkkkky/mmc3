@@ -7,9 +7,15 @@ from tempfile import TemporaryDirectory
 
 os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 
-from PySide6.QtWidgets import QApplication
+from PySide6.QtWidgets import QApplication, QDialogButtonBox
 
-from dc_modifier.legacy_text_pages import LegacyGrowthPage, LegacyScenarioEventsPage, LegacyShopPage, LegacyTextPage
+from dc_modifier.legacy_text_pages import (
+    GrowthHexDialog,
+    LegacyGrowthPage,
+    LegacyScenarioEventsPage,
+    LegacyShopPage,
+    LegacyTextPage,
+)
 from fc_editor.codecs.legacy_scenario import LegacyScenarioCodec
 from fc_editor.codecs.legacy_text import LegacyTextCodec
 from fc_editor.codecs.legacy_text_growth import LegacyGrowthCodec
@@ -46,6 +52,166 @@ class LegacyTextScenarioCodecTests(unittest.TestCase):
         self.assertEqual(record.file_offset, 0x54020)
         self.assertIn("嘿嘿！小毛贼！往哪", record.text)
         self.assertIn("投靠我们联邦不好吗", codec.record("battle_00", 0, 5).text)
+
+    def test_battle_group_boundaries_roundtrip_in_original_capacity(self) -> None:
+        codec = LegacyTextCodec(self.data)
+        for key, last_index in (
+            ("battle_00", 255),
+            ("battle_01", 15),
+            ("battle_04", 255),
+            ("battle_05", 63),
+        ):
+            for variant in range(codec.variant_count(key, last_index)):
+                record = codec.record(key, last_index, variant)
+                offset, before, after = codec.replacement_patch(
+                    key, last_index, variant, record.text
+                )
+                self.assertEqual(before, after)
+                self.assertEqual(
+                    self.data[offset : offset + len(before)],
+                    before,
+                    (key, last_index, variant),
+                )
+
+    @staticmethod
+    def _apply_patches(data: bytes, patches) -> bytes:
+        result = bytearray(data)
+        for offset, before, after in patches:
+            if bytes(result[offset : offset + len(before)]) != before:
+                raise AssertionError(f"stale patch at {offset:#x}")
+            result[offset : offset + len(after)] = after
+        return bytes(result)
+
+    @staticmethod
+    def _battle_alias_signature(codec: LegacyTextCodec, keys: tuple[str, ...]):
+        aliases: dict[int, list[tuple[str, int, int]]] = {}
+        for key in keys:
+            group = codec.group_by_key[key]
+            for index in range(group.count):
+                for variant in range(codec.variant_count(key, index)):
+                    record = codec.record(key, index, variant)
+                    aliases.setdefault(record.pointer, []).append(
+                        (key, index, variant)
+                    )
+        return tuple(sorted(tuple(values) for values in aliases.values()))
+
+    def test_battle_2a_pool_repack_reuses_shortened_bytes_and_preserves_aliases(self) -> None:
+        codec = LegacyTextCodec(self.data)
+        shorter_id = ("battle_00", 0, 0)
+        longer_id = ("battle_00", 0, 1)
+        shorter = codec.record(*shorter_id).text.replace("小毛贼", "贼")
+        longer = codec.record(*longer_id).text.replace(
+            "你们", "你们你们", 1
+        )
+        before_records = {
+            (key, index, variant): codec.record(key, index, variant).raw
+            for key in ("battle_00", "battle_01")
+            for index in range(codec.group_by_key[key].count)
+            for variant in range(codec.variant_count(key, index))
+        }
+        before_aliases = self._battle_alias_signature(
+            codec, ("battle_00", "battle_01")
+        )
+        usage = codec.battle_usage(
+            0x2A, {shorter_id: shorter, longer_id: longer}
+        )
+        self.assertEqual((usage.used, usage.capacity, usage.free), (5432, 5432, 0))
+
+        patches = codec.battle_repack_patches(
+            {shorter_id: shorter, longer_id: longer}
+        )
+        self.assertGreaterEqual(len(patches), 2)
+        self.assertLess(
+            sum(
+                sum(left != right for left, right in zip(before, after))
+                for _offset, before, after in patches
+            ),
+            100,
+        )
+        repacked_data = self._apply_patches(self.data, patches)
+        repacked = LegacyTextCodec(repacked_data)
+        self.assertEqual(repacked.record(*shorter_id).text, shorter)
+        self.assertEqual(repacked.record(*longer_id).text, longer)
+        self.assertNotEqual(
+            repacked.record(*longer_id).pointer,
+            codec.record(*longer_id).pointer,
+        )
+        for identity, raw in before_records.items():
+            if identity not in (shorter_id, longer_id):
+                self.assertEqual(repacked.record(*identity).raw, raw, identity)
+        self.assertEqual(
+            self._battle_alias_signature(
+                repacked, ("battle_00", "battle_01")
+            ),
+            before_aliases,
+        )
+        system_start = LegacyTextCodec.offset(0x2A, 0x9768)
+        system_end = LegacyTextCodec.offset(0x2A, 0xA000)
+        self.assertEqual(
+            repacked_data[system_start:system_end],
+            self.data[system_start:system_end],
+        )
+        self.assertEqual(
+            repacked.battle_repack_patches(
+                {shorter_id: shorter, longer_id: longer}
+            ),
+            (),
+        )
+
+    def test_battle_repack_survives_reopen_and_preserves_0e_non_text_gaps(self) -> None:
+        codec = LegacyTextCodec(self.data)
+        shorter_id = ("battle_04", 0, 0)
+        longer_id = ("battle_04", 0, 1)
+        shorter = codec.record(*shorter_id).text.replace("小毛贼", "贼")
+        first = self._apply_patches(
+            self.data,
+            codec.battle_repack_patches({shorter_id: shorter}),
+        )
+        reopened = LegacyTextCodec(first)
+        self.assertEqual(reopened.battle_usage(0x0E).free, 4)
+        longer = reopened.record(*longer_id).text.replace(
+            "敌人", "敌人敌人", 1
+        )
+        second = self._apply_patches(
+            first,
+            reopened.battle_repack_patches({longer_id: longer}),
+        )
+        final = LegacyTextCodec(second)
+        self.assertEqual(final.record(*shorter_id).text, shorter)
+        self.assertEqual(final.record(*longer_id).text, longer)
+        self.assertEqual(final.battle_usage(0x0E).free, 0)
+        for start, end in ((0x97E4, 0x97FB), (0x9B3D, 0x9E28)):
+            offset = LegacyTextCodec.offset(0x0E, start)
+            size = end - start
+            self.assertEqual(second[offset : offset + size], self.data[offset : offset + size])
+
+    def test_battle_repack_rejects_total_capacity_overflow_atomically(self) -> None:
+        codec = LegacyTextCodec(self.data)
+        identity = ("battle_00", 0, 0)
+        longer = codec.record(*identity).text.replace("嘿嘿", "嘿嘿嘿", 1)
+        usage = codec.battle_usage(0x2A, {identity: longer})
+        self.assertEqual(usage.used - usage.capacity, 2)
+        with self.assertRaisesRegex(ValueError, r"超出 2 字节.*缩短"):
+            codec.battle_repack_patches({identity: longer})
+
+    def test_battle_repack_rejects_divergent_drafts_for_shared_text(self) -> None:
+        codec = LegacyTextCodec(self.data)
+        key = "battle_00"
+        record = next(
+            codec.record(key, index, variant)
+            for index in range(codec.group_by_key[key].count)
+            for variant in range(codec.variant_count(key, index))
+            if len(codec.record(key, index, variant).shared_by) >= 2
+        )
+        first, second = record.shared_by[:2]
+        changed = record.text.replace("⟦结束⟧", "我⟦结束⟧")
+        with self.assertRaisesRegex(ValueError, "不同草稿"):
+            codec.battle_repack_patches(
+                {
+                    (key, first[0], first[1]): record.text,
+                    (key, second[0], second[1]): changed,
+                }
+            )
 
     def test_system_ff_operands_are_preserved_and_not_record_terminators(self) -> None:
         codec = LegacyTextCodec(self.data)
@@ -101,6 +267,8 @@ class LegacyTextScenarioCodecTests(unittest.TestCase):
 
     def test_growth_reader_nibble_order_shared_records_and_last_padding(self) -> None:
         codec = LegacyGrowthCodec(self.data)
+        self.assertEqual(codec.verified_level_cap, 99)
+        self.assertEqual(codec.LEVEL_CAPACITY, 99)
         for growth_id in range(201, 254):
             record = codec.record(growth_id)
             self.assertEqual(codec.replacement_patch(growth_id, record.values)[1:], (record.raw, record.raw))
@@ -115,6 +283,14 @@ class LegacyTextScenarioCodecTests(unittest.TestCase):
         self.assertEqual(codec.record(214).shared_ids, tuple(range(214, 254)))
         with self.assertRaises(ValueError):
             codec.replacement_patch(201, [16] * 99)
+
+    def test_growth_reader_rejects_runtime_cap_that_does_not_match_records(self) -> None:
+        data = bytearray(self.data)
+        data[LegacyGrowthCodec.LEVEL_CAP_COMPARE_OFFSET + 1] = 0x3B
+        codec = LegacyGrowthCodec(data)
+
+        with self.assertRaisesRegex(ValueError, "运行时等级上限60.*容量99"):
+            _ = codec.verified_level_cap
 
     def test_shop_metadata_matches_screenshot_and_unused_pointers_cannot_write(self) -> None:
         codec = LegacyShopCodec(self.data)
@@ -131,6 +307,36 @@ class LegacyTextScenarioCodecTests(unittest.TestCase):
         for shop_id in range(0xF5, 0xFF):
             with self.assertRaisesRegex(ValueError, "地图事件"):
                 codec.record(shop_id)
+
+    def test_all_m10_text_and_shop_records_roundtrip_without_hidden_changes(self) -> None:
+        text_codec = LegacyTextCodec(self.data)
+        for index in range(24):
+            for variant in range(text_codec.variant_count("item_description", index)):
+                record = text_codec.record("item_description", index, variant)
+                offset, before, after = text_codec.replacement_patch(
+                    "item_description", index, variant, record.text
+                )
+                self.assertEqual(before, after, (index, variant))
+                self.assertEqual(self.data[offset : offset + len(before)], before)
+
+        shop_codec = LegacyShopCodec(self.data)
+        for shop_id in range(0xF0, 0xF5):
+            record = shop_codec.record(shop_id)
+            offset, before, after = shop_codec.replacement_patch(
+                shop_id,
+                record.clerk_id,
+                record.dialogue_id,
+                record.items,
+            )
+            self.assertEqual(before, after, shop_id)
+            self.assertEqual(self.data[offset : offset + len(before)], before)
+            for dialogue_index in range(7):
+                text_id = record.dialogue_id + dialogue_index
+                dialogue = text_codec.record("system", text_id)
+                patch = text_codec.replacement_patch(
+                    "system", text_id, 0, dialogue.text
+                )
+                self.assertEqual(patch[1], patch[2], (shop_id, dialogue_index))
 
 
 class LegacyTextScenarioUiTests(QtTestCase):
@@ -161,6 +367,73 @@ class LegacyTextScenarioUiTests(QtTestCase):
         self.assertIn("哈哈", LegacyTextCodec(self.project.working).record("battle_00", 0).text)
         self.project.undo()
         self.assertEqual(bytes(self.project.working), before)
+
+    def test_battle_page_exposes_reference_list_and_content_views(self) -> None:
+        page = LegacyTextPage()
+        self.widgets.append(page)
+        page.set_project(self.project)
+        self.assertEqual(
+            [page.view_tabs.tabText(index) for index in range(page.view_tabs.count())],
+            ["按列表", "按内容"],
+        )
+        self.assertEqual(page.group_combo.count(), 4)
+        self.assertEqual(page.variant_list.count(), 6)
+        self.assertEqual(page.content_edit.toPlainText().count("++"), 5)
+        self.assertIn("嘿嘿！小毛贼", page.content_edit.toPlainText())
+        self.assertIn("投靠我们联邦不好吗", page.content_edit.toPlainText())
+        page.text_edit.setPlainText(page.text_edit.toPlainText().replace("嘿嘿", "哈哈"))
+        self.assertIn("哈哈！小毛贼", page.content_edit.toPlainText())
+        self.assertIn("哈哈！小毛贼", page.variant_list.item(0).text())
+        self.assertIn("哈哈！小毛贼", page.record_list.item(0).text())
+
+    def test_battle_page_relocates_longer_text_using_same_bank_draft_space(self) -> None:
+        page = LegacyTextPage()
+        self.widgets.append(page)
+        page.set_project(self.project)
+        before = bytes(self.project.working)
+        page.text_edit.setPlainText(
+            page.text_edit.toPlainText().replace("小毛贼", "贼")
+        )
+        self.assertIsNone(page.pending_draft_error)
+        self.assertIn("剩余 4 字节", page.status_label.text())
+        page.variant_list.setCurrentRow(1)
+        page.text_edit.setPlainText(
+            page.text_edit.toPlainText().replace("你们", "你们你们", 1)
+        )
+        self.assertIsNone(page.pending_draft_error)
+        self.assertIn("剩余 0 字节", page.status_label.text())
+        self.assertTrue(page.commit_pending_changes())
+        codec = LegacyTextCodec(self.project.working)
+        self.assertIn("嘿嘿！贼！", codec.record("battle_00", 0, 0).text)
+        self.assertIn("你们你们为什么", codec.record("battle_00", 0, 1).text)
+        self.project.undo()
+        self.assertEqual(bytes(self.project.working), before)
+
+    def test_system_text_page_shows_reference_escape_note_and_disables_append(self) -> None:
+        page = LegacyTextPage(("system",))
+        self.widgets.append(page)
+        page.set_project(self.project)
+        self.assertTrue(page.system_note.isVisibleTo(page))
+        self.assertIn('"{"加3字节16进制', page.system_note.text())
+        self.assertTrue(page.add_button.isVisibleTo(page))
+        self.assertFalse(page.add_button.isEnabled())
+        self.assertIn("原记录容量", page.add_button.toolTip())
+
+    def test_growth_hex_dialog_edits_first_60_values_and_preserves_tail(self) -> None:
+        values = tuple(index % 16 for index in range(99))
+        dialog = GrowthHexDialog(values)
+        self.widgets.append(dialog)
+        self.assertEqual(dialog.hex_edit.text(), "".join(f"{value:X}" for value in values[:60]))
+        self.assertEqual(dialog.values(), values)
+        dialog.hex_edit.setText("F" * 60)
+        self.assertEqual(dialog.values()[:60], (15,) * 60)
+        self.assertEqual(dialog.values()[60:], values[60:])
+        dialog.hex_edit.setText("F" * 59)
+        self.assertFalse(
+            dialog.buttons.button(QDialogButtonBox.StandardButton.Ok).isEnabled()
+        )
+        with self.assertRaisesRegex(ValueError, "60位"):
+            dialog.values()
 
     def test_event_page_uses_real_bank_and_dialogue_previews(self) -> None:
         page = LegacyScenarioEventsPage(0)
@@ -247,11 +520,16 @@ class LegacyTextScenarioUiTests(QtTestCase):
         growth = LegacyGrowthCodec(data)
         shops = LegacyShopCodec(data)
         events = LegacyScenarioCodec(data)
-        record = text.record("battle_00", 0)
+        shorter_id = ("battle_00", 0, 0)
+        longer_id = ("battle_00", 0, 1)
+        shorter = text.record(*shorter_id).text.replace("小毛贼", "贼")
+        longer = text.record(*longer_id).text.replace("你们", "你们你们", 1)
         values = list(growth.record(201).values)
         values[0] = 3
         patches = (
-            text.replacement_patch("battle_00", 0, 0, record.text.replace("嘿嘿", "哈哈")),
+            *text.battle_repack_patches(
+                {shorter_id: shorter, longer_id: longer}
+            ),
             growth.replacement_patch(201, values),
             shops.replacement_patch(0xF0, 2, 48, (12, 5, 15, 16)),
             events.replacement_patch(events.instructions(0, 0)[0], b"\x59\x87"),
@@ -261,6 +539,9 @@ class LegacyTextScenarioUiTests(QtTestCase):
             path = self.project.save_project(Path(directory) / "legacy.dcproject")
             reloaded = RomProject.load_project(path, ROM)
             self.assertEqual(bytes(reloaded.working), bytes(self.project.working))
+            reopened = LegacyTextCodec(reloaded.working)
+            self.assertEqual(reopened.record(*shorter_id).text, shorter)
+            self.assertEqual(reopened.record(*longer_id).text, longer)
 
 
 if __name__ == "__main__":

@@ -1,0 +1,89 @@
+{
+  "schema_version": 1,
+  "reason": "preserve six text-without-EN_CHANGE attempts, two deterministic 1584-offset library side-effect discoveries, and one disabled body-bank-2 attempt before retry",
+  "timestamp": "20260920T005339",
+  "moved": [
+    {
+      "module": "M05",
+      "field": "body_color_1",
+      "case_id": "cold_start_01",
+      "from": "output/build/legacy-diff-audit/cases/legacy_live/M05/body_color_1/cold_start_01",
+      "to": "output/build/legacy-diff-audit/cases/diagnostic/retry_history/20260920T005339/M05/body_color_1/cold_start_01",
+      "had_case_json": true,
+      "had_error_json": false
+    },
+    {
+      "module": "M05",
+      "field": "body_color_2",
+      "case_id": "cold_start_01",
+      "from": "output/build/legacy-diff-audit/cases/legacy_live/M05/body_color_2/cold_start_01",
+      "to": "output/build/legacy-diff-audit/cases/diagnostic/retry_history/20260920T005339/M05/body_color_2/cold_start_01",
+      "had_case_json": true,
+      "had_error_json": false
+    },
+    {
+      "module": "M05",
+      "field": "body_color_3",
+      "case_id": "cold_start_01",
+      "from": "output/build/legacy-diff-audit/cases/legacy_live/M05/body_color_3/cold_start_01",
+      "to": "output/build/legacy-diff-audit/cases/diagnostic/retry_history/20260920T005339/M05/body_color_3/cold_start_01",
+      "had_case_json": false,
+      "had_error_json": true
+    },
+    {
+      "module": "M05",
+      "field": "fragment_color_1",
+      "case_id": "cold_start_01",
+      "from": "output/build/legacy-diff-audit/cases/legacy_live/M05/fragment_color_1/cold_start_01",
+      "to": "output/build/legacy-diff-audit/cases/diagnostic/retry_history/20260920T005339/M05/fragment_color_1/cold_start_01",
+      "had_case_json": true,
+      "had_error_json": false
+    },
+    {
+      "module": "M05",
+      "field": "fragment_color_2",
+      "case_id": "cold_start_01",
+      "from": "output/build/legacy-diff-audit/cases/legacy_live/M05/fragment_color_2/cold_start_01",
+      "to": "output/build/legacy-diff-audit/cases/diagnostic/retry_history/20260920T005339/M05/fragment_color_2/cold_start_01",
+      "had_case_json": true,
+      "had_error_json": false
+    },
+    {
+      "module": "M05",
+      "field": "fragment_color_3",
+      "case_id": "cold_start_01",
+      "from": "output/build/legacy-diff-audit/cases/legacy_live/M05/fragment_color_3/cold_start_01",
+      "to": "output/build/legacy-diff-audit/cases/diagnostic/retry_history/20260920T005339/M05/fragment_color_3/cold_start_01",
+      "had_case_json": true,
+      "had_error_json": false
+    },
+    {
+      "module": "M05",
+      "field": "fragment_bank",
+      "case_id": "cold_start_01",
+      "from": "output/build/legacy-diff-audit/cases/legacy_live/M05/fragment_bank/cold_start_01",
+      "to": "output/build/legacy-diff-audit/cases/diagnostic/retry_history/20260920T005339/M05/fragment_bank/cold_start_01",
+      "had_case_json": true,
+      "had_error_json": false
+    },
+    {
+      "module": "M05",
+      "field": "body_bank_1",
+      "case_id": "cold_start_01",
+      "from": "output/build/legacy-diff-audit/cases/legacy_live/M05/body_bank_1/cold_start_01",
+      "to": "output/build/legacy-diff-audit/cases/diagnostic/retry_history/20260920T005339/M05/body_bank_1/cold_start_01",
+      "had_case_json": true,
+      "had_error_json": false
+    },
+    {
+      "module": "M05",
+      "field": "body_bank_2",
+      "case_id": "cold_start_01",
+      "from": "output/build/legacy-diff-audit/cases/legacy_live/M05/body_bank_2/cold_start_01",
+      "to": "output/build/legacy-diff-audit/cases/diagnostic/retry_history/20260920T005339/M05/body_bank_2/cold_start_01",
+      "had_case_json": false,
+      "had_error_json": true
+    }
+  ],
+  "live_result_rows_removed": 7
+}

@@ -1,0 +1,20 @@
+{
+  "module": "M17",
+  "field": "hit_threshold",
+  "case_id": "cold_start_02",
+  "requested_value": 71,
+  "expected_before": 70,
+  "expected_offsets": [42062],
+  "required_offsets": [42062],
+  "optional_offsets": [],
+  "extra_allowed": [],
+  "navigation": [
+    {"op": "menu", "path": "数据->其他"},
+    {"op": "window", "title": "其他"}
+  ],
+  "edit_steps": [
+    {"op": "set_text", "class": "Edit", "control_id": 830, "value": "$requested"},
+    {"op": "click_id", "class": "Button", "control_id": 320}
+  ],
+  "read_selector": {"class": "Edit", "control_id": 830, "value_type": "int"}
+}

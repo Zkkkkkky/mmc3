@@ -1,0 +1,32 @@
+{
+  "tag": "CLEAN_Sogou_TSF_",
+  "hwnd": 132010,
+  "title": "Sogou_TSF_UI",
+  "class": "Sogou_TSF_UI",
+  "rect": {
+    "left": 0,
+    "top": 0,
+    "right": 0,
+    "bottom": 0,
+    "width": 0,
+    "height": 0
+  },
+  "pid": 41916,
+  "tree": {
+    "hwnd": 132010,
+    "class": "Sogou_TSF_UI",
+    "text": "Sogou_TSF_UI",
+    "ctrl_id": 0,
+    "rect": {
+      "left": 0,
+      "top": 0,
+      "right": 0,
+      "bottom": 0,
+      "width": 0,
+      "height": 0
+    },
+    "visible": false,
+    "enabled": false,
+    "children": []
+  }
+}

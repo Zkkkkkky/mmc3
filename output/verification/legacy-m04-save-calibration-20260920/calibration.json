@@ -1,0 +1,101 @@
+{
+  "schema_version": 1,
+  "module": "M04",
+  "samples": [
+    {
+      "sequence": 0,
+      "field_id": "M04/00/trigger/00/x",
+      "field": "x",
+      "file_offset": 88406,
+      "original": 9,
+      "requested": 0,
+      "changed_offsets": [
+        88406
+      ],
+      "target_after": 0,
+      "before_sha256": "c0f6fb15dbcc9f04d35ec97b9558df85d099c661c35d54d3a2aae4966d2ed5b2",
+      "after_sha256": "41f14fb140d3f2a62ff3cdd407d0248ecbec68861ea5e2d3e468bb009002a500",
+      "expected_rom_effect": true,
+      "mapping_passed": true
+    },
+    {
+      "sequence": 1,
+      "field_id": "M04/00/trigger/00/y",
+      "field": "y",
+      "file_offset": 88407,
+      "original": 3,
+      "requested": 0,
+      "changed_offsets": [
+        88407
+      ],
+      "target_after": 0,
+      "before_sha256": "c0f6fb15dbcc9f04d35ec97b9558df85d099c661c35d54d3a2aae4966d2ed5b2",
+      "after_sha256": "6e2128f13d2a5c6d3542afa0a0788b3e49914617ab6280183a0bc9100821049b",
+      "expected_rom_effect": true,
+      "mapping_passed": true
+    },
+    {
+      "sequence": 2,
+      "field_id": "M04/00/trigger/00/character_id",
+      "field": "character_id",
+      "file_offset": 88408,
+      "original": 255,
+      "requested": 5,
+      "changed_offsets": [],
+      "target_after": 255,
+      "before_sha256": "c0f6fb15dbcc9f04d35ec97b9558df85d099c661c35d54d3a2aae4966d2ed5b2",
+      "after_sha256": "c0f6fb15dbcc9f04d35ec97b9558df85d099c661c35d54d3a2aae4966d2ed5b2",
+      "expected_rom_effect": false,
+      "mapping_passed": true
+    },
+    {
+      "sequence": 3,
+      "field_id": "M04/00/trigger/00/event_id",
+      "field": "event_id",
+      "file_offset": 88409,
+      "original": 7,
+      "requested": 8,
+      "changed_offsets": [
+        88409
+      ],
+      "target_after": 8,
+      "before_sha256": "c0f6fb15dbcc9f04d35ec97b9558df85d099c661c35d54d3a2aae4966d2ed5b2",
+      "after_sha256": "e1336bd3a2c1314ca4c06058ccc6ae682f4c3346b5a0d81e261aa4a829558ea7",
+      "expected_rom_effect": true,
+      "mapping_passed": true
+    },
+    {
+      "sequence": 4,
+      "field_id": "M04/01/trigger/03/character_id",
+      "field": "character_id",
+      "file_offset": 88425,
+      "original": 4,
+      "requested": 5,
+      "changed_offsets": [
+        88425
+      ],
+      "target_after": 5,
+      "before_sha256": "c0f6fb15dbcc9f04d35ec97b9558df85d099c661c35d54d3a2aae4966d2ed5b2",
+      "after_sha256": "a2ecf2e104830a30d3dfef9790c8e6f73edefc49b2c7e0bf4421b48a72552dd6",
+      "expected_rom_effect": true,
+      "mapping_passed": true
+    },
+    {
+      "sequence": 5,
+      "field_id": "M04/01/trigger/03/event_id",
+      "field": "event_id",
+      "file_offset": 88426,
+      "original": 241,
+      "requested": 242,
+      "changed_offsets": [
+        88426
+      ],
+      "target_after": 242,
+      "before_sha256": "c0f6fb15dbcc9f04d35ec97b9558df85d099c661c35d54d3a2aae4966d2ed5b2",
+      "after_sha256": "c75b0121e2d1a199011c4f92e895fc5369677c7196bbe1d237d83bc2dd591b8a",
+      "expected_rom_effect": true,
+      "mapping_passed": true
+    }
+  ],
+  "passed": true
+}

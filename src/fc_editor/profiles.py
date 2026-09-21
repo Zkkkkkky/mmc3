@@ -322,6 +322,15 @@ class RomProfile:
     character_name_data_prg_bank: int | None = None
     character_name_data_window_base: int = 0x8000
     character_name_data_end_pointer: int | None = None
+    character_normal_name_pointer_table_offset: int | None = None
+    character_normal_name_count: int = 0
+    character_dialogue_pointer_table_offset: int | None = None
+    character_dialogue_count: int = 0
+    character_dialogue_data_prg_bank: int | None = None
+    character_dialogue_data_window_base: int = 0x8000
+    character_dialogue_data_end_pointer: int | None = None
+    character_transform_table_offset: int | None = None
+    character_transform_capacity: int = 0
     map_triggers: MapTriggerSpec | None = None
     persuasion_rules: PersuasionRuleSpec | None = None
     legacy_global_data: LegacyGlobalDataSpec | None = None
@@ -389,11 +398,27 @@ V51_STORY_TEXT_GROUPS = (
     StoryTextGroupSpec(0x3B, 22, 0x8010, 255, 0x820E, 0xC000, "剧情文本 H", last_pointer_writable=False),
 )
 
-# DC's selector $37 uses a split pointer/data layout that the current exact-size
-# text writer cannot safely represent.  Keep the other seven verified groups
-# available and leave $37 untouched until the relocatable text editor lands.
+# DC's selector $37 keeps its 52-entry pointer table after the text pool.  Slot
+# $00 points at a non-text structure and is deliberately outside the writable
+# data range; slots $01-$33 point at 34 FF-terminated physical records in
+# $9B4A-$9E27.  The ordinary exact-size codec can therefore expose the real
+# indices while treating slot $00 as a read-only sentinel.  This split group is
+# safe for in-place replacement, but is intentionally not one of the seven
+# relocatable 16 KiB story pairs in ``expansion_story``.
+MMC5_SPLIT_STORY_TEXT_GROUP = StoryTextGroupSpec(
+    0x37,
+    14,
+    0x9E28,
+    52,
+    0x9B4A,
+    0x9E28,
+    "剧情文本 D",
+    first_pointer=0x9E90,
+    last_pointer_writable=False,
+)
 MMC5_STORY_TEXT_GROUPS = tuple(
-    group for group in V51_STORY_TEXT_GROUPS if group.selector != 0x37
+    MMC5_SPLIT_STORY_TEXT_GROUP if group.selector == 0x37 else group
+    for group in V51_STORY_TEXT_GROUPS
 )
 
 
@@ -409,7 +434,7 @@ V51_PROFILE = RomProfile(
     unit_data_window_base=0x8000,
     weapon_pointer_table_offset=0x496FB,
     weapon_pointer_count=0x100,
-    weapon_count=0xFF,
+    weapon_count=0x100,
     weapon_data_prg_bank=36,
     weapon_data_window_base=0x8000,
     unit_weapon_table_offset=0xB4E0,
@@ -528,7 +553,7 @@ MMC5_PROFILE = RomProfile(
     unit_data_window_base=0x8000,
     weapon_pointer_table_offset=0x48ECF,
     weapon_pointer_count=0x100,
-    weapon_count=0xFF,
+    weapon_count=0x100,
     weapon_data_prg_bank=0x24,
     weapon_data_window_base=0x8000,
     # Verified two-slot direct weapon-ID table; IDs $01-$FF start at 0xB2DA.
@@ -577,6 +602,19 @@ MMC5_PROFILE = RomProfile(
     character_name_data_prg_bank=0x24,
     character_name_data_window_base=0x8000,
     character_name_data_end_pointer=0x9766,
+    # The first table contains display names for IDs $01-$C8.  It shares the
+    # same bounded text pool with the in-battle table above.
+    character_normal_name_pointer_table_offset=0x4945B,
+    character_normal_name_count=0xC8,
+    # Each character points at 8 direct two-byte bindings followed by three
+    # FF-terminated lists of four-byte conditional dialogue rules.
+    character_dialogue_pointer_table_offset=0xD119,
+    character_dialogue_count=0xC8,
+    character_dialogue_data_prg_bank=0x06,
+    character_dialogue_data_window_base=0x8000,
+    character_dialogue_data_end_pointer=0x9AE6,
+    character_transform_table_offset=0x1596D,
+    character_transform_capacity=0x10,
     map_triggers=MapTriggerSpec(
         prg_bank=0x0A,
         window_base=0x8000,
@@ -660,6 +698,15 @@ DC_EXPANDED_MMC3_LEGACY_PROFILE = RomProfile(
     character_name_data_prg_bank=MMC5_PROFILE.character_name_data_prg_bank,
     character_name_data_window_base=MMC5_PROFILE.character_name_data_window_base,
     character_name_data_end_pointer=MMC5_PROFILE.character_name_data_end_pointer,
+    character_normal_name_pointer_table_offset=MMC5_PROFILE.character_normal_name_pointer_table_offset,
+    character_normal_name_count=MMC5_PROFILE.character_normal_name_count,
+    character_dialogue_pointer_table_offset=MMC5_PROFILE.character_dialogue_pointer_table_offset,
+    character_dialogue_count=MMC5_PROFILE.character_dialogue_count,
+    character_dialogue_data_prg_bank=MMC5_PROFILE.character_dialogue_data_prg_bank,
+    character_dialogue_data_window_base=MMC5_PROFILE.character_dialogue_data_window_base,
+    character_dialogue_data_end_pointer=MMC5_PROFILE.character_dialogue_data_end_pointer,
+    character_transform_table_offset=MMC5_PROFILE.character_transform_table_offset,
+    character_transform_capacity=MMC5_PROFILE.character_transform_capacity,
     map_triggers=MMC5_PROFILE.map_triggers,
     persuasion_rules=PersuasionRuleSpec(
         table_offset=0x3B73D,

@@ -1,0 +1,60 @@
+{
+  "schema_version": 1,
+  "module": "M05",
+  "field": "speed",
+  "case_id": "cold_start_01",
+  "case_kind": "golden",
+  "requested_value": 149,
+  "changed_offsets": [
+    297552
+  ],
+  "removed_normalization": [],
+  "reopen_value": 149,
+  "original_value": 150,
+  "reopen_matches_request": true,
+  "reopen_mode": "new_process",
+  "expected_offsets": [
+    297552
+  ],
+  "required_offsets": [
+    297552
+  ],
+  "optional_offsets": [],
+  "extra_allowed": [],
+  "unexpected_offsets": [],
+  "target_changed": [
+    297552
+  ],
+  "expected_not_changed": [],
+  "passed": true,
+  "pending_reason": null,
+  "notes": [
+    "在线单字段采集：保存后关闭进程，再以不同 PID 冷启动重开"
+  ],
+  "provenance": {
+    "source_json": "output/build/legacy-diff-audit/legacy-live-results.json"
+  },
+  "snapshots": {
+    "before": {
+      "path": "output/build/legacy-diff-audit/cases/legacy_live/M05/speed/cold_start_01/before.nes",
+      "sha256": "c5d2c1dfbe0dc39afc9effd314c082f121b98c9ad67c4825b1c9dd4b9e991954",
+      "size": 786448
+    },
+    "after": {
+      "path": "output/build/legacy-diff-audit/cases/legacy_live/M05/speed/cold_start_01/after.nes",
+      "sha256": "095ad34da5805fa0d11e3356c06f02aa74ff7a3c817500b1d778e5252fec943d",
+      "size": 786448
+    }
+  },
+  "diff_entries": [
+    {
+      "offset": 297552,
+      "before_value": 150,
+      "after_value": 149
+    }
+  ],
+  "duration_seconds": 20.901,
+  "budget_seconds": 30.0,
+  "within_budget": true,
+  "duration_note": null
+}

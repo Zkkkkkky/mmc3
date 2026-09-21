@@ -1,0 +1,1148 @@
+{
+  "passed": true,
+  "source_sha256": "c0f6fb15dbcc9f04d35ec97b9558df85d099c661c35d54d3a2aae4966d2ed5b2",
+  "rom_unchanged": true,
+  "map_pointer_count": 152,
+  "enabled_map_weapon_slot_count": 52,
+  "map_pointers": [
+    {
+      "row": 0,
+      "value": "0080",
+      "dialog_title": "请输入："
+    },
+    {
+      "row": 1,
+      "value": "0080",
+      "dialog_title": "请输入："
+    },
+    {
+      "row": 2,
+      "value": "0080",
+      "dialog_title": "请输入："
+    },
+    {
+      "row": 3,
+      "value": "0080",
+      "dialog_title": "请输入："
+    },
+    {
+      "row": 4,
+      "value": "0080",
+      "dialog_title": "请输入："
+    },
+    {
+      "row": 5,
+      "value": "0080",
+      "dialog_title": "请输入："
+    },
+    {
+      "row": 6,
+      "value": "0080",
+      "dialog_title": "请输入："
+    },
+    {
+      "row": 7,
+      "value": "0080",
+      "dialog_title": "请输入："
+    },
+    {
+      "row": 8,
+      "value": "0080",
+      "dialog_title": "请输入："
+    },
+    {
+      "row": 9,
+      "value": "0080",
+      "dialog_title": "请输入："
+    },
+    {
+      "row": 10,
+      "value": "0080",
+      "dialog_title": "请输入："
+    },
+    {
+      "row": 11,
+      "value": "0080",
+      "dialog_title": "请输入："
+    },
+    {
+      "row": 12,
+      "value": "0080",
+      "dialog_title": "请输入："
+    },
+    {
+      "row": 13,
+      "value": "0080",
+      "dialog_title": "请输入："
+    },
+    {
+      "row": 14,
+      "value": "0080",
+      "dialog_title": "请输入："
+    },
+    {
+      "row": 15,
+      "value": "0080",
+      "dialog_title": "请输入："
+    },
+    {
+      "row": 16,
+      "value": "0080",
+      "dialog_title": "请输入："
+    },
+    {
+      "row": 17,
+      "value": "0080",
+      "dialog_title": "请输入："
+    },
+    {
+      "row": 18,
+      "value": "0080",
+      "dialog_title": "请输入："
+    },
+    {
+      "row": 19,
+      "value": "0080",
+      "dialog_title": "请输入："
+    },
+    {
+      "row": 20,
+      "value": "0080",
+      "dialog_title": "请输入："
+    },
+    {
+      "row": 21,
+      "value": "0080",
+      "dialog_title": "请输入："
+    },
+    {
+      "row": 22,
+      "value": "0080",
+      "dialog_title": "请输入："
+    },
+    {
+      "row": 23,
+      "value": "0080",
+      "dialog_title": "请输入："
+    },
+    {
+      "row": 24,
+      "value": "0080",
+      "dialog_title": "请输入："
+    },
+    {
+      "row": 25,
+      "value": "0080",
+      "dialog_title": "请输入："
+    },
+    {
+      "row": 26,
+      "value": "0080",
+      "dialog_title": "请输入："
+    },
+    {
+      "row": 27,
+      "value": "0080",
+      "dialog_title": "请输入："
+    },
+    {
+      "row": 28,
+      "value": "0080",
+      "dialog_title": "请输入："
+    },
+    {
+      "row": 29,
+      "value": "0080",
+      "dialog_title": "请输入："
+    },
+    {
+      "row": 30,
+      "value": "0080",
+      "dialog_title": "请输入："
+    },
+    {
+      "row": 31,
+      "value": "0080",
+      "dialog_title": "请输入："
+    },
+    {
+      "row": 32,
+      "value": "0080",
+      "dialog_title": "请输入："
+    },
+    {
+      "row": 33,
+      "value": "0080",
+      "dialog_title": "请输入："
+    },
+    {
+      "row": 34,
+      "value": "0080",
+      "dialog_title": "请输入："
+    },
+    {
+      "row": 35,
+      "value": "0080",
+      "dialog_title": "请输入："
+    },
+    {
+      "row": 36,
+      "value": "0080",
+      "dialog_title": "请输入："
+    },
+    {
+      "row": 37,
+      "value": "0080",
+      "dialog_title": "请输入："
+    },
+    {
+      "row": 38,
+      "value": "0080",
+      "dialog_title": "请输入："
+    },
+    {
+      "row": 39,
+      "value": "0080",
+      "dialog_title": "请输入："
+    },
+    {
+      "row": 40,
+      "value": "0080",
+      "dialog_title": "请输入："
+    },
+    {
+      "row": 41,
+      "value": "0080",
+      "dialog_title": "请输入："
+    },
+    {
+      "row": 42,
+      "value": "0080",
+      "dialog_title": "请输入："
+    },
+    {
+      "row": 43,
+      "value": "0080",
+      "dialog_title": "请输入："
+    },
+    {
+      "row": 44,
+      "value": "0080",
+      "dialog_title": "请输入："
+    },
+    {
+      "row": 45,
+      "value": "0080",
+      "dialog_title": "请输入："
+    },
+    {
+      "row": 46,
+      "value": "0080",
+      "dialog_title": "请输入："
+    },
+    {
+      "row": 47,
+      "value": "0080",
+      "dialog_title": "请输入："
+    },
+    {
+      "row": 48,
+      "value": "0080",
+      "dialog_title": "请输入："
+    },
+    {
+      "row": 49,
+      "value": "0080",
+      "dialog_title": "请输入："
+    },
+    {
+      "row": 50,
+      "value": "0080",
+      "dialog_title": "请输入："
+    },
+    {
+      "row": 51,
+      "value": "0080",
+      "dialog_title": "请输入："
+    },
+    {
+      "row": 52,
+      "value": "0080",
+      "dialog_title": "请输入："
+    },
+    {
+      "row": 53,
+      "value": "0080",
+      "dialog_title": "请输入："
+    },
+    {
+      "row": 54,
+      "value": "0080",
+      "dialog_title": "请输入："
+    },
+    {
+      "row": 55,
+      "value": "0080",
+      "dialog_title": "请输入："
+    },
+    {
+      "row": 56,
+      "value": "0080",
+      "dialog_title": "请输入："
+    },
+    {
+      "row": 57,
+      "value": "0080",
+      "dialog_title": "请输入："
+    },
+    {
+      "row": 58,
+      "value": "0080",
+      "dialog_title": "请输入："
+    },
+    {
+      "row": 59,
+      "value": "0080",
+      "dialog_title": "请输入："
+    },
+    {
+      "row": 60,
+      "value": "0080",
+      "dialog_title": "请输入："
+    },
+    {
+      "row": 61,
+      "value": "0080",
+      "dialog_title": "请输入："
+    },
+    {
+      "row": 62,
+      "value": "0080",
+      "dialog_title": "请输入："
+    },
+    {
+      "row": 63,
+      "value": "0080",
+      "dialog_title": "请输入："
+    },
+    {
+      "row": 64,
+      "value": "0080",
+      "dialog_title": "请输入："
+    },
+    {
+      "row": 65,
+      "value": "0080",
+      "dialog_title": "请输入："
+    },
+    {
+      "row": 66,
+      "value": "0080",
+      "dialog_title": "请输入："
+    },
+    {
+      "row": 67,
+      "value": "0080",
+      "dialog_title": "请输入："
+    },
+    {
+      "row": 68,
+      "value": "0080",
+      "dialog_title": "请输入："
+    },
+    {
+      "row": 69,
+      "value": "0080",
+      "dialog_title": "请输入："
+    },
+    {
+      "row": 70,
+      "value": "0080",
+      "dialog_title": "请输入："
+    },
+    {
+      "row": 71,
+      "value": "0080",
+      "dialog_title": "请输入："
+    },
+    {
+      "row": 72,
+      "value": "0080",
+      "dialog_title": "请输入："
+    },
+    {
+      "row": 73,
+      "value": "0080",
+      "dialog_title": "请输入："
+    },
+    {
+      "row": 74,
+      "value": "0080",
+      "dialog_title": "请输入："
+    },
+    {
+      "row": 75,
+      "value": "0080",
+      "dialog_title": "请输入："
+    },
+    {
+      "row": 76,
+      "value": "0080",
+      "dialog_title": "请输入："
+    },
+    {
+      "row": 77,
+      "value": "0080",
+      "dialog_title": "请输入："
+    },
+    {
+      "row": 78,
+      "value": "0080",
+      "dialog_title": "请输入："
+    },
+    {
+      "row": 79,
+      "value": "0080",
+      "dialog_title": "请输入："
+    },
+    {
+      "row": 80,
+      "value": "0080",
+      "dialog_title": "请输入："
+    },
+    {
+      "row": 81,
+      "value": "0080",
+      "dialog_title": "请输入："
+    },
+    {
+      "row": 82,
+      "value": "0080",
+      "dialog_title": "请输入："
+    },
+    {
+      "row": 83,
+      "value": "0080",
+      "dialog_title": "请输入："
+    },
+    {
+      "row": 84,
+      "value": "0080",
+      "dialog_title": "请输入："
+    },
+    {
+      "row": 85,
+      "value": "0080",
+      "dialog_title": "请输入："
+    },
+    {
+      "row": 86,
+      "value": "0080",
+      "dialog_title": "请输入："
+    },
+    {
+      "row": 87,
+      "value": "0080",
+      "dialog_title": "请输入："
+    },
+    {
+      "row": 88,
+      "value": "0080",
+      "dialog_title": "请输入："
+    },
+    {
+      "row": 89,
+      "value": "0080",
+      "dialog_title": "请输入："
+    },
+    {
+      "row": 90,
+      "value": "0080",
+      "dialog_title": "请输入："
+    },
+    {
+      "row": 91,
+      "value": "0080",
+      "dialog_title": "请输入："
+    },
+    {
+      "row": 92,
+      "value": "0080",
+      "dialog_title": "请输入："
+    },
+    {
+      "row": 93,
+      "value": "0080",
+      "dialog_title": "请输入："
+    },
+    {
+      "row": 94,
+      "value": "0080",
+      "dialog_title": "请输入："
+    },
+    {
+      "row": 95,
+      "value": "0080",
+      "dialog_title": "请输入："
+    },
+    {
+      "row": 96,
+      "value": "0080",
+      "dialog_title": "请输入："
+    },
+    {
+      "row": 97,
+      "value": "0080",
+      "dialog_title": "请输入："
+    },
+    {
+      "row": 98,
+      "value": "0080",
+      "dialog_title": "请输入："
+    },
+    {
+      "row": 99,
+      "value": "0080",
+      "dialog_title": "请输入："
+    },
+    {
+      "row": 100,
+      "value": "0080",
+      "dialog_title": "请输入："
+    },
+    {
+      "row": 101,
+      "value": "0080",
+      "dialog_title": "请输入："
+    },
+    {
+      "row": 102,
+      "value": "0080",
+      "dialog_title": "请输入："
+    },
+    {
+      "row": 103,
+      "value": "0080",
+      "dialog_title": "请输入："
+    },
+    {
+      "row": 104,
+      "value": "0080",
+      "dialog_title": "请输入："
+    },
+    {
+      "row": 105,
+      "value": "0080",
+      "dialog_title": "请输入："
+    },
+    {
+      "row": 106,
+      "value": "0080",
+      "dialog_title": "请输入："
+    },
+    {
+      "row": 107,
+      "value": "0080",
+      "dialog_title": "请输入："
+    },
+    {
+      "row": 108,
+      "value": "0080",
+      "dialog_title": "请输入："
+    },
+    {
+      "row": 109,
+      "value": "0080",
+      "dialog_title": "请输入："
+    },
+    {
+      "row": 110,
+      "value": "0080",
+      "dialog_title": "请输入："
+    },
+    {
+      "row": 111,
+      "value": "0080",
+      "dialog_title": "请输入："
+    },
+    {
+      "row": 112,
+      "value": "0080",
+      "dialog_title": "请输入："
+    },
+    {
+      "row": 113,
+      "value": "0080",
+      "dialog_title": "请输入："
+    },
+    {
+      "row": 114,
+      "value": "0080",
+      "dialog_title": "请输入："
+    },
+    {
+      "row": 115,
+      "value": "0080",
+      "dialog_title": "请输入："
+    },
+    {
+      "row": 116,
+      "value": "0080",
+      "dialog_title": "请输入："
+    },
+    {
+      "row": 117,
+      "value": "0080",
+      "dialog_title": "请输入："
+    },
+    {
+      "row": 118,
+      "value": "0080",
+      "dialog_title": "请输入："
+    },
+    {
+      "row": 119,
+      "value": "0080",
+      "dialog_title": "请输入："
+    },
+    {
+      "row": 120,
+      "value": "0080",
+      "dialog_title": "请输入："
+    },
+    {
+      "row": 121,
+      "value": "0080",
+      "dialog_title": "请输入："
+    },
+    {
+      "row": 122,
+      "value": "0080",
+      "dialog_title": "请输入："
+    },
+    {
+      "row": 123,
+      "value": "0080",
+      "dialog_title": "请输入："
+    },
+    {
+      "row": 124,
+      "value": "0080",
+      "dialog_title": "请输入："
+    },
+    {
+      "row": 125,
+      "value": "0080",
+      "dialog_title": "请输入："
+    },
+    {
+      "row": 126,
+      "value": "0080",
+      "dialog_title": "请输入："
+    },
+    {
+      "row": 127,
+      "value": "0080",
+      "dialog_title": "请输入："
+    },
+    {
+      "row": 128,
+      "value": "0080",
+      "dialog_title": "请输入："
+    },
+    {
+      "row": 129,
+      "value": "0080",
+      "dialog_title": "请输入："
+    },
+    {
+      "row": 130,
+      "value": "0080",
+      "dialog_title": "请输入："
+    },
+    {
+      "row": 131,
+      "value": "0080",
+      "dialog_title": "请输入："
+    },
+    {
+      "row": 132,
+      "value": "0080",
+      "dialog_title": "请输入："
+    },
+    {
+      "row": 133,
+      "value": "0080",
+      "dialog_title": "请输入："
+    },
+    {
+      "row": 134,
+      "value": "0080",
+      "dialog_title": "请输入："
+    },
+    {
+      "row": 135,
+      "value": "0080",
+      "dialog_title": "请输入："
+    },
+    {
+      "row": 136,
+      "value": "0080",
+      "dialog_title": "请输入："
+    },
+    {
+      "row": 137,
+      "value": "0080",
+      "dialog_title": "请输入："
+    },
+    {
+      "row": 138,
+      "value": "0080",
+      "dialog_title": "请输入："
+    },
+    {
+      "row": 139,
+      "value": "0080",
+      "dialog_title": "请输入："
+    },
+    {
+      "row": 140,
+      "value": "0080",
+      "dialog_title": "请输入："
+    },
+    {
+      "row": 141,
+      "value": "0080",
+      "dialog_title": "请输入："
+    },
+    {
+      "row": 142,
+      "value": "0080",
+      "dialog_title": "请输入："
+    },
+    {
+      "row": 143,
+      "value": "0080",
+      "dialog_title": "请输入："
+    },
+    {
+      "row": 144,
+      "value": "0080",
+      "dialog_title": "请输入："
+    },
+    {
+      "row": 145,
+      "value": "0080",
+      "dialog_title": "请输入："
+    },
+    {
+      "row": 146,
+      "value": "0080",
+      "dialog_title": "请输入："
+    },
+    {
+      "row": 147,
+      "value": "0080",
+      "dialog_title": "请输入："
+    },
+    {
+      "row": 148,
+      "value": "0080",
+      "dialog_title": "请输入："
+    },
+    {
+      "row": 149,
+      "value": "0080",
+      "dialog_title": "请输入："
+    },
+    {
+      "row": 150,
+      "value": "0080",
+      "dialog_title": "请输入："
+    },
+    {
+      "row": 151,
+      "value": "0080",
+      "dialog_title": "请输入："
+    }
+  ],
+  "map_weapon": [
+    {
+      "row": 0,
+      "slots": [
+        {
+          "slot": 1,
+          "control_id": 450,
+          "enabled": true,
+          "selected_index": 43
+        },
+        {
+          "slot": 2,
+          "control_id": 480,
+          "enabled": true,
+          "selected_index": -1
+        },
+        {
+          "slot": 3,
+          "control_id": 500,
+          "enabled": true,
+          "selected_index": -1
+        },
+        {
+          "slot": 4,
+          "control_id": 520,
+          "enabled": true,
+          "selected_index": -1
+        }
+      ]
+    },
+    {
+      "row": 1,
+      "slots": [
+        {
+          "slot": 1,
+          "control_id": 450,
+          "enabled": true,
+          "selected_index": 13
+        },
+        {
+          "slot": 2,
+          "control_id": 480,
+          "enabled": true,
+          "selected_index": -1
+        },
+        {
+          "slot": 3,
+          "control_id": 500,
+          "enabled": true,
+          "selected_index": -1
+        },
+        {
+          "slot": 4,
+          "control_id": 520,
+          "enabled": true,
+          "selected_index": -1
+        }
+      ]
+    },
+    {
+      "row": 2,
+      "slots": [
+        {
+          "slot": 1,
+          "control_id": 450,
+          "enabled": true,
+          "selected_index": 27
+        },
+        {
+          "slot": 2,
+          "control_id": 480,
+          "enabled": true,
+          "selected_index": -1
+        },
+        {
+          "slot": 3,
+          "control_id": 500,
+          "enabled": true,
+          "selected_index": -1
+        },
+        {
+          "slot": 4,
+          "control_id": 520,
+          "enabled": true,
+          "selected_index": -1
+        }
+      ]
+    },
+    {
+      "row": 3,
+      "slots": [
+        {
+          "slot": 1,
+          "control_id": 450,
+          "enabled": true,
+          "selected_index": 13
+        },
+        {
+          "slot": 2,
+          "control_id": 480,
+          "enabled": true,
+          "selected_index": -1
+        },
+        {
+          "slot": 3,
+          "control_id": 500,
+          "enabled": true,
+          "selected_index": -1
+        },
+        {
+          "slot": 4,
+          "control_id": 520,
+          "enabled": true,
+          "selected_index": -1
+        }
+      ]
+    },
+    {
+      "row": 4,
+      "slots": [
+        {
+          "slot": 1,
+          "control_id": 450,
+          "enabled": true,
+          "selected_index": 27
+        },
+        {
+          "slot": 2,
+          "control_id": 480,
+          "enabled": true,
+          "selected_index": -1
+        },
+        {
+          "slot": 3,
+          "control_id": 500,
+          "enabled": true,
+          "selected_index": -1
+        },
+        {
+          "slot": 4,
+          "control_id": 520,
+          "enabled": true,
+          "selected_index": -1
+        }
+      ]
+    },
+    {
+      "row": 5,
+      "slots": [
+        {
+          "slot": 1,
+          "control_id": 450,
+          "enabled": true,
+          "selected_index": 48
+        },
+        {
+          "slot": 2,
+          "control_id": 480,
+          "enabled": true,
+          "selected_index": -1
+        },
+        {
+          "slot": 3,
+          "control_id": 500,
+          "enabled": true,
+          "selected_index": -1
+        },
+        {
+          "slot": 4,
+          "control_id": 520,
+          "enabled": true,
+          "selected_index": -1
+        }
+      ]
+    },
+    {
+      "row": 6,
+      "slots": [
+        {
+          "slot": 1,
+          "control_id": 450,
+          "enabled": true,
+          "selected_index": 26
+        },
+        {
+          "slot": 2,
+          "control_id": 480,
+          "enabled": true,
+          "selected_index": -1
+        },
+        {
+          "slot": 3,
+          "control_id": 500,
+          "enabled": true,
+          "selected_index": -1
+        },
+        {
+          "slot": 4,
+          "control_id": 520,
+          "enabled": true,
+          "selected_index": -1
+        }
+      ]
+    },
+    {
+      "row": 7,
+      "slots": [
+        {
+          "slot": 1,
+          "control_id": 450,
+          "enabled": true,
+          "selected_index": 45
+        },
+        {
+          "slot": 2,
+          "control_id": 480,
+          "enabled": true,
+          "selected_index": -1
+        },
+        {
+          "slot": 3,
+          "control_id": 500,
+          "enabled": true,
+          "selected_index": -1
+        },
+        {
+          "slot": 4,
+          "control_id": 520,
+          "enabled": true,
+          "selected_index": -1
+        }
+      ]
+    },
+    {
+      "row": 8,
+      "slots": [
+        {
+          "slot": 1,
+          "control_id": 450,
+          "enabled": true,
+          "selected_index": 46
+        },
+        {
+          "slot": 2,
+          "control_id": 480,
+          "enabled": true,
+          "selected_index": -1
+        },
+        {
+          "slot": 3,
+          "control_id": 500,
+          "enabled": true,
+          "selected_index": -1
+        },
+        {
+          "slot": 4,
+          "control_id": 520,
+          "enabled": true,
+          "selected_index": -1
+        }
+      ]
+    },
+    {
+      "row": 9,
+      "slots": [
+        {
+          "slot": 1,
+          "control_id": 450,
+          "enabled": true,
+          "selected_index": 30
+        },
+        {
+          "slot": 2,
+          "control_id": 480,
+          "enabled": true,
+          "selected_index": 28
+        },
+        {
+          "slot": 3,
+          "control_id": 500,
+          "enabled": true,
+          "selected_index": 31
+        },
+        {
+          "slot": 4,
+          "control_id": 520,
+          "enabled": true,
+          "selected_index": 29
+        }
+      ]
+    },
+    {
+      "row": 10,
+      "slots": [
+        {
+          "slot": 1,
+          "control_id": 450,
+          "enabled": true,
+          "selected_index": 38
+        },
+        {
+          "slot": 2,
+          "control_id": 480,
+          "enabled": true,
+          "selected_index": 41
+        },
+        {
+          "slot": 3,
+          "control_id": 500,
+          "enabled": true,
+          "selected_index": 39
+        },
+        {
+          "slot": 4,
+          "control_id": 520,
+          "enabled": true,
+          "selected_index": 40
+        }
+      ]
+    },
+    {
+      "row": 11,
+      "slots": [
+        {
+          "slot": 1,
+          "control_id": 450,
+          "enabled": true,
+          "selected_index": 61
+        },
+        {
+          "slot": 2,
+          "control_id": 480,
+          "enabled": true,
+          "selected_index": 41
+        },
+        {
+          "slot": 3,
+          "control_id": 500,
+          "enabled": true,
+          "selected_index": 39
+        },
+        {
+          "slot": 4,
+          "control_id": 520,
+          "enabled": true,
+          "selected_index": 40
+        }
+      ]
+    },
+    {
+      "row": 12,
+      "slots": [
+        {
+          "slot": 1,
+          "control_id": 450,
+          "enabled": true,
+          "selected_index": 20
+        },
+        {
+          "slot": 2,
+          "control_id": 480,
+          "enabled": true,
+          "selected_index": 41
+        },
+        {
+          "slot": 3,
+          "control_id": 500,
+          "enabled": true,
+          "selected_index": 39
+        },
+        {
+          "slot": 4,
+          "control_id": 520,
+          "enabled": true,
+          "selected_index": 40
+        }
+      ]
+    }
+  ]
+}

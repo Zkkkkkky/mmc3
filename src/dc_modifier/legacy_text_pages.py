@@ -6,7 +6,8 @@ from PySide6.QtWidgets import (
     QListWidgetItem, QMessageBox, QPlainTextEdit, QPushButton,
     QSplitter, QVBoxLayout, QWidget,
     QTableWidget, QTableWidgetItem, QHeaderView,
-    QSpinBox, QFormLayout, QTabWidget,
+    QSpinBox, QFormLayout, QTabWidget, QDialog, QDialogButtonBox,
+    QGridLayout, QGroupBox,
 )
 
 from fc_editor.codecs.legacy_scenario import LegacyScenarioCodec
@@ -18,7 +19,12 @@ from .pages import ProjectPage
 
 
 class LegacyTextPage(ProjectPage):
-    """Shared real-ROM text editor for battle dialogue, system and item text."""
+    """Shared real-ROM text editor for battle dialogue, system and item text.
+
+    Battle dialogue can repack its verified fixed-bank arenas.  System and item
+    text retain their original-record capacity because their relocation rules
+    are separate and have not been verified.
+    """
 
     def __init__(self, group_keys: tuple[str, ...] = ("battle_00", "battle_01", "battle_04", "battle_05")) -> None:
         super().__init__()
@@ -30,12 +36,15 @@ class LegacyTextPage(ProjectPage):
         self._transaction_conflict_checker = None
         layout = QVBoxLayout(self)
         splitter = QSplitter()
+        self.splitter = splitter
         left = QWidget()
         left_layout = QVBoxLayout(left)
         self.group_combo = QComboBox()
+        self.group_combo.setObjectName("legacyDialogueGroup")
         self.search_edit = QLineEdit()
         self.search_edit.setPlaceholderText("查找文字或编号")
         self.record_list = QListWidget()
+        self.record_list.setObjectName("legacyDialogueRecords")
         self.record_list.setAlternatingRowColors(True)
         left_layout.addWidget(QLabel("对话段 / 文字记录"))
         left_layout.addWidget(self.group_combo)
@@ -44,13 +53,25 @@ class LegacyTextPage(ProjectPage):
         right = QWidget()
         right_layout = QVBoxLayout(right)
         self.variant_list = QListWidget()
-        self.variant_list.setMaximumHeight(180)
+        self.variant_list.setObjectName("legacyDialogueVariants")
         self.text_edit = QPlainTextEdit()
+        self.text_edit.setObjectName("legacyDialogueEditor")
+        self.content_edit = QPlainTextEdit()
+        self.content_edit.setObjectName("legacyDialogueContent")
+        self.content_edit.setReadOnly(True)
+        self.content_edit.setToolTip(
+            "按参考版“按内容”视图汇总当前对话段；随机分支之间以 ++ 分隔。"
+        )
+        self.view_tabs = QTabWidget()
+        self.view_tabs.setObjectName("legacyDialogueViews")
+        self.view_tabs.addTab(self.variant_list, "按列表")
+        self.view_tabs.addTab(self.content_edit, "按内容")
         self.status_label = QLabel()
         self.status_label.setWordWrap(True)
-        right_layout.addWidget(QLabel("文字编辑 · 随机对话的各条正文"))
-        right_layout.addWidget(self.variant_list)
-        right_layout.addWidget(self.text_edit, 1)
+        self.editor_title = QLabel("文字编辑")
+        right_layout.addWidget(self.editor_title)
+        right_layout.addWidget(self.text_edit, 2)
+        right_layout.addWidget(self.view_tabs, 1)
         right_layout.addWidget(self.status_label)
         splitter.addWidget(left)
         splitter.addWidget(right)
@@ -59,6 +80,21 @@ class LegacyTextPage(ProjectPage):
         buttons = QHBoxLayout()
         self.apply_button = QPushButton("暂存文字修改")
         self.reset_button = QPushButton("还原当前文字")
+        self.system_note = QLabel(
+            '注："{"加3字节16进制代码等于直接写入3字节16进制\n'
+            '    "["为直接写入2字节16进制， "|"为直接写入1字节16进制'
+        )
+        self.system_note.setObjectName("legacySystemTextNote")
+        self.system_note.setStyleSheet("color: #b00020;")
+        self.system_note.setVisible(group_keys == ("system",))
+        self.add_button = QPushButton("添加")
+        self.add_button.setEnabled(False)
+        self.add_button.setVisible(group_keys == ("system",))
+        self.add_button.setToolTip(
+            "系统文字池没有经过黄金对照验证的追加/搬移规则；当前只允许原记录容量内修改。"
+        )
+        buttons.addWidget(self.system_note, 1)
+        buttons.addWidget(self.add_button)
         buttons.addStretch()
         buttons.addWidget(self.apply_button)
         buttons.addWidget(self.reset_button)
@@ -70,6 +106,19 @@ class LegacyTextPage(ProjectPage):
         self.search_edit.textChanged.connect(self._filter)
         self.apply_button.clicked.connect(self.apply_changes)
         self.reset_button.clicked.connect(self.reset_current)
+
+    def set_embedded_single_record_mode(self) -> None:
+        """Reduce the generic text page to the editor used by M10's item panel."""
+
+        self.splitter.widget(0).hide()
+        self.editor_title.hide()
+        self.view_tabs.hide()
+        self.system_note.hide()
+        self.add_button.hide()
+        self.apply_button.hide()
+        self.reset_button.hide()
+        self.text_edit.setMinimumHeight(86)
+        self.text_edit.setMaximumHeight(124)
 
     def refresh(self) -> None:
         if self.has_pending_draft:
@@ -83,6 +132,7 @@ class LegacyTextPage(ProjectPage):
         self.record_list.clear()
         self.variant_list.clear()
         self.text_edit.clear()
+        self.content_edit.clear()
         if self.project is not None:
             try:
                 self.codec = LegacyTextCodec(self.project.working)
@@ -124,6 +174,7 @@ class LegacyTextPage(ProjectPage):
             for variant in range(self.codec.variant_count(key, index)):
                 text = self._drafts.get((key, index, variant), self.codec.record(key, index, variant).text)
                 self.variant_list.addItem(f"{variant:03d}: {text.replace(chr(10), ' ↵ ').replace('⟦结束⟧', '')}")
+        self._update_content_view()
         self._loading = False
         self.variant_list.setCurrentRow(0 if self.variant_list.count() else -1)
         self._select_variant()
@@ -148,7 +199,35 @@ class LegacyTextPage(ProjectPage):
             self._drafts.pop(self._selected, None)
         else:
             self._drafts[self._selected] = text
+        key, index, variant = self._selected
+        variant_item = self.variant_list.item(variant)
+        if variant_item is not None:
+            variant_item.setText(
+                f"{variant:03d}: {text.replace(chr(10), ' ↵ ').replace('⟦结束⟧', '')}"
+            )
+        if variant == 0:
+            record_item = self.record_list.item(index)
+            if record_item is not None:
+                record_item.setText(
+                    f"{index:03d}: {text.replace(chr(10), ' ↵ ').replace('⟦结束⟧', '')}"
+                )
+        self._update_content_view()
         self._update_status()
+
+    def _update_content_view(self) -> None:
+        key = self.group_combo.currentData()
+        index = self.record_list.currentRow()
+        if self.codec is None or key is None or index < 0:
+            self.content_edit.clear()
+            return
+        texts = (
+            self._drafts.get(
+                (key, index, variant),
+                self.codec.record(key, index, variant).text,
+            ).replace("⟦结束⟧", "")
+            for variant in range(self.codec.variant_count(key, index))
+        )
+        self.content_edit.setPlainText("++".join(texts))
 
     def _filter(self, *_args) -> None:
         query = self.search_edit.text().casefold()
@@ -164,7 +243,16 @@ class LegacyTextPage(ProjectPage):
 
     @property
     def pending_draft_keys(self) -> frozenset[tuple[str, int]]:
-        return frozenset(("rom_offset", self.codec.record(*key).file_offset) for key in self._drafts) if self.codec else frozenset()
+        if self.codec is None:
+            return frozenset()
+        result: set[tuple[str, int]] = set()
+        for identity in self._drafts:
+            key, _index, _variant = identity
+            if key.startswith("battle_"):
+                result.add(("battle_text_bank", self.codec.group_by_key[key].bank))
+            else:
+                result.add(("rom_offset", self.codec.record(*identity).file_offset))
+        return frozenset(result)
 
     @property
     def pending_draft_key(self):
@@ -177,10 +265,13 @@ class LegacyTextPage(ProjectPage):
         if self.project is None:
             return ()
         codec = LegacyTextCodec(self.project.working, capacity_data=self.project.original)
-        by_offset = {}
         for identity, text in self._drafts.items():
             if self.codec is not None and codec.record(*identity).raw != self.codec.record(*identity).raw:
                 raise ValueError("当前文字已在其他页面修改，请先还原本页草稿再重新编辑。")
+        if self._drafts and all(key.startswith("battle_") for key, _index, _variant in self._drafts):
+            return codec.battle_repack_patches(self._drafts)
+        by_offset = {}
+        for identity, text in self._drafts.items():
             patch = codec.replacement_patch(*identity, text)
             if patch[0] in by_offset and by_offset[patch[0]] != patch:
                 raise ValueError("共用同一文字的两个编号存在不同草稿，请保留一份修改。")
@@ -209,7 +300,22 @@ class LegacyTextPage(ProjectPage):
             self.status_label.setText(error)
         elif self.codec is not None and self._selected is not None:
             record = self.codec.record(*self._selected)
-            self.status_label.setText(f"原记录 {len(record.raw)} 字节；保留控制码和结束码，可在原容量内修改正文。共用此正文的条目：{len(record.shared_by)}。")
+            key, _index, _variant = self._selected
+            if key.startswith("battle_"):
+                group = self.codec.group_by_key[key]
+                usage = self.codec.battle_usage(group.bank, self._drafts)
+                self.status_label.setText(
+                    f"当前记录 {len(record.raw)} 字节；Bank ${group.bank:02X} "
+                    f"安全文字段 {usage.used}/{usage.capacity} 字节，剩余 {usage.free} 字节。"
+                    "缩短一条后，释放空间可供同 Bank 其他对话增长；暂存时会整体重排指针。"
+                    f"共用此正文的条目：{len(record.shared_by)}。"
+                )
+            else:
+                self.status_label.setText(
+                    f"原记录 {len(record.raw)} 字节；保留控制码和结束码，"
+                    "可在原容量内修改正文。"
+                    f"共用此正文的条目：{len(record.shared_by)}。"
+                )
 
     def apply_changes(self) -> bool:
         if self.project is None:
@@ -402,6 +508,64 @@ class LegacyScenarioEventsPage(ProjectPage):
         self.refresh()
 
 
+class GrowthHexDialog(QDialog):
+    """Reference-shaped editor for the first 60 growth nibbles."""
+
+    VALUE_COUNT = 60
+
+    def __init__(
+        self,
+        values: tuple[int, ...],
+        parent: QWidget | None = None,
+    ) -> None:
+        super().__init__(parent)
+        if len(values) < self.VALUE_COUNT:
+            raise ValueError("成长方式至少需要60级数据。")
+        self.setWindowTitle("成长属性")
+        self._tail = tuple(values[self.VALUE_COUNT :])
+        layout = QVBoxLayout(self)
+        layout.addWidget(QLabel("请输入60位十六进制成长串（每位0—F）："))
+        self.hex_edit = QLineEdit(
+            "".join(f"{value:X}" for value in values[: self.VALUE_COUNT])
+        )
+        self.hex_edit.setMaxLength(self.VALUE_COUNT)
+        self.hex_edit.setObjectName("legacyGrowthHex")
+        layout.addWidget(self.hex_edit)
+        self.length_label = QLabel()
+        self.length_label.setObjectName("legacyGrowthHexLength")
+        layout.addWidget(self.length_label)
+        self.buttons = QDialogButtonBox(
+            QDialogButtonBox.StandardButton.Ok
+            | QDialogButtonBox.StandardButton.Cancel
+        )
+        self.buttons.button(QDialogButtonBox.StandardButton.Ok).setText("确定")
+        self.buttons.button(QDialogButtonBox.StandardButton.Cancel).setText("取消")
+        self.buttons.accepted.connect(self.accept)
+        self.buttons.rejected.connect(self.reject)
+        layout.addWidget(self.buttons)
+        self.hex_edit.textChanged.connect(self._validate)
+        self._validate()
+
+    def _validate(self) -> None:
+        text = self.hex_edit.text().strip()
+        valid = len(text) == self.VALUE_COUNT and all(
+            character in "0123456789abcdefABCDEF" for character in text
+        )
+        self.length_label.setText(
+            f"当前长度：{len(text)} / {self.VALUE_COUNT}"
+            + ("" if valid else "（必须为60位十六进制）")
+        )
+        self.buttons.button(QDialogButtonBox.StandardButton.Ok).setEnabled(valid)
+
+    def values(self) -> tuple[int, ...]:
+        text = self.hex_edit.text().strip()
+        if len(text) != self.VALUE_COUNT or any(
+            character not in "0123456789abcdefABCDEF" for character in text
+        ):
+            raise ValueError("成长属性必须是60位十六进制字符串。")
+        return tuple(int(character, 16) for character in text) + self._tail
+
+
 class LegacyGrowthPage(ProjectPage):
     transaction_sync_group = "growth_table"
 
@@ -423,16 +587,19 @@ class LegacyGrowthPage(ProjectPage):
         self.status_label.setWordWrap(True)
         self.apply_button = QPushButton("暂存成长方式")
         self.reset_button = QPushButton("还原当前成长")
+        self.hex_button = QPushButton("成长修改(16进制快捷修改)")
         layout.addWidget(QLabel("成长方式 · 每级数值 0—15"))
         layout.addWidget(self.growth_combo)
         layout.addWidget(self.growth_table, 1)
         layout.addWidget(self.status_label)
+        layout.addWidget(self.hex_button)
         layout.addWidget(self.apply_button)
         layout.addWidget(self.reset_button)
         self.growth_combo.currentIndexChanged.connect(self._load)
         self.growth_table.itemChanged.connect(self._changed)
         self.apply_button.clicked.connect(self.apply_changes)
         self.reset_button.clicked.connect(self.reset_current)
+        self.hex_button.clicked.connect(self._open_hex_editor)
 
     def refresh(self) -> None:
         if self.has_pending_draft:
@@ -474,6 +641,26 @@ class LegacyGrowthPage(ProjectPage):
         if error:
             self.status_label.setText(error)
         self.apply_button.setEnabled(self.has_pending_draft and error is None)
+
+    def _open_hex_editor(self) -> None:
+        if self.codec is None:
+            return
+        growth_id = self.growth_combo.currentIndex() + 201
+        source = self._drafts.get(
+            growth_id,
+            tuple(map(str, self.codec.record(growth_id).values)),
+        )
+        try:
+            values = tuple(int(value) for value in source)
+        except ValueError as error:
+            QMessageBox.warning(self, "无法打开成长属性", str(error))
+            return
+        dialog = GrowthHexDialog(values, self)
+        if dialog.exec() != QDialog.DialogCode.Accepted:
+            return
+        edited = dialog.values()
+        self._drafts[growth_id] = tuple(map(str, edited))
+        self._load()
 
     @property
     def has_pending_draft(self) -> bool:
@@ -566,7 +753,12 @@ class LegacyShopPage(ProjectPage):
         layout = QVBoxLayout(self)
         self.shop_combo = QComboBox()
         self.shop_combo.addItems([f"商店 {value:02X}" for value in range(0xF0, 0xFF)])
-        layout.addWidget(self.shop_combo)
+        self.shop_combo.hide()
+        self.shop_list = QListWidget()
+        self.shop_list.setObjectName("legacyShopList")
+        self.shop_list.addItems([f"{value:02X}" for value in range(0xF0, 0xFF)])
+        self.shop_list.setMaximumWidth(130)
+        self.shop_list.setAlternatingRowColors(True)
         self.fields = QWidget()
         form = QFormLayout(self.fields)
         self.item_combos = [QComboBox() for _ in range(4)]
@@ -578,15 +770,32 @@ class LegacyShopPage(ProjectPage):
         self.dialogue_spin.setRange(0, 214)
         form.addRow("店员", self.clerk_combo)
         form.addRow("对话起始编号", self.dialogue_spin)
-        layout.addWidget(self.fields)
-        self.dialogue_tabs = QTabWidget()
+        settings_group = QGroupBox("商店设置")
+        settings_layout = QVBoxLayout(settings_group)
+        settings_layout.addWidget(self.fields)
+        upper = QHBoxLayout()
+        upper.addWidget(self.shop_list)
+        upper.addWidget(settings_group, 1)
+        layout.addLayout(upper)
+
+        self.dialogue_group = QGroupBox("店员对话")
+        dialogue_layout = QGridLayout(self.dialogue_group)
         self.dialogue_edits = []
         for index, label in enumerate(LegacyShopCodec.LABELS):
             edit = QPlainTextEdit()
+            edit.setObjectName(f"legacyShopDialogue{index}")
+            edit.setMinimumHeight(72)
             edit.textChanged.connect(lambda index=index: self._text_changed(index))
             self.dialogue_edits.append(edit)
-            self.dialogue_tabs.addTab(edit, label)
-        layout.addWidget(self.dialogue_tabs, 1)
+            column = index // 3
+            slot = index % 3
+            dialogue_layout.addWidget(QLabel(f"{label}对话："), slot * 2, column)
+            dialogue_layout.addWidget(edit, slot * 2 + 1, column)
+        dialogue_note = QLabel("注：店员对话为 7 个顺序对话段，由对话起始编号连续取用。")
+        dialogue_note.setWordWrap(True)
+        dialogue_layout.addWidget(dialogue_note, 2, 2, 3, 1)
+        self.dialogue_tabs = self.dialogue_group
+        layout.addWidget(self.dialogue_group, 1)
         self.status_label = QLabel()
         self.status_label.setWordWrap(True)
         layout.addWidget(self.status_label)
@@ -595,10 +804,21 @@ class LegacyShopPage(ProjectPage):
         self.discard_button = QPushButton("放弃本页草稿")
         layout.addWidget(self.discard_button)
         self.shop_combo.currentIndexChanged.connect(self._load)
+        self.shop_combo.currentIndexChanged.connect(self._sync_shop_list)
+        self.shop_list.currentRowChanged.connect(self._shop_row_changed)
         self.clerk_combo.currentIndexChanged.connect(self._metadata_changed)
         self.dialogue_spin.valueChanged.connect(self._dialogue_changed)
         self.apply_button.clicked.connect(self.apply_changes)
         self.discard_button.clicked.connect(self.discard_pending_changes)
+        self.shop_list.setCurrentRow(0)
+
+    def _shop_row_changed(self, row: int) -> None:
+        if row >= 0 and self.shop_combo.currentIndex() != row:
+            self.shop_combo.setCurrentIndex(row)
+
+    def _sync_shop_list(self, index: int) -> None:
+        if index >= 0 and self.shop_list.currentRow() != index:
+            self.shop_list.setCurrentRow(index)
 
     def refresh(self) -> None:
         if self.has_pending_draft:

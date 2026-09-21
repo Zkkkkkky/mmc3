@@ -27,6 +27,7 @@ from fc_editor.codecs.character_attributes import (
 )
 from fc_editor.codecs.legacy_scenario import LegacyScenarioCodec
 from fc_editor.codecs.legacy_text import LegacyTextCodec
+from .action_event_page import ACTION_EVENT_NAMES
 from .database_graphics import read_unit_appearance
 
 
@@ -284,12 +285,26 @@ def build_event_sheet(project) -> DataSheet:
     )
     rows = []
     offsets = []
+    if project.supports_action_events:
+        for action_id, record in enumerate(project.action_event_records()):
+            for instruction in record.instructions:
+                rows.append((
+                    "独立行动表",
+                    f"$26/${instruction.address:04X}",
+                    _address(instruction.file_offset),
+                    f"${action_id:02X} {ACTION_EVENT_NAMES[action_id]}",
+                    instruction.label,
+                    " ".join(f"${value:02X}" for value in instruction.raw[1:]),
+                    _hex(instruction.raw),
+                    "是" if instruction.is_terminal else "否",
+                ))
+                offsets.append(instruction.file_offset)
     for instruction in project.chapter_event_instructions():
         contexts = "、".join(
             f"{context.scenario_id + 1:02d}/{context.phase + 1}" for context in instruction.contexts
         )
         rows.append((
-            "行动事件表",
+            "全局事件块（兼容索引）",
             f"${project.chapter_event_codec.spec.data_prg_bank:02X}/${instruction.address:04X}",
             _address(instruction.file_offset),
             contexts,

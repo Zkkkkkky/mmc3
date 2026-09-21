@@ -1,0 +1,32 @@
+{
+  "tag": "CLEAN__EL_HideOwner",
+  "hwnd": 263094,
+  "title": "",
+  "class": "_EL_HideOwner",
+  "rect": {
+    "left": 0,
+    "top": 0,
+    "right": 33,
+    "bottom": 59,
+    "width": 33,
+    "height": 59
+  },
+  "pid": 41916,
+  "tree": {
+    "hwnd": 263094,
+    "class": "_EL_HideOwner",
+    "text": "",
+    "ctrl_id": 0,
+    "rect": {
+      "left": 0,
+      "top": 0,
+      "right": 33,
+      "bottom": 59,
+      "width": 33,
+      "height": 59
+    },
+    "visible": false,
+    "enabled": true,
+    "children": []
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "pid": 13652,
+  "rom_unchanged": true,
+  "samples": [
+    {
+      "weapon_row": 0,
+      "ally": "0080",
+      "enemy": "0080"
+    },
+    {
+      "weapon_row": 1,
+      "ally": "0080",
+      "enemy": "0080"
+    },
+    {
+      "weapon_row": 2,
+      "ally": "0080",
+      "enemy": "0080"
+    },
+    {
+      "weapon_row": 3,
+      "ally": "0080",
+      "enemy": "0080"
+    },
+    {
+      "weapon_row": 4,
+      "ally": "0080",
+      "enemy": "0080"
+    },
+    {
+      "weapon_row": 140,
+      "ally": "0080",
+      "enemy": "0080"
+    }
+  ]
+}

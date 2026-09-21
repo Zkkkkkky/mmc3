@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "reason": "baseline pointer text corrected from D080 to 0080; failures occurred before mutation",
+  "timestamp": "20260920T075312",
+  "moved": [
+    {
+      "module": "M07",
+      "field": "ally_animation_pointer",
+      "case_id": "cold_start_01",
+      "from": "output/build/legacy-diff-audit/cases/legacy_live/M07/ally_animation_pointer/cold_start_01",
+      "to": "output/build/legacy-diff-audit/cases/diagnostic/retry_history/20260920T075312/M07/ally_animation_pointer/cold_start_01",
+      "had_case_json": false,
+      "had_error_json": true
+    },
+    {
+      "module": "M07",
+      "field": "ally_animation_pointer",
+      "case_id": "cold_start_02",
+      "from": "output/build/legacy-diff-audit/cases/legacy_live/M07/ally_animation_pointer/cold_start_02",
+      "to": "output/build/legacy-diff-audit/cases/diagnostic/retry_history/20260920T075312/M07/ally_animation_pointer/cold_start_02",
+      "had_case_json": false,
+      "had_error_json": true
+    },
+    {
+      "module": "M07",
+      "field": "enemy_animation_pointer",
+      "case_id": "cold_start_01",
+      "from": "output/build/legacy-diff-audit/cases/legacy_live/M07/enemy_animation_pointer/cold_start_01",
+      "to": "output/build/legacy-diff-audit/cases/diagnostic/retry_history/20260920T075312/M07/enemy_animation_pointer/cold_start_01",
+      "had_case_json": false,
+      "had_error_json": true
+    },
+    {
+      "module": "M07",
+      "field": "enemy_animation_pointer",
+      "case_id": "cold_start_02",
+      "from": "output/build/legacy-diff-audit/cases/legacy_live/M07/enemy_animation_pointer/cold_start_02",
+      "to": "output/build/legacy-diff-audit/cases/diagnostic/retry_history/20260920T075312/M07/enemy_animation_pointer/cold_start_02",
+      "had_case_json": false,
+      "had_error_json": true
+    }
+  ],
+  "live_result_rows_removed": 0
+}

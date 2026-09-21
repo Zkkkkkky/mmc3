@@ -367,6 +367,40 @@ class SearchableRecordPage(ProjectPage):
         )
         return answer == QMessageBox.StandardButton.Yes
 
+    def shared_weapon_record_ids(self, weapon_id: int) -> tuple[int, ...]:
+        """Return every visible weapon ID backed by the same six-byte record."""
+
+        if self.project is None:
+            return ()
+        pointer = self.project.weapon_codec.pointers[weapon_id]
+        return tuple(
+            candidate
+            for candidate in range(1, self.project.weapon_count)
+            if self.project.weapon_codec.pointers[candidate] == pointer
+        )
+
+    def confirm_shared_weapon_record_edit(
+        self,
+        weapon_id: int,
+        field_labels: tuple[str, ...],
+        *,
+        action: str = "修改",
+    ) -> bool:
+        affected = self.shared_weapon_record_ids(weapon_id)
+        if len(affected) <= 1 or not field_labels:
+            return True
+        answer = QMessageBox.question(
+            self,
+            "共享武器记录确认",
+            f"武器 ${weapon_id:02X} 的6字节属性记录由 "
+            f"{compact_ids(affected)} 共用。\n"
+            f"本次{action}字段：{'、'.join(field_labels)}。\n"
+            "继续后这些武器ID的对应属性会一起变化，是否继续？",
+            QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.Cancel,
+            QMessageBox.StandardButton.Cancel,
+        )
+        return answer == QMessageBox.StandardButton.Yes
+
     def supports_record_export(self) -> bool:
         return False
 
@@ -834,6 +868,28 @@ class UnitPage(SearchableRecordPage):
             current_name = self.project.unit_display_name(self.current_id)
             edited_name = self.name_text.text().strip()
             name_changed = edited_name != current_name
+            changed_fields = tuple(
+                field.label
+                for field in UNIT_FIELDS
+                if self.fields[field.key].value()
+                != self.project.get_value(self.current_id, field.key)
+                * self.project.unit_field(field.key).display_scale
+            )
+            shared_ids = self.project.unit_codec.decode_record(
+                self.current_id, bytes(self.project.working)
+            ).ids
+            if changed_fields and len(shared_ids) > 1:
+                answer = QMessageBox.question(
+                    self,
+                    "共享机体属性确认",
+                    f"属性记录由 {compact_ids(shared_ids)} 共用。\n"
+                    f"修改 {'、'.join(changed_fields)} 会同时影响这些机体；"
+                    "名称和武器仅按当前 ID 修改。是否继续？",
+                    QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.Cancel,
+                    QMessageBox.StandardButton.Cancel,
+                )
+                if answer != QMessageBox.StandardButton.Yes:
+                    return
             if name_changed and not self.confirm_shared_name_edit(
                 "机体", self.project.unit_name_source_ids(self.current_id)
             ):
@@ -867,10 +923,21 @@ class UnitPage(SearchableRecordPage):
     def apply_raw_record(self) -> None:
         if self.project is None or self.current_id is None:
             return
+        shared_ids = self.project.unit_codec.decode_record(
+            self.current_id, bytes(self.project.working)
+        ).ids
+        shared_note = (
+            f"\n\n该属性记录由 {compact_ids(shared_ids)} 共用，写入会同时影响这些机体。"
+            if len(shared_ids) > 1
+            else ""
+        )
         answer = QMessageBox.question(
             self,
             "确认高级修改",
-            "原始记录包含尚未确认的标志位。确定写入这16字节吗？",
+            "原始记录包含尚未确认的标志位。确定写入这16字节吗？"
+            + shared_note,
+            QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.Cancel,
+            QMessageBox.StandardButton.Cancel,
         )
         if answer != QMessageBox.StandardButton.Yes:
             return
@@ -895,14 +962,14 @@ class UnitPage(SearchableRecordPage):
 
 
 class CharacterPage(SearchableRecordPage):
-    """Edit verified character-name references and per-character battle themes."""
+    """Edit the two verified character-name tables and battle themes."""
 
     def __init__(self) -> None:
         super().__init__()
         outer = QVBoxLayout(self)
         title, subtitle = page_title(
             "人物编辑",
-            "编辑ROM中的真实战斗名称引用，以及人物作为我方/敌方时使用的战斗音乐。",
+            "编辑ROM中的显示名称、战斗名称引用，以及人物作为我方/敌方时使用的战斗音乐。",
         )
         outer.addWidget(title)
         outer.addWidget(subtitle)
@@ -928,16 +995,20 @@ class CharacterPage(SearchableRecordPage):
         self.pending_state.setObjectName("editState")
         detail_layout.addWidget(self.pending_state)
 
-        identity = QGroupBox("名称")
+        identity = QGroupBox("名称与战斗名称")
         identity_form = QFormLayout(identity)
+        self.normal_name_text = QLineEdit()
+        self.normal_name_text.setPlaceholderText("人物目录与数据库使用的名称")
+        self.normal_name_text.textChanged.connect(self._update_pending_state)
+        identity_form.addRow("名称", self.normal_name_text)
         self.name_reference = QComboBox()
         self.name_reference.setMaxVisibleItems(24)
         self.name_reference.currentIndexChanged.connect(self._update_pending_state)
-        identity_form.addRow("名称引用", self.name_reference)
+        identity_form.addRow("战斗名称引用", self.name_reference)
         self.name_text = QLineEdit()
         self.name_text.setPlaceholderText("在当前名称原槽容量内直接修改")
         self.name_text.textChanged.connect(self._update_pending_state)
-        identity_form.addRow("直接修改名称", self.name_text)
+        identity_form.addRow("战斗名称", self.name_text)
         self.name_tokens = QLineEdit()
         self.name_tokens.setReadOnly(True)
         identity_form.addRow("名称Token", self.name_tokens)
@@ -989,11 +1060,15 @@ class CharacterPage(SearchableRecordPage):
 
     def record_ids(self) -> range:
         assert self.project is not None
-        return range(1, self.project.profile.character_name_count)
+        count = (
+            self.project.profile.character_normal_name_count
+            or self.project.profile.character_name_count - 1
+        )
+        return range(1, count + 1)
 
     def record_text(self, record_id: int) -> str:
         assert self.project is not None
-        text = f"${record_id:02X}  {self.project.character_display_name(record_id)}"
+        text = f"${record_id:02X}  {self.project.character_normal_display_name(record_id)}"
         if (
             self.project.supports_battle_music
             and record_id < self.project.profile.battle_music.selector_count
@@ -1031,32 +1106,59 @@ class CharacterPage(SearchableRecordPage):
         if self.project is None or record_id is None:
             self.record_heading.setText("请选择人物")
             self.record_meta.setText("—")
+            self.normal_name_text.clear()
             self.name_text.clear()
             self.name_tokens.clear()
             self.original_name.setText("基准ROM：—")
             self.original_music.setText("基准ROM：—")
             self.apply_button.setEnabled(False)
             return
-        name = self.project.character_display_name(record_id)
-        pointer = self.project.get_character_name_pointer(record_id)
-        source_ids = self.project.character_name_source_ids(record_id)
+        name = self.project.character_normal_display_name(record_id)
+        self.normal_name_text.setText(
+            concise_dc_text(
+                self.project.character_normal_name_record_bytes(record_id)
+            )
+        )
+        battle_supported = record_id < self.project.profile.character_name_count
+        pointer = (
+            self.project.get_character_name_pointer(record_id)
+            if battle_supported
+            else 0
+        )
+        source_ids = (
+            self.project.character_name_source_ids(record_id)
+            if battle_supported
+            else ()
+        )
         self.record_heading.setText(f"人物 ${record_id:02X} · {name}")
         self.record_meta.setText(
-            f"名称指针 ${pointer:04X} · 名称共享ID：{compact_ids(source_ids)} · "
-            "人物ID同时作为战斗音乐选择器"
+            (
+                f"战斗名称指针 ${pointer:04X} · 共享ID：{compact_ids(source_ids)} · "
+                "人物ID同时作为战斗音乐选择器"
+                if battle_supported
+                else "保留人物槽 $C8：有显示名称、属性和头像记录，没有战斗名称或音乐选择器。"
+            )
         )
-        self.name_tokens.setText(
-            self.project.character_name_record_bytes(record_id).hex(" ").upper()
-        )
-        self.name_text.setText(
-            concise_dc_text(self.project.character_name_record_bytes(record_id))
-        )
+        self.name_reference.setEnabled(battle_supported)
+        self.name_text.setEnabled(battle_supported)
+        if battle_supported:
+            self.name_tokens.setText(
+                self.project.character_name_record_bytes(record_id).hex(" ").upper()
+            )
+            self.name_text.setText(
+                concise_dc_text(self.project.character_name_record_bytes(record_id))
+            )
+        else:
+            self.name_tokens.clear()
+            self.name_text.clear()
         if source_ids:
             self.name_reference.setCurrentIndex(
                 self.name_reference.findData(source_ids[0])
             )
-        original_sources = self.project.character_name_source_ids(
-            record_id, original=True
+        original_sources = (
+            self.project.character_name_source_ids(record_id, original=True)
+            if battle_supported
+            else ()
         )
         original_name = (
             self.project.character_display_name(original_sources[0])
@@ -1065,7 +1167,11 @@ class CharacterPage(SearchableRecordPage):
         )
         self.original_name.setText(
             f"基准ROM：{original_name} · 指针 "
-            f"${self.project.get_character_name_pointer(record_id, original=True):04X}"
+            + (
+                f"${self.project.get_character_name_pointer(record_id, original=True):04X}"
+                if battle_supported
+                else "无战斗名称槽"
+            )
         )
         music_supported = (
             self.project.supports_battle_music
@@ -1095,6 +1201,8 @@ class CharacterPage(SearchableRecordPage):
     def _pending_values(self) -> tuple[bool, bool, bool]:
         if self.project is None or self.current_id is None:
             return False, False, False
+        if self.current_id >= self.project.profile.character_name_count:
+            return False, False, False
         source_ids = self.project.character_name_source_ids(self.current_id)
         reference_pending = bool(
             source_ids
@@ -1113,14 +1221,24 @@ class CharacterPage(SearchableRecordPage):
             )
         return reference_pending, text_pending, music_pending
 
+    def _normal_name_pending(self) -> bool:
+        if self.project is None or self.current_id is None:
+            return False
+        return self.normal_name_text.text().strip() != concise_dc_text(
+            self.project.character_normal_name_record_bytes(self.current_id)
+        )
+
     def _update_pending_state(self) -> None:
         reference_pending, text_pending, music_pending = self._pending_values()
-        pending = reference_pending or text_pending or music_pending
+        normal_pending = self._normal_name_pending()
+        pending = normal_pending or reference_pending or text_pending or music_pending
         self.apply_button.setEnabled(pending)
         if self.project is None or self.current_id is None:
             self.pending_state.setText("请选择人物")
         elif pending:
             parts = []
+            if normal_pending:
+                parts.append("名称")
             if reference_pending:
                 parts.append("名称引用")
             if text_pending:
@@ -1139,19 +1257,21 @@ class CharacterPage(SearchableRecordPage):
             return
         try:
             reference_pending, text_pending, _music_pending = self._pending_values()
+            normal_pending = self._normal_name_pending()
             if reference_pending and text_pending:
                 raise ValueError("名称引用和名称文字不能同时修改；请先应用其中一项。")
-            if text_pending and not self.confirm_shared_name_edit(
-                "人物", self.project.character_name_source_ids(self.current_id)
-            ):
-                return
             with self.project.transaction(f"人物 ${self.current_id:02X} · 名称与音乐"):
-                self.project.set_character_name_reference(
-                    self.current_id, int(self.name_reference.currentData())
-                )
-                if text_pending:
-                    self.project.set_character_name_text(
-                        self.current_id, self.name_text.text()
+                if self.name_reference.isEnabled():
+                    self.project.set_character_name_reference(
+                        self.current_id, int(self.name_reference.currentData())
+                    )
+                if normal_pending or text_pending:
+                    self.project.set_character_name_texts(
+                        self.current_id,
+                        normal_text=(
+                            self.normal_name_text.text() if normal_pending else None
+                        ),
+                        battle_text=(self.name_text.text() if text_pending else None),
                     )
                 if self.ally_music.isEnabled():
                     self.project.set_battle_music_binding(
@@ -1167,14 +1287,14 @@ class CharacterPage(SearchableRecordPage):
         if self.project is None or self.current_id is None:
             return
         options = [
-            f"${character_id:02X} · {self.project.character_display_name(character_id)}"
+            f"${character_id:02X} · {self.project.character_normal_display_name(character_id)}"
             for character_id in self.record_ids()
             if character_id != self.current_id
         ]
         selected, accepted = QInputDialog.getItem(
             self,
             "复制人物",
-            f"把 ${self.current_id:02X} 的名称和战斗音乐复制到：",
+            f"把 ${self.current_id:02X} 的名称、战斗名称和战斗音乐复制到：",
             options,
             0,
             False,
@@ -1188,14 +1308,26 @@ class CharacterPage(SearchableRecordPage):
         if self.project is None or source_id == target_id:
             return False
         try:
-            source_ids = self.project.character_name_source_ids(source_id)
             with self.project.transaction(
                 f"复制人物 ${source_id:02X} 到 ${target_id:02X}"
             ):
-                if source_ids:
-                    self.project.set_character_name_reference(target_id, source_ids[0])
+                self.project.set_character_name_texts(
+                    target_id,
+                    normal_text=concise_dc_text(
+                        self.project.character_normal_name_record_bytes(source_id)
+                    ),
+                    battle_text=(
+                        concise_dc_text(
+                            self.project.character_name_record_bytes(source_id)
+                        )
+                        if source_id < self.project.profile.character_name_count
+                        and target_id < self.project.profile.character_name_count
+                        else None
+                    ),
+                )
                 if (
                     self.project.supports_battle_music
+                    and source_id < self.project.profile.battle_music.selector_count
                     and target_id < self.project.profile.battle_music.selector_count
                 ):
                     binding = self.project.get_battle_music_binding(source_id)
@@ -1217,7 +1349,7 @@ class CharacterPage(SearchableRecordPage):
             return
         try:
             with self.project.transaction(f"人物 ${self.current_id:02X} · 完整还原"):
-                self.project.reset_character_name(self.current_id)
+                self.project.reset_character_names(self.current_id)
                 if (
                     self.project.supports_battle_music
                     and self.current_id < self.project.profile.battle_music.selector_count
@@ -1348,7 +1480,8 @@ class WeaponPage(SearchableRecordPage):
         self.record_heading.setText(f"武器 ${record_id:02X} · {name}")
         metadata = (
             f"属性指针 ${record.pointer:04X} · 文件偏移 "
-            f"0x{self.project.weapon_record_file_offset(record_id):06X}"
+            f"0x{self.project.weapon_record_file_offset(record_id):06X} · 属性共享ID："
+            f"{compact_ids(self.shared_weapon_record_ids(record_id))}"
         )
         if self.project.supports_weapon_names:
             name_pointer = self.project.get_weapon_name_pointer(record_id)
@@ -1434,24 +1567,12 @@ class WeaponPage(SearchableRecordPage):
         if self.project is None or source_id == target_id:
             return False
         try:
-            target_pointer = self.project.weapon_codec.pointers[target_id]
-            affected = tuple(
-                weapon_id
-                for weapon_id in range(1, self.project.weapon_count)
-                if self.project.weapon_codec.pointers[weapon_id] == target_pointer
-            )
-            if len(affected) > 1:
-                answer = QMessageBox.question(
-                    self,
-                    "共享武器记录确认",
-                    f"目标 ${target_id:02X} 的6字节属性记录由 "
-                    f"{compact_ids(affected)} 共用。\n"
-                    "复制后这些ID的属性都会改变；名称仅修改目标ID。是否继续？",
-                    QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.Cancel,
-                    QMessageBox.StandardButton.Cancel,
-                )
-                if answer != QMessageBox.StandardButton.Yes:
-                    return False
+            if not self.confirm_shared_weapon_record_edit(
+                target_id,
+                tuple(field.label for field in WEAPON_FIELDS),
+                action="复制",
+            ):
+                return False
             name_ids = self.project.weapon_name_source_ids(source_id)
             with self.project.transaction(
                 f"复制武器 ${source_id:02X} 到 ${target_id:02X}"
@@ -1495,6 +1616,16 @@ class WeaponPage(SearchableRecordPage):
                 raise ValueError("名称引用和名称文字不能同时修改；请先应用其中一项。")
             if text_pending and not self.confirm_shared_name_edit("武器", name_sources):
                 return
+            changed_fields = tuple(
+                field.label
+                for field in WEAPON_FIELDS
+                if self.fields[field.key].value()
+                != self.project.get_weapon_value(self.current_id, field.key)
+            )
+            if not self.confirm_shared_weapon_record_edit(
+                self.current_id, changed_fields
+            ):
+                return
             with self.project.transaction(f"武器 ${self.current_id:02X} · 属性与名称"):
                 for field in WEAPON_FIELDS:
                     self.project.set_weapon_value(
@@ -1518,6 +1649,24 @@ class WeaponPage(SearchableRecordPage):
         if self.project is None or self.current_id is None:
             return
         try:
+            changed_fields = tuple(
+                field.label
+                for field in WEAPON_FIELDS
+                if self.project.get_weapon_value(self.current_id, field.key)
+                != self.project.get_weapon_value(
+                    self.current_id, field.key, original=True
+                )
+            )
+            if (
+                not changed_fields
+                and self.project.weapon_record_bytes(self.current_id)
+                != self.project.weapon_record_bytes(self.current_id, original=True)
+            ):
+                changed_fields = ("武器特技、距离补正或保留位",)
+            if not self.confirm_shared_weapon_record_edit(
+                self.current_id, changed_fields, action="还原"
+            ):
+                return
             with self.project.transaction(f"武器 ${self.current_id:02X} · 完整还原"):
                 self.project.reset_weapon_record(self.current_id)
                 if self.project.supports_weapon_names:

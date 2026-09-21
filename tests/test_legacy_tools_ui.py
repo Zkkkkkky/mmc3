@@ -3,13 +3,14 @@ from __future__ import annotations
 import os
 from pathlib import Path
 import tempfile
+from types import SimpleNamespace
 import unittest
 
 os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 
 from PySide6.QtCore import QPoint
 from PySide6.QtGui import QFont, QFontDatabase
-from PySide6.QtWidgets import QApplication, QGroupBox
+from PySide6.QtWidgets import QApplication, QGroupBox, QPushButton, QWidget
 
 from dc_modifier.legacy_tools import (
     AttributeCalculatorDialog,
@@ -21,6 +22,8 @@ from dc_modifier.legacy_tools import (
     _glyph_file_offset,
     _glyph_pixmap,
 )
+from fc_editor.dc_text import reference_dc_text_table
+from fc_editor.codecs.legacy_save import LegacySaveCodec, LegacySaveFormatError
 from fc_editor.text_table import TextTable
 from fc_rom_editor_core import RomProject
 
@@ -65,6 +68,18 @@ class LegacyToolDialogTests(QtTestCase):
         self.assertFalse(dialog.write_button.isEnabled())
         self.assertEqual(dialog.replace_all_button.isEnabled(), self.project is not None)
         self._show(dialog)
+        visible_buttons = {
+            button.text()
+            for button in dialog.findChildren(QPushButton)
+            if button.isVisible()
+        }
+        self.assertEqual(
+            visible_buttons,
+            {"写入文字", "选择字体", "替换全部字体", "清空本页", "确定"},
+        )
+        self.assertFalse(dialog.import_page_button.isVisible())
+        self.assertFalse(dialog.export_page_button.isVisible())
+        self.assertFalse(hasattr(dialog, "cancel_button"))
         self.assertLess(self._top(dialog.glyph_table, dialog), self._top(dialog.status, dialog))
         if self.project is not None:
             self.assertFalse(dialog.glyph_table.item(0, 0).icon().isNull())
@@ -100,7 +115,8 @@ class LegacyToolDialogTests(QtTestCase):
         self.assertEqual(dialog.instruction_table.rowCount(), 11)
         self.assertIn("切换 00 区域图库", dialog.instruction_table.item(0, 0).text())
         self.assertEqual(dialog.instruction_table.item(0, 1).text(), "E0 0A")
-        self.assertFalse(dialog.add_button.isEnabled())
+        self.assertTrue(dialog.add_button.isEnabled())
+        self.assertIn("预留槽", dialog.add_button.toolTip())
         self.assertTrue(dialog.code_button.isEnabled())
         self.assertIn("当前 ROM", dialog.read_only_status.text())
         self.assertEqual(dialog.rule_lists["movement"].count(), 157)
@@ -123,37 +139,88 @@ class LegacyToolDialogTests(QtTestCase):
         self.assertEqual(TextConverterDialog.parse_code("<10>, $11 0xFF"), b"\x10\x11\xFF")
         dialog.code_edit.setPlainText("123")
         dialog.decode_button.click()
-        self.assertIn("转换失败", dialog.status.text())
+        self.assertIn("转换失败", dialog.last_status)
         self._show(dialog)
+        visible_children = [
+            widget
+            for widget in dialog.findChildren(QWidget)
+            if widget.parent() is dialog and widget.isVisible()
+        ]
+        self.assertEqual(len(visible_children), 6)
+        self.assertEqual(
+            sorted(type(widget).__name__ for widget in visible_children),
+            ["QLabel", "QLabel", "QPlainTextEdit", "QPlainTextEdit", "QPushButton", "QPushButton"],
+        )
+        self.assertEqual(dialog.text_edit.placeholderText(), "")
+        self.assertEqual(dialog.code_edit.placeholderText(), "")
+        self.assertEqual(dialog.encode_button.size().toTuple(), (80, 32))
+        self.assertEqual(dialog.decode_button.size().toTuple(), (80, 32))
         self.assertLess(self._top(dialog.text_edit, dialog), self._top(dialog.encode_button, dialog))
         self.assertLess(dialog.encode_button.mapTo(dialog, QPoint(0, 0)).x(), dialog.decode_button.mapTo(dialog, QPoint(0, 0)).x())
         self.assertLess(self._top(dialog.decode_button, dialog), self._top(dialog.code_edit, dialog))
         dialog.close()
 
-    def test_attribute_calculator_uses_documented_deterministic_formula(self) -> None:
+    def test_text_converter_uses_all_nonempty_legacy_table_entries(self) -> None:
+        source = ROOT / "src" / "resources" / "default_config" / "码表.ini"
+        entries = []
+        for line in source.read_text(encoding="gbk").splitlines():
+            _address, code, value = line.split("=", 2)
+            if code and value:
+                entries.append((bytes.fromhex(code), value))
+        table = reference_dc_text_table()
+        self.assertEqual(len(entries), 2713)
+        self.assertEqual(len(table.byte_to_text), 2713)
+        for code, value in entries:
+            self.assertEqual(table.byte_to_text.get(code), value, code.hex().upper())
+            self.assertEqual(table.decode(code), value, code.hex().upper())
+        self.assertEqual(table.decode(b"\xF2"), "\\")
+        dialog = TextConverterDialog()
+        dialog.code_edit.setPlainText("F1 F2 F6 F9")
+        dialog.decode_button.click()
+        self.assertEqual(dialog.text_edit.toPlainText(), "@\\】【")
+
+    def test_text_converter_uses_project_local_font_assignment(self) -> None:
+        if not ROM_PATH.is_file():
+            self.skipTest("测试 ROM 不存在")
+        project = RomProject.load(ROM_PATH)
+        project.replace_font_character_overrides({bytes.fromhex("BAE3"): "龘"})
+        dialog = TextConverterDialog(project=project)
+        dialog.text_edit.setPlainText("龘")
+        dialog.encode_button.click()
+        self.assertEqual(dialog.code_edit.toPlainText(), "BA E3")
+        dialog.text_edit.clear()
+        dialog.decode_button.click()
+        self.assertEqual(dialog.text_edit.toPlainText(), "龘")
+
+    def test_attribute_calculator_uses_live_formula_and_legacy_result_lines(self) -> None:
         dialog = AttributeCalculatorDialog()
         dialog.enemy.strength.setValue(30)
         dialog.enemy.power_land.setValue(20)
         dialog.enemy.weapon_hit.setValue(70)
         dialog.enemy.speed.setValue(25)
+        dialog.enemy.weapon_range.setValue(1)
         dialog.enemy.multiplier_numerator.setValue(3)
         dialog.enemy.multiplier_denominator.setValue(2)
         dialog.ally.defense.setValue(15)
         dialog.ally.speed.setValue(20)
         dialog.ally.hp.setValue(100)
+        dialog.ally.terrain_value = 1
+        dialog.ally.skill.setValue(0)
         dialog.calculate_button.click()
-        self.assertEqual(dialog.results.rowCount(), 2)
-        self.assertEqual(dialog.results.item(0, 2).text(), "75%")
-        self.assertEqual(dialog.results.item(0, 3).text(), "0")
-        self.assertEqual(dialog.results.item(0, 4).text(), "60")
-        self.assertEqual(dialog.results.item(0, 5).text(), "40")
-        self.assertFalse(dialog.results.horizontalHeader().isHidden())
+        self.assertEqual(dialog.last_results["敌方"].hit_score, 75)
+        self.assertEqual(dialog.last_results["敌方"].minimum_hit_speed, 20)
+        self.assertEqual(dialog.last_results["敌方"].predicted_damage, 66)
+        self.assertEqual(dialog.last_results["敌方"].remaining_hp, 34)
+        result_lines = [
+            dialog.results.item(row).text() for row in range(dialog.results.count())
+        ]
+        self.assertIn("预计伤害计算：敌方 对 我方 造成预计伤害 66（对陆火力 20）", result_lines)
+        self.assertTrue(any("计算结果： 可以命中" in line for line in result_lines))
         dialog.close()
 
     def test_attribute_calculator_opens_with_empty_lower_result_area(self) -> None:
         dialog = AttributeCalculatorDialog()
-        self.assertEqual(dialog.results.rowCount(), 0)
-        self.assertTrue(dialog.results.horizontalHeader().isHidden())
+        self.assertEqual(dialog.results.count(), 0)
         self._show(dialog)
         self.assertLess(self._top(dialog.enemy, dialog), self._top(dialog.results, dialog))
         self.assertLess(self._top(dialog.results, dialog), self._top(dialog.calculate_button, dialog))
@@ -164,35 +231,198 @@ class LegacyToolDialogTests(QtTestCase):
             self.skipTest("测试ROM不存在")
         dialog = AttributeCalculatorDialog(project=self.project)
         self.assertEqual(dialog.enemy.unit.count(), self.project.unit_count - 1)
-        self.assertEqual(dialog.enemy.weapon.count(), self.project.weapon_count)
-        self.assertEqual(dialog.enemy.unit.currentData(), 2)
+        self.assertEqual(dialog.enemy.character.count(), 200)
+        self.assertEqual(dialog.enemy.unit.currentData(), 9)
         self.assertEqual(dialog.enemy.character.currentData(), 4)
-        self.assertEqual(dialog.enemy.weapon.currentData(), 1)
+        self.assertEqual(
+            tuple(dialog.enemy.weapon.itemData(index) for index in range(dialog.enemy.weapon.count())),
+            (7, 11),
+        )
+        self.assertEqual(dialog.enemy.weapon.currentData(), 7)
         unit = self.project.unit_codec.decode_record(
             int(dialog.enemy.unit.currentData()), bytes(self.project.working)
         )
         self.assertEqual(dialog.enemy.strength.value(), unit.get("strength"))
         self.assertEqual(dialog.enemy.hp.value(), unit.get("hp"))
+        weapon = self.project.weapon_codec.decode_record(
+            int(dialog.enemy.weapon.currentData()), bytes(self.project.working)
+        )
+        self.assertEqual(
+            dialog.enemy.power_land.value(),
+            weapon.get("power_land") * self.project.get_damage_formula_values()[1] + 8,
+        )
         self.assertIn("人物属性", dialog.enemy.character_summary.text())
         dialog.close()
 
-    def test_save_editor_reads_file_but_never_enables_unverified_writes(self) -> None:
+    def test_attribute_calculator_applies_level_growth_and_character_corrections(self) -> None:
+        if self.project is None:
+            self.skipTest("测试ROM不存在")
+        dialog = AttributeCalculatorDialog(project=self.project)
+        side = dialog.enemy
+        unit_id = int(side.unit.currentData())
+        base_strength = self.project.get_value(unit_id, "strength")
+        side.level.setCurrentIndex(9)
+        self.assertGreaterEqual(side.strength.value(), base_strength)
+        self.assertLessEqual(side.strength.value(), 255)
+        side.level.setCurrentIndex(59)
+        self.assertLessEqual(side.strength.value(), 255)
+        self.assertLessEqual(side.hp.value(), 9999)
+        dialog.close()
+
+    def test_attribute_calculator_disables_broken_multiplier_buttons(self) -> None:
+        dialog = AttributeCalculatorDialog(project=self.project)
+        for side in (dialog.enemy, dialog.ally):
+            self.assertFalse(side.change_multiplier_button.isEnabled())
+            self.assertIn("参考版此功能损坏", side.change_multiplier_button.toolTip())
+            self.assertEqual(side.level.count(), 60)
+        dialog.close()
+
+    def test_attribute_calculator_reads_changed_m17_parameters_without_writing_rom(self) -> None:
+        if not ROM_PATH.is_file():
+            self.skipTest("测试ROM不存在")
+        project = RomProject.load(ROM_PATH)
+        dialog = AttributeCalculatorDialog(project=project)
+        before_calculation = bytes(project.working)
+        raw_power = dialog.enemy._raw_weapon_powers[1]
+        changed = list(project.get_damage_formula_values())
+        changed[1] += 1
+        project.set_damage_formula_values(changed)
+        after_parameter_change = bytes(project.working)
+
+        dialog.calculate()
+
+        self.assertEqual(
+            dialog.enemy.power_land.value(), raw_power * changed[1] + 8
+        )
+        self.assertEqual(bytes(project.working), after_parameter_change)
+        self.assertNotEqual(before_calculation, after_parameter_change)
+        dialog.close()
+
+    def test_save_editor_keeps_reference_buttons_and_independent_title(self) -> None:
+        dialog = SaveEditorDialog()
+        self.assertEqual(dialog.windowTitle(), "存档编辑器：")
+        self.assertTrue(dialog.open_button.isEnabled())
+        self.assertTrue(dialog.read_button.isEnabled())
+        self.assertTrue(dialog.write_button.isEnabled())
+        self.assertTrue(dialog.save_button.isEnabled())
+        self.assertEqual(dialog.ally_table.columnCount(), 11)
+        self.assertEqual(dialog.enemy_table.columnCount(), 11)
+        dialog.close()
+
+    def test_save_editor_reads_stages_and_atomically_saves_verified_slot(self) -> None:
         dialog = SaveEditorDialog(project=self.project)
         with tempfile.TemporaryDirectory() as directory:
             path = Path(directory) / "sample.sav"
-            payload = bytes(range(256))
+            payload = bytearray(LegacySaveCodec.SAVE_SIZE)
+            active = bytearray(LegacySaveCodec.SLOT_LENGTH)
+            active[LegacySaveCodec.CHAPTER_OFFSET] = 4
+            active[LegacySaveCodec.CHARACTER_OFFSET] = 4
+            active[LegacySaveCodec.UNIT_OFFSET] = 9
+            active[LegacySaveCodec.LEVEL_OFFSET] = 8
+            active[LegacySaveCodec.EXP_LOW_OFFSET] = 0x34
+            active[LegacySaveCodec.EXP_HIGH_OFFSET] = 0x12
+            payload[
+                LegacySaveCodec.ACTIVE_OFFSET : LegacySaveCodec.ACTIVE_OFFSET
+                + LegacySaveCodec.SLOT_LENGTH
+            ] = active
+            slot_offset = LegacySaveCodec.SLOT_DATA_OFFSETS[0]
+            checksum_offset = LegacySaveCodec.SLOT_CHECKSUM_OFFSETS[0]
+            payload[slot_offset : slot_offset + LegacySaveCodec.SLOT_LENGTH] = active
+            payload[checksum_offset : checksum_offset + 2] = (
+                LegacySaveCodec.checksum(active).to_bytes(2, "little")
+            )
+            payload = bytes(payload)
             path.write_bytes(payload)
             dialog.load_path(path)
-            self.assertTrue(dialog.read_button.isEnabled())
             dialog.read_button.click()
             self.assertEqual(dialog.save_bytes, payload)
-            self.assertIn("256 字节", dialog.status.text())
-            self.assertEqual(dialog.ally_table.rowCount(), 12)
-            self.assertEqual(dialog.enemy_table.rowCount(), 12)
-            self.assertFalse(dialog.write_button.isEnabled())
-            self.assertFalse(dialog.save_button.isEnabled())
+            self.assertIn("有效槽 1/3", dialog.status.text())
+            self.assertEqual(dialog.ally_table.item(0, 1).text().split()[0], "$04")
+            self.assertEqual(dialog.ally_table.item(0, 2).text().split()[0], "$09")
+            dialog.ally_table.item(0, 9).setText("1000")
+            self.assertTrue(dialog._table_draft)
+            dialog.write_button.click()
+            self.assertTrue(dialog._staged)
+            self.assertEqual(path.read_bytes(), payload)
+            staged = LegacySaveCodec.decode(dialog.save_bytes)
+            self.assertTrue(staged.slots[0].checksum_valid)
+            self.assertEqual(staged.slots[0].roster[0].experience, 1000)
+            dialog.slot_selector.setCurrentIndex(1)
+            dialog.read_button.click()
+            self.assertTrue(dialog._staged)
+            self.assertEqual(
+                LegacySaveCodec.decode(dialog.save_bytes).slots[0].roster[0].experience,
+                1000,
+            )
+            dialog.slot_selector.setCurrentIndex(0)
+            dialog.read_button.click()
+            self.assertEqual(dialog.ally_table.item(0, 9).text(), "1000")
+            dialog.save_button.click()
+            self.assertFalse(dialog._staged)
+            self.assertEqual(path.read_bytes(), dialog.save_bytes)
+            self.assertIsNotNone(dialog.last_backup_path)
+            self.assertEqual(dialog.last_backup_path.read_bytes(), payload)
             self._show(dialog)
             self.assertLess(self._top(dialog.ally_table, dialog), self._top(dialog.enemy_table, dialog))
+        dialog.close()
+
+    def test_save_editor_does_not_silently_drop_an_unwritten_table_draft(self) -> None:
+        dialog = SaveEditorDialog(project=self.project)
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "sample.sav"
+            payload = bytearray(LegacySaveCodec.SAVE_SIZE)
+            active = bytearray(LegacySaveCodec.SLOT_LENGTH)
+            active[LegacySaveCodec.CHAPTER_OFFSET] = 4
+            active[LegacySaveCodec.CHARACTER_OFFSET] = 4
+            active[LegacySaveCodec.UNIT_OFFSET] = 9
+            active[LegacySaveCodec.LEVEL_OFFSET] = 8
+            slot_offset = LegacySaveCodec.SLOT_DATA_OFFSETS[0]
+            checksum_offset = LegacySaveCodec.SLOT_CHECKSUM_OFFSETS[0]
+            payload[slot_offset : slot_offset + LegacySaveCodec.SLOT_LENGTH] = active
+            payload[checksum_offset : checksum_offset + 2] = (
+                LegacySaveCodec.checksum(active).to_bytes(2, "little")
+            )
+            path.write_bytes(payload)
+            dialog.load_path(path)
+            dialog.read_save()
+            dialog.ally_table.item(0, 9).setText("123")
+            dialog.read_save()
+            self.assertEqual(dialog.ally_table.item(0, 9).text(), "123")
+            self.assertIn("未写入内存", dialog.status.text())
+        dialog._table_draft = False
+        dialog.close()
+
+    def test_save_editor_only_derives_enemy_unit_from_a_unique_rom_match(self) -> None:
+        data = bytearray(LegacySaveCodec.SAVE_SIZE)
+        data[LegacySaveCodec.ACTIVE_OFFSET + LegacySaveCodec.CHAPTER_OFFSET] = 4
+        layout = LegacySaveCodec._BATTLE_LAYOUT["enemy"]
+        base = LegacySaveCodec.ACTIVE_OFFSET
+        data[base + layout["character"]] = 0x2F
+        data[base + layout["level"]] = 12
+        document = LegacySaveCodec.decode(data)
+
+        class Project:
+            def __init__(self, enemies) -> None:
+                self.enemies = enemies
+
+            def get_scenario_layout(self, _map_id):
+                return SimpleNamespace(enemies=self.enemies)
+
+        matching = SimpleNamespace(pilot_id=0x2F, level=12, unit_id=9)
+        duplicate = SimpleNamespace(pilot_id=0x2F, level=12, unit_id=10)
+        dialog = SaveEditorDialog(project=Project([matching, duplicate]))
+        self.assertIsNone(dialog._resolve_enemy_units_for_active(document)[0])
+        dialog.project = Project([matching])
+        self.assertEqual(dialog._resolve_enemy_units_for_active(document)[0], 9)
+        dialog.close()
+
+    def test_save_editor_rejects_non_8k_files_before_reading(self) -> None:
+        dialog = SaveEditorDialog()
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "bad.sav"
+            path.write_bytes(bytes(256))
+            with self.assertRaisesRegex(LegacySaveFormatError, "8192"):
+                dialog.load_path(path)
         dialog.close()
 
     def test_other_settings_loads_real_defaults_and_cancel_discards_drafts(self) -> None:
@@ -316,7 +546,7 @@ class LegacyToolDialogTests(QtTestCase):
 
     def test_tool_geometry_and_offscreen_screenshots_render(self) -> None:
         flexible_dialogs = (
-            ("converter", TextConverterDialog(), (600, 620)),
+            ("converter", TextConverterDialog(), (473, 483)),
             ("calculator", AttributeCalculatorDialog(), (1120, 780)),
         )
         fixed_dialogs = (
@@ -376,15 +606,19 @@ class LegacyToolDialogTests(QtTestCase):
         dialog.enemy.weapon_hit.setValue(70)
         dialog.enemy.speed.setValue(20)
         dialog.ally.speed.setValue(100)
-        hit, minimum_speed, _damage, _remaining = dialog.calculate_attack(
+        result = dialog.calculate_attack(
             dialog.enemy, dialog.ally
         )
-        self.assertEqual(hit, 0)
-        self.assertEqual(minimum_speed, 31)
+        self.assertEqual(result.hit_score, 0)
+        self.assertEqual(result.minimum_hit_speed, 100)
         dialog.calculate()
-        self.assertEqual(dialog.results.columnCount(), 6)
-        self.assertEqual(dialog.results.horizontalHeaderItem(3).text(), "最低命中速度")
-        self.assertEqual(dialog.results.item(0, 3).text(), "31")
+        self.assertTrue(
+            any(
+                "命中最低速度计算：速度至少大于 99 才能命中"
+                in dialog.results.item(row).text()
+                for row in range(dialog.results.count())
+            )
+        )
         dialog.close()
 
 

@@ -1,0 +1,34 @@
+{
+  "generatedAt": "2026-09-19T20:59:59+08:00",
+  "rom": {
+    "path": "output/rom/DC_kuorong_464K.nes",
+    "sha256": "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E",
+    "workingBeforeSha256": "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E",
+    "workingAfterSha256": "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E",
+    "unchanged": true
+  },
+  "reference": {
+    "path": "output/verification/legacy-user-evidence-2026-09-14/legacy-unit-export-samples.zip",
+    "sha256": "230E55274B647D0E903C6B2753EE9BD54580F188FD8B3F0DC74F57F8FB0E2C39"
+  },
+  "protocol": {
+    "unitDirectories": 255,
+    "generatedFiles": 1275,
+    "referenceFiles": 1275,
+    "bytesPerKind": {
+      "效果": 49206,
+      "机体": 49206,
+      "碎片": 49206,
+      "图标1": 822,
+      "图标2": 822
+    }
+  },
+  "aggregate": {
+    "generatedSha256": "FB2122766C647507D357B62B5799B0856FCAB01F4EC649A889793F63A9FAC102",
+    "referenceSha256": "FB2122766C647507D357B62B5799B0856FCAB01F4EC649A889793F63A9FAC102"
+  },
+  "missingPaths": [],
+  "extraPaths": [],
+  "mismatches": [],
+  "passed": true
+}

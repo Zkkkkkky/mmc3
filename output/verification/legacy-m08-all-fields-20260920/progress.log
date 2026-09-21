@@ -1,0 +1,506 @@
+restart
+collector launched pid=16820, range=0:5
+saved 5/1095
+collector launched pid=13512, range=5:105
+saved 10/1095
+saved 20/1095
+collector launched pid=13824, range=27:77
+saved 30/1095
+saved 40/1095
+work ROM differs from committed state; rebuilding from evidence
+rebuilt work ROM from 46 evidence records
+collector launched pid=17528, range=46:96
+saved 50/1095
+saved 60/1095
+saved 70/1095
+saved 80/1095
+saved 90/1095
+saved 96/1095
+collector launched pid=17468, range=96:1095
+saved 100/1095
+saved 110/1095
+saved 120/1095
+open database attempt 1 failed: Legacy window did not appear before timeout (pid=17468; seen=[])
+open database attempt 2 failed: Legacy window did not appear before timeout (pid=17468; seen=[])
+open database attempt 3 failed: Legacy window did not appear before timeout (pid=17468; seen=[])
+work ROM differs from committed state; rebuilding from evidence
+rebuilt work ROM from 128 evidence records
+collector launched pid=16000, range=128:133
+collector launched pid=13732, range=128:129
+collector launched pid=11092, range=128:129
+collector launched pid=18292, range=128:129
+collector launched pid=4424, range=128:129
+collector launched pid=6108, range=128:129
+collector launched pid=11608, range=128:129
+collector launched pid=6252 on attempt 1
+collector range=128:129
+saved 129/1095
+collector launched pid=17412 on attempt 1
+collector range=129:179
+saved 130/1095
+saved 140/1095
+saved 150/1095
+M08/00/064/000: save attempt 1 timed out
+M08/00/064/000: save attempt 2 timed out
+M08/00/064/000: save attempt 3 timed out
+collector launched pid=18012 on attempt 1
+collector range=152:172
+saved 160/1095
+saved 170/1095
+saved 172/1095
+collector launched pid=2816 on attempt 1
+collector range=172:192
+saved 180/1095
+saved 190/1095
+saved 192/1095
+collector launched pid=18048 on attempt 1
+collector range=192:212
+saved 200/1095
+open database attempt 1 failed: [WinError 1400] 无效的窗口句柄。
+open database attempt 2 failed: Legacy window did not appear before timeout (pid=18048; seen=[])
+open database attempt 3 failed: Legacy window did not appear before timeout (pid=18048; seen=[])
+collector session failed at 192: Legacy window did not appear before timeout (pid=18048; seen=[])
+rebuilt work ROM from 200 evidence records
+collector launched pid=4224 on attempt 1
+collector range=200:220
+saved 210/1095
+open database attempt 1 failed: [WinError 1400] 无效的窗口句柄。
+open database attempt 2 failed: Legacy window did not appear before timeout (pid=4224; seen=[])
+open database attempt 3 failed: Legacy window did not appear before timeout (pid=4224; seen=[])
+collector session failed at 200: Legacy window did not appear before timeout (pid=4224; seen=[])
+rebuilt work ROM from 211 evidence records
+collector launched pid=8964 on attempt 1
+collector range=211:231
+saved 220/1095
+saved 230/1095
+saved 231/1095
+collector launched pid=10424 on attempt 1
+collector range=231:251
+open database attempt 1 failed: [WinError 1400] 无效的窗口句柄。
+open database attempt 2 failed: Legacy window did not appear before timeout (pid=10424; seen=[])
+open database attempt 3 failed: Legacy window did not appear before timeout (pid=10424; seen=[])
+collector session failed at 231: Legacy window did not appear before timeout (pid=10424; seen=[])
+rebuilt work ROM from 231 evidence records
+collector launched pid=14832 on attempt 1
+collector range=231:251
+saved 240/1095
+open database attempt 1 failed: [WinError 1400] 无效的窗口句柄。
+open database attempt 2 failed: Legacy window did not appear before timeout (pid=14832; seen=[])
+open database attempt 3 failed: Legacy window did not appear before timeout (pid=14832; seen=[])
+collector session failed at 231: Legacy window did not appear before timeout (pid=14832; seen=[])
+rebuilt work ROM from 246 evidence records
+collector launched pid=10688 on attempt 1
+collector range=246:266
+saved 250/1095
+open database attempt 1 failed: [WinError 1400] 无效的窗口句柄。
+open database attempt 2 failed: Legacy window did not appear before timeout (pid=10688; seen=[])
+open database attempt 3 failed: Legacy window did not appear before timeout (pid=10688; seen=[])
+collector session failed at 246: Legacy window did not appear before timeout (pid=10688; seen=[])
+rebuilt work ROM from 252 evidence records
+collector launched pid=12084 on attempt 1
+collector range=252:272
+saved 260/1095
+saved 270/1095
+saved 272/1095
+collector launched pid=12152 on attempt 1
+collector range=272:292
+open database attempt 1 failed: [WinError 1400] 无效的窗口句柄。
+open database attempt 2 failed: Legacy window did not appear before timeout (pid=12152; seen=[])
+open database attempt 3 failed: Legacy window did not appear before timeout (pid=12152; seen=[])
+collector session failed at 272: Legacy window did not appear before timeout (pid=12152; seen=[])
+rebuilt work ROM from 273 evidence records
+collector launched pid=15320 on attempt 1
+collector range=273:293
+saved 280/1095
+open database attempt 1 failed: [WinError 1400] 无效的窗口句柄。
+open database attempt 2 failed: Legacy window did not appear before timeout (pid=15320; seen=[])
+open database attempt 3 failed: Legacy window did not appear before timeout (pid=15320; seen=[])
+collector session failed at 273: Legacy window did not appear before timeout (pid=15320; seen=[])
+rebuilt work ROM from 285 evidence records
+collector launched pid=9656 on attempt 1
+collector range=285:305
+saved 290/1095
+saved 300/1095
+saved 305/1095
+collector launched pid=5448 on attempt 1
+collector range=305:325
+saved 310/1095
+collector session failed at 305: M08/00/126/005 produced no ROM change
+rebuilt work ROM from 313 evidence records
+collector launched pid=14580 on attempt 1
+collector range=313:333
+collector session failed at 313: M08/00/126/005 produced no ROM change
+rebuilt work ROM from 313 evidence records
+collector launched pid=17296 on attempt 1
+collector range=313:333
+collector session failed at 313: M08/00/126/005 produced no ROM change
+rebuilt work ROM from 313 evidence records
+collector launched pid=17100 on attempt 1
+collector range=313:333
+collector session failed at 313: M08/00/126/005 produced no ROM change
+rebuilt work ROM from 313 evidence records
+collector launched pid=8636 on attempt 1
+collector range=313:333
+saved 320/1095
+saved 330/1095
+saved 333/1095
+collector launched pid=15456 on attempt 1
+collector range=333:353
+saved 340/1095
+open database attempt 1 failed: [WinError 1400] 无效的窗口句柄。
+open database attempt 2 failed: Legacy window did not appear before timeout (pid=15456; seen=[])
+open database attempt 3 failed: Legacy window did not appear before timeout (pid=15456; seen=[])
+collector session failed at 333: Legacy window did not appear before timeout (pid=15456; seen=[])
+rebuilt work ROM from 345 evidence records
+collector launched pid=13448 on attempt 1
+collector range=345:365
+saved 350/1095
+saved 360/1095
+saved 365/1095
+collector launched pid=17732 on attempt 1
+collector range=365:385
+saved 370/1095
+open database attempt 1 failed: [WinError 1400] 无效的窗口句柄。
+open database attempt 2 failed: Legacy window did not appear before timeout (pid=17732; seen=[])
+open database attempt 3 failed: Legacy window did not appear before timeout (pid=17732; seen=[])
+collector session failed at 365: Legacy window did not appear before timeout (pid=17732; seen=[])
+rebuilt work ROM from 378 evidence records
+collector launched pid=8548 on attempt 1
+collector range=378:398
+saved 380/1095
+saved 390/1095
+saved 398/1095
+collector launched pid=15872 on attempt 1
+collector range=398:418
+saved 400/1095
+saved 410/1095
+saved 418/1095
+collector launched pid=8108 on attempt 1
+collector range=418:438
+saved 420/1095
+saved 430/1095
+open database attempt 1 failed: [WinError 1400] 无效的窗口句柄。
+open database attempt 2 failed: Legacy window did not appear before timeout (pid=8108; seen=[])
+open database attempt 3 failed: Legacy window did not appear before timeout (pid=8108; seen=[])
+collector session failed at 418: Legacy window did not appear before timeout (pid=8108; seen=[])
+rebuilt work ROM from 432 evidence records
+collector launched pid=16208 on attempt 1
+collector range=432:452
+saved 440/1095
+saved 450/1095
+saved 452/1095
+collector launched pid=13368 on attempt 1
+collector range=452:472
+M08/00/192/000: save attempt 1 timed out
+M08/00/192/000: save attempt 2 timed out
+M08/00/192/000: save attempt 3 timed out
+collector session failed at 452: Legacy window did not appear before timeout (pid=13368; seen=[])
+rebuilt work ROM from 455 evidence records
+collector launched pid=16692 on attempt 1
+collector range=455:475
+open database attempt 1 failed: [WinError 1400] 无效的窗口句柄。
+open database attempt 2 failed: Legacy window did not appear before timeout (pid=16692; seen=[])
+open database attempt 3 failed: Legacy window did not appear before timeout (pid=16692; seen=[])
+collector session failed at 455: Legacy window did not appear before timeout (pid=16692; seen=[])
+rebuilt work ROM from 455 evidence records
+collector launched pid=1132 on attempt 1
+collector range=455:475
+saved 460/1095
+saved 470/1095
+saved 475/1095
+collector launched pid=17740 on attempt 1
+collector range=475:495
+open database attempt 1 failed: [WinError 1400] 无效的窗口句柄。
+open database attempt 2 failed: Legacy window did not appear before timeout (pid=17740; seen=[])
+open database attempt 3 failed: Legacy window did not appear before timeout (pid=17740; seen=[])
+collector session failed at 475: Legacy window did not appear before timeout (pid=17740; seen=[])
+rebuilt work ROM from 475 evidence records
+collector launched pid=7324 on attempt 1
+collector range=475:495
+saved 480/1095
+M08/00/205/000: save attempt 1 timed out
+M08/00/205/000: save attempt 2 timed out
+M08/00/205/000: save attempt 3 timed out
+collector session failed at 475: Legacy window did not appear before timeout (pid=7324; seen=[])
+rebuilt work ROM from 485 evidence records
+collector launched pid=4036 on attempt 1
+collector range=485:505
+saved 490/1095
+saved 500/1095
+saved 505/1095
+collector launched pid=8244 on attempt 1
+collector range=505:525
+M08/00/217/001: save attempt 1 timed out
+M08/00/217/001: save attempt 2 timed out
+M08/00/217/001: save attempt 3 timed out
+collector session failed at 505: Legacy window did not appear before timeout (pid=8244; seen=[])
+rebuilt work ROM from 509 evidence records
+collector launched pid=8484 on attempt 1
+collector range=509:529
+saved 510/1095
+saved 520/1095
+saved 529/1095
+collector launched pid=16768 on attempt 1
+collector range=529:549
+saved 530/1095
+saved 540/1095
+saved 549/1095
+collector launched pid=16128 on attempt 1
+collector range=549:569
+saved 550/1095
+saved 560/1095
+saved 569/1095
+collector launched pid=12704 on attempt 1
+collector range=569:589
+saved 570/1095
+open database attempt 1 failed: [WinError 1400] 无效的窗口句柄。
+open database attempt 2 failed: Legacy window did not appear before timeout (pid=12704; seen=[])
+open database attempt 3 failed: Legacy window did not appear before timeout (pid=12704; seen=[])
+collector session failed at 569: Legacy window did not appear before timeout (pid=12704; seen=[])
+rebuilt work ROM from 573 evidence records
+collector launched pid=17712 on attempt 1
+collector range=573:593
+saved 580/1095
+saved 590/1095
+saved 593/1095
+collector launched pid=18000 on attempt 1
+collector range=593:613
+saved 600/1095
+saved 610/1095
+saved 613/1095
+collector launched pid=17836 on attempt 1
+collector range=613:633
+saved 620/1095
+saved 630/1095
+saved 633/1095
+collector launched pid=8492 on attempt 1
+collector range=633:653
+saved 640/1095
+saved 650/1095
+saved 653/1095
+collector launched pid=16912 on attempt 1
+collector range=653:673
+saved 660/1095
+saved 670/1095
+saved 673/1095
+collector launched pid=13208 on attempt 1
+collector range=673:693
+saved 680/1095
+saved 690/1095
+M08/04/049/004: save attempt 1 timed out
+M08/04/049/004: save attempt 2 timed out
+M08/04/049/004: save attempt 3 timed out
+collector session failed at 673: Legacy window did not appear before timeout (pid=13208; seen=[])
+rebuilt work ROM from 690 evidence records
+collector launched pid=6624 on attempt 1
+collector range=690:710
+saved 700/1095
+saved 710/1095
+collector launched pid=14428 on attempt 1
+collector range=710:730
+saved 720/1095
+open database attempt 1 failed: [WinError 1400] 无效的窗口句柄。
+open database attempt 2 failed: Legacy window did not appear before timeout (pid=14428; seen=[])
+open database attempt 3 failed: Legacy window did not appear before timeout (pid=14428; seen=[])
+collector session failed at 710: Legacy window did not appear before timeout (pid=14428; seen=[])
+rebuilt work ROM from 722 evidence records
+collector launched pid=5144 on attempt 1
+collector range=722:742
+saved 730/1095
+saved 740/1095
+saved 742/1095
+collector launched pid=8512 on attempt 1
+collector range=742:762
+open database attempt 1 failed: [WinError 1400] 无效的窗口句柄。
+open database attempt 2 failed: Legacy window did not appear before timeout (pid=8512; seen=[])
+open database attempt 3 failed: Legacy window did not appear before timeout (pid=8512; seen=[])
+collector session failed at 742: Legacy window did not appear before timeout (pid=8512; seen=[])
+rebuilt work ROM from 742 evidence records
+collector launched pid=13804 on attempt 1
+collector range=742:762
+saved 750/1095
+saved 760/1095
+saved 762/1095
+collector launched pid=12748 on attempt 1
+collector range=762:782
+M08/04/084/000: save attempt 1 timed out
+M08/04/084/000: save attempt 2 timed out
+M08/04/084/000: save attempt 3 timed out
+collector session failed at 762: Legacy window did not appear before timeout (pid=12748; seen=[])
+rebuilt work ROM from 767 evidence records
+collector launched pid=15288 on attempt 1
+collector range=767:787
+saved 770/1095
+saved 780/1095
+saved 787/1095
+collector launched pid=9168 on attempt 1
+collector range=787:807
+saved 790/1095
+open database attempt 1 failed: [WinError 1400] 无效的窗口句柄。
+open database attempt 2 failed: Legacy window did not appear before timeout (pid=9168; seen=[])
+open database attempt 3 failed: Legacy window did not appear before timeout (pid=9168; seen=[])
+collector session failed at 787: Legacy window did not appear before timeout (pid=9168; seen=[])
+rebuilt work ROM from 796 evidence records
+collector launched pid=8512 on attempt 1
+collector range=796:816
+saved 800/1095
+saved 810/1095
+saved 816/1095
+collector launched pid=2480 on attempt 1
+collector range=816:836
+saved 820/1095
+open database attempt 1 failed: [WinError 1400] 无效的窗口句柄。
+open database attempt 2 failed: Legacy window did not appear before timeout (pid=2480; seen=[])
+open database attempt 3 failed: Legacy window did not appear before timeout (pid=2480; seen=[])
+collector session failed at 816: Legacy window did not appear before timeout (pid=2480; seen=[])
+rebuilt work ROM from 829 evidence records
+collector launched pid=2816 on attempt 1
+collector range=829:849
+saved 830/1095
+saved 840/1095
+saved 849/1095
+collector launched pid=12216 on attempt 1
+collector range=849:869
+saved 850/1095
+saved 860/1095
+saved 869/1095
+collector launched pid=12492 on attempt 1
+collector range=869:889
+saved 870/1095
+saved 880/1095
+saved 889/1095
+collector launched pid=3612 on attempt 1
+collector range=889:909
+saved 890/1095
+saved 900/1095
+saved 909/1095
+collector launched pid=16056 on attempt 1
+collector range=909:929
+saved 910/1095
+saved 920/1095
+saved 929/1095
+collector launched pid=13272 on attempt 1
+collector range=929:949
+saved 930/1095
+open database attempt 1 failed: [WinError 1400] 无效的窗口句柄。
+open database attempt 2 failed: Legacy window did not appear before timeout (pid=13272; seen=[])
+open database attempt 3 failed: Legacy window did not appear before timeout (pid=13272; seen=[])
+collector session failed at 929: Legacy window did not appear before timeout (pid=13272; seen=[])
+rebuilt work ROM from 931 evidence records
+collector launched pid=12984 on attempt 1
+collector range=931:951
+saved 940/1095
+saved 950/1095
+saved 951/1095
+collector launched pid=9012 on attempt 1
+collector range=951:971
+saved 960/1095
+saved 970/1095
+saved 971/1095
+collector launched pid=13064 on attempt 1
+collector range=971:991
+saved 980/1095
+saved 990/1095
+saved 991/1095
+collector launched pid=14728 on attempt 1
+collector range=991:1011
+saved 1000/1095
+saved 1010/1095
+saved 1011/1095
+collector launched pid=17544 on attempt 1
+collector range=1011:1031
+saved 1020/1095
+collector session failed at 1011: M08/05/000/000 after readback differs: '卡姆：\n比旦，刚达Z出发！】' != '一姆：\n比旦，刚达Z出发！】'
+rebuilt work ROM from 1027 evidence records
+collector launched pid=6984 on attempt 1
+collector range=1027:1047
+collector session failed at 1027: M08/05/000/000 after readback differs: '卡姆：\n比旦，刚达Z出发！】' != '一姆：\n比旦，刚达Z出发！】'
+rebuilt work ROM from 1027 evidence records
+collector launched pid=9908 on attempt 1
+collector range=1027:1047
+collector session failed at 1027: M08/05/000/000 after readback differs: '卡姆：\n比旦，刚达Z出发！】' != '一姆：\n比旦，刚达Z出发！】'
+rebuilt work ROM from 1027 evidence records
+collector launched pid=11244 on attempt 1
+collector range=1027:1047
+collector session failed at 1027: M08/05/000/000 after readback differs: '卡姆：\n比旦，刚达Z出发！】' != '一姆：\n比旦，刚达Z出发！】'
+rebuilt work ROM from 1027 evidence records
+collector launched pid=4756 on attempt 1
+collector range=1027:1047
+collector session failed at 1027: M08/05/000/000 after readback differs: '卡姆：\n比旦，刚达Z出发！】' != '一姆：\n比旦，刚达Z出发！】'
+rebuilt work ROM from 1027 evidence records
+collector launched pid=18140 on attempt 1
+collector range=1027:1047
+collector session failed at 1027: M08/05/000/000 after readback differs: '卡姆：\n比旦，刚达Z出发！】' != '一姆：\n比旦，刚达Z出发！】'
+rebuilt work ROM from 1027 evidence records
+collector launched pid=12416 on attempt 1
+collector range=1027:1047
+collector session failed at 1027: M08/05/000/000 after readback differs: '卡姆：\n比旦，刚达Z出发！】' != '一姆：\n比旦，刚达Z出发！】'
+rebuilt work ROM from 1027 evidence records
+collector launched pid=15044 on attempt 1
+collector range=1027:1047
+collector session failed at 1027: M08/05/000/000 unsafe orphan write archived; restart required
+rebuilt work ROM from 1028 evidence records
+collector launched pid=12992 on attempt 1
+collector range=1028:1048
+saved 1030/1095
+saved 1040/1095
+M08/05/047/000: save attempt 1 timed out
+M08/05/047/000: save attempt 2 timed out
+M08/05/047/000: save attempt 3 timed out
+collector session failed at 1028: Legacy window did not appear before timeout (pid=12992; seen=[])
+rebuilt work ROM from 1043 evidence records
+collector launched pid=5636 on attempt 1
+collector range=1043:1063
+saved 1050/1095
+saved 1060/1095
+saved 1063/1095
+collector launched pid=13344 on attempt 1
+collector range=1063:1083
+saved 1070/1095
+M08/07/015/000: save attempt 1 timed out
+M08/07/015/000: save attempt 2 timed out
+M08/07/015/000: save attempt 3 timed out
+collector session failed at 1063: Legacy window did not appear before timeout (pid=13344; seen=[])
+rebuilt work ROM from 1075 evidence records
+collector launched pid=3136 on attempt 1
+collector range=1075:1095
+open database attempt 1 failed: [WinError 1400] 无效的窗口句柄。
+open database attempt 2 failed: Legacy window did not appear before timeout (pid=3136; seen=[])
+open database attempt 3 failed: Legacy window did not appear before timeout (pid=3136; seen=[])
+collector session failed at 1075: Legacy window did not appear before timeout (pid=3136; seen=[])
+rebuilt work ROM from 1075 evidence records
+collector launched pid=16680 on attempt 1
+collector range=1075:1095
+saved 1080/1095
+open database attempt 1 failed: [WinError 1400] 无效的窗口句柄。
+open database attempt 2 failed: Legacy window did not appear before timeout (pid=16680; seen=[])
+open database attempt 3 failed: Legacy window did not appear before timeout (pid=16680; seen=[])
+collector session failed at 1075: Legacy window did not appear before timeout (pid=16680; seen=[])
+rebuilt work ROM from 1084 evidence records
+collector launched pid=14504 on attempt 1
+collector range=1084:1095
+saved 1090/1095
+saved 1095/1095
+cold readback launched pid=10524 on attempt 1
+cold readback 50/1095
+cold readback 100/1095
+cold readback 150/1095
+cold readback 200/1095
+cold readback 250/1095
+cold readback 300/1095
+cold readback 350/1095
+cold readback 400/1095
+cold readback 450/1095
+cold readback 500/1095
+cold readback 550/1095
+cold readback 600/1095
+cold readback 650/1095
+cold readback 700/1095
+cold readback 750/1095
+cold readback 800/1095
+cold readback 850/1095
+cold readback 900/1095
+cold readback 950/1095
+cold readback 1000/1095
+cold readback 1050/1095
+cold readback complete

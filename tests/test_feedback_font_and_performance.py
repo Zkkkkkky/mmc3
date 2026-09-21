@@ -47,6 +47,28 @@ class FontFeedbackTests(QtTestCase):
             self.project.set_font_glyphs({bytes.fromhex("C800"): bytes(17)})
         self.assertFalse(self.project.is_dirty)
 
+    def test_every_verified_font_page_round_trips_without_touching_reserved_bytes(self) -> None:
+        before = bytes(self.project.working)
+        glyphs = {}
+        for lead in range(0xB8, 0xDC):
+            if lead not in (*range(0xB8, 0xBC), *range(0xC8, 0xCC), *range(0xD8, 0xDC)):
+                continue
+            tokens = page_tokens(lead)
+            self.assertEqual(len(tokens), 224)
+            for token in tokens:
+                offset = glyph_file_offset(token, writable=True)
+                raw = before[offset:offset + 18]
+                self.assertEqual(encode_glyph(decode_glyph(raw)), raw)
+                glyphs[token] = raw
+            page_base = glyph_file_offset(bytes((lead, 0x00)), writable=True)
+            for row in range(16):
+                padding = page_base + row * 0x100 + 252
+                self.assertEqual(before[padding:padding + 4], bytes(self.project.working[padding:padding + 4]))
+        self.assertEqual(len(glyphs), 12 * 224)
+        self.project.set_font_glyphs(glyphs)
+        self.assertEqual(bytes(self.project.working), before)
+        self.assertFalse(self.project.is_dirty)
+
     def test_real_one_glyph_is_a_single_eleven_pixel_horizontal_stroke(self) -> None:
         # CAC6 / 一: three 4×12 vertical strips, zero bits are foreground.
         raw = bytes.fromhex("ff ff ff 8f ff ff ff ff ff 0f ff ff ff ff ff 0f ff ff")
@@ -156,7 +178,12 @@ class FontFeedbackTests(QtTestCase):
         unit_id = page.current_id
         old_hp = page.fields["hp"].value()
         page.fields["hp"].setValue(old_hp + 1)
-        page.records.setCurrentRow(1)
+        with patch.object(
+            QMessageBox,
+            "question",
+            return_value=QMessageBox.StandardButton.Yes,
+        ):
+            page.records.setCurrentRow(1)
         self.assertEqual(self.project.get_value(unit_id, "hp"), old_hp + 1)
         self.assertEqual(page.current_id, 2)
         self.assertTrue(persistent.isValid())

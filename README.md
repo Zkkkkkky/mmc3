@@ -157,6 +157,8 @@ python tools\build_dc_expanded_dual_audio.py
 .\tools\验证交接包.ps1
 ```
 
+在已安装开发依赖的电脑上，也可直接双击仓库根目录的 `打包DC修改器.bat`。脚本会自动进入项目目录并调用上述正式打包流程；生成的 EXE、SHA-256 校验文本和映射表位于 `output/app/`。多人协作时不要在同一共享工作目录中同时打包，最终成品应在代码合并完成后由一台电脑统一生成。
+
 当前迁移后的完整套件为 184 项测试，包含核心、集成、离屏 GUI、6502 运行片段及只读输出边界检查。
 
 ROM 布局或音频行为发生变化时，还必须执行 [《交接文档》](docs/交接文档.md) 中对应的 Mesen/Lua 冒烟检查。Mesen 0.9.9 位于 `tools/vendor/mesen-0.9.9/`，脚本位于 `tests/emulator/`，验证产物写入 `output/verification/`。

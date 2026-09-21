@@ -15,7 +15,16 @@ from PySide6.QtWidgets import QApplication, QDialog, QMessageBox
 
 from dc_modifier.app import DEFAULT_ROM
 from dc_modifier.legacy_tools import FontLibraryDialog
-from fc_editor.codecs.dc_font import PAGE_PAYLOAD_SIZE, glyph_file_offset, page_tokens
+from fc_editor.codecs.dc_font import (
+    FULL_FONT_PAYLOAD_SIZE,
+    PAGE_PAYLOAD_SIZE,
+    decode_full_font_file,
+    encode_full_font_file,
+    font_tokens,
+    glyph_file_offset,
+    page_tokens,
+    safe_unmapped_tokens,
+)
 from fc_rom_editor_core import RomProject
 
 
@@ -216,6 +225,115 @@ class FontEditTransactionTests(QtTestCase):
         with self.assertRaises(ValueError):
             dialog._stage_glyphs(batch)
         self.assertFalse(dialog._glyph_drafts)
+
+    def test_safe_auto_allocation_is_transactional_persistent_and_undoable(self) -> None:
+        dialog = self.dialog()
+        candidates = safe_unmapped_tokens(
+            bytes(self.project.working),
+            set(dialog.text_table.byte_to_text),
+        )
+        self.assertEqual(len(candidates), 76)
+        self.assertEqual(candidates[0], bytes.fromhex("BAE3"))
+        glyph = bytes(range(18))
+        before = bytes(self.project.working)
+        with patch(
+            "dc_modifier.font_edit.QInputDialog.getText",
+            return_value=("龘", True),
+        ), patch.object(dialog, "_render_character", return_value=glyph):
+            dialog.allocate_new_character()
+        token = bytes.fromhex("BAE3")
+        self.assertEqual(dialog._font_mapping_drafts[token], "龘")
+        self.assertEqual(dialog._glyph_drafts[token], glyph)
+        self.assertEqual(bytes(self.project.working), before)
+        self.assertFalse(self.project.font_character_overrides)
+
+        dialog.accept()
+        self.assertEqual(self.project.font_character_overrides, {token: "龘"})
+        self.assertEqual(self.project.dc_text_table().encode("龘"), token)
+        offset = glyph_file_offset(token, writable=True)
+        self.assertEqual(bytes(self.project.working[offset:offset + 18]), glyph)
+        self.project.undo()
+        self.assertFalse(self.project.font_character_overrides)
+        self.assertEqual(bytes(self.project.working), before)
+        self.project.redo()
+        self.assertEqual(self.project.font_character_overrides, {token: "龘"})
+        self.assertEqual(bytes(self.project.working[offset:offset + 18]), glyph)
+
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "font-mapping.dcmod"
+            self.project.save_project(path)
+            reopened = RomProject.load_project(path, DEFAULT_ROM)
+        self.assertEqual(reopened.font_character_overrides, {token: "龘"})
+        self.assertEqual(reopened.dc_text_table(reference=True).encode("龘"), token)
+        self.assertEqual(bytes(reopened.working[offset:offset + 18]), glyph)
+
+    def test_full_font_file_roundtrip_is_deterministic_and_strict(self) -> None:
+        glyphs = {
+            token: bytes(self.project.working[
+                glyph_file_offset(token, writable=True):
+                glyph_file_offset(token, writable=True) + 18
+            ])
+            for token in font_tokens()
+        }
+        mappings = {bytes.fromhex("BAE3"): "龘"}
+        raw = encode_full_font_file(glyphs, mappings)
+        decoded_glyphs, decoded_mappings = decode_full_font_file(raw)
+        self.assertEqual(decoded_glyphs, glyphs)
+        self.assertEqual(decoded_mappings, mappings)
+        self.assertEqual(
+            len(raw),
+            18 + FULL_FONT_PAYLOAD_SIZE + len('{"BAE3":"龘"}'.encode("utf-8")),
+        )
+        self.assertEqual(raw, encode_full_font_file(decoded_glyphs, decoded_mappings))
+        with self.assertRaisesRegex(ValueError, "长度"):
+            decode_full_font_file(raw + b"\x00")
+
+    def test_full_font_import_is_one_atomic_undo_and_preserves_padding(self) -> None:
+        dialog = self.dialog()
+        glyphs = {
+            token: bytes(self.project.working[
+                glyph_file_offset(token, writable=True):
+                glyph_file_offset(token, writable=True) + 18
+            ])
+            for token in font_tokens()
+        }
+        token = bytes.fromhex("BAE3")
+        glyphs[token] = bytes(range(18))
+        mappings = {token: "龘"}
+        raw = encode_full_font_file(glyphs, mappings)
+        before = bytes(self.project.working)
+        padding = {
+            offset: before[offset:offset + 4]
+            for lead in (0xB8, 0xB9, 0xBA, 0xBB, 0xC8, 0xC9, 0xCA, 0xCB, 0xD8, 0xD9, 0xDA, 0xDB)
+            for row in range(16)
+            for offset in (glyph_file_offset(bytes((lead, row * 16)), writable=True) + 252,)
+        }
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "all.dcfontset"
+            path.write_bytes(raw)
+            with patch(
+                "dc_modifier.font_edit.QFileDialog.getOpenFileName",
+                return_value=(str(path), ""),
+            ), patch(
+                "dc_modifier.font_edit.QMessageBox.question",
+                return_value=QMessageBox.StandardButton.Yes,
+            ):
+                dialog.import_full_font()
+        self.assertEqual(bytes(self.project.working), before)
+        dialog.accept()
+        self.assertEqual(self.project.font_character_overrides, mappings)
+        self.assertEqual(
+            bytes(self.project.working[
+                glyph_file_offset(token, writable=True):
+                glyph_file_offset(token, writable=True) + 18
+            ]),
+            glyphs[token],
+        )
+        for offset, expected in padding.items():
+            self.assertEqual(bytes(self.project.working[offset:offset + 4]), expected)
+        self.project.undo()
+        self.assertEqual(bytes(self.project.working), before)
+        self.assertFalse(self.project.font_character_overrides)
 
 
 if __name__ == "__main__":

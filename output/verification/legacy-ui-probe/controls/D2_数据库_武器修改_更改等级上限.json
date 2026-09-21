@@ -1,0 +1,101 @@
+{
+  "tag": "D2_数据库_武器修改_更改等级上限",
+  "hwnd": 9901780,
+  "title": "最大值",
+  "class": "WTWindow",
+  "rect": {
+    "left": 1721,
+    "top": 992,
+    "right": 2117,
+    "bottom": 1175,
+    "width": 396,
+    "height": 183
+  },
+  "pid": 30308,
+  "tree": {
+    "hwnd": 9901780,
+    "class": "WTWindow",
+    "text": "最大值",
+    "ctrl_id": 0,
+    "rect": {
+      "left": 1721,
+      "top": 992,
+      "right": 2117,
+      "bottom": 1175,
+      "width": 396,
+      "height": 183
+    },
+    "visible": true,
+    "enabled": true,
+    "children": [
+      {
+        "hwnd": 1836950,
+        "class": "msctls_updown32",
+        "text": "",
+        "ctrl_id": 124,
+        "rect": {
+          "left": 1916,
+          "top": 1086,
+          "right": 1943,
+          "bottom": 1122,
+          "width": 27,
+          "height": 36
+        },
+        "visible": true,
+        "enabled": true,
+        "children": []
+      },
+      {
+        "hwnd": 26481090,
+        "class": "Edit",
+        "text": "60",
+        "ctrl_id": 120,
+        "rect": {
+          "left": 1748,
+          "top": 1086,
+          "right": 1916,
+          "bottom": 1122,
+          "width": 168,
+          "height": 36
+        },
+        "visible": true,
+        "enabled": true,
+        "children": []
+      },
+      {
+        "hwnd": 20125856,
+        "class": "Button",
+        "text": "取消",
+        "ctrl_id": 110,
+        "rect": {
+          "left": 1988,
+          "top": 1110,
+          "right": 2108,
+          "bottom": 1146,
+          "width": 120,
+          "height": 36
+        },
+        "visible": true,
+        "enabled": true,
+        "children": []
+      },
+      {
+        "hwnd": 6621662,
+        "class": "Button",
+        "text": "确定",
+        "ctrl_id": 100,
+        "rect": {
+          "left": 1988,
+          "top": 1062,
+          "right": 2108,
+          "bottom": 1098,
+          "width": 120,
+          "height": 36
+        },
+        "visible": true,
+        "enabled": true,
+        "children": []
+      }
+    ]
+  }
+}

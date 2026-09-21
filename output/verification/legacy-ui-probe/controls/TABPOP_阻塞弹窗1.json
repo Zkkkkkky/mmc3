@@ -1,0 +1,84 @@
+{
+  "tag": "TABPOP_阻塞弹窗1",
+  "hwnd": 10098388,
+  "title": "错误",
+  "class": "#32770",
+  "rect": {
+    "left": 1659,
+    "top": 854,
+    "right": 2183,
+    "bottom": 1235,
+    "width": 524,
+    "height": 381
+  },
+  "pid": 30308,
+  "tree": {
+    "hwnd": 10098388,
+    "class": "#32770",
+    "text": "错误",
+    "ctrl_id": 0,
+    "rect": {
+      "left": 1659,
+      "top": 854,
+      "right": 2183,
+      "bottom": 1235,
+      "width": 524,
+      "height": 381
+    },
+    "visible": true,
+    "enabled": true,
+    "children": [
+      {
+        "hwnd": 6818270,
+        "class": "Button",
+        "text": "确定",
+        "ctrl_id": 2,
+        "rect": {
+          "left": 2019,
+          "top": 1170,
+          "right": 2151,
+          "bottom": 1212,
+          "width": 132,
+          "height": 42
+        },
+        "visible": true,
+        "enabled": true,
+        "children": []
+      },
+      {
+        "hwnd": 20322464,
+        "class": "Static",
+        "text": "",
+        "ctrl_id": 20,
+        "rect": {
+          "left": 1700,
+          "top": 942,
+          "right": 1748,
+          "bottom": 990,
+          "width": 48,
+          "height": 48
+        },
+        "visible": true,
+        "enabled": true,
+        "children": []
+      },
+      {
+        "hwnd": 10228140,
+        "class": "Static",
+        "text": "运行时出错!\r\n\r\n错误信息：读取组件属性时发现指定窗口尚未载入\r\n\r\n1376089409, 369456457\r\n\"\"\r\n\"\"\r\n",
+        "ctrl_id": 65535,
+        "rect": {
+          "left": 1760,
+          "top": 942,
+          "right": 2125,
+          "bottom": 1113,
+          "width": 365,
+          "height": 171
+        },
+        "visible": true,
+        "enabled": true,
+        "children": []
+      }
+    ]
+  }
+}

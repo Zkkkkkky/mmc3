@@ -1,0 +1,8 @@
+{
+  "schema_version": 1,
+  "name": "m06_defeat_persist_0_to_1_v1",
+  "description": "参考版启用人物第 1 行“击落不消失”时的确定性变长记录重建；标志字节和首个修正值均写入 0x80，两轮 12155 条差分完全一致。",
+  "source_case": "output/build/legacy-diff-audit/cases/diagnostic/retry_history/20260920T021407/M06/defeat_persist/cold_start_01/case.json",
+  "source_case_sha256": "591478e0d7a7fe4e294c0e3c89ea481cd66e830f05ac2c4a58c7104a3308a5d6",
+  "exclude_offsets": [296343, 296344]
+}

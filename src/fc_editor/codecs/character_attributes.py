@@ -69,10 +69,16 @@ class PortraitRecord:
             raise ValueError("头像颜色必须是三个 00—3F 的调色板索引。")
         _byte(self.front_bank, "正面图库")
         _byte(self.back_bank, "背景图库")
-        if not 0 <= self.front_slot <= 3 or not 0 <= self.back_slot <= 7:
-            raise ValueError("正面头像位置必须在 1—4，背景位置必须在 1—8 之间。")
-        return bytes((*self.colors, self.front_bank, self.back_bank,
-                      0xC0 + self.front_slot * 16, 0x80 + self.back_slot * 16))
+        if not 0 <= self.front_slot <= 3 or not 0 <= self.back_slot <= 3:
+            raise ValueError("正面和背景头像位置必须在 1—4 之间。")
+        front_physical_slot = (self.front_bank & 1) * 4 + self.front_slot
+        return bytes((
+            *self.colors,
+            self.back_bank,
+            self.front_bank,
+            0xC0 + self.back_slot * 16,
+            0x80 + front_physical_slot * 16,
+        ))
 
 
 class CharacterAttributesCodec:
@@ -177,7 +183,16 @@ class CharacterAttributesCodec:
         raw = bytes(source[offset:offset + 7])
         if offset + 7 > self.PORTRAIT_POOL_END or raw[5] not in (0xC0, 0xD0, 0xE0, 0xF0) or raw[6] not in range(0x80, 0x100, 0x10):
             raise RomFormatError("头像记录的位置编码不在已验证范围内。")
-        result = PortraitRecord(tuple(raw[:3]), raw[3], raw[4], (raw[5] - 0xC0) // 16, (raw[6] - 0x80) // 16)
+        front_physical_slot = (raw[6] - 0x80) // 16
+        if front_physical_slot // 4 != (raw[4] & 1):
+            raise RomFormatError("正面头像图库低位与 2KB 窗口位置不一致。")
+        result = PortraitRecord(
+            tuple(raw[:3]),
+            raw[4],
+            raw[3],
+            front_physical_slot % 4,
+            (raw[5] - 0xC0) // 16,
+        )
         result.encode()
         return result
 

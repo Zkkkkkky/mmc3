@@ -417,7 +417,7 @@ class DatabaseFeedbackTests(QtTestCase):
         self.assertGreaterEqual(page.appearance_type.width(), 95)
         self.assertTrue(all(
             170 <= editor.width() <= 210 for editor in page.appearance_bank_editors
-        ))
+        ), [editor.width() for editor in page.appearance_bank_editors])
         self.assertTrue(all(
             editor.fontMetrics().horizontalAdvance(editor.currentText())
             <= editor.width() - 20

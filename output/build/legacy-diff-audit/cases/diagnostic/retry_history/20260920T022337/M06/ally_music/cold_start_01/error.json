@@ -1,0 +1,8 @@
+{
+  "module": "M06",
+  "field": "ally_music",
+  "case_id": "cold_start_01",
+  "error": "RuntimeError: Baseline display differs: expected 0, got 1",
+  "first_pid": 14332,
+  "second_pid": null
+}

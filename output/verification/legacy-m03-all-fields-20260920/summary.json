@@ -1,0 +1,8 @@
+{
+  "passed": true,
+  "catalog_fields": 1380,
+  "completed_fields": 1380,
+  "safe_denominator_fields": 1380,
+  "chain_contiguous": true,
+  "fresh_inventories_match": true
+}

@@ -1,0 +1,8 @@
+{
+  "module": "M05",
+  "field": "fragment_color_1",
+  "case_id": "cold_start_01",
+  "error": "ElementNotVisible: ",
+  "first_pid": 17320,
+  "second_pid": null
+}

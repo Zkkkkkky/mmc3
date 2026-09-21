@@ -1,0 +1,8 @@
+{
+  "module": "M05",
+  "field": "body_color_3",
+  "case_id": "cold_start_01",
+  "error": "ElementNotVisible: ",
+  "first_pid": null,
+  "second_pid": null
+}

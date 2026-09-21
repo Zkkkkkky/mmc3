@@ -1,0 +1,8 @@
+{
+  "schema_version": 1,
+  "name": "m05_unit_type_0_to_1_v1",
+  "description": "参考版将第 2 行机体类型由索引 0 转为 1 时的确定性资源迁移。两次独立发现运行的 14066 条差分三元组完全一致；本配置以 SHA-256 锁定第二次证据，排除一个正式用例必改偏移。",
+  "source_case": "output/build/legacy-diff-audit/cases/diagnostic/retry_history/20260920T013156/M05/unit_type/cold_start_01/case.json",
+  "source_case_sha256": "71fba6007df9cf1f2fada2440e058ad264ccdb8334e5578d8c7c8d0257e3ae57",
+  "exclude_offsets": [33457]
+}

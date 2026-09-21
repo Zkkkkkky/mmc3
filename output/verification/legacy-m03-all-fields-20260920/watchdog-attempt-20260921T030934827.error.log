@@ -1,0 +1,12 @@
+Traceback (most recent call last):
+  File "D:\GIT\mmc3\tools\research\collect_m03_all_reference_fields.py", line 393, in <module>
+    raise SystemExit(main())
+                     ^^^^^^
+  File "D:\GIT\mmc3\tools\research\collect_m03_all_reference_fields.py", line 378, in main
+    first = inventory(payload, lookup, "fresh-a")
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\GIT\mmc3\tools\research\collect_m03_all_reference_fields.py", line 299, in inventory
+    ref.select_main_page(driver, 1)
+  File "D:\GIT\mmc3\tools\research\reference_map_editor.py", line 53, in select_main_page
+    raise RuntimeError(
+RuntimeError: main page 1 click failed after 3 attempts; main=40897642 screen=(551,228) hit=40897642:'WTWindow' root=40897642:'WTWindow'

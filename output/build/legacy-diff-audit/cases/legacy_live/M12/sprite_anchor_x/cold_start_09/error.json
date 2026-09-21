@@ -1,0 +1,8 @@
+{
+  "module": "M12",
+  "field": "sprite_anchor_x",
+  "case_id": "cold_start_09",
+  "error": "RuntimeError: Legacy window did not appear before timeout (pid=32132; seen=['WTWindow:SRW2修改器V1.5', '_EL_HideOwner:', 'SoPY_Status:', 'MSCTFIME UI:M', 'SoPY_Hint:HintWnd', 'SoPY_UI:', 'Sogou_TSF_UI:Sogou_TSF_UI', 'IME:Default IME'])",
+  "first_pid": 23796,
+  "second_pid": null
+}

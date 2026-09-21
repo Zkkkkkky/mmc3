@@ -1,0 +1,67 @@
+{
+  "generated_at": "2026-09-19T13:44:05+08:00",
+  "passed": true,
+  "reference_table": {
+    "path": "references/legacy_modifier/默认配置文件/码表.ini",
+    "sha256": "8B88B75E443225C574DD6171A2E0DB25981A503678CD92747B61971439EAF01C",
+    "line_count": 3328,
+    "nonempty_mapping_count": 2713,
+    "unique_code_count": 2713,
+    "unique_value_count": 2297,
+    "duplicate_value_groups": 231,
+    "duplicate_alias_count": 416,
+    "maximum_aliases_for_one_value": 5
+  },
+  "active_table": {
+    "path": "src/resources/default_config/码表.ini",
+    "sha256": "8B88B75E443225C574DD6171A2E0DB25981A503678CD92747B61971439EAF01C"
+  },
+  "reference_ui": {
+    "path": "output/verification/legacy-ui-probe/controls/C04_文字转换.json",
+    "window_class": "WTWindow",
+    "visible_child_count": 6,
+    "control_ids": [
+      100,
+      110,
+      120,
+      130,
+      140,
+      150
+    ]
+  },
+  "product": {
+    "visible_direct_child_count": 6,
+    "initial_size": [
+      473,
+      483
+    ],
+    "sample_text": "机体@\\】【龘",
+    "sample_code": "C9 64 CB 10 F1 F2 F6 F9 BA E3",
+    "long_text_characters": 1024,
+    "long_text_encoded_bytes": 2048,
+    "rom_sha256_before": "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E",
+    "rom_sha256_after": "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E"
+  },
+  "checks": {
+    "reference_and_active_table_hash_match": true,
+    "table_shape_is_3328_lines_2713_nonempty": true,
+    "all_reference_codes_are_unique": true,
+    "all_reference_rows_decode_exactly": true,
+    "duplicate_values_use_first_shortest_reference_code": true,
+    "legacy_control_tokens_are_exact": true,
+    "reference_visible_control_inventory_is_exact": true,
+    "product_visible_control_inventory_matches_reference": true,
+    "product_sample_roundtrip_and_format": true,
+    "product_unknown_character_is_atomic_rejection": true,
+    "product_invalid_hex_is_atomic_rejection": true,
+    "product_empty_inputs_are_empty_outputs": true,
+    "product_1024_character_roundtrip": true,
+    "project_local_character_roundtrip": true,
+    "conversion_does_not_modify_rom": true
+  },
+  "limitations": [
+    "参考程序当前停留在提权模态字库子窗；Computer Use 可读取截图但无法激活该子窗，因此本报告没有把参考按钮动态输出记为已通过。",
+    "大写/分隔符、未知字符、非法十六进制、空串和超长输入仍需在参考程序中逐项重放；当前报告只证明产品行为确定、原子且不改 ROM。",
+    "实现侧报告和自动测试不等于用户验收；M13 签收表必须由用户明确填写。"
+  ]
+}

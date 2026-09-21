@@ -800,8 +800,9 @@ class UnitAppearanceDialog(QDialog):
         library_layout.setAlignment(Qt.AlignmentFlag.AlignTop)
         self.body_selection = QLabel("当前选择的图块编号：00")
         self.body_selection.setStyleSheet("color:#d00000; font-weight:600;")
+        self.body_selection.setFixedHeight(24)
         library_layout.addWidget(self.body_selection)
-        library_layout.addSpacing(43)
+        library_layout.addSpacing(31)
         self.body_library_preview = InteractivePreviewLabel()
         self.body_composition_preview = InteractivePreviewLabel()
         for preview in (self.body_library_preview, self.body_composition_preview):

@@ -1,0 +1,1273 @@
+{
+  "tag": "C05_剧情事件",
+  "hwnd": 4658588,
+  "title": "事件编辑",
+  "class": "WTWindow",
+  "rect": {
+    "left": 1173,
+    "top": 600,
+    "right": 2663,
+    "bottom": 1566,
+    "width": 1490,
+    "height": 966
+  },
+  "pid": 33688,
+  "menu": [],
+  "tree": {
+    "hwnd": 4658588,
+    "class": "WTWindow",
+    "text": "事件编辑",
+    "ctrl_id": 0,
+    "rect": {
+      "left": 1173,
+      "top": 600,
+      "right": 2663,
+      "bottom": 1566,
+      "width": 1490,
+      "height": 966
+    },
+    "visible": true,
+    "enabled": true,
+    "children": [
+      {
+        "hwnd": 5507938,
+        "class": "Button",
+        "text": "检查剧情剩余空间",
+        "ctrl_id": 690,
+        "rect": {
+          "left": 1188,
+          "top": 1487,
+          "right": 1416,
+          "bottom": 1523,
+          "width": 228,
+          "height": 36
+        },
+        "visible": true,
+        "enabled": true,
+        "children": []
+      },
+      {
+        "hwnd": 2038120,
+        "class": "CPageControl",
+        "text": "",
+        "ctrl_id": 120,
+        "rect": {
+          "left": 1176,
+          "top": 659,
+          "right": 2652,
+          "bottom": 1475,
+          "width": 1476,
+          "height": 816
+        },
+        "visible": true,
+        "enabled": true,
+        "children": [
+          {
+            "hwnd": 1906858,
+            "class": "Button",
+            "text": "文字编辑提示",
+            "ctrl_id": 680,
+            "rect": {
+              "left": 1692,
+              "top": 707,
+              "right": 2640,
+              "bottom": 899,
+              "width": 948,
+              "height": 192
+            },
+            "visible": false,
+            "enabled": true,
+            "children": [
+              {
+                "hwnd": 924150,
+                "class": "_EL_Label",
+                "text": "提示：\r\n \r\n“_”=空格        “\\”=换行        “@”=头像不换\r\n\r\n“【”加三位数人物序号=换头像       “】”=对话结束\r\n\r\n“*”加三位数字=延迟     ",
+                "ctrl_id": 670,
+                "rect": {
+                  "left": 1704,
+                  "top": 731,
+                  "right": 2628,
+                  "bottom": 887,
+                  "width": 924,
+                  "height": 156
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              }
+            ]
+          },
+          {
+            "hwnd": 1315940,
+            "class": "Button",
+            "text": "文字编辑",
+            "ctrl_id": 660,
+            "rect": {
+              "left": 1692,
+              "top": 911,
+              "right": 2640,
+              "bottom": 1463,
+              "width": 948,
+              "height": 552
+            },
+            "visible": false,
+            "enabled": true,
+            "children": [
+              {
+                "hwnd": 6558124,
+                "class": "Edit",
+                "text": "",
+                "ctrl_id": 650,
+                "rect": {
+                  "left": 1704,
+                  "top": 935,
+                  "right": 2628,
+                  "bottom": 1451,
+                  "width": 924,
+                  "height": 516
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              }
+            ]
+          },
+          {
+            "hwnd": 989776,
+            "class": "Button",
+            "text": "对话段选择",
+            "ctrl_id": 640,
+            "rect": {
+              "left": 1188,
+              "top": 707,
+              "right": 1680,
+              "bottom": 1463,
+              "width": 492,
+              "height": 756
+            },
+            "visible": false,
+            "enabled": true,
+            "children": [
+              {
+                "hwnd": 2889662,
+                "class": "ListBox",
+                "text": "",
+                "ctrl_id": 630,
+                "rect": {
+                  "left": 1200,
+                  "top": 731,
+                  "right": 1668,
+                  "bottom": 1451,
+                  "width": 468,
+                  "height": 720
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              }
+            ]
+          },
+          {
+            "hwnd": 3804226,
+            "class": "Button",
+            "text": "对话段选择",
+            "ctrl_id": 580,
+            "rect": {
+              "left": 1188,
+              "top": 707,
+              "right": 1680,
+              "bottom": 1463,
+              "width": 492,
+              "height": 756
+            },
+            "visible": false,
+            "enabled": true,
+            "children": [
+              {
+                "hwnd": 1644860,
+                "class": "Button",
+                "text": "清空本页",
+                "ctrl_id": 700,
+                "rect": {
+                  "left": 1488,
+                  "top": 731,
+                  "right": 1620,
+                  "bottom": 767,
+                  "width": 132,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 793200,
+                "class": "ComboBox",
+                "text": "02",
+                "ctrl_id": 570,
+                "rect": {
+                  "left": 1200,
+                  "top": 731,
+                  "right": 1440,
+                  "bottom": 767,
+                  "width": 240,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "combo_count": 10,
+                "combo_selected": 0,
+                "children": []
+              },
+              {
+                "hwnd": 1316068,
+                "class": "ListBox",
+                "text": "",
+                "ctrl_id": 560,
+                "rect": {
+                  "left": 1200,
+                  "top": 779,
+                  "right": 1668,
+                  "bottom": 1451,
+                  "width": 468,
+                  "height": 672
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              }
+            ]
+          },
+          {
+            "hwnd": 2494630,
+            "class": "Button",
+            "text": "文字编辑提示",
+            "ctrl_id": 550,
+            "rect": {
+              "left": 1692,
+              "top": 707,
+              "right": 2640,
+              "bottom": 899,
+              "width": 948,
+              "height": 192
+            },
+            "visible": false,
+            "enabled": true,
+            "children": [
+              {
+                "hwnd": 7014996,
+                "class": "_EL_Label",
+                "text": "提示：\r\n \r\n“_”=空格        “\\”=换行        “@”=头像不换\r\n\r\n“【”加三位数人物序号=换头像       “】”=对话结束\r\n\r\n“*”加三位数字=延迟     ",
+                "ctrl_id": 540,
+                "rect": {
+                  "left": 1704,
+                  "top": 731,
+                  "right": 2628,
+                  "bottom": 887,
+                  "width": 924,
+                  "height": 156
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              }
+            ]
+          },
+          {
+            "hwnd": 858422,
+            "class": "Button",
+            "text": "文字编辑",
+            "ctrl_id": 530,
+            "rect": {
+              "left": 1692,
+              "top": 911,
+              "right": 2640,
+              "bottom": 1463,
+              "width": 948,
+              "height": 552
+            },
+            "visible": false,
+            "enabled": true,
+            "children": [
+              {
+                "hwnd": 1119416,
+                "class": "Edit",
+                "text": "克鲁泽：\\\r\n这是根据雅金多维的追击数据测\\\r\n算出的，那些家伙的预测航线！】\r\n\r\n【047？？？？：\\\r\nL4殖民地层内，殖民地门德尔\\\r\n吗？果然…】\r\n\r\n【045克鲁泽：\\\r\n那也是个令人伤脑筋的地方，\\\r\n被奇怪的人作为根据地。】\r\n\r\n【045克鲁泽：\\\r\n确实是个便利的地方，这次\\\r\n也要…干出点什么吧！】\r\n\r\n【045克鲁泽：\\\r\n不管怎样，深藏在人类心中的想\\\r\n法，并非那么容易从表面看出…】\r\n\r\n【045克鲁泽：\\\r\n卡纳德！你的对手基拉.大和\\\r\n终于要出现了！】\r\n\r\n【044卡纳德：\\\r\n卡纳德：……】\r\n",
+                "ctrl_id": 520,
+                "rect": {
+                  "left": 1704,
+                  "top": 935,
+                  "right": 2628,
+                  "bottom": 1451,
+                  "width": 924,
+                  "height": 516
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              }
+            ]
+          },
+          {
+            "hwnd": 3935322,
+            "class": "Button",
+            "text": "基本设置",
+            "ctrl_id": 500,
+            "rect": {
+              "left": 1596,
+              "top": 707,
+              "right": 2640,
+              "bottom": 827,
+              "width": 1044,
+              "height": 120
+            },
+            "visible": false,
+            "enabled": true,
+            "children": [
+              {
+                "hwnd": 1641072,
+                "class": "Edit",
+                "text": "商店",
+                "ctrl_id": 490,
+                "rect": {
+                  "left": 1608,
+                  "top": 767,
+                  "right": 2052,
+                  "bottom": 815,
+                  "width": 444,
+                  "height": 48
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 15340988,
+                "class": "Afx:400000:b:10003:900015:0",
+                "text": "名称：",
+                "ctrl_id": 480,
+                "rect": {
+                  "left": 1608,
+                  "top": 731,
+                  "right": 1728,
+                  "bottom": 767,
+                  "width": 120,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              }
+            ]
+          },
+          {
+            "hwnd": 3016818,
+            "class": "Button",
+            "text": "基本设置",
+            "ctrl_id": 410,
+            "rect": {
+              "left": 1596,
+              "top": 707,
+              "right": 2640,
+              "bottom": 827,
+              "width": 1044,
+              "height": 120
+            },
+            "visible": false,
+            "enabled": true,
+            "children": [
+              {
+                "hwnd": 21564552,
+                "class": "Afx:400000:b:10003:900015:0",
+                "text": "被劝降敌方：",
+                "ctrl_id": 470,
+                "rect": {
+                  "left": 2256,
+                  "top": 731,
+                  "right": 2376,
+                  "bottom": 755,
+                  "width": 120,
+                  "height": 24
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 8853176,
+                "class": "ComboBox",
+                "text": "012：蕾蒙",
+                "ctrl_id": 460,
+                "rect": {
+                  "left": 2256,
+                  "top": 767,
+                  "right": 2496,
+                  "bottom": 803,
+                  "width": 240,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "combo_count": 200,
+                "combo_selected": 11,
+                "children": []
+              },
+              {
+                "hwnd": 2365202,
+                "class": "Afx:400000:b:10003:900015:0",
+                "text": "我方：",
+                "ctrl_id": 450,
+                "rect": {
+                  "left": 1980,
+                  "top": 731,
+                  "right": 2100,
+                  "bottom": 755,
+                  "width": 120,
+                  "height": 24
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 4592654,
+                "class": "ComboBox",
+                "text": "011：拉米娅",
+                "ctrl_id": 440,
+                "rect": {
+                  "left": 1980,
+                  "top": 767,
+                  "right": 2208,
+                  "bottom": 803,
+                  "width": 228,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "combo_count": 200,
+                "combo_selected": 10,
+                "children": []
+              },
+              {
+                "hwnd": 1513744,
+                "class": "ComboBox",
+                "text": "008：荒野谋略",
+                "ctrl_id": 430,
+                "rect": {
+                  "left": 1620,
+                  "top": 767,
+                  "right": 1932,
+                  "bottom": 803,
+                  "width": 312,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "combo_count": 32,
+                "combo_selected": 7,
+                "children": []
+              },
+              {
+                "hwnd": 2234604,
+                "class": "Afx:400000:b:10003:900015:0",
+                "text": "关卡：",
+                "ctrl_id": 420,
+                "rect": {
+                  "left": 1620,
+                  "top": 731,
+                  "right": 1740,
+                  "bottom": 755,
+                  "width": 120,
+                  "height": 24
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              }
+            ]
+          },
+          {
+            "hwnd": 2035904,
+            "class": "Button",
+            "text": "基本设置",
+            "ctrl_id": 400,
+            "rect": {
+              "left": 1596,
+              "top": 707,
+              "right": 2640,
+              "bottom": 827,
+              "width": 1044,
+              "height": 120
+            },
+            "visible": false,
+            "enabled": true,
+            "children": [
+              {
+                "hwnd": 8526450,
+                "class": "Edit",
+                "text": "不动",
+                "ctrl_id": 390,
+                "rect": {
+                  "left": 1608,
+                  "top": 767,
+                  "right": 2052,
+                  "bottom": 815,
+                  "width": 444,
+                  "height": 48
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 660692,
+                "class": "Afx:400000:b:10003:900015:0",
+                "text": "名称：",
+                "ctrl_id": 380,
+                "rect": {
+                  "left": 1608,
+                  "top": 731,
+                  "right": 1728,
+                  "bottom": 767,
+                  "width": 120,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              }
+            ]
+          },
+          {
+            "hwnd": 989642,
+            "class": "Button",
+            "text": "地图事件",
+            "ctrl_id": 370,
+            "rect": {
+              "left": 1188,
+              "top": 707,
+              "right": 1584,
+              "bottom": 1451,
+              "width": 396,
+              "height": 744
+            },
+            "visible": false,
+            "enabled": true,
+            "children": [
+              {
+                "hwnd": 1579158,
+                "class": "ListBox",
+                "text": "",
+                "ctrl_id": 360,
+                "rect": {
+                  "left": 1200,
+                  "top": 731,
+                  "right": 1572,
+                  "bottom": 1439,
+                  "width": 372,
+                  "height": 708
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              }
+            ]
+          },
+          {
+            "hwnd": 1055048,
+            "class": "Button",
+            "text": "事件编辑",
+            "ctrl_id": 350,
+            "rect": {
+              "left": 1596,
+              "top": 839,
+              "right": 2640,
+              "bottom": 1451,
+              "width": 1044,
+              "height": 612
+            },
+            "visible": false,
+            "enabled": true,
+            "children": [
+              {
+                "hwnd": 1448416,
+                "class": "CPageControl",
+                "text": "",
+                "ctrl_id": 330,
+                "rect": {
+                  "left": 1608,
+                  "top": 875,
+                  "right": 2628,
+                  "bottom": 1439,
+                  "width": 1020,
+                  "height": 564
+                },
+                "visible": false,
+                "enabled": true,
+                "children": [
+                  {
+                    "hwnd": 1776100,
+                    "class": "ListBox",
+                    "text": "",
+                    "ctrl_id": 340,
+                    "rect": {
+                      "left": 1608,
+                      "top": 911,
+                      "right": 2628,
+                      "bottom": 1439,
+                      "width": 1020,
+                      "height": 528
+                    },
+                    "visible": false,
+                    "enabled": true,
+                    "children": []
+                  },
+                  {
+                    "hwnd": 1050508,
+                    "class": "AfxWnd42s",
+                    "text": "<",
+                    "ctrl_id": 1008,
+                    "rect": {
+                      "left": 1608,
+                      "top": 875,
+                      "right": 1608,
+                      "bottom": 875,
+                      "width": 0,
+                      "height": 0
+                    },
+                    "visible": false,
+                    "enabled": true,
+                    "children": []
+                  },
+                  {
+                    "hwnd": 2757386,
+                    "class": "AfxWnd42s",
+                    "text": ">",
+                    "ctrl_id": 1009,
+                    "rect": {
+                      "left": 1608,
+                      "top": 875,
+                      "right": 1608,
+                      "bottom": 875,
+                      "width": 0,
+                      "height": 0
+                    },
+                    "visible": false,
+                    "enabled": true,
+                    "children": []
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "hwnd": 924126,
+            "class": "Button",
+            "text": "劝降选择",
+            "ctrl_id": 320,
+            "rect": {
+              "left": 1188,
+              "top": 707,
+              "right": 1584,
+              "bottom": 1451,
+              "width": 396,
+              "height": 744
+            },
+            "visible": false,
+            "enabled": true,
+            "children": [
+              {
+                "hwnd": 2035778,
+                "class": "ListBox",
+                "text": "",
+                "ctrl_id": 310,
+                "rect": {
+                  "left": 1200,
+                  "top": 731,
+                  "right": 1572,
+                  "bottom": 1439,
+                  "width": 372,
+                  "height": 708
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              }
+            ]
+          },
+          {
+            "hwnd": 3541950,
+            "class": "Button",
+            "text": "事件编辑",
+            "ctrl_id": 300,
+            "rect": {
+              "left": 1596,
+              "top": 839,
+              "right": 2640,
+              "bottom": 1451,
+              "width": 1044,
+              "height": 612
+            },
+            "visible": false,
+            "enabled": true,
+            "children": [
+              {
+                "hwnd": 27661738,
+                "class": "CPageControl",
+                "text": "",
+                "ctrl_id": 280,
+                "rect": {
+                  "left": 1608,
+                  "top": 875,
+                  "right": 2628,
+                  "bottom": 1439,
+                  "width": 1020,
+                  "height": 564
+                },
+                "visible": false,
+                "enabled": true,
+                "children": [
+                  {
+                    "hwnd": 2430684,
+                    "class": "ListBox",
+                    "text": "",
+                    "ctrl_id": 290,
+                    "rect": {
+                      "left": 1608,
+                      "top": 911,
+                      "right": 2628,
+                      "bottom": 1439,
+                      "width": 1020,
+                      "height": 528
+                    },
+                    "visible": false,
+                    "enabled": true,
+                    "children": []
+                  },
+                  {
+                    "hwnd": 1447196,
+                    "class": "AfxWnd42s",
+                    "text": "<",
+                    "ctrl_id": 1008,
+                    "rect": {
+                      "left": 1608,
+                      "top": 875,
+                      "right": 1608,
+                      "bottom": 875,
+                      "width": 0,
+                      "height": 0
+                    },
+                    "visible": false,
+                    "enabled": true,
+                    "children": []
+                  },
+                  {
+                    "hwnd": 2754388,
+                    "class": "AfxWnd42s",
+                    "text": ">",
+                    "ctrl_id": 1009,
+                    "rect": {
+                      "left": 1608,
+                      "top": 875,
+                      "right": 1608,
+                      "bottom": 875,
+                      "width": 0,
+                      "height": 0
+                    },
+                    "visible": false,
+                    "enabled": true,
+                    "children": []
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "hwnd": 1316996,
+            "class": "Button",
+            "text": "行动事件",
+            "ctrl_id": 270,
+            "rect": {
+              "left": 1188,
+              "top": 707,
+              "right": 1584,
+              "bottom": 1451,
+              "width": 396,
+              "height": 744
+            },
+            "visible": false,
+            "enabled": true,
+            "children": [
+              {
+                "hwnd": 1381538,
+                "class": "ListBox",
+                "text": "",
+                "ctrl_id": 260,
+                "rect": {
+                  "left": 1200,
+                  "top": 731,
+                  "right": 1572,
+                  "bottom": 1439,
+                  "width": 372,
+                  "height": 708
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              }
+            ]
+          },
+          {
+            "hwnd": 1186138,
+            "class": "Button",
+            "text": "事件编辑",
+            "ctrl_id": 250,
+            "rect": {
+              "left": 1596,
+              "top": 839,
+              "right": 2640,
+              "bottom": 1451,
+              "width": 1044,
+              "height": 612
+            },
+            "visible": false,
+            "enabled": true,
+            "children": [
+              {
+                "hwnd": 1317142,
+                "class": "CPageControl",
+                "text": "",
+                "ctrl_id": 230,
+                "rect": {
+                  "left": 1608,
+                  "top": 875,
+                  "right": 2628,
+                  "bottom": 1439,
+                  "width": 1020,
+                  "height": 564
+                },
+                "visible": false,
+                "enabled": true,
+                "children": [
+                  {
+                    "hwnd": 1513888,
+                    "class": "ListBox",
+                    "text": "",
+                    "ctrl_id": 240,
+                    "rect": {
+                      "left": 1608,
+                      "top": 911,
+                      "right": 2628,
+                      "bottom": 1439,
+                      "width": 1020,
+                      "height": 528
+                    },
+                    "visible": false,
+                    "enabled": true,
+                    "children": []
+                  },
+                  {
+                    "hwnd": 1512662,
+                    "class": "AfxWnd42s",
+                    "text": "<",
+                    "ctrl_id": 1008,
+                    "rect": {
+                      "left": 1608,
+                      "top": 875,
+                      "right": 1608,
+                      "bottom": 875,
+                      "width": 0,
+                      "height": 0
+                    },
+                    "visible": false,
+                    "enabled": true,
+                    "children": []
+                  },
+                  {
+                    "hwnd": 1710596,
+                    "class": "AfxWnd42s",
+                    "text": ">",
+                    "ctrl_id": 1009,
+                    "rect": {
+                      "left": 1608,
+                      "top": 875,
+                      "right": 1608,
+                      "bottom": 875,
+                      "width": 0,
+                      "height": 0
+                    },
+                    "visible": false,
+                    "enabled": true,
+                    "children": []
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "hwnd": 8852354,
+            "class": "Button",
+            "text": "关卡选择",
+            "ctrl_id": 210,
+            "rect": {
+              "left": 1188,
+              "top": 971,
+              "right": 1596,
+              "bottom": 1451,
+              "width": 408,
+              "height": 480
+            },
+            "visible": true,
+            "enabled": true,
+            "children": [
+              {
+                "hwnd": 1574798,
+                "class": "ListBox",
+                "text": "",
+                "ctrl_id": 220,
+                "rect": {
+                  "left": 1200,
+                  "top": 995,
+                  "right": 1584,
+                  "bottom": 1439,
+                  "width": 384,
+                  "height": 444
+                },
+                "visible": true,
+                "enabled": true,
+                "children": []
+              }
+            ]
+          },
+          {
+            "hwnd": 1251738,
+            "class": "Button",
+            "text": "基本设置",
+            "ctrl_id": 200,
+            "rect": {
+              "left": 1188,
+              "top": 707,
+              "right": 1596,
+              "bottom": 971,
+              "width": 408,
+              "height": 264
+            },
+            "visible": true,
+            "enabled": true,
+            "children": [
+              {
+                "hwnd": 2365032,
+                "class": "Edit",
+                "text": "伏击之战",
+                "ctrl_id": 600,
+                "rect": {
+                  "left": 1200,
+                  "top": 767,
+                  "right": 1584,
+                  "bottom": 815,
+                  "width": 384,
+                  "height": 48
+                },
+                "visible": true,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 10488826,
+                "class": "Afx:400000:b:10003:900015:0",
+                "text": "标题：",
+                "ctrl_id": 590,
+                "rect": {
+                  "left": 1200,
+                  "top": 731,
+                  "right": 1350,
+                  "bottom": 767,
+                  "width": 150,
+                  "height": 36
+                },
+                "visible": true,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 47846364,
+                "class": "Afx:400000:b:10003:900015:0",
+                "text": "初始胜利文字：",
+                "ctrl_id": 510,
+                "rect": {
+                  "left": 1200,
+                  "top": 815,
+                  "right": 1350,
+                  "bottom": 851,
+                  "width": 150,
+                  "height": 36
+                },
+                "visible": true,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 3805940,
+                "class": "Edit",
+                "text": "阻挡敌方进攻等待我方大部队增援\r\n@基拉或阿斯兰被击落则失败。",
+                "ctrl_id": 190,
+                "rect": {
+                  "left": 1200,
+                  "top": 851,
+                  "right": 1584,
+                  "bottom": 959,
+                  "width": 384,
+                  "height": 108
+                },
+                "visible": true,
+                "enabled": true,
+                "children": []
+              }
+            ]
+          },
+          {
+            "hwnd": 1186296,
+            "class": "Button",
+            "text": "标题拼图设置",
+            "ctrl_id": 180,
+            "rect": {
+              "left": 1608,
+              "top": 707,
+              "right": 2640,
+              "bottom": 827,
+              "width": 1032,
+              "height": 120
+            },
+            "visible": true,
+            "enabled": true,
+            "children": [
+              {
+                "hwnd": 12061322,
+                "class": "_EL_PicBox",
+                "text": "",
+                "ctrl_id": 620,
+                "rect": {
+                  "left": 1620,
+                  "top": 743,
+                  "right": 2052,
+                  "bottom": 815,
+                  "width": 432,
+                  "height": 72
+                },
+                "visible": true,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 988414,
+                "class": "Button",
+                "text": "代码编辑",
+                "ctrl_id": 610,
+                "rect": {
+                  "left": 2064,
+                  "top": 767,
+                  "right": 2184,
+                  "bottom": 815,
+                  "width": 120,
+                  "height": 48
+                },
+                "visible": true,
+                "enabled": true,
+                "children": []
+              }
+            ]
+          },
+          {
+            "hwnd": 4721822,
+            "class": "Button",
+            "text": "事件编辑",
+            "ctrl_id": 170,
+            "rect": {
+              "left": 1608,
+              "top": 839,
+              "right": 2640,
+              "bottom": 1451,
+              "width": 1032,
+              "height": 612
+            },
+            "visible": true,
+            "enabled": true,
+            "children": [
+              {
+                "hwnd": 2103524,
+                "class": "CPageControl",
+                "text": "",
+                "ctrl_id": 130,
+                "rect": {
+                  "left": 1620,
+                  "top": 875,
+                  "right": 2628,
+                  "bottom": 1439,
+                  "width": 1008,
+                  "height": 564
+                },
+                "visible": true,
+                "enabled": true,
+                "children": [
+                  {
+                    "hwnd": 1775732,
+                    "class": "ListBox",
+                    "text": "",
+                    "ctrl_id": 160,
+                    "rect": {
+                      "left": 1620,
+                      "top": 911,
+                      "right": 2628,
+                      "bottom": 1439,
+                      "width": 1008,
+                      "height": 528
+                    },
+                    "visible": true,
+                    "enabled": true,
+                    "children": []
+                  },
+                  {
+                    "hwnd": 1317018,
+                    "class": "ListBox",
+                    "text": "",
+                    "ctrl_id": 150,
+                    "rect": {
+                      "left": 1620,
+                      "top": 911,
+                      "right": 2628,
+                      "bottom": 1439,
+                      "width": 1008,
+                      "height": 528
+                    },
+                    "visible": false,
+                    "enabled": true,
+                    "children": []
+                  },
+                  {
+                    "hwnd": 2169064,
+                    "class": "ListBox",
+                    "text": "",
+                    "ctrl_id": 140,
+                    "rect": {
+                      "left": 1620,
+                      "top": 911,
+                      "right": 2628,
+                      "bottom": 1439,
+                      "width": 1008,
+                      "height": 528
+                    },
+                    "visible": false,
+                    "enabled": true,
+                    "children": []
+                  },
+                  {
+                    "hwnd": 3676362,
+                    "class": "AfxWnd42s",
+                    "text": "<",
+                    "ctrl_id": 1008,
+                    "rect": {
+                      "left": 1620,
+                      "top": 875,
+                      "right": 1620,
+                      "bottom": 875,
+                      "width": 0,
+                      "height": 0
+                    },
+                    "visible": false,
+                    "enabled": true,
+                    "children": []
+                  },
+                  {
+                    "hwnd": 792932,
+                    "class": "AfxWnd42s",
+                    "text": ">",
+                    "ctrl_id": 1009,
+                    "rect": {
+                      "left": 1620,
+                      "top": 875,
+                      "right": 1620,
+                      "bottom": 875,
+                      "width": 0,
+                      "height": 0
+                    },
+                    "visible": false,
+                    "enabled": true,
+                    "children": []
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "hwnd": 1120722,
+            "class": "AfxWnd42s",
+            "text": "<",
+            "ctrl_id": 1008,
+            "rect": {
+              "left": 1176,
+              "top": 659,
+              "right": 1176,
+              "bottom": 659,
+              "width": 0,
+              "height": 0
+            },
+            "visible": false,
+            "enabled": true,
+            "children": []
+          },
+          {
+            "hwnd": 10491972,
+            "class": "AfxWnd42s",
+            "text": ">",
+            "ctrl_id": 1009,
+            "rect": {
+              "left": 1176,
+              "top": 659,
+              "right": 1176,
+              "bottom": 659,
+              "width": 0,
+              "height": 0
+            },
+            "visible": false,
+            "enabled": true,
+            "children": []
+          }
+        ]
+      },
+      {
+        "hwnd": 2168946,
+        "class": "Button",
+        "text": "取消",
+        "ctrl_id": 110,
+        "rect": {
+          "left": 2532,
+          "top": 1487,
+          "right": 2652,
+          "bottom": 1523,
+          "width": 120,
+          "height": 36
+        },
+        "visible": true,
+        "enabled": true,
+        "children": []
+      },
+      {
+        "hwnd": 5639034,
+        "class": "Button",
+        "text": "确定",
+        "ctrl_id": 100,
+        "rect": {
+          "left": 2400,
+          "top": 1487,
+          "right": 2520,
+          "bottom": 1523,
+          "width": 120,
+          "height": 36
+        },
+        "visible": true,
+        "enabled": true,
+        "children": []
+      }
+    ]
+  }
+}

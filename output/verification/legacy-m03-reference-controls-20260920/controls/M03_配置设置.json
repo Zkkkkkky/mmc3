@@ -1,0 +1,325 @@
+{
+  "tag": "M03_配置设置",
+  "hwnd": 13176354,
+  "title": "配置设置",
+  "class": "WTWindow",
+  "rect": {
+    "left": 746,
+    "top": 330,
+    "right": 1170,
+    "bottom": 755,
+    "width": 424,
+    "height": 425
+  },
+  "pid": 14808,
+  "tree": {
+    "hwnd": 13176354,
+    "class": "WTWindow",
+    "text": "配置设置",
+    "ctrl_id": 0,
+    "rect": {
+      "left": 746,
+      "top": 330,
+      "right": 1170,
+      "bottom": 755,
+      "width": 424,
+      "height": 425
+    },
+    "visible": true,
+    "enabled": true,
+    "children": [
+      {
+        "hwnd": 13635018,
+        "class": "Button",
+        "text": "取消",
+        "ctrl_id": 250,
+        "rect": {
+          "left": 1059,
+          "top": 719,
+          "right": 1159,
+          "bottom": 749,
+          "width": 100,
+          "height": 30
+        },
+        "visible": true,
+        "enabled": true,
+        "button_check_state": 0,
+        "children": []
+      },
+      {
+        "hwnd": 10489316,
+        "class": "Button",
+        "text": "确定",
+        "ctrl_id": 240,
+        "rect": {
+          "left": 949,
+          "top": 719,
+          "right": 1049,
+          "bottom": 749,
+          "width": 100,
+          "height": 30
+        },
+        "visible": true,
+        "enabled": true,
+        "button_check_state": 0,
+        "children": []
+      },
+      {
+        "hwnd": 140051520,
+        "class": "Button",
+        "text": "我方队员编号",
+        "ctrl_id": 230,
+        "rect": {
+          "left": 759,
+          "top": 639,
+          "right": 1159,
+          "bottom": 709,
+          "width": 400,
+          "height": 70
+        },
+        "visible": true,
+        "enabled": false,
+        "button_check_state": 0,
+        "children": [
+          {
+            "hwnd": 7146952,
+            "class": "ComboBox",
+            "text": "编号00：玛琉  永恒号",
+            "ctrl_id": 220,
+            "rect": {
+              "left": 769,
+              "top": 661,
+              "right": 1139,
+              "bottom": 689,
+              "width": 370,
+              "height": 28
+            },
+            "visible": true,
+            "enabled": true,
+            "combo_count": 16,
+            "combo_selected": 0,
+            "children": []
+          }
+        ]
+      },
+      {
+        "hwnd": 11472210,
+        "class": "Button",
+        "text": "配置信息",
+        "ctrl_id": 150,
+        "rect": {
+          "left": 759,
+          "top": 459,
+          "right": 1159,
+          "bottom": 629,
+          "width": 400,
+          "height": 170
+        },
+        "visible": true,
+        "enabled": true,
+        "button_check_state": 0,
+        "children": [
+          {
+            "hwnd": 6753584,
+            "class": "Afx:400000:b:10003:900015:0",
+            "text": "行动：",
+            "ctrl_id": 210,
+            "rect": {
+              "left": 969,
+              "top": 559,
+              "right": 1009,
+              "bottom": 579,
+              "width": 40,
+              "height": 20
+            },
+            "visible": true,
+            "enabled": true,
+            "children": []
+          },
+          {
+            "hwnd": 164233734,
+            "class": "ComboBox",
+            "text": "000：不动",
+            "ctrl_id": 200,
+            "rect": {
+              "left": 969,
+              "top": 586,
+              "right": 1149,
+              "bottom": 614,
+              "width": 180,
+              "height": 28
+            },
+            "visible": true,
+            "enabled": true,
+            "combo_count": 256,
+            "combo_selected": 0,
+            "children": []
+          },
+          {
+            "hwnd": 85722320,
+            "class": "Afx:400000:b:10003:900015:0",
+            "text": "等级：",
+            "ctrl_id": 190,
+            "rect": {
+              "left": 779,
+              "top": 559,
+              "right": 819,
+              "bottom": 579,
+              "width": 40,
+              "height": 20
+            },
+            "visible": true,
+            "enabled": true,
+            "children": []
+          },
+          {
+            "hwnd": 156370130,
+            "class": "ComboBox",
+            "text": "等级：01",
+            "ctrl_id": 180,
+            "rect": {
+              "left": 779,
+              "top": 586,
+              "right": 959,
+              "bottom": 614,
+              "width": 180,
+              "height": 28
+            },
+            "visible": true,
+            "enabled": true,
+            "combo_count": 60,
+            "combo_selected": 0,
+            "children": []
+          },
+          {
+            "hwnd": 181142708,
+            "class": "Afx:400000:b:10003:900015:0",
+            "text": "机体：",
+            "ctrl_id": 170,
+            "rect": {
+              "left": 969,
+              "top": 489,
+              "right": 1009,
+              "bottom": 509,
+              "width": 40,
+              "height": 20
+            },
+            "visible": true,
+            "enabled": true,
+            "children": []
+          },
+          {
+            "hwnd": 120063242,
+            "class": "ComboBox",
+            "text": "[01]001：剑装强袭",
+            "ctrl_id": 160,
+            "rect": {
+              "left": 969,
+              "top": 516,
+              "right": 1149,
+              "bottom": 544,
+              "width": 180,
+              "height": 28
+            },
+            "visible": true,
+            "enabled": true,
+            "combo_count": 251,
+            "combo_selected": 0,
+            "children": []
+          },
+          {
+            "hwnd": 11144548,
+            "class": "ComboBox",
+            "text": "[01]001：_",
+            "ctrl_id": 140,
+            "rect": {
+              "left": 779,
+              "top": 519,
+              "right": 959,
+              "bottom": 547,
+              "width": 180,
+              "height": 28
+            },
+            "visible": true,
+            "enabled": true,
+            "combo_count": 200,
+            "combo_selected": 0,
+            "children": []
+          },
+          {
+            "hwnd": 6032744,
+            "class": "Afx:400000:b:10003:900015:0",
+            "text": "机师：",
+            "ctrl_id": 130,
+            "rect": {
+              "left": 779,
+              "top": 491,
+              "right": 819,
+              "bottom": 511,
+              "width": 40,
+              "height": 20
+            },
+            "visible": true,
+            "enabled": true,
+            "children": []
+          }
+        ]
+      },
+      {
+        "hwnd": 167249024,
+        "class": "Button",
+        "text": "选择类型",
+        "ctrl_id": 100,
+        "rect": {
+          "left": 759,
+          "top": 379,
+          "right": 1159,
+          "bottom": 449,
+          "width": 400,
+          "height": 70
+        },
+        "visible": true,
+        "enabled": true,
+        "button_check_state": 0,
+        "children": [
+          {
+            "hwnd": 55313912,
+            "class": "ComboBox",
+            "text": "敌方配置",
+            "ctrl_id": 120,
+            "rect": {
+              "left": 829,
+              "top": 409,
+              "right": 1029,
+              "bottom": 437,
+              "width": 200,
+              "height": 28
+            },
+            "visible": true,
+            "enabled": true,
+            "combo_count": 3,
+            "combo_selected": 0,
+            "children": []
+          },
+          {
+            "hwnd": 4656468,
+            "class": "Afx:400000:b:10003:900015:0",
+            "text": "类型：",
+            "ctrl_id": 110,
+            "rect": {
+              "left": 779,
+              "top": 411,
+              "right": 819,
+              "bottom": 431,
+              "width": 40,
+              "height": 20
+            },
+            "visible": true,
+            "enabled": true,
+            "children": []
+          }
+        ]
+      }
+    ]
+  }
+}

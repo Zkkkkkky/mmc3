@@ -1,0 +1,152 @@
+{
+  "tag": "A01_启动器",
+  "hwnd": 7734846,
+  "title": "SRW2修改器V1.5",
+  "class": "WTWindow",
+  "rect": {
+    "left": 571,
+    "top": 244,
+    "right": 1346,
+    "bottom": 843,
+    "width": 775,
+    "height": 599
+  },
+  "pid": 4460,
+  "tree": {
+    "hwnd": 7734846,
+    "class": "WTWindow",
+    "text": "SRW2修改器V1.5",
+    "ctrl_id": 0,
+    "rect": {
+      "left": 571,
+      "top": 244,
+      "right": 1346,
+      "bottom": 843,
+      "width": 775,
+      "height": 599
+    },
+    "visible": true,
+    "enabled": true,
+    "children": [
+      {
+        "hwnd": 5374838,
+        "class": "Button",
+        "text": "修改器更新查看\r\n\r\n(百度网盘：提取码6553)",
+        "ctrl_id": 160,
+        "rect": {
+          "left": 984,
+          "top": 703,
+          "right": 1184,
+          "bottom": 763,
+          "width": 200,
+          "height": 60
+        },
+        "visible": true,
+        "enabled": true,
+        "children": []
+      },
+      {
+        "hwnd": 7406154,
+        "class": "Button",
+        "text": "第二次机器人大战公共网盘",
+        "ctrl_id": 150,
+        "rect": {
+          "left": 984,
+          "top": 643,
+          "right": 1184,
+          "bottom": 693,
+          "width": 200,
+          "height": 50
+        },
+        "visible": true,
+        "enabled": true,
+        "children": []
+      },
+      {
+        "hwnd": 4719798,
+        "class": "Button",
+        "text": "第二次机器人大战百度贴吧",
+        "ctrl_id": 140,
+        "rect": {
+          "left": 734,
+          "top": 643,
+          "right": 964,
+          "bottom": 693,
+          "width": 230,
+          "height": 50
+        },
+        "visible": true,
+        "enabled": true,
+        "children": []
+      },
+      {
+        "hwnd": 7996528,
+        "class": "Afx:400000:b:10003:900015:0",
+        "text": "SRW2修改器：\r\n           修改器作者：贴吧ID：  DG小火     QQ：1096194951\r\n\r\n\r\n第二次机器人大战资料集整理：\r\n           整理者：贴吧ID：   游戏一场梦    QQ：291149065\r\n\r\n\r\n第二次机器人大战QQ主群：181624711\r\nFC机战2ROM修改交流QQ群：780885837\r\n\r\n提示：使用本修改器前请以“兼容模式运行”否则可能会强制退出",
+        "ctrl_id": 130,
+        "rect": {
+          "left": 584,
+          "top": 293,
+          "right": 1334,
+          "bottom": 633,
+          "width": 750,
+          "height": 340
+        },
+        "visible": true,
+        "enabled": true,
+        "children": []
+      },
+      {
+        "hwnd": 3605486,
+        "class": "Button",
+        "text": "第二次机器人大战资料集",
+        "ctrl_id": 120,
+        "rect": {
+          "left": 734,
+          "top": 703,
+          "right": 964,
+          "bottom": 763,
+          "width": 230,
+          "height": 60
+        },
+        "visible": true,
+        "enabled": true,
+        "children": []
+      },
+      {
+        "hwnd": 2294742,
+        "class": "Button",
+        "text": "进入修改器",
+        "ctrl_id": 110,
+        "rect": {
+          "left": 904,
+          "top": 773,
+          "right": 1034,
+          "bottom": 823,
+          "width": 130,
+          "height": 50
+        },
+        "visible": true,
+        "enabled": true,
+        "children": []
+      },
+      {
+        "hwnd": 4653980,
+        "class": "_EL_DrawPanel",
+        "text": "",
+        "ctrl_id": 100,
+        "rect": {
+          "left": 1013,
+          "top": 359,
+          "right": 1053,
+          "bottom": 399,
+          "width": 40,
+          "height": 40
+        },
+        "visible": false,
+        "enabled": true,
+        "children": []
+      }
+    ]
+  }
+}

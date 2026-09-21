@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import sys
+from ctypes import wintypes
 from pathlib import Path
 
 from PySide6.QtCore import QPoint, QRect, Qt, Signal
@@ -19,6 +20,7 @@ from PySide6.QtWidgets import (
     QListWidget,
     QListWidgetItem,
     QMainWindow,
+    QMenu,
     QMessageBox,
     QPushButton,
     QProxyStyle,
@@ -61,6 +63,12 @@ from .workspace import (
 APP_TITLE = "新DC篇完整修改器"
 LEGACY_WINDOW_TITLE = "SRW2扩容版修改器V1.0"
 LAUNCHER_TITLE = "SRW2修改器V1.5"
+_ACTIVE_EDITOR_WINDOW: MainWindow | None = None
+
+
+def _forget_active_editor() -> None:
+    global _ACTIVE_EDITOR_WINDOW
+    _ACTIVE_EDITOR_WINDOW = None
 
 
 class VisibleArrowStyle(QProxyStyle):
@@ -243,6 +251,7 @@ class LauncherWindow(QDialog):
         self.resize(520, 360)
         self.setMinimumSize(400, 240)
         self.setWindowFlag(Qt.WindowType.WindowMaximizeButtonHint, False)
+        self.setAttribute(Qt.WidgetAttribute.WA_DeleteOnClose, True)
 
         layout = QVBoxLayout(self)
         layout.setContentsMargins(15, 20, 15, 20)
@@ -262,15 +271,20 @@ class LauncherWindow(QDialog):
         enter_row.addStretch()
         layout.addLayout(enter_row)
 
-    def enter_editor(self) -> None:
+    def enter_editor(self) -> MainWindow:
+        global _ACTIVE_EDITOR_WINDOW
         if self.main_window is not None:
             self.main_window.raise_()
             self.main_window.activateWindow()
-            return
+            return self.main_window
         self.main_window = MainWindow(open_default=False)
-        self.main_window.closed.connect(self.close)
-        self.main_window.show()
-        self.hide()
+        main = self.main_window
+        _ACTIVE_EDITOR_WINDOW = main
+        main.closed.connect(_forget_active_editor)
+        main.show()
+        # The launch window is not part of the editor's hidden-window session.
+        self.close()
+        return main
 
 
 class MainWindow(QMainWindow):
@@ -344,8 +358,9 @@ class MainWindow(QMainWindow):
         self._create_actions()
         self._create_menus()
         self.navigation.currentRowChanged.connect(self._show_page_by_index)
-        self.workspace.setCurrentWidget(self.blank_page)
+        self.workspace.setCurrentWidget(self.map_page)
         self._update_action_state()
+        self._update_window_state()
 
         if open_default and DEFAULT_ROM.exists():
             self.load_rom(DEFAULT_ROM, quiet=True)
@@ -408,7 +423,7 @@ class MainWindow(QMainWindow):
         return action
 
     def _create_actions(self) -> None:
-        self.open_rom_action = self._action("打开(&O)…", self.open_rom_dialog, "Ctrl+O")
+        self.open_rom_action = self._action("打开(&O)", self.open_rom_dialog, "Ctrl+O")
         self.save_rom_action = self._action("保存(&S)", self.save_rom, "Ctrl+S")
         self.exit_action = self._action("退出(&X)", self.close, "Ctrl+X")
 
@@ -419,7 +434,12 @@ class MainWindow(QMainWindow):
         self.text_converter_action = self._action("文字转换(&Z)", self.open_text_converter, "Ctrl+Z")
         self.scenario_action = self._action("剧情事件(&J)", self.open_scenario, "Ctrl+J")
         self.export_unit_action = self._action("导出机体(&P)", self.export_unit, "Ctrl+F")
-        self.export_avatar_action = self._action("导出头像(&L)", self.export_avatar, "Ctrl+L")
+        self.export_avatar_action = self._action("导出头像(&L)", lambda: None, "Ctrl+L")
+        self.export_avatar_action.setEnabled(False)
+        self.export_avatar_action.setStatusTip(
+            "参考版此入口不可触发；请在“数据库 → 人物 → 头像设置与上传”中导出。"
+        )
+        self.export_avatar_action.setToolTip(self.export_avatar_action.statusTip())
         self.attribute_calculator_action = self._action("属性计算器", self.open_attribute_calculator)
         self.save_editor_action = self._action("存档修改器", self.open_save_editor)
         self.other_settings_action = self._action("其他(&T)", self.open_other_settings, "Ctrl+T")
@@ -436,7 +456,7 @@ class MainWindow(QMainWindow):
         self.undo_action = self._action("撤销", self.undo, "Ctrl+Alt+Z")
         self.redo_action = self._action("重做", self.redo, "Ctrl+Alt+Y")
         self.validate_action = self._action("完整检查", self.validate_project, "F7")
-        self.about_action = self._action("关于与安全说明", self.show_about)
+        self.about_action = self._action("关于", self.show_about)
         self.page_actions = {
             key: self._action(
                 text,
@@ -450,31 +470,54 @@ class MainWindow(QMainWindow):
                 ("changes", "变更与验证"),
             )
         }
+        self.legacy_commands = {
+            command_id: action
+            for command_id, action in (
+                (20001, self.open_rom_action), (20004, self.save_rom_action),
+                (20006, self.exit_action), (20008, self.database_action),
+                (20009, self.font_library_action), (20011, self.map_animation_action),
+                (20013, self.text_converter_action), (20015, self.scenario_action),
+                (20017, self.export_unit_action), (20018, self.export_avatar_action),
+                (20020, self.attribute_calculator_action), (20021, self.save_editor_action),
+                (20023, self.other_settings_action), (20025, self.about_action),
+            )
+        }
+        for command_id, action in self.legacy_commands.items():
+            action.setData(command_id)
+
+    @staticmethod
+    def _legacy_separator(menu: QMenu, command_id: int) -> None:
+        menu.addSeparator().setData(command_id)
 
     def _create_menus(self) -> None:
         file_menu = self.menuBar().addMenu("文件(&F)")
         file_menu.addAction(self.open_rom_action)
+        self._legacy_separator(file_menu, 20003)
         file_menu.addAction(self.save_rom_action)
-        file_menu.addSeparator()
+        self._legacy_separator(file_menu, 20005)
         file_menu.addAction(self.exit_action)
 
         self.data_menu = self.menuBar().addMenu("数据(&A)")
         self.data_menu.addAction(self.database_action)
-        self.data_menu.addAction(self.rom_data_action)
         self.data_menu.addAction(self.font_library_action)
-        self.data_menu.addSeparator()
+        self._legacy_separator(self.data_menu, 20010)
         self.data_menu.addAction(self.map_animation_action)
+        self._legacy_separator(self.data_menu, 20012)
         self.data_menu.addAction(self.text_converter_action)
-        self.data_menu.addSeparator()
+        self._legacy_separator(self.data_menu, 20014)
         self.data_menu.addAction(self.scenario_action)
+        self._legacy_separator(self.data_menu, 20016)
         self.data_menu.addAction(self.export_unit_action)
         self.data_menu.addAction(self.export_avatar_action)
-        self.data_menu.addSeparator()
+        self._legacy_separator(self.data_menu, 20019)
         self.data_menu.addAction(self.attribute_calculator_action)
         self.data_menu.addAction(self.save_editor_action)
+        self._legacy_separator(self.data_menu, 20022)
         self.data_menu.addAction(self.other_settings_action)
 
         self.extension_menu = self.menuBar().addMenu("扩展功能")
+        self.extension_menu.addAction(self.rom_data_action)
+        self.extension_menu.addSeparator()
         self.extension_menu.addAction(self.page_actions["music"])
         self.extension_menu.addAction(self.page_actions["unit_import"])
         self.extension_menu.addAction(self.page_actions["resources"])
@@ -631,7 +674,7 @@ class MainWindow(QMainWindow):
         for side in (dialog.enemy, dialog.ally):
             side.character.setCurrentIndex(side.character.findData(character_id))
             side.unit.setCurrentIndex(side.unit.findData(unit_id))
-            side.level.setCurrentIndex(max(0, min(98, level - 1)))
+            side.level.setCurrentIndex(max(0, min(59, level - 1)))
         self._run_tool_dialog(dialog)
 
     def _open_defeat_experience_calculator(
@@ -651,8 +694,6 @@ class MainWindow(QMainWindow):
         )
 
     def open_save_editor(self) -> None:
-        if self.project is None:
-            return
         from .legacy_tools import SaveEditorDialog
 
         self._run_tool_dialog(SaveEditorDialog(parent=self, project=self.project))
@@ -738,79 +779,71 @@ class MainWindow(QMainWindow):
     def export_unit(self) -> None:
         if self.project is None:
             return
-        from .unit_packages import package_from_project
-
-        labels = [
-            f"${unit_id:02X} · {self.project.unit_display_name(unit_id)}"
-            for unit_id in range(1, self.project.unit_count)
-        ]
-        selected, accepted = QInputDialog.getItem(
-            self, "导出机体", "选择机体：", labels, 0, False
+        from .legacy_unit_export import (
+            LEGACY_UNIT_EXPORT_DIRECTORY,
+            export_legacy_unit_bitmaps,
         )
-        if not accepted:
-            return
-        unit_id = labels.index(selected) + 1
+
         destination, _ = QFileDialog.getSaveFileName(
             self,
             "导出机体",
-            str(_default_export_path(f"unit_{unit_id:02X}.dcunit")),
-            "新DC机体包 (*.dcunit)",
+            str(_default_export_path(LEGACY_UNIT_EXPORT_DIRECTORY)),
+            "导出位置 (*)",
         )
         if not destination:
             return
         try:
-            path = Path(destination)
-            if path.suffix.lower() != ".dcunit":
-                path = path.with_suffix(".dcunit")
-            path = writable_output_path(path)
-            package_from_project(self.project, unit_id).save(path)
-            self.status.showMessage(f"机体已导出：{path.name}", 5000)
-        except Exception as error:
-            QMessageBox.critical(self, "导出机体失败", str(error))
-
-    def export_avatar(self) -> None:
-        if self.project is None:
-            return
-        from .portrait_export import export_portrait_bitmaps, portrait_export_paths
-
-        root_name = QFileDialog.getExistingDirectory(
-            self,
-            "导出头像 · 选择根目录",
-            str(_default_export_path("头像导出").parent),
-        )
-        if not root_name:
-            return
-        labels = [
-            f"{character_id:03d} · {self.project.character_display_name(character_id)}"
-            for character_id in range(1, self.project.profile.character_name_count)
-        ]
-        selected, accepted = QInputDialog.getItem(
-            self, "导出头像", "选择人物：", labels, 0, False
-        )
-        if not accepted:
-            return
-        character_id = labels.index(selected) + 1
-        try:
-            root = writable_output_path(root_name)
-            paths = portrait_export_paths(self.project, character_id, root)
-            if any(path.exists() for path in paths):
+            # The reference uses a native Save dialog as a location picker;
+            # the typed file component is only a marker.  The actual protocol
+            # always creates the fixed “导出的机体” directory beside it.
+            root = writable_output_path(Path(destination).parent)
+            output_root = root / LEGACY_UNIT_EXPORT_DIRECTORY
+            if output_root.exists():
                 answer = QMessageBox.question(
                     self,
-                    "覆盖头像文件",
-                    f"{paths[0].parent.name} 已有头像文件。是否覆盖？",
+                    "覆盖机体导出",
+                    "“导出的机体”目录已存在。是否覆盖其中同名的 1275 个 BMP？\n"
+                    "其他文件不会被删除。",
                     QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
                     QMessageBox.StandardButton.No,
                 )
                 if answer != QMessageBox.StandardButton.Yes:
                     return
-            back_path, front_path = export_portrait_bitmaps(
-                self.project, character_id, root
+
+            before = bytes(self.project.working)
+
+            def show_progress(done: int, total: int) -> None:
+                self.status.showMessage(f"正在导出机体：{done}/{total}")
+                QApplication.processEvents()
+
+            result = export_legacy_unit_bitmaps(
+                self.project,
+                root,
+                progress=show_progress,
             )
+            if bytes(self.project.working) != before:
+                raise RuntimeError("机体导出意外改动了当前 ROM，结果已标记为失败。")
+            if result.failures:
+                details = "\n".join(
+                    f"{unit_id:03d}：{message}"
+                    for unit_id, message in result.failures[:12]
+                )
+                QMessageBox.warning(
+                    self,
+                    "机体导出部分失败",
+                    f"已写入 {len(result.written_files)} 个文件，"
+                    f"{len(result.failures)} 个机体失败：\n{details}",
+                )
+                self.status.showMessage(
+                    f"机体导出完成但有 {len(result.failures)} 项失败", 8000
+                )
+                return
             self.status.showMessage(
-                f"头像已导出：{back_path.parent.name}（2 个 BMP）", 5000
+                f"机体已导出：{result.root}（{len(result.written_files)} 个 BMP）",
+                8000,
             )
         except Exception as error:
-            QMessageBox.critical(self, "导出头像失败", str(error))
+            QMessageBox.critical(self, "导出机体失败", str(error))
 
     @property
     def has_unsaved_changes(self) -> bool:
@@ -879,17 +912,30 @@ class MainWindow(QMainWindow):
         try:
             project = RomProject.load(path)
             if not project.rom_image.is_reference_base:
-                if project.expansion_plan is None:
+                plan = project.expansion_plan
+                if (
+                    plan is None
+                    and project.profile.key != "dc-kuorong-mmc3-v2"
+                ):
                     raise ValueError(
                         f"该ROM布局兼容，但不是“{project.profile.label}”的基准哈希。"
-                        "只有带有效自动容量表的修改器输出ROM可以直接续改。"
+                        "当前版本只能直接续改带有效自动容量表的输出ROM。"
                     )
+                if plan is None:
+                    for region in project.profile.free_prg_regions:
+                        start = 16 + region.first_bank * 0x2000
+                        end = 16 + region.end_bank * 0x2000
+                        if any(project.original[start:end]):
+                            raise ValueError(
+                                f"无容量规划表的输出ROM在预留区域 {region.display} "
+                                "含未登记的数据，不能安全直接续改。"
+                            )
                 errors = tuple(
                     issue for issue in project.validate() if issue.severity == "error"
                 )
                 if errors:
                     detail = "；".join(issue.message for issue in errors[:3])
-                    raise ValueError(f"输出ROM的自动容量布局校验失败：{detail}")
+                    raise ValueError(f"输出ROM完整性校验失败：{detail}")
             self._activate_project(project)
             self.status.showMessage("ROM已安全载入", 4000)
             return True
@@ -1148,20 +1194,26 @@ class MainWindow(QMainWindow):
             self.export_ips_action,
             self.build_action,
             self.validate_action,
+            self.rom_data_action,
             self.database_action,
             self.font_library_action,
             self.map_animation_action,
             self.text_converter_action,
             self.scenario_action,
             self.export_unit_action,
-            self.export_avatar_action,
             self.attribute_calculator_action,
-            self.save_editor_action,
             self.other_settings_action,
         ):
             action.setEnabled(loaded)
+        # The save editor owns an independent SRAM file lifecycle and remains
+        # usable before a ROM is loaded.  ROM-backed names/stat derivation is
+        # added when a project is available, but is not required to open it.
+        self.save_editor_action.setEnabled(True)
         for key, action in self.page_actions.items():
             action.setEnabled(loaded)
+        # D2: preserve the reference command and Ctrl+L binding, but never
+        # route it to the extension exporter because the stock entry is inert.
+        self.export_avatar_action.setEnabled(False)
         self.undo_action.setEnabled(
             loaded
             and bool(
@@ -1170,7 +1222,7 @@ class MainWindow(QMainWindow):
             )
         )
         self.redo_action.setEnabled(loaded and bool(self.project and self.project.can_redo))
-        self.data_menu.menuAction().setVisible(loaded)
+        self.data_menu.menuAction().setVisible(True)
         self.extension_menu.menuAction().setVisible(loaded)
         self.project_menu.menuAction().setVisible(loaded)
 
@@ -1179,13 +1231,14 @@ class MainWindow(QMainWindow):
         if self.project is None:
             self.setWindowTitle(LEGACY_WINDOW_TITLE)
             self.path_status.setText("尚未载入ROM")
-            self.session_status.setText("")
+            self.session_status.setText("尚未载入ROM · 按 Ctrl+O 或“文件→打开”")
             self.change_status.setText("0 字节修改")
-            self.workspace.setCurrentWidget(self.blank_page)
+            self.map_page.setEnabled(False)
+            self.workspace.setCurrentWidget(self.map_page)
             return
+        self.map_page.setEnabled(True)
         unsaved = self.has_unsaved_changes
-        marker = " *" if unsaved else ""
-        self.setWindowTitle(f"{LEGACY_WINDOW_TITLE}：{self.project.path}{marker}")
+        self.setWindowTitle(f"{LEGACY_WINDOW_TITLE}：{self.project.path}")
         self.path_status.setText(str(self.project.path))
         # Native bytes comparison is inexpensive; avoid enumerating the entire
         # ROM twice per pointer movement/draft notification.
@@ -1234,6 +1287,23 @@ class MainWindow(QMainWindow):
             self.closed.emit()
         else:
             event.ignore()
+
+    def dispatch_legacy_command(self, command_id: int) -> bool:
+        """Accept the reference editor's command IDs for Win32 automation."""
+        action = self.legacy_commands.get(command_id)
+        if action is None or not action.isEnabled():
+            return False
+        action.trigger()
+        return True
+
+    def nativeEvent(self, event_type, message):  # noqa: N802
+        if sys.platform == "win32" and bytes(event_type) == b"windows_generic_MSG":
+            native_message = wintypes.MSG.from_address(int(message))
+            if native_message.message == 0x0111 and native_message.lParam == 0:
+                command_id = native_message.wParam & 0xFFFF
+                if self.dispatch_legacy_command(command_id):
+                    return True, 0
+        return super().nativeEvent(event_type, message)
 
 
 def run() -> int:

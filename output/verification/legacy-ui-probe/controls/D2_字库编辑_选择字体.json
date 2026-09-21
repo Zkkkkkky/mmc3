@@ -1,0 +1,505 @@
+{
+  "tag": "D2_字库编辑_选择字体",
+  "hwnd": 36575936,
+  "title": "字体",
+  "class": "#32770",
+  "rect": {
+    "left": 678,
+    "top": 182,
+    "right": 1322,
+    "bottom": 979,
+    "width": 644,
+    "height": 797
+  },
+  "pid": 30308,
+  "tree": {
+    "hwnd": 36575936,
+    "class": "#32770",
+    "text": "字体",
+    "ctrl_id": 0,
+    "rect": {
+      "left": 678,
+      "top": 182,
+      "right": 1322,
+      "bottom": 979,
+      "width": 644,
+      "height": 797
+    },
+    "visible": true,
+    "enabled": true,
+    "children": [
+      {
+        "hwnd": 36706812,
+        "class": "Static",
+        "text": "字体(&F):",
+        "ctrl_id": 1088,
+        "rect": {
+          "left": 699,
+          "top": 251,
+          "right": 957,
+          "bottom": 280,
+          "width": 258,
+          "height": 29
+        },
+        "visible": true,
+        "enabled": true,
+        "children": []
+      },
+      {
+        "hwnd": 1835946,
+        "class": "ComboBox",
+        "text": "宋体",
+        "ctrl_id": 1136,
+        "rect": {
+          "left": 699,
+          "top": 279,
+          "right": 957,
+          "bottom": 521,
+          "width": 258,
+          "height": 242
+        },
+        "visible": true,
+        "enabled": true,
+        "combo_count": 126,
+        "combo_selected": 123,
+        "children": [
+          {
+            "hwnd": 2234670,
+            "class": "ComboLBox",
+            "text": "",
+            "ctrl_id": 1000,
+            "rect": {
+              "left": 699,
+              "top": 315,
+              "right": 957,
+              "bottom": 521,
+              "width": 258,
+              "height": 206
+            },
+            "visible": true,
+            "enabled": true,
+            "children": []
+          },
+          {
+            "hwnd": 1772956,
+            "class": "Edit",
+            "text": "宋体",
+            "ctrl_id": 1001,
+            "rect": {
+              "left": 704,
+              "top": 284,
+              "right": 953,
+              "bottom": 311,
+              "width": 249,
+              "height": 27
+            },
+            "visible": true,
+            "enabled": true,
+            "children": []
+          }
+        ]
+      },
+      {
+        "hwnd": 3082416,
+        "class": "Static",
+        "text": "字形(&Y):",
+        "ctrl_id": 1089,
+        "rect": {
+          "left": 981,
+          "top": 251,
+          "right": 1176,
+          "bottom": 280,
+          "width": 195,
+          "height": 29
+        },
+        "visible": true,
+        "enabled": true,
+        "children": []
+      },
+      {
+        "hwnd": 17175564,
+        "class": "ComboBox",
+        "text": "常规",
+        "ctrl_id": 1137,
+        "rect": {
+          "left": 981,
+          "top": 279,
+          "right": 1176,
+          "bottom": 522,
+          "width": 195,
+          "height": 243
+        },
+        "visible": true,
+        "enabled": true,
+        "combo_count": 4,
+        "combo_selected": 0,
+        "children": [
+          {
+            "hwnd": 3348788,
+            "class": "ComboLBox",
+            "text": "",
+            "ctrl_id": 1000,
+            "rect": {
+              "left": 981,
+              "top": 315,
+              "right": 1176,
+              "bottom": 521,
+              "width": 195,
+              "height": 206
+            },
+            "visible": true,
+            "enabled": true,
+            "children": []
+          },
+          {
+            "hwnd": 1710514,
+            "class": "Edit",
+            "text": "常规",
+            "ctrl_id": 1001,
+            "rect": {
+              "left": 986,
+              "top": 284,
+              "right": 1172,
+              "bottom": 311,
+              "width": 186,
+              "height": 27
+            },
+            "visible": true,
+            "enabled": true,
+            "children": []
+          }
+        ]
+      },
+      {
+        "hwnd": 9507614,
+        "class": "Static",
+        "text": "大小(&S):",
+        "ctrl_id": 1090,
+        "rect": {
+          "left": 1202,
+          "top": 251,
+          "right": 1297,
+          "bottom": 280,
+          "width": 95,
+          "height": 29
+        },
+        "visible": true,
+        "enabled": true,
+        "children": []
+      },
+      {
+        "hwnd": 7739108,
+        "class": "ComboBox",
+        "text": "10",
+        "ctrl_id": 1138,
+        "rect": {
+          "left": 1202,
+          "top": 279,
+          "right": 1297,
+          "bottom": 500,
+          "width": 95,
+          "height": 221
+        },
+        "visible": true,
+        "enabled": true,
+        "combo_count": 28,
+        "combo_selected": 2,
+        "children": [
+          {
+            "hwnd": 2624220,
+            "class": "ComboLBox",
+            "text": "",
+            "ctrl_id": 1000,
+            "rect": {
+              "left": 1202,
+              "top": 315,
+              "right": 1297,
+              "bottom": 500,
+              "width": 95,
+              "height": 185
+            },
+            "visible": true,
+            "enabled": true,
+            "children": []
+          },
+          {
+            "hwnd": 5052478,
+            "class": "Edit",
+            "text": "10",
+            "ctrl_id": 1001,
+            "rect": {
+              "left": 1206,
+              "top": 284,
+              "right": 1292,
+              "bottom": 311,
+              "width": 86,
+              "height": 27
+            },
+            "visible": true,
+            "enabled": true,
+            "children": []
+          }
+        ]
+      },
+      {
+        "hwnd": 6166624,
+        "class": "Button",
+        "text": "效果",
+        "ctrl_id": 1072,
+        "rect": {
+          "left": 699,
+          "top": 537,
+          "right": 957,
+          "bottom": 780,
+          "width": 258,
+          "height": 243
+        },
+        "visible": true,
+        "enabled": true,
+        "children": []
+      },
+      {
+        "hwnd": 1049492,
+        "class": "Button",
+        "text": "删除线(&K)",
+        "ctrl_id": 1040,
+        "rect": {
+          "left": 716,
+          "top": 582,
+          "right": 953,
+          "bottom": 614,
+          "width": 237,
+          "height": 32
+        },
+        "visible": true,
+        "enabled": true,
+        "children": []
+      },
+      {
+        "hwnd": 2889906,
+        "class": "Button",
+        "text": "下划线(&U)",
+        "ctrl_id": 1041,
+        "rect": {
+          "left": 716,
+          "top": 633,
+          "right": 953,
+          "bottom": 665,
+          "width": 237,
+          "height": 32
+        },
+        "visible": true,
+        "enabled": true,
+        "children": []
+      },
+      {
+        "hwnd": 989328,
+        "class": "Static",
+        "text": "颜色(&C):",
+        "ctrl_id": 1091,
+        "rect": {
+          "left": 716,
+          "top": 687,
+          "right": 950,
+          "bottom": 716,
+          "width": 234,
+          "height": 29
+        },
+        "visible": true,
+        "enabled": true,
+        "children": []
+      },
+      {
+        "hwnd": 7344342,
+        "class": "ComboBox",
+        "text": "黑色",
+        "ctrl_id": 1139,
+        "rect": {
+          "left": 716,
+          "top": 722,
+          "right": 940,
+          "bottom": 758,
+          "width": 224,
+          "height": 36
+        },
+        "visible": true,
+        "enabled": true,
+        "combo_count": 16,
+        "combo_selected": 0,
+        "children": []
+      },
+      {
+        "hwnd": 3480036,
+        "class": "Button",
+        "text": "示例",
+        "ctrl_id": 1073,
+        "rect": {
+          "left": 981,
+          "top": 537,
+          "right": 1296,
+          "bottom": 674,
+          "width": 315,
+          "height": 137
+        },
+        "visible": true,
+        "enabled": true,
+        "children": []
+      },
+      {
+        "hwnd": 5839050,
+        "class": "Static",
+        "text": "微软中文软件",
+        "ctrl_id": 1092,
+        "rect": {
+          "left": 986,
+          "top": 566,
+          "right": 1294,
+          "bottom": 671,
+          "width": 308,
+          "height": 105
+        },
+        "visible": false,
+        "enabled": true,
+        "children": []
+      },
+      {
+        "hwnd": 2365816,
+        "class": "Static",
+        "text": "这是 OpenType 字体。这种字体既用于打印也用于显示。",
+        "ctrl_id": 1093,
+        "rect": {
+          "left": 699,
+          "top": 795,
+          "right": 1295,
+          "bottom": 860,
+          "width": 596,
+          "height": 65
+        },
+        "visible": true,
+        "enabled": true,
+        "children": []
+      },
+      {
+        "hwnd": 1776300,
+        "class": "Static",
+        "text": "脚本(&R):",
+        "ctrl_id": 1094,
+        "rect": {
+          "left": 981,
+          "top": 690,
+          "right": 1292,
+          "bottom": 719,
+          "width": 311,
+          "height": 29
+        },
+        "visible": true,
+        "enabled": true,
+        "children": []
+      },
+      {
+        "hwnd": 3609590,
+        "class": "ComboBox",
+        "text": "中文 GB2312",
+        "ctrl_id": 1140,
+        "rect": {
+          "left": 981,
+          "top": 722,
+          "right": 1296,
+          "bottom": 758,
+          "width": 315,
+          "height": 36
+        },
+        "visible": true,
+        "enabled": true,
+        "combo_count": 2,
+        "combo_selected": 0,
+        "children": []
+      },
+      {
+        "hwnd": 1776308,
+        "class": "SysLink",
+        "text": "<A>显示更多字体</A>",
+        "ctrl_id": 1592,
+        "rect": {
+          "left": 699,
+          "top": 863,
+          "right": 1295,
+          "bottom": 892,
+          "width": 596,
+          "height": 29
+        },
+        "visible": true,
+        "enabled": true,
+        "children": []
+      },
+      {
+        "hwnd": 2690970,
+        "class": "Button",
+        "text": "确定",
+        "ctrl_id": 1,
+        "rect": {
+          "left": 1052,
+          "top": 914,
+          "right": 1171,
+          "bottom": 959,
+          "width": 119,
+          "height": 45
+        },
+        "visible": true,
+        "enabled": true,
+        "children": []
+      },
+      {
+        "hwnd": 662202,
+        "class": "Button",
+        "text": "取消",
+        "ctrl_id": 2,
+        "rect": {
+          "left": 1181,
+          "top": 914,
+          "right": 1300,
+          "bottom": 959,
+          "width": 119,
+          "height": 45
+        },
+        "visible": true,
+        "enabled": true,
+        "children": []
+      },
+      {
+        "hwnd": 5639258,
+        "class": "Button",
+        "text": "应用(&A)",
+        "ctrl_id": 1026,
+        "rect": {
+          "left": 923,
+          "top": 914,
+          "right": 1042,
+          "bottom": 959,
+          "width": 119,
+          "height": 45
+        },
+        "visible": false,
+        "enabled": false,
+        "children": []
+      },
+      {
+        "hwnd": 7999640,
+        "class": "Button",
+        "text": "帮助(&H)",
+        "ctrl_id": 1038,
+        "rect": {
+          "left": 794,
+          "top": 914,
+          "right": 913,
+          "bottom": 959,
+          "width": 119,
+          "height": 45
+        },
+        "visible": false,
+        "enabled": false,
+        "children": []
+      }
+    ]
+  }
+}

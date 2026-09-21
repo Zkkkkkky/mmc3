@@ -14,8 +14,10 @@ os.environ.setdefault("QT_SCALE_FACTOR", "1")
 
 from PySide6.QtGui import QFont, QFontDatabase
 from PySide6.QtWidgets import QApplication, QDialog, QWidget
+import shiboken6
 
 from dc_modifier.app import DEFAULT_ROM, LauncherWindow, MainWindow, STYLE_SHEET
+from dc_modifier.animation_editor import SpritePuzzlePreviewDialog
 from dc_modifier.legacy_tools import (
     AttributeCalculatorDialog,
     FontLibraryDialog,
@@ -113,7 +115,9 @@ def capture_extension_dialog(
 
 
 def main() -> int:
-    application = QApplication.instance() or QApplication(sys.argv)
+    m01_m02_only = "--m01-m02-only" in sys.argv
+    arguments = [argument for argument in sys.argv if argument != "--m01-m02-only"]
+    application = QApplication.instance() or QApplication(arguments)
     application.setApplicationName("新DC篇完整修改器 3.0 说明截图")
     application.setStyle("Fusion")
     configure_font(application)
@@ -124,11 +128,8 @@ def main() -> int:
     # launcher -> empty editor -> explicit ROM open -> persistent map shell.
     launcher = LauncherWindow()
     save_capture(application, launcher, "00-launcher.png")
-    launcher.enter_editor()
+    window = launcher.enter_editor()
     process_layout(application)
-    window = launcher.main_window
-    if window is None:
-        raise RuntimeError("启动器未能创建主窗口。")
     save_capture(application, window, "00b-empty-main.png")
 
     if not DEFAULT_ROM.is_file() or not window.load_rom(DEFAULT_ROM, quiet=True):
@@ -137,6 +138,10 @@ def main() -> int:
     window.show_page("maps")
     save_capture(application, window, "01-map-editor.png")
     assert window.project is not None
+    if m01_m02_only:
+        window._saved_snapshot = None
+        window.close()
+        return 0
 
     database_dialog = DatabaseDialog(window.project, window)
     database_dialog._select_unit(12)
@@ -158,21 +163,30 @@ def main() -> int:
         UnitAppearanceDialog(window.project, 12, window),
         "02d-unit-composition.png",
     )
-    capture_dialog(
-        application,
-        ScenarioDialog(window.project, window),
-        "03-scenario-editor.png",
-    )
+    scenario_dialog = ScenarioDialog(window.project, window)
+    save_capture(application, scenario_dialog, "03-scenario-editor.png")
+    scenario_dialog.tabs.setCurrentIndex(1)
+    process_layout(application)
+    save_capture(application, scenario_dialog, "03b-action-events.png")
+    close_dialog(application, scenario_dialog)
     capture_dialog(
         application,
         FontLibraryDialog(parent=window, project=window.project),
         "04-font-library.png",
     )
-    capture_dialog(
-        application,
-        MapAnimationDialog(parent=window, project=window.project),
-        "05-map-animation.png",
+    animation_dialog = MapAnimationDialog(parent=window, project=window.project)
+    save_capture(application, animation_dialog, "05-map-animation.png")
+    sprite_record = animation_dialog.codec.record("sprite", 0x32)
+    puzzle_dialog = SpritePuzzlePreviewDialog(
+        sprite_record,
+        window.project,
+        animation_dialog.codec,
+        animation_dialog,
+        initial_library=8,
     )
+    save_capture(application, puzzle_dialog, "05b-animation-puzzle.png")
+    close_dialog(application, puzzle_dialog)
+    close_dialog(application, animation_dialog)
     capture_dialog(
         application,
         TextConverterDialog(parent=window, project=window.project),
@@ -238,7 +252,8 @@ def main() -> int:
 
     window._saved_snapshot = bytes(window.project.working)
     window.close()
-    launcher.close()
+    if shiboken6.isValid(launcher):
+        launcher.close()
     process_layout(application)
     return 0
 

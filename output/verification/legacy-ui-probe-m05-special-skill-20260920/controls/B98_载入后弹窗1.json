@@ -1,0 +1,84 @@
+{
+  "tag": "B98_载入后弹窗1",
+  "hwnd": 12322100,
+  "title": "错误",
+  "class": "#32770",
+  "rect": {
+    "left": 763,
+    "top": 351,
+    "right": 1158,
+    "bottom": 669,
+    "width": 395,
+    "height": 318
+  },
+  "pid": 12916,
+  "tree": {
+    "hwnd": 12322100,
+    "class": "#32770",
+    "text": "错误",
+    "ctrl_id": 0,
+    "rect": {
+      "left": 763,
+      "top": 351,
+      "right": 1158,
+      "bottom": 669,
+      "width": 395,
+      "height": 318
+    },
+    "visible": true,
+    "enabled": true,
+    "children": [
+      {
+        "hwnd": 4260834,
+        "class": "Button",
+        "text": "确定",
+        "ctrl_id": 2,
+        "rect": {
+          "left": 1021,
+          "top": 615,
+          "right": 1131,
+          "bottom": 650,
+          "width": 110,
+          "height": 35
+        },
+        "visible": true,
+        "enabled": true,
+        "children": []
+      },
+      {
+        "hwnd": 5702744,
+        "class": "Static",
+        "text": "",
+        "ctrl_id": 20,
+        "rect": {
+          "left": 796,
+          "top": 425,
+          "right": 836,
+          "bottom": 465,
+          "width": 40,
+          "height": 40
+        },
+        "visible": true,
+        "enabled": true,
+        "children": []
+      },
+      {
+        "hwnd": 3605676,
+        "class": "Static",
+        "text": "运行时出错!\r\n\r\n错误代码：1\r\n\r\n错误信息：数组成员引用下标超出定义范围\r\n\r\n67859708, 3091\r\n",
+        "ctrl_id": 65535,
+        "rect": {
+          "left": 846,
+          "top": 425,
+          "right": 1109,
+          "bottom": 568,
+          "width": 263,
+          "height": 143
+        },
+        "visible": true,
+        "enabled": true,
+        "children": []
+      }
+    ]
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "reason": "正式内容正确但超过30秒门槛或60秒进程保护；保留失败证据后独立重试",
+  "timestamp": "20260920T033020",
+  "moved": [
+    {
+      "module": "M06",
+      "field": "spirit_cost_02",
+      "case_id": "cold_start_01",
+      "from": "output/build/legacy-diff-audit/cases/legacy_live/M06/spirit_cost_02/cold_start_01",
+      "to": "output/build/legacy-diff-audit/cases/diagnostic/retry_history/20260920T033020/M06/spirit_cost_02/cold_start_01",
+      "had_case_json": true,
+      "had_error_json": false
+    }
+  ],
+  "live_result_rows_removed": 1
+}

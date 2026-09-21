@@ -1,0 +1,96 @@
+{
+  "generated_at": "2026-09-19T13:44:05+08:00",
+  "passed": true,
+  "conclusion": "三个 0xFB 字节槽位及其 16 位小端累加校验均可复验；单字段内存修改仅影响目标字节和校验和，活动战场敌方数组可独立读取。",
+  "layout": {
+    "save_size": 8192,
+    "active": {
+      "offset": "0x1411",
+      "length": "0x0437"
+    },
+    "backup": {
+      "offset": "0x1848",
+      "checksum_offset": "0x1C7F"
+    },
+    "slot_length": "0x00FB",
+    "slot_data_offsets": [
+      "0x1C81",
+      "0x1D7E",
+      "0x1E7B"
+    ],
+    "slot_checksum_offsets": [
+      "0x1D7C",
+      "0x1E79",
+      "0x1F76"
+    ]
+  },
+  "save": {
+    "path": "references/emulator-state/fceux/sav/DC_kuorong.sav",
+    "sha256": "E0CD4A176707D7D3103F11CF3836E99A9DB193A153E536C826009C05FC07EBC3",
+    "size": 8192,
+    "active_chapter": 1,
+    "active_roster_count": 2,
+    "slots": [
+      {
+        "number": 1,
+        "data_offset": "0x1C81",
+        "checksum_offset": "0x1D7C",
+        "stored_checksum": "0x1244",
+        "calculated_checksum": "0x1244",
+        "checksum_valid": true,
+        "occupied": true,
+        "chapter": 26,
+        "money": 4663,
+        "roster_count": 11
+      },
+      {
+        "number": 2,
+        "data_offset": "0x1D7E",
+        "checksum_offset": "0x1E79",
+        "stored_checksum": "0x0DBE",
+        "calculated_checksum": "0x0DBE",
+        "checksum_valid": true,
+        "occupied": true,
+        "chapter": 27,
+        "money": 4663,
+        "roster_count": 2
+      },
+      {
+        "number": 3,
+        "data_offset": "0x1E7B",
+        "checksum_offset": "0x1F76",
+        "stored_checksum": "0x11B1",
+        "calculated_checksum": "0x11B1",
+        "checksum_valid": true,
+        "occupied": true,
+        "chapter": 25,
+        "money": 4663,
+        "roster_count": 11
+      }
+    ]
+  },
+  "battle_save": {
+    "path": "references/emulator-state/fceux/sav/DC-fixed-test.sav",
+    "sha256": "7CD5DD6583ADF97945135EE0DBA0D7E804EB0E518FB0B60C4801B63E0FCADC65",
+    "size": 8192,
+    "active_chapter": 12,
+    "ally_battle_rows": 12,
+    "enemy_battle_rows": 7
+  },
+  "round_trip": {
+    "no_op_identical": true,
+    "changed_experience": {
+      "slot": 1,
+      "roster_index": 0,
+      "before": 3884,
+      "after": 3885
+    },
+    "changed_offsets": [
+      "0x1D5C",
+      "0x1D7C"
+    ],
+    "unexpected_offsets": [],
+    "checksum_valid_after_mutation": true,
+    "input_sha256_after_in_memory_checks": "E0CD4A176707D7D3103F11CF3836E99A9DB193A153E536C826009C05FC07EBC3"
+  }
+}

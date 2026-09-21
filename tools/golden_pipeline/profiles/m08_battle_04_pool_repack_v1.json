@@ -1,0 +1,8 @@
+{
+  "schema_version": 1,
+  "name": "m08_battle_04_pool_repack_v1",
+  "description": "参考版把 04 组第 000 行第 2 个随机分支从‘你们该死！’等长改为‘你们该退！’时执行的确定性 $0E 文本池重排；两次独立冷启动均产生完全相同的 10866 条差分及输出 ROM SHA-256。偏移 114704 作为必写哨兵排除，其余 10865 条作为已复核联动写入。",
+  "source_case": "output/build/legacy-diff-audit/cases/diagnostic/retry_history/20260920T083343/M08/battle_04_row000_variant001/cold_start_01/case.json",
+  "source_case_sha256": "2b5e6134293b08f93c097dfe84d66249beb13d8fe7dfb2fc7f3c5309c5f20d0d",
+  "exclude_offsets": [114704]
+}

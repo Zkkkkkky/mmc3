@@ -1,0 +1,656 @@
+{
+  "schema_version": 1,
+  "module": "M05",
+  "passed": true,
+  "status": "controls_cataloged_33_save_fields_passed_11_actions_guarded",
+  "sources": {
+    "main": {
+      "path": "output/verification/legacy-ui-probe-m05-icon-double-click-20260920l/controls/M05_数据库_机体修改.json",
+      "sha256": "63750f1f3e59f611e6576b272d4e8001a09ceba8113acf886f1344fad1101cd7"
+    },
+    "special_skill": {
+      "path": "output/verification/legacy-ui-probe-m05-icon-double-click-20260920l/controls/M05_数据库_机体修改_特殊技能.json",
+      "sha256": "0423d561e4ac1e0b7c6ee2d5a019d4f64671e295ac46d2b8e6155a4958758732"
+    },
+    "icon_binding": {
+      "path": "output/verification/legacy-ui-probe-m05-icon-double-click-20260920l/controls/M05_数据库_机体修改_机体图标设置.json",
+      "sha256": "476fceb90715874423cddb11f9071f688d44c58c5ab1b28f2d35c851fccb9e81"
+    }
+  },
+  "counts": {
+    "controls": 69,
+    "controls_by_surface": {
+      "main": 56,
+      "special_skill": 8,
+      "icon_binding": 5
+    },
+    "controls_by_class": {
+      "Button": 36,
+      "ListBox": 1,
+      "Edit": 21,
+      "ComboBox": 11
+    },
+    "golden_save_fields": 33,
+    "classified_non_rom_fields": 5,
+    "guarded_pending_actions": 11
+  },
+  "checks": {
+    "source_files_present": true,
+    "main_controls_enumerated": true,
+    "special_skill_controls_enumerated": true,
+    "icon_binding_controls_enumerated": true,
+    "golden_fields_unique": true,
+    "all_golden_fields_passed": true,
+    "non_rom_fields_classified": true,
+    "pending_actions_guarded": true
+  },
+  "golden_save_fields": [
+    "body_bank_1",
+    "body_bank_2",
+    "body_color_1",
+    "body_color_2",
+    "body_color_3",
+    "captain",
+    "defense",
+    "defense_growth",
+    "experience",
+    "fragment_bank",
+    "fragment_color_1",
+    "fragment_color_2",
+    "fragment_color_3",
+    "hp",
+    "hp_growth",
+    "money",
+    "movement",
+    "name",
+    "special_skill_base",
+    "special_skill_dimension",
+    "special_skill_first_strike",
+    "special_skill_hit_and_away",
+    "special_skill_reflect",
+    "special_skill_twist",
+    "speed",
+    "speed_growth",
+    "strength",
+    "strength_growth",
+    "terrain",
+    "transform",
+    "unit_type",
+    "weapon_1",
+    "weapon_2"
+  ],
+  "classified_non_rom_fields": [
+    {
+      "field_id": "upload_body_offset",
+      "surface": "main",
+      "control_id": 170,
+      "classification": "operation_parameter"
+    },
+    {
+      "field_id": "upload_fragment_offset",
+      "surface": "main",
+      "control_id": 1300,
+      "classification": "operation_parameter"
+    },
+    {
+      "field_id": "search_text",
+      "surface": "main",
+      "control_id": 2150,
+      "classification": "ui_filter"
+    },
+    {
+      "field_id": "icon_character_selector",
+      "surface": "icon_binding",
+      "control_id": 120,
+      "classification": "no_rom_effect_without_canvas_commit"
+    },
+    {
+      "field_id": "icon_tile_selector",
+      "surface": "icon_binding",
+      "control_id": 130,
+      "classification": "no_rom_effect_without_canvas_commit"
+    }
+  ],
+  "guarded_pending_actions": [
+    {
+      "control_id": 130,
+      "action": "add_unit",
+      "reason": "pointer relocation save protocol pending"
+    },
+    {
+      "control_id": 160,
+      "action": "upload_body",
+      "reason": "file and cross-bank save protocol pending"
+    },
+    {
+      "control_id": 1310,
+      "action": "upload_fragment",
+      "reason": "file and cross-bank save protocol pending"
+    },
+    {
+      "control_id": 180,
+      "action": "compressed_upload_body",
+      "reason": "compression save protocol pending"
+    },
+    {
+      "control_id": 1290,
+      "action": "compressed_upload_fragment",
+      "reason": "compression save protocol pending"
+    },
+    {
+      "control_id": 190,
+      "action": "body_puzzle",
+      "reason": "puzzle editor gesture-level save evidence pending"
+    },
+    {
+      "control_id": 220,
+      "action": "fragment_puzzle",
+      "reason": "puzzle editor gesture-level save evidence pending"
+    },
+    {
+      "control_id": 1350,
+      "action": "icon_binding",
+      "reason": "canvas commit gesture pending"
+    },
+    {
+      "control_id": 2510,
+      "action": "upload_icon",
+      "reason": "file upload save protocol pending"
+    },
+    {
+      "control_id": 2670,
+      "action": "clear_body",
+      "reason": "destructive save layout pending"
+    },
+    {
+      "control_id": 2680,
+      "action": "clear_fragment",
+      "reason": "destructive save layout pending"
+    }
+  ],
+  "controls": [
+    {
+      "surface": "main",
+      "control_id": 110,
+      "class": "Button",
+      "text": "机体选择",
+      "enabled": true
+    },
+    {
+      "surface": "main",
+      "control_id": 120,
+      "class": "ListBox",
+      "text": "",
+      "enabled": true
+    },
+    {
+      "surface": "main",
+      "control_id": 130,
+      "class": "Button",
+      "text": "添加",
+      "enabled": true
+    },
+    {
+      "surface": "main",
+      "control_id": 140,
+      "class": "Button",
+      "text": "机体图片",
+      "enabled": true
+    },
+    {
+      "surface": "main",
+      "control_id": 160,
+      "class": "Button",
+      "text": "上传机体",
+      "enabled": true
+    },
+    {
+      "surface": "main",
+      "control_id": 170,
+      "class": "Edit",
+      "text": "0",
+      "enabled": true
+    },
+    {
+      "surface": "main",
+      "control_id": 180,
+      "class": "Button",
+      "text": "压缩上传",
+      "enabled": true
+    },
+    {
+      "surface": "main",
+      "control_id": 190,
+      "class": "Button",
+      "text": "机体拼图",
+      "enabled": true
+    },
+    {
+      "surface": "main",
+      "control_id": 200,
+      "class": "Button",
+      "text": "显示机体",
+      "enabled": true
+    },
+    {
+      "surface": "main",
+      "control_id": 210,
+      "class": "Button",
+      "text": "显示碎片",
+      "enabled": true
+    },
+    {
+      "surface": "main",
+      "control_id": 220,
+      "class": "Button",
+      "text": "碎片拼图",
+      "enabled": true
+    },
+    {
+      "surface": "main",
+      "control_id": 230,
+      "class": "Edit",
+      "text": "20",
+      "enabled": true
+    },
+    {
+      "surface": "main",
+      "control_id": 240,
+      "class": "Edit",
+      "text": "16",
+      "enabled": true
+    },
+    {
+      "surface": "main",
+      "control_id": 250,
+      "class": "Edit",
+      "text": "27",
+      "enabled": true
+    },
+    {
+      "surface": "main",
+      "control_id": 290,
+      "class": "Edit",
+      "text": "3D",
+      "enabled": true
+    },
+    {
+      "surface": "main",
+      "control_id": 300,
+      "class": "Edit",
+      "text": "2A",
+      "enabled": true
+    },
+    {
+      "surface": "main",
+      "control_id": 310,
+      "class": "Edit",
+      "text": "29",
+      "enabled": true
+    },
+    {
+      "surface": "main",
+      "control_id": 350,
+      "class": "ComboBox",
+      "text": "[4C]076：93010",
+      "enabled": true
+    },
+    {
+      "surface": "main",
+      "control_id": 360,
+      "class": "ComboBox",
+      "text": "[00]000：80010",
+      "enabled": false
+    },
+    {
+      "surface": "main",
+      "control_id": 370,
+      "class": "ComboBox",
+      "text": "[FC]252：BF010",
+      "enabled": true
+    },
+    {
+      "surface": "main",
+      "control_id": 380,
+      "class": "Button",
+      "text": "基本设置",
+      "enabled": true
+    },
+    {
+      "surface": "main",
+      "control_id": 390,
+      "class": "Edit",
+      "text": "弓天使",
+      "enabled": true
+    },
+    {
+      "surface": "main",
+      "control_id": 400,
+      "class": "Button",
+      "text": "机体属性",
+      "enabled": true
+    },
+    {
+      "surface": "main",
+      "control_id": 410,
+      "class": "Edit",
+      "text": "37",
+      "enabled": true
+    },
+    {
+      "surface": "main",
+      "control_id": 420,
+      "class": "Edit",
+      "text": "640",
+      "enabled": true
+    },
+    {
+      "surface": "main",
+      "control_id": 430,
+      "class": "Edit",
+      "text": "150",
+      "enabled": true
+    },
+    {
+      "surface": "main",
+      "control_id": 440,
+      "class": "Edit",
+      "text": "210",
+      "enabled": true
+    },
+    {
+      "surface": "main",
+      "control_id": 450,
+      "class": "Edit",
+      "text": "105",
+      "enabled": true
+    },
+    {
+      "surface": "main",
+      "control_id": 460,
+      "class": "Edit",
+      "text": "207",
+      "enabled": true
+    },
+    {
+      "surface": "main",
+      "control_id": 470,
+      "class": "Edit",
+      "text": "200",
+      "enabled": true
+    },
+    {
+      "surface": "main",
+      "control_id": 480,
+      "class": "Edit",
+      "text": "125",
+      "enabled": true
+    },
+    {
+      "surface": "main",
+      "control_id": 490,
+      "class": "Edit",
+      "text": "208",
+      "enabled": true
+    },
+    {
+      "surface": "main",
+      "control_id": 500,
+      "class": "Edit",
+      "text": "25",
+      "enabled": true
+    },
+    {
+      "surface": "main",
+      "control_id": 510,
+      "class": "Edit",
+      "text": "8",
+      "enabled": true
+    },
+    {
+      "surface": "main",
+      "control_id": 520,
+      "class": "Button",
+      "text": "机体武器",
+      "enabled": true
+    },
+    {
+      "surface": "main",
+      "control_id": 530,
+      "class": "ComboBox",
+      "text": "无",
+      "enabled": true
+    },
+    {
+      "surface": "main",
+      "control_id": 540,
+      "class": "ComboBox",
+      "text": "空",
+      "enabled": true
+    },
+    {
+      "surface": "main",
+      "control_id": 550,
+      "class": "ComboBox",
+      "text": "[01]001：光束军刀",
+      "enabled": true
+    },
+    {
+      "surface": "main",
+      "control_id": 560,
+      "class": "ComboBox",
+      "text": "[02]002：风影箭·P",
+      "enabled": true
+    },
+    {
+      "surface": "main",
+      "control_id": 570,
+      "class": "ComboBox",
+      "text": "我方小型机",
+      "enabled": true
+    },
+    {
+      "surface": "main",
+      "control_id": 590,
+      "class": "Button",
+      "text": "确定",
+      "enabled": true
+    },
+    {
+      "surface": "main",
+      "control_id": 600,
+      "class": "Button",
+      "text": "取消",
+      "enabled": true
+    },
+    {
+      "surface": "main",
+      "control_id": 1290,
+      "class": "Button",
+      "text": "压缩上传",
+      "enabled": true
+    },
+    {
+      "surface": "main",
+      "control_id": 1300,
+      "class": "Edit",
+      "text": "0",
+      "enabled": true
+    },
+    {
+      "surface": "main",
+      "control_id": 1310,
+      "class": "Button",
+      "text": "上传碎片",
+      "enabled": true
+    },
+    {
+      "surface": "main",
+      "control_id": 1350,
+      "class": "Button",
+      "text": "更改图标",
+      "enabled": true
+    },
+    {
+      "surface": "main",
+      "control_id": 2150,
+      "class": "Edit",
+      "text": "",
+      "enabled": true
+    },
+    {
+      "surface": "main",
+      "control_id": 2160,
+      "class": "Button",
+      "text": "查找下一个",
+      "enabled": true
+    },
+    {
+      "surface": "main",
+      "control_id": 2170,
+      "class": "Button",
+      "text": "查找上一个",
+      "enabled": true
+    },
+    {
+      "surface": "main",
+      "control_id": 2510,
+      "class": "Button",
+      "text": "上传图标",
+      "enabled": true
+    },
+    {
+      "surface": "main",
+      "control_id": 2600,
+      "class": "Button",
+      "text": "33",
+      "enabled": true
+    },
+    {
+      "surface": "main",
+      "control_id": 2670,
+      "class": "Button",
+      "text": "清除机体",
+      "enabled": true
+    },
+    {
+      "surface": "main",
+      "control_id": 2680,
+      "class": "Button",
+      "text": "清除碎片",
+      "enabled": true
+    },
+    {
+      "surface": "main",
+      "control_id": 2690,
+      "class": "Button",
+      "text": "调换图库",
+      "enabled": true
+    },
+    {
+      "surface": "main",
+      "control_id": 2720,
+      "class": "Button",
+      "text": "转到武器1",
+      "enabled": true
+    },
+    {
+      "surface": "main",
+      "control_id": 2730,
+      "class": "Button",
+      "text": "转到武器2",
+      "enabled": true
+    },
+    {
+      "surface": "special_skill",
+      "control_id": 100,
+      "class": "ComboBox",
+      "text": "01：T防御系统",
+      "enabled": true
+    },
+    {
+      "surface": "special_skill",
+      "control_id": 110,
+      "class": "Button",
+      "text": "扭曲力场（间无）",
+      "enabled": true
+    },
+    {
+      "surface": "special_skill",
+      "control_id": 120,
+      "class": "Button",
+      "text": "一击脱离（仅限我方）",
+      "enabled": true
+    },
+    {
+      "surface": "special_skill",
+      "control_id": 130,
+      "class": "Button",
+      "text": "异次元连接系统",
+      "enabled": true
+    },
+    {
+      "surface": "special_skill",
+      "control_id": 140,
+      "class": "Button",
+      "text": "积层装甲反射系统（反伤）",
+      "enabled": true
+    },
+    {
+      "surface": "special_skill",
+      "control_id": 150,
+      "class": "Button",
+      "text": "先制攻击",
+      "enabled": true
+    },
+    {
+      "surface": "special_skill",
+      "control_id": 160,
+      "class": "Button",
+      "text": "确定",
+      "enabled": true
+    },
+    {
+      "surface": "special_skill",
+      "control_id": 170,
+      "class": "Button",
+      "text": "取消",
+      "enabled": true
+    },
+    {
+      "surface": "icon_binding",
+      "control_id": 100,
+      "class": "Button",
+      "text": "图标选择",
+      "enabled": true
+    },
+    {
+      "surface": "icon_binding",
+      "control_id": 120,
+      "class": "ComboBox",
+      "text": "017：",
+      "enabled": true
+    },
+    {
+      "surface": "icon_binding",
+      "control_id": 130,
+      "class": "ComboBox",
+      "text": "图标：03",
+      "enabled": true
+    },
+    {
+      "surface": "icon_binding",
+      "control_id": 190,
+      "class": "Button",
+      "text": "取消",
+      "enabled": true
+    },
+    {
+      "surface": "icon_binding",
+      "control_id": 200,
+      "class": "Button",
+      "text": "确定",
+      "enabled": true
+    }
+  ]
+}

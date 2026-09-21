@@ -1,0 +1,300 @@
+{
+  "schema_version": 1,
+  "module": "M03",
+  "normalized_sha256": "c0f6fb15dbcc9f04d35ec97b9558df85d099c661c35d54d3a2aae4966d2ed5b2",
+  "samples": [
+    {
+      "sequence": 0,
+      "field_id": "M03/00/player/00/x",
+      "field": "x",
+      "file_offset": 308082,
+      "catalog_original": 4,
+      "ui_observed": 4,
+      "ui_requested": 0,
+      "before_sha256": "c0f6fb15dbcc9f04d35ec97b9558df85d099c661c35d54d3a2aae4966d2ed5b2",
+      "after_sha256": "17b8f3393a93db8025c46b9e9c7dcce149093510cdca02aa5fdc63f36b5bb34d",
+      "changed_offsets": [
+        308082
+      ],
+      "target_after": 0,
+      "target_changed": true,
+      "expected_rom_effect": true,
+      "mapping_passed": true,
+      "diff": [
+        {
+          "offset": 308082,
+          "before": 4,
+          "after": 0
+        }
+      ]
+    },
+    {
+      "sequence": 1,
+      "field_id": "M03/00/player/00/y",
+      "field": "y",
+      "file_offset": 308083,
+      "catalog_original": 9,
+      "ui_observed": 9,
+      "ui_requested": 0,
+      "before_sha256": "c0f6fb15dbcc9f04d35ec97b9558df85d099c661c35d54d3a2aae4966d2ed5b2",
+      "after_sha256": "8868459d79a9b17c4ce2a8f400b48e9a4ae0bf37af46448eb33db0e9f6201d37",
+      "changed_offsets": [
+        308083
+      ],
+      "target_after": 0,
+      "target_changed": true,
+      "expected_rom_effect": true,
+      "mapping_passed": true,
+      "diff": [
+        {
+          "offset": 308083,
+          "before": 9,
+          "after": 0
+        }
+      ]
+    },
+    {
+      "sequence": 2,
+      "field_id": "M03/00/player/00/roster_index",
+      "field": "roster_index",
+      "file_offset": 308084,
+      "catalog_original": 2,
+      "ui_observed": 2,
+      "ui_requested": 3,
+      "before_sha256": "c0f6fb15dbcc9f04d35ec97b9558df85d099c661c35d54d3a2aae4966d2ed5b2",
+      "after_sha256": "a72bf0ca4eb9b48d689f10e51f1092fe7d0962b19f6a12d0b6ce19385b899231",
+      "changed_offsets": [
+        308084
+      ],
+      "target_after": 3,
+      "target_changed": true,
+      "expected_rom_effect": true,
+      "mapping_passed": true,
+      "diff": [
+        {
+          "offset": 308084,
+          "before": 2,
+          "after": 3
+        }
+      ]
+    },
+    {
+      "sequence": 3,
+      "field_id": "M03/00/player/00/flags",
+      "field": "flags",
+      "file_offset": 308085,
+      "catalog_original": 0,
+      "ui_observed": 0,
+      "ui_requested": 1,
+      "before_sha256": "c0f6fb15dbcc9f04d35ec97b9558df85d099c661c35d54d3a2aae4966d2ed5b2",
+      "after_sha256": "c0f6fb15dbcc9f04d35ec97b9558df85d099c661c35d54d3a2aae4966d2ed5b2",
+      "changed_offsets": [],
+      "target_after": 0,
+      "target_changed": false,
+      "expected_rom_effect": false,
+      "mapping_passed": true,
+      "diff": []
+    },
+    {
+      "sequence": 4,
+      "field_id": "M03/00/enemy/01/pilot_id",
+      "field": "pilot_id",
+      "file_offset": 308046,
+      "catalog_original": 56,
+      "ui_observed": 55,
+      "ui_requested": 56,
+      "before_sha256": "c0f6fb15dbcc9f04d35ec97b9558df85d099c661c35d54d3a2aae4966d2ed5b2",
+      "after_sha256": "a1f5e690b70a8bc8ffcea32e51b45096c3b0c7bc67e0149d6274ffcc0fa39f8c",
+      "changed_offsets": [
+        308046
+      ],
+      "target_after": 57,
+      "target_changed": true,
+      "expected_rom_effect": true,
+      "mapping_passed": true,
+      "diff": [
+        {
+          "offset": 308046,
+          "before": 56,
+          "after": 57
+        }
+      ]
+    },
+    {
+      "sequence": 5,
+      "field_id": "M03/00/enemy/01/unit_id",
+      "field": "unit_id",
+      "file_offset": 308047,
+      "catalog_original": 144,
+      "ui_observed": 143,
+      "ui_requested": 144,
+      "before_sha256": "c0f6fb15dbcc9f04d35ec97b9558df85d099c661c35d54d3a2aae4966d2ed5b2",
+      "after_sha256": "d72cadfe6fd990aa5d5ddb971a8b8f2bd719541c0f804140d4fe289c2e206da5",
+      "changed_offsets": [
+        308047
+      ],
+      "target_after": 145,
+      "target_changed": true,
+      "expected_rom_effect": true,
+      "mapping_passed": true,
+      "diff": [
+        {
+          "offset": 308047,
+          "before": 144,
+          "after": 145
+        }
+      ]
+    },
+    {
+      "sequence": 6,
+      "field_id": "M03/00/enemy/01/level",
+      "field": "level",
+      "file_offset": 308048,
+      "catalog_original": 0,
+      "ui_observed": 0,
+      "ui_requested": 1,
+      "before_sha256": "c0f6fb15dbcc9f04d35ec97b9558df85d099c661c35d54d3a2aae4966d2ed5b2",
+      "after_sha256": "d58c70f729a16bb61db5ce8d20e813025e2155c47b44d0869e91d108b6cbc483",
+      "changed_offsets": [
+        308048
+      ],
+      "target_after": 1,
+      "target_changed": true,
+      "expected_rom_effect": true,
+      "mapping_passed": true,
+      "diff": [
+        {
+          "offset": 308048,
+          "before": 0,
+          "after": 1
+        }
+      ]
+    },
+    {
+      "sequence": 7,
+      "field_id": "M03/00/enemy/01/flags",
+      "field": "flags",
+      "file_offset": 308049,
+      "catalog_original": 1,
+      "ui_observed": 1,
+      "ui_requested": 2,
+      "before_sha256": "c0f6fb15dbcc9f04d35ec97b9558df85d099c661c35d54d3a2aae4966d2ed5b2",
+      "after_sha256": "69464f389ee979687b19b9f14ce38915aba55dd7f5b578b229b04a7a3a90646b",
+      "changed_offsets": [
+        308049
+      ],
+      "target_after": 2,
+      "target_changed": true,
+      "expected_rom_effect": true,
+      "mapping_passed": true,
+      "diff": [
+        {
+          "offset": 308049,
+          "before": 1,
+          "after": 2
+        }
+      ]
+    },
+    {
+      "sequence": 8,
+      "field_id": "M03/22/guest/00/pilot_id",
+      "field": "pilot_id",
+      "file_offset": 310099,
+      "catalog_original": 55,
+      "ui_observed": 54,
+      "ui_requested": 55,
+      "before_sha256": "c0f6fb15dbcc9f04d35ec97b9558df85d099c661c35d54d3a2aae4966d2ed5b2",
+      "after_sha256": "4eda87f22958c873322bf5acc12e28c4e440789d03bd7a13d789b8f4df66f022",
+      "changed_offsets": [
+        310099
+      ],
+      "target_after": 56,
+      "target_changed": true,
+      "expected_rom_effect": true,
+      "mapping_passed": true,
+      "diff": [
+        {
+          "offset": 310099,
+          "before": 55,
+          "after": 56
+        }
+      ]
+    },
+    {
+      "sequence": 9,
+      "field_id": "M03/22/guest/00/unit_id",
+      "field": "unit_id",
+      "file_offset": 310100,
+      "catalog_original": 78,
+      "ui_observed": 77,
+      "ui_requested": 78,
+      "before_sha256": "c0f6fb15dbcc9f04d35ec97b9558df85d099c661c35d54d3a2aae4966d2ed5b2",
+      "after_sha256": "d9d34fdf39d26214f6e73ade433932f7e2c1fc39affd1a8e181241fe8940a672",
+      "changed_offsets": [
+        310100
+      ],
+      "target_after": 79,
+      "target_changed": true,
+      "expected_rom_effect": true,
+      "mapping_passed": true,
+      "diff": [
+        {
+          "offset": 310100,
+          "before": 78,
+          "after": 79
+        }
+      ]
+    },
+    {
+      "sequence": 10,
+      "field_id": "M03/22/guest/00/level",
+      "field": "level",
+      "file_offset": 310101,
+      "catalog_original": 34,
+      "ui_observed": 34,
+      "ui_requested": 35,
+      "before_sha256": "c0f6fb15dbcc9f04d35ec97b9558df85d099c661c35d54d3a2aae4966d2ed5b2",
+      "after_sha256": "cd2f8f4e16786aa5bf97872f43c7fca11ee9c76c75b893aa226d6dacb768189f",
+      "changed_offsets": [
+        310101
+      ],
+      "target_after": 35,
+      "target_changed": true,
+      "expected_rom_effect": true,
+      "mapping_passed": true,
+      "diff": [
+        {
+          "offset": 310101,
+          "before": 34,
+          "after": 35
+        }
+      ]
+    },
+    {
+      "sequence": 11,
+      "field_id": "M03/22/guest/00/flags",
+      "field": "flags",
+      "file_offset": 310102,
+      "catalog_original": 1,
+      "ui_observed": 1,
+      "ui_requested": 2,
+      "before_sha256": "c0f6fb15dbcc9f04d35ec97b9558df85d099c661c35d54d3a2aae4966d2ed5b2",
+      "after_sha256": "60782b68e1cd4ba879c83507daa59acb51fe90c22060aaa3f6c6093aa8bf9e3e",
+      "changed_offsets": [
+        310102
+      ],
+      "target_after": 2,
+      "target_changed": true,
+      "expected_rom_effect": true,
+      "mapping_passed": true,
+      "diff": [
+        {
+          "offset": 310102,
+          "before": 1,
+          "after": 2
+        }
+      ]
+    }
+  ],
+  "passed": true
+}

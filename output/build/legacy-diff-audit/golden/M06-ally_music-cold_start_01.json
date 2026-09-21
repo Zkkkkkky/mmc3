@@ -1,0 +1,60 @@
+{
+  "schema_version": 1,
+  "module": "M06",
+  "field": "ally_music",
+  "case_id": "cold_start_01",
+  "case_kind": "golden",
+  "requested_value": 2,
+  "changed_offsets": [
+    53378
+  ],
+  "removed_normalization": [],
+  "reopen_value": 2,
+  "original_value": 1,
+  "reopen_matches_request": true,
+  "reopen_mode": "new_process",
+  "expected_offsets": [
+    53378
+  ],
+  "required_offsets": [
+    53378
+  ],
+  "optional_offsets": [],
+  "extra_allowed": [],
+  "unexpected_offsets": [],
+  "target_changed": [
+    53378
+  ],
+  "expected_not_changed": [],
+  "passed": true,
+  "pending_reason": null,
+  "notes": [
+    "在线单字段采集：保存后关闭进程，再以不同 PID 冷启动重开"
+  ],
+  "provenance": {
+    "source_json": "output/build/legacy-diff-audit/legacy-live-results.json"
+  },
+  "snapshots": {
+    "before": {
+      "path": "output/build/legacy-diff-audit/cases/legacy_live/M06/ally_music/cold_start_01/before.nes",
+      "sha256": "c5d2c1dfbe0dc39afc9effd314c082f121b98c9ad67c4825b1c9dd4b9e991954",
+      "size": 786448
+    },
+    "after": {
+      "path": "output/build/legacy-diff-audit/cases/legacy_live/M06/ally_music/cold_start_01/after.nes",
+      "sha256": "e4ce95980fb77d07dd320f5b3acc4d63545a51e4a68358419baf8e45d87061b4",
+      "size": 786448
+    }
+  },
+  "diff_entries": [
+    {
+      "offset": 53378,
+      "before_value": 128,
+      "after_value": 129
+    }
+  ],
+  "duration_seconds": 23.639,
+  "budget_seconds": 30.0,
+  "within_budget": true,
+  "duration_note": null
+}

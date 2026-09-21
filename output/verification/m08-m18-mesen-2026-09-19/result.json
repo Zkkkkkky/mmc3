@@ -1,0 +1,53 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-09-19T18:29:41+08:00",
+  "runner": {
+    "path": "tools/vendor/mesen-0.9.9/Mesen.exe",
+    "sha256": "A480C42B28424FFC9517E003B458926D7920E860494103F1E0805E6AD972C08B",
+    "arguments": "--testrunner --timeout=60 <isolated-rom> <isolated-lua>",
+    "isolatedTemporaryDirectory": true,
+    "exitCode": 0
+  },
+  "input": {
+    "rom": "output/rom/DC_kuorong_464K.nes",
+    "romSha256": "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E",
+    "lua": "tests/emulator/dc_mesen_smoke.lua",
+    "luaSha256": "DA78C6EB3D729941FF67D4C71258FF189F966D920A787026686131CD76E50455"
+  },
+  "result": {
+    "checks": 17,
+    "passedChecks": 17,
+    "failures": 0,
+    "frames": 11309,
+    "stockAudioEntries": 310,
+    "expandedBridgeEntries": 11302,
+    "famiStudioInitCalls": 3,
+    "famiStudioPlayCalls": 3,
+    "famiStudioUpdates": 10993,
+    "soundEffectCalls": 56,
+    "apuWrites": 101960,
+    "passed": true
+  },
+  "evidence": {
+    "log": "output/verification/m08-m18-mesen-2026-09-19/dc_mesen_dual_audio_464K-current.log",
+    "logSha256": "832486479C25D9FF0E3A5B5DC500B72C0EA9FD1EB7BAB0B27D061E8327E69842",
+    "stdout": "output/verification/m08-m18-mesen-2026-09-19/stdout.txt",
+    "stdoutSha256": "7CA9A621E10D5A2D22AE2680245DACD2B2091681775D55A625DFE261ABA83DFB",
+    "stderr": "output/verification/m08-m18-mesen-2026-09-19/stderr.txt",
+    "stderrSha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+  },
+  "verifiedScope": [
+    "Mapper 194 1 MiB fixed and expanded PRG bank mapping",
+    "stock audio remains on the stock engine",
+    "three expanded FamiStudio song banks start and sustain",
+    "all 56 migrated sound-effect commands execute",
+    "return from expanded music to the stock engine",
+    "FamiStudio APU output and engine update activity"
+  ],
+  "notVerifiedByThisRun": [
+    "M12 edited animation visual appearance or timing",
+    "M14 edited scenario behavior",
+    "user subjective visual acceptance",
+    "real cartridge or flash-cart compatibility"
+  ]
+}

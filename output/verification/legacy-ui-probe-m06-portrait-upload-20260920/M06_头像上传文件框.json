@@ -1,0 +1,1366 @@
+{
+  "pid": 15852,
+  "dialogs": [
+    {
+      "kind": "front",
+      "confirmation": {
+        "title": "信息：",
+        "controls": [
+          {
+            "class": "Button",
+            "text": "是(&Y)",
+            "control_id": 6,
+            "rect": [
+              853,
+              588,
+              963,
+              623
+            ],
+            "visible": true,
+            "enabled": true
+          },
+          {
+            "class": "Button",
+            "text": "否(&N)",
+            "control_id": 7,
+            "rect": [
+              973,
+              588,
+              1083,
+              623
+            ],
+            "visible": true,
+            "enabled": true
+          },
+          {
+            "class": "Static",
+            "text": "是否上传空白图像",
+            "control_id": 65535,
+            "rect": [
+              828,
+              518,
+              1062,
+              541
+            ],
+            "visible": true,
+            "enabled": true
+          }
+        ]
+      },
+      "title": "打开图片",
+      "controls": [
+        {
+          "class": "DUIViewWndClassName",
+          "text": "",
+          "control_id": 0,
+          "rect": [
+            306,
+            251,
+            1082,
+            421
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "class": "DirectUIHWND",
+          "text": "",
+          "control_id": 0,
+          "rect": [
+            306,
+            251,
+            1082,
+            421
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "class": "CtrlNotifySink",
+          "text": "",
+          "control_id": 0,
+          "rect": [
+            309,
+            291,
+            502,
+            421
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "class": "NamespaceTreeControl",
+          "text": "命名空间树状控制项",
+          "control_id": 0,
+          "rect": [
+            309,
+            291,
+            502,
+            421
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "class": "Static",
+          "text": "命名空间树状控制项",
+          "control_id": 0,
+          "rect": [
+            309,
+            291,
+            309,
+            291
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "class": "SysTreeView32",
+          "text": "导航窗格",
+          "control_id": 100,
+          "rect": [
+            309,
+            291,
+            502,
+            421
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "class": "CtrlNotifySink",
+          "text": "",
+          "control_id": 0,
+          "rect": [
+            306,
+            251,
+            306,
+            251
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "class": "Shell Preview Extension Host",
+          "text": "Shell Preview Extension Host",
+          "control_id": 0,
+          "rect": [
+            306,
+            251,
+            306,
+            251
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "class": "CtrlNotifySink",
+          "text": "",
+          "control_id": 0,
+          "rect": [
+            506,
+            291,
+            1082,
+            421
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "class": "SHELLDLL_DefView",
+          "text": "ShellView",
+          "control_id": 1121,
+          "rect": [
+            506,
+            291,
+            1082,
+            421
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "class": "DirectUIHWND",
+          "text": "",
+          "control_id": 0,
+          "rect": [
+            506,
+            291,
+            1082,
+            421
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "class": "CtrlNotifySink",
+          "text": "",
+          "control_id": 0,
+          "rect": [
+            506,
+            400,
+            1061,
+            421
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "class": "ScrollBar",
+          "text": "",
+          "control_id": 0,
+          "rect": [
+            506,
+            400,
+            1061,
+            421
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "class": "CtrlNotifySink",
+          "text": "",
+          "control_id": 0,
+          "rect": [
+            1061,
+            291,
+            1082,
+            400
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "class": "ScrollBar",
+          "text": "",
+          "control_id": 0,
+          "rect": [
+            1061,
+            291,
+            1082,
+            400
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "class": "Static",
+          "text": "文件名(&N):",
+          "control_id": 1090,
+          "rect": [
+            469,
+            440,
+            540,
+            461
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "class": "ComboBoxEx32",
+          "text": "",
+          "control_id": 1148,
+          "rect": [
+            546,
+            435,
+            811,
+            468
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "class": "ComboBox",
+          "text": "",
+          "control_id": 1148,
+          "rect": [
+            546,
+            435,
+            811,
+            468
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "class": "Edit",
+          "text": "",
+          "control_id": 1148,
+          "rect": [
+            551,
+            441,
+            786,
+            462
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "class": "Static",
+          "text": "文件类型(&T):",
+          "control_id": 1089,
+          "rect": [
+            306,
+            181,
+            306,
+            181
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "class": "ComboBox",
+          "text": "",
+          "control_id": 1136,
+          "rect": [
+            826,
+            435,
+            1061,
+            466
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "class": "Button",
+          "text": "打开(&O)",
+          "control_id": 1,
+          "rect": [
+            826,
+            474,
+            936,
+            507
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "class": "Button",
+          "text": "取消",
+          "control_id": 2,
+          "rect": [
+            951,
+            474,
+            1061,
+            507
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "class": "ScrollBar",
+          "text": "",
+          "control_id": -1,
+          "rect": [
+            1061,
+            500,
+            1082,
+            521
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "class": "Static",
+          "text": "",
+          "control_id": 1092,
+          "rect": [
+            453,
+            195,
+            1098,
+            219
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "class": "Static",
+          "text": "",
+          "control_id": 1091,
+          "rect": [
+            318,
+            200,
+            417,
+            243
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "class": "Static",
+          "text": "",
+          "control_id": 1093,
+          "rect": [
+            453,
+            226,
+            1101,
+            259
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "class": "ListBox",
+          "text": "",
+          "control_id": 1120,
+          "rect": [
+            306,
+            251,
+            1105,
+            779
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "class": "Static",
+          "text": "",
+          "control_id": 1095,
+          "rect": [
+            469,
+            181,
+            1062,
+            181
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "class": "Button",
+          "text": "帮助(&H)",
+          "control_id": 1038,
+          "rect": [
+            881,
+            795,
+            991,
+            833
+          ],
+          "visible": false,
+          "enabled": false
+        },
+        {
+          "class": "WorkerW",
+          "text": "",
+          "control_id": 0,
+          "rect": [
+            306,
+            181,
+            1082,
+            251
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "class": "ReBarWindow32",
+          "text": "",
+          "control_id": 40965,
+          "rect": [
+            306,
+            181,
+            1082,
+            251
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "class": "TravelBand",
+          "text": "",
+          "control_id": 0,
+          "rect": [
+            306,
+            193,
+            431,
+            236
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "class": "ToolbarWindow32",
+          "text": "导航按钮",
+          "control_id": 0,
+          "rect": [
+            311,
+            195,
+            431,
+            235
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "class": "UpBand",
+          "text": "",
+          "control_id": 0,
+          "rect": [
+            431,
+            191,
+            476,
+            236
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "class": "ToolbarWindow32",
+          "text": "上区段",
+          "control_id": 0,
+          "rect": [
+            431,
+            195,
+            476,
+            240
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "class": "Address Band Root",
+          "text": "",
+          "control_id": 41477,
+          "rect": [
+            476,
+            181,
+            801,
+            247
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "class": "msctls_progress32",
+          "text": "",
+          "control_id": 0,
+          "rect": [
+            479,
+            194,
+            799,
+            238
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "class": "Breadcrumb Parent",
+          "text": "",
+          "control_id": 0,
+          "rect": [
+            479,
+            194,
+            704,
+            238
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "class": "ToolbarWindow32",
+          "text": "地址: D:\\GIT\\mmc3\\output\\build\\legacy-diff-audit",
+          "control_id": 1001,
+          "rect": [
+            486,
+            194,
+            704,
+            238
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "class": "ToolbarWindow32",
+          "text": "地址区段工具栏",
+          "control_id": 0,
+          "rect": [
+            704,
+            194,
+            799,
+            238
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "class": "ComboBoxEx32",
+          "text": "",
+          "control_id": 41477,
+          "rect": [
+            479,
+            194,
+            704,
+            238
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "class": "ComboBox",
+          "text": "",
+          "control_id": 41477,
+          "rect": [
+            479,
+            194,
+            704,
+            238
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "class": "Edit",
+          "text": "",
+          "control_id": 41477,
+          "rect": [
+            509,
+            205,
+            657,
+            226
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "class": "SeparatorBand",
+          "text": "",
+          "control_id": 0,
+          "rect": [
+            806,
+            214,
+            814,
+            215
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "class": "UniversalSearchBand",
+          "text": "",
+          "control_id": 0,
+          "rect": [
+            814,
+            189,
+            1069,
+            240
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "class": "Search Box",
+          "text": "",
+          "control_id": 0,
+          "rect": [
+            814,
+            193,
+            1069,
+            239
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "class": "SearchEditBoxWrapperClass",
+          "text": "",
+          "control_id": 0,
+          "rect": [
+            820,
+            193,
+            1063,
+            239
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "class": "DirectUIHWND",
+          "text": "",
+          "control_id": 0,
+          "rect": [
+            820,
+            193,
+            1063,
+            239
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "class": "SeparatorBand",
+          "text": "",
+          "control_id": 0,
+          "rect": [
+            1074,
+            214,
+            1083,
+            215
+          ],
+          "visible": true,
+          "enabled": true
+        }
+      ]
+    },
+    {
+      "kind": "back",
+      "confirmation": {
+        "title": "信息：",
+        "controls": [
+          {
+            "class": "Button",
+            "text": "是(&Y)",
+            "control_id": 6,
+            "rect": [
+              853,
+              588,
+              963,
+              623
+            ],
+            "visible": true,
+            "enabled": true
+          },
+          {
+            "class": "Button",
+            "text": "否(&N)",
+            "control_id": 7,
+            "rect": [
+              973,
+              588,
+              1083,
+              623
+            ],
+            "visible": true,
+            "enabled": true
+          },
+          {
+            "class": "Static",
+            "text": "是否上传空白图像",
+            "control_id": 65535,
+            "rect": [
+              828,
+              518,
+              1062,
+              541
+            ],
+            "visible": true,
+            "enabled": true
+          }
+        ]
+      },
+      "title": "打开图片",
+      "controls": [
+        {
+          "class": "DUIViewWndClassName",
+          "text": "",
+          "control_id": 0,
+          "rect": [
+            306,
+            251,
+            1082,
+            421
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "class": "DirectUIHWND",
+          "text": "",
+          "control_id": 0,
+          "rect": [
+            306,
+            251,
+            1082,
+            421
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "class": "CtrlNotifySink",
+          "text": "",
+          "control_id": 0,
+          "rect": [
+            309,
+            290,
+            502,
+            421
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "class": "NamespaceTreeControl",
+          "text": "命名空间树状控制项",
+          "control_id": 0,
+          "rect": [
+            309,
+            290,
+            502,
+            421
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "class": "Static",
+          "text": "命名空间树状控制项",
+          "control_id": 0,
+          "rect": [
+            309,
+            290,
+            309,
+            290
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "class": "SysTreeView32",
+          "text": "导航窗格",
+          "control_id": 100,
+          "rect": [
+            309,
+            290,
+            502,
+            421
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "class": "CtrlNotifySink",
+          "text": "",
+          "control_id": 0,
+          "rect": [
+            306,
+            251,
+            306,
+            251
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "class": "Shell Preview Extension Host",
+          "text": "Shell Preview Extension Host",
+          "control_id": 0,
+          "rect": [
+            306,
+            251,
+            306,
+            251
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "class": "CtrlNotifySink",
+          "text": "",
+          "control_id": 0,
+          "rect": [
+            506,
+            290,
+            1082,
+            421
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "class": "SHELLDLL_DefView",
+          "text": "ShellView",
+          "control_id": 1121,
+          "rect": [
+            506,
+            290,
+            1082,
+            421
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "class": "DirectUIHWND",
+          "text": "",
+          "control_id": 0,
+          "rect": [
+            506,
+            290,
+            1082,
+            421
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "class": "CtrlNotifySink",
+          "text": "",
+          "control_id": 0,
+          "rect": [
+            506,
+            400,
+            1061,
+            421
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "class": "ScrollBar",
+          "text": "",
+          "control_id": 0,
+          "rect": [
+            506,
+            400,
+            1061,
+            421
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "class": "CtrlNotifySink",
+          "text": "",
+          "control_id": 0,
+          "rect": [
+            1061,
+            290,
+            1082,
+            400
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "class": "ScrollBar",
+          "text": "",
+          "control_id": 0,
+          "rect": [
+            1061,
+            290,
+            1082,
+            400
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "class": "Static",
+          "text": "文件名(&N):",
+          "control_id": 1090,
+          "rect": [
+            469,
+            440,
+            540,
+            461
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "class": "ComboBoxEx32",
+          "text": "",
+          "control_id": 1148,
+          "rect": [
+            546,
+            435,
+            811,
+            468
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "class": "ComboBox",
+          "text": "",
+          "control_id": 1148,
+          "rect": [
+            546,
+            435,
+            811,
+            468
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "class": "Edit",
+          "text": "",
+          "control_id": 1148,
+          "rect": [
+            551,
+            441,
+            786,
+            462
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "class": "Static",
+          "text": "文件类型(&T):",
+          "control_id": 1089,
+          "rect": [
+            306,
+            181,
+            306,
+            181
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "class": "ComboBox",
+          "text": "",
+          "control_id": 1136,
+          "rect": [
+            826,
+            435,
+            1061,
+            466
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "class": "Button",
+          "text": "打开(&O)",
+          "control_id": 1,
+          "rect": [
+            826,
+            474,
+            936,
+            507
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "class": "Button",
+          "text": "取消",
+          "control_id": 2,
+          "rect": [
+            951,
+            474,
+            1061,
+            507
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "class": "ScrollBar",
+          "text": "",
+          "control_id": -1,
+          "rect": [
+            1061,
+            500,
+            1082,
+            521
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "class": "Static",
+          "text": "",
+          "control_id": 1092,
+          "rect": [
+            453,
+            195,
+            1098,
+            219
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "class": "Static",
+          "text": "",
+          "control_id": 1091,
+          "rect": [
+            318,
+            200,
+            417,
+            243
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "class": "Static",
+          "text": "",
+          "control_id": 1093,
+          "rect": [
+            453,
+            226,
+            1101,
+            259
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "class": "ListBox",
+          "text": "",
+          "control_id": 1120,
+          "rect": [
+            306,
+            251,
+            1105,
+            779
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "class": "Static",
+          "text": "",
+          "control_id": 1095,
+          "rect": [
+            469,
+            181,
+            1062,
+            181
+          ],
+          "visible": false,
+          "enabled": true
+        },
+        {
+          "class": "Button",
+          "text": "帮助(&H)",
+          "control_id": 1038,
+          "rect": [
+            881,
+            795,
+            991,
+            833
+          ],
+          "visible": false,
+          "enabled": false
+        },
+        {
+          "class": "WorkerW",
+          "text": "",
+          "control_id": 0,
+          "rect": [
+            306,
+            181,
+            1082,
+            251
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "class": "ReBarWindow32",
+          "text": "",
+          "control_id": 40965,
+          "rect": [
+            306,
+            181,
+            1082,
+            251
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "class": "TravelBand",
+          "text": "",
+          "control_id": 0,
+          "rect": [
+            306,
+            193,
+            431,
+            236
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "class": "ToolbarWindow32",
+          "text": "导航按钮",
+          "control_id": 0,
+          "rect": [
+            311,
+            195,
+            431,
+            235
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "class": "UpBand",
+          "text": "",
+          "control_id": 0,
+          "rect": [
+            431,
+            191,
+            476,
+            236
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "class": "ToolbarWindow32",
+          "text": "上区段",
+          "control_id": 0,
+          "rect": [
+            431,
+            195,
+            476,
+            240
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "class": "Address Band Root",
+          "text": "",
+          "control_id": 41477,
+          "rect": [
+            476,
+            181,
+            801,
+            247
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "class": "msctls_progress32",
+          "text": "",
+          "control_id": 0,
+          "rect": [
+            479,
+            194,
+            799,
+            238
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "class": "Breadcrumb Parent",
+          "text": "",
+          "control_id": 0,
+          "rect": [
+            479,
+            194,
+            704,
+            238
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "class": "ToolbarWindow32",
+          "text": "地址: D:\\GIT\\mmc3\\output\\build\\legacy-diff-audit",
+          "control_id": 1001,
+          "rect": [
+            486,
+            194,
+            704,
+            238
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "class": "ToolbarWindow32",
+          "text": "地址区段工具栏",
+          "control_id": 0,
+          "rect": [
+            704,
+            194,
+            799,
+            238
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "class": "SeparatorBand",
+          "text": "",
+          "control_id": 0,
+          "rect": [
+            806,
+            214,
+            814,
+            215
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "class": "UniversalSearchBand",
+          "text": "",
+          "control_id": 0,
+          "rect": [
+            814,
+            189,
+            1069,
+            240
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "class": "Search Box",
+          "text": "",
+          "control_id": 0,
+          "rect": [
+            814,
+            193,
+            1069,
+            239
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "class": "SearchEditBoxWrapperClass",
+          "text": "",
+          "control_id": 0,
+          "rect": [
+            820,
+            193,
+            1063,
+            239
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "class": "DirectUIHWND",
+          "text": "",
+          "control_id": 0,
+          "rect": [
+            820,
+            193,
+            1063,
+            239
+          ],
+          "visible": true,
+          "enabled": true
+        },
+        {
+          "class": "SeparatorBand",
+          "text": "",
+          "control_id": 0,
+          "rect": [
+            1074,
+            214,
+            1083,
+            215
+          ],
+          "visible": true,
+          "enabled": true
+        }
+      ]
+    }
+  ]
+}

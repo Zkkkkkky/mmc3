@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "reason": "重新执行30秒硬门禁；保留移动力旧超时、速度错误90秒预算判定和HP瞬时不可见证据",
+  "timestamp": "20260920T000547",
+  "moved": [
+    {
+      "module": "M05",
+      "field": "movement",
+      "case_id": "cold_start_01",
+      "from": "output/build/legacy-diff-audit/cases/legacy_live/M05/movement/cold_start_01",
+      "to": "output/build/legacy-diff-audit/cases/diagnostic/retry_history/20260920T000547/M05/movement/cold_start_01",
+      "had_case_json": true,
+      "had_error_json": false
+    },
+    {
+      "module": "M05",
+      "field": "speed",
+      "case_id": "cold_start_01",
+      "from": "output/build/legacy-diff-audit/cases/legacy_live/M05/speed/cold_start_01",
+      "to": "output/build/legacy-diff-audit/cases/diagnostic/retry_history/20260920T000547/M05/speed/cold_start_01",
+      "had_case_json": true,
+      "had_error_json": false
+    },
+    {
+      "module": "M05",
+      "field": "hp",
+      "case_id": "cold_start_01",
+      "from": "output/build/legacy-diff-audit/cases/legacy_live/M05/hp/cold_start_01",
+      "to": "output/build/legacy-diff-audit/cases/diagnostic/retry_history/20260920T000547/M05/hp/cold_start_01",
+      "had_case_json": false,
+      "had_error_json": true
+    }
+  ],
+  "live_result_rows_removed": 2
+}

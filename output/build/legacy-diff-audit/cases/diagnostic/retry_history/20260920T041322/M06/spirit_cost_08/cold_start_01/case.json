@@ -1,0 +1,56 @@
+{
+  "schema_version": 1,
+  "module": "M06",
+  "field": "spirit_cost_08",
+  "case_id": "cold_start_01",
+  "case_kind": "golden",
+  "requested_value": 111,
+  "original_value": 110,
+  "reopen_value": 111,
+  "reopen_matches_request": true,
+  "reopen_mode": "new_process",
+  "first_pid": 17132,
+  "second_pid": 652,
+  "changed_offsets": [
+    236367
+  ],
+  "removed_normalization": [],
+  "unexpected_offsets": [],
+  "expected_offsets": [
+    236367
+  ],
+  "required_offsets": [
+    236367
+  ],
+  "optional_offsets": [],
+  "extra_allowed": [],
+  "extra_allowed_profile": null,
+  "expected_not_changed": [],
+  "diffs": [
+    {
+      "offset": 236367,
+      "before": 110,
+      "after": 111
+    }
+  ],
+  "snapshots": {
+    "before": {
+      "path": "output/build/legacy-diff-audit/cases/legacy_live/M06/spirit_cost_08/cold_start_01/before.nes",
+      "sha256": "c5d2c1dfbe0dc39afc9effd314c082f121b98c9ad67c4825b1c9dd4b9e991954"
+    },
+    "after": {
+      "path": "output/build/legacy-diff-audit/cases/legacy_live/M06/spirit_cost_08/cold_start_01/after.nes",
+      "sha256": "a440c25c692a189c265258f95c27436ccff807bfb21df59b409928f23176958d"
+    }
+  },
+  "supporting_cdl": {
+    "source": "output/build/legacy-diff-audit/默认配置文件/测试.cdl",
+    "sha256": "599c1bb5ffd4b87229a81958f33f1060821cd01cd7aa7ccafa0d862f4522f3f6"
+  },
+  "duration_seconds": 44.082,
+  "budget_seconds": 30.0,
+  "requested_budget_seconds": 30.0,
+  "within_budget": false,
+  "passed": false,
+  "pending_reason": "44.08s exceeds 30.00s budget"
+}

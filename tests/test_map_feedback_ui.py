@@ -10,7 +10,7 @@ os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 from PySide6.QtCore import QPoint, Qt
 from PySide6.QtGui import QImage
 from PySide6.QtTest import QSignalSpy, QTest
-from PySide6.QtWidgets import QApplication
+from PySide6.QtWidgets import QApplication, QDialogButtonBox
 
 from dc_modifier.app import DEFAULT_ROM
 from dc_modifier.database_graphics import palette_color
@@ -41,6 +41,10 @@ class MapFeedbackUiTests(QtTestCase):
     def setUp(self) -> None:
         self.project = RomProject.load(DEFAULT_ROM)
         self.page = MapPage()
+        # Preserve coverage of the already built editor behind the D3 gate.
+        # The shipped page keeps these writes disabled until golden evidence.
+        self.page._deployment_write_verified = True
+        self.page._trigger_write_verified = True
         self.page.resize(1280, 820)
         self.page.set_project(self.project)
         self.page.show()
@@ -50,6 +54,35 @@ class MapFeedbackUiTests(QtTestCase):
         self.page.close()
         self.page.deleteLater()
         self.application.processEvents()
+
+    def test_default_page_blocks_unverified_record_writes_but_keeps_map_editing(self) -> None:
+        guarded_project = RomProject.load(DEFAULT_ROM)
+        guarded = MapPage()
+        guarded.set_project(guarded_project)
+        guarded.show()
+        self.application.processEvents()
+        try:
+            self.assertTrue(guarded.enemy_table.isEnabled())
+            self.assertFalse(guarded.enemy_table.editing_enabled)
+            self.assertFalse(guarded.trigger_table.editing_enabled)
+            self.assertFalse(guarded.canvas.deployment_edit_enabled)
+            self.assertFalse(guarded.canvas.overlay_move_enabled)
+            self.assertFalse(guarded.trigger_cell_buttons.button(
+                QDialogButtonBox.StandardButton.Ok
+            ).isEnabled())
+            before = bytes(guarded_project.working)
+            guarded.trigger_table.set_rows([(3, 4, 0xFF, 0xF2)])
+            self.assertFalse(guarded.commit_pending_changes())
+            self.assertIn("黄金对照", guarded.pending_draft_error)
+            self.assertEqual(bytes(guarded_project.working), before)
+            guarded.trigger_table.set_rows([])
+            original_tile = guarded.staged_tiles[0]
+            guarded.staged_tiles[0] = (original_tile + 1) & 0x0F
+            self.assertTrue(guarded.commit_pending_changes())
+            self.assertEqual(guarded_project.get_map(0).tiles[0], guarded.staged_tiles[0])
+        finally:
+            guarded.close()
+            guarded.deleteLater()
 
     def test_icon_bank_uses_all_four_quadrants_without_inventing_unit_bindings(self) -> None:
         self.assertEqual(ICON_PALETTE_NES, (0x0F, 0x30, 0x21, 0x02))
@@ -259,9 +292,43 @@ class MapFeedbackUiTests(QtTestCase):
         table.set_rows([(1, 2, 4), (5, 6, 8)])
         self.assertEqual(spy.count(), 2)
         self.assertEqual(len(labels), 256)
-        table.set_row_coordinates(0, 8, 9)
+        self.application.processEvents()
+        table.set_rows([(1, 2, 4), (5, 6, 8), (7, 8, 9)])
         self.assertEqual(spy.count(), 3)
+        self.assertEqual(table.rows(), [(1, 2, 4), (5, 6, 8), (7, 8, 9)])
+        self.assertTrue(all(
+            table.cellWidget(row, column) is not None
+            for row in range(table.rowCount())
+            for column in range(table.columnCount())
+        ))
+        self.assertIs(table.cellWidget(0, 2).model(), table.cellWidget(2, 2).model())
+        table.set_row_coordinates(0, 8, 9)
+        self.assertEqual(spy.count(), 4)
         table.deleteLater()
+
+    def test_backstage_reveal_can_switch_to_other_chapters_and_back(self) -> None:
+        backstage_row = next(
+            row
+            for row in range(self.page.map_list.count())
+            if "幕后浮现" in self.page.map_list.item(row).text()
+        )
+        route = (backstage_row, 0, 11, backstage_row, 4)
+        for row in route:
+            self.page.map_list.setCurrentRow(row)
+            self.application.processEvents()
+            self.assertEqual(self.page.map_list.currentRow(), row)
+            self.assertEqual(self.page.current_map_id, row)
+            for table in (
+                self.page.enemy_table,
+                self.page.guest_table,
+                self.page.player_table,
+            ):
+                self.assertTrue(all(
+                    table.cellWidget(table_row, column) is not None
+                    for table_row in range(table.rowCount())
+                    for column in range(table.columnCount())
+                ))
+                table.rows()
 
     def test_chapter_load_populates_once_and_does_not_validate_partial_tables(self) -> None:
         with patch.object(self.page, "_load_map_record", wraps=self.page._load_map_record) as load:

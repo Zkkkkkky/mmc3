@@ -10,7 +10,7 @@ os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 
 from PySide6.QtCore import QPoint, Qt
 from PySide6.QtGui import QColor, QImage
-from PySide6.QtWidgets import QApplication
+from PySide6.QtWidgets import QApplication, QMessageBox
 
 from dc_modifier.app import DEFAULT_ROM
 from dc_modifier.database_graphics import (
@@ -138,7 +138,11 @@ class ScreenshotUnitTests(QtTestCase):
         self.assertEqual(page.fields["upgrade"].value(), 1300)
         self.assertEqual(page.fields["upgrade"].singleStep(), 10)
         page.fields["upgrade"].setValue(1210)
-        page.apply_record()
+        with patch(
+            "dc_modifier.pages.QMessageBox.question",
+            return_value=QMessageBox.StandardButton.Yes,
+        ):
+            page.apply_record()
         self.assertEqual(self.project.get_value(2, "upgrade"), 121)
 
     def test_unit_special_byte_has_reference_style_visual_editor(self) -> None:

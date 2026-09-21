@@ -1,0 +1,1900 @@
+{
+  "person": {
+    "list": {
+      "count": 200,
+      "selected": 5,
+      "first": [
+        "[01]001：_",
+        "[02]002：查理",
+        "[03]003：联邦士兵"
+      ],
+      "last": [
+        "[C6]198：",
+        "[C7]199：",
+        "[C8]200："
+      ]
+    },
+    "controls": [
+      {
+        "id": 630,
+        "class": "ListBox",
+        "text": "",
+        "enabled": true
+      },
+      {
+        "id": 830,
+        "class": "Edit",
+        "text": "夏亚",
+        "enabled": true
+      },
+      {
+        "id": 1420,
+        "class": "Button",
+        "text": "不是任何人的错，只是\\\r\n因为那里是战场。",
+        "enabled": true
+      },
+      {
+        "id": 1430,
+        "class": "Button",
+        "text": "再补一下！",
+        "enabled": true
+      },
+      {
+        "id": 1440,
+        "class": "Button",
+        "text": "不想被打就那么自己就\\\r\n不要犯错误！",
+        "enabled": true
+      },
+      {
+        "id": 1450,
+        "class": "Button",
+        "text": "想打败我就光明正大的决斗！",
+        "enabled": true
+      },
+      {
+        "id": 1460,
+        "class": "Button",
+        "text": "想打败我就光明正大的决斗！",
+        "enabled": true
+      },
+      {
+        "id": 1470,
+        "class": "Button",
+        "text": "太不熟练了，这种程\\\r\n度休想伤我！",
+        "enabled": true
+      },
+      {
+        "id": 1480,
+        "class": "Button",
+        "text": "太不熟练了，这种程\\\r\n度休想伤我！",
+        "enabled": true
+      },
+      {
+        "id": 1490,
+        "class": "Button",
+        "text": "干得不错，居然能\\\r\n给予我如此伤害…",
+        "enabled": true
+      },
+      {
+        "id": 1500,
+        "class": "Button",
+        "text": "光有勇气可不行呢…\\\r\n技术还差了点！",
+        "enabled": true
+      },
+      {
+        "id": 1510,
+        "class": "Button",
+        "text": "干得不错，居然能\\\r\n给予我如此伤害…",
+        "enabled": true
+      },
+      {
+        "id": 1520,
+        "class": "Button",
+        "text": "不管创造多少希望，灵魂\\\r\n被地球重力束缚的人都会去\\\r\n破坏。",
+        "enabled": true
+      },
+      {
+        "id": 1530,
+        "class": "Button",
+        "text": "_",
+        "enabled": true
+      },
+      {
+        "id": 1540,
+        "class": "ComboBox",
+        "text": "变形对话1",
+        "enabled": true
+      },
+      {
+        "id": 2120,
+        "class": "Button",
+        "text": "添加",
+        "enabled": true
+      },
+      {
+        "id": 2200,
+        "class": "Edit",
+        "text": "夏亚",
+        "enabled": true
+      }
+    ],
+    "add": null,
+    "transform_clear": {
+      "before": {
+        "id": 1540,
+        "selected": 0,
+        "count": 5,
+        "first": [
+          "变形对话1",
+          "变形对话2",
+          "变形对话3",
+          "变形对话4",
+          "添加"
+        ],
+        "selected_text": "变形对话1",
+        "last": [
+          "变形对话1",
+          "变形对话2",
+          "变形对话3",
+          "变形对话4",
+          "添加"
+        ]
+      },
+      "after": {
+        "id": 1540,
+        "selected": 0,
+        "count": 1,
+        "first": [
+          "添加"
+        ],
+        "selected_text": "添加",
+        "last": [
+          "添加"
+        ]
+      },
+      "text": "无",
+      "windows": [
+        {
+          "handle": 1510900,
+          "class": "WTWindow",
+          "title": "数据库",
+          "controls": [
+            {
+              "id": 2170,
+              "class": "Button",
+              "text": "查找上一个"
+            },
+            {
+              "id": 2160,
+              "class": "Button",
+              "text": "查找下一个"
+            },
+            {
+              "id": 2150,
+              "class": "Edit",
+              "text": ""
+            },
+            {
+              "id": 600,
+              "class": "Button",
+              "text": "取消"
+            },
+            {
+              "id": 590,
+              "class": "Button",
+              "text": "确定"
+            },
+            {
+              "id": 100,
+              "class": "CPageControl",
+              "text": ""
+            },
+            {
+              "id": 1260,
+              "class": "Button",
+              "text": "精神列表(双击可修改精神消耗)"
+            },
+            {
+              "id": 1270,
+              "class": "ListBox",
+              "text": ""
+            },
+            {
+              "id": 1160,
+              "class": "Button",
+              "text": "防御对话"
+            },
+            {
+              "id": 1520,
+              "class": "Button",
+              "text": "不管创造多少希望，灵魂\\\r\n被地球重力束缚的人都会去\\\r\n破坏。"
+            },
+            {
+              "id": 1510,
+              "class": "Button",
+              "text": "干得不错，居然能\\\r\n给予我如此伤害…"
+            },
+            {
+              "id": 1500,
+              "class": "Button",
+              "text": "光有勇气可不行呢…\\\r\n技术还差了点！"
+            },
+            {
+              "id": 1490,
+              "class": "Button",
+              "text": "干得不错，居然能\\\r\n给予我如此伤害…"
+            },
+            {
+              "id": 1480,
+              "class": "Button",
+              "text": "太不熟练了，这种程\\\r\n度休想伤我！"
+            },
+            {
+              "id": 1470,
+              "class": "Button",
+              "text": "太不熟练了，这种程\\\r\n度休想伤我！"
+            },
+            {
+              "id": 1150,
+              "class": "Afx:400000:b:10003:900015:0",
+              "text": "  被击落："
+            },
+            {
+              "id": 1140,
+              "class": "Afx:400000:b:10003:900015:0",
+              "text": "重度损伤："
+            },
+            {
+              "id": 1130,
+              "class": "Afx:400000:b:10003:900015:0",
+              "text": "中度损伤："
+            },
+            {
+              "id": 1120,
+              "class": "Afx:400000:b:10003:900015:0",
+              "text": "轻微损伤："
+            },
+            {
+              "id": 1110,
+              "class": "Afx:400000:b:10003:900015:0",
+              "text": "未受损伤："
+            },
+            {
+              "id": 1100,
+              "class": "Afx:400000:b:10003:900015:0",
+              "text": "防御成功："
+            },
+            {
+              "id": 1090,
+              "class": "Button",
+              "text": "攻击对话"
+            },
+            {
+              "id": 1460,
+              "class": "Button",
+              "text": "想打败我就光明正大的决斗！"
+            },
+            {
+              "id": 1450,
+              "class": "Button",
+              "text": "想打败我就光明正大的决斗！"
+            },
+            {
+              "id": 1440,
+              "class": "Button",
+              "text": "不想被打就那么自己就\\\r\n不要犯错误！"
+            },
+            {
+              "id": 1430,
+              "class": "Button",
+              "text": "再补一下！"
+            },
+            {
+              "id": 1420,
+              "class": "Button",
+              "text": "不是任何人的错，只是\\\r\n因为那里是战场。"
+            },
+            {
+              "id": 1080,
+              "class": "Afx:400000:b:10003:900015:0",
+              "text": "攻击受阻："
+            },
+            {
+              "id": 1070,
+              "class": "Afx:400000:b:10003:900015:0",
+              "text": "无力反击："
+            },
+            {
+              "id": 1060,
+              "class": "Afx:400000:b:10003:900015:0",
+              "text": "可以反击："
+            },
+            {
+              "id": 1050,
+              "class": "Afx:400000:b:10003:900015:0",
+              "text": "二次攻击："
+            },
+            {
+              "id": 1040,
+              "class": "Afx:400000:b:10003:900015:0",
+              "text": "一次攻击："
+            },
+            {
+              "id": 1030,
+              "class": "Button",
+              "text": "变形起飞对话"
+            },
+            {
+              "id": 2180,
+              "class": "Button",
+              "text": "清空"
+            },
+            {
+              "id": 1540,
+              "class": "ComboBox",
+              "text": "添加"
+            },
+            {
+              "id": 1530,
+              "class": "Button",
+              "text": "无"
+            },
+            {
+              "id": 1020,
+              "class": "Afx:400000:b:10003:900015:0",
+              "text": "变形对话："
+            },
+            {
+              "id": 1010,
+              "class": "Afx:400000:b:10003:900015:0",
+              "text": "对话选择："
+            },
+            {
+              "id": 860,
+              "class": "Button",
+              "text": "人物属性"
+            },
+            {
+              "id": 2660,
+              "class": "Button",
+              "text": "击落不消失"
+            },
+            {
+              "id": 1004,
+              "class": "msctls_updown32",
+              "text": ""
+            },
+            {
+              "id": 1000,
+              "class": "Edit",
+              "text": "0"
+            },
+            {
+              "id": 994,
+              "class": "msctls_updown32",
+              "text": ""
+            },
+            {
+              "id": 990,
+              "class": "Edit",
+              "text": "0"
+            },
+            {
+              "id": 984,
+              "class": "msctls_updown32",
+              "text": ""
+            },
+            {
+              "id": 980,
+              "class": "Edit",
+              "text": "0"
+            },
+            {
+              "id": 974,
+              "class": "msctls_updown32",
+              "text": ""
+            },
+            {
+              "id": 970,
+              "class": "Edit",
+              "text": "0"
+            },
+            {
+              "id": 964,
+              "class": "msctls_updown32",
+              "text": ""
+            },
+            {
+              "id": 960,
+              "class": "Edit",
+              "text": "0"
+            },
+            {
+              "id": 950,
+              "class": "Afx:400000:b:10003:900015:0",
+              "text": "机动补正："
+            },
+            {
+              "id": 940,
+              "class": "Afx:400000:b:10003:900015:0",
+              "text": "HP补正："
+            },
+            {
+              "id": 930,
+              "class": "Afx:400000:b:10003:900015:0",
+              "text": "强度补正："
+            },
+            {
+              "id": 920,
+              "class": "Afx:400000:b:10003:900015:0",
+              "text": "防御补正："
+            },
+            {
+              "id": 914,
+              "class": "msctls_updown32",
+              "text": ""
+            },
+            {
+              "id": 910,
+              "class": "Edit",
+              "text": "201"
+            },
+            {
+              "id": 900,
+              "class": "Afx:400000:b:10003:900015:0",
+              "text": "精神成长："
+            },
+            {
+              "id": 894,
+              "class": "msctls_updown32",
+              "text": ""
+            },
+            {
+              "id": 890,
+              "class": "Edit",
+              "text": "33"
+            },
+            {
+              "id": 880,
+              "class": "Afx:400000:b:10003:900015:0",
+              "text": "速度补正："
+            },
+            {
+              "id": 870,
+              "class": "Afx:400000:b:10003:900015:0",
+              "text": "精神值："
+            },
+            {
+              "id": 810,
+              "class": "Button",
+              "text": "基本设置"
+            },
+            {
+              "id": 2450,
+              "class": "Afx:400000:b:10003:900015:0",
+              "text": "敌方战斗音乐："
+            },
+            {
+              "id": 2440,
+              "class": "Afx:400000:b:10003:900015:0",
+              "text": "我方战斗音乐："
+            },
+            {
+              "id": 2200,
+              "class": "Edit",
+              "text": "夏亚"
+            },
+            {
+              "id": 2190,
+              "class": "Afx:400000:b:10003:900015:0",
+              "text": "战斗名称："
+            },
+            {
+              "id": 850,
+              "class": "ComboBox",
+              "text": "大卫音乐"
+            },
+            {
+              "id": 840,
+              "class": "ComboBox",
+              "text": "默认音乐"
+            },
+            {
+              "id": 830,
+              "class": "Edit",
+              "text": "夏亚"
+            },
+            {
+              "id": 820,
+              "class": "Afx:400000:b:10003:900015:0",
+              "text": "名称："
+            },
+            {
+              "id": 660,
+              "class": "Button",
+              "text": "头像设置"
+            },
+            {
+              "id": 2430,
+              "class": "Afx:400000:b:10003:900015:0",
+              "text": "头像颜色3："
+            },
+            {
+              "id": 2420,
+              "class": "Afx:400000:b:10003:900015:0",
+              "text": "头像颜色2："
+            },
+            {
+              "id": 2410,
+              "class": "Afx:400000:b:10003:900015:0",
+              "text": "头像颜色1："
+            },
+            {
+              "id": 2400,
+              "class": "Afx:400000:b:10003:900015:0",
+              "text": "背景图库："
+            },
+            {
+              "id": 2390,
+              "class": "Afx:400000:b:10003:900015:0",
+              "text": "正面图库："
+            },
+            {
+              "id": 1360,
+              "class": "_EL_PicBox",
+              "text": ""
+            },
+            {
+              "id": 800,
+              "class": "Button",
+              "text": "背景上传"
+            },
+            {
+              "id": 790,
+              "class": "Button",
+              "text": "正面上传"
+            },
+            {
+              "id": 780,
+              "class": "_EL_Label",
+              "text": ""
+            },
+            {
+              "id": 770,
+              "class": "_EL_Label",
+              "text": ""
+            },
+            {
+              "id": 760,
+              "class": "_EL_Label",
+              "text": ""
+            },
+            {
+              "id": 750,
+              "class": "Edit",
+              "text": "37"
+            },
+            {
+              "id": 740,
+              "class": "Edit",
+              "text": "07"
+            },
+            {
+              "id": 730,
+              "class": "Edit",
+              "text": "17"
+            },
+            {
+              "id": 720,
+              "class": "ComboBox",
+              "text": "图库：027"
+            },
+            {
+              "id": 710,
+              "class": "ComboBox",
+              "text": "头像2"
+            },
+            {
+              "id": 700,
+              "class": "ComboBox",
+              "text": "头像1"
+            },
+            {
+              "id": 690,
+              "class": "ComboBox",
+              "text": "图库：025"
+            },
+            {
+              "id": 680,
+              "class": "Button",
+              "text": "显示正面"
+            },
+            {
+              "id": 670,
+              "class": "Button",
+              "text": "显示背景"
+            },
+            {
+              "id": 640,
+              "class": "Button",
+              "text": "人物选择"
+            },
+            {
+              "id": 2120,
+              "class": "Button",
+              "text": "添加"
+            },
+            {
+              "id": 630,
+              "class": "ListBox",
+              "text": ""
+            }
+          ]
+        },
+        {
+          "handle": 462262,
+          "class": "WTWindow",
+          "title": "SRW2扩容版修改器V1.0：D:\\LLM\\项目\\FC\\扩容MMC3\\output\\build\\legacy-diff-audit\\cases\\exploratory-m06-m07\\probe.nes",
+          "controls": [
+            {
+              "id": 600,
+              "class": "Afx:400000:b:10003:900015:0",
+              "text": ""
+            },
+            {
+              "id": 590,
+              "class": "Afx:400000:b:10003:900015:0",
+              "text": ""
+            },
+            {
+              "id": 580,
+              "class": "Afx:400000:b:10003:900015:0",
+              "text": ""
+            },
+            {
+              "id": 500,
+              "class": "Afx:400000:b:10003:900015:0",
+              "text": ""
+            },
+            {
+              "id": 120,
+              "class": "CPageControl",
+              "text": ""
+            },
+            {
+              "id": 530,
+              "class": "_EL_PicBox",
+              "text": ""
+            },
+            {
+              "id": 490,
+              "class": "msctls_updown32",
+              "text": ""
+            },
+            {
+              "id": 480,
+              "class": "msctls_updown32",
+              "text": ""
+            },
+            {
+              "id": 470,
+              "class": "Afx:400000:b:10003:900015:0",
+              "text": "地图高度："
+            },
+            {
+              "id": 460,
+              "class": "Edit",
+              "text": "26"
+            },
+            {
+              "id": 450,
+              "class": "Afx:400000:b:10003:900015:0",
+              "text": "地图宽度："
+            },
+            {
+              "id": 440,
+              "class": "Edit",
+              "text": "27"
+            },
+            {
+              "id": 430,
+              "class": "Button",
+              "text": "地图图块设置"
+            },
+            {
+              "id": 680,
+              "class": "ComboBox",
+              "text": "[3D]061：8F410"
+            },
+            {
+              "id": 670,
+              "class": "Afx:400000:b:10003:900015:0",
+              "text": "图库选择："
+            },
+            {
+              "id": 660,
+              "class": "Button",
+              "text": "编辑图块属性"
+            },
+            {
+              "id": 420,
+              "class": "Afx:400000:b:10003:900015:0",
+              "text": "右键"
+            },
+            {
+              "id": 410,
+              "class": "Afx:400000:b:10003:900015:0",
+              "text": "左键"
+            },
+            {
+              "id": 400,
+              "class": "Afx:400000:b:10003:900015:0",
+              "text": "位图选择："
+            },
+            {
+              "id": 390,
+              "class": "_EL_PicBox",
+              "text": ""
+            },
+            {
+              "id": 380,
+              "class": "_EL_PicBox",
+              "text": ""
+            },
+            {
+              "id": 370,
+              "class": "_EL_PicBox",
+              "text": ""
+            },
+            {
+              "id": 360,
+              "class": "_EL_PicBox",
+              "text": ""
+            },
+            {
+              "id": 350,
+              "class": "_EL_PicBox",
+              "text": ""
+            },
+            {
+              "id": 340,
+              "class": "_EL_PicBox",
+              "text": ""
+            },
+            {
+              "id": 330,
+              "class": "_EL_PicBox",
+              "text": ""
+            },
+            {
+              "id": 320,
+              "class": "_EL_PicBox",
+              "text": ""
+            },
+            {
+              "id": 310,
+              "class": "_EL_PicBox",
+              "text": ""
+            },
+            {
+              "id": 300,
+              "class": "_EL_PicBox",
+              "text": ""
+            },
+            {
+              "id": 290,
+              "class": "_EL_PicBox",
+              "text": ""
+            },
+            {
+              "id": 280,
+              "class": "_EL_PicBox",
+              "text": ""
+            },
+            {
+              "id": 270,
+              "class": "_EL_PicBox",
+              "text": ""
+            },
+            {
+              "id": 260,
+              "class": "_EL_PicBox",
+              "text": ""
+            },
+            {
+              "id": 250,
+              "class": "_EL_PicBox",
+              "text": ""
+            },
+            {
+              "id": 240,
+              "class": "_EL_PicBox",
+              "text": ""
+            },
+            {
+              "id": 230,
+              "class": "_EL_PicBox",
+              "text": ""
+            },
+            {
+              "id": 220,
+              "class": "_EL_PicBox",
+              "text": ""
+            },
+            {
+              "id": 210,
+              "class": "ComboBox",
+              "text": "位图D"
+            },
+            {
+              "id": 110,
+              "class": "Button",
+              "text": "关卡选择"
+            },
+            {
+              "id": 100,
+              "class": "ListBox",
+              "text": ""
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "weapon": {
+    "list": {
+      "count": 255,
+      "selected": 0,
+      "first": [
+        "[01]001：光束军刀",
+        "[02]002：光束军刀",
+        "[03]003：光束军刀"
+      ],
+      "last": [
+        "[FD]253：光束战斧",
+        "[FE]254：毒液",
+        "[FF]255：不可用"
+      ]
+    },
+    "controls": [
+      {
+        "id": 610,
+        "class": "ListBox",
+        "text": "",
+        "enabled": true
+      },
+      {
+        "id": 1180,
+        "class": "Edit",
+        "text": "光束军刀",
+        "enabled": true
+      },
+      {
+        "id": 1190,
+        "class": "ComboBox",
+        "text": "00：无",
+        "enabled": true
+      },
+      {
+        "id": 1200,
+        "class": "Edit",
+        "text": "1",
+        "enabled": true
+      },
+      {
+        "id": 1210,
+        "class": "Edit",
+        "text": "110",
+        "enabled": true
+      },
+      {
+        "id": 1220,
+        "class": "Edit",
+        "text": "0",
+        "enabled": true
+      },
+      {
+        "id": 1230,
+        "class": "Edit",
+        "text": "5",
+        "enabled": true
+      },
+      {
+        "id": 1240,
+        "class": "Edit",
+        "text": "5",
+        "enabled": true
+      },
+      {
+        "id": 1250,
+        "class": "Edit",
+        "text": "2",
+        "enabled": true
+      },
+      {
+        "id": 2130,
+        "class": "Button",
+        "text": "添加",
+        "enabled": true
+      },
+      {
+        "id": 2530,
+        "class": "ListBox",
+        "text": "",
+        "enabled": true
+      },
+      {
+        "id": 2540,
+        "class": "CPageControl",
+        "text": "",
+        "enabled": true
+      },
+      {
+        "id": 2550,
+        "class": "Button",
+        "text": "规律",
+        "enabled": true
+      },
+      {
+        "id": 2560,
+        "class": "Button",
+        "text": "代码编辑",
+        "enabled": true
+      },
+      {
+        "id": 2710,
+        "class": "Button",
+        "text": "动画测试",
+        "enabled": true
+      }
+    ],
+    "add": null
+  },
+  "save_diff": {
+    "count": 455,
+    "ranges": [
+      [
+        87359,
+        87359
+      ],
+      [
+        87365,
+        87365
+      ],
+      [
+        87371,
+        87371
+      ],
+      [
+        87610,
+        87610
+      ],
+      [
+        87615,
+        87615
+      ],
+      [
+        88429,
+        88429
+      ],
+      [
+        88432,
+        88433
+      ],
+      [
+        88436,
+        88437
+      ],
+      [
+        88440,
+        88441
+      ],
+      [
+        88444,
+        88445
+      ],
+      [
+        88448,
+        88449
+      ],
+      [
+        88452,
+        88453
+      ],
+      [
+        88456,
+        88457
+      ],
+      [
+        88460,
+        88461
+      ],
+      [
+        88464,
+        88465
+      ],
+      [
+        88468,
+        88469
+      ],
+      [
+        88472,
+        88474
+      ],
+      [
+        88476,
+        88507
+      ],
+      [
+        88509,
+        88516
+      ],
+      [
+        88524,
+        88529
+      ],
+      [
+        88531,
+        88534
+      ],
+      [
+        88536,
+        88536
+      ],
+      [
+        88539,
+        88539
+      ],
+      [
+        88542,
+        88543
+      ],
+      [
+        88545,
+        88560
+      ],
+      [
+        88562,
+        88572
+      ],
+      [
+        88574,
+        88590
+      ],
+      [
+        88592,
+        88592
+      ],
+      [
+        88594,
+        88594
+      ],
+      [
+        88596,
+        88596
+      ],
+      [
+        88598,
+        88598
+      ],
+      [
+        88604,
+        88622
+      ],
+      [
+        88626,
+        88629
+      ],
+      [
+        88632,
+        88632
+      ],
+      [
+        88634,
+        88638
+      ],
+      [
+        88640,
+        88656
+      ],
+      [
+        88658,
+        88662
+      ],
+      [
+        88665,
+        88685
+      ],
+      [
+        88687,
+        88688
+      ],
+      [
+        88695,
+        88696
+      ],
+      [
+        88701,
+        88702
+      ],
+      [
+        88707,
+        88724
+      ],
+      [
+        88726,
+        88726
+      ],
+      [
+        88728,
+        88734
+      ],
+      [
+        88736,
+        88739
+      ],
+      [
+        88741,
+        88741
+      ],
+      [
+        88743,
+        88744
+      ],
+      [
+        88746,
+        88760
+      ],
+      [
+        88762,
+        88772
+      ],
+      [
+        88774,
+        88791
+      ],
+      [
+        88793,
+        88794
+      ],
+      [
+        88796,
+        88796
+      ],
+      [
+        88798,
+        88798
+      ],
+      [
+        88800,
+        88807
+      ],
+      [
+        88810,
+        88825
+      ],
+      [
+        88830,
+        88833
+      ],
+      [
+        88836,
+        88836
+      ],
+      [
+        88838,
+        88842
+      ],
+      [
+        88844,
+        88860
+      ],
+      [
+        88862,
+        88866
+      ],
+      [
+        88869,
+        88889
+      ],
+      [
+        88891,
+        88892
+      ],
+      [
+        88899,
+        88900
+      ],
+      [
+        88905,
+        88906
+      ],
+      [
+        88911,
+        88928
+      ],
+      [
+        88930,
+        88930
+      ],
+      [
+        88932,
+        88938
+      ],
+      [
+        88940,
+        88943
+      ],
+      [
+        88945,
+        88945
+      ],
+      [
+        88947,
+        88948
+      ],
+      [
+        88950,
+        88964
+      ],
+      [
+        88966,
+        88976
+      ],
+      [
+        88978,
+        88987
+      ],
+      [
+        88989,
+        88992
+      ],
+      [
+        88994,
+        89002
+      ]
+    ],
+    "bytes": [
+      {
+        "offset": 87359,
+        "before": 158,
+        "after": 142
+      },
+      {
+        "offset": 87365,
+        "before": 159,
+        "after": 143
+      },
+      {
+        "offset": 87371,
+        "before": 160,
+        "after": 144
+      },
+      {
+        "offset": 87610,
+        "before": 202,
+        "after": 186
+      },
+      {
+        "offset": 87615,
+        "before": 203,
+        "after": 187
+      },
+      {
+        "offset": 88429,
+        "before": 6,
+        "after": 8
+      },
+      {
+        "offset": 88432,
+        "before": 36,
+        "after": 34
+      },
+      {
+        "offset": 88433,
+        "before": 6,
+        "after": 9
+      },
+      {
+        "offset": 88436,
+        "before": 36,
+        "after": 28
+      },
+      {
+        "offset": 88437,
+        "before": 6,
+        "after": 10
+      },
+      {
+        "offset": 88440,
+        "before": 36,
+        "after": 29
+      },
+      {
+        "offset": 88441,
+        "before": 6,
+        "after": 10
+      },
+      {
+        "offset": 88444,
+        "before": 36,
+        "after": 29
+      },
+      {
+        "offset": 88445,
+        "before": 8,
+        "after": 10
+      },
+      {
+        "offset": 88448,
+        "before": 34,
+        "after": 29
+      },
+      {
+        "offset": 88449,
+        "before": 9,
+        "after": 10
+      },
+      {
+        "offset": 88452,
+        "before": 28,
+        "after": 29
+      },
+      {
+        "offset": 88453,
+        "before": 10,
+        "after": 16
+      },
+      {
+        "offset": 88456,
+        "before": 29,
+        "after": 41
+      },
+      {
+        "offset": 88457,
+        "before": 10,
+        "after": 16
+      },
+      {
+        "offset": 88460,
+        "before": 29,
+        "after": 41
+      },
+      {
+        "offset": 88461,
+        "before": 10,
+        "after": 38
+      },
+      {
+        "offset": 88464,
+        "before": 29,
+        "after": 1
+      },
+      {
+        "offset": 88465,
+        "before": 10,
+        "after": 39
+      },
+      {
+        "offset": 88468,
+        "before": 29,
+        "after": 5
+      },
+      {
+        "offset": 88469,
+        "before": 16,
+        "after": 40
+      },
+      {
+        "offset": 88472,
+        "before": 41,
+        "after": 2
+      },
+      {
+        "offset": 88473,
+        "before": 16,
+        "after": 255
+      },
+      {
+        "offset": 88474,
+        "before": 0,
+        "after": 255
+      },
+      {
+        "offset": 88476,
+        "before": 41,
+        "after": 255
+      },
+      {
+        "offset": 88477,
+        "before": 38,
+        "after": 255
+      },
+      {
+        "offset": 88478,
+        "before": 0,
+        "after": 92
+      },
+      {
+        "offset": 88479,
+        "before": 255,
+        "after": 93
+      },
+      {
+        "offset": 88480,
+        "before": 1,
+        "after": 94
+      },
+      {
+        "offset": 88481,
+        "before": 39,
+        "after": 92
+      },
+      {
+        "offset": 88482,
+        "before": 0,
+        "after": 93
+      },
+      {
+        "offset": 88483,
+        "before": 255,
+        "after": 94
+      },
+      {
+        "offset": 88484,
+        "before": 5,
+        "after": 92
+      },
+      {
+        "offset": 88485,
+        "before": 40,
+        "after": 93
+      },
+      {
+        "offset": 88486,
+        "before": 0,
+        "after": 94
+      },
+      {
+        "offset": 88487,
+        "before": 255,
+        "after": 92
+      },
+      {
+        "offset": 88488,
+        "before": 2,
+        "after": 93
+      },
+      {
+        "offset": 88489,
+        "before": 255,
+        "after": 94
+      },
+      {
+        "offset": 88490,
+        "before": 255,
+        "after": 92
+      },
+      {
+        "offset": 88491,
+        "before": 255,
+        "after": 93
+      },
+      {
+        "offset": 88492,
+        "before": 255,
+        "after": 94
+      },
+      {
+        "offset": 88493,
+        "before": 255,
+        "after": 93
+      },
+      {
+        "offset": 88494,
+        "before": 92,
+        "after": 94
+      },
+      {
+        "offset": 88495,
+        "before": 93,
+        "after": 92
+      },
+      {
+        "offset": 88496,
+        "before": 94,
+        "after": 92
+      },
+      {
+        "offset": 88497,
+        "before": 92,
+        "after": 93
+      },
+      {
+        "offset": 88498,
+        "before": 93,
+        "after": 92
+      },
+      {
+        "offset": 88499,
+        "before": 94,
+        "after": 93
+      },
+      {
+        "offset": 88500,
+        "before": 92,
+        "after": 94
+      },
+      {
+        "offset": 88501,
+        "before": 93,
+        "after": 92
+      },
+      {
+        "offset": 88502,
+        "before": 94,
+        "after": 93
+      },
+      {
+        "offset": 88503,
+        "before": 92,
+        "after": 94
+      },
+      {
+        "offset": 88504,
+        "before": 93,
+        "after": 92
+      },
+      {
+        "offset": 88505,
+        "before": 94,
+        "after": 93
+      },
+      {
+        "offset": 88506,
+        "before": 92,
+        "after": 94
+      },
+      {
+        "offset": 88507,
+        "before": 93,
+        "after": 92
+      },
+      {
+        "offset": 88509,
+        "before": 93,
+        "after": 95
+      },
+      {
+        "offset": 88510,
+        "before": 94,
+        "after": 92
+      },
+      {
+        "offset": 88511,
+        "before": 92,
+        "after": 93
+      },
+      {
+        "offset": 88512,
+        "before": 92,
+        "after": 94
+      },
+      {
+        "offset": 88513,
+        "before": 93,
+        "after": 92
+      },
+      {
+        "offset": 88514,
+        "before": 92,
+        "after": 94
+      },
+      {
+        "offset": 88515,
+        "before": 93,
+        "after": 95
+      },
+      {
+        "offset": 88516,
+        "before": 94,
+        "after": 92
+      },
+      {
+        "offset": 88524,
+        "before": 94,
+        "after": 93
+      },
+      {
+        "offset": 88525,
+        "before": 95,
+        "after": 94
+      },
+      {
+        "offset": 88526,
+        "before": 92,
+        "after": 93
+      },
+      {
+        "offset": 88527,
+        "before": 93,
+        "after": 94
+      },
+      {
+        "offset": 88528,
+        "before": 94,
+        "after": 92
+      },
+      {
+        "offset": 88529,
+        "before": 92,
+        "after": 93
+      },
+      {
+        "offset": 88531,
+        "before": 95,
+        "after": 92
+      },
+      {
+        "offset": 88532,
+        "before": 92,
+        "after": 93
+      },
+      {
+        "offset": 88533,
+        "before": 92,
+        "after": 94
+      },
+      {
+        "offset": 88534,
+        "before": 93,
+        "after": 92
+      },
+      {
+        "offset": 88536,
+        "before": 92,
+        "after": 95
+      },
+      {
+        "offset": 88539,
+        "before": 92,
+        "after": 95
+      },
+      {
+        "offset": 88542,
+        "before": 93,
+        "after": 95
+      },
+      {
+        "offset": 88543,
+        "before": 94,
+        "after": 93
+      },
+      {
+        "offset": 88545,
+        "before": 93,
+        "after": 95
+      },
+      {
+        "offset": 88546,
+        "before": 94,
+        "after": 93
+      },
+      {
+        "offset": 88547,
+        "before": 92,
+        "after": 95
+      },
+      {
+        "offset": 88548,
+        "before": 93,
+        "after": 96
+      },
+      {
+        "offset": 88549,
+        "before": 94,
+        "after": 93
+      },
+      {
+        "offset": 88550,
+        "before": 92,
+        "after": 95
+      },
+      {
+        "offset": 88551,
+        "before": 94,
+        "after": 96
+      },
+      {
+        "offset": 88552,
+        "before": 95,
+        "after": 93
+      },
+      {
+        "offset": 88553,
+        "before": 93,
+        "after": 94
+      },
+      {
+        "offset": 88554,
+        "before": 94,
+        "after": 96
+      },
+      {
+        "offset": 88555,
+        "before": 95,
+        "after": 93
+      },
+      {
+        "offset": 88556,
+        "before": 93,
+        "after": 96
+      },
+      {
+        "offset": 88557,
+        "before": 94,
+        "after": 97
+      },
+      {
+        "offset": 88558,
+        "before": 95,
+        "after": 93
+      },
+      {
+        "offset": 88559,
+        "before": 93,
+        "after": 97
+      },
+      {
+        "offset": 88560,
+        "before": 92,
+        "after": 94
+      },
+      {
+        "offset": 88562,
+        "before": 93,
+        "after": 92
+      },
+      {
+        "offset": 88563,
+        "before": 95,
+        "after": 93
+      },
+      {
+        "offset": 88564,
+        "before": 96,
+        "after": 94
+      },
+      {
+        "offset": 88565,
+        "before": 93,
+        "after": 95
+      },
+      {
+        "offset": 88566,
+        "before": 95,
+        "after": 96
+      },
+      {
+        "offset": 88567,
+        "before": 96,
+        "after": 92
+      },
+      {
+        "offset": 88568,
+        "before": 93,
+        "after": 175
+      },
+      {
+        "offset": 88569,
+        "before": 94,
+        "after": 176
+      },
+      {
+        "offset": 88570,
+        "before": 96,
+        "after": 92
+      },
+      {
+        "offset": 88571,
+        "before": 93,
+        "after": 97
+      },
+      {
+        "offset": 88572,
+        "before": 96,
+        "after": 97
+      },
+      {
+        "offset": 88574,
+        "before": 93,
+        "after": 188
+      },
+      {
+        "offset": 88575,
+        "before": 97,
+        "after": 154
+      },
+      {
+        "offset": 88576,
+        "before": 94,
+        "after": 196
+      },
+      {
+        "offset": 88577,
+        "before": 95,
+        "after": 154
+      },
+      {
+        "offset": 88578,
+        "before": 92,
+        "after": 204
+      },
+      {
+        "offset": 88579,
+        "before": 93,
+        "after": 154
+      },
+      {
+        "offset": 88580,
+        "before": 94,
+        "after": 212
+      },
+      {
+        "offset": 88581,
+        "before": 95,
+        "after": 154
+      },
+      {
+        "offset": 88582,
+        "before": 96,
+        "after": 220
+      },
+      {
+        "offset": 88583,
+        "before": 92,
+        "after": 154
+      },
+      {
+        "offset": 88584,
+        "before": 175,
+        "after": 225
+      },
+      {
+        "offset": 88585,
+        "before": 176,
+        "after": 154
+      },
+      {
+        "offset": 88586,
+        "before": 92,
+        "after": 225
+      },
+      {
+        "offset": 88587,
+        "before": 97,
+        "after": 154
+      },
+      {
+        "offset": 88588,
+        "before": 97,
+        "after": 225
+      },
+      {
+        "offset": 88589,
+        "before": 97,
+        "after": 154
+      },
+      {
+        "offset": 88590,
+        "before": 188,
+        "after": 225
+      },
+      {
+        "offset": 88592,
+        "before": 196,
+        "after": 225
+      }
+    ]
+  }
+}

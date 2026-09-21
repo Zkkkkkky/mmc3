@@ -1,0 +1,8 @@
+{
+  "schema_version": 1,
+  "name": "m06_battle_name_to_ascii_a_v1",
+  "description": "参考版将人物第 1 行战斗名称从下划线占位改为 A 时的确定性共享名称池重建；两轮 3922 条差分完全一致。",
+  "source_case": "output/build/legacy-diff-audit/cases/diagnostic/retry_history/20260920T022004/M06/battle_name/cold_start_01/case.json",
+  "source_case_sha256": "67734e4647464b96da9d9b9ace84603c7faf602a8163ad36d49408fa064bb04e",
+  "exclude_offsets": [304053]
+}

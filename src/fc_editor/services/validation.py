@@ -406,7 +406,9 @@ def validate_project(project: ProjectView) -> tuple[ValidationIssue, ...]:
     if project.character_name_codec is not None:
         for character_id in range(project.profile.character_name_count):
             pointer = project.get_character_name_pointer(character_id)
-            if character_id and not project.character_name_codec.source_ids(pointer):
+            if character_id and not project.character_name_codec.source_ids(
+                pointer, project.working
+            ):
                 issues.append(
                     ValidationIssue(
                         "error",

@@ -12,6 +12,7 @@ os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import (
     QApplication,
+    QLineEdit,
     QListWidget,
     QMessageBox,
     QPushButton,
@@ -150,6 +151,7 @@ class LegacyWindowTests(QtTestCase):
             )
             self.assertTrue((portrait_directory / "[背面].bmp").is_file())
             self.assertTrue((portrait_directory / "[正面].bmp").is_file())
+            self.assertTrue((portrait_directory / "[效果].bmp").is_file())
 
     def test_global_tables_load_all_verified_rom_defaults(self) -> None:
         project = RomProject.load(DEFAULT_ROM)
@@ -182,6 +184,20 @@ class LegacyWindowTests(QtTestCase):
                 (100, 90, 80, 70, 60, 50, 40, 30, 20, 10, 9, 8, 7, 6, 5, 4),
             ),
         )
+        self.assertEqual(page.level_cap_value.text(), "当前等级上限：99")
+        self.assertFalse(page.level_cap_button.isEnabled())
+        self.assertIn("99级布局", page.level_cap_button.toolTip())
+        self.assertIn("audit.nes", page.level_cap_button.toolTip())
+
+    def test_experience_table_rejects_non_monotonic_thresholds(self) -> None:
+        project = RomProject.load(DEFAULT_ROM)
+        dialog = self._show(DatabaseDialog(project))
+        page = dialog.other_page_1
+        page.experience_table.item(1, 1).setText("10")
+        self.application.processEvents()
+        self.assertTrue(page.has_pending_draft)
+        self.assertIn("不能小于", page.pending_draft_error or "")
+        self.assertFalse(page.apply_button.isEnabled())
 
     def test_database_ok_commits_global_table_drafts_and_undo_restores_both(self) -> None:
         project = RomProject.load(DEFAULT_ROM)
@@ -405,9 +421,25 @@ class LegacyWindowTests(QtTestCase):
                 for index in range(dialog.setup_event_tabs.count())
             )
         )
-        self.assertTrue(dialog.setup_event_pages[0].isVisible())
-        self.assertTrue(all(page.isHidden() for page in dialog.setup_event_pages[1:]))
-        self.assertTrue(dialog.action_event_page.isHidden())
+        self.assertTrue(all(page.isHidden() for page in dialog.setup_event_pages))
+        self.assertTrue(
+            all(
+                dialog.setup_event_tabs.widget(index).findChild(QLineEdit) is None
+                for index in range(dialog.setup_event_tabs.count())
+            )
+        )
+        self.assertTrue(
+            all(
+                overview is not page.record_list
+                for overview, page in zip(
+                    dialog.setup_event_lists, dialog.setup_event_pages
+                )
+            )
+        )
+        self.assertEqual(dialog.space_button.text(), ScenarioDialog.SPACE_BUTTON_TEXT)
+        self.assertTrue(dialog.space_button.isEnabled())
+        self.assertFalse(dialog.action_event_page.isHidden())
+        self.assertEqual(dialog.action_event_page.action_list.count(), 0x100)
         self.assertTrue(dialog.map_event_page.isHidden())
         title_pixmap = dialog.title_preview.pixmap()
         self.assertIsNotNone(title_pixmap)
@@ -420,6 +452,57 @@ class LegacyWindowTests(QtTestCase):
         dialog.tabs.setCurrentIndex(3)
         self.assertIs(shared_context.parentWidget(), dialog._splitters[3])
         self.assertFalse(shared_context.isHidden())
+
+    def test_scenario_space_button_reports_verified_shared_pools(self) -> None:
+        dialog = self._show(ScenarioDialog(self.project))
+        before = bytes(self.project.working)
+
+        report = dialog.scenario_space_report_text()
+
+        self.assertEqual(report.count("剧情 $"), 8)
+        self.assertIn(
+            "界面事件和回合事件（Bank $1E）：3541 / 8192 字节，剩余 4651 字节",
+            report,
+        )
+        self.assertIn(
+            "即时事件（Bank $1B）：8154 / 8192 字节，剩余 38 字节",
+            report,
+        )
+        self.assertIn(
+            "即时事件（Bank $1F）：1525 / 8192 字节，剩余 6667 字节",
+            report,
+        )
+        self.assertIn(
+            "独立行动事件（Bank $26）：2541 / 2751 字节，剩余 210 字节",
+            report,
+        )
+        self.assertIn("256 项指针 / 45 个有效物理脚本", report)
+        self.assertIn("劝降事件为 4 个已验证等长槽", report)
+        self.assertIn("地图事件为分 Bank 章节脚本的条件索引", report)
+        self.assertEqual(bytes(self.project.working), before)
+
+        with patch("dc_modifier.legacy_windows.QMessageBox.information") as info:
+            dialog.space_button.click()
+            self.application.processEvents()
+
+        info.assert_called_once()
+        self.assertEqual(info.call_args.args[1], "提示")
+        self.assertEqual(info.call_args.args[2], report)
+        self.assertEqual(bytes(self.project.working), before)
+
+    def test_scenario_setup_projection_tracks_hidden_event_editor(self) -> None:
+        dialog = self._show(ScenarioDialog(self.project, initial_scenario_id=0))
+        overview = dialog.setup_event_lists[0]
+        controller = dialog.setup_event_pages[0]
+        self.assertEqual(overview.count(), controller.record_list.count())
+        self.assertGreater(overview.count(), 1)
+
+        overview.setCurrentRow(1)
+        self.application.processEvents()
+
+        self.assertEqual(controller.record_list.currentRow(), 1)
+        self.assertEqual(overview.item(1).text(), controller.record_list.item(1).text())
+        self.assertIn("双击", overview.item(1).toolTip())
 
     def test_scenario_open_does_not_manufacture_unknown_opcode_drafts(self) -> None:
         dialog = self._show(ScenarioDialog(self.project, initial_scenario_id=0))
@@ -435,7 +518,7 @@ class LegacyWindowTests(QtTestCase):
         for page in explicit.setup_event_pages:
             self.assertEqual(page.scenario_id, 5)
         self.assertEqual(explicit.map_event_page.scenario_filter.currentData(), 5)
-        self.assertIsNone(explicit.action_event_page.scenario_filter.currentData())
+        self.assertEqual(explicit.action_event_page.current_action_id, 0)
 
         parent = QWidget()
         parent.map_page = SimpleNamespace(current_map_id=7)
@@ -582,7 +665,7 @@ class LegacyWindowTests(QtTestCase):
         for event_page in dialog.setup_event_pages:
             self.assertEqual(event_page.scenario_id, target_scenario)
         self.assertEqual(dialog.map_event_page.scenario_filter.currentData(), target_scenario)
-        self.assertIsNone(dialog.action_event_page.scenario_filter.currentData())
+        self.assertEqual(dialog.action_event_page.current_action_id, 0)
 
     def test_scenario_chapter_switch_blocks_invalid_hidden_event_draft(self) -> None:
         dialog = self._show(ScenarioDialog(self.project, initial_scenario_id=0))

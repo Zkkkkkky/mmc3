@@ -63,7 +63,7 @@ class WeaponNameReferenceCodec:
         assert profile.weapon_name_pointer_table_offset is not None
         return profile.weapon_name_pointer_table_offset + weapon_id * 2
 
-    def pointer(self, weapon_id: int, data: bytes | None = None) -> int:
+    def pointer(self, weapon_id: int, data: bytes | bytearray | None = None) -> int:
         source = self.rom.data if data is None else data
         offset = self.pointer_offset(weapon_id)
         return int.from_bytes(source[offset : offset + 2], "little")
@@ -82,7 +82,9 @@ class WeaponNameReferenceCodec:
             - profile.weapon_name_data_window_base
         )
 
-    def record_bytes(self, weapon_id: int, data: bytes | None = None) -> bytes:
+    def record_bytes(
+        self, weapon_id: int, data: bytes | bytearray | None = None
+    ) -> bytes:
         source = self.rom.data if data is None else data
         pointer = self.pointer(weapon_id, source)
         offset = self.pointer_to_file_offset(pointer)

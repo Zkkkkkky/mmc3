@@ -23,6 +23,14 @@ Read `docs/交接文档.md` before changing ROM layout or audio behavior. For hi
 
 `docs/提交记录.md` is a historical record. Do not rewrite it merely to make old commands or old paths look current.
 
+## Development Sequence & Persistent Progress Log
+
+Follow the user-approved execution queue in `docs/需求拆分/README.md` section 4.1. It refines the P0–P3 roadmap without changing the main requirements baseline; M02 is explicitly allowed to start early. If evidence or dependencies require a different order, record the reason and revised order there before proceeding. Do not treat a planned step or an implementation-side self-check as user acceptance.
+
+At the end of **every development work turn**, including partial implementations, failed verification, or blocked work, append an entry to `docs/开发记录.md` before handing off. Record what was actually done, what remains undone or disabled, verification commands/results and evidence, risks, and the concrete next step. Never silently omit unfinished work or call unrun tests successful. Update the affected module's section 8 and the main requirements chapter 11 when actual status changes; user acceptance tables are filled only after the user signs off. This is a standing user instruction and does not require another reminder. Keep `docs/提交记录.md` as a separate historical record.
+
+Whenever a requirements module reaches the implementation scope declared complete for the current delivery, automatically create or update a user-executable acceptance checklist in the same development turn. Keep the module's section 7 and any consolidated acceptance checklist synchronized with the delivered scope. Include prerequisites and build/input hashes when relevant, numbered steps, expected results, evidence fields, failure/issue recording, and a final user sign-off table; explicitly identify disabled, deferred, read-only, or unverified scope. Creating or updating the checklist is not user acceptance: do not fill acceptance results or upgrade status until the user explicitly signs off.
+
 ## Build, Test, and Development Commands
 
 Run commands from the repository root on Windows:

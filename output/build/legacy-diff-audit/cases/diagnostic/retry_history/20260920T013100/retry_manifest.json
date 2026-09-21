@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "reason": "first unit-type 0-to-1 migration discovery saved/reopened and produced 14066-byte resource rewrite; preserve for exact reproduction",
+  "timestamp": "20260920T013100",
+  "moved": [
+    {
+      "module": "M05",
+      "field": "unit_type",
+      "case_id": "cold_start_01",
+      "from": "output/build/legacy-diff-audit/cases/legacy_live/M05/unit_type/cold_start_01",
+      "to": "output/build/legacy-diff-audit/cases/diagnostic/retry_history/20260920T013100/M05/unit_type/cold_start_01",
+      "had_case_json": true,
+      "had_error_json": false
+    }
+  ],
+  "live_result_rows_removed": 1
+}

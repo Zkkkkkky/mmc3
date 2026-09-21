@@ -45,7 +45,7 @@ class RomDataBrowserTests(QtTestCase):
         )
         self.assertEqual(
             tuple(len(sheet.rows) for sheet in sheets),
-            (255, 199, 254, 100, 1258, 1177, 6911),
+            (255, 199, 255, 100, 1258, 1177, 8359),
         )
         self.assertEqual(sheets[0].rows[0][4], "08 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00")
         self.assertEqual(sheets[0].rows[1][4], "18 00 00 08 3C 84 36 82 90 01 64 00 02 CA 02 0A")
@@ -86,10 +86,10 @@ class RomDataBrowserTests(QtTestCase):
         dialog = AttributeCalculatorDialog(project=self.project)
         for side in (dialog.enemy, dialog.ally):
             self.assertEqual(side.character.currentData(), 4)
-            self.assertEqual(side.unit.currentData(), 2)
-            self.assertEqual(side.weapon.currentData(), 1)
-            self.assertEqual(side.strength.value(), 132)
-            self.assertEqual(side.skill.value(), self.project.get_value(2, "special"))
+            self.assertEqual(side.unit.currentData(), 9)
+            self.assertEqual(side.weapon.currentData(), 7)
+            self.assertEqual(side.strength.value(), 98)
+            self.assertEqual(side.skill.value(), 2)
             self.assertIn("21 C9 A0 00 08 00", side.character_summary.text())
             self.assertIn("武器特技", side.weapon_summary.text())
         dialog.reject()

@@ -1,0 +1,2796 @@
+{
+  "module": "M10",
+  "classification": "reference_controls_enumerated_save_probe_pending",
+  "source_sha256": "c0f6fb15dbcc9f04d35ec97b9558df85d099c661c35d54d3a2aae4966d2ed5b2",
+  "controls": {
+    "1690": {
+      "style": 1454473229,
+      "ex_style": 0,
+      "enabled": true,
+      "visible": true,
+      "edit_read_only": null
+    },
+    "1710": {
+      "style": 1417740416,
+      "ex_style": 0,
+      "enabled": true,
+      "visible": true,
+      "edit_read_only": false
+    },
+    "1730": {
+      "style": 1417740416,
+      "ex_style": 0,
+      "enabled": true,
+      "visible": true,
+      "edit_read_only": false
+    },
+    "1780": {
+      "style": 1419841604,
+      "ex_style": 0,
+      "enabled": true,
+      "visible": true,
+      "edit_read_only": false
+    },
+    "1810": {
+      "style": 1417740673,
+      "ex_style": 0,
+      "enabled": true,
+      "visible": true,
+      "edit_read_only": null
+    },
+    "1870": {
+      "style": 1409352259,
+      "ex_style": 0,
+      "enabled": true,
+      "visible": true,
+      "edit_read_only": null
+    },
+    "1880": {
+      "style": 1409352259,
+      "ex_style": 0,
+      "enabled": true,
+      "visible": true,
+      "edit_read_only": null
+    },
+    "1890": {
+      "style": 1409352259,
+      "ex_style": 0,
+      "enabled": true,
+      "visible": true,
+      "edit_read_only": null
+    },
+    "1900": {
+      "style": 1409352259,
+      "ex_style": 0,
+      "enabled": true,
+      "visible": true,
+      "edit_read_only": null
+    },
+    "1920": {
+      "style": 1409352259,
+      "ex_style": 0,
+      "enabled": true,
+      "visible": true,
+      "edit_read_only": null
+    },
+    "1940": {
+      "style": 1409352259,
+      "ex_style": 0,
+      "enabled": true,
+      "visible": true,
+      "edit_read_only": null
+    },
+    "1970": {
+      "style": 1419841604,
+      "ex_style": 0,
+      "enabled": true,
+      "visible": true,
+      "edit_read_only": false
+    },
+    "1990": {
+      "style": 1419841604,
+      "ex_style": 0,
+      "enabled": true,
+      "visible": true,
+      "edit_read_only": false
+    },
+    "2010": {
+      "style": 1419841604,
+      "ex_style": 0,
+      "enabled": true,
+      "visible": true,
+      "edit_read_only": false
+    },
+    "2020": {
+      "style": 1419841604,
+      "ex_style": 0,
+      "enabled": true,
+      "visible": true,
+      "edit_read_only": false
+    },
+    "2040": {
+      "style": 1419841604,
+      "ex_style": 0,
+      "enabled": true,
+      "visible": true,
+      "edit_read_only": false
+    },
+    "2060": {
+      "style": 1419841604,
+      "ex_style": 0,
+      "enabled": true,
+      "visible": true,
+      "edit_read_only": false
+    },
+    "2090": {
+      "style": 1419841604,
+      "ex_style": 0,
+      "enabled": true,
+      "visible": true,
+      "edit_read_only": false
+    }
+  },
+  "counts": {
+    "logical_fields": 254,
+    "product_safe_candidates": 134,
+    "product_blocked_candidates": 120,
+    "unique_initial_physical_ids": 184,
+    "families": {
+      "item_description": 24,
+      "item_name": 24,
+      "item_price": 24,
+      "shop_clerk": 14,
+      "shop_dialogue_id": 14,
+      "shop_dialogue_text": 98,
+      "shop_item": 56
+    },
+    "items": 24,
+    "reference_shop_rows": 14
+  },
+  "reference_shop_labels": [
+    "商店F0",
+    "商店F1",
+    "商店F2",
+    "商店F3",
+    "商店F4",
+    "商店F5",
+    "商店F6",
+    "商店F7",
+    "商店F8",
+    "商店F9",
+    "商店FA",
+    "商店FB",
+    "商店FC",
+    "商店FE"
+  ],
+  "notes": [
+    "The reference ListBox exposes F0-FC and FE; FD is absent.",
+    "F5-FC and FE remain visibly enabled in the reference but overlap map-event data in the supported product layout.",
+    "F4 only has one supported item slot; its remaining three visible slots are treated as blocked candidates.",
+    "Dialogue edits alias M09 system-text records by the selected base dialogue id."
+  ],
+  "fields": [
+    {
+      "field_id": "M10/item_name/01",
+      "physical_id": "M10/item_name/01",
+      "family": "item_name",
+      "row": 0,
+      "control_id": 1710,
+      "value": "佐玛合金",
+      "product_safe": true
+    },
+    {
+      "field_id": "M10/item_price/01",
+      "physical_id": "M10/item_price/01",
+      "family": "item_price",
+      "row": 0,
+      "control_id": 1730,
+      "value": "3000",
+      "product_safe": true
+    },
+    {
+      "field_id": "M10/item_description/01",
+      "physical_id": "M10/item_description/01",
+      "family": "item_description",
+      "row": 0,
+      "control_id": 1780,
+      "value": "__使用它，防御力增加1点。",
+      "product_safe": true
+    },
+    {
+      "field_id": "M10/item_name/02",
+      "physical_id": "M10/item_name/02",
+      "family": "item_name",
+      "row": 1,
+      "control_id": 1710,
+      "value": "磁性涂料",
+      "product_safe": true
+    },
+    {
+      "field_id": "M10/item_price/02",
+      "physical_id": "M10/item_price/02",
+      "family": "item_price",
+      "row": 1,
+      "control_id": 1730,
+      "value": "4000",
+      "product_safe": true
+    },
+    {
+      "field_id": "M10/item_description/02",
+      "physical_id": "M10/item_description/02",
+      "family": "item_description",
+      "row": 1,
+      "control_id": 1780,
+      "value": "__加快反应速度，\r\n@速度提高1点。",
+      "product_safe": true
+    },
+    {
+      "field_id": "M10/item_name/03",
+      "physical_id": "M10/item_name/03",
+      "family": "item_name",
+      "row": 2,
+      "control_id": 1710,
+      "value": "传感器",
+      "product_safe": true
+    },
+    {
+      "field_id": "M10/item_price/03",
+      "physical_id": "M10/item_price/03",
+      "family": "item_price",
+      "row": 2,
+      "control_id": 1730,
+      "value": "2000",
+      "product_safe": true
+    },
+    {
+      "field_id": "M10/item_description/03",
+      "physical_id": "M10/item_description/03",
+      "family": "item_description",
+      "row": 2,
+      "control_id": 1780,
+      "value": "__使用这种装置，\r\n@强度增加1点。",
+      "product_safe": true
+    },
+    {
+      "field_id": "M10/item_name/04",
+      "physical_id": "M10/item_name/04",
+      "family": "item_name",
+      "row": 3,
+      "control_id": 1710,
+      "value": "C装甲",
+      "product_safe": true
+    },
+    {
+      "field_id": "M10/item_price/04",
+      "physical_id": "M10/item_price/04",
+      "family": "item_price",
+      "row": 3,
+      "control_id": 1730,
+      "value": "2000",
+      "product_safe": true
+    },
+    {
+      "field_id": "M10/item_description/04",
+      "physical_id": "M10/item_description/04",
+      "family": "item_description",
+      "row": 3,
+      "control_id": 1780,
+      "value": "__也叫复合装甲，\r\n@HP上限提高5点。",
+      "product_safe": true
+    },
+    {
+      "field_id": "M10/item_name/05",
+      "physical_id": "M10/item_name/05",
+      "family": "item_name",
+      "row": 4,
+      "control_id": 1710,
+      "value": "尼姆合金",
+      "product_safe": true
+    },
+    {
+      "field_id": "M10/item_price/05",
+      "physical_id": "M10/item_price/05",
+      "family": "item_price",
+      "row": 4,
+      "control_id": 1730,
+      "value": "5000",
+      "product_safe": true
+    },
+    {
+      "field_id": "M10/item_description/05",
+      "physical_id": "M10/item_description/05",
+      "family": "item_description",
+      "row": 4,
+      "control_id": 1780,
+      "value": "__能强化超合金Z，\r\n@提高防护力3点。",
+      "product_safe": true
+    },
+    {
+      "field_id": "M10/item_name/06",
+      "physical_id": "M10/item_name/06",
+      "family": "item_name",
+      "row": 5,
+      "control_id": 1710,
+      "value": "TSL推进器",
+      "product_safe": true
+    },
+    {
+      "field_id": "M10/item_price/06",
+      "physical_id": "M10/item_price/06",
+      "family": "item_price",
+      "row": 5,
+      "control_id": 1730,
+      "value": "8000",
+      "product_safe": true
+    },
+    {
+      "field_id": "M10/item_description/06",
+      "physical_id": "M10/item_description/06",
+      "family": "item_description",
+      "row": 5,
+      "control_id": 1780,
+      "value": "__火箭喷射装置，\r\n@提高移动力1点。",
+      "product_safe": true
+    },
+    {
+      "field_id": "M10/item_name/07",
+      "physical_id": "M10/item_name/07",
+      "family": "item_name",
+      "row": 6,
+      "control_id": 1710,
+      "value": "喷气机翼",
+      "product_safe": true
+    },
+    {
+      "field_id": "M10/item_price/07",
+      "physical_id": "M10/item_price/07",
+      "family": "item_price",
+      "row": 6,
+      "control_id": 1730,
+      "value": "9000",
+      "product_safe": true
+    },
+    {
+      "field_id": "M10/item_description/07",
+      "physical_id": "M10/item_description/07",
+      "family": "item_description",
+      "row": 6,
+      "control_id": 1780,
+      "value": "__装上红色机翼，\r\n@能在太空飞行。",
+      "product_safe": true
+    },
+    {
+      "field_id": "M10/item_name/08",
+      "physical_id": "M10/item_name/08",
+      "family": "item_name",
+      "row": 7,
+      "control_id": 1710,
+      "value": "T-强化模组",
+      "product_safe": true
+    },
+    {
+      "field_id": "M10/item_price/08",
+      "physical_id": "M10/item_price/08",
+      "family": "item_price",
+      "row": 7,
+      "control_id": 1730,
+      "value": "3000",
+      "product_safe": true
+    },
+    {
+      "field_id": "M10/item_description/08",
+      "physical_id": "M10/item_description/08",
+      "family": "item_description",
+      "row": 7,
+      "control_id": 1780,
+      "value": "__增强型传感器，\r\n@提高攻击力3点。",
+      "product_safe": true
+    },
+    {
+      "field_id": "M10/item_name/09",
+      "physical_id": "M10/item_name/09",
+      "family": "item_name",
+      "row": 8,
+      "control_id": 1710,
+      "value": "生化传感器",
+      "product_safe": true
+    },
+    {
+      "field_id": "M10/item_price/09",
+      "physical_id": "M10/item_price/09",
+      "family": "item_price",
+      "row": 8,
+      "control_id": 1730,
+      "value": "5000",
+      "product_safe": true
+    },
+    {
+      "field_id": "M10/item_description/09",
+      "physical_id": "M10/item_description/09",
+      "family": "item_description",
+      "row": 8,
+      "control_id": 1780,
+      "value": "__能反映脑电波，\r\n@速度提高3点。",
+      "product_safe": true
+    },
+    {
+      "field_id": "M10/item_name/10",
+      "physical_id": "M10/item_name/10",
+      "family": "item_name",
+      "row": 9,
+      "control_id": 1710,
+      "value": "混合式装甲",
+      "product_safe": true
+    },
+    {
+      "field_id": "M10/item_price/10",
+      "physical_id": "M10/item_price/10",
+      "family": "item_price",
+      "row": 9,
+      "control_id": 1730,
+      "value": "3000",
+      "product_safe": true
+    },
+    {
+      "field_id": "M10/item_description/10",
+      "physical_id": "M10/item_description/10",
+      "family": "item_description",
+      "row": 9,
+      "control_id": 1780,
+      "value": "__新式的电子光束盾，\r\n@HP上限提高10点。",
+      "product_safe": true
+    },
+    {
+      "field_id": "M10/item_name/11",
+      "physical_id": "M10/item_name/11",
+      "family": "item_name",
+      "row": 10,
+      "control_id": 1710,
+      "value": "米诺夫粒子",
+      "product_safe": true
+    },
+    {
+      "field_id": "M10/item_price/11",
+      "physical_id": "M10/item_price/11",
+      "family": "item_price",
+      "row": 10,
+      "control_id": 1730,
+      "value": "18000",
+      "product_safe": true
+    },
+    {
+      "field_id": "M10/item_description/11",
+      "physical_id": "M10/item_description/11",
+      "family": "item_description",
+      "row": 10,
+      "control_id": 1780,
+      "value": "__干扰雷达，\r\n@使敌人命中变为0%。",
+      "product_safe": true
+    },
+    {
+      "field_id": "M10/item_name/12",
+      "physical_id": "M10/item_name/12",
+      "family": "item_name",
+      "row": 11,
+      "control_id": 1710,
+      "value": "正义",
+      "product_safe": true
+    },
+    {
+      "field_id": "M10/item_price/12",
+      "physical_id": "M10/item_price/12",
+      "family": "item_price",
+      "row": 11,
+      "control_id": 1730,
+      "value": "5000",
+      "product_safe": true
+    },
+    {
+      "field_id": "M10/item_description/12",
+      "physical_id": "M10/item_description/12",
+      "family": "item_description",
+      "row": 11,
+      "control_id": 1780,
+      "value": "__使用它\r\n@恢复精神20点。",
+      "product_safe": true
+    },
+    {
+      "field_id": "M10/item_name/13",
+      "physical_id": "M10/item_name/13",
+      "family": "item_name",
+      "row": 12,
+      "control_id": 1710,
+      "value": "精神回复器",
+      "product_safe": true
+    },
+    {
+      "field_id": "M10/item_price/13",
+      "physical_id": "M10/item_price/13",
+      "family": "item_price",
+      "row": 12,
+      "control_id": 1730,
+      "value": "15000",
+      "product_safe": true
+    },
+    {
+      "field_id": "M10/item_description/13",
+      "physical_id": "M10/item_description/13",
+      "family": "item_description",
+      "row": 12,
+      "control_id": 1780,
+      "value": "__使用它恢复精神100点。",
+      "product_safe": true
+    },
+    {
+      "field_id": "M10/item_name/14",
+      "physical_id": "M10/item_name/14",
+      "family": "item_name",
+      "row": 13,
+      "control_id": 1710,
+      "value": "救援组件",
+      "product_safe": true
+    },
+    {
+      "field_id": "M10/item_price/14",
+      "physical_id": "M10/item_price/14",
+      "family": "item_price",
+      "row": 13,
+      "control_id": 1730,
+      "value": "18000",
+      "product_safe": true
+    },
+    {
+      "field_id": "M10/item_description/14",
+      "physical_id": "M10/item_description/14",
+      "family": "item_description",
+      "row": 13,
+      "control_id": 1780,
+      "value": "__恢复全体成员的HP50到200点。",
+      "product_safe": true
+    },
+    {
+      "field_id": "M10/item_name/15",
+      "physical_id": "M10/item_name/15",
+      "family": "item_name",
+      "row": 14,
+      "control_id": 1710,
+      "value": "斗志",
+      "product_safe": true
+    },
+    {
+      "field_id": "M10/item_price/15",
+      "physical_id": "M10/item_price/15",
+      "family": "item_price",
+      "row": 14,
+      "control_id": 1730,
+      "value": "12000",
+      "product_safe": true
+    },
+    {
+      "field_id": "M10/item_description/15",
+      "physical_id": "M10/item_description/15",
+      "family": "item_description",
+      "row": 14,
+      "control_id": 1780,
+      "value": "__可用一次，\r\n@攻击力变为2倍。",
+      "product_safe": true
+    },
+    {
+      "field_id": "M10/item_name/16",
+      "physical_id": "M10/item_name/16",
+      "family": "item_name",
+      "row": 15,
+      "control_id": 1710,
+      "value": "疾风",
+      "product_safe": true
+    },
+    {
+      "field_id": "M10/item_price/16",
+      "physical_id": "M10/item_price/16",
+      "family": "item_price",
+      "row": 15,
+      "control_id": 1730,
+      "value": "1000",
+      "product_safe": true
+    },
+    {
+      "field_id": "M10/item_description/16",
+      "physical_id": "M10/item_description/16",
+      "family": "item_description",
+      "row": 15,
+      "control_id": 1780,
+      "value": "__使机器人的机动力加3。",
+      "product_safe": true
+    },
+    {
+      "field_id": "M10/item_name/17",
+      "physical_id": "M10/item_name/17",
+      "family": "item_name",
+      "row": 16,
+      "control_id": 1710,
+      "value": "勇气",
+      "product_safe": true
+    },
+    {
+      "field_id": "M10/item_price/17",
+      "physical_id": "M10/item_price/17",
+      "family": "item_price",
+      "row": 16,
+      "control_id": 1730,
+      "value": "4000",
+      "product_safe": true
+    },
+    {
+      "field_id": "M10/item_description/17",
+      "physical_id": "M10/item_description/17",
+      "family": "item_description",
+      "row": 16,
+      "control_id": 1780,
+      "value": "__恢复机器人的HP100点。",
+      "product_safe": true
+    },
+    {
+      "field_id": "M10/item_name/18",
+      "physical_id": "M10/item_name/18",
+      "family": "item_name",
+      "row": 17,
+      "control_id": 1710,
+      "value": "愤怒",
+      "product_safe": true
+    },
+    {
+      "field_id": "M10/item_price/18",
+      "physical_id": "M10/item_price/18",
+      "family": "item_price",
+      "row": 17,
+      "control_id": 1730,
+      "value": "10000",
+      "product_safe": true
+    },
+    {
+      "field_id": "M10/item_description/18",
+      "physical_id": "M10/item_description/18",
+      "family": "item_description",
+      "row": 17,
+      "control_id": 1780,
+      "value": "__给敌方1台机器\r\n@10到200的损害。",
+      "product_safe": true
+    },
+    {
+      "field_id": "M10/item_name/19",
+      "physical_id": "M10/item_name/19",
+      "family": "item_name",
+      "row": 18,
+      "control_id": 1710,
+      "value": "努力",
+      "product_safe": true
+    },
+    {
+      "field_id": "M10/item_price/19",
+      "physical_id": "M10/item_price/19",
+      "family": "item_price",
+      "row": 18,
+      "control_id": 1730,
+      "value": "1000",
+      "product_safe": true
+    },
+    {
+      "field_id": "M10/item_description/19",
+      "physical_id": "M10/item_description/19",
+      "family": "item_description",
+      "row": 18,
+      "control_id": 1780,
+      "value": "__下次击落敌人获得经验\\\r\n和金钱为2倍！",
+      "product_safe": true
+    },
+    {
+      "field_id": "M10/item_name/20",
+      "physical_id": "M10/item_name/20",
+      "family": "item_name",
+      "row": 19,
+      "control_id": 1710,
+      "value": "根基",
+      "product_safe": true
+    },
+    {
+      "field_id": "M10/item_price/20",
+      "physical_id": "M10/item_price/20",
+      "family": "item_price",
+      "row": 19,
+      "control_id": 1730,
+      "value": "5000",
+      "product_safe": true
+    },
+    {
+      "field_id": "M10/item_description/20",
+      "physical_id": "M10/item_description/20",
+      "family": "item_description",
+      "row": 19,
+      "control_id": 1780,
+      "value": "__增加1-255点EXP。",
+      "product_safe": true
+    },
+    {
+      "field_id": "M10/item_name/21",
+      "physical_id": "M10/item_name/21",
+      "family": "item_name",
+      "row": 20,
+      "control_id": 1710,
+      "value": "地雷",
+      "product_safe": true
+    },
+    {
+      "field_id": "M10/item_price/21",
+      "physical_id": "M10/item_price/21",
+      "family": "item_price",
+      "row": 20,
+      "control_id": 1730,
+      "value": "99990",
+      "product_safe": true
+    },
+    {
+      "field_id": "M10/item_description/21",
+      "physical_id": "M10/item_description/21",
+      "family": "item_description",
+      "row": 20,
+      "control_id": 1780,
+      "value": "",
+      "product_safe": true
+    },
+    {
+      "field_id": "M10/item_name/22",
+      "physical_id": "M10/item_name/22",
+      "family": "item_name",
+      "row": 21,
+      "control_id": 1710,
+      "value": "探雷器",
+      "product_safe": true
+    },
+    {
+      "field_id": "M10/item_price/22",
+      "physical_id": "M10/item_price/22",
+      "family": "item_price",
+      "row": 21,
+      "control_id": 1730,
+      "value": "99990",
+      "product_safe": true
+    },
+    {
+      "field_id": "M10/item_description/22",
+      "physical_id": "M10/item_description/22",
+      "family": "item_description",
+      "row": 21,
+      "control_id": 1780,
+      "value": "",
+      "product_safe": true
+    },
+    {
+      "field_id": "M10/item_name/23",
+      "physical_id": "M10/item_name/23",
+      "family": "item_name",
+      "row": 22,
+      "control_id": 1710,
+      "value": "G零件",
+      "product_safe": true
+    },
+    {
+      "field_id": "M10/item_price/23",
+      "physical_id": "M10/item_price/23",
+      "family": "item_price",
+      "row": 22,
+      "control_id": 1730,
+      "value": "1000",
+      "product_safe": true
+    },
+    {
+      "field_id": "M10/item_description/23",
+      "physical_id": "M10/item_description/23",
+      "family": "item_description",
+      "row": 22,
+      "control_id": 1780,
+      "value": "",
+      "product_safe": true
+    },
+    {
+      "field_id": "M10/item_name/24",
+      "physical_id": "M10/item_name/24",
+      "family": "item_name",
+      "row": 23,
+      "control_id": 1710,
+      "value": "非尔卡",
+      "product_safe": true
+    },
+    {
+      "field_id": "M10/item_price/24",
+      "physical_id": "M10/item_price/24",
+      "family": "item_price",
+      "row": 23,
+      "control_id": 1730,
+      "value": "99990",
+      "product_safe": true
+    },
+    {
+      "field_id": "M10/item_description/24",
+      "physical_id": "M10/item_description/24",
+      "family": "item_description",
+      "row": 23,
+      "control_id": 1780,
+      "value": "",
+      "product_safe": true
+    },
+    {
+      "field_id": "M10/shop/F0/item/1",
+      "physical_id": "M10/shop/F0/item/1",
+      "family": "shop_item",
+      "shop_row": 0,
+      "shop_id": 240,
+      "slot": 0,
+      "control_id": 1870,
+      "value": 13,
+      "product_safe": true
+    },
+    {
+      "field_id": "M10/shop/F0/item/2",
+      "physical_id": "M10/shop/F0/item/2",
+      "family": "shop_item",
+      "shop_row": 0,
+      "shop_id": 240,
+      "slot": 1,
+      "control_id": 1880,
+      "value": 5,
+      "product_safe": true
+    },
+    {
+      "field_id": "M10/shop/F0/item/3",
+      "physical_id": "M10/shop/F0/item/3",
+      "family": "shop_item",
+      "shop_row": 0,
+      "shop_id": 240,
+      "slot": 2,
+      "control_id": 1890,
+      "value": 15,
+      "product_safe": true
+    },
+    {
+      "field_id": "M10/shop/F0/item/4",
+      "physical_id": "M10/shop/F0/item/4",
+      "family": "shop_item",
+      "shop_row": 0,
+      "shop_id": 240,
+      "slot": 3,
+      "control_id": 1900,
+      "value": 16,
+      "product_safe": true
+    },
+    {
+      "field_id": "M10/shop/F0/clerk",
+      "physical_id": "M10/shop/F0/clerk",
+      "family": "shop_clerk",
+      "shop_row": 0,
+      "shop_id": 240,
+      "control_id": 1920,
+      "value": 1,
+      "product_safe": true
+    },
+    {
+      "field_id": "M10/shop/F0/dialogue_id",
+      "physical_id": "M10/shop/F0/dialogue_id",
+      "family": "shop_dialogue_id",
+      "shop_row": 0,
+      "shop_id": 240,
+      "control_id": 1940,
+      "value": 48,
+      "product_safe": true
+    },
+    {
+      "field_id": "M10/shop/F0/dialogue/1",
+      "physical_id": "M09/system/048",
+      "family": "shop_dialogue_text",
+      "shop_row": 0,
+      "shop_id": 240,
+      "slot": 0,
+      "control_id": 1970,
+      "value": "[EE14查理：欢迎光临道具商店！】\r\n",
+      "product_safe": true
+    },
+    {
+      "field_id": "M10/shop/F0/dialogue/2",
+      "physical_id": "M09/system/049",
+      "family": "shop_dialogue_text",
+      "shop_row": 0,
+      "shop_id": 240,
+      "slot": 1,
+      "control_id": 1990,
+      "value": "[EE14查理：需要什么？",
+      "product_safe": true
+    },
+    {
+      "field_id": "M10/shop/F0/dialogue/3",
+      "physical_id": "M09/system/050",
+      "family": "shop_dialogue_text",
+      "shop_row": 0,
+      "shop_id": 240,
+      "slot": 2,
+      "control_id": 2010,
+      "value": "[EE14查理：钱不够啊！】\r\n",
+      "product_safe": true
+    },
+    {
+      "field_id": "M10/shop/F0/dialogue/4",
+      "physical_id": "M09/system/051",
+      "family": "shop_dialogue_text",
+      "shop_row": 0,
+      "shop_id": 240,
+      "slot": 3,
+      "control_id": 2020,
+      "value": "[EE14查理：还要什么吗？",
+      "product_safe": true
+    },
+    {
+      "field_id": "M10/shop/F0/dialogue/5",
+      "physical_id": "M09/system/052",
+      "family": "shop_dialogue_text",
+      "shop_row": 0,
+      "shop_id": 240,
+      "slot": 4,
+      "control_id": 2040,
+      "value": "[EE14查理：要买吗？",
+      "product_safe": true
+    },
+    {
+      "field_id": "M10/shop/F0/dialogue/6",
+      "physical_id": "M09/system/053",
+      "family": "shop_dialogue_text",
+      "shop_row": 0,
+      "shop_id": 240,
+      "slot": 5,
+      "control_id": 2060,
+      "value": "[EE14查理：只能带那么些。】\r\n",
+      "product_safe": true
+    },
+    {
+      "field_id": "M10/shop/F0/dialogue/7",
+      "physical_id": "M09/system/054",
+      "family": "shop_dialogue_text",
+      "shop_row": 0,
+      "shop_id": 240,
+      "slot": 6,
+      "control_id": 2090,
+      "value": "[EE14查理：谢谢。请再来！】\r\n",
+      "product_safe": true
+    },
+    {
+      "field_id": "M10/shop/F1/item/1",
+      "physical_id": "M10/shop/F1/item/1",
+      "family": "shop_item",
+      "shop_row": 1,
+      "shop_id": 241,
+      "slot": 0,
+      "control_id": 1870,
+      "value": 1,
+      "product_safe": true
+    },
+    {
+      "field_id": "M10/shop/F1/item/2",
+      "physical_id": "M10/shop/F1/item/2",
+      "family": "shop_item",
+      "shop_row": 1,
+      "shop_id": 241,
+      "slot": 1,
+      "control_id": 1880,
+      "value": 2,
+      "product_safe": true
+    },
+    {
+      "field_id": "M10/shop/F1/item/3",
+      "physical_id": "M10/shop/F1/item/3",
+      "family": "shop_item",
+      "shop_row": 1,
+      "shop_id": 241,
+      "slot": 2,
+      "control_id": 1890,
+      "value": 19,
+      "product_safe": true
+    },
+    {
+      "field_id": "M10/shop/F1/item/4",
+      "physical_id": "M10/shop/F1/item/4",
+      "family": "shop_item",
+      "shop_row": 1,
+      "shop_id": 241,
+      "slot": 3,
+      "control_id": 1900,
+      "value": 12,
+      "product_safe": true
+    },
+    {
+      "field_id": "M10/shop/F1/clerk",
+      "physical_id": "M10/shop/F1/clerk",
+      "family": "shop_clerk",
+      "shop_row": 1,
+      "shop_id": 241,
+      "control_id": 1920,
+      "value": 1,
+      "product_safe": true
+    },
+    {
+      "field_id": "M10/shop/F1/dialogue_id",
+      "physical_id": "M10/shop/F1/dialogue_id",
+      "family": "shop_dialogue_id",
+      "shop_row": 1,
+      "shop_id": 241,
+      "control_id": 1940,
+      "value": 48,
+      "product_safe": true
+    },
+    {
+      "field_id": "M10/shop/F1/dialogue/1",
+      "physical_id": "M09/system/048",
+      "family": "shop_dialogue_text",
+      "shop_row": 1,
+      "shop_id": 241,
+      "slot": 0,
+      "control_id": 1970,
+      "value": "[EE14查理：欢迎光临道具商店！】\r\n",
+      "product_safe": true
+    },
+    {
+      "field_id": "M10/shop/F1/dialogue/2",
+      "physical_id": "M09/system/049",
+      "family": "shop_dialogue_text",
+      "shop_row": 1,
+      "shop_id": 241,
+      "slot": 1,
+      "control_id": 1990,
+      "value": "[EE14查理：需要什么？",
+      "product_safe": true
+    },
+    {
+      "field_id": "M10/shop/F1/dialogue/3",
+      "physical_id": "M09/system/050",
+      "family": "shop_dialogue_text",
+      "shop_row": 1,
+      "shop_id": 241,
+      "slot": 2,
+      "control_id": 2010,
+      "value": "[EE14查理：钱不够啊！】\r\n",
+      "product_safe": true
+    },
+    {
+      "field_id": "M10/shop/F1/dialogue/4",
+      "physical_id": "M09/system/051",
+      "family": "shop_dialogue_text",
+      "shop_row": 1,
+      "shop_id": 241,
+      "slot": 3,
+      "control_id": 2020,
+      "value": "[EE14查理：还要什么吗？",
+      "product_safe": true
+    },
+    {
+      "field_id": "M10/shop/F1/dialogue/5",
+      "physical_id": "M09/system/052",
+      "family": "shop_dialogue_text",
+      "shop_row": 1,
+      "shop_id": 241,
+      "slot": 4,
+      "control_id": 2040,
+      "value": "[EE14查理：要买吗？",
+      "product_safe": true
+    },
+    {
+      "field_id": "M10/shop/F1/dialogue/6",
+      "physical_id": "M09/system/053",
+      "family": "shop_dialogue_text",
+      "shop_row": 1,
+      "shop_id": 241,
+      "slot": 5,
+      "control_id": 2060,
+      "value": "[EE14查理：只能带那么些。】\r\n",
+      "product_safe": true
+    },
+    {
+      "field_id": "M10/shop/F1/dialogue/7",
+      "physical_id": "M09/system/054",
+      "family": "shop_dialogue_text",
+      "shop_row": 1,
+      "shop_id": 241,
+      "slot": 6,
+      "control_id": 2090,
+      "value": "[EE14查理：谢谢。请再来！】\r\n",
+      "product_safe": true
+    },
+    {
+      "field_id": "M10/shop/F2/item/1",
+      "physical_id": "M10/shop/F2/item/1",
+      "family": "shop_item",
+      "shop_row": 2,
+      "shop_id": 242,
+      "slot": 0,
+      "control_id": 1870,
+      "value": 2,
+      "product_safe": true
+    },
+    {
+      "field_id": "M10/shop/F2/item/2",
+      "physical_id": "M10/shop/F2/item/2",
+      "family": "shop_item",
+      "shop_row": 2,
+      "shop_id": 242,
+      "slot": 1,
+      "control_id": 1880,
+      "value": 4,
+      "product_safe": true
+    },
+    {
+      "field_id": "M10/shop/F2/item/3",
+      "physical_id": "M10/shop/F2/item/3",
+      "family": "shop_item",
+      "shop_row": 2,
+      "shop_id": 242,
+      "slot": 2,
+      "control_id": 1890,
+      "value": 17,
+      "product_safe": true
+    },
+    {
+      "field_id": "M10/shop/F2/item/4",
+      "physical_id": "M10/shop/F2/item/4",
+      "family": "shop_item",
+      "shop_row": 2,
+      "shop_id": 242,
+      "slot": 3,
+      "control_id": 1900,
+      "value": 20,
+      "product_safe": true
+    },
+    {
+      "field_id": "M10/shop/F2/clerk",
+      "physical_id": "M10/shop/F2/clerk",
+      "family": "shop_clerk",
+      "shop_row": 2,
+      "shop_id": 242,
+      "control_id": 1920,
+      "value": 1,
+      "product_safe": true
+    },
+    {
+      "field_id": "M10/shop/F2/dialogue_id",
+      "physical_id": "M10/shop/F2/dialogue_id",
+      "family": "shop_dialogue_id",
+      "shop_row": 2,
+      "shop_id": 242,
+      "control_id": 1940,
+      "value": 48,
+      "product_safe": true
+    },
+    {
+      "field_id": "M10/shop/F2/dialogue/1",
+      "physical_id": "M09/system/048",
+      "family": "shop_dialogue_text",
+      "shop_row": 2,
+      "shop_id": 242,
+      "slot": 0,
+      "control_id": 1970,
+      "value": "[EE14查理：欢迎光临道具商店！】\r\n",
+      "product_safe": true
+    },
+    {
+      "field_id": "M10/shop/F2/dialogue/2",
+      "physical_id": "M09/system/049",
+      "family": "shop_dialogue_text",
+      "shop_row": 2,
+      "shop_id": 242,
+      "slot": 1,
+      "control_id": 1990,
+      "value": "[EE14查理：需要什么？",
+      "product_safe": true
+    },
+    {
+      "field_id": "M10/shop/F2/dialogue/3",
+      "physical_id": "M09/system/050",
+      "family": "shop_dialogue_text",
+      "shop_row": 2,
+      "shop_id": 242,
+      "slot": 2,
+      "control_id": 2010,
+      "value": "[EE14查理：钱不够啊！】\r\n",
+      "product_safe": true
+    },
+    {
+      "field_id": "M10/shop/F2/dialogue/4",
+      "physical_id": "M09/system/051",
+      "family": "shop_dialogue_text",
+      "shop_row": 2,
+      "shop_id": 242,
+      "slot": 3,
+      "control_id": 2020,
+      "value": "[EE14查理：还要什么吗？",
+      "product_safe": true
+    },
+    {
+      "field_id": "M10/shop/F2/dialogue/5",
+      "physical_id": "M09/system/052",
+      "family": "shop_dialogue_text",
+      "shop_row": 2,
+      "shop_id": 242,
+      "slot": 4,
+      "control_id": 2040,
+      "value": "[EE14查理：要买吗？",
+      "product_safe": true
+    },
+    {
+      "field_id": "M10/shop/F2/dialogue/6",
+      "physical_id": "M09/system/053",
+      "family": "shop_dialogue_text",
+      "shop_row": 2,
+      "shop_id": 242,
+      "slot": 5,
+      "control_id": 2060,
+      "value": "[EE14查理：只能带那么些。】\r\n",
+      "product_safe": true
+    },
+    {
+      "field_id": "M10/shop/F2/dialogue/7",
+      "physical_id": "M09/system/054",
+      "family": "shop_dialogue_text",
+      "shop_row": 2,
+      "shop_id": 242,
+      "slot": 6,
+      "control_id": 2090,
+      "value": "[EE14查理：谢谢。请再来！】\r\n",
+      "product_safe": true
+    },
+    {
+      "field_id": "M10/shop/F3/item/1",
+      "physical_id": "M10/shop/F3/item/1",
+      "family": "shop_item",
+      "shop_row": 3,
+      "shop_id": 243,
+      "slot": 0,
+      "control_id": 1870,
+      "value": 3,
+      "product_safe": true
+    },
+    {
+      "field_id": "M10/shop/F3/item/2",
+      "physical_id": "M10/shop/F3/item/2",
+      "family": "shop_item",
+      "shop_row": 3,
+      "shop_id": 243,
+      "slot": 1,
+      "control_id": 1880,
+      "value": 4,
+      "product_safe": true
+    },
+    {
+      "field_id": "M10/shop/F3/item/3",
+      "physical_id": "M10/shop/F3/item/3",
+      "family": "shop_item",
+      "shop_row": 3,
+      "shop_id": 243,
+      "slot": 2,
+      "control_id": 1890,
+      "value": 11,
+      "product_safe": true
+    },
+    {
+      "field_id": "M10/shop/F3/item/4",
+      "physical_id": "M10/shop/F3/item/4",
+      "family": "shop_item",
+      "shop_row": 3,
+      "shop_id": 243,
+      "slot": 3,
+      "control_id": 1900,
+      "value": 17,
+      "product_safe": true
+    },
+    {
+      "field_id": "M10/shop/F3/clerk",
+      "physical_id": "M10/shop/F3/clerk",
+      "family": "shop_clerk",
+      "shop_row": 3,
+      "shop_id": 243,
+      "control_id": 1920,
+      "value": 1,
+      "product_safe": true
+    },
+    {
+      "field_id": "M10/shop/F3/dialogue_id",
+      "physical_id": "M10/shop/F3/dialogue_id",
+      "family": "shop_dialogue_id",
+      "shop_row": 3,
+      "shop_id": 243,
+      "control_id": 1940,
+      "value": 55,
+      "product_safe": true
+    },
+    {
+      "field_id": "M10/shop/F3/dialogue/1",
+      "physical_id": "M09/system/055",
+      "family": "shop_dialogue_text",
+      "shop_row": 3,
+      "shop_id": 243,
+      "slot": 0,
+      "control_id": 1970,
+      "value": "[EE14米拉：乔，您好！】\r\n",
+      "product_safe": true
+    },
+    {
+      "field_id": "M10/shop/F3/dialogue/2",
+      "physical_id": "M09/system/056",
+      "family": "shop_dialogue_text",
+      "shop_row": 3,
+      "shop_id": 243,
+      "slot": 1,
+      "control_id": 1990,
+      "value": "[EE14米拉：您要什么？",
+      "product_safe": true
+    },
+    {
+      "field_id": "M10/shop/F3/dialogue/3",
+      "physical_id": "M09/system/057",
+      "family": "shop_dialogue_text",
+      "shop_row": 3,
+      "shop_id": 243,
+      "slot": 2,
+      "control_id": 2010,
+      "value": "[EE14米拉：不行，乔。\\\r\n您也不例外。】\r\n",
+      "product_safe": true
+    },
+    {
+      "field_id": "M10/shop/F3/dialogue/4",
+      "physical_id": "M09/system/058",
+      "family": "shop_dialogue_text",
+      "shop_row": 3,
+      "shop_id": 243,
+      "slot": 3,
+      "control_id": 2020,
+      "value": "[EE14米拉：您还要什么吗？",
+      "product_safe": true
+    },
+    {
+      "field_id": "M10/shop/F3/dialogue/5",
+      "physical_id": "M09/system/059",
+      "family": "shop_dialogue_text",
+      "shop_row": 3,
+      "shop_id": 243,
+      "slot": 4,
+      "control_id": 2040,
+      "value": "[EE14米拉：要买吗？",
+      "product_safe": true
+    },
+    {
+      "field_id": "M10/shop/F3/dialogue/6",
+      "physical_id": "M09/system/060",
+      "family": "shop_dialogue_text",
+      "shop_row": 3,
+      "shop_id": 243,
+      "slot": 5,
+      "control_id": 2060,
+      "value": "[EE14米拉：粗心大意不行。】\r\n",
+      "product_safe": true
+    },
+    {
+      "field_id": "M10/shop/F3/dialogue/7",
+      "physical_id": "M09/system/061",
+      "family": "shop_dialogue_text",
+      "shop_row": 3,
+      "shop_id": 243,
+      "slot": 6,
+      "control_id": 2090,
+      "value": "[EE14米拉：那么，加油吧！",
+      "product_safe": true
+    },
+    {
+      "field_id": "M10/shop/F4/item/1",
+      "physical_id": "M10/shop/F4/item/1",
+      "family": "shop_item",
+      "shop_row": 4,
+      "shop_id": 244,
+      "slot": 0,
+      "control_id": 1870,
+      "value": 1,
+      "product_safe": true
+    },
+    {
+      "field_id": "M10/shop/F4/item/2",
+      "physical_id": "M10/shop/F4/item/2",
+      "family": "shop_item",
+      "shop_row": 4,
+      "shop_id": 244,
+      "slot": 1,
+      "control_id": 1880,
+      "value": 0,
+      "product_safe": false
+    },
+    {
+      "field_id": "M10/shop/F4/item/3",
+      "physical_id": "M10/shop/F4/item/3",
+      "family": "shop_item",
+      "shop_row": 4,
+      "shop_id": 244,
+      "slot": 2,
+      "control_id": 1890,
+      "value": 0,
+      "product_safe": false
+    },
+    {
+      "field_id": "M10/shop/F4/item/4",
+      "physical_id": "M10/shop/F4/item/4",
+      "family": "shop_item",
+      "shop_row": 4,
+      "shop_id": 244,
+      "slot": 3,
+      "control_id": 1900,
+      "value": 0,
+      "product_safe": false
+    },
+    {
+      "field_id": "M10/shop/F4/clerk",
+      "physical_id": "M10/shop/F4/clerk",
+      "family": "shop_clerk",
+      "shop_row": 4,
+      "shop_id": 244,
+      "control_id": 1920,
+      "value": 189,
+      "product_safe": true
+    },
+    {
+      "field_id": "M10/shop/F4/dialogue_id",
+      "physical_id": "M10/shop/F4/dialogue_id",
+      "family": "shop_dialogue_id",
+      "shop_row": 4,
+      "shop_id": 244,
+      "control_id": 1940,
+      "value": 203,
+      "product_safe": true
+    },
+    {
+      "field_id": "M10/shop/F4/dialogue/1",
+      "physical_id": "M09/system/203",
+      "family": "shop_dialogue_text",
+      "shop_row": 4,
+      "shop_id": 244,
+      "slot": 0,
+      "control_id": 1970,
+      "value": "",
+      "product_safe": true
+    },
+    {
+      "field_id": "M10/shop/F4/dialogue/2",
+      "physical_id": "M09/system/204",
+      "family": "shop_dialogue_text",
+      "shop_row": 4,
+      "shop_id": 244,
+      "slot": 1,
+      "control_id": 1990,
+      "value": "",
+      "product_safe": true
+    },
+    {
+      "field_id": "M10/shop/F4/dialogue/3",
+      "physical_id": "M09/system/205",
+      "family": "shop_dialogue_text",
+      "shop_row": 4,
+      "shop_id": 244,
+      "slot": 2,
+      "control_id": 2010,
+      "value": "",
+      "product_safe": true
+    },
+    {
+      "field_id": "M10/shop/F4/dialogue/4",
+      "physical_id": "M09/system/206",
+      "family": "shop_dialogue_text",
+      "shop_row": 4,
+      "shop_id": 244,
+      "slot": 3,
+      "control_id": 2020,
+      "value": "",
+      "product_safe": true
+    },
+    {
+      "field_id": "M10/shop/F4/dialogue/5",
+      "physical_id": "M09/system/207",
+      "family": "shop_dialogue_text",
+      "shop_row": 4,
+      "shop_id": 244,
+      "slot": 4,
+      "control_id": 2040,
+      "value": "",
+      "product_safe": true
+    },
+    {
+      "field_id": "M10/shop/F4/dialogue/6",
+      "physical_id": "M09/system/208",
+      "family": "shop_dialogue_text",
+      "shop_row": 4,
+      "shop_id": 244,
+      "slot": 5,
+      "control_id": 2060,
+      "value": "",
+      "product_safe": true
+    },
+    {
+      "field_id": "M10/shop/F4/dialogue/7",
+      "physical_id": "M09/system/209",
+      "family": "shop_dialogue_text",
+      "shop_row": 4,
+      "shop_id": 244,
+      "slot": 6,
+      "control_id": 2090,
+      "value": "",
+      "product_safe": true
+    },
+    {
+      "field_id": "M10/shop/F5/item/1",
+      "physical_id": "M10/shop/F5/item/1",
+      "family": "shop_item",
+      "shop_row": 5,
+      "shop_id": 245,
+      "slot": 0,
+      "control_id": 1870,
+      "value": 0,
+      "product_safe": false
+    },
+    {
+      "field_id": "M10/shop/F5/item/2",
+      "physical_id": "M10/shop/F5/item/2",
+      "family": "shop_item",
+      "shop_row": 5,
+      "shop_id": 245,
+      "slot": 1,
+      "control_id": 1880,
+      "value": 0,
+      "product_safe": false
+    },
+    {
+      "field_id": "M10/shop/F5/item/3",
+      "physical_id": "M10/shop/F5/item/3",
+      "family": "shop_item",
+      "shop_row": 5,
+      "shop_id": 245,
+      "slot": 2,
+      "control_id": 1890,
+      "value": 0,
+      "product_safe": false
+    },
+    {
+      "field_id": "M10/shop/F5/item/4",
+      "physical_id": "M10/shop/F5/item/4",
+      "family": "shop_item",
+      "shop_row": 5,
+      "shop_id": 245,
+      "slot": 3,
+      "control_id": 1900,
+      "value": 0,
+      "product_safe": false
+    },
+    {
+      "field_id": "M10/shop/F5/clerk",
+      "physical_id": "M10/shop/F5/clerk",
+      "family": "shop_clerk",
+      "shop_row": 5,
+      "shop_id": 245,
+      "control_id": 1920,
+      "value": 189,
+      "product_safe": false
+    },
+    {
+      "field_id": "M10/shop/F5/dialogue_id",
+      "physical_id": "M10/shop/F5/dialogue_id",
+      "family": "shop_dialogue_id",
+      "shop_row": 5,
+      "shop_id": 245,
+      "control_id": 1940,
+      "value": 195,
+      "product_safe": false
+    },
+    {
+      "field_id": "M10/shop/F5/dialogue/1",
+      "physical_id": "M09/system/195",
+      "family": "shop_dialogue_text",
+      "shop_row": 5,
+      "shop_id": 245,
+      "slot": 0,
+      "control_id": 1970,
+      "value": "",
+      "product_safe": false
+    },
+    {
+      "field_id": "M10/shop/F5/dialogue/2",
+      "physical_id": "M09/system/196",
+      "family": "shop_dialogue_text",
+      "shop_row": 5,
+      "shop_id": 245,
+      "slot": 1,
+      "control_id": 1990,
+      "value": "",
+      "product_safe": false
+    },
+    {
+      "field_id": "M10/shop/F5/dialogue/3",
+      "physical_id": "M09/system/197",
+      "family": "shop_dialogue_text",
+      "shop_row": 5,
+      "shop_id": 245,
+      "slot": 2,
+      "control_id": 2010,
+      "value": "",
+      "product_safe": false
+    },
+    {
+      "field_id": "M10/shop/F5/dialogue/4",
+      "physical_id": "M09/system/198",
+      "family": "shop_dialogue_text",
+      "shop_row": 5,
+      "shop_id": 245,
+      "slot": 3,
+      "control_id": 2020,
+      "value": "",
+      "product_safe": false
+    },
+    {
+      "field_id": "M10/shop/F5/dialogue/5",
+      "physical_id": "M09/system/199",
+      "family": "shop_dialogue_text",
+      "shop_row": 5,
+      "shop_id": 245,
+      "slot": 4,
+      "control_id": 2040,
+      "value": "",
+      "product_safe": false
+    },
+    {
+      "field_id": "M10/shop/F5/dialogue/6",
+      "physical_id": "M09/system/200",
+      "family": "shop_dialogue_text",
+      "shop_row": 5,
+      "shop_id": 245,
+      "slot": 5,
+      "control_id": 2060,
+      "value": "",
+      "product_safe": false
+    },
+    {
+      "field_id": "M10/shop/F5/dialogue/7",
+      "physical_id": "M09/system/201",
+      "family": "shop_dialogue_text",
+      "shop_row": 5,
+      "shop_id": 245,
+      "slot": 6,
+      "control_id": 2090,
+      "value": "",
+      "product_safe": false
+    },
+    {
+      "field_id": "M10/shop/F6/item/1",
+      "physical_id": "M10/shop/F6/item/1",
+      "family": "shop_item",
+      "shop_row": 6,
+      "shop_id": 246,
+      "slot": 0,
+      "control_id": 1870,
+      "value": 0,
+      "product_safe": false
+    },
+    {
+      "field_id": "M10/shop/F6/item/2",
+      "physical_id": "M10/shop/F6/item/2",
+      "family": "shop_item",
+      "shop_row": 6,
+      "shop_id": 246,
+      "slot": 1,
+      "control_id": 1880,
+      "value": 0,
+      "product_safe": false
+    },
+    {
+      "field_id": "M10/shop/F6/item/3",
+      "physical_id": "M10/shop/F6/item/3",
+      "family": "shop_item",
+      "shop_row": 6,
+      "shop_id": 246,
+      "slot": 2,
+      "control_id": 1890,
+      "value": 0,
+      "product_safe": false
+    },
+    {
+      "field_id": "M10/shop/F6/item/4",
+      "physical_id": "M10/shop/F6/item/4",
+      "family": "shop_item",
+      "shop_row": 6,
+      "shop_id": 246,
+      "slot": 3,
+      "control_id": 1900,
+      "value": 0,
+      "product_safe": false
+    },
+    {
+      "field_id": "M10/shop/F6/clerk",
+      "physical_id": "M10/shop/F6/clerk",
+      "family": "shop_clerk",
+      "shop_row": 6,
+      "shop_id": 246,
+      "control_id": 1920,
+      "value": 189,
+      "product_safe": false
+    },
+    {
+      "field_id": "M10/shop/F6/dialogue_id",
+      "physical_id": "M10/shop/F6/dialogue_id",
+      "family": "shop_dialogue_id",
+      "shop_row": 6,
+      "shop_id": 246,
+      "control_id": 1940,
+      "value": 195,
+      "product_safe": false
+    },
+    {
+      "field_id": "M10/shop/F6/dialogue/1",
+      "physical_id": "M09/system/195",
+      "family": "shop_dialogue_text",
+      "shop_row": 6,
+      "shop_id": 246,
+      "slot": 0,
+      "control_id": 1970,
+      "value": "",
+      "product_safe": false
+    },
+    {
+      "field_id": "M10/shop/F6/dialogue/2",
+      "physical_id": "M09/system/196",
+      "family": "shop_dialogue_text",
+      "shop_row": 6,
+      "shop_id": 246,
+      "slot": 1,
+      "control_id": 1990,
+      "value": "",
+      "product_safe": false
+    },
+    {
+      "field_id": "M10/shop/F6/dialogue/3",
+      "physical_id": "M09/system/197",
+      "family": "shop_dialogue_text",
+      "shop_row": 6,
+      "shop_id": 246,
+      "slot": 2,
+      "control_id": 2010,
+      "value": "",
+      "product_safe": false
+    },
+    {
+      "field_id": "M10/shop/F6/dialogue/4",
+      "physical_id": "M09/system/198",
+      "family": "shop_dialogue_text",
+      "shop_row": 6,
+      "shop_id": 246,
+      "slot": 3,
+      "control_id": 2020,
+      "value": "",
+      "product_safe": false
+    },
+    {
+      "field_id": "M10/shop/F6/dialogue/5",
+      "physical_id": "M09/system/199",
+      "family": "shop_dialogue_text",
+      "shop_row": 6,
+      "shop_id": 246,
+      "slot": 4,
+      "control_id": 2040,
+      "value": "",
+      "product_safe": false
+    },
+    {
+      "field_id": "M10/shop/F6/dialogue/6",
+      "physical_id": "M09/system/200",
+      "family": "shop_dialogue_text",
+      "shop_row": 6,
+      "shop_id": 246,
+      "slot": 5,
+      "control_id": 2060,
+      "value": "",
+      "product_safe": false
+    },
+    {
+      "field_id": "M10/shop/F6/dialogue/7",
+      "physical_id": "M09/system/201",
+      "family": "shop_dialogue_text",
+      "shop_row": 6,
+      "shop_id": 246,
+      "slot": 6,
+      "control_id": 2090,
+      "value": "",
+      "product_safe": false
+    },
+    {
+      "field_id": "M10/shop/F7/item/1",
+      "physical_id": "M10/shop/F7/item/1",
+      "family": "shop_item",
+      "shop_row": 7,
+      "shop_id": 247,
+      "slot": 0,
+      "control_id": 1870,
+      "value": 0,
+      "product_safe": false
+    },
+    {
+      "field_id": "M10/shop/F7/item/2",
+      "physical_id": "M10/shop/F7/item/2",
+      "family": "shop_item",
+      "shop_row": 7,
+      "shop_id": 247,
+      "slot": 1,
+      "control_id": 1880,
+      "value": 0,
+      "product_safe": false
+    },
+    {
+      "field_id": "M10/shop/F7/item/3",
+      "physical_id": "M10/shop/F7/item/3",
+      "family": "shop_item",
+      "shop_row": 7,
+      "shop_id": 247,
+      "slot": 2,
+      "control_id": 1890,
+      "value": 0,
+      "product_safe": false
+    },
+    {
+      "field_id": "M10/shop/F7/item/4",
+      "physical_id": "M10/shop/F7/item/4",
+      "family": "shop_item",
+      "shop_row": 7,
+      "shop_id": 247,
+      "slot": 3,
+      "control_id": 1900,
+      "value": 0,
+      "product_safe": false
+    },
+    {
+      "field_id": "M10/shop/F7/clerk",
+      "physical_id": "M10/shop/F7/clerk",
+      "family": "shop_clerk",
+      "shop_row": 7,
+      "shop_id": 247,
+      "control_id": 1920,
+      "value": 189,
+      "product_safe": false
+    },
+    {
+      "field_id": "M10/shop/F7/dialogue_id",
+      "physical_id": "M10/shop/F7/dialogue_id",
+      "family": "shop_dialogue_id",
+      "shop_row": 7,
+      "shop_id": 247,
+      "control_id": 1940,
+      "value": 195,
+      "product_safe": false
+    },
+    {
+      "field_id": "M10/shop/F7/dialogue/1",
+      "physical_id": "M09/system/195",
+      "family": "shop_dialogue_text",
+      "shop_row": 7,
+      "shop_id": 247,
+      "slot": 0,
+      "control_id": 1970,
+      "value": "",
+      "product_safe": false
+    },
+    {
+      "field_id": "M10/shop/F7/dialogue/2",
+      "physical_id": "M09/system/196",
+      "family": "shop_dialogue_text",
+      "shop_row": 7,
+      "shop_id": 247,
+      "slot": 1,
+      "control_id": 1990,
+      "value": "",
+      "product_safe": false
+    },
+    {
+      "field_id": "M10/shop/F7/dialogue/3",
+      "physical_id": "M09/system/197",
+      "family": "shop_dialogue_text",
+      "shop_row": 7,
+      "shop_id": 247,
+      "slot": 2,
+      "control_id": 2010,
+      "value": "",
+      "product_safe": false
+    },
+    {
+      "field_id": "M10/shop/F7/dialogue/4",
+      "physical_id": "M09/system/198",
+      "family": "shop_dialogue_text",
+      "shop_row": 7,
+      "shop_id": 247,
+      "slot": 3,
+      "control_id": 2020,
+      "value": "",
+      "product_safe": false
+    },
+    {
+      "field_id": "M10/shop/F7/dialogue/5",
+      "physical_id": "M09/system/199",
+      "family": "shop_dialogue_text",
+      "shop_row": 7,
+      "shop_id": 247,
+      "slot": 4,
+      "control_id": 2040,
+      "value": "",
+      "product_safe": false
+    },
+    {
+      "field_id": "M10/shop/F7/dialogue/6",
+      "physical_id": "M09/system/200",
+      "family": "shop_dialogue_text",
+      "shop_row": 7,
+      "shop_id": 247,
+      "slot": 5,
+      "control_id": 2060,
+      "value": "",
+      "product_safe": false
+    },
+    {
+      "field_id": "M10/shop/F7/dialogue/7",
+      "physical_id": "M09/system/201",
+      "family": "shop_dialogue_text",
+      "shop_row": 7,
+      "shop_id": 247,
+      "slot": 6,
+      "control_id": 2090,
+      "value": "",
+      "product_safe": false
+    },
+    {
+      "field_id": "M10/shop/F8/item/1",
+      "physical_id": "M10/shop/F8/item/1",
+      "family": "shop_item",
+      "shop_row": 8,
+      "shop_id": 248,
+      "slot": 0,
+      "control_id": 1870,
+      "value": 0,
+      "product_safe": false
+    },
+    {
+      "field_id": "M10/shop/F8/item/2",
+      "physical_id": "M10/shop/F8/item/2",
+      "family": "shop_item",
+      "shop_row": 8,
+      "shop_id": 248,
+      "slot": 1,
+      "control_id": 1880,
+      "value": 0,
+      "product_safe": false
+    },
+    {
+      "field_id": "M10/shop/F8/item/3",
+      "physical_id": "M10/shop/F8/item/3",
+      "family": "shop_item",
+      "shop_row": 8,
+      "shop_id": 248,
+      "slot": 2,
+      "control_id": 1890,
+      "value": 0,
+      "product_safe": false
+    },
+    {
+      "field_id": "M10/shop/F8/item/4",
+      "physical_id": "M10/shop/F8/item/4",
+      "family": "shop_item",
+      "shop_row": 8,
+      "shop_id": 248,
+      "slot": 3,
+      "control_id": 1900,
+      "value": 0,
+      "product_safe": false
+    },
+    {
+      "field_id": "M10/shop/F8/clerk",
+      "physical_id": "M10/shop/F8/clerk",
+      "family": "shop_clerk",
+      "shop_row": 8,
+      "shop_id": 248,
+      "control_id": 1920,
+      "value": 189,
+      "product_safe": false
+    },
+    {
+      "field_id": "M10/shop/F8/dialogue_id",
+      "physical_id": "M10/shop/F8/dialogue_id",
+      "family": "shop_dialogue_id",
+      "shop_row": 8,
+      "shop_id": 248,
+      "control_id": 1940,
+      "value": 195,
+      "product_safe": false
+    },
+    {
+      "field_id": "M10/shop/F8/dialogue/1",
+      "physical_id": "M09/system/195",
+      "family": "shop_dialogue_text",
+      "shop_row": 8,
+      "shop_id": 248,
+      "slot": 0,
+      "control_id": 1970,
+      "value": "",
+      "product_safe": false
+    },
+    {
+      "field_id": "M10/shop/F8/dialogue/2",
+      "physical_id": "M09/system/196",
+      "family": "shop_dialogue_text",
+      "shop_row": 8,
+      "shop_id": 248,
+      "slot": 1,
+      "control_id": 1990,
+      "value": "",
+      "product_safe": false
+    },
+    {
+      "field_id": "M10/shop/F8/dialogue/3",
+      "physical_id": "M09/system/197",
+      "family": "shop_dialogue_text",
+      "shop_row": 8,
+      "shop_id": 248,
+      "slot": 2,
+      "control_id": 2010,
+      "value": "",
+      "product_safe": false
+    },
+    {
+      "field_id": "M10/shop/F8/dialogue/4",
+      "physical_id": "M09/system/198",
+      "family": "shop_dialogue_text",
+      "shop_row": 8,
+      "shop_id": 248,
+      "slot": 3,
+      "control_id": 2020,
+      "value": "",
+      "product_safe": false
+    },
+    {
+      "field_id": "M10/shop/F8/dialogue/5",
+      "physical_id": "M09/system/199",
+      "family": "shop_dialogue_text",
+      "shop_row": 8,
+      "shop_id": 248,
+      "slot": 4,
+      "control_id": 2040,
+      "value": "",
+      "product_safe": false
+    },
+    {
+      "field_id": "M10/shop/F8/dialogue/6",
+      "physical_id": "M09/system/200",
+      "family": "shop_dialogue_text",
+      "shop_row": 8,
+      "shop_id": 248,
+      "slot": 5,
+      "control_id": 2060,
+      "value": "",
+      "product_safe": false
+    },
+    {
+      "field_id": "M10/shop/F8/dialogue/7",
+      "physical_id": "M09/system/201",
+      "family": "shop_dialogue_text",
+      "shop_row": 8,
+      "shop_id": 248,
+      "slot": 6,
+      "control_id": 2090,
+      "value": "",
+      "product_safe": false
+    },
+    {
+      "field_id": "M10/shop/F9/item/1",
+      "physical_id": "M10/shop/F9/item/1",
+      "family": "shop_item",
+      "shop_row": 9,
+      "shop_id": 249,
+      "slot": 0,
+      "control_id": 1870,
+      "value": 0,
+      "product_safe": false
+    },
+    {
+      "field_id": "M10/shop/F9/item/2",
+      "physical_id": "M10/shop/F9/item/2",
+      "family": "shop_item",
+      "shop_row": 9,
+      "shop_id": 249,
+      "slot": 1,
+      "control_id": 1880,
+      "value": 0,
+      "product_safe": false
+    },
+    {
+      "field_id": "M10/shop/F9/item/3",
+      "physical_id": "M10/shop/F9/item/3",
+      "family": "shop_item",
+      "shop_row": 9,
+      "shop_id": 249,
+      "slot": 2,
+      "control_id": 1890,
+      "value": 0,
+      "product_safe": false
+    },
+    {
+      "field_id": "M10/shop/F9/item/4",
+      "physical_id": "M10/shop/F9/item/4",
+      "family": "shop_item",
+      "shop_row": 9,
+      "shop_id": 249,
+      "slot": 3,
+      "control_id": 1900,
+      "value": 0,
+      "product_safe": false
+    },
+    {
+      "field_id": "M10/shop/F9/clerk",
+      "physical_id": "M10/shop/F9/clerk",
+      "family": "shop_clerk",
+      "shop_row": 9,
+      "shop_id": 249,
+      "control_id": 1920,
+      "value": 189,
+      "product_safe": false
+    },
+    {
+      "field_id": "M10/shop/F9/dialogue_id",
+      "physical_id": "M10/shop/F9/dialogue_id",
+      "family": "shop_dialogue_id",
+      "shop_row": 9,
+      "shop_id": 249,
+      "control_id": 1940,
+      "value": 195,
+      "product_safe": false
+    },
+    {
+      "field_id": "M10/shop/F9/dialogue/1",
+      "physical_id": "M09/system/195",
+      "family": "shop_dialogue_text",
+      "shop_row": 9,
+      "shop_id": 249,
+      "slot": 0,
+      "control_id": 1970,
+      "value": "",
+      "product_safe": false
+    },
+    {
+      "field_id": "M10/shop/F9/dialogue/2",
+      "physical_id": "M09/system/196",
+      "family": "shop_dialogue_text",
+      "shop_row": 9,
+      "shop_id": 249,
+      "slot": 1,
+      "control_id": 1990,
+      "value": "",
+      "product_safe": false
+    },
+    {
+      "field_id": "M10/shop/F9/dialogue/3",
+      "physical_id": "M09/system/197",
+      "family": "shop_dialogue_text",
+      "shop_row": 9,
+      "shop_id": 249,
+      "slot": 2,
+      "control_id": 2010,
+      "value": "",
+      "product_safe": false
+    },
+    {
+      "field_id": "M10/shop/F9/dialogue/4",
+      "physical_id": "M09/system/198",
+      "family": "shop_dialogue_text",
+      "shop_row": 9,
+      "shop_id": 249,
+      "slot": 3,
+      "control_id": 2020,
+      "value": "",
+      "product_safe": false
+    },
+    {
+      "field_id": "M10/shop/F9/dialogue/5",
+      "physical_id": "M09/system/199",
+      "family": "shop_dialogue_text",
+      "shop_row": 9,
+      "shop_id": 249,
+      "slot": 4,
+      "control_id": 2040,
+      "value": "",
+      "product_safe": false
+    },
+    {
+      "field_id": "M10/shop/F9/dialogue/6",
+      "physical_id": "M09/system/200",
+      "family": "shop_dialogue_text",
+      "shop_row": 9,
+      "shop_id": 249,
+      "slot": 5,
+      "control_id": 2060,
+      "value": "",
+      "product_safe": false
+    },
+    {
+      "field_id": "M10/shop/F9/dialogue/7",
+      "physical_id": "M09/system/201",
+      "family": "shop_dialogue_text",
+      "shop_row": 9,
+      "shop_id": 249,
+      "slot": 6,
+      "control_id": 2090,
+      "value": "",
+      "product_safe": false
+    },
+    {
+      "field_id": "M10/shop/FA/item/1",
+      "physical_id": "M10/shop/FA/item/1",
+      "family": "shop_item",
+      "shop_row": 10,
+      "shop_id": 250,
+      "slot": 0,
+      "control_id": 1870,
+      "value": 0,
+      "product_safe": false
+    },
+    {
+      "field_id": "M10/shop/FA/item/2",
+      "physical_id": "M10/shop/FA/item/2",
+      "family": "shop_item",
+      "shop_row": 10,
+      "shop_id": 250,
+      "slot": 1,
+      "control_id": 1880,
+      "value": 0,
+      "product_safe": false
+    },
+    {
+      "field_id": "M10/shop/FA/item/3",
+      "physical_id": "M10/shop/FA/item/3",
+      "family": "shop_item",
+      "shop_row": 10,
+      "shop_id": 250,
+      "slot": 2,
+      "control_id": 1890,
+      "value": 0,
+      "product_safe": false
+    },
+    {
+      "field_id": "M10/shop/FA/item/4",
+      "physical_id": "M10/shop/FA/item/4",
+      "family": "shop_item",
+      "shop_row": 10,
+      "shop_id": 250,
+      "slot": 3,
+      "control_id": 1900,
+      "value": 0,
+      "product_safe": false
+    },
+    {
+      "field_id": "M10/shop/FA/clerk",
+      "physical_id": "M10/shop/FA/clerk",
+      "family": "shop_clerk",
+      "shop_row": 10,
+      "shop_id": 250,
+      "control_id": 1920,
+      "value": 189,
+      "product_safe": false
+    },
+    {
+      "field_id": "M10/shop/FA/dialogue_id",
+      "physical_id": "M10/shop/FA/dialogue_id",
+      "family": "shop_dialogue_id",
+      "shop_row": 10,
+      "shop_id": 250,
+      "control_id": 1940,
+      "value": 195,
+      "product_safe": false
+    },
+    {
+      "field_id": "M10/shop/FA/dialogue/1",
+      "physical_id": "M09/system/195",
+      "family": "shop_dialogue_text",
+      "shop_row": 10,
+      "shop_id": 250,
+      "slot": 0,
+      "control_id": 1970,
+      "value": "",
+      "product_safe": false
+    },
+    {
+      "field_id": "M10/shop/FA/dialogue/2",
+      "physical_id": "M09/system/196",
+      "family": "shop_dialogue_text",
+      "shop_row": 10,
+      "shop_id": 250,
+      "slot": 1,
+      "control_id": 1990,
+      "value": "",
+      "product_safe": false
+    },
+    {
+      "field_id": "M10/shop/FA/dialogue/3",
+      "physical_id": "M09/system/197",
+      "family": "shop_dialogue_text",
+      "shop_row": 10,
+      "shop_id": 250,
+      "slot": 2,
+      "control_id": 2010,
+      "value": "",
+      "product_safe": false
+    },
+    {
+      "field_id": "M10/shop/FA/dialogue/4",
+      "physical_id": "M09/system/198",
+      "family": "shop_dialogue_text",
+      "shop_row": 10,
+      "shop_id": 250,
+      "slot": 3,
+      "control_id": 2020,
+      "value": "",
+      "product_safe": false
+    },
+    {
+      "field_id": "M10/shop/FA/dialogue/5",
+      "physical_id": "M09/system/199",
+      "family": "shop_dialogue_text",
+      "shop_row": 10,
+      "shop_id": 250,
+      "slot": 4,
+      "control_id": 2040,
+      "value": "",
+      "product_safe": false
+    },
+    {
+      "field_id": "M10/shop/FA/dialogue/6",
+      "physical_id": "M09/system/200",
+      "family": "shop_dialogue_text",
+      "shop_row": 10,
+      "shop_id": 250,
+      "slot": 5,
+      "control_id": 2060,
+      "value": "",
+      "product_safe": false
+    },
+    {
+      "field_id": "M10/shop/FA/dialogue/7",
+      "physical_id": "M09/system/201",
+      "family": "shop_dialogue_text",
+      "shop_row": 10,
+      "shop_id": 250,
+      "slot": 6,
+      "control_id": 2090,
+      "value": "",
+      "product_safe": false
+    },
+    {
+      "field_id": "M10/shop/FB/item/1",
+      "physical_id": "M10/shop/FB/item/1",
+      "family": "shop_item",
+      "shop_row": 11,
+      "shop_id": 251,
+      "slot": 0,
+      "control_id": 1870,
+      "value": 0,
+      "product_safe": false
+    },
+    {
+      "field_id": "M10/shop/FB/item/2",
+      "physical_id": "M10/shop/FB/item/2",
+      "family": "shop_item",
+      "shop_row": 11,
+      "shop_id": 251,
+      "slot": 1,
+      "control_id": 1880,
+      "value": 0,
+      "product_safe": false
+    },
+    {
+      "field_id": "M10/shop/FB/item/3",
+      "physical_id": "M10/shop/FB/item/3",
+      "family": "shop_item",
+      "shop_row": 11,
+      "shop_id": 251,
+      "slot": 2,
+      "control_id": 1890,
+      "value": 0,
+      "product_safe": false
+    },
+    {
+      "field_id": "M10/shop/FB/item/4",
+      "physical_id": "M10/shop/FB/item/4",
+      "family": "shop_item",
+      "shop_row": 11,
+      "shop_id": 251,
+      "slot": 3,
+      "control_id": 1900,
+      "value": 0,
+      "product_safe": false
+    },
+    {
+      "field_id": "M10/shop/FB/clerk",
+      "physical_id": "M10/shop/FB/clerk",
+      "family": "shop_clerk",
+      "shop_row": 11,
+      "shop_id": 251,
+      "control_id": 1920,
+      "value": 189,
+      "product_safe": false
+    },
+    {
+      "field_id": "M10/shop/FB/dialogue_id",
+      "physical_id": "M10/shop/FB/dialogue_id",
+      "family": "shop_dialogue_id",
+      "shop_row": 11,
+      "shop_id": 251,
+      "control_id": 1940,
+      "value": 195,
+      "product_safe": false
+    },
+    {
+      "field_id": "M10/shop/FB/dialogue/1",
+      "physical_id": "M09/system/195",
+      "family": "shop_dialogue_text",
+      "shop_row": 11,
+      "shop_id": 251,
+      "slot": 0,
+      "control_id": 1970,
+      "value": "",
+      "product_safe": false
+    },
+    {
+      "field_id": "M10/shop/FB/dialogue/2",
+      "physical_id": "M09/system/196",
+      "family": "shop_dialogue_text",
+      "shop_row": 11,
+      "shop_id": 251,
+      "slot": 1,
+      "control_id": 1990,
+      "value": "",
+      "product_safe": false
+    },
+    {
+      "field_id": "M10/shop/FB/dialogue/3",
+      "physical_id": "M09/system/197",
+      "family": "shop_dialogue_text",
+      "shop_row": 11,
+      "shop_id": 251,
+      "slot": 2,
+      "control_id": 2010,
+      "value": "",
+      "product_safe": false
+    },
+    {
+      "field_id": "M10/shop/FB/dialogue/4",
+      "physical_id": "M09/system/198",
+      "family": "shop_dialogue_text",
+      "shop_row": 11,
+      "shop_id": 251,
+      "slot": 3,
+      "control_id": 2020,
+      "value": "",
+      "product_safe": false
+    },
+    {
+      "field_id": "M10/shop/FB/dialogue/5",
+      "physical_id": "M09/system/199",
+      "family": "shop_dialogue_text",
+      "shop_row": 11,
+      "shop_id": 251,
+      "slot": 4,
+      "control_id": 2040,
+      "value": "",
+      "product_safe": false
+    },
+    {
+      "field_id": "M10/shop/FB/dialogue/6",
+      "physical_id": "M09/system/200",
+      "family": "shop_dialogue_text",
+      "shop_row": 11,
+      "shop_id": 251,
+      "slot": 5,
+      "control_id": 2060,
+      "value": "",
+      "product_safe": false
+    },
+    {
+      "field_id": "M10/shop/FB/dialogue/7",
+      "physical_id": "M09/system/201",
+      "family": "shop_dialogue_text",
+      "shop_row": 11,
+      "shop_id": 251,
+      "slot": 6,
+      "control_id": 2090,
+      "value": "",
+      "product_safe": false
+    },
+    {
+      "field_id": "M10/shop/FC/item/1",
+      "physical_id": "M10/shop/FC/item/1",
+      "family": "shop_item",
+      "shop_row": 12,
+      "shop_id": 252,
+      "slot": 0,
+      "control_id": 1870,
+      "value": 0,
+      "product_safe": false
+    },
+    {
+      "field_id": "M10/shop/FC/item/2",
+      "physical_id": "M10/shop/FC/item/2",
+      "family": "shop_item",
+      "shop_row": 12,
+      "shop_id": 252,
+      "slot": 1,
+      "control_id": 1880,
+      "value": 0,
+      "product_safe": false
+    },
+    {
+      "field_id": "M10/shop/FC/item/3",
+      "physical_id": "M10/shop/FC/item/3",
+      "family": "shop_item",
+      "shop_row": 12,
+      "shop_id": 252,
+      "slot": 2,
+      "control_id": 1890,
+      "value": 0,
+      "product_safe": false
+    },
+    {
+      "field_id": "M10/shop/FC/item/4",
+      "physical_id": "M10/shop/FC/item/4",
+      "family": "shop_item",
+      "shop_row": 12,
+      "shop_id": 252,
+      "slot": 3,
+      "control_id": 1900,
+      "value": 0,
+      "product_safe": false
+    },
+    {
+      "field_id": "M10/shop/FC/clerk",
+      "physical_id": "M10/shop/FC/clerk",
+      "family": "shop_clerk",
+      "shop_row": 12,
+      "shop_id": 252,
+      "control_id": 1920,
+      "value": 189,
+      "product_safe": false
+    },
+    {
+      "field_id": "M10/shop/FC/dialogue_id",
+      "physical_id": "M10/shop/FC/dialogue_id",
+      "family": "shop_dialogue_id",
+      "shop_row": 12,
+      "shop_id": 252,
+      "control_id": 1940,
+      "value": 195,
+      "product_safe": false
+    },
+    {
+      "field_id": "M10/shop/FC/dialogue/1",
+      "physical_id": "M09/system/195",
+      "family": "shop_dialogue_text",
+      "shop_row": 12,
+      "shop_id": 252,
+      "slot": 0,
+      "control_id": 1970,
+      "value": "",
+      "product_safe": false
+    },
+    {
+      "field_id": "M10/shop/FC/dialogue/2",
+      "physical_id": "M09/system/196",
+      "family": "shop_dialogue_text",
+      "shop_row": 12,
+      "shop_id": 252,
+      "slot": 1,
+      "control_id": 1990,
+      "value": "",
+      "product_safe": false
+    },
+    {
+      "field_id": "M10/shop/FC/dialogue/3",
+      "physical_id": "M09/system/197",
+      "family": "shop_dialogue_text",
+      "shop_row": 12,
+      "shop_id": 252,
+      "slot": 2,
+      "control_id": 2010,
+      "value": "",
+      "product_safe": false
+    },
+    {
+      "field_id": "M10/shop/FC/dialogue/4",
+      "physical_id": "M09/system/198",
+      "family": "shop_dialogue_text",
+      "shop_row": 12,
+      "shop_id": 252,
+      "slot": 3,
+      "control_id": 2020,
+      "value": "",
+      "product_safe": false
+    },
+    {
+      "field_id": "M10/shop/FC/dialogue/5",
+      "physical_id": "M09/system/199",
+      "family": "shop_dialogue_text",
+      "shop_row": 12,
+      "shop_id": 252,
+      "slot": 4,
+      "control_id": 2040,
+      "value": "",
+      "product_safe": false
+    },
+    {
+      "field_id": "M10/shop/FC/dialogue/6",
+      "physical_id": "M09/system/200",
+      "family": "shop_dialogue_text",
+      "shop_row": 12,
+      "shop_id": 252,
+      "slot": 5,
+      "control_id": 2060,
+      "value": "",
+      "product_safe": false
+    },
+    {
+      "field_id": "M10/shop/FC/dialogue/7",
+      "physical_id": "M09/system/201",
+      "family": "shop_dialogue_text",
+      "shop_row": 12,
+      "shop_id": 252,
+      "slot": 6,
+      "control_id": 2090,
+      "value": "",
+      "product_safe": false
+    },
+    {
+      "field_id": "M10/shop/FE/item/1",
+      "physical_id": "M10/shop/FE/item/1",
+      "family": "shop_item",
+      "shop_row": 13,
+      "shop_id": 254,
+      "slot": 0,
+      "control_id": 1870,
+      "value": 0,
+      "product_safe": false
+    },
+    {
+      "field_id": "M10/shop/FE/item/2",
+      "physical_id": "M10/shop/FE/item/2",
+      "family": "shop_item",
+      "shop_row": 13,
+      "shop_id": 254,
+      "slot": 1,
+      "control_id": 1880,
+      "value": 0,
+      "product_safe": false
+    },
+    {
+      "field_id": "M10/shop/FE/item/3",
+      "physical_id": "M10/shop/FE/item/3",
+      "family": "shop_item",
+      "shop_row": 13,
+      "shop_id": 254,
+      "slot": 2,
+      "control_id": 1890,
+      "value": 0,
+      "product_safe": false
+    },
+    {
+      "field_id": "M10/shop/FE/item/4",
+      "physical_id": "M10/shop/FE/item/4",
+      "family": "shop_item",
+      "shop_row": 13,
+      "shop_id": 254,
+      "slot": 3,
+      "control_id": 1900,
+      "value": 0,
+      "product_safe": false
+    },
+    {
+      "field_id": "M10/shop/FE/clerk",
+      "physical_id": "M10/shop/FE/clerk",
+      "family": "shop_clerk",
+      "shop_row": 13,
+      "shop_id": 254,
+      "control_id": 1920,
+      "value": 189,
+      "product_safe": false
+    },
+    {
+      "field_id": "M10/shop/FE/dialogue_id",
+      "physical_id": "M10/shop/FE/dialogue_id",
+      "family": "shop_dialogue_id",
+      "shop_row": 13,
+      "shop_id": 254,
+      "control_id": 1940,
+      "value": 195,
+      "product_safe": false
+    },
+    {
+      "field_id": "M10/shop/FE/dialogue/1",
+      "physical_id": "M09/system/195",
+      "family": "shop_dialogue_text",
+      "shop_row": 13,
+      "shop_id": 254,
+      "slot": 0,
+      "control_id": 1970,
+      "value": "",
+      "product_safe": false
+    },
+    {
+      "field_id": "M10/shop/FE/dialogue/2",
+      "physical_id": "M09/system/196",
+      "family": "shop_dialogue_text",
+      "shop_row": 13,
+      "shop_id": 254,
+      "slot": 1,
+      "control_id": 1990,
+      "value": "",
+      "product_safe": false
+    },
+    {
+      "field_id": "M10/shop/FE/dialogue/3",
+      "physical_id": "M09/system/197",
+      "family": "shop_dialogue_text",
+      "shop_row": 13,
+      "shop_id": 254,
+      "slot": 2,
+      "control_id": 2010,
+      "value": "",
+      "product_safe": false
+    },
+    {
+      "field_id": "M10/shop/FE/dialogue/4",
+      "physical_id": "M09/system/198",
+      "family": "shop_dialogue_text",
+      "shop_row": 13,
+      "shop_id": 254,
+      "slot": 3,
+      "control_id": 2020,
+      "value": "",
+      "product_safe": false
+    },
+    {
+      "field_id": "M10/shop/FE/dialogue/5",
+      "physical_id": "M09/system/199",
+      "family": "shop_dialogue_text",
+      "shop_row": 13,
+      "shop_id": 254,
+      "slot": 4,
+      "control_id": 2040,
+      "value": "",
+      "product_safe": false
+    },
+    {
+      "field_id": "M10/shop/FE/dialogue/6",
+      "physical_id": "M09/system/200",
+      "family": "shop_dialogue_text",
+      "shop_row": 13,
+      "shop_id": 254,
+      "slot": 5,
+      "control_id": 2060,
+      "value": "",
+      "product_safe": false
+    },
+    {
+      "field_id": "M10/shop/FE/dialogue/7",
+      "physical_id": "M09/system/201",
+      "family": "shop_dialogue_text",
+      "shop_row": 13,
+      "shop_id": 254,
+      "slot": 6,
+      "control_id": 2090,
+      "value": "",
+      "product_safe": false
+    }
+  ]
+}

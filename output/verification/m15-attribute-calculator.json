@@ -1,0 +1,145 @@
+{
+  "generated_at": "2026-09-19T13:44:05+08:00",
+  "passed": true,
+  "delivery_status": "implementation_complete_reference_and_user_pending",
+  "conclusion": "M15 机体/人物/武器/等级联动、完整命中/双击/伤害公式、M17 实时参数和 D6 禁用按钮均通过实现侧门禁；参考 EXE 逐行动态黄金与用户签收仍待完成。",
+  "rom": {
+    "path": "output/rom/DC_kuorong_464K.nes",
+    "size": 1310736,
+    "sha256": "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E"
+  },
+  "formula_parameters": {
+    "double_hit": [
+      70,
+      90,
+      20
+    ],
+    "damage": [
+      13,
+      10,
+      10,
+      1,
+      1
+    ],
+    "hit_threshold": 70
+  },
+  "ui": {
+    "default": {
+      "window_title": "战斗属性计算器",
+      "character_count": 200,
+      "unit_count": 255,
+      "level_count": 60,
+      "character_id": 4,
+      "unit_id": 9,
+      "weapon_ids": [
+        7,
+        11
+      ],
+      "weapon_id": 7,
+      "strength": 98,
+      "defense": 42,
+      "speed": 86,
+      "hp": 140,
+      "weapon_hit": 110,
+      "weapon_range": 1,
+      "power_air": 58,
+      "power_land": 58,
+      "power_sea": 58,
+      "special": 2
+    },
+    "unit_02_weapon_ids": [
+      0
+    ],
+    "unit_09_weapon_ids": [
+      7,
+      11
+    ],
+    "visible_button_texts": [
+      "更改倍数",
+      "更改倍数",
+      "开始计算"
+    ],
+    "level_values": {
+      "1": {
+        "strength": 98,
+        "defense": 42,
+        "speed": 86,
+        "hp": 140
+      },
+      "30": {
+        "strength": 214,
+        "defense": 143,
+        "speed": 245,
+        "hp": 720
+      },
+      "60": {
+        "strength": 255,
+        "defense": 248,
+        "speed": 255,
+        "hp": 1320
+      }
+    }
+  },
+  "calculation": {
+    "default": {
+      "hit_score": 110,
+      "hit_threshold": 70,
+      "can_hit": true,
+      "minimum_hit_speed": 46,
+      "can_double": false,
+      "minimum_double_speed": 140,
+      "terrain_name": "空",
+      "firepower": 58,
+      "predicted_damage": 143,
+      "actual_damage": 107,
+      "remaining_hp": 33,
+      "hits_to_defeat": 2,
+      "defensive_effect": "相对转移装甲",
+      "distance_percent": 100
+    },
+    "result_lines": [
+      "--------我方计算----------------",
+      "命中最低速度计算：速度至少大于 45 才能命中",
+      "计算结果： 可以命中（命中值 110，临界 70，距离补正 100%）",
+      "双击最低速度计算：速度至少大于 139 才能双击",
+      "计算结果： 无法双击",
+      "预计伤害计算：我方 对 敌方 造成预计伤害 143（对空火力 58）",
+      "敌方 拥有相对转移装甲",
+      "实际伤害计算：我方 对 敌方 造成实际伤害 107，命中后 HP 33",
+      "2次 可以击落 敌方",
+      "--------敌方计算----------------",
+      "命中最低速度计算：速度至少大于 45 才能命中",
+      "计算结果： 可以命中（命中值 110，临界 70，距离补正 100%）",
+      "双击最低速度计算：速度至少大于 139 才能双击",
+      "计算结果： 无法双击",
+      "预计伤害计算：敌方 对 我方 造成预计伤害 143（对空火力 58）",
+      "我方 拥有相对转移装甲",
+      "实际伤害计算：敌方 对 我方 造成实际伤害 107，命中后 HP 33",
+      "2次 可以击落 我方"
+    ],
+    "doubled_damage": 286,
+    "invalid_multiplier_fallback": "2/1",
+    "live_weapon_multiplier": 11,
+    "live_land_firepower": 63
+  },
+  "checks": {
+    "reference_window_structure": true,
+    "unit_weapon_binding": true,
+    "default_record_values": true,
+    "level_growth_is_bounded": true,
+    "default_calculation_matches_reference_values": true,
+    "result_list_is_two_way": true,
+    "calculator_never_writes_rom": true,
+    "damage_multiplier_and_invalid_input": true,
+    "m17_live_parameter_link_and_undo": true,
+    "broken_multiplier_buttons_are_safe": true,
+    "archived_firepower_examples": true,
+    "distance_terrain_damage_and_defense_compose": true,
+    "double_hit_is_strictly_greater": true,
+    "expanded_special_codes_are_conservative": true
+  },
+  "pending_acceptance": [
+    "在可与提权参考 EXE 同完整性交互的 Windows 会话中补采结果列表逐行动态黄金。",
+    "由用户按 docs/M15验收清单.md 执行正式 EXE 现场验收并明确签收。"
+  ]
+}

@@ -1,0 +1,84 @@
+{
+  "passed": false,
+  "results": [
+    {
+      "field_id": "M14/chapter/000/initial_victory",
+      "original": "全歼敌人胜利！\r\n@夺权者登场后3回合撤退！",
+      "requested": "_歼敌人胜利！\r\n@夺权者登场后3回合撤退！",
+      "changed_bytes": 588,
+      "set_seconds": 0.954,
+      "save_seconds": 0.217
+    },
+    {
+      "field_id": "M14/surrender/000/chapter",
+      "original": 4,
+      "requested": 5,
+      "changed_bytes": 0,
+      "set_seconds": 1.175,
+      "save_seconds": 0.216
+    },
+    {
+      "field_id": "M14/story/02/000",
+      "original": "阿鲁格：\\\r\n多蒙呢？】\r\n\r\n【030铃：\\\r\n刚才他看了阿莲比的病\\\r\n情，就一直待在自己的\\\r\n房间里。失去师父和哥\\\r\n哥对他的打击很大…】\r\n\r\n【033蔡斋西：\\\r\n铃姐姐，关于阿莲比\\\r\n的病情】\r\n\r\n【030铃：\\\r\n阿莲比不要紧，现在只是\\\r\n累了，很快就会醒的。】\r\n\r\n【026花园丽：\\\r\n用镇静剂才能让她安睡\\\r\n狂暴系统给脑和精神的\\\r\n负担太大了】\r\n\r\n【030铃：\\\r\n那么接下来就是狂暴系\\\r\n统的事了。】\r\n\r\n【036祖尔殊：\\\r\n你打算怎么做？铃！】\r\n\r\n【030铃：\\\r\n我们打算改造诺贝尔高\\\r\n达，让它可以被正常使\\\r\n用，只是那种狂暴化的\\\r\n战力发挥不出来。】\r\n\r\n【034奇波迪：\\\r\n那种东西还是不要为好\\\r\n！那系统是什么原理来\\\r\n引发那种战斗力的呢？】\r\n\r\n【011四谷：\\\r\n嗯！我来说明一下吧！】\r\n\r\n【030铃：\\\r\n不好！…我，我得先走了】\r\n",
+      "requested": "_鲁格：\\\r\n多蒙呢？】\r\n\r\n【030铃：\\\r\n刚才他看了阿莲比的病\\\r\n情，就一直待在自己的\\\r\n房间里。失去师父和哥\\\r\n哥对他的打击很大…】\r\n\r\n【033蔡斋西：\\\r\n铃姐姐，关于阿莲比\\\r\n的病情】\r\n\r\n【030铃：\\\r\n阿莲比不要紧，现在只是\\\r\n累了，很快就会醒的。】\r\n\r\n【026花园丽：\\\r\n用镇静剂才能让她安睡\\\r\n狂暴系统给脑和精神的\\\r\n负担太大了】\r\n\r\n【030铃：\\\r\n那么接下来就是狂暴系\\\r\n统的事了。】\r\n\r\n【036祖尔殊：\\\r\n你打算怎么做？铃！】\r\n\r\n【030铃：\\\r\n我们打算改造诺贝尔高\\\r\n达，让它可以被正常使\\\r\n用，只是那种狂暴化的\\\r\n战力发挥不出来。】\r\n\r\n【034奇波迪：\\\r\n那种东西还是不要为好\\\r\n！那系统是什么原理来\\\r\n引发那种战斗力的呢？】\r\n\r\n【011四谷：\\\r\n嗯！我来说明一下吧！】\r\n\r\n【030铃：\\\r\n不好！…我，我得先走了】\r\n",
+      "changed_bytes": 0,
+      "set_seconds": 1.291,
+      "save_seconds": 0.215
+    },
+    {
+      "field_id": "M14/story/02/110",
+      "original": "",
+      "requested": "_",
+      "changed_bytes": 0,
+      "set_seconds": 1.343,
+      "save_seconds": 0.216
+    },
+    {
+      "field_id": "M14/victory/000",
+      "original": "保护_子号，全歼敌人！",
+      "requested": "_护_子号，全歼敌人！",
+      "changed_bytes": 542,
+      "set_seconds": 0.469,
+      "save_seconds": 0.215
+    },
+    {
+      "field_id": "M14/chapter/000/title",
+      "original": "夺权者",
+      "requested": "_权者",
+      "changed_bytes": 0,
+      "set_seconds": 0.93,
+      "save_seconds": 0.217
+    },
+    {
+      "field_id": "M14/action/000/name",
+      "original": "可控",
+      "requested": "_控",
+      "changed_bytes": 0,
+      "set_seconds": 0.638,
+      "save_seconds": 0.216
+    },
+    {
+      "field_id": "M14/map/003/name",
+      "original": "",
+      "requested": "_",
+      "changed_bytes": 0,
+      "set_seconds": 0.834,
+      "save_seconds": 0.215
+    }
+  ],
+  "cold": {
+    "M14/chapter/000/initial_victory": "_歼敌人胜利！\r\n@夺权者登场后3回合撤退！",
+    "M14/surrender/000/chapter": 4,
+    "M14/story/02/000": "阿鲁格：\\\r\n多蒙呢？】\r\n\r\n【030铃：\\\r\n刚才他看了阿莲比的病\\\r\n情，就一直待在自己的\\\r\n房间里。失去师父和哥\\\r\n哥对他的打击很大…】\r\n\r\n【033蔡斋西：\\\r\n铃姐姐，关于阿莲比\\\r\n的病情】\r\n\r\n【030铃：\\\r\n阿莲比不要紧，现在只是\\\r\n累了，很快就会醒的。】\r\n\r\n【026花园丽：\\\r\n用镇静剂才能让她安睡\\\r\n狂暴系统给脑和精神的\\\r\n负担太大了】\r\n\r\n【030铃：\\\r\n那么接下来就是狂暴系\\\r\n统的事了。】\r\n\r\n【036祖尔殊：\\\r\n你打算怎么做？铃！】\r\n\r\n【030铃：\\\r\n我们打算改造诺贝尔高\\\r\n达，让它可以被正常使\\\r\n用，只是那种狂暴化的\\\r\n战力发挥不出来。】\r\n\r\n【034奇波迪：\\\r\n那种东西还是不要为好\\\r\n！那系统是什么原理来\\\r\n引发那种战斗力的呢？】\r\n\r\n【011四谷：\\\r\n嗯！我来说明一下吧！】\r\n\r\n【030铃：\\\r\n不好！…我，我得先走了】\r\n",
+    "M14/story/02/110": "",
+    "M14/victory/000": "_护_子号，全歼敌人！",
+    "M14/chapter/000/title": "夺权者",
+    "M14/action/000/name": "可控",
+    "M14/map/003/name": ""
+  },
+  "failures": [
+    "M14/surrender/000/chapter",
+    "M14/story/02/000",
+    "M14/story/02/110"
+  ]
+}

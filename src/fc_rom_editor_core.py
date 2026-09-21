@@ -13,12 +13,21 @@ from pathlib import Path
 from collections.abc import Iterable, Iterator
 
 from fc_editor.codecs import (
+    ActionEventCodec,
+    ActionEventRecord,
+    ActionEventUsage,
     BattleMusicCodec,
+    CharacterDialogueCodec,
     CharacterNameCodec,
     ChapterEventCodec,
+    ChapterTitleCodec,
+    ChapterTitleRecord,
+    ChapterVictoryCodec,
+    ChapterVictoryRecord,
     ChrCodec,
     CustomMusicCodec,
     LegacyGlobalDataCodec,
+    LegacyGrowthCodec,
     MapCodec,
     MapTileAttributeCodec,
     MapTilesetAttributes,
@@ -42,7 +51,11 @@ from fc_editor.constants import (
     WEAPON_RECORD_SIZE,
 )
 from fc_editor.errors import ProjectFormatError, RomFormatError
-from fc_editor.dc_text import concise_dc_text, default_dc_text_table
+from fc_editor.dc_text import (
+    concise_dc_text,
+    dc_text_table_with_overrides,
+    default_dc_text_table,
+)
 from fc_editor.expansion import (
     AUTO_ALLOCATION_PREFIX,
     EXPANSION_METADATA_OFFSET,
@@ -68,6 +81,7 @@ from fc_editor.expansion_map import (
 from fc_editor.expansion_story import (
     STORY_DATA_CAPACITY,
     STORY_DATA_START,
+    VERIFIED_STORY_SELECTORS,
     build_story_group,
     extract_story_group,
     pack_story_group,
@@ -107,6 +121,7 @@ from fc_editor.project import ProjectDocument
 from fc_editor.resources import Allocation, BankAllocator
 from fc_editor.rom_image import RomImage
 from fc_editor.services.validation import ValidationIssue, validate_project
+from fc_editor.text_table import TextTable
 
 FIELDS = UNIT_FIELDS
 FIELD_BY_KEY = UNIT_FIELD_BY_KEY
@@ -126,12 +141,18 @@ class EditHistoryEntry:
     patches: tuple[EditPatch, ...]
     allocations_before: tuple[Allocation, ...] = ()
     allocations_after: tuple[Allocation, ...] = ()
+    font_mappings_before: tuple[tuple[bytes, str], ...] = ()
+    font_mappings_after: tuple[tuple[bytes, str], ...] = ()
+    animation_labels_before: tuple[tuple[tuple[str, int], str], ...] = ()
+    animation_labels_after: tuple[tuple[tuple[str, int], str], ...] = ()
 
 
 @dataclass(frozen=True)
 class ProjectSnapshot:
     data: bytes
     allocations: tuple[Allocation, ...]
+    font_mappings: tuple[tuple[bytes, str], ...] = ()
+    animation_labels: tuple[tuple[tuple[str, int], str], ...] = ()
 
 
 @dataclass(frozen=True)
@@ -470,6 +491,8 @@ class RomProject:
         self.rom_image = RomImage(data, path)
         self.original = self.rom_image.data
         self.working = bytearray(self.original)
+        self.font_character_overrides: dict[bytes, str] = {}
+        self.animation_label_overrides: dict[tuple[str, int], str] = {}
         initial_plan = ExpansionPlan.from_bytes(self.working)
         self._initial_expansion_plan = initial_plan
         self._unit_name_baseline_pointers: tuple[int, ...] | None = None
@@ -537,6 +560,11 @@ class RomProject:
             if self.rom_image.profile.character_name_pointer_table_offset is not None
             else None
         )
+        self.character_dialogue_codec = (
+            CharacterDialogueCodec(self.rom_image)
+            if self.rom_image.profile.character_dialogue_pointer_table_offset is not None
+            else None
+        )
         self.legacy_global_data_codec = (
             LegacyGlobalDataCodec(self.rom_image)
             if self.rom_image.profile.legacy_global_data is not None
@@ -580,6 +608,21 @@ class RomProject:
         self.chapter_event_codec = (
             ChapterEventCodec(self.rom_image)
             if self.rom_image.profile.chapter_events is not None
+            else None
+        )
+        self.action_event_codec = (
+            ActionEventCodec(self.rom_image, self.original)
+            if ActionEventCodec.supports(self.original)
+            else None
+        )
+        self.chapter_title_codec = (
+            ChapterTitleCodec(self.rom_image, self.original)
+            if ChapterTitleCodec.supports(self.original)
+            else None
+        )
+        self.chapter_victory_codec = (
+            ChapterVictoryCodec(self.rom_image, self.original)
+            if ChapterVictoryCodec.supports(self.original)
             else None
         )
         self.persuasion_rule_codec = (
@@ -653,6 +696,16 @@ class RomProject:
         document = ProjectDocument.load(project_path)
         project = cls.load(base_rom_path)
         project.working[:] = document.materialize(project.rom_image)
+        project.font_character_overrides = document.font_character_overrides(
+            project.rom_image
+        )
+        project.animation_label_overrides = document.animation_label_overrides(
+            project.rom_image
+        )
+        try:
+            project.dc_text_table()
+        except ValueError as error:
+            raise ProjectFormatError(f"工程字库映射无效：{error}") from error
         project.resource_allocator = BankAllocator(
             project.profile,
             project.original,
@@ -696,14 +749,26 @@ class RomProject:
     def _mutation_snapshot(self) -> ProjectSnapshot | None:
         if self._transaction_depth:
             return None
-        return ProjectSnapshot(bytes(self.working), self.resource_allocator.allocations)
+        return ProjectSnapshot(
+            bytes(self.working),
+            self.resource_allocator.allocations,
+            tuple(sorted(self.font_character_overrides.items())),
+            tuple(sorted(self.animation_label_overrides.items())),
+        )
 
     def _finish_mutation(self, before: ProjectSnapshot | None, description: str) -> None:
         if before is None:
             return
         allocations_after = self.resource_allocator.allocations
+        font_mappings_after = tuple(sorted(self.font_character_overrides.items()))
+        animation_labels_after = tuple(sorted(self.animation_label_overrides.items()))
         patches = self._diff_patches(before.data, bytes(self.working))
-        if not patches and before.allocations == allocations_after:
+        if (
+            not patches
+            and before.allocations == allocations_after
+            and before.font_mappings == font_mappings_after
+            and before.animation_labels == animation_labels_after
+        ):
             return
         self._undo_stack.append(
             EditHistoryEntry(
@@ -711,6 +776,10 @@ class RomProject:
                 patches,
                 before.allocations,
                 allocations_after,
+                before.font_mappings,
+                font_mappings_after,
+                before.animation_labels,
+                animation_labels_after,
             )
         )
         self._redo_stack.clear()
@@ -720,7 +789,10 @@ class RomProject:
         outermost = self._transaction_depth == 0
         if outermost:
             self._transaction_before = ProjectSnapshot(
-                bytes(self.working), self.resource_allocator.allocations
+                bytes(self.working),
+                self.resource_allocator.allocations,
+                tuple(sorted(self.font_character_overrides.items())),
+                tuple(sorted(self.animation_label_overrides.items())),
             )
             self._transaction_description = description
         self._transaction_depth += 1
@@ -733,6 +805,12 @@ class RomProject:
                     self.profile,
                     self.original,
                     self._transaction_before.allocations,
+                )
+                self.font_character_overrides = dict(
+                    self._transaction_before.font_mappings
+                )
+                self.animation_label_overrides = dict(
+                    self._transaction_before.animation_labels
                 )
                 self._refresh_dynamic_codecs()
             raise
@@ -771,6 +849,8 @@ class RomProject:
         self.resource_allocator = BankAllocator(
             self.profile, self.original, entry.allocations_before
         )
+        self.font_character_overrides = dict(entry.font_mappings_before)
+        self.animation_label_overrides = dict(entry.animation_labels_before)
         self._refresh_dynamic_codecs()
         self._redo_stack.append(entry)
         return entry.description
@@ -784,6 +864,8 @@ class RomProject:
         self.resource_allocator = BankAllocator(
             self.profile, self.original, entry.allocations_after
         )
+        self.font_character_overrides = dict(entry.font_mappings_after)
+        self.animation_label_overrides = dict(entry.animation_labels_after)
         self._refresh_dynamic_codecs()
         self._undo_stack.append(entry)
         return entry.description
@@ -1164,6 +1246,20 @@ class RomProject:
         source = self.original if original else self.working
         return codec.experience_totals(source)
 
+    def get_verified_level_cap(self, *, original: bool = False) -> int:
+        """Read the current ROM's cap and reject mismatched fixed table layouts."""
+
+        self._require_legacy_global_data_codec()
+        source = self.original if original else self.working
+        level_cap = LegacyGrowthCodec(source).verified_level_cap
+        experience_count = len(self.get_experience_totals(original=original))
+        if level_cap != experience_count:
+            raise RomFormatError(
+                f"运行时等级上限{level_cap}与累计经验表"
+                f"{experience_count}项不一致。"
+            )
+        return level_cap
+
     def set_experience_totals(self, values: Iterable[int]) -> None:
         codec = self._require_legacy_global_data_codec()
         patches = codec.experience_total_patches(self.working, values)
@@ -1531,6 +1627,67 @@ class RomProject:
         with self.transaction(f"替换 {len(patches)} 个 ROM 字模"):
             for offset, raw in patches:
                 self.working[offset : offset + 18] = raw
+
+    def dc_text_table(self, *, reference: bool = False) -> TextTable:
+        return dc_text_table_with_overrides(
+            self.font_character_overrides,
+            reference=reference,
+        )
+
+    def replace_font_character_overrides(
+        self,
+        mappings: dict[bytes, str],
+    ) -> None:
+        """Replace project-local code assignments without modifying ROM bytes."""
+
+        from fc_editor.codecs.dc_font import glyph_file_offset
+        from fc_editor.dc_text import reference_dc_text_table
+
+        built_in = reference_dc_text_table().byte_to_text
+        checked: dict[bytes, str] = {}
+        for token, character in mappings.items():
+            glyph_file_offset(token, writable=True)
+            if len(character) != 1:
+                raise ValueError("工程字库映射必须是一枚 Unicode 字符。")
+            if token in built_in:
+                raise ValueError(
+                    f"不能覆盖内置字库代码 {token.hex().upper()}。"
+                )
+            checked[bytes(token)] = character
+        if len(set(checked.values())) != len(checked):
+            raise ValueError("工程字库映射不能把多个代码分配给同一字符。")
+        before = self._mutation_snapshot()
+        self.font_character_overrides = checked
+        self.dc_text_table()
+        self._finish_mutation(before, f"更新 {len(checked)} 条工程字库映射")
+
+    def replace_animation_label_overrides(
+        self,
+        labels: dict[tuple[str, int], str],
+    ) -> None:
+        """Replace project-local animation labels without modifying ROM bytes."""
+
+        from fc_editor.codecs.animation import AnimationCodec
+
+        codec = AnimationCodec(self.working)
+        checked: dict[tuple[str, int], str] = {}
+        for key, label in labels.items():
+            if not isinstance(key, tuple) or len(key) != 2:
+                raise ValueError("动画名称键必须为 (类型, 序号)。")
+            kind, index = key
+            if kind not in {"map", "background", "movement", "sprite"}:
+                raise ValueError(f"未知动画名称类型：{kind}")
+            if not isinstance(index, int) or not 0 <= index < codec.count(kind):
+                raise ValueError(f"{kind} 动画名称序号越界：{index}")
+            normalized = label.strip()
+            if not normalized or normalized != label or len(normalized) > 80:
+                raise ValueError("动画名称必须为 1—80 个无首尾空白的字符。")
+            if "\n" in normalized or "\r" in normalized:
+                raise ValueError("动画名称必须为单行文本。")
+            checked[(kind, index)] = normalized
+        before = self._mutation_snapshot()
+        self.animation_label_overrides = checked
+        self._finish_mutation(before, f"更新 {len(checked)} 条动画名称")
 
     def set_chr_tile_pixels(
         self,
@@ -1901,7 +2058,7 @@ class RomProject:
     ) -> int:
         if self.weapon_name_codec is None:
             raise ValueError("当前 ROM 的武器名称表尚未验证。")
-        source = self.original if original else bytes(self.working)
+        source = self.original if original else self.working
         return self.weapon_name_codec.pointer(weapon_id, source)
 
     def weapon_name_source_ids(
@@ -1924,7 +2081,7 @@ class RomProject:
     ) -> bytes:
         if self.weapon_name_codec is None:
             raise ValueError("当前 ROM 的武器名称表尚未验证。")
-        source = self.original if original else bytes(self.working)
+        source = self.original if original else self.working
         return self.weapon_name_codec.record_bytes(weapon_id, source)
 
     def _replace_terminated_name(
@@ -1997,6 +2154,28 @@ class RomProject:
             return f"占位/未命名人物槽（原ROM“{label}”）"
         return label
 
+    def character_normal_display_name(self, character_id: int) -> str:
+        """Return the database display name from the first shared name table."""
+        if self.profile.character_normal_name_pointer_table_offset is None:
+            return self.character_display_name(character_id)
+        if character_id == 0:
+            return "无人物/特殊上下文"
+        if (
+            self.character_name_codec is None
+            or not 1
+            <= character_id
+            <= self.profile.character_normal_name_count
+        ):
+            return "超出已验证人物表"
+        label = concise_dc_text(
+            self.character_name_codec.normal_record_bytes(
+                character_id, self.working
+            )
+        )
+        if not label or not label.strip("-_ "):
+            return "空白/未分配人物槽"
+        return label
+
     def get_character_name_pointer(
         self,
         character_id: int,
@@ -2017,8 +2196,25 @@ class RomProject:
         if self.character_name_codec is None:
             raise ValueError("当前 ROM 的人物名称表尚未验证。")
         return self.character_name_codec.source_ids(
-            self.get_character_name_pointer(character_id, original=original)
+            self.get_character_name_pointer(character_id, original=original),
+            self.original if original else self.working,
         )
+
+    def character_normal_name_source_ids(
+        self,
+        character_id: int,
+        *,
+        original: bool = False,
+    ) -> tuple[int, ...]:
+        if self.character_name_codec is None:
+            raise ValueError("当前 ROM 的人物显示名称表尚未验证。")
+        if self.profile.character_normal_name_pointer_table_offset is None:
+            return self.character_name_source_ids(
+                character_id, original=original
+            )
+        source = self.original if original else self.working
+        pointer = self.character_name_codec.normal_pointer(character_id, source)
+        return self.character_name_codec.normal_source_ids(pointer, source)
 
     def character_name_record_bytes(
         self,
@@ -2031,20 +2227,72 @@ class RomProject:
         source = self.original if original else self.working
         return self.character_name_codec.record_bytes(character_id, source)
 
-    def set_character_name_text(self, character_id: int, text: str) -> None:
+    def character_normal_name_record_bytes(
+        self,
+        character_id: int,
+        *,
+        original: bool = False,
+    ) -> bytes:
+        if self.character_name_codec is None:
+            raise ValueError("当前 ROM 的人物显示名称表尚未验证。")
+        if self.profile.character_normal_name_pointer_table_offset is None:
+            return self.character_name_record_bytes(
+                character_id, original=original
+            )
+        source = self.original if original else self.working
+        return self.character_name_codec.normal_record_bytes(character_id, source)
+
+    def set_character_name_texts(
+        self,
+        character_id: int,
+        *,
+        normal_text: str | None = None,
+        battle_text: str | None = None,
+    ) -> None:
         if self.character_name_codec is None:
             raise ValueError("当前 ROM 的人物名称表尚未验证。")
-        pointer = self.character_name_codec.pointer(character_id, self.working)
-        if not pointer:
-            raise ValueError("空人物名称槽没有可安全写入的原记录。")
-        offset = self.character_name_codec.pointer_to_file_offset(pointer)
-        raw = self.character_name_codec.record_bytes(character_id, self.working)
-        self._replace_terminated_name(
-            offset,
-            self._terminated_capacity(raw, "人物名称"),
-            text,
-            f"人物 {character_id:02X} · 直接修改名称",
+        if self.profile.character_normal_name_pointer_table_offset is None:
+            if (
+                normal_text is not None
+                and battle_text is not None
+                and normal_text != battle_text
+            ):
+                raise ValueError("当前 ROM 只有一套人物名称，不能分别写入两个名称。")
+            text = battle_text if battle_text is not None else normal_text
+            if text is None:
+                return
+            pointer = self.character_name_codec.pointer(character_id, self.working)
+            if not pointer:
+                raise ValueError("空人物名称槽没有可安全写入的原记录。")
+            offset = self.character_name_codec.pointer_to_file_offset(pointer)
+            raw = self.character_name_codec.record_bytes(
+                character_id, self.working
+            )
+            self._replace_terminated_name(
+                offset,
+                self._terminated_capacity(raw, "人物名称"),
+                text,
+                f"人物 {character_id:02X} · 修改名称",
+            )
+            return
+        before = self._mutation_snapshot()
+        patches = self.character_name_codec.repack_names(
+            self.working,
+            character_id,
+            normal_text=normal_text,
+            battle_text=battle_text,
         )
+        for offset, expected, replacement in patches:
+            if bytes(self.working[offset : offset + len(expected)]) != expected:
+                raise ValueError("人物名称池已变化，请重新载入后再试。")
+            self.working[offset : offset + len(replacement)] = replacement
+        self._finish_mutation(before, f"人物 {character_id:02X} · 名称与战斗名称")
+
+    def set_character_name_text(self, character_id: int, text: str) -> None:
+        self.set_character_name_texts(character_id, battle_text=text)
+
+    def set_character_normal_name_text(self, character_id: int, text: str) -> None:
+        self.set_character_name_texts(character_id, normal_text=text)
 
     def character_name_reference_options(
         self,
@@ -2052,8 +2300,14 @@ class RomProject:
         if self.character_name_codec is None:
             return ()
         options: list[tuple[int, int, str, tuple[int, ...]]] = []
-        for pointer in sorted(self.character_name_codec.ids_by_pointer):
-            source_ids = self.character_name_codec.source_ids(pointer)
+        pointers = sorted(
+            {
+                self.character_name_codec.pointer(character_id, self.working)
+                for character_id in range(1, self.profile.character_name_count)
+            }
+        )
+        for pointer in pointers:
+            source_ids = self.character_name_codec.source_ids(pointer, self.working)
             if not source_ids:
                 continue
             source_id = source_ids[0]
@@ -2095,6 +2349,32 @@ class RomProject:
         offset = self.character_name_codec.pointer_offset(character_id)
         self.working[offset : offset + 2] = self.original[offset : offset + 2]
         self._finish_mutation(before, f"人物 {character_id:02X} · 还原名称")
+
+    def reset_character_names(self, character_id: int) -> None:
+        if self.character_name_codec is None:
+            raise ValueError("当前 ROM 的人物名称表尚未验证。")
+        if self.profile.character_normal_name_pointer_table_offset is None:
+            self.reset_character_name(character_id)
+            return
+        normal = concise_dc_text(
+            self.character_name_codec.normal_record_bytes(
+                character_id, self.original
+            )
+        )
+        battle = (
+            concise_dc_text(
+                self.character_name_codec.record_bytes(
+                    character_id, self.original
+                )
+            )
+            if character_id < self.profile.character_name_count
+            else None
+        )
+        self.set_character_name_texts(
+            character_id,
+            normal_text=normal,
+            battle_text=battle,
+        )
 
     def battle_music_selector_label(self, selector: int) -> str:
         spec = self.profile.battle_music
@@ -2229,7 +2509,7 @@ class RomProject:
         original: bool = False,
     ) -> bytes:
         codec = self.base_unit_name_codec if original else self.unit_name_codec
-        source = self.original if original else bytes(self.working)
+        source = self.original if original else self.working
         pointer = codec.pointer(unit_id, source)
         bank = (
             codec.pair_first_bank
@@ -2606,6 +2886,192 @@ class RomProject:
         self.working[current.file_offset : current.file_offset + len(current.raw)] = original.raw
         self._finish_mutation(before, f"还原章节事件 ${address:04X}")
 
+    @property
+    def supports_action_events(self) -> bool:
+        return self.action_event_codec is not None
+
+    def action_event_records(
+        self,
+        *,
+        original: bool = False,
+    ) -> tuple[ActionEventRecord, ...]:
+        if self.action_event_codec is None:
+            raise ValueError("当前 ROM 没有已验证的独立行动事件表。")
+        source = self.original if original else self.working
+        return self.action_event_codec.records(source)
+
+    def get_action_event(
+        self,
+        action_id: int,
+        *,
+        original: bool = False,
+    ) -> ActionEventRecord:
+        if not 0 <= action_id < 0x100:
+            raise IndexError(f"行动 ID ${action_id:02X} 超出范围。")
+        return self.action_event_records(original=original)[action_id]
+
+    def action_event_usage(self) -> ActionEventUsage:
+        if self.action_event_codec is None:
+            raise ValueError("当前 ROM 没有已验证的独立行动事件表。")
+        return self.action_event_codec.usage(self.working)
+
+    def _apply_action_event_patches(
+        self,
+        patches: Iterable[tuple[int, bytes, bytes]],
+        description: str,
+    ) -> None:
+        normalized = tuple(patches)
+        before_snapshot = self._mutation_snapshot()
+        for offset, before, _after in normalized:
+            current = bytes(self.working[offset:offset + len(before)])
+            if current != before:
+                raise RomFormatError("行动事件数据已变化，请重新载入。")
+        for offset, _before, after in normalized:
+            self.working[offset:offset + len(after)] = after
+        self._finish_mutation(before_snapshot, description)
+
+    def set_action_event_instruction(
+        self,
+        action_id: int,
+        instruction_index: int,
+        raw: bytes,
+    ) -> None:
+        if self.action_event_codec is None:
+            raise ValueError("当前 ROM 没有已验证的独立行动事件表。")
+        patches = self.action_event_codec.replacement_patches(
+            self.working,
+            action_id,
+            instruction_index,
+            raw,
+        )
+        self._apply_action_event_patches(
+            patches,
+            f"行动 ${action_id:02X} · 编辑指令 {instruction_index + 1}",
+        )
+
+    def insert_action_event_instruction(
+        self,
+        action_id: int,
+        instruction_index: int,
+        raw: bytes,
+        *,
+        after: bool,
+    ) -> None:
+        if self.action_event_codec is None:
+            raise ValueError("当前 ROM 没有已验证的独立行动事件表。")
+        patches = self.action_event_codec.insertion_patches(
+            self.working,
+            action_id,
+            instruction_index,
+            raw,
+            after=after,
+        )
+        self._apply_action_event_patches(
+            patches,
+            f"行动 ${action_id:02X} · 插入指令",
+        )
+
+    def delete_action_event_instruction(
+        self,
+        action_id: int,
+        instruction_index: int,
+    ) -> None:
+        if self.action_event_codec is None:
+            raise ValueError("当前 ROM 没有已验证的独立行动事件表。")
+        patches = self.action_event_codec.deletion_patches(
+            self.working,
+            action_id,
+            instruction_index,
+        )
+        self._apply_action_event_patches(
+            patches,
+            f"行动 ${action_id:02X} · 删除指令 {instruction_index + 1}",
+        )
+
+    def reset_action_event(self, action_id: int) -> None:
+        if self.action_event_codec is None:
+            raise ValueError("当前 ROM 没有已验证的独立行动事件表。")
+        original = self.get_action_event(action_id, original=True)
+        patches = self.action_event_codec.record_replacement_patches(
+            self.working,
+            action_id,
+            original.raw,
+            source_pointer=original.pointer,
+        )
+        self._apply_action_event_patches(
+            patches,
+            f"行动 ${action_id:02X} · 还原记录",
+        )
+
+    @property
+    def supports_chapter_titles(self) -> bool:
+        return self.chapter_title_codec is not None
+
+    def get_chapter_title(
+        self,
+        scenario_id: int,
+        *,
+        original: bool = False,
+    ) -> ChapterTitleRecord:
+        if self.chapter_title_codec is None:
+            raise ValueError("当前 ROM 没有已验证的关卡标题拼图表。")
+        source = self.original if original else self.working
+        return self.chapter_title_codec.decode(scenario_id, source)
+
+    def set_chapter_title(
+        self,
+        scenario_id: int,
+        chr_banks: tuple[int, int, int],
+        raw: bytes,
+    ) -> None:
+        if self.chapter_title_codec is None:
+            raise ValueError("当前 ROM 没有已验证的关卡标题拼图表。")
+        before = self._mutation_snapshot()
+        patches = self.chapter_title_codec.replacement_patches(
+            self.working,
+            scenario_id,
+            chr_banks,
+            raw,
+        )
+        for offset, _old, after in patches:
+            self.working[offset : offset + len(after)] = after
+        self._finish_mutation(before, f"关卡 {scenario_id + 1:03d} · 标题拼图")
+
+    def reset_chapter_title(self, scenario_id: int) -> None:
+        original = self.get_chapter_title(scenario_id, original=True)
+        self.set_chapter_title(scenario_id, original.chr_banks, original.raw)
+
+    @property
+    def supports_chapter_victory(self) -> bool:
+        return self.chapter_victory_codec is not None
+
+    def get_chapter_victory(
+        self,
+        scenario_id: int,
+        *,
+        original: bool = False,
+    ) -> ChapterVictoryRecord:
+        if self.chapter_victory_codec is None:
+            raise ValueError("当前 ROM 没有已验证的初始胜利文字表。")
+        source = self.original if original else self.working
+        return self.chapter_victory_codec.decode(scenario_id, source)
+
+    def set_chapter_victory_body(self, scenario_id: int, body: bytes) -> None:
+        if self.chapter_victory_codec is None:
+            raise ValueError("当前 ROM 没有已验证的初始胜利文字表。")
+        before = self._mutation_snapshot()
+        offset, _old, after = self.chapter_victory_codec.replacement_patch(
+            self.working,
+            scenario_id,
+            body,
+        )
+        self.working[offset : offset + len(after)] = after
+        self._finish_mutation(before, f"关卡 {scenario_id + 1:03d} · 初始胜利文字")
+
+    def reset_chapter_victory(self, scenario_id: int) -> None:
+        original = self.get_chapter_victory(scenario_id, original=True)
+        self.set_chapter_victory_body(scenario_id, original.body)
+
     def get_story_text(
         self,
         selector: int,
@@ -2626,7 +3092,7 @@ class RomProject:
         """Dry-run a text replacement and return used/available group bytes."""
 
         plan = self.expansion_plan
-        if plan is None:
+        if plan is None or selector not in VERIFIED_STORY_SELECTORS:
             record = self.get_story_text(selector, index)
             if len(data) != record.capacity:
                 raise ValueError(f"当前记录必须保持 {record.capacity} 字节。")
@@ -2642,7 +3108,7 @@ class RomProject:
 
     def set_story_text_raw(self, selector: int, index: int, data: bytes) -> None:
         plan = self.expansion_plan
-        if plan is not None:
+        if plan is not None and selector in VERIFIED_STORY_SELECTORS:
             records = extract_story_group(
                 self.story_text_codec, selector, self.working
             )
@@ -2707,7 +3173,10 @@ class RomProject:
         )
 
     def reset_story_text(self, selector: int, index: int) -> None:
-        if self.expansion_plan is not None:
+        if (
+            self.expansion_plan is not None
+            and selector in VERIFIED_STORY_SELECTORS
+        ):
             original = extract_story_group(
                 self.base_story_text_codec, selector, self.original
             ).record_for_index(index)
@@ -2970,9 +3439,7 @@ class RomProject:
             raise ValueError("不能覆盖当前载入的基准 ROM，请使用新文件名。")
         destination.parent.mkdir(parents=True, exist_ok=True)
         if make_backup and destination.exists():
-            timestamp = datetime.now().strftime("%Y%m%d-%H%M%S")
-            backup = destination.with_name(destination.name + f".{timestamp}.bak")
-            shutil.copy2(destination, backup)
+            self._backup_existing(destination)
         atomic_write_bytes(destination, bytes(self.working))
         return destination
 
@@ -2987,10 +3454,14 @@ class RomProject:
     def _backup_existing(path: Path) -> Path | None:
         if not path.exists():
             return None
-        timestamp = datetime.now().strftime("%Y%m%d-%H%M%S")
-        backup = path.with_name(path.name + f".{timestamp}.bak")
-        shutil.copy2(path, backup)
-        return backup
+        timestamp = datetime.now().strftime("%Y%m%d-%H%M%S-%f")
+        for index in range(1000):
+            suffix = f"-{index}" if index else ""
+            backup = path.with_name(path.name + f".{timestamp}{suffix}.bak")
+            if not backup.exists():
+                shutil.copy2(path, backup)
+                return backup
+        raise FileExistsError(f"无法为 {path} 建立唯一备份文件名")
 
     def build_release(self, output_dir: str | Path, name: str) -> BuildArtifacts:
         if not name.strip() or Path(name).name != name:
@@ -3141,6 +3612,10 @@ class RomProject:
 
     def to_project_document(self) -> ProjectDocument:
         document = ProjectDocument.create(self.rom_image)
+        for token, character in sorted(self.font_character_overrides.items()):
+            document.add_font_character_mapping(token, character)
+        for (kind, index), label in sorted(self.animation_label_overrides.items()):
+            document.add_animation_label(kind, index, label)
         covered_offsets: set[int] = set()
         plan = self.expansion_plan
         units_are_linked = bool(plan is not None and plan.flags & FLAG_UNITS)
@@ -3265,7 +3740,30 @@ class RomProject:
             offset = self.unit_name_codec.pointer_offset(unit_id)
             covered_offsets.update(range(offset, offset + 2))
 
+        character_name_pool_repacked = False
         if self.character_name_codec is not None:
+            profile = self.profile
+            if (
+                profile.character_normal_name_pointer_table_offset is not None
+                and profile.character_name_first_pointer is not None
+                and profile.character_name_data_end_pointer is not None
+            ):
+                normal_start = profile.character_normal_name_pointer_table_offset
+                normal_end = normal_start + profile.character_normal_name_count * 2
+                pool_start = self.character_name_codec.pointer_to_file_offset(
+                    profile.character_name_first_pointer
+                )
+                pool_end = pool_start + (
+                    profile.character_name_data_end_pointer
+                    - profile.character_name_first_pointer
+                )
+                character_name_pool_repacked = (
+                    self.working[normal_start:normal_end]
+                    != self.original[normal_start:normal_end]
+                    or self.working[pool_start:pool_end]
+                    != self.original[pool_start:pool_end]
+                )
+        if self.character_name_codec is not None and not character_name_pool_repacked:
             for character_id in range(1, self.profile.character_name_count):
                 original_pointer = self.get_character_name_pointer(
                     character_id, original=True
@@ -3273,7 +3771,9 @@ class RomProject:
                 current_pointer = self.get_character_name_pointer(character_id)
                 if original_pointer == current_pointer:
                     continue
-                source_ids = self.character_name_codec.source_ids(current_pointer)
+                source_ids = self.character_name_codec.source_ids(
+                    current_pointer, self.working
+                )
                 if not source_ids:
                     continue
                 document.add_character_name_reference(

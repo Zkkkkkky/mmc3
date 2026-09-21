@@ -1,0 +1,2091 @@
+{
+  "schema_version": 1,
+  "module": "M04",
+  "passed": true,
+  "status": "physical_fields_cataloged_save_evidence_pending",
+  "source": "output/build/legacy-diff-audit/audit.nes",
+  "source_sha256": "c0f6fb15dbcc9f04d35ec97b9558df85d099c661c35d54d3a2aae4966d2ed5b2",
+  "counts": {
+    "maps": 32,
+    "nonempty_maps": 16,
+    "records": 44,
+    "physical_fields": 176,
+    "persistent_candidate_fields": 103,
+    "reference_off_viewport_fields": 44,
+    "reference_forced_unlimited_fields": 29
+  },
+  "checks": {
+    "scenario_count_is_32": true,
+    "record_count_is_44": true,
+    "physical_field_count_is_176": true,
+    "persistent_candidate_count_is_103": true,
+    "forced_unlimited_count_is_29": true,
+    "off_viewport_field_count_is_44": true,
+    "field_ids_unique": true,
+    "record_offsets_unique": true,
+    "all_pointers_readable": true,
+    "reference_editor_controls_enumerated": true,
+    "reference_editor_rom_unchanged": true,
+    "reference_editor_core_controls_present": true,
+    "existing_record_path_enumerated": true,
+    "existing_record_requires_delete_and_readd": true,
+    "existing_record_probe_rom_unchanged": true
+  },
+  "records": [
+    {
+      "record_id": "M04/00/trigger/00",
+      "map_id": 0,
+      "row": 0,
+      "pointer": 39238,
+      "offset": 88406,
+      "raw_hex": "0903FF07",
+      "kind": "event"
+    },
+    {
+      "record_id": "M04/01/trigger/00",
+      "map_id": 1,
+      "row": 0,
+      "pointer": 39243,
+      "offset": 88411,
+      "raw_hex": "0903FFF0",
+      "kind": "shop"
+    },
+    {
+      "record_id": "M04/01/trigger/01",
+      "map_id": 1,
+      "row": 1,
+      "pointer": 39243,
+      "offset": 88415,
+      "raw_hex": "0D12FF07",
+      "kind": "event"
+    },
+    {
+      "record_id": "M04/01/trigger/02",
+      "map_id": 1,
+      "row": 2,
+      "pointer": 39243,
+      "offset": 88419,
+      "raw_hex": "1009FF07",
+      "kind": "event"
+    },
+    {
+      "record_id": "M04/01/trigger/03",
+      "map_id": 1,
+      "row": 3,
+      "pointer": 39243,
+      "offset": 88423,
+      "raw_hex": "030204F1",
+      "kind": "shop"
+    },
+    {
+      "record_id": "M04/03/trigger/00",
+      "map_id": 3,
+      "row": 0,
+      "pointer": 39265,
+      "offset": 88433,
+      "raw_hex": "030AFF07",
+      "kind": "event"
+    },
+    {
+      "record_id": "M04/03/trigger/01",
+      "map_id": 3,
+      "row": 1,
+      "pointer": 39265,
+      "offset": 88437,
+      "raw_hex": "0807FF07",
+      "kind": "event"
+    },
+    {
+      "record_id": "M04/03/trigger/02",
+      "map_id": 3,
+      "row": 2,
+      "pointer": 39265,
+      "offset": 88441,
+      "raw_hex": "0C03FF07",
+      "kind": "event"
+    },
+    {
+      "record_id": "M04/04/trigger/00",
+      "map_id": 4,
+      "row": 0,
+      "pointer": 39278,
+      "offset": 88446,
+      "raw_hex": "0118FFF0",
+      "kind": "shop"
+    },
+    {
+      "record_id": "M04/04/trigger/01",
+      "map_id": 4,
+      "row": 1,
+      "pointer": 39278,
+      "offset": 88450,
+      "raw_hex": "1B01FFF0",
+      "kind": "shop"
+    },
+    {
+      "record_id": "M04/04/trigger/02",
+      "map_id": 4,
+      "row": 2,
+      "pointer": 39278,
+      "offset": 88454,
+      "raw_hex": "0E1BFF00",
+      "kind": "event"
+    },
+    {
+      "record_id": "M04/04/trigger/03",
+      "map_id": 4,
+      "row": 3,
+      "pointer": 39278,
+      "offset": 88458,
+      "raw_hex": "0E0EFF07",
+      "kind": "event"
+    },
+    {
+      "record_id": "M04/04/trigger/04",
+      "map_id": 4,
+      "row": 4,
+      "pointer": 39278,
+      "offset": 88462,
+      "raw_hex": "0C01FF00",
+      "kind": "event"
+    },
+    {
+      "record_id": "M04/05/trigger/00",
+      "map_id": 5,
+      "row": 0,
+      "pointer": 39299,
+      "offset": 88467,
+      "raw_hex": "120CFF07",
+      "kind": "event"
+    },
+    {
+      "record_id": "M04/06/trigger/00",
+      "map_id": 6,
+      "row": 0,
+      "pointer": 39304,
+      "offset": 88472,
+      "raw_hex": "0C0BFF07",
+      "kind": "event"
+    },
+    {
+      "record_id": "M04/07/trigger/00",
+      "map_id": 7,
+      "row": 0,
+      "pointer": 39309,
+      "offset": 88477,
+      "raw_hex": "0217FFF0",
+      "kind": "shop"
+    },
+    {
+      "record_id": "M04/07/trigger/01",
+      "map_id": 7,
+      "row": 1,
+      "pointer": 39309,
+      "offset": 88481,
+      "raw_hex": "0D0DFF07",
+      "kind": "event"
+    },
+    {
+      "record_id": "M04/08/trigger/00",
+      "map_id": 8,
+      "row": 0,
+      "pointer": 39318,
+      "offset": 88486,
+      "raw_hex": "0011FFF0",
+      "kind": "shop"
+    },
+    {
+      "record_id": "M04/08/trigger/01",
+      "map_id": 8,
+      "row": 1,
+      "pointer": 39318,
+      "offset": 88490,
+      "raw_hex": "0805FF07",
+      "kind": "event"
+    },
+    {
+      "record_id": "M04/08/trigger/02",
+      "map_id": 8,
+      "row": 2,
+      "pointer": 39318,
+      "offset": 88494,
+      "raw_hex": "050FFF07",
+      "kind": "event"
+    },
+    {
+      "record_id": "M04/08/trigger/03",
+      "map_id": 8,
+      "row": 3,
+      "pointer": 39318,
+      "offset": 88498,
+      "raw_hex": "0D0DFF07",
+      "kind": "event"
+    },
+    {
+      "record_id": "M04/08/trigger/04",
+      "map_id": 8,
+      "row": 4,
+      "pointer": 39318,
+      "offset": 88502,
+      "raw_hex": "1812FF07",
+      "kind": "event"
+    },
+    {
+      "record_id": "M04/09/trigger/00",
+      "map_id": 9,
+      "row": 0,
+      "pointer": 39339,
+      "offset": 88507,
+      "raw_hex": "1A0BFF07",
+      "kind": "event"
+    },
+    {
+      "record_id": "M04/09/trigger/01",
+      "map_id": 9,
+      "row": 1,
+      "pointer": 39339,
+      "offset": 88511,
+      "raw_hex": "070DFF07",
+      "kind": "event"
+    },
+    {
+      "record_id": "M04/10/trigger/00",
+      "map_id": 10,
+      "row": 0,
+      "pointer": 39348,
+      "offset": 88516,
+      "raw_hex": "1A00FF00",
+      "kind": "event"
+    },
+    {
+      "record_id": "M04/11/trigger/00",
+      "map_id": 11,
+      "row": 0,
+      "pointer": 39353,
+      "offset": 88521,
+      "raw_hex": "1E13FFF0",
+      "kind": "shop"
+    },
+    {
+      "record_id": "M04/12/trigger/00",
+      "map_id": 12,
+      "row": 0,
+      "pointer": 39358,
+      "offset": 88526,
+      "raw_hex": "0708FF07",
+      "kind": "event"
+    },
+    {
+      "record_id": "M04/12/trigger/01",
+      "map_id": 12,
+      "row": 1,
+      "pointer": 39358,
+      "offset": 88530,
+      "raw_hex": "1704FF07",
+      "kind": "event"
+    },
+    {
+      "record_id": "M04/12/trigger/02",
+      "map_id": 12,
+      "row": 2,
+      "pointer": 39358,
+      "offset": 88534,
+      "raw_hex": "0714FF07",
+      "kind": "event"
+    },
+    {
+      "record_id": "M04/13/trigger/00",
+      "map_id": 13,
+      "row": 0,
+      "pointer": 39371,
+      "offset": 88539,
+      "raw_hex": "140DFF07",
+      "kind": "event"
+    },
+    {
+      "record_id": "M04/14/trigger/00",
+      "map_id": 14,
+      "row": 0,
+      "pointer": 39376,
+      "offset": 88544,
+      "raw_hex": "000EFF04",
+      "kind": "event"
+    },
+    {
+      "record_id": "M04/14/trigger/01",
+      "map_id": 14,
+      "row": 1,
+      "pointer": 39376,
+      "offset": 88548,
+      "raw_hex": "1D0EFF04",
+      "kind": "event"
+    },
+    {
+      "record_id": "M04/14/trigger/02",
+      "map_id": 14,
+      "row": 2,
+      "pointer": 39376,
+      "offset": 88552,
+      "raw_hex": "0E00FF03",
+      "kind": "event"
+    },
+    {
+      "record_id": "M04/14/trigger/03",
+      "map_id": 14,
+      "row": 3,
+      "pointer": 39376,
+      "offset": 88556,
+      "raw_hex": "0F00FF03",
+      "kind": "event"
+    },
+    {
+      "record_id": "M04/14/trigger/04",
+      "map_id": 14,
+      "row": 4,
+      "pointer": 39376,
+      "offset": 88560,
+      "raw_hex": "0006FF00",
+      "kind": "event"
+    },
+    {
+      "record_id": "M04/18/trigger/00",
+      "map_id": 18,
+      "row": 0,
+      "pointer": 39397,
+      "offset": 88565,
+      "raw_hex": "0010FF04",
+      "kind": "event"
+    },
+    {
+      "record_id": "M04/18/trigger/01",
+      "map_id": 18,
+      "row": 1,
+      "pointer": 39397,
+      "offset": 88569,
+      "raw_hex": "1E10FF04",
+      "kind": "event"
+    },
+    {
+      "record_id": "M04/18/trigger/02",
+      "map_id": 18,
+      "row": 2,
+      "pointer": 39397,
+      "offset": 88573,
+      "raw_hex": "0F10FF01",
+      "kind": "event"
+    },
+    {
+      "record_id": "M04/18/trigger/03",
+      "map_id": 18,
+      "row": 3,
+      "pointer": 39397,
+      "offset": 88577,
+      "raw_hex": "0D10FF05",
+      "kind": "event"
+    },
+    {
+      "record_id": "M04/18/trigger/04",
+      "map_id": 18,
+      "row": 4,
+      "pointer": 39397,
+      "offset": 88581,
+      "raw_hex": "1110FF05",
+      "kind": "event"
+    },
+    {
+      "record_id": "M04/18/trigger/05",
+      "map_id": 18,
+      "row": 5,
+      "pointer": 39397,
+      "offset": 88585,
+      "raw_hex": "0F0EFF0B",
+      "kind": "event"
+    },
+    {
+      "record_id": "M04/18/trigger/06",
+      "map_id": 18,
+      "row": 6,
+      "pointer": 39397,
+      "offset": 88589,
+      "raw_hex": "0F12FF0C",
+      "kind": "event"
+    },
+    {
+      "record_id": "M04/21/trigger/00",
+      "map_id": 21,
+      "row": 0,
+      "pointer": 39426,
+      "offset": 88594,
+      "raw_hex": "0110FFF0",
+      "kind": "shop"
+    },
+    {
+      "record_id": "M04/21/trigger/01",
+      "map_id": 21,
+      "row": 1,
+      "pointer": 39426,
+      "offset": 88598,
+      "raw_hex": "0905FF07",
+      "kind": "event"
+    }
+  ],
+  "fields": [
+    {
+      "field_id": "M04/00/trigger/00/x",
+      "map_id": 0,
+      "row": 0,
+      "field": "x",
+      "file_offset": 88406,
+      "original": 9,
+      "classification": "persistent_candidate"
+    },
+    {
+      "field_id": "M04/00/trigger/00/y",
+      "map_id": 0,
+      "row": 0,
+      "field": "y",
+      "file_offset": 88407,
+      "original": 3,
+      "classification": "persistent_candidate"
+    },
+    {
+      "field_id": "M04/00/trigger/00/character_id",
+      "map_id": 0,
+      "row": 0,
+      "field": "character_id",
+      "file_offset": 88408,
+      "original": 255,
+      "classification": "reference_forced_unlimited_no_effect"
+    },
+    {
+      "field_id": "M04/00/trigger/00/event_id",
+      "map_id": 0,
+      "row": 0,
+      "field": "event_id",
+      "file_offset": 88409,
+      "original": 7,
+      "classification": "persistent_candidate"
+    },
+    {
+      "field_id": "M04/01/trigger/00/x",
+      "map_id": 1,
+      "row": 0,
+      "field": "x",
+      "file_offset": 88411,
+      "original": 9,
+      "classification": "persistent_candidate"
+    },
+    {
+      "field_id": "M04/01/trigger/00/y",
+      "map_id": 1,
+      "row": 0,
+      "field": "y",
+      "file_offset": 88412,
+      "original": 3,
+      "classification": "persistent_candidate"
+    },
+    {
+      "field_id": "M04/01/trigger/00/character_id",
+      "map_id": 1,
+      "row": 0,
+      "field": "character_id",
+      "file_offset": 88413,
+      "original": 255,
+      "classification": "persistent_candidate"
+    },
+    {
+      "field_id": "M04/01/trigger/00/event_id",
+      "map_id": 1,
+      "row": 0,
+      "field": "event_id",
+      "file_offset": 88414,
+      "original": 240,
+      "classification": "persistent_candidate"
+    },
+    {
+      "field_id": "M04/01/trigger/01/x",
+      "map_id": 1,
+      "row": 1,
+      "field": "x",
+      "file_offset": 88415,
+      "original": 13,
+      "classification": "persistent_candidate"
+    },
+    {
+      "field_id": "M04/01/trigger/01/y",
+      "map_id": 1,
+      "row": 1,
+      "field": "y",
+      "file_offset": 88416,
+      "original": 18,
+      "classification": "persistent_candidate"
+    },
+    {
+      "field_id": "M04/01/trigger/01/character_id",
+      "map_id": 1,
+      "row": 1,
+      "field": "character_id",
+      "file_offset": 88417,
+      "original": 255,
+      "classification": "reference_forced_unlimited_no_effect"
+    },
+    {
+      "field_id": "M04/01/trigger/01/event_id",
+      "map_id": 1,
+      "row": 1,
+      "field": "event_id",
+      "file_offset": 88418,
+      "original": 7,
+      "classification": "persistent_candidate"
+    },
+    {
+      "field_id": "M04/01/trigger/02/x",
+      "map_id": 1,
+      "row": 2,
+      "field": "x",
+      "file_offset": 88419,
+      "original": 16,
+      "classification": "persistent_candidate"
+    },
+    {
+      "field_id": "M04/01/trigger/02/y",
+      "map_id": 1,
+      "row": 2,
+      "field": "y",
+      "file_offset": 88420,
+      "original": 9,
+      "classification": "persistent_candidate"
+    },
+    {
+      "field_id": "M04/01/trigger/02/character_id",
+      "map_id": 1,
+      "row": 2,
+      "field": "character_id",
+      "file_offset": 88421,
+      "original": 255,
+      "classification": "reference_forced_unlimited_no_effect"
+    },
+    {
+      "field_id": "M04/01/trigger/02/event_id",
+      "map_id": 1,
+      "row": 2,
+      "field": "event_id",
+      "file_offset": 88422,
+      "original": 7,
+      "classification": "persistent_candidate"
+    },
+    {
+      "field_id": "M04/01/trigger/03/x",
+      "map_id": 1,
+      "row": 3,
+      "field": "x",
+      "file_offset": 88423,
+      "original": 3,
+      "classification": "persistent_candidate"
+    },
+    {
+      "field_id": "M04/01/trigger/03/y",
+      "map_id": 1,
+      "row": 3,
+      "field": "y",
+      "file_offset": 88424,
+      "original": 2,
+      "classification": "persistent_candidate"
+    },
+    {
+      "field_id": "M04/01/trigger/03/character_id",
+      "map_id": 1,
+      "row": 3,
+      "field": "character_id",
+      "file_offset": 88425,
+      "original": 4,
+      "classification": "persistent_candidate"
+    },
+    {
+      "field_id": "M04/01/trigger/03/event_id",
+      "map_id": 1,
+      "row": 3,
+      "field": "event_id",
+      "file_offset": 88426,
+      "original": 241,
+      "classification": "persistent_candidate"
+    },
+    {
+      "field_id": "M04/03/trigger/00/x",
+      "map_id": 3,
+      "row": 0,
+      "field": "x",
+      "file_offset": 88433,
+      "original": 3,
+      "classification": "persistent_candidate"
+    },
+    {
+      "field_id": "M04/03/trigger/00/y",
+      "map_id": 3,
+      "row": 0,
+      "field": "y",
+      "file_offset": 88434,
+      "original": 10,
+      "classification": "persistent_candidate"
+    },
+    {
+      "field_id": "M04/03/trigger/00/character_id",
+      "map_id": 3,
+      "row": 0,
+      "field": "character_id",
+      "file_offset": 88435,
+      "original": 255,
+      "classification": "reference_forced_unlimited_no_effect"
+    },
+    {
+      "field_id": "M04/03/trigger/00/event_id",
+      "map_id": 3,
+      "row": 0,
+      "field": "event_id",
+      "file_offset": 88436,
+      "original": 7,
+      "classification": "persistent_candidate"
+    },
+    {
+      "field_id": "M04/03/trigger/01/x",
+      "map_id": 3,
+      "row": 1,
+      "field": "x",
+      "file_offset": 88437,
+      "original": 8,
+      "classification": "persistent_candidate"
+    },
+    {
+      "field_id": "M04/03/trigger/01/y",
+      "map_id": 3,
+      "row": 1,
+      "field": "y",
+      "file_offset": 88438,
+      "original": 7,
+      "classification": "persistent_candidate"
+    },
+    {
+      "field_id": "M04/03/trigger/01/character_id",
+      "map_id": 3,
+      "row": 1,
+      "field": "character_id",
+      "file_offset": 88439,
+      "original": 255,
+      "classification": "reference_forced_unlimited_no_effect"
+    },
+    {
+      "field_id": "M04/03/trigger/01/event_id",
+      "map_id": 3,
+      "row": 1,
+      "field": "event_id",
+      "file_offset": 88440,
+      "original": 7,
+      "classification": "persistent_candidate"
+    },
+    {
+      "field_id": "M04/03/trigger/02/x",
+      "map_id": 3,
+      "row": 2,
+      "field": "x",
+      "file_offset": 88441,
+      "original": 12,
+      "classification": "persistent_candidate"
+    },
+    {
+      "field_id": "M04/03/trigger/02/y",
+      "map_id": 3,
+      "row": 2,
+      "field": "y",
+      "file_offset": 88442,
+      "original": 3,
+      "classification": "persistent_candidate"
+    },
+    {
+      "field_id": "M04/03/trigger/02/character_id",
+      "map_id": 3,
+      "row": 2,
+      "field": "character_id",
+      "file_offset": 88443,
+      "original": 255,
+      "classification": "reference_forced_unlimited_no_effect"
+    },
+    {
+      "field_id": "M04/03/trigger/02/event_id",
+      "map_id": 3,
+      "row": 2,
+      "field": "event_id",
+      "file_offset": 88444,
+      "original": 7,
+      "classification": "persistent_candidate"
+    },
+    {
+      "field_id": "M04/04/trigger/00/x",
+      "map_id": 4,
+      "row": 0,
+      "field": "x",
+      "file_offset": 88446,
+      "original": 1,
+      "classification": "reference_off_viewport_no_editor"
+    },
+    {
+      "field_id": "M04/04/trigger/00/y",
+      "map_id": 4,
+      "row": 0,
+      "field": "y",
+      "file_offset": 88447,
+      "original": 24,
+      "classification": "reference_off_viewport_no_editor"
+    },
+    {
+      "field_id": "M04/04/trigger/00/character_id",
+      "map_id": 4,
+      "row": 0,
+      "field": "character_id",
+      "file_offset": 88448,
+      "original": 255,
+      "classification": "reference_off_viewport_no_editor"
+    },
+    {
+      "field_id": "M04/04/trigger/00/event_id",
+      "map_id": 4,
+      "row": 0,
+      "field": "event_id",
+      "file_offset": 88449,
+      "original": 240,
+      "classification": "reference_off_viewport_no_editor"
+    },
+    {
+      "field_id": "M04/04/trigger/01/x",
+      "map_id": 4,
+      "row": 1,
+      "field": "x",
+      "file_offset": 88450,
+      "original": 27,
+      "classification": "reference_off_viewport_no_editor"
+    },
+    {
+      "field_id": "M04/04/trigger/01/y",
+      "map_id": 4,
+      "row": 1,
+      "field": "y",
+      "file_offset": 88451,
+      "original": 1,
+      "classification": "reference_off_viewport_no_editor"
+    },
+    {
+      "field_id": "M04/04/trigger/01/character_id",
+      "map_id": 4,
+      "row": 1,
+      "field": "character_id",
+      "file_offset": 88452,
+      "original": 255,
+      "classification": "reference_off_viewport_no_editor"
+    },
+    {
+      "field_id": "M04/04/trigger/01/event_id",
+      "map_id": 4,
+      "row": 1,
+      "field": "event_id",
+      "file_offset": 88453,
+      "original": 240,
+      "classification": "reference_off_viewport_no_editor"
+    },
+    {
+      "field_id": "M04/04/trigger/02/x",
+      "map_id": 4,
+      "row": 2,
+      "field": "x",
+      "file_offset": 88454,
+      "original": 14,
+      "classification": "reference_off_viewport_no_editor"
+    },
+    {
+      "field_id": "M04/04/trigger/02/y",
+      "map_id": 4,
+      "row": 2,
+      "field": "y",
+      "file_offset": 88455,
+      "original": 27,
+      "classification": "reference_off_viewport_no_editor"
+    },
+    {
+      "field_id": "M04/04/trigger/02/character_id",
+      "map_id": 4,
+      "row": 2,
+      "field": "character_id",
+      "file_offset": 88456,
+      "original": 255,
+      "classification": "reference_off_viewport_no_editor"
+    },
+    {
+      "field_id": "M04/04/trigger/02/event_id",
+      "map_id": 4,
+      "row": 2,
+      "field": "event_id",
+      "file_offset": 88457,
+      "original": 0,
+      "classification": "reference_off_viewport_no_editor"
+    },
+    {
+      "field_id": "M04/04/trigger/03/x",
+      "map_id": 4,
+      "row": 3,
+      "field": "x",
+      "file_offset": 88458,
+      "original": 14,
+      "classification": "persistent_candidate"
+    },
+    {
+      "field_id": "M04/04/trigger/03/y",
+      "map_id": 4,
+      "row": 3,
+      "field": "y",
+      "file_offset": 88459,
+      "original": 14,
+      "classification": "persistent_candidate"
+    },
+    {
+      "field_id": "M04/04/trigger/03/character_id",
+      "map_id": 4,
+      "row": 3,
+      "field": "character_id",
+      "file_offset": 88460,
+      "original": 255,
+      "classification": "reference_forced_unlimited_no_effect"
+    },
+    {
+      "field_id": "M04/04/trigger/03/event_id",
+      "map_id": 4,
+      "row": 3,
+      "field": "event_id",
+      "file_offset": 88461,
+      "original": 7,
+      "classification": "persistent_candidate"
+    },
+    {
+      "field_id": "M04/04/trigger/04/x",
+      "map_id": 4,
+      "row": 4,
+      "field": "x",
+      "file_offset": 88462,
+      "original": 12,
+      "classification": "persistent_candidate"
+    },
+    {
+      "field_id": "M04/04/trigger/04/y",
+      "map_id": 4,
+      "row": 4,
+      "field": "y",
+      "file_offset": 88463,
+      "original": 1,
+      "classification": "persistent_candidate"
+    },
+    {
+      "field_id": "M04/04/trigger/04/character_id",
+      "map_id": 4,
+      "row": 4,
+      "field": "character_id",
+      "file_offset": 88464,
+      "original": 255,
+      "classification": "reference_forced_unlimited_no_effect"
+    },
+    {
+      "field_id": "M04/04/trigger/04/event_id",
+      "map_id": 4,
+      "row": 4,
+      "field": "event_id",
+      "file_offset": 88465,
+      "original": 0,
+      "classification": "persistent_candidate"
+    },
+    {
+      "field_id": "M04/05/trigger/00/x",
+      "map_id": 5,
+      "row": 0,
+      "field": "x",
+      "file_offset": 88467,
+      "original": 18,
+      "classification": "persistent_candidate"
+    },
+    {
+      "field_id": "M04/05/trigger/00/y",
+      "map_id": 5,
+      "row": 0,
+      "field": "y",
+      "file_offset": 88468,
+      "original": 12,
+      "classification": "persistent_candidate"
+    },
+    {
+      "field_id": "M04/05/trigger/00/character_id",
+      "map_id": 5,
+      "row": 0,
+      "field": "character_id",
+      "file_offset": 88469,
+      "original": 255,
+      "classification": "reference_forced_unlimited_no_effect"
+    },
+    {
+      "field_id": "M04/05/trigger/00/event_id",
+      "map_id": 5,
+      "row": 0,
+      "field": "event_id",
+      "file_offset": 88470,
+      "original": 7,
+      "classification": "persistent_candidate"
+    },
+    {
+      "field_id": "M04/06/trigger/00/x",
+      "map_id": 6,
+      "row": 0,
+      "field": "x",
+      "file_offset": 88472,
+      "original": 12,
+      "classification": "persistent_candidate"
+    },
+    {
+      "field_id": "M04/06/trigger/00/y",
+      "map_id": 6,
+      "row": 0,
+      "field": "y",
+      "file_offset": 88473,
+      "original": 11,
+      "classification": "persistent_candidate"
+    },
+    {
+      "field_id": "M04/06/trigger/00/character_id",
+      "map_id": 6,
+      "row": 0,
+      "field": "character_id",
+      "file_offset": 88474,
+      "original": 255,
+      "classification": "reference_forced_unlimited_no_effect"
+    },
+    {
+      "field_id": "M04/06/trigger/00/event_id",
+      "map_id": 6,
+      "row": 0,
+      "field": "event_id",
+      "file_offset": 88475,
+      "original": 7,
+      "classification": "persistent_candidate"
+    },
+    {
+      "field_id": "M04/07/trigger/00/x",
+      "map_id": 7,
+      "row": 0,
+      "field": "x",
+      "file_offset": 88477,
+      "original": 2,
+      "classification": "reference_off_viewport_no_editor"
+    },
+    {
+      "field_id": "M04/07/trigger/00/y",
+      "map_id": 7,
+      "row": 0,
+      "field": "y",
+      "file_offset": 88478,
+      "original": 23,
+      "classification": "reference_off_viewport_no_editor"
+    },
+    {
+      "field_id": "M04/07/trigger/00/character_id",
+      "map_id": 7,
+      "row": 0,
+      "field": "character_id",
+      "file_offset": 88479,
+      "original": 255,
+      "classification": "reference_off_viewport_no_editor"
+    },
+    {
+      "field_id": "M04/07/trigger/00/event_id",
+      "map_id": 7,
+      "row": 0,
+      "field": "event_id",
+      "file_offset": 88480,
+      "original": 240,
+      "classification": "reference_off_viewport_no_editor"
+    },
+    {
+      "field_id": "M04/07/trigger/01/x",
+      "map_id": 7,
+      "row": 1,
+      "field": "x",
+      "file_offset": 88481,
+      "original": 13,
+      "classification": "persistent_candidate"
+    },
+    {
+      "field_id": "M04/07/trigger/01/y",
+      "map_id": 7,
+      "row": 1,
+      "field": "y",
+      "file_offset": 88482,
+      "original": 13,
+      "classification": "persistent_candidate"
+    },
+    {
+      "field_id": "M04/07/trigger/01/character_id",
+      "map_id": 7,
+      "row": 1,
+      "field": "character_id",
+      "file_offset": 88483,
+      "original": 255,
+      "classification": "reference_forced_unlimited_no_effect"
+    },
+    {
+      "field_id": "M04/07/trigger/01/event_id",
+      "map_id": 7,
+      "row": 1,
+      "field": "event_id",
+      "file_offset": 88484,
+      "original": 7,
+      "classification": "persistent_candidate"
+    },
+    {
+      "field_id": "M04/08/trigger/00/x",
+      "map_id": 8,
+      "row": 0,
+      "field": "x",
+      "file_offset": 88486,
+      "original": 0,
+      "classification": "persistent_candidate"
+    },
+    {
+      "field_id": "M04/08/trigger/00/y",
+      "map_id": 8,
+      "row": 0,
+      "field": "y",
+      "file_offset": 88487,
+      "original": 17,
+      "classification": "persistent_candidate"
+    },
+    {
+      "field_id": "M04/08/trigger/00/character_id",
+      "map_id": 8,
+      "row": 0,
+      "field": "character_id",
+      "file_offset": 88488,
+      "original": 255,
+      "classification": "persistent_candidate"
+    },
+    {
+      "field_id": "M04/08/trigger/00/event_id",
+      "map_id": 8,
+      "row": 0,
+      "field": "event_id",
+      "file_offset": 88489,
+      "original": 240,
+      "classification": "persistent_candidate"
+    },
+    {
+      "field_id": "M04/08/trigger/01/x",
+      "map_id": 8,
+      "row": 1,
+      "field": "x",
+      "file_offset": 88490,
+      "original": 8,
+      "classification": "persistent_candidate"
+    },
+    {
+      "field_id": "M04/08/trigger/01/y",
+      "map_id": 8,
+      "row": 1,
+      "field": "y",
+      "file_offset": 88491,
+      "original": 5,
+      "classification": "persistent_candidate"
+    },
+    {
+      "field_id": "M04/08/trigger/01/character_id",
+      "map_id": 8,
+      "row": 1,
+      "field": "character_id",
+      "file_offset": 88492,
+      "original": 255,
+      "classification": "reference_forced_unlimited_no_effect"
+    },
+    {
+      "field_id": "M04/08/trigger/01/event_id",
+      "map_id": 8,
+      "row": 1,
+      "field": "event_id",
+      "file_offset": 88493,
+      "original": 7,
+      "classification": "persistent_candidate"
+    },
+    {
+      "field_id": "M04/08/trigger/02/x",
+      "map_id": 8,
+      "row": 2,
+      "field": "x",
+      "file_offset": 88494,
+      "original": 5,
+      "classification": "persistent_candidate"
+    },
+    {
+      "field_id": "M04/08/trigger/02/y",
+      "map_id": 8,
+      "row": 2,
+      "field": "y",
+      "file_offset": 88495,
+      "original": 15,
+      "classification": "persistent_candidate"
+    },
+    {
+      "field_id": "M04/08/trigger/02/character_id",
+      "map_id": 8,
+      "row": 2,
+      "field": "character_id",
+      "file_offset": 88496,
+      "original": 255,
+      "classification": "reference_forced_unlimited_no_effect"
+    },
+    {
+      "field_id": "M04/08/trigger/02/event_id",
+      "map_id": 8,
+      "row": 2,
+      "field": "event_id",
+      "file_offset": 88497,
+      "original": 7,
+      "classification": "persistent_candidate"
+    },
+    {
+      "field_id": "M04/08/trigger/03/x",
+      "map_id": 8,
+      "row": 3,
+      "field": "x",
+      "file_offset": 88498,
+      "original": 13,
+      "classification": "persistent_candidate"
+    },
+    {
+      "field_id": "M04/08/trigger/03/y",
+      "map_id": 8,
+      "row": 3,
+      "field": "y",
+      "file_offset": 88499,
+      "original": 13,
+      "classification": "persistent_candidate"
+    },
+    {
+      "field_id": "M04/08/trigger/03/character_id",
+      "map_id": 8,
+      "row": 3,
+      "field": "character_id",
+      "file_offset": 88500,
+      "original": 255,
+      "classification": "reference_forced_unlimited_no_effect"
+    },
+    {
+      "field_id": "M04/08/trigger/03/event_id",
+      "map_id": 8,
+      "row": 3,
+      "field": "event_id",
+      "file_offset": 88501,
+      "original": 7,
+      "classification": "persistent_candidate"
+    },
+    {
+      "field_id": "M04/08/trigger/04/x",
+      "map_id": 8,
+      "row": 4,
+      "field": "x",
+      "file_offset": 88502,
+      "original": 24,
+      "classification": "reference_off_viewport_no_editor"
+    },
+    {
+      "field_id": "M04/08/trigger/04/y",
+      "map_id": 8,
+      "row": 4,
+      "field": "y",
+      "file_offset": 88503,
+      "original": 18,
+      "classification": "reference_off_viewport_no_editor"
+    },
+    {
+      "field_id": "M04/08/trigger/04/character_id",
+      "map_id": 8,
+      "row": 4,
+      "field": "character_id",
+      "file_offset": 88504,
+      "original": 255,
+      "classification": "reference_off_viewport_no_editor"
+    },
+    {
+      "field_id": "M04/08/trigger/04/event_id",
+      "map_id": 8,
+      "row": 4,
+      "field": "event_id",
+      "file_offset": 88505,
+      "original": 7,
+      "classification": "reference_off_viewport_no_editor"
+    },
+    {
+      "field_id": "M04/09/trigger/00/x",
+      "map_id": 9,
+      "row": 0,
+      "field": "x",
+      "file_offset": 88507,
+      "original": 26,
+      "classification": "reference_off_viewport_no_editor"
+    },
+    {
+      "field_id": "M04/09/trigger/00/y",
+      "map_id": 9,
+      "row": 0,
+      "field": "y",
+      "file_offset": 88508,
+      "original": 11,
+      "classification": "reference_off_viewport_no_editor"
+    },
+    {
+      "field_id": "M04/09/trigger/00/character_id",
+      "map_id": 9,
+      "row": 0,
+      "field": "character_id",
+      "file_offset": 88509,
+      "original": 255,
+      "classification": "reference_off_viewport_no_editor"
+    },
+    {
+      "field_id": "M04/09/trigger/00/event_id",
+      "map_id": 9,
+      "row": 0,
+      "field": "event_id",
+      "file_offset": 88510,
+      "original": 7,
+      "classification": "reference_off_viewport_no_editor"
+    },
+    {
+      "field_id": "M04/09/trigger/01/x",
+      "map_id": 9,
+      "row": 1,
+      "field": "x",
+      "file_offset": 88511,
+      "original": 7,
+      "classification": "persistent_candidate"
+    },
+    {
+      "field_id": "M04/09/trigger/01/y",
+      "map_id": 9,
+      "row": 1,
+      "field": "y",
+      "file_offset": 88512,
+      "original": 13,
+      "classification": "persistent_candidate"
+    },
+    {
+      "field_id": "M04/09/trigger/01/character_id",
+      "map_id": 9,
+      "row": 1,
+      "field": "character_id",
+      "file_offset": 88513,
+      "original": 255,
+      "classification": "reference_forced_unlimited_no_effect"
+    },
+    {
+      "field_id": "M04/09/trigger/01/event_id",
+      "map_id": 9,
+      "row": 1,
+      "field": "event_id",
+      "file_offset": 88514,
+      "original": 7,
+      "classification": "persistent_candidate"
+    },
+    {
+      "field_id": "M04/10/trigger/00/x",
+      "map_id": 10,
+      "row": 0,
+      "field": "x",
+      "file_offset": 88516,
+      "original": 26,
+      "classification": "reference_off_viewport_no_editor"
+    },
+    {
+      "field_id": "M04/10/trigger/00/y",
+      "map_id": 10,
+      "row": 0,
+      "field": "y",
+      "file_offset": 88517,
+      "original": 0,
+      "classification": "reference_off_viewport_no_editor"
+    },
+    {
+      "field_id": "M04/10/trigger/00/character_id",
+      "map_id": 10,
+      "row": 0,
+      "field": "character_id",
+      "file_offset": 88518,
+      "original": 255,
+      "classification": "reference_off_viewport_no_editor"
+    },
+    {
+      "field_id": "M04/10/trigger/00/event_id",
+      "map_id": 10,
+      "row": 0,
+      "field": "event_id",
+      "file_offset": 88519,
+      "original": 0,
+      "classification": "reference_off_viewport_no_editor"
+    },
+    {
+      "field_id": "M04/11/trigger/00/x",
+      "map_id": 11,
+      "row": 0,
+      "field": "x",
+      "file_offset": 88521,
+      "original": 30,
+      "classification": "reference_off_viewport_no_editor"
+    },
+    {
+      "field_id": "M04/11/trigger/00/y",
+      "map_id": 11,
+      "row": 0,
+      "field": "y",
+      "file_offset": 88522,
+      "original": 19,
+      "classification": "reference_off_viewport_no_editor"
+    },
+    {
+      "field_id": "M04/11/trigger/00/character_id",
+      "map_id": 11,
+      "row": 0,
+      "field": "character_id",
+      "file_offset": 88523,
+      "original": 255,
+      "classification": "reference_off_viewport_no_editor"
+    },
+    {
+      "field_id": "M04/11/trigger/00/event_id",
+      "map_id": 11,
+      "row": 0,
+      "field": "event_id",
+      "file_offset": 88524,
+      "original": 240,
+      "classification": "reference_off_viewport_no_editor"
+    },
+    {
+      "field_id": "M04/12/trigger/00/x",
+      "map_id": 12,
+      "row": 0,
+      "field": "x",
+      "file_offset": 88526,
+      "original": 7,
+      "classification": "persistent_candidate"
+    },
+    {
+      "field_id": "M04/12/trigger/00/y",
+      "map_id": 12,
+      "row": 0,
+      "field": "y",
+      "file_offset": 88527,
+      "original": 8,
+      "classification": "persistent_candidate"
+    },
+    {
+      "field_id": "M04/12/trigger/00/character_id",
+      "map_id": 12,
+      "row": 0,
+      "field": "character_id",
+      "file_offset": 88528,
+      "original": 255,
+      "classification": "reference_forced_unlimited_no_effect"
+    },
+    {
+      "field_id": "M04/12/trigger/00/event_id",
+      "map_id": 12,
+      "row": 0,
+      "field": "event_id",
+      "file_offset": 88529,
+      "original": 7,
+      "classification": "persistent_candidate"
+    },
+    {
+      "field_id": "M04/12/trigger/01/x",
+      "map_id": 12,
+      "row": 1,
+      "field": "x",
+      "file_offset": 88530,
+      "original": 23,
+      "classification": "reference_off_viewport_no_editor"
+    },
+    {
+      "field_id": "M04/12/trigger/01/y",
+      "map_id": 12,
+      "row": 1,
+      "field": "y",
+      "file_offset": 88531,
+      "original": 4,
+      "classification": "reference_off_viewport_no_editor"
+    },
+    {
+      "field_id": "M04/12/trigger/01/character_id",
+      "map_id": 12,
+      "row": 1,
+      "field": "character_id",
+      "file_offset": 88532,
+      "original": 255,
+      "classification": "reference_off_viewport_no_editor"
+    },
+    {
+      "field_id": "M04/12/trigger/01/event_id",
+      "map_id": 12,
+      "row": 1,
+      "field": "event_id",
+      "file_offset": 88533,
+      "original": 7,
+      "classification": "reference_off_viewport_no_editor"
+    },
+    {
+      "field_id": "M04/12/trigger/02/x",
+      "map_id": 12,
+      "row": 2,
+      "field": "x",
+      "file_offset": 88534,
+      "original": 7,
+      "classification": "persistent_candidate"
+    },
+    {
+      "field_id": "M04/12/trigger/02/y",
+      "map_id": 12,
+      "row": 2,
+      "field": "y",
+      "file_offset": 88535,
+      "original": 20,
+      "classification": "persistent_candidate"
+    },
+    {
+      "field_id": "M04/12/trigger/02/character_id",
+      "map_id": 12,
+      "row": 2,
+      "field": "character_id",
+      "file_offset": 88536,
+      "original": 255,
+      "classification": "reference_forced_unlimited_no_effect"
+    },
+    {
+      "field_id": "M04/12/trigger/02/event_id",
+      "map_id": 12,
+      "row": 2,
+      "field": "event_id",
+      "file_offset": 88537,
+      "original": 7,
+      "classification": "persistent_candidate"
+    },
+    {
+      "field_id": "M04/13/trigger/00/x",
+      "map_id": 13,
+      "row": 0,
+      "field": "x",
+      "file_offset": 88539,
+      "original": 20,
+      "classification": "persistent_candidate"
+    },
+    {
+      "field_id": "M04/13/trigger/00/y",
+      "map_id": 13,
+      "row": 0,
+      "field": "y",
+      "file_offset": 88540,
+      "original": 13,
+      "classification": "persistent_candidate"
+    },
+    {
+      "field_id": "M04/13/trigger/00/character_id",
+      "map_id": 13,
+      "row": 0,
+      "field": "character_id",
+      "file_offset": 88541,
+      "original": 255,
+      "classification": "reference_forced_unlimited_no_effect"
+    },
+    {
+      "field_id": "M04/13/trigger/00/event_id",
+      "map_id": 13,
+      "row": 0,
+      "field": "event_id",
+      "file_offset": 88542,
+      "original": 7,
+      "classification": "persistent_candidate"
+    },
+    {
+      "field_id": "M04/14/trigger/00/x",
+      "map_id": 14,
+      "row": 0,
+      "field": "x",
+      "file_offset": 88544,
+      "original": 0,
+      "classification": "persistent_candidate"
+    },
+    {
+      "field_id": "M04/14/trigger/00/y",
+      "map_id": 14,
+      "row": 0,
+      "field": "y",
+      "file_offset": 88545,
+      "original": 14,
+      "classification": "persistent_candidate"
+    },
+    {
+      "field_id": "M04/14/trigger/00/character_id",
+      "map_id": 14,
+      "row": 0,
+      "field": "character_id",
+      "file_offset": 88546,
+      "original": 255,
+      "classification": "reference_forced_unlimited_no_effect"
+    },
+    {
+      "field_id": "M04/14/trigger/00/event_id",
+      "map_id": 14,
+      "row": 0,
+      "field": "event_id",
+      "file_offset": 88547,
+      "original": 4,
+      "classification": "persistent_candidate"
+    },
+    {
+      "field_id": "M04/14/trigger/01/x",
+      "map_id": 14,
+      "row": 1,
+      "field": "x",
+      "file_offset": 88548,
+      "original": 29,
+      "classification": "reference_off_viewport_no_editor"
+    },
+    {
+      "field_id": "M04/14/trigger/01/y",
+      "map_id": 14,
+      "row": 1,
+      "field": "y",
+      "file_offset": 88549,
+      "original": 14,
+      "classification": "reference_off_viewport_no_editor"
+    },
+    {
+      "field_id": "M04/14/trigger/01/character_id",
+      "map_id": 14,
+      "row": 1,
+      "field": "character_id",
+      "file_offset": 88550,
+      "original": 255,
+      "classification": "reference_off_viewport_no_editor"
+    },
+    {
+      "field_id": "M04/14/trigger/01/event_id",
+      "map_id": 14,
+      "row": 1,
+      "field": "event_id",
+      "file_offset": 88551,
+      "original": 4,
+      "classification": "reference_off_viewport_no_editor"
+    },
+    {
+      "field_id": "M04/14/trigger/02/x",
+      "map_id": 14,
+      "row": 2,
+      "field": "x",
+      "file_offset": 88552,
+      "original": 14,
+      "classification": "persistent_candidate"
+    },
+    {
+      "field_id": "M04/14/trigger/02/y",
+      "map_id": 14,
+      "row": 2,
+      "field": "y",
+      "file_offset": 88553,
+      "original": 0,
+      "classification": "persistent_candidate"
+    },
+    {
+      "field_id": "M04/14/trigger/02/character_id",
+      "map_id": 14,
+      "row": 2,
+      "field": "character_id",
+      "file_offset": 88554,
+      "original": 255,
+      "classification": "reference_forced_unlimited_no_effect"
+    },
+    {
+      "field_id": "M04/14/trigger/02/event_id",
+      "map_id": 14,
+      "row": 2,
+      "field": "event_id",
+      "file_offset": 88555,
+      "original": 3,
+      "classification": "persistent_candidate"
+    },
+    {
+      "field_id": "M04/14/trigger/03/x",
+      "map_id": 14,
+      "row": 3,
+      "field": "x",
+      "file_offset": 88556,
+      "original": 15,
+      "classification": "persistent_candidate"
+    },
+    {
+      "field_id": "M04/14/trigger/03/y",
+      "map_id": 14,
+      "row": 3,
+      "field": "y",
+      "file_offset": 88557,
+      "original": 0,
+      "classification": "persistent_candidate"
+    },
+    {
+      "field_id": "M04/14/trigger/03/character_id",
+      "map_id": 14,
+      "row": 3,
+      "field": "character_id",
+      "file_offset": 88558,
+      "original": 255,
+      "classification": "reference_forced_unlimited_no_effect"
+    },
+    {
+      "field_id": "M04/14/trigger/03/event_id",
+      "map_id": 14,
+      "row": 3,
+      "field": "event_id",
+      "file_offset": 88559,
+      "original": 3,
+      "classification": "persistent_candidate"
+    },
+    {
+      "field_id": "M04/14/trigger/04/x",
+      "map_id": 14,
+      "row": 4,
+      "field": "x",
+      "file_offset": 88560,
+      "original": 0,
+      "classification": "persistent_candidate"
+    },
+    {
+      "field_id": "M04/14/trigger/04/y",
+      "map_id": 14,
+      "row": 4,
+      "field": "y",
+      "file_offset": 88561,
+      "original": 6,
+      "classification": "persistent_candidate"
+    },
+    {
+      "field_id": "M04/14/trigger/04/character_id",
+      "map_id": 14,
+      "row": 4,
+      "field": "character_id",
+      "file_offset": 88562,
+      "original": 255,
+      "classification": "reference_forced_unlimited_no_effect"
+    },
+    {
+      "field_id": "M04/14/trigger/04/event_id",
+      "map_id": 14,
+      "row": 4,
+      "field": "event_id",
+      "file_offset": 88563,
+      "original": 0,
+      "classification": "persistent_candidate"
+    },
+    {
+      "field_id": "M04/18/trigger/00/x",
+      "map_id": 18,
+      "row": 0,
+      "field": "x",
+      "file_offset": 88565,
+      "original": 0,
+      "classification": "persistent_candidate"
+    },
+    {
+      "field_id": "M04/18/trigger/00/y",
+      "map_id": 18,
+      "row": 0,
+      "field": "y",
+      "file_offset": 88566,
+      "original": 16,
+      "classification": "persistent_candidate"
+    },
+    {
+      "field_id": "M04/18/trigger/00/character_id",
+      "map_id": 18,
+      "row": 0,
+      "field": "character_id",
+      "file_offset": 88567,
+      "original": 255,
+      "classification": "reference_forced_unlimited_no_effect"
+    },
+    {
+      "field_id": "M04/18/trigger/00/event_id",
+      "map_id": 18,
+      "row": 0,
+      "field": "event_id",
+      "file_offset": 88568,
+      "original": 4,
+      "classification": "persistent_candidate"
+    },
+    {
+      "field_id": "M04/18/trigger/01/x",
+      "map_id": 18,
+      "row": 1,
+      "field": "x",
+      "file_offset": 88569,
+      "original": 30,
+      "classification": "reference_off_viewport_no_editor"
+    },
+    {
+      "field_id": "M04/18/trigger/01/y",
+      "map_id": 18,
+      "row": 1,
+      "field": "y",
+      "file_offset": 88570,
+      "original": 16,
+      "classification": "reference_off_viewport_no_editor"
+    },
+    {
+      "field_id": "M04/18/trigger/01/character_id",
+      "map_id": 18,
+      "row": 1,
+      "field": "character_id",
+      "file_offset": 88571,
+      "original": 255,
+      "classification": "reference_off_viewport_no_editor"
+    },
+    {
+      "field_id": "M04/18/trigger/01/event_id",
+      "map_id": 18,
+      "row": 1,
+      "field": "event_id",
+      "file_offset": 88572,
+      "original": 4,
+      "classification": "reference_off_viewport_no_editor"
+    },
+    {
+      "field_id": "M04/18/trigger/02/x",
+      "map_id": 18,
+      "row": 2,
+      "field": "x",
+      "file_offset": 88573,
+      "original": 15,
+      "classification": "persistent_candidate"
+    },
+    {
+      "field_id": "M04/18/trigger/02/y",
+      "map_id": 18,
+      "row": 2,
+      "field": "y",
+      "file_offset": 88574,
+      "original": 16,
+      "classification": "persistent_candidate"
+    },
+    {
+      "field_id": "M04/18/trigger/02/character_id",
+      "map_id": 18,
+      "row": 2,
+      "field": "character_id",
+      "file_offset": 88575,
+      "original": 255,
+      "classification": "reference_forced_unlimited_no_effect"
+    },
+    {
+      "field_id": "M04/18/trigger/02/event_id",
+      "map_id": 18,
+      "row": 2,
+      "field": "event_id",
+      "file_offset": 88576,
+      "original": 1,
+      "classification": "persistent_candidate"
+    },
+    {
+      "field_id": "M04/18/trigger/03/x",
+      "map_id": 18,
+      "row": 3,
+      "field": "x",
+      "file_offset": 88577,
+      "original": 13,
+      "classification": "persistent_candidate"
+    },
+    {
+      "field_id": "M04/18/trigger/03/y",
+      "map_id": 18,
+      "row": 3,
+      "field": "y",
+      "file_offset": 88578,
+      "original": 16,
+      "classification": "persistent_candidate"
+    },
+    {
+      "field_id": "M04/18/trigger/03/character_id",
+      "map_id": 18,
+      "row": 3,
+      "field": "character_id",
+      "file_offset": 88579,
+      "original": 255,
+      "classification": "reference_forced_unlimited_no_effect"
+    },
+    {
+      "field_id": "M04/18/trigger/03/event_id",
+      "map_id": 18,
+      "row": 3,
+      "field": "event_id",
+      "file_offset": 88580,
+      "original": 5,
+      "classification": "persistent_candidate"
+    },
+    {
+      "field_id": "M04/18/trigger/04/x",
+      "map_id": 18,
+      "row": 4,
+      "field": "x",
+      "file_offset": 88581,
+      "original": 17,
+      "classification": "persistent_candidate"
+    },
+    {
+      "field_id": "M04/18/trigger/04/y",
+      "map_id": 18,
+      "row": 4,
+      "field": "y",
+      "file_offset": 88582,
+      "original": 16,
+      "classification": "persistent_candidate"
+    },
+    {
+      "field_id": "M04/18/trigger/04/character_id",
+      "map_id": 18,
+      "row": 4,
+      "field": "character_id",
+      "file_offset": 88583,
+      "original": 255,
+      "classification": "reference_forced_unlimited_no_effect"
+    },
+    {
+      "field_id": "M04/18/trigger/04/event_id",
+      "map_id": 18,
+      "row": 4,
+      "field": "event_id",
+      "file_offset": 88584,
+      "original": 5,
+      "classification": "persistent_candidate"
+    },
+    {
+      "field_id": "M04/18/trigger/05/x",
+      "map_id": 18,
+      "row": 5,
+      "field": "x",
+      "file_offset": 88585,
+      "original": 15,
+      "classification": "persistent_candidate"
+    },
+    {
+      "field_id": "M04/18/trigger/05/y",
+      "map_id": 18,
+      "row": 5,
+      "field": "y",
+      "file_offset": 88586,
+      "original": 14,
+      "classification": "persistent_candidate"
+    },
+    {
+      "field_id": "M04/18/trigger/05/character_id",
+      "map_id": 18,
+      "row": 5,
+      "field": "character_id",
+      "file_offset": 88587,
+      "original": 255,
+      "classification": "reference_forced_unlimited_no_effect"
+    },
+    {
+      "field_id": "M04/18/trigger/05/event_id",
+      "map_id": 18,
+      "row": 5,
+      "field": "event_id",
+      "file_offset": 88588,
+      "original": 11,
+      "classification": "persistent_candidate"
+    },
+    {
+      "field_id": "M04/18/trigger/06/x",
+      "map_id": 18,
+      "row": 6,
+      "field": "x",
+      "file_offset": 88589,
+      "original": 15,
+      "classification": "persistent_candidate"
+    },
+    {
+      "field_id": "M04/18/trigger/06/y",
+      "map_id": 18,
+      "row": 6,
+      "field": "y",
+      "file_offset": 88590,
+      "original": 18,
+      "classification": "persistent_candidate"
+    },
+    {
+      "field_id": "M04/18/trigger/06/character_id",
+      "map_id": 18,
+      "row": 6,
+      "field": "character_id",
+      "file_offset": 88591,
+      "original": 255,
+      "classification": "reference_forced_unlimited_no_effect"
+    },
+    {
+      "field_id": "M04/18/trigger/06/event_id",
+      "map_id": 18,
+      "row": 6,
+      "field": "event_id",
+      "file_offset": 88592,
+      "original": 12,
+      "classification": "persistent_candidate"
+    },
+    {
+      "field_id": "M04/21/trigger/00/x",
+      "map_id": 21,
+      "row": 0,
+      "field": "x",
+      "file_offset": 88594,
+      "original": 1,
+      "classification": "persistent_candidate"
+    },
+    {
+      "field_id": "M04/21/trigger/00/y",
+      "map_id": 21,
+      "row": 0,
+      "field": "y",
+      "file_offset": 88595,
+      "original": 16,
+      "classification": "persistent_candidate"
+    },
+    {
+      "field_id": "M04/21/trigger/00/character_id",
+      "map_id": 21,
+      "row": 0,
+      "field": "character_id",
+      "file_offset": 88596,
+      "original": 255,
+      "classification": "persistent_candidate"
+    },
+    {
+      "field_id": "M04/21/trigger/00/event_id",
+      "map_id": 21,
+      "row": 0,
+      "field": "event_id",
+      "file_offset": 88597,
+      "original": 240,
+      "classification": "persistent_candidate"
+    },
+    {
+      "field_id": "M04/21/trigger/01/x",
+      "map_id": 21,
+      "row": 1,
+      "field": "x",
+      "file_offset": 88598,
+      "original": 9,
+      "classification": "persistent_candidate"
+    },
+    {
+      "field_id": "M04/21/trigger/01/y",
+      "map_id": 21,
+      "row": 1,
+      "field": "y",
+      "file_offset": 88599,
+      "original": 5,
+      "classification": "persistent_candidate"
+    },
+    {
+      "field_id": "M04/21/trigger/01/character_id",
+      "map_id": 21,
+      "row": 1,
+      "field": "character_id",
+      "file_offset": 88600,
+      "original": 255,
+      "classification": "reference_forced_unlimited_no_effect"
+    },
+    {
+      "field_id": "M04/21/trigger/01/event_id",
+      "map_id": 21,
+      "row": 1,
+      "field": "event_id",
+      "file_offset": 88601,
+      "original": 7,
+      "classification": "persistent_candidate"
+    }
+  ],
+  "ui_alias_note": "shop/event radio and selection controls jointly encode event_id; x/y are selected through the owner-drawn map.",
+  "reference_editor_controls": {
+    "passed": true,
+    "source_rom": "output/build/legacy-diff-audit/audit.nes",
+    "source_sha256": "c0f6fb15dbcc9f04d35ec97b9558df85d099c661c35d54d3a2aae4966d2ed5b2",
+    "rom_unchanged": true,
+    "dialog_title": "商店设置",
+    "visible_control_count": 10,
+    "visible_controls": [
+      {
+        "control_id": 190,
+        "class": "Button",
+        "text": "事件",
+        "enabled": true
+      },
+      {
+        "control_id": 180,
+        "class": "Button",
+        "text": "商店",
+        "enabled": true
+      },
+      {
+        "control_id": 170,
+        "class": "ComboBox",
+        "text": "000：商店",
+        "enabled": false
+      },
+      {
+        "control_id": 160,
+        "class": "Afx:400000:b:10003:900015:0",
+        "text": "地图事件：",
+        "enabled": true
+      },
+      {
+        "control_id": 150,
+        "class": "Button",
+        "text": "取消",
+        "enabled": true
+      },
+      {
+        "control_id": 140,
+        "class": "Button",
+        "text": "确定",
+        "enabled": true
+      },
+      {
+        "control_id": 130,
+        "class": "ComboBox",
+        "text": "01：商店F0",
+        "enabled": true
+      },
+      {
+        "control_id": 120,
+        "class": "Afx:400000:b:10003:900015:0",
+        "text": "商店选择：",
+        "enabled": true
+      },
+      {
+        "control_id": 110,
+        "class": "Afx:400000:b:10003:900015:0",
+        "text": "限定人物：",
+        "enabled": true
+      },
+      {
+        "control_id": 100,
+        "class": "ComboBox",
+        "text": "无限定人物",
+        "enabled": true
+      }
+    ]
+  },
+  "control_evidence": "output/verification/legacy-m04-reference-controls-20260920/catalog.json",
+  "existing_record_evidence": "output/verification/legacy-m03-m04-existing-records-20260920/catalog.json"
+}

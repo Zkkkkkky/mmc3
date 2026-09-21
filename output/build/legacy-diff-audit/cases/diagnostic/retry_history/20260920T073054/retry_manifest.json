@@ -1,0 +1,134 @@
+{
+  "schema_version": 1,
+  "reason": "M07 direct-field discovery pairs reviewed; promote stable one-byte offsets to formal golden cases",
+  "timestamp": "20260920T073054",
+  "moved": [
+    {
+      "module": "M07",
+      "field": "max_range",
+      "case_id": "cold_start_01",
+      "from": "output/build/legacy-diff-audit/cases/legacy_live/M07/max_range/cold_start_01",
+      "to": "output/build/legacy-diff-audit/cases/diagnostic/retry_history/20260920T073054/M07/max_range/cold_start_01",
+      "had_case_json": true,
+      "had_error_json": false
+    },
+    {
+      "module": "M07",
+      "field": "max_range",
+      "case_id": "cold_start_02",
+      "from": "output/build/legacy-diff-audit/cases/legacy_live/M07/max_range/cold_start_02",
+      "to": "output/build/legacy-diff-audit/cases/diagnostic/retry_history/20260920T073054/M07/max_range/cold_start_02",
+      "had_case_json": true,
+      "had_error_json": false
+    },
+    {
+      "module": "M07",
+      "field": "hit",
+      "case_id": "cold_start_01",
+      "from": "output/build/legacy-diff-audit/cases/legacy_live/M07/hit/cold_start_01",
+      "to": "output/build/legacy-diff-audit/cases/diagnostic/retry_history/20260920T073054/M07/hit/cold_start_01",
+      "had_case_json": true,
+      "had_error_json": false
+    },
+    {
+      "module": "M07",
+      "field": "hit",
+      "case_id": "cold_start_02",
+      "from": "output/build/legacy-diff-audit/cases/legacy_live/M07/hit/cold_start_02",
+      "to": "output/build/legacy-diff-audit/cases/diagnostic/retry_history/20260920T073054/M07/hit/cold_start_02",
+      "had_case_json": true,
+      "had_error_json": false
+    },
+    {
+      "module": "M07",
+      "field": "distance_correction",
+      "case_id": "cold_start_01",
+      "from": "output/build/legacy-diff-audit/cases/legacy_live/M07/distance_correction/cold_start_01",
+      "to": "output/build/legacy-diff-audit/cases/diagnostic/retry_history/20260920T073054/M07/distance_correction/cold_start_01",
+      "had_case_json": true,
+      "had_error_json": false
+    },
+    {
+      "module": "M07",
+      "field": "distance_correction",
+      "case_id": "cold_start_02",
+      "from": "output/build/legacy-diff-audit/cases/legacy_live/M07/distance_correction/cold_start_02",
+      "to": "output/build/legacy-diff-audit/cases/diagnostic/retry_history/20260920T073054/M07/distance_correction/cold_start_02",
+      "had_case_json": true,
+      "had_error_json": false
+    },
+    {
+      "module": "M07",
+      "field": "power_air",
+      "case_id": "cold_start_01",
+      "from": "output/build/legacy-diff-audit/cases/legacy_live/M07/power_air/cold_start_01",
+      "to": "output/build/legacy-diff-audit/cases/diagnostic/retry_history/20260920T073054/M07/power_air/cold_start_01",
+      "had_case_json": true,
+      "had_error_json": false
+    },
+    {
+      "module": "M07",
+      "field": "power_air",
+      "case_id": "cold_start_02",
+      "from": "output/build/legacy-diff-audit/cases/legacy_live/M07/power_air/cold_start_02",
+      "to": "output/build/legacy-diff-audit/cases/diagnostic/retry_history/20260920T073054/M07/power_air/cold_start_02",
+      "had_case_json": true,
+      "had_error_json": false
+    },
+    {
+      "module": "M07",
+      "field": "power_land",
+      "case_id": "cold_start_01",
+      "from": "output/build/legacy-diff-audit/cases/legacy_live/M07/power_land/cold_start_01",
+      "to": "output/build/legacy-diff-audit/cases/diagnostic/retry_history/20260920T073054/M07/power_land/cold_start_01",
+      "had_case_json": true,
+      "had_error_json": false
+    },
+    {
+      "module": "M07",
+      "field": "power_land",
+      "case_id": "cold_start_02",
+      "from": "output/build/legacy-diff-audit/cases/legacy_live/M07/power_land/cold_start_02",
+      "to": "output/build/legacy-diff-audit/cases/diagnostic/retry_history/20260920T073054/M07/power_land/cold_start_02",
+      "had_case_json": true,
+      "had_error_json": false
+    },
+    {
+      "module": "M07",
+      "field": "power_sea",
+      "case_id": "cold_start_01",
+      "from": "output/build/legacy-diff-audit/cases/legacy_live/M07/power_sea/cold_start_01",
+      "to": "output/build/legacy-diff-audit/cases/diagnostic/retry_history/20260920T073054/M07/power_sea/cold_start_01",
+      "had_case_json": true,
+      "had_error_json": false
+    },
+    {
+      "module": "M07",
+      "field": "power_sea",
+      "case_id": "cold_start_02",
+      "from": "output/build/legacy-diff-audit/cases/legacy_live/M07/power_sea/cold_start_02",
+      "to": "output/build/legacy-diff-audit/cases/diagnostic/retry_history/20260920T073054/M07/power_sea/cold_start_02",
+      "had_case_json": true,
+      "had_error_json": false
+    },
+    {
+      "module": "M07",
+      "field": "weapon_skill",
+      "case_id": "cold_start_01",
+      "from": "output/build/legacy-diff-audit/cases/legacy_live/M07/weapon_skill/cold_start_01",
+      "to": "output/build/legacy-diff-audit/cases/diagnostic/retry_history/20260920T073054/M07/weapon_skill/cold_start_01",
+      "had_case_json": true,
+      "had_error_json": false
+    },
+    {
+      "module": "M07",
+      "field": "weapon_skill",
+      "case_id": "cold_start_02",
+      "from": "output/build/legacy-diff-audit/cases/legacy_live/M07/weapon_skill/cold_start_02",
+      "to": "output/build/legacy-diff-audit/cases/diagnostic/retry_history/20260920T073054/M07/weapon_skill/cold_start_02",
+      "had_case_json": true,
+      "had_error_json": false
+    }
+  ],
+  "live_result_rows_removed": 14
+}

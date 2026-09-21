@@ -1,0 +1,568 @@
+{
+  "schema_version": 1,
+  "module": "M06",
+  "field": "portrait_back_upload",
+  "case_id": "cold_start_01",
+  "case_kind": "golden",
+  "requested_value": "e0f7789976dae11ee84c0f6f74de69dcaec66c953515bd8ebcecfa167354db62",
+  "original_value": "1c9fdefc3fedebedbd65c52d2ddf212c5729d5076e2086186321bb204caef309",
+  "reopen_value": "e0f7789976dae11ee84c0f6f74de69dcaec66c953515bd8ebcecfa167354db62",
+  "reopen_matches_request": true,
+  "reopen_mode": "new_process",
+  "first_pid": 18028,
+  "second_pid": 15660,
+  "changed_offsets": [
+    561680,
+    561681,
+    561682,
+    561683,
+    561684,
+    561685,
+    561686,
+    561687,
+    561697,
+    561698,
+    561703,
+    561712,
+    561713,
+    561714,
+    561715,
+    561716,
+    561717,
+    561728,
+    561729,
+    561730,
+    561731,
+    561732,
+    561733,
+    561734,
+    561744,
+    561749,
+    561750,
+    561751,
+    561757,
+    561760,
+    561761,
+    561762,
+    561767,
+    561783,
+    561791,
+    561792,
+    561793,
+    561794,
+    561795,
+    561796,
+    561797,
+    561798,
+    561808,
+    561814,
+    561815,
+    561816,
+    561840,
+    561841,
+    561848,
+    561849,
+    561858,
+    561859,
+    561860,
+    561861,
+    561862,
+    561863,
+    561872,
+    561873,
+    561874,
+    561875,
+    561876,
+    561877,
+    561878,
+    561879,
+    561889,
+    561908,
+    561909,
+    561920,
+    561921,
+    561922,
+    561923,
+    561924,
+    561925,
+    561926
+  ],
+  "removed_normalization": [],
+  "unexpected_offsets": [],
+  "expected_offsets": [
+    561680
+  ],
+  "required_offsets": [
+    561680
+  ],
+  "optional_offsets": [],
+  "extra_allowed": [
+    561681,
+    561682,
+    561683,
+    561684,
+    561685,
+    561686,
+    561687,
+    561697,
+    561698,
+    561703,
+    561712,
+    561713,
+    561714,
+    561715,
+    561716,
+    561717,
+    561728,
+    561729,
+    561730,
+    561731,
+    561732,
+    561733,
+    561734,
+    561744,
+    561749,
+    561750,
+    561751,
+    561757,
+    561760,
+    561761,
+    561762,
+    561767,
+    561783,
+    561791,
+    561792,
+    561793,
+    561794,
+    561795,
+    561796,
+    561797,
+    561798,
+    561808,
+    561814,
+    561815,
+    561816,
+    561840,
+    561841,
+    561848,
+    561849,
+    561858,
+    561859,
+    561860,
+    561861,
+    561862,
+    561863,
+    561872,
+    561873,
+    561874,
+    561875,
+    561876,
+    561877,
+    561878,
+    561879,
+    561889,
+    561908,
+    561909,
+    561920,
+    561921,
+    561922,
+    561923,
+    561924,
+    561925,
+    561926
+  ],
+  "extra_allowed_profile": "m06_portrait_back_upload_v1",
+  "expected_not_changed": [],
+  "diffs": [
+    {
+      "offset": 561680,
+      "before": 56,
+      "after": 0
+    },
+    {
+      "offset": 561681,
+      "before": 104,
+      "after": 0
+    },
+    {
+      "offset": 561682,
+      "before": 72,
+      "after": 0
+    },
+    {
+      "offset": 561683,
+      "before": 144,
+      "after": 0
+    },
+    {
+      "offset": 561684,
+      "before": 16,
+      "after": 0
+    },
+    {
+      "offset": 561685,
+      "before": 32,
+      "after": 0
+    },
+    {
+      "offset": 561686,
+      "before": 32,
+      "after": 0
+    },
+    {
+      "offset": 561687,
+      "before": 64,
+      "after": 0
+    },
+    {
+      "offset": 561697,
+      "before": 32,
+      "after": 0
+    },
+    {
+      "offset": 561698,
+      "before": 64,
+      "after": 0
+    },
+    {
+      "offset": 561703,
+      "before": 4,
+      "after": 0
+    },
+    {
+      "offset": 561712,
+      "before": 1,
+      "after": 0
+    },
+    {
+      "offset": 561713,
+      "before": 4,
+      "after": 0
+    },
+    {
+      "offset": 561714,
+      "before": 4,
+      "after": 0
+    },
+    {
+      "offset": 561715,
+      "before": 2,
+      "after": 0
+    },
+    {
+      "offset": 561716,
+      "before": 2,
+      "after": 0
+    },
+    {
+      "offset": 561717,
+      "before": 1,
+      "after": 0
+    },
+    {
+      "offset": 561728,
+      "before": 8,
+      "after": 0
+    },
+    {
+      "offset": 561729,
+      "before": 141,
+      "after": 0
+    },
+    {
+      "offset": 561730,
+      "before": 205,
+      "after": 0
+    },
+    {
+      "offset": 561731,
+      "before": 76,
+      "after": 0
+    },
+    {
+      "offset": 561732,
+      "before": 12,
+      "after": 0
+    },
+    {
+      "offset": 561733,
+      "before": 4,
+      "after": 0
+    },
+    {
+      "offset": 561734,
+      "before": 4,
+      "after": 0
+    },
+    {
+      "offset": 561744,
+      "before": 128,
+      "after": 0
+    },
+    {
+      "offset": 561749,
+      "before": 8,
+      "after": 0
+    },
+    {
+      "offset": 561750,
+      "before": 8,
+      "after": 0
+    },
+    {
+      "offset": 561751,
+      "before": 156,
+      "after": 0
+    },
+    {
+      "offset": 561757,
+      "before": 8,
+      "after": 0
+    },
+    {
+      "offset": 561760,
+      "before": 4,
+      "after": 0
+    },
+    {
+      "offset": 561761,
+      "before": 4,
+      "after": 0
+    },
+    {
+      "offset": 561762,
+      "before": 4,
+      "after": 0
+    },
+    {
+      "offset": 561767,
+      "before": 128,
+      "after": 0
+    },
+    {
+      "offset": 561783,
+      "before": 1,
+      "after": 0
+    },
+    {
+      "offset": 561791,
+      "before": 32,
+      "after": 0
+    },
+    {
+      "offset": 561792,
+      "before": 1,
+      "after": 0
+    },
+    {
+      "offset": 561793,
+      "before": 9,
+      "after": 0
+    },
+    {
+      "offset": 561794,
+      "before": 9,
+      "after": 0
+    },
+    {
+      "offset": 561795,
+      "before": 9,
+      "after": 0
+    },
+    {
+      "offset": 561796,
+      "before": 3,
+      "after": 0
+    },
+    {
+      "offset": 561797,
+      "before": 3,
+      "after": 0
+    },
+    {
+      "offset": 561798,
+      "before": 1,
+      "after": 0
+    },
+    {
+      "offset": 561808,
+      "before": 128,
+      "after": 0
+    },
+    {
+      "offset": 561814,
+      "before": 64,
+      "after": 0
+    },
+    {
+      "offset": 561815,
+      "before": 64,
+      "after": 0
+    },
+    {
+      "offset": 561816,
+      "before": 1,
+      "after": 0
+    },
+    {
+      "offset": 561840,
+      "before": 112,
+      "after": 0
+    },
+    {
+      "offset": 561841,
+      "before": 88,
+      "after": 0
+    },
+    {
+      "offset": 561848,
+      "before": 22,
+      "after": 0
+    },
+    {
+      "offset": 561849,
+      "before": 24,
+      "after": 0
+    },
+    {
+      "offset": 561858,
+      "before": 8,
+      "after": 0
+    },
+    {
+      "offset": 561859,
+      "before": 8,
+      "after": 0
+    },
+    {
+      "offset": 561860,
+      "before": 8,
+      "after": 0
+    },
+    {
+      "offset": 561861,
+      "before": 8,
+      "after": 0
+    },
+    {
+      "offset": 561862,
+      "before": 8,
+      "after": 0
+    },
+    {
+      "offset": 561863,
+      "before": 24,
+      "after": 0
+    },
+    {
+      "offset": 561872,
+      "before": 192,
+      "after": 0
+    },
+    {
+      "offset": 561873,
+      "before": 128,
+      "after": 0
+    },
+    {
+      "offset": 561874,
+      "before": 128,
+      "after": 0
+    },
+    {
+      "offset": 561875,
+      "before": 16,
+      "after": 0
+    },
+    {
+      "offset": 561876,
+      "before": 16,
+      "after": 0
+    },
+    {
+      "offset": 561877,
+      "before": 50,
+      "after": 0
+    },
+    {
+      "offset": 561878,
+      "before": 34,
+      "after": 0
+    },
+    {
+      "offset": 561879,
+      "before": 68,
+      "after": 0
+    },
+    {
+      "offset": 561889,
+      "before": 8,
+      "after": 0
+    },
+    {
+      "offset": 561908,
+      "before": 1,
+      "after": 0
+    },
+    {
+      "offset": 561909,
+      "before": 2,
+      "after": 0
+    },
+    {
+      "offset": 561920,
+      "before": 25,
+      "after": 0
+    },
+    {
+      "offset": 561921,
+      "before": 81,
+      "after": 0
+    },
+    {
+      "offset": 561922,
+      "before": 161,
+      "after": 0
+    },
+    {
+      "offset": 561923,
+      "before": 65,
+      "after": 0
+    },
+    {
+      "offset": 561924,
+      "before": 1,
+      "after": 0
+    },
+    {
+      "offset": 561925,
+      "before": 1,
+      "after": 0
+    },
+    {
+      "offset": 561926,
+      "before": 1,
+      "after": 0
+    }
+  ],
+  "snapshots": {
+    "before": {
+      "path": "output/build/legacy-diff-audit/cases/legacy_live/M06/portrait_back_upload/cold_start_01/before.nes",
+      "sha256": "c5d2c1dfbe0dc39afc9effd314c082f121b98c9ad67c4825b1c9dd4b9e991954"
+    },
+    "after": {
+      "path": "output/build/legacy-diff-audit/cases/legacy_live/M06/portrait_back_upload/cold_start_01/after.nes",
+      "sha256": "90dbb54399443b7cca1890146a9f0dda0fdec03506c7b89de2bb62935bd7f069"
+    }
+  },
+  "supporting_cdl": {
+    "source": "output/build/legacy-diff-audit/默认配置文件/测试.cdl",
+    "sha256": "599c1bb5ffd4b87229a81958f33f1060821cd01cd7aa7ccafa0d862f4522f3f6"
+  },
+  "duration_seconds": 23.885,
+  "budget_seconds": 30.0,
+  "requested_budget_seconds": 30.0,
+  "within_budget": true,
+  "passed": true,
+  "pending_reason": null
+}

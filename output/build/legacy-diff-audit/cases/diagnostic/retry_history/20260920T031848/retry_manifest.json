@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "reason": "改用目标DC真实裁剪范围读取自绘精神复选框像素；保留DPI尺寸接口误判证据后重试",
+  "timestamp": "20260920T031848",
+  "moved": [
+    {
+      "module": "M06",
+      "field": "spirit_17",
+      "case_id": "cold_start_01",
+      "from": "output/build/legacy-diff-audit/cases/legacy_live/M06/spirit_17/cold_start_01",
+      "to": "output/build/legacy-diff-audit/cases/diagnostic/retry_history/20260920T031848/M06/spirit_17/cold_start_01",
+      "had_case_json": false,
+      "had_error_json": true
+    }
+  ],
+  "live_result_rows_removed": 0
+}
