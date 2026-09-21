@@ -1,58 +1,62 @@
 {
-  "generated_at": "2026-09-21T19:45:00+08:00",
+  "generated_at": "2026-09-21T20:23:12+08:00",
   "branch": "hushanghua",
-  "head": "78c412965758d7b3702a7ca6ef2e4262f935f65b",
+  "head": "d958b27c56410508cf2fbc9d9c1b50fd96970dec",
   "build": {
     "exe": "output/app/新DC篇完整修改器.exe",
     "exe_sha256": "27521067DF21A812AEAD0B59A7E7B59E390083AA4B92ED1A04813D7FEA5C3887",
     "input_rom": "output/rom/DC_kuorong_464K.nes",
-    "input_rom_sha256": "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E"
+    "input_rom_sha256_before": "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E",
+    "input_rom_sha256_after": "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E",
+    "working_copy": "output/verification/manual-acceptance-current-20260921/H09-working.nes",
+    "working_copy_sha256_after": "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E"
   },
   "computer_use": {
     "requested": true,
     "native_app_inventory_available": false,
-    "observed": "The current computer-use session exposed only the Codex in-app browser; native app APIs and listWindows were unavailable.",
-    "effect": "No manual checklist result was promoted to passed. Verification continued with the repository's Qt UI and data-path regression tests."
+    "mouse_script_authorized": true,
+    "observed": "The packaged Windows application was operated through an authorized pywinauto mouse/UI Automation script. All writes were directed at an independent working-ROM copy.",
+    "evidence_directory": "output/verification/manual-acceptance-current-20260921"
   },
   "checks": {
     "H-07_R-M06-01": {
-      "status": "machine_pass_manual_pending",
-      "tests": 11,
-      "shared_suite": "tests.test_portrait_export tests.test_weapon_rule_library",
-      "observed": "Character $06 selector conversion is front 27/2 and back 25/1; round-trip preserves the raw portrait record."
+      "status": "manual_failed",
+      "automated_tests": "8/8 portrait-export tests passed, but this branch has no legacy selector-conversion regression test.",
+      "observed": "For character $06, the packaged UI displays front bank 25 / position 1 and back bank 27 / position 2. The acceptance target is front 27 / 2 and back 25 / 1, so the two visible selectors are reversed.",
+      "evidence": "output/verification/manual-acceptance-current-20260921/03-H07-character-06-selectors.png"
     },
     "H-08_R-M04-01": {
-      "status": "machine_pass_manual_pending",
-      "tests": 41,
-      "suite": "tests.test_map_feedback_ui tests.test_legacy_map_ui",
-      "observed": "Shop/event add, edit, delete, drag, transaction rollback, invalid-draft blocking and capacity planning passed."
+      "status": "manual_failed",
+      "automated_tests": "41/41 map-feedback and legacy-map tests passed, but the tests enable the private _trigger_write_verified flag explicitly.",
+      "observed": "The packaged application leaves shop/event writing locked. The shop-event tab is read-only, the apply button is disabled, and add/edit/delete cannot be exercised in the production UI. The currently loaded map also reports no writable event/shop record area.",
+      "evidence": "output/verification/manual-acceptance-current-20260921/07-H08-shop-events-ui.png"
     },
     "H-09_R-M05-01": {
-      "status": "machine_pass_manual_pending",
-      "tests": 45,
-      "suite": "tests.test_screenshot_unit_feedback plus the focused legacy unit-page layout test",
-      "observed": "Legacy two-column import layout, body offsets 0-63, fragment offsets 0-127, compression, uncompressed size rejection, body overflow rejection and fragment remaining-capacity import passed.",
-      "new_regressions": [
-        "fragment non-zero offset preserves preceding tiles",
-        "fragment uncompressed import rejects dimensions other than 64x128",
-        "fragment compressed import writes only the capacity remaining after the selected offset"
+      "status": "manual_partial_blocked",
+      "automated_tests": "83/83 unit-screenshot and legacy-window regression tests passed.",
+      "observed": "The packaged UI matches the requested two-column import layout. Body offset is 0-63, fragment offset is 0-127, and both compression checkboxes are present and enabled. A real 128x128 BMP import reached the preview at body offset 1, but confirmation was rejected with '拼图脚本写入需要先完成机体扩容绑定'. Save-and-fresh-process-reopen therefore remains unverified on the recommended ROM.",
+      "evidence": [
+        "output/verification/manual-acceptance-current-20260921/02-M05-unit-layout.png",
+        "output/verification/manual-acceptance-current-20260921/06-M05-offset1-different-body-preview.png"
       ]
     },
     "H-10_R-M07-01": {
-      "status": "machine_pass_manual_pending",
-      "tests": 11,
-      "shared_suite": "tests.test_portrait_export tests.test_weapon_rule_library",
-      "observed": "Four independent read-only rule tabs expose 255/252/250/255 records and verified first-record code."
+      "status": "manual_failed",
+      "automated_tests": "No tests/test_weapon_rule_library.py exists on this branch.",
+      "observed": "The packaged database UI does not expose the required four independent read-only rule tabs with 255/252/250/255 records. The current 'other 1' page only contains unrelated experience/hit, system-text and growth tabs, and src/dc_modifier/weapon_rule_library.py is absent.",
+      "evidence": "output/verification/manual-acceptance-current-20260921/04-H10-current-global-tables.png"
     }
   },
   "summary": {
-    "machine_checks_passed": true,
-    "merged_related_regression_tests": 109,
+    "targeted_regression_tests_passed": 132,
+    "machine_gate_passed": false,
     "manual_acceptance_complete": false,
-    "manual_pending": [
-      "visible native-app operation for H-07 through H-10",
-      "independent working-ROM save and fresh-process reopen where required",
-      "user acceptance decision"
+    "overall_delivery_complete": false,
+    "blocking_results": [
+      "H-07 visible portrait selectors are reversed.",
+      "H-08 production shop/event editing remains locked.",
+      "H-09 import preview works, but save/reopen is blocked until unit expansion binding is available.",
+      "H-10 four-rule-library implementation and tests are absent from this branch."
     ]
   }
 }
