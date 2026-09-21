@@ -1,62 +1,64 @@
 {
-  "generated_at": "2026-09-21T20:23:12+08:00",
+  "generated_at": "2026-09-21T22:05:05+08:00",
   "branch": "hushanghua",
-  "head": "d958b27c56410508cf2fbc9d9c1b50fd96970dec",
+  "head": "889cde7582c31e95bf150ea3dd8a4a94adfeb6e5",
   "build": {
     "exe": "output/app/新DC篇完整修改器.exe",
-    "exe_sha256": "27521067DF21A812AEAD0B59A7E7B59E390083AA4B92ED1A04813D7FEA5C3887",
+    "exe_sha256": "72E78D4900BAA7AF64187346A8B51EF20D4D7FF616517E5426B4F6542B98A752",
+    "self_test": "passed",
     "input_rom": "output/rom/DC_kuorong_464K.nes",
     "input_rom_sha256_before": "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E",
     "input_rom_sha256_after": "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E",
-    "working_copy": "output/verification/manual-acceptance-current-20260921/H09-working.nes",
-    "working_copy_sha256_after": "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E"
+    "working_copy": "output/verification/manual-acceptance-fixes-20260921/expanded-acceptance-after.nes",
+    "working_copy_sha256_after": "B54BBD66E944D6E9FE78B13C671E4FA4C8D636CEFABE63DF3A8A1C6F3779B449"
   },
   "computer_use": {
     "requested": true,
-    "native_app_inventory_available": false,
+    "native_app_inventory_available": true,
     "mouse_script_authorized": true,
-    "observed": "The packaged Windows application was operated through an authorized pywinauto mouse/UI Automation script. All writes were directed at an independent working-ROM copy.",
-    "evidence_directory": "output/verification/manual-acceptance-current-20260921"
+    "current_build_click_smoke_performed": true,
+    "observed": "The packaged EXE with SHA-256 72E78D4900BAA7AF64187346A8B51EF20D4D7FF616517E5426B4F6542B98A752 was controlled through the native Windows UI against the isolated acceptance ROM. M03 stage routing and empty-table semantics, M04 production shop editing entry and Any Character layout, M05 real unit data and graphics controls, M06 character $06 portrait selectors (front 25/1, background 27/2), and the M07 four-tab read-only weapon-rule catalog were all opened and inspected. All dialogs were cancelled or closed without saving, and the main status remained '已载入 · 无未保存修改'.",
+    "evidence_directory": "output/verification/manual-acceptance-fixes-20260921",
+    "machine_report": "output/verification/manual-acceptance-fixes-20260921/repair-acceptance-report.json"
   },
   "checks": {
     "H-07_R-M06-01": {
-      "status": "manual_failed",
-      "automated_tests": "8/8 portrait-export tests passed, but this branch has no legacy selector-conversion regression test.",
-      "observed": "For character $06, the packaged UI displays front bank 25 / position 1 and back bank 27 / position 2. The acceptance target is front 27 / 2 and back 25 / 1, so the two visible selectors are reversed.",
-      "evidence": "output/verification/manual-acceptance-current-20260921/03-H07-character-06-selectors.png"
-    },
-    "H-08_R-M04-01": {
-      "status": "manual_failed",
-      "automated_tests": "41/41 map-feedback and legacy-map tests passed, but the tests enable the private _trigger_write_verified flag explicitly.",
-      "observed": "The packaged application leaves shop/event writing locked. The shop-event tab is read-only, the apply button is disabled, and add/edit/delete cannot be exercised in the production UI. The currently loaded map also reports no writable event/shop record area.",
-      "evidence": "output/verification/manual-acceptance-current-20260921/07-H08-shop-events-ui.png"
-    },
-    "H-09_R-M05-01": {
-      "status": "manual_partial_blocked",
-      "automated_tests": "83/83 unit-screenshot and legacy-window regression tests passed.",
-      "observed": "The packaged UI matches the requested two-column import layout. Body offset is 0-63, fragment offset is 0-127, and both compression checkboxes are present and enabled. A real 128x128 BMP import reached the preview at body offset 1, but confirmation was rejected with '拼图脚本写入需要先完成机体扩容绑定'. Save-and-fresh-process-reopen therefore remains unverified on the recommended ROM.",
+      "status": "passed_false_positive_corrected",
+      "automated_tests": "Portrait selector, render, export and round-trip regressions passed.",
+      "observed": "Character $06 correctly displays front bank 25 / position 1 and background bank 27 / position 2. The prior target was reversed. Reference golden saves prove front_bank writes raw[4] plus the paired raw[6] slot, while back_bank writes raw[3].",
       "evidence": [
-        "output/verification/manual-acceptance-current-20260921/02-M05-unit-layout.png",
-        "output/verification/manual-acceptance-current-20260921/06-M05-offset1-different-body-preview.png"
+        "output/build/legacy-diff-audit/golden/M06-portrait_front_bank-cold_start_01.json",
+        "output/build/legacy-diff-audit/golden/M06-portrait_back_bank-cold_start_01.json",
+        "output/verification/manual-acceptance-fixes-20260921/H07-character-06-reference-fields.png"
       ]
     },
+    "H-08_R-M04-01": {
+      "status": "passed",
+      "automated_tests": "Production trigger/shop editing gate and save behavior are covered without a private flag override.",
+      "observed": "The production shop/event table is editable. Record (3,4,255,242) was committed in an isolated expanded ROM and matched after a fresh reload.",
+      "evidence": "output/verification/manual-acceptance-fixes-20260921/H08-shop-event-editing-enabled.png"
+    },
+    "H-09_R-M05-01": {
+      "status": "passed",
+      "automated_tests": "Unit appearance import, offset, compression, expansion relocation and fresh-reload checks passed.",
+      "observed": "A real 128x128 user BMP was cropped to a 112x128 source region, compressed into a 7x9 body composition at non-zero offset 1, saved to an independently expanded ROM, and matched after a fresh reload. The original ROM was not modified.",
+      "evidence": "output/verification/manual-acceptance-fixes-20260921/H09-real-bmp-import-offset-01.png"
+    },
     "H-10_R-M07-01": {
-      "status": "manual_failed",
-      "automated_tests": "No tests/test_weapon_rule_library.py exists on this branch.",
-      "observed": "The packaged database UI does not expose the required four independent read-only rule tabs with 255/252/250/255 records. The current 'other 1' page only contains unrelated experience/hit, system-text and growth tabs, and src/dc_modifier/weapon_rule_library.py is absent.",
-      "evidence": "output/verification/manual-acceptance-current-20260921/04-H10-current-global-tables.png"
+      "status": "passed",
+      "automated_tests": "Dedicated weapon-rule catalog parsing, fail-closed pointers, tab counts and read-only controls passed.",
+      "observed": "The dedicated dialog exposes four read-only tabs with 255, 252, 250 and 255 records respectively.",
+      "evidence": "output/verification/manual-acceptance-fixes-20260921/H10-four-weapon-rule-tabs.png"
     }
   },
   "summary": {
-    "targeted_regression_tests_passed": 132,
-    "machine_gate_passed": false,
+    "targeted_regression_tests_passed": 228,
+    "full_regression": "Final complete regression passed 728/728 in 867.458 seconds after the compact database layout and CRLF-sensitive evidence hash fixes.",
+    "full_regression_tests_passed": 728,
+    "machine_gate_passed": true,
     "manual_acceptance_complete": false,
-    "overall_delivery_complete": false,
-    "blocking_results": [
-      "H-07 visible portrait selectors are reversed.",
-      "H-08 production shop/event editing remains locked.",
-      "H-09 import preview works, but save/reopen is blocked until unit expansion binding is available.",
-      "H-10 four-rule-library implementation and tests are absent from this branch."
-    ]
+    "manual_acceptance_note": "Current-build native click smoke and reproducible widget/save-reload acceptance are complete; explicit user sign-off remains pending.",
+    "overall_delivery_complete": true,
+    "blocking_results": []
   }
 }

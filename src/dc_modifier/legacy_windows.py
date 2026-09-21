@@ -9,6 +9,7 @@ from PySide6.QtCore import QSize, Qt, QTimer, Signal
 from PySide6.QtGui import QPixmap, QShowEvent
 from PySide6.QtWidgets import (
     QAbstractItemView,
+    QBoxLayout,
     QCheckBox,
     QComboBox,
     QDialog,
@@ -672,6 +673,11 @@ class LegacyUnitDatabasePage(ProjectPage):
         if mode == self._compact_data_layout:
             return
         self._compact_data_layout = mode
+        self.graphics_content.setDirection(
+            QBoxLayout.Direction.TopToBottom
+            if mode == "compact"
+            else QBoxLayout.Direction.LeftToRight
+        )
         for group in (self.basic_group, self.attributes_group, self.weapons_group):
             self.data_grid.removeWidget(group)
         for column in range(3):
@@ -716,6 +722,7 @@ class LegacyUnitDatabasePage(ProjectPage):
 
         content = QHBoxLayout()
         content.setSpacing(6)
+        self.graphics_content = content
         root.addLayout(content, 1)
         preview_column = QVBoxLayout()
         preview_column.setSpacing(2)

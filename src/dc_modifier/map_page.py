@@ -1280,11 +1280,10 @@ class MapPage(ProjectPage):
         self._trigger_edit_row: int | None = None
         self._deployment_edit_source: tuple[str, int] | None = None
         self._deployment_clipboard: tuple[str, tuple[int, ...]] | None = None
-        # D3: legacy deployment/trigger controls and single-field save layouts
-        # have not passed the reference-editor audit.  Keep the verified decoder
-        # visible, but do not let the product commit guessed record edits.
+        # Deployment remains guarded.  Trigger/event fields have completed the
+        # reference save/reopen audit and are safe to edit in the shipped UI.
         self._deployment_write_verified = False
-        self._trigger_write_verified = False
+        self._trigger_write_verified = True
         self._player_slot_cache_key: tuple | None = None
         self._player_slot_snapshots: tuple[dict[int, tuple[int, int]], ...] = ()
         self._icon_sheet_cache: dict[int, QImage] = {}

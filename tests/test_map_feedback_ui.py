@@ -41,10 +41,8 @@ class MapFeedbackUiTests(QtTestCase):
     def setUp(self) -> None:
         self.project = RomProject.load(DEFAULT_ROM)
         self.page = MapPage()
-        # Preserve coverage of the already built editor behind the D3 gate.
-        # The shipped page keeps these writes disabled until golden evidence.
+        # Deployment remains behind D3; trigger/event editing is now verified.
         self.page._deployment_write_verified = True
-        self.page._trigger_write_verified = True
         self.page.resize(1280, 820)
         self.page.set_project(self.project)
         self.page.show()
@@ -55,7 +53,7 @@ class MapFeedbackUiTests(QtTestCase):
         self.page.deleteLater()
         self.application.processEvents()
 
-    def test_default_page_blocks_unverified_record_writes_but_keeps_map_editing(self) -> None:
+    def test_default_page_blocks_deployment_but_enables_verified_triggers(self) -> None:
         guarded_project = RomProject.load(DEFAULT_ROM)
         guarded = MapPage()
         guarded.set_project(guarded_project)
@@ -64,18 +62,20 @@ class MapFeedbackUiTests(QtTestCase):
         try:
             self.assertTrue(guarded.enemy_table.isEnabled())
             self.assertFalse(guarded.enemy_table.editing_enabled)
-            self.assertFalse(guarded.trigger_table.editing_enabled)
+            self.assertTrue(guarded.trigger_table.editing_enabled)
             self.assertFalse(guarded.canvas.deployment_edit_enabled)
-            self.assertFalse(guarded.canvas.overlay_move_enabled)
-            self.assertFalse(guarded.trigger_cell_buttons.button(
+            guarded.editor_tabs.setCurrentIndex(2)
+            guarded._update_overlays()
+            self.assertTrue(guarded.canvas.overlay_move_enabled)
+            self.assertTrue(guarded.trigger_cell_buttons.button(
                 QDialogButtonBox.StandardButton.Ok
             ).isEnabled())
-            before = bytes(guarded_project.working)
             guarded.trigger_table.set_rows([(3, 4, 0xFF, 0xF2)])
-            self.assertFalse(guarded.commit_pending_changes())
-            self.assertIn("黄金对照", guarded.pending_draft_error)
-            self.assertEqual(bytes(guarded_project.working), before)
-            guarded.trigger_table.set_rows([])
+            self.assertTrue(guarded.commit_pending_changes())
+            self.assertEqual(
+                tuple(guarded_project.get_map_triggers(0)[0].to_bytes()),
+                (3, 4, 0xFF, 0xF2),
+            )
             original_tile = guarded.staged_tiles[0]
             guarded.staged_tiles[0] = (original_tile + 1) & 0x0F
             self.assertTrue(guarded.commit_pending_changes())

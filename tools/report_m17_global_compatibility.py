@@ -55,7 +55,10 @@ def _archive_integrity(index_path: Path) -> tuple[list[dict[str, object]], bool]
         archive_path = archive_root / str(entry["archive"])
         archive_bytes = archive_path.read_bytes()
         archive = json.loads(archive_bytes.decode("utf-8"))
-        digest = hashlib.sha256(archive_bytes).hexdigest().lower()
+        # Golden JSON hashes are recorded for canonical LF bytes; accept the
+        # equivalent CRLF checkout produced by Windows core.autocrlf.
+        canonical_archive = archive_bytes.replace(b"\r\n", b"\n")
+        digest = hashlib.sha256(canonical_archive).hexdigest().lower()
         valid = (
             digest == str(entry["sha256"]).lower()
             and entry.get("passed") is True

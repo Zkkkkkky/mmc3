@@ -1,0 +1,74 @@
+{
+  "schema_version": 1,
+  "input_rom": "output/verification/manual-acceptance-fixes-20260921/expanded-acceptance-before.nes",
+  "input_sha256": "0F8364BEB991DE6828DE1C4A33AE629DC16D384BCC224303D1BB033BDD5D6F1D",
+  "configured_from_original_in_same_session": true,
+  "source_bmp": "C:\\Users\\hu\\Desktop\\千禧年号.bmp",
+  "checks": {
+    "H07": {
+      "status": "passed_false_positive_corrected",
+      "selectors": {
+        "front_bank": 25,
+        "front_slot": 1,
+        "back_bank": 27,
+        "back_slot": 2
+      },
+      "golden_front": "output/build/legacy-diff-audit/golden/M06-portrait_front_bank-cold_start_01.json",
+      "golden_back": "output/build/legacy-diff-audit/golden/M06-portrait_back_bank-cold_start_01.json",
+      "evidence": "output/verification/manual-acceptance-fixes-20260921/H07-character-06-reference-fields.png"
+    },
+    "H08": {
+      "status": "passed",
+      "editing_enabled": true,
+      "saved_trigger": [
+        3,
+        4,
+        255,
+        242
+      ],
+      "evidence": "output/verification/manual-acceptance-fixes-20260921/H08-shop-event-editing-enabled.png"
+    },
+    "H10": {
+      "status": "passed",
+      "tab_count": 4,
+      "record_counts": {
+        "光束组图规律": 255,
+        "物理运行规律1": 252,
+        "物理运行规律2": 250,
+        "物理图片": 255
+      },
+      "read_only": true,
+      "evidence": "output/verification/manual-acceptance-fixes-20260921/H10-four-weapon-rule-tabs.png"
+    },
+    "H09": {
+      "status": "passed",
+      "source_dimensions": [
+        128,
+        128
+      ],
+      "import_dimensions": [
+        112,
+        128
+      ],
+      "body_offset": 1,
+      "unit_id": 9,
+      "representative_tile": 3521,
+      "fresh_reopen_equal": true,
+      "evidence": "output/verification/manual-acceptance-fixes-20260921/H09-real-bmp-import-offset-01.png"
+    }
+  },
+  "output_rom": "output/verification/manual-acceptance-fixes-20260921/expanded-acceptance-after.nes",
+  "output_sha256": "B54BBD66E944D6E9FE78B13C671E4FA4C8D636CEFABE63DF3A8A1C6F3779B449",
+  "regression": {
+    "command": ".\\.venv\\Scripts\\python.exe -m unittest discover -s tests -t . -p \"test_*.py\"",
+    "tests_run": 728,
+    "failures": 0,
+    "errors": 0,
+    "duration_seconds": 867.458,
+    "passed": true
+  },
+  "original_rom_sha256_before": "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E",
+  "original_rom_sha256_after": "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E",
+  "original_rom_unchanged": true,
+  "passed": true
+}
