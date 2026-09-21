@@ -326,6 +326,95 @@ class ScreenshotUnitTests(QtTestCase):
         bank = dialog.values()[7]
         self.assertEqual(dialog._draft_tiles[bank * 64 + 63], (0,) * 64)
 
+    def test_body_import_offset_and_uncompressed_mode_change_first_tile(self) -> None:
+        dialog = UnitAppearanceDialog(self.project, 0x09)
+        self.addCleanup(dialog.close)
+        dialog.body_compress_upload.setChecked(False)
+        dialog.body_import_offset.setValue(2)
+        image = QImage(16, 8, QImage.Format.Format_RGB32)
+        image.fill(WORK_PALETTE[1])
+        dialog._import_body_image(image)
+        placements = decode_unit_body_script(dialog.body_script, 64)
+        self.assertEqual([item.tile_index for item in placements], [2, 3])
+        bank = dialog.values()[7]
+        self.assertNotIn(bank * 64, dialog._draft_tiles)
+        self.assertNotIn(bank * 64 + 1, dialog._draft_tiles)
+        self.assertEqual(dialog._draft_tiles[bank * 64 + 2], (1,) * 64)
+        self.assertIn("偏移 $02", dialog.status.text())
+
+    def test_body_import_offset_rejects_overflow_without_draft(self) -> None:
+        dialog = UnitAppearanceDialog(self.project, 0x09)
+        self.addCleanup(dialog.close)
+        dialog.body_compress_upload.setChecked(False)
+        dialog.body_import_offset.setValue(63)
+        image = QImage(16, 8, QImage.Format.Format_RGB32)
+        image.fill(WORK_PALETTE[1])
+        with self.assertRaisesRegex(ValueError, "无法容纳"):
+            dialog._import_body_image(image)
+        self.assertEqual(dialog._draft_tiles, {})
+
+    def test_fragment_import_offset_preserves_preceding_tiles(self) -> None:
+        dialog = UnitAppearanceDialog(self.project, 0x09)
+        self.addCleanup(dialog.close)
+        dialog.fragment_compress_upload.setChecked(False)
+        dialog.fragment_import_offset.setValue(2)
+        image = QImage(64, 128, QImage.Format.Format_RGB32)
+        image.fill(WORK_PALETTE[2])
+        with tempfile.TemporaryDirectory() as temporary:
+            source = Path(temporary) / "fragments.bmp"
+            self.assertTrue(image.save(str(source), "BMP"))
+            with patch(
+                "dc_modifier.unit_appearance_dialog.QFileDialog.getOpenFileName",
+                return_value=(str(source), "BMP 图片 (*.bmp)"),
+            ):
+                dialog._import_library("fragment")
+        bank = dialog.values()[6] & 0xFE
+        self.assertNotIn(bank * 64, dialog._draft_tiles)
+        self.assertNotIn(bank * 64 + 1, dialog._draft_tiles)
+        self.assertEqual(len(dialog._draft_tiles), 126)
+        self.assertEqual(dialog._draft_tiles[bank * 64 + 2], (2,) * 64)
+        self.assertIn("偏移 $02", dialog.status.text())
+
+    def test_fragment_uncompressed_import_rejects_non_64x128_image(self) -> None:
+        dialog = UnitAppearanceDialog(self.project, 0x09)
+        self.addCleanup(dialog.close)
+        dialog.fragment_compress_upload.setChecked(False)
+        image = QImage(16, 16, QImage.Format.Format_RGB32)
+        image.fill(WORK_PALETTE[1])
+        with tempfile.TemporaryDirectory() as temporary:
+            source = Path(temporary) / "invalid-fragments.bmp"
+            self.assertTrue(image.save(str(source), "BMP"))
+            with patch(
+                "dc_modifier.unit_appearance_dialog.QFileDialog.getOpenFileName",
+                return_value=(str(source), "BMP 图片 (*.bmp)"),
+            ), patch(
+                "dc_modifier.unit_appearance_dialog.QMessageBox.warning"
+            ) as warning:
+                dialog._import_library("fragment")
+        warning.assert_called_once()
+        self.assertIn("64×128", warning.call_args.args[2])
+        self.assertEqual(dialog._draft_tiles, {})
+
+    def test_fragment_compressed_import_respects_remaining_offset_capacity(self) -> None:
+        dialog = UnitAppearanceDialog(self.project, 0x09)
+        self.addCleanup(dialog.close)
+        dialog.fragment_compress_upload.setChecked(True)
+        dialog.fragment_import_offset.setValue(127)
+        image = QImage(100, 50, QImage.Format.Format_RGB32)
+        image.fill(WORK_PALETTE[3])
+        with tempfile.TemporaryDirectory() as temporary:
+            source = Path(temporary) / "compressed-fragments.bmp"
+            self.assertTrue(image.save(str(source), "BMP"))
+            with patch(
+                "dc_modifier.unit_appearance_dialog.QFileDialog.getOpenFileName",
+                return_value=(str(source), "BMP 图片 (*.bmp)"),
+            ):
+                dialog._import_library("fragment")
+        bank = dialog.values()[6] & 0xFE
+        self.assertEqual(list(dialog._draft_tiles), [bank * 64 + 127])
+        self.assertIn("偏移 $7F", dialog.status.text())
+        self.assertIn("等比压缩并居中", dialog.status.text())
+
     def test_appearance_bmp_export_matches_legacy_library_dimensions(self) -> None:
         dialog = UnitAppearanceDialog(self.project, 0x09)
         self.addCleanup(dialog.close)
@@ -666,8 +755,12 @@ class ScreenshotUnitTests(QtTestCase):
         self.assertEqual(dialog.color_swatches, [])
         self.assertEqual(dialog.windowTitle(), "机体拼图")
         self.assertFalse(dialog.preview_tabs.tabBar().isVisible())
-        self.assertFalse(dialog.body_import_button.isVisible())
-        self.assertFalse(dialog.body_export_button.isVisible())
+        self.assertTrue(dialog.body_import_button.isVisible())
+        self.assertTrue(dialog.body_export_button.isVisible())
+        self.assertEqual(dialog.body_import_offset.value(), 0)
+        self.assertTrue(dialog.body_compress_upload.isChecked())
+        self.assertEqual(dialog.fragment_import_offset.value(), 0)
+        self.assertTrue(dialog.fragment_compress_upload.isChecked())
         self.assertEqual(dialog.preview_tabs.tabText(0), "战斗合成")
         self.assertEqual(dialog.preview_tabs.tabText(1), "碎片原始图库")
         self.assertEqual(dialog.preview_tabs.tabText(2), "拼图脚本原码")

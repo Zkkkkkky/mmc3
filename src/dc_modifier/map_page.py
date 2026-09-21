@@ -2204,7 +2204,9 @@ class MapPage(ProjectPage):
         selected = self.trigger_character_combo.currentData()
         self.trigger_character_combo.blockSignals(True)
         self.trigger_character_combo.clear()
-        for character_id in range(256):
+        # “任何人物”是地图事件最常用的限定条件，固定放在下拉框首项，
+        # 避免每次都要滚动到 256 项列表末尾选择 $FF。
+        for character_id in (0xFF, *range(0xFF)):
             self.trigger_character_combo.addItem(
                 self._trigger_character_label(character_id), character_id
             )

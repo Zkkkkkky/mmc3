@@ -5,7 +5,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
-from PySide6.QtCore import QSize, Qt, Signal
+from PySide6.QtCore import QSize, Qt, QTimer, Signal
 from PySide6.QtGui import QPixmap, QShowEvent
 from PySide6.QtWidgets import (
     QAbstractItemView,
@@ -708,18 +708,17 @@ class LegacyUnitDatabasePage(ProjectPage):
         group = QGroupBox("机体图片")
         root = QVBoxLayout(group)
         root.setContentsMargins(7, 8, 7, 7)
-        root.setSpacing(5)
+        root.setSpacing(3)
         self.graphics_status = QLabel("请选择机体。")
         self.graphics_status.setWordWrap(True)
-        self.graphics_status.setFixedHeight(24)
+        self.graphics_status.setFixedHeight(20)
         root.addWidget(self.graphics_status)
 
         content = QHBoxLayout()
-        content.setSpacing(8)
+        content.setSpacing(6)
         root.addLayout(content, 1)
         preview_column = QVBoxLayout()
-        preview_column.setSpacing(4)
-        preview_column.addWidget(QLabel("按主体拼图脚本合成"))
+        preview_column.setSpacing(2)
         self.body_preview = QLabel("请选择机体")
         self.body_preview.setObjectName("legacyUnitBodyPreview")
         self.body_preview.setAlignment(Qt.AlignmentFlag.AlignCenter)
@@ -737,8 +736,103 @@ class LegacyUnitDatabasePage(ProjectPage):
         preview_column.addStretch(1)
         content.addLayout(preview_column)
 
+        # Keep the two import columns beside the preview, matching the legacy
+        # modifier's M05 unit-image panel.  The detailed composition dialog is
+        # still used for the actual edit so imports retain validation, draft
+        # previews and outer-dialog rollback.
+        import_columns = QWidget()
+        import_columns.setFixedWidth(174)
+        import_grid = QGridLayout(import_columns)
+        import_grid.setContentsMargins(0, 0, 0, 0)
+        import_grid.setHorizontalSpacing(5)
+        import_grid.setVerticalSpacing(2)
+
+        def import_column(column: int, kind: str) -> None:
+            is_body = kind == "body"
+            upload = QPushButton("上传机体" if is_body else "上传碎片")
+            clear = QPushButton("清除机体" if is_body else "清除碎片")
+            offset_label = QLabel("导图偏移：")
+            offset = QSpinBox()
+            offset.setRange(0, 63 if is_body else 127)
+            offset.setAlignment(Qt.AlignmentFlag.AlignCenter)
+            compress = QCheckBox("压缩上传")
+            compress.setChecked(True)
+            layout = QPushButton("机体拼图" if is_body else "碎片拼图")
+            show = QCheckBox("显示机体" if is_body else "显示碎片")
+            show.setChecked(True)
+            for button in (upload, clear, layout):
+                button.setFixedHeight(26)
+            upload.setToolTip(
+                "按下方导图偏移和压缩上传设置导入图片；导入前可在拼图窗口预览。"
+            )
+            clear.setToolTip("打开拼图窗口并清空当前图库；确定前仍可取消。")
+            offset.setToolTip(
+                "导入的第一个图块写入当前图库的此编号。"
+            )
+            compress.setToolTip(
+                "勾选时按旧版导图方式等比压缩并居中。"
+            )
+            upload.clicked.connect(
+                lambda _checked=False, target=kind: self._edit_appearance(
+                    0 if target == "body" else 1, f"import_{target}"
+                )
+            )
+            clear.clicked.connect(
+                lambda _checked=False, target=kind: self._edit_appearance(
+                    0 if target == "body" else 1, f"clear_{target}"
+                )
+            )
+            layout.clicked.connect(
+                lambda _checked=False, target=kind: self._edit_appearance(
+                    0 if target == "body" else 1
+                )
+            )
+            show.toggled.connect(self._refresh_visuals)
+            for row, widget in enumerate((
+                upload, clear, offset_label, offset, compress, layout, show
+            )):
+                import_grid.addWidget(widget, row, column)
+            if is_body:
+                self.body_upload_button = upload
+                self.body_clear_button = clear
+                self.body_import_offset = offset
+                self.body_compress_upload = compress
+                self.body_layout_button = layout
+                self.show_body_check = show
+            else:
+                self.fragment_upload_button = upload
+                self.fragment_clear_button = clear
+                self.fragment_import_offset = offset
+                self.fragment_compress_upload = compress
+                self.fragment_layout_button = layout
+                self.show_fragment_check = show
+
+        import_column(0, "body")
+        import_column(1, "fragment")
+        self.swap_body_library_check = QCheckBox("调换图库")
+        self.swap_body_library_check.setToolTip(
+            "大型机导入时切换到机体图片地址2（图块 $40—$7F）。"
+        )
+        import_grid.addWidget(self.swap_body_library_check, 4, 0)
+        # Move compression one row down in the body column so both legacy
+        # checkboxes are visible in their original order.
+        import_grid.removeWidget(self.body_compress_upload)
+        import_grid.addWidget(self.body_compress_upload, 5, 0)
+        import_grid.removeWidget(self.body_layout_button)
+        import_grid.addWidget(self.body_layout_button, 6, 0)
+        import_grid.removeWidget(self.show_body_check)
+        import_grid.addWidget(self.show_body_check, 7, 0)
+        import_grid.removeWidget(self.fragment_compress_upload)
+        import_grid.addWidget(self.fragment_compress_upload, 5, 1)
+        import_grid.removeWidget(self.fragment_layout_button)
+        import_grid.addWidget(self.fragment_layout_button, 6, 1)
+        import_grid.removeWidget(self.show_fragment_check)
+        import_grid.addWidget(self.show_fragment_check, 7, 1)
+        import_grid.setRowStretch(8, 1)
+        content.addWidget(import_columns)
+
         controls = QVBoxLayout()
-        controls.setSpacing(5)
+        controls.setSpacing(3)
         content.addLayout(controls, 1)
 
         # Retain the summary as non-visual state for diagnostics and tests.  The
@@ -836,29 +930,6 @@ class LegacyUnitDatabasePage(ProjectPage):
         # Keep these public labels for status/error reporting used elsewhere.
         self.body_palette_caption = palette_rows[0].findChildren(QLabel)[0]
         self.fragment_palette_caption = palette_rows[1].findChildren(QLabel)[0]
-        appearance_actions = QHBoxLayout()
-        self.body_layout_button = QPushButton("机体拼图")
-        self.body_layout_button.setToolTip("打开主体图库、脚本编辑与战斗合成预览。")
-        self.body_layout_button.clicked.connect(
-            lambda _checked=False: self._edit_appearance(0)
-        )
-        self.fragment_layout_button = QPushButton("碎片图库")
-        self.fragment_layout_button.setToolTip("打开碎片图库、脚本编辑、移动与翻转。")
-        self.fragment_layout_button.clicked.connect(
-            lambda _checked=False: self._edit_appearance(1)
-        )
-        appearance_actions.addWidget(self.body_layout_button)
-        appearance_actions.addWidget(self.fragment_layout_button)
-        self.show_body_check = QCheckBox("显示机体")
-        self.show_body_check.setChecked(True)
-        self.show_body_check.toggled.connect(self._refresh_visuals)
-        self.show_fragment_check = QCheckBox("显示碎片")
-        self.show_fragment_check.setChecked(True)
-        self.show_fragment_check.toggled.connect(self._refresh_visuals)
-        appearance_actions.addWidget(self.show_body_check)
-        appearance_actions.addWidget(self.show_fragment_check)
-        controls.addLayout(appearance_actions)
-
         icon_box = QWidget()
         self.icon_group = icon_box
         icon_box.setFixedSize(310, 78)
@@ -925,8 +996,8 @@ class LegacyUnitDatabasePage(ProjectPage):
         self.appearance_details.hide()
         self.unsupported_graphics_buttons: list[QPushButton] = []
         controls.addStretch(1)
-        group.setMinimumHeight(315)
-        group.setMaximumHeight(330)
+        group.setMinimumHeight(300)
+        group.setMaximumHeight(315)
         return group
 
     def _set_appearance_color(self, color_index: int, value: int) -> None:
@@ -1401,12 +1472,28 @@ class LegacyUnitDatabasePage(ProjectPage):
         except (ValueError, IndexError) as error:
             self.show_error(error)
 
-    def _edit_appearance(self, tab_index: int = 0) -> None:
+    def _edit_appearance(self, tab_index: int = 0, initial_action: str | None = None) -> None:
         if self.project is None or self.current_id is None:
             return
         try:
             dialog = UnitAppearanceDialog(self.project, self.current_id, self)
             dialog.preview_tabs.setCurrentIndex(tab_index)
+            dialog.body_import_offset.setValue(self.body_import_offset.value())
+            dialog.body_compress_upload.setChecked(self.body_compress_upload.isChecked())
+            dialog.fragment_import_offset.setValue(self.fragment_import_offset.value())
+            dialog.fragment_compress_upload.setChecked(
+                self.fragment_compress_upload.isChecked()
+            )
+            dialog.swap_body_library.setChecked(
+                self.swap_body_library_check.isChecked()
+                and self.swap_body_library_check.isEnabled()
+            )
+            if initial_action is not None:
+                kind = "body" if initial_action.endswith("body") else "fragment"
+                if initial_action.startswith("import_"):
+                    QTimer.singleShot(0, lambda: dialog._import_library(kind))
+                elif initial_action.startswith("clear_"):
+                    QTimer.singleShot(0, lambda: dialog._clear_library(kind))
             if dialog.exec() == QDialog.DialogCode.Accepted and dialog.changed:
                 # Refresh graphics only: an uncommitted attribute form belongs
                 # to the outer page and must not be discarded by this action.
@@ -1430,6 +1517,7 @@ class LegacyUnitDatabasePage(ProjectPage):
             for button in self.appearance_color_buttons:
                 button.setEnabled(False)
             self.appearance_type.setEnabled(False)
+            self.swap_body_library_check.setEnabled(False)
             for editor in self.appearance_bank_editors:
                 editor.setEnabled(False)
             self.appearance_details.clear()
@@ -1458,6 +1546,11 @@ class LegacyUnitDatabasePage(ProjectPage):
         self._refresh_transform(self.fields["transform"].value())
         try:
             appearance = read_unit_appearance(self.project, unit_id)
+            self.swap_body_library_check.setEnabled(
+                bool(appearance.configuration[0] & 0x80)
+            )
+            if not self.swap_body_library_check.isEnabled():
+                self.swap_body_library_check.setChecked(False)
             self.graphics_status.setText(
                 f"已读取当前机体外观：主体脚本 {len(appearance.body_script)} 字节，"
                 f"碎片脚本 {len(appearance.fragment_script)} 字节。"
