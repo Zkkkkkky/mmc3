@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "reason": "two deterministic transform action discoveries reviewed; promote cold_start_01 identities to formal golden",
+  "timestamp": "20260920T062219",
+  "moved": [
+    {
+      "module": "M06",
+      "field": "transform_dialogue_add",
+      "case_id": "cold_start_01",
+      "from": "output/build/legacy-diff-audit/cases/legacy_live/M06/transform_dialogue_add/cold_start_01",
+      "to": "output/build/legacy-diff-audit/cases/diagnostic/retry_history/20260920T062219/M06/transform_dialogue_add/cold_start_01",
+      "had_case_json": true,
+      "had_error_json": false
+    },
+    {
+      "module": "M06",
+      "field": "transform_dialogue_add",
+      "case_id": "cold_start_02",
+      "from": "output/build/legacy-diff-audit/cases/legacy_live/M06/transform_dialogue_add/cold_start_02",
+      "to": "output/build/legacy-diff-audit/cases/diagnostic/retry_history/20260920T062219/M06/transform_dialogue_add/cold_start_02",
+      "had_case_json": true,
+      "had_error_json": false
+    },
+    {
+      "module": "M06",
+      "field": "transform_dialogue_clear",
+      "case_id": "cold_start_01",
+      "from": "output/build/legacy-diff-audit/cases/legacy_live/M06/transform_dialogue_clear/cold_start_01",
+      "to": "output/build/legacy-diff-audit/cases/diagnostic/retry_history/20260920T062219/M06/transform_dialogue_clear/cold_start_01",
+      "had_case_json": true,
+      "had_error_json": false
+    },
+    {
+      "module": "M06",
+      "field": "transform_dialogue_clear",
+      "case_id": "cold_start_02",
+      "from": "output/build/legacy-diff-audit/cases/legacy_live/M06/transform_dialogue_clear/cold_start_02",
+      "to": "output/build/legacy-diff-audit/cases/diagnostic/retry_history/20260920T062219/M06/transform_dialogue_clear/cold_start_02",
+      "had_case_json": true,
+      "had_error_json": false
+    }
+  ],
+  "live_result_rows_removed": 4
+}

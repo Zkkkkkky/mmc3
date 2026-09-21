@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "reason": "third valid 2B save; isolate final retry because 31.669s batch timing alone exceeded hard 30s budget",
+  "timestamp": "20260920T011504",
+  "moved": [
+    {
+      "module": "M05",
+      "field": "fragment_color_1",
+      "case_id": "cold_start_01",
+      "from": "output/build/legacy-diff-audit/cases/legacy_live/M05/fragment_color_1/cold_start_01",
+      "to": "output/build/legacy-diff-audit/cases/diagnostic/retry_history/20260920T011504/M05/fragment_color_1/cold_start_01",
+      "had_case_json": true,
+      "had_error_json": false
+    }
+  ],
+  "live_result_rows_removed": 1
+}

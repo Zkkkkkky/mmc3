@@ -1,0 +1,8 @@
+{
+  "module": "M08",
+  "field": "battle_01_row000_variant000",
+  "case_id": "cold_start_01",
+  "error": "ElementNotVisible: ",
+  "first_pid": null,
+  "second_pid": null
+}

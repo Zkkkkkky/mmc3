@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "reason": "M06数值字段第一轮发现证据，归档后使用同一锁定基准复测确定性",
+  "timestamp": "20260920T015856",
+  "moved": [
+    {
+      "module": "M06",
+      "field": "defense_bonus",
+      "case_id": "cold_start_01",
+      "from": "output/build/legacy-diff-audit/cases/legacy_live/M06/defense_bonus/cold_start_01",
+      "to": "output/build/legacy-diff-audit/cases/diagnostic/retry_history/20260920T015856/M06/defense_bonus/cold_start_01",
+      "had_case_json": true,
+      "had_error_json": false
+    }
+  ],
+  "live_result_rows_removed": 1
+}

@@ -1,0 +1,22 @@
+{
+  "module": "M05",
+  "field": "name",
+  "case_id": "cold_start_01",
+  "requested_value": "弓天神",
+  "expected_before": "弓天使",
+  "expected_offsets": [294942, 294944],
+  "required_offsets": [294942, 294944],
+  "optional_offsets": [],
+  "extra_allowed": [],
+  "extra_allowed_profile": "m05_name_rebuild_bow_angel_to_bow_god_v1",
+  "navigation": [
+    {"op": "menu", "path": "数据->数据库"},
+    {"op": "window", "title": "数据库"},
+    {"op": "list_select", "class": "ListBox", "control_id": 120, "row": 1}
+  ],
+  "edit_steps": [
+    {"op": "set_text_notify", "class": "Edit", "control_id": 390, "value": "$requested"},
+    {"op": "click_id", "class": "Button", "control_id": 590}
+  ],
+  "read_selector": {"class": "Edit", "control_id": 390, "value_type": "str"}
+}

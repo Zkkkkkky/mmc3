@@ -1,0 +1,68 @@
+﻿M06 spirit final retry started: 2026-09-20T04:13:43.2966198+08:00
+
+=== M06-spirit-06-cold-start-01.json ===
+在线采集完成：M06/spirit_06/cold_start_01 PID 14244→13804，耗时 23.819s，passed=True
+- 用例目录：D:\GIT\mmc3\output\build\legacy-diff-audit\cases\legacy_live\M06\spirit_06\cold_start_01
+D:\GIT\mmc3\.venv\Lib\site-packages\pywinauto\application.py:1085: UserWarning: 32-bit application should be automated using 32-bit Python (you use 64-bit Python)
+  warnings.warn(
+D:\GIT\mmc3\.venv\Lib\site-packages\pywinauto\application.py:1085: UserWarning: 32-bit application should be automated using 32-bit Python (you use 64-bit Python)
+  warnings.warn(
+
+=== M06-spirit-cost-04-cold-start-01.json ===
+在线采集完成：M06/spirit_cost_04/cold_start_01 PID 15588→8068，耗时 25.089s，passed=True
+- 用例目录：D:\GIT\mmc3\output\build\legacy-diff-audit\cases\legacy_live\M06\spirit_cost_04\cold_start_01
+D:\GIT\mmc3\.venv\Lib\site-packages\pywinauto\application.py:1085: UserWarning: 32-bit application should be automated using 32-bit Python (you use 64-bit Python)
+  warnings.warn(
+D:\GIT\mmc3\.venv\Lib\site-packages\pywinauto\application.py:1085: UserWarning: 32-bit application should be automated using 32-bit Python (you use 64-bit Python)
+  warnings.warn(
+
+=== M06-spirit-cost-08-cold-start-01.json ===
+在线采集完成：M06/spirit_cost_08/cold_start_01 PID 12012→12452，耗时 35.569s，passed=False
+- 用例目录：D:\GIT\mmc3\output\build\legacy-diff-audit\cases\legacy_live\M06\spirit_cost_08\cold_start_01
+D:\GIT\mmc3\.venv\Lib\site-packages\pywinauto\application.py:1085: UserWarning: 32-bit application should be automated using 32-bit Python (you use 64-bit Python)
+  warnings.warn(
+D:\GIT\mmc3\.venv\Lib\site-packages\pywinauto\application.py:1085: UserWarning: 32-bit application should be automated using 32-bit Python (you use 64-bit Python)
+  warnings.warn(
+
+=== M06-spirit-cost-10-cold-start-01.json ===
+在线采集完成：M06/spirit_cost_10/cold_start_01 PID 13492→11232，耗时 25.604s，passed=True
+- 用例目录：D:\GIT\mmc3\output\build\legacy-diff-audit\cases\legacy_live\M06\spirit_cost_10\cold_start_01
+D:\GIT\mmc3\.venv\Lib\site-packages\pywinauto\application.py:1085: UserWarning: 32-bit application should be automated using 32-bit Python (you use 64-bit Python)
+  warnings.warn(
+D:\GIT\mmc3\.venv\Lib\site-packages\pywinauto\application.py:1085: UserWarning: 32-bit application should be automated using 32-bit Python (you use 64-bit Python)
+  warnings.warn(
+
+=== M06-spirit-cost-11-cold-start-01.json ===
+D:\GIT\mmc3\.venv\Lib\site-packages\pywinauto\application.py:1085: UserWarning: 32-bit application should be automated using 32-bit Python (you use 64-bit Python)
+  warnings.warn(
+在线采集失败：
+
+=== M06-spirit-cost-12-cold-start-01.json ===
+在线采集完成：M06/spirit_cost_12/cold_start_01 PID 8944→7216，耗时 25.231s，passed=True
+- 用例目录：D:\GIT\mmc3\output\build\legacy-diff-audit\cases\legacy_live\M06\spirit_cost_12\cold_start_01
+D:\GIT\mmc3\.venv\Lib\site-packages\pywinauto\application.py:1085: UserWarning: 32-bit application should be automated using 32-bit Python (you use 64-bit Python)
+  warnings.warn(
+D:\GIT\mmc3\.venv\Lib\site-packages\pywinauto\application.py:1085: UserWarning: 32-bit application should be automated using 32-bit Python (you use 64-bit Python)
+  warnings.warn(
+
+=== M06-spirit-cost-19-cold-start-01.json ===
+在线采集完成：M06/spirit_cost_19/cold_start_01 PID 17396→11460，耗时 25.083s，passed=True
+- 用例目录：D:\GIT\mmc3\output\build\legacy-diff-audit\cases\legacy_live\M06\spirit_cost_19\cold_start_01
+D:\GIT\mmc3\.venv\Lib\site-packages\pywinauto\application.py:1085: UserWarning: 32-bit application should be automated using 32-bit Python (you use 64-bit Python)
+  warnings.warn(
+D:\GIT\mmc3\.venv\Lib\site-packages\pywinauto\application.py:1085: UserWarning: 32-bit application should be automated using 32-bit Python (you use 64-bit Python)
+  warnings.warn(
+黄金档案归档完成：164/164 用例（golden 159，discovery 5），耗时 15.10s
+- 通过 golden：158；未通过 golden：1
+- 快照缺失：0
+- 未登记快照目录：3 -> output/build/legacy-diff-audit/cases/global_hit_threshold；output/build/legacy-diff-audit/cases/item_price_01；output/build/legacy-diff-audit/cases/legacy_other1/experience_level_98
+- 存量差分不一致预警：0
+- 孤儿档案（不被注册表引用，仅报告未删除）：1 -> M06-spirit_cost_11-cold_start_01.json
+- 档案目录：output/build/legacy-diff-audit/golden（164 个 JSON + index.json）
+- 注册表：tools/golden_pipeline/cases/field_registry.json
+G1 黄金对照覆盖率：157/162 = 96.91%（分母口径 registered_fields；最终口径为主文档第 4/5 章全量字段数）
+G2 逐字段差分通过率：159/159 = 100.00%
+用例计数：golden 159（通过 158/未通过 1），discovery 5，待解释 6
+报告：output/reports/golden-coverage-report.json / output/reports/golden-coverage-report.md
+
+M06 spirit final retry finished: 2026-09-20T04:18:20.2212605+08:00

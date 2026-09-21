@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "module": "M03",
+  "passed": true,
+  "status": "complete",
+  "counts": {
+    "physical_fields": 2134,
+    "catalog_fields": 1380,
+    "completed_fields": 1380,
+    "remaining_fields": 0,
+    "safe_denominator_fields": 1380,
+    "fresh_inventory_fields": 1380,
+    "excluded_reference_no_rom_effect": 52,
+    "excluded_reference_off_viewport": 702,
+    "runtime_route_selector_views": 96,
+    "guarded_structural_type_actions": 386,
+    "logical_ui_entries": 2616
+  },
+  "checks": {
+    "catalog_passed": true,
+    "all_1380_editable_fields_recorded": true,
+    "sequences_contiguous": true,
+    "catalog_identities_match": true,
+    "hash_links_contiguous": true,
+    "each_save_changes_exactly_target_byte": true,
+    "requested_value_persisted_exactly": true,
+    "coordinate_result_changed_and_isolated": true,
+    "byte_chain_replays": true,
+    "tail_matches_work_rom": true,
+    "two_fresh_reference_inventories_match": true
+  },
+  "evidence": {
+    "catalog": "output/reports/m03-reference-field-catalog.json",
+    "save_chain": "output/verification/legacy-m03-all-fields-20260920/field-save-chain.jsonl",
+    "work_rom": "output/verification/legacy-m03-all-fields-20260920/work.nes",
+    "fresh_inventory_a": "output/verification/legacy-m03-all-fields-20260920/fresh-inventory-a.json",
+    "fresh_inventory_b": "output/verification/legacy-m03-all-fields-20260920/fresh-inventory-b.json"
+  }
+}

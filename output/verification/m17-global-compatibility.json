@@ -1,0 +1,430 @@
+{
+  "generated_at": "2026-09-21T21:46:19+08:00",
+  "passed": true,
+  "delivery_status": "aligned_regression_guard_user_checklist_pending",
+  "conclusion": "M17 的 20 个公式/道具字段和 12 个初始阵容字段均通过产品侧单字段差分、撤销、镜像/哨兵和拒绝边界；33 个参考黄金用例档案完整、共覆盖 32 个逻辑字段。",
+  "rom": {
+    "path": "output/rom/DC_kuorong_464K.nes",
+    "size": 1310736,
+    "sha256": "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E"
+  },
+  "reference_index": "output/build/legacy-diff-audit/golden/index.json",
+  "defaults": {
+    "double_hit": [
+      70,
+      90,
+      20
+    ],
+    "damage": [
+      13,
+      10,
+      10,
+      1,
+      1
+    ],
+    "hit_threshold": 70,
+    "item_effects": [
+      1,
+      1,
+      1,
+      5,
+      3,
+      1,
+      3,
+      3,
+      25,
+      25,
+      50
+    ],
+    "initial_roster": [
+      [
+        4,
+        9
+      ],
+      [
+        5,
+        13
+      ],
+      [
+        6,
+        15
+      ],
+      [
+        7,
+        17
+      ],
+      [
+        8,
+        19
+      ],
+      [
+        9,
+        23
+      ]
+    ]
+  },
+  "product_diffs": {
+    "double_hit": {
+      "changed_offsets": [
+        491785,
+        491815,
+        491832,
+        491866,
+        491896,
+        491913,
+        524035,
+        524050,
+        524058
+      ],
+      "expected_offsets": [
+        491785,
+        491815,
+        491832,
+        491866,
+        491896,
+        491913,
+        524035,
+        524050,
+        524058
+      ]
+    },
+    "damage": {
+      "changed_offsets": [
+        39321,
+        39328,
+        491717,
+        491748,
+        491755
+      ],
+      "expected_offsets": [
+        39321,
+        39328,
+        491717,
+        491748,
+        491755
+      ]
+    },
+    "hit_threshold": {
+      "changed_offsets": [
+        42062
+      ],
+      "expected_offsets": [
+        42062
+      ]
+    },
+    "item_effects": {
+      "changed_offsets": [
+        82127,
+        82134,
+        82141,
+        82148,
+        82155,
+        82162,
+        82169,
+        82176,
+        82183,
+        82190,
+        82197
+      ],
+      "expected_offsets": [
+        82127,
+        82134,
+        82141,
+        82148,
+        82155,
+        82162,
+        82169,
+        82176,
+        82183,
+        82190,
+        82197
+      ]
+    },
+    "initial_roster": {
+      "changed_offsets": [
+        235101,
+        235102,
+        235103,
+        235104,
+        235105,
+        235106,
+        235107,
+        235108,
+        235109,
+        235110,
+        235111,
+        235112
+      ],
+      "expected_offsets": [
+        235101,
+        235102,
+        235103,
+        235104,
+        235105,
+        235106,
+        235107,
+        235108,
+        235109,
+        235110,
+        235111,
+        235112
+      ],
+      "sentinel_offset": 235113,
+      "sentinel_value": 255
+    }
+  },
+  "rejection_messages": {
+    "strength_divisor_zero": "伤害公式第 3 项不能为 0。",
+    "defense_divisor_zero": "伤害公式第 5 项不能为 0。"
+  },
+  "reference_golden": {
+    "case_count": 33,
+    "logical_field_count": 32,
+    "cases": [
+      {
+        "field": "damage_defense_divisor",
+        "case_id": "write",
+        "archive": "M17-damage_defense_divisor-write.json",
+        "sha256": "26738EE85A0D33D6293045BC32C60A7139FD72A147B88A981F4E5EF759F154B6",
+        "valid": true
+      },
+      {
+        "field": "damage_defense_multiplier",
+        "case_id": "write",
+        "archive": "M17-damage_defense_multiplier-write.json",
+        "sha256": "15DB6BD16E13435B2D1A64CD5073E7FD4CA356CA0E8DE1AE8571217F03F87B93",
+        "valid": true
+      },
+      {
+        "field": "damage_strength_divisor",
+        "case_id": "write",
+        "archive": "M17-damage_strength_divisor-write.json",
+        "sha256": "8BDCB8B56C0FD7163DA4621ACF4611E44080DB104EE75AA4A3864CD6B639065A",
+        "valid": true
+      },
+      {
+        "field": "damage_strength_multiplier",
+        "case_id": "write",
+        "archive": "M17-damage_strength_multiplier-write.json",
+        "sha256": "6A65DB38CDC3F0507703D53446A7FEC1C78A080B9334A3A09125FE37D90FFF90",
+        "valid": true
+      },
+      {
+        "field": "damage_weapon_multiplier",
+        "case_id": "write",
+        "archive": "M17-damage_weapon_multiplier-write.json",
+        "sha256": "9D0C5C4DA451AA8F402F3369DEBFAFD8D61DD66F3A371547BF96F8C8C1A205F5",
+        "valid": true
+      },
+      {
+        "field": "double_hit_attack_percent",
+        "case_id": "write",
+        "archive": "M17-double_hit_attack_percent-write.json",
+        "sha256": "54A9EDCD445DE95A713818BFE1A863CB17192DE91A93A11971BB0D91A5210924",
+        "valid": true
+      },
+      {
+        "field": "double_hit_bonus",
+        "case_id": "write",
+        "archive": "M17-double_hit_bonus-write.json",
+        "sha256": "8B24F378C8CB82460ACC05C07B4C97B9DD8A671288D89F68B861D5219349457A",
+        "valid": true
+      },
+      {
+        "field": "double_hit_defense_percent",
+        "case_id": "write",
+        "archive": "M17-double_hit_defense_percent-write.json",
+        "sha256": "21E6B43FDA0ECF8A9C587B34EF5DE277EB726F55C41E5E1F96BD7E84A4351271",
+        "valid": true
+      },
+      {
+        "field": "hit_threshold",
+        "case_id": "cold_start_03",
+        "archive": "M17-hit_threshold-cold_start_03.json",
+        "sha256": "47AEE2357B4185C60DCF2EBEA68E7FDD7A2A0CD47116CDB9E91FA77D40B8F848",
+        "valid": true
+      },
+      {
+        "field": "hit_threshold",
+        "case_id": "write",
+        "archive": "M17-hit_threshold-write.json",
+        "sha256": "3707BCA1DB3EA6F7D5154914683520C49DE098BE201F1B1E667945F94F4B0056",
+        "valid": true
+      },
+      {
+        "field": "item_01",
+        "case_id": "write",
+        "archive": "M17-item_01-write.json",
+        "sha256": "D608D56517126D8C0241D8F5FDF6699959FCE49096839041FC8286E67EABC743",
+        "valid": true
+      },
+      {
+        "field": "item_02",
+        "case_id": "write",
+        "archive": "M17-item_02-write.json",
+        "sha256": "9CD808B4EC5D7F6573E0FA7DE05D33D7CEA6923907CEE46A2CF999D1037D43F8",
+        "valid": true
+      },
+      {
+        "field": "item_03",
+        "case_id": "write",
+        "archive": "M17-item_03-write.json",
+        "sha256": "D45A1FB82ADC34F4DAC08489311B39FFC147EB38B4EC79C7F0106DA7902E342F",
+        "valid": true
+      },
+      {
+        "field": "item_04",
+        "case_id": "write",
+        "archive": "M17-item_04-write.json",
+        "sha256": "86EE8110B9359D92CF90CB2B864240929C99BC878459CD98B6A18CD6562D6AE1",
+        "valid": true
+      },
+      {
+        "field": "item_05",
+        "case_id": "write",
+        "archive": "M17-item_05-write.json",
+        "sha256": "357C641B46E2D4A37B42B6915152754E3F347BB49CB2D8C9A7C6045CDD5CB8C3",
+        "valid": true
+      },
+      {
+        "field": "item_06",
+        "case_id": "write",
+        "archive": "M17-item_06-write.json",
+        "sha256": "74A2C519E6F0AB8001DB044FC8162B34E39AACE072D7D1B88765BABC91BB7CF7",
+        "valid": true
+      },
+      {
+        "field": "item_07",
+        "case_id": "write",
+        "archive": "M17-item_07-write.json",
+        "sha256": "4593DF4769DE6ED45BE67D26F2824FABDE9E6BBC000BF0A5FAD576E3E0EA9013",
+        "valid": true
+      },
+      {
+        "field": "item_08",
+        "case_id": "write",
+        "archive": "M17-item_08-write.json",
+        "sha256": "3CC133D3F1B38D3E04D77F6759BFEB1BCEB0AF5D75F4A96B37E2E7CC56F88515",
+        "valid": true
+      },
+      {
+        "field": "item_09",
+        "case_id": "write",
+        "archive": "M17-item_09-write.json",
+        "sha256": "A94F1B5E9BD7DFE577FDC8AAE5163C3942C67F659CE523A14057EF701383B171",
+        "valid": true
+      },
+      {
+        "field": "item_10",
+        "case_id": "write",
+        "archive": "M17-item_10-write.json",
+        "sha256": "4F8F381298DDCF0886C2FA5DF51ACE6EDCF71733DAEFC6C412B63C35FAF06453",
+        "valid": true
+      },
+      {
+        "field": "item_11",
+        "case_id": "write",
+        "archive": "M17-item_11-write.json",
+        "sha256": "34FE2AD402E06B247840EF4C66980F6D79A7BF2F115ECD1711F5B8F868D086AE",
+        "valid": true
+      },
+      {
+        "field": "slot_1_character",
+        "case_id": "write",
+        "archive": "M17-slot_1_character-write.json",
+        "sha256": "35231F22FAD6D37FCFE61819A92EC5E1AA02FB79F3FD06F256685F94DEC927F5",
+        "valid": true
+      },
+      {
+        "field": "slot_1_unit",
+        "case_id": "write",
+        "archive": "M17-slot_1_unit-write.json",
+        "sha256": "6D3FDAC6F49726104ABC199B51518A75AC3A7DB9EEE5192DF5EDAF72FEB0071E",
+        "valid": true
+      },
+      {
+        "field": "slot_2_character",
+        "case_id": "write",
+        "archive": "M17-slot_2_character-write.json",
+        "sha256": "A67AF1DADAB64E0F6D577C072DD1D58296428844B411579A9F1ED8AE612111FD",
+        "valid": true
+      },
+      {
+        "field": "slot_2_unit",
+        "case_id": "write",
+        "archive": "M17-slot_2_unit-write.json",
+        "sha256": "06B5F79E121BEE13D4B5EE5955861E55D33D21FD4FB97809AA7340C70A89E3F7",
+        "valid": true
+      },
+      {
+        "field": "slot_3_character",
+        "case_id": "write",
+        "archive": "M17-slot_3_character-write.json",
+        "sha256": "905C4534DFFEA5C349AD4C6D5FFFB561EEDF2A1750528845814B3F65D934079F",
+        "valid": true
+      },
+      {
+        "field": "slot_3_unit",
+        "case_id": "write",
+        "archive": "M17-slot_3_unit-write.json",
+        "sha256": "E159C28527523A7FAA4F26F6C54AFEB40DB29B50854C3739E573B22FC0E469E1",
+        "valid": true
+      },
+      {
+        "field": "slot_4_character",
+        "case_id": "write",
+        "archive": "M17-slot_4_character-write.json",
+        "sha256": "CFDB041099ED4A220A9F9704627A6C5565716E81D430F7F73FE55EA4DDF8C2A6",
+        "valid": true
+      },
+      {
+        "field": "slot_4_unit",
+        "case_id": "write",
+        "archive": "M17-slot_4_unit-write.json",
+        "sha256": "CEE8B3A57380B973A3464680FF8F880BD0979A2DB954DB24A8845B5BEC574A83",
+        "valid": true
+      },
+      {
+        "field": "slot_5_character",
+        "case_id": "write",
+        "archive": "M17-slot_5_character-write.json",
+        "sha256": "D3319A0082B4A6F1EC91FD77923BF21D675F38BF6E0CE18F3C3F6B9BEE3C7728",
+        "valid": true
+      },
+      {
+        "field": "slot_5_unit",
+        "case_id": "write",
+        "archive": "M17-slot_5_unit-write.json",
+        "sha256": "DB0E60F96476579CCD48A96BAA338CF7FCDA890CA67016F50F1507CE1B4F3AA2",
+        "valid": true
+      },
+      {
+        "field": "slot_6_character",
+        "case_id": "write",
+        "archive": "M17-slot_6_character-write.json",
+        "sha256": "5935461039CE6D547D416749F6930244A06127F24C0506E849545980A589A782",
+        "valid": true
+      },
+      {
+        "field": "slot_6_unit",
+        "case_id": "write",
+        "archive": "M17-slot_6_unit-write.json",
+        "sha256": "7DEF598530D85FB86160303F828FF5E87C2E079595CB102694130CD97BF05DA3",
+        "valid": true
+      }
+    ]
+  },
+  "checks": {
+    "verified_defaults": true,
+    "double_hit_three_mirrors": true,
+    "damage_five_operands": true,
+    "hit_threshold_single_operand": true,
+    "item_effect_eleven_operands": true,
+    "initial_roster_twelve_bytes_and_sentinel": true,
+    "zero_divisors_rejected_atomically": true,
+    "reference_golden_archives": true
+  },
+  "pending_acceptance": [
+    "由用户按 docs/需求拆分/M17_其他窗口.md 第 7 节执行正式 EXE 现场查看并签收。"
+  ]
+}

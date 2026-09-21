@@ -1,0 +1,32 @@
+{
+  "tag": "CLEAN_ComboLBox",
+  "hwnd": 2755856,
+  "title": "",
+  "class": "ComboLBox",
+  "rect": {
+    "left": 0,
+    "top": 36,
+    "right": 252,
+    "bottom": 804,
+    "width": 252,
+    "height": 768
+  },
+  "pid": 41916,
+  "tree": {
+    "hwnd": 2755856,
+    "class": "ComboLBox",
+    "text": "",
+    "ctrl_id": 1000,
+    "rect": {
+      "left": 0,
+      "top": 36,
+      "right": 252,
+      "bottom": 804,
+      "width": 252,
+      "height": 768
+    },
+    "visible": false,
+    "enabled": true,
+    "children": []
+  }
+}

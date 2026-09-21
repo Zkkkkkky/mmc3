@@ -1,8 +1,8 @@
 @echo off
 setlocal
 cd /d "%~dp0"
-if exist "FC模拟器\新DC篇完整修改器.exe" (
-  start "" "FC模拟器\新DC篇完整修改器.exe"
+if exist "output\app\新DC篇完整修改器.exe" (
+  start "" "output\app\新DC篇完整修改器.exe"
   exit /b 0
 )
 if not exist ".venv\Scripts\python.exe" (

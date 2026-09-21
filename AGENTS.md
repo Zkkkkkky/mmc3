@@ -1,39 +1,93 @@
 # Repository Guidelines
 
+## Repository SSH Identity
+
+For Git operations against this repository's `origin`, use the private key
+`C:/Users/Administrator/.ssh/id_ed25519`. The repository-local Git setting is
+expected to remain:
+
+```text
+C:/Windows/System32/OpenSSH/ssh.exe -i C:/Users/Administrator/.ssh/id_ed25519 -o IdentitiesOnly=yes
+```
+
+Do not probe or rotate through other SSH keys during commit/push workflows. If
+authentication with this configured key fails, report the exact failure instead
+of trying unrelated identities.
+
+## Branch Discipline
+
+Remain on the current Git branch unless the user explicitly instructs you to
+switch to a named branch. Requests to inspect another branch, merge it, repair
+content originating from it, compare it, or resolve its conflicts do not by
+themselves authorize `git switch`, `git checkout <branch>`, or any equivalent
+branch change.
+
+Use read-only branch references such as `git show`, `git diff`, `git grep`,
+and explicit commit/tree paths whenever possible. If completing a task truly
+requires a branch switch and the user has not explicitly requested one, stop
+and ask first. After an authorized switch, treat that branch as the active
+working branch until the user explicitly requests another switch.
+
 ## Project Purpose & Modifier Conventions
 
-The project's core goal is to develop a ROM editor for the FC game *第二次机器人大战*. `srw2_patched.exe` is a completed editor product used as a reference source for behavior, workflows, and supported data; it is not the editor currently being developed. “新DC修改器” is the active editor product in this repository.
+The project's core goal is to develop a ROM editor for the FC game *第二次机器人大战*. `references/legacy_modifier/SRW2_patched.exe` is a completed editor product used as a reference source for behavior, workflows, and supported data; it is not the editor currently being developed. “新DC修改器” is the active editor product in this repository.
 
-Every change to the active editor must update `DC修改器使用说明.md` in the same change. Keep the instructions synchronized with changes to features, UI, supported data, operating steps, validation, and user-visible limitations.
+Every change to the active editor must update `docs/DC修改器使用说明.md` in the same change. Keep the instructions synchronized with changes to features, UI, supported data, operating steps, validation, and user-visible limitations.
+
+Whenever a change affects reusable ROM-editor architecture or methodology—including ROM identity/Profile, address mapping, codecs, transactions, resource graphs or allocation, reverse-engineering evidence, golden comparison, testing and acceptance, packaging and delivery, or cross-ROM reuse boundaries—update `docs/ROM定制修改器建设方案.md` in the same change. Improve the general guidance from verified experience without copying game-specific addresses into the reusable method.
 
 ## Project Structure & Module Organization
 
-This repository is a self-contained NES ROM expansion handoff. `tools/` contains the Python builder, IPS helpers, reusable `fc_editor/` modules, and the `unittest` suite. `analysis/` holds 6502/ASM6 sources, generated listings, Lua emulator checks, and bundled FamiStudio assembler dependencies. Final ROMs, reports, and NSF inputs live under `build/`; distributable patches belong in `patches/`. Treat `历史方案报告/` as reference material and `验证工具/` as vendored tooling. Read `交接文档.md` before changing ROM layout or audio behavior.
+The repository uses five core directories plus a separate read-only reference area:
 
-For historical reverse-engineering experience, consult `analysis/FC第二次机器人大战资料集V1.16_阅读笔记.md` first and use the extracted CHM content under `analysis/reference_chm_v1_16/` when more detail is needed. Treat this material as leads rather than authoritative project facts: verify addresses, free-space claims, mapper behavior, and uncertain annotations against the current ROM, disassembly, builder assertions, and emulator checks.
+- `src/` is the product source root. The GUI is in `src/dc_modifier/`, reusable ROM code is in `src/fc_editor/`, session/build orchestration is in `src/fc_rom_editor_core.py`, 6502/ASM6 sources are in `src/asm/`, and active default configuration is in `src/resources/default_config/`.
+- `tools/` contains launch, ROM build, documentation, packaging, manifest, and research scripts. Bundled third-party dependencies live under `tools/vendor/famistudio-4.5.3/`, `tools/vendor/fceux-2.6.6/`, and `tools/vendor/mesen-0.9.9/`.
+- `tests/` is the sole automated-test discovery root. Emulator smoke scripts live in `tests/emulator/`.
+- `output/` contains generated and distributable artifacts. Use `output/app/`, `output/rom/`, `output/patches/`, `output/reports/`, `output/mappings/`, `output/pdf/`, `output/build/`, `output/verification/`, and `output/manifest/` according to artifact type.
+- `docs/` contains user-facing and maintenance documentation, research notes, screenshots, and rejected-design archives.
+- `references/` contains immutable source material and historical evidence. Treat `references/rom/source/新DC.nes`, `references/rom/baselines/DC_kuorong.nes`, `references/legacy_modifier/`, `references/audio/`, `references/emulator-state/`, and `references/research/` as read-only.
+
+The recommended generated ROM is `output/rom/DC_kuorong_464K.nes`. Never redirect build output into `references/` and do not use a generated output as a replacement for the canonical source ROM.
+
+Read `docs/交接文档.md` before changing ROM layout or audio behavior. For historical reverse-engineering experience, consult `docs/research/FC第二次机器人大战资料集V1.16_阅读笔记.md` first and use the extracted CHM content under `references/research/fc资料集-v1.16/` when more detail is needed. Treat this material as leads rather than authoritative facts: verify addresses, free-space claims, mapper behavior, and uncertain annotations against the current ROM, disassembly, builder assertions, and emulator checks.
+
+`docs/提交记录.md` is a historical record. Do not rewrite it merely to make old commands or old paths look current.
+
+## Development Sequence & Persistent Progress Log
+
+Follow the user-approved execution queue in `docs/需求拆分/README.md` section 4.1. It refines the P0–P3 roadmap without changing the main requirements baseline; M02 is explicitly allowed to start early. If evidence or dependencies require a different order, record the reason and revised order there before proceeding. Do not treat a planned step or an implementation-side self-check as user acceptance.
+
+At the end of **every development work turn**, including partial implementations, failed verification, or blocked work, append an entry to `docs/开发记录.md` before handing off. Record what was actually done, what remains undone or disabled, verification commands/results and evidence, risks, and the concrete next step. Never silently omit unfinished work or call unrun tests successful. Update the affected module's section 8 and the main requirements chapter 11 when actual status changes; user acceptance tables are filled only after the user signs off. This is a standing user instruction and does not require another reminder. Keep `docs/提交记录.md` as a separate historical record.
+
+Whenever a requirements module reaches the implementation scope declared complete for the current delivery, automatically create or update a user-executable acceptance checklist in the same development turn. Keep the module's section 7 and any consolidated acceptance checklist synchronized with the delivered scope. Include prerequisites and build/input hashes when relevant, numbered steps, expected results, evidence fields, failure/issue recording, and a final user sign-off table; explicitly identify disabled, deferred, read-only, or unverified scope. Creating or updating the checklist is not user acceptance: do not fill acceptance results or upgrade status until the user explicitly signs off.
 
 ## Build, Test, and Development Commands
 
 Run commands from the repository root on Windows:
 
 ```powershell
+.\.venv\Scripts\python.exe tools\run_dc_modifier.py
 python tools\build_dc_expanded_dual_audio.py
-python tools\test_dc_expanded_dual_audio.py
-.\.venv\Scripts\python.exe -m unittest discover -s tools -p "test_*.py"
-.\build_modifier_exe.ps1
-.\验证交接包.ps1
+.\.venv\Scripts\python.exe -m unittest discover -s tests -t . -p "test_*.py"
+.\tools\build_modifier_exe.ps1
+.\tools\更新文件清单.ps1
+.\tools\验证交接包.ps1
 ```
 
-The ROM builder validates source identity and regenerates ROM, IPS, and reports. The discovery command runs core and offscreen GUI tests. `build_modifier_exe.ps1` creates the standalone Windows editor. The verification script checks every file recorded in `文件清单_SHA256.csv`.
+The launcher adds `src/` to the import path. `pyproject.toml` provides the standard `src` package configuration for editable installs and packaging. The ROM builder reads `references/rom/source/新DC.nes` and writes ROM, IPS, reports, and intermediate assembly products under `output/`. The discovery command runs core, integration, and offscreen GUI tests. `tools/build_modifier_exe.ps1` creates `output/app/新DC篇完整修改器.exe`. The two manifest scripts update and verify `output/manifest/文件清单_SHA256.csv`.
 
 ## Coding Style & Naming Conventions
 
 Use four-space indentation, type hints, `pathlib.Path`, and `snake_case` for Python functions and modules; constants remain `UPPER_SNAKE_CASE`. Keep tests named `test_<behavior>`. In assembly, preserve existing lower-snake-case labels and hexadecimal address comments. Prefer repository-relative paths derived from the root; do not embed machine-specific paths. There is no configured formatter or linter, so match nearby code and keep changes focused.
 
+Do not restore application modules or tests beneath `tools/`. New product code belongs in `src/`; new tests belong in `tests/`; generated files belong in `output/`; immutable evidence and upstream inputs belong in `references/`.
+
 ## Testing Guidelines
 
-Tests use Python's standard `unittest` framework and require the exact source ROM hash documented in `交接文档.md`. Add assertions for every changed bank, pointer, size, or hash invariant. After ROM changes, run the builder and full test suite, then perform the relevant Mesen/Lua smoke checks described in the handoff. Do not edit `build/nsf/新DC.nes`; create derived outputs instead.
+Tests use Python's standard `unittest` framework and require the exact source ROM hash documented in `docs/交接文档.md`. Add assertions for every changed bank, pointer, size, or hash invariant. After ROM changes, run the builder and full test suite, then perform the relevant Mesen/Lua smoke checks described in the handoff. Use `tools/vendor/mesen-0.9.9/` with scripts from `tests/emulator/`, and store resulting evidence under `output/verification/`.
+
+Do not edit `references/rom/source/新DC.nes` or `references/rom/baselines/DC_kuorong.nes`; create derived outputs instead.
 
 ## Commit & Pull Request Guidelines
 
-This package contains no Git metadata, so no historical commit convention can be inferred. Use concise imperative subjects, for example `Fix expanded-bank dispatch`. Pull requests should explain affected banks and behavior, list verification commands and emulator results, and identify regenerated ROM/IPS/report artifacts. Include before/after hashes when binary outputs change. Avoid distributing copyrighted ROMs publicly; prefer source, reports, and IPS patches.
+Use concise imperative subjects, for example `Fix expanded-bank dispatch`. Pull requests should explain affected banks and behavior, list verification commands and emulator results, and identify regenerated ROM/IPS/report artifacts. Include before/after hashes when binary outputs change. Avoid distributing copyrighted ROMs publicly; prefer source, reports, and IPS patches.

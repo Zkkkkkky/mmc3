@@ -1,0 +1,32 @@
+{
+  "tag": "DIAG2_打开ROM对话框",
+  "hwnd": 132090,
+  "title": "",
+  "class": "SoPY_Status",
+  "rect": {
+    "left": 3477,
+    "top": 1806,
+    "right": 3830,
+    "bottom": 1872,
+    "width": 353,
+    "height": 66
+  },
+  "pid": 41916,
+  "tree": {
+    "hwnd": 132090,
+    "class": "SoPY_Status",
+    "text": "",
+    "ctrl_id": 0,
+    "rect": {
+      "left": 3477,
+      "top": 1806,
+      "right": 3830,
+      "bottom": 1872,
+      "width": 353,
+      "height": 66
+    },
+    "visible": true,
+    "enabled": false,
+    "children": []
+  }
+}

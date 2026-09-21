@@ -1,0 +1,32 @@
+{
+  "tag": "CLEAN_Default IM",
+  "hwnd": 132102,
+  "title": "Default IME",
+  "class": "IME",
+  "rect": {
+    "left": 0,
+    "top": 0,
+    "right": 0,
+    "bottom": 0,
+    "width": 0,
+    "height": 0
+  },
+  "pid": 41916,
+  "tree": {
+    "hwnd": 132102,
+    "class": "IME",
+    "text": "Default IME",
+    "ctrl_id": 0,
+    "rect": {
+      "left": 0,
+      "top": 0,
+      "right": 0,
+      "bottom": 0,
+      "width": 0,
+      "height": 0
+    },
+    "visible": false,
+    "enabled": false,
+    "children": []
+  }
+}

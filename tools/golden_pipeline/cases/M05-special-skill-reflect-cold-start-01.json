@@ -1,0 +1,20 @@
+{
+  "module": "M05", "field": "special_skill_reflect", "case_id": "cold_start_01",
+  "requested_value": 1, "expected_before": 0,
+  "expected_offsets": [297549], "required_offsets": [297549],
+  "optional_offsets": [], "extra_allowed": [],
+  "navigation": [
+    {"op": "menu", "path": "数据->数据库"},
+    {"op": "window", "title": "数据库"},
+    {"op": "list_select", "class": "ListBox", "control_id": 120, "row": 1},
+    {"op": "click_id", "class": "Button", "control_id": 2600},
+    {"op": "window", "title": "机体特技", "settle_seconds": 0.5}
+  ],
+  "edit_steps": [
+    {"op": "set_check", "class": "Button", "control_id": 140, "value": "$requested"},
+    {"op": "click_id", "class": "Button", "control_id": 160},
+    {"op": "window", "title": "数据库"},
+    {"op": "click_id", "class": "Button", "control_id": 590}
+  ],
+  "read_selector": {"class": "Button", "control_id": 140, "value_type": "check"}
+}

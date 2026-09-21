@@ -1,0 +1,8 @@
+{
+  "schema_version": 1,
+  "name": "m06_sp_64_to_65_v1",
+  "description": "参考版将人物第 1 行 SP 从 64 改为 65 时的确定性人物数据重建。两次使用同一锁定基准的独立发现运行产生完全相同的 10188 条差分三元组；本配置以 SHA-256 锁定第二次证据，并排除正式用例必改的 SP 偏移。",
+  "source_case": "output/build/legacy-diff-audit/cases/diagnostic/retry_history/20260920T015343/M06/sp/cold_start_01/case.json",
+  "source_case_sha256": "75cfb19342be8903733d1d97bf251633abe197573da401a175237e9ce802b20e",
+  "exclude_offsets": [296338]
+}

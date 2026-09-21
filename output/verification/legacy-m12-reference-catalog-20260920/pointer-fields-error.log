@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "D:\GIT\mmc3\tools\research\probe_m12_reference_pointer_fields.py", line 179, in <module>
+    result = main()
+             ^^^^^^
+  File "D:\GIT\mmc3\tools\research\probe_m12_reference_pointer_fields.py", line 99, in main
+    dialog = driver._wait_window(
+             ^^^^^^^^^^^^^^^^^^^^
+  File "D:\GIT\mmc3\tools\golden_pipeline_collect.py", line 648, in _wait_window
+    raise RuntimeError(
+RuntimeError: Legacy window did not appear before timeout (pid=5724; seen=[])

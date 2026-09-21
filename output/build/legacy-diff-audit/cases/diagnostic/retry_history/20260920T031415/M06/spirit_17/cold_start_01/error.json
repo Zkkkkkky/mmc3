@@ -1,0 +1,8 @@
+{
+  "module": "M06",
+  "field": "spirit_17",
+  "case_id": "cold_start_01",
+  "error": "RuntimeError: Baseline display differs: expected 0, got 1",
+  "first_pid": 14056,
+  "second_pid": null
+}

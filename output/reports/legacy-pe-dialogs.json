@@ -1,0 +1,3066 @@
+{
+  "schema_version": 1,
+  "source": "D:/GIT/mmc3/references/legacy_modifier/SRW2_patched.exe",
+  "source_sha256": "FF1C1C5799FDB8F34DF355D761B382C6946CDADC6810772862947E892E8B4C27",
+  "scope_note": "只读解析参考 EXE 的 RT_DIALOG；动态创建窗口仍以运行时控件树为准。",
+  "counts": {
+    "dialog_resources": 17,
+    "parse_failures": 0,
+    "declared_controls": 184
+  },
+  "failures": [],
+  "dialogs": [
+    {
+      "extended": false,
+      "title": "请输入：",
+      "class": "",
+      "menu": "",
+      "rect": {
+        "x": 0,
+        "y": 0,
+        "cx": 252,
+        "cy": 92
+      },
+      "style": "0x80C808C0",
+      "ex_style": "0x00000000",
+      "help_id": 0,
+      "font": {
+        "point_size": 9,
+        "weight": 0,
+        "italic": 0,
+        "charset": 0,
+        "face": "宋体"
+      },
+      "declared_control_count": 6,
+      "controls": [
+        {
+          "control_id": 65535,
+          "class": "Static",
+          "title": "",
+          "rect": {
+            "x": 7,
+            "y": 7,
+            "cx": 238,
+            "cy": 35
+          },
+          "style": "0x50021000",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 1128,
+          "class": "Static",
+          "title": "",
+          "rect": {
+            "x": 12,
+            "y": 11,
+            "cx": 229,
+            "cy": 27
+          },
+          "style": "0x50020000",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 1001,
+          "class": "Edit",
+          "title": "",
+          "rect": {
+            "x": 7,
+            "y": 45,
+            "cx": 238,
+            "cy": 12
+          },
+          "style": "0x50810080",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 1002,
+          "class": "Edit",
+          "title": "",
+          "rect": {
+            "x": 7,
+            "y": 45,
+            "cx": 238,
+            "cy": 12
+          },
+          "style": "0x508100A0",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 1,
+          "class": "Button",
+          "title": "确认输入(&O)",
+          "rect": {
+            "x": 63,
+            "y": 66,
+            "cx": 55,
+            "cy": 19
+          },
+          "style": "0x50010001",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 2,
+          "class": "Button",
+          "title": "取消(&C)",
+          "rect": {
+            "x": 134,
+            "y": 66,
+            "cx": 55,
+            "cy": 19
+          },
+          "style": "0x50010000",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        }
+      ],
+      "resource": "1037",
+      "language": 2052,
+      "size": 234
+    },
+    {
+      "extended": false,
+      "title": "打印设置对话框",
+      "class": "",
+      "menu": "",
+      "rect": {
+        "x": 0,
+        "y": 0,
+        "cx": 271,
+        "cy": 271
+      },
+      "style": "0x80C808C0",
+      "ex_style": "0x00000000",
+      "help_id": 0,
+      "font": {
+        "point_size": 9,
+        "weight": 0,
+        "italic": 0,
+        "charset": 0,
+        "face": "宋体"
+      },
+      "declared_control_count": 54,
+      "controls": [
+        {
+          "control_id": 65535,
+          "class": "Static",
+          "title": "打印机:",
+          "rect": {
+            "x": 8,
+            "y": 12,
+            "cx": 34,
+            "cy": 8
+          },
+          "style": "0x50020000",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 1087,
+          "class": "ComboBox",
+          "title": "",
+          "rect": {
+            "x": 44,
+            "y": 9,
+            "cx": 176,
+            "cy": 110
+          },
+          "style": "0x50210003",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 1088,
+          "class": "Button",
+          "title": "设置(&S)",
+          "rect": {
+            "x": 224,
+            "y": 7,
+            "cx": 38,
+            "cy": 16
+          },
+          "style": "0x50010000",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 1089,
+          "class": "Button",
+          "title": "打印到文件:",
+          "rect": {
+            "x": 9,
+            "y": 31,
+            "cx": 60,
+            "cy": 8
+          },
+          "style": "0x50010003",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 1090,
+          "class": "Edit",
+          "title": "",
+          "rect": {
+            "x": 72,
+            "y": 29,
+            "cx": 171,
+            "cy": 12
+          },
+          "style": "0x50810080",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 1092,
+          "class": "Button",
+          "title": "...",
+          "rect": {
+            "x": 245,
+            "y": 28,
+            "cx": 17,
+            "cy": 13
+          },
+          "style": "0x50010000",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 65535,
+          "class": "Button",
+          "title": "页边距(单位:毫米)",
+          "rect": {
+            "x": 9,
+            "y": 49,
+            "cx": 117,
+            "cy": 77
+          },
+          "style": "0x50000007",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 65535,
+          "class": "Static",
+          "title": "上:",
+          "rect": {
+            "x": 28,
+            "y": 66,
+            "cx": 21,
+            "cy": 8
+          },
+          "style": "0x50020000",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 1001,
+          "class": "Edit",
+          "title": "",
+          "rect": {
+            "x": 52,
+            "y": 64,
+            "cx": 51,
+            "cy": 12
+          },
+          "style": "0x50810080",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 1095,
+          "class": "msctls_updown32",
+          "title": "Spin1",
+          "rect": {
+            "x": 104,
+            "y": 62,
+            "cx": 12,
+            "cy": 16
+          },
+          "style": "0x50000034",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 65535,
+          "class": "Static",
+          "title": "下:",
+          "rect": {
+            "x": 28,
+            "y": 79,
+            "cx": 21,
+            "cy": 8
+          },
+          "style": "0x50020000",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 1002,
+          "class": "Edit",
+          "title": "",
+          "rect": {
+            "x": 52,
+            "y": 77,
+            "cx": 51,
+            "cy": 12
+          },
+          "style": "0x50810080",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 1096,
+          "class": "msctls_updown32",
+          "title": "Spin1",
+          "rect": {
+            "x": 100,
+            "y": 75,
+            "cx": 12,
+            "cy": 16
+          },
+          "style": "0x50000034",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 65535,
+          "class": "Static",
+          "title": "左:",
+          "rect": {
+            "x": 28,
+            "y": 93,
+            "cx": 21,
+            "cy": 8
+          },
+          "style": "0x50020000",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 1097,
+          "class": "Edit",
+          "title": "",
+          "rect": {
+            "x": 52,
+            "y": 91,
+            "cx": 51,
+            "cy": 12
+          },
+          "style": "0x50810080",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 1098,
+          "class": "msctls_updown32",
+          "title": "Spin1",
+          "rect": {
+            "x": 101,
+            "y": 89,
+            "cx": 12,
+            "cy": 16
+          },
+          "style": "0x50000034",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 65535,
+          "class": "Static",
+          "title": "右:",
+          "rect": {
+            "x": 28,
+            "y": 107,
+            "cx": 21,
+            "cy": 8
+          },
+          "style": "0x50020000",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 1099,
+          "class": "Edit",
+          "title": "",
+          "rect": {
+            "x": 52,
+            "y": 105,
+            "cx": 51,
+            "cy": 12
+          },
+          "style": "0x50810080",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 1100,
+          "class": "msctls_updown32",
+          "title": "Spin1",
+          "rect": {
+            "x": 102,
+            "y": 103,
+            "cx": 12,
+            "cy": 16
+          },
+          "style": "0x50000034",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 65535,
+          "class": "Button",
+          "title": "缩放",
+          "rect": {
+            "x": 143,
+            "y": 49,
+            "cx": 118,
+            "cy": 77
+          },
+          "style": "0x50000007",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 1117,
+          "class": "Button",
+          "title": "缩放到纸宽",
+          "rect": {
+            "x": 153,
+            "y": 65,
+            "cx": 92,
+            "cy": 10
+          },
+          "style": "0x50020009",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 1118,
+          "class": "Button",
+          "title": "如超宽则压缩到纸宽",
+          "rect": {
+            "x": 153,
+            "y": 77,
+            "cx": 95,
+            "cy": 10
+          },
+          "style": "0x50000009",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 1121,
+          "class": "Button",
+          "title": "自定义:",
+          "rect": {
+            "x": 153,
+            "y": 89,
+            "cx": 49,
+            "cy": 10
+          },
+          "style": "0x50000009",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 1115,
+          "class": "Static",
+          "title": "缩放百分比:",
+          "rect": {
+            "x": 165,
+            "y": 103,
+            "cx": 47,
+            "cy": 8
+          },
+          "style": "0x50020000",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 1119,
+          "class": "Edit",
+          "title": "",
+          "rect": {
+            "x": 215,
+            "y": 101,
+            "cx": 39,
+            "cy": 12
+          },
+          "style": "0x50812080",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 1120,
+          "class": "msctls_updown32",
+          "title": "Spin1",
+          "rect": {
+            "x": 247,
+            "y": 99,
+            "cx": 12,
+            "cy": 16
+          },
+          "style": "0x50000034",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 65535,
+          "class": "Button",
+          "title": "打印范围",
+          "rect": {
+            "x": 9,
+            "y": 134,
+            "cx": 135,
+            "cy": 107
+          },
+          "style": "0x50000007",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 65535,
+          "class": "Static",
+          "title": "奇偶页方式:",
+          "rect": {
+            "x": 17,
+            "y": 148,
+            "cx": 48,
+            "cy": 8
+          },
+          "style": "0x50020000",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 1101,
+          "class": "ComboBox",
+          "title": "",
+          "rect": {
+            "x": 69,
+            "y": 146,
+            "cx": 67,
+            "cy": 117
+          },
+          "style": "0x50210003",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 1102,
+          "class": "Button",
+          "title": "打印所有页",
+          "rect": {
+            "x": 19,
+            "y": 166,
+            "cx": 92,
+            "cy": 10
+          },
+          "style": "0x50020009",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 1103,
+          "class": "Button",
+          "title": "打印页范围",
+          "rect": {
+            "x": 19,
+            "y": 178,
+            "cx": 58,
+            "cy": 10
+          },
+          "style": "0x50000009",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 1104,
+          "class": "Button",
+          "title": "打印行范围",
+          "rect": {
+            "x": 82,
+            "y": 178,
+            "cx": 56,
+            "cy": 10
+          },
+          "style": "0x50000009",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 1085,
+          "class": "Static",
+          "title": "起始页号:",
+          "rect": {
+            "x": 31,
+            "y": 194,
+            "cx": 43,
+            "cy": 8
+          },
+          "style": "0x50020000",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 1105,
+          "class": "Edit",
+          "title": "",
+          "rect": {
+            "x": 75,
+            "y": 192,
+            "cx": 46,
+            "cy": 12
+          },
+          "style": "0x50812080",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 1106,
+          "class": "msctls_updown32",
+          "title": "Spin1",
+          "rect": {
+            "x": 123,
+            "y": 190,
+            "cx": 12,
+            "cy": 16
+          },
+          "style": "0x50000034",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 1086,
+          "class": "Static",
+          "title": "结束页号:",
+          "rect": {
+            "x": 31,
+            "y": 208,
+            "cx": 43,
+            "cy": 8
+          },
+          "style": "0x50020000",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 1107,
+          "class": "Edit",
+          "title": "",
+          "rect": {
+            "x": 75,
+            "y": 206,
+            "cx": 46,
+            "cy": 12
+          },
+          "style": "0x50812080",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 1108,
+          "class": "msctls_updown32",
+          "title": "Spin1",
+          "rect": {
+            "x": 123,
+            "y": 204,
+            "cx": 12,
+            "cy": 16
+          },
+          "style": "0x50000034",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 1109,
+          "class": "Button",
+          "title": "打印到结尾",
+          "rect": {
+            "x": 76,
+            "y": 225,
+            "cx": 58,
+            "cy": 8
+          },
+          "style": "0x50010003",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 65535,
+          "class": "Static",
+          "title": "打印份数:",
+          "rect": {
+            "x": 153,
+            "y": 147,
+            "cx": 39,
+            "cy": 8
+          },
+          "style": "0x50020000",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 1091,
+          "class": "Edit",
+          "title": "",
+          "rect": {
+            "x": 211,
+            "y": 145,
+            "cx": 50,
+            "cy": 12
+          },
+          "style": "0x50812080",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 1093,
+          "class": "msctls_updown32",
+          "title": "Spin1",
+          "rect": {
+            "x": 251,
+            "y": 143,
+            "cx": 12,
+            "cy": 16
+          },
+          "style": "0x50000034",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 65535,
+          "class": "Static",
+          "title": "页号位置:",
+          "rect": {
+            "x": 153,
+            "y": 171,
+            "cx": 42,
+            "cy": 8
+          },
+          "style": "0x50020000",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 1110,
+          "class": "ComboBox",
+          "title": "",
+          "rect": {
+            "x": 211,
+            "y": 167,
+            "cx": 50,
+            "cy": 117
+          },
+          "style": "0x50210003",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 65535,
+          "class": "Static",
+          "title": "首页打印页号:",
+          "rect": {
+            "x": 153,
+            "y": 187,
+            "cx": 55,
+            "cy": 8
+          },
+          "style": "0x50020000",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 1111,
+          "class": "Edit",
+          "title": "",
+          "rect": {
+            "x": 211,
+            "y": 185,
+            "cx": 50,
+            "cy": 12
+          },
+          "style": "0x50812080",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 1112,
+          "class": "msctls_updown32",
+          "title": "Spin1",
+          "rect": {
+            "x": 257,
+            "y": 185,
+            "cx": 12,
+            "cy": 16
+          },
+          "style": "0x50000034",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 1012,
+          "class": "Button",
+          "title": "自动重复尾行填充尾页空白",
+          "rect": {
+            "x": 154,
+            "y": 209,
+            "cx": 112,
+            "cy": 8
+          },
+          "style": "0x50010003",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 1094,
+          "class": "Button",
+          "title": "自动添加表格线",
+          "rect": {
+            "x": 154,
+            "y": 223,
+            "cx": 78,
+            "cy": 8
+          },
+          "style": "0x50010003",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 65535,
+          "class": "Static",
+          "title": "每页打印行数(为0自动判断):",
+          "rect": {
+            "x": 9,
+            "y": 251,
+            "cx": 109,
+            "cy": 8
+          },
+          "style": "0x50020000",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 1113,
+          "class": "Edit",
+          "title": "",
+          "rect": {
+            "x": 119,
+            "y": 249,
+            "cx": 34,
+            "cy": 12
+          },
+          "style": "0x50812080",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 1114,
+          "class": "msctls_updown32",
+          "title": "Spin1",
+          "rect": {
+            "x": 149,
+            "y": 245,
+            "cx": 11,
+            "cy": 16
+          },
+          "style": "0x50000034",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 1,
+          "class": "Button",
+          "title": "确认(&O)",
+          "rect": {
+            "x": 163,
+            "y": 246,
+            "cx": 47,
+            "cy": 16
+          },
+          "style": "0x50010001",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 2,
+          "class": "Button",
+          "title": "取消(&C)",
+          "rect": {
+            "x": 217,
+            "y": 246,
+            "cx": 47,
+            "cy": 16
+          },
+          "style": "0x50010000",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        }
+      ],
+      "resource": "1084",
+      "language": 2052,
+      "size": 2222
+    },
+    {
+      "extended": false,
+      "title": "页面跳转:",
+      "class": "",
+      "menu": "",
+      "rect": {
+        "x": 0,
+        "y": 0,
+        "cx": 187,
+        "cy": 83
+      },
+      "style": "0x80C808C0",
+      "ex_style": "0x00000000",
+      "help_id": 0,
+      "font": {
+        "point_size": 9,
+        "weight": 0,
+        "italic": 0,
+        "charset": 0,
+        "face": "宋体"
+      },
+      "declared_control_count": 4,
+      "controls": [
+        {
+          "control_id": 1128,
+          "class": "Static",
+          "title": "#",
+          "rect": {
+            "x": 7,
+            "y": 16,
+            "cx": 113,
+            "cy": 12
+          },
+          "style": "0x50020200",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 1001,
+          "class": "Edit",
+          "title": "",
+          "rect": {
+            "x": 126,
+            "y": 16,
+            "cx": 39,
+            "cy": 12
+          },
+          "style": "0x50812080",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 1,
+          "class": "Button",
+          "title": "确定(&O)",
+          "rect": {
+            "x": 67,
+            "y": 58,
+            "cx": 50,
+            "cy": 18
+          },
+          "style": "0x50010001",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 2,
+          "class": "Button",
+          "title": "取消(&C)",
+          "rect": {
+            "x": 130,
+            "y": 58,
+            "cx": 50,
+            "cy": 18
+          },
+          "style": "0x50010000",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        }
+      ],
+      "resource": "1124",
+      "language": 2052,
+      "size": 178
+    },
+    {
+      "extended": false,
+      "title": "正在打印，请稍候...",
+      "class": "",
+      "menu": "",
+      "rect": {
+        "x": 0,
+        "y": 0,
+        "cx": 224,
+        "cy": 109
+      },
+      "style": "0x80C808C0",
+      "ex_style": "0x00000000",
+      "help_id": 0,
+      "font": {
+        "point_size": 9,
+        "weight": 0,
+        "italic": 0,
+        "charset": 0,
+        "face": "宋体"
+      },
+      "declared_control_count": 3,
+      "controls": [
+        {
+          "control_id": 2,
+          "class": "Button",
+          "title": "中止打印(&C)",
+          "rect": {
+            "x": 82,
+            "y": 77,
+            "cx": 60,
+            "cy": 21
+          },
+          "style": "0x50010000",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 1135,
+          "class": "msctls_progress32",
+          "title": "Progress1",
+          "rect": {
+            "x": 11,
+            "y": 39,
+            "cx": 200,
+            "cy": 18
+          },
+          "style": "0x50800000",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 1128,
+          "class": "Static",
+          "title": "#",
+          "rect": {
+            "x": 11,
+            "y": 14,
+            "cx": 200,
+            "cy": 14
+          },
+          "style": "0x50020201",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        }
+      ],
+      "resource": "1134",
+      "language": 2052,
+      "size": 204
+    },
+    {
+      "extended": false,
+      "title": "请输入：",
+      "class": "",
+      "menu": "",
+      "rect": {
+        "x": 0,
+        "y": 0,
+        "cx": 214,
+        "cy": 56
+      },
+      "style": "0x80C808C0",
+      "ex_style": "0x00000000",
+      "help_id": 0,
+      "font": {
+        "point_size": 9,
+        "weight": 0,
+        "italic": 0,
+        "charset": 0,
+        "face": "宋体"
+      },
+      "declared_control_count": 4,
+      "controls": [
+        {
+          "control_id": 1001,
+          "class": "Edit",
+          "title": "",
+          "rect": {
+            "x": 7,
+            "y": 7,
+            "cx": 200,
+            "cy": 12
+          },
+          "style": "0x50810080",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 1002,
+          "class": "Edit",
+          "title": "",
+          "rect": {
+            "x": 7,
+            "y": 7,
+            "cx": 200,
+            "cy": 12
+          },
+          "style": "0x508100A0",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 1,
+          "class": "Button",
+          "title": "确认输入(&O)",
+          "rect": {
+            "x": 82,
+            "y": 30,
+            "cx": 55,
+            "cy": 19
+          },
+          "style": "0x50010001",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 2,
+          "class": "Button",
+          "title": "取消(&C)",
+          "rect": {
+            "x": 151,
+            "y": 30,
+            "cx": 55,
+            "cy": 19
+          },
+          "style": "0x50010000",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        }
+      ],
+      "resource": "1150",
+      "language": 2052,
+      "size": 178
+    },
+    {
+      "extended": false,
+      "title": "",
+      "class": "",
+      "menu": 1039,
+      "rect": {
+        "x": 0,
+        "y": 0,
+        "cx": 243,
+        "cy": 179
+      },
+      "style": "0x80C808C0",
+      "ex_style": "0x00000000",
+      "help_id": 0,
+      "font": {
+        "point_size": 9,
+        "weight": 0,
+        "italic": 0,
+        "charset": 0,
+        "face": "宋体"
+      },
+      "declared_control_count": 4,
+      "controls": [
+        {
+          "control_id": 1078,
+          "class": "Static",
+          "title": "",
+          "rect": {
+            "x": 4,
+            "y": 7,
+            "cx": 50,
+            "cy": 166
+          },
+          "style": "0x50001000",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 1001,
+          "class": "Edit",
+          "title": "",
+          "rect": {
+            "x": 80,
+            "y": 41,
+            "cx": 6,
+            "cy": 12
+          },
+          "style": "0x40810080",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 1012,
+          "class": "Button",
+          "title": "",
+          "rect": {
+            "x": 82,
+            "y": 63,
+            "cx": 10,
+            "cy": 10
+          },
+          "style": "0x40010003",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 1013,
+          "class": "Button",
+          "title": "...",
+          "rect": {
+            "x": 79,
+            "y": 79,
+            "cx": 26,
+            "cy": 12
+          },
+          "style": "0x40010F00",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        }
+      ],
+      "resource": "150",
+      "language": 2052,
+      "size": 152
+    },
+    {
+      "extended": false,
+      "title": "",
+      "class": "",
+      "menu": "",
+      "rect": {
+        "x": 0,
+        "y": 0,
+        "cx": 292,
+        "cy": 230
+      },
+      "style": "0x80C808C0",
+      "ex_style": "0x00000000",
+      "help_id": 0,
+      "font": {
+        "point_size": 9,
+        "weight": 0,
+        "italic": 0,
+        "charset": 0,
+        "face": "宋体"
+      },
+      "declared_control_count": 9,
+      "controls": [
+        {
+          "control_id": 1002,
+          "class": "Edit",
+          "title": "",
+          "rect": {
+            "x": 7,
+            "y": 7,
+            "cx": 278,
+            "cy": 187
+          },
+          "style": "0x40A11804",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 1001,
+          "class": "Edit",
+          "title": "",
+          "rect": {
+            "x": 7,
+            "y": 7,
+            "cx": 278,
+            "cy": 187
+          },
+          "style": "0x40A11004",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 5,
+          "class": "Button",
+          "title": "演播(&P)",
+          "rect": {
+            "x": 83,
+            "y": 178,
+            "cx": 51,
+            "cy": 19
+          },
+          "style": "0x40010000",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 7,
+          "class": "Button",
+          "title": "停止演播(&T)",
+          "rect": {
+            "x": 156,
+            "y": 178,
+            "cx": 51,
+            "cy": 19
+          },
+          "style": "0x48010000",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 6,
+          "class": "Button",
+          "title": "清空(&E)",
+          "rect": {
+            "x": 7,
+            "y": 204,
+            "cx": 40,
+            "cy": 19
+          },
+          "style": "0x50010000",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 3,
+          "class": "Button",
+          "title": "导入(&I)",
+          "rect": {
+            "x": 51,
+            "y": 204,
+            "cx": 40,
+            "cy": 19
+          },
+          "style": "0x50010000",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 4,
+          "class": "Button",
+          "title": "导出(&O)",
+          "rect": {
+            "x": 95,
+            "y": 204,
+            "cx": 40,
+            "cy": 19
+          },
+          "style": "0x50010000",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 1,
+          "class": "Button",
+          "title": "保存退出(&S)",
+          "rect": {
+            "x": 145,
+            "y": 204,
+            "cx": 65,
+            "cy": 19
+          },
+          "style": "0x50010001",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 2,
+          "class": "Button",
+          "title": "取消退出(&C)",
+          "rect": {
+            "x": 220,
+            "y": 204,
+            "cx": 65,
+            "cy": 19
+          },
+          "style": "0x50010000",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        }
+      ],
+      "resource": "286",
+      "language": 2052,
+      "size": 378
+    },
+    {
+      "extended": false,
+      "title": "新建",
+      "class": "",
+      "menu": "",
+      "rect": {
+        "x": 9,
+        "y": 26,
+        "cx": 183,
+        "cy": 70
+      },
+      "style": "0x80C800C4",
+      "ex_style": "0x00000000",
+      "help_id": 0,
+      "font": {
+        "point_size": 8,
+        "weight": 0,
+        "italic": 0,
+        "charset": 0,
+        "face": "MS Shell Dlg"
+      },
+      "declared_control_count": 5,
+      "controls": [
+        {
+          "control_id": 65535,
+          "class": "Static",
+          "title": "新建(&N)",
+          "rect": {
+            "x": 6,
+            "y": 5,
+            "cx": 123,
+            "cy": 8
+          },
+          "style": "0x50000000",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 100,
+          "class": "ListBox",
+          "title": "",
+          "rect": {
+            "x": 6,
+            "y": 15,
+            "cx": 125,
+            "cy": 49
+          },
+          "style": "0x50A10001",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 1,
+          "class": "Button",
+          "title": "确定",
+          "rect": {
+            "x": 137,
+            "y": 6,
+            "cx": 40,
+            "cy": 14
+          },
+          "style": "0x50010001",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 2,
+          "class": "Button",
+          "title": "取消",
+          "rect": {
+            "x": 137,
+            "y": 23,
+            "cx": 40,
+            "cy": 14
+          },
+          "style": "0x50010000",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 57670,
+          "class": "Button",
+          "title": "帮助(&H)",
+          "rect": {
+            "x": 137,
+            "y": 43,
+            "cx": 40,
+            "cy": 14
+          },
+          "style": "0x50010000",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        }
+      ],
+      "resource": "30721",
+      "language": 2052,
+      "size": 226
+    },
+    {
+      "extended": false,
+      "title": "正在进行打印，请稍候 ......",
+      "class": "",
+      "menu": "",
+      "rect": {
+        "x": 6,
+        "y": 18,
+        "cx": 244,
+        "cy": 114
+      },
+      "style": "0x80C008C4",
+      "ex_style": "0x00000000",
+      "help_id": 0,
+      "font": {
+        "point_size": 9,
+        "weight": 0,
+        "italic": 0,
+        "charset": 0,
+        "face": "宋体"
+      },
+      "declared_control_count": 10,
+      "controls": [
+        {
+          "control_id": 65535,
+          "class": "Static",
+          "title": "打印作业名：",
+          "rect": {
+            "x": 5,
+            "y": 9,
+            "cx": 88,
+            "cy": 8
+          },
+          "style": "0x50020000",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 2,
+          "class": "Button",
+          "title": "中止打印",
+          "rect": {
+            "x": 75,
+            "y": 91,
+            "cx": 55,
+            "cy": 16
+          },
+          "style": "0x50010000",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 65535,
+          "class": "Static",
+          "title": "打印目的：",
+          "rect": {
+            "x": 5,
+            "y": 22,
+            "cx": 88,
+            "cy": 8
+          },
+          "style": "0x50020000",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 65535,
+          "class": "Static",
+          "title": "已打印份数：",
+          "rect": {
+            "x": 5,
+            "y": 60,
+            "cx": 88,
+            "cy": 8
+          },
+          "style": "0x50020000",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 65535,
+          "class": "Static",
+          "title": "当前页号：",
+          "rect": {
+            "x": 5,
+            "y": 74,
+            "cx": 88,
+            "cy": 8
+          },
+          "style": "0x50020000",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 1008,
+          "class": "Static",
+          "title": "#",
+          "rect": {
+            "x": 100,
+            "y": 9,
+            "cx": 139,
+            "cy": 8
+          },
+          "style": "0x50020000",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 65535,
+          "class": "Static",
+          "title": "",
+          "rect": {
+            "x": 5,
+            "y": 52,
+            "cx": 234,
+            "cy": 1
+          },
+          "style": "0x50000007",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 1009,
+          "class": "Static",
+          "title": "#",
+          "rect": {
+            "x": 5,
+            "y": 35,
+            "cx": 234,
+            "cy": 8
+          },
+          "style": "0x50020001",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 1010,
+          "class": "Static",
+          "title": "#",
+          "rect": {
+            "x": 100,
+            "y": 60,
+            "cx": 139,
+            "cy": 8
+          },
+          "style": "0x50020000",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 1011,
+          "class": "Static",
+          "title": "#",
+          "rect": {
+            "x": 100,
+            "y": 74,
+            "cx": 139,
+            "cy": 8
+          },
+          "style": "0x50020000",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        }
+      ],
+      "resource": "30722",
+      "language": 2052,
+      "size": 396
+    },
+    {
+      "extended": false,
+      "title": "密码输入",
+      "class": "",
+      "menu": "",
+      "rect": {
+        "x": 0,
+        "y": 0,
+        "cx": 222,
+        "cy": 80
+      },
+      "style": "0x80C808C0",
+      "ex_style": "0x00000000",
+      "help_id": 0,
+      "font": {
+        "point_size": 9,
+        "weight": 0,
+        "italic": 0,
+        "charset": 0,
+        "face": "宋体"
+      },
+      "declared_control_count": 6,
+      "controls": [
+        {
+          "control_id": 65535,
+          "class": "Static",
+          "title": "请输入数据库访问密码：",
+          "rect": {
+            "x": 7,
+            "y": 15,
+            "cx": 94,
+            "cy": 8
+          },
+          "style": "0x50020000",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 65535,
+          "class": "Static",
+          "title": 1151,
+          "rect": {
+            "x": 191,
+            "y": 8,
+            "cx": 20,
+            "cy": 20
+          },
+          "style": "0x50000803",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 1017,
+          "class": "Static",
+          "title": "",
+          "rect": {
+            "x": 7,
+            "y": 36,
+            "cx": 208,
+            "cy": 8
+          },
+          "style": "0x50020000",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 1001,
+          "class": "Edit",
+          "title": "",
+          "rect": {
+            "x": 107,
+            "y": 13,
+            "cx": 78,
+            "cy": 12
+          },
+          "style": "0x508100A0",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 1,
+          "class": "Button",
+          "title": "确认(&O)",
+          "rect": {
+            "x": 104,
+            "y": 56,
+            "cx": 50,
+            "cy": 17
+          },
+          "style": "0x50010001",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 2,
+          "class": "Button",
+          "title": "取消(&C)",
+          "rect": {
+            "x": 165,
+            "y": 56,
+            "cx": 50,
+            "cy": 17
+          },
+          "style": "0x50010000",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        }
+      ],
+      "resource": "554",
+      "language": 2052,
+      "size": 250
+    },
+    {
+      "extended": false,
+      "title": "关于递归视图制作工具",
+      "class": "",
+      "menu": "",
+      "rect": {
+        "x": 0,
+        "y": 0,
+        "cx": 235,
+        "cy": 68
+      },
+      "style": "0x80C800C0",
+      "ex_style": "0x00000000",
+      "help_id": 0,
+      "font": {
+        "point_size": 9,
+        "weight": 0,
+        "italic": 0,
+        "charset": 0,
+        "face": "宋体"
+      },
+      "declared_control_count": 3,
+      "controls": [
+        {
+          "control_id": 65535,
+          "class": "Static",
+          "title": "递归视图制作工具 1.0 版",
+          "rect": {
+            "x": 7,
+            "y": 10,
+            "cx": 152,
+            "cy": 8
+          },
+          "style": "0x50020080",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 65535,
+          "class": "Static",
+          "title": "大连大有吴涛易语言软件开发有限公司 版权所有 (C) 2004",
+          "rect": {
+            "x": 7,
+            "y": 25,
+            "cx": 221,
+            "cy": 8
+          },
+          "style": "0x50020000",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 1,
+          "class": "Button",
+          "title": "确定",
+          "rect": {
+            "x": 178,
+            "y": 47,
+            "cx": 50,
+            "cy": 14
+          },
+          "style": "0x50030001",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        }
+      ],
+      "resource": "FIGURES_IDD_ABOUTBOX",
+      "language": 2052,
+      "size": 226
+    },
+    {
+      "extended": false,
+      "title": "设置“图形窗口.文档内容”",
+      "class": "",
+      "menu": "",
+      "rect": {
+        "x": 0,
+        "y": 0,
+        "cx": 429,
+        "cy": 295
+      },
+      "style": "0x80C800C0",
+      "ex_style": "0x00000000",
+      "help_id": 0,
+      "font": {
+        "point_size": 9,
+        "weight": 0,
+        "italic": 0,
+        "charset": 0,
+        "face": "宋体"
+      },
+      "declared_control_count": 5,
+      "controls": [
+        {
+          "control_id": 1007,
+          "class": "Static",
+          "title": "Static",
+          "rect": {
+            "x": 0,
+            "y": 0,
+            "cx": 105,
+            "cy": 275
+          },
+          "style": "0x50820000",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 1008,
+          "class": "Static",
+          "title": "Static",
+          "rect": {
+            "x": 105,
+            "y": 4,
+            "cx": 320,
+            "cy": 269
+          },
+          "style": "0x50820000",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 1009,
+          "class": "Button",
+          "title": "视图管理...",
+          "rect": {
+            "x": 3,
+            "y": 276,
+            "cx": 65,
+            "cy": 16
+          },
+          "style": "0x50010000",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 1,
+          "class": "Button",
+          "title": "确定(&O)",
+          "rect": {
+            "x": 335,
+            "y": 276,
+            "cx": 47,
+            "cy": 16
+          },
+          "style": "0x50010000",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 2,
+          "class": "Button",
+          "title": "取消",
+          "rect": {
+            "x": 387,
+            "y": 276,
+            "cx": 37,
+            "cy": 16
+          },
+          "style": "0x50010000",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        }
+      ],
+      "resource": "FIGURES_IDD_DLG_VGC_DESIGN",
+      "language": 2052,
+      "size": 250
+    },
+    {
+      "extended": false,
+      "title": "",
+      "class": "",
+      "menu": "",
+      "rect": {
+        "x": 0,
+        "y": 0,
+        "cx": 357,
+        "cy": 300
+      },
+      "style": "0x80C808C0",
+      "ex_style": "0x00000000",
+      "help_id": 0,
+      "font": {
+        "point_size": 9,
+        "weight": 0,
+        "italic": 0,
+        "charset": 0,
+        "face": "宋体"
+      },
+      "declared_control_count": 54,
+      "controls": [
+        {
+          "control_id": 1010,
+          "class": "Static",
+          "title": "欲跳转到的视图名称：",
+          "rect": {
+            "x": 9,
+            "y": 13,
+            "cx": 88,
+            "cy": 8
+          },
+          "style": "0x50020000",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 1003,
+          "class": "ComboBox",
+          "title": "",
+          "rect": {
+            "x": 99,
+            "y": 10,
+            "cx": 151,
+            "cy": 192
+          },
+          "style": "0x50210002",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 127,
+          "class": "Static",
+          "title": "水平位置:",
+          "rect": {
+            "x": 22,
+            "y": 52,
+            "cx": 42,
+            "cy": 8
+          },
+          "style": "0x50020000",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 128,
+          "class": "Edit",
+          "title": "",
+          "rect": {
+            "x": 67,
+            "y": 50,
+            "cx": 63,
+            "cy": 12
+          },
+          "style": "0x50810080",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 129,
+          "class": "msctls_updown32",
+          "title": "Spin1",
+          "rect": {
+            "x": 132,
+            "y": 49,
+            "cx": 11,
+            "cy": 14
+          },
+          "style": "0x50000034",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 130,
+          "class": "Static",
+          "title": "垂直位置:",
+          "rect": {
+            "x": 145,
+            "y": 52,
+            "cx": 42,
+            "cy": 8
+          },
+          "style": "0x50020000",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 131,
+          "class": "Edit",
+          "title": "",
+          "rect": {
+            "x": 191,
+            "y": 50,
+            "cx": 63,
+            "cy": 12
+          },
+          "style": "0x50810080",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 132,
+          "class": "msctls_updown32",
+          "title": "Spin1",
+          "rect": {
+            "x": 257,
+            "y": 49,
+            "cx": 11,
+            "cy": 14
+          },
+          "style": "0x50000034",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 133,
+          "class": "Static",
+          "title": "宽度:",
+          "rect": {
+            "x": 22,
+            "y": 71,
+            "cx": 42,
+            "cy": 8
+          },
+          "style": "0x50020000",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 134,
+          "class": "Edit",
+          "title": "",
+          "rect": {
+            "x": 67,
+            "y": 69,
+            "cx": 63,
+            "cy": 12
+          },
+          "style": "0x50810080",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 135,
+          "class": "msctls_updown32",
+          "title": "Spin1",
+          "rect": {
+            "x": 132,
+            "y": 69,
+            "cx": 11,
+            "cy": 14
+          },
+          "style": "0x50000034",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 136,
+          "class": "Static",
+          "title": "高度:",
+          "rect": {
+            "x": 145,
+            "y": 71,
+            "cx": 42,
+            "cy": 8
+          },
+          "style": "0x50020000",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 137,
+          "class": "Edit",
+          "title": "",
+          "rect": {
+            "x": 191,
+            "y": 69,
+            "cx": 63,
+            "cy": 12
+          },
+          "style": "0x50810080",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 138,
+          "class": "msctls_updown32",
+          "title": "Spin1",
+          "rect": {
+            "x": 257,
+            "y": 69,
+            "cx": 11,
+            "cy": 14
+          },
+          "style": "0x50000034",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 139,
+          "class": "Static",
+          "title": "旋转角度:",
+          "rect": {
+            "x": 22,
+            "y": 90,
+            "cx": 42,
+            "cy": 8
+          },
+          "style": "0x50020000",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 140,
+          "class": "Edit",
+          "title": "",
+          "rect": {
+            "x": 67,
+            "y": 88,
+            "cx": 63,
+            "cy": 12
+          },
+          "style": "0x50810080",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 141,
+          "class": "msctls_updown32",
+          "title": "Spin1",
+          "rect": {
+            "x": 132,
+            "y": 87,
+            "cx": 11,
+            "cy": 14
+          },
+          "style": "0x50000034",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 142,
+          "class": "Static",
+          "title": "文本:",
+          "rect": {
+            "x": 22,
+            "y": 111,
+            "cx": 42,
+            "cy": 8
+          },
+          "style": "0x50020000",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 143,
+          "class": "Button",
+          "title": "字体...(&T)",
+          "rect": {
+            "x": 68,
+            "y": 108,
+            "cx": 63,
+            "cy": 14
+          },
+          "style": "0x50010000",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 144,
+          "class": "Static",
+          "title": "水平对齐:",
+          "rect": {
+            "x": 145,
+            "y": 111,
+            "cx": 42,
+            "cy": 8
+          },
+          "style": "0x50020000",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 145,
+          "class": "ComboBox",
+          "title": "",
+          "rect": {
+            "x": 191,
+            "y": 108,
+            "cx": 45,
+            "cy": 66
+          },
+          "style": "0x50210003",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 146,
+          "class": "Static",
+          "title": "垂直对齐:",
+          "rect": {
+            "x": 247,
+            "y": 111,
+            "cx": 42,
+            "cy": 8
+          },
+          "style": "0x50020000",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 147,
+          "class": "ComboBox",
+          "title": "",
+          "rect": {
+            "x": 293,
+            "y": 108,
+            "cx": 45,
+            "cy": 66
+          },
+          "style": "0x50210003",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 101,
+          "class": "Static",
+          "title": "阴影方向:",
+          "rect": {
+            "x": 22,
+            "y": 170,
+            "cx": 42,
+            "cy": 8
+          },
+          "style": "0x50020000",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 102,
+          "class": "ComboBox",
+          "title": "",
+          "rect": {
+            "x": 68,
+            "y": 168,
+            "cx": 63,
+            "cy": 100
+          },
+          "style": "0x50210003",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 103,
+          "class": "Static",
+          "title": "颜色:",
+          "rect": {
+            "x": 141,
+            "y": 170,
+            "cx": 27,
+            "cy": 8
+          },
+          "style": "0x50020000",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 104,
+          "class": "Button",
+          "title": "",
+          "rect": {
+            "x": 170,
+            "y": 166,
+            "cx": 63,
+            "cy": 16
+          },
+          "style": "0x5001000B",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 105,
+          "class": "Static",
+          "title": "宽度:",
+          "rect": {
+            "x": 266,
+            "y": 170,
+            "cx": 25,
+            "cy": 8
+          },
+          "style": "0x50020000",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 106,
+          "class": "Edit",
+          "title": "",
+          "rect": {
+            "x": 295,
+            "y": 168,
+            "cx": 43,
+            "cy": 12
+          },
+          "style": "0x50810080",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 107,
+          "class": "msctls_updown32",
+          "title": "Spin1",
+          "rect": {
+            "x": 346,
+            "y": 167,
+            "cx": 11,
+            "cy": 14
+          },
+          "style": "0x50000034",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 108,
+          "class": "Static",
+          "title": "线条颜色:",
+          "rect": {
+            "x": 22,
+            "y": 196,
+            "cx": 42,
+            "cy": 8
+          },
+          "style": "0x50020000",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 109,
+          "class": "Button",
+          "title": "",
+          "rect": {
+            "x": 68,
+            "y": 190,
+            "cx": 63,
+            "cy": 16
+          },
+          "style": "0x5001000B",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 110,
+          "class": "Static",
+          "title": "类型:",
+          "rect": {
+            "x": 141,
+            "y": 194,
+            "cx": 27,
+            "cy": 8
+          },
+          "style": "0x50020000",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 111,
+          "class": "ComboBox",
+          "title": "",
+          "rect": {
+            "x": 170,
+            "y": 190,
+            "cx": 90,
+            "cy": 150
+          },
+          "style": "0x50210213",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 112,
+          "class": "Static",
+          "title": "宽度:",
+          "rect": {
+            "x": 266,
+            "y": 194,
+            "cx": 25,
+            "cy": 8
+          },
+          "style": "0x50020000",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 113,
+          "class": "Edit",
+          "title": "",
+          "rect": {
+            "x": 295,
+            "y": 191,
+            "cx": 43,
+            "cy": 12
+          },
+          "style": "0x50810080",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 114,
+          "class": "msctls_updown32",
+          "title": "Spin1",
+          "rect": {
+            "x": 346,
+            "y": 189,
+            "cx": 11,
+            "cy": 14
+          },
+          "style": "0x50000034",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 115,
+          "class": "Static",
+          "title": "填充风格:",
+          "rect": {
+            "x": 22,
+            "y": 217,
+            "cx": 42,
+            "cy": 8
+          },
+          "style": "0x50020000",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 116,
+          "class": "ComboBox",
+          "title": "",
+          "rect": {
+            "x": 68,
+            "y": 215,
+            "cx": 63,
+            "cy": 150
+          },
+          "style": "0x50210003",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 123,
+          "class": "Static",
+          "title": "颜色:",
+          "rect": {
+            "x": 141,
+            "y": 217,
+            "cx": 27,
+            "cy": 8
+          },
+          "style": "0x50020000",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 124,
+          "class": "Button",
+          "title": "",
+          "rect": {
+            "x": 170,
+            "y": 213,
+            "cx": 63,
+            "cy": 16
+          },
+          "style": "0x5001000B",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 125,
+          "class": "Button",
+          "title": "图像设置(&P)",
+          "rect": {
+            "x": 141,
+            "y": 213,
+            "cx": 62,
+            "cy": 16
+          },
+          "style": "0x50010000",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 117,
+          "class": "Static",
+          "title": "前景:",
+          "rect": {
+            "x": 38,
+            "y": 240,
+            "cx": 25,
+            "cy": 8
+          },
+          "style": "0x50020000",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 118,
+          "class": "Button",
+          "title": "",
+          "rect": {
+            "x": 68,
+            "y": 236,
+            "cx": 52,
+            "cy": 16
+          },
+          "style": "0x5001000B",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 119,
+          "class": "Static",
+          "title": "背景:",
+          "rect": {
+            "x": 130,
+            "y": 240,
+            "cx": 25,
+            "cy": 8
+          },
+          "style": "0x50020000",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 120,
+          "class": "Button",
+          "title": "",
+          "rect": {
+            "x": 159,
+            "y": 236,
+            "cx": 52,
+            "cy": 16
+          },
+          "style": "0x5001000B",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 121,
+          "class": "Static",
+          "title": "类型:",
+          "rect": {
+            "x": 222,
+            "y": 240,
+            "cx": 25,
+            "cy": 8
+          },
+          "style": "0x50020000",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 122,
+          "class": "ComboBox",
+          "title": "",
+          "rect": {
+            "x": 248,
+            "y": 236,
+            "cx": 90,
+            "cy": 100
+          },
+          "style": "0x50210213",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 65535,
+          "class": "Button",
+          "title": "位置、文本",
+          "rect": {
+            "x": 9,
+            "y": 31,
+            "cx": 338,
+            "cy": 108
+          },
+          "style": "0x50000007",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 65535,
+          "class": "Button",
+          "title": "阴影、线条、填充",
+          "rect": {
+            "x": 9,
+            "y": 150,
+            "cx": 338,
+            "cy": 111
+          },
+          "style": "0x50000007",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 148,
+          "class": "Static",
+          "title": "放置方法:",
+          "rect": {
+            "x": 219,
+            "y": 217,
+            "cx": 42,
+            "cy": 8
+          },
+          "style": "0x50020000",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 149,
+          "class": "ComboBox",
+          "title": "",
+          "rect": {
+            "x": 265,
+            "y": 214,
+            "cx": 73,
+            "cy": 150
+          },
+          "style": "0x50210003",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 1,
+          "class": "Button",
+          "title": "确定(&O)",
+          "rect": {
+            "x": 224,
+            "y": 269,
+            "cx": 57,
+            "cy": 19
+          },
+          "style": "0x50010001",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 2,
+          "class": "Button",
+          "title": "取消(&C)",
+          "rect": {
+            "x": 290,
+            "y": 269,
+            "cx": 57,
+            "cy": 19
+          },
+          "style": "0x50010000",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        }
+      ],
+      "resource": "FIGURES_IDD_OBJ_DIALOG",
+      "language": 2052,
+      "size": 2010
+    },
+    {
+      "extended": true,
+      "title": "线条端点设定:",
+      "class": "",
+      "menu": "",
+      "rect": {
+        "x": 0,
+        "y": 0,
+        "cx": 206,
+        "cy": 84
+      },
+      "style": "0x80C800C0",
+      "ex_style": "0x00000080",
+      "help_id": 0,
+      "font": {
+        "point_size": 9,
+        "weight": 0,
+        "italic": 0,
+        "charset": 1,
+        "face": "宋体"
+      },
+      "declared_control_count": 6,
+      "controls": [
+        {
+          "control_id": 4294967295,
+          "class": "Static",
+          "title": "端点类型:",
+          "rect": {
+            "x": 7,
+            "y": 11,
+            "cx": 56,
+            "cy": 8
+          },
+          "style": "0x50020000",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 143,
+          "class": "ComboBox",
+          "title": "",
+          "rect": {
+            "x": 71,
+            "y": 9,
+            "cx": 64,
+            "cy": 80
+          },
+          "style": "0x50210213",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 4294967295,
+          "class": "Static",
+          "title": "端点尺寸:",
+          "rect": {
+            "x": 7,
+            "y": 33,
+            "cx": 54,
+            "cy": 8
+          },
+          "style": "0x50020000",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 142,
+          "class": "ComboBox",
+          "title": "",
+          "rect": {
+            "x": 71,
+            "y": 30,
+            "cx": 64,
+            "cy": 80
+          },
+          "style": "0x50210213",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 1,
+          "class": "Button",
+          "title": "确定(&O)",
+          "rect": {
+            "x": 70,
+            "y": 59,
+            "cx": 59,
+            "cy": 16
+          },
+          "style": "0x50010001",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 2,
+          "class": "Button",
+          "title": "取消(&C)",
+          "rect": {
+            "x": 140,
+            "y": 59,
+            "cx": 59,
+            "cy": 16
+          },
+          "style": "0x50010000",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        }
+      ],
+      "resource": "FIGURES_IDD_RICHLINE_DIALOG",
+      "language": 2052,
+      "size": 300
+    },
+    {
+      "extended": true,
+      "title": "请输入文本(Esc键退出):",
+      "class": "",
+      "menu": "",
+      "rect": {
+        "x": 0,
+        "y": 0,
+        "cx": 225,
+        "cy": 56
+      },
+      "style": "0x80C800C0",
+      "ex_style": "0x00000080",
+      "help_id": 0,
+      "font": {
+        "point_size": 9,
+        "weight": 0,
+        "italic": 0,
+        "charset": 1,
+        "face": "宋体"
+      },
+      "declared_control_count": 1,
+      "controls": [
+        {
+          "control_id": 141,
+          "class": "Edit",
+          "title": "",
+          "rect": {
+            "x": 0,
+            "y": 0,
+            "cx": 225,
+            "cy": 56
+          },
+          "style": "0x508110C4",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        }
+      ],
+      "resource": "FIGURES_IDD_TEXTBOXDIALOG",
+      "language": 2052,
+      "size": 104
+    },
+    {
+      "extended": false,
+      "title": "文档管理",
+      "class": "",
+      "menu": "",
+      "rect": {
+        "x": 0,
+        "y": 0,
+        "cx": 249,
+        "cy": 154
+      },
+      "style": "0x80C800C0",
+      "ex_style": "0x00000000",
+      "help_id": 0,
+      "font": {
+        "point_size": 9,
+        "weight": 0,
+        "italic": 0,
+        "charset": 0,
+        "face": "宋体"
+      },
+      "declared_control_count": 7,
+      "controls": [
+        {
+          "control_id": 65535,
+          "class": "Static",
+          "title": "文档名称：",
+          "rect": {
+            "x": 7,
+            "y": 11,
+            "cx": 48,
+            "cy": 8
+          },
+          "style": "0x50020000",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 141,
+          "class": "Edit",
+          "title": "",
+          "rect": {
+            "x": 61,
+            "y": 9,
+            "cx": 118,
+            "cy": 12
+          },
+          "style": "0x50810080",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 1000,
+          "class": "ListBox",
+          "title": "",
+          "rect": {
+            "x": 7,
+            "y": 29,
+            "cx": 172,
+            "cy": 112
+          },
+          "style": "0x50A10101",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 3,
+          "class": "Button",
+          "title": "添加(&A)",
+          "rect": {
+            "x": 192,
+            "y": 29,
+            "cx": 50,
+            "cy": 18
+          },
+          "style": "0x50010000",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 4,
+          "class": "Button",
+          "title": "删除(&D)",
+          "rect": {
+            "x": 192,
+            "y": 57,
+            "cx": 50,
+            "cy": 18
+          },
+          "style": "0x50010000",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 1,
+          "class": "Button",
+          "title": "跳转(&G)",
+          "rect": {
+            "x": 192,
+            "y": 92,
+            "cx": 50,
+            "cy": 18
+          },
+          "style": "0x50010001",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 2,
+          "class": "Button",
+          "title": "关闭(&C)",
+          "rect": {
+            "x": 192,
+            "y": 123,
+            "cx": 50,
+            "cy": 18
+          },
+          "style": "0x50010000",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        }
+      ],
+      "resource": "FIGURES_IDD_VIEW_DLG",
+      "language": 2052,
+      "size": 290
+    },
+    {
+      "extended": false,
+      "title": "",
+      "class": "",
+      "menu": "",
+      "rect": {
+        "x": 0,
+        "y": 0,
+        "cx": 129,
+        "cy": 196
+      },
+      "style": "0x50000040",
+      "ex_style": "0x00000000",
+      "help_id": 0,
+      "font": {
+        "point_size": 9,
+        "weight": 0,
+        "italic": 0,
+        "charset": 0,
+        "face": "宋体"
+      },
+      "declared_control_count": 3,
+      "controls": [
+        {
+          "control_id": 1000,
+          "class": "ListBox",
+          "title": "",
+          "rect": {
+            "x": 7,
+            "y": 23,
+            "cx": 115,
+            "cy": 109
+          },
+          "style": "0x50A10101",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 1001,
+          "class": "ComboBox",
+          "title": "",
+          "rect": {
+            "x": 7,
+            "y": 7,
+            "cx": 115,
+            "cy": 133
+          },
+          "style": "0x50210003",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        },
+        {
+          "control_id": 1002,
+          "class": "Static",
+          "title": "#",
+          "rect": {
+            "x": 7,
+            "y": 148,
+            "cx": 115,
+            "cy": 41
+          },
+          "style": "0x50820000",
+          "ex_style": "0x00000000",
+          "help_id": 0
+        }
+      ],
+      "resource": "FIGURES_IDD_WORK",
+      "language": 2052,
+      "size": 116
+    }
+  ]
+}

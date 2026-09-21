@@ -4,35 +4,43 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 import re
 import subprocess
+import sys
 from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[1]
+SRC_ROOT = ROOT / "src"
+if str(SRC_ROOT) not in sys.path:
+    sys.path.insert(0, str(SRC_ROOT))
 
 from fc_rom_editor_core import apply_ips
 
 
-ROOT = Path(__file__).resolve().parent.parent
-SOURCE_ROM = ROOT / "build" / "nsf" / "新DC.nes"
-OUTPUT_ROM = ROOT / "build" / "DC_FamiStudio_增容双引擎_464K_测试.nes"
-DELIVERY_ROM = ROOT / "FC模拟器" / "DC_kuorong_464K.nes"
-OUTPUT_IPS = ROOT / "patches" / "DC_FamiStudio_增容双引擎_464K_测试.ips"
-CAPACITY_REPORT = ROOT / "build" / "DC_FamiStudio_增容双引擎_464K_容量报告.json"
-BUILD_LOG = ROOT / "build" / "DC_FamiStudio_增容双引擎_464K_构建记录.md"
+SOURCE_ROM = ROOT / "references" / "rom" / "source" / "新DC.nes"
+OUTPUT_ROM = ROOT / "output" / "rom" / "DC_kuorong_464K.nes"
+OUTPUT_IPS = ROOT / "output" / "patches" / "DC_FamiStudio_增容双引擎_464K_测试.ips"
+REPORT_ROOT = ROOT / "output" / "reports" / "rom-build"
+CAPACITY_REPORT = REPORT_ROOT / "DC_FamiStudio_增容双引擎_464K_容量报告.json"
+BUILD_LOG = REPORT_ROOT / "DC_FamiStudio_增容双引擎_464K_构建记录.md"
 
-ANALYSIS = ROOT / "analysis"
-ENGINE_ASM = ANALYSIS / "dc_dual_engine_bank.asm"
-ENGINE_BIN = ANALYSIS / "dc_dual_engine_bank.bin"
-ENGINE_LST = ANALYSIS / "dc_dual_engine_bank.lst"
-TRAMPOLINE_ASM = ANALYSIS / "dc_dual_audio_trampoline.asm"
-TRAMPOLINE_BIN = ANALYSIS / "dc_dual_audio_trampoline.bin"
-TRAMPOLINE_LST = ANALYSIS / "dc_dual_audio_trampoline.lst"
-HANDOFF_ASM = ANALYSIS / "dc_dual_audio_handoff.asm"
-HANDOFF_BIN = ANALYSIS / "dc_dual_audio_handoff.bin"
-HANDOFF_LST = ANALYSIS / "dc_dual_audio_handoff.lst"
+ASM_SOURCE_ROOT = ROOT / "src" / "asm"
+ASM_OUTPUT_ROOT = ROOT / "output" / "build" / "asm"
+ENGINE_ASM = ASM_SOURCE_ROOT / "dc_dual_engine_bank.asm"
+ENGINE_BIN = ASM_OUTPUT_ROOT / "dc_dual_engine_bank.bin"
+ENGINE_LST = ASM_OUTPUT_ROOT / "dc_dual_engine_bank.lst"
+TRAMPOLINE_ASM = ASM_SOURCE_ROOT / "dc_dual_audio_trampoline.asm"
+TRAMPOLINE_BIN = ASM_OUTPUT_ROOT / "dc_dual_audio_trampoline.bin"
+TRAMPOLINE_LST = ASM_OUTPUT_ROOT / "dc_dual_audio_trampoline.lst"
+HANDOFF_ASM = ASM_SOURCE_ROOT / "dc_dual_audio_handoff.asm"
+HANDOFF_BIN = ASM_OUTPUT_ROOT / "dc_dual_audio_handoff.bin"
+HANDOFF_LST = ASM_OUTPUT_ROOT / "dc_dual_audio_handoff.lst"
 ASM6 = (
-    ANALYSIS
-    / "FamiStudio-4.5.3-source"
-    / "FamiStudio-4.5.3"
+    ROOT
+    / "tools"
+    / "vendor"
+    / "famistudio-4.5.3"
     / "Tools"
     / "asm6_fixed.exe"
 )
@@ -60,9 +68,9 @@ FIXED_BANK_C000 = 0x7E
 FIXED_BANK_E000 = 0x7F
 
 MUSIC_BANK_ASM = {
-    ASH_TO_ASH_BANK: ANALYSIS / "three_song_ash_to_ash_data.asm",
-    DARK_KNIGHT_BANK: ANALYSIS / "three_song_dark_knight_data.asm",
-    DARK_PRISON_BANK: ANALYSIS / "three_song_dark_prison_v9_data.asm",
+    ASH_TO_ASH_BANK: ASM_SOURCE_ROOT / "three_song_ash_to_ash_data.asm",
+    DARK_KNIGHT_BANK: ASM_SOURCE_ROOT / "three_song_dark_knight_data.asm",
+    DARK_PRISON_BANK: ASM_SOURCE_ROOT / "three_song_dark_prison_v9_data.asm",
 }
 MUSIC_BANK_NAMES = {
     ASH_TO_ASH_BANK: "Ash to Ash",
@@ -122,8 +130,11 @@ def patched_stock_audio_bank(
 
 
 def assemble(source: Path, output: Path, listing: Path) -> None:
+    output.parent.mkdir(parents=True, exist_ok=True)
+    output_argument = os.path.relpath(output, source.parent)
+    listing_argument = os.path.relpath(listing, source.parent)
     result = subprocess.run(
-        [str(ASM6), source.name, output.name, listing.name],
+        [str(ASM6), source.name, output_argument, listing_argument],
         cwd=source.parent,
         check=False,
         capture_output=True,
@@ -139,7 +150,11 @@ def assemble_payloads() -> None:
         raise FileNotFoundError(f"ASM6 not found: {ASM6}")
     for bank, source in MUSIC_BANK_ASM.items():
         stem = f"dc_dual_music_{bank:02x}"
-        assemble(source, ANALYSIS / f"{stem}.bin", ANALYSIS / f"{stem}.lst")
+        assemble(
+            source,
+            ASM_OUTPUT_ROOT / f"{stem}.bin",
+            ASM_OUTPUT_ROOT / f"{stem}.lst",
+        )
     assemble(ENGINE_ASM, ENGINE_BIN, ENGINE_LST)
     assemble(
         TRAMPOLINE_ASM,
@@ -352,7 +367,7 @@ def validate_source(source: bytes) -> None:
 def load_payloads() -> tuple[dict[int, bytes], bytes, bytes, bytes]:
     music: dict[int, bytes] = {}
     for bank in MUSIC_BANK_ASM:
-        payload = (ANALYSIS / f"dc_dual_music_{bank:02x}.bin").read_bytes()
+        payload = (ASM_OUTPUT_ROOT / f"dc_dual_music_{bank:02x}.bin").read_bytes()
         if len(payload) != PRG_BANK_SIZE:
             raise ValueError(f"Music bank 0x{bank:02X} is not exactly 8 KiB")
         music[bank] = payload
@@ -460,7 +475,7 @@ def payload_layout() -> tuple[dict[int, int], dict[str, int]]:
         DARK_PRISON_BANK: "dark_prison_data_end",
     }
     for bank, label in label_names.items():
-        listing = ANALYSIS / f"dc_dual_music_{bank:02x}.lst"
+        listing = ASM_OUTPUT_ROOT / f"dc_dual_music_{bank:02x}.lst"
         music_used[bank] = label_address(listing, label) - 0x8000
 
     engine_addresses = {
@@ -529,7 +544,7 @@ def write_reports(
         },
         "preservation": {
             "sourceRomOverwritten": False,
-            "derivedRom": str(DELIVERY_ROM.relative_to(ROOT)),
+            "derivedRom": str(OUTPUT_ROM.relative_to(ROOT)),
             "headerChangedOffsets": ["0x4"],
             "stockAudioPatchedInPlace": audio_patched_in_place,
             "oldChrPrgBanksZeroFilled": reclaimed_chr_zero,
@@ -655,7 +670,7 @@ def write_reports(
                 "- 两套引擎不并发更新 APU；切回旧驱动时在同一 NMI 内完成复位和命令重放。",
                 "- IPS 扩容回放：通过。",
                 "",
-                "运行时结果见 `build/DC_FamiStudio_增容双引擎_464K_验证记录.md`。",
+                "运行时结果见 `output/reports/rom-build/DC_FamiStudio_增容双引擎_464K_验证记录.md`。",
             ]
         )
         + "\n",
@@ -693,15 +708,13 @@ def main() -> None:
         raise AssertionError("Expanding IPS round-trip verification failed")
 
     OUTPUT_ROM.parent.mkdir(parents=True, exist_ok=True)
-    DELIVERY_ROM.parent.mkdir(parents=True, exist_ok=True)
     OUTPUT_IPS.parent.mkdir(parents=True, exist_ok=True)
+    REPORT_ROOT.mkdir(parents=True, exist_ok=True)
     OUTPUT_ROM.write_bytes(output)
-    DELIVERY_ROM.write_bytes(output)
     OUTPUT_IPS.write_bytes(ips)
     write_reports(source, output, ips, music, engine, trampoline, handoff)
 
     print(f"ROM: {OUTPUT_ROM} ({sha256(output)})")
-    print(f"Delivery ROM: {DELIVERY_ROM}")
     print(f"IPS: {OUTPUT_IPS} ({len(ips)} bytes)")
     print(f"Capacity report: {CAPACITY_REPORT}")
     print(f"Build log: {BUILD_LOG}")

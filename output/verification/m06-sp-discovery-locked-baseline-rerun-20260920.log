@@ -1,0 +1,33 @@
+﻿python.exe : D:\GIT\mmc3\.venv\Lib\site-packages\pywinauto\application.py:1085: UserWarning: 32-bit application should 
+be automated using 32-bit Python (you use 64-bit Python)
+所在位置 行:1 字符: 42
++ ... \GIT\mmc3'; & '.\.venv\Scripts\python.exe' 'tools\report_golden_cover ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (D:\GIT\mmc3\.ve... 64-bit Python):String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+  warnings.warn(
+D:\GIT\mmc3\.venv\Lib\site-packages\pywinauto\application.py:1085: UserWarning: 32-bit application should be automated 
+using 32-bit Python (you use 64-bit Python)
+  warnings.warn(
+在线采集完成：M06/sp/cold_start_01 PID 10324→11420，耗时 23.199s，passed=False
+- 用例目录：D:\GIT\mmc3\output\build\legacy-diff-audit\cases\legacy_live\M06\sp\cold_start_01
+Traceback (most recent call last):
+  File "D:\GIT\mmc3\tools\report_golden_coverage.py", line 967, in <module>
+    raise SystemExit(main())
+                     ^^^^^^
+  File "D:\GIT\mmc3\tools\report_golden_coverage.py", line 963, in main
+    return int(args.handler(args))
+               ^^^^^^^^^^^^^^^^^^
+  File "D:\GIT\mmc3\tools\report_golden_coverage.py", line 256, in cmd_collect
+    if cmd_archive(args) or cmd_stats(args):
+       ^^^^^^^^^^^^^^^^^
+  File "D:\GIT\mmc3\tools\report_golden_coverage.py", line 265, in cmd_archive
+    records = load_family_records(repo)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\GIT\mmc3\tools\golden_pipeline_core.py", line 521, in load_family_records
+    records.extend(_adapt_live(json.loads(live_path.read_text(encoding="utf-8"))))
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\GIT\mmc3\tools\golden_pipeline_core.py", line 476, in _adapt_live
+    raise ValueError("Live required/optional offsets do not partition expected")
+ValueError: Live required/optional offsets do not partition expected

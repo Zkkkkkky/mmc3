@@ -1,0 +1,50 @@
+{
+  "module": "M05",
+  "field": "fragment_bank",
+  "case_id": "cold_start_01",
+  "requested_value": 250,
+  "expected_before": 252,
+  "expected_offsets": [
+    45171
+  ],
+  "required_offsets": [
+    45171
+  ],
+  "optional_offsets": [],
+  "extra_allowed": [],
+  "navigation": [
+    {
+      "op": "menu",
+      "path": "数据->数据库"
+    },
+    {
+      "op": "window",
+      "title": "数据库"
+    },
+    {
+      "op": "list_select",
+      "class": "ListBox",
+      "control_id": 120,
+      "row": 1
+    }
+  ],
+  "edit_steps": [
+    {
+      "op": "select_index",
+      "class": "ComboBox",
+      "control_id": 370,
+      "value": "$requested"
+    },
+    {
+      "op": "click_id",
+      "class": "Button",
+      "control_id": 590
+    }
+  ],
+  "read_selector": {
+    "class": "ComboBox",
+    "control_id": 370,
+    "value_type": "combo_index"
+  },
+  "extra_allowed_profile": "m05_appearance_normalization_v1"
+}

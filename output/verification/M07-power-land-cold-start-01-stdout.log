@@ -1,0 +1,14 @@
+在线采集完成：M07/power_land/cold_start_01 PID 9820→12240，耗时 22.74s，passed=True
+- 用例目录：D:\GIT\mmc3\output\build\legacy-diff-audit\cases\legacy_live\M07\power_land\cold_start_01
+黄金档案归档完成：211/211 用例（golden 204，discovery 7），耗时 19.31s
+- 通过 golden：204；未通过 golden：0
+- 快照缺失：0
+- 未登记快照目录：3 -> output/build/legacy-diff-audit/cases/global_hit_threshold；output/build/legacy-diff-audit/cases/item_price_01；output/build/legacy-diff-audit/cases/legacy_other1/experience_level_98
+- 存量差分不一致预警：0
+- 孤儿档案（不被注册表引用，仅报告未删除）：9 -> M07-distance_correction-cold_start_02.json；M07-hit-cold_start_02.json；M07-max_range-cold_start_02.json；M07-power_air-cold_start_02.json；M07-power_land-cold_start_02.json；M07-power_sea-cold_start_01.json；M07-power_sea-cold_start_02.json；M07-weapon_skill-cold_start_01.json；M07-weapon_skill-cold_start_02.json
+- 档案目录：output/build/legacy-diff-audit/golden（211 个 JSON + index.json）
+- 注册表：tools/golden_pipeline/cases/field_registry.json
+G1 黄金对照覆盖率：203/208 = 97.60%（分母口径 registered_fields；最终口径为主文档第 4/5 章全量字段数）
+G2 逐字段差分通过率：204/204 = 100.00%
+用例计数：golden 204（通过 204/未通过 0），discovery 7，待解释 7
+报告：output/reports/golden-coverage-report.json / output/reports/golden-coverage-report.md

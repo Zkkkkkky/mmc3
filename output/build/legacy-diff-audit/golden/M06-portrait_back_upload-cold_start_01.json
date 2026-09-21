@@ -1,0 +1,572 @@
+{
+  "schema_version": 1,
+  "module": "M06",
+  "field": "portrait_back_upload",
+  "case_id": "cold_start_01",
+  "case_kind": "golden",
+  "requested_value": "e0f7789976dae11ee84c0f6f74de69dcaec66c953515bd8ebcecfa167354db62",
+  "changed_offsets": [
+    561680,
+    561681,
+    561682,
+    561683,
+    561684,
+    561685,
+    561686,
+    561687,
+    561697,
+    561698,
+    561703,
+    561712,
+    561713,
+    561714,
+    561715,
+    561716,
+    561717,
+    561728,
+    561729,
+    561730,
+    561731,
+    561732,
+    561733,
+    561734,
+    561744,
+    561749,
+    561750,
+    561751,
+    561757,
+    561760,
+    561761,
+    561762,
+    561767,
+    561783,
+    561791,
+    561792,
+    561793,
+    561794,
+    561795,
+    561796,
+    561797,
+    561798,
+    561808,
+    561814,
+    561815,
+    561816,
+    561840,
+    561841,
+    561848,
+    561849,
+    561858,
+    561859,
+    561860,
+    561861,
+    561862,
+    561863,
+    561872,
+    561873,
+    561874,
+    561875,
+    561876,
+    561877,
+    561878,
+    561879,
+    561889,
+    561908,
+    561909,
+    561920,
+    561921,
+    561922,
+    561923,
+    561924,
+    561925,
+    561926
+  ],
+  "removed_normalization": [],
+  "reopen_value": "e0f7789976dae11ee84c0f6f74de69dcaec66c953515bd8ebcecfa167354db62",
+  "original_value": "1c9fdefc3fedebedbd65c52d2ddf212c5729d5076e2086186321bb204caef309",
+  "reopen_matches_request": true,
+  "reopen_mode": "new_process",
+  "expected_offsets": [
+    561680
+  ],
+  "required_offsets": [
+    561680
+  ],
+  "optional_offsets": [],
+  "extra_allowed": [
+    561681,
+    561682,
+    561683,
+    561684,
+    561685,
+    561686,
+    561687,
+    561697,
+    561698,
+    561703,
+    561712,
+    561713,
+    561714,
+    561715,
+    561716,
+    561717,
+    561728,
+    561729,
+    561730,
+    561731,
+    561732,
+    561733,
+    561734,
+    561744,
+    561749,
+    561750,
+    561751,
+    561757,
+    561760,
+    561761,
+    561762,
+    561767,
+    561783,
+    561791,
+    561792,
+    561793,
+    561794,
+    561795,
+    561796,
+    561797,
+    561798,
+    561808,
+    561814,
+    561815,
+    561816,
+    561840,
+    561841,
+    561848,
+    561849,
+    561858,
+    561859,
+    561860,
+    561861,
+    561862,
+    561863,
+    561872,
+    561873,
+    561874,
+    561875,
+    561876,
+    561877,
+    561878,
+    561879,
+    561889,
+    561908,
+    561909,
+    561920,
+    561921,
+    561922,
+    561923,
+    561924,
+    561925,
+    561926
+  ],
+  "unexpected_offsets": [],
+  "target_changed": [
+    561680
+  ],
+  "expected_not_changed": [],
+  "passed": true,
+  "pending_reason": null,
+  "notes": [
+    "在线单字段采集：保存后关闭进程，再以不同 PID 冷启动重开"
+  ],
+  "provenance": {
+    "source_json": "output/build/legacy-diff-audit/legacy-live-results.json"
+  },
+  "snapshots": {
+    "before": {
+      "path": "output/build/legacy-diff-audit/cases/legacy_live/M06/portrait_back_upload/cold_start_01/before.nes",
+      "sha256": "c5d2c1dfbe0dc39afc9effd314c082f121b98c9ad67c4825b1c9dd4b9e991954",
+      "size": 786448
+    },
+    "after": {
+      "path": "output/build/legacy-diff-audit/cases/legacy_live/M06/portrait_back_upload/cold_start_01/after.nes",
+      "sha256": "90dbb54399443b7cca1890146a9f0dda0fdec03506c7b89de2bb62935bd7f069",
+      "size": 786448
+    }
+  },
+  "diff_entries": [
+    {
+      "offset": 561680,
+      "before_value": 56,
+      "after_value": 0
+    },
+    {
+      "offset": 561681,
+      "before_value": 104,
+      "after_value": 0
+    },
+    {
+      "offset": 561682,
+      "before_value": 72,
+      "after_value": 0
+    },
+    {
+      "offset": 561683,
+      "before_value": 144,
+      "after_value": 0
+    },
+    {
+      "offset": 561684,
+      "before_value": 16,
+      "after_value": 0
+    },
+    {
+      "offset": 561685,
+      "before_value": 32,
+      "after_value": 0
+    },
+    {
+      "offset": 561686,
+      "before_value": 32,
+      "after_value": 0
+    },
+    {
+      "offset": 561687,
+      "before_value": 64,
+      "after_value": 0
+    },
+    {
+      "offset": 561697,
+      "before_value": 32,
+      "after_value": 0
+    },
+    {
+      "offset": 561698,
+      "before_value": 64,
+      "after_value": 0
+    },
+    {
+      "offset": 561703,
+      "before_value": 4,
+      "after_value": 0
+    },
+    {
+      "offset": 561712,
+      "before_value": 1,
+      "after_value": 0
+    },
+    {
+      "offset": 561713,
+      "before_value": 4,
+      "after_value": 0
+    },
+    {
+      "offset": 561714,
+      "before_value": 4,
+      "after_value": 0
+    },
+    {
+      "offset": 561715,
+      "before_value": 2,
+      "after_value": 0
+    },
+    {
+      "offset": 561716,
+      "before_value": 2,
+      "after_value": 0
+    },
+    {
+      "offset": 561717,
+      "before_value": 1,
+      "after_value": 0
+    },
+    {
+      "offset": 561728,
+      "before_value": 8,
+      "after_value": 0
+    },
+    {
+      "offset": 561729,
+      "before_value": 141,
+      "after_value": 0
+    },
+    {
+      "offset": 561730,
+      "before_value": 205,
+      "after_value": 0
+    },
+    {
+      "offset": 561731,
+      "before_value": 76,
+      "after_value": 0
+    },
+    {
+      "offset": 561732,
+      "before_value": 12,
+      "after_value": 0
+    },
+    {
+      "offset": 561733,
+      "before_value": 4,
+      "after_value": 0
+    },
+    {
+      "offset": 561734,
+      "before_value": 4,
+      "after_value": 0
+    },
+    {
+      "offset": 561744,
+      "before_value": 128,
+      "after_value": 0
+    },
+    {
+      "offset": 561749,
+      "before_value": 8,
+      "after_value": 0
+    },
+    {
+      "offset": 561750,
+      "before_value": 8,
+      "after_value": 0
+    },
+    {
+      "offset": 561751,
+      "before_value": 156,
+      "after_value": 0
+    },
+    {
+      "offset": 561757,
+      "before_value": 8,
+      "after_value": 0
+    },
+    {
+      "offset": 561760,
+      "before_value": 4,
+      "after_value": 0
+    },
+    {
+      "offset": 561761,
+      "before_value": 4,
+      "after_value": 0
+    },
+    {
+      "offset": 561762,
+      "before_value": 4,
+      "after_value": 0
+    },
+    {
+      "offset": 561767,
+      "before_value": 128,
+      "after_value": 0
+    },
+    {
+      "offset": 561783,
+      "before_value": 1,
+      "after_value": 0
+    },
+    {
+      "offset": 561791,
+      "before_value": 32,
+      "after_value": 0
+    },
+    {
+      "offset": 561792,
+      "before_value": 1,
+      "after_value": 0
+    },
+    {
+      "offset": 561793,
+      "before_value": 9,
+      "after_value": 0
+    },
+    {
+      "offset": 561794,
+      "before_value": 9,
+      "after_value": 0
+    },
+    {
+      "offset": 561795,
+      "before_value": 9,
+      "after_value": 0
+    },
+    {
+      "offset": 561796,
+      "before_value": 3,
+      "after_value": 0
+    },
+    {
+      "offset": 561797,
+      "before_value": 3,
+      "after_value": 0
+    },
+    {
+      "offset": 561798,
+      "before_value": 1,
+      "after_value": 0
+    },
+    {
+      "offset": 561808,
+      "before_value": 128,
+      "after_value": 0
+    },
+    {
+      "offset": 561814,
+      "before_value": 64,
+      "after_value": 0
+    },
+    {
+      "offset": 561815,
+      "before_value": 64,
+      "after_value": 0
+    },
+    {
+      "offset": 561816,
+      "before_value": 1,
+      "after_value": 0
+    },
+    {
+      "offset": 561840,
+      "before_value": 112,
+      "after_value": 0
+    },
+    {
+      "offset": 561841,
+      "before_value": 88,
+      "after_value": 0
+    },
+    {
+      "offset": 561848,
+      "before_value": 22,
+      "after_value": 0
+    },
+    {
+      "offset": 561849,
+      "before_value": 24,
+      "after_value": 0
+    },
+    {
+      "offset": 561858,
+      "before_value": 8,
+      "after_value": 0
+    },
+    {
+      "offset": 561859,
+      "before_value": 8,
+      "after_value": 0
+    },
+    {
+      "offset": 561860,
+      "before_value": 8,
+      "after_value": 0
+    },
+    {
+      "offset": 561861,
+      "before_value": 8,
+      "after_value": 0
+    },
+    {
+      "offset": 561862,
+      "before_value": 8,
+      "after_value": 0
+    },
+    {
+      "offset": 561863,
+      "before_value": 24,
+      "after_value": 0
+    },
+    {
+      "offset": 561872,
+      "before_value": 192,
+      "after_value": 0
+    },
+    {
+      "offset": 561873,
+      "before_value": 128,
+      "after_value": 0
+    },
+    {
+      "offset": 561874,
+      "before_value": 128,
+      "after_value": 0
+    },
+    {
+      "offset": 561875,
+      "before_value": 16,
+      "after_value": 0
+    },
+    {
+      "offset": 561876,
+      "before_value": 16,
+      "after_value": 0
+    },
+    {
+      "offset": 561877,
+      "before_value": 50,
+      "after_value": 0
+    },
+    {
+      "offset": 561878,
+      "before_value": 34,
+      "after_value": 0
+    },
+    {
+      "offset": 561879,
+      "before_value": 68,
+      "after_value": 0
+    },
+    {
+      "offset": 561889,
+      "before_value": 8,
+      "after_value": 0
+    },
+    {
+      "offset": 561908,
+      "before_value": 1,
+      "after_value": 0
+    },
+    {
+      "offset": 561909,
+      "before_value": 2,
+      "after_value": 0
+    },
+    {
+      "offset": 561920,
+      "before_value": 25,
+      "after_value": 0
+    },
+    {
+      "offset": 561921,
+      "before_value": 81,
+      "after_value": 0
+    },
+    {
+      "offset": 561922,
+      "before_value": 161,
+      "after_value": 0
+    },
+    {
+      "offset": 561923,
+      "before_value": 65,
+      "after_value": 0
+    },
+    {
+      "offset": 561924,
+      "before_value": 1,
+      "after_value": 0
+    },
+    {
+      "offset": 561925,
+      "before_value": 1,
+      "after_value": 0
+    },
+    {
+      "offset": 561926,
+      "before_value": 1,
+      "after_value": 0
+    }
+  ],
+  "duration_seconds": 23.885,
+  "budget_seconds": 30.0,
+  "within_budget": true,
+  "duration_note": null
+}

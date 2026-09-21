@@ -1,0 +1,74 @@
+������ӳ�����D:\LLM\��Ŀ\FC\����MMC3\output\mappings
+72 INFO: PyInstaller: 6.22.2, contrib hooks: 2026.7
+72 INFO: Python: 3.14.7
+78 INFO: Platform: Windows-11-10.0.26100-SP0
+79 INFO: Python environment: D:\LLM\��Ŀ\FC\����MMC3\.venv
+80 INFO: Removing temporary files and cleaning cache in C:\Users\Administrator\AppData\Local\pyinstaller
+86 INFO: Module search paths (PYTHONPATH):
+['D:\\LLM\\��Ŀ\\FC\\����MMC3',
+ 'C:\\Python314\\python314.zip',
+ 'C:\\Python314\\DLLs',
+ 'C:\\Python314\\Lib',
+ 'C:\\Python314',
+ 'D:\\LLM\\��Ŀ\\FC\\����MMC3\\.venv',
+ 'D:\\LLM\\��Ŀ\\FC\\����MMC3\\.venv\\Lib\\site-packages',
+ 'D:\\LLM\\��Ŀ\\FC\\����MMC3\\src',
+ 'D:\\LLM\\��Ŀ\\FC\\����MMC3',
+ 'D:\\LLM\\��Ŀ\\FC\\����MMC3\\src']
+245 INFO: Appending 'binaries' from .spec
+245 INFO: checking Analysis
+245 INFO: Building Analysis because Analysis-00.toc is non existent
+245 INFO: Looking for Python shared library...
+245 INFO: Using Python shared library: C:\Python314\python314.dll
+245 INFO: Running Analysis Analysis-00.toc
+245 INFO: Target bytecode optimization level: 0
+245 INFO: Initializing module dependency graph...
+246 INFO: Initializing module graph hook caches...
+252 INFO: Analyzing modules for base_library.zip ...
+1227 INFO: Processing standard module hook 'hook-encodings.py' from 'D:\\LLM\\��Ŀ\\FC\\����MMC3\\.venv\\Lib\\site-packages\\PyInstaller\\hooks'
+1471 INFO: Processing standard module hook 'hook-math.py' from 'D:\\LLM\\��Ŀ\\FC\\����MMC3\\.venv\\Lib\\site-packages\\PyInstaller\\hooks'
+2271 INFO: Processing standard module hook 'hook-difflib.py' from 'D:\\LLM\\��Ŀ\\FC\\����MMC3\\.venv\\Lib\\site-packages\\PyInstaller\\hooks'
+2278 INFO: Processing standard module hook 'hook-heapq.py' from 'D:\\LLM\\��Ŀ\\FC\\����MMC3\\.venv\\Lib\\site-packages\\PyInstaller\\hooks'
+2343 INFO: Processing standard module hook 'hook-pickle.py' from 'D:\\LLM\\��Ŀ\\FC\\����MMC3\\.venv\\Lib\\site-packages\\PyInstaller\\hooks'
+3198 INFO: Caching module dependency graph...
+3213 INFO: Analyzing D:\LLM\��Ŀ\FC\����MMC3\tools\run_dc_modifier.py
+3245 INFO: Processing standard module hook 'hook-PySide6.py' from 'D:\\LLM\\��Ŀ\\FC\\����MMC3\\.venv\\Lib\\site-packages\\PyInstaller\\hooks'
+3360 INFO: Processing standard module hook 'hook-shiboken6.py' from 'D:\\LLM\\��Ŀ\\FC\\����MMC3\\.venv\\Lib\\site-packages\\PyInstaller\\hooks'
+3536 INFO: Processing standard module hook 'hook-PySide6.QtNetwork.py' from 'D:\\LLM\\��Ŀ\\FC\\����MMC3\\.venv\\Lib\\site-packages\\PyInstaller\\hooks'
+4908 INFO: Processing standard module hook 'hook-PySide6.QtCore.py' from 'D:\\LLM\\��Ŀ\\FC\\����MMC3\\.venv\\Lib\\site-packages\\PyInstaller\\hooks'
+6778 INFO: Processing standard module hook 'hook-PySide6.QtGui.py' from 'D:\\LLM\\��Ŀ\\FC\\����MMC3\\.venv\\Lib\\site-packages\\PyInstaller\\hooks'
+12626 INFO: Processing standard module hook 'hook-PySide6.QtWidgets.py' from 'D:\\LLM\\��Ŀ\\FC\\����MMC3\\.venv\\Lib\\site-packages\\PyInstaller\\hooks'
+14440 INFO: Processing module hooks (post-graph stage)...
+14444 INFO: Performing binary vs. data reclassification (123 entries)
+14459 INFO: Looking for ctypes DLLs
+14462 INFO: Analyzing run-time hooks ...
+14462 INFO: Including run-time hook 'pyi_rth_inspect.py' from 'D:\\LLM\\��Ŀ\\FC\\����MMC3\\.venv\\Lib\\site-packages\\PyInstaller\\hooks\\rthooks'
+14464 INFO: Including run-time hook 'pyi_rth_pyside6.py' from 'D:\\LLM\\��Ŀ\\FC\\����MMC3\\.venv\\Lib\\site-packages\\PyInstaller\\hooks\\rthooks'
+14465 INFO: Processing pre-find-module-path hook 'hook-_pyi_rth_utils.py' from 'D:\\LLM\\��Ŀ\\FC\\����MMC3\\.venv\\Lib\\site-packages\\PyInstaller\\hooks\\pre_find_module_path'
+14466 INFO: Processing standard module hook 'hook-_pyi_rth_utils.py' from 'D:\\LLM\\��Ŀ\\FC\\����MMC3\\.venv\\Lib\\site-packages\\PyInstaller\\hooks'
+14471 INFO: Creating base_library.zip...
+14481 INFO: Looking for dynamic libraries
+14643 INFO: Extra DLL search directories (AddDllDirectory): ['D:\\LLM\\��Ŀ\\FC\\����MMC3\\.venv\\Lib\\site-packages\\shiboken6']
+14643 INFO: Extra DLL search directories (PATH): ['D:\\LLM\\��Ŀ\\FC\\����MMC3\\.venv\\Lib\\site-packages\\PySide6']
+15190 INFO: Warnings written to D:\LLM\��Ŀ\FC\����MMC3\output\build\pyinstaller-work\dc_modifier\warn-dc_modifier.txt
+15199 INFO: Graph cross-reference written to D:\LLM\��Ŀ\FC\����MMC3\output\build\pyinstaller-work\dc_modifier\xref-dc_modifier.html
+15210 INFO: checking PYZ
+15210 INFO: Building PYZ because PYZ-00.toc is non existent
+15210 INFO: Building PYZ (ZlibArchive) D:\LLM\��Ŀ\FC\����MMC3\output\build\pyinstaller-work\dc_modifier\PYZ-00.pyz
+15309 INFO: Building PYZ (ZlibArchive) D:\LLM\��Ŀ\FC\����MMC3\output\build\pyinstaller-work\dc_modifier\PYZ-00.pyz completed successfully.
+15313 INFO: checking PKG
+15314 INFO: Building PKG because PKG-00.toc is non existent
+15314 INFO: Building PKG (CArchive) ��DCƪ�����޸���.pkg
+19061 INFO: Building PKG (CArchive) ��DCƪ�����޸���.pkg completed successfully.
+19064 INFO: Bootloader D:\LLM\��Ŀ\FC\����MMC3\.venv\Lib\site-packages\PyInstaller\bootloader\Windows-64bit-intel\runw.exe
+19064 INFO: checking EXE
+19064 INFO: Building EXE because EXE-00.toc is non existent
+19064 INFO: Building EXE from EXE-00.toc
+19068 INFO: Copying bootloader EXE to D:\LLM\��Ŀ\FC\����MMC3\output\app\��DCƪ�����޸���.exe
+19072 INFO: Copying icon to EXE
+19098 INFO: Copying 0 resources to EXE
+19098 INFO: Embedding manifest in EXE
+19116 INFO: Appending PKG archive to EXE
+19155 INFO: Fixing EXE headers
+21265 INFO: Building EXE from EXE-00.toc completed successfully.
+21268 INFO: Build complete! The results are available in: D:\LLM\��Ŀ\FC\����MMC3\output\app

@@ -1,0 +1,60 @@
+{
+  "schema_version": 1,
+  "module": "M06",
+  "field": "portrait_color_2",
+  "case_id": "cold_start_01",
+  "case_kind": "golden",
+  "requested_value": "02",
+  "changed_offsets": [
+    43853
+  ],
+  "removed_normalization": [],
+  "reopen_value": "02",
+  "original_value": "00",
+  "reopen_matches_request": true,
+  "reopen_mode": "new_process",
+  "expected_offsets": [
+    43853
+  ],
+  "required_offsets": [
+    43853
+  ],
+  "optional_offsets": [],
+  "extra_allowed": [],
+  "unexpected_offsets": [],
+  "target_changed": [
+    43853
+  ],
+  "expected_not_changed": [],
+  "passed": true,
+  "pending_reason": null,
+  "notes": [
+    "在线单字段采集：保存后关闭进程，再以不同 PID 冷启动重开"
+  ],
+  "provenance": {
+    "source_json": "output/build/legacy-diff-audit/legacy-live-results.json"
+  },
+  "snapshots": {
+    "before": {
+      "path": "output/build/legacy-diff-audit/cases/legacy_live/M06/portrait_color_2/cold_start_01/before.nes",
+      "sha256": "c5d2c1dfbe0dc39afc9effd314c082f121b98c9ad67c4825b1c9dd4b9e991954",
+      "size": 786448
+    },
+    "after": {
+      "path": "output/build/legacy-diff-audit/cases/legacy_live/M06/portrait_color_2/cold_start_01/after.nes",
+      "sha256": "a7a31ecea2b79e9b8cc7d209004964619ab702bc3e5d20a1d577fdce4b01f2d7",
+      "size": 786448
+    }
+  },
+  "diff_entries": [
+    {
+      "offset": 43853,
+      "before_value": 0,
+      "after_value": 2
+    }
+  ],
+  "duration_seconds": 24.306,
+  "budget_seconds": 30.0,
+  "within_budget": true,
+  "duration_note": null
+}

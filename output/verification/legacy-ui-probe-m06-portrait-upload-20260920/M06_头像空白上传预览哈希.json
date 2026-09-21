@@ -1,0 +1,18 @@
+{
+  "front": {
+    "pid": 17132,
+    "kind": "front",
+    "before_hash": "1c9fdefc3fedebedbd65c52d2ddf212c5729d5076e2086186321bb204caef309",
+    "after_hash": "25e1d39498a91890b6b52aa2e0c5d2b4c320d07d6768eda7a5d17edc08bcf397",
+    "launch_and_navigation_seconds": 11.472,
+    "blank_upload_seconds": 0.765
+  },
+  "back": {
+    "pid": 14132,
+    "kind": "back",
+    "before_hash": "1c9fdefc3fedebedbd65c52d2ddf212c5729d5076e2086186321bb204caef309",
+    "after_hash": "e0f7789976dae11ee84c0f6f74de69dcaec66c953515bd8ebcecfa167354db62",
+    "launch_and_navigation_seconds": 11.123,
+    "blank_upload_seconds": 0.77
+  }
+}

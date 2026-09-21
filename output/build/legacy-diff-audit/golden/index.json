@@ -1,0 +1,4017 @@
+{
+  "schema_version": 1,
+  "archive_dir": "output/build/legacy-diff-audit/golden",
+  "registry": "tools/golden_pipeline/cases/field_registry.json",
+  "summary": {
+    "total_cases": 219,
+    "archived_cases": 219,
+    "golden_cases": 212,
+    "discovery_cases": 7,
+    "passed_golden_cases": 212,
+    "failed_golden_cases": 0,
+    "missing_snapshots": [],
+    "unregistered_snapshots": [
+      "output/build/legacy-diff-audit/cases/global_hit_threshold",
+      "output/build/legacy-diff-audit/cases/item_price_01",
+      "output/build/legacy-diff-audit/cases/legacy_other1/experience_level_98"
+    ],
+    "orphan_archives": [],
+    "stored_diff_mismatches": []
+  },
+  "fields": {
+    "M05/body_bank_1/cold_start_01": {
+      "module": "M05",
+      "field": "body_bank_1",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "archive": "M05-body_bank_1-cold_start_01.json",
+      "sha256": "fa0c461f10bf01a5e3a49b45e24f860fb1c2afddaa16504fbd2e4df761510fc0",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        45172
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 1585,
+      "removed_normalization_count": 0,
+      "pending_reason": null
+    },
+    "M05/body_bank_2/cold_start_01": {
+      "module": "M05",
+      "field": "body_bank_2",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "archive": "M05-body_bank_2-cold_start_01.json",
+      "sha256": "6a300d70552cd6ba5d8588fd61018e67496ed27757cf1cc47c93ce4966e2bad3",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        45218
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 1706,
+      "removed_normalization_count": 0,
+      "pending_reason": null
+    },
+    "M05/body_color_1/cold_start_01": {
+      "module": "M05",
+      "field": "body_color_1",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "archive": "M05-body_color_1-cold_start_01.json",
+      "sha256": "e7c1e03bb5b76528cd2dd0b2d73b6c016fd0a0d199bcbb9b6fd081c3e5d57d65",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        45165
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 1585,
+      "removed_normalization_count": 0,
+      "pending_reason": null
+    },
+    "M05/body_color_2/cold_start_01": {
+      "module": "M05",
+      "field": "body_color_2",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "archive": "M05-body_color_2-cold_start_01.json",
+      "sha256": "3520b8804ff69b23f19aa46f2eb1e74f32581c99f1c48b0eaa5e3d13eb7d6cdf",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        45166
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 1585,
+      "removed_normalization_count": 0,
+      "pending_reason": null
+    },
+    "M05/body_color_3/cold_start_01": {
+      "module": "M05",
+      "field": "body_color_3",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "archive": "M05-body_color_3-cold_start_01.json",
+      "sha256": "57cbc7a7b3e7ba69660bd27164163d56289c9e5d5883930c0748631912619f9a",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        45167
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 1585,
+      "removed_normalization_count": 0,
+      "pending_reason": null
+    },
+    "M05/captain/cold_start_01": {
+      "module": "M05",
+      "field": "captain",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "archive": "M05-captain-cold_start_01.json",
+      "sha256": "d5c4dc71f95628a750f4550ffd6167148383bf342fc94cccb8f2d819cf2412e8",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        45209
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 1706,
+      "removed_normalization_count": 0,
+      "pending_reason": null
+    },
+    "M05/defense/cold_start_01": {
+      "module": "M05",
+      "field": "defense",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "archive": "M05-defense-cold_start_01.json",
+      "sha256": "bdbbe8aac9918bad5dad3b71037a451525a3fc9bf0d1e80a9cfac2a6c5b52d86",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        297554
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 1,
+      "removed_normalization_count": 0,
+      "pending_reason": null
+    },
+    "M05/defense_growth/cold_start_01": {
+      "module": "M05",
+      "field": "defense_growth",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "archive": "M05-defense_growth-cold_start_01.json",
+      "sha256": "f56e83f17231bb84cacce061c597d012ed16fb76bfdb75eacc27e0bca91b0777",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        297562
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 1,
+      "removed_normalization_count": 0,
+      "pending_reason": null
+    },
+    "M05/experience/cold_start_01": {
+      "module": "M05",
+      "field": "experience",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "archive": "M05-experience-cold_start_01.json",
+      "sha256": "ba61b35f1dd0581fabfbad6636b309e9a94977881907d413817a3a2e2b125234",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        297558
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 1,
+      "removed_normalization_count": 0,
+      "pending_reason": null
+    },
+    "M05/fragment_bank/cold_start_01": {
+      "module": "M05",
+      "field": "fragment_bank",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "archive": "M05-fragment_bank-cold_start_01.json",
+      "sha256": "80b1d5b0a8c306531949bcded30c48b694eec6429fe35293b34d89b18cac2716",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        45171
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 1585,
+      "removed_normalization_count": 0,
+      "pending_reason": null
+    },
+    "M05/fragment_color_1/cold_start_01": {
+      "module": "M05",
+      "field": "fragment_color_1",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "archive": "M05-fragment_color_1-cold_start_01.json",
+      "sha256": "210dfb8e6d74da8fcd8832e8bf0e677225b19972cf1aaa5d89f6d193c0a5fb86",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        45168
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 1585,
+      "removed_normalization_count": 0,
+      "pending_reason": null
+    },
+    "M05/fragment_color_2/cold_start_01": {
+      "module": "M05",
+      "field": "fragment_color_2",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "archive": "M05-fragment_color_2-cold_start_01.json",
+      "sha256": "3637cdefb60a91ccf224cbc0d334149b860bd5c101cfff46e7d986f0ac8f34f8",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        45169
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 1585,
+      "removed_normalization_count": 0,
+      "pending_reason": null
+    },
+    "M05/fragment_color_3/cold_start_01": {
+      "module": "M05",
+      "field": "fragment_color_3",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "archive": "M05-fragment_color_3-cold_start_01.json",
+      "sha256": "386aecb5af2622253e56633e0c79086b4acc513f3554f844b021cda1dc5c8bc7",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        45170
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 1585,
+      "removed_normalization_count": 0,
+      "pending_reason": null
+    },
+    "M05/hp/cold_start_01": {
+      "module": "M05",
+      "field": "hp",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "archive": "M05-hp-cold_start_01.json",
+      "sha256": "cf343159b89a1cd30e48c53c0a6000aac615ec382bf5a0120f77377e5cdf45fa",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        297556
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 1,
+      "removed_normalization_count": 0,
+      "pending_reason": null
+    },
+    "M05/hp_growth/cold_start_01": {
+      "module": "M05",
+      "field": "hp_growth",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "archive": "M05-hp_growth-cold_start_01.json",
+      "sha256": "e0863463b970689eb58476d9541fd6bbb5a0945a2d5b007c9761dcc2dba601c2",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        297563
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 1,
+      "removed_normalization_count": 0,
+      "pending_reason": null
+    },
+    "M05/money/cold_start_01": {
+      "module": "M05",
+      "field": "money",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "archive": "M05-money-cold_start_01.json",
+      "sha256": "04dda33d427f920631f49319f5a2089f00fe1a2a5cad1bb28ee2bfa73a4819bd",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        297555
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 1,
+      "removed_normalization_count": 0,
+      "pending_reason": null
+    },
+    "M05/movement/cold_start_01": {
+      "module": "M05",
+      "field": "movement",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "archive": "M05-movement-cold_start_01.json",
+      "sha256": "a370689bffa1a4bc959a447b6f944a94a2cc070eafbe798b5e551ea76b0b1afe",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        297551
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 1,
+      "removed_normalization_count": 0,
+      "pending_reason": null
+    },
+    "M05/name/cold_start_01": {
+      "module": "M05",
+      "field": "name",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "archive": "M05-name-cold_start_01.json",
+      "sha256": "ed7805c84babe9631e5ecaa328888f28deb5459ac60a830f6d917dd45fd116f9",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        294942,
+        294944
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 3897,
+      "removed_normalization_count": 2,
+      "pending_reason": null
+    },
+    "M05/special_skill_base/cold_start_01": {
+      "module": "M05",
+      "field": "special_skill_base",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "archive": "M05-special_skill_base-cold_start_01.json",
+      "sha256": "c36becfe5c47bd1b227652552095c10b108db05c3d609fd58ca1609f0be91e08",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        297549
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 1,
+      "removed_normalization_count": 0,
+      "pending_reason": null
+    },
+    "M05/special_skill_dimension/cold_start_01": {
+      "module": "M05",
+      "field": "special_skill_dimension",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "archive": "M05-special_skill_dimension-cold_start_01.json",
+      "sha256": "690f77f2101d0431a1fc2b7d80c052770fc20de0ddfa8d0ec1d518b474a7dc05",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        297549
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 1,
+      "removed_normalization_count": 0,
+      "pending_reason": null
+    },
+    "M05/special_skill_first_strike/cold_start_01": {
+      "module": "M05",
+      "field": "special_skill_first_strike",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "archive": "M05-special_skill_first_strike-cold_start_01.json",
+      "sha256": "c9c047f5e372f0a57300c3a57173a2fd94f2311a14b66fb156379043cc8d48d0",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        297549
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 1,
+      "removed_normalization_count": 0,
+      "pending_reason": null
+    },
+    "M05/special_skill_hit_and_away/cold_start_01": {
+      "module": "M05",
+      "field": "special_skill_hit_and_away",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "archive": "M05-special_skill_hit_and_away-cold_start_01.json",
+      "sha256": "388e155a8d8605afe79f56d1dac272268aa268cb398f9cb5eefdfc660f93c599",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        297549
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 1,
+      "removed_normalization_count": 0,
+      "pending_reason": null
+    },
+    "M05/special_skill_reflect/cold_start_01": {
+      "module": "M05",
+      "field": "special_skill_reflect",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "archive": "M05-special_skill_reflect-cold_start_01.json",
+      "sha256": "00b44533e7cd8a2137d406654788c32eb43b2b449fc37671a8e94acb504b77b8",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        297549
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 1,
+      "removed_normalization_count": 0,
+      "pending_reason": null
+    },
+    "M05/special_skill_twist/cold_start_01": {
+      "module": "M05",
+      "field": "special_skill_twist",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "archive": "M05-special_skill_twist-cold_start_01.json",
+      "sha256": "dfabd7a0b3496b50dbf1bde1d29305999f8b70da8a1aef1fcb52750a13ddca4a",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        297549
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 1,
+      "removed_normalization_count": 0,
+      "pending_reason": null
+    },
+    "M05/speed/cold_start_01": {
+      "module": "M05",
+      "field": "speed",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "archive": "M05-speed-cold_start_01.json",
+      "sha256": "dbe1eb4c4965d53fdb7d93c2ab2034b556544f5d4bd29724b6372627f05b371a",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        297552
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 1,
+      "removed_normalization_count": 0,
+      "pending_reason": null
+    },
+    "M05/speed_growth/cold_start_01": {
+      "module": "M05",
+      "field": "speed_growth",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "archive": "M05-speed_growth-cold_start_01.json",
+      "sha256": "0310298ab4bd3c6ef36575b448320048208dfe4b8d3b9c93e6f9ab9e2248d50c",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        297560
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 1,
+      "removed_normalization_count": 0,
+      "pending_reason": null
+    },
+    "M05/strength/cold_start_01": {
+      "module": "M05",
+      "field": "strength",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "archive": "M05-strength-cold_start_01.json",
+      "sha256": "f239b897ae437e1c4b278144ec4dc643d636d32db5d90be8f082f162211c3c25",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        297553
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 1,
+      "removed_normalization_count": 0,
+      "pending_reason": null
+    },
+    "M05/strength_growth/cold_start_01": {
+      "module": "M05",
+      "field": "strength_growth",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "archive": "M05-strength_growth-cold_start_01.json",
+      "sha256": "24f56d4ab5b2d77a55c84e78529f95abb6f76c24db338fd20963d1982a5f28b5",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        297561
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 1,
+      "removed_normalization_count": 0,
+      "pending_reason": null
+    },
+    "M05/terrain/cold_start_01": {
+      "module": "M05",
+      "field": "terrain",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "archive": "M05-terrain-cold_start_01.json",
+      "sha256": "2f5cb42b35a2d640dd9064bcafbf93c137f33af57c97f8183eee38fdad001af8",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        297548
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 1,
+      "removed_normalization_count": 0,
+      "pending_reason": null
+    },
+    "M05/transform/cold_start_01": {
+      "module": "M05",
+      "field": "transform",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "archive": "M05-transform-cold_start_01.json",
+      "sha256": "750b0d9358811179455ea38e40e0f84925ba0e424b0e0679049e5a7c13747ff1",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        297548
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 1,
+      "removed_normalization_count": 0,
+      "pending_reason": null
+    },
+    "M05/unit_type/cold_start_01": {
+      "module": "M05",
+      "field": "unit_type",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "archive": "M05-unit_type-cold_start_01.json",
+      "sha256": "fdcffbdbb417cda2f9fe1da54eb45ac69988d4230790bc0f09892b68078c8d20",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        33457
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 14066,
+      "removed_normalization_count": 0,
+      "pending_reason": null
+    },
+    "M05/weapon_1/cold_start_01": {
+      "module": "M05",
+      "field": "weapon_1",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "archive": "M05-weapon_1-cold_start_01.json",
+      "sha256": "90b2719643e18eb347e290d8c88f2be95d00ba5862ff270240692e263ec991b9",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        46394
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 1,
+      "removed_normalization_count": 0,
+      "pending_reason": null
+    },
+    "M05/weapon_2/cold_start_01": {
+      "module": "M05",
+      "field": "weapon_2",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "archive": "M05-weapon_2-cold_start_01.json",
+      "sha256": "06bdfbdfb8518dc518e89061dfd82bebe59265c57a8bf5e808e0f8bce0d2d277",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        46395
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 1,
+      "removed_normalization_count": 0,
+      "pending_reason": null
+    },
+    "M06/ally_music/cold_start_01": {
+      "module": "M06",
+      "field": "ally_music",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "archive": "M06-ally_music-cold_start_01.json",
+      "sha256": "3cc1677e16a698b6f153b4f3e23aec8ec2051a3863ce220be88ddbba29781254",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        53378
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 1,
+      "removed_normalization_count": 0,
+      "pending_reason": null
+    },
+    "M06/battle_name/cold_start_01": {
+      "module": "M06",
+      "field": "battle_name",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "archive": "M06-battle_name-cold_start_01.json",
+      "sha256": "c9cd6dd2081d496b37307b68447a6462df0e8bdbec66f3c3656f06253e6a3597",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        304053
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 3922,
+      "removed_normalization_count": 2,
+      "pending_reason": null
+    },
+    "M06/character_add_overflow/cold_start_01": {
+      "module": "M06",
+      "field": "character_add_overflow",
+      "case_id": "cold_start_01",
+      "case_kind": "discovery",
+      "archive": "M06-character_add_overflow-cold_start_01.json",
+      "sha256": "c9825c8177e39ec9a1624bff3e69f1090d1ef093a488961b3de252eec38e0184",
+      "passed": null,
+      "expected_known": false,
+      "required_offsets": [],
+      "optional_offsets": [],
+      "unexpected_count": 16475,
+      "changed_count": 16479,
+      "removed_normalization_count": 4,
+      "pending_reason": "在线单字段采集：保存后关闭进程，再以不同 PID 冷启动重开"
+    },
+    "M06/character_add_overflow/cold_start_02": {
+      "module": "M06",
+      "field": "character_add_overflow",
+      "case_id": "cold_start_02",
+      "case_kind": "discovery",
+      "archive": "M06-character_add_overflow-cold_start_02.json",
+      "sha256": "5e228065a0656debfd055025ba21a85bf8a843b9ac2c0634f850c2e2cbcd5225",
+      "passed": null,
+      "expected_known": false,
+      "required_offsets": [],
+      "optional_offsets": [],
+      "unexpected_count": 16475,
+      "changed_count": 16479,
+      "removed_normalization_count": 4,
+      "pending_reason": "在线单字段采集：保存后关闭进程，再以不同 PID 冷启动重开"
+    },
+    "M06/defeat_persist/cold_start_01": {
+      "module": "M06",
+      "field": "defeat_persist",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "archive": "M06-defeat_persist-cold_start_01.json",
+      "sha256": "262c59721040a3217347c34c19adeecdec3ae09bf6e27ef45571364c6c1b8d95",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        296343,
+        296344
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 12155,
+      "removed_normalization_count": 4,
+      "pending_reason": null
+    },
+    "M06/defense_bonus/cold_start_01": {
+      "module": "M06",
+      "field": "defense_bonus",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "archive": "M06-defense_bonus-cold_start_01.json",
+      "sha256": "4f7ef33b8217431dbff7fb86f8af4776c5996278e60163b3bc19d219a52f90f8",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        296343,
+        296344
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 12155,
+      "removed_normalization_count": 4,
+      "pending_reason": null
+    },
+    "M06/dialogue_attack_blocked_number/cold_start_01": {
+      "module": "M06",
+      "field": "dialogue_attack_blocked_number",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "archive": "M06-dialogue_attack_blocked_number-cold_start_01.json",
+      "sha256": "bd383d758485cb29bf8a5f56d46154e6cc08f136240096c08e1fe7e104793be6",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        53993
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 1864,
+      "removed_normalization_count": 0,
+      "pending_reason": null
+    },
+    "M06/dialogue_attack_blocked_segment/cold_start_01": {
+      "module": "M06",
+      "field": "dialogue_attack_blocked_segment",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "archive": "M06-dialogue_attack_blocked_segment-cold_start_01.json",
+      "sha256": "8268ba45175cda81d0062853b81aeba0f557dfc7d52c246e948ab836253aa1f3",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        53992
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 1864,
+      "removed_normalization_count": 0,
+      "pending_reason": null
+    },
+    "M06/dialogue_attack_hit_number/cold_start_01": {
+      "module": "M06",
+      "field": "dialogue_attack_hit_number",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "archive": "M06-dialogue_attack_hit_number-cold_start_01.json",
+      "sha256": "cb5005a76ea7317ecf2df0d3caa6c5f22e6ccf467140b7a0f7c2771609927976",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        53995
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 1864,
+      "removed_normalization_count": 0,
+      "pending_reason": null
+    },
+    "M06/dialogue_attack_hit_segment/cold_start_01": {
+      "module": "M06",
+      "field": "dialogue_attack_hit_segment",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "archive": "M06-dialogue_attack_hit_segment-cold_start_01.json",
+      "sha256": "ba95c5541c2ea291eec3da4fc289114d9339efe0bd10cf9ad2beb5f98613b3d2",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        53994
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 1864,
+      "removed_normalization_count": 0,
+      "pending_reason": null
+    },
+    "M06/dialogue_defense_destroyed_number/cold_start_01": {
+      "module": "M06",
+      "field": "dialogue_defense_destroyed_number",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "archive": "M06-dialogue_defense_destroyed_number-cold_start_01.json",
+      "sha256": "a0959c161beb632c9f0b9af939bc29c307a51eee705d0198f03a167b5ae48473",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        53991
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 1864,
+      "removed_normalization_count": 0,
+      "pending_reason": null
+    },
+    "M06/dialogue_defense_destroyed_segment/cold_start_01": {
+      "module": "M06",
+      "field": "dialogue_defense_destroyed_segment",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "archive": "M06-dialogue_defense_destroyed_segment-cold_start_01.json",
+      "sha256": "98285bce0f16f83237e44fee4b69d2337e52b5e793a53c80501ab7f1bf0609e0",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        53990
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 1864,
+      "removed_normalization_count": 0,
+      "pending_reason": null
+    },
+    "M06/dialogue_defense_heavy_damage_number/cold_start_01": {
+      "module": "M06",
+      "field": "dialogue_defense_heavy_damage_number",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "archive": "M06-dialogue_defense_heavy_damage_number-cold_start_01.json",
+      "sha256": "a99b8d7602f561915a721ae9bc2f1c44d88c4785cecd99de582d0a59ce59af4e",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        53989
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 1864,
+      "removed_normalization_count": 0,
+      "pending_reason": null
+    },
+    "M06/dialogue_defense_heavy_damage_segment/cold_start_01": {
+      "module": "M06",
+      "field": "dialogue_defense_heavy_damage_segment",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "archive": "M06-dialogue_defense_heavy_damage_segment-cold_start_01.json",
+      "sha256": "f2c774edb0dd5cee00e52a2054daefb9d7389d62253c8c28fa971f00c135f23f",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        53988
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 1864,
+      "removed_normalization_count": 0,
+      "pending_reason": null
+    },
+    "M06/dialogue_defense_light_damage_number/cold_start_01": {
+      "module": "M06",
+      "field": "dialogue_defense_light_damage_number",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "archive": "M06-dialogue_defense_light_damage_number-cold_start_01.json",
+      "sha256": "4eb18912d5634ca1e9183c2a220b8c0a987aeb755b75c13cc8fa9b7bc43b5514",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        53985
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 1864,
+      "removed_normalization_count": 0,
+      "pending_reason": null
+    },
+    "M06/dialogue_defense_light_damage_segment/cold_start_01": {
+      "module": "M06",
+      "field": "dialogue_defense_light_damage_segment",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "archive": "M06-dialogue_defense_light_damage_segment-cold_start_01.json",
+      "sha256": "eba30c785aae412e488b932132bc11c5f6c304e9c56c010efdd5ea1b597fff23",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        53984
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 1864,
+      "removed_normalization_count": 0,
+      "pending_reason": null
+    },
+    "M06/dialogue_defense_medium_damage_number/cold_start_01": {
+      "module": "M06",
+      "field": "dialogue_defense_medium_damage_number",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "archive": "M06-dialogue_defense_medium_damage_number-cold_start_01.json",
+      "sha256": "8c1fcd50c4223b5e95039e29bfa32bf06644ae4779c052ab4b65000637ed163b",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        53987
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 1864,
+      "removed_normalization_count": 0,
+      "pending_reason": null
+    },
+    "M06/dialogue_defense_medium_damage_segment/cold_start_01": {
+      "module": "M06",
+      "field": "dialogue_defense_medium_damage_segment",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "archive": "M06-dialogue_defense_medium_damage_segment-cold_start_01.json",
+      "sha256": "3b8cbd7c2b44ac54eb9d941c4c0c5cf23c22cc474a5d198ad372313f125d731b",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        53986
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 1864,
+      "removed_normalization_count": 0,
+      "pending_reason": null
+    },
+    "M06/dialogue_defense_no_damage_number/cold_start_01": {
+      "module": "M06",
+      "field": "dialogue_defense_no_damage_number",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "archive": "M06-dialogue_defense_no_damage_number-cold_start_01.json",
+      "sha256": "042aa1ee3f4d04a890fe40e25346f427c1f885d4894268ee83dac94a0d3dba29",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        53983
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 1864,
+      "removed_normalization_count": 0,
+      "pending_reason": null
+    },
+    "M06/dialogue_defense_no_damage_segment/cold_start_01": {
+      "module": "M06",
+      "field": "dialogue_defense_no_damage_segment",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "archive": "M06-dialogue_defense_no_damage_segment-cold_start_01.json",
+      "sha256": "1de4067f208aeb59d37fa93c737354b78c8246a7e59e720776efa299d5e1500e",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        53982
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 1864,
+      "removed_normalization_count": 0,
+      "pending_reason": null
+    },
+    "M06/dialogue_defense_success_number/cold_start_01": {
+      "module": "M06",
+      "field": "dialogue_defense_success_number",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "archive": "M06-dialogue_defense_success_number-cold_start_01.json",
+      "sha256": "a106e436e141b86ee0fb8a59c9925c68996748a853920d4483fd09f8b5cde85c",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        53981
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 1864,
+      "removed_normalization_count": 0,
+      "pending_reason": null
+    },
+    "M06/dialogue_defense_success_segment/cold_start_01": {
+      "module": "M06",
+      "field": "dialogue_defense_success_segment",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "archive": "M06-dialogue_defense_success_segment-cold_start_01.json",
+      "sha256": "37e4345b6308d77baa28d5df947e4ec9a377252c588a7e149ceafdbc67d24083",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        53980
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 1864,
+      "removed_normalization_count": 0,
+      "pending_reason": null
+    },
+    "M06/dialogue_special_attack_1_end/cold_start_01": {
+      "module": "M06",
+      "field": "dialogue_special_attack_1_end",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "archive": "M06-dialogue_special_attack_1_end-cold_start_01.json",
+      "sha256": "29b4048f0a2f8761f3f94514b8fc3c36d4c82c91fcdfe0627ccefdc9f9bcb413",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        53997
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 1864,
+      "removed_normalization_count": 0,
+      "pending_reason": null
+    },
+    "M06/dialogue_special_attack_1_number/cold_start_01": {
+      "module": "M06",
+      "field": "dialogue_special_attack_1_number",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "archive": "M06-dialogue_special_attack_1_number-cold_start_01.json",
+      "sha256": "ca669795d37b7719697b7d684605f071b7d9b919dcad887a3d8f962d5b216a41",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        53999
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 1864,
+      "removed_normalization_count": 0,
+      "pending_reason": null
+    },
+    "M06/dialogue_special_attack_1_segment/cold_start_01": {
+      "module": "M06",
+      "field": "dialogue_special_attack_1_segment",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "archive": "M06-dialogue_special_attack_1_segment-cold_start_01.json",
+      "sha256": "819ac55c89cf28f798240bad41a664ba2a51c1d8b1702960adc4f6d30e097cb1",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        53998
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 1864,
+      "removed_normalization_count": 0,
+      "pending_reason": null
+    },
+    "M06/dialogue_special_attack_1_start/cold_start_01": {
+      "module": "M06",
+      "field": "dialogue_special_attack_1_start",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "archive": "M06-dialogue_special_attack_1_start-cold_start_01.json",
+      "sha256": "63b61659f447463931847140488e015023302c7d1cd2689e6eaf64ee0b0a04d7",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        53996
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 1864,
+      "removed_normalization_count": 0,
+      "pending_reason": null
+    },
+    "M06/dialogue_special_attack_2_end/cold_start_01": {
+      "module": "M06",
+      "field": "dialogue_special_attack_2_end",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "archive": "M06-dialogue_special_attack_2_end-cold_start_01.json",
+      "sha256": "09432e6ffd0eabd355f5ad340c791ba1b04ab22eac23d4c60cec7dcbbe8746e3",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        54007
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 1864,
+      "removed_normalization_count": 0,
+      "pending_reason": null
+    },
+    "M06/dialogue_special_attack_2_number/cold_start_01": {
+      "module": "M06",
+      "field": "dialogue_special_attack_2_number",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "archive": "M06-dialogue_special_attack_2_number-cold_start_01.json",
+      "sha256": "ad3eaf1754f14004d7a021d6416c217284c1f70fb378469f16753975c4925183",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        54009
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 1864,
+      "removed_normalization_count": 0,
+      "pending_reason": null
+    },
+    "M06/dialogue_special_attack_2_segment/cold_start_01": {
+      "module": "M06",
+      "field": "dialogue_special_attack_2_segment",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "archive": "M06-dialogue_special_attack_2_segment-cold_start_01.json",
+      "sha256": "f7d67aa024738f0cba388e0cdaf21768df81f54b84787842935db7b5aab0ff66",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        54008
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 1864,
+      "removed_normalization_count": 0,
+      "pending_reason": null
+    },
+    "M06/dialogue_special_attack_2_start/cold_start_01": {
+      "module": "M06",
+      "field": "dialogue_special_attack_2_start",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "archive": "M06-dialogue_special_attack_2_start-cold_start_01.json",
+      "sha256": "d1f2f407b03b2d9afe44af6b021caa5722becee5410565483a9da543f1784938",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        54006
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 1864,
+      "removed_normalization_count": 0,
+      "pending_reason": null
+    },
+    "M06/dialogue_special_attack_3_end/cold_start_01": {
+      "module": "M06",
+      "field": "dialogue_special_attack_3_end",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "archive": "M06-dialogue_special_attack_3_end-cold_start_01.json",
+      "sha256": "edd83547e78dc99aafc4d20e557e7b767363c5fd43ae589da447272fb50a8d6f",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        54002
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 1864,
+      "removed_normalization_count": 0,
+      "pending_reason": null
+    },
+    "M06/dialogue_special_attack_3_number/cold_start_01": {
+      "module": "M06",
+      "field": "dialogue_special_attack_3_number",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "archive": "M06-dialogue_special_attack_3_number-cold_start_01.json",
+      "sha256": "5c4067af456661254c11cf0016b20d6889b379a416e4e99acb865976e37e1944",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        54004
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 1864,
+      "removed_normalization_count": 0,
+      "pending_reason": null
+    },
+    "M06/dialogue_special_attack_3_segment/cold_start_01": {
+      "module": "M06",
+      "field": "dialogue_special_attack_3_segment",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "archive": "M06-dialogue_special_attack_3_segment-cold_start_01.json",
+      "sha256": "4abae96ac082b0d42ac1de1ff25ae784f46b08083d1e8f48b15506433a9453ba",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        54003
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 1864,
+      "removed_normalization_count": 0,
+      "pending_reason": null
+    },
+    "M06/dialogue_special_attack_3_start/cold_start_01": {
+      "module": "M06",
+      "field": "dialogue_special_attack_3_start",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "archive": "M06-dialogue_special_attack_3_start-cold_start_01.json",
+      "sha256": "c90b84311ce3596d6ad8d0ebf3c9f49afe2625aa7eb2daee8410043c22137c9d",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        54001
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 1864,
+      "removed_normalization_count": 0,
+      "pending_reason": null
+    },
+    "M06/enemy_music/cold_start_01": {
+      "module": "M06",
+      "field": "enemy_music",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "archive": "M06-enemy_music-cold_start_01.json",
+      "sha256": "551524bcdd854f491d82d8e5a1a6ce0b1ac7ea8c2f0cf1c154f898563c4f3cc4",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        53178
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 1,
+      "removed_normalization_count": 0,
+      "pending_reason": null
+    },
+    "M06/growth_curve/cold_start_01": {
+      "module": "M06",
+      "field": "growth_curve",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "archive": "M06-growth_curve-cold_start_01.json",
+      "sha256": "6e67220fc3815721fee3180a2204853cbfc030001e0a1ad1e8b0a1f7884eed48",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        296339
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 10188,
+      "removed_normalization_count": 4,
+      "pending_reason": null
+    },
+    "M06/growth_fixed/cold_start_01": {
+      "module": "M06",
+      "field": "growth_fixed",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "archive": "M06-growth_fixed-cold_start_01.json",
+      "sha256": "6ccd6217229c096214225e91df0d08f57c9831300036fdd94edf9e40063cd10d",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        296339
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 10188,
+      "removed_normalization_count": 4,
+      "pending_reason": null
+    },
+    "M06/hp_bonus/cold_start_01": {
+      "module": "M06",
+      "field": "hp_bonus",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "archive": "M06-hp_bonus-cold_start_01.json",
+      "sha256": "1e1bd2478d7ae135553931c0ba73eacea8436b25fc2e8d6bdc48986bac2c0aa3",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        296343,
+        296344
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 12155,
+      "removed_normalization_count": 4,
+      "pending_reason": null
+    },
+    "M06/mobility_bonus/cold_start_01": {
+      "module": "M06",
+      "field": "mobility_bonus",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "archive": "M06-mobility_bonus-cold_start_01.json",
+      "sha256": "98550e449a329cbacda0938a1eb4777b94383f56309b470dc0243884eac288cd",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        296343,
+        296344
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 12155,
+      "removed_normalization_count": 4,
+      "pending_reason": null
+    },
+    "M06/name/cold_start_01": {
+      "module": "M06",
+      "field": "name",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "archive": "M06-name-cold_start_01.json",
+      "sha256": "154908c95933a8dd2f1958a8aab8029511335b601eae99f27b7f30ddde386abd",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        302958
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 3923,
+      "removed_normalization_count": 2,
+      "pending_reason": null
+    },
+    "M06/portrait_back_bank/cold_start_01": {
+      "module": "M06",
+      "field": "portrait_back_bank",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "archive": "M06-portrait_back_bank-cold_start_01.json",
+      "sha256": "25851060fb930e53e5e0401ec4f1957145c25ba92935fc46a4a2ac7a20cb80af",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        43855
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 1,
+      "removed_normalization_count": 0,
+      "pending_reason": null
+    },
+    "M06/portrait_back_slot/cold_start_01": {
+      "module": "M06",
+      "field": "portrait_back_slot",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "archive": "M06-portrait_back_slot-cold_start_01.json",
+      "sha256": "9b119fdd84f0468077109ec8d931f25a1032a25bb31a833e753884bb696e587d",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        43857
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 1,
+      "removed_normalization_count": 0,
+      "pending_reason": null
+    },
+    "M06/portrait_back_upload/cold_start_01": {
+      "module": "M06",
+      "field": "portrait_back_upload",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "archive": "M06-portrait_back_upload-cold_start_01.json",
+      "sha256": "f28676f10f374ad867fdb8bf228ead79527f25a5624be0a7d56964e852831b29",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        561680
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 74,
+      "removed_normalization_count": 0,
+      "pending_reason": null
+    },
+    "M06/portrait_color_1/cold_start_01": {
+      "module": "M06",
+      "field": "portrait_color_1",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "archive": "M06-portrait_color_1-cold_start_01.json",
+      "sha256": "7ffec6286e4ead710a71a987c1c778a2c786cfb97a4c0918e83a31134319b380",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        43852
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 1,
+      "removed_normalization_count": 0,
+      "pending_reason": null
+    },
+    "M06/portrait_color_2/cold_start_01": {
+      "module": "M06",
+      "field": "portrait_color_2",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "archive": "M06-portrait_color_2-cold_start_01.json",
+      "sha256": "8e755815902a1d49e5f8b95d2cb9347f9c1e86b8ff80c5b884e361d451592362",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        43853
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 1,
+      "removed_normalization_count": 0,
+      "pending_reason": null
+    },
+    "M06/portrait_color_3/cold_start_01": {
+      "module": "M06",
+      "field": "portrait_color_3",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "archive": "M06-portrait_color_3-cold_start_01.json",
+      "sha256": "fd4083cf1cc52386f3790ed42f1cda3ce62c86287560b33a9c9604ec75acce43",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        43854
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 1,
+      "removed_normalization_count": 0,
+      "pending_reason": null
+    },
+    "M06/portrait_front_bank/cold_start_01": {
+      "module": "M06",
+      "field": "portrait_front_bank",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "archive": "M06-portrait_front_bank-cold_start_01.json",
+      "sha256": "fd1515d13caeed8164169da8bcb74c717fabb34d226023b5c49b9a7ae3d001c0",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        43856,
+        43858
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 2,
+      "removed_normalization_count": 0,
+      "pending_reason": null
+    },
+    "M06/portrait_front_slot/cold_start_01": {
+      "module": "M06",
+      "field": "portrait_front_slot",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "archive": "M06-portrait_front_slot-cold_start_01.json",
+      "sha256": "c0316240d39723d2a44169a2745c2a31a6ec574322ace616a1d39d04fe8a5b52",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        43858
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 1,
+      "removed_normalization_count": 0,
+      "pending_reason": null
+    },
+    "M06/portrait_front_upload/cold_start_01": {
+      "module": "M06",
+      "field": "portrait_front_upload",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "archive": "M06-portrait_front_upload-cold_start_01.json",
+      "sha256": "f0cfae3e6471f595f98ab5d74e8216164a36c66073652cb896cba91463026c20",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        561426
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 223,
+      "removed_normalization_count": 0,
+      "pending_reason": null
+    },
+    "M06/sp/cold_start_01": {
+      "module": "M06",
+      "field": "sp",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "archive": "M06-sp-cold_start_01.json",
+      "sha256": "1dde47b5e0d64647007c254ea1f9b1fb0f5a2a0b1ea8455a8a3838a6340aad59",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        296338
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 10188,
+      "removed_normalization_count": 4,
+      "pending_reason": null
+    },
+    "M06/speed_bonus/cold_start_01": {
+      "module": "M06",
+      "field": "speed_bonus",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "archive": "M06-speed_bonus-cold_start_01.json",
+      "sha256": "2d0441a745a6e4a3dbb6e694502a43e70423a51f2934a53257894bbad61e243a",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        296343,
+        296344
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 12155,
+      "removed_normalization_count": 4,
+      "pending_reason": null
+    },
+    "M06/spirit_01/cold_start_01": {
+      "module": "M06",
+      "field": "spirit_01",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "archive": "M06-spirit_01-cold_start_01.json",
+      "sha256": "bc455b5c7707329c167a71b7a32091e64d467aa583b96d3a6da81b4d5e185eba",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        296340
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 10188,
+      "removed_normalization_count": 4,
+      "pending_reason": null
+    },
+    "M06/spirit_02/cold_start_01": {
+      "module": "M06",
+      "field": "spirit_02",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "archive": "M06-spirit_02-cold_start_01.json",
+      "sha256": "ac57dabae786b2141de7c64f57630200e28900a7da2b52e20b825fa504ad0c37",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        296340
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 10188,
+      "removed_normalization_count": 4,
+      "pending_reason": null
+    },
+    "M06/spirit_03/cold_start_01": {
+      "module": "M06",
+      "field": "spirit_03",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "archive": "M06-spirit_03-cold_start_01.json",
+      "sha256": "3931adad8c99bd4b2ecf4835feaca71f39bd82658edc37f7f199fc2273490cda",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        296340
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 10188,
+      "removed_normalization_count": 4,
+      "pending_reason": null
+    },
+    "M06/spirit_04/cold_start_01": {
+      "module": "M06",
+      "field": "spirit_04",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "archive": "M06-spirit_04-cold_start_01.json",
+      "sha256": "610a470617f378a21f6688fda956507813de24372ab26816a591b9fc26d15a97",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        296340
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 10188,
+      "removed_normalization_count": 4,
+      "pending_reason": null
+    },
+    "M06/spirit_05/cold_start_01": {
+      "module": "M06",
+      "field": "spirit_05",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "archive": "M06-spirit_05-cold_start_01.json",
+      "sha256": "9807cb6bfe8cc62bc539dfde5e3977c18b0e51d70eb89429e78b70e4f48250d8",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        296340
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 10188,
+      "removed_normalization_count": 4,
+      "pending_reason": null
+    },
+    "M06/spirit_06/cold_start_01": {
+      "module": "M06",
+      "field": "spirit_06",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "archive": "M06-spirit_06-cold_start_01.json",
+      "sha256": "4990cf07a15da84c3fcca8342fdf696ff16a55bf1537b045b9e3df7ef9f67c95",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        296340
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 10188,
+      "removed_normalization_count": 4,
+      "pending_reason": null
+    },
+    "M06/spirit_07/cold_start_01": {
+      "module": "M06",
+      "field": "spirit_07",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "archive": "M06-spirit_07-cold_start_01.json",
+      "sha256": "cd92c595c905492bb10b777d530989fff218b819761d2fe1665a08a2be604a90",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        296340
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 10188,
+      "removed_normalization_count": 4,
+      "pending_reason": null
+    },
+    "M06/spirit_08/cold_start_01": {
+      "module": "M06",
+      "field": "spirit_08",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "archive": "M06-spirit_08-cold_start_01.json",
+      "sha256": "5b7321c586c87c1ae672fffb28a6fbb8ee782e95f024cccec2f5c26b011b1f41",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        296340
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 10188,
+      "removed_normalization_count": 4,
+      "pending_reason": null
+    },
+    "M06/spirit_09/cold_start_01": {
+      "module": "M06",
+      "field": "spirit_09",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "archive": "M06-spirit_09-cold_start_01.json",
+      "sha256": "3459ef1d24496af243190fc7f5164116c54ed8e2969088040998d0641f771147",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        296341
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 10188,
+      "removed_normalization_count": 4,
+      "pending_reason": null
+    },
+    "M06/spirit_10/cold_start_01": {
+      "module": "M06",
+      "field": "spirit_10",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "archive": "M06-spirit_10-cold_start_01.json",
+      "sha256": "80650d097ed06b363621961486ddc8e3a9ac736e168d330ed1fb70c473dd1d7c",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        296341
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 10188,
+      "removed_normalization_count": 4,
+      "pending_reason": null
+    },
+    "M06/spirit_11/cold_start_01": {
+      "module": "M06",
+      "field": "spirit_11",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "archive": "M06-spirit_11-cold_start_01.json",
+      "sha256": "442c61455f095a9156bc93beaff20c36131aefa9b28b6a124daf4abecb97e01a",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        296341
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 10188,
+      "removed_normalization_count": 4,
+      "pending_reason": null
+    },
+    "M06/spirit_12/cold_start_01": {
+      "module": "M06",
+      "field": "spirit_12",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "archive": "M06-spirit_12-cold_start_01.json",
+      "sha256": "e8bbef60cc7c37e8b7337d40be1e99c20a4c98c826625d48e8b80077909c1ae5",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        296341
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 10188,
+      "removed_normalization_count": 4,
+      "pending_reason": null
+    },
+    "M06/spirit_13/cold_start_01": {
+      "module": "M06",
+      "field": "spirit_13",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "archive": "M06-spirit_13-cold_start_01.json",
+      "sha256": "0d9d204dee895ec8ed5274adfa8b023105bbe904993dd0d417dde5ed676a4de1",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        296341
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 10188,
+      "removed_normalization_count": 4,
+      "pending_reason": null
+    },
+    "M06/spirit_14/cold_start_01": {
+      "module": "M06",
+      "field": "spirit_14",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "archive": "M06-spirit_14-cold_start_01.json",
+      "sha256": "9b5865dfb3f2a26a88a83e77bae80b5c8fe4d3f5c52a23f93eb6fadb43c33d6f",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        296341
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 10188,
+      "removed_normalization_count": 4,
+      "pending_reason": null
+    },
+    "M06/spirit_15/cold_start_01": {
+      "module": "M06",
+      "field": "spirit_15",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "archive": "M06-spirit_15-cold_start_01.json",
+      "sha256": "592cd144b3611a90b4b7d5ef3e52cd6ba2efb36f65a707b276d709dfe189db52",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        296341
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 10188,
+      "removed_normalization_count": 4,
+      "pending_reason": null
+    },
+    "M06/spirit_16/cold_start_01": {
+      "module": "M06",
+      "field": "spirit_16",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "archive": "M06-spirit_16-cold_start_01.json",
+      "sha256": "f2af69783a763421c8d5161ba5362e3e6776e4c5f45efe677a4453cf3525366d",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        296341
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 10188,
+      "removed_normalization_count": 4,
+      "pending_reason": null
+    },
+    "M06/spirit_17/cold_start_01": {
+      "module": "M06",
+      "field": "spirit_17",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "archive": "M06-spirit_17-cold_start_01.json",
+      "sha256": "c5903f6610acf4f16dc04cda90b1466300d27ea12d82d2f446d7032a9a2bbba1",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        296342
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 10188,
+      "removed_normalization_count": 4,
+      "pending_reason": null
+    },
+    "M06/spirit_18/cold_start_01": {
+      "module": "M06",
+      "field": "spirit_18",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "archive": "M06-spirit_18-cold_start_01.json",
+      "sha256": "fd072573b27e2954426949c44f9f3d8d65404cbb031234e9870e2e9f2fd2ea1b",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        296342
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 10188,
+      "removed_normalization_count": 4,
+      "pending_reason": null
+    },
+    "M06/spirit_19/cold_start_01": {
+      "module": "M06",
+      "field": "spirit_19",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "archive": "M06-spirit_19-cold_start_01.json",
+      "sha256": "e8cbefadbf241bb1c0a78199bb9a8c85429e740a620abd015aa6da39179f6786",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        296342
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 10188,
+      "removed_normalization_count": 4,
+      "pending_reason": null
+    },
+    "M06/spirit_20/cold_start_01": {
+      "module": "M06",
+      "field": "spirit_20",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "archive": "M06-spirit_20-cold_start_01.json",
+      "sha256": "83ed3bf29bf22da92b600c9cfdd9dfed11a000876ba7b4ffaa648a1b23af158a",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        296342
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 10188,
+      "removed_normalization_count": 4,
+      "pending_reason": null
+    },
+    "M06/spirit_21/cold_start_01": {
+      "module": "M06",
+      "field": "spirit_21",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "archive": "M06-spirit_21-cold_start_01.json",
+      "sha256": "cd458b3fa74f59d3abeca0ba183645224e74176bb100ce6a949885772b9c0181",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        296342
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 10188,
+      "removed_normalization_count": 4,
+      "pending_reason": null
+    },
+    "M06/spirit_22/cold_start_01": {
+      "module": "M06",
+      "field": "spirit_22",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "archive": "M06-spirit_22-cold_start_01.json",
+      "sha256": "dae18ac6f7be624d64c8e13147afa250a0240b1255e0521ca8db0dd2d84eed48",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        296342
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 10188,
+      "removed_normalization_count": 4,
+      "pending_reason": null
+    },
+    "M06/spirit_23/cold_start_01": {
+      "module": "M06",
+      "field": "spirit_23",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "archive": "M06-spirit_23-cold_start_01.json",
+      "sha256": "1760a7d06abd34b92b16ba280a441cd7ef7488e0310d3e851e9be8331c742ceb",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        296342
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 10188,
+      "removed_normalization_count": 4,
+      "pending_reason": null
+    },
+    "M06/spirit_24/cold_start_01": {
+      "module": "M06",
+      "field": "spirit_24",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "archive": "M06-spirit_24-cold_start_01.json",
+      "sha256": "3b35a5cd0773ee24b526ec59e670f8e942b0339c7f25df477e15e206cd7603c3",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        296342
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 10188,
+      "removed_normalization_count": 4,
+      "pending_reason": null
+    },
+    "M06/spirit_cost_01/cold_start_01": {
+      "module": "M06",
+      "field": "spirit_cost_01",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "archive": "M06-spirit_cost_01-cold_start_01.json",
+      "sha256": "3c8604e970951642338323a9777e8569a37fdf6fed45453b6689dc854fbc17b4",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        236360
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 1,
+      "removed_normalization_count": 0,
+      "pending_reason": null
+    },
+    "M06/spirit_cost_02/cold_start_01": {
+      "module": "M06",
+      "field": "spirit_cost_02",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "archive": "M06-spirit_cost_02-cold_start_01.json",
+      "sha256": "7ba12d9ef09e3871fc2e1e59e5b8cc780060a3eb024a9417717200be712d830e",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        236361
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 1,
+      "removed_normalization_count": 0,
+      "pending_reason": null
+    },
+    "M06/spirit_cost_03/cold_start_01": {
+      "module": "M06",
+      "field": "spirit_cost_03",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "archive": "M06-spirit_cost_03-cold_start_01.json",
+      "sha256": "97b475291d31cce96cfce69e5a06e7334d31073a3c130cbe4193e7462e269719",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        236362
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 1,
+      "removed_normalization_count": 0,
+      "pending_reason": null
+    },
+    "M06/spirit_cost_04/cold_start_01": {
+      "module": "M06",
+      "field": "spirit_cost_04",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "archive": "M06-spirit_cost_04-cold_start_01.json",
+      "sha256": "1a19351726022352dd8cc0a9013ff8d91edd8b1559babd1414dbf8b554bf058c",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        236363
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 1,
+      "removed_normalization_count": 0,
+      "pending_reason": null
+    },
+    "M06/spirit_cost_05/cold_start_01": {
+      "module": "M06",
+      "field": "spirit_cost_05",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "archive": "M06-spirit_cost_05-cold_start_01.json",
+      "sha256": "13f81d0703f155ec5bea16d943fd58fb157c1e64ce81f341e797b498553d2831",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        236364
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 1,
+      "removed_normalization_count": 0,
+      "pending_reason": null
+    },
+    "M06/spirit_cost_06/cold_start_01": {
+      "module": "M06",
+      "field": "spirit_cost_06",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "archive": "M06-spirit_cost_06-cold_start_01.json",
+      "sha256": "f7d8b30497ce50227477390069b2a4a685f1026b2ab8549b3259f2fef9178415",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        236365
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 1,
+      "removed_normalization_count": 0,
+      "pending_reason": null
+    },
+    "M06/spirit_cost_07/cold_start_01": {
+      "module": "M06",
+      "field": "spirit_cost_07",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "archive": "M06-spirit_cost_07-cold_start_01.json",
+      "sha256": "92f6ea53fff16adf8d2e8530c7bf813c40e1d8cf27eafeadbf63cf5980edef84",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        236366
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 1,
+      "removed_normalization_count": 0,
+      "pending_reason": null
+    },
+    "M06/spirit_cost_08/cold_start_01": {
+      "module": "M06",
+      "field": "spirit_cost_08",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "archive": "M06-spirit_cost_08-cold_start_01.json",
+      "sha256": "7aca5a8986e41eb8959f3874ea78c08596ee7e6c42c37312c34a4de1077445e5",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        236367
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 1,
+      "removed_normalization_count": 0,
+      "pending_reason": null
+    },
+    "M06/spirit_cost_09/cold_start_01": {
+      "module": "M06",
+      "field": "spirit_cost_09",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "archive": "M06-spirit_cost_09-cold_start_01.json",
+      "sha256": "f972df9c9b66201ac8fffcbe51312614c60d246a35a5a0307cff0a46120b6f3e",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        236368
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 1,
+      "removed_normalization_count": 0,
+      "pending_reason": null
+    },
+    "M06/spirit_cost_10/cold_start_01": {
+      "module": "M06",
+      "field": "spirit_cost_10",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "archive": "M06-spirit_cost_10-cold_start_01.json",
+      "sha256": "3c75c216426db16768d445e5d4e63f48a8fc36edb47dcbce87a3841d8fdbc2c4",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        236369
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 1,
+      "removed_normalization_count": 0,
+      "pending_reason": null
+    },
+    "M06/spirit_cost_11/cold_start_01": {
+      "module": "M06",
+      "field": "spirit_cost_11",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "archive": "M06-spirit_cost_11-cold_start_01.json",
+      "sha256": "75049900d1dfdecc1004c123e59e18424c951674500e33ff98ac25f36983629d",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        236370
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 1,
+      "removed_normalization_count": 0,
+      "pending_reason": null
+    },
+    "M06/spirit_cost_12/cold_start_01": {
+      "module": "M06",
+      "field": "spirit_cost_12",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "archive": "M06-spirit_cost_12-cold_start_01.json",
+      "sha256": "73d449b6bc434afb69a202c0c87d1249657ac5eb0116bd871e3bf2dea8beecfa",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        236371
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 1,
+      "removed_normalization_count": 0,
+      "pending_reason": null
+    },
+    "M06/spirit_cost_13/cold_start_01": {
+      "module": "M06",
+      "field": "spirit_cost_13",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "archive": "M06-spirit_cost_13-cold_start_01.json",
+      "sha256": "ab1fe985ff3b759c4c50abc1a50b2e1c4607ae54c5f205a85f5b8088a5bdb3d6",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        236372
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 1,
+      "removed_normalization_count": 0,
+      "pending_reason": null
+    },
+    "M06/spirit_cost_14/cold_start_01": {
+      "module": "M06",
+      "field": "spirit_cost_14",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "archive": "M06-spirit_cost_14-cold_start_01.json",
+      "sha256": "23ed731d0c4755d01f52252919adbc08f16ff19c32da18ff37adca935793f15a",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        236373
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 1,
+      "removed_normalization_count": 0,
+      "pending_reason": null
+    },
+    "M06/spirit_cost_15/cold_start_01": {
+      "module": "M06",
+      "field": "spirit_cost_15",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "archive": "M06-spirit_cost_15-cold_start_01.json",
+      "sha256": "7209d4e3aa2cf3f784dc9980847cd719cacfdace602d2679e42df011bd4972bc",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        236374
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 1,
+      "removed_normalization_count": 0,
+      "pending_reason": null
+    },
+    "M06/spirit_cost_16/cold_start_01": {
+      "module": "M06",
+      "field": "spirit_cost_16",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "archive": "M06-spirit_cost_16-cold_start_01.json",
+      "sha256": "329b332d7df0570d7431b4e3390164d71556dca5690069188b5fb5e0aa54b437",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        236375
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 1,
+      "removed_normalization_count": 0,
+      "pending_reason": null
+    },
+    "M06/spirit_cost_17/cold_start_01": {
+      "module": "M06",
+      "field": "spirit_cost_17",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "archive": "M06-spirit_cost_17-cold_start_01.json",
+      "sha256": "dba578f02cd51ea310b90ec21e103ac0260faf170225231f9ffa6e27fb13ba3a",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        236376
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 1,
+      "removed_normalization_count": 0,
+      "pending_reason": null
+    },
+    "M06/spirit_cost_18/cold_start_01": {
+      "module": "M06",
+      "field": "spirit_cost_18",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "archive": "M06-spirit_cost_18-cold_start_01.json",
+      "sha256": "82527a383ac570c80429d40acc45d98102a96792b19ba8a9ac3e8206b6da9d81",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        236377
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 1,
+      "removed_normalization_count": 0,
+      "pending_reason": null
+    },
+    "M06/spirit_cost_19/cold_start_01": {
+      "module": "M06",
+      "field": "spirit_cost_19",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "archive": "M06-spirit_cost_19-cold_start_01.json",
+      "sha256": "d683d4b8860a375dc5da167caf3956ec192c84b0a1cc6a6de348a149fbda2ba4",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        236378
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 1,
+      "removed_normalization_count": 0,
+      "pending_reason": null
+    },
+    "M06/spirit_cost_20/cold_start_01": {
+      "module": "M06",
+      "field": "spirit_cost_20",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "archive": "M06-spirit_cost_20-cold_start_01.json",
+      "sha256": "cecba04db6c8c4e73f21b9ef146f83ed310c738908e692ffa69db87456f121b6",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        236379
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 1,
+      "removed_normalization_count": 0,
+      "pending_reason": null
+    },
+    "M06/spirit_cost_21/cold_start_01": {
+      "module": "M06",
+      "field": "spirit_cost_21",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "archive": "M06-spirit_cost_21-cold_start_01.json",
+      "sha256": "3b027669a5c83474b49d4db31872a2dbc149ae06592beaadeb5b2d60608b06ef",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        236380
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 1,
+      "removed_normalization_count": 0,
+      "pending_reason": null
+    },
+    "M06/spirit_cost_22/cold_start_01": {
+      "module": "M06",
+      "field": "spirit_cost_22",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "archive": "M06-spirit_cost_22-cold_start_01.json",
+      "sha256": "b31a5ef3c6b2c4a8cee3f379d6108f6245084a0358ae25b68dbc36a253bd61e0",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        236381
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 1,
+      "removed_normalization_count": 0,
+      "pending_reason": null
+    },
+    "M06/spirit_cost_23/cold_start_01": {
+      "module": "M06",
+      "field": "spirit_cost_23",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "archive": "M06-spirit_cost_23-cold_start_01.json",
+      "sha256": "b7ab31ea37d9aead5881e0c9cbc4149dbb9af403d9eb26e01e3d46b5d3ee4e6b",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        236382
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 1,
+      "removed_normalization_count": 0,
+      "pending_reason": null
+    },
+    "M06/spirit_cost_24/cold_start_01": {
+      "module": "M06",
+      "field": "spirit_cost_24",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "archive": "M06-spirit_cost_24-cold_start_01.json",
+      "sha256": "7b7db8433ca5f5e2559b821a162270841ea6edbde27eaa0775a4016ee0b1ff03",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        236383
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 1,
+      "removed_normalization_count": 0,
+      "pending_reason": null
+    },
+    "M06/strength_bonus/cold_start_01": {
+      "module": "M06",
+      "field": "strength_bonus",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "archive": "M06-strength_bonus-cold_start_01.json",
+      "sha256": "96d7bbc8d7eb8ad20a3de632e26cd52cbe6a4406000173b8149d070555b6b792",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        296343,
+        296344
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 12155,
+      "removed_normalization_count": 4,
+      "pending_reason": null
+    },
+    "M06/transform_dialogue_2_end/cold_start_01": {
+      "module": "M06",
+      "field": "transform_dialogue_2_end",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "archive": "M06-transform_dialogue_2_end-cold_start_01.json",
+      "sha256": "fe283739571f8045803d56feff0f9f9edef8d0236b742e52f1d9cc924e2dac50",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        88502
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 1,
+      "removed_normalization_count": 0,
+      "pending_reason": null
+    },
+    "M06/transform_dialogue_2_number/cold_start_01": {
+      "module": "M06",
+      "field": "transform_dialogue_2_number",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "archive": "M06-transform_dialogue_2_number-cold_start_01.json",
+      "sha256": "0d9d822611d10c3e63402110984721bbfac9e062169f0988a378ff77268f0b3e",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        88503
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 1,
+      "removed_normalization_count": 0,
+      "pending_reason": null
+    },
+    "M06/transform_dialogue_2_start/cold_start_01": {
+      "module": "M06",
+      "field": "transform_dialogue_2_start",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "archive": "M06-transform_dialogue_2_start-cold_start_01.json",
+      "sha256": "4407f664c7482695b82a5b02d9f35eab03657863c0ef9e90b7cbb2b66071b38a",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        88501
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 1,
+      "removed_normalization_count": 0,
+      "pending_reason": null
+    },
+    "M06/transform_dialogue_add/cold_start_01": {
+      "module": "M06",
+      "field": "transform_dialogue_add",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "archive": "M06-transform_dialogue_add-cold_start_01.json",
+      "sha256": "e652413bd80cc04992c8b8b80229aadaf463718aa72ba37f883310ae4e722bcc",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        88504
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 429,
+      "removed_normalization_count": 0,
+      "pending_reason": null
+    },
+    "M06/transform_dialogue_clear/cold_start_01": {
+      "module": "M06",
+      "field": "transform_dialogue_clear",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "archive": "M06-transform_dialogue_clear-cold_start_01.json",
+      "sha256": "35806771a8da99b079317b871d3caaac4001e10d953ff23b82149575fd3ff64f",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        88496
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 435,
+      "removed_normalization_count": 0,
+      "pending_reason": null
+    },
+    "M06/transform_dialogue_end/cold_start_01": {
+      "module": "M06",
+      "field": "transform_dialogue_end",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "archive": "M06-transform_dialogue_end-cold_start_01.json",
+      "sha256": "d3c8078524c328fe6299cae92fa0e20718438e1b55c2780ee6ed65f2d0ee564b",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        88498
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 1,
+      "removed_normalization_count": 0,
+      "pending_reason": null
+    },
+    "M06/transform_dialogue_number/cold_start_01": {
+      "module": "M06",
+      "field": "transform_dialogue_number",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "archive": "M06-transform_dialogue_number-cold_start_01.json",
+      "sha256": "8055650de8c70b69aaecca8b66e7c473b07d77ff934e1b96da7574a04fa24a8e",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        88499
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 1,
+      "removed_normalization_count": 0,
+      "pending_reason": null
+    },
+    "M06/transform_dialogue_start/cold_start_01": {
+      "module": "M06",
+      "field": "transform_dialogue_start",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "archive": "M06-transform_dialogue_start-cold_start_01.json",
+      "sha256": "e71ad8408367482306274f1172c82c86ede3ba56c2fd6fa17e26c5e0563cea2d",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        88497
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 1,
+      "removed_normalization_count": 0,
+      "pending_reason": null
+    },
+    "M07/distance_correction/cold_start_01": {
+      "module": "M07",
+      "field": "distance_correction",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "archive": "M07-distance_correction-cold_start_01.json",
+      "sha256": "0b0402d261243a369451efe6b5f76f6b0710f342805892afd20a21c6e2aef999",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        301070
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 1,
+      "removed_normalization_count": 0,
+      "pending_reason": null
+    },
+    "M07/hit/cold_start_01": {
+      "module": "M07",
+      "field": "hit",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "archive": "M07-hit-cold_start_01.json",
+      "sha256": "8143b1d196fe383cb1d1de16215ac62c16b3417960aa30abbd3f837dca4ca463",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        301069
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 1,
+      "removed_normalization_count": 0,
+      "pending_reason": null
+    },
+    "M07/max_range/cold_start_01": {
+      "module": "M07",
+      "field": "max_range",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "archive": "M07-max_range-cold_start_01.json",
+      "sha256": "6c42eca971f94abc2c3fba3dcca5de6ba77dd5c1c2c5c19714e66631f9509075",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        301068
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 1,
+      "removed_normalization_count": 0,
+      "pending_reason": null
+    },
+    "M07/name_token/cold_start_01": {
+      "module": "M07",
+      "field": "name_token",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "archive": "M07-name_token-cold_start_01.json",
+      "sha256": "d73cb4eade52af00ae0db5dcd53ce604eff88868af82b04b13553115fe0b63bd",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        294944
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 2487,
+      "removed_normalization_count": 2,
+      "pending_reason": null
+    },
+    "M07/power_air/cold_start_01": {
+      "module": "M07",
+      "field": "power_air",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "archive": "M07-power_air-cold_start_01.json",
+      "sha256": "eb2e70495ec86b94cdc3cb514e46d2edb1d41206b6b1ab398f03d7f24c488ac3",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        301071
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 1,
+      "removed_normalization_count": 0,
+      "pending_reason": null
+    },
+    "M07/power_land/cold_start_01": {
+      "module": "M07",
+      "field": "power_land",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "archive": "M07-power_land-cold_start_01.json",
+      "sha256": "4d205b8f0396d9231c345fb2fad802df734a678942d368f5503aee063bfe65d7",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        301072
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 1,
+      "removed_normalization_count": 0,
+      "pending_reason": null
+    },
+    "M07/power_sea/cold_start_01": {
+      "module": "M07",
+      "field": "power_sea",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "archive": "M07-power_sea-cold_start_01.json",
+      "sha256": "3284896052747dc1c1d212721856ab686183458e841aaff7e59b5ae2d61ff603",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        301073
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 1,
+      "removed_normalization_count": 0,
+      "pending_reason": null
+    },
+    "M07/weapon_skill/cold_start_01": {
+      "module": "M07",
+      "field": "weapon_skill",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "archive": "M07-weapon_skill-cold_start_01.json",
+      "sha256": "75d0035c596d104f6e17c2766e11f4cd3be2ac9b1c87d995729af4a84732d0f3",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        301068
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 1,
+      "removed_normalization_count": 0,
+      "pending_reason": null
+    },
+    "M08/battle_00_row000_variant000/cold_start_01": {
+      "module": "M08",
+      "field": "battle_00_row000_variant000",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "archive": "M08-battle_00_row000_variant000-cold_start_01.json",
+      "sha256": "6901c02d227dc4bed51d7553f466104f693e3b0c01b542ca26aeb21e21a2fb10",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        344112
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 1,
+      "removed_normalization_count": 0,
+      "pending_reason": null
+    },
+    "M08/battle_01_row000_variant000/cold_start_01": {
+      "module": "M08",
+      "field": "battle_01_row000_variant000",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "archive": "M08-battle_01_row000_variant000-cold_start_01.json",
+      "sha256": "53b702328d012163115d30618f4d1837c273664a2f22a02a8ce8cca2efab54c3",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        358212,
+        358213
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 2,
+      "removed_normalization_count": 0,
+      "pending_reason": null
+    },
+    "M08/battle_04_row000_variant001/cold_start_01": {
+      "module": "M08",
+      "field": "battle_04_row000_variant001",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "archive": "M08-battle_04_row000_variant001-cold_start_01.json",
+      "sha256": "a34092710ed2dc69cd2afc8080f39c79d71da69e3b49671b4e160c826569c23a",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        114704
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 10866,
+      "removed_normalization_count": 0,
+      "pending_reason": null
+    },
+    "M08/battle_05_row001_variant000/cold_start_01": {
+      "module": "M08",
+      "field": "battle_05_row001_variant000",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "archive": "M08-battle_05_row001_variant000-cold_start_01.json",
+      "sha256": "4d2f5325057c0c2c9d1b8fa9adb4512970c7e12086455c2fec68d9cf2c5e2a59",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        124837,
+        124838
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 2,
+      "removed_normalization_count": 0,
+      "pending_reason": null
+    },
+    "M08/battle_07_alias_row000_variant000/cold_start_01": {
+      "module": "M08",
+      "field": "battle_07_alias_row000_variant000",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "archive": "M08-battle_07_alias_row000_variant000-cold_start_01.json",
+      "sha256": "75154e23ea3b28f092c8b8e9f9a4d7d7adcb3396a16ca6b29528ea83f9b7622a",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        125790,
+        125791
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 2,
+      "removed_normalization_count": 0,
+      "pending_reason": null
+    },
+    "M09/distance_first/write": {
+      "module": "M09",
+      "field": "distance_first",
+      "case_id": "write",
+      "case_kind": "golden",
+      "archive": "M09-distance_first-write.json",
+      "sha256": "5d057e8cf01ed2faea919bfb8b1cf05f14902772d7514016ee5e58fb58d68bb5",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        46658
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 7,
+      "removed_normalization_count": 6,
+      "pending_reason": null
+    },
+    "M09/distance_last/write": {
+      "module": "M09",
+      "field": "distance_last",
+      "case_id": "write",
+      "case_kind": "golden",
+      "archive": "M09-distance_last-write.json",
+      "sha256": "333ecafd5d3d503faaca2e6d81ccc058d4a2d86f5fece0d0af373df502b14dbb",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        46721
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 7,
+      "removed_normalization_count": 6,
+      "pending_reason": null
+    },
+    "M09/experience_level_2/write": {
+      "module": "M09",
+      "field": "experience_level_2",
+      "case_id": "write",
+      "case_kind": "discovery",
+      "archive": "M09-experience_level_2-write.json",
+      "sha256": "487caecf38077b51a00ac126b290fbfaedd9bb5506de97007ed81f3a43590c6a",
+      "passed": null,
+      "expected_known": false,
+      "required_offsets": [],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 6,
+      "removed_normalization_count": 6,
+      "pending_reason": "发现型用例：存量 expected_offset=0（写入偏移未知）且重开读取值不等于请求值，需在线采集补证"
+    },
+    "M09/experience_level_60/write": {
+      "module": "M09",
+      "field": "experience_level_60",
+      "case_id": "write",
+      "case_kind": "discovery",
+      "archive": "M09-experience_level_60-write.json",
+      "sha256": "cea836606c6b6a6ef74c04caa45fea1315096dc74c1b59ad1edcde9dd6dc0407",
+      "passed": null,
+      "expected_known": false,
+      "required_offsets": [],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 6,
+      "removed_normalization_count": 6,
+      "pending_reason": "发现型用例：存量 expected_offset=0（写入偏移未知）且重开读取值不等于请求值，需在线采集补证"
+    },
+    "M09/level_cap/write": {
+      "module": "M09",
+      "field": "level_cap",
+      "case_id": "write",
+      "case_kind": "discovery",
+      "archive": "M09-level_cap-write.json",
+      "sha256": "c98428288c763100910d298ba08caccba64c0c17849357188699fa830b8ea23b",
+      "passed": null,
+      "expected_known": false,
+      "required_offsets": [],
+      "optional_offsets": [],
+      "unexpected_count": 3772,
+      "changed_count": 3778,
+      "removed_normalization_count": 6,
+      "pending_reason": "发现型用例：等级上限 60→61 触发成长曲线等联动重写（3778 处偏移），无单一预期偏移集，待在线采集拆解（D5 决策）"
+    },
+    "M10/item_price_01/write": {
+      "module": "M10",
+      "field": "item_price_01",
+      "case_id": "write",
+      "case_kind": "golden",
+      "archive": "M10-item_price_01-write.json",
+      "sha256": "f96472741496c0cacedb2052be2380f52586b3e1c197e5e23c0e720d1cd979c4",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        87843
+      ],
+      "optional_offsets": [
+        87844
+      ],
+      "unexpected_count": 0,
+      "changed_count": 7,
+      "removed_normalization_count": 6,
+      "pending_reason": null
+    },
+    "M10/item_price_02/write": {
+      "module": "M10",
+      "field": "item_price_02",
+      "case_id": "write",
+      "case_kind": "golden",
+      "archive": "M10-item_price_02-write.json",
+      "sha256": "3b03d2a8a3035a7f6ed7ae2185441995bba7139881441c8f78a4e28d1e9b30a8",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        87845
+      ],
+      "optional_offsets": [
+        87846
+      ],
+      "unexpected_count": 0,
+      "changed_count": 7,
+      "removed_normalization_count": 6,
+      "pending_reason": null
+    },
+    "M10/item_price_03/write": {
+      "module": "M10",
+      "field": "item_price_03",
+      "case_id": "write",
+      "case_kind": "golden",
+      "archive": "M10-item_price_03-write.json",
+      "sha256": "4a6dfce05baa33bba59ae74870d2079b52cf1d16492235276e1d257682df4d44",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        87847
+      ],
+      "optional_offsets": [
+        87848
+      ],
+      "unexpected_count": 0,
+      "changed_count": 7,
+      "removed_normalization_count": 6,
+      "pending_reason": null
+    },
+    "M10/item_price_04/write": {
+      "module": "M10",
+      "field": "item_price_04",
+      "case_id": "write",
+      "case_kind": "golden",
+      "archive": "M10-item_price_04-write.json",
+      "sha256": "1e8d405a8c7b4bd0bb06a29f0ade7d77c7408739e6c4a8fb10d5f5cb466a3519",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        87849
+      ],
+      "optional_offsets": [
+        87850
+      ],
+      "unexpected_count": 0,
+      "changed_count": 7,
+      "removed_normalization_count": 6,
+      "pending_reason": null
+    },
+    "M10/item_price_05/write": {
+      "module": "M10",
+      "field": "item_price_05",
+      "case_id": "write",
+      "case_kind": "golden",
+      "archive": "M10-item_price_05-write.json",
+      "sha256": "cb981253e9a564085f137de8e342ceecb1d73f53af848aa8a3a161adda8418cd",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        87851
+      ],
+      "optional_offsets": [
+        87852
+      ],
+      "unexpected_count": 0,
+      "changed_count": 7,
+      "removed_normalization_count": 6,
+      "pending_reason": null
+    },
+    "M10/item_price_06/write": {
+      "module": "M10",
+      "field": "item_price_06",
+      "case_id": "write",
+      "case_kind": "golden",
+      "archive": "M10-item_price_06-write.json",
+      "sha256": "43b45d943ca18d3c3b33a15654c1eee09e4041b19e64ac2b6eec58ad825ac0da",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        87853
+      ],
+      "optional_offsets": [
+        87854
+      ],
+      "unexpected_count": 0,
+      "changed_count": 7,
+      "removed_normalization_count": 6,
+      "pending_reason": null
+    },
+    "M10/item_price_07/write": {
+      "module": "M10",
+      "field": "item_price_07",
+      "case_id": "write",
+      "case_kind": "golden",
+      "archive": "M10-item_price_07-write.json",
+      "sha256": "5dcd29ba3c4fa5ba371ebc36f8dbf74205447ea17987707b53e714f316022738",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        87855
+      ],
+      "optional_offsets": [
+        87856
+      ],
+      "unexpected_count": 0,
+      "changed_count": 7,
+      "removed_normalization_count": 6,
+      "pending_reason": null
+    },
+    "M10/item_price_08/write": {
+      "module": "M10",
+      "field": "item_price_08",
+      "case_id": "write",
+      "case_kind": "golden",
+      "archive": "M10-item_price_08-write.json",
+      "sha256": "c10ce53be120b455934382697e47159aaffe02b0a0f3518285ee9d297c297318",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        87857
+      ],
+      "optional_offsets": [
+        87858
+      ],
+      "unexpected_count": 0,
+      "changed_count": 7,
+      "removed_normalization_count": 6,
+      "pending_reason": null
+    },
+    "M10/item_price_09/write": {
+      "module": "M10",
+      "field": "item_price_09",
+      "case_id": "write",
+      "case_kind": "golden",
+      "archive": "M10-item_price_09-write.json",
+      "sha256": "ca19f5e950e88209ea31ae08451886a85c8f5c8905dfa6df1a36540b7a3b162c",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        87859
+      ],
+      "optional_offsets": [
+        87860
+      ],
+      "unexpected_count": 0,
+      "changed_count": 7,
+      "removed_normalization_count": 6,
+      "pending_reason": null
+    },
+    "M10/item_price_10/write": {
+      "module": "M10",
+      "field": "item_price_10",
+      "case_id": "write",
+      "case_kind": "golden",
+      "archive": "M10-item_price_10-write.json",
+      "sha256": "4a6f5bfd3a74b4050e419df37b10bb0d4188fa9f26391a912dae713fcc4e1a8e",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        87861
+      ],
+      "optional_offsets": [
+        87862
+      ],
+      "unexpected_count": 0,
+      "changed_count": 7,
+      "removed_normalization_count": 6,
+      "pending_reason": null
+    },
+    "M10/item_price_11/write": {
+      "module": "M10",
+      "field": "item_price_11",
+      "case_id": "write",
+      "case_kind": "golden",
+      "archive": "M10-item_price_11-write.json",
+      "sha256": "02734fc91836ebe767ac62c5fe5a3578e112f5f99a4dabab7c4cb336720b72cd",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        87863
+      ],
+      "optional_offsets": [
+        87864
+      ],
+      "unexpected_count": 0,
+      "changed_count": 7,
+      "removed_normalization_count": 6,
+      "pending_reason": null
+    },
+    "M10/item_price_12/write": {
+      "module": "M10",
+      "field": "item_price_12",
+      "case_id": "write",
+      "case_kind": "golden",
+      "archive": "M10-item_price_12-write.json",
+      "sha256": "7d2d24d76a3f7811c2c58b7ff16554f4a0262fbf3cb9993814a101925c2d078f",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        87865
+      ],
+      "optional_offsets": [
+        87866
+      ],
+      "unexpected_count": 0,
+      "changed_count": 7,
+      "removed_normalization_count": 6,
+      "pending_reason": null
+    },
+    "M10/item_price_13/write": {
+      "module": "M10",
+      "field": "item_price_13",
+      "case_id": "write",
+      "case_kind": "golden",
+      "archive": "M10-item_price_13-write.json",
+      "sha256": "96c801242204346a5ae05b1b79543c5d7b15ed5d61150627d6b746eaee5f113c",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        87867
+      ],
+      "optional_offsets": [
+        87868
+      ],
+      "unexpected_count": 0,
+      "changed_count": 7,
+      "removed_normalization_count": 6,
+      "pending_reason": null
+    },
+    "M10/item_price_14/write": {
+      "module": "M10",
+      "field": "item_price_14",
+      "case_id": "write",
+      "case_kind": "golden",
+      "archive": "M10-item_price_14-write.json",
+      "sha256": "bfd5447b8b0d46d86952059d6a3a86b31b1f37f9423852aad0115e7fad0228d5",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        87869
+      ],
+      "optional_offsets": [
+        87870
+      ],
+      "unexpected_count": 0,
+      "changed_count": 7,
+      "removed_normalization_count": 6,
+      "pending_reason": null
+    },
+    "M10/item_price_15/write": {
+      "module": "M10",
+      "field": "item_price_15",
+      "case_id": "write",
+      "case_kind": "golden",
+      "archive": "M10-item_price_15-write.json",
+      "sha256": "60e81084af93d2d3a2996d810d35d09efea7f4e651033ce5f23dd139dead8865",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        87871
+      ],
+      "optional_offsets": [
+        87872
+      ],
+      "unexpected_count": 0,
+      "changed_count": 7,
+      "removed_normalization_count": 6,
+      "pending_reason": null
+    },
+    "M10/item_price_16/write": {
+      "module": "M10",
+      "field": "item_price_16",
+      "case_id": "write",
+      "case_kind": "golden",
+      "archive": "M10-item_price_16-write.json",
+      "sha256": "c374ebfa6c84e2670b09b5fca716d381f1f884fb245ab156e253c7a501ff599c",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        87873
+      ],
+      "optional_offsets": [
+        87874
+      ],
+      "unexpected_count": 0,
+      "changed_count": 7,
+      "removed_normalization_count": 6,
+      "pending_reason": null
+    },
+    "M10/item_price_17/write": {
+      "module": "M10",
+      "field": "item_price_17",
+      "case_id": "write",
+      "case_kind": "golden",
+      "archive": "M10-item_price_17-write.json",
+      "sha256": "080ab2f70111265be965e79d37747d5a835b83b5e6dae25dd1866417b1111038",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        87875
+      ],
+      "optional_offsets": [
+        87876
+      ],
+      "unexpected_count": 0,
+      "changed_count": 7,
+      "removed_normalization_count": 6,
+      "pending_reason": null
+    },
+    "M10/item_price_18/write": {
+      "module": "M10",
+      "field": "item_price_18",
+      "case_id": "write",
+      "case_kind": "golden",
+      "archive": "M10-item_price_18-write.json",
+      "sha256": "427e40c01087f3bcebcbfb8445e77921fcdd12986b50d6abf2b4898fd8b314ac",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        87877
+      ],
+      "optional_offsets": [
+        87878
+      ],
+      "unexpected_count": 0,
+      "changed_count": 7,
+      "removed_normalization_count": 6,
+      "pending_reason": null
+    },
+    "M10/item_price_19/write": {
+      "module": "M10",
+      "field": "item_price_19",
+      "case_id": "write",
+      "case_kind": "golden",
+      "archive": "M10-item_price_19-write.json",
+      "sha256": "cbd02f3b149a6cac3473760ad9f26c81fbe6a3c0425347116629664027117a0e",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        87879
+      ],
+      "optional_offsets": [
+        87880
+      ],
+      "unexpected_count": 0,
+      "changed_count": 7,
+      "removed_normalization_count": 6,
+      "pending_reason": null
+    },
+    "M10/item_price_20/write": {
+      "module": "M10",
+      "field": "item_price_20",
+      "case_id": "write",
+      "case_kind": "golden",
+      "archive": "M10-item_price_20-write.json",
+      "sha256": "e6290a06a33758fb0c071bf2c953da4546e612080929b5e69625f93ad77fcbce",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        87881
+      ],
+      "optional_offsets": [
+        87882
+      ],
+      "unexpected_count": 0,
+      "changed_count": 7,
+      "removed_normalization_count": 6,
+      "pending_reason": null
+    },
+    "M10/item_price_21/write": {
+      "module": "M10",
+      "field": "item_price_21",
+      "case_id": "write",
+      "case_kind": "golden",
+      "archive": "M10-item_price_21-write.json",
+      "sha256": "718adc98c9a0cd998bbd4f56c22b4c761969a4d4f07683fa3daae91b3bccf9a0",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        87883
+      ],
+      "optional_offsets": [
+        87884
+      ],
+      "unexpected_count": 0,
+      "changed_count": 7,
+      "removed_normalization_count": 6,
+      "pending_reason": null
+    },
+    "M10/item_price_22/write": {
+      "module": "M10",
+      "field": "item_price_22",
+      "case_id": "write",
+      "case_kind": "golden",
+      "archive": "M10-item_price_22-write.json",
+      "sha256": "4a5c2ef196dde66edcb31e6735ffe3f43be56444f8ffe25392ad5cb95a9a1c32",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        87885
+      ],
+      "optional_offsets": [
+        87886
+      ],
+      "unexpected_count": 0,
+      "changed_count": 7,
+      "removed_normalization_count": 6,
+      "pending_reason": null
+    },
+    "M10/item_price_23/write": {
+      "module": "M10",
+      "field": "item_price_23",
+      "case_id": "write",
+      "case_kind": "golden",
+      "archive": "M10-item_price_23-write.json",
+      "sha256": "38e73451a5f4499e64883cb02035b860b4bffca44dfd17c93b7b96fe26c226ea",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        87887
+      ],
+      "optional_offsets": [
+        87888
+      ],
+      "unexpected_count": 0,
+      "changed_count": 7,
+      "removed_normalization_count": 6,
+      "pending_reason": null
+    },
+    "M10/item_price_24/write": {
+      "module": "M10",
+      "field": "item_price_24",
+      "case_id": "write",
+      "case_kind": "golden",
+      "archive": "M10-item_price_24-write.json",
+      "sha256": "c6cf089788cc448d860e7e91fcf98c7e21a3a9371950b60b563501c8f97dde45",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        87889
+      ],
+      "optional_offsets": [
+        87890
+      ],
+      "unexpected_count": 0,
+      "changed_count": 7,
+      "removed_normalization_count": 6,
+      "pending_reason": null
+    },
+    "M12/sprite_anchor_x/cold_start_07": {
+      "module": "M12",
+      "field": "sprite_anchor_x",
+      "case_id": "cold_start_07",
+      "case_kind": "discovery",
+      "archive": "M12-sprite_anchor_x-cold_start_07.json",
+      "sha256": "f25070dd4ebfcdf25eca432f1405f939af36062dcf5d0df4509b70390cad5964",
+      "passed": null,
+      "expected_known": true,
+      "required_offsets": [
+        203906
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 0,
+      "removed_normalization_count": 0,
+      "pending_reason": "在线单字段采集：保存后关闭进程，再以不同 PID 冷启动重开"
+    },
+    "M12/sprite_code_first_tile/cold_start_01": {
+      "module": "M12",
+      "field": "sprite_code_first_tile",
+      "case_id": "cold_start_01",
+      "case_kind": "discovery",
+      "archive": "M12-sprite_code_first_tile-cold_start_01.json",
+      "sha256": "1e003b601910217875ebf30e4c078b616e417c489ec00a3d90152af9e67e3e6a",
+      "passed": null,
+      "expected_known": true,
+      "required_offsets": [
+        203908
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 6,
+      "changed_count": 7,
+      "removed_normalization_count": 0,
+      "pending_reason": "在线单字段采集：保存后关闭进程，再以不同 PID 冷启动重开"
+    },
+    "M12/sprite_code_first_tile/cold_start_02": {
+      "module": "M12",
+      "field": "sprite_code_first_tile",
+      "case_id": "cold_start_02",
+      "case_kind": "golden",
+      "archive": "M12-sprite_code_first_tile-cold_start_02.json",
+      "sha256": "30cc12f679f810184250280101f2f1cd1a95b40c1c6b1608fae30faf9ff08129",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        203908
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 7,
+      "removed_normalization_count": 0,
+      "pending_reason": null
+    },
+    "M17/damage_defense_divisor/write": {
+      "module": "M17",
+      "field": "damage_defense_divisor",
+      "case_id": "write",
+      "case_kind": "golden",
+      "archive": "M17-damage_defense_divisor-write.json",
+      "sha256": "26738ee85a0d33d6293045bc32c60a7139fd72a147b88a981f4e5ef759f154b6",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        39328
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 7,
+      "removed_normalization_count": 6,
+      "pending_reason": null
+    },
+    "M17/damage_defense_multiplier/write": {
+      "module": "M17",
+      "field": "damage_defense_multiplier",
+      "case_id": "write",
+      "case_kind": "golden",
+      "archive": "M17-damage_defense_multiplier-write.json",
+      "sha256": "15db6bd16e13435b2d1a64cd5073e7fd4ca356ca0e8de1ae8571217f03f87b93",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        39321
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 7,
+      "removed_normalization_count": 6,
+      "pending_reason": null
+    },
+    "M17/damage_strength_divisor/write": {
+      "module": "M17",
+      "field": "damage_strength_divisor",
+      "case_id": "write",
+      "case_kind": "golden",
+      "archive": "M17-damage_strength_divisor-write.json",
+      "sha256": "8bdcb8b56c0fd7163da4621acf4611e44080db104ee75aa4a3864cd6b639065a",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        491755
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 7,
+      "removed_normalization_count": 6,
+      "pending_reason": null
+    },
+    "M17/damage_strength_multiplier/write": {
+      "module": "M17",
+      "field": "damage_strength_multiplier",
+      "case_id": "write",
+      "case_kind": "golden",
+      "archive": "M17-damage_strength_multiplier-write.json",
+      "sha256": "6a65db38cdc3f0507703d53446a7fec1c78a080b9334a3a09125fe37d90fff90",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        491748
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 7,
+      "removed_normalization_count": 6,
+      "pending_reason": null
+    },
+    "M17/damage_weapon_multiplier/write": {
+      "module": "M17",
+      "field": "damage_weapon_multiplier",
+      "case_id": "write",
+      "case_kind": "golden",
+      "archive": "M17-damage_weapon_multiplier-write.json",
+      "sha256": "9d0c5c4da451aa8f402f3369debfafd8d61dd66f3a371547bf96f8c8c1a205f5",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        491717
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 7,
+      "removed_normalization_count": 6,
+      "pending_reason": null
+    },
+    "M17/double_hit_attack_percent/write": {
+      "module": "M17",
+      "field": "double_hit_attack_percent",
+      "case_id": "write",
+      "case_kind": "golden",
+      "archive": "M17-double_hit_attack_percent-write.json",
+      "sha256": "54a9edcd445de95a713818bfe1a863cb17192de91a93a11971bb0d91a5210924",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        491785,
+        491866
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 9,
+      "removed_normalization_count": 6,
+      "pending_reason": null
+    },
+    "M17/double_hit_bonus/write": {
+      "module": "M17",
+      "field": "double_hit_bonus",
+      "case_id": "write",
+      "case_kind": "golden",
+      "archive": "M17-double_hit_bonus-write.json",
+      "sha256": "8b24f378c8cb82460acc05c07b4c97b9dd8a671288d89f68b861d5219349457a",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        491832,
+        491913
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 9,
+      "removed_normalization_count": 6,
+      "pending_reason": null
+    },
+    "M17/double_hit_defense_percent/write": {
+      "module": "M17",
+      "field": "double_hit_defense_percent",
+      "case_id": "write",
+      "case_kind": "golden",
+      "archive": "M17-double_hit_defense_percent-write.json",
+      "sha256": "21e6b43fda0ecf8a9c587b34ef5de277eb726f55c41e5e1f96bd7e84a4351271",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        491815,
+        491896
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 9,
+      "removed_normalization_count": 6,
+      "pending_reason": null
+    },
+    "M17/hit_threshold/cold_start_03": {
+      "module": "M17",
+      "field": "hit_threshold",
+      "case_id": "cold_start_03",
+      "case_kind": "golden",
+      "archive": "M17-hit_threshold-cold_start_03.json",
+      "sha256": "47aee2357b4185c60dcf2ebea68e7fdd7a2a0cd47116cdb9e91fa77d40b8f848",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        42062
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 7,
+      "removed_normalization_count": 6,
+      "pending_reason": null
+    },
+    "M17/hit_threshold/write": {
+      "module": "M17",
+      "field": "hit_threshold",
+      "case_id": "write",
+      "case_kind": "golden",
+      "archive": "M17-hit_threshold-write.json",
+      "sha256": "3707bca1db3ea6f7d5154914683520c49de098be201f1b1e667945f94f4b0056",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        42062
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 7,
+      "removed_normalization_count": 6,
+      "pending_reason": null
+    },
+    "M17/item_01/write": {
+      "module": "M17",
+      "field": "item_01",
+      "case_id": "write",
+      "case_kind": "golden",
+      "archive": "M17-item_01-write.json",
+      "sha256": "d608d56517126d8c0241d8f5fdf6699959fce49096839041fc8286e67eabc743",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        82127
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 7,
+      "removed_normalization_count": 6,
+      "pending_reason": null
+    },
+    "M17/item_02/write": {
+      "module": "M17",
+      "field": "item_02",
+      "case_id": "write",
+      "case_kind": "golden",
+      "archive": "M17-item_02-write.json",
+      "sha256": "9cd808b4ec5d7f6573e0fa7de05d33d7cea6923907cee46a2cf999d1037d43f8",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        82134
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 7,
+      "removed_normalization_count": 6,
+      "pending_reason": null
+    },
+    "M17/item_03/write": {
+      "module": "M17",
+      "field": "item_03",
+      "case_id": "write",
+      "case_kind": "golden",
+      "archive": "M17-item_03-write.json",
+      "sha256": "d45a1fb82adc34f4dac08489311b39ffc147eb38b4ec79c7f0106da7902e342f",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        82141
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 7,
+      "removed_normalization_count": 6,
+      "pending_reason": null
+    },
+    "M17/item_04/write": {
+      "module": "M17",
+      "field": "item_04",
+      "case_id": "write",
+      "case_kind": "golden",
+      "archive": "M17-item_04-write.json",
+      "sha256": "86ee8110b9359d92cf90cb2b864240929c99bc878459cd98b6a18cd6562d6ae1",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        82148
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 7,
+      "removed_normalization_count": 6,
+      "pending_reason": null
+    },
+    "M17/item_05/write": {
+      "module": "M17",
+      "field": "item_05",
+      "case_id": "write",
+      "case_kind": "golden",
+      "archive": "M17-item_05-write.json",
+      "sha256": "357c641b46e2d4a37b42b6915152754e3f347bb49cb2d8c9a7c6045cdd5cb8c3",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        82155
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 7,
+      "removed_normalization_count": 6,
+      "pending_reason": null
+    },
+    "M17/item_06/write": {
+      "module": "M17",
+      "field": "item_06",
+      "case_id": "write",
+      "case_kind": "golden",
+      "archive": "M17-item_06-write.json",
+      "sha256": "74a2c519e6f0ab8001db044fc8162b34e39aace072d7d1b88765babc91bb7cf7",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        82162
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 7,
+      "removed_normalization_count": 6,
+      "pending_reason": null
+    },
+    "M17/item_07/write": {
+      "module": "M17",
+      "field": "item_07",
+      "case_id": "write",
+      "case_kind": "golden",
+      "archive": "M17-item_07-write.json",
+      "sha256": "4593df4769de6ed45be67d26f2824fabde9e6bbc000bf0a5fad576e3e0ea9013",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        82169
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 7,
+      "removed_normalization_count": 6,
+      "pending_reason": null
+    },
+    "M17/item_08/write": {
+      "module": "M17",
+      "field": "item_08",
+      "case_id": "write",
+      "case_kind": "golden",
+      "archive": "M17-item_08-write.json",
+      "sha256": "3cc133d3f1b38d3e04d77f6759bfeb1bceb0af5d75f4a96b37e2e7cc56f88515",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        82176
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 7,
+      "removed_normalization_count": 6,
+      "pending_reason": null
+    },
+    "M17/item_09/write": {
+      "module": "M17",
+      "field": "item_09",
+      "case_id": "write",
+      "case_kind": "golden",
+      "archive": "M17-item_09-write.json",
+      "sha256": "a94f1b5e9bd7dfe577fdc8aae5163c3942c67f659ce523a14057ef701383b171",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        82183
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 7,
+      "removed_normalization_count": 6,
+      "pending_reason": null
+    },
+    "M17/item_10/write": {
+      "module": "M17",
+      "field": "item_10",
+      "case_id": "write",
+      "case_kind": "golden",
+      "archive": "M17-item_10-write.json",
+      "sha256": "4f8f381298ddcf0886c2fa5df51ace6edcf71733daefc6c412b63c35faf06453",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        82190
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 7,
+      "removed_normalization_count": 6,
+      "pending_reason": null
+    },
+    "M17/item_11/write": {
+      "module": "M17",
+      "field": "item_11",
+      "case_id": "write",
+      "case_kind": "golden",
+      "archive": "M17-item_11-write.json",
+      "sha256": "34fe2ad402e06b247840ef4c66980f6d79a7bf2f115ecd1711f5b8f868d086ae",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        82197
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 7,
+      "removed_normalization_count": 6,
+      "pending_reason": null
+    },
+    "M17/slot_1_character/write": {
+      "module": "M17",
+      "field": "slot_1_character",
+      "case_id": "write",
+      "case_kind": "golden",
+      "archive": "M17-slot_1_character-write.json",
+      "sha256": "35231f22fad6d37fcfe61819a92ec5e1aa02fb79f3fd06f256685f94dec927f5",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        235101
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 7,
+      "removed_normalization_count": 6,
+      "pending_reason": null
+    },
+    "M17/slot_1_unit/write": {
+      "module": "M17",
+      "field": "slot_1_unit",
+      "case_id": "write",
+      "case_kind": "golden",
+      "archive": "M17-slot_1_unit-write.json",
+      "sha256": "6d3fdac6f49726104abc199b51518a75ac3a7db9eee5192df5edaf72feb0071e",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        235102
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 7,
+      "removed_normalization_count": 6,
+      "pending_reason": null
+    },
+    "M17/slot_2_character/write": {
+      "module": "M17",
+      "field": "slot_2_character",
+      "case_id": "write",
+      "case_kind": "golden",
+      "archive": "M17-slot_2_character-write.json",
+      "sha256": "a67af1dadab64e0f6d577c072dd1d58296428844b411579a9f1ed8ae612111fd",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        235103
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 7,
+      "removed_normalization_count": 6,
+      "pending_reason": null
+    },
+    "M17/slot_2_unit/write": {
+      "module": "M17",
+      "field": "slot_2_unit",
+      "case_id": "write",
+      "case_kind": "golden",
+      "archive": "M17-slot_2_unit-write.json",
+      "sha256": "06b5f79e121bee13d4b5ee5955861e55d33d21fd4fb97809aa7340c70a89e3f7",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        235104
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 7,
+      "removed_normalization_count": 6,
+      "pending_reason": null
+    },
+    "M17/slot_3_character/write": {
+      "module": "M17",
+      "field": "slot_3_character",
+      "case_id": "write",
+      "case_kind": "golden",
+      "archive": "M17-slot_3_character-write.json",
+      "sha256": "905c4534dffea5c349ad4c6d5fffb561eedf2a1750528845814b3f65d934079f",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        235105
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 7,
+      "removed_normalization_count": 6,
+      "pending_reason": null
+    },
+    "M17/slot_3_unit/write": {
+      "module": "M17",
+      "field": "slot_3_unit",
+      "case_id": "write",
+      "case_kind": "golden",
+      "archive": "M17-slot_3_unit-write.json",
+      "sha256": "e159c28527523a7faa4f26f6c54afeb40db29b50854c3739e573b22fc0e469e1",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        235106
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 7,
+      "removed_normalization_count": 6,
+      "pending_reason": null
+    },
+    "M17/slot_4_character/write": {
+      "module": "M17",
+      "field": "slot_4_character",
+      "case_id": "write",
+      "case_kind": "golden",
+      "archive": "M17-slot_4_character-write.json",
+      "sha256": "cfdb041099ed4a220a9f9704627a6c5565716e81d430f7f73fe55ea4ddf8c2a6",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        235107
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 7,
+      "removed_normalization_count": 6,
+      "pending_reason": null
+    },
+    "M17/slot_4_unit/write": {
+      "module": "M17",
+      "field": "slot_4_unit",
+      "case_id": "write",
+      "case_kind": "golden",
+      "archive": "M17-slot_4_unit-write.json",
+      "sha256": "cee8b3a57380b973a3464680ff8f880bd0979a2db954db24a8845b5bec574a83",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        235108
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 7,
+      "removed_normalization_count": 6,
+      "pending_reason": null
+    },
+    "M17/slot_5_character/write": {
+      "module": "M17",
+      "field": "slot_5_character",
+      "case_id": "write",
+      "case_kind": "golden",
+      "archive": "M17-slot_5_character-write.json",
+      "sha256": "d3319a0082b4a6f1ec91fd77923bf21d675f38bf6e0ce18f3c3f6b9bee3c7728",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        235109
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 7,
+      "removed_normalization_count": 6,
+      "pending_reason": null
+    },
+    "M17/slot_5_unit/write": {
+      "module": "M17",
+      "field": "slot_5_unit",
+      "case_id": "write",
+      "case_kind": "golden",
+      "archive": "M17-slot_5_unit-write.json",
+      "sha256": "db0e60f96476579ccd48a96baa338cf7fcda890ca67016f50f1507ce1b4f3aa2",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        235110
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 7,
+      "removed_normalization_count": 6,
+      "pending_reason": null
+    },
+    "M17/slot_6_character/write": {
+      "module": "M17",
+      "field": "slot_6_character",
+      "case_id": "write",
+      "case_kind": "golden",
+      "archive": "M17-slot_6_character-write.json",
+      "sha256": "5935461039ce6d547d416749f6930244a06127f24c0506e849545980a589a782",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        235111
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 7,
+      "removed_normalization_count": 6,
+      "pending_reason": null
+    },
+    "M17/slot_6_unit/write": {
+      "module": "M17",
+      "field": "slot_6_unit",
+      "case_id": "write",
+      "case_kind": "golden",
+      "archive": "M17-slot_6_unit-write.json",
+      "sha256": "7def598530d85fb86160303f828ff5e87c2e079595cb102694130cd97bf05da3",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [
+        235112
+      ],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 7,
+      "removed_normalization_count": 6,
+      "pending_reason": null
+    }
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "passed": true,
+  "catalog_fields": 103,
+  "completed_fields": 103,
+  "safe_denominator_fields": 103,
+  "isolated_cases_exact": true,
+  "fresh_inventories_match": true
+}

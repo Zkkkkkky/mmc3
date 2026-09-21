@@ -1,0 +1,84 @@
+{
+  "tag": "CLEAN_错误",
+  "hwnd": 3741924,
+  "title": "错误",
+  "class": "#32770",
+  "rect": {
+    "left": 1683,
+    "top": 854,
+    "right": 2157,
+    "bottom": 1235,
+    "width": 474,
+    "height": 381
+  },
+  "pid": 41916,
+  "tree": {
+    "hwnd": 3741924,
+    "class": "#32770",
+    "text": "错误",
+    "ctrl_id": 0,
+    "rect": {
+      "left": 1683,
+      "top": 854,
+      "right": 2157,
+      "bottom": 1235,
+      "width": 474,
+      "height": 381
+    },
+    "visible": true,
+    "enabled": true,
+    "children": [
+      {
+        "hwnd": 2628048,
+        "class": "Button",
+        "text": "确定",
+        "ctrl_id": 2,
+        "rect": {
+          "left": 1994,
+          "top": 1170,
+          "right": 2126,
+          "bottom": 1212,
+          "width": 132,
+          "height": 42
+        },
+        "visible": true,
+        "enabled": true,
+        "children": []
+      },
+      {
+        "hwnd": 2756882,
+        "class": "Static",
+        "text": "",
+        "ctrl_id": 20,
+        "rect": {
+          "left": 1724,
+          "top": 942,
+          "right": 1772,
+          "bottom": 990,
+          "width": 48,
+          "height": 48
+        },
+        "visible": true,
+        "enabled": true,
+        "children": []
+      },
+      {
+        "hwnd": 6885710,
+        "class": "Static",
+        "text": "运行时出错!\r\n\r\n错误代码：1\r\n\r\n错误信息：数组成员引用下标超出定义范围\r\n\r\n67859719, 0\r\n",
+        "ctrl_id": 65535,
+        "rect": {
+          "left": 1784,
+          "top": 942,
+          "right": 2099,
+          "bottom": 1113,
+          "width": 315,
+          "height": 171
+        },
+        "visible": true,
+        "enabled": true,
+        "children": []
+      }
+    ]
+  }
+}

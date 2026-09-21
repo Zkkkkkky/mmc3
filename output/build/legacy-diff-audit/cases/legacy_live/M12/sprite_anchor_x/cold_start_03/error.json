@@ -1,0 +1,8 @@
+{
+  "module": "M12",
+  "field": "sprite_anchor_x",
+  "case_id": "cold_start_03",
+  "error": "RuntimeError: Control ID 220 matched 0 descendants",
+  "first_pid": 27284,
+  "second_pid": null
+}

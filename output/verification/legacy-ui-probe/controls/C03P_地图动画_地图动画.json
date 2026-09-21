@@ -1,0 +1,1093 @@
+{
+  "tag": "C03P_地图动画_地图动画",
+  "hwnd": 2099444,
+  "title": "地图动画",
+  "class": "WTWindow",
+  "rect": {
+    "left": 401,
+    "top": 60,
+    "right": 2002,
+    "bottom": 1160,
+    "width": 1601,
+    "height": 1100
+  },
+  "pid": 17320,
+  "tree": {
+    "hwnd": 2099444,
+    "class": "WTWindow",
+    "text": "地图动画",
+    "ctrl_id": 0,
+    "rect": {
+      "left": 401,
+      "top": 60,
+      "right": 2002,
+      "bottom": 1160,
+      "width": 1601,
+      "height": 1100
+    },
+    "visible": true,
+    "enabled": true,
+    "children": [
+      {
+        "hwnd": 3542424,
+        "class": "Button",
+        "text": "确定",
+        "ctrl_id": 310,
+        "rect": {
+          "left": 1424,
+          "top": 984,
+          "right": 1532,
+          "bottom": 1020,
+          "width": 108,
+          "height": 36
+        },
+        "visible": true,
+        "enabled": true,
+        "children": []
+      },
+      {
+        "hwnd": 7936018,
+        "class": "Button",
+        "text": "取消",
+        "ctrl_id": 300,
+        "rect": {
+          "left": 1544,
+          "top": 984,
+          "right": 1652,
+          "bottom": 1020,
+          "width": 108,
+          "height": 36
+        },
+        "visible": true,
+        "enabled": true,
+        "children": []
+      },
+      {
+        "hwnd": 2690174,
+        "class": "CPageControl",
+        "text": "",
+        "ctrl_id": 100,
+        "rect": {
+          "left": 404,
+          "top": 156,
+          "right": 1652,
+          "bottom": 960,
+          "width": 1248,
+          "height": 804
+        },
+        "visible": true,
+        "enabled": true,
+        "children": [
+          {
+            "hwnd": 1905648,
+            "class": "Button",
+            "text": "背景规律",
+            "ctrl_id": 580,
+            "rect": {
+              "left": 416,
+              "top": 204,
+              "right": 788,
+              "bottom": 948,
+              "width": 372,
+              "height": 744
+            },
+            "visible": false,
+            "enabled": true,
+            "children": [
+              {
+                "hwnd": 7802262,
+                "class": "Edit",
+                "text": "无",
+                "ctrl_id": 570,
+                "rect": {
+                  "left": 512,
+                  "top": 612,
+                  "right": 776,
+                  "bottom": 660,
+                  "width": 264,
+                  "height": 48
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 13174650,
+                "class": "Afx:400000:b:10003:900015:0",
+                "text": "规律名称：",
+                "ctrl_id": 560,
+                "rect": {
+                  "left": 428,
+                  "top": 624,
+                  "right": 512,
+                  "bottom": 660,
+                  "width": 84,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 5771536,
+                "class": "Edit",
+                "text": "FC 20 00 FC 20 4F F5 C0 00 48 F5 C2 00 48 F5 C4 00 48 F5 C6 00 48 F5 C8 00 48 FE 22 00 20 11 22 11 09 1C 11 09 F8 16 01 1B 22 11 08 40 39 52 0C 0E F8 18 01 1B 11 18 1F 0E 3C 1F 1A F8 18 01 1C 11 11 11 23 59 0E F8 05 01 15 48 F8 05 51 52 F8 0C 01 1D 11 11 11 11 3B F8 05 01 1F 11 3F 24 1A 01 1F 29 55 F8 0B 01 1F 2E 2F 11 56 3A 47 25 15 32 01 1B 0E 05 55 05 01 1B 11 0E 55 F8 09 01 1B 30 11 4F 11 11 59 1A 01 1D 2B 26 27 1F 1E 15 55 01 01 1B 11 1A 55 01 01 50 F8 06 51 43 0D 2C 2D 11 11 59 12 17 11 11 28 11 11 11 20 55 01 01 01 05 01 45 01 01 44 F8 06 01 55 1D 11 11 11 11 59 02 04 05 0F 11 11 02 04 05 55 01 01 01 15 01 53 F8 08 51 40 38 F8 04 11 11 3D F8 04 01 05 05 01 01 01 3E 1E 01 01 0F 1E 15 01 01 01 1F 24 1A 01 33 24 F8 05 11 08 55 F8 09 01 55 0F 1E 16 17 11 11 1A 01 1F 11 11 23 1A 1B 11 11 22 11 11 11 0A 55 F8 09 01 55 01 05 0D 11 11 11 19 1B F8 04 11 31 17 11 11 1E 21 11 11 0A 49 F8 05 51 43 01 01 01 55 01 01 1D 11 11 11 18 1F F8 04 11 1E 0F 11 22 2B 22 11 11 18 F8 06 01 55 01 01 01 55 01 1F F8 0A 11 22 2A 0E 1B 11 24 11 11 11 1E F8 05 01 53 51 51 51 47 1C F8 0B 11 1E 0F 1E 1F F8 04 11 11 11 12 17 24 1E F8 06 01 1D F8 0C 11 1E 21 F8 05 11 F8 05 11 08 F8 06 01 0D F8 12 11 0E F8 05 11 18 F8 06 01 1D 0E 0D F8 0E 11 02 04 01 FF ",
+                "ctrl_id": 550,
+                "rect": {
+                  "left": 428,
+                  "top": 720,
+                  "right": 776,
+                  "bottom": 936,
+                  "width": 348,
+                  "height": 216
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 11868048,
+                "class": "Afx:400000:b:10003:900015:0",
+                "text": "代码：",
+                "ctrl_id": 540,
+                "rect": {
+                  "left": 428,
+                  "top": 684,
+                  "right": 512,
+                  "bottom": 720,
+                  "width": 84,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 4853014,
+                "class": "ListBox",
+                "text": "",
+                "ctrl_id": 530,
+                "rect": {
+                  "left": 428,
+                  "top": 228,
+                  "right": 776,
+                  "bottom": 600,
+                  "width": 348,
+                  "height": 372
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              }
+            ]
+          },
+          {
+            "hwnd": 1379654,
+            "class": "Button",
+            "text": "地图武器相关",
+            "ctrl_id": 460,
+            "rect": {
+              "left": 980,
+              "top": 204,
+              "right": 1640,
+              "bottom": 948,
+              "width": 660,
+              "height": 744
+            },
+            "visible": false,
+            "enabled": true,
+            "children": [
+              {
+                "hwnd": 1052158,
+                "class": "Button",
+                "text": "设置",
+                "ctrl_id": 430,
+                "rect": {
+                  "left": 1232,
+                  "top": 252,
+                  "right": 1628,
+                  "bottom": 936,
+                  "width": 396,
+                  "height": 684
+                },
+                "visible": false,
+                "enabled": true,
+                "children": [
+                  {
+                    "hwnd": 9374116,
+                    "class": "ComboBox",
+                    "text": "",
+                    "ctrl_id": 520,
+                    "rect": {
+                      "left": 1244,
+                      "top": 696,
+                      "right": 1616,
+                      "bottom": 732,
+                      "width": 372,
+                      "height": 36
+                    },
+                    "visible": false,
+                    "enabled": true,
+                    "combo_count": 152,
+                    "combo_selected": 4294967295,
+                    "children": []
+                  },
+                  {
+                    "hwnd": 6821662,
+                    "class": "Afx:400000:b:10003:900015:0",
+                    "text": "动画调用：",
+                    "ctrl_id": 510,
+                    "rect": {
+                      "left": 1244,
+                      "top": 660,
+                      "right": 1496,
+                      "bottom": 696,
+                      "width": 252,
+                      "height": 36
+                    },
+                    "visible": false,
+                    "enabled": true,
+                    "children": []
+                  },
+                  {
+                    "hwnd": 3539222,
+                    "class": "ComboBox",
+                    "text": "",
+                    "ctrl_id": 500,
+                    "rect": {
+                      "left": 1244,
+                      "top": 576,
+                      "right": 1616,
+                      "bottom": 612,
+                      "width": 372,
+                      "height": 36
+                    },
+                    "visible": false,
+                    "enabled": true,
+                    "combo_count": 152,
+                    "combo_selected": 4294967295,
+                    "children": []
+                  },
+                  {
+                    "hwnd": 1248732,
+                    "class": "Afx:400000:b:10003:900015:0",
+                    "text": "动画调用：",
+                    "ctrl_id": 490,
+                    "rect": {
+                      "left": 1244,
+                      "top": 540,
+                      "right": 1496,
+                      "bottom": 576,
+                      "width": 252,
+                      "height": 36
+                    },
+                    "visible": false,
+                    "enabled": true,
+                    "children": []
+                  },
+                  {
+                    "hwnd": 3673390,
+                    "class": "ComboBox",
+                    "text": "",
+                    "ctrl_id": 480,
+                    "rect": {
+                      "left": 1244,
+                      "top": 444,
+                      "right": 1616,
+                      "bottom": 480,
+                      "width": 372,
+                      "height": 36
+                    },
+                    "visible": false,
+                    "enabled": true,
+                    "combo_count": 152,
+                    "combo_selected": 4294967295,
+                    "children": []
+                  },
+                  {
+                    "hwnd": 2430782,
+                    "class": "Afx:400000:b:10003:900015:0",
+                    "text": "动画调用：",
+                    "ctrl_id": 470,
+                    "rect": {
+                      "left": 1244,
+                      "top": 408,
+                      "right": 1496,
+                      "bottom": 444,
+                      "width": 252,
+                      "height": 36
+                    },
+                    "visible": false,
+                    "enabled": true,
+                    "children": []
+                  },
+                  {
+                    "hwnd": 15926410,
+                    "class": "ComboBox",
+                    "text": "[2C]044：范围修理",
+                    "ctrl_id": 450,
+                    "rect": {
+                      "left": 1244,
+                      "top": 324,
+                      "right": 1616,
+                      "bottom": 360,
+                      "width": 372,
+                      "height": 36
+                    },
+                    "visible": false,
+                    "enabled": true,
+                    "combo_count": 152,
+                    "combo_selected": 43,
+                    "children": []
+                  },
+                  {
+                    "hwnd": 6230934,
+                    "class": "Afx:400000:b:10003:900015:0",
+                    "text": "动画调用：",
+                    "ctrl_id": 440,
+                    "rect": {
+                      "left": 1244,
+                      "top": 288,
+                      "right": 1496,
+                      "bottom": 324,
+                      "width": 252,
+                      "height": 36
+                    },
+                    "visible": false,
+                    "enabled": true,
+                    "children": []
+                  }
+                ]
+              },
+              {
+                "hwnd": 2625730,
+                "class": "Afx:400000:b:10003:900015:0",
+                "text": "地图武器选择：",
+                "ctrl_id": 420,
+                "rect": {
+                  "left": 992,
+                  "top": 228,
+                  "right": 1142,
+                  "bottom": 264,
+                  "width": 150,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 1972222,
+                "class": "ListBox",
+                "text": "",
+                "ctrl_id": 410,
+                "rect": {
+                  "left": 992,
+                  "top": 264,
+                  "right": 1220,
+                  "bottom": 936,
+                  "width": 228,
+                  "height": 672
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              }
+            ]
+          },
+          {
+            "hwnd": 2758768,
+            "class": "Button",
+            "text": "精神相关",
+            "ctrl_id": 350,
+            "rect": {
+              "left": 416,
+              "top": 204,
+              "right": 980,
+              "bottom": 948,
+              "width": 564,
+              "height": 744
+            },
+            "visible": false,
+            "enabled": true,
+            "children": [
+              {
+                "hwnd": 8392882,
+                "class": "Button",
+                "text": "设置",
+                "ctrl_id": 380,
+                "rect": {
+                  "left": 620,
+                  "top": 252,
+                  "right": 968,
+                  "bottom": 936,
+                  "width": 348,
+                  "height": 684
+                },
+                "visible": false,
+                "enabled": true,
+                "children": [
+                  {
+                    "hwnd": 4132996,
+                    "class": "ComboBox",
+                    "text": "[02]002：HP补给类",
+                    "ctrl_id": 400,
+                    "rect": {
+                      "left": 632,
+                      "top": 324,
+                      "right": 956,
+                      "bottom": 360,
+                      "width": 324,
+                      "height": 36
+                    },
+                    "visible": false,
+                    "enabled": true,
+                    "combo_count": 152,
+                    "combo_selected": 1,
+                    "children": []
+                  },
+                  {
+                    "hwnd": 1840458,
+                    "class": "Afx:400000:b:10003:900015:0",
+                    "text": "动画调用：",
+                    "ctrl_id": 390,
+                    "rect": {
+                      "left": 632,
+                      "top": 288,
+                      "right": 782,
+                      "bottom": 324,
+                      "width": 150,
+                      "height": 36
+                    },
+                    "visible": false,
+                    "enabled": true,
+                    "children": []
+                  }
+                ]
+              },
+              {
+                "hwnd": 8260404,
+                "class": "Afx:400000:b:10003:900015:0",
+                "text": "精神选择：",
+                "ctrl_id": 370,
+                "rect": {
+                  "left": 428,
+                  "top": 228,
+                  "right": 578,
+                  "bottom": 264,
+                  "width": 150,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 11147752,
+                "class": "ListBox",
+                "text": "",
+                "ctrl_id": 360,
+                "rect": {
+                  "left": 428,
+                  "top": 264,
+                  "right": 608,
+                  "bottom": 936,
+                  "width": 180,
+                  "height": 672
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              }
+            ]
+          },
+          {
+            "hwnd": 2887492,
+            "class": "Button",
+            "text": "组图规律",
+            "ctrl_id": 270,
+            "rect": {
+              "left": 1268,
+              "top": 204,
+              "right": 1640,
+              "bottom": 948,
+              "width": 372,
+              "height": 744
+            },
+            "visible": false,
+            "enabled": true,
+            "children": [
+              {
+                "hwnd": 3738588,
+                "class": "Button",
+                "text": "",
+                "ctrl_id": 660,
+                "rect": {
+                  "left": 1280,
+                  "top": 864,
+                  "right": 1640,
+                  "bottom": 936,
+                  "width": 360,
+                  "height": 72
+                },
+                "visible": false,
+                "enabled": true,
+                "children": [
+                  {
+                    "hwnd": 4066252,
+                    "class": "msctls_updown32",
+                    "text": "",
+                    "ctrl_id": 654,
+                    "rect": {
+                      "left": 1400,
+                      "top": 888,
+                      "right": 1427,
+                      "bottom": 924,
+                      "width": 27,
+                      "height": 36
+                    },
+                    "visible": false,
+                    "enabled": true,
+                    "children": []
+                  },
+                  {
+                    "hwnd": 1052166,
+                    "class": "Edit",
+                    "text": "0",
+                    "ctrl_id": 650,
+                    "rect": {
+                      "left": 1316,
+                      "top": 888,
+                      "right": 1400,
+                      "bottom": 924,
+                      "width": 84,
+                      "height": 36
+                    },
+                    "visible": false,
+                    "enabled": true,
+                    "children": []
+                  },
+                  {
+                    "hwnd": 3412730,
+                    "class": "Afx:400000:b:10003:900015:0",
+                    "text": "Y：",
+                    "ctrl_id": 640,
+                    "rect": {
+                      "left": 1460,
+                      "top": 888,
+                      "right": 1508,
+                      "bottom": 924,
+                      "width": 48,
+                      "height": 36
+                    },
+                    "visible": false,
+                    "enabled": true,
+                    "children": []
+                  },
+                  {
+                    "hwnd": 1183184,
+                    "class": "msctls_updown32",
+                    "text": "",
+                    "ctrl_id": 634,
+                    "rect": {
+                      "left": 1568,
+                      "top": 888,
+                      "right": 1595,
+                      "bottom": 924,
+                      "width": 27,
+                      "height": 36
+                    },
+                    "visible": false,
+                    "enabled": true,
+                    "children": []
+                  },
+                  {
+                    "hwnd": 2559244,
+                    "class": "Edit",
+                    "text": "0",
+                    "ctrl_id": 630,
+                    "rect": {
+                      "left": 1484,
+                      "top": 888,
+                      "right": 1568,
+                      "bottom": 924,
+                      "width": 84,
+                      "height": 36
+                    },
+                    "visible": false,
+                    "enabled": true,
+                    "children": []
+                  },
+                  {
+                    "hwnd": 2361936,
+                    "class": "Afx:400000:b:10003:900015:0",
+                    "text": "X：",
+                    "ctrl_id": 620,
+                    "rect": {
+                      "left": 1292,
+                      "top": 888,
+                      "right": 1340,
+                      "bottom": 924,
+                      "width": 48,
+                      "height": 36
+                    },
+                    "visible": false,
+                    "enabled": true,
+                    "children": []
+                  }
+                ]
+              },
+              {
+                "hwnd": 41488556,
+                "class": "Button",
+                "text": "动画拼图",
+                "ctrl_id": 610,
+                "rect": {
+                  "left": 1532,
+                  "top": 660,
+                  "right": 1628,
+                  "bottom": 696,
+                  "width": 96,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 9179278,
+                "class": "ComboBox",
+                "text": "[08]008：82010",
+                "ctrl_id": 600,
+                "rect": {
+                  "left": 1364,
+                  "top": 612,
+                  "right": 1628,
+                  "bottom": 648,
+                  "width": 264,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "combo_count": 256,
+                "combo_selected": 8,
+                "children": []
+              },
+              {
+                "hwnd": 986628,
+                "class": "Afx:400000:b:10003:900015:0",
+                "text": "预览图库：",
+                "ctrl_id": 590,
+                "rect": {
+                  "left": 1280,
+                  "top": 612,
+                  "right": 1364,
+                  "bottom": 648,
+                  "width": 84,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 1118506,
+                "class": "Button",
+                "text": "添加",
+                "ctrl_id": 330,
+                "rect": {
+                  "left": 1280,
+                  "top": 492,
+                  "right": 1628,
+                  "bottom": 540,
+                  "width": 348,
+                  "height": 48
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 5903860,
+                "class": "Edit",
+                "text": "黑色图块",
+                "ctrl_id": 260,
+                "rect": {
+                  "left": 1364,
+                  "top": 552,
+                  "right": 1628,
+                  "bottom": 600,
+                  "width": 264,
+                  "height": 48
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 1382176,
+                "class": "Afx:400000:b:10003:900015:0",
+                "text": "规律名称：",
+                "ctrl_id": 250,
+                "rect": {
+                  "left": 1280,
+                  "top": 564,
+                  "right": 1364,
+                  "bottom": 600,
+                  "width": 84,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 2559130,
+                "class": "Edit",
+                "text": "00 00 FF ",
+                "ctrl_id": 240,
+                "rect": {
+                  "left": 1280,
+                  "top": 708,
+                  "right": 1628,
+                  "bottom": 864,
+                  "width": 348,
+                  "height": 156
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 2886928,
+                "class": "Afx:400000:b:10003:900015:0",
+                "text": "代码：",
+                "ctrl_id": 230,
+                "rect": {
+                  "left": 1280,
+                  "top": 672,
+                  "right": 1364,
+                  "bottom": 708,
+                  "width": 84,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 70784466,
+                "class": "ListBox",
+                "text": "",
+                "ctrl_id": 220,
+                "rect": {
+                  "left": 1280,
+                  "top": 228,
+                  "right": 1628,
+                  "bottom": 492,
+                  "width": 348,
+                  "height": 264
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              }
+            ]
+          },
+          {
+            "hwnd": 4395836,
+            "class": "Button",
+            "text": "运行规律",
+            "ctrl_id": 170,
+            "rect": {
+              "left": 836,
+              "top": 204,
+              "right": 1208,
+              "bottom": 948,
+              "width": 372,
+              "height": 744
+            },
+            "visible": false,
+            "enabled": true,
+            "children": [
+              {
+                "hwnd": 6035554,
+                "class": "Button",
+                "text": "添加",
+                "ctrl_id": 320,
+                "rect": {
+                  "left": 848,
+                  "top": 552,
+                  "right": 1196,
+                  "bottom": 600,
+                  "width": 348,
+                  "height": 48
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 5510572,
+                "class": "Edit",
+                "text": "坠机爆炸组图",
+                "ctrl_id": 210,
+                "rect": {
+                  "left": 932,
+                  "top": 612,
+                  "right": 1196,
+                  "bottom": 660,
+                  "width": 264,
+                  "height": 48
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 1775382,
+                "class": "Afx:400000:b:10003:900015:0",
+                "text": "规律名称：",
+                "ctrl_id": 200,
+                "rect": {
+                  "left": 848,
+                  "top": 624,
+                  "right": 932,
+                  "bottom": 660,
+                  "width": 84,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 1446188,
+                "class": "Edit",
+                "text": "09 FB 0A FC 0A FB 0A FC 0B FB 0A FC 0C FB 0A FC 0D FB 0A FC FF ",
+                "ctrl_id": 190,
+                "rect": {
+                  "left": 848,
+                  "top": 720,
+                  "right": 1196,
+                  "bottom": 936,
+                  "width": 348,
+                  "height": 216
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 1117666,
+                "class": "Afx:400000:b:10003:900015:0",
+                "text": "代码：",
+                "ctrl_id": 180,
+                "rect": {
+                  "left": 848,
+                  "top": 684,
+                  "right": 932,
+                  "bottom": 720,
+                  "width": 84,
+                  "height": 36
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 2952414,
+                "class": "ListBox",
+                "text": "",
+                "ctrl_id": 160,
+                "rect": {
+                  "left": 848,
+                  "top": 228,
+                  "right": 1196,
+                  "bottom": 540,
+                  "width": 348,
+                  "height": 312
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              }
+            ]
+          },
+          {
+            "hwnd": 986584,
+            "class": "Button",
+            "text": "动画编辑",
+            "ctrl_id": 140,
+            "rect": {
+              "left": 800,
+              "top": 204,
+              "right": 1640,
+              "bottom": 948,
+              "width": 840,
+              "height": 744
+            },
+            "visible": true,
+            "enabled": true,
+            "children": [
+              {
+                "hwnd": 924100,
+                "class": "ListBox",
+                "text": "",
+                "ctrl_id": 340,
+                "rect": {
+                  "left": 812,
+                  "top": 228,
+                  "right": 1628,
+                  "bottom": 888,
+                  "width": 816,
+                  "height": 660
+                },
+                "visible": true,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 1182996,
+                "class": "Button",
+                "text": "代码编辑",
+                "ctrl_id": 150,
+                "rect": {
+                  "left": 812,
+                  "top": 888,
+                  "right": 932,
+                  "bottom": 936,
+                  "width": 120,
+                  "height": 48
+                },
+                "visible": true,
+                "enabled": true,
+                "children": []
+              }
+            ]
+          },
+          {
+            "hwnd": 1052116,
+            "class": "Button",
+            "text": "动画选择",
+            "ctrl_id": 130,
+            "rect": {
+              "left": 416,
+              "top": 204,
+              "right": 788,
+              "bottom": 948,
+              "width": 372,
+              "height": 744
+            },
+            "visible": true,
+            "enabled": true,
+            "children": [
+              {
+                "hwnd": 6294376,
+                "class": "Afx:400000:b:10003:900015:0",
+                "text": "动画名称：",
+                "ctrl_id": 290,
+                "rect": {
+                  "left": 428,
+                  "top": 852,
+                  "right": 512,
+                  "bottom": 888,
+                  "width": 84,
+                  "height": 36
+                },
+                "visible": true,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 3736830,
+                "class": "Edit",
+                "text": "",
+                "ctrl_id": 280,
+                "rect": {
+                  "left": 428,
+                  "top": 888,
+                  "right": 776,
+                  "bottom": 936,
+                  "width": 348,
+                  "height": 48
+                },
+                "visible": true,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 3871696,
+                "class": "Button",
+                "text": "添加",
+                "ctrl_id": 120,
+                "rect": {
+                  "left": 428,
+                  "top": 792,
+                  "right": 776,
+                  "bottom": 840,
+                  "width": 348,
+                  "height": 48
+                },
+                "visible": true,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 4000468,
+                "class": "ListBox",
+                "text": "",
+                "ctrl_id": 110,
+                "rect": {
+                  "left": 428,
+                  "top": 228,
+                  "right": 776,
+                  "bottom": 792,
+                  "width": 348,
+                  "height": 564
+                },
+                "visible": true,
+                "enabled": true,
+                "children": []
+              }
+            ]
+          },
+          {
+            "hwnd": 4130738,
+            "class": "AfxWnd42s",
+            "text": "<",
+            "ctrl_id": 1008,
+            "rect": {
+              "left": 404,
+              "top": 156,
+              "right": 404,
+              "bottom": 156,
+              "width": 0,
+              "height": 0
+            },
+            "visible": false,
+            "enabled": true,
+            "children": []
+          },
+          {
+            "hwnd": 1052088,
+            "class": "AfxWnd42s",
+            "text": ">",
+            "ctrl_id": 1009,
+            "rect": {
+              "left": 404,
+              "top": 156,
+              "right": 404,
+              "bottom": 156,
+              "width": 0,
+              "height": 0
+            },
+            "visible": false,
+            "enabled": true,
+            "children": []
+          }
+        ]
+      }
+    ]
+  }
+}

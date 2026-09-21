@@ -1,0 +1,8 @@
+{
+  "schema_version": 1,
+  "name": "m06_hp_bonus_0_to_1_v1",
+  "description": "参考版启用人物第 1 行 HP 修正并写入 1 时的确定性变长记录重建；两轮 12155 条差分完全一致。",
+  "source_case": "output/build/legacy-diff-audit/cases/diagnostic/retry_history/20260920T020207/M06/hp_bonus/cold_start_01/case.json",
+  "source_case_sha256": "b334049be4a3b61e21aedc109130655e3c8dcaf398b98c1459a2d9d895cabb47",
+  "exclude_offsets": [296343, 296344]
+}

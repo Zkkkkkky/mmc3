@@ -1,0 +1,103 @@
+{
+  "field": "upper.row0.exp",
+  "original": "3884",
+  "requested": "3885",
+  "observed_after_set": "3885",
+  "disk_changed_after_set": false,
+  "disk_changed_after_write": false,
+  "disk_changed_after_save": false,
+  "windows_after_write": [
+    {
+      "handle": 61999454,
+      "class": "WTWindow",
+      "title": "存档编辑器：",
+      "texts": [
+        "读取存档",
+        "保存存档文件",
+        "写入存档",
+        "打开存档文件",
+        "存档：",
+        "1：没有数据",
+        "关卡：",
+        "27"
+      ]
+    },
+    {
+      "handle": 61671900,
+      "class": "#32770",
+      "title": "错误",
+      "texts": [
+        "确定",
+        "运行时出错!\r\n\r\n错误代码：4\r\n\r\n错误信息：数组成员引用下标必须大于等于1\r\n\r\n67851643, 428\r\n"
+      ]
+    },
+    {
+      "handle": 28314362,
+      "class": "WTWindow",
+      "title": "SRW2扩容版修改器V1.0：D:\\GIT\\mmc3\\output\\verification\\legacy-m16-reference-controls-20260920\\probe.nes",
+      "texts": [
+        "地图高度：",
+        "28",
+        "地图宽度：",
+        "29",
+        "地图图块设置",
+        "[05]005：81410",
+        "图库选择：",
+        "编辑图块属性",
+        "右键",
+        "左键",
+        "位图选择：",
+        "位图B",
+        "关卡选择"
+      ]
+    }
+  ],
+  "windows_after_save": [
+    {
+      "handle": 61999454,
+      "class": "WTWindow",
+      "title": "存档编辑器：",
+      "texts": [
+        "读取存档",
+        "保存存档文件",
+        "写入存档",
+        "打开存档文件",
+        "存档：",
+        "1：没有数据",
+        "关卡：",
+        "27"
+      ]
+    },
+    {
+      "handle": 61671900,
+      "class": "#32770",
+      "title": "错误",
+      "texts": [
+        "确定",
+        "运行时出错!\r\n\r\n错误代码：4\r\n\r\n错误信息：数组成员引用下标必须大于等于1\r\n\r\n67851643, 428\r\n"
+      ]
+    },
+    {
+      "handle": 28314362,
+      "class": "WTWindow",
+      "title": "SRW2扩容版修改器V1.0：D:\\GIT\\mmc3\\output\\verification\\legacy-m16-reference-controls-20260920\\probe.nes",
+      "texts": [
+        "地图高度：",
+        "28",
+        "地图宽度：",
+        "29",
+        "地图图块设置",
+        "[05]005：81410",
+        "图库选择：",
+        "编辑图块属性",
+        "右键",
+        "左键",
+        "位图选择：",
+        "位图B",
+        "关卡选择"
+      ]
+    }
+  ],
+  "ranges_after_save": [],
+  "passed": true
+}

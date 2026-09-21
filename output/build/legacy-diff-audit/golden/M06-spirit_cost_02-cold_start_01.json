@@ -1,0 +1,60 @@
+{
+  "schema_version": 1,
+  "module": "M06",
+  "field": "spirit_cost_02",
+  "case_id": "cold_start_01",
+  "case_kind": "golden",
+  "requested_value": 16,
+  "changed_offsets": [
+    236361
+  ],
+  "removed_normalization": [],
+  "reopen_value": 16,
+  "original_value": 15,
+  "reopen_matches_request": true,
+  "reopen_mode": "new_process",
+  "expected_offsets": [
+    236361
+  ],
+  "required_offsets": [
+    236361
+  ],
+  "optional_offsets": [],
+  "extra_allowed": [],
+  "unexpected_offsets": [],
+  "target_changed": [
+    236361
+  ],
+  "expected_not_changed": [],
+  "passed": true,
+  "pending_reason": null,
+  "notes": [
+    "在线单字段采集：保存后关闭进程，再以不同 PID 冷启动重开"
+  ],
+  "provenance": {
+    "source_json": "output/build/legacy-diff-audit/legacy-live-results.json"
+  },
+  "snapshots": {
+    "before": {
+      "path": "output/build/legacy-diff-audit/cases/legacy_live/M06/spirit_cost_02/cold_start_01/before.nes",
+      "sha256": "c5d2c1dfbe0dc39afc9effd314c082f121b98c9ad67c4825b1c9dd4b9e991954",
+      "size": 786448
+    },
+    "after": {
+      "path": "output/build/legacy-diff-audit/cases/legacy_live/M06/spirit_cost_02/cold_start_01/after.nes",
+      "sha256": "d374e5a365e48cf77d46e573cec686a3bd4bc9f4108f72d1ac83fefea833d256",
+      "size": 786448
+    }
+  },
+  "diff_entries": [
+    {
+      "offset": 236361,
+      "before_value": 15,
+      "after_value": 16
+    }
+  ],
+  "duration_seconds": 24.962,
+  "budget_seconds": 30.0,
+  "within_budget": true,
+  "duration_note": null
+}

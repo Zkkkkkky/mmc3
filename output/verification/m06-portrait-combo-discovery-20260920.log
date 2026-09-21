@@ -1,0 +1,87 @@
+﻿M06 portrait combo discovery started: 2026-09-20T02:30:57.7532869+08:00
+
+=== M06-portrait-front-bank-discovery-cold-start-01.json ===
+在线采集完成：M06/portrait_front_bank/cold_start_01 PID 9204→2852，耗时 22.937s，passed=False
+- 用例目录：D:\GIT\mmc3\output\build\legacy-diff-audit\cases\legacy_live\M06\portrait_front_bank\cold_start_01
+D:\GIT\mmc3\.venv\Lib\site-packages\pywinauto\application.py:1085: UserWarning: 32-bit application should be automated using 32-bit Python (you use 64-bit Python)
+  warnings.warn(
+D:\GIT\mmc3\.venv\Lib\site-packages\pywinauto\application.py:1085: UserWarning: 32-bit application should be automated using 32-bit Python (you use 64-bit Python)
+  warnings.warn(
+Traceback (most recent call last):
+  File "D:\GIT\mmc3\tools\report_golden_coverage.py", line 967, in <module>
+    raise SystemExit(main())
+                     ^^^^^^
+  File "D:\GIT\mmc3\tools\report_golden_coverage.py", line 963, in main
+    return int(args.handler(args))
+               ^^^^^^^^^^^^^^^^^^
+  File "D:\GIT\mmc3\tools\report_golden_coverage.py", line 256, in cmd_collect
+    if cmd_archive(args) or cmd_stats(args):
+       ^^^^^^^^^^^^^^^^^
+  File "D:\GIT\mmc3\tools\report_golden_coverage.py", line 265, in cmd_archive
+    records = load_family_records(repo)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\GIT\mmc3\tools\golden_pipeline_core.py", line 521, in load_family_records
+    records.extend(_adapt_live(json.loads(live_path.read_text(encoding="utf-8"))))
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\GIT\mmc3\tools\golden_pipeline_core.py", line 476, in _adapt_live
+    raise ValueError("Live required/optional offsets do not partition expected")
+ValueError: Live required/optional offsets do not partition expected
+
+=== M06-portrait-front-slot-discovery-cold-start-01.json ===
+在线采集完成：M06/portrait_front_slot/cold_start_01 PID 17228→18084，耗时 23.986s，passed=False
+- 用例目录：D:\GIT\mmc3\output\build\legacy-diff-audit\cases\legacy_live\M06\portrait_front_slot\cold_start_01
+D:\GIT\mmc3\.venv\Lib\site-packages\pywinauto\application.py:1085: UserWarning: 32-bit application should be automated using 32-bit Python (you use 64-bit Python)
+  warnings.warn(
+D:\GIT\mmc3\.venv\Lib\site-packages\pywinauto\application.py:1085: UserWarning: 32-bit application should be automated using 32-bit Python (you use 64-bit Python)
+  warnings.warn(
+Traceback (most recent call last):
+  File "D:\GIT\mmc3\tools\report_golden_coverage.py", line 967, in <module>
+    raise SystemExit(main())
+                     ^^^^^^
+  File "D:\GIT\mmc3\tools\report_golden_coverage.py", line 963, in main
+    return int(args.handler(args))
+               ^^^^^^^^^^^^^^^^^^
+  File "D:\GIT\mmc3\tools\report_golden_coverage.py", line 256, in cmd_collect
+    if cmd_archive(args) or cmd_stats(args):
+       ^^^^^^^^^^^^^^^^^
+  File "D:\GIT\mmc3\tools\report_golden_coverage.py", line 265, in cmd_archive
+    records = load_family_records(repo)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\GIT\mmc3\tools\golden_pipeline_core.py", line 521, in load_family_records
+    records.extend(_adapt_live(json.loads(live_path.read_text(encoding="utf-8"))))
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\GIT\mmc3\tools\golden_pipeline_core.py", line 476, in _adapt_live
+    raise ValueError("Live required/optional offsets do not partition expected")
+ValueError: Live required/optional offsets do not partition expected
+
+=== M06-portrait-back-bank-discovery-cold-start-01.json ===
+timeout
+
+=== M06-portrait-back-slot-discovery-cold-start-01.json ===
+在线采集完成：M06/portrait_back_slot/cold_start_01 PID 14316→13056，耗时 23.018s，passed=False
+- 用例目录：D:\GIT\mmc3\output\build\legacy-diff-audit\cases\legacy_live\M06\portrait_back_slot\cold_start_01
+D:\GIT\mmc3\.venv\Lib\site-packages\pywinauto\application.py:1085: UserWarning: 32-bit application should be automated using 32-bit Python (you use 64-bit Python)
+  warnings.warn(
+D:\GIT\mmc3\.venv\Lib\site-packages\pywinauto\application.py:1085: UserWarning: 32-bit application should be automated using 32-bit Python (you use 64-bit Python)
+  warnings.warn(
+Traceback (most recent call last):
+  File "D:\GIT\mmc3\tools\report_golden_coverage.py", line 967, in <module>
+    raise SystemExit(main())
+                     ^^^^^^
+  File "D:\GIT\mmc3\tools\report_golden_coverage.py", line 963, in main
+    return int(args.handler(args))
+               ^^^^^^^^^^^^^^^^^^
+  File "D:\GIT\mmc3\tools\report_golden_coverage.py", line 256, in cmd_collect
+    if cmd_archive(args) or cmd_stats(args):
+       ^^^^^^^^^^^^^^^^^
+  File "D:\GIT\mmc3\tools\report_golden_coverage.py", line 265, in cmd_archive
+    records = load_family_records(repo)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\GIT\mmc3\tools\golden_pipeline_core.py", line 521, in load_family_records
+    records.extend(_adapt_live(json.loads(live_path.read_text(encoding="utf-8"))))
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\GIT\mmc3\tools\golden_pipeline_core.py", line 476, in _adapt_live
+    raise ValueError("Live required/optional offsets do not partition expected")
+ValueError: Live required/optional offsets do not partition expected
+
+M06 portrait combo discovery finished: 2026-09-20T02:33:19.2734111+08:00

@@ -1,0 +1,8 @@
+{
+  "module": "M07",
+  "field": "ally_animation_pointer",
+  "case_id": "cold_start_02",
+  "error": "RuntimeError: Baseline display differs: expected 'D080', got '0080'",
+  "first_pid": 17488,
+  "second_pid": null
+}

@@ -1,0 +1,754 @@
+from __future__ import annotations
+
+from PySide6.QtCore import QProcess, Qt, Signal
+from PySide6.QtWidgets import (
+    QComboBox,
+    QFileDialog,
+    QFormLayout,
+    QGridLayout,
+    QGroupBox,
+    QHBoxLayout,
+    QInputDialog,
+    QLabel,
+    QListWidget,
+    QListWidgetItem,
+    QMessageBox,
+    QPushButton,
+    QScrollArea,
+    QSpinBox,
+    QSplitter,
+    QToolButton,
+    QVBoxLayout,
+    QWidget,
+)
+
+from .pages import CharacterPage, WeaponPage, compact_ids
+from .character_editor import CharacterDetailsWidget, CharacterDialogueWidget
+from .animation_editor import WeaponAnimationWidget
+from .workspace import ROOT
+from fc_editor.dc_text import concise_dc_text
+from fc_editor.codecs.character_attributes import (
+    CharacterAttributesCodec, WEAPON_SKILLS, apply_verified_patches,
+    weapon_extra_patches, weapon_extra_values,
+)
+from fc_editor.models import WEAPON_FIELDS
+
+
+def readable_references(combo: QComboBox) -> None:
+    """Keep source IDs as item data; put pointer diagnostics in tooltips."""
+    for index in range(combo.count()):
+        text = combo.itemText(index)
+        if " · 来源 " in text:
+            combo.setItemData(index, text, Qt.ItemDataRole.ToolTipRole)
+            name = text.split(" · 来源 ", 1)[0]
+            combo.setItemText(index, f"{name}  [${int(combo.itemData(index)):02X}]")
+    combo.setMinimumContentsLength(12)
+    combo.setSizeAdjustPolicy(QComboBox.SizeAdjustPolicy.AdjustToMinimumContentsLengthWithIcon)
+
+
+def collapsible_details(title: str, content: QWidget) -> QWidget:
+    host = QWidget()
+    layout = QVBoxLayout(host)
+    layout.setContentsMargins(0, 0, 0, 0)
+    toggle = QToolButton()
+    toggle.setText(title)
+    toggle.setCheckable(True)
+    toggle.setToolButtonStyle(Qt.ToolButtonStyle.ToolButtonTextBesideIcon)
+    toggle.setArrowType(Qt.ArrowType.RightArrow)
+    toggle.toggled.connect(content.setVisible)
+    toggle.toggled.connect(lambda expanded: toggle.setArrowType(
+        Qt.ArrowType.DownArrow if expanded else Qt.ArrowType.RightArrow
+    ))
+    layout.addWidget(toggle)
+    layout.addWidget(content)
+    content.hide()
+    return host
+
+
+def _prepare_readable_page(page) -> QVBoxLayout:
+    splitter = page.findChild(QSplitter)
+    assert splitter is not None
+    detail = splitter.widget(1)
+    detail_layout = detail.layout()
+    assert isinstance(detail_layout, QVBoxLayout)
+    detail.setMinimumWidth(0)
+    page.record_meta.setWordWrap(True)
+    advanced = QWidget()
+    advanced_layout = QVBoxLayout(advanced)
+    advanced_layout.setContentsMargins(0, 0, 0, 0)
+    advanced_layout.addWidget(page.record_meta)
+    for field in (page.name_tokens, getattr(page, "raw_record", None)):
+        if field is None:
+            continue
+        parent_layout = field.parentWidget().layout()
+        if isinstance(parent_layout, QFormLayout):
+            label = parent_layout.labelForField(field)
+            parent_layout.removeWidget(field)
+            if label is not None:
+                parent_layout.removeWidget(label)
+                advanced_layout.addWidget(label)
+        advanced_layout.addWidget(field)
+    detail_layout.insertWidget(2, collapsible_details("技术详情：指针、共享记录与原始字节", advanced))
+    page.records.setMinimumWidth(180)
+    page.records.setMaximumWidth(400)
+    splitter.setSizes([280, 770])
+    splitter.setChildrenCollapsible(False)
+    scroll = QScrollArea()
+    scroll.setWidgetResizable(True)
+    scroll.setFrameShape(QScrollArea.Shape.NoFrame)
+    # Reparenting the detail widget removes its old splitter slot.
+    scroll.setWidget(detail)
+    splitter.addWidget(scroll)
+    splitter.setStretchFactor(0, 0)
+    splitter.setStretchFactor(1, 1)
+    return detail_layout
+
+
+class ReadableCharacterPage(CharacterPage):
+    def __init__(self) -> None:
+        self._loading_details = False
+        self.character_dialogue = CharacterDialogueWidget()
+        super().__init__()
+        detail = _prepare_readable_page(self)
+        self.capability_status = QLabel(
+            "可编辑：名称、战斗名称/引用、双方音乐、精神/成长、五项修正、精神与消耗、头像引用/颜色、击落不消失。\n"
+            "战斗台词的 8 个直接绑定和 3 组特殊攻击规则可编辑；变形起飞台词仍在解析。"
+        )
+        self.capability_status.setObjectName("hintText")
+        self.capability_status.setWordWrap(True)
+        detail.insertWidget(1, self.capability_status)
+        for label in self.findChildren(QLabel):
+            if label.text().startswith("当前人物属性表、头像索引"):
+                label.hide()
+        self.original_name.setWordWrap(True)
+        identities = [item for item in self.findChildren(QGroupBox) if item.title() in ("名称与战斗名称", "人物战斗音乐")]
+        if len(identities) == 2:
+            identity_row = QWidget()
+            row = QHBoxLayout(identity_row)
+            row.setContentsMargins(0, 0, 0, 0)
+            position = detail.indexOf(identities[0])
+            for group in identities:
+                detail.removeWidget(group)
+                row.addWidget(group, 1)
+            detail.insertWidget(position, identity_row)
+        self.character_details = CharacterDetailsWidget()
+        self.character_details.changed.connect(self._update_pending_state)
+        self.character_details.portrait_export_requested.connect(
+            self.export_selected_record
+        )
+        detail.insertWidget(detail.count() - 2, self.character_details)
+        self.character_dialogue.changed.connect(self._update_pending_state)
+        detail.insertWidget(detail.count() - 2, self.character_dialogue)
+
+    def record_text(self, record_id: int) -> str:
+        assert self.project is not None
+        return f"{record_id:03d}  {self.project.character_normal_display_name(record_id)}"
+
+    def preferred_record_id(self) -> int | None:
+        if self.project is None:
+            return None
+        codec = CharacterAttributesCodec(self.project)
+        return next(
+            (
+                character_id
+                for character_id in self.record_ids()
+                if any(codec.record_bytes(character_id))
+            ),
+            None,
+        )
+
+    def supports_record_export(self) -> bool:
+        return True
+
+    def record_export_label(self) -> str:
+        return "导出当前头像 BMP（背面/正面/效果）…"
+
+    def export_selected_record(self) -> None:
+        if self.project is None or self.current_id is None:
+            return
+        directory = QFileDialog.getExistingDirectory(
+            self, "导出当前头像 · 选择根目录"
+        )
+        if not directory:
+            return
+        try:
+            if not self.commit_pending_changes():
+                return
+            from .portrait_export import export_portrait_bitmaps, portrait_export_paths
+            from .workspace import writable_output_path
+
+            root = writable_output_path(directory)
+            paths = portrait_export_paths(self.project, self.current_id, root)
+            if any(path.exists() for path in paths):
+                answer = QMessageBox.question(
+                    self,
+                    "覆盖头像文件",
+                    f"{paths[0].parent.name} 已有头像文件。是否覆盖？",
+                    QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
+                    QMessageBox.StandardButton.No,
+                )
+                if answer != QMessageBox.StandardButton.Yes:
+                    return
+            back, front, effect = export_portrait_bitmaps(
+                self.project, self.current_id, root
+            )
+            self.records.setToolTip(
+                f"已导出：{back.name}、{front.name}、{effect.name}"
+            )
+        except Exception as error:
+            self.show_error(error)
+
+    def refresh(self) -> None:
+        super().refresh()
+        readable_references(self.name_reference)
+
+    def load_record(self, record_id: int | None) -> None:
+        self._loading_details = True
+        try:
+            super().load_record(record_id)
+            self.character_details.set_record(self.project, record_id)
+            self.character_dialogue.set_record(self.project, record_id)
+        finally:
+            self._loading_details = False
+        self._update_pending_state()
+
+    def _update_pending_state(self) -> None:
+        if self._loading_details:
+            return
+        super()._update_pending_state()
+        details = getattr(self, "character_details", None)
+        if details is not None and details.has_pending_changes():
+            self.apply_button.setEnabled(True)
+            self.pending_state.setText("● 有尚未暂存的人物属性、精神或头像改动")
+        dialogue = getattr(self, "character_dialogue", None)
+        if dialogue is not None and dialogue.has_pending_changes():
+            self.apply_button.setEnabled(True)
+            self.pending_state.setText("● 有尚未暂存的人物战斗台词绑定改动")
+
+    def apply_record(self) -> None:
+        if self.project is None or self.current_id is None:
+            return
+        try:
+            reference_pending, text_pending, _music_pending = self._pending_values()
+            normal_pending = self._normal_name_pending()
+            if reference_pending and text_pending:
+                raise ValueError("名称引用和名称文字不能同时修改；请先应用其中一项。")
+            patches = self.character_details.pending_patches()
+            dialogue_patches = self.character_dialogue.pending_patches()
+            impacts = (
+                self.character_details.shared_change_impacts()
+                + self.character_dialogue.shared_change_impacts()
+            )
+            if impacts:
+                lines = [
+                    f"{label}：{compact_ids(ids)}"
+                    for label, ids in impacts
+                ]
+                answer = QMessageBox.question(
+                    self,
+                    "共用人物数据确认",
+                    "本次修改会同时影响下列人物ID：\n"
+                    + "\n".join(lines)
+                    + "\n是否继续？",
+                    QMessageBox.StandardButton.Yes
+                    | QMessageBox.StandardButton.Cancel,
+                    QMessageBox.StandardButton.Cancel,
+                )
+                if answer != QMessageBox.StandardButton.Yes:
+                    return
+            with self.project.transaction(f"人物 ${self.current_id:02X} · 完整表单"):
+                apply_verified_patches(self.project, patches, "人物属性、精神与头像")
+                apply_verified_patches(self.project, dialogue_patches, "人物战斗台词绑定")
+                if self.name_reference.isEnabled():
+                    self.project.set_character_name_reference(
+                        self.current_id, int(self.name_reference.currentData())
+                    )
+                if normal_pending or text_pending:
+                    self.project.set_character_name_texts(
+                        self.current_id,
+                        normal_text=(
+                            self.normal_name_text.text() if normal_pending else None
+                        ),
+                        battle_text=(self.name_text.text() if text_pending else None),
+                    )
+                if self.ally_music.isEnabled():
+                    self.project.set_battle_music_binding(self.current_id, int(self.ally_music.currentData()), int(self.enemy_music.currentData()))
+            self.load_record(self.current_id)
+            self.project_changed.emit(f"已更新人物 ${self.current_id:02X}")
+        except Exception as error:
+            self.show_error(error)
+
+    def reset_record(self) -> None:
+        if self.project is None or self.current_id is None:
+            return
+        try:
+            impacts = self.character_dialogue.reset_change_impacts()
+            if impacts:
+                lines = [f"{label}：{compact_ids(ids)}" for label, ids in impacts]
+                answer = QMessageBox.question(
+                    self,
+                    "共用人物数据确认",
+                    "还原会同时影响下列人物ID：\n"
+                    + "\n".join(lines)
+                    + "\n是否继续？",
+                    QMessageBox.StandardButton.Yes
+                    | QMessageBox.StandardButton.Cancel,
+                    QMessageBox.StandardButton.Cancel,
+                )
+                if answer != QMessageBox.StandardButton.Yes:
+                    return
+            with self.project.transaction(f"人物 ${self.current_id:02X} · 还原"):
+                self.character_details.reset_to_original()
+                self.character_dialogue.reset_to_original()
+                self.project.reset_character_names(self.current_id)
+                if self.project.supports_battle_music and self.ally_music.isEnabled():
+                    self.project.reset_battle_music_binding(self.current_id)
+            self.load_record(self.current_id)
+            self.project_changed.emit(f"已还原人物 ${self.current_id:02X}；全局精神消耗保留当前值")
+        except Exception as error:
+            self.show_error(error)
+
+    def duplicate_record(self) -> None:
+        if self.project is None or self.current_id is None or not self.commit_pending_changes():
+            return
+        options = [
+            f"${item:02X} · {self.project.character_normal_display_name(item)}"
+            for item in self.record_ids()
+            if item != self.current_id
+        ]
+        selected, accepted = QInputDialog.getItem(self, "复制人物", "复制名称、音乐、属性、精神与头像到：", options, 0, False)
+        if not accepted:
+            return
+        target = int(selected[1:3], 16)
+        self.copy_record_to(self.current_id, target)
+
+    def copy_record_to(self, source_id: int, target_id: int) -> bool:
+        if self.project is None or source_id == target_id:
+            return False
+        try:
+            codec = CharacterAttributesCodec(self.project)
+            patches = codec.patches(target_id, codec.read(source_id)) + codec.portrait_patches(target_id, codec.read_portrait(source_id))
+            with self.project.transaction(f"复制人物 ${source_id:02X} 到 ${target_id:02X}"):
+                apply_verified_patches(self.project, patches, "复制人物属性与头像")
+                self.project.set_character_name_texts(
+                    target_id,
+                    normal_text=concise_dc_text(
+                        self.project.character_normal_name_record_bytes(source_id)
+                    ),
+                    battle_text=(
+                        concise_dc_text(
+                            self.project.character_name_record_bytes(source_id)
+                        )
+                        if source_id < self.project.profile.character_name_count
+                        and target_id < self.project.profile.character_name_count
+                        else None
+                    ),
+                )
+                if (
+                    self.project.supports_battle_music
+                    and source_id < self.project.profile.battle_music.selector_count
+                    and target_id < self.project.profile.battle_music.selector_count
+                ):
+                    binding = self.project.get_battle_music_binding(source_id)
+                    self.project.set_battle_music_binding(target_id, binding.attacker_command, binding.defender_command)
+            self.project_changed.emit(f"已复制人物 ${source_id:02X} 到 ${target_id:02X}")
+            return True
+        except Exception as error:
+            self.show_error(error)
+            return False
+
+
+class ReadableWeaponPage(WeaponPage):
+    unit_requested = Signal(int)
+
+    def __init__(self) -> None:
+        self._loading_details = False
+        self._extras_enabled = False
+        super().__init__()
+        detail = _prepare_readable_page(self)
+        self.capability_status = QLabel(
+            "可编辑：名称引用、射程、命中、距离补正、武器特技、对空/陆/海攻击力及双方动画的已验证参数。"
+            "共享6字节记录或共享动画脚本写入前会列出全部受影响ID。"
+        )
+        self.capability_status.setObjectName("hintText")
+        self.capability_status.setWordWrap(True)
+        detail.insertWidget(1, self.capability_status)
+        self.rom_summary = QLabel("请选择武器以读取完整原始记录。")
+        self.rom_summary.setObjectName("hintText")
+        self.rom_summary.setWordWrap(True)
+        self.rom_summary.setTextInteractionFlags(Qt.TextInteractionFlag.TextSelectableByMouse)
+        detail.insertWidget(2, self.rom_summary)
+        attributes = next(group for group in self.findChildren(QGroupBox) if group.title() == "战斗参数")
+        grid = attributes.layout()
+        if isinstance(grid, QGridLayout):
+            retained = tuple(self.fields.values()) + tuple(self.original_values.values())
+            while grid.count():
+                widget = grid.takeAt(0).widget()
+                if widget is not None and widget not in retained:
+                    widget.hide()
+                    widget.deleteLater()
+            for index, field in enumerate(WEAPON_FIELDS):
+                row, col = index // 3, index % 3 * 3
+                self.fields[field.key].setMaximumWidth(75)
+                grid.addWidget(QLabel(field.label), row, col)
+                grid.addWidget(self.fields[field.key], row, col + 1)
+                self.original_values[field.key].setToolTip("基准 ROM 原值")
+                grid.addWidget(self.original_values[field.key], row, col + 2)
+        extras = QGroupBox("武器特技与距离补正")
+        form = QFormLayout(extras)
+        self.weapon_skill = QComboBox()
+        for index, name in enumerate(WEAPON_SKILLS):
+            self.weapon_skill.addItem(f"{index:02d}：{name}", index)
+        self.weapon_skill.currentIndexChanged.connect(self._update_pending_state)
+        self.distance_correction = QSpinBox()
+        self.distance_correction.setRange(0, 3)
+        self.distance_correction.valueChanged.connect(self._update_pending_state)
+        form.addRow("武器特技", self.weapon_skill)
+        form.addRow("距离补正表", self.distance_correction)
+        self.extra_status = QLabel()
+        self.extra_status.setWordWrap(True)
+        form.addRow(self.extra_status)
+        detail.insertWidget(detail.count() - 2, extras)
+        self.weapon_animation = WeaponAnimationWidget()
+        self.weapon_animation.changed.connect(self._update_pending_state)
+        animation_tools = QHBoxLayout()
+        self.animation_code_button = QPushButton("代码编辑")
+        self.animation_code_button.setToolTip(
+            "展开当前我方/敌方动画页的等长十六进制代码编辑区。"
+        )
+        self.animation_code_button.clicked.connect(self._open_animation_code)
+        self.animation_rules_button = QPushButton("规律…")
+        self.animation_rules_button.setToolTip(
+            "打开武器专用的光束组图、两套物理运行规律和物理图片库。"
+        )
+        self.animation_rules_button.clicked.connect(self._open_animation_rules)
+        self.animation_test_button = QPushButton("动画测试")
+        self.animation_test_button.setToolTip(
+            "先暂存当前武器表单，再导出测试 ROM 并用随附 Mesen 启动；"
+            "进入装备此武器的战斗即可核对双方动画。"
+        )
+        self.animation_test_button.clicked.connect(self._launch_animation_test)
+        animation_tools.addWidget(self.animation_code_button)
+        animation_tools.addWidget(self.animation_rules_button)
+        animation_tools.addWidget(self.animation_test_button)
+        animation_tools.addStretch()
+        detail.insertLayout(detail.count() - 2, animation_tools)
+        detail.insertWidget(detail.count() - 2, self.weapon_animation)
+        for button in self.findChildren(QPushButton):
+            if button.text() == "复制到其他ID…":
+                button.setText("复制属性与名称到其他ID…")
+            elif button.text() == "还原此武器":
+                button.setText("还原武器属性与名称")
+        group = QGroupBox("使用此武器的机体")
+        layout = QVBoxLayout(group)
+        self.usage_status = QLabel("请选择武器。")
+        self.usage_status.setWordWrap(True)
+        layout.addWidget(self.usage_status)
+        self.usage_list = QListWidget()
+        self.usage_list.setObjectName("weaponUnitUsageList")
+        self.usage_list.setAlternatingRowColors(True)
+        self.usage_list.setMinimumHeight(100)
+        self.usage_list.setMaximumHeight(190)
+        self.usage_list.itemDoubleClicked.connect(self._open_usage)
+        layout.addWidget(self.usage_list)
+        row = QHBoxLayout()
+        jump = QPushButton("转到所选机体")
+        jump.clicked.connect(lambda: self._open_usage(self.usage_list.currentItem()))
+        row.addWidget(jump)
+        row.addWidget(QLabel("双击机体也可跳转；按实际装备槽统计。"))
+        row.addStretch()
+        layout.addLayout(row)
+        self.weapon_animation.addTab(group, "使用此武器的机体")
+
+    def _open_animation_code(self) -> None:
+        index = self.weapon_animation.currentIndex()
+        if 0 <= index < len(self.weapon_animation.editors):
+            editor = self.weapon_animation.editors[index]
+            if not editor.code_edit.isVisible():
+                editor.code_button.click()
+            editor.code_edit.setFocus()
+
+    def _open_animation_rules(self) -> None:
+        if self.project is None:
+            return
+        from .weapon_rule_library import WeaponRuleLibraryDialog
+
+        dialog = WeaponRuleLibraryDialog(self.project, self.window())
+        dialog.exec()
+        dialog.deleteLater()
+
+    def _launch_animation_test(self) -> None:
+        if (
+            self.project is None
+            or self.current_id is None
+            or not self.commit_pending_changes()
+        ):
+            return
+        try:
+            emulator = ROOT / "tools" / "vendor" / "mesen-0.9.9" / "Mesen.exe"
+            if not emulator.is_file():
+                raise FileNotFoundError(f"找不到随附模拟器：{emulator}")
+            destination = (
+                ROOT
+                / "output"
+                / "verification"
+                / f"weapon-animation-{self.current_id:02X}.nes"
+            )
+            self.project.save_as(destination, make_backup=False)
+            started, _process_id = QProcess.startDetached(
+                str(emulator), [str(destination)]
+            )
+            if not started:
+                raise RuntimeError("Mesen 启动失败。")
+            self.records.setToolTip(
+                f"已启动武器 ${self.current_id:02X} 动画测试 ROM：{destination}"
+            )
+        except Exception as error:
+            self.show_error(error)
+
+    def record_text(self, record_id: int) -> str:
+        assert self.project is not None
+        return f"{record_id:03d}  {self.project.weapon_display_name(record_id)}"
+
+    def refresh(self) -> None:
+        super().refresh()
+        readable_references(self.name_reference)
+
+    def load_record(self, record_id: int | None) -> None:
+        self._loading_details = True
+        try:
+            super().load_record(record_id)
+            self._extras_enabled = False
+            if self.project is not None and record_id is not None:
+                skill, distance = weapon_extra_values(self.project, record_id)
+                weapon_extra_patches(self.project, record_id, skill, distance)
+                self.weapon_skill.setCurrentIndex(skill)
+                self.distance_correction.setValue(distance)
+                self._extras_enabled = True
+                self.extra_status.setText("距离补正引用“其他修改1”的第 0—3 号命中表；特技名称与旧修改器一致。")
+                raw = self.project.weapon_record_bytes(record_id)
+                name_raw = self.project.weapon_name_record_bytes(record_id)
+                self.rom_summary.setText(
+                    f"ROM属性 0x{self.project.weapon_codec.record_offset(record_id):06X}："
+                    f"{raw.hex(' ').upper()}；名称Token：{name_raw.hex(' ').upper()}。"
+                    "这里显示的是实际读取值，00 代表ROM原值为零。"
+                )
+            else:
+                self.rom_summary.setText("请选择武器以读取完整原始记录。")
+            self.weapon_skill.setEnabled(self._extras_enabled)
+            self.distance_correction.setEnabled(self._extras_enabled)
+            self.weapon_animation.set_record(self.project, record_id)
+        except ValueError as error:
+            self.extra_status.setText(str(error))
+            self.rom_summary.setText(f"原始记录读取失败：{error}")
+            self.weapon_animation.setEnabled(False)
+        finally:
+            self._loading_details = False
+        self.refresh_usage()
+        self._update_pending_state()
+
+    def _update_pending_state(self) -> None:
+        if self._loading_details:
+            return
+        super()._update_pending_state()
+        animation = getattr(self, "weapon_animation", None)
+        if animation is None or self.project is None or self.current_id is None:
+            return
+        extra_pending = self._extras_enabled and weapon_extra_values(self.project, self.current_id) != (self.weapon_skill.currentData(), self.distance_correction.value())
+        if extra_pending or (animation.isEnabled() and animation.has_pending_changes()):
+            self.apply_button.setEnabled(True)
+            self.pending_state.setText("● 有尚未暂存的武器特技、距离补正或动画改动")
+
+    def apply_record(self) -> None:
+        if self.project is None or self.current_id is None:
+            return
+        try:
+            name_sources = self.project.weapon_name_source_ids(self.current_id)
+            reference_pending = bool(
+                name_sources
+                and self.name_reference.currentData() is not None
+                and int(self.name_reference.currentData()) != name_sources[0]
+            )
+            text_pending = (
+                self.name_text.text().strip()
+                != concise_dc_text(self.project.weapon_name_record_bytes(self.current_id))
+            )
+            if reference_pending and text_pending:
+                raise ValueError("名称引用和名称文字不能同时修改；请先应用其中一项。")
+            if text_pending and not self.confirm_shared_name_edit("武器", name_sources):
+                return
+            if self.weapon_animation.isEnabled():
+                self.weapon_animation.pending_patches()  # Validate every draft before mutating.
+            changed_fields = [
+                field.label
+                for field in WEAPON_FIELDS
+                if self.fields[field.key].value()
+                != self.project.get_weapon_value(self.current_id, field.key)
+            ]
+            current_extras = weapon_extra_values(self.project, self.current_id)
+            requested_extras = current_extras
+            if self._extras_enabled:
+                requested_extras = (
+                    int(self.weapon_skill.currentData()),
+                    self.distance_correction.value(),
+                )
+            if self._extras_enabled and current_extras[0] != requested_extras[0]:
+                changed_fields.append("武器特技")
+            if self._extras_enabled and current_extras[1] != requested_extras[1]:
+                changed_fields.append("距离补正")
+            if not self._confirm_shared_writes(tuple(changed_fields)):
+                return
+            with self.project.transaction(f"武器 ${self.current_id:02X} · 完整表单"):
+                for field in WEAPON_FIELDS:
+                    self.project.set_weapon_value(self.current_id, field.key, self.fields[field.key].value())
+                if self._extras_enabled:
+                    apply_verified_patches(self.project, weapon_extra_patches(self.project, self.current_id,
+                                           int(self.weapon_skill.currentData()), self.distance_correction.value()), "武器特技与距离补正")
+                if self.project.supports_weapon_names:
+                    self.project.set_weapon_name_reference(self.current_id, int(self.name_reference.currentData()))
+                    if text_pending:
+                        self.project.set_weapon_name_text(
+                            self.current_id, self.name_text.text()
+                        )
+                if self.weapon_animation.isEnabled():
+                    self.weapon_animation.apply_pending()
+            self.load_record(self.current_id)
+            self.project_changed.emit(f"已更新武器 ${self.current_id:02X}")
+        except Exception as error:
+            self.show_error(error)
+
+    def duplicate_record(self) -> None:
+        if self.project is None or self.current_id is None or not self.commit_pending_changes():
+            return
+        options = [f"${index:02X} · {self.project.weapon_display_name(index)}"
+                   for index in range(1, self.project.weapon_count) if index != self.current_id]
+        selected, accepted = QInputDialog.getItem(self, "复制武器属性与名称", "复制到（目标的共用属性记录同步改变）：", options, 0, False)
+        if not accepted:
+            return
+        target = int(selected[1:3], 16)
+        self.copy_record_to(self.current_id, target)
+
+    def copy_record_to(self, source_id: int, target_id: int) -> bool:
+        if self.project is None or source_id == target_id:
+            return False
+        try:
+            if not self.confirm_shared_weapon_record_edit(
+                target_id,
+                tuple(field.label for field in WEAPON_FIELDS)
+                + ("武器特技", "距离补正"),
+                action="复制",
+            ):
+                return False
+            skill, distance = weapon_extra_values(self.project, source_id)
+            weapon_extra_patches(self.project, target_id, skill, distance)
+            sources = self.project.weapon_name_source_ids(source_id)
+            with self.project.transaction(f"复制武器 ${source_id:02X} 到 ${target_id:02X}"):
+                for field in WEAPON_FIELDS:
+                    self.project.set_weapon_value(target_id, field.key, self.project.get_weapon_value(source_id, field.key))
+                apply_verified_patches(self.project, weapon_extra_patches(self.project, target_id, skill, distance), "复制武器特技与距离补正")
+                if sources:
+                    self.project.set_weapon_name_reference(target_id, sources[0])
+            self.project_changed.emit(f"已复制武器属性与名称 ${source_id:02X} 到 ${target_id:02X}")
+            return True
+        except Exception as error:
+            self.show_error(error)
+            return False
+
+    def _confirm_shared_writes(self, field_labels: tuple[str, ...]) -> bool:
+        if self.project is None or self.current_id is None:
+            return True
+        warnings: list[str] = []
+        affected = self.shared_weapon_record_ids(self.current_id)
+        if field_labels and len(affected) > 1:
+            warnings.append(
+                f"6字节属性 {compact_ids(affected)}：{'、'.join(field_labels)}"
+            )
+        for title, editor in zip(
+            ("我方动画", "敌方动画"), self.weapon_animation.editors
+        ):
+            record = editor.record
+            if (
+                record is not None
+                and editor.has_pending_changes()
+                and record.aliases
+            ):
+                animation_ids = tuple(sorted((self.current_id, *record.aliases)))
+                warnings.append(f"{title} {compact_ids(animation_ids)}：共享脚本参数")
+        if not warnings:
+            return True
+        answer = QMessageBox.question(
+            self,
+            "共享武器数据确认",
+            "本次修改会同时影响下列武器ID：\n"
+            + "\n".join(warnings)
+            + "\n是否继续？",
+            QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.Cancel,
+            QMessageBox.StandardButton.Cancel,
+        )
+        return answer == QMessageBox.StandardButton.Yes
+
+    def refresh_usage(self) -> None:
+        if self.project is None or self.current_id is None:
+            self._set_usage_entries([])
+            self.usage_status.setText("请选择武器。")
+            return
+        if not self.project.supports_unit_weapons:
+            self._set_usage_entries([])
+            self.usage_status.setText("当前 ROM 的机体武器关联表尚未验证。")
+            return
+        entries: list[tuple[int, str]] = []
+        for unit_id in range(1, self.project.unit_count):
+            slots = tuple(index + 1 for index, weapon_id in enumerate(
+                self.project.get_unit_weapons(unit_id)
+            ) if weapon_id == self.current_id)
+            if not slots:
+                continue
+            text = (
+                f"{unit_id:03d}  {self.project.unit_display_name(unit_id)}"
+                f"  · 武器槽 {'、'.join(map(str, slots))}"
+            )
+            entries.append((unit_id, text))
+        self._set_usage_entries(entries)
+        count = len(entries)
+        self.usage_status.setText(
+            f"当前工程有 {count} 个机体装备此武器。"
+            if count else "当前没有机体装备此武器；这不代表该记录或动画空间可以删除。"
+        )
+
+    def _set_usage_entries(self, entries: list[tuple[int, str]]) -> None:
+        """Retain items during parameter/name edits and double-click signals."""
+        role = Qt.ItemDataRole.UserRole
+        selected = self.usage_list.currentItem()
+        selected_id = int(selected.data(role)) if selected is not None else None
+        old_ids = tuple(int(self.usage_list.item(row).data(role))
+                        for row in range(self.usage_list.count()))
+        new_ids = tuple(unit_id for unit_id, _text in entries)
+        blocked = self.usage_list.blockSignals(True)
+        updates = self.usage_list.updatesEnabled()
+        self.usage_list.setUpdatesEnabled(False)
+        try:
+            if old_ids == new_ids:
+                for row, (_unit_id, text) in enumerate(entries):
+                    self.usage_list.item(row).setText(text)
+            else:
+                self.usage_list.clear()
+                for unit_id, text in entries:
+                    item = QListWidgetItem(text)
+                    item.setData(role, unit_id)
+                    self.usage_list.addItem(item)
+            if entries:
+                row = new_ids.index(selected_id) if selected_id in new_ids else 0
+                self.usage_list.setCurrentRow(row)
+        finally:
+            self.usage_list.blockSignals(blocked)
+            self.usage_list.setUpdatesEnabled(updates)
+
+    def _open_usage(self, item: QListWidgetItem | None) -> None:
+        if item is None:
+            return
+        # Committing emits project_changed synchronously. The dialog refreshes
+        # this page and rebuilds usage_list, destroying its QListWidgetItems.
+        # Only the stable ID may be retained across that refresh.
+        unit_id = int(item.data(Qt.ItemDataRole.UserRole))
+        if self.commit_pending_changes():
+            self.unit_requested.emit(unit_id)

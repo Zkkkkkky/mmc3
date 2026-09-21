@@ -1,0 +1,204 @@
+{
+  "schema_version": 1,
+  "passed": true,
+  "status": "complete",
+  "counts": {
+    "modules": 18,
+    "scope_complete": 18,
+    "scope_incomplete": 0,
+    "evidence_passed": 18,
+    "safe_denominator_fields": 6842
+  },
+  "checks": {
+    "all_18_modules_present": true,
+    "runtime_control_inventory_present": true,
+    "pe_dialog_inventory_has_zero_failures": true,
+    "all_module_scopes_complete": true,
+    "all_scope_claims_have_matching_evidence": true,
+    "matrix_final_denominator_ready": true,
+    "matrix_and_scope_agree": true,
+    "final_safe_denominator_matches_reviewed_scope": true
+  },
+  "modules": [
+    {
+      "module": "M01",
+      "scope_complete": true,
+      "denominator_count": 0,
+      "evidence_path": null,
+      "evidence_count": 0,
+      "evidence_passed": true,
+      "evidence_reason": "module has no persistent reference fields or is explicitly excluded",
+      "classification": "no_persistent_reference_fields"
+    },
+    {
+      "module": "M02",
+      "scope_complete": true,
+      "denominator_count": 0,
+      "evidence_path": null,
+      "evidence_count": 0,
+      "evidence_passed": true,
+      "evidence_reason": "module has no persistent reference fields or is explicitly excluded",
+      "classification": "excluded_by_user_decision"
+    },
+    {
+      "module": "M03",
+      "scope_complete": true,
+      "denominator_count": 1380,
+      "evidence_path": "output/reports/m03-reference-field-coverage.json",
+      "evidence_count": 1380,
+      "evidence_passed": true,
+      "evidence_reason": "custom exhaustive report",
+      "classification": "field_scope_complete_with_no_effect_and_unreachable_exclusions"
+    },
+    {
+      "module": "M04",
+      "scope_complete": true,
+      "denominator_count": 103,
+      "evidence_path": "output/reports/m04-reference-field-coverage.json",
+      "evidence_count": 103,
+      "evidence_passed": true,
+      "evidence_reason": "custom exhaustive report",
+      "classification": "field_scope_complete_with_no_effect_and_unreachable_exclusions"
+    },
+    {
+      "module": "M05",
+      "scope_complete": true,
+      "denominator_count": 33,
+      "evidence_path": "output/reports/m05-reference-control-catalog.json",
+      "evidence_count": 33,
+      "evidence_passed": true,
+      "evidence_reason": "custom exhaustive report",
+      "classification": "field_scope_complete_with_non_rom_and_unsafe_action_exclusions"
+    },
+    {
+      "module": "M06",
+      "scope_complete": true,
+      "denominator_count": 106,
+      "evidence_path": "output/reports/golden-coverage-report.json",
+      "evidence_count": 106,
+      "evidence_passed": true,
+      "evidence_reason": "unique passed golden fields",
+      "classification": "field_scope_complete_with_unsafe_action_exclusion"
+    },
+    {
+      "module": "M07",
+      "scope_complete": true,
+      "denominator_count": 8,
+      "evidence_path": "output/reports/golden-coverage-report.json",
+      "evidence_count": 8,
+      "evidence_passed": true,
+      "evidence_reason": "unique passed golden fields",
+      "classification": "field_scope_complete_with_unsafe_action_exclusion"
+    },
+    {
+      "module": "M08",
+      "scope_complete": true,
+      "denominator_count": 1090,
+      "evidence_path": "output/verification/legacy-m08-all-fields-20260920/summary.json",
+      "evidence_count": 1090,
+      "evidence_passed": true,
+      "evidence_reason": "custom exhaustive report",
+      "classification": "field_scope_complete_with_no_effect_and_unsafe_exclusions"
+    },
+    {
+      "module": "M09",
+      "scope_complete": true,
+      "denominator_count": 412,
+      "evidence_path": "output/verification/legacy-m09-all-fields-20260920/summary.json",
+      "evidence_count": 412,
+      "evidence_passed": true,
+      "evidence_reason": "custom exhaustive report",
+      "classification": "field_scope_complete_with_no_effect_exclusions"
+    },
+    {
+      "module": "M10",
+      "scope_complete": true,
+      "denominator_count": 134,
+      "evidence_path": "output/verification/legacy-m10-all-fields-20260920/summary.json",
+      "evidence_count": 134,
+      "evidence_passed": true,
+      "evidence_reason": "custom exhaustive report",
+      "classification": "field_scope_complete_with_product_blocked_exclusions"
+    },
+    {
+      "module": "M11",
+      "scope_complete": true,
+      "denominator_count": 672,
+      "evidence_path": "output/verification/legacy-m11-all-fields-20260920/summary.json",
+      "evidence_count": 672,
+      "evidence_passed": true,
+      "evidence_reason": "custom exhaustive report",
+      "classification": "field_scope_complete_with_no_effect_and_unsafe_exclusions"
+    },
+    {
+      "module": "M12",
+      "scope_complete": true,
+      "denominator_count": 198,
+      "evidence_path": "output/reports/m12-reference-field-coverage.json",
+      "evidence_count": 198,
+      "evidence_passed": true,
+      "evidence_reason": "custom exhaustive report",
+      "classification": "field_scope_complete_with_no_effect_and_product_blocked_exclusions"
+    },
+    {
+      "module": "M13",
+      "scope_complete": true,
+      "denominator_count": 0,
+      "evidence_path": null,
+      "evidence_count": 0,
+      "evidence_passed": true,
+      "evidence_reason": "module has no persistent reference fields or is explicitly excluded",
+      "classification": "no_persistent_reference_fields"
+    },
+    {
+      "module": "M14",
+      "scope_complete": true,
+      "denominator_count": 2674,
+      "evidence_path": "output/reports/m14-reference-save-coverage.json",
+      "evidence_count": 2674,
+      "evidence_passed": true,
+      "evidence_reason": "custom exhaustive report",
+      "classification": "field_scope_complete_with_volatile_and_read_only_exclusions"
+    },
+    {
+      "module": "M15",
+      "scope_complete": true,
+      "denominator_count": 0,
+      "evidence_path": null,
+      "evidence_count": 0,
+      "evidence_passed": true,
+      "evidence_reason": "module has no persistent reference fields or is explicitly excluded",
+      "classification": "no_persistent_reference_fields"
+    },
+    {
+      "module": "M16",
+      "scope_complete": true,
+      "denominator_count": 0,
+      "evidence_path": "output/reports/m16-reference-field-coverage.json",
+      "evidence_count": 0,
+      "evidence_passed": true,
+      "evidence_reason": "custom exhaustive report",
+      "classification": "field_scope_complete_with_reference_runtime_error_exclusions"
+    },
+    {
+      "module": "M17",
+      "scope_complete": true,
+      "denominator_count": 32,
+      "evidence_path": "output/reports/golden-coverage-report.json",
+      "evidence_count": 32,
+      "evidence_passed": true,
+      "evidence_reason": "unique passed golden fields",
+      "classification": "field_scope_complete"
+    },
+    {
+      "module": "M18",
+      "scope_complete": true,
+      "denominator_count": 0,
+      "evidence_path": null,
+      "evidence_count": 0,
+      "evidence_passed": true,
+      "evidence_reason": "module has no persistent reference fields or is explicitly excluded",
+      "classification": "no_persistent_reference_fields"
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "reason": "误用默认audit.nes而非锁定m05-reference-baseline.nes，保留用于基准差异诊断",
+  "timestamp": "20260920T015255",
+  "moved": [
+    {
+      "module": "M06",
+      "field": "sp",
+      "case_id": "cold_start_01",
+      "from": "output/build/legacy-diff-audit/cases/legacy_live/M06/sp/cold_start_01",
+      "to": "output/build/legacy-diff-audit/cases/diagnostic/retry_history/20260920T015255/M06/sp/cold_start_01",
+      "had_case_json": true,
+      "had_error_json": false
+    }
+  ],
+  "live_result_rows_removed": 1
+}

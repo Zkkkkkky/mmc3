@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "reason": "preserve notified-text failure and interrupted sibling attempt before real keyboard input retry",
+  "timestamp": "20260920T005504",
+  "moved": [
+    {
+      "module": "M05",
+      "field": "body_color_1",
+      "case_id": "cold_start_01",
+      "from": "output/build/legacy-diff-audit/cases/legacy_live/M05/body_color_1/cold_start_01",
+      "to": "output/build/legacy-diff-audit/cases/diagnostic/retry_history/20260920T005504/M05/body_color_1/cold_start_01",
+      "had_case_json": true,
+      "had_error_json": false
+    },
+    {
+      "module": "M05",
+      "field": "body_color_2",
+      "case_id": "cold_start_01",
+      "from": "output/build/legacy-diff-audit/cases/legacy_live/M05/body_color_2/cold_start_01",
+      "to": "output/build/legacy-diff-audit/cases/diagnostic/retry_history/20260920T005504/M05/body_color_2/cold_start_01",
+      "had_case_json": false,
+      "had_error_json": false
+    }
+  ],
+  "live_result_rows_removed": 1
+}

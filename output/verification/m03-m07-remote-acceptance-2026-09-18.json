@@ -1,0 +1,114 @@
+{
+  "schemaVersion": 1,
+  "recordedAt": "2026-09-19T18:45:00+08:00",
+  "acceptancePerformedAt": "2026-09-18",
+  "source": {
+    "remote": "origin",
+    "branch": "youhua_hu",
+    "commit": "c54ab50c8283a29200d8fb7befe01e000372003e",
+    "commitAuthor": "candicemarie57-stack <candicemarie57@yahoo.com>",
+    "commitTimestamp": "2026-09-18T22:26:43+08:00",
+    "checklistPath": "docs/M03-M07验收清单.md",
+    "checklistGitBlob": "482229f36bc7c1176251d11415e637dd93f79656"
+  },
+  "testedBuild": {
+    "executableSha256": "A80366B68C357E2C2327F9C81CD792E6B4E5B6EE50BCC9FF64127D3A10DD0D1C",
+    "currentExecutableSha256AtImport": "CC167867741E4355F014EE72EB01CE22F75432E11423017C534075F83E160D7B",
+    "matchesCurrentExecutable": false,
+    "note": "验收结论属于远端提交记录的 A80366B6… 构建；当前构建已变更，不把历史签收冒充为当前 EXE 的完整重验。"
+  },
+  "summary": {
+    "passedSteps": 44,
+    "pendingSteps": 4,
+    "modulesAccepted": 1,
+    "modulesConditionallyAccepted": 4,
+    "overall": "conditionally_accepted"
+  },
+  "modules": {
+    "M03": {
+      "conclusion": "accepted",
+      "passed": ["M03-01", "M03-02", "M03-03", "M03-04", "M03-05", "M03-06", "M03-07"],
+      "pending": [],
+      "condition": null
+    },
+    "M04": {
+      "conclusion": "conditionally_accepted",
+      "passed": ["M04-03", "M04-06"],
+      "pending": ["M04-01", "M04-02", "M04-04", "M04-05"],
+      "condition": "商店事件还不可编辑；4 项标记待功能完善验收。"
+    },
+    "M05": {
+      "conclusion": "conditionally_accepted",
+      "passed": ["M05-01", "M05-02", "M05-03", "M05-04", "M05-05", "M05-06", "M05-07", "M05-08", "M05-09", "M05-10"],
+      "pending": [],
+      "condition": "导图未完全参照旧修改器。"
+    },
+    "M06": {
+      "conclusion": "conditionally_accepted",
+      "passed": ["M06-01", "M06-02", "M06-03", "M06-04", "M06-05", "M06-06", "M06-07", "M06-08", "M06-09", "M06-10"],
+      "pending": [],
+      "condition": "人物头像预览错误。"
+    },
+    "M07": {
+      "conclusion": "conditionally_accepted",
+      "passed": ["M07-01", "M07-02", "M07-03", "M07-04", "M07-05", "M07-06", "M07-07", "M07-08", "M07-09", "M07-10"],
+      "pending": [],
+      "condition": "武器规律应该有单独的规律库。"
+    }
+  },
+  "crossModule": {
+    "conclusion": "accepted",
+    "passed": ["X-01", "X-02", "X-03", "X-04", "X-05"]
+  },
+  "importedEvidence": [
+    {
+      "path": "output/verification/manual-acceptance-m03-m07-20260918/M03-01-第一关.png",
+      "sha256": "93D8A48D8FC6AF70870BD16FE757456B02F8415F9138422A8AEC0195CC2CA5BE",
+      "supports": ["M03-01"]
+    },
+    {
+      "path": "output/verification/manual-acceptance-m03-m07-20260918/M03-01-第四关.png",
+      "sha256": "0B4F10D3B5F905E55323EB8E331BF74388B5C839E5914FE693546178B49C9FE4",
+      "supports": ["M03-01"]
+    },
+    {
+      "path": "output/verification/manual-acceptance-m03-m07-20260918/M03-01-第28关.png",
+      "sha256": "30DDF7A8520D6C18A9F03009BB8A1797C21457B00B3D7F739D964B82947D8C03",
+      "supports": ["M03-01"]
+    }
+  ],
+  "remoteOnlyEvidence": [
+    {
+      "paths": ["output/verification/weapon-animation-95.nes", "output/verification/weapon-animation-9D.nes"],
+      "gitBlob": "e33a2eaa97b7cf51ab100894698f2cdf82502b4d",
+      "size": 1310736,
+      "supports": ["M07-08"],
+      "imported": false,
+      "reason": "测试 ROM 保留在原远端提交；当前分支避免再引入受版权 ROM 二进制。"
+    },
+    {
+      "paths": [
+        "tools/vendor/mesen-0.9.9/RecentGames/weapon-animation-95.rgd",
+        "tools/vendor/mesen-0.9.9/RecentGames/weapon-animation-9D.rgd",
+        "tools/vendor/mesen-0.9.9/Saves/weapon-animation-95.sav",
+        "tools/vendor/mesen-0.9.9/Saves/weapon-animation-9D.sav"
+      ],
+      "gitBlobs": [
+        "3dd1994b9bdb229c6a6a569c1aeb38c02565d0d8",
+        "a910279090844430d1931aa85981a7de0256ebc7",
+        "5698400a18fa85e2c2aa1a5b2db5aecbf2a82d40",
+        "9ee8eea211efea7a8fe0160d971e0523098f897b"
+      ],
+      "supports": ["M07-08"],
+      "imported": false,
+      "reason": "模拟器个人设置、最近记录与存档不直接覆盖当前工作区。"
+    }
+  ],
+  "unresolvedFeedback": [
+    "M04-01/M04-02/M04-04/M04-05 待功能完善后重验。",
+    "M05 导图与旧修改器未完全对齐，需明确具体页面/图层/差异。",
+    "M06 人物头像预览错误需复现并修复。",
+    "M07 需确认‘单独的规律库’的产品交互与数据范围。",
+    "验收构建与当前构建哈希不同，涉及后续改动的路径需当前版本定向复验。"
+  ]
+}

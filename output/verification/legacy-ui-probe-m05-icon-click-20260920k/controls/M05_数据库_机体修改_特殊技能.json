@@ -1,0 +1,178 @@
+{
+  "tag": "M05_数据库_机体修改_特殊技能",
+  "hwnd": 21234778,
+  "title": "机体特技",
+  "class": "WTWindow",
+  "rect": {
+    "left": 768,
+    "top": 406,
+    "right": 1149,
+    "bottom": 679,
+    "width": 381,
+    "height": 273
+  },
+  "pid": 17968,
+  "tree": {
+    "hwnd": 21234778,
+    "class": "WTWindow",
+    "text": "机体特技",
+    "ctrl_id": 0,
+    "rect": {
+      "left": 768,
+      "top": 406,
+      "right": 1149,
+      "bottom": 679,
+      "width": 381,
+      "height": 273
+    },
+    "visible": true,
+    "enabled": true,
+    "children": [
+      {
+        "hwnd": 9898674,
+        "class": "Button",
+        "text": "取消",
+        "ctrl_id": 170,
+        "rect": {
+          "left": 1040,
+          "top": 495,
+          "right": 1140,
+          "bottom": 525,
+          "width": 100,
+          "height": 30
+        },
+        "visible": true,
+        "enabled": true,
+        "button_check_state": 0,
+        "children": []
+      },
+      {
+        "hwnd": 16384980,
+        "class": "Button",
+        "text": "确定",
+        "ctrl_id": 160,
+        "rect": {
+          "left": 1040,
+          "top": 455,
+          "right": 1140,
+          "bottom": 485,
+          "width": 100,
+          "height": 30
+        },
+        "visible": true,
+        "enabled": true,
+        "button_check_state": 0,
+        "children": []
+      },
+      {
+        "hwnd": 15139886,
+        "class": "Button",
+        "text": "先制攻击",
+        "ctrl_id": 150,
+        "rect": {
+          "left": 780,
+          "top": 555,
+          "right": 1030,
+          "bottom": 585,
+          "width": 250,
+          "height": 30
+        },
+        "visible": true,
+        "enabled": true,
+        "button_check_state": 0,
+        "children": []
+      },
+      {
+        "hwnd": 15664192,
+        "class": "Button",
+        "text": "积层装甲反射系统（反伤）",
+        "ctrl_id": 140,
+        "rect": {
+          "left": 780,
+          "top": 585,
+          "right": 1030,
+          "bottom": 615,
+          "width": 250,
+          "height": 30
+        },
+        "visible": true,
+        "enabled": true,
+        "button_check_state": 0,
+        "children": []
+      },
+      {
+        "hwnd": 14550084,
+        "class": "Button",
+        "text": "异次元连接系统",
+        "ctrl_id": 130,
+        "rect": {
+          "left": 780,
+          "top": 495,
+          "right": 1030,
+          "bottom": 525,
+          "width": 250,
+          "height": 30
+        },
+        "visible": true,
+        "enabled": true,
+        "button_check_state": 0,
+        "children": []
+      },
+      {
+        "hwnd": 15205520,
+        "class": "Button",
+        "text": "一击脱离（仅限我方）",
+        "ctrl_id": 120,
+        "rect": {
+          "left": 780,
+          "top": 525,
+          "right": 1030,
+          "bottom": 555,
+          "width": 250,
+          "height": 30
+        },
+        "visible": true,
+        "enabled": true,
+        "button_check_state": 1,
+        "children": []
+      },
+      {
+        "hwnd": 9571014,
+        "class": "Button",
+        "text": "扭曲力场（间无）",
+        "ctrl_id": 110,
+        "rect": {
+          "left": 780,
+          "top": 465,
+          "right": 1030,
+          "bottom": 495,
+          "width": 250,
+          "height": 30
+        },
+        "visible": true,
+        "enabled": true,
+        "button_check_state": 0,
+        "children": []
+      },
+      {
+        "hwnd": 13501528,
+        "class": "ComboBox",
+        "text": "01：T防御系统",
+        "ctrl_id": 100,
+        "rect": {
+          "left": 780,
+          "top": 625,
+          "right": 1030,
+          "bottom": 655,
+          "width": 250,
+          "height": 30
+        },
+        "visible": true,
+        "enabled": true,
+        "combo_count": 8,
+        "combo_selected": 1,
+        "children": []
+      }
+    ]
+  }
+}

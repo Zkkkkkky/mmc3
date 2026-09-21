@@ -1,0 +1,75 @@
+{
+  "module": "M06",
+  "field": "dialogue_attack_blocked_number",
+  "case_id": "cold_start_01",
+  "requested_value": 248,
+  "expected_before": 247,
+  "expected_offsets": [
+    53993
+  ],
+  "required_offsets": [
+    53993
+  ],
+  "optional_offsets": [],
+  "extra_allowed": [],
+  "extra_allowed_profile": "m06_dialogue_pool_repack_v1",
+  "navigation": [
+    {
+      "op": "menu",
+      "path": "数据->数据库"
+    },
+    {
+      "op": "window",
+      "title": "数据库"
+    },
+    {
+      "op": "click_coords",
+      "x": 130,
+      "y": 73
+    },
+    {
+      "op": "list_select",
+      "class": "ListBox",
+      "control_id": 630,
+      "row": 0
+    },
+    {
+      "op": "click_id",
+      "class": "Button",
+      "control_id": 1460
+    },
+    {
+      "op": "window",
+      "title": "防御对话",
+      "settle_seconds": 0.2
+    }
+  ],
+  "edit_steps": [
+    {
+      "op": "select_index",
+      "class": "ComboBox",
+      "control_id": 130,
+      "value": "$requested"
+    },
+    {
+      "op": "click_id",
+      "class": "Button",
+      "control_id": 110
+    },
+    {
+      "op": "window",
+      "title": "数据库",
+      "settle_seconds": 0.2
+    },
+    {
+      "op": "click_id",
+      "class": "Button",
+      "control_id": 590
+    }
+  ],
+  "read_selector": {
+    "class": "ComboBox",
+    "control_id": 130,
+    "value_type": "combo_index"
+  }
+}

@@ -1,5 +1,17 @@
+# Python environments and caches
 .venv/
 __pycache__/
 *.py[cod]
+*.egg-info/
 .pytest_cache/
-build/pyinstaller-work/
+
+# Generated build work
+output/build/pyinstaller-work/
+
+# Local Codex, scratch, and emulator state
+.codex-remote-attachments/
+tmp/
+tools/vendor/fceux-2.6.6/fceux.cfg
+
+# Keep the user-provided comparison recording local.
+/录制_2026_09_10_18_51_54_457.mp4

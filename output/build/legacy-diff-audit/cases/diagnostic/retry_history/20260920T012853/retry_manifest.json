@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "reason": "second independent discovery reproduced all 3897 diff triples exactly; promote two directory bytes plus deterministic name-pool rebuild to golden",
+  "timestamp": "20260920T012853",
+  "moved": [
+    {
+      "module": "M05",
+      "field": "name",
+      "case_id": "cold_start_01",
+      "from": "output/build/legacy-diff-audit/cases/legacy_live/M05/name/cold_start_01",
+      "to": "output/build/legacy-diff-audit/cases/diagnostic/retry_history/20260920T012853/M05/name/cold_start_01",
+      "had_case_json": true,
+      "had_error_json": false
+    }
+  ],
+  "live_result_rows_removed": 1
+}

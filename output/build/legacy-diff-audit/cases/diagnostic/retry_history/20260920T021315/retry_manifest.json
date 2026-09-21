@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "reason": "击落不消失首次发现：标志和值均写入0x80，归档后同基准复测确定性",
+  "timestamp": "20260920T021315",
+  "moved": [
+    {
+      "module": "M06",
+      "field": "defeat_persist",
+      "case_id": "cold_start_01",
+      "from": "output/build/legacy-diff-audit/cases/legacy_live/M06/defeat_persist/cold_start_01",
+      "to": "output/build/legacy-diff-audit/cases/diagnostic/retry_history/20260920T021315/M06/defeat_persist/cold_start_01",
+      "had_case_json": true,
+      "had_error_json": false
+    }
+  ],
+  "live_result_rows_removed": 1
+}

@@ -1,0 +1,103 @@
+INPUT frame=1 poll=1 requested_down=false requested_a=false
+INPUT frame=2 poll=2 requested_down=false requested_a=false
+INPUT frame=3 poll=3 requested_down=false requested_a=false
+INPUT frame=4 poll=4 requested_down=false requested_a=false
+PALETTE_WRITE frame=5 address=0490 value=00
+PALETTE_WRITE frame=5 address=0491 value=00
+PALETTE_WRITE frame=5 address=0492 value=00
+PALETTE_WRITE frame=5 address=0493 value=00
+PALETTE_WRITE frame=5 address=0494 value=00
+PALETTE_WRITE frame=5 address=0495 value=00
+PALETTE_WRITE frame=5 address=0496 value=00
+PALETTE_WRITE frame=5 address=0497 value=00
+PALETTE_WRITE frame=5 address=0498 value=00
+PALETTE_WRITE frame=5 address=0499 value=00
+PALETTE_WRITE frame=5 address=049A value=00
+PALETTE_WRITE frame=5 address=049B value=00
+PALETTE_WRITE frame=5 address=049C value=00
+PALETTE_WRITE frame=5 address=049D value=00
+PALETTE_WRITE frame=5 address=049E value=00
+PALETTE_WRITE frame=5 address=049F value=00
+PALETTE_WRITE frame=5 address=04A0 value=00
+PALETTE_WRITE frame=5 address=04A1 value=00
+PALETTE_WRITE frame=5 address=04A2 value=00
+PALETTE_WRITE frame=5 address=04A3 value=00
+PALETTE_WRITE frame=5 address=04A4 value=00
+PALETTE_WRITE frame=5 address=04A5 value=00
+PALETTE_WRITE frame=5 address=04A6 value=00
+PALETTE_WRITE frame=5 address=04A7 value=00
+PALETTE_WRITE frame=5 address=04A8 value=00
+PALETTE_WRITE frame=5 address=04A9 value=00
+PALETTE_WRITE frame=5 address=04AA value=00
+PALETTE_WRITE frame=5 address=04AB value=00
+PALETTE_WRITE frame=5 address=04AC value=00
+PALETTE_WRITE frame=5 address=04AD value=00
+PALETTE_WRITE frame=5 address=04AE value=00
+PALETTE_WRITE frame=5 address=04AF value=00
+PALETTE_WRITE frame=20 address=0490 value=0F
+PALETTE_WRITE frame=20 address=0491 value=30
+PALETTE_WRITE frame=20 address=0492 value=10
+PALETTE_WRITE frame=20 address=0493 value=00
+PALETTE_WRITE frame=20 address=0494 value=0F
+PALETTE_WRITE frame=20 address=0495 value=28
+PALETTE_WRITE frame=20 address=0496 value=0F
+PALETTE_WRITE frame=20 address=0497 value=30
+PALETTE_WRITE frame=20 address=0498 value=0F
+PALETTE_WRITE frame=20 address=0499 value=16
+PALETTE_WRITE frame=20 address=049A value=0F
+PALETTE_WRITE frame=20 address=049B value=28
+PALETTE_WRITE frame=20 address=049C value=0F
+PALETTE_WRITE frame=20 address=049D value=28
+PALETTE_WRITE frame=20 address=049E value=06
+PALETTE_WRITE frame=20 address=049F value=28
+PALETTE_WRITE frame=20 address=04A0 value=0F
+PALETTE_WRITE frame=20 address=04A1 value=30
+PALETTE_WRITE frame=20 address=04A2 value=23
+PALETTE_WRITE frame=20 address=04A3 value=0F
+PALETTE_WRITE frame=20 address=04A4 value=0F
+PALETTE_WRITE frame=20 address=04A5 value=30
+PALETTE_WRITE frame=20 address=04A6 value=30
+PALETTE_WRITE frame=20 address=04A7 value=30
+PALETTE_WRITE frame=20 address=04A8 value=0F
+PALETTE_WRITE frame=20 address=04A9 value=30
+PALETTE_WRITE frame=20 address=04AA value=30
+PALETTE_WRITE frame=20 address=04AB value=30
+PALETTE_WRITE frame=20 address=04AC value=0F
+PALETTE_WRITE frame=20 address=04AD value=30
+PALETTE_WRITE frame=20 address=04AE value=30
+PALETTE_WRITE frame=20 address=04AF value=30
+SNAP frame=675 label=checkpoint pc=F875 prg=FF875 ram=0F 30 10 00 0F 28 16 30 0F 28 16 38 0F 16 06 28 0F 30 23 0F 0F 30 30 30 0F 30 30 30 0F 30 30 30 ppu=0F 30 10 00 0F 28 16 30 0F 28 16 38 0F 16 06 28 0F 30 23 0F 0F 30 30 30 0F 30 30 30 0F 30 30 30 reads=0 writes=145
+INPUT frame=690 poll=690 requested_down=true requested_a=false
+RECORD_READ frame=741 cpu=A10C prg=610C value=64
+RECORD_READ frame=741 cpu=A10D prg=610D value=64
+RECORD_READ frame=741 cpu=A10E prg=610E value=5F
+RECORD_READ frame=741 cpu=A10F prg=610F value=5A
+RECORD_READ frame=741 cpu=A110 prg=6110 value=50
+RECORD_READ frame=741 cpu=A111 prg=6111 value=55
+RECORD_READ frame=741 cpu=A112 prg=6112 value=5F
+RECORD_READ frame=741 cpu=A113 prg=6113 value=5A
+RECORD_READ frame=741 cpu=A114 prg=6114 value=64
+RECORD_READ frame=741 cpu=A115 prg=6115 value=55
+RECORD_READ frame=741 cpu=A116 prg=6116 value=50
+RECORD_READ frame=741 cpu=A117 prg=6117 value=64
+RECORD_READ frame=741 cpu=A118 prg=6118 value=64
+RECORD_READ frame=741 cpu=A119 prg=6119 value=64
+RECORD_READ frame=741 cpu=A11A prg=611A value=64
+RECORD_READ frame=741 cpu=A11B prg=611B value=64
+RECORD_READ frame=743 cpu=A0FC prg=60FC value=00
+RECORD_READ frame=743 cpu=A0FD prg=60FD value=55
+RECORD_READ frame=743 cpu=A0FE prg=60FE value=00
+RECORD_READ frame=743 cpu=A0FF prg=60FF value=00
+RECORD_READ frame=743 cpu=A100 prg=6100 value=FF
+RECORD_READ frame=743 cpu=A101 prg=6101 value=AA
+RECORD_READ frame=743 cpu=A102 prg=6102 value=55
+RECORD_READ frame=743 cpu=A103 prg=6103 value=55
+SNAP frame=750 label=checkpoint pc=9A6F prg=5A6F ram=0F 30 10 00 0F 28 16 30 0F 28 16 38 0F 16 06 28 0F 30 23 0F 0F 30 30 30 0F 30 30 30 0F 30 30 30 ppu=0F 30 10 00 0F 28 16 30 0F 28 16 38 0F 16 06 28 0F 30 23 0F 0F 30 30 30 0F 30 30 30 0F 30 30 30 reads=32 writes=145
+INPUT frame=850 poll=850 requested_down=false requested_a=false
+SNAP frame=1000 label=checkpoint pc=F97F prg=FF97F ram=0F 30 10 00 0F 27 2A 1A 0F 30 21 02 0F 37 27 16 0F 30 23 0F 0F 00 00 00 0F 30 21 02 0F 37 27 16 ppu=0F 30 10 00 0F 27 2A 1A 0F 30 21 02 0F 37 27 16 0F 30 23 0F 0F 00 00 00 0F 30 21 02 0F 37 27 16 reads=36 writes=268
+SNAP frame=1500 label=checkpoint pc=F97F prg=FF97F ram=0F 30 10 00 0F 27 2A 1A 0F 30 21 02 0F 37 27 16 0F 30 23 0F 0F 00 00 00 0F 30 21 02 0F 37 27 16 ppu=0F 30 10 00 0F 27 2A 1A 0F 30 21 02 0F 37 27 16 0F 30 23 0F 0F 00 00 00 0F 30 21 02 0F 37 27 16 reads=52 writes=268
+SNAP frame=2200 label=checkpoint pc=F97F prg=FF97F ram=0F 30 10 00 0F 27 2A 1A 0F 30 21 02 0F 37 27 16 0F 30 23 0F 0F 00 00 00 0F 30 21 02 0F 37 27 16 ppu=0F 30 10 00 0F 27 2A 1A 0F 30 21 02 0F 37 27 16 0F 30 23 0F 0F 00 00 00 0F 30 21 02 0F 37 27 16 reads=52 writes=268
+SNAP frame=3200 label=checkpoint pc=F97F prg=FF97F ram=0F 30 10 00 0F 27 2A 1A 0F 30 21 02 0F 37 27 16 0F 30 23 0F 0F 00 00 00 0F 30 21 02 0F 37 27 16 ppu=0F 30 10 00 0F 27 2A 1A 0F 30 21 02 0F 37 27 16 0F 30 23 0F 0F 00 00 00 0F 30 21 02 0F 37 27 16 reads=52 writes=268
+SNAP frame=5000 label=checkpoint pc=F97E prg=FF97E ram=0F 30 10 00 0F 27 2A 1A 0F 30 21 02 0F 37 27 16 0F 30 23 0F 0F 00 00 00 0F 30 21 02 0F 37 27 16 ppu=0F 30 10 00 0F 27 2A 1A 0F 30 21 02 0F 37 27 16 0F 30 23 0F 0F 00 00 00 0F 30 21 02 0F 37 27 16 reads=52 writes=268
+SNAP frame=8000 label=checkpoint pc=F97F prg=FF97F ram=0F 30 10 00 0F 27 2A 1A 0F 30 21 02 0F 37 27 16 0F 30 23 0F 0F 00 00 00 0F 30 21 02 0F 37 27 16 ppu=0F 30 10 00 0F 27 2A 1A 0F 30 21 02 0F 37 27 16 0F 30 23 0F 0F 00 00 00 0F 30 21 02 0F 37 27 16 reads=52 writes=268
+RESULT frames=8000 record_reads=52 palette_writes=268 snapshots=8 input_polls=7999

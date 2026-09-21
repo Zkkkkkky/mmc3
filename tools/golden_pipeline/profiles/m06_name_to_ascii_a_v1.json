@@ -1,0 +1,8 @@
+{
+  "schema_version": 1,
+  "name": "m06_name_to_ascii_a_v1",
+  "description": "参考版将人物第 1 行目录名称从下划线占位改为 A 时的确定性共享名称池重建；两轮 3923 条差分完全一致。",
+  "source_case": "output/build/legacy-diff-audit/cases/diagnostic/retry_history/20260920T022002/M06/name/cold_start_01/case.json",
+  "source_case_sha256": "3cb00efb967bba1e638837d95ad21187d6a6f7e9f40e636e4023e8106a7290c7",
+  "exclude_offsets": [302958]
+}

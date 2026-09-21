@@ -1,0 +1,84 @@
+{
+  "tag": "D4_属性计算器_更改倍数",
+  "hwnd": 1448520,
+  "title": "错误",
+  "class": "#32770",
+  "rect": {
+    "left": 1683,
+    "top": 854,
+    "right": 2157,
+    "bottom": 1235,
+    "width": 474,
+    "height": 381
+  },
+  "pid": 15980,
+  "tree": {
+    "hwnd": 1448520,
+    "class": "#32770",
+    "text": "错误",
+    "ctrl_id": 0,
+    "rect": {
+      "left": 1683,
+      "top": 854,
+      "right": 2157,
+      "bottom": 1235,
+      "width": 474,
+      "height": 381
+    },
+    "visible": true,
+    "enabled": true,
+    "children": [
+      {
+        "hwnd": 793152,
+        "class": "Button",
+        "text": "确定",
+        "ctrl_id": 2,
+        "rect": {
+          "left": 1994,
+          "top": 1170,
+          "right": 2126,
+          "bottom": 1212,
+          "width": 132,
+          "height": 42
+        },
+        "visible": true,
+        "enabled": true,
+        "children": []
+      },
+      {
+        "hwnd": 793120,
+        "class": "Static",
+        "text": "",
+        "ctrl_id": 20,
+        "rect": {
+          "left": 1724,
+          "top": 942,
+          "right": 1772,
+          "bottom": 990,
+          "width": 48,
+          "height": 48
+        },
+        "visible": true,
+        "enabled": true,
+        "children": []
+      },
+      {
+        "hwnd": 596486,
+        "class": "Static",
+        "text": "运行时出错!\r\n\r\n错误代码：1\r\n\r\n错误信息：数组成员引用下标超出定义范围\r\n\r\n67721765, 100\r\n",
+        "ctrl_id": 65535,
+        "rect": {
+          "left": 1784,
+          "top": 942,
+          "right": 2099,
+          "bottom": 1113,
+          "width": 315,
+          "height": 171
+        },
+        "visible": true,
+        "enabled": true,
+        "children": []
+      }
+    ]
+  }
+}

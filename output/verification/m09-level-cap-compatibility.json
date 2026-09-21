@@ -1,0 +1,82 @@
+{
+  "generated_at": "2026-09-18T23:35:10+08:00",
+  "passed": true,
+  "conclusion": "当前受支持 ROM 已是固定 99 级布局；旧版 audit.nes 的 60→61 3778 字节重排不兼容，不能应用到当前产品。",
+  "supported_rom": {
+    "path": "output/rom/DC_kuorong_464K.nes",
+    "sha256": "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E",
+    "runtime_compare": "C9 62",
+    "runtime_level_cap": 99,
+    "verified_level_cap": 99,
+    "experience_entries": 99,
+    "growth_record_bytes": 50,
+    "growth_capacity": 99,
+    "first_growth_offsets": [
+      "0xA78A",
+      "0xA7BC",
+      "0xA7EE",
+      "0xA820",
+      "0xA852",
+      "0xA884",
+      "0xA8B6",
+      "0xA8E8",
+      "0xA91A",
+      "0xA94C",
+      "0xA97E"
+    ],
+    "first_growth_widths": [
+      50,
+      50,
+      50,
+      50,
+      50,
+      50,
+      50,
+      50,
+      50,
+      50
+    ]
+  },
+  "legacy_audit": {
+    "before_path": "output/build/legacy-diff-audit/audit.nes",
+    "before_sha256": "C0F6FB15DBCC9F04D35EC97B9558DF85D099C661C35D54D3A2AAE4966D2ED5B2",
+    "after_path": "output/build/legacy-diff-audit/cases/legacy_level_cap/after.nes",
+    "after_sha256": "F2E7D9FB9F272101886050426441DC05A1D08A3E09C8379A2CFBA7FDA616946A",
+    "before_runtime_compare": "C9 3B",
+    "before_runtime_level_cap": 60,
+    "after_runtime_compare": "C9 3C",
+    "after_runtime_level_cap": 61,
+    "before_growth_widths": [
+      30,
+      30,
+      30,
+      30,
+      30,
+      30,
+      30,
+      30,
+      30,
+      30
+    ],
+    "after_growth_widths": [
+      31,
+      31,
+      31,
+      31,
+      31,
+      31,
+      31,
+      31,
+      31,
+      31
+    ],
+    "changed_bytes": 3778,
+    "changed_prg_banks": {
+      "0x04": 19,
+      "0x05": 3753
+    },
+    "normalization_changes": 6,
+    "accepted_by_current_product": false,
+    "rejection": "机体名称指针表起始标记不正确。"
+  }
+}

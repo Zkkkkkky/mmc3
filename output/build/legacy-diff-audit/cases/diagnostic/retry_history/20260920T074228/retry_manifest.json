@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "reason": "M07 weapon-name deterministic 2487-byte repack reviewed; promote pointer plus reviewed pool profile",
+  "timestamp": "20260920T074228",
+  "moved": [
+    {
+      "module": "M07",
+      "field": "name_token",
+      "case_id": "cold_start_01",
+      "from": "output/build/legacy-diff-audit/cases/legacy_live/M07/name_token/cold_start_01",
+      "to": "output/build/legacy-diff-audit/cases/diagnostic/retry_history/20260920T074228/M07/name_token/cold_start_01",
+      "had_case_json": true,
+      "had_error_json": false
+    },
+    {
+      "module": "M07",
+      "field": "name_token",
+      "case_id": "cold_start_02",
+      "from": "output/build/legacy-diff-audit/cases/legacy_live/M07/name_token/cold_start_02",
+      "to": "output/build/legacy-diff-audit/cases/diagnostic/retry_history/20260920T074228/M07/name_token/cold_start_02",
+      "had_case_json": true,
+      "had_error_json": false
+    }
+  ],
+  "live_result_rows_removed": 2
+}

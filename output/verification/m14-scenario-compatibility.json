@@ -1,0 +1,396 @@
+{
+  "generated_at": "2026-09-21T21:46:26+08:00",
+  "passed": true,
+  "delivery_status": "implementation_complete",
+  "conclusion": "M14 的静态布局、三类关卡脚本、256 项独立行动表、行动池接上/接下变长重排、四条劝降规则、八个文本组（含 $37 分离布局）、13 条初始胜利文字、32 组真实标题拼图和事务边界可重复通过；当前交付范围实现完成，但仍待参考 EXE 动态黄金和用户签收。",
+  "rom": {
+    "path": "output/rom/DC_kuorong_464K.nes",
+    "size": 1310736,
+    "sha256": "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E"
+  },
+  "reference_ui": {
+    "path": "output/verification/legacy-ui-probe/controls/C05S_剧情事件_页签A.json",
+    "node_count": 72,
+    "control_ids": [
+      0,
+      100,
+      110,
+      120,
+      130,
+      140,
+      150,
+      160,
+      170,
+      180,
+      190,
+      200,
+      210,
+      220,
+      230,
+      240,
+      250,
+      260,
+      270,
+      280,
+      290,
+      300,
+      310,
+      320,
+      330,
+      340,
+      350,
+      360,
+      370,
+      380,
+      390,
+      400,
+      410,
+      420,
+      430,
+      440,
+      450,
+      460,
+      470,
+      480,
+      490,
+      500,
+      510,
+      520,
+      530,
+      540,
+      550,
+      560,
+      570,
+      580,
+      590,
+      600,
+      610,
+      620,
+      630,
+      640,
+      650,
+      660,
+      670,
+      680,
+      690,
+      700,
+      1008,
+      1008,
+      1008,
+      1008,
+      1008,
+      1009,
+      1009,
+      1009,
+      1009,
+      1009
+    ]
+  },
+  "reference_binary_capacity_strings": {
+    "path": "references/legacy_modifier/SRW2_patched.exe",
+    "sha256": "FF1C1C5799FDB8F34DF355D761B382C6946CDADC6810772862947E892E8B4C27",
+    "event_error_templates": {
+      "界面事件": {
+        "offset": "0x35A353",
+        "text": "保存界面事件:空间不足!\r\n错误原因:当前剩余空间不足以保存第"
+      },
+      "回合事件": {
+        "offset": "0x35A38D",
+        "text": "保存回合事件:空间不足!\r\n错误原因:当前剩余空间不足以保存第"
+      },
+      "即时事件": {
+        "offset": "0x35A3C7",
+        "text": "保存即时事件:空间不足!\r\n错误原因:当前剩余空间不足以保存第"
+      },
+      "行动事件": {
+        "offset": "0x35A401",
+        "text": "保存行动事件:空间不足!\r\n错误原因:当前剩余空间不足以保存第"
+      },
+      "劝降事件": {
+        "offset": "0x35A43B",
+        "text": "保存劝降事件:空间不足!\r\n错误原因:当前剩余空间不足以保存第"
+      },
+      "地图事件": {
+        "offset": "0x35A475",
+        "text": "保存地图事件:空间不足!\r\n错误原因:当前剩余空间不足以保存第"
+      }
+    },
+    "story_display_templates": [
+      {
+        "offset": "0x35A5CC",
+        "text": "剧情对话段02 一共16384字节空间 当前空间还剩："
+      },
+      {
+        "offset": "0x35A638",
+        "text": "剧情对话段03 一共16384字节空间 当前空间还剩："
+      },
+      {
+        "offset": "0x35A6A4",
+        "text": "剧情对话段06 一共16384字节空间 当前空间还剩："
+      },
+      {
+        "offset": "0x35A710",
+        "text": "剧情对话段08 一共16384字节空间 当前空间还剩："
+      },
+      {
+        "offset": "0x35A781",
+        "text": " 鍬剧情对话段09 一共12544字节空间 当前空间还剩："
+      },
+      {
+        "offset": "0x35A7F0",
+        "text": "剧情对话段0A 一共16384字节空间 当前空间还剩："
+      },
+      {
+        "offset": "0x35A85C",
+        "text": "剧情对话段0B 一共16384字节空间 当前空间还剩："
+      },
+      {
+        "offset": "0x35A8C8",
+        "text": "剧情对话段0C 一共16384字节空间 当前空间还剩："
+      },
+      {
+        "offset": "0x35A934",
+        "text": "剧情对话段0D 一共16384字节空间 当前空间还剩："
+      }
+    ],
+    "evidence_boundary": "静态字符串证明六类事件分类和剧情段容量文案；按钮处理器进一步证明标题为“提示”的消息框及剧情容量汇总调用。"
+  },
+  "reference_button_690": {
+    "handler_offset": "0x1A0C57",
+    "capacity_function_offset": "0x194936",
+    "message_title": "提示",
+    "signature_exact": true
+  },
+  "legacy_scenario": {
+    "group_count": 96,
+    "instruction_count": 4274,
+    "phase_instruction_counts": [
+      998,
+      73,
+      3203
+    ],
+    "bank_instruction_counts": {
+      "$1B": 2637,
+      "$1E": 1071,
+      "$1F": 566
+    },
+    "physical_pool_usage": {
+      "界面事件和回合事件": {
+        "$1E": 3541
+      },
+      "即时事件": {
+        "$1B": 8154,
+        "$1F": 1525
+      }
+    },
+    "physical_pool_capacity_per_bank": 8192,
+    "isolated_samples": [
+      {
+        "phase": 0,
+        "bank": "$1E",
+        "address": "$A000",
+        "file_offset": "0x03C010",
+        "before": "59 88",
+        "after": "59 89",
+        "changed_offsets": [
+          "0x03C011"
+        ],
+        "isolated": true
+      },
+      {
+        "phase": 1,
+        "bank": "$1E",
+        "address": "$AD3F",
+        "file_offset": "0x03CD4F",
+        "before": "00 01",
+        "after": "00 00",
+        "changed_offsets": [
+          "0x03CD50"
+        ],
+        "isolated": true
+      },
+      {
+        "phase": 2,
+        "bank": "$1B",
+        "address": "$A000",
+        "file_offset": "0x036010",
+        "before": "01 08",
+        "after": "01 09",
+        "changed_offsets": [
+          "0x036011"
+        ],
+        "isolated": true
+      }
+    ]
+  },
+  "global_events": {
+    "instruction_count": 2637,
+    "action_instruction_count": 294,
+    "data_bytes": 8154,
+    "sample_address": "$A06D",
+    "changed_offsets": [
+      "0x03607E"
+    ]
+  },
+  "independent_action_events": {
+    "pointer_table_file_offset": "0x035BD0",
+    "pointer_count": 256,
+    "data_bank": "$26",
+    "data_range": "$A000-$AABE",
+    "used_bytes": 2541,
+    "capacity_bytes": 2751,
+    "free_bytes": 210,
+    "physical_records": 45,
+    "insert_sample": {
+      "action_id": "$00",
+      "before": "63 D5 00 A0",
+      "after": "63 63 D5 00 A0",
+      "free_after": 209
+    },
+    "jump_operands_relocated": true,
+    "delete_sample_action_id": "$02",
+    "undo_exact": true
+  },
+  "persuasion": {
+    "slot_count": 32,
+    "editable_count": 4,
+    "changed_offsets": [
+      "0x03B73D"
+    ]
+  },
+  "story_text": {
+    "supported_selectors": [
+      "$32",
+      "$33",
+      "$36",
+      "$37",
+      "$38",
+      "$39",
+      "$3A",
+      "$3B"
+    ],
+    "record_count": 1837,
+    "sample": {
+      "selector": "$32",
+      "index": "$0A",
+      "changed_offsets": [
+        "0x018310",
+        "0x018311"
+      ]
+    },
+    "split_37": {
+      "descriptor": "73 00",
+      "mapped_banks": [
+        "$0E",
+        "$0F"
+      ],
+      "pointer_table": "$9E28",
+      "pointer_count": 52,
+      "writable_text_slots": 51,
+      "protected_non_text_slots": [
+        "$00"
+      ],
+      "physical_text_records": 34,
+      "sample_index": "$01",
+      "changed_offsets": [
+        "0x01DB5B"
+      ],
+      "descriptor_unchanged": true,
+      "pointer_table_unchanged": true,
+      "relocatable": false
+    }
+  },
+  "chapter_victory": {
+    "bank": "$3D",
+    "start_cpu_address": "$8000",
+    "start_file_offset": "0x07A010",
+    "record_count": 13,
+    "header": "FC 20 0F FD 40",
+    "sample_scenario_id": 0,
+    "sample_body_capacity": 32,
+    "changed_offsets": [
+      "0x07A015",
+      "0x07A016"
+    ],
+    "fixed_capacity": true
+  },
+  "chapter_titles": {
+    "pointer_table_file_offset": "0x016111",
+    "chr_table_file_offset": "0x0159AE",
+    "record_count": 32,
+    "sample": {
+      "scenario_id": 0,
+      "pointer": "$AB7A",
+      "file_offset": "0x016B8A",
+      "chr_banks": [
+        "$5C",
+        "$5D",
+        "$5E"
+      ],
+      "segment_count": 2,
+      "title_width_tiles": 8,
+      "changed_offsets": [
+        "0x0159AE",
+        "0x0159AF",
+        "0x016B9E"
+      ]
+    },
+    "fixed_capacity": true,
+    "pointer_table_unchanged": true
+  },
+  "product_ui": {
+    "tabs": [
+      "关卡设置",
+      "行动事件",
+      "劝降事件",
+      "地图事件",
+      "剧情对话",
+      "胜利文字"
+    ],
+    "setup_event_tabs": [
+      "界面事件",
+      "回合事件",
+      "即时事件"
+    ],
+    "initial_size": [
+      1180,
+      780
+    ],
+    "space_button_text": "检查剧情；界面事件和回合事件；即时事件；行动事件，劝降事件和地图事件剩余空间",
+    "space_report": "剧情文本\n剧情 $32（原位数据池）：3640 / 15858 字节，剩余 12218 字节\n剧情 $33（原位数据池）：13381 / 15858 字节，剩余 2477 字节\n剧情 $36（原位数据池）：11181 / 15858 字节，剩余 4677 字节\n剧情 $37（原位数据池）：734 / 734 字节，剩余 0 字节\n剧情 $38（原位数据池）：10352 / 15858 字节，剩余 5506 字节\n剧情 $39（原位数据池）：1648 / 15858 字节，剩余 14210 字节\n剧情 $3A（原位数据池）：4508 / 15858 字节，剩余 11350 字节\n剧情 $3B（原位数据池）：4826 / 15858 字节，剩余 11032 字节\n\n事件脚本\n界面事件和回合事件（Bank $1E）：3541 / 8192 字节，剩余 4651 字节\n即时事件（Bank $1B）：8154 / 8192 字节，剩余 38 字节\n即时事件（Bank $1F）：1525 / 8192 字节，剩余 6667 字节\n独立行动事件（Bank $26）：2541 / 2751 字节，剩余 210 字节；256 项指针 / 45 个有效物理脚本\n边界说明：劝降事件为 4 个已验证等长槽；地图事件为分 Bank 章节脚本的条件索引。"
+  },
+  "checks": {
+    "reference_control_tree_is_72_nodes": true,
+    "reference_exe_has_six_event_capacity_error_templates": true,
+    "reference_exe_has_story_capacity_display_templates": true,
+    "reference_button_690_handler_and_message_shape_are_exact": true,
+    "legacy_96_groups_are_instruction_aligned": true,
+    "legacy_three_phase_samples_are_isolated": true,
+    "global_event_block_is_complete": true,
+    "global_event_edit_is_one_byte_and_pointer_safe": true,
+    "variable_length_opcode_is_atomically_rejected": true,
+    "independent_action_table_is_complete": true,
+    "action_insert_delete_repack_and_undo_are_exact": true,
+    "persuasion_first_four_only_and_pointer_safe": true,
+    "eight_supported_story_groups_roundtrip_losslessly": true,
+    "story_equal_length_edit_and_undo_are_exact": true,
+    "split_37_layout_and_in_place_edit_are_exact": true,
+    "chapter_victory_table_and_fixed_capacity_edit_are_exact": true,
+    "chapter_title_tables_and_fixed_capacity_edit_are_exact": true,
+    "six_tabs_match_declared_order": true,
+    "three_setup_tabs_match_declared_order": true,
+    "title_preview_is_rom_bound_and_editable": true,
+    "initial_victory_editor_is_rom_bound": true,
+    "space_check_uses_verified_physical_pools": true,
+    "event_copy_paste_controls_exist": true,
+    "action_tab_is_true_independent_table": true,
+    "report_does_not_modify_input_rom": true
+  },
+  "incomplete_requirements": [],
+  "limitations": [
+    "参考程序仍处于提权模态窗口，次级编辑对话框无法可靠动态重放。",
+    "按钮 690 对独立行动表按 Bank $26 单独计算；劝降与地图事件仍按已验证章节脚本边界报告。",
+    "接上/接下变长能力只对已验证的 Bank $26 独立行动池开放；三类章节脚本仍保持等长边界。",
+    "自动报告证明实现边界，不等于参考动态黄金或用户验收。"
+  ]
+}

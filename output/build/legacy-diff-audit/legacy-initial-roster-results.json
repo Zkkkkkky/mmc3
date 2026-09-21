@@ -1,0 +1,614 @@
+[
+  {
+    "case": "slot_1_character",
+    "control_id": 380,
+    "target_offset": 235101,
+    "displayed_before": 13,
+    "rom_before": 13,
+    "selected_index_before": 12,
+    "requested_new": 14,
+    "displayed_after_reopen": 14,
+    "rom_after": 14,
+    "diffs": [
+      {
+        "offset": 235101,
+        "before": 13,
+        "after": 14
+      },
+      {
+        "offset": 303361,
+        "before": 201,
+        "after": 216
+      },
+      {
+        "offset": 303362,
+        "before": 2,
+        "after": 71
+      },
+      {
+        "offset": 306730,
+        "before": 201,
+        "after": 216
+      },
+      {
+        "offset": 306731,
+        "before": 2,
+        "after": 71
+      },
+      {
+        "offset": 496952,
+        "before": 201,
+        "after": 216
+      },
+      {
+        "offset": 496953,
+        "before": 2,
+        "after": 71
+      }
+    ],
+    "target_offset_changed": true,
+    "only_target_or_normalization": true,
+    "reopen_matches": true
+  },
+  {
+    "case": "slot_1_unit",
+    "control_id": 500,
+    "target_offset": 235102,
+    "displayed_before": 25,
+    "rom_before": 25,
+    "selected_index_before": 24,
+    "requested_new": 26,
+    "displayed_after_reopen": 26,
+    "rom_after": 26,
+    "diffs": [
+      {
+        "offset": 235102,
+        "before": 25,
+        "after": 26
+      },
+      {
+        "offset": 303361,
+        "before": 201,
+        "after": 216
+      },
+      {
+        "offset": 303362,
+        "before": 2,
+        "after": 71
+      },
+      {
+        "offset": 306730,
+        "before": 201,
+        "after": 216
+      },
+      {
+        "offset": 306731,
+        "before": 2,
+        "after": 71
+      },
+      {
+        "offset": 496952,
+        "before": 201,
+        "after": 216
+      },
+      {
+        "offset": 496953,
+        "before": 2,
+        "after": 71
+      }
+    ],
+    "target_offset_changed": true,
+    "only_target_or_normalization": true,
+    "reopen_matches": true
+  },
+  {
+    "case": "slot_2_character",
+    "control_id": 400,
+    "target_offset": 235103,
+    "displayed_before": 9,
+    "rom_before": 9,
+    "selected_index_before": 8,
+    "requested_new": 10,
+    "displayed_after_reopen": 10,
+    "rom_after": 10,
+    "diffs": [
+      {
+        "offset": 235103,
+        "before": 9,
+        "after": 10
+      },
+      {
+        "offset": 303361,
+        "before": 201,
+        "after": 216
+      },
+      {
+        "offset": 303362,
+        "before": 2,
+        "after": 71
+      },
+      {
+        "offset": 306730,
+        "before": 201,
+        "after": 216
+      },
+      {
+        "offset": 306731,
+        "before": 2,
+        "after": 71
+      },
+      {
+        "offset": 496952,
+        "before": 201,
+        "after": 216
+      },
+      {
+        "offset": 496953,
+        "before": 2,
+        "after": 71
+      }
+    ],
+    "target_offset_changed": true,
+    "only_target_or_normalization": true,
+    "reopen_matches": true
+  },
+  {
+    "case": "slot_2_unit",
+    "control_id": 520,
+    "target_offset": 235104,
+    "displayed_before": 62,
+    "rom_before": 62,
+    "selected_index_before": 61,
+    "requested_new": 63,
+    "displayed_after_reopen": 63,
+    "rom_after": 63,
+    "diffs": [
+      {
+        "offset": 235104,
+        "before": 62,
+        "after": 63
+      },
+      {
+        "offset": 303361,
+        "before": 201,
+        "after": 216
+      },
+      {
+        "offset": 303362,
+        "before": 2,
+        "after": 71
+      },
+      {
+        "offset": 306730,
+        "before": 201,
+        "after": 216
+      },
+      {
+        "offset": 306731,
+        "before": 2,
+        "after": 71
+      },
+      {
+        "offset": 496952,
+        "before": 201,
+        "after": 216
+      },
+      {
+        "offset": 496953,
+        "before": 2,
+        "after": 71
+      }
+    ],
+    "target_offset_changed": true,
+    "only_target_or_normalization": true,
+    "reopen_matches": true
+  },
+  {
+    "case": "slot_3_character",
+    "control_id": 420,
+    "target_offset": 235105,
+    "displayed_before": 8,
+    "rom_before": 8,
+    "selected_index_before": 7,
+    "requested_new": 9,
+    "displayed_after_reopen": 9,
+    "rom_after": 9,
+    "diffs": [
+      {
+        "offset": 235105,
+        "before": 8,
+        "after": 9
+      },
+      {
+        "offset": 303361,
+        "before": 201,
+        "after": 216
+      },
+      {
+        "offset": 303362,
+        "before": 2,
+        "after": 71
+      },
+      {
+        "offset": 306730,
+        "before": 201,
+        "after": 216
+      },
+      {
+        "offset": 306731,
+        "before": 2,
+        "after": 71
+      },
+      {
+        "offset": 496952,
+        "before": 201,
+        "after": 216
+      },
+      {
+        "offset": 496953,
+        "before": 2,
+        "after": 71
+      }
+    ],
+    "target_offset_changed": true,
+    "only_target_or_normalization": true,
+    "reopen_matches": true
+  },
+  {
+    "case": "slot_3_unit",
+    "control_id": 540,
+    "target_offset": 235106,
+    "displayed_before": 76,
+    "rom_before": 76,
+    "selected_index_before": 75,
+    "requested_new": 77,
+    "displayed_after_reopen": 77,
+    "rom_after": 77,
+    "diffs": [
+      {
+        "offset": 235106,
+        "before": 76,
+        "after": 77
+      },
+      {
+        "offset": 303361,
+        "before": 201,
+        "after": 216
+      },
+      {
+        "offset": 303362,
+        "before": 2,
+        "after": 71
+      },
+      {
+        "offset": 306730,
+        "before": 201,
+        "after": 216
+      },
+      {
+        "offset": 306731,
+        "before": 2,
+        "after": 71
+      },
+      {
+        "offset": 496952,
+        "before": 201,
+        "after": 216
+      },
+      {
+        "offset": 496953,
+        "before": 2,
+        "after": 71
+      }
+    ],
+    "target_offset_changed": true,
+    "only_target_or_normalization": true,
+    "reopen_matches": true
+  },
+  {
+    "case": "slot_4_character",
+    "control_id": 440,
+    "target_offset": 235107,
+    "displayed_before": 5,
+    "rom_before": 5,
+    "selected_index_before": 4,
+    "requested_new": 6,
+    "displayed_after_reopen": 6,
+    "rom_after": 6,
+    "diffs": [
+      {
+        "offset": 235107,
+        "before": 5,
+        "after": 6
+      },
+      {
+        "offset": 303361,
+        "before": 201,
+        "after": 216
+      },
+      {
+        "offset": 303362,
+        "before": 2,
+        "after": 71
+      },
+      {
+        "offset": 306730,
+        "before": 201,
+        "after": 216
+      },
+      {
+        "offset": 306731,
+        "before": 2,
+        "after": 71
+      },
+      {
+        "offset": 496952,
+        "before": 201,
+        "after": 216
+      },
+      {
+        "offset": 496953,
+        "before": 2,
+        "after": 71
+      }
+    ],
+    "target_offset_changed": true,
+    "only_target_or_normalization": true,
+    "reopen_matches": true
+  },
+  {
+    "case": "slot_4_unit",
+    "control_id": 560,
+    "target_offset": 235108,
+    "displayed_before": 54,
+    "rom_before": 54,
+    "selected_index_before": 53,
+    "requested_new": 55,
+    "displayed_after_reopen": 55,
+    "rom_after": 55,
+    "diffs": [
+      {
+        "offset": 235108,
+        "before": 54,
+        "after": 55
+      },
+      {
+        "offset": 303361,
+        "before": 201,
+        "after": 216
+      },
+      {
+        "offset": 303362,
+        "before": 2,
+        "after": 71
+      },
+      {
+        "offset": 306730,
+        "before": 201,
+        "after": 216
+      },
+      {
+        "offset": 306731,
+        "before": 2,
+        "after": 71
+      },
+      {
+        "offset": 496952,
+        "before": 201,
+        "after": 216
+      },
+      {
+        "offset": 496953,
+        "before": 2,
+        "after": 71
+      }
+    ],
+    "target_offset_changed": true,
+    "only_target_or_normalization": true,
+    "reopen_matches": true
+  },
+  {
+    "case": "slot_5_character",
+    "control_id": 460,
+    "target_offset": 235109,
+    "displayed_before": 15,
+    "rom_before": 15,
+    "selected_index_before": 14,
+    "requested_new": 16,
+    "displayed_after_reopen": 16,
+    "rom_after": 16,
+    "diffs": [
+      {
+        "offset": 235109,
+        "before": 15,
+        "after": 16
+      },
+      {
+        "offset": 303361,
+        "before": 201,
+        "after": 216
+      },
+      {
+        "offset": 303362,
+        "before": 2,
+        "after": 71
+      },
+      {
+        "offset": 306730,
+        "before": 201,
+        "after": 216
+      },
+      {
+        "offset": 306731,
+        "before": 2,
+        "after": 71
+      },
+      {
+        "offset": 496952,
+        "before": 201,
+        "after": 216
+      },
+      {
+        "offset": 496953,
+        "before": 2,
+        "after": 71
+      }
+    ],
+    "target_offset_changed": true,
+    "only_target_or_normalization": true,
+    "reopen_matches": true
+  },
+  {
+    "case": "slot_5_unit",
+    "control_id": 580,
+    "target_offset": 235110,
+    "displayed_before": 9,
+    "rom_before": 9,
+    "selected_index_before": 8,
+    "requested_new": 10,
+    "displayed_after_reopen": 10,
+    "rom_after": 10,
+    "diffs": [
+      {
+        "offset": 235110,
+        "before": 9,
+        "after": 10
+      },
+      {
+        "offset": 303361,
+        "before": 201,
+        "after": 216
+      },
+      {
+        "offset": 303362,
+        "before": 2,
+        "after": 71
+      },
+      {
+        "offset": 306730,
+        "before": 201,
+        "after": 216
+      },
+      {
+        "offset": 306731,
+        "before": 2,
+        "after": 71
+      },
+      {
+        "offset": 496952,
+        "before": 201,
+        "after": 216
+      },
+      {
+        "offset": 496953,
+        "before": 2,
+        "after": 71
+      }
+    ],
+    "target_offset_changed": true,
+    "only_target_or_normalization": true,
+    "reopen_matches": true
+  },
+  {
+    "case": "slot_6_character",
+    "control_id": 480,
+    "target_offset": 235111,
+    "displayed_before": 12,
+    "rom_before": 12,
+    "selected_index_before": 11,
+    "requested_new": 13,
+    "displayed_after_reopen": 13,
+    "rom_after": 13,
+    "diffs": [
+      {
+        "offset": 235111,
+        "before": 12,
+        "after": 13
+      },
+      {
+        "offset": 303361,
+        "before": 201,
+        "after": 216
+      },
+      {
+        "offset": 303362,
+        "before": 2,
+        "after": 71
+      },
+      {
+        "offset": 306730,
+        "before": 201,
+        "after": 216
+      },
+      {
+        "offset": 306731,
+        "before": 2,
+        "after": 71
+      },
+      {
+        "offset": 496952,
+        "before": 201,
+        "after": 216
+      },
+      {
+        "offset": 496953,
+        "before": 2,
+        "after": 71
+      }
+    ],
+    "target_offset_changed": true,
+    "only_target_or_normalization": true,
+    "reopen_matches": true
+  },
+  {
+    "case": "slot_6_unit",
+    "control_id": 600,
+    "target_offset": 235112,
+    "displayed_before": 34,
+    "rom_before": 34,
+    "selected_index_before": 33,
+    "requested_new": 35,
+    "displayed_after_reopen": 35,
+    "rom_after": 35,
+    "diffs": [
+      {
+        "offset": 235112,
+        "before": 34,
+        "after": 35
+      },
+      {
+        "offset": 303361,
+        "before": 201,
+        "after": 216
+      },
+      {
+        "offset": 303362,
+        "before": 2,
+        "after": 71
+      },
+      {
+        "offset": 306730,
+        "before": 201,
+        "after": 216
+      },
+      {
+        "offset": 306731,
+        "before": 2,
+        "after": 71
+      },
+      {
+        "offset": 496952,
+        "before": 201,
+        "after": 216
+      },
+      {
+        "offset": 496953,
+        "before": 2,
+        "after": 71
+      }
+    ],
+    "target_offset_changed": true,
+    "only_target_or_normalization": true,
+    "reopen_matches": true
+  }
+]

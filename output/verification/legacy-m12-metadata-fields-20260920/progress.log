@@ -1,0 +1,88 @@
+metadata restart
+metadata-chain pid=14796 sequence=0 attempt=1
+metadata probed 5/497
+metadata-chain pid=3752 sequence=5 attempt=1
+metadata probed 10/497
+metadata probed 20/497
+metadata probed 30/497
+metadata probed 40/497
+metadata probed 45/497
+metadata-chain pid=12272 sequence=45 attempt=1
+metadata probed 50/497
+metadata probed 60/497
+metadata probed 70/497
+metadata probed 80/497
+metadata probed 85/497
+metadata-chain pid=13340 sequence=85 attempt=1
+metadata probed 90/497
+metadata probed 100/497
+metadata probed 110/497
+metadata probed 120/497
+metadata probed 125/497
+metadata-chain pid=10636 sequence=125 attempt=1
+metadata probed 130/497
+metadata probed 140/497
+metadata probed 150/497
+metadata probed 160/497
+metadata probed 165/497
+metadata-chain pid=14268 sequence=165 attempt=1
+metadata probed 170/497
+metadata probed 180/497
+metadata probed 190/497
+metadata probed 200/497
+metadata probed 205/497
+metadata-chain pid=14032 sequence=205 attempt=1
+metadata probed 210/497
+metadata probed 220/497
+metadata probed 230/497
+metadata probed 240/497
+metadata probed 245/497
+metadata-chain pid=16400 sequence=245 attempt=1
+metadata probed 250/497
+metadata probed 260/497
+metadata probed 270/497
+metadata probed 280/497
+metadata probed 285/497
+metadata-chain pid=13464 sequence=285 attempt=1
+metadata probed 290/497
+metadata probed 300/497
+metadata probed 310/497
+metadata probed 320/497
+metadata probed 325/497
+metadata-chain pid=16172 sequence=325 attempt=1
+metadata probed 330/497
+metadata probed 340/497
+metadata probed 350/497
+metadata probed 360/497
+metadata probed 365/497
+metadata-chain pid=9552 sequence=365 attempt=1
+metadata probed 370/497
+metadata probed 380/497
+metadata probed 390/497
+metadata probed 400/497
+metadata probed 405/497
+metadata-chain pid=10460 sequence=405 attempt=1
+metadata probed 410/497
+metadata probed 420/497
+metadata probed 430/497
+metadata probed 440/497
+metadata probed 445/497
+metadata-chain pid=17684 sequence=445 attempt=1
+metadata probed 450/497
+metadata probed 460/497
+metadata probed 470/497
+metadata probed 480/497
+metadata probed 485/497
+metadata-chain pid=5600 sequence=485 attempt=1
+metadata probed 490/497
+metadata probed 497/497
+metadata-cold pid=3372 sequence=497 attempt=1
+metadata cold 50/497
+metadata cold 100/497
+metadata cold 150/497
+metadata cold 200/497
+metadata cold 250/497
+metadata cold 300/497
+metadata cold 350/497
+metadata cold 400/497
+metadata cold 450/497

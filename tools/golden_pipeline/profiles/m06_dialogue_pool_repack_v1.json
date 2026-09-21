@@ -1,0 +1,8 @@
+{
+  "schema_version": 1,
+  "name": "m06_dialogue_pool_repack_v1",
+  "description": "参考版保存人物第 1 行攻击命中对话编号 247→248 时的确定性台词指针表与数据池重排；两次独立冷启动的输入/输出哈希及 1864 条差分完全一致，主字段偏移 0xD2EB 排除后其余 1863 条作为联动写入。",
+  "source_case": "output/build/legacy-diff-audit/cases/diagnostic/retry_history/20260920T-dialogue-discovery/M06/dialogue_attack_hit_number/cold_start_01/case.json",
+  "source_case_sha256": "7faa0715c7813ce1ad2cd7d2649a017fef4768bdc5e26b21e12f4c3e21e38fc2",
+  "exclude_offsets": [53995]
+}

@@ -1,0 +1,61 @@
+{
+  "schema_version": 1,
+  "module": "M06",
+  "field": "portrait_front_bank",
+  "case_id": "cold_start_01",
+  "case_kind": "discovery",
+  "requested_value": 21,
+  "original_value": 20,
+  "reopen_value": 21,
+  "reopen_matches_request": true,
+  "reopen_mode": "new_process",
+  "first_pid": 9204,
+  "second_pid": 2852,
+  "changed_offsets": [
+    43856,
+    43858
+  ],
+  "removed_normalization": [],
+  "unexpected_offsets": [
+    43856,
+    43858
+  ],
+  "expected_offsets": [],
+  "required_offsets": [],
+  "optional_offsets": [],
+  "extra_allowed": [],
+  "extra_allowed_profile": null,
+  "expected_not_changed": [],
+  "diffs": [
+    {
+      "offset": 43856,
+      "before": 20,
+      "after": 21
+    },
+    {
+      "offset": 43858,
+      "before": 128,
+      "after": 192
+    }
+  ],
+  "snapshots": {
+    "before": {
+      "path": "output/build/legacy-diff-audit/cases/legacy_live/M06/portrait_front_bank/cold_start_01/before.nes",
+      "sha256": "c5d2c1dfbe0dc39afc9effd314c082f121b98c9ad67c4825b1c9dd4b9e991954"
+    },
+    "after": {
+      "path": "output/build/legacy-diff-audit/cases/legacy_live/M06/portrait_front_bank/cold_start_01/after.nes",
+      "sha256": "30d4c610b404a122b5bd8fe5853426a17e07d15e5a178f527255b7404c0481ca"
+    }
+  },
+  "supporting_cdl": {
+    "source": "output/build/legacy-diff-audit/默认配置文件/测试.cdl",
+    "sha256": "599c1bb5ffd4b87229a81958f33f1060821cd01cd7aa7ccafa0d862f4522f3f6"
+  },
+  "duration_seconds": 22.937,
+  "budget_seconds": 30.0,
+  "requested_budget_seconds": 30.0,
+  "within_budget": true,
+  "passed": false,
+  "pending_reason": "discovery case requires reviewed offset promotion; 2 unexplained offsets"
+}

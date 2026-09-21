@@ -1,0 +1,14 @@
+D:\GIT\mmc3\.venv\Lib\site-packages\pywinauto\application.py:1085: UserWarning: 32-bit application should be automated using 32-bit Python (you use 64-bit Python)
+  warnings.warn(
+Traceback (most recent call last):
+  File "D:\GIT\mmc3\tools\research\collect_m03_all_reference_fields.py", line 393, in <module>
+    raise SystemExit(main())
+                     ^^^^^^
+  File "D:\GIT\mmc3\tools\research\collect_m03_all_reference_fields.py", line 378, in main
+    first = inventory(payload, lookup, "fresh-a")
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\GIT\mmc3\tools\research\collect_m03_all_reference_fields.py", line 299, in inventory
+    ref.select_main_page(driver, 1)
+  File "D:\GIT\mmc3\tools\research\reference_map_editor.py", line 44, in select_main_page
+    raise RuntimeError(f"main page {page_index} click failed")
+RuntimeError: main page 1 click failed

@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "reason": "captain discovery changed offset 45209 plus same 1705 deterministic large-unit resource writes as body_bank_2; promote to golden",
+  "timestamp": "20260920T013814",
+  "moved": [
+    {
+      "module": "M05",
+      "field": "captain",
+      "case_id": "cold_start_01",
+      "from": "output/build/legacy-diff-audit/cases/legacy_live/M05/captain/cold_start_01",
+      "to": "output/build/legacy-diff-audit/cases/diagnostic/retry_history/20260920T013814/M05/captain/cold_start_01",
+      "had_case_json": true,
+      "had_error_json": false
+    }
+  ],
+  "live_result_rows_removed": 1
+}

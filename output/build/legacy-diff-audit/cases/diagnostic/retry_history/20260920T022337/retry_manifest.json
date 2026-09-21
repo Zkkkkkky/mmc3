@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "reason": "只读索引探测：预期0、实际1，修改前停止；保留错误记录后按实际索引采集",
+  "timestamp": "20260920T022337",
+  "moved": [
+    {
+      "module": "M06",
+      "field": "ally_music",
+      "case_id": "cold_start_01",
+      "from": "output/build/legacy-diff-audit/cases/legacy_live/M06/ally_music/cold_start_01",
+      "to": "output/build/legacy-diff-audit/cases/diagnostic/retry_history/20260920T022337/M06/ally_music/cold_start_01",
+      "had_case_json": false,
+      "had_error_json": true
+    }
+  ],
+  "live_result_rows_removed": 0
+}

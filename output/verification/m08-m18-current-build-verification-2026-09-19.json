@@ -1,0 +1,60 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-09-21T22:05:05+08:00",
+  "formalExecutable": {
+    "path": "output/app/新DC篇完整修改器.exe",
+    "sha256": "72E78D4900BAA7AF64187346A8B51EF20D4D7FF616517E5426B4F6542B98A752",
+    "checksumFileMatches": true,
+    "selfTestExitCode": 0
+  },
+  "fullRegression": {
+    "command": ".\\.venv\\Scripts\\python.exe -m unittest discover -s tests -t . -p \"test_*.py\"",
+    "testsRun": 728,
+    "failures": 0,
+    "errors": 0,
+    "durationSeconds": 867.458,
+    "passed": true
+  },
+  "deliveryGate": {
+    "path": "output/verification/m08-m18-delivery-gate.json",
+    "machineGatePassed": true,
+    "implementationScopeComplete": "11/11",
+    "userAccepted": "1/11"
+  },
+  "m12ReferenceEvidence": {
+    "path": "output/verification/m12-reference-dynamic-2026-09-19.json",
+    "positiveGolden": "sprite_code_first_tile/cold_start_02",
+    "negativeGolden": "sprite_anchor_x/cold_start_07",
+    "productRule": "组图首物理图块可写，X/Y 锚点按参考版非持久化行为只读"
+  },
+  "packagedProcessHealth": {
+    "launched": true,
+    "remainedRunningAfterFiveSeconds": true,
+    "responding": true,
+    "testProcessesClosedAfterProbe": true
+  },
+  "mesenRuntime": {
+    "path": "output/verification/m08-m18-mesen-2026-09-19/result.json",
+    "romSha256": "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E",
+    "checks": 17,
+    "failures": 0,
+    "frames": 11309,
+    "exitCode": 0,
+    "passed": true,
+    "scope": "当前推荐 ROM 的 Mapper 194、扩展 Bank、双音频引擎、3 首扩展曲、56 个音效与旧引擎切回基线"
+  },
+  "nativeUiAutomation": {
+    "availableInCurrentSession": true,
+    "observed": "The current packaged EXE (72E78D4…98A752) was controlled through the native Windows UI with the isolated acceptance ROM. M08 battle dialogue, M09 Other 1, M10 Other 2, M11 font editor, M12 map animation, M13 text conversion, M14 scenario, M15 attribute calculator, M16 save editor and M17 Other were opened and inspected. The M13 round trip 啊 -> C8 00 -> 啊 and the M15 read-only calculation both succeeded. M18's legacy Data-menu portrait export entry was confirmed disabled; the 1275/1275 export verifier remains the functional evidence. No ROM or save-file write was made, and the main status remained '已载入 · 无未保存修改'.",
+    "currentBuildClickSmokePerformed": true,
+    "reason": "当前正式构建已完成原生窗口点击烟测；代理现场烟测与用户最终签收仍分层记录。"
+  },
+  "priorPackagedUiSmoke": {
+    "path": "output/verification/m08-m18-agent-ui-smoke-2026-09-19.json",
+    "executableSha256": "A0675C1A165590056DFB350C1F72B9D818BE28982D2AE8D796C3FC0BFCF8B1C0",
+    "passed": true,
+    "appliesToCurrentExecutableHash": false
+  },
+  "userAcceptance": false,
+  "overallDeliveryComplete": false
+}

@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "reason": "首次M06人物SP 64到65发现10188字节参考版重建副作用，保留后进行独立复测",
+  "timestamp": "20260920T015047",
+  "moved": [
+    {
+      "module": "M06",
+      "field": "sp",
+      "case_id": "cold_start_01",
+      "from": "output/build/legacy-diff-audit/cases/legacy_live/M06/sp/cold_start_01",
+      "to": "output/build/legacy-diff-audit/cases/diagnostic/retry_history/20260920T015047/M06/sp/cold_start_01",
+      "had_case_json": true,
+      "had_error_json": false
+    }
+  ],
+  "live_result_rows_removed": 1
+}

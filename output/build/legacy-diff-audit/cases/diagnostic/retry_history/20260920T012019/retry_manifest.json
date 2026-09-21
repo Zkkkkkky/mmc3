@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "reason": "collector process tree exceeded 60s before report finalization; incomplete before/after/CDL retained for diagnosis",
+  "timestamp": "20260920T012019",
+  "moved": [
+    {
+      "module": "M05",
+      "field": "fragment_bank",
+      "case_id": "cold_start_01",
+      "from": "output/build/legacy-diff-audit/cases/legacy_live/M05/fragment_bank/cold_start_01",
+      "to": "output/build/legacy-diff-audit/cases/diagnostic/retry_history/20260920T012019/M05/fragment_bank/cold_start_01",
+      "had_case_json": false,
+      "had_error_json": false
+    }
+  ],
+  "live_result_rows_removed": 0
+}

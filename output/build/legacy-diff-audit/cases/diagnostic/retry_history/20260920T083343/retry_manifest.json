@@ -1,0 +1,80 @@
+{
+  "schema_version": 1,
+  "reason": "two-run M08 representative discoveries produced identical diffs and cold-reopen values for battle_01/04/05 and the battle_07-to-05 alias; promote reviewed results to formal golden cases",
+  "timestamp": "20260920T083343",
+  "moved": [
+    {
+      "module": "M08",
+      "field": "battle_01_row000_variant000",
+      "case_id": "cold_start_01",
+      "from": "output/build/legacy-diff-audit/cases/legacy_live/M08/battle_01_row000_variant000/cold_start_01",
+      "to": "output/build/legacy-diff-audit/cases/diagnostic/retry_history/20260920T083343/M08/battle_01_row000_variant000/cold_start_01",
+      "had_case_json": true,
+      "had_error_json": false
+    },
+    {
+      "module": "M08",
+      "field": "battle_01_row000_variant000",
+      "case_id": "cold_start_02",
+      "from": "output/build/legacy-diff-audit/cases/legacy_live/M08/battle_01_row000_variant000/cold_start_02",
+      "to": "output/build/legacy-diff-audit/cases/diagnostic/retry_history/20260920T083343/M08/battle_01_row000_variant000/cold_start_02",
+      "had_case_json": true,
+      "had_error_json": false
+    },
+    {
+      "module": "M08",
+      "field": "battle_04_row000_variant001",
+      "case_id": "cold_start_01",
+      "from": "output/build/legacy-diff-audit/cases/legacy_live/M08/battle_04_row000_variant001/cold_start_01",
+      "to": "output/build/legacy-diff-audit/cases/diagnostic/retry_history/20260920T083343/M08/battle_04_row000_variant001/cold_start_01",
+      "had_case_json": true,
+      "had_error_json": false
+    },
+    {
+      "module": "M08",
+      "field": "battle_04_row000_variant001",
+      "case_id": "cold_start_02",
+      "from": "output/build/legacy-diff-audit/cases/legacy_live/M08/battle_04_row000_variant001/cold_start_02",
+      "to": "output/build/legacy-diff-audit/cases/diagnostic/retry_history/20260920T083343/M08/battle_04_row000_variant001/cold_start_02",
+      "had_case_json": true,
+      "had_error_json": false
+    },
+    {
+      "module": "M08",
+      "field": "battle_05_row001_variant000",
+      "case_id": "cold_start_01",
+      "from": "output/build/legacy-diff-audit/cases/legacy_live/M08/battle_05_row001_variant000/cold_start_01",
+      "to": "output/build/legacy-diff-audit/cases/diagnostic/retry_history/20260920T083343/M08/battle_05_row001_variant000/cold_start_01",
+      "had_case_json": true,
+      "had_error_json": false
+    },
+    {
+      "module": "M08",
+      "field": "battle_05_row001_variant000",
+      "case_id": "cold_start_02",
+      "from": "output/build/legacy-diff-audit/cases/legacy_live/M08/battle_05_row001_variant000/cold_start_02",
+      "to": "output/build/legacy-diff-audit/cases/diagnostic/retry_history/20260920T083343/M08/battle_05_row001_variant000/cold_start_02",
+      "had_case_json": true,
+      "had_error_json": false
+    },
+    {
+      "module": "M08",
+      "field": "battle_07_alias_row000_variant000",
+      "case_id": "cold_start_01",
+      "from": "output/build/legacy-diff-audit/cases/legacy_live/M08/battle_07_alias_row000_variant000/cold_start_01",
+      "to": "output/build/legacy-diff-audit/cases/diagnostic/retry_history/20260920T083343/M08/battle_07_alias_row000_variant000/cold_start_01",
+      "had_case_json": true,
+      "had_error_json": false
+    },
+    {
+      "module": "M08",
+      "field": "battle_07_alias_row000_variant000",
+      "case_id": "cold_start_02",
+      "from": "output/build/legacy-diff-audit/cases/legacy_live/M08/battle_07_alias_row000_variant000/cold_start_02",
+      "to": "output/build/legacy-diff-audit/cases/diagnostic/retry_history/20260920T083343/M08/battle_07_alias_row000_variant000/cold_start_02",
+      "had_case_json": true,
+      "had_error_json": false
+    }
+  ],
+  "live_result_rows_removed": 8
+}

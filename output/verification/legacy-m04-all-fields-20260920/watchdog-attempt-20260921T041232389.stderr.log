@@ -1,0 +1,12 @@
+D:\GIT\mmc3\.venv\Lib\site-packages\pywinauto\application.py:1085: UserWarning: 32-bit application should be automated using 32-bit Python (you use 64-bit Python)
+  warnings.warn(
+Traceback (most recent call last):
+  File "D:\GIT\mmc3\tools\research\collect_m04_all_reference_fields.py", line 326, in <module>
+    raise SystemExit(main())
+                     ^^^^^^
+  File "D:\GIT\mmc3\tools\research\collect_m04_all_reference_fields.py", line 312, in main
+    first = inventory(data, "fresh-a")
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\GIT\mmc3\tools\research\collect_m04_all_reference_fields.py", line 244, in inventory
+    raise RuntimeError(
+RuntimeError: M04 map 04 list has 5 rows, expected 2 viewport records

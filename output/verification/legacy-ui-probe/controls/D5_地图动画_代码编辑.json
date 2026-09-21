@@ -1,0 +1,135 @@
+{
+  "tag": "D5_地图动画_代码编辑",
+  "hwnd": 9897004,
+  "title": "请输入：",
+  "class": "#32770",
+  "rect": {
+    "left": 1632,
+    "top": 918,
+    "right": 2205,
+    "bottom": 1176,
+    "width": 573,
+    "height": 258
+  },
+  "pid": 28008,
+  "tree": {
+    "hwnd": 9897004,
+    "class": "#32770",
+    "text": "请输入：",
+    "ctrl_id": 0,
+    "rect": {
+      "left": 1632,
+      "top": 918,
+      "right": 2205,
+      "bottom": 1176,
+      "width": 573,
+      "height": 258
+    },
+    "visible": true,
+    "enabled": true,
+    "children": [
+      {
+        "hwnd": 1902310,
+        "class": "Static",
+        "text": "",
+        "ctrl_id": 65535,
+        "rect": {
+          "left": 1652,
+          "top": 981,
+          "right": 2188,
+          "bottom": 1061,
+          "width": 536,
+          "height": 80
+        },
+        "visible": true,
+        "enabled": true,
+        "children": []
+      },
+      {
+        "hwnd": 1969564,
+        "class": "Static",
+        "text": "请输入动画指针",
+        "ctrl_id": 1128,
+        "rect": {
+          "left": 1662,
+          "top": 990,
+          "right": 2178,
+          "bottom": 1052,
+          "width": 516,
+          "height": 62
+        },
+        "visible": true,
+        "enabled": true,
+        "children": []
+      },
+      {
+        "hwnd": 8327320,
+        "class": "Edit",
+        "text": "0080",
+        "ctrl_id": 1001,
+        "rect": {
+          "left": 1652,
+          "top": 1067,
+          "right": 2188,
+          "bottom": 1094,
+          "width": 536,
+          "height": 27
+        },
+        "visible": true,
+        "enabled": true,
+        "children": []
+      },
+      {
+        "hwnd": 5835866,
+        "class": "Edit",
+        "text": "",
+        "ctrl_id": 1002,
+        "rect": {
+          "left": 1652,
+          "top": 1067,
+          "right": 2188,
+          "bottom": 1094,
+          "width": 536,
+          "height": 27
+        },
+        "visible": false,
+        "enabled": true,
+        "children": []
+      },
+      {
+        "hwnd": 3806198,
+        "class": "Button",
+        "text": "确认输入(&O)",
+        "ctrl_id": 1,
+        "rect": {
+          "left": 1778,
+          "top": 1113,
+          "right": 1903,
+          "bottom": 1157,
+          "width": 125,
+          "height": 44
+        },
+        "visible": true,
+        "enabled": true,
+        "children": []
+      },
+      {
+        "hwnd": 6035658,
+        "class": "Button",
+        "text": "取消(&C)",
+        "ctrl_id": 2,
+        "rect": {
+          "left": 1937,
+          "top": 1113,
+          "right": 2062,
+          "bottom": 1157,
+          "width": 125,
+          "height": 44
+        },
+        "visible": true,
+        "enabled": true,
+        "children": []
+      }
+    ]
+  }
+}

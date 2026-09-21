@@ -1,0 +1,26 @@
+﻿python.exe : D:\GIT\mmc3\.venv\Lib\site-packages\pywinauto\application.py:1085: UserWarning: 32-bit application should 
+be automated using 32-bit Python (you use 64-bit Python)
+所在位置 行:1 字符: 42
++ ... \GIT\mmc3'; & '.\.venv\Scripts\python.exe' 'tools\report_golden_cover ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (D:\GIT\mmc3\.ve... 64-bit Python):String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+  warnings.warn(
+D:\GIT\mmc3\.venv\Lib\site-packages\pywinauto\application.py:1085: UserWarning: 32-bit application should be automated 
+using 32-bit Python (you use 64-bit Python)
+  warnings.warn(
+在线采集完成：M06/growth_fixed/cold_start_01 PID 9672→17744，耗时 23.394s，passed=True
+- 用例目录：D:\GIT\mmc3\output\build\legacy-diff-audit\cases\legacy_live\M06\growth_fixed\cold_start_01
+黄金档案归档完成：100/100 用例（golden 95，discovery 5），耗时 7.00s
+- 通过 golden：95；未通过 golden：0
+- 快照缺失：0
+- 未登记快照目录：3 -> output/build/legacy-diff-audit/cases/global_hit_threshold；output/build/legacy-diff-audit/cases/item_price_01；output/build/legacy-diff-audit/cases/legacy_other1/experience_level_98
+- 存量差分不一致预警：0
+- 孤儿档案（不被注册表引用）：0
+- 档案目录：output/build/legacy-diff-audit/golden（100 个 JSON + index.json）
+- 注册表：tools/golden_pipeline/cases/field_registry.json
+G1 黄金对照覆盖率：94/98 = 95.92%（分母口径 registered_fields；最终口径为主文档第 4/5 章全量字段数）
+G2 逐字段差分通过率：95/95 = 100.00%
+用例计数：golden 95（通过 95/未通过 0），discovery 5，待解释 5
+报告：output/reports/golden-coverage-report.json / output/reports/golden-coverage-report.md

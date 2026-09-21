@@ -1,0 +1,16 @@
+{
+  "passed": true,
+  "logical_fields": 414,
+  "save_probe_fields": 414,
+  "initial_physical_candidates": 213,
+  "persistent_physical_fields": 212,
+  "saved_fields": 412,
+  "no_effect_fields": 2,
+  "unsafe_unreadable_write_fields": 0,
+  "baseline_sha256": "c0f6fb15dbcc9f04d35ec97b9558df85d099c661c35d54d3a2aae4966d2ed5b2",
+  "final_sha256": "d980acf892eb3c932590b79824e35c52d83fc9fa23c0265b1cab011858dfd402",
+  "same_process_reopen_passed": 414,
+  "cold_process_logical_readback_passed": 414,
+  "evidence": "output/verification/legacy-m09-all-fields-20260920/field-save-chain.jsonl",
+  "final_rom": "output/verification/legacy-m09-all-fields-20260920/after-all-fields.nes"
+}

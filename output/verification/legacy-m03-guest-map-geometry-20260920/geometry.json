@@ -1,0 +1,21 @@
+{
+  "passed": true,
+  "requested_cell": [
+    4,
+    27
+  ],
+  "client_point": [
+    473,
+    415
+  ],
+  "status": [
+    {
+      "control_id": 600,
+      "text": "Y坐标：19"
+    },
+    {
+      "control_id": 590,
+      "text": "X坐标：4"
+    }
+  ]
+}

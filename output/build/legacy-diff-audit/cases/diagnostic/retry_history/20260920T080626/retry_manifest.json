@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "reason": "0180 rejected/no-op and one startup timeout; retain diagnostics before valid-boundary retry",
+  "timestamp": "20260920T080626",
+  "moved": [
+    {
+      "module": "M07",
+      "field": "ally_animation_pointer",
+      "case_id": "cold_start_01",
+      "from": "output/build/legacy-diff-audit/cases/legacy_live/M07/ally_animation_pointer/cold_start_01",
+      "to": "output/build/legacy-diff-audit/cases/diagnostic/retry_history/20260920T080626/M07/ally_animation_pointer/cold_start_01",
+      "had_case_json": true,
+      "had_error_json": false
+    },
+    {
+      "module": "M07",
+      "field": "ally_animation_pointer",
+      "case_id": "cold_start_02",
+      "from": "output/build/legacy-diff-audit/cases/legacy_live/M07/ally_animation_pointer/cold_start_02",
+      "to": "output/build/legacy-diff-audit/cases/diagnostic/retry_history/20260920T080626/M07/ally_animation_pointer/cold_start_02",
+      "had_case_json": true,
+      "had_error_json": false
+    },
+    {
+      "module": "M07",
+      "field": "enemy_animation_pointer",
+      "case_id": "cold_start_01",
+      "from": "output/build/legacy-diff-audit/cases/legacy_live/M07/enemy_animation_pointer/cold_start_01",
+      "to": "output/build/legacy-diff-audit/cases/diagnostic/retry_history/20260920T080626/M07/enemy_animation_pointer/cold_start_01",
+      "had_case_json": false,
+      "had_error_json": true
+    },
+    {
+      "module": "M07",
+      "field": "enemy_animation_pointer",
+      "case_id": "cold_start_02",
+      "from": "output/build/legacy-diff-audit/cases/legacy_live/M07/enemy_animation_pointer/cold_start_02",
+      "to": "output/build/legacy-diff-audit/cases/diagnostic/retry_history/20260920T080626/M07/enemy_animation_pointer/cold_start_02",
+      "had_case_json": true,
+      "had_error_json": false
+    }
+  ],
+  "live_result_rows_removed": 3
+}

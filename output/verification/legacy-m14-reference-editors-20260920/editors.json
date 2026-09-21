@@ -1,0 +1,48 @@
+{
+  "passed": true,
+  "probes": [
+    {
+      "label": "chapter_phase_0",
+      "control_id": 140,
+      "row": 0,
+      "row_text": "000：事件结束",
+      "new_windows": []
+    },
+    {
+      "label": "chapter_phase_1",
+      "control_id": 150,
+      "row": 0,
+      "row_text": "000：事件结束",
+      "new_windows": []
+    },
+    {
+      "label": "chapter_phase_2",
+      "control_id": 160,
+      "row": 0,
+      "row_text": "000：控制行动：哈罗",
+      "new_windows": []
+    },
+    {
+      "label": "action_instruction",
+      "control_id": 240,
+      "row": 0,
+      "row_text": "000：事件结束",
+      "new_windows": []
+    },
+    {
+      "label": "surrender_instruction",
+      "control_id": 290,
+      "row": 0,
+      "row_text": "000：对话：头像:桐子，内容:桐子：\\\r\n不要过来！再过来我要\\\r\n攻击了！】\r\n",
+      "new_windows": []
+    },
+    {
+      "label": "map_instruction",
+      "control_id": 340,
+      "row": 0,
+      "row_text": "000：等待：10帧",
+      "new_windows": []
+    }
+  ],
+  "rom_unchanged": true
+}

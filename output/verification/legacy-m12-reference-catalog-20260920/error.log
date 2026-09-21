@@ -1,0 +1,19 @@
+Traceback (most recent call last):
+  File "D:\GIT\mmc3\tools\research\probe_m12_reference_catalog.py", line 118, in <module>
+    result = main()
+             ^^^^^^
+  File "D:\GIT\mmc3\tools\research\probe_m12_reference_catalog.py", line 96, in main
+    map_weapon = rows_for_list(driver, 410, tuple((f"animation_{slot + 1}_index", lambda control_id=control_id: combo_index(driver, control_id)) for slot, control_id in enumerate((450, 480, 500, 520))))
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\GIT\mmc3\tools\research\probe_m12_reference_catalog.py", line 74, in rows_for_list
+    item[key] = reader()
+                ^^^^^^^^
+  File "D:\GIT\mmc3\tools\research\probe_m12_reference_catalog.py", line 96, in <lambda>
+    map_weapon = rows_for_list(driver, 410, tuple((f"animation_{slot + 1}_index", lambda control_id=control_id: combo_index(driver, control_id)) for slot, control_id in enumerate((450, 480, 500, 520))))
+                                                                                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\GIT\mmc3\tools\research\probe_m12_reference_catalog.py", line 63, in combo_index
+    return int(win32gui.SendMessage(driver._control(control_id, "ComboBox").handle, 0x0147, 0, 0))
+                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\GIT\mmc3\tools\golden_pipeline_collect.py", line 846, in _control
+    raise RuntimeError(f"Control ID {control_id} matched {len(matches)} descendants")
+RuntimeError: Control ID 480 matched 0 descendants

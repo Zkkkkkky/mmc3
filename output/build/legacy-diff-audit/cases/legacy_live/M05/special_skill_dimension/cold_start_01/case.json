@@ -1,0 +1,55 @@
+{
+  "schema_version": 1,
+  "module": "M05",
+  "field": "special_skill_dimension",
+  "case_id": "cold_start_01",
+  "case_kind": "golden",
+  "requested_value": 1,
+  "original_value": 0,
+  "reopen_value": 1,
+  "reopen_matches_request": true,
+  "reopen_mode": "new_process",
+  "first_pid": 14880,
+  "second_pid": 5160,
+  "changed_offsets": [
+    297549
+  ],
+  "removed_normalization": [],
+  "unexpected_offsets": [],
+  "expected_offsets": [
+    297549
+  ],
+  "required_offsets": [
+    297549
+  ],
+  "optional_offsets": [],
+  "extra_allowed": [],
+  "expected_not_changed": [],
+  "diffs": [
+    {
+      "offset": 297549,
+      "before": 33,
+      "after": 97
+    }
+  ],
+  "snapshots": {
+    "before": {
+      "path": "output/build/legacy-diff-audit/cases/legacy_live/M05/special_skill_dimension/cold_start_01/before.nes",
+      "sha256": "c5d2c1dfbe0dc39afc9effd314c082f121b98c9ad67c4825b1c9dd4b9e991954"
+    },
+    "after": {
+      "path": "output/build/legacy-diff-audit/cases/legacy_live/M05/special_skill_dimension/cold_start_01/after.nes",
+      "sha256": "24f403b64aeec48d957673d1405bb558a3545298e1a5b95fd33cb911aa1b0678"
+    }
+  },
+  "supporting_cdl": {
+    "source": "output/build/legacy-diff-audit/默认配置文件/测试.cdl",
+    "sha256": "599c1bb5ffd4b87229a81958f33f1060821cd01cd7aa7ccafa0d862f4522f3f6"
+  },
+  "duration_seconds": 21.626,
+  "budget_seconds": 30.0,
+  "requested_budget_seconds": 30.0,
+  "within_budget": true,
+  "passed": true,
+  "pending_reason": null
+}

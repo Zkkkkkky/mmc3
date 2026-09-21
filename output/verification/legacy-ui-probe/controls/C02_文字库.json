@@ -1,0 +1,411 @@
+{
+  "tag": "C02_文字库",
+  "hwnd": 4461980,
+  "title": "字库编辑",
+  "class": "WTWindow",
+  "rect": {
+    "left": 1443,
+    "top": 651,
+    "right": 2394,
+    "bottom": 1517,
+    "width": 951,
+    "height": 866
+  },
+  "pid": 33688,
+  "tree": {
+    "hwnd": 4461980,
+    "class": "WTWindow",
+    "text": "字库编辑",
+    "ctrl_id": 0,
+    "rect": {
+      "left": 1443,
+      "top": 651,
+      "right": 2394,
+      "bottom": 1517,
+      "width": 951,
+      "height": 866
+    },
+    "visible": true,
+    "enabled": true,
+    "children": [
+      {
+        "hwnd": 5312378,
+        "class": "Afx:400000:8:10003:900015:0",
+        "text": "",
+        "ctrl_id": 290,
+        "rect": {
+          "left": 1326,
+          "top": 842,
+          "right": 1976,
+          "bottom": 1492,
+          "width": 650,
+          "height": 650
+        },
+        "visible": false,
+        "enabled": true,
+        "children": []
+      },
+      {
+        "hwnd": 661860,
+        "class": "Afx:400000:8:10003:900015:0",
+        "text": "",
+        "ctrl_id": 280,
+        "rect": {
+          "left": 1614,
+          "top": 866,
+          "right": 1658,
+          "bottom": 910,
+          "width": 44,
+          "height": 44
+        },
+        "visible": false,
+        "enabled": true,
+        "children": []
+      },
+      {
+        "hwnd": 1381590,
+        "class": "Afx:400000:8:10003:900015:0",
+        "text": "",
+        "ctrl_id": 270,
+        "rect": {
+          "left": 1758,
+          "top": 866,
+          "right": 1794,
+          "bottom": 902,
+          "width": 36,
+          "height": 36
+        },
+        "visible": false,
+        "enabled": true,
+        "children": []
+      },
+      {
+        "hwnd": 1250466,
+        "class": "Button",
+        "text": "确定",
+        "ctrl_id": 170,
+        "rect": {
+          "left": 2262,
+          "top": 1466,
+          "right": 2382,
+          "bottom": 1502,
+          "width": 120,
+          "height": 36
+        },
+        "visible": true,
+        "enabled": true,
+        "children": []
+      },
+      {
+        "hwnd": 1906916,
+        "class": "Button",
+        "text": "文字库修改",
+        "ctrl_id": 120,
+        "rect": {
+          "left": 2166,
+          "top": 722,
+          "right": 2382,
+          "bottom": 1442,
+          "width": 216,
+          "height": 720
+        },
+        "visible": true,
+        "enabled": true,
+        "children": [
+          {
+            "hwnd": 1055066,
+            "class": "Button",
+            "text": "清空本页",
+            "ctrl_id": 310,
+            "rect": {
+              "left": 2178,
+              "top": 1166,
+              "right": 2322,
+              "bottom": 1202,
+              "width": 144,
+              "height": 36
+            },
+            "visible": true,
+            "enabled": true,
+            "children": []
+          },
+          {
+            "hwnd": 1382816,
+            "class": "Edit",
+            "text": "啊",
+            "ctrl_id": 300,
+            "rect": {
+              "left": 2250,
+              "top": 974,
+              "right": 2322,
+              "bottom": 1022,
+              "width": 72,
+              "height": 48
+            },
+            "visible": true,
+            "enabled": true,
+            "children": []
+          },
+          {
+            "hwnd": 1055268,
+            "class": "Button",
+            "text": "写入文字",
+            "ctrl_id": 260,
+            "rect": {
+              "left": 2178,
+              "top": 1022,
+              "right": 2322,
+              "bottom": 1058,
+              "width": 144,
+              "height": 36
+            },
+            "visible": true,
+            "enabled": true,
+            "children": []
+          },
+          {
+            "hwnd": 1579524,
+            "class": "Button",
+            "text": "替换全部字体",
+            "ctrl_id": 250,
+            "rect": {
+              "left": 2178,
+              "top": 1118,
+              "right": 2322,
+              "bottom": 1154,
+              "width": 144,
+              "height": 36
+            },
+            "visible": true,
+            "enabled": true,
+            "children": []
+          },
+          {
+            "hwnd": 1443726,
+            "class": "Button",
+            "text": "选择字体",
+            "ctrl_id": 240,
+            "rect": {
+              "left": 2178,
+              "top": 1070,
+              "right": 2322,
+              "bottom": 1106,
+              "width": 144,
+              "height": 36
+            },
+            "visible": true,
+            "enabled": true,
+            "children": []
+          },
+          {
+            "hwnd": 8721282,
+            "class": "Afx:400000:b:10003:900015:0",
+            "text": "文字地址：",
+            "ctrl_id": 210,
+            "rect": {
+              "left": 2178,
+              "top": 1334,
+              "right": 2310,
+              "bottom": 1370,
+              "width": 132,
+              "height": 36
+            },
+            "visible": true,
+            "enabled": true,
+            "children": []
+          },
+          {
+            "hwnd": 1120666,
+            "class": "Afx:400000:b:10003:900015:0",
+            "text": "文字代码：",
+            "ctrl_id": 200,
+            "rect": {
+              "left": 2178,
+              "top": 1238,
+              "right": 2310,
+              "bottom": 1274,
+              "width": 132,
+              "height": 36
+            },
+            "visible": true,
+            "enabled": true,
+            "children": []
+          },
+          {
+            "hwnd": 3674868,
+            "class": "Afx:400000:b:10003:900015:0",
+            "text": "文字修改：",
+            "ctrl_id": 190,
+            "rect": {
+              "left": 2178,
+              "top": 938,
+              "right": 2310,
+              "bottom": 974,
+              "width": 132,
+              "height": 36
+            },
+            "visible": true,
+            "enabled": true,
+            "children": []
+          },
+          {
+            "hwnd": 4590750,
+            "class": "Afx:400000:b:10003:900015:0",
+            "text": "文字段选择：",
+            "ctrl_id": 180,
+            "rect": {
+              "left": 2178,
+              "top": 770,
+              "right": 2310,
+              "bottom": 806,
+              "width": 132,
+              "height": 36
+            },
+            "visible": true,
+            "enabled": true,
+            "children": []
+          },
+          {
+            "hwnd": 1055224,
+            "class": "Edit",
+            "text": "70010",
+            "ctrl_id": 160,
+            "rect": {
+              "left": 2178,
+              "top": 1370,
+              "right": 2322,
+              "bottom": 1418,
+              "width": 144,
+              "height": 48
+            },
+            "visible": true,
+            "enabled": true,
+            "children": []
+          },
+          {
+            "hwnd": 1185946,
+            "class": "Edit",
+            "text": "C800",
+            "ctrl_id": 150,
+            "rect": {
+              "left": 2178,
+              "top": 1274,
+              "right": 2322,
+              "bottom": 1322,
+              "width": 144,
+              "height": 48
+            },
+            "visible": true,
+            "enabled": true,
+            "children": []
+          },
+          {
+            "hwnd": 2037992,
+            "class": "Edit",
+            "text": "啊",
+            "ctrl_id": 140,
+            "rect": {
+              "left": 2178,
+              "top": 974,
+              "right": 2238,
+              "bottom": 1022,
+              "width": 60,
+              "height": 48
+            },
+            "visible": true,
+            "enabled": true,
+            "children": []
+          },
+          {
+            "hwnd": 3545290,
+            "class": "ComboBox",
+            "text": "C8",
+            "ctrl_id": 130,
+            "rect": {
+              "left": 2178,
+              "top": 806,
+              "right": 2346,
+              "bottom": 842,
+              "width": 168,
+              "height": 36
+            },
+            "visible": true,
+            "enabled": true,
+            "combo_count": 12,
+            "combo_selected": 4,
+            "children": []
+          }
+        ]
+      },
+      {
+        "hwnd": 5442426,
+        "class": "Button",
+        "text": "文字库预览",
+        "ctrl_id": 100,
+        "rect": {
+          "left": 1446,
+          "top": 722,
+          "right": 2166,
+          "bottom": 1454,
+          "width": 720,
+          "height": 732
+        },
+        "visible": true,
+        "enabled": true,
+        "children": [
+          {
+            "hwnd": 1972338,
+            "class": "Afx:400000:b:10003:900015:0",
+            "text": "00  01  02  03  04  05  06  07  08  09  0A  0B  0C  0D  0E  0F",
+            "ctrl_id": 230,
+            "rect": {
+              "left": 1458,
+              "top": 794,
+              "right": 1494,
+              "bottom": 1406,
+              "width": 36,
+              "height": 612
+            },
+            "visible": true,
+            "enabled": true,
+            "children": []
+          },
+          {
+            "hwnd": 1841512,
+            "class": "Afx:400000:b:10003:900015:0",
+            "text": "00 01 02 03 04 05 06 07 08 09 0A 0B 0C 0D 0E 0F",
+            "ctrl_id": 220,
+            "rect": {
+              "left": 1482,
+              "top": 746,
+              "right": 2058,
+              "bottom": 770,
+              "width": 576,
+              "height": 24
+            },
+            "visible": true,
+            "enabled": true,
+            "children": []
+          },
+          {
+            "hwnd": 10295364,
+            "class": "Afx:400000:b:10003:900015:0",
+            "text": "",
+            "ctrl_id": 110,
+            "rect": {
+              "left": 1494,
+              "top": 782,
+              "right": 2153,
+              "bottom": 1441,
+              "width": 659,
+              "height": 659
+            },
+            "visible": true,
+            "enabled": true,
+            "children": []
+          }
+        ]
+      }
+    ]
+  }
+}

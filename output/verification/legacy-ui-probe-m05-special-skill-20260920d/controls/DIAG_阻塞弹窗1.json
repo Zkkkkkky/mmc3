@@ -1,0 +1,84 @@
+{
+  "tag": "DIAG_阻塞弹窗1",
+  "hwnd": 4194822,
+  "title": "错误",
+  "class": "#32770",
+  "rect": {
+    "left": 743,
+    "top": 351,
+    "right": 1179,
+    "bottom": 669,
+    "width": 436,
+    "height": 318
+  },
+  "pid": 6816,
+  "tree": {
+    "hwnd": 4194822,
+    "class": "#32770",
+    "text": "错误",
+    "ctrl_id": 0,
+    "rect": {
+      "left": 743,
+      "top": 351,
+      "right": 1179,
+      "bottom": 669,
+      "width": 436,
+      "height": 318
+    },
+    "visible": true,
+    "enabled": true,
+    "children": [
+      {
+        "hwnd": 4392136,
+        "class": "Button",
+        "text": "确定",
+        "ctrl_id": 2,
+        "rect": {
+          "left": 1043,
+          "top": 615,
+          "right": 1153,
+          "bottom": 650,
+          "width": 110,
+          "height": 35
+        },
+        "visible": true,
+        "enabled": true,
+        "children": []
+      },
+      {
+        "hwnd": 2950340,
+        "class": "Static",
+        "text": "",
+        "ctrl_id": 20,
+        "rect": {
+          "left": 776,
+          "top": 425,
+          "right": 816,
+          "bottom": 465,
+          "width": 40,
+          "height": 40
+        },
+        "visible": true,
+        "enabled": true,
+        "children": []
+      },
+      {
+        "hwnd": 5702578,
+        "class": "Static",
+        "text": "运行时出错!\r\n\r\n错误信息：读取组件属性时发现指定窗口尚未载入\r\n\r\n1375879643, 369246872\r\n\"\"\r\n\"\"\r\n",
+        "ctrl_id": 65535,
+        "rect": {
+          "left": 826,
+          "top": 425,
+          "right": 1130,
+          "bottom": 568,
+          "width": 304,
+          "height": 143
+        },
+        "visible": true,
+        "enabled": true,
+        "children": []
+      }
+    ]
+  }
+}

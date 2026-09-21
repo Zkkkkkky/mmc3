@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "reason": "保留首轮超时、瞬时控件失败或底部行像素偏移证据；使用精确PID终止和整数行高后重试",
+  "timestamp": "20260920T040232",
+  "moved": [
+    {
+      "module": "M06",
+      "field": "spirit_06",
+      "case_id": "cold_start_01",
+      "from": "output/build/legacy-diff-audit/cases/legacy_live/M06/spirit_06/cold_start_01",
+      "to": "output/build/legacy-diff-audit/cases/diagnostic/retry_history/20260920T040232/M06/spirit_06/cold_start_01",
+      "had_case_json": true,
+      "had_error_json": false
+    }
+  ],
+  "live_result_rows_removed": 1
+}

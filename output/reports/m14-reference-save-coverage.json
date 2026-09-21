@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "module": "M14",
+  "passed": true,
+  "status": "complete",
+  "counts": {
+    "catalog_fields": 3217,
+    "persistent_catalog_fields": 2674,
+    "volatile_catalog_fields": 543,
+    "read_only_instruction_rows": 9920,
+    "completed_fields": 3217,
+    "remaining_fields": 0,
+    "safe_denominator_fields": 2674,
+    "families": {
+      "action_name": 256,
+      "chapter_initial_victory": 32,
+      "chapter_title": 32,
+      "map_name": 255,
+      "story_text": 2295,
+      "surrender_ally": 32,
+      "surrender_chapter": 32,
+      "surrender_enemy": 32,
+      "victory_text": 251
+    },
+    "statuses": {
+      "no_rom_effect": 543,
+      "saved": 2674
+    },
+    "cold_inventory_fields": 3217
+  },
+  "checks": {
+    "catalog_passed": true,
+    "all_3217_fields_recorded": true,
+    "sequences_contiguous": true,
+    "catalog_identities_match": true,
+    "hash_links_contiguous": true,
+    "byte_ranges_replay": true,
+    "tail_matches_work_rom": true,
+    "requested_value_observed_before_each_save": true,
+    "persistent_and_volatile_family_classification_matches": true,
+    "two_fresh_final_inventories_match": true
+  },
+  "evidence": {
+    "catalog": "output/reports/m14-reference-field-catalog.json",
+    "save_chain": "output/verification/legacy-m14-all-fields-20260920/field-save-chain.jsonl",
+    "normalized_baseline": "output/verification/legacy-m14-all-fields-20260920/normalized-baseline.nes",
+    "work_rom": "output/verification/legacy-m14-all-fields-20260920/work.nes",
+    "same_process_inventory": "output/verification/legacy-m14-all-fields-20260920/same-process-final-values.json",
+    "cold_process_inventory": "output/verification/legacy-m14-all-fields-20260920/cold-process-final-values.json"
+  }
+}

@@ -1,0 +1,101 @@
+{
+  "tag": "D2_数据库_其他修改1_成长修改(16进制快捷修改)",
+  "hwnd": 9967316,
+  "title": "成长属性",
+  "class": "WTWindow",
+  "rect": {
+    "left": 1635,
+    "top": 963,
+    "right": 2202,
+    "bottom": 1205,
+    "width": 567,
+    "height": 242
+  },
+  "pid": 30308,
+  "tree": {
+    "hwnd": 9967316,
+    "class": "WTWindow",
+    "text": "成长属性",
+    "ctrl_id": 0,
+    "rect": {
+      "left": 1635,
+      "top": 963,
+      "right": 2202,
+      "bottom": 1205,
+      "width": 567,
+      "height": 242
+    },
+    "visible": true,
+    "enabled": true,
+    "children": [
+      {
+        "hwnd": 1902486,
+        "class": "Afx:400000:b:10003:900015:0",
+        "text": "长度：60",
+        "ctrl_id": 130,
+        "rect": {
+          "left": 1650,
+          "top": 1130,
+          "right": 1902,
+          "bottom": 1190,
+          "width": 252,
+          "height": 60
+        },
+        "visible": true,
+        "enabled": true,
+        "children": []
+      },
+      {
+        "hwnd": 26546626,
+        "class": "Button",
+        "text": "取消",
+        "ctrl_id": 120,
+        "rect": {
+          "left": 2070,
+          "top": 1154,
+          "right": 2190,
+          "bottom": 1190,
+          "width": 120,
+          "height": 36
+        },
+        "visible": true,
+        "enabled": true,
+        "children": []
+      },
+      {
+        "hwnd": 20191392,
+        "class": "Button",
+        "text": "确定",
+        "ctrl_id": 110,
+        "rect": {
+          "left": 1938,
+          "top": 1154,
+          "right": 2058,
+          "bottom": 1190,
+          "width": 120,
+          "height": 36
+        },
+        "visible": true,
+        "enabled": true,
+        "children": []
+      },
+      {
+        "hwnd": 6687198,
+        "class": "Edit",
+        "text": "555555555555555555555555565656565656666666666666666666666666",
+        "ctrl_id": 100,
+        "rect": {
+          "left": 1650,
+          "top": 1022,
+          "right": 2190,
+          "bottom": 1130,
+          "width": 540,
+          "height": 108
+        },
+        "visible": true,
+        "enabled": true,
+        "children": []
+      }
+    ]
+  }
+}

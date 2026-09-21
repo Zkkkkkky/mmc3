@@ -1,0 +1,213 @@
+{
+  "tag": "M04_商店设置",
+  "hwnd": 23068916,
+  "title": "商店设置",
+  "class": "WTWindow",
+  "rect": {
+    "left": 788,
+    "top": 405,
+    "right": 1131,
+    "bottom": 681,
+    "width": 343,
+    "height": 276
+  },
+  "pid": 8720,
+  "tree": {
+    "hwnd": 23068916,
+    "class": "WTWindow",
+    "text": "商店设置",
+    "ctrl_id": 0,
+    "rect": {
+      "left": 788,
+      "top": 405,
+      "right": 1131,
+      "bottom": 681,
+      "width": 343,
+      "height": 276
+    },
+    "visible": true,
+    "enabled": true,
+    "children": [
+      {
+        "hwnd": 6163816,
+        "class": "Button",
+        "text": "事件",
+        "ctrl_id": 190,
+        "rect": {
+          "left": 880,
+          "top": 644,
+          "right": 950,
+          "bottom": 674,
+          "width": 70,
+          "height": 30
+        },
+        "visible": true,
+        "enabled": true,
+        "button_check_state": 0,
+        "children": []
+      },
+      {
+        "hwnd": 11603282,
+        "class": "Button",
+        "text": "商店",
+        "ctrl_id": 180,
+        "rect": {
+          "left": 800,
+          "top": 644,
+          "right": 870,
+          "bottom": 674,
+          "width": 70,
+          "height": 30
+        },
+        "visible": true,
+        "enabled": true,
+        "button_check_state": 1,
+        "children": []
+      },
+      {
+        "hwnd": 8785232,
+        "class": "ComboBox",
+        "text": "000：商店",
+        "ctrl_id": 170,
+        "rect": {
+          "left": 880,
+          "top": 594,
+          "right": 1110,
+          "bottom": 624,
+          "width": 230,
+          "height": 30
+        },
+        "visible": true,
+        "enabled": false,
+        "combo_count": 255,
+        "combo_selected": 0,
+        "children": []
+      },
+      {
+        "hwnd": 101122524,
+        "class": "Afx:400000:b:10003:900015:0",
+        "text": "地图事件：",
+        "ctrl_id": 160,
+        "rect": {
+          "left": 800,
+          "top": 594,
+          "right": 870,
+          "bottom": 624,
+          "width": 70,
+          "height": 30
+        },
+        "visible": true,
+        "enabled": true,
+        "children": []
+      },
+      {
+        "hwnd": 106168840,
+        "class": "Button",
+        "text": "取消",
+        "ctrl_id": 150,
+        "rect": {
+          "left": 1040,
+          "top": 644,
+          "right": 1120,
+          "bottom": 674,
+          "width": 80,
+          "height": 30
+        },
+        "visible": true,
+        "enabled": true,
+        "button_check_state": 0,
+        "children": []
+      },
+      {
+        "hwnd": 14159286,
+        "class": "Button",
+        "text": "确定",
+        "ctrl_id": 140,
+        "rect": {
+          "left": 950,
+          "top": 644,
+          "right": 1030,
+          "bottom": 674,
+          "width": 80,
+          "height": 30
+        },
+        "visible": true,
+        "enabled": true,
+        "button_check_state": 0,
+        "children": []
+      },
+      {
+        "hwnd": 164496534,
+        "class": "ComboBox",
+        "text": "01：商店F0",
+        "ctrl_id": 130,
+        "rect": {
+          "left": 880,
+          "top": 534,
+          "right": 1110,
+          "bottom": 564,
+          "width": 230,
+          "height": 30
+        },
+        "visible": true,
+        "enabled": true,
+        "combo_count": 15,
+        "combo_selected": 0,
+        "children": []
+      },
+      {
+        "hwnd": 120194314,
+        "class": "Afx:400000:b:10003:900015:0",
+        "text": "商店选择：",
+        "ctrl_id": 120,
+        "rect": {
+          "left": 800,
+          "top": 534,
+          "right": 870,
+          "bottom": 564,
+          "width": 70,
+          "height": 30
+        },
+        "visible": true,
+        "enabled": true,
+        "children": []
+      },
+      {
+        "hwnd": 24186514,
+        "class": "Afx:400000:b:10003:900015:0",
+        "text": "限定人物：",
+        "ctrl_id": 110,
+        "rect": {
+          "left": 800,
+          "top": 474,
+          "right": 870,
+          "bottom": 504,
+          "width": 70,
+          "height": 30
+        },
+        "visible": true,
+        "enabled": true,
+        "children": []
+      },
+      {
+        "hwnd": 113509422,
+        "class": "ComboBox",
+        "text": "无限定人物",
+        "ctrl_id": 100,
+        "rect": {
+          "left": 880,
+          "top": 474,
+          "right": 1110,
+          "bottom": 504,
+          "width": 230,
+          "height": 30
+        },
+        "visible": true,
+        "enabled": true,
+        "combo_count": 201,
+        "combo_selected": 0,
+        "children": []
+      }
+    ]
+  }
+}

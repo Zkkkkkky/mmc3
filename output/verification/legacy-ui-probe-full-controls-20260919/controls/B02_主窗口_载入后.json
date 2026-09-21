@@ -1,0 +1,1217 @@
+{
+  "tag": "B02_主窗口_载入后",
+  "hwnd": 67982,
+  "title": "SRW2扩容版修改器V1.0：D:\\GIT\\mmc3\\output\\build\\legacy-ui-probe\\测试.nes",
+  "class": "WTWindow",
+  "rect": {
+    "left": -40000,
+    "top": -40000,
+    "right": -39751,
+    "bottom": -39957,
+    "width": 249,
+    "height": 43
+  },
+  "pid": 7476,
+  "menu": [
+    {
+      "index": 0,
+      "text": "文件&(F)",
+      "id": null,
+      "items": [
+        {
+          "index": 0,
+          "text": "打开&(O)\tCtrl+O",
+          "id": 20001
+        },
+        {
+          "index": 1,
+          "text": "",
+          "id": 20003
+        },
+        {
+          "index": 2,
+          "text": "保存&(S)\tCtrl+S",
+          "id": 20004
+        },
+        {
+          "index": 3,
+          "text": "",
+          "id": 20005
+        },
+        {
+          "index": 4,
+          "text": "退出&(X)\tCtrl+X",
+          "id": 20006
+        }
+      ]
+    },
+    {
+      "index": 1,
+      "text": "数据&(A)",
+      "id": null,
+      "items": [
+        {
+          "index": 0,
+          "text": "数据库&(D)\tCtrl+D",
+          "id": 20008
+        },
+        {
+          "index": 1,
+          "text": "文字库&(W)\tCtrl+W",
+          "id": 20009
+        },
+        {
+          "index": 2,
+          "text": "",
+          "id": 20010
+        },
+        {
+          "index": 3,
+          "text": "地图动画&(M)\tCtrl+M",
+          "id": 20011
+        },
+        {
+          "index": 4,
+          "text": "",
+          "id": 20012
+        },
+        {
+          "index": 5,
+          "text": "文字转换&(Z)\tCtrl+Z",
+          "id": 20013
+        },
+        {
+          "index": 6,
+          "text": "",
+          "id": 20014
+        },
+        {
+          "index": 7,
+          "text": "剧情事件&(J)\tCtrl+J",
+          "id": 20015
+        },
+        {
+          "index": 8,
+          "text": "",
+          "id": 20016
+        },
+        {
+          "index": 9,
+          "text": "导出机体&(P)\tCtrl+F",
+          "id": 20017
+        },
+        {
+          "index": 10,
+          "text": "导出头像&(L)\tCtrl+L",
+          "id": 20018
+        },
+        {
+          "index": 11,
+          "text": "",
+          "id": 20019
+        },
+        {
+          "index": 12,
+          "text": "属性计算器",
+          "id": 20020
+        },
+        {
+          "index": 13,
+          "text": "存档修改器",
+          "id": 20021
+        },
+        {
+          "index": 14,
+          "text": "",
+          "id": 20022
+        },
+        {
+          "index": 15,
+          "text": "其他&(T)\tCtrl+T",
+          "id": 20023
+        }
+      ]
+    },
+    {
+      "index": 2,
+      "text": "帮助&(H)",
+      "id": null,
+      "items": [
+        {
+          "index": 0,
+          "text": "关于",
+          "id": 20025
+        }
+      ]
+    }
+  ],
+  "tree": {
+    "hwnd": 67982,
+    "class": "WTWindow",
+    "text": "SRW2扩容版修改器V1.0：D:\\GIT\\mmc3\\output\\build\\legacy-ui-probe\\测试.nes",
+    "ctrl_id": 0,
+    "rect": {
+      "left": -40000,
+      "top": -40000,
+      "right": -39751,
+      "bottom": -39957,
+      "width": 249,
+      "height": 43
+    },
+    "visible": true,
+    "enabled": true,
+    "children": [
+      {
+        "hwnd": 68118,
+        "class": "_EL_Label",
+        "text": "标签",
+        "ctrl_id": 680,
+        "rect": {
+          "left": -39388,
+          "top": -39930,
+          "right": -39288,
+          "bottom": -39900,
+          "width": 100,
+          "height": 30
+        },
+        "visible": false,
+        "enabled": true,
+        "children": []
+      },
+      {
+        "hwnd": 68116,
+        "class": "_EL_ServerSock",
+        "text": "",
+        "ctrl_id": 670,
+        "rect": {
+          "left": -39858,
+          "top": -39960,
+          "right": -39825,
+          "bottom": -39927,
+          "width": 33,
+          "height": 33
+        },
+        "visible": false,
+        "enabled": true,
+        "children": []
+      },
+      {
+        "hwnd": 68104,
+        "class": "Afx:43e0000:b:10003:0:0",
+        "text": "",
+        "ctrl_id": 630,
+        "rect": {
+          "left": -39398,
+          "top": -39850,
+          "right": -39365,
+          "bottom": -39817,
+          "width": 33,
+          "height": 33
+        },
+        "visible": false,
+        "enabled": true,
+        "children": []
+      },
+      {
+        "hwnd": 68096,
+        "class": "Jy_iext1_05",
+        "text": "",
+        "ctrl_id": 590,
+        "rect": {
+          "left": -39268,
+          "top": -39210,
+          "right": -39038,
+          "bottom": -39180,
+          "width": 230,
+          "height": 30
+        },
+        "visible": true,
+        "enabled": true,
+        "children": []
+      },
+      {
+        "hwnd": 68094,
+        "class": "Jy_iext1_05",
+        "text": "",
+        "ctrl_id": 580,
+        "rect": {
+          "left": -39528,
+          "top": -39210,
+          "right": -39298,
+          "bottom": -39180,
+          "width": 230,
+          "height": 30
+        },
+        "visible": true,
+        "enabled": true,
+        "children": []
+      },
+      {
+        "hwnd": 68092,
+        "class": "Jy_iext1_05",
+        "text": "",
+        "ctrl_id": 570,
+        "rect": {
+          "left": -39548,
+          "top": -39250,
+          "right": -39488,
+          "bottom": -39230,
+          "width": 60,
+          "height": 20
+        },
+        "visible": true,
+        "enabled": true,
+        "children": []
+      },
+      {
+        "hwnd": 68090,
+        "class": "Afx:3c60000:8:10003:900015:0",
+        "text": "",
+        "ctrl_id": 560,
+        "rect": {
+          "left": -39498,
+          "top": -39780,
+          "right": -39478,
+          "bottom": -39760,
+          "width": 20,
+          "height": 20
+        },
+        "visible": false,
+        "enabled": true,
+        "children": []
+      },
+      {
+        "hwnd": 68086,
+        "class": "Afx:3c60000:8:10003:900015:0",
+        "text": "",
+        "ctrl_id": 540,
+        "rect": {
+          "left": -39428,
+          "top": -39770,
+          "right": -39408,
+          "bottom": -39750,
+          "width": 20,
+          "height": 20
+        },
+        "visible": false,
+        "enabled": true,
+        "children": []
+      },
+      {
+        "hwnd": 68082,
+        "class": "Afx:3c60000:8:10003:900015:0",
+        "text": "",
+        "ctrl_id": 520,
+        "rect": {
+          "left": -39478,
+          "top": -39730,
+          "right": -39458,
+          "bottom": -39710,
+          "width": 20,
+          "height": 20
+        },
+        "visible": false,
+        "enabled": true,
+        "children": []
+      },
+      {
+        "hwnd": 68080,
+        "class": "Afx:3c60000:8:10003:900015:0",
+        "text": "",
+        "ctrl_id": 510,
+        "rect": {
+          "left": -39538,
+          "top": -39680,
+          "right": -39518,
+          "bottom": -39660,
+          "width": 20,
+          "height": 20
+        },
+        "visible": false,
+        "enabled": true,
+        "children": []
+      },
+      {
+        "hwnd": 68078,
+        "class": "Afx:3c60000:b:10003:900015:0",
+        "text": "",
+        "ctrl_id": 500,
+        "rect": {
+          "left": -39608,
+          "top": -39900,
+          "right": -39068,
+          "bottom": -39380,
+          "width": 540,
+          "height": 520
+        },
+        "visible": true,
+        "enabled": true,
+        "children": []
+      },
+      {
+        "hwnd": 67988,
+        "class": "CPageControl",
+        "text": "",
+        "ctrl_id": 120,
+        "rect": {
+          "left": -39998,
+          "top": -39920,
+          "right": -39618,
+          "bottom": -39490,
+          "width": 380,
+          "height": 430
+        },
+        "visible": true,
+        "enabled": true,
+        "children": [
+          {
+            "hwnd": 68088,
+            "class": "ListBox",
+            "text": "",
+            "ctrl_id": 550,
+            "rect": {
+              "left": -39988,
+              "top": -39880,
+              "right": -39628,
+              "bottom": -39500,
+              "width": 360,
+              "height": 380
+            },
+            "visible": false,
+            "enabled": true,
+            "children": []
+          },
+          {
+            "hwnd": 68084,
+            "class": "_EL_PicBox",
+            "text": "",
+            "ctrl_id": 530,
+            "rect": {
+              "left": -39988,
+              "top": -39560,
+              "right": -39628,
+              "bottom": -39500,
+              "width": 360,
+              "height": 60
+            },
+            "visible": true,
+            "enabled": true,
+            "children": []
+          },
+          {
+            "hwnd": 68076,
+            "class": "msctls_updown32",
+            "text": "",
+            "ctrl_id": 490,
+            "rect": {
+              "left": -39848,
+              "top": -39620,
+              "right": -39823,
+              "bottom": -39590,
+              "width": 25,
+              "height": 30
+            },
+            "visible": true,
+            "enabled": true,
+            "children": []
+          },
+          {
+            "hwnd": 68074,
+            "class": "msctls_updown32",
+            "text": "",
+            "ctrl_id": 480,
+            "rect": {
+              "left": -39658,
+              "top": -39620,
+              "right": -39628,
+              "bottom": -39590,
+              "width": 30,
+              "height": 30
+            },
+            "visible": true,
+            "enabled": true,
+            "children": []
+          },
+          {
+            "hwnd": 68072,
+            "class": "Jy_iext1_05",
+            "text": "地图高度：",
+            "ctrl_id": 470,
+            "rect": {
+              "left": -39978,
+              "top": -39620,
+              "right": -39908,
+              "bottom": -39590,
+              "width": 70,
+              "height": 30
+            },
+            "visible": true,
+            "enabled": true,
+            "children": []
+          },
+          {
+            "hwnd": 68070,
+            "class": "Edit",
+            "text": "26",
+            "ctrl_id": 460,
+            "rect": {
+              "left": -39908,
+              "top": -39620,
+              "right": -39848,
+              "bottom": -39590,
+              "width": 60,
+              "height": 30
+            },
+            "visible": true,
+            "enabled": false,
+            "children": []
+          },
+          {
+            "hwnd": 68068,
+            "class": "Jy_iext1_05",
+            "text": "地图宽度：",
+            "ctrl_id": 450,
+            "rect": {
+              "left": -39788,
+              "top": -39620,
+              "right": -39718,
+              "bottom": -39590,
+              "width": 70,
+              "height": 30
+            },
+            "visible": true,
+            "enabled": true,
+            "children": []
+          },
+          {
+            "hwnd": 68066,
+            "class": "Edit",
+            "text": "27",
+            "ctrl_id": 440,
+            "rect": {
+              "left": -39718,
+              "top": -39620,
+              "right": -39658,
+              "bottom": -39590,
+              "width": 60,
+              "height": 30
+            },
+            "visible": true,
+            "enabled": false,
+            "children": []
+          },
+          {
+            "hwnd": 68064,
+            "class": "Button",
+            "text": "地图图块设置",
+            "ctrl_id": 430,
+            "rect": {
+              "left": -39988,
+              "top": -39880,
+              "right": -39628,
+              "bottom": -39630,
+              "width": 360,
+              "height": 250
+            },
+            "visible": true,
+            "enabled": true,
+            "children": [
+              {
+                "hwnd": 68112,
+                "class": "ComboBox",
+                "text": "[3D]061：8F410",
+                "ctrl_id": 660,
+                "rect": {
+                  "left": -39878,
+                  "top": -39680,
+                  "right": -39738,
+                  "bottom": -39655,
+                  "width": 140,
+                  "height": 25
+                },
+                "visible": true,
+                "enabled": true,
+                "combo_count": 256,
+                "combo_selected": 61,
+                "children": []
+              },
+              {
+                "hwnd": 68110,
+                "class": "Jy_iext1_05",
+                "text": "图库选择：",
+                "ctrl_id": 650,
+                "rect": {
+                  "left": -39848,
+                  "top": -39710,
+                  "right": -39788,
+                  "bottom": -39690,
+                  "width": 60,
+                  "height": 20
+                },
+                "visible": true,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 68108,
+                "class": "Button",
+                "text": "编辑图块属性",
+                "ctrl_id": 640,
+                "rect": {
+                  "left": -39768,
+                  "top": -39860,
+                  "right": -39648,
+                  "bottom": -39830,
+                  "width": 120,
+                  "height": 30
+                },
+                "visible": true,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 68062,
+                "class": "Jy_iext1_05",
+                "text": "右键",
+                "ctrl_id": 420,
+                "rect": {
+                  "left": -39708,
+                  "top": -39730,
+                  "right": -39668,
+                  "bottom": -39700,
+                  "width": 40,
+                  "height": 30
+                },
+                "visible": true,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 68060,
+                "class": "Jy_iext1_05",
+                "text": "左键",
+                "ctrl_id": 410,
+                "rect": {
+                  "left": -39948,
+                  "top": -39730,
+                  "right": -39908,
+                  "bottom": -39700,
+                  "width": 40,
+                  "height": 30
+                },
+                "visible": true,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 68058,
+                "class": "Jy_iext1_05",
+                "text": "位图选择：",
+                "ctrl_id": 400,
+                "rect": {
+                  "left": -39968,
+                  "top": -39850,
+                  "right": -39908,
+                  "bottom": -39830,
+                  "width": 60,
+                  "height": 20
+                },
+                "visible": true,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 68056,
+                "class": "_EL_PicBox",
+                "text": "",
+                "ctrl_id": 390,
+                "rect": {
+                  "left": -39688,
+                  "top": -39780,
+                  "right": -39648,
+                  "bottom": -39740,
+                  "width": 40,
+                  "height": 40
+                },
+                "visible": true,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 68054,
+                "class": "_EL_PicBox",
+                "text": "",
+                "ctrl_id": 380,
+                "rect": {
+                  "left": -39728,
+                  "top": -39780,
+                  "right": -39688,
+                  "bottom": -39740,
+                  "width": 40,
+                  "height": 40
+                },
+                "visible": true,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 68052,
+                "class": "_EL_PicBox",
+                "text": "",
+                "ctrl_id": 370,
+                "rect": {
+                  "left": -39768,
+                  "top": -39780,
+                  "right": -39728,
+                  "bottom": -39740,
+                  "width": 40,
+                  "height": 40
+                },
+                "visible": true,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 68050,
+                "class": "_EL_PicBox",
+                "text": "",
+                "ctrl_id": 360,
+                "rect": {
+                  "left": -39808,
+                  "top": -39780,
+                  "right": -39768,
+                  "bottom": -39740,
+                  "width": 40,
+                  "height": 40
+                },
+                "visible": true,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 68048,
+                "class": "_EL_PicBox",
+                "text": "",
+                "ctrl_id": 350,
+                "rect": {
+                  "left": -39848,
+                  "top": -39780,
+                  "right": -39808,
+                  "bottom": -39740,
+                  "width": 40,
+                  "height": 40
+                },
+                "visible": true,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 68046,
+                "class": "_EL_PicBox",
+                "text": "",
+                "ctrl_id": 340,
+                "rect": {
+                  "left": -39888,
+                  "top": -39780,
+                  "right": -39848,
+                  "bottom": -39740,
+                  "width": 40,
+                  "height": 40
+                },
+                "visible": true,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 68044,
+                "class": "_EL_PicBox",
+                "text": "",
+                "ctrl_id": 330,
+                "rect": {
+                  "left": -39928,
+                  "top": -39780,
+                  "right": -39888,
+                  "bottom": -39740,
+                  "width": 40,
+                  "height": 40
+                },
+                "visible": true,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 68042,
+                "class": "_EL_PicBox",
+                "text": "",
+                "ctrl_id": 320,
+                "rect": {
+                  "left": -39968,
+                  "top": -39780,
+                  "right": -39928,
+                  "bottom": -39740,
+                  "width": 40,
+                  "height": 40
+                },
+                "visible": true,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 68040,
+                "class": "_EL_PicBox",
+                "text": "",
+                "ctrl_id": 310,
+                "rect": {
+                  "left": -39688,
+                  "top": -39820,
+                  "right": -39648,
+                  "bottom": -39780,
+                  "width": 40,
+                  "height": 40
+                },
+                "visible": true,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 68038,
+                "class": "_EL_PicBox",
+                "text": "",
+                "ctrl_id": 300,
+                "rect": {
+                  "left": -39728,
+                  "top": -39820,
+                  "right": -39688,
+                  "bottom": -39780,
+                  "width": 40,
+                  "height": 40
+                },
+                "visible": true,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 68036,
+                "class": "_EL_PicBox",
+                "text": "",
+                "ctrl_id": 290,
+                "rect": {
+                  "left": -39768,
+                  "top": -39820,
+                  "right": -39728,
+                  "bottom": -39780,
+                  "width": 40,
+                  "height": 40
+                },
+                "visible": true,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 68034,
+                "class": "_EL_PicBox",
+                "text": "",
+                "ctrl_id": 280,
+                "rect": {
+                  "left": -39808,
+                  "top": -39820,
+                  "right": -39768,
+                  "bottom": -39780,
+                  "width": 40,
+                  "height": 40
+                },
+                "visible": true,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 68032,
+                "class": "_EL_PicBox",
+                "text": "",
+                "ctrl_id": 270,
+                "rect": {
+                  "left": -39848,
+                  "top": -39820,
+                  "right": -39808,
+                  "bottom": -39780,
+                  "width": 40,
+                  "height": 40
+                },
+                "visible": true,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 68030,
+                "class": "_EL_PicBox",
+                "text": "",
+                "ctrl_id": 260,
+                "rect": {
+                  "left": -39888,
+                  "top": -39820,
+                  "right": -39848,
+                  "bottom": -39780,
+                  "width": 40,
+                  "height": 40
+                },
+                "visible": true,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 68028,
+                "class": "_EL_PicBox",
+                "text": "",
+                "ctrl_id": 250,
+                "rect": {
+                  "left": -39928,
+                  "top": -39820,
+                  "right": -39888,
+                  "bottom": -39780,
+                  "width": 40,
+                  "height": 40
+                },
+                "visible": true,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 68026,
+                "class": "_EL_PicBox",
+                "text": "",
+                "ctrl_id": 240,
+                "rect": {
+                  "left": -39968,
+                  "top": -39820,
+                  "right": -39928,
+                  "bottom": -39780,
+                  "width": 40,
+                  "height": 40
+                },
+                "visible": true,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 68024,
+                "class": "_EL_PicBox",
+                "text": "",
+                "ctrl_id": 230,
+                "rect": {
+                  "left": -39708,
+                  "top": -39700,
+                  "right": -39668,
+                  "bottom": -39660,
+                  "width": 40,
+                  "height": 40
+                },
+                "visible": true,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 68022,
+                "class": "_EL_PicBox",
+                "text": "",
+                "ctrl_id": 220,
+                "rect": {
+                  "left": -39948,
+                  "top": -39700,
+                  "right": -39908,
+                  "bottom": -39660,
+                  "width": 40,
+                  "height": 40
+                },
+                "visible": true,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 68018,
+                "class": "ComboBox",
+                "text": "位图D",
+                "ctrl_id": 210,
+                "rect": {
+                  "left": -39898,
+                  "top": -39850,
+                  "right": -39778,
+                  "bottom": -39825,
+                  "width": 120,
+                  "height": 25
+                },
+                "visible": true,
+                "enabled": true,
+                "combo_count": 8,
+                "combo_selected": 3,
+                "children": []
+              }
+            ]
+          },
+          {
+            "hwnd": 68016,
+            "class": "Button",
+            "text": "机体图标",
+            "ctrl_id": 200,
+            "rect": {
+              "left": -39988,
+              "top": -39890,
+              "right": -39628,
+              "bottom": -39500,
+              "width": 360,
+              "height": 390
+            },
+            "visible": false,
+            "enabled": true,
+            "children": [
+              {
+                "hwnd": 68102,
+                "class": "Jy_iext1_05",
+                "text": "图标地址3：",
+                "ctrl_id": 620,
+                "rect": {
+                  "left": -39968,
+                  "top": -39625,
+                  "right": -39888,
+                  "bottom": -39605,
+                  "width": 80,
+                  "height": 20
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 68100,
+                "class": "Jy_iext1_05",
+                "text": "图标地址2：",
+                "ctrl_id": 610,
+                "rect": {
+                  "left": -39968,
+                  "top": -39745,
+                  "right": -39888,
+                  "bottom": -39725,
+                  "width": 80,
+                  "height": 20
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 68098,
+                "class": "Jy_iext1_05",
+                "text": "图标地址1：",
+                "ctrl_id": 600,
+                "rect": {
+                  "left": -39968,
+                  "top": -39865,
+                  "right": -39888,
+                  "bottom": -39845,
+                  "width": 80,
+                  "height": 20
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 68014,
+                "class": "Afx:3c60000:8:10003:900015:0",
+                "text": "",
+                "ctrl_id": 190,
+                "rect": {
+                  "left": -39888,
+                  "top": -39820,
+                  "right": -39848,
+                  "bottom": -39780,
+                  "width": 40,
+                  "height": 40
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 68010,
+                "class": "ComboBox",
+                "text": "[36]054：8D810",
+                "ctrl_id": 180,
+                "rect": {
+                  "left": -39888,
+                  "top": -39630,
+                  "right": -39728,
+                  "bottom": -39602,
+                  "width": 160,
+                  "height": 28
+                },
+                "visible": false,
+                "enabled": true,
+                "combo_count": 256,
+                "combo_selected": 54,
+                "children": []
+              },
+              {
+                "hwnd": 68008,
+                "class": "Afx:3c60000:b:10003:900015:0",
+                "text": "",
+                "ctrl_id": 170,
+                "rect": {
+                  "left": -39968,
+                  "top": -39600,
+                  "right": -39648,
+                  "bottom": -39520,
+                  "width": 320,
+                  "height": 80
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 68004,
+                "class": "ComboBox",
+                "text": "[35]053：8D410",
+                "ctrl_id": 160,
+                "rect": {
+                  "left": -39888,
+                  "top": -39750,
+                  "right": -39728,
+                  "bottom": -39722,
+                  "width": 160,
+                  "height": 28
+                },
+                "visible": false,
+                "enabled": true,
+                "combo_count": 256,
+                "combo_selected": 53,
+                "children": []
+              },
+              {
+                "hwnd": 68002,
+                "class": "Afx:3c60000:b:10003:900015:0",
+                "text": "",
+                "ctrl_id": 150,
+                "rect": {
+                  "left": -39968,
+                  "top": -39720,
+                  "right": -39648,
+                  "bottom": -39640,
+                  "width": 320,
+                  "height": 80
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 67998,
+                "class": "ComboBox",
+                "text": "[34]052：8D010",
+                "ctrl_id": 140,
+                "rect": {
+                  "left": -39888,
+                  "top": -39870,
+                  "right": -39728,
+                  "bottom": -39842,
+                  "width": 160,
+                  "height": 28
+                },
+                "visible": false,
+                "enabled": true,
+                "combo_count": 256,
+                "combo_selected": 52,
+                "children": []
+              },
+              {
+                "hwnd": 67996,
+                "class": "Afx:3c60000:b:10003:900015:0",
+                "text": "",
+                "ctrl_id": 130,
+                "rect": {
+                  "left": -39968,
+                  "top": -39840,
+                  "right": -39648,
+                  "bottom": -39760,
+                  "width": 320,
+                  "height": 80
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              }
+            ]
+          },
+          {
+            "hwnd": 67990,
+            "class": "AfxWnd42s",
+            "text": "<",
+            "ctrl_id": 1008,
+            "rect": {
+              "left": -39998,
+              "top": -39920,
+              "right": -39998,
+              "bottom": -39920,
+              "width": 0,
+              "height": 0
+            },
+            "visible": false,
+            "enabled": true,
+            "children": []
+          },
+          {
+            "hwnd": 67992,
+            "class": "AfxWnd42s",
+            "text": ">",
+            "ctrl_id": 1009,
+            "rect": {
+              "left": -39998,
+              "top": -39920,
+              "right": -39998,
+              "bottom": -39920,
+              "width": 0,
+              "height": 0
+            },
+            "visible": false,
+            "enabled": true,
+            "children": []
+          }
+        ]
+      },
+      {
+        "hwnd": 67986,
+        "class": "Button",
+        "text": "关卡选择",
+        "ctrl_id": 110,
+        "rect": {
+          "left": -39998,
+          "top": -39480,
+          "right": -39618,
+          "bottom": -39180,
+          "width": 380,
+          "height": 300
+        },
+        "visible": true,
+        "enabled": true,
+        "children": [
+          {
+            "hwnd": 67984,
+            "class": "ListBox",
+            "text": "",
+            "ctrl_id": 100,
+            "rect": {
+              "left": -39988,
+              "top": -39460,
+              "right": -39628,
+              "bottom": -39190,
+              "width": 360,
+              "height": 270
+            },
+            "visible": true,
+            "enabled": true,
+            "children": []
+          }
+        ]
+      }
+    ]
+  }
+}

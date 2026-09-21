@@ -1,0 +1,56 @@
+{
+  "schema_version": 1,
+  "module": "M06",
+  "field": "portrait_color_3",
+  "case_id": "cold_start_01",
+  "case_kind": "golden",
+  "requested_value": "03",
+  "original_value": "00",
+  "reopen_value": "03",
+  "reopen_matches_request": true,
+  "reopen_mode": "new_process",
+  "first_pid": 11980,
+  "second_pid": 17092,
+  "changed_offsets": [
+    43854
+  ],
+  "removed_normalization": [],
+  "unexpected_offsets": [],
+  "expected_offsets": [
+    43854
+  ],
+  "required_offsets": [
+    43854
+  ],
+  "optional_offsets": [],
+  "extra_allowed": [],
+  "extra_allowed_profile": null,
+  "expected_not_changed": [],
+  "diffs": [
+    {
+      "offset": 43854,
+      "before": 0,
+      "after": 3
+    }
+  ],
+  "snapshots": {
+    "before": {
+      "path": "output/build/legacy-diff-audit/cases/legacy_live/M06/portrait_color_3/cold_start_01/before.nes",
+      "sha256": "c5d2c1dfbe0dc39afc9effd314c082f121b98c9ad67c4825b1c9dd4b9e991954"
+    },
+    "after": {
+      "path": "output/build/legacy-diff-audit/cases/legacy_live/M06/portrait_color_3/cold_start_01/after.nes",
+      "sha256": "1b18d64de02cd365ae7b1a82a6db1e73ce3822101f0c04ce49fb978ed645f2fe"
+    }
+  },
+  "supporting_cdl": {
+    "source": "output/build/legacy-diff-audit/默认配置文件/测试.cdl",
+    "sha256": "599c1bb5ffd4b87229a81958f33f1060821cd01cd7aa7ccafa0d862f4522f3f6"
+  },
+  "duration_seconds": 24.538,
+  "budget_seconds": 30.0,
+  "requested_budget_seconds": 30.0,
+  "within_budget": true,
+  "passed": true,
+  "pending_reason": null
+}

@@ -1,0 +1,8 @@
+{
+  "module": "M05",
+  "field": "special_skill_twist",
+  "case_id": "cold_start_01",
+  "error": "RuntimeError: Baseline display differs: expected 1, got 0",
+  "first_pid": 3768,
+  "second_pid": null
+}

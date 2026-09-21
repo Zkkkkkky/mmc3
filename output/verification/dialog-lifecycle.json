@@ -1,0 +1,180 @@
+{
+  "started_utc": "2026-09-11T00:31:52.305916+00:00",
+  "python": "3.14.7",
+  "pyside6": "6.11.2",
+  "platform": "offscreen",
+  "event_loop": "QApplication.exec with QTimer callbacks",
+  "automatic_gc_enabled": true,
+  "explicit_gc_collection": false,
+  "explicit_deferred_delete_flush": false,
+  "requested_rounds": 20,
+  "input_rom": "output\\rom\\DC_kuorong_464K.nes",
+  "input_sha256_before": "82c218275459d53c0f306f6bc036c4797316976e0fa7ad1d5a8247e338995b8e",
+  "rounds": [
+    {
+      "round": 1,
+      "action": "reject",
+      "undo_steps": 0,
+      "rom_restored": true,
+      "top_level_widgets_after_delete": 0,
+      "destroyed_signal_observed": true
+    },
+    {
+      "round": 2,
+      "action": "accept_then_undo",
+      "undo_steps": 2,
+      "rom_restored": true,
+      "top_level_widgets_after_delete": 0,
+      "destroyed_signal_observed": true
+    },
+    {
+      "round": 3,
+      "action": "reject",
+      "undo_steps": 0,
+      "rom_restored": true,
+      "top_level_widgets_after_delete": 0,
+      "destroyed_signal_observed": true
+    },
+    {
+      "round": 4,
+      "action": "accept_then_undo",
+      "undo_steps": 2,
+      "rom_restored": true,
+      "top_level_widgets_after_delete": 0,
+      "destroyed_signal_observed": true
+    },
+    {
+      "round": 5,
+      "action": "reject",
+      "undo_steps": 0,
+      "rom_restored": true,
+      "top_level_widgets_after_delete": 0,
+      "destroyed_signal_observed": true
+    },
+    {
+      "round": 6,
+      "action": "accept_then_undo",
+      "undo_steps": 2,
+      "rom_restored": true,
+      "top_level_widgets_after_delete": 0,
+      "destroyed_signal_observed": true
+    },
+    {
+      "round": 7,
+      "action": "reject",
+      "undo_steps": 0,
+      "rom_restored": true,
+      "top_level_widgets_after_delete": 0,
+      "destroyed_signal_observed": true
+    },
+    {
+      "round": 8,
+      "action": "accept_then_undo",
+      "undo_steps": 2,
+      "rom_restored": true,
+      "top_level_widgets_after_delete": 0,
+      "destroyed_signal_observed": true
+    },
+    {
+      "round": 9,
+      "action": "reject",
+      "undo_steps": 0,
+      "rom_restored": true,
+      "top_level_widgets_after_delete": 0,
+      "destroyed_signal_observed": true
+    },
+    {
+      "round": 10,
+      "action": "accept_then_undo",
+      "undo_steps": 2,
+      "rom_restored": true,
+      "top_level_widgets_after_delete": 0,
+      "destroyed_signal_observed": true
+    },
+    {
+      "round": 11,
+      "action": "reject",
+      "undo_steps": 0,
+      "rom_restored": true,
+      "top_level_widgets_after_delete": 0,
+      "destroyed_signal_observed": true
+    },
+    {
+      "round": 12,
+      "action": "accept_then_undo",
+      "undo_steps": 2,
+      "rom_restored": true,
+      "top_level_widgets_after_delete": 0,
+      "destroyed_signal_observed": true
+    },
+    {
+      "round": 13,
+      "action": "reject",
+      "undo_steps": 0,
+      "rom_restored": true,
+      "top_level_widgets_after_delete": 0,
+      "destroyed_signal_observed": true
+    },
+    {
+      "round": 14,
+      "action": "accept_then_undo",
+      "undo_steps": 2,
+      "rom_restored": true,
+      "top_level_widgets_after_delete": 0,
+      "destroyed_signal_observed": true
+    },
+    {
+      "round": 15,
+      "action": "reject",
+      "undo_steps": 0,
+      "rom_restored": true,
+      "top_level_widgets_after_delete": 0,
+      "destroyed_signal_observed": true
+    },
+    {
+      "round": 16,
+      "action": "accept_then_undo",
+      "undo_steps": 2,
+      "rom_restored": true,
+      "top_level_widgets_after_delete": 0,
+      "destroyed_signal_observed": true
+    },
+    {
+      "round": 17,
+      "action": "reject",
+      "undo_steps": 0,
+      "rom_restored": true,
+      "top_level_widgets_after_delete": 0,
+      "destroyed_signal_observed": true
+    },
+    {
+      "round": 18,
+      "action": "accept_then_undo",
+      "undo_steps": 2,
+      "rom_restored": true,
+      "top_level_widgets_after_delete": 0,
+      "destroyed_signal_observed": true
+    },
+    {
+      "round": 19,
+      "action": "reject",
+      "undo_steps": 0,
+      "rom_restored": true,
+      "top_level_widgets_after_delete": 0,
+      "destroyed_signal_observed": true
+    },
+    {
+      "round": 20,
+      "action": "accept_then_undo",
+      "undo_steps": 2,
+      "rom_restored": true,
+      "top_level_widgets_after_delete": 0,
+      "destroyed_signal_observed": true
+    }
+  ],
+  "input_sha256_after": "82c218275459d53c0f306f6bc036c4797316976e0fa7ad1d5a8247e338995b8e",
+  "input_unchanged": true,
+  "destroyed_dialogs": 20,
+  "elapsed_seconds": 27.067,
+  "status": "passed"
+}
