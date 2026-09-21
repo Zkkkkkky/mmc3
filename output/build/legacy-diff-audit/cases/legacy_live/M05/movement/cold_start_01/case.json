@@ -9,8 +9,8 @@
   "reopen_value": 7,
   "reopen_matches_request": true,
   "reopen_mode": "new_process",
-  "first_pid": 38920,
-  "second_pid": 16764,
+  "first_pid": 6680,
+  "second_pid": 16920,
   "changed_offsets": [
     297551
   ],
@@ -46,9 +46,10 @@
     "source": "output/build/legacy-diff-audit/默认配置文件/测试.cdl",
     "sha256": "599c1bb5ffd4b87229a81958f33f1060821cd01cd7aa7ccafa0d862f4522f3f6"
   },
-  "duration_seconds": 62.272,
+  "duration_seconds": 22.09,
   "budget_seconds": 30.0,
-  "within_budget": false,
-  "passed": false,
-  "pending_reason": "62.27s exceeds 30.00s budget"
+  "requested_budget_seconds": 30.0,
+  "within_budget": true,
+  "passed": true,
+  "pending_reason": null
 }

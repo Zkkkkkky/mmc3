@@ -1,0 +1,16 @@
+{
+  "module": "M05", "field": "hp_growth", "case_id": "cold_start_01",
+  "requested_value": 36, "expected_before": 37,
+  "expected_offsets": [297563], "required_offsets": [297563],
+  "optional_offsets": [], "extra_allowed": [],
+  "navigation": [
+    {"op": "menu", "path": "数据->数据库"},
+    {"op": "window", "title": "数据库"},
+    {"op": "list_select", "class": "ListBox", "control_id": 120, "row": 1}
+  ],
+  "edit_steps": [
+    {"op": "set_text", "class": "Edit", "control_id": 410, "value": "$requested"},
+    {"op": "click_id", "class": "Button", "control_id": 590}
+  ],
+  "read_selector": {"class": "Edit", "control_id": 410, "value_type": "int"}
+}

@@ -1,0 +1,157 @@
+restart
+collector launched pid=18272
+saved 2/213
+collector launched pid=12516
+collector failed at 2: ListView 1580 selected row 2, expected 3; top=0, click=(1143,243)
+collector launched pid=9804
+collector failed at 3: ListView 1580 selected row 2, expected 3; top=0, click=(1143,243)
+collector launched pid=11268
+collector failed at 3: ListView 1580 selected row 2, expected 3; top=0, click=(1143,243)
+collector launched pid=4932
+collector failed at 3: ListView 1580 selected row 2, expected 3; top=0, click=(1143,243)
+collector launched pid=6892
+saved 4/213
+collector launched pid=16296
+saved 10/213
+saved 20/213
+saved 24/213
+collector failed at 24: 
+collector launched pid=11420
+saved 30/213
+saved 40/213
+saved 44/213
+collector launched pid=1724
+saved 50/213
+saved 60/213
+saved 64/213
+collector launched pid=14928
+saved 70/213
+saved 80/213
+saved 84/213
+collector launched pid=17388
+rewound evidence to 80/213
+collector launched pid=15708
+saved 81/213
+collector launched pid=16964
+saved 82/213
+rewound evidence to 80/213
+collector launched pid=13496
+collector failed at 80: M09/experience/01 archived as unexpected_readback; restart required
+rewound evidence to 80/213
+collector launched pid=12892
+saved 81/213
+collector launched pid=16424
+saved 90/213
+saved 100/213
+saved 101/213
+collector launched pid=10260
+saved 110/213
+saved 120/213
+saved 121/213
+collector launched pid=13720
+saved 130/213
+collector failed at 121: [WinError 1400] 无效的窗口句柄。
+collector launched pid=9092
+saved 140/213
+collector failed at 133: M09/system/000 archived as unexpected_readback; restart required
+collector launched pid=9380
+rewound evidence to 140/213
+collector launched pid=6620
+collector failed at 140: M09/system/000 archived as unexpected_readback; restart required
+rewound evidence to 140/213
+collector launched pid=2080
+saved 141/213
+collector launched pid=15452
+saved 150/213
+saved 160/213
+saved 161/213
+collector launched pid=6140
+saved 170/213
+saved 180/213
+saved 181/213
+collector launched pid=11536
+collector launched pid=9576
+collector failed at 185: [WinError 1400] 无效的窗口句柄。
+collector launched pid=14568
+saved 190/213
+saved 200/213
+saved 205/213
+collector launched pid=3084
+saved 210/213
+saved 213/213
+cold readback launched pid=12768
+cold readback 25/414
+cold readback 50/414
+cold readback 75/414
+cold readback 100/414
+cold readback 125/414
+cold readback 150/414
+cold readback 175/414
+cold readback 200/414
+cold readback 225/414
+cold readback 250/414
+cold readback 275/414
+cold readback 300/414
+cold readback 325/414
+cold readback 350/414
+cold readback 375/414
+cold readback 400/414
+collector launched pid=11284
+saved 220/414
+saved 230/414
+saved 233/414
+collector launched pid=12496
+collector launched pid=7816
+saved 240/414
+saved 250/414
+saved 255/414
+collector launched pid=6536
+saved 260/414
+saved 270/414
+saved 275/414
+collector launched pid=7200
+saved 280/414
+saved 290/414
+saved 295/414
+collector launched pid=8104
+saved 300/414
+collector failed at 295: [WinError 1400] 无效的窗口句柄。
+collector launched pid=18236
+saved 310/414
+saved 320/414
+saved 328/414
+collector launched pid=14128
+saved 330/414
+saved 340/414
+saved 348/414
+collector launched pid=4468
+saved 350/414
+saved 360/414
+saved 368/414
+collector launched pid=14808
+saved 370/414
+saved 380/414
+collector launched pid=14004
+saved 390/414
+saved 400/414
+saved 401/414
+collector launched pid=17784
+saved 410/414
+saved 414/414
+cold readback launched pid=11664
+cold readback 25/414
+cold readback 50/414
+cold readback 75/414
+cold readback 100/414
+cold readback 125/414
+cold readback 150/414
+cold readback 175/414
+cold readback 200/414
+cold readback 225/414
+cold readback 250/414
+cold readback 275/414
+cold readback 300/414
+cold readback 325/414
+cold readback 350/414
+cold readback 375/414
+cold readback 400/414

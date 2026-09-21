@@ -180,7 +180,7 @@ class LegacyUnitExportUiTests(QtTestCase):
         export.assert_not_called()
         self.assertEqual(bytes(window.project.working), before)
 
-    def test_d2_keeps_reference_avatar_entry_disabled_and_extension_enabled(self) -> None:
+    def test_d2_keeps_reference_avatar_entry_disabled_without_extension_duplicate(self) -> None:
         window = MainWindow(open_default=True)
         self.addCleanup(window.close)
 
@@ -188,9 +188,12 @@ class LegacyUnitExportUiTests(QtTestCase):
         self.assertEqual(window.export_avatar_action.shortcut().toString(), "Ctrl+L")
         self.assertFalse(window.export_avatar_action.isEnabled())
         self.assertIn("参考版此入口不可触发", window.export_avatar_action.statusTip())
-        self.assertTrue(window.export_avatar_extended_action.isEnabled())
-        self.assertEqual(window.export_avatar_extended_action.shortcut().toString(), "")
-        self.assertIn(window.export_avatar_extended_action, window.extension_menu.actions())
+        self.assertIn("数据库", window.export_avatar_action.statusTip())
+        self.assertFalse(hasattr(window, "export_avatar_extended_action"))
+        self.assertNotIn(
+            "导出头像 BMP（增强）",
+            tuple(action.text() for action in window.extension_menu.actions()),
+        )
 
 
 if __name__ == "__main__":

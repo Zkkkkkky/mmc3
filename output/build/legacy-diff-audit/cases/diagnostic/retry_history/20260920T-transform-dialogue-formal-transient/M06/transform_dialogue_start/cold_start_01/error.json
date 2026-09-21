@@ -1,0 +1,8 @@
+{
+  "module": "M06",
+  "field": "transform_dialogue_start",
+  "case_id": "cold_start_01",
+  "error": "ElementNotVisible: ",
+  "first_pid": 10920,
+  "second_pid": null
+}

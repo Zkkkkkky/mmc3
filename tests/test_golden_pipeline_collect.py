@@ -150,6 +150,23 @@ class LiveCollectionTests(unittest.TestCase):
         self.assertEqual(report["unexpected_offsets"], [])
         self.assertTrue(report["reopen_matches_request"])
 
+    def test_caller_cannot_relax_hard_thirty_second_budget(self) -> None:
+        with patch.object(collector.time, "perf_counter", side_effect=(0.0, 31.0)):
+            _, report = collector.collect_case(
+                self.repo,
+                collector.CaseSpec.from_payload(case_payload()),
+                self.baseline,
+                self.exe,
+                FakeDriver,
+                budget_seconds=90.0,
+            )
+
+        self.assertFalse(report["passed"])
+        self.assertFalse(report["within_budget"])
+        self.assertEqual(report["budget_seconds"], 30.0)
+        self.assertEqual(report["requested_budget_seconds"], 90.0)
+        self.assertIn("exceeds 30.00s", report["pending_reason"])
+
     def test_case_is_never_overwritten(self) -> None:
         self.collect()
         with self.assertRaises(FileExistsError):
@@ -210,12 +227,18 @@ class LiveCollectionTests(unittest.TestCase):
                 "control_id": 100,
                 "x": 140,
                 "y": 30,
+                "click_count": 2,
                 "wait_control_id": 220,
             }
         ]
         spec = collector.CaseSpec.from_payload(payload)
         self.assertEqual(spec.navigation[0]["control_id"], 100)
+        self.assertEqual(spec.navigation[0]["click_count"], 2)
         self.assertEqual(spec.navigation[0]["wait_control_id"], 220)
+        payload["navigation"][0]["click_count"] = 3
+        with self.assertRaises(ValueError):
+            collector.CaseSpec.from_payload(payload)
+        payload["navigation"][0]["click_count"] = 2
         del payload["navigation"][0]["x"]
         with self.assertRaises(ValueError):
             collector.CaseSpec.from_payload(payload)
@@ -237,6 +260,271 @@ class LiveCollectionTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             collector.CaseSpec.from_payload(payload)
 
+    def test_checkbox_write_and_read_are_whitelisted_and_bounded(self) -> None:
+        payload = case_payload()
+        payload["requested_value"] = 1
+        payload["expected_before"] = 0
+        payload["edit_steps"] = [
+            {
+                "op": "set_check",
+                "class": "Button",
+                "control_id": 130,
+                "value": "$requested",
+            }
+        ]
+        payload["read_selector"] = {
+            "class": "Button",
+            "control_id": 130,
+            "value_type": "check",
+        }
+        spec = collector.CaseSpec.from_payload(payload)
+        self.assertEqual(spec.edit_steps[0]["op"], "set_check")
+        self.assertEqual(spec.read_selector["value_type"], "check")
+        payload["edit_steps"][0]["value"] = 2
+        with self.assertRaises(ValueError):
+            collector.CaseSpec.from_payload(payload)
+
+    def test_combo_index_can_be_read_as_an_integer(self) -> None:
+        payload = case_payload()
+        payload["requested_value"] = 2
+        payload["expected_before"] = 1
+        payload["edit_steps"] = [
+            {
+                "op": "select_index",
+                "class": "ComboBox",
+                "control_id": 100,
+                "value": "$requested",
+            }
+        ]
+        payload["read_selector"] = {
+            "class": "ComboBox",
+            "control_id": 100,
+            "value_type": "combo_index",
+        }
+        spec = collector.CaseSpec.from_payload(payload)
+        self.assertEqual(spec.read_selector["value_type"], "combo_index")
+
+    def test_combo_item_count_and_separate_reopen_navigation_are_supported(self) -> None:
+        payload = case_payload()
+        payload["requested_value"] = 4
+        payload["expected_before"] = 3
+        payload["read_navigation"] = [{"op": "window", "title": "数据库"}]
+        payload["edit_steps"] = [
+            {
+                "op": "select_index_message",
+                "class": "ComboBox",
+                "control_id": 1540,
+                "value": 2,
+            }
+        ]
+        payload["read_selector"] = {
+            "class": "ComboBox",
+            "control_id": 1540,
+            "value_type": "combo_item_count",
+        }
+        spec = collector.CaseSpec.from_payload(payload)
+        self.assertEqual(spec.read_navigation[0]["title"], "数据库")
+        self.assertEqual(spec.read_selector["value_type"], "combo_item_count")
+
+    def test_control_pixel_hash_is_a_string_selector(self) -> None:
+        payload = case_payload()
+        payload["requested_value"] = "a" * 64
+        payload["expected_before"] = "b" * 64
+        payload["read_selector"] = {
+            "class": "_EL_PicBox",
+            "control_id": 1360,
+            "value_type": "control_pixel_sha256",
+        }
+        spec = collector.CaseSpec.from_payload(payload)
+        self.assertEqual(spec.read_selector["value_type"], "control_pixel_sha256")
+
+    def test_list_item_count_is_an_integer_selector(self) -> None:
+        payload = case_payload()
+        payload["requested_value"] = 201
+        payload["expected_before"] = 200
+        payload["read_selector"] = {
+            "class": "ListBox",
+            "control_id": 630,
+            "value_type": "list_item_count",
+        }
+        spec = collector.CaseSpec.from_payload(payload)
+        self.assertEqual(spec.read_selector["value_type"], "list_item_count")
+
+    def test_list_item_text_is_a_string_selector(self) -> None:
+        payload = case_payload()
+        payload["requested_value"] = "001：等待：001帧"
+        payload["expected_before"] = "000：动画结束"
+        payload["read_selector"] = {
+            "class": "ListBox",
+            "control_id": 2530,
+            "value_type": "list_item_text",
+            "item_index": 0,
+        }
+        spec = collector.CaseSpec.from_payload(payload)
+        self.assertEqual(spec.read_selector["value_type"], "list_item_text")
+
+        payload["read_selector"]["item_index"] = -1
+        with self.assertRaisesRegex(ValueError, "nonnegative item_index"):
+            collector.CaseSpec.from_payload(payload)
+
+    def test_keyboard_combo_selection_is_whitelisted(self) -> None:
+        payload = case_payload()
+        payload["requested_value"] = 1
+        payload["expected_before"] = 0
+        payload["edit_steps"] = [
+            {
+                "op": "select_index_keyboard",
+                "class": "ComboBox",
+                "control_id": 120,
+                "value": "$requested",
+            }
+        ]
+        payload["read_selector"] = {
+            "class": "ComboBox",
+            "control_id": 120,
+            "value_type": "combo_index",
+        }
+        spec = collector.CaseSpec.from_payload(payload)
+        self.assertEqual(spec.edit_steps[0]["op"], "select_index_keyboard")
+
+    def test_message_combo_selection_is_whitelisted(self) -> None:
+        payload = case_payload()
+        payload["requested_value"] = 1
+        payload["expected_before"] = 0
+        payload["edit_steps"] = [
+            {
+                "op": "select_index_message",
+                "class": "ComboBox",
+                "control_id": 120,
+                "value": "$requested",
+            }
+        ]
+        payload["read_selector"] = {
+            "class": "ComboBox",
+            "control_id": 120,
+            "value_type": "combo_index",
+        }
+        spec = collector.CaseSpec.from_payload(payload)
+        self.assertEqual(spec.edit_steps[0]["op"], "select_index_message")
+
+    def test_click_combo_selection_is_whitelisted(self) -> None:
+        payload = case_payload()
+        payload["requested_value"] = 1
+        payload["expected_before"] = 0
+        payload["edit_steps"] = [
+            {
+                "op": "select_index_click",
+                "class": "ComboBox",
+                "control_id": 120,
+                "value": "$requested",
+            }
+        ]
+        payload["read_selector"] = {
+            "class": "ComboBox",
+            "control_id": 120,
+            "value_type": "combo_index",
+        }
+        spec = collector.CaseSpec.from_payload(payload)
+        self.assertEqual(spec.edit_steps[0]["op"], "select_index_click")
+
+    def test_owner_drawn_spirit_checkbox_selector_and_pixel_reader(self) -> None:
+        from PIL import Image, ImageDraw
+
+        payload = case_payload()
+        payload["requested_value"] = 1
+        payload["expected_before"] = 0
+        payload["read_selector"] = {
+            "class": "ListBox",
+            "control_id": 1270,
+            "value_type": "checkbox_pixel",
+            "item_index": 0,
+        }
+        spec = collector.CaseSpec.from_payload(payload)
+        self.assertEqual(spec.read_selector["item_index"], 0)
+        blank = Image.new("RGB", (460, 170), "white")
+        checked = blank.copy()
+        ImageDraw.Draw(checked).line((5, 7, 11, 12), fill="black", width=2)
+        self.assertEqual(collector._owner_drawn_spirit_checkbox_state(blank, 0), 0)
+        self.assertEqual(collector._owner_drawn_spirit_checkbox_state(checked, 0), 1)
+        lower_checked = blank.copy()
+        ImageDraw.Draw(lower_checked).line((312, 154, 318, 159), fill="black", width=2)
+        self.assertEqual(collector._owner_drawn_spirit_checkbox_state(lower_checked, 23), 1)
+        payload["read_selector"]["item_index"] = 24
+        with self.assertRaises(ValueError):
+            collector.CaseSpec.from_payload(payload)
+
+    def test_notified_text_write_is_whitelisted(self) -> None:
+        payload = case_payload()
+        payload["edit_steps"] = [
+            {
+                "op": "set_text_notify",
+                "class": "Edit",
+                "control_id": 250,
+                "value": "$requested",
+            }
+        ]
+        spec = collector.CaseSpec.from_payload(payload)
+        self.assertEqual(spec.edit_steps[0]["op"], "set_text_notify")
+
+    def test_real_control_click_is_whitelisted(self) -> None:
+        payload = case_payload()
+        payload["edit_steps"] = [
+            {
+                "op": "click_id_input",
+                "class": "_EL_Label",
+                "control_id": 280,
+            }
+        ]
+        spec = collector.CaseSpec.from_payload(payload)
+        self.assertEqual(spec.edit_steps[0]["op"], "click_id_input")
+
+    def test_message_control_click_is_whitelisted(self) -> None:
+        payload = case_payload()
+        payload["edit_steps"] = [
+            {"op": "click_id_message", "class": "Button", "control_id": 7}
+        ]
+        spec = collector.CaseSpec.from_payload(payload)
+        self.assertEqual(spec.edit_steps[0]["op"], "click_id_message")
+
+    def test_named_extra_allowed_profile_expands_ranges(self) -> None:
+        payload = case_payload()
+        payload["extra_allowed_profile"] = "m05_appearance_normalization_v1"
+        spec = collector.CaseSpec.from_payload(payload)
+        self.assertEqual(spec.extra_allowed_profile, "m05_appearance_normalization_v1")
+        self.assertEqual(len(spec.extra_allowed), 1584)
+        self.assertIn(33457, spec.extra_allowed)
+        self.assertIn(47158, spec.extra_allowed)
+
+    def test_discovery_case_allows_empty_expected_offsets(self) -> None:
+        payload = case_payload()
+        payload["case_kind"] = "discovery"
+        payload["expected_offsets"] = []
+        payload["required_offsets"] = []
+        spec = collector.CaseSpec.from_payload(payload)
+        self.assertEqual(spec.case_kind, "discovery")
+        self.assertEqual(spec.expected_offsets, ())
+
+    def test_hash_pinned_source_profile_expands_discovery_offsets(self) -> None:
+        payload = case_payload()
+        payload["extra_allowed_profile"] = "m05_unit_type_0_to_1_v1"
+        spec = collector.CaseSpec.from_payload(payload)
+        self.assertEqual(len(spec.extra_allowed), 14065)
+        self.assertNotIn(33457, spec.extra_allowed)
+        self.assertIn(45164, spec.extra_allowed)
+
+    def test_real_keyboard_text_write_is_whitelisted(self) -> None:
+        payload = case_payload()
+        payload["edit_steps"] = [
+            {
+                "op": "type_text",
+                "class": "Edit",
+                "control_id": 250,
+                "value": "$requested",
+            }
+        ]
+        spec = collector.CaseSpec.from_payload(payload)
+        self.assertEqual(spec.edit_steps[0]["op"], "type_text")
+
     def test_win32_adapter_waits_for_disk_save_and_process_exit(self) -> None:
         driver = collector.Win32LegacyDriver()
         driver.app = Mock()
@@ -254,21 +542,32 @@ class LiveCollectionTests(unittest.TestCase):
             driver, "_menu_command", side_effect=save_to_disk
         ) as menu_command:
             driver.save()
-        app = driver.app
-        driver.stop()
+        with patch("win32api.OpenProcess", return_value=123) as open_process, patch(
+            "win32api.TerminateProcess"
+        ) as terminate_process, patch(
+            "win32event.WaitForSingleObject", return_value=0
+        ) as wait_for_exit, patch("win32api.CloseHandle") as close_handle:
+            driver.stop()
         menu_command.assert_called_once_with(main, "文件->保存")
-        app.wait_for_process_exit.assert_called_once_with(timeout=5)
+        open_process.assert_called_once()
+        terminate_process.assert_called_once_with(123, 0)
+        wait_for_exit.assert_called_once_with(123, 5000)
+        close_handle.assert_called_once_with(123)
         self.assertIsNone(driver.app)
         self.assertIsNone(driver.pid)
 
     def test_win32_adapter_rejects_unconfirmed_process_exit(self) -> None:
         driver = collector.Win32LegacyDriver()
         app = Mock()
-        app.wait_for_process_exit.side_effect = TimeoutError("still running")
         driver.app = app
         driver.pid = 9001
-        with self.assertRaisesRegex(RuntimeError, "did not exit"):
-            driver.stop()
+        with patch("win32api.OpenProcess", return_value=123), patch(
+            "win32api.TerminateProcess"
+        ), patch("win32event.WaitForSingleObject", return_value=258), patch(
+            "win32api.CloseHandle"
+        ):
+            with self.assertRaisesRegex(RuntimeError, "did not exit"):
+                driver.stop()
 
     def test_map_animation_menu_is_a_whitelisted_legacy_command(self) -> None:
         self.assertEqual(collector.LEGACY_MENU_COMMANDS["数据->地图动画"], 20011)

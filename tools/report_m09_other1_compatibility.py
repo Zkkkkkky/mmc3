@@ -27,6 +27,7 @@ from tools.report_m09_level_cap_compatibility import (  # noqa: E402
 
 DEFAULT_ROM = ROOT / "output" / "rom" / "DC_kuorong_464K.nes"
 DEFAULT_REPORT = ROOT / "output" / "verification" / "m09-other1-compatibility.json"
+REFERENCE_ALL_FIELDS = ROOT / "output" / "verification" / "legacy-m09-all-fields-20260920" / "summary.json"
 
 
 def _sha256(data: bytes) -> str:
@@ -114,6 +115,7 @@ def analyze(
         lambda: growth_codec.replacement_patch(201, (16,) + growth.values[1:])
     )
     shared_record = growth_codec.record(214)
+    reference_all_fields = json.loads(REFERENCE_ALL_FIELDS.read_text(encoding="utf-8"))
 
     level_cap = analyze_level_cap(
         rom_path, audit_before_path, audit_after_path
@@ -157,14 +159,22 @@ def analyze(
         "shared_growth_ids_explicit": shared_record.shared_ids == tuple(range(214, 254)),
         "level_cap_compatibility_report_passed": bool(level_cap["passed"]),
         "source_rom_unchanged": _sha256(data) == original_hash,
+        "reference_all_414_fields_cold_readback": (
+            reference_all_fields.get("passed") is True
+            and reference_all_fields.get("logical_fields") == 414
+            and reference_all_fields.get("saved_fields") == 412
+            and reference_all_fields.get("no_effect_fields") == 2
+            and reference_all_fields.get("cold_process_logical_readback_passed") == 414
+        ),
     }
     return {
         "generated_at": datetime.now().astimezone().isoformat(timespec="seconds"),
         "passed": all(checks.values()),
-        "delivery_status": "implementation_complete_reference_and_user_pending",
+        "delivery_status": "reference_field_scope_complete_product_compatibility_and_user_pending",
         "conclusion": (
             "M09 当前 99 级安全范围、经验/命中表、系统文字和成长编辑均通过实现侧门禁；"
-            "参考 EXE 的系统文字/成长保存黄金与用户签收仍待完成。"
+            "参考 audit.nes 的 414 个逻辑入口保存/冷读已全部完成。参考 5×16/60 级/30 字节"
+            "与当前 4×16/99 级/50 字节布局差异和用户签收继续保留。"
         ),
         "rom": {
             "path": rom_path.resolve().relative_to(ROOT).as_posix(),
@@ -221,10 +231,11 @@ def analyze(
                 "invalid_value_rejection": invalid_growth_value,
             },
             "level_cap": level_cap,
+            "reference_all_fields": reference_all_fields,
         },
         "checks": checks,
         "pending_acceptance": [
-            "参考 EXE：系统文字单字段、成长单半字节和 60 位快捷编辑保存/重开黄金。",
+            "确认参考第五距离段在当前扩容 ROM 中的目标布局；未经证实不开放写入。",
             "正式 EXE 人工执行 M09 验收清单并由用户签收。",
         ],
     }

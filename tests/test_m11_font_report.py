@@ -23,6 +23,8 @@ class M11FontReportTests(unittest.TestCase):
         self.assertTrue(
             report["checks"]["project_reopen_preserves_mapping_and_glyph"]
         )
+        self.assertEqual(report["reference_all_fields"]["physical_fields"], 2688)
+        self.assertEqual(report["reference_all_fields"]["safe_page_save_fields"], 672)
 
 
 if __name__ == "__main__":

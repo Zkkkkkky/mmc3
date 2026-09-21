@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "reason": "preserve Win32-check-state mismatch failures and 32.272s over-budget reflect evidence before probe/retry",
+  "timestamp": "20260920T003558",
+  "moved": [
+    {
+      "module": "M05",
+      "field": "special_skill_twist",
+      "case_id": "cold_start_01",
+      "from": "output/build/legacy-diff-audit/cases/legacy_live/M05/special_skill_twist/cold_start_01",
+      "to": "output/build/legacy-diff-audit/cases/diagnostic/retry_history/20260920T003558/M05/special_skill_twist/cold_start_01",
+      "had_case_json": false,
+      "had_error_json": true
+    },
+    {
+      "module": "M05",
+      "field": "special_skill_hit_and_away",
+      "case_id": "cold_start_01",
+      "from": "output/build/legacy-diff-audit/cases/legacy_live/M05/special_skill_hit_and_away/cold_start_01",
+      "to": "output/build/legacy-diff-audit/cases/diagnostic/retry_history/20260920T003558/M05/special_skill_hit_and_away/cold_start_01",
+      "had_case_json": false,
+      "had_error_json": true
+    },
+    {
+      "module": "M05",
+      "field": "special_skill_reflect",
+      "case_id": "cold_start_01",
+      "from": "output/build/legacy-diff-audit/cases/legacy_live/M05/special_skill_reflect/cold_start_01",
+      "to": "output/build/legacy-diff-audit/cases/diagnostic/retry_history/20260920T003558/M05/special_skill_reflect/cold_start_01",
+      "had_case_json": true,
+      "had_error_json": false
+    }
+  ],
+  "live_result_rows_removed": 1
+}

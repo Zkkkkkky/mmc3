@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "reason": "correct upload evidence but slow per-pixel preview hash; retry with bulk GDI hash",
+  "timestamp": "20260920T063930",
+  "moved": [
+    {
+      "module": "M06",
+      "field": "portrait_front_upload",
+      "case_id": "cold_start_01",
+      "from": "output/build/legacy-diff-audit/cases/legacy_live/M06/portrait_front_upload/cold_start_01",
+      "to": "output/build/legacy-diff-audit/cases/diagnostic/retry_history/20260920T063930/M06/portrait_front_upload/cold_start_01",
+      "had_case_json": true,
+      "had_error_json": false
+    },
+    {
+      "module": "M06",
+      "field": "portrait_back_upload",
+      "case_id": "cold_start_01",
+      "from": "output/build/legacy-diff-audit/cases/legacy_live/M06/portrait_back_upload/cold_start_01",
+      "to": "output/build/legacy-diff-audit/cases/diagnostic/retry_history/20260920T063930/M06/portrait_back_upload/cold_start_01",
+      "had_case_json": true,
+      "had_error_json": false
+    }
+  ],
+  "live_result_rows_removed": 2
+}

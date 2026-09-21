@@ -1,0 +1,3 @@
+D:\GIT\mmc3\.venv\Lib\site-packages\pywinauto\application.py:1085: UserWarning: 32-bit application should be automated using 32-bit Python (you use 64-bit Python)
+  warnings.warn(
+在线采集失败：

@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "m03": {
+    "passed": true,
+    "dialog_title": "配置设置",
+    "rom_unchanged": true
+  },
+  "m04": {
+    "passed": true,
+    "dialog_title": null,
+    "existing_record_direct_editor": false,
+    "reference_update_mode": "delete_and_readd",
+    "rom_unchanged": true
+  },
+  "passed": true
+}

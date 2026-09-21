@@ -17,22 +17,7 @@ from fc_editor.codecs.character_dialogue import (
     TransformDialogueBinding, VALID_SEGMENTS,
 )
 from .database_graphics import palette_color
-
-
-def legacy_portrait_selectors(record: PortraitRecord) -> tuple[int, int, int, int]:
-    """Return the four-per-library selectors displayed by the legacy editor.
-
-    Background portraits address eight positions in a 2 KiB even-bank window.
-    The reference UI folds positions 5--8 into the following displayed 1 KiB
-    library and always presents positions 1--4.
-    """
-
-    return (
-        record.front_bank,
-        record.front_slot + 1,
-        (record.back_bank & 0xFE) + record.back_slot // 4,
-        record.back_slot % 4 + 1,
-    )
+from .portrait_export import PORTRAIT_BACKGROUND_PALETTE_NES
 
 
 class CharacterDialogueWidget(QGroupBox):
@@ -347,6 +332,7 @@ class CharacterDialogueWidget(QGroupBox):
 
 class CharacterDetailsWidget(QWidget):
     changed = Signal()
+    portrait_export_requested = Signal()
 
     def __init__(self) -> None:
         super().__init__()
@@ -431,8 +417,8 @@ class CharacterDetailsWidget(QWidget):
         portrait_grid.setContentsMargins(0, 0, 0, 0)
         self.portrait_fields = {}
         for index, (key, label, minimum, maximum) in enumerate((
-            ("front_bank", "正面图库", 0, 255), ("front_slot", "正面头像", 1, 4),
-            ("back_bank", "背景图库", 0, 255), ("back_slot", "背景头像", 1, 4),
+            ("front_bank", "正面图库", 0, 255), ("front_slot", "正面位置", 1, 4),
+            ("back_bank", "背景图库", 0, 255), ("back_slot", "背景位置", 1, 4),
             ("color0", "头像颜色1", 0, 63), ("color1", "头像颜色2", 0, 63),
             ("color2", "头像颜色3", 0, 63),
         )):
@@ -454,29 +440,41 @@ class CharacterDetailsWidget(QWidget):
         preview = QWidget()
         row = QHBoxLayout(preview)
         row.setContentsMargins(0, 0, 0, 0)
-        self.front_preview = QLabel()
-        self.back_preview = QLabel()
-        self.composite_preview = QLabel()
-        row.addWidget(QLabel("正面"))
-        row.addWidget(self.front_preview)
-        row.addWidget(QLabel("背景"))
-        row.addWidget(self.back_preview)
-        row.addWidget(QLabel("合成"))
-        row.addWidget(self.composite_preview)
-        row.addStretch()
-        form.addRow(preview)
-        uploads = QWidget()
-        row = QHBoxLayout(uploads)
-        row.setContentsMargins(0, 0, 0, 0)
-        for kind, text in (("front", "上传正面…"), ("back", "上传背景…")):
+        self.portrait_preview = QLabel()
+        self.portrait_preview.setFixedSize(64, 64)
+        row.addWidget(self.portrait_preview)
+        visibility = QVBoxLayout()
+        self.show_front = QCheckBox("显示正面")
+        self.show_back = QCheckBox("显示背景")
+        self.show_front.setChecked(True)
+        self.show_back.setChecked(True)
+        self.show_front.toggled.connect(self._render_previews)
+        self.show_back.toggled.connect(self._render_previews)
+        visibility.addWidget(self.show_front)
+        visibility.addWidget(self.show_back)
+        visibility.addStretch()
+        row.addLayout(visibility)
+        uploads = QVBoxLayout()
+        for kind, text in (("front", "正面上传"), ("back", "背景上传")):
             button = QPushButton(text)
             button.clicked.connect(lambda _checked=False, kind=kind: self._upload_image(kind))
-            row.addWidget(button)
+            uploads.addWidget(button)
+        self.portrait_export_button = QPushButton("导出当前头像…")
+        self.portrait_export_button.setObjectName("portrait_export_button")
+        self.portrait_export_button.setToolTip(
+            "导出当前人物的[背面].bmp、[正面].bmp和[效果].bmp"
+        )
+        self.portrait_export_button.clicked.connect(
+            self.portrait_export_requested.emit
+        )
+        uploads.addWidget(self.portrait_export_button)
+        uploads.addStretch()
+        row.addLayout(uploads)
         row.addStretch()
-        form.addRow(uploads)
+        form.addRow(preview)
         hint = QLabel(
-            "头像由真实 CHR 图块预览。与旧修改器一致，每个图库显示头像 1—4；"
-            "背景记录的 2KB 后半页会自动换算为下一图库，不再显示成位置 5—8。"
+            "头像由真实 CHR 图块预览。正面图库编号低位选择 2KB 窗口的前/后半，"
+            "正面与背景位置均按参考版显示为头像1—4。"
         )
         hint.setWordWrap(True)
         form.addRow(hint)
@@ -532,7 +530,7 @@ class CharacterDetailsWidget(QWidget):
             portrait = self.codec.read_portrait(character_id)
             starts = (
                 portrait.front_bank * 64 + portrait.front_slot * 16,
-                (portrait.back_bank & 0xFE) * 64 + portrait.back_slot * 16,
+                portrait.back_bank * 64 + portrait.back_slot * 16,
             )
             if first_tile in starts:
                 affected.add(character_id)
@@ -577,17 +575,9 @@ class CharacterDetailsWidget(QWidget):
                 check.setChecked(bool(record.spirit_mask & (1 << (23 - index))))
             for cost, value in zip(self.costs, codec.costs()):
                 cost.setValue(value)
-            selector_values = dict(zip(
-                ("front_bank", "front_slot", "back_bank", "back_slot"),
-                legacy_portrait_selectors(portrait),
-            ))
             for key, spin in self.portrait_fields.items():
-                value = (
-                    portrait.colors[int(key[-1])]
-                    if key.startswith("color")
-                    else selector_values[key]
-                )
-                spin.setValue(value)
+                value = portrait.colors[int(key[-1])] if key.startswith("color") else getattr(portrait, key)
+                spin.setValue(value + (1 if key.endswith("slot") else 0))
             self.shared_attributes.setChecked(False)
             self.shared_portrait.setChecked(False)
             for label, is_portrait in ((self.attribute_sharing, False), (self.portrait_sharing, True)):
@@ -618,16 +608,8 @@ class CharacterDetailsWidget(QWidget):
 
     def portrait_record(self) -> PortraitRecord:
         values = {key: spin.value() for key, spin in self.portrait_fields.items()}
-        original = self.codec.read_portrait(self.character_id)
-        background_bank = (
-            (values["back_bank"] & 0xFE) | (original.back_bank & 0x01)
-        )
-        background_slot = (
-            (values["back_bank"] & 0x01) * 4 + values["back_slot"] - 1
-        )
         return PortraitRecord(tuple(values[f"color{index}"] for index in range(3)),
-                              values["front_bank"], background_bank,
-                              values["front_slot"] - 1, background_slot)
+                              values["front_bank"], values["back_bank"], values["front_slot"] - 1, values["back_slot"] - 1)
 
     def pending_patches(self):
         if self.codec is None or self.character_id is None:
@@ -637,7 +619,7 @@ class CharacterDetailsWidget(QWidget):
                    + (self.codec.cost_patch(tuple(cost.value() for cost in self.costs)),))
         portrait = self.portrait_record()
         targets = {"front": portrait.front_bank * 64 + portrait.front_slot * 16,
-                   "back": (portrait.back_bank & 0xFE) * 64 + portrait.back_slot * 16}
+                   "back": portrait.back_bank * 64 + portrait.back_slot * 16}
         for kind, (first_tile, payload) in self._image_drafts.items():
             if targets[kind] != first_tile:
                 raise ValueError("上传后更改了头像图库位置，请在新位置重新上传图片。")
@@ -668,19 +650,32 @@ class CharacterDetailsWidget(QWidget):
         if self.project is None or self.codec is None:
             return
         record = self.portrait_record()
-        front = self._render_preview(self.front_preview, record.front_bank * 64 + record.front_slot * 16, record.colors, transparent=True)
-        back = self._render_preview(self.back_preview, (record.back_bank & 0xFE) * 64 + record.back_slot * 16, (0, 0x10, 0x20))
-        if front is not None and back is not None:
+        front = self._portrait_image(
+            record.front_bank * 64 + record.front_slot * 16,
+            record.colors,
+            transparent=True,
+        )
+        back = self._portrait_image(
+            record.back_bank * 64 + record.back_slot * 16,
+            PORTRAIT_BACKGROUND_PALETTE_NES[1:],
+        )
+        if front is None or back is None:
+            self.portrait_preview.clear()
+            self.portrait_preview.setText("图库越界")
+            return
+        composite = QImage(32, 32, QImage.Format.Format_ARGB32)
+        composite.fill(palette_color(0x0F))
+        if self.show_back.isChecked():
+            composite = back.copy()
+        if self.show_front.isChecked():
             for y in range(32):
                 for x in range(32):
                     if front.pixelColor(x, y).alpha():
-                        back.setPixelColor(x, y, front.pixelColor(x, y))
-            self.composite_preview.setPixmap(QPixmap.fromImage(back.scaled(96, 96)))
+                        composite.setPixelColor(x, y, front.pixelColor(x, y))
+        self.portrait_preview.setPixmap(QPixmap.fromImage(composite.scaled(64, 64)))
 
-    def _render_preview(self, label: QLabel, first_tile: int, palette: tuple[int, ...], *, transparent: bool = False) -> QImage | None:
+    def _portrait_image(self, first_tile: int, palette: tuple[int, ...], *, transparent: bool = False) -> QImage | None:
         if first_tile + 16 > self.project.chr_tile_count:
-            label.clear()
-            label.setText("图库越界")
             return None
         image = QImage(32, 32, QImage.Format.Format_ARGB32)
         colors = (palette_color(0x0F), *(palette_color(value) for value in palette))
@@ -695,7 +690,6 @@ class CharacterDetailsWidget(QWidget):
             for y in range(8):
                 for x in range(8):
                     image.setPixelColor(tile % 4 * 8 + x, tile // 4 * 8 + y, colors[pixels[y * 8 + x]])
-        label.setPixmap(QPixmap.fromImage(image.scaled(96, 96)))
         return image
 
     def import_portrait_image(self, kind: str, image: QImage) -> None:
@@ -704,9 +698,18 @@ class CharacterDetailsWidget(QWidget):
         if image.isNull() or image.width() != 32 or image.height() != 32:
             raise ValueError("头像图片必须为 32×32 像素。")
         record = self.portrait_record()
-        first_tile = record.front_bank * 64 + record.front_slot * 16 if kind == "front" else (record.back_bank & 0xFE) * 64 + record.back_slot * 16
+        first_tile = (
+            record.front_bank * 64 + record.front_slot * 16
+            if kind == "front"
+            else record.back_bank * 64 + record.back_slot * 16
+        )
         self.project.chr_codec.range_bytes(first_tile, 16, bytes(self.project.working))
-        colors = (palette_color(0x0F), *(palette_color(value) for value in (record.colors if kind == "front" else (0, 0x10, 0x20))))
+        layer_colors = (
+            record.colors
+            if kind == "front"
+            else PORTRAIT_BACKGROUND_PALETTE_NES[1:]
+        )
+        colors = (palette_color(0x0F), *(palette_color(value) for value in layer_colors))
         payload = bytearray()
         for tile in range(16):
             pixels = []

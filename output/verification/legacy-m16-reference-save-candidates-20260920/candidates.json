@@ -1,0 +1,471 @@
+{
+  "passed": true,
+  "count": 15,
+  "candidates": [
+    {
+      "path": "references/emulator-state/fceux/sav/converted.sav",
+      "sha256": "4bbbdc41c72c0b9b1cc84b814d15b46c1be160dfee7808422d1907a3758ba848",
+      "slot_selected": "1：没有数据",
+      "slot_items": [
+        "1：没有数据",
+        "2：没有数据",
+        "3：没有数据"
+      ],
+      "chapter": "05",
+      "upper_rows": 6,
+      "lower_rows": 0,
+      "upper_first": [
+        "00",
+        "布莱德",
+        "萨拉斯",
+        "9",
+        "6",
+        "226",
+        "184",
+        "135",
+        "1170",
+        "720",
+        ""
+      ],
+      "lower_first": [],
+      "dialogs": [
+        "确定",
+        "运行时出错!\r\n\r\n错误代码：4\r\n\r\n错误信息：数组成员引用下标必须大于等于1\r\n\r\n67859818, 3401\r\n"
+      ]
+    },
+    {
+      "path": "references/emulator-state/fceux/sav/DC-fixed-test.sav",
+      "sha256": "7cd5dd6583adf97945135ee0dba0d7e804eb0e518fb0b60c4801b63e0fcadc65",
+      "slot_selected": "1：没有数据",
+      "slot_items": [
+        "1：没有数据",
+        "2：没有数据",
+        "3：没有数据"
+      ],
+      "chapter": "27",
+      "upper_rows": 12,
+      "lower_rows": 0,
+      "upper_first": [
+        "00",
+        "阿克塞尔",
+        "Z高达",
+        "24",
+        "7",
+        "307",
+        "221",
+        "309",
+        "1701",
+        "3884",
+        ""
+      ],
+      "lower_first": [],
+      "dialogs": [
+        "确定",
+        "运行时出错!\r\n\r\n错误代码：4\r\n\r\n错误信息：数组成员引用下标必须大于等于1\r\n\r\n67851643, 428\r\n"
+      ]
+    },
+    {
+      "path": "references/emulator-state/fceux/sav/DC-patched-test.sav",
+      "sha256": "16a149b34222b916820cbef2bc7155e5e0fb18402c7b19adc1e615b3eae052d8",
+      "slot_selected": "1：没有数据",
+      "slot_items": [
+        "1：没有数据",
+        "2：没有数据",
+        "3：没有数据"
+      ],
+      "chapter": "27",
+      "upper_rows": 12,
+      "lower_rows": 0,
+      "upper_first": [
+        "00",
+        "阿克塞尔",
+        "Z高达",
+        "24",
+        "7",
+        "307",
+        "221",
+        "309",
+        "1701",
+        "3884",
+        ""
+      ],
+      "lower_first": [],
+      "dialogs": [
+        "确定",
+        "运行时出错!\r\n\r\n错误代码：4\r\n\r\n错误信息：数组成员引用下标必须大于等于1\r\n\r\n67851643, 428\r\n"
+      ]
+    },
+    {
+      "path": "references/emulator-state/fceux/sav/DC.sav",
+      "sha256": "7cd5dd6583adf97945135ee0dba0d7e804eb0e518fb0b60c4801b63e0fcadc65",
+      "slot_selected": "1：没有数据",
+      "slot_items": [
+        "1：没有数据",
+        "2：没有数据",
+        "3：没有数据"
+      ],
+      "chapter": "27",
+      "upper_rows": 12,
+      "lower_rows": 0,
+      "upper_first": [
+        "00",
+        "阿克塞尔",
+        "Z高达",
+        "24",
+        "7",
+        "307",
+        "221",
+        "309",
+        "1701",
+        "3884",
+        ""
+      ],
+      "lower_first": [],
+      "dialogs": [
+        "确定",
+        "运行时出错!\r\n\r\n错误代码：4\r\n\r\n错误信息：数组成员引用下标必须大于等于1\r\n\r\n67851643, 428\r\n"
+      ]
+    },
+    {
+      "path": "references/emulator-state/fceux/sav/DC_kuorong.sav",
+      "sha256": "e0cd4a176707d7d3103f11cf3836e99a9db193a153e536c826009c05fc07ebc3",
+      "slot_selected": "1：没有数据",
+      "slot_items": [
+        "1：没有数据",
+        "2：没有数据",
+        "3：没有数据"
+      ],
+      "chapter": "27",
+      "upper_rows": 12,
+      "lower_rows": 0,
+      "upper_first": [
+        "00",
+        "阿克塞尔",
+        "Z高达",
+        "24",
+        "7",
+        "307",
+        "221",
+        "309",
+        "1701",
+        "3884",
+        ""
+      ],
+      "lower_first": [],
+      "dialogs": [
+        "确定",
+        "运行时出错!\r\n\r\n错误代码：4\r\n\r\n错误信息：数组成员引用下标必须大于等于1\r\n\r\n67851643, 428\r\n"
+      ]
+    },
+    {
+      "path": "references/emulator-state/fceux/sav/DC_写入Dark Knight前备份.sav",
+      "sha256": "37912aff2d8266b5e03acc51ab68bc86a608f970cc1aa49b809c465491ca06f2",
+      "slot_selected": "1：没有数据",
+      "slot_items": [
+        "1：没有数据",
+        "2：没有数据",
+        "3：没有数据"
+      ],
+      "chapter": "32",
+      "upper_rows": 1,
+      "lower_rows": 0,
+      "upper_first": [
+        "00",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        ""
+      ],
+      "lower_first": [],
+      "dialogs": [
+        "确定",
+        "运行时出错!\r\n\r\n错误代码：4\r\n\r\n错误信息：数组成员引用下标必须大于等于1\r\n\r\n67851643, 428\r\n"
+      ]
+    },
+    {
+      "path": "references/emulator-state/fceux/sav/DC_鏅烘収涔嬬鎴樻枟鏇瞋Dark Knight.sav",
+      "sha256": "c9a6235f47583067ee4defa6a85c0d395e62bb7d64d9cee49d7f9c3187a6b840",
+      "slot_selected": "1：没有数据",
+      "slot_items": [
+        "1：没有数据",
+        "2：没有数据",
+        "3：没有数据"
+      ],
+      "chapter": "32",
+      "upper_rows": 1,
+      "lower_rows": 0,
+      "upper_first": [
+        "00",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        ""
+      ],
+      "lower_first": [],
+      "dialogs": [
+        "确定",
+        "运行时出错!\r\n\r\n错误代码：4\r\n\r\n错误信息：数组成员引用下标必须大于等于1\r\n\r\n67851643, 428\r\n"
+      ]
+    },
+    {
+      "path": "references/emulator-state/fceux/sav/DQ.sav",
+      "sha256": "edf7c79238dfe28cc597057b602a1a27ea9ead9472f0b47305f04c4f59f265dd",
+      "slot_selected": "1：没有数据",
+      "slot_items": [
+        "1：没有数据",
+        "2：没有数据",
+        "3：没有数据"
+      ],
+      "chapter": "27",
+      "upper_rows": 12,
+      "lower_rows": 0,
+      "upper_first": [
+        "00",
+        "阿克塞尔",
+        "Z高达",
+        "24",
+        "7",
+        "307",
+        "221",
+        "309",
+        "1701",
+        "3884",
+        ""
+      ],
+      "lower_first": [],
+      "dialogs": [
+        "确定",
+        "运行时出错!\r\n\r\n错误代码：4\r\n\r\n错误信息：数组成员引用下标必须大于等于1\r\n\r\n67851643, 428\r\n"
+      ]
+    },
+    {
+      "path": "references/emulator-state/fceux/sav/skzy.sav",
+      "sha256": "5b836e44271d9a0d0356cc1d4395a4c1a647ccc110d881921cd04d9f6c843fb0",
+      "slot_selected": "1：没有数据",
+      "slot_items": [
+        "1：没有数据",
+        "2：没有数据",
+        "3：没有数据"
+      ],
+      "chapter": "32",
+      "upper_rows": 1,
+      "lower_rows": 0,
+      "upper_first": [
+        "00",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        ""
+      ],
+      "lower_first": [],
+      "dialogs": [
+        "确定",
+        "运行时出错!\r\n\r\n错误代码：4\r\n\r\n错误信息：数组成员引用下标必须大于等于1\r\n\r\n67851643, 428\r\n"
+      ]
+    },
+    {
+      "path": "references/emulator-state/fceux/sav/stable_name_test.sav",
+      "sha256": "f0d06e40c204e11deddd524cacf2d795bfdd85f4367181d1c54861d6add0f6ea",
+      "slot_selected": "1：没有数据",
+      "slot_items": [
+        "1：没有数据",
+        "2：没有数据",
+        "3：没有数据"
+      ],
+      "chapter": "32",
+      "upper_rows": 1,
+      "lower_rows": 0,
+      "upper_first": [
+        "00",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        ""
+      ],
+      "lower_first": [],
+      "dialogs": [
+        "确定",
+        "运行时出错!\r\n\r\n错误代码：4\r\n\r\n错误信息：数组成员引用下标必须大于等于1\r\n\r\n67851643, 428\r\n"
+      ]
+    },
+    {
+      "path": "references/emulator-state/fceux/sav/title-input.sav",
+      "sha256": "aa0dd30ec117751464252038b7e039493d8b6cc3e6b3e27801551b9802ca59b1",
+      "slot_selected": "1：没有数据",
+      "slot_items": [
+        "1：没有数据",
+        "2：没有数据",
+        "3：没有数据"
+      ],
+      "chapter": "32",
+      "upper_rows": 1,
+      "lower_rows": 0,
+      "upper_first": [
+        "00",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        ""
+      ],
+      "lower_first": [],
+      "dialogs": [
+        "确定",
+        "运行时出错!\r\n\r\n错误代码：4\r\n\r\n错误信息：数组成员引用下标必须大于等于1\r\n\r\n67851643, 428\r\n"
+      ]
+    },
+    {
+      "path": "references/emulator-state/fceux/sav/verify.sav",
+      "sha256": "c1dd1c1ee667262390c932e3ef0195526120e86e8192953d7afd7804bab827a6",
+      "slot_selected": "1：没有数据",
+      "slot_items": [
+        "1：没有数据",
+        "2：没有数据",
+        "3：没有数据"
+      ],
+      "chapter": "32",
+      "upper_rows": 1,
+      "lower_rows": 0,
+      "upper_first": [
+        "00",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        ""
+      ],
+      "lower_first": [],
+      "dialogs": [
+        "确定",
+        "运行时出错!\r\n\r\n错误代码：4\r\n\r\n错误信息：数组成员引用下标必须大于等于1\r\n\r\n67851643, 428\r\n"
+      ]
+    },
+    {
+      "path": "references/emulator-state/fceux/sav/新DC.sav",
+      "sha256": "f1e9c25f40de0e300296646cb6798d19b6488cac53f8568f3cf8c4cbc4cb433b",
+      "slot_selected": "1：没有数据",
+      "slot_items": [
+        "1：没有数据",
+        "2：没有数据",
+        "3：没有数据"
+      ],
+      "chapter": "32",
+      "upper_rows": 1,
+      "lower_rows": 0,
+      "upper_first": [
+        "00",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        ""
+      ],
+      "lower_first": [],
+      "dialogs": [
+        "确定",
+        "运行时出错!\r\n\r\n错误代码：4\r\n\r\n错误信息：数组成员引用下标必须大于等于1\r\n\r\n67851643, 428\r\n"
+      ]
+    },
+    {
+      "path": "references/emulator-state/fceux/sav/新DC_MMC5.sav",
+      "sha256": "8298418c5c52daf3568ab512fc4853f917c2aaf29cc92d0ee5e3bc02bad030b4",
+      "slot_selected": "1：没有数据",
+      "slot_items": [
+        "1：没有数据",
+        "2：没有数据",
+        "3：没有数据"
+      ],
+      "chapter": "32",
+      "upper_rows": 1,
+      "lower_rows": 0,
+      "upper_first": [
+        "00",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        ""
+      ],
+      "lower_first": [],
+      "dialogs": [
+        "确定",
+        "运行时出错!\r\n\r\n错误代码：4\r\n\r\n错误信息：数组成员引用下标必须大于等于1\r\n\r\n67851643, 428\r\n"
+      ]
+    },
+    {
+      "path": "references/emulator-state/fceux/sav/新DC_v1.sav",
+      "sha256": "aadf74d73a57207761665bb4f1a0b3424a8d3ad72c7cbb6830b370c5b7540d8c",
+      "slot_selected": "1：没有数据",
+      "slot_items": [
+        "1：没有数据",
+        "2：没有数据",
+        "3：没有数据"
+      ],
+      "chapter": "32",
+      "upper_rows": 1,
+      "lower_rows": 0,
+      "upper_first": [
+        "00",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        ""
+      ],
+      "lower_first": [],
+      "dialogs": [
+        "确定",
+        "运行时出错!\r\n\r\n错误代码：4\r\n\r\n错误信息：数组成员引用下标必须大于等于1\r\n\r\n67851643, 428\r\n"
+      ]
+    }
+  ]
+}

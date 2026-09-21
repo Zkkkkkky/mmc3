@@ -92,8 +92,12 @@ MODULES: dict[str, dict[str, object]] = {
         "evidence": "output/verification/m18-unit-export-verification.json",
         "checklist": "docs/M18验收清单.md",
         "implementation_scope_complete": True,
-        "status": "implementation_complete_user_pending",
+        "status": "user_accepted",
     },
+}
+
+USER_ACCEPTANCE = {
+    "M18": "accepted",
 }
 
 
@@ -129,7 +133,7 @@ def analyze() -> dict[str, object]:
             "checklist": str(declaration["checklist"]),
             "checklist_exists": checklist_path.is_file(),
             # Standing rule: only an explicit user decision can change this.
-            "user_acceptance": "pending",
+            "user_acceptance": USER_ACCEPTANCE.get(module, "pending"),
         }
 
     machine_gate_passed = (
@@ -158,7 +162,7 @@ def analyze() -> dict[str, object]:
         "conclusion": (
             "M08—M18 共 11 个模块的机器门禁与当前声明实现范围均通过；M12 已用参考动态黄金"
             "把组图首图块开放、X/Y 非持久化锁为只读，其余无安全协议或双证据范围继续门禁。"
-            "M08—M18 的用户签收均未由实现侧代填，因此总交付不得标记为已完成。"
+            "M18 已由用户现场确认通过；其余模块仍待用户签收，因此总交付不得标记为已完成。"
         ),
         "formal_executable": {
             "path": EXE.resolve().relative_to(ROOT).as_posix(),

@@ -1,0 +1,16 @@
+{
+  "module": "M05", "field": "terrain", "case_id": "cold_start_01",
+  "requested_value": "陆", "expected_before": "空",
+  "expected_offsets": [297548], "required_offsets": [297548],
+  "optional_offsets": [], "extra_allowed": [],
+  "navigation": [
+    {"op": "menu", "path": "数据->数据库"},
+    {"op": "window", "title": "数据库"},
+    {"op": "list_select", "class": "ListBox", "control_id": 120, "row": 1}
+  ],
+  "edit_steps": [
+    {"op": "select_index", "class": "ComboBox", "control_id": 540, "value": 1},
+    {"op": "click_id", "class": "Button", "control_id": 590}
+  ],
+  "read_selector": {"class": "ComboBox", "control_id": 540, "value_type": "str"}
+}

@@ -58,6 +58,7 @@ from .database_records import (
     ReadableCharacterPage, ReadableWeaponPage, collapsible_details, readable_references,
 )
 from .map_page import (
+    CHAPTER_TITLE_PALETTE_NES,
     MAP_ICON_PALETTES_NES,
     MAP_ICON_BANK_CANDIDATES,
     SCENARIO_MAP_ICON_BANKS,
@@ -2657,7 +2658,7 @@ class ChapterTitleDialog(QDialog):
                 image = render_chr_banks(
                     self.project,
                     (bank,),
-                    (0x00, 0x10, 0x20),
+                    CHAPTER_TITLE_PALETTE_NES[1:],
                 )
                 preview.setPixmap(
                     QPixmap.fromImage(image).scaled(

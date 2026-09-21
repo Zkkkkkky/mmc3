@@ -649,12 +649,9 @@ class DesktopEditorSmokeTests(QtTestCase):
              20022, 20023],
         )
         self.assertEqual(self.window.extension_menu.actions()[0], self.window.rom_data_action)
-        self.assertEqual(
-            self.window.extension_menu.actions()[1],
-            self.window.export_avatar_extended_action,
-        )
+        self.assertTrue(self.window.extension_menu.actions()[1].isSeparator())
         self.assertFalse(self.window.export_avatar_action.isEnabled())
-        self.assertTrue(self.window.export_avatar_extended_action.isEnabled())
+        self.assertFalse(hasattr(self.window, "export_avatar_extended_action"))
         self.assertEqual(self.window.about_action.text(), "关于")
         project_actions = [
             action for action in self.window.project_menu.actions() if not action.isSeparator()

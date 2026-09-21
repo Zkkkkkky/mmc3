@@ -1,0 +1,7 @@
+Traceback (most recent call last):
+  File "D:\GIT\mmc3\tools\research\collect_m11_all_glyph_fields.py", line 204, in <module>
+    result = main()
+             ^^^^^^
+  File "D:\GIT\mmc3\tools\research\collect_m11_all_glyph_fields.py", line 198, in main
+    raise RuntimeError("M11 page or single-glyph save verification failed")
+RuntimeError: M11 page or single-glyph save verification failed

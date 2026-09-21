@@ -528,16 +528,16 @@
       <ControllerType>StandardController</ControllerType>
       <Keys>
         <KeyMappings>
-          <A>0</A>
-          <B>0</B>
+          <A>50</A>
+          <B>49</B>
           <Select>0</Select>
           <Start>0</Start>
-          <Up>0</Up>
-          <Down>0</Down>
-          <Left>0</Left>
-          <Right>0</Right>
-          <TurboA>0</TurboA>
-          <TurboB>0</TurboB>
+          <Up>17</Up>
+          <Down>31</Down>
+          <Left>30</Left>
+          <Right>32</Right>
+          <TurboA>37</TurboA>
+          <TurboB>36</TurboB>
           <TurboStart>0</TurboStart>
           <TurboSelect>0</TurboSelect>
           <Microphone>0</Microphone>
@@ -1374,7 +1374,24 @@
     <RewindSpeed>100</RewindSpeed>
     <RunAheadFrames>0</RunAheadFrames>
   </EmulationInfo>
-  <RecentFiles />
+  <RecentFiles>
+    <RecentItem>
+      <RomFile>
+        <Path>D:\GIT\mmc3\output\verification\weapon-animation-95.nes</Path>
+        <InnerFile />
+        <InnerFileIndex>0</InnerFileIndex>
+      </RomFile>
+      <PatchFile xsi:nil="true" />
+    </RecentItem>
+    <RecentItem>
+      <RomFile>
+        <Path>D:\GIT\mmc3\output\verification\weapon-animation-9D.nes</Path>
+        <InnerFile />
+        <InnerFileIndex>0</InnerFileIndex>
+      </RomFile>
+      <PatchFile xsi:nil="true" />
+    </RecentItem>
+  </RecentFiles>
   <Cheats />
   <DisableAllCheats>false</DisableAllCheats>
   <Region>Auto</Region>
@@ -1834,8 +1851,14 @@
     <WindowSize xsi:nil="true" />
   </HistoryViewerInfo>
   <GameSpecificSettings />
-  <WindowLocation xsi:nil="true" />
-  <WindowSize xsi:nil="true" />
+  <WindowLocation>
+    <X>664</X>
+    <Y>294</Y>
+  </WindowLocation>
+  <WindowSize>
+    <Width>530</Width>
+    <Height>555</Height>
+  </WindowSize>
   <CheatWindowLocation>
     <X>0</X>
     <Y>0</Y>

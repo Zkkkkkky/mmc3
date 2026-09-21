@@ -1,0 +1,150 @@
+{
+  "generated_at": "2026-09-20T17:34:36+08:00",
+  "module": "M16",
+  "passed": true,
+  "delivery_status": "reference_control_scope_complete_runtime_blocked_user_pending",
+  "physical_controls": 13,
+  "logical_field_families": 18,
+  "safe_denominator_fields": 0,
+  "classification_counts": {
+    "navigation_only": 1,
+    "reference_runtime_error_blocked": 17
+  },
+  "checks": {
+    "control_probe_passed": true,
+    "rom_and_save_unchanged": true,
+    "physical_controls_enumerated": true,
+    "upper_headers_complete": true,
+    "all_upper_columns_probed": true,
+    "no_inplace_editor_exposed": true,
+    "all_preserved_saves_scanned": true,
+    "all_slots_rejected_by_reference": true,
+    "all_lower_tables_empty": true,
+    "all_reads_raise_runtime_error_4": true,
+    "forced_exp_write_rejected": true,
+    "forced_exp_disk_zero_diff": true,
+    "product_safe_codec_still_passes": true
+  },
+  "evidence": {
+    "controls": "output/verification/legacy-m16-reference-controls-20260920/catalog.json",
+    "save_candidates": "output/verification/legacy-m16-reference-save-candidates-20260920/candidates.json",
+    "single_save": "output/verification/legacy-m16-reference-single-save-20260920/result.json",
+    "implementation": "output/verification/m16-save-compatibility.json"
+  },
+  "limitations": [
+    "仓库保存的 15 份 8 KiB SAV 均被参考版显示为“1：没有数据”，读取后统一报运行时错误 4。",
+    "参考版上表 11 列均未暴露双击编辑器；下表在全部样本中均为 0 行。",
+    "强制将首行 EXP 3884 改为 3885 后，写入按钮仍报错误 4，隔离 SAV 保持逐字节不变。",
+    "产品 8 KiB/三槽/校验和实现继续由独立安全协议证据守护，但不冒充参考版保存黄金。"
+  ],
+  "fields": [
+    {
+      "field_id": "save_slot_selector",
+      "family": "navigation",
+      "classification": "navigation_only",
+      "reason": "三项存档槽下拉仅选择读取目标，不是持久字段。"
+    },
+    {
+      "field_id": "chapter_selector",
+      "family": "chapter",
+      "classification": "reference_runtime_error_blocked",
+      "reason": "关卡下拉可选择 32 项，但所有现有 8 KiB 样本读取后均触发参考版运行时错误，无法形成保存证据。"
+    },
+    {
+      "field_id": "upper.人物",
+      "family": "upper_table",
+      "classification": "reference_runtime_error_blocked",
+      "reason": "参考表格可显示该列，但逐列双击无编辑控件，强制改单元格后写入触发运行时错误且磁盘零差分。"
+    },
+    {
+      "field_id": "upper.机体",
+      "family": "upper_table",
+      "classification": "reference_runtime_error_blocked",
+      "reason": "参考表格可显示该列，但逐列双击无编辑控件，强制改单元格后写入触发运行时错误且磁盘零差分。"
+    },
+    {
+      "field_id": "upper.等级",
+      "family": "upper_table",
+      "classification": "reference_runtime_error_blocked",
+      "reason": "参考表格可显示该列，但逐列双击无编辑控件，强制改单元格后写入触发运行时错误且磁盘零差分。"
+    },
+    {
+      "field_id": "upper.机动",
+      "family": "upper_table",
+      "classification": "reference_runtime_error_blocked",
+      "reason": "参考表格可显示该列，但逐列双击无编辑控件，强制改单元格后写入触发运行时错误且磁盘零差分。"
+    },
+    {
+      "field_id": "upper.强度",
+      "family": "upper_table",
+      "classification": "reference_runtime_error_blocked",
+      "reason": "参考表格可显示该列，但逐列双击无编辑控件，强制改单元格后写入触发运行时错误且磁盘零差分。"
+    },
+    {
+      "field_id": "upper.防御",
+      "family": "upper_table",
+      "classification": "reference_runtime_error_blocked",
+      "reason": "参考表格可显示该列，但逐列双击无编辑控件，强制改单元格后写入触发运行时错误且磁盘零差分。"
+    },
+    {
+      "field_id": "upper.速度",
+      "family": "upper_table",
+      "classification": "reference_runtime_error_blocked",
+      "reason": "参考表格可显示该列，但逐列双击无编辑控件，强制改单元格后写入触发运行时错误且磁盘零差分。"
+    },
+    {
+      "field_id": "upper.HP",
+      "family": "upper_table",
+      "classification": "reference_runtime_error_blocked",
+      "reason": "参考表格可显示该列，但逐列双击无编辑控件，强制改单元格后写入触发运行时错误且磁盘零差分。"
+    },
+    {
+      "field_id": "upper.EXP",
+      "family": "upper_table",
+      "classification": "reference_runtime_error_blocked",
+      "reason": "参考表格可显示该列，但逐列双击无编辑控件，强制改单元格后写入触发运行时错误且磁盘零差分。"
+    },
+    {
+      "field_id": "lower.人物",
+      "family": "lower_table",
+      "classification": "reference_runtime_error_blocked",
+      "reason": "15 份现有样本在参考版下表均为 0 行，读取即报错，无法生成合法字段实例。"
+    },
+    {
+      "field_id": "lower.等级",
+      "family": "lower_table",
+      "classification": "reference_runtime_error_blocked",
+      "reason": "15 份现有样本在参考版下表均为 0 行，读取即报错，无法生成合法字段实例。"
+    },
+    {
+      "field_id": "lower.机动",
+      "family": "lower_table",
+      "classification": "reference_runtime_error_blocked",
+      "reason": "15 份现有样本在参考版下表均为 0 行，读取即报错，无法生成合法字段实例。"
+    },
+    {
+      "field_id": "lower.强度",
+      "family": "lower_table",
+      "classification": "reference_runtime_error_blocked",
+      "reason": "15 份现有样本在参考版下表均为 0 行，读取即报错，无法生成合法字段实例。"
+    },
+    {
+      "field_id": "lower.防御",
+      "family": "lower_table",
+      "classification": "reference_runtime_error_blocked",
+      "reason": "15 份现有样本在参考版下表均为 0 行，读取即报错，无法生成合法字段实例。"
+    },
+    {
+      "field_id": "lower.速度",
+      "family": "lower_table",
+      "classification": "reference_runtime_error_blocked",
+      "reason": "15 份现有样本在参考版下表均为 0 行，读取即报错，无法生成合法字段实例。"
+    },
+    {
+      "field_id": "lower.HP",
+      "family": "lower_table",
+      "classification": "reference_runtime_error_blocked",
+      "reason": "15 份现有样本在参考版下表均为 0 行，读取即报错，无法生成合法字段实例。"
+    }
+  ]
+}

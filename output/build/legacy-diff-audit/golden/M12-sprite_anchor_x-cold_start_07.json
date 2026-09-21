@@ -46,5 +46,7 @@
   },
   "diff_entries": [],
   "duration_seconds": 24.369,
+  "budget_seconds": 30.0,
+  "within_budget": true,
   "duration_note": null
 }

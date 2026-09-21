@@ -1,0 +1,15 @@
+{
+  "module":"M06","field":"spirit_15","case_id":"cold_start_01",
+  "requested_value":1,"expected_before":0,
+  "expected_offsets":[296341],"required_offsets":[296341],"optional_offsets":[],"extra_allowed":[],
+  "extra_allowed_profile":"m06_spirit_01_enable_v1",
+  "navigation":[
+    {"op":"menu","path":"数据->数据库"},{"op":"window","title":"数据库"},
+    {"op":"click_coords","x":130,"y":73},{"op":"list_select","class":"ListBox","control_id":630,"row":0}
+  ],
+  "edit_steps":[
+    {"op":"click_control_coords","class":"ListBox","control_id":1270,"x":161,"y":138},
+    {"op":"click_id","class":"Button","control_id":590}
+  ],
+  "read_selector":{"class":"ListBox","control_id":1270,"value_type":"checkbox_pixel","item_index":14}
+}

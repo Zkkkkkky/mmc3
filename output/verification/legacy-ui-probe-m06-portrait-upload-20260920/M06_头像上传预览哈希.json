@@ -1,0 +1,51 @@
+{
+  "front": {
+    "pid": 2272,
+    "sample": "output/verification/avatar-preview-layer-order-corrected/4：琉妮/[正面].bmp",
+    "before_hash": "1c9fdefc3fedebedbd65c52d2ddf212c5729d5076e2086186321bb204caef309",
+    "after_hash": "25e1d39498a91890b6b52aa2e0c5d2b4c320d07d6768eda7a5d17edc08bcf397",
+    "timings": {
+      "launch_open_navigation": 11.541,
+      "before_hash": 0.055,
+      "upload": 56.064,
+      "after_hash": 0.062,
+      "upload_steps": [
+        {
+          "op": "click_id_message",
+          "id_or_title": 790,
+          "seconds": 0.102
+        },
+        {
+          "op": "window",
+          "id_or_title": "信息：",
+          "seconds": 0.005
+        },
+        {
+          "op": "click_id_message",
+          "id_or_title": 7,
+          "seconds": 0.101
+        },
+        {
+          "op": "window",
+          "id_or_title": "打开图片",
+          "seconds": 0.122
+        },
+        {
+          "op": "set_text",
+          "id_or_title": 1148,
+          "seconds": 0.054
+        },
+        {
+          "op": "click_id_message",
+          "id_or_title": 1,
+          "seconds": 0.101
+        },
+        {
+          "op": "window",
+          "id_or_title": "数据库",
+          "seconds": 55.579
+        }
+      ]
+    }
+  }
+}

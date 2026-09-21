@@ -37,6 +37,7 @@ try:
         GOLDEN_DIR_RELATIVE,
         GOLDEN_INDEX_RELATIVE,
         NORMALIZATION_OFFSETS,
+        ONLINE_FIELD_BUDGET_SECONDS,
         REGISTRY_RELATIVE,
         SCHEMA_VERSION,
         classify_case,
@@ -59,6 +60,7 @@ except ImportError:  # 以包路径导入（仓库根目录把 tools 作为包�
         GOLDEN_DIR_RELATIVE,
         GOLDEN_INDEX_RELATIVE,
         NORMALIZATION_OFFSETS,
+        ONLINE_FIELD_BUDGET_SECONDS,
         REGISTRY_RELATIVE,
         SCHEMA_VERSION,
         classify_case,
@@ -251,7 +253,7 @@ def cmd_collect(args: argparse.Namespace) -> int:
         f"耗时 {report['duration_seconds']}s，passed={report['passed']}"
     )
     print(f"- 用例目录：{case_dir}")
-    if cmd_archive(args) or cmd_stats(args):
+    if not args.defer_archive and (cmd_archive(args) or cmd_stats(args)):
         return 2
     return 0 if report["passed"] else 1
 
@@ -326,6 +328,10 @@ def cmd_archive(args: argparse.Namespace) -> int:
         if record.reopen_value is not None and record.requested_value is not None:
             reopen_matches_request = record.reopen_value == record.requested_value
         passed: bool | None = None
+        within_hard_budget = (
+            record.duration_seconds is None
+            or record.duration_seconds <= ONLINE_FIELD_BUDGET_SECONDS
+        )
         if entry.case_kind == "golden":
             # Diff, mandatory bytes and saved-value reopen are all required.
             passed = (
@@ -334,6 +340,7 @@ def cmd_archive(args: argparse.Namespace) -> int:
                 and not required_missing
                 and reopen_matches_request is True
                 and record.within_budget is not False
+                and within_hard_budget
                 and record.stored_passed is not False
             )
         pending_reason: str | None = None
@@ -344,7 +351,7 @@ def cmd_archive(args: argparse.Namespace) -> int:
         elif passed is False:
             if reopen_matches_request is not True:
                 pending_reason = "重开读取值不等于请求值，或缺少重开证据"
-            elif record.within_budget is False:
+            elif record.within_budget is False or not within_hard_budget:
                 pending_reason = "在线采集超出每字段 30 秒性能预算"
             elif record.stored_passed is False:
                 pending_reason = "在线采集原始判定未通过"
@@ -406,6 +413,14 @@ def cmd_archive(args: argparse.Namespace) -> int:
             # 原始四步闭环未计时（存量档案离线复算）；REQ-NFR-PERF-005 的
             # ≤30s/字段预算适用于在线采集闭环，不适用于本离线流程。
             "duration_seconds": record.duration_seconds,
+            "budget_seconds": (
+                ONLINE_FIELD_BUDGET_SECONDS
+                if record.duration_seconds is not None
+                else None
+            ),
+            "within_budget": (
+                within_hard_budget if record.duration_seconds is not None else None
+            ),
             "duration_note": (
                 None if record.duration_seconds is not None else
                 "存量档案离线复算：原始四步闭环未计时；"
@@ -938,6 +953,11 @@ def build_parser() -> argparse.ArgumentParser:
     collect_parser.add_argument("--baseline", help="基准 ROM；默认 output/build/legacy-diff-audit/audit.nes")
     collect_parser.add_argument("--legacy-exe", help="隔离参考 EXE；默认 output/build/legacy-diff-audit/SRW2_patched.exe")
     collect_parser.add_argument("--budget-seconds", type=float, default=30.0)
+    collect_parser.add_argument(
+        "--defer-archive",
+        action="store_true",
+        help="批量采集时仅写现场用例；由调用方在批次结束后统一 archive/stats",
+    )
     collect_parser.set_defaults(handler=cmd_collect)
     return parser
 

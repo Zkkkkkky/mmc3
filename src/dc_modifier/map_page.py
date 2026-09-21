@@ -95,6 +95,11 @@ MAP_ICON_PALETTES_NES = {
     "客": (0x0F, 0x30, 0x2A, 0x1A),
     "我": ICON_PALETTE_NES,
 }
+
+# The reference title renderer maps nonzero CHR indices from light to dark.
+# The paired screenshots show index 1 as the white main stroke and index 3 as
+# its darkest edge, matching the portrait-background material convention.
+CHAPTER_TITLE_PALETTE_NES = (0x0F, 0x20, 0x10, 0x00)
 # The three map-icon windows are switched by the scenario loader.  These routes
 # were read row-by-row from the reference editor; they must not be collapsed to
 # one global tuple (in particular, the third page is not always $36 or $3A).
@@ -330,12 +335,7 @@ def render_title_segment(
         QImage.Format.Format_ARGB32,
     )
     image.fill(QColor("#000000"))
-    colors = (
-        QColor("#000000"),
-        QColor("#686868"),
-        QColor("#B0B0B0"),
-        QColor("#F0F0F0"),
-    )
+    colors = tuple(palette_color(value) for value in CHAPTER_TITLE_PALETTE_NES)
     for index, tile_code in enumerate(segment.tiles):
         # The title runtime leaves 00-3F on its shared episode-number page
         # and maps the three per-chapter pages to 40-7F/80-BF/C0-FF.

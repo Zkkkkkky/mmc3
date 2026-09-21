@@ -1,0 +1,8 @@
+{
+  "module":"M08","field":"battle_07_alias_row000_variant000","case_id":"cold_start_01",
+  "requested_value":"000：卡姆：\\\r\n比丹，刚达Z出发！】\r\n","expected_before":"000：卡姆：\\\r\n比旦，刚达Z出发！】\r\n","expected_offsets":[125790,125791],"required_offsets":[125790,125791],"optional_offsets":[],"extra_allowed":[],
+  "navigation":[{"op":"menu","path":"数据->数据库"},{"op":"window","title":"数据库"},{"op":"click_coords","x":310,"y":73},{"op":"select_index_message","class":"ComboBox","control_id":1410,"value":4},{"op":"list_select","class":"ListBox","control_id":1390,"row":0},{"op":"list_select","class":"ListBox","control_id":2580,"row":0}],
+  "edit_steps":[{"op":"set_text_notify","class":"Edit","control_id":1370,"value":"卡姆：\\\r\n比丹，刚达Z出发！】\r\n"},{"op":"click_id","class":"Button","control_id":590}],
+  "read_navigation":[{"op":"menu","path":"数据->数据库"},{"op":"window","title":"数据库"},{"op":"click_coords","x":310,"y":73},{"op":"select_index_message","class":"ComboBox","control_id":1410,"value":3},{"op":"list_select","class":"ListBox","control_id":1390,"row":0},{"op":"list_select","class":"ListBox","control_id":2580,"row":0}],
+  "read_selector":{"class":"ListBox","control_id":2580,"value_type":"list_item_text","item_index":0}
+}

@@ -1,0 +1,12 @@
+Traceback (most recent call last):
+  File "D:\GIT\mmc3\tools\research\collect_m03_all_reference_fields.py", line 393, in <module>
+    raise SystemExit(main())
+                     ^^^^^^
+  File "D:\GIT\mmc3\tools\research\collect_m03_all_reference_fields.py", line 378, in main
+    first = inventory(payload, lookup, "fresh-a")
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\GIT\mmc3\tools\research\collect_m03_all_reference_fields.py", line 301, in inventory
+    ref.context_command(driver, x, y, 23, 21, 2)
+  File "D:\GIT\mmc3\tools\research\reference_map_editor.py", line 114, in context_command
+    raise RuntimeError(
+RuntimeError: map right click failed at (9, 13) after 3 attempts; main=42601664 screen=(1011,494) hit=258343240:'Button' root=41356374:'WTWindow'

@@ -1,0 +1,56 @@
+{
+  "schema_version": 1,
+  "module": "M07",
+  "field": "max_range",
+  "case_id": "cold_start_01",
+  "case_kind": "golden",
+  "requested_value": 2,
+  "original_value": 1,
+  "reopen_value": 2,
+  "reopen_matches_request": true,
+  "reopen_mode": "new_process",
+  "first_pid": 11912,
+  "second_pid": 5808,
+  "changed_offsets": [
+    301068
+  ],
+  "removed_normalization": [],
+  "unexpected_offsets": [],
+  "expected_offsets": [
+    301068
+  ],
+  "required_offsets": [
+    301068
+  ],
+  "optional_offsets": [],
+  "extra_allowed": [],
+  "extra_allowed_profile": null,
+  "expected_not_changed": [],
+  "diffs": [
+    {
+      "offset": 301068,
+      "before": 0,
+      "after": 1
+    }
+  ],
+  "snapshots": {
+    "before": {
+      "path": "output/build/legacy-diff-audit/cases/legacy_live/M07/max_range/cold_start_01/before.nes",
+      "sha256": "c5d2c1dfbe0dc39afc9effd314c082f121b98c9ad67c4825b1c9dd4b9e991954"
+    },
+    "after": {
+      "path": "output/build/legacy-diff-audit/cases/legacy_live/M07/max_range/cold_start_01/after.nes",
+      "sha256": "d1a2512b664f4927bd21cb7020c1a6adfe0eaeba64a0a286462a1feeed1441c4"
+    }
+  },
+  "supporting_cdl": {
+    "source": "output/build/legacy-diff-audit/默认配置文件/测试.cdl",
+    "sha256": "599c1bb5ffd4b87229a81958f33f1060821cd01cd7aa7ccafa0d862f4522f3f6"
+  },
+  "duration_seconds": 22.503,
+  "budget_seconds": 30.0,
+  "requested_budget_seconds": 30.0,
+  "within_budget": true,
+  "passed": true,
+  "pending_reason": null
+}

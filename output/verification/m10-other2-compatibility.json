@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-09-19T13:44:04+08:00",
+  "generated_at": "2026-09-20T13:39:16+08:00",
   "passed": true,
-  "delivery_status": "implementation_complete_reference_and_user_pending",
-  "conclusion": "M10 六项实现范围已具备离线可重复证据；参考 EXE 单字段保存黄金和用户签收仍未完成。",
+  "delivery_status": "reference_field_scope_complete_user_pending",
+  "conclusion": "M10 参考版 254 个逻辑入口已逐字段保存并完成全新进程回读；134 个安全字段进入最终分母，风险入口维持产品禁写，仅待用户签收。",
   "rom": {
     "path": "output/rom/DC_kuorong_464K.nes",
     "size": 1310736,
@@ -283,6 +283,29 @@
         9,
         10
       ]
+    },
+    "reference_all_fields": {
+      "passed": true,
+      "logical_fields": 254,
+      "save_probe_fields": 254,
+      "product_safe_candidates": 134,
+      "product_blocked_candidates": 120,
+      "statuses": {
+        "blocked_no_effect": 29,
+        "reference_saved_product_blocked": 91,
+        "saved": 134
+      },
+      "saved_fields": 134,
+      "no_effect_fields": 0,
+      "reference_saved_product_blocked_fields": 91,
+      "blocked_no_effect_fields": 29,
+      "blocked_unstable_fields": 0,
+      "baseline_sha256": "c0f6fb15dbcc9f04d35ec97b9558df85d099c661c35d54d3a2aae4966d2ed5b2",
+      "final_sha256": "2d0cc61afea4374f44727c47208c7e2f398c8f8ddfc2d1a2cfccae49fb9b3611",
+      "same_process_reopen_probe_count": 254,
+      "cold_process_logical_readback_passed": 254,
+      "evidence": "output/verification/legacy-m10-all-fields-20260920/field-save-chain.jsonl",
+      "final_rom": "output/verification/legacy-m10-all-fields-20260920/after-all-fields.nes"
     }
   },
   "checks": {
@@ -294,10 +317,10 @@
     "shop_single_fields_are_isolated": true,
     "invalid_shops_and_f4_overflow_rejected": true,
     "seven_dialogues_roundtrip_and_edit_is_confined": true,
-    "source_rom_unchanged": true
+    "source_rom_unchanged": true,
+    "reference_all_254_fields_saved_and_cold_read": true
   },
   "pending_acceptance": [
-    "参考 EXE：道具名称、说明、商店三字段及七段对话的单字段保存/重开黄金。",
     "正式 EXE 人工执行 M10 验收清单并由用户签收。"
   ]
 }

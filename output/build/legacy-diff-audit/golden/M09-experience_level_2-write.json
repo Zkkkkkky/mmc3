@@ -85,5 +85,7 @@
     }
   ],
   "duration_seconds": null,
+  "budget_seconds": null,
+  "within_budget": null,
   "duration_note": "存量档案离线复算：原始四步闭环未计时；REQ-NFR-PERF-005 的 ≤30s/字段预算适用于在线采集闭环"
 }

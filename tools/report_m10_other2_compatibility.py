@@ -20,6 +20,7 @@ from fc_rom_editor_core import RomProject  # noqa: E402
 
 DEFAULT_ROM = ROOT / "output" / "rom" / "DC_kuorong_464K.nes"
 DEFAULT_REPORT = ROOT / "output" / "verification" / "m10-other2-compatibility.json"
+REFERENCE_SUMMARY = ROOT / "output/verification/legacy-m10-all-fields-20260920/summary.json"
 
 
 def _sha256(data: bytes) -> str:
@@ -63,6 +64,7 @@ def analyze(rom_path: Path) -> dict[str, object]:
         raise ValueError("当前 ROM 未启用已验证的全局数据协议。")
     text_codec = LegacyTextCodec(data)
     shop_codec = LegacyShopCodec(data)
+    reference_summary = json.loads(REFERENCE_SUMMARY.read_text(encoding="utf-8"))
 
     names = list(global_codec.item_name_records(data))
     name_pool_capacity = (
@@ -207,14 +209,22 @@ def analyze(rom_path: Path) -> dict[str, object]:
             and dialogue_patch[0] == first_dialogue.file_offset
         ),
         "source_rom_unchanged": _sha256(data) == original_hash,
+        "reference_all_254_fields_saved_and_cold_read": (
+            reference_summary["passed"]
+            and reference_summary["logical_fields"] == 254
+            and reference_summary["saved_fields"] == 134
+            and reference_summary["reference_saved_product_blocked_fields"] == 91
+            and reference_summary["blocked_no_effect_fields"] == 29
+            and reference_summary["cold_process_logical_readback_passed"] == 254
+        ),
     }
 
     return {
         "generated_at": datetime.now().astimezone().isoformat(timespec="seconds"),
         "passed": all(checks.values()),
-        "delivery_status": "implementation_complete_reference_and_user_pending",
+        "delivery_status": "reference_field_scope_complete_user_pending",
         "conclusion": (
-            "M10 六项实现范围已具备离线可重复证据；参考 EXE 单字段保存黄金和用户签收仍未完成。"
+            "M10 参考版 254 个逻辑入口已逐字段保存并完成全新进程回读；134 个安全字段进入最终分母，风险入口维持产品禁写，仅待用户签收。"
         ),
         "rom": {
             "path": rom_path.resolve().relative_to(ROOT).as_posix(),
@@ -266,10 +276,10 @@ def analyze(rom_path: Path) -> dict[str, object]:
                 "sample_patch_offset": f"0x{dialogue_patch[0]:06X}",
                 "sample_changed_indices": dialogue_diff,
             },
+            "reference_all_fields": reference_summary,
         },
         "checks": checks,
         "pending_acceptance": [
-            "参考 EXE：道具名称、说明、商店三字段及七段对话的单字段保存/重开黄金。",
             "正式 EXE 人工执行 M10 验收清单并由用户签收。",
         ],
     }

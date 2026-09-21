@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "reason": "目录名称第二轮与第一轮3923条差分完全一致，归档为哈希锁定证据并提升正式用例",
+  "timestamp": "20260920T022002",
+  "moved": [
+    {
+      "module": "M06",
+      "field": "name",
+      "case_id": "cold_start_01",
+      "from": "output/build/legacy-diff-audit/cases/legacy_live/M06/name/cold_start_01",
+      "to": "output/build/legacy-diff-audit/cases/diagnostic/retry_history/20260920T022002/M06/name/cold_start_01",
+      "had_case_json": true,
+      "had_error_json": false
+    }
+  ],
+  "live_result_rows_removed": 1
+}

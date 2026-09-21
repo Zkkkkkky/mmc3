@@ -51,11 +51,13 @@ WM_LBUTTONUP = 0x0202
 WM_RBUTTONDOWN = 0x0204
 WM_RBUTTONUP = 0x0205
 BM_CLICK = 0x00F5
+BM_GETCHECK = 0x00F0
 BN_CLICKED = 0
 MK_LBUTTON = 0x0001
 VK_ESCAPE = 0x1B
 VK_RETURN = 0x0D
 VK_MENU = 0x12
+VK_CONTROL = 0x11
 GW_CHILD = 5
 GW_HWNDNEXT = 2
 SW_RESTORE = 9
@@ -296,6 +298,8 @@ def enum_child_tree(hwnd: int, depth: int = 0, max_depth: int = 8) -> dict:
     elif cls == "SysTabControl32":
         node["tab_count"] = _send_msg_num(hwnd, TCM_GETITEMCOUNT, 0, 0)
         node["tab_current"] = _send_msg_num(hwnd, TCM_GETCURSEL, 0, 0)
+    elif cls == "Button":
+        node["button_check_state"] = _send_msg_num(hwnd, BM_GETCHECK, 0, 0)
 
     children: list[dict] = []
     if depth < max_depth:
@@ -381,6 +385,47 @@ def post_command(parent_hwnd: int, ctrl_id: int, ctrl_hwnd: int) -> None:
 def click_control(hwnd: int) -> None:
     """Click a control: BM_CLICK first, then WM_COMMAND fallback."""
     user32.PostMessageW(hwnd, BM_CLICK, 0, 0)
+
+
+def real_click_control(hwnd: int) -> bool:
+    """Click the centre of a control with real input.
+
+    This is the UIPI-safe fallback for the elevated legacy executable, where
+    BM_CLICK/WM_COMMAND messages from the probe can be silently discarded.
+    """
+
+    rect = get_window_rect(hwnd)
+    root = user32.GetAncestor(hwnd, 2) or hwnd  # GA_ROOT
+    if not force_foreground(root):
+        return False
+    x = (rect["left"] + rect["right"]) // 2
+    y = (rect["top"] + rect["bottom"]) // 2
+    user32.SetCursorPos(x, y)
+    time.sleep(0.12)
+    user32.mouse_event(MOUSEEVENTF_LEFTDOWN, 0, 0, 0, 0)
+    time.sleep(0.04)
+    user32.mouse_event(MOUSEEVENTF_LEFTUP, 0, 0, 0, 0)
+    time.sleep(0.15)
+    return True
+
+
+def real_double_click_control_cell(hwnd: int, x_offset: int, y_offset: int) -> bool:
+    """Double-click an interior point of an owner-drawn control."""
+
+    rect = get_window_rect(hwnd)
+    root = user32.GetAncestor(hwnd, 2) or hwnd
+    if not force_foreground(root):
+        return False
+    x = rect["left"] + x_offset
+    y = rect["top"] + y_offset
+    user32.SetCursorPos(x, y)
+    time.sleep(0.12)
+    for _ in range(2):
+        user32.mouse_event(MOUSEEVENTF_LEFTDOWN, 0, 0, 0, 0)
+        time.sleep(0.04)
+        user32.mouse_event(MOUSEEVENTF_LEFTUP, 0, 0, 0, 0)
+        time.sleep(0.08)
+    return True
 
 
 def click_control_via_command(item: dict) -> None:
@@ -665,6 +710,15 @@ class ProbeSession:
     def process_alive(self) -> bool:
         if not self.pid:
             return False
+        # EnumWindows remains available when the reference editor is running
+        # at a higher integrity level, while OpenProcess can legitimately be
+        # denied.  A WTWindow owned by the exact PID is the strongest signal
+        # needed by this UI-only probe.
+        if any(
+            window["class"] == "WTWindow"
+            for window in self.top_windows(visible_only=False)
+        ):
+            return True
         handle = kernel32.OpenProcess(PROCESS_QUERY_INFORMATION, False, self.pid)
         if not handle:
             return False
@@ -919,10 +973,15 @@ def stage_a(session: ProbeSession) -> None:
         log(f"top window: {window}")
     if not windows:
         raise RuntimeError("no visible top-level window after launch")
-    already_main = windows[0]["title"].startswith("SRW2扩容版修改器")
-    if already_main:
+    main_candidates = [
+        window
+        for window in windows
+        if window["title"].startswith("SRW2扩容版修改器")
+    ]
+    if main_candidates:
         log("launcher already dismissed (attached session); skipping launcher dump")
-        session.main_hwnd = windows[0]["hwnd"]
+        session.main_hwnd = main_candidates[0]["hwnd"]
+        session.pid = main_candidates[0]["pid"]
         session.save()
     else:
         launcher = windows[0]
@@ -941,7 +1000,10 @@ def stage_a(session: ProbeSession) -> None:
         deadline = time.monotonic() + 20.0
         real_click_retried = False
         while time.monotonic() < deadline:
-            for window in session.top_windows():
+            # The launcher starts the real editor in a separate GUI process.
+            # Search all top-level windows instead of restricting the lookup
+            # to the launcher PID, then follow that child for later stages.
+            for window in enum_top_windows(0):
                 if window["hwnd"] == launcher["hwnd"]:
                     continue
                 if window["title"].startswith("SRW2扩容版修改器"):
@@ -964,6 +1026,7 @@ def stage_a(session: ProbeSession) -> None:
             time.sleep(0.4)
         if not main_window:
             raise RuntimeError("main window did not appear after entering")
+        session.pid = main_window["pid"]
         session.main_hwnd = main_window["hwnd"]
         session.save()
         log(f"main window hwnd={session.main_hwnd} title={main_window['title']!r}")
@@ -1176,8 +1239,11 @@ def close_window_safely(session: "ProbeSession", hwnd: int, timeout: float = 6.0
         buttons = find_controls(tree, cls="Button", text_contains=word)
         if buttons:
             click_control(buttons[0]["hwnd"])
-            if session.wait_gone(hwnd, timeout):
+            if session.wait_gone(hwnd, min(1.2, timeout)):
                 return
+            if real_click_control(buttons[0]["hwnd"]):
+                if session.wait_gone(hwnd, timeout):
+                    return
     user32.PostMessageW(hwnd, WM_CLOSE, 0, 0)
     session.wait_gone(hwnd, timeout)
 
@@ -1210,13 +1276,16 @@ def handle_export_dialog(session: "ProbeSession", label: str, cmd_id: int, tag: 
     log(f"{label}: export dialog captured and dismissed (gone={gone})")
 
 
-def stage_c(session: ProbeSession) -> None:
+def _stage_c_windows(session: ProbeSession, *, skip_labels: set[str]) -> None:
     log("=== stage C: 数据 menu windows ===")
     if not session.main_hwnd or not is_window(session.main_hwnd):
         raise RuntimeError("main window not alive; run stage A/B first")
     if not session.rom_is_loaded():
         raise RuntimeError("ROM not loaded; run stage B first")
     for index, (label, cmd_id, tabs) in enumerate(STAGE_C_WINDOWS, start=1):
+        if label in skip_labels:
+            log(f"{label}: skipped by stable capture mode")
+            continue
         tag = f"C{index:02d}_{label}"
         if tabs == "EXPORT":
             try:
@@ -1242,6 +1311,21 @@ def stage_c(session: ProbeSession) -> None:
             time.sleep(0.5)
 
 
+def stage_c(session: ProbeSession) -> None:
+    _stage_c_windows(session, skip_labels=set())
+
+
+def stage_c_safe(session: ProbeSession) -> None:
+    """Capture all stable data windows without invoking the crashing export.
+
+    The reference build's 导出头像 command is already covered by preserved
+    failure evidence.  Invoking it during a full sweep raises a delayed runtime
+    error and terminates the editor before the remaining controls are captured.
+    """
+
+    _stage_c_windows(session, skip_labels={"导出头像"})
+
+
 def stage_m05(session: ProbeSession) -> None:
     """Load the compatible probe ROM and capture only 数据->数据库.
 
@@ -1262,11 +1346,155 @@ def stage_m05(session: ProbeSession) -> None:
         if not session.open_rom_via_menu(rom, "M05_打开ROM对话框"):
             raise RuntimeError(f"ROM load failed for {rom.name}")
         session.dump_window(session.main_hwnd, "M05_主窗口_载入后")
-    window = _open_data_window(session, 20008, "数据库")
+    # The reference editor pre-creates several hidden business windows.  They
+    # are valid lazy-loaded UI state, not stale blockers; closing the hidden
+    # database window makes the legacy runtime fail when the menu opens it.
+    window = _open_data_window(session, 20008, "数据库", dismiss_hidden=False)
     if not window:
         raise RuntimeError("database window did not appear")
     try:
+        unit_lists = find_controls(
+            enum_child_tree(window["hwnd"]), cls="ListBox", ctrl_id=120
+        )
+        if not unit_lists:
+            raise RuntimeError("unit list 120 not found")
+        unit_list = unit_lists[0]["hwnd"]
+        if user32.SendMessageW(unit_list, 0x0186, 1, 0) == -1:  # LB_SETCURSEL
+            raise RuntimeError("unit row 1 is unavailable")
+        list_parent = user32.GetParent(unit_list)
+        user32.SendMessageW(
+            list_parent,
+            WM_COMMAND,
+            120 | (1 << 16),  # LBN_SELCHANGE
+            unit_list,
+        )
+        time.sleep(0.3)
         session.dump_window(window["hwnd"], "M05_数据库_机体修改")
+        known = {item["hwnd"] for item in session.top_windows()}
+        skill_buttons = find_controls(enum_child_tree(window["hwnd"]), ctrl_id=2600)
+        if not skill_buttons:
+            raise RuntimeError("special-skill button 2600 not found")
+        skill_button = skill_buttons[0]["hwnd"]
+        click_control(skill_button)
+        popup = session.wait_new_top(exclude=known, timeout=2.0)
+        if popup is None:
+            real_click_control(skill_button)
+            popup = session.wait_new_top(exclude=known, timeout=8.0)
+        if popup is None:
+            raise RuntimeError("special-skill popup did not appear")
+        session.dump_window(
+            popup["hwnd"], "M05_数据库_机体修改_特殊技能", menu=False
+        )
+        close_window_safely(session, popup["hwnd"])
+
+        # Capture the owner-drawn colour picker reached through the first
+        # swatch.  Direct edits display text but do not update the legacy
+        # window's internal palette value, so the swatch path is authoritative.
+        fresh_tree = enum_child_tree(window["hwnd"])
+        swatches = find_controls(fresh_tree, ctrl_id=280)
+        if swatches:
+            known = {item["hwnd"] for item in session.top_windows()}
+            real_click_control(swatches[0]["hwnd"])
+            colour_popup = session.wait_new_top(exclude=known, timeout=3.0)
+            if colour_popup is not None:
+                session.dump_window(
+                    colour_popup["hwnd"],
+                    "M05_数据库_机体修改_颜色选择",
+                    menu=False,
+                )
+                close_window_safely(session, colour_popup["hwnd"])
+            else:
+                session.dump_window(
+                    window["hwnd"],
+                    "M05_数据库_机体修改_颜色选择内嵌",
+                    menu=False,
+                )
+
+        # Capture the icon-binding picker without committing a selection.
+        fresh_tree = enum_child_tree(window["hwnd"])
+        icon_buttons = find_controls(fresh_tree, ctrl_id=1350)
+        if icon_buttons:
+            known = {item["hwnd"] for item in session.top_windows()}
+            click_control(icon_buttons[0]["hwnd"])
+            icon_popup = session.wait_new_top(exclude=known, timeout=2.0)
+            if icon_popup is None:
+                real_click_control(icon_buttons[0]["hwnd"])
+                icon_popup = session.wait_new_top(exclude=known, timeout=5.0)
+            if icon_popup is not None:
+                session.dump_window(
+                    icon_popup["hwnd"],
+                    "M05_数据库_机体修改_机体图标设置",
+                    menu=False,
+                )
+                icon_tree = enum_child_tree(icon_popup["hwnd"])
+                icon_rows = find_controls(icon_tree, ctrl_id=170)
+                if icon_rows:
+                    row_rect = get_window_rect(icon_rows[0]["hwnd"])
+                    client_origin = wintypes.POINT(0, 0)
+                    user32.ClientToScreen(icon_popup["hwnd"], ctypes.byref(client_origin))
+                    post_click_at(
+                        icon_popup["hwnd"],
+                        row_rect["left"] - client_origin.x + 20,
+                        row_rect["top"] - client_origin.y + 16,
+                    )
+                    time.sleep(0.4)
+                    session.dump_window(
+                        icon_popup["hwnd"],
+                        "M05_数据库_机体修改_机体图标设置_点击后",
+                        menu=False,
+                    )
+                close_window_safely(session, icon_popup["hwnd"])
+
+        # Record a compact row sample to locate a large-unit row where image
+        # address 2 is genuinely enabled.  This is observation only.
+        row_samples: list[dict] = []
+        for row in range(32):
+            if user32.SendMessageW(unit_list, 0x0186, row, 0) == -1:
+                break
+            user32.SendMessageW(list_parent, WM_COMMAND, 120 | (1 << 16), unit_list)
+            time.sleep(0.12)
+            row_tree = enum_child_tree(window["hwnd"])
+
+            def one(control_id: int) -> dict | None:
+                items = find_controls(row_tree, ctrl_id=control_id)
+                return items[0] if items else None
+
+            sample: dict = {"row": row}
+            name = one(390)
+            if name:
+                sample["name"] = name["text"]
+            for label, control_id in (
+                ("weapon_1", 550),
+                ("weapon_2", 560),
+                ("unit_type", 570),
+                ("fragment_bank", 370),
+                ("body_bank_1", 350),
+                ("body_bank_2", 360),
+            ):
+                item = one(control_id)
+                if item:
+                    sample[label] = {
+                        "text": item["text"],
+                        "selected": item.get("combo_selected"),
+                        "visible": item["visible"],
+                        "enabled": item["enabled"],
+                    }
+            captain = one(2700)
+            if captain:
+                sample["captain"] = {
+                    "text": captain["text"],
+                    "visible": captain["visible"],
+                    "enabled": captain["enabled"],
+                    "checked": captain.get("button_check_state"),
+                }
+            row_samples.append(sample)
+            body_bank_2 = sample.get("body_bank_2", {})
+            if row >= 1 and body_bank_2.get("enabled"):
+                break
+        (session.controls / "M05_数据库_机体修改_行样本.json").write_text(
+            json.dumps(row_samples, ensure_ascii=False, indent=2) + "\n",
+            encoding="utf-8",
+        )
     finally:
         close_window_safely(session, window["hwnd"])
 
@@ -1359,14 +1587,40 @@ def sweep_tabs(
     return pages
 
 
-def _open_data_window(session: "ProbeSession", cmd_id: int, label: str):
+def _open_data_window(
+    session: "ProbeSession",
+    cmd_id: int,
+    label: str,
+    *,
+    dismiss_hidden: bool = True,
+):
     if not session.process_alive():
         log(f"{label}: target process is dead")
         return None
-    dismiss_blocking_popups(session)
+    dismiss_blocking_popups(session, include_hidden=dismiss_hidden)
     session.snapshot_known()
     user32.PostMessageW(session.main_hwnd, WM_COMMAND, cmd_id, 0)
-    window = session.wait_new_top(timeout=10.0, cls_equals="WTWindow")
+    window = session.wait_new_top(
+        timeout=2.0, cls_equals="WTWindow", title_contains=label
+    )
+    if not window:
+        accelerators = {
+            20008: "D",
+            20009: "W",
+            20011: "M",
+            20013: "Z",
+            20015: "J",
+            20023: "T",
+        }
+        key = accelerators.get(cmd_id)
+        if key and force_foreground(session.main_hwnd):
+            keybd(VK_CONTROL)
+            keybd(ord(key))
+            keybd(ord(key), up=True)
+            keybd(VK_CONTROL, up=True)
+            window = session.wait_new_top(
+                timeout=8.0, cls_equals="WTWindow", title_contains=label
+            )
     if not window:
         # late error dialogs can appear after the timeout; give them a chance
         time.sleep(4.0)
@@ -1378,13 +1632,22 @@ def _open_data_window(session: "ProbeSession", cmd_id: int, label: str):
     return window
 
 
-def dismiss_blocking_popups(session: "ProbeSession", prefix: str = "DIAG") -> int:
+def dismiss_blocking_popups(
+    session: "ProbeSession",
+    prefix: str = "DIAG",
+    *,
+    include_hidden: bool = True,
+) -> int:
     """Dump and close any non-main top-level window blocking the main window."""
     if not session.pid:
         return 0
     closed = 0
     index = 0
-    for window in session.top_windows():
+    # Include hidden owned windows.  The 易语言 reference editor keeps prior
+    # modal tool windows alive but hidden, then reveals them when the current
+    # dialog closes.  Leaving those in the stack makes the next command look
+    # as though it opened an unrelated window.
+    for window in session.top_windows(visible_only=not include_hidden):
         if window["hwnd"] == session.main_hwnd:
             continue
         # only close app-owned windows; skip IME/tool windows like SoPY_Status
@@ -1398,6 +1661,8 @@ def dismiss_blocking_popups(session: "ProbeSession", prefix: str = "DIAG") -> in
         except Exception as exc:
             log(f"dismiss popup dump failed: {exc!r}")
         close_window_safely(session, window["hwnd"], timeout=4.0)
+        if is_window(window["hwnd"]):
+            user32.PostMessageW(window["hwnd"], WM_CLOSE, 0, 0)
         closed += 1
     if closed:
         log(f"dismissed {closed} blocking popup(s)")
@@ -1505,7 +1770,7 @@ def stage_m12(session: ProbeSession) -> None:
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        "--stage", default="A,B", help="comma separated A/B/C/CT/M05/M12"
+        "--stage", default="A,B", help="comma separated A/B/C/CSAFE/CT/M05/M12"
     )
     parser.add_argument("--pid", type=int, help="attach to a running probe process")
     parser.add_argument("--rom", help="override ROM path used by stage B")
@@ -1544,6 +1809,7 @@ def main() -> int:
             "A": stage_a,
             "B": stage_b,
             "C": stage_c,
+            "CSAFE": stage_c_safe,
             "CT": stage_ct,
             "M05": stage_m05,
             "M12": stage_m12,

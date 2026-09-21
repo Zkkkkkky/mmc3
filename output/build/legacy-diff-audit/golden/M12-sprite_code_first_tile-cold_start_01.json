@@ -97,5 +97,7 @@
     }
   ],
   "duration_seconds": 23.311,
+  "budget_seconds": 30.0,
+  "within_budget": true,
   "duration_note": null
 }

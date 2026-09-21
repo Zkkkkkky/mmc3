@@ -1,0 +1,138 @@
+restart
+collector launched pid=13420
+probed 3/254
+collector launched pid=17424
+probed 10/254
+probed 20/254
+probed 23/254
+collector launched pid=16692
+probed 30/254
+probed 40/254
+probed 43/254
+collector launched pid=17472
+probed 50/254
+probed 60/254
+probed 63/254
+collector launched pid=4480
+probed 70/254
+probed 80/254
+probed 83/254
+collector launched pid=1916
+probed 90/254
+probed 100/254
+probed 103/254
+collector launched pid=5124
+probed 110/254
+probed 120/254
+probed 123/254
+collector launched pid=11948
+probed 130/254
+probed 140/254
+probed 143/254
+collector launched pid=13932
+collector launched pid=14016
+probed 140/254
+probed 150/254
+probed 154/254
+collector launched pid=12812
+probed 160/254
+probed 170/254
+probed 174/254
+collector launched pid=5392
+probed 180/254
+probed 190/254
+collector failed at 174: Legacy window did not appear before timeout (pid=5392; seen=[])
+collector launched pid=10716
+probed 200/254
+probed 210/254
+probed 213/254
+collector launched pid=17876
+probed 220/254
+probed 230/254
+probed 233/254
+collector launched pid=5716
+collector failed at 233: [WinError 1400] 无效的窗口句柄。
+collector launched pid=18160
+probed 250/254
+probed 254/254
+same-process final inventory launched pid=15516
+inventory 25/254
+inventory 50/254
+same-process final inventory launched pid=708
+inventory 3/254
+inventory 6/254
+inventory 9/254
+inventory 12/254
+inventory 15/254
+inventory 18/254
+inventory 21/254
+inventory 24/254
+inventory 27/254
+inventory 30/254
+inventory 33/254
+inventory 36/254
+inventory 39/254
+inventory 42/254
+inventory 45/254
+inventory 48/254
+inventory 51/254
+inventory 54/254
+inventory 57/254
+inventory 60/254
+inventory 63/254
+inventory 66/254
+inventory 69/254
+inventory 72/254
+inventory 85/254
+inventory 98/254
+inventory 111/254
+inventory 124/254
+inventory 137/254
+inventory 150/254
+inventory 163/254
+inventory 176/254
+inventory 189/254
+inventory 202/254
+inventory 215/254
+inventory 228/254
+inventory 241/254
+inventory 254/254
+cold final inventory launched pid=16396
+inventory 3/254
+inventory 6/254
+inventory 9/254
+inventory 12/254
+inventory 15/254
+inventory 18/254
+inventory 21/254
+inventory 24/254
+inventory 27/254
+inventory 30/254
+inventory 33/254
+inventory 36/254
+inventory 39/254
+inventory 42/254
+inventory 45/254
+inventory 48/254
+inventory 51/254
+inventory 54/254
+inventory 57/254
+inventory 60/254
+inventory 63/254
+inventory 66/254
+inventory 69/254
+inventory 72/254
+inventory 85/254
+inventory 98/254
+inventory 111/254
+inventory 124/254
+inventory 137/254
+inventory 150/254
+inventory 163/254
+inventory 176/254
+inventory 189/254
+inventory 202/254
+inventory 215/254
+inventory 228/254
+inventory 241/254
+inventory 254/254

@@ -6,13 +6,13 @@ from tools.report_m08_m18_delivery_gate import analyze
 
 
 class M08M18DeliveryGateTests(unittest.TestCase):
-    def test_all_machine_reports_pass_without_claiming_user_acceptance(self) -> None:
+    def test_machine_reports_pass_and_only_m18_has_user_acceptance(self) -> None:
         report = analyze()
         self.assertTrue(report["machine_gate_passed"])
         self.assertEqual(report["counts"]["modules"], 11)
         self.assertEqual(report["counts"]["machine_gate_passed"], 11)
         self.assertEqual(report["counts"]["implementation_scope_complete"], 11)
-        self.assertEqual(report["counts"]["user_accepted"], 0)
+        self.assertEqual(report["counts"]["user_accepted"], 1)
         self.assertTrue(report["implementation_complete"])
         self.assertFalse(report["user_acceptance_complete"])
         self.assertFalse(report["overall_delivery_complete"])
@@ -43,10 +43,12 @@ class M08M18DeliveryGateTests(unittest.TestCase):
             report["modules"]["M12"]["status"],
             "implementation_complete_guarded_reference_and_user_pending",
         )
+        self.assertEqual(report["modules"]["M18"]["user_acceptance"], "accepted")
         self.assertTrue(
             all(
                 item["user_acceptance"] == "pending"
-                for item in report["modules"].values()
+                for module, item in report["modules"].items()
+                if module != "M18"
             )
         )
 

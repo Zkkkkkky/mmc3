@@ -1,0 +1,8 @@
+{
+  "module": "M06",
+  "field": "dialogue_defense_heavy_damage_segment",
+  "case_id": "cold_start_01",
+  "error": "RuntimeError: Legacy save did not update the isolated ROM before timeout",
+  "first_pid": 2008,
+  "second_pid": null
+}

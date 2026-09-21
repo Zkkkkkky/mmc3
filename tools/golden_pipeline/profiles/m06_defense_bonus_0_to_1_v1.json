@@ -1,0 +1,8 @@
+{
+  "schema_version": 1,
+  "name": "m06_defense_bonus_0_to_1_v1",
+  "description": "参考版启用人物第 1 行防御修正并写入 1 时的确定性变长记录重建；两轮 12155 条差分完全一致。",
+  "source_case": "output/build/legacy-diff-audit/cases/diagnostic/retry_history/20260920T020205/M06/defense_bonus/cold_start_01/case.json",
+  "source_case_sha256": "8cb3553c21cbe69e4f7fa985c72e24d2c39d785e43970c5632db47c408c92307",
+  "exclude_offsets": [296343, 296344]
+}

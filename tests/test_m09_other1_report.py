@@ -30,7 +30,7 @@ class M09Other1ReportTests(unittest.TestCase):
         self.assertTrue(report["passed"])
         self.assertEqual(
             report["delivery_status"],
-            "implementation_complete_reference_and_user_pending",
+            "reference_field_scope_complete_product_compatibility_and_user_pending",
         )
         evidence = report["evidence"]
         self.assertEqual(evidence["distance_hit"]["shape"], [4, 16])
@@ -45,6 +45,8 @@ class M09Other1ReportTests(unittest.TestCase):
         self.assertEqual(evidence["growth"]["values_per_record"], 99)
         self.assertEqual(evidence["growth"]["record_bytes"], 50)
         self.assertTrue(evidence["level_cap"]["passed"])
+        self.assertTrue(evidence["reference_all_fields"]["passed"])
+        self.assertEqual(evidence["reference_all_fields"]["saved_fields"], 412)
         self.assertEqual(len(report["pending_acceptance"]), 2)
 
 

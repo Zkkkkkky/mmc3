@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "module": "M04",
+  "passed": true,
+  "status": "complete",
+  "counts": {
+    "physical_fields": 176,
+    "records": 44,
+    "catalog_fields": 103,
+    "completed_fields": 103,
+    "remaining_fields": 0,
+    "safe_denominator_fields": 103,
+    "fresh_inventory_fields": 103,
+    "excluded_reference_off_viewport": 44,
+    "excluded_reference_forced_unlimited": 29
+  },
+  "checks": {
+    "catalog_passed": true,
+    "all_103_editable_fields_recorded": true,
+    "sequences_contiguous": true,
+    "catalog_identities_match": true,
+    "each_isolated_case_changes_exactly_target_byte": true,
+    "aggregate_replays_all_cases": true,
+    "two_fresh_reference_inventories_match": true
+  },
+  "evidence": {
+    "catalog": "output/reports/m04-reference-field-catalog.json",
+    "isolated_cases": "output/verification/legacy-m04-all-fields-20260920/field-save-cases.jsonl",
+    "aggregate_rom": "output/verification/legacy-m04-all-fields-20260920/aggregate-all-fields.nes",
+    "fresh_inventory_a": "output/verification/legacy-m04-all-fields-20260920/fresh-inventory-a.json",
+    "fresh_inventory_b": "output/verification/legacy-m04-all-fields-20260920/fresh-inventory-b.json"
+  }
+}

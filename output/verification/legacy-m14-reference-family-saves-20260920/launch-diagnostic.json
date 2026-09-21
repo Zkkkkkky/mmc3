@@ -1,0 +1,10 @@
+﻿{
+    "exited":  false,
+    "pid":  9860,
+    "windows":  {
+                    "ProcessId":  9860,
+                    "ParentProcessId":  8108,
+                    "Name":  "SRW2_patched.exe",
+                    "CreationDate":  "\/Date(1789897896472)\/"
+                }
+}

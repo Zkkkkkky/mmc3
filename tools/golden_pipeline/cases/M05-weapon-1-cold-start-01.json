@@ -1,0 +1,21 @@
+{
+  "module": "M05",
+  "field": "weapon_1",
+  "case_id": "cold_start_01",
+  "requested_value": 3,
+  "expected_before": 1,
+  "expected_offsets": [46394],
+  "required_offsets": [46394],
+  "optional_offsets": [],
+  "extra_allowed": [],
+  "navigation": [
+    {"op": "menu", "path": "数据->数据库"},
+    {"op": "window", "title": "数据库"},
+    {"op": "list_select", "class": "ListBox", "control_id": 120, "row": 1}
+  ],
+  "edit_steps": [
+    {"op": "select_index", "class": "ComboBox", "control_id": 550, "value": "$requested"},
+    {"op": "click_id", "class": "Button", "control_id": 590}
+  ],
+  "read_selector": {"class": "ComboBox", "control_id": 550, "value_type": "combo_index"}
+}

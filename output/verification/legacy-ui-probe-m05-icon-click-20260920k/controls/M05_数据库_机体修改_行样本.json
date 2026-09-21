@@ -1,0 +1,324 @@
+[
+  {
+    "row": 0,
+    "name": "一阶段机体------",
+    "weapon_1": {
+      "text": "没有武器",
+      "selected": 0,
+      "visible": true,
+      "enabled": true
+    },
+    "weapon_2": {
+      "text": "没有武器",
+      "selected": 0,
+      "visible": true,
+      "enabled": true
+    },
+    "unit_type": {
+      "text": "我方小型机",
+      "selected": 0,
+      "visible": true,
+      "enabled": true
+    },
+    "fragment_bank": {
+      "text": "[00]000：80010",
+      "selected": 0,
+      "visible": true,
+      "enabled": true
+    },
+    "body_bank_1": {
+      "text": "[90]144：A4010",
+      "selected": 144,
+      "visible": true,
+      "enabled": true
+    },
+    "body_bank_2": {
+      "text": "[00]000：80010",
+      "selected": 0,
+      "visible": true,
+      "enabled": false
+    },
+    "captain": {
+      "text": "舰长",
+      "visible": false,
+      "enabled": true,
+      "checked": 0
+    }
+  },
+  {
+    "row": 1,
+    "name": "弓天使",
+    "weapon_1": {
+      "text": "[01]001：光束军刀",
+      "selected": 1,
+      "visible": true,
+      "enabled": true
+    },
+    "weapon_2": {
+      "text": "[02]002：风影箭·P",
+      "selected": 2,
+      "visible": true,
+      "enabled": true
+    },
+    "unit_type": {
+      "text": "我方小型机",
+      "selected": 0,
+      "visible": true,
+      "enabled": true
+    },
+    "fragment_bank": {
+      "text": "[FC]252：BF010",
+      "selected": 252,
+      "visible": true,
+      "enabled": true
+    },
+    "body_bank_1": {
+      "text": "[4C]076：93010",
+      "selected": 76,
+      "visible": true,
+      "enabled": true
+    },
+    "body_bank_2": {
+      "text": "[00]000：80010",
+      "selected": 0,
+      "visible": true,
+      "enabled": false
+    },
+    "captain": {
+      "text": "舰长",
+      "visible": false,
+      "enabled": true,
+      "checked": 0
+    }
+  },
+  {
+    "row": 2,
+    "name": "拔刀机",
+    "weapon_1": {
+      "text": "[03]003：光束军刀",
+      "selected": 3,
+      "visible": true,
+      "enabled": true
+    },
+    "weapon_2": {
+      "text": "[04]004：链子冲击·P",
+      "selected": 4,
+      "visible": true,
+      "enabled": true
+    },
+    "unit_type": {
+      "text": "我方小型机",
+      "selected": 0,
+      "visible": true,
+      "enabled": true
+    },
+    "fragment_bank": {
+      "text": "[FC]252：BF010",
+      "selected": 252,
+      "visible": true,
+      "enabled": true
+    },
+    "body_bank_1": {
+      "text": "[38]056：8E010",
+      "selected": 56,
+      "visible": true,
+      "enabled": true
+    },
+    "body_bank_2": {
+      "text": "[00]000：80010",
+      "selected": 0,
+      "visible": true,
+      "enabled": false
+    },
+    "captain": {
+      "text": "舰长",
+      "visible": false,
+      "enabled": true,
+      "checked": 0
+    }
+  },
+  {
+    "row": 3,
+    "name": "夺魂者",
+    "weapon_1": {
+      "text": "[05]005：冲击波",
+      "selected": 5,
+      "visible": true,
+      "enabled": true
+    },
+    "weapon_2": {
+      "text": "[06]006：能量冲击波·P",
+      "selected": 6,
+      "visible": true,
+      "enabled": true
+    },
+    "unit_type": {
+      "text": "我方小型机",
+      "selected": 0,
+      "visible": true,
+      "enabled": true
+    },
+    "fragment_bank": {
+      "text": "[60]096：98010",
+      "selected": 96,
+      "visible": true,
+      "enabled": true
+    },
+    "body_bank_1": {
+      "text": "[37]055：8DC10",
+      "selected": 55,
+      "visible": true,
+      "enabled": true
+    },
+    "body_bank_2": {
+      "text": "[00]000：80010",
+      "selected": 0,
+      "visible": true,
+      "enabled": false
+    },
+    "captain": {
+      "text": "舰长",
+      "visible": false,
+      "enabled": true,
+      "checked": 0
+    }
+  },
+  {
+    "row": 4,
+    "name": "盖塔龙",
+    "weapon_1": {
+      "text": "[07]007：盖塔射线",
+      "selected": 7,
+      "visible": true,
+      "enabled": true
+    },
+    "weapon_2": {
+      "text": "[08]008：盖塔冲击波·P",
+      "selected": 8,
+      "visible": true,
+      "enabled": true
+    },
+    "unit_type": {
+      "text": "我方小型机",
+      "selected": 0,
+      "visible": true,
+      "enabled": true
+    },
+    "fragment_bank": {
+      "text": "[60]096：98010",
+      "selected": 96,
+      "visible": true,
+      "enabled": true
+    },
+    "body_bank_1": {
+      "text": "[5E]094：97810",
+      "selected": 94,
+      "visible": true,
+      "enabled": true
+    },
+    "body_bank_2": {
+      "text": "[00]000：80010",
+      "selected": 0,
+      "visible": true,
+      "enabled": false
+    },
+    "captain": {
+      "text": "舰长",
+      "visible": false,
+      "enabled": true,
+      "checked": 0
+    }
+  },
+  {
+    "row": 5,
+    "name": "戴安娜",
+    "weapon_1": {
+      "text": "[09]009：双子飞弹·P",
+      "selected": 9,
+      "visible": true,
+      "enabled": true
+    },
+    "weapon_2": {
+      "text": "[0A]010：修理装置Ⅱ",
+      "selected": 10,
+      "visible": true,
+      "enabled": true
+    },
+    "unit_type": {
+      "text": "我方小型机",
+      "selected": 0,
+      "visible": true,
+      "enabled": true
+    },
+    "fragment_bank": {
+      "text": "[C8]200：B2010",
+      "selected": 200,
+      "visible": true,
+      "enabled": true
+    },
+    "body_bank_1": {
+      "text": "[42]066：90810",
+      "selected": 66,
+      "visible": true,
+      "enabled": true
+    },
+    "body_bank_2": {
+      "text": "[00]000：80010",
+      "selected": 0,
+      "visible": true,
+      "enabled": false
+    },
+    "captain": {
+      "text": "舰长",
+      "visible": false,
+      "enabled": true,
+      "checked": 0
+    }
+  },
+  {
+    "row": 6,
+    "name": "大魔神",
+    "weapon_1": {
+      "text": "[0B]011：机械刀",
+      "selected": 11,
+      "visible": true,
+      "enabled": true
+    },
+    "weapon_2": {
+      "text": "[0C]012：火箭飞拳",
+      "selected": 12,
+      "visible": true,
+      "enabled": true
+    },
+    "unit_type": {
+      "text": "我方大型机",
+      "selected": 2,
+      "visible": true,
+      "enabled": true
+    },
+    "fragment_bank": {
+      "text": "[CA]202：B2810",
+      "selected": 202,
+      "visible": true,
+      "enabled": true
+    },
+    "body_bank_1": {
+      "text": "[C1]193：B0410",
+      "selected": 193,
+      "visible": true,
+      "enabled": true
+    },
+    "body_bank_2": {
+      "text": "[45]069：91410",
+      "selected": 69,
+      "visible": true,
+      "enabled": true
+    },
+    "captain": {
+      "text": "舰长",
+      "visible": true,
+      "enabled": true,
+      "checked": 0
+    }
+  }
+]

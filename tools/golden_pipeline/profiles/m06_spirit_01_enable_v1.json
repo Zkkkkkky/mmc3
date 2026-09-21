@@ -1,0 +1,8 @@
+{
+  "schema_version": 1,
+  "name": "m06_spirit_01_enable_v1",
+  "description": "参考版为人物第 1 行启用精神位时的确定性属性池重建；第 1 位双跑一致，且第 2、9、17 位跨三字节代表项除各自主偏移外的 10187 条差分完全相同。",
+  "source_case": "output/build/legacy-diff-audit/cases/diagnostic/retry_history/20260920T025921/M06/spirit_01/cold_start_01/case.json",
+  "source_case_sha256": "95842a581ff40672d92da7d8712a0246d6ff46c5204a6dc4579a1b8bc9589d83",
+  "exclude_offsets": [296340]
+}

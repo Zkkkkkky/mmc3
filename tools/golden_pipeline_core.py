@@ -40,6 +40,10 @@ from typing import Any, Callable, Sequence
 
 SCHEMA_VERSION = 1
 
+#: 在线单字段“复制→修改→保存→关闭→新进程重开”闭环的硬门禁。
+#: 调用方可以要求更短预算用于测试，但不得用更大值放宽验收标准。
+ONLINE_FIELD_BUDGET_SECONDS = 30.0
+
 #: 参考版每次保存都会把以下 6 个偏移的文本 Token ``C9 02`` 归一化为
 #: ``D8 47``。这是保存副作用而非功能行为（NEG-8），差分判定（G2）前必须剔除。
 #: 语义来源：``tools/audit_legacy_global_fields.py`` 的
@@ -468,7 +472,20 @@ def _adapt_live(payload: list[dict[str, Any]]) -> list[GoldenRecord]:
         expected = tuple(int(offset) for offset in item["expected_offsets"])
         required = tuple(int(offset) for offset in item["required_offsets"])
         optional = tuple(int(offset) for offset in item.get("optional_offsets", []))
-        if not required or set(required) | set(optional) != set(expected):
+        partitioned = (
+            not (set(required) & set(optional))
+            and set(required) | set(optional) == set(expected)
+        )
+        # 发现型在线用例允许在尚未识别真实写入偏移时以空口径入档；
+        # 它只作为待审证据保留，不参与 golden 通过率。正式 golden 仍必须
+        # 至少声明一个 required 偏移，避免空集合被误判为已验证。
+        unknown_discovery = (
+            item.get("case_kind") == "discovery"
+            and not expected
+            and not required
+            and not optional
+        )
+        if not partitioned or (not required and not unknown_discovery):
             raise ValueError("Live required/optional offsets do not partition expected")
         entries = _stored_diff_entries(item["diffs"])
         records.append(
@@ -664,6 +681,9 @@ def find_unregistered_snapshots(
     orphans: list[str] = []
     for before in sorted(cases_root.rglob("before.nes")):
         case_dir = before.parent
+        relative_under_cases = case_dir.relative_to(cases_root)
+        if relative_under_cases.parts and relative_under_cases.parts[0].lower() == "diagnostic":
+            continue
         if not (case_dir / "after.nes").is_file():
             continue
         # A failed live attempt is deliberately retained as diagnostic evidence,

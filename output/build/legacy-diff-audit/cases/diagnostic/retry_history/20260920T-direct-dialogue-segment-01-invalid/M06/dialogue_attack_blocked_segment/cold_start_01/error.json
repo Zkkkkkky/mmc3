@@ -1,0 +1,8 @@
+{
+  "module": "M06",
+  "field": "dialogue_attack_blocked_segment",
+  "case_id": "cold_start_01",
+  "error": "IndexError: Combobox has 16 items, you requested item 248 (0 based)",
+  "first_pid": 16304,
+  "second_pid": null
+}

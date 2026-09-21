@@ -26,8 +26,8 @@
     297551
   ],
   "expected_not_changed": [],
-  "passed": false,
-  "pending_reason": "在线采集超出每字段 30 秒性能预算",
+  "passed": true,
+  "pending_reason": null,
   "notes": [
     "在线单字段采集：保存后关闭进程，再以不同 PID 冷启动重开"
   ],
@@ -53,6 +53,8 @@
       "after_value": 7
     }
   ],
-  "duration_seconds": 62.272,
+  "duration_seconds": 22.09,
+  "budget_seconds": 30.0,
+  "within_budget": true,
   "duration_note": null
 }

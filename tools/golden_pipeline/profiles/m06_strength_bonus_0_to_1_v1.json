@@ -1,0 +1,8 @@
+{
+  "schema_version": 1,
+  "name": "m06_strength_bonus_0_to_1_v1",
+  "description": "参考版启用人物第 1 行强度修正并写入 1 时的确定性变长记录重建；两轮 12155 条差分完全一致。",
+  "source_case": "output/build/legacy-diff-audit/cases/diagnostic/retry_history/20260920T020201/M06/strength_bonus/cold_start_01/case.json",
+  "source_case_sha256": "00ce38a8a3d6040f9dc3e35d71799a704c357bd2eee81bbe83164a5e3cb6d175",
+  "exclude_offsets": [296343, 296344]
+}

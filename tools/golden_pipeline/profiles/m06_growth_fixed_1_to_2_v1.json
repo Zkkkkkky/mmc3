@@ -1,0 +1,8 @@
+{
+  "schema_version": 1,
+  "name": "m06_growth_fixed_1_to_2_v1",
+  "description": "参考版修改人物第 1 行精神成长时的确定性人物数据重建；固定值 1→2 双跑一致，曲线编码 1→201 除主偏移外的 10187 条差分也完全相同。",
+  "source_case": "output/build/legacy-diff-audit/cases/diagnostic/retry_history/20260920T020159/M06/growth_fixed/cold_start_01/case.json",
+  "source_case_sha256": "e2b26d25a04ddafdd3953f32f5c3b23c496d4c671fc80596034f26e2e9c82ac9",
+  "exclude_offsets": [296339]
+}

@@ -1,0 +1,11 @@
+Traceback (most recent call last):
+  File "D:\GIT\mmc3\tools\research\collect_m04_all_reference_fields.py", line 322, in <module>
+    raise SystemExit(main())
+                     ^^^^^^
+  File "D:\GIT\mmc3\tools\research\collect_m04_all_reference_fields.py", line 308, in main
+    first = inventory(data, "fresh-a")
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\GIT\mmc3\tools\research\collect_m04_all_reference_fields.py", line 245, in inventory
+    raw = parse_raw(texts[row])
+                    ~~~~~^^^^^
+IndexError: list index out of range

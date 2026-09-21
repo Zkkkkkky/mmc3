@@ -1,0 +1,7 @@
+{
+  "module":"M08","field":"battle_04_row000_variant001","case_id":"cold_start_01",
+  "requested_value":"001：你们该退！","expected_before":"001：你们该死！","expected_offsets":[114704],"required_offsets":[114704],"optional_offsets":[],"extra_allowed":[],"extra_allowed_profile":"m08_battle_04_pool_repack_v1",
+  "navigation":[{"op":"menu","path":"数据->数据库"},{"op":"window","title":"数据库"},{"op":"click_coords","x":310,"y":73},{"op":"select_index_message","class":"ComboBox","control_id":1410,"value":2},{"op":"list_select","class":"ListBox","control_id":1390,"row":0},{"op":"list_select","class":"ListBox","control_id":2580,"row":1}],
+  "edit_steps":[{"op":"set_text_notify","class":"Edit","control_id":1370,"value":"你们该退！"},{"op":"click_id","class":"Button","control_id":590}],
+  "read_selector":{"class":"ListBox","control_id":2580,"value_type":"list_item_text","item_index":1}
+}

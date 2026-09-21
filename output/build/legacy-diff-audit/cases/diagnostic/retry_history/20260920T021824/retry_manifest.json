@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "reason": "目录名称首次发现证据，归档后同基准复测名称池重建确定性",
+  "timestamp": "20260920T021824",
+  "moved": [
+    {
+      "module": "M06",
+      "field": "name",
+      "case_id": "cold_start_01",
+      "from": "output/build/legacy-diff-audit/cases/legacy_live/M06/name/cold_start_01",
+      "to": "output/build/legacy-diff-audit/cases/diagnostic/retry_history/20260920T021824/M06/name/cold_start_01",
+      "had_case_json": true,
+      "had_error_json": false
+    }
+  ],
+  "live_result_rows_removed": 1
+}

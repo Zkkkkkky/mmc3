@@ -1,0 +1,8 @@
+{
+  "schema_version": 1,
+  "name": "m07_weapon_name_pool_repack_v1",
+  "description": "参考版把武器第 1 行名称从光束军刀改为等长的光束军刃时执行的确定性名称指针/字形资源池重排；两次独立冷启动均产生完全相同的 2487 条差分及输出 ROM SHA-256。主名称指针偏移 294944 排除后，其余 2486 条作为已复核联动写入。",
+  "source_case": "output/build/legacy-diff-audit/cases/diagnostic/retry_history/20260920T074228/M07/name_token/cold_start_01/case.json",
+  "source_case_sha256": "221f4a31ec46258050f836b1205213155ca75f52ff062994715f0779b4f75505",
+  "exclude_offsets": [294944]
+}

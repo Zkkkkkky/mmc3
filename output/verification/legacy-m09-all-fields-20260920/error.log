@@ -1,0 +1,9 @@
+Traceback (most recent call last):
+  File "D:\GIT\mmc3\tools\research\collect_m09_all_physical_fields.py", line 469, in <module>
+    result = main()
+             ^^^^^^
+  File "D:\GIT\mmc3\tools\research\collect_m09_all_physical_fields.py", line 463, in main
+    cold_readback(catalog, probes)
+  File "D:\GIT\mmc3\tools\research\collect_m09_all_physical_fields.py", line 408, in cold_readback
+    raise ValueError(f"cold readback failed for {len(failures)} fields: {failures[:5]}")
+ValueError: cold readback failed for 202 fields: [{'field_id': 'M09/experience/59', 'expected': 1880, 'actual': 1822}, {'field_id': 'M09/system/021', 'expected': '任务失败了，请继续努力？', 'actual': '任务失败了，请继续努力！'}, {'field_id': 'M09/system/022', 'expected': '任务失败了，请继续努力？', 'actual': '任务失败了，请继续努力！'}, {'field_id': 'M09/system/023', 'expected': '任务失败了，请继续努力？', 'actual': '任务失败了，请继续努力！'}, {'field_id': 'M09/system/024', 'expected': '任务失败了，请继续努力？', 'actual': '任务失败了，请继续努力！'}]

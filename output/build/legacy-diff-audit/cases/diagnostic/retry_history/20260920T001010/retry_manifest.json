@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "reason": "采集脚本误将32位pywinauto警告升级为终止错误；保留未完成目录后重试",
+  "timestamp": "20260920T001010",
+  "moved": [
+    {
+      "module": "M05",
+      "field": "movement",
+      "case_id": "cold_start_01",
+      "from": "output/build/legacy-diff-audit/cases/legacy_live/M05/movement/cold_start_01",
+      "to": "output/build/legacy-diff-audit/cases/diagnostic/retry_history/20260920T001010/M05/movement/cold_start_01",
+      "had_case_json": false,
+      "had_error_json": false
+    }
+  ],
+  "live_result_rows_removed": 0
+}

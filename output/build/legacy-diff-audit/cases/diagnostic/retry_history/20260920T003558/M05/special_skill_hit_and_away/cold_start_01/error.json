@@ -1,0 +1,8 @@
+{
+  "module": "M05",
+  "field": "special_skill_hit_and_away",
+  "case_id": "cold_start_01",
+  "error": "RuntimeError: Baseline display differs: expected 0, got 1",
+  "first_pid": 17672,
+  "second_pid": null
+}

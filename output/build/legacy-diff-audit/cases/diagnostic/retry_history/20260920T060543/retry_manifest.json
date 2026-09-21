@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "reason": "transient ElementNotVisible before reopen completion",
+  "timestamp": "20260920T060543",
+  "moved": [
+    {
+      "module": "M06",
+      "field": "transform_dialogue_2_number",
+      "case_id": "cold_start_01",
+      "from": "output/build/legacy-diff-audit/cases/legacy_live/M06/transform_dialogue_2_number/cold_start_01",
+      "to": "output/build/legacy-diff-audit/cases/diagnostic/retry_history/20260920T060543/M06/transform_dialogue_2_number/cold_start_01",
+      "had_case_json": false,
+      "had_error_json": true
+    }
+  ],
+  "live_result_rows_removed": 0
+}

@@ -1,0 +1,7 @@
+{
+  "module":"M08","field":"battle_05_row001_variant000","case_id":"cold_start_01",
+  "requested_value":"000：魔神也不成了吗？！","expected_before":"000：魔神也不行了吗？！","expected_offsets":[124837,124838],"required_offsets":[124837,124838],"optional_offsets":[],"extra_allowed":[],
+  "navigation":[{"op":"menu","path":"数据->数据库"},{"op":"window","title":"数据库"},{"op":"click_coords","x":310,"y":73},{"op":"select_index_message","class":"ComboBox","control_id":1410,"value":3},{"op":"list_select","class":"ListBox","control_id":1390,"row":1},{"op":"list_select","class":"ListBox","control_id":2580,"row":0}],
+  "edit_steps":[{"op":"set_text_notify","class":"Edit","control_id":1370,"value":"魔神也不成了吗？！"},{"op":"click_id","class":"Button","control_id":590}],
+  "read_selector":{"class":"ListBox","control_id":2580,"value_type":"list_item_text","item_index":0}
+}

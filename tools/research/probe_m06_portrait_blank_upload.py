@@ -1,0 +1,73 @@
+"""Probe the legacy blank-image branch of both M06 portrait upload buttons."""
+
+from __future__ import annotations
+
+import json
+import sys
+import time
+from pathlib import Path
+
+REPO = Path(__file__).resolve().parents[2]
+if str(REPO) not in sys.path:
+    sys.path.insert(0, str(REPO))
+
+from tools.golden_pipeline_collect import Win32LegacyDriver, _control_pixel_sha256_hwnd
+
+
+AUDIT = REPO / "output" / "build" / "legacy-diff-audit"
+ROOT = REPO / "output" / "verification" / "legacy-ui-probe-m06-portrait-upload-20260920"
+OUTPUT = ROOT / "M06_头像空白上传预览哈希.json"
+
+
+def run(kind: str, button_id: int) -> dict[str, object]:
+    driver = Win32LegacyDriver()
+    try:
+        started = time.perf_counter()
+        pid = driver.launch(AUDIT / "SRW2_patched.exe", AUDIT)
+        driver.open_rom(AUDIT / "m05-reference-baseline.nes")
+        driver.perform(
+            (
+                {"op": "menu", "path": "数据->数据库"},
+                {"op": "window", "title": "数据库"},
+                {"op": "click_coords", "x": 130, "y": 73},
+                {"op": "list_select", "class": "ListBox", "control_id": 630, "row": 5},
+            ),
+            0,
+        )
+        preview = driver._control(1360, "_EL_PicBox")
+        before_hash = _control_pixel_sha256_hwnd(int(preview.handle))
+        before_upload = time.perf_counter()
+        driver.perform(
+            (
+                {"op": "click_id_message", "class": "Button", "control_id": button_id},
+                {"op": "window", "title": "信息："},
+                {"op": "click_id_message", "class": "Button", "control_id": 6},
+                {"op": "window", "title": "数据库", "settle_seconds": 0.5},
+            ),
+            0,
+        )
+        after = driver._control(1360, "_EL_PicBox")
+        return {
+            "pid": pid,
+            "kind": kind,
+            "before_hash": before_hash,
+            "after_hash": _control_pixel_sha256_hwnd(int(after.handle)),
+            "launch_and_navigation_seconds": round(before_upload - started, 3),
+            "blank_upload_seconds": round(time.perf_counter() - before_upload, 3),
+        }
+    finally:
+        driver.stop()
+
+
+def main() -> int:
+    ROOT.mkdir(parents=True, exist_ok=True)
+    payload = {"front": run("front", 790), "back": run("back", 800)}
+    OUTPUT.write_text(
+        json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
+    )
+    print(OUTPUT)
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

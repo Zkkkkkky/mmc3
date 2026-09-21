@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "reason": "精神1第二轮与首次10188条差分完全一致且GDI读回降至30秒内，归档为哈希锁定证据并提升正式用例",
+  "timestamp": "20260920T025921",
+  "moved": [
+    {
+      "module": "M06",
+      "field": "spirit_01",
+      "case_id": "cold_start_01",
+      "from": "output/build/legacy-diff-audit/cases/legacy_live/M06/spirit_01/cold_start_01",
+      "to": "output/build/legacy-diff-audit/cases/diagnostic/retry_history/20260920T025921/M06/spirit_01/cold_start_01",
+      "had_case_json": true,
+      "had_error_json": false
+    }
+  ],
+  "live_result_rows_removed": 1
+}

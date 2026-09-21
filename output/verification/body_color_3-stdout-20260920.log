@@ -1,0 +1,14 @@
+在线采集完成：M05/body_color_3/cold_start_01 PID 9260→9676，耗时 22.58s，passed=True
+- 用例目录：D:\GIT\mmc3\output\build\legacy-diff-audit\cases\legacy_live\M05\body_color_3\cold_start_01
+黄金档案归档完成：87/87 用例（golden 82，discovery 5），耗时 5.30s
+- 通过 golden：80；未通过 golden：2
+- 快照缺失：0
+- 未登记快照目录：3 -> output/build/legacy-diff-audit/cases/global_hit_threshold；output/build/legacy-diff-audit/cases/item_price_01；output/build/legacy-diff-audit/cases/legacy_other1/experience_level_98
+- 存量差分不一致预警：0
+- 孤儿档案（不被注册表引用，仅报告未删除）：5 -> M05-body_bank_1-cold_start_01.json；M05-fragment_bank-cold_start_01.json；M05-fragment_color_1-cold_start_01.json；M05-fragment_color_2-cold_start_01.json；M05-fragment_color_3-cold_start_01.json
+- 档案目录：output/build/legacy-diff-audit/golden（87 个 JSON + index.json）
+- 注册表：tools/golden_pipeline/cases/field_registry.json
+G1 黄金对照覆盖率：79/85 = 92.94%（分母口径 registered_fields；最终口径为主文档第 4/5 章全量字段数）
+G2 逐字段差分通过率：82/82 = 100.00%
+用例计数：golden 82（通过 80/未通过 2），discovery 5，待解释 7
+报告：output/reports/golden-coverage-report.json / output/reports/golden-coverage-report.md

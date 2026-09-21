@@ -1,19 +1,19 @@
 {
-  "generated_at": "2026-09-19T18:32:33+08:00",
+  "generated_at": "2026-09-19T23:11:00+08:00",
   "machine_gate_passed": true,
   "implementation_complete": true,
   "user_acceptance_complete": false,
   "overall_delivery_complete": false,
-  "conclusion": "M08—M18 共 11 个模块的机器门禁与当前声明实现范围均通过；M12 已用参考动态黄金把组图首图块开放、X/Y 非持久化锁为只读，其余无安全协议或双证据范围继续门禁。M08—M18 的用户签收均未由实现侧代填，因此总交付不得标记为已完成。",
+  "conclusion": "M08—M18 共 11 个模块的机器门禁与当前声明实现范围均通过；M12 已用参考动态黄金把组图首图块开放、X/Y 非持久化锁为只读，其余无安全协议或双证据范围继续门禁。M18 已由用户现场确认通过；其余模块仍待用户签收，因此总交付不得标记为已完成。",
   "formal_executable": {
     "path": "output/app/新DC篇完整修改器.exe",
-    "sha256": "F7784D2DE361621AC43B551B7759C8E9D5AB7FE63F8058DA7951A97CFDA6DA9D",
-    "declared_sha256": "F7784D2DE361621AC43B551B7759C8E9D5AB7FE63F8058DA7951A97CFDA6DA9D",
+    "sha256": "3C5DB9230284F79AD559FAFB3F024193C097329ED74A0B98D7F538FE129B9BE7",
+    "declared_sha256": "3C5DB9230284F79AD559FAFB3F024193C097329ED74A0B98D7F538FE129B9BE7",
     "hash_matches": true
   },
   "current_build_verification": {
     "path": "output/verification/m08-m18-current-build-verification-2026-09-19.json",
-    "sha256": "1ED8EDB4DC45227D91EA6D2D66F78CC1C82C423C35739A1B42F8103FCE57A5BE",
+    "sha256": "3D6EE15A7AE7AE65EEAE8E3B9B2C60B1C2A18300B5CE45B604893F9346F24F5B",
     "full_regression_passed": true,
     "full_regression_tests": 647,
     "self_test_exit_code": 0,
@@ -23,7 +23,7 @@
   },
   "agent_ui_smoke": {
     "path": "output/verification/m08-m18-agent-ui-smoke-2026-09-19.json",
-    "sha256": "B345A30C5D55D326958134D750704AB0D3B58F10B1B3A173EC77B3E467866DAB",
+    "sha256": "8D1B7E80C9CE5F5752AB716658B9F652093FCA27C6D5C198C9D17F73FE9F2AAC",
     "passed": true,
     "executable_sha256": "A0675C1A165590056DFB350C1F72B9D818BE28982D2AE8D796C3FC0BFCF8B1C0",
     "matches_current_executable": false
@@ -38,7 +38,7 @@
     "modules": 11,
     "machine_gate_passed": 11,
     "implementation_scope_complete": 11,
-    "user_accepted": 0
+    "user_accepted": 1
   },
   "modules": {
     "M08": {
@@ -142,14 +142,14 @@
       "user_acceptance": "pending"
     },
     "M18": {
-      "status": "implementation_complete_user_pending",
+      "status": "user_accepted",
       "implementation_scope_complete": true,
       "machine_gate_passed": true,
       "evidence": "output/verification/m18-unit-export-verification.json",
-      "evidence_sha256": "FFC77B6F1722484E3C0B97527BB959328F7B55D375C9460A1FF62174B0A5ECE4",
+      "evidence_sha256": "BE3360E59EAFA8375329D5D08A41226385518ADF7BBE137516F4D767A44F7ACE",
       "checklist": "docs/M18验收清单.md",
       "checklist_exists": true,
-      "user_acceptance": "pending"
+      "user_acceptance": "accepted"
     }
   },
   "blocking_reasons": [

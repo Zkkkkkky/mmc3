@@ -1,0 +1,4 @@
+Traceback (most recent call last):
+  File "D:\GIT\mmc3\tools\research\probe_m09_reference_catalog.py", line 168, in <module>
+    raise SystemExit(main())
+SystemExit: 0

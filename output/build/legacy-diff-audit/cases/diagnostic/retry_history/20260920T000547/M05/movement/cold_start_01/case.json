@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "module": "M05",
+  "field": "movement",
+  "case_id": "cold_start_01",
+  "case_kind": "golden",
+  "requested_value": 7,
+  "original_value": 8,
+  "reopen_value": 7,
+  "reopen_matches_request": true,
+  "reopen_mode": "new_process",
+  "first_pid": 38920,
+  "second_pid": 16764,
+  "changed_offsets": [
+    297551
+  ],
+  "removed_normalization": [],
+  "unexpected_offsets": [],
+  "expected_offsets": [
+    297551
+  ],
+  "required_offsets": [
+    297551
+  ],
+  "optional_offsets": [],
+  "extra_allowed": [],
+  "expected_not_changed": [],
+  "diffs": [
+    {
+      "offset": 297551,
+      "before": 8,
+      "after": 7
+    }
+  ],
+  "snapshots": {
+    "before": {
+      "path": "output/build/legacy-diff-audit/cases/legacy_live/M05/movement/cold_start_01/before.nes",
+      "sha256": "c5d2c1dfbe0dc39afc9effd314c082f121b98c9ad67c4825b1c9dd4b9e991954"
+    },
+    "after": {
+      "path": "output/build/legacy-diff-audit/cases/legacy_live/M05/movement/cold_start_01/after.nes",
+      "sha256": "3c0eee08259d867f73c421c86f19f5be8096350a2636309935a90e5a3667dc81"
+    }
+  },
+  "supporting_cdl": {
+    "source": "output/build/legacy-diff-audit/默认配置文件/测试.cdl",
+    "sha256": "599c1bb5ffd4b87229a81958f33f1060821cd01cd7aa7ccafa0d862f4522f3f6"
+  },
+  "duration_seconds": 62.272,
+  "budget_seconds": 30.0,
+  "within_budget": false,
+  "passed": false,
+  "pending_reason": "62.27s exceeds 30.00s budget"
+}

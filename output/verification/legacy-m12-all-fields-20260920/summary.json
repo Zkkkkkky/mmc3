@@ -1,0 +1,28 @@
+{
+  "passed": true,
+  "logical_fields": 784,
+  "completed": 784,
+  "statuses": {
+    "no_effect": 397,
+    "reference_saved_product_blocked": 387
+  },
+  "family_probe_counts": {
+    "background_code": 32,
+    "map_pointer_action_input": 1,
+    "map_weapon_animation_1": 13,
+    "map_weapon_animation_2": 2,
+    "map_weapon_animation_3": 2,
+    "map_weapon_animation_4": 2,
+    "movement_code": 114,
+    "spirit_animation": 24,
+    "sprite_code": 198,
+    "sprite_x": 198,
+    "sprite_y": 198
+  },
+  "baseline_sha256": "a7656c6ece9b463dcc26c8c62f280bdaade55dc39f0a120b8cffdeb54e8cfc2f",
+  "final_sha256": "f3082bbb149be9829e881dfcdf12a03ec7bdcfcc5a616f7ef4f4eda0886676ca",
+  "chain_valid": true,
+  "cold_process_logical_readback_passed": 784,
+  "evidence": "output/verification/legacy-m12-all-fields-20260920/field-save-chain.jsonl",
+  "final_rom": "output/verification/legacy-m12-all-fields-20260920/after-all-fields.nes"
+}

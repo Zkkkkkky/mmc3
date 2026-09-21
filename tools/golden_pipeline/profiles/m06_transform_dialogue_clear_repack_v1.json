@@ -1,0 +1,6 @@
+{
+  "schema_version": 1,
+  "source_case": "output/build/legacy-diff-audit/cases/diagnostic/retry_history/20260920T062219/M06/transform_dialogue_clear/cold_start_01/case.json",
+  "source_case_sha256": "1336F5AFE3748C038BE1AE6479EF5AF9F8456C8AE098237D020DE067C50E3FA1",
+  "exclude_offsets": [88496]
+}

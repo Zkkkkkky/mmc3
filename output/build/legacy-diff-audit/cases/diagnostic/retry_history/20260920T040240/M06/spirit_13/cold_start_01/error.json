@@ -1,0 +1,8 @@
+{
+  "module": "M06",
+  "field": "spirit_13",
+  "case_id": "cold_start_01",
+  "error": "ElementNotVisible: ",
+  "first_pid": null,
+  "second_pid": null
+}

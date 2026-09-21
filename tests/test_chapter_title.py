@@ -9,7 +9,8 @@ from PySide6.QtWidgets import QApplication
 
 from dc_modifier.app import DEFAULT_ROM
 from dc_modifier.legacy_windows import ChapterTitleDialog, ScenarioDialog
-from dc_modifier.map_page import render_chapter_title
+from dc_modifier.database_graphics import palette_color
+from dc_modifier.map_page import CHAPTER_TITLE_PALETTE_NES, render_chapter_title
 from fc_editor.codecs.chapter_title import (
     CHAPTER_TITLE_CHR_TABLE_OFFSET,
     CHAPTER_TITLE_COUNT,
@@ -123,6 +124,53 @@ class ChapterTitleUiTests(QtTestCase):
         self.assertFalse(actual.isNull())
         self.assertEqual(actual.size(), expected.size())
         self.assertEqual((actual.width(), actual.height()), (192, 48))
+
+    def test_title_pixels_keep_verified_light_to_dark_nes_index_order(self) -> None:
+        self.assertEqual(
+            CHAPTER_TITLE_PALETTE_NES,
+            (0x0F, 0x20, 0x10, 0x00),
+        )
+        record = self.project.get_chapter_title(0)
+        segment = record.title_segment
+        rendered = render_chapter_title(self.project, 0).toImage()
+        found: dict[int, tuple[int, int]] = {}
+        for position, tile_code in enumerate(segment.tiles):
+            bank_index = max(0, tile_code // 0x40 - 1)
+            tile = self.project.chr_tile_pixels(
+                record.chr_banks[bank_index] * 0x40 + tile_code % 0x40
+            )
+            for pixel, value in enumerate(tile):
+                if value and value not in found:
+                    found[value] = (
+                        (position % segment.width * 8 + pixel % 8) * 3,
+                        (position // segment.width * 8 + pixel // 8) * 3,
+                    )
+        self.assertEqual(set(found), {1, 2, 3})
+        for index, (x, y) in found.items():
+            self.assertEqual(
+                rendered.pixelColor(x, y),
+                palette_color(CHAPTER_TITLE_PALETTE_NES[index]),
+            )
+
+    def test_title_library_preview_uses_the_same_exact_nes_gray_ramp(self) -> None:
+        dialog = self.show(ChapterTitleDialog(self.project, 0))
+        image = dialog.bank_previews[0].pixmap().toImage()
+        bank = self.project.get_chapter_title(0).chr_banks[0]
+        found: dict[int, tuple[int, int]] = {}
+        for tile_index in range(64):
+            tile = self.project.chr_tile_pixels(bank * 64 + tile_index)
+            for pixel, value in enumerate(tile):
+                if value and value not in found:
+                    found[value] = (
+                        (tile_index % 8 * 8 + pixel % 8) * 2,
+                        (tile_index // 8 * 8 + pixel // 8) * 2,
+                    )
+        self.assertEqual(set(found), {1, 2, 3})
+        for index, (x, y) in found.items():
+            self.assertEqual(
+                image.pixelColor(x, y),
+                palette_color(CHAPTER_TITLE_PALETTE_NES[index]),
+            )
 
     def test_title_dialog_applies_one_fixed_capacity_tile_change(self) -> None:
         before = bytes(self.project.working)

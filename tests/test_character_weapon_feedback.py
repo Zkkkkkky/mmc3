@@ -12,9 +12,10 @@ from PySide6.QtWidgets import QApplication, QMessageBox
 
 from dc_modifier.app import DEFAULT_ROM
 from dc_modifier.legacy_windows import DatabaseDialog
+from dc_modifier.portrait_export import PORTRAIT_BACKGROUND_PALETTE_NES
 from fc_editor.dc_text import concise_dc_text
 from fc_editor.codecs.character_attributes import (
-    CharacterAttributesCodec, apply_verified_patches,
+    CharacterAttributesCodec, PortraitRecord, apply_verified_patches,
     weapon_extra_patches, weapon_extra_values,
 )
 from fc_editor.codecs.character_dialogue import TransformDialogueBinding
@@ -46,6 +47,10 @@ class CharacterCodecFeedbackTests(unittest.TestCase):
         self.assertEqual(self.codec.read(4).spirit, 33)
         self.assertEqual(self.codec.read(4).growth, 201)
         self.assertEqual(self.codec.read_portrait(4).colors, (55, 40, 23))
+        self.assertEqual(
+            self.codec.read_portrait(4),
+            PortraitRecord((55, 40, 23), 3, 20, 3, 2),
+        )
         self.assertEqual(self.codec.costs(), (10, 50, 10, 20, 40, 30, 80, 160, 50, 60, 80, 80, 150, 80, 130, 150, 180, 150, 150, 90, 100, 10, 60, 40))
 
     def test_independent_fixed_size_edit_touches_only_one_record(self) -> None:
@@ -338,6 +343,56 @@ class CharacterWeaponUiFeedbackTests(QtTestCase):
         self.assertEqual(codec.read_portrait(4).colors[0], 32)
         self.dialog.reject()
         self.assertEqual(bytes(self.project.working), self.before)
+
+    def test_portrait_preview_matches_reference_single_composite_and_toggles_layers(self) -> None:
+        record = CharacterAttributesCodec(self.project).read_portrait(4)
+        self.assertEqual(self.widget.portrait_fields["front_bank"].value(), 3)
+        self.assertEqual(self.widget.portrait_fields["front_slot"].value(), 4)
+        self.assertEqual(self.widget.portrait_fields["back_bank"].value(), 20)
+        self.assertEqual(self.widget.portrait_fields["back_slot"].value(), 3)
+        front_colors = {
+            QColor(*self._palette_rgb(index)).name().upper()
+            for index in (0x0F, *record.colors)
+        }
+        back_colors = {
+            QColor(*self._palette_rgb(index)).name().upper()
+            for index in PORTRAIT_BACKGROUND_PALETTE_NES
+        }
+        self.assertTrue(self.widget.show_front.isChecked())
+        self.assertTrue(self.widget.show_back.isChecked())
+        image = self.widget.portrait_preview.pixmap().toImage()
+        self.assertEqual((image.width(), image.height()), (64, 64))
+        actual = {
+            image.pixelColor(x, y).name().upper()
+            for y in range(image.height())
+            for x in range(image.width())
+        }
+        self.assertTrue(actual <= front_colors | back_colors)
+
+        both = image
+        self.widget.show_front.setChecked(False)
+        background_only = self.widget.portrait_preview.pixmap().toImage()
+        self.assertNotEqual(background_only, both)
+        self.assertTrue(
+            {background_only.pixelColor(x, y).name().upper()
+             for y in range(background_only.height()) for x in range(background_only.width())}
+            <= back_colors
+        )
+        self.widget.show_back.setChecked(False)
+        hidden = self.widget.portrait_preview.pixmap().toImage()
+        self.assertEqual(
+            {hidden.pixelColor(x, y).name().upper()
+             for y in range(hidden.height()) for x in range(hidden.width())},
+            {QColor(*self._palette_rgb(0x0F)).name().upper()},
+        )
+        self.assertFalse(self.widget.has_pending_changes())
+
+    @staticmethod
+    def _palette_rgb(index: int) -> tuple[int, int, int]:
+        from dc_modifier.database_graphics import FCEUX_RGB
+
+        start = (index & 0x3F) * 3
+        return tuple(FCEUX_RGB[start:start + 3])
 
     def test_capacity_error_preserves_form_and_all_other_pending_changes(self) -> None:
         self.page.records.setCurrentRow(0)

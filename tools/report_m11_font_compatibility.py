@@ -30,6 +30,7 @@ from fc_rom_editor_core import RomProject  # noqa: E402
 
 DEFAULT_ROM = ROOT / "output" / "rom" / "DC_kuorong_464K.nes"
 DEFAULT_REPORT = ROOT / "output" / "verification" / "m11-font-compatibility.json"
+REFERENCE_SUMMARY = ROOT / "output/verification/legacy-m11-all-fields-20260920/summary.json"
 EXPECTED_ROM_SHA256 = (
     "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E"
 )
@@ -41,6 +42,7 @@ def _sha256(data: bytes) -> str:
 
 def analyze(rom_path: Path) -> dict[str, object]:
     data = rom_path.read_bytes()
+    reference_summary = json.loads(REFERENCE_SUMMARY.read_text(encoding="utf-8"))
     rom_sha256 = _sha256(data)
     tokens = font_tokens()
     payload = full_font_payload(data)
@@ -128,6 +130,13 @@ def analyze(rom_path: Path) -> dict[str, object]:
         "all_row_padding_preserved": padding_preserved,
         "glyph_and_mapping_are_one_undo_transaction": undo_restored and redo_restored,
         "project_reopen_preserves_mapping_and_glyph": project_reopen_ok,
+        "reference_all_2688_fields_classified": (
+            reference_summary["passed"]
+            and reference_summary["physical_fields"] == 2688
+            and reference_summary["covered_fields"] == 2688
+            and reference_summary["safe_page_save_fields"] == 672
+            and reference_summary["two_cold_process_cases_passed"] == 24
+        ),
     }
     return {
         "generated_at": datetime.now().astimezone().isoformat(timespec="seconds"),
@@ -165,11 +174,13 @@ def analyze(rom_path: Path) -> dict[str, object]:
             ),
             "padding_regions_checked": len(padding_offsets),
         },
+        "reference_all_fields": reference_summary,
         "checks": checks,
         "limitations": [
             "自动分配只使用内置码表未占用、全 ROM 中 Token 零出现、且字模为统一填充值的槽位；不自动回收任何已分配槽。",
             "自定义字符到 Token 的关系是编辑工程元数据，游戏 ROM 只保存字模和正文 Token；单独打开 ROM 时需同时打开 .dcmod 或导入 .dcfontset 才能恢复 Unicode 名称。",
             ".dcfontset 是新修改器的版本化超集协议；参考程序可见窗口没有自动分配或字体文件控件，不能宣称与未知参考文件协议字节级一致。",
+            "参考版仅 B8/B9/C8 三页清页表现为目标区隔离保存；其余页或单字模动作存在 no-effect/非目标写入。产品的 18 字节定长隔离写入是安全增强，不冒充参考版逐字模字节一致。",
         ],
     }
 

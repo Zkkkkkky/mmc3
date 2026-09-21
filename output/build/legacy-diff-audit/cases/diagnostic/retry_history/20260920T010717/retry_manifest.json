@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "reason": "cold reopen proved palette save; 1584-byte reference graphics normalization independently matched body_bank_1 and fragment_bank and is now registered as a named profile",
+  "timestamp": "20260920T010717",
+  "moved": [
+    {
+      "module": "M05",
+      "field": "body_color_1",
+      "case_id": "cold_start_01",
+      "from": "output/build/legacy-diff-audit/cases/legacy_live/M05/body_color_1/cold_start_01",
+      "to": "output/build/legacy-diff-audit/cases/diagnostic/retry_history/20260920T010717/M05/body_color_1/cold_start_01",
+      "had_case_json": true,
+      "had_error_json": false
+    }
+  ],
+  "live_result_rows_removed": 1
+}

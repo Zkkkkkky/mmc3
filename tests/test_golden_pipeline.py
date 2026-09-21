@@ -101,9 +101,10 @@ SNAPSHOT_SAMPLES = (
 )
 SNAPSHOT_ROOT = AUDIT_DIR / "cases" / "legacy_globals"
 
-#: 当前快照中的 5 个 discovery 字段（G2 分母排除、G1 不计分子）。
+#: 当前快照中的 discovery 字段（G2 分母排除、G1 不计分子）。
 EXPECTED_DISCOVERY_FIELDS = frozenset(
     {
+        "M06/character_add_overflow",
         "M09/experience_level_2",
         "M09/experience_level_60",
         "M09/level_cap",
@@ -352,6 +353,47 @@ class ClassifyCaseTests(unittest.TestCase):
         self.assertEqual(result.unexplained, ())
         self.assertEqual(result.target_changed, (0x78109, 0x7815A))
         self.assertEqual(result.removed_normalization, core.NORMALIZATION_OFFSETS)
+
+
+class LiveAdapterTests(unittest.TestCase):
+    """在线发现型用例可先保留未知写入集，golden 不得使用空口径。"""
+
+    @staticmethod
+    def _item(case_kind: str) -> dict[str, object]:
+        return {
+            "module": "M06",
+            "field": "dialogue_probe",
+            "case_id": "cold_start_01",
+            "case_kind": case_kind,
+            "requested_value": 2,
+            "original_value": 1,
+            "reopen_value": 2,
+            "expected_offsets": [],
+            "required_offsets": [],
+            "optional_offsets": [],
+            "extra_allowed": [],
+            "unexpected_offsets": [123],
+            "diffs": [{"offset": 123, "before": 1, "after": 2}],
+            "snapshots": {
+                "before": {"path": "cases/probe/before.nes"},
+                "after": {"path": "cases/probe/after.nes", "sha256": "00"},
+            },
+            "duration_seconds": 1.0,
+            "reopen_mode": "new_process",
+            "within_budget": True,
+            "passed": False,
+        }
+
+    def test_unknown_discovery_offsets_are_accepted(self) -> None:
+        records = core._adapt_live([self._item("discovery")])
+        self.assertEqual(len(records), 1)
+        self.assertEqual(records[0].expected_offsets, ())
+        self.assertEqual(records[0].required_offsets, ())
+        self.assertEqual(records[0].changed_offsets, (123,))
+
+    def test_golden_offsets_must_not_be_empty(self) -> None:
+        with self.assertRaisesRegex(ValueError, "partition expected"):
+            core._adapt_live([self._item("golden")])
 
 
 # ---------------------------------------------------------------------------
@@ -1065,6 +1107,25 @@ class UnregisteredSnapshotPathTests(unittest.TestCase):
             (case_dir / "error.json").write_text("{}", encoding="utf-8")
             self.assertEqual(core.find_unregistered_snapshots(repo, []), [])
 
+    def test_retry_history_is_diagnostic_not_unregistered_golden(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            repo = Path(tmp)
+            case_dir = (
+                repo
+                / core.AUDIT_DIR_RELATIVE
+                / "cases"
+                / "diagnostic"
+                / "retry_history"
+                / "stamp"
+                / "M05"
+                / "speed"
+                / "cold_start_01"
+            )
+            case_dir.mkdir(parents=True)
+            (case_dir / "before.nes").write_bytes(b"\x00")
+            (case_dir / "after.nes").write_bytes(b"\x01")
+            self.assertEqual(core.find_unregistered_snapshots(repo, []), [])
+
 
 class OrphanArchiveTests(unittest.TestCase):
     """find_orphan_archives：golden/ 下未被引用的旧档案仅报告不删除。"""
@@ -1200,6 +1261,13 @@ class ThirdMirrorConsistencyTests(unittest.TestCase):
                     entry["expected_offsets"],
                     list(DOUBLE_HIT_FIRST_TWO_MIRRORS_BY_FIELD[field]),
                 )
+
+class CollectCliTests(unittest.TestCase):
+    def test_collect_can_defer_archive_for_guarded_batches(self) -> None:
+        args = cli.build_parser().parse_args(
+            ["collect", "--case-config", "case.json", "--defer-archive"]
+        )
+        self.assertTrue(args.defer_archive)
 
 
 if __name__ == "__main__":

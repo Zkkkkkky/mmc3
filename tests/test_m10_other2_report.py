@@ -17,7 +17,7 @@ class M10Other2ReportTests(unittest.TestCase):
         self.assertTrue(report["passed"])
         self.assertEqual(
             report["delivery_status"],
-            "implementation_complete_reference_and_user_pending",
+            "reference_field_scope_complete_user_pending",
         )
         evidence = report["evidence"]
         self.assertEqual(evidence["item_names"]["records"], 24)
@@ -27,7 +27,9 @@ class M10Other2ReportTests(unittest.TestCase):
         self.assertEqual(evidence["shops"]["item_counts"], [4, 4, 4, 4, 1])
         self.assertEqual(len(evidence["shops"]["invalid_ids"]), 10)
         self.assertEqual(evidence["shop_dialogues"]["no_op_roundtrips"], 35)
-        self.assertEqual(len(report["pending_acceptance"]), 2)
+        self.assertEqual(evidence["reference_all_fields"]["logical_fields"], 254)
+        self.assertEqual(evidence["reference_all_fields"]["saved_fields"], 134)
+        self.assertEqual(len(report["pending_acceptance"]), 1)
 
 
 if __name__ == "__main__":

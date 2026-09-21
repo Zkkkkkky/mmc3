@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "module": "M07",
+  "field": "enemy_animation_pointer",
+  "case_id": "cold_start_02",
+  "case_kind": "discovery",
+  "requested_value": "0081",
+  "original_value": "0080",
+  "reopen_value": "0080",
+  "reopen_matches_request": false,
+  "reopen_mode": "new_process",
+  "first_pid": 13924,
+  "second_pid": 9420,
+  "changed_offsets": [],
+  "removed_normalization": [],
+  "unexpected_offsets": [],
+  "expected_offsets": [],
+  "required_offsets": [],
+  "optional_offsets": [],
+  "extra_allowed": [],
+  "extra_allowed_profile": null,
+  "expected_not_changed": [],
+  "diffs": [],
+  "snapshots": {
+    "before": {
+      "path": "output/build/legacy-diff-audit/cases/legacy_live/M07/enemy_animation_pointer/cold_start_02/before.nes",
+      "sha256": "c5d2c1dfbe0dc39afc9effd314c082f121b98c9ad67c4825b1c9dd4b9e991954"
+    },
+    "after": {
+      "path": "output/build/legacy-diff-audit/cases/legacy_live/M07/enemy_animation_pointer/cold_start_02/after.nes",
+      "sha256": "c5d2c1dfbe0dc39afc9effd314c082f121b98c9ad67c4825b1c9dd4b9e991954"
+    }
+  },
+  "supporting_cdl": {
+    "source": "output/build/legacy-diff-audit/默认配置文件/测试.cdl",
+    "sha256": "599c1bb5ffd4b87229a81958f33f1060821cd01cd7aa7ccafa0d862f4522f3f6"
+  },
+  "duration_seconds": 44.275,
+  "budget_seconds": 30.0,
+  "requested_budget_seconds": 30.0,
+  "within_budget": false,
+  "passed": false,
+  "pending_reason": "discovery case requires reviewed offset promotion; cold reopen value differs from request; 44.28s exceeds 30.00s budget"
+}

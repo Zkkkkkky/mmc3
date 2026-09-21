@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "reason": "最后两项分别为30秒超时与瞬时ElementNotVisible；保留证据并加长20秒冷却后隔离重试",
+  "timestamp": "20260920T041926",
+  "moved": [
+    {
+      "module": "M06",
+      "field": "spirit_cost_08",
+      "case_id": "cold_start_01",
+      "from": "output/build/legacy-diff-audit/cases/legacy_live/M06/spirit_cost_08/cold_start_01",
+      "to": "output/build/legacy-diff-audit/cases/diagnostic/retry_history/20260920T041926/M06/spirit_cost_08/cold_start_01",
+      "had_case_json": true,
+      "had_error_json": false
+    }
+  ],
+  "live_result_rows_removed": 1
+}

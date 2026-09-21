@@ -1,0 +1,13 @@
+﻿python.exe : D:\GIT\mmc3\.venv\Lib\site-packages\pywinauto\application.py:1085: UserWarning: 32-bit application should 
+be automated using 32-bit Python (you use 64-bit Python)
+所在位置 行:1 字符: 42
++ ... \GIT\mmc3'; & '.\.venv\Scripts\python.exe' 'tools\research\probe_m06_ ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (D:\GIT\mmc3\.ve... 64-bit Python):String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+  warnings.warn(
+D:\GIT\mmc3\tools\research\probe_m06_spirit_list.py:136: DeprecationWarning: Image.Image.getdata is deprecated and will
+ be removed in Pillow 14 (2027-10-15). Use get_flattened_data instead.
+  payload["reverted_pixels_equal"] = list(reverted_image.getdata()) == list(before_image.getdata())
+D:\GIT\mmc3\output\verification\legacy-ui-probe-m06-spirit-20260920\controls\M06_数据库_人物修改_精神列表交互.json

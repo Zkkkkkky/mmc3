@@ -1,0 +1,8 @@
+�ƽ𵵰��鵵��ɣ�219/219 ������golden 212��discovery 7������ʱ 19.69s
+- ͨ�� golden��212��δͨ�� golden��0
+- ����ȱʧ��0
+- δ�Ǽǿ���Ŀ¼��3 -> output/build/legacy-diff-audit/cases/global_hit_threshold��output/build/legacy-diff-audit/cases/item_price_01��output/build/legacy-diff-audit/cases/legacy_other1/experience_level_98
+- ������ֲ�һ��Ԥ����0
+- �¶�����������ע������ã���0
+- ����Ŀ¼��output/build/legacy-diff-audit/golden��219 �� JSON + index.json��
+- ע�����tools/golden_pipeline/cases/field_registry.json

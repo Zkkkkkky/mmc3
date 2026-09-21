@@ -483,15 +483,12 @@ class MainWindow(QMainWindow):
         self.text_converter_action = self._action("文字转换(&Z)", self.open_text_converter, "Ctrl+Z")
         self.scenario_action = self._action("剧情事件(&J)", self.open_scenario, "Ctrl+J")
         self.export_unit_action = self._action("导出机体(&P)", self.export_unit, "Ctrl+F")
-        self.export_avatar_action = self._action("导出头像(&L)", self.export_avatar, "Ctrl+L")
+        self.export_avatar_action = self._action("导出头像(&L)", lambda: None, "Ctrl+L")
         self.export_avatar_action.setEnabled(False)
         self.export_avatar_action.setStatusTip(
-            "参考版此入口不可触发；增强头像 BMP 导出已移至“扩展功能”。"
+            "参考版此入口不可触发；请在“数据库 → 人物 → 头像设置与上传”中导出。"
         )
         self.export_avatar_action.setToolTip(self.export_avatar_action.statusTip())
-        self.export_avatar_extended_action = self._action(
-            "导出头像 BMP（增强）", self.export_avatar
-        )
         self.attribute_calculator_action = self._action("属性计算器", self.open_attribute_calculator)
         self.save_editor_action = self._action("存档修改器", self.open_save_editor)
         self.other_settings_action = self._action("其他(&T)", self.open_other_settings, "Ctrl+T")
@@ -569,7 +566,6 @@ class MainWindow(QMainWindow):
 
         self.extension_menu = self.menuBar().addMenu("扩展功能")
         self.extension_menu.addAction(self.rom_data_action)
-        self.extension_menu.addAction(self.export_avatar_extended_action)
         self.extension_menu.addSeparator()
         self.extension_menu.addAction(self.page_actions["music"])
         self.extension_menu.addAction(self.page_actions["unit_import"])
@@ -897,50 +893,6 @@ class MainWindow(QMainWindow):
             )
         except Exception as error:
             QMessageBox.critical(self, "导出机体失败", str(error))
-
-    def export_avatar(self) -> None:
-        if self.project is None:
-            return
-        from .portrait_export import export_portrait_bitmaps, portrait_export_paths
-
-        root_name = QFileDialog.getExistingDirectory(
-            self,
-            "导出头像 · 选择根目录",
-            str(_default_export_path("头像导出").parent),
-        )
-        if not root_name:
-            return
-        labels = [
-            f"{character_id:03d} · {self.project.character_display_name(character_id)}"
-            for character_id in range(1, self.project.profile.character_name_count)
-        ]
-        selected, accepted = QInputDialog.getItem(
-            self, "导出头像", "选择人物：", labels, 0, False
-        )
-        if not accepted:
-            return
-        character_id = labels.index(selected) + 1
-        try:
-            root = writable_output_path(root_name)
-            paths = portrait_export_paths(self.project, character_id, root)
-            if any(path.exists() for path in paths):
-                answer = QMessageBox.question(
-                    self,
-                    "覆盖头像文件",
-                    f"{paths[0].parent.name} 已有头像文件。是否覆盖？",
-                    QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
-                    QMessageBox.StandardButton.No,
-                )
-                if answer != QMessageBox.StandardButton.Yes:
-                    return
-            back_path, front_path, effect_path = export_portrait_bitmaps(
-                self.project, character_id, root
-            )
-            self.status.showMessage(
-                f"头像已导出：{back_path.parent.name}（3 个 BMP）", 5000
-            )
-        except Exception as error:
-            QMessageBox.critical(self, "导出头像失败", str(error))
 
     @property
     def has_unsaved_changes(self) -> bool:
@@ -1304,7 +1256,6 @@ class MainWindow(QMainWindow):
             self.text_converter_action,
             self.scenario_action,
             self.export_unit_action,
-            self.export_avatar_extended_action,
             self.attribute_calculator_action,
             self.other_settings_action,
         ):

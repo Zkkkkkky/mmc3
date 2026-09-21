@@ -1,0 +1,64 @@
+{
+  "module": "M05",
+  "field": "fragment_color_2",
+  "case_id": "cold_start_01",
+  "requested_value": "2B",
+  "expected_before": "2A",
+  "expected_offsets": [
+    45169
+  ],
+  "required_offsets": [
+    45169
+  ],
+  "optional_offsets": [],
+  "extra_allowed": [],
+  "navigation": [
+    {
+      "op": "menu",
+      "path": "数据->数据库"
+    },
+    {
+      "op": "window",
+      "title": "数据库"
+    },
+    {
+      "op": "list_select",
+      "class": "ListBox",
+      "control_id": 120,
+      "row": 1
+    }
+  ],
+  "edit_steps": [
+    {
+      "op": "click_id_input",
+      "class": "_EL_Label",
+      "control_id": 330
+    },
+    {
+      "op": "window",
+      "title": "调色板选择",
+      "settle_seconds": 0.2
+    },
+    {
+      "op": "click_id_input",
+      "class": "_EL_Label",
+      "control_id": 520
+    },
+    {
+      "op": "window",
+      "title": "数据库",
+      "settle_seconds": 0.2
+    },
+    {
+      "op": "click_id",
+      "class": "Button",
+      "control_id": 590
+    }
+  ],
+  "read_selector": {
+    "class": "Edit",
+    "control_id": 300,
+    "value_type": "str"
+  },
+  "extra_allowed_profile": "m05_appearance_normalization_v1"
+}

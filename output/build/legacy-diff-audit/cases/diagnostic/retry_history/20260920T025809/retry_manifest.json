@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "reason": "精神1字段语义正确但整图截图读回导致33.353秒超出硬门槛，保留后改用GDI像素采样重试",
+  "timestamp": "20260920T025809",
+  "moved": [
+    {
+      "module": "M06",
+      "field": "spirit_01",
+      "case_id": "cold_start_01",
+      "from": "output/build/legacy-diff-audit/cases/legacy_live/M06/spirit_01/cold_start_01",
+      "to": "output/build/legacy-diff-audit/cases/diagnostic/retry_history/20260920T025809/M06/spirit_01/cold_start_01",
+      "had_case_json": true,
+      "had_error_json": false
+    }
+  ],
+  "live_result_rows_removed": 1
+}

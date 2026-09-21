@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "reason": "按460像素真实控件宽度修正第二第三列复选框点击坐标；保留文字区域零写入证据",
+  "timestamp": "20260920T032140",
+  "moved": [
+    {
+      "module": "M06",
+      "field": "spirit_09",
+      "case_id": "cold_start_01",
+      "from": "output/build/legacy-diff-audit/cases/legacy_live/M06/spirit_09/cold_start_01",
+      "to": "output/build/legacy-diff-audit/cases/diagnostic/retry_history/20260920T032140/M06/spirit_09/cold_start_01",
+      "had_case_json": true,
+      "had_error_json": false
+    }
+  ],
+  "live_result_rows_removed": 1
+}

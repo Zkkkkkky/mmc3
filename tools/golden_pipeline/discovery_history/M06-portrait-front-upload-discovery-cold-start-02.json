@@ -1,0 +1,9 @@
+{
+  "module":"M06","field":"portrait_front_upload","case_id":"cold_start_02","case_kind":"discovery",
+  "requested_value":"25e1d39498a91890b6b52aa2e0c5d2b4c320d07d6768eda7a5d17edc08bcf397","expected_before":"1c9fdefc3fedebedbd65c52d2ddf212c5729d5076e2086186321bb204caef309",
+  "expected_offsets":[],"required_offsets":[],"optional_offsets":[],"extra_allowed":[],
+  "navigation":[{"op":"menu","path":"数据->数据库"},{"op":"window","title":"数据库"},{"op":"click_coords","x":130,"y":73},{"op":"list_select","class":"ListBox","control_id":630,"row":5}],
+  "read_navigation":[{"op":"menu","path":"数据->数据库"},{"op":"window","title":"数据库"},{"op":"click_coords","x":130,"y":73},{"op":"list_select","class":"ListBox","control_id":630,"row":5}],
+  "edit_steps":[{"op":"click_id_message","class":"Button","control_id":790},{"op":"window","title":"信息："},{"op":"click_id_message","class":"Button","control_id":6},{"op":"window","title":"数据库","settle_seconds":0.5},{"op":"click_id","class":"Button","control_id":590}],
+  "read_selector":{"class":"_EL_PicBox","control_id":1360,"value_type":"control_pixel_sha256"}
+}

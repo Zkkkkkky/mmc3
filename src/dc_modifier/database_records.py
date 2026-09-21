@@ -133,6 +133,9 @@ class ReadableCharacterPage(CharacterPage):
             detail.insertWidget(position, identity_row)
         self.character_details = CharacterDetailsWidget()
         self.character_details.changed.connect(self._update_pending_state)
+        self.character_details.portrait_export_requested.connect(
+            self.export_selected_record
+        )
         detail.insertWidget(detail.count() - 2, self.character_details)
         self.character_dialogue.changed.connect(self._update_pending_state)
         detail.insertWidget(detail.count() - 2, self.character_dialogue)
@@ -158,21 +161,34 @@ class ReadableCharacterPage(CharacterPage):
         return True
 
     def record_export_label(self) -> str:
-        return "导出当前正面/背面/效果头像…"
+        return "导出当前头像 BMP（背面/正面/效果）…"
 
     def export_selected_record(self) -> None:
         if self.project is None or self.current_id is None:
             return
-        directory = QFileDialog.getExistingDirectory(self, "选择头像导出根目录")
+        directory = QFileDialog.getExistingDirectory(
+            self, "导出当前头像 · 选择根目录"
+        )
         if not directory:
             return
         try:
             if not self.commit_pending_changes():
                 return
-            from .portrait_export import export_portrait_bitmaps
+            from .portrait_export import export_portrait_bitmaps, portrait_export_paths
             from .workspace import writable_output_path
 
             root = writable_output_path(directory)
+            paths = portrait_export_paths(self.project, self.current_id, root)
+            if any(path.exists() for path in paths):
+                answer = QMessageBox.question(
+                    self,
+                    "覆盖头像文件",
+                    f"{paths[0].parent.name} 已有头像文件。是否覆盖？",
+                    QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
+                    QMessageBox.StandardButton.No,
+                )
+                if answer != QMessageBox.StandardButton.Yes:
+                    return
             back, front, effect = export_portrait_bitmaps(
                 self.project, self.current_id, root
             )
