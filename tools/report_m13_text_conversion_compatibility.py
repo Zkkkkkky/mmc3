@@ -7,7 +7,13 @@ import hashlib
 import json
 import os
 from pathlib import Path
+import sys
 from typing import Iterable
+
+ROOT = Path(__file__).resolve().parents[1]
+SRC = ROOT / "src"
+if str(SRC) not in sys.path:
+    sys.path.insert(0, str(SRC))
 
 os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 
@@ -17,8 +23,6 @@ from dc_modifier.legacy_tools import TextConverterDialog
 from fc_editor.dc_text import reference_dc_text_table
 from fc_rom_editor_core import RomProject
 
-
-ROOT = Path(__file__).resolve().parents[1]
 REFERENCE_TABLE = (
     ROOT / "references" / "legacy_modifier" / "默认配置文件" / "码表.ini"
 )

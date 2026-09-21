@@ -20,6 +20,17 @@ from .database_graphics import palette_color
 from .portrait_export import PORTRAIT_BACKGROUND_PALETTE_NES
 
 
+def legacy_portrait_selectors(record: PortraitRecord) -> tuple[int, int, int, int]:
+    """Return the four selectors with the reference editor's 1-based slots."""
+
+    return (
+        record.front_bank,
+        record.front_slot + 1,
+        record.back_bank,
+        record.back_slot + 1,
+    )
+
+
 class CharacterDialogueWidget(QGroupBox):
     changed = Signal()
 
@@ -575,9 +586,17 @@ class CharacterDetailsWidget(QWidget):
                 check.setChecked(bool(record.spirit_mask & (1 << (23 - index))))
             for cost, value in zip(self.costs, codec.costs()):
                 cost.setValue(value)
+            selector_values = dict(zip(
+                ("front_bank", "front_slot", "back_bank", "back_slot"),
+                legacy_portrait_selectors(portrait),
+            ))
             for key, spin in self.portrait_fields.items():
-                value = portrait.colors[int(key[-1])] if key.startswith("color") else getattr(portrait, key)
-                spin.setValue(value + (1 if key.endswith("slot") else 0))
+                value = (
+                    portrait.colors[int(key[-1])]
+                    if key.startswith("color")
+                    else selector_values[key]
+                )
+                spin.setValue(value)
             self.shared_attributes.setChecked(False)
             self.shared_portrait.setChecked(False)
             for label, is_portrait in ((self.attribute_sharing, False), (self.portrait_sharing, True)):
@@ -608,8 +627,13 @@ class CharacterDetailsWidget(QWidget):
 
     def portrait_record(self) -> PortraitRecord:
         values = {key: spin.value() for key, spin in self.portrait_fields.items()}
-        return PortraitRecord(tuple(values[f"color{index}"] for index in range(3)),
-                              values["front_bank"], values["back_bank"], values["front_slot"] - 1, values["back_slot"] - 1)
+        return PortraitRecord(
+            tuple(values[f"color{index}"] for index in range(3)),
+            values["front_bank"],
+            values["back_bank"],
+            values["front_slot"] - 1,
+            values["back_slot"] - 1,
+        )
 
     def pending_patches(self):
         if self.codec is None or self.character_id is None:

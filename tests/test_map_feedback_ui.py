@@ -507,6 +507,8 @@ class MapFeedbackUiTests(QtTestCase):
     def test_shop_list_add_drag_commit_and_undo_preserve_record_semantics(self) -> None:
         self.page.editor_tabs.setCurrentIndex(2)
         self.assertIn("没有", self.page.trigger_summary.text())
+        self.assertEqual(self.page.trigger_character_combo.itemData(0), 0xFF)
+        self.assertIn("任何人物", self.page.trigger_character_combo.itemText(0))
         self.page.trigger_table.set_rows([(3, 4, 0xFF, 0xF2)])
         self.assertEqual(self.page.trigger_objects.count(), 1)
         self.assertIn("商店 2", self.page.trigger_objects.item(0).text())

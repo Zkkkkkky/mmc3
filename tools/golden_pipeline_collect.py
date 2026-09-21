@@ -147,7 +147,10 @@ class CaseSpec:
                 if relative_source.is_absolute() or not source_path.is_relative_to(repo_root):
                     raise ValueError("extra_allowed profile source_case must stay inside the repo")
                 source_bytes = source_path.read_bytes()
-                actual_hash = hashlib.sha256(source_bytes).hexdigest()
+                # Hash-pinned JSON evidence is stored in canonical LF form.
+                # Windows core.autocrlf may materialize equivalent CRLF bytes.
+                canonical_source = source_bytes.replace(b"\r\n", b"\n")
+                actual_hash = hashlib.sha256(canonical_source).hexdigest()
                 if actual_hash.lower() != str(profile.get("source_case_sha256", "")).lower():
                     raise ValueError("extra_allowed profile source_case SHA-256 mismatch")
                 source_payload = json.loads(source_bytes.decode("utf-8"))

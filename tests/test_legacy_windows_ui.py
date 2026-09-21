@@ -336,6 +336,32 @@ class LegacyWindowTests(QtTestCase):
         self.assertTrue(page.name_text.isVisible())
         self.assertTrue(page.body_layout_button.isEnabled())
         self.assertTrue(page.fragment_layout_button.isEnabled())
+        self.assertEqual(page.body_upload_button.text(), "上传机体")
+        self.assertEqual(page.fragment_upload_button.text(), "上传碎片")
+        self.assertEqual(page.body_clear_button.text(), "清除机体")
+        self.assertEqual(page.fragment_clear_button.text(), "清除碎片")
+        self.assertEqual((page.body_import_offset.minimum(), page.body_import_offset.maximum()), (0, 63))
+        self.assertEqual(
+            (page.fragment_import_offset.minimum(), page.fragment_import_offset.maximum()),
+            (0, 127),
+        )
+        self.assertTrue(page.body_compress_upload.isChecked())
+        self.assertTrue(page.fragment_compress_upload.isChecked())
+        preview_right = page.body_preview.mapTo(
+            page.graphics_group, page.body_preview.rect().topRight()
+        ).x()
+        body_upload_left = page.body_upload_button.mapTo(
+            page.graphics_group, page.body_upload_button.rect().topLeft()
+        ).x()
+        fragment_upload_left = page.fragment_upload_button.mapTo(
+            page.graphics_group, page.fragment_upload_button.rect().topLeft()
+        ).x()
+        self.assertLess(preview_right, body_upload_left)
+        self.assertLess(body_upload_left, fragment_upload_left)
+        self.assertEqual(
+            page.body_layout_button.geometry().y(),
+            page.fragment_layout_button.geometry().y(),
+        )
         self.assertTrue(page.icon_group.isVisible())
         self.assertFalse(page.appearance_summary.isVisible())
         self.assertTrue(page.appearance_type.isVisible())

@@ -17,7 +17,7 @@ class M08M18DeliveryGateTests(unittest.TestCase):
         self.assertFalse(report["user_acceptance_complete"])
         self.assertFalse(report["overall_delivery_complete"])
         self.assertEqual(
-            report["current_build_verification"]["full_regression_tests"], 647
+            report["current_build_verification"]["full_regression_tests"], 728
         )
         self.assertTrue(
             report["current_build_verification"]["full_regression_passed"]
@@ -25,7 +25,7 @@ class M08M18DeliveryGateTests(unittest.TestCase):
         self.assertEqual(
             report["current_build_verification"]["self_test_exit_code"], 0
         )
-        self.assertFalse(
+        self.assertTrue(
             report["current_build_verification"][
                 "current_build_click_smoke_performed"
             ]

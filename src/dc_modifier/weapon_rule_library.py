@@ -53,21 +53,23 @@ WEAPON_RULE_TABLES = (
 
 
 class WeaponRuleCatalog:
-    """Read the four legacy weapon-rule pointer libraries without guessing writes."""
+    """Read the four reference weapon-rule pointer libraries safely."""
 
     def __init__(self, data: bytes | bytearray) -> None:
         self.data = bytes(data)
         for table in WEAPON_RULE_TABLES:
             if self._pointer(table, 1) != table.first_pointer:
-                raise ValueError(
-                    f"{table.title}指针表与已验证格式不同；已停止解析。"
-                )
+                raise ValueError(f"{table.title}指针表与已验证格式不同；已停止解析。")
 
     def _pointer(self, table: WeaponRuleTable, rule_id: int) -> int:
         offset = table.pointer_table + rule_id * 2
         return int.from_bytes(self.data[offset:offset + 2], "little")
 
-    def record(self, table: WeaponRuleTable, rule_id: int) -> tuple[int, bytes, tuple[int, ...]]:
+    def record(
+        self,
+        table: WeaponRuleTable,
+        rule_id: int,
+    ) -> tuple[int, bytes, tuple[int, ...]]:
         if not 1 <= rule_id <= table.count:
             raise IndexError(rule_id)
         pointer = self._pointer(table, rule_id)
@@ -85,8 +87,6 @@ class WeaponRuleCatalog:
         if larger:
             end = table.file_base + min(larger) - table.cpu_base
         else:
-            # Every verified record is FF-terminated; cap the final/aliased tail
-            # at the containing 8 KiB bank so malformed input cannot escape it.
             bank_end = table.file_base + 0x2000
             terminator = self.data.find(b"\xFF", start, bank_end)
             end = terminator + 1 if terminator >= start else bank_end
