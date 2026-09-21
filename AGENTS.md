@@ -1,5 +1,33 @@
 # Repository Guidelines
 
+## Repository SSH Identity
+
+For Git operations against this repository's `origin`, use the private key
+`C:/Users/Administrator/.ssh/id_ed25519`. The repository-local Git setting is
+expected to remain:
+
+```text
+C:/Windows/System32/OpenSSH/ssh.exe -i C:/Users/Administrator/.ssh/id_ed25519 -o IdentitiesOnly=yes
+```
+
+Do not probe or rotate through other SSH keys during commit/push workflows. If
+authentication with this configured key fails, report the exact failure instead
+of trying unrelated identities.
+
+## Branch Discipline
+
+Remain on the current Git branch unless the user explicitly instructs you to
+switch to a named branch. Requests to inspect another branch, merge it, repair
+content originating from it, compare it, or resolve its conflicts do not by
+themselves authorize `git switch`, `git checkout <branch>`, or any equivalent
+branch change.
+
+Use read-only branch references such as `git show`, `git diff`, `git grep`,
+and explicit commit/tree paths whenever possible. If completing a task truly
+requires a branch switch and the user has not explicitly requested one, stop
+and ask first. After an authorized switch, treat that branch as the active
+working branch until the user explicitly requests another switch.
+
 ## Project Purpose & Modifier Conventions
 
 The project's core goal is to develop a ROM editor for the FC game *第二次机器人大战*. `references/legacy_modifier/SRW2_patched.exe` is a completed editor product used as a reference source for behavior, workflows, and supported data; it is not the editor currently being developed. “新DC修改器” is the active editor product in this repository.
