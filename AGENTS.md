@@ -6,6 +6,8 @@ The project's core goal is to develop a ROM editor for the FC game *第二次机
 
 Every change to the active editor must update `docs/DC修改器使用说明.md` in the same change. Keep the instructions synchronized with changes to features, UI, supported data, operating steps, validation, and user-visible limitations.
 
+Whenever a change affects reusable ROM-editor architecture or methodology—including ROM identity/Profile, address mapping, codecs, transactions, resource graphs or allocation, reverse-engineering evidence, golden comparison, testing and acceptance, packaging and delivery, or cross-ROM reuse boundaries—update `docs/ROM定制修改器建设方案.md` in the same change. Improve the general guidance from verified experience without copying game-specific addresses into the reusable method.
+
 ## Project Structure & Module Organization
 
 The repository uses five core directories plus a separate read-only reference area:
