@@ -103,6 +103,11 @@ class LegacySaveCodec:
     ACTIVE_LENGTH = 0x0437
     BACKUP_OFFSET = 0x1848
     BACKUP_CHECKSUM_OFFSET = 0x1C7F
+    DEPLOYED_UNIT_OFFSET = 0x0009
+    ALLY_X_OFFSET = 0x0186
+    ENEMY_X_OFFSET = 0x0194
+    ALLY_Y_OFFSET = 0x01A6
+    ENEMY_Y_OFFSET = 0x01B4
     SLOT_LENGTH = 0x00FB
     SLOT_DATA_OFFSETS = (0x1C81, 0x1D7E, 0x1E7B)
     SLOT_CHECKSUM_OFFSETS = (0x1D7C, 0x1E79, 0x1F76)
@@ -420,4 +425,63 @@ class LegacySaveCodec:
             staged[base + layout["hp_high"] + index] = hp >> 8
             staged[base + layout["max_hp_low"] + index] = maximum & 0xFF
             staged[base + layout["max_hp_high"] + index] = maximum >> 8
+        return bytes(staged)
+
+    @classmethod
+    def prepare_weapon_animation_fixture(
+        cls,
+        data: bytes | bytearray,
+        *,
+        unit_id: int,
+        ally_index: int = 0,
+        enemy_index: int = 0,
+    ) -> bytes:
+        """Clone an active-battle save into a deterministic animation fixture.
+
+        The active block and its checked backup use the same relative layout.
+        The chosen deployed unit is put in the first controllable slot and the
+        chosen enemy is moved one tile next to that ally.  Persistent save
+        slots and the caller's source bytes are left untouched.
+        """
+        cls.validate_size(data)
+        unit = cls._byte(unit_id, "测试机体编号")
+        ally_count = cls._BATTLE_LAYOUT["ally"]["count"]
+        enemy_count = cls._BATTLE_LAYOUT["enemy"]["count"]
+        if not 0 <= ally_index < ally_count:
+            raise ValueError(f"我方战场序号必须在 0—{ally_count - 1} 之间。")
+        if not 0 <= enemy_index < enemy_count:
+            raise ValueError(f"敌方战场序号必须在 0—{enemy_count - 1} 之间。")
+
+        source = bytes(data)
+        document = cls.decode(source)
+        if not any(entry.index == ally_index for entry in document.allies):
+            raise LegacySaveFormatError("活动战场中没有可用的测试单位。")
+        if not any(entry.index == enemy_index for entry in document.enemies):
+            raise LegacySaveFormatError("活动战场中没有可用的敌方目标。")
+        backup = source[cls.BACKUP_OFFSET : cls.BACKUP_CHECKSUM_OFFSET]
+        stored = int.from_bytes(
+            source[cls.BACKUP_CHECKSUM_OFFSET : cls.BACKUP_CHECKSUM_OFFSET + 2],
+            "little",
+        )
+        if cls.checksum(backup) != stored:
+            raise LegacySaveFormatError("活动战场备份校验失败，不能生成动画测试夹具。")
+
+        staged = bytearray(source)
+        active = cls.ACTIVE_OFFSET
+        ally_x = staged[active + cls.ALLY_X_OFFSET + ally_index]
+        ally_y = staged[active + cls.ALLY_Y_OFFSET + ally_index]
+        if ally_x >= 0x40 or ally_y >= 0x40:
+            raise LegacySaveFormatError("活动战场中的测试单位坐标无效。")
+        enemy_x = ally_x
+        enemy_y = ally_y - 1 if ally_y > 0 else ally_y + 1
+
+        for base in (cls.ACTIVE_OFFSET, cls.BACKUP_OFFSET):
+            staged[base + cls.DEPLOYED_UNIT_OFFSET + ally_index] = unit
+            staged[base + cls.ENEMY_X_OFFSET + enemy_index] = enemy_x
+            staged[base + cls.ENEMY_Y_OFFSET + enemy_index] = enemy_y
+
+        checked = staged[cls.BACKUP_OFFSET : cls.BACKUP_CHECKSUM_OFFSET]
+        staged[
+            cls.BACKUP_CHECKSUM_OFFSET : cls.BACKUP_CHECKSUM_OFFSET + 2
+        ] = cls.checksum(checked).to_bytes(2, "little")
         return bytes(staged)

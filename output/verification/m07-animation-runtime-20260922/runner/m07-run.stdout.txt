@@ -1,0 +1,9 @@
+CAPTURE frame=675 file=m07-frame-0675.png pc=F875
+CAPTURE frame=750 file=m07-frame-0750.png pc=F874
+CAPTURE frame=900 file=m07-frame-0900.png pc=F876
+CAPTURE frame=1200 file=m07-frame-1200.png pc=F874
+CAPTURE frame=1800 file=m07-frame-1800.png pc=F875
+CAPTURE frame=2400 file=m07-frame-2400.png pc=F872
+CAPTURE frame=3600 file=m07-frame-3600.png pc=F875
+CAPTURE frame=5000 file=m07-frame-5000.png pc=F875
+RESULT frames=5000 pc=F875

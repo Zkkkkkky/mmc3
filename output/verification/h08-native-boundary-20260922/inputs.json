@@ -1,0 +1,24 @@
+{
+  "source": "output/rom/DC_kuorong_464K.nes",
+  "source_sha256_before_and_after": "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E",
+  "capacity": {
+    "path": "output/verification/h08-native-boundary-20260922/h08-capacity-299.nes",
+    "sha256": "D31EA0325832A90C3DBE5FC5B70CB7EF239FCAD82C1556B6B27D07167B17E73F",
+    "map_id": 0,
+    "record_count": 73,
+    "pool_used": 299,
+    "pool_capacity": 300,
+    "one_more_record_would_need": 303
+  },
+  "coordinate": {
+    "path": "output/verification/h08-native-boundary-20260922/h08-coordinate-edge.nes",
+    "sha256": "2D6BF97D70B04911E69AE88187C155C5CE93CBDE42AFB79485EC8463995BA885",
+    "map_id": 0,
+    "original_width": 27,
+    "height": 26,
+    "existing_event_x": 26,
+    "proposed_width": 26,
+    "proposed_rle_size": 320,
+    "rle_capacity": 324
+  }
+}

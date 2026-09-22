@@ -1,0 +1,24 @@
+{
+  "branch": "shanghua",
+  "date": "2026-09-22",
+  "scope": "M07 animation-test launch smoke only",
+  "formal_exe": "output/app/新DC篇完整修改器.exe",
+  "input_rom": "output/verification/h11-native-exe-20260922/h11-work.nes",
+  "test_rom": "output/verification/weapon-animation-01.nes",
+  "input_rom_sha256": "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E",
+  "test_rom_sha256": "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E",
+  "weapon_id": "01",
+  "emulator": "tools/vendor/mesen-0.9.9/Mesen.exe",
+  "observed": [
+    "Formal EXE database weapon page Animation Test button generated the test ROM",
+    "Bundled Mesen process opened weapon-animation-01.nes",
+    "Game title screen displayed START, CONTINUE and DATA LOAD"
+  ],
+  "not_verified": [
+    "Entering a battle",
+    "Selected weapon animation playback",
+    "Comparison of ally and enemy animation with reference behavior"
+  ],
+  "input_constraint": "Player 1 Start and Select were unbound in the existing Mesen input configuration. A UI attempt to bind Start did not capture keyboard input and was canceled without saving the configuration.",
+  "result": "launch_smoke_passed_battle_pending"
+}

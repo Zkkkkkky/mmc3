@@ -1,0 +1,14 @@
+{
+  "branch": "shanghua",
+  "date": "2026-09-22",
+  "scope": "full unittest regression after M07 selected-weapon runtime fixture integration",
+  "command": ".venv/Scripts/python.exe -X faulthandler -m unittest discover -s tests -t . -p test_*.py",
+  "tests": 743,
+  "failures": 0,
+  "errors": 0,
+  "elapsed_seconds": 850.271,
+  "result": "passed",
+  "formal_executable_sha256": "111C3B3D9A5C11918DE4CF46E92899938EA948F13E40135FA8E776A616BD08E9",
+  "recommended_rom_sha256": "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E",
+  "note": "The first run exposed one stale delivery-gate assertion that still expected only M18 to be user accepted. The delivery report already recorded M08-M18 as accepted for their current scopes. The assertion was updated to match that recorded state; the complete suite was then rerun from the beginning and passed 743/743."
+}

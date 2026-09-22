@@ -1,0 +1,9 @@
+CAPTURE frame=675 file=confirm-0675.png pc=F875
+CAPTURE frame=740 file=confirm-0740.png pc=F875
+CAPTURE frame=800 file=confirm-0800.png pc=F874
+CAPTURE frame=940 file=confirm-0940.png pc=F874
+CAPTURE frame=1080 file=confirm-1080.png pc=F875
+CAPTURE frame=1250 file=confirm-1250.png pc=F872
+CAPTURE frame=1500 file=confirm-1500.png pc=F874
+CAPTURE frame=1800 file=confirm-1800.png pc=F875
+RESULT frames=1800 pc=F875

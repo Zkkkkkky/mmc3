@@ -1,0 +1,40 @@
+{
+  "case_id": "H08-formal-exe-boundary-20260922",
+  "branch": "shanghua",
+  "status": "passed_machine_scope",
+  "formal_exe_sha256": "E3D17EB2919E8418C8650EFF3C6A094183B4AB25AF52DBA69CCD4D794903C419",
+  "recommended_rom_sha256_after": "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E",
+  "capacity": {
+    "input": "output/verification/h08-native-boundary-20260922/h08-capacity-299.nes",
+    "sha256_before_and_after": "D31EA0325832A90C3DBE5FC5B70CB7EF239FCAD82C1556B6B27D07167B17E73F",
+    "initial_records": 73,
+    "initial_pool_used": 299,
+    "draft_records_after_native_add": 74,
+    "native_error": "地图触发器压缩后需要 303 字节，托管池只有 300 字节。",
+    "apply_rejected": true,
+    "draft_preserved": true,
+    "working_bytes_changed": 0,
+    "input_file_unchanged": true
+  },
+  "coordinate": {
+    "input": "output/verification/h08-native-boundary-20260922/h08-coordinate-edge.nes",
+    "sha256_before_and_after": "2D6BF97D70B04911E69AE88187C155C5CE93CBDE42AFB79485EC8463995BA885",
+    "initial_event": [26, 0, 255, 242],
+    "initial_map_size": [27, 26],
+    "draft_map_size": [26, 26],
+    "native_error": "第 1 条地图触发器坐标 (26, 0) 超出 26×26 地图。",
+    "apply_rejected": true,
+    "draft_preserved": true,
+    "working_bytes_changed": 0,
+    "input_file_unchanged": true
+  },
+  "related_previous_checks": {
+    "gui_save_reopen_and_f5_fe": "output/verification/m04-shop-events-20260922/report.json",
+    "core_checks_passed": "23/23",
+    "codec_and_qt_boundary_regression": "72/72"
+  },
+  "not_covered": [
+    "用户对 M04 新开放范围的增量签收。",
+    "参考版固定视口外 44 字段与事件限定人物 29 个 forced-FF 字段仍禁写。"
+  ]
+}

@@ -399,6 +399,31 @@ class EditorProjectTests(unittest.TestCase):
                 ),
             )
 
+    def test_map_trigger_pool_boundary_rejects_overflow_without_writing(self) -> None:
+        project = RomProject.load(TARGET_ROM)
+        record = project.get_map(0)
+        self.assertGreaterEqual(record.width * record.height, 74)
+        accepted = tuple(
+            MapTrigger(index % record.width, index // record.width, 0xFF, 0xF2)
+            for index in range(73)
+        )
+        overflow = accepted + (
+            MapTrigger(73 % record.width, 73 // record.width, 0xFF, 0xF2),
+        )
+        project.set_map_triggers(0, accepted)
+        self.assertEqual(project.map_trigger_codec.storage_used(project.working), 299)
+        before_overflow = bytes(project.working)
+        with self.assertRaisesRegex(ValueError, "托管池只有 300 字节"):
+            project.set_map_triggers(0, overflow)
+        self.assertEqual(bytes(project.working), before_overflow)
+        self.assertEqual(project.get_map_triggers(0), accepted)
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "map-triggers-near-capacity.nes"
+            project.save_as(path, make_backup=False)
+            reopened = RomProject.load(path)
+            self.assertEqual(reopened.get_map_triggers(0), accepted)
+            self.assertEqual(reopened.map_trigger_codec.storage_used(reopened.working), 299)
+
     def test_campaign_map_tiles_render_from_active_chr(self) -> None:
         project = RomProject.load(TARGET_ROM)
         self.assertEqual(campaign_tileset_key(0), "D")

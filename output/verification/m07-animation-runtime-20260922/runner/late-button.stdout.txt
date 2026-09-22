@@ -1,0 +1,12 @@
+CAPTURE frame=675 file=late-0675.png pc=F875
+CAPTURE frame=5100 file=late-5100.png pc=F872
+CAPTURE frame=5250 file=late-5250.png pc=F872
+CAPTURE frame=5550 file=late-5550.png pc=F872
+CAPTURE frame=5850 file=late-5850.png pc=F872
+CAPTURE frame=6150 file=late-6150.png pc=F871
+CAPTURE frame=6450 file=late-6450.png pc=F876
+CAPTURE frame=6750 file=late-6750.png pc=F872
+CAPTURE frame=7050 file=late-7050.png pc=F874
+CAPTURE frame=7350 file=late-7350.png pc=F876
+CAPTURE frame=7600 file=late-7600.png pc=F872
+RESULT frames=7600 pc=F872

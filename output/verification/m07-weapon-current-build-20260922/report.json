@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "module": "M07",
+  "scope": "Current-build GUI-to-disk acceptance, without emulator combat playback",
+  "passed": true,
+  "checks": {
+    "weapon_unique_record": true,
+    "all_weapon_ids_visible": true,
+    "field_editor_enabled": true,
+    "field_draft_exists": true,
+    "project_unchanged_before_apply": true,
+    "field_apply_clears_draft": true,
+    "field_values_applied": true,
+    "exact_three_byte_delta": true,
+    "range_and_reserved_nibbles_preserved": true,
+    "outer_dialog_accepted": true,
+    "save_reopen_exact": true,
+    "four_rule_tabs_and_counts": true,
+    "rule_fields_read_only": true,
+    "rule_browsing_zero_write": true,
+    "invalid_animation_rejected": true,
+    "invalid_animation_atomic": true,
+    "cancel_preserves_reopened_rom": true,
+    "recommended_rom_unchanged": true
+  },
+  "details": {
+    "source_rom": "D:\\GIT\\mmc3\\output\\rom\\DC_kuorong_464K.nes",
+    "source_sha256": "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E",
+    "edited_rom_sha256": "952AF30A8048C49E727E6BD1780BE883E2EE97894DA8C7BC5A343F67F9B5CC99",
+    "weapon_id": 1,
+    "record_offset": "0x0490CF",
+    "record_before": "00 6E 00 05 05 02",
+    "record_after": "B0 6F 02 05 05 02",
+    "changed_offsets": [
+      "0x0490CF",
+      "0x0490D0",
+      "0x0490D1"
+    ],
+    "rule_counts": {
+      "weapon_beam": 255,
+      "weapon_movement_1": 252,
+      "weapon_movement_2": 250,
+      "weapon_picture": 255
+    }
+  },
+  "artifacts": [
+    "output/verification/m07-weapon-current-build-20260922/m07-weapon-edited.nes",
+    "output/verification/m07-weapon-current-build-20260922/01-weapon-field-draft.png",
+    "output/verification/m07-weapon-current-build-20260922/02-four-rule-libraries.png"
+  ],
+  "note": "Machine acceptance does not expand the 2026-09-21 user sign-off or unlock read-only rule code."
+}

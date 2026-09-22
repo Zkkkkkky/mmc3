@@ -1,0 +1,71 @@
+{
+  "branch": "shanghua",
+  "date": "2026-09-22",
+  "scope": "M07 animation-test runtime path after formal EXE export",
+  "formal_exe_test_rom": "output/verification/weapon-animation-01.nes",
+  "test_rom_sha256": "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E",
+  "emulator": "Mesen 0.9.9 isolated TestRunner",
+  "emulator_sha256": "A480C42B28424FFC9517E003B458926D7920E860494103F1E0805E6AD972C08B",
+  "core_sha256": "B8578EE6F694EFD730FE3497AA4A8AF2A6951322F9426BAD603DD2F6FC2FBC9C",
+  "input_api": "emu.setInput(0, inputTable, false)",
+  "probe": "runner/m07_weapon01_playback_probe.lua",
+  "probe_sha256": "1FA9F6EE9ED68A7A1549318511E8CC58A91A91B69084E7C46DEA7EC236C4786A",
+  "observed": [
+    "Scripted direction input moved the title cursor, proving controller injection works with the Mesen 0.9.9 API order.",
+    "With the cursor left on START, the scripted A press was accepted.",
+    "The title screen cleared, then the ROM reached GAME OVER with the message 任务失败了，请继续努力！ without showing a battle.",
+    "No selected weapon animation was observed.",
+    "A verified 8192-byte battery save was recognized by DATA LOAD with three valid slots.",
+    "CONTINUE restored the active chapter-26 battle map; scripted input opened the selected ally command menu, weapon list, and range/target-selection layer.",
+    "Runtime ROM-read tracing proved that the combatant index at CPU $00BB selects the deployed-unit byte at $741A and that unit ID selects its two-byte weapon table at PRG $B2C8.",
+    "The product fixture now clones the verified active-battle save, equips test unit $11 with the editor-selected weapon in the exported ROM, mirrors the deployed-unit and adjacent-enemy changes into the checked backup, and recalculates its checksum.",
+    "The generated fixture exposed weapon $01 光束军刀, entered the range/target-selection layer, and reached the combat screen with 亚古特·多加攻击; the original project ROM and source save remained unchanged."
+  ],
+  "evidence": {
+    "title_before_confirm": {
+      "path": "runner/start-5100.png",
+      "sha256": "CC462A4754034408F2A212D3536B2868FE217DE1CB24C68870D6B8DE93832277"
+    },
+    "transition_after_a": {
+      "path": "runner/start-5250.png",
+      "sha256": "788D6984576BB13490A00DF106EC8EC4A1C2F966E544DEBD99F7FFCE8D65C029"
+    },
+    "game_over": {
+      "path": "runner/start-5550.png",
+      "sha256": "3DDFF0FDA90A31536FD5DC5B46C5C7754452D3B2CA3FB6C4DDEE038F014838CB"
+    }
+  },
+  "active_battle_fixture": {
+    "source": "references/emulator-state/fceux/sav/DC_kuorong.sav",
+    "source_sha256": "E0CD4A176707D7D3103F11CF3836E99A9DB193A153E536C826009C05FC07EBC3",
+    "generated_sha256": "A2D7218D06E849C5119A9786A241AAACF4CD0CDE9B7443EF7D4BCAF0B307BC32",
+    "generated_backup_checksum": "85D9",
+    "test_unit_id": "11",
+    "selected_weapon_id": "01",
+    "runtime_mapping_trace": {
+      "path": "runner/weapon-table-trace.log",
+      "sha256": "F847164255EA70758CC27F51721DE1C42C7F1D24D308656B7427C7E5FE097967"
+    },
+    "map_evidence": {
+      "path": "runner/continue-0780.png",
+      "sha256": "FBE9811C3592F807D979B1C9A168E37A0051FD464890C9D6CE05258E57B7D70D"
+    },
+    "weapon_menu_evidence": {
+      "path": "runner/weapon01-01700.png",
+      "sha256": "D952AC1582FAF908E80C64B99F4980F82FDCE436ABB0254ECB8AB6F95A7A54C9"
+    },
+    "range_selection_evidence": {
+      "path": "runner/weapon01-01850.png",
+      "sha256": "8A9A4090F98701E1D2DC6F8AD801DB40FA1930E4820709A90DB5C6453240B1AF"
+    },
+    "combat_evidence": {
+      "path": "runner/weapon01-02100.png",
+      "sha256": "12C3BF415FD13120AA9423CEEED9910B0491CF35BF79B134579B485C6070F2FF"
+    },
+    "status": "selected_weapon_bound_and_combat_playback_confirmed"
+  },
+  "diagnosis": "The previous product button exported an ordinary ROM only. The repaired path now creates an isolated ROM/SRAM pair from a checksum-valid active battle, binds the selected weapon through the verified deployed-unit table, and launches that pair in Mesen.",
+  "result": "selected_weapon_runtime_fixture_verified",
+  "f040_verified": true,
+  "user_acceptance": "pending"
+}

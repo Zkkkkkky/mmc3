@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from pathlib import Path
+
 from PySide6.QtCore import QProcess, Qt, Signal
 from PySide6.QtWidgets import (
     QComboBox,
@@ -26,6 +28,7 @@ from .pages import CharacterPage, WeaponPage, compact_ids
 from .character_editor import CharacterDetailsWidget, CharacterDialogueWidget
 from .animation_editor import WeaponAnimationWidget
 from .workspace import ROOT
+from .weapon_animation_test import prepare_weapon_animation_test
 from fc_editor.dc_text import concise_dc_text
 from fc_editor.codecs.character_attributes import (
     CharacterAttributesCodec, WEAPON_SKILLS, apply_verified_patches,
@@ -424,8 +427,8 @@ class ReadableWeaponPage(WeaponPage):
         self.animation_rules_button.clicked.connect(self._open_animation_rules)
         self.animation_test_button = QPushButton("动画测试")
         self.animation_test_button.setToolTip(
-            "先暂存当前武器表单，再导出测试 ROM 并用随附 Mesen 启动；"
-            "进入装备此武器的战斗即可核对双方动画。"
+            "先暂存当前武器表单，再生成带活动战场的测试 ROM/存档并用随附 Mesen 启动；"
+            "在标题画面选择 CONTINUE 后即可用装备此武器的测试机体进入战斗。"
         )
         self.animation_test_button.clicked.connect(self._launch_animation_test)
         animation_tools.addWidget(self.animation_code_button)
@@ -488,20 +491,39 @@ class ReadableWeaponPage(WeaponPage):
             emulator = ROOT / "tools" / "vendor" / "mesen-0.9.9" / "Mesen.exe"
             if not emulator.is_file():
                 raise FileNotFoundError(f"找不到随附模拟器：{emulator}")
-            destination = (
+            source_save = (
                 ROOT
-                / "output"
-                / "verification"
-                / f"weapon-animation-{self.current_id:02X}.nes"
+                / "references"
+                / "emulator-state"
+                / "fceux"
+                / "sav"
+                / "DC_kuorong.sav"
             )
-            self.project.save_as(destination, make_backup=False)
+            if not source_save.is_file():
+                selected, _filter = QFileDialog.getOpenFileName(
+                    self,
+                    "选择含活动战场的 8192 字节存档",
+                    str(ROOT),
+                    "FC 电池存档 (*.sav);;所有文件 (*)",
+                )
+                if not selected:
+                    return
+                source_save = Path(selected)
+            artifacts = prepare_weapon_animation_test(
+                self.project,
+                self.current_id,
+                source_save,
+                ROOT / "output" / "verification",
+                emulator.parent,
+            )
             started, _process_id = QProcess.startDetached(
-                str(emulator), [str(destination)]
+                str(emulator), [str(artifacts.rom_path)]
             )
             if not started:
                 raise RuntimeError("Mesen 启动失败。")
             self.records.setToolTip(
-                f"已启动武器 ${self.current_id:02X} 动画测试 ROM：{destination}"
+                f"已启动武器 ${self.current_id:02X} 动画测试；"
+                f"ROM：{artifacts.rom_path}；存档：{artifacts.save_path}。"
             )
         except Exception as error:
             self.show_error(error)

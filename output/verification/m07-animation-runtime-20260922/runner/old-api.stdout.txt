@@ -1,0 +1,11 @@
+CAPTURE frame=675 file=old-api-0675.png pc=F875
+CAPTURE frame=760 file=old-api-0760.png pc=F872
+CAPTURE frame=860 file=old-api-0860.png pc=F872
+CAPTURE frame=1000 file=old-api-1000.png pc=F874
+CAPTURE frame=1250 file=old-api-1250.png pc=F872
+CAPTURE frame=1600 file=old-api-1600.png pc=F876
+CAPTURE frame=2200 file=old-api-2200.png pc=F874
+CAPTURE frame=3000 file=old-api-3000.png pc=F871
+CAPTURE frame=4200 file=old-api-4200.png pc=F872
+CAPTURE frame=6000 file=old-api-6000.png pc=F873
+RESULT frames=6000 pc=F873

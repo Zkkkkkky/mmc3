@@ -3,6 +3,7 @@ from __future__ import annotations
 from dataclasses import replace
 from pathlib import Path
 import tempfile
+from types import SimpleNamespace
 import unittest
 from unittest.mock import patch
 
@@ -13,7 +14,12 @@ from PySide6.QtWidgets import QApplication, QMessageBox
 from dc_modifier.app import DEFAULT_ROM
 from dc_modifier.legacy_windows import DatabaseDialog
 from dc_modifier.portrait_export import PORTRAIT_BACKGROUND_PALETTE_NES
+from dc_modifier.weapon_animation_test import (
+    TEST_UNIT_ID,
+    prepare_weapon_animation_test,
+)
 from fc_editor.dc_text import concise_dc_text
+from fc_editor.codecs import LegacySaveCodec
 from fc_editor.codecs.character_attributes import (
     CharacterAttributesCodec, PortraitRecord, apply_verified_patches,
     weapon_extra_patches, weapon_extra_values,
@@ -39,6 +45,30 @@ class CharacterCodecFeedbackTests(unittest.TestCase):
         self.assertEqual(bytes(reopened.working), bytes(self.project.working))
         self.assertEqual(reopened.get_weapon_value(1, "max_range"), 2)
         self.assertEqual(weapon_extra_values(reopened, 1), (11, 2))
+
+    def test_weapon_animation_fixture_equips_selected_weapon_without_touching_project(self) -> None:
+        before = bytes(self.project.working)
+        source_save = (
+            Path(__file__).resolve().parents[1]
+            / "references"
+            / "emulator-state"
+            / "fceux"
+            / "sav"
+            / "DC_kuorong.sav"
+        )
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            artifacts = prepare_weapon_animation_test(
+                self.project, 2, source_save, root / "output", root / "mesen"
+            )
+            exported = artifacts.rom_path.read_bytes()
+            offset = self.project.unit_weapon_codec.record_offset(TEST_UNIT_ID)
+            self.assertNotEqual(before[offset], 2)
+            self.assertEqual(exported[offset], 2)
+            self.assertEqual(
+                artifacts.save_path.stat().st_size, LegacySaveCodec.SAVE_SIZE
+            )
+        self.assertEqual(bytes(self.project.working), before)
 
     def test_all_character_and_portrait_records_round_trip_including_reserved_last_id(self) -> None:
         for record_id in range(1, 201):
@@ -693,14 +723,21 @@ class CharacterWeaponUiFeedbackTests(QtTestCase):
     def test_weapon_animation_test_exports_current_rom_and_starts_mesen(self) -> None:
         page = self.dialog.weapon_page
         self.dialog._select_weapon(1)
-        with patch.object(self.project, "save_as") as save_as, patch(
+        destination = Path("D:/tmp/weapon-animation-01.nes")
+        save_path = Path("D:/tmp/Saves/weapon-animation-01.sav")
+        with patch(
+            "dc_modifier.database_records.prepare_weapon_animation_test",
+            return_value=SimpleNamespace(
+                rom_path=destination,
+                save_path=save_path,
+            ),
+        ) as prepare, patch(
             "dc_modifier.database_records.QProcess.startDetached",
             return_value=(True, 123),
         ) as start:
             page.animation_test_button.click()
-        save_as.assert_called_once()
-        self.assertEqual(save_as.call_args.kwargs, {"make_backup": False})
-        destination = save_as.call_args.args[0]
-        self.assertEqual(destination.name, "weapon-animation-01.nes")
+        prepare.assert_called_once()
+        self.assertIs(prepare.call_args.args[0], self.project)
+        self.assertEqual(prepare.call_args.args[1], 1)
         start.assert_called_once()
         self.assertEqual(start.call_args.args[1], [str(destination)])

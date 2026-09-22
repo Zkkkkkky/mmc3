@@ -1,0 +1,6 @@
+frame=1400 cpu=B2DA prg=B2DA value=07 pc=9EA7 pc_prg=9EA7 a=12 x=12 y=00 sp=E6
+frame=1400 cpu=B2DB prg=B2DB value=0B pc=9EA7 pc_prg=9EA7 a=13 x=13 y=00 sp=E6
+frame=1665 cpu=B2DA prg=B2DA value=07 pc=9EA7 pc_prg=9EA7 a=12 x=12 y=00 sp=E8
+frame=1665 cpu=B2DB prg=B2DB value=0B pc=9EA7 pc_prg=9EA7 a=13 x=13 y=00 sp=E8
+frame=1704 cpu=B2DA prg=B2DA value=07 pc=9EA7 pc_prg=9EA7 a=12 x=12 y=00 sp=E8
+frame=1704 cpu=B2DB prg=B2DB value=0B pc=9EA7 pc_prg=9EA7 a=13 x=13 y=00 sp=E8

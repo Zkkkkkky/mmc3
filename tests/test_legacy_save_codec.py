@@ -163,6 +163,50 @@ class LegacySaveCodecTests(unittest.TestCase):
             ],
         )
 
+    def test_prepare_weapon_animation_fixture_updates_active_and_checked_backup(self) -> None:
+        prepared = bytearray(_sample_save())
+        ally_layout = LegacySaveCodec._BATTLE_LAYOUT["ally"]
+        prepared[
+            LegacySaveCodec.ACTIVE_OFFSET + ally_layout["character"]
+        ] = 0x04
+        before = bytes(prepared)
+        after = LegacySaveCodec.prepare_weapon_animation_fixture(before, unit_id=0x11)
+        changed = {
+            index
+            for index, (old, new) in enumerate(zip(before, after, strict=True))
+            if old != new
+        }
+        expected_data = {
+            LegacySaveCodec.ACTIVE_OFFSET + LegacySaveCodec.DEPLOYED_UNIT_OFFSET,
+            LegacySaveCodec.ACTIVE_OFFSET + LegacySaveCodec.ENEMY_Y_OFFSET,
+            LegacySaveCodec.BACKUP_OFFSET + LegacySaveCodec.DEPLOYED_UNIT_OFFSET,
+            LegacySaveCodec.BACKUP_OFFSET + LegacySaveCodec.ENEMY_Y_OFFSET,
+        }
+        self.assertLessEqual(
+            changed,
+            expected_data
+            | {
+                LegacySaveCodec.BACKUP_CHECKSUM_OFFSET,
+                LegacySaveCodec.BACKUP_CHECKSUM_OFFSET + 1,
+            },
+        )
+        self.assertTrue(expected_data <= changed)
+        self.assertEqual(
+            after[LegacySaveCodec.ACTIVE_OFFSET + LegacySaveCodec.DEPLOYED_UNIT_OFFSET],
+            0x11,
+        )
+        backup = after[
+            LegacySaveCodec.BACKUP_OFFSET : LegacySaveCodec.BACKUP_CHECKSUM_OFFSET
+        ]
+        stored = int.from_bytes(
+            after[
+                LegacySaveCodec.BACKUP_CHECKSUM_OFFSET :
+                LegacySaveCodec.BACKUP_CHECKSUM_OFFSET + 2
+            ],
+            "little",
+        )
+        self.assertEqual(LegacySaveCodec.checksum(backup), stored)
+
     def test_rejects_non_8k_files(self) -> None:
         with self.assertRaisesRegex(LegacySaveFormatError, "8192"):
             LegacySaveCodec.decode(bytes(256))

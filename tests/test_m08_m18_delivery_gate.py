@@ -6,16 +6,16 @@ from tools.report_m08_m18_delivery_gate import analyze
 
 
 class M08M18DeliveryGateTests(unittest.TestCase):
-    def test_machine_reports_pass_and_only_m18_has_user_acceptance(self) -> None:
+    def test_machine_reports_and_all_current_scopes_have_user_acceptance(self) -> None:
         report = analyze()
         self.assertTrue(report["machine_gate_passed"])
         self.assertEqual(report["counts"]["modules"], 11)
         self.assertEqual(report["counts"]["machine_gate_passed"], 11)
         self.assertEqual(report["counts"]["implementation_scope_complete"], 11)
-        self.assertEqual(report["counts"]["user_accepted"], 1)
+        self.assertEqual(report["counts"]["user_accepted"], 11)
         self.assertTrue(report["implementation_complete"])
-        self.assertFalse(report["user_acceptance_complete"])
-        self.assertFalse(report["overall_delivery_complete"])
+        self.assertTrue(report["user_acceptance_complete"])
+        self.assertTrue(report["overall_delivery_complete"])
         self.assertEqual(
             report["current_build_verification"]["full_regression_tests"], 728
         )
@@ -41,14 +41,13 @@ class M08M18DeliveryGateTests(unittest.TestCase):
         self.assertIn("已逐项审计", report["blocking_reasons"][0])
         self.assertEqual(
             report["modules"]["M12"]["status"],
-            "implementation_complete_guarded_reference_and_user_pending",
+            "user_accepted_guarded_scope",
         )
         self.assertEqual(report["modules"]["M18"]["user_acceptance"], "accepted")
         self.assertTrue(
             all(
-                item["user_acceptance"] == "pending"
-                for module, item in report["modules"].items()
-                if module != "M18"
+                item["user_acceptance"] == "accepted"
+                for item in report["modules"].values()
             )
         )
 

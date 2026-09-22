@@ -541,6 +541,32 @@ class MapFeedbackUiTests(QtTestCase):
         self.project.undo()
         self.assertEqual(self.project.get_map_triggers(0), ())
 
+    def test_trigger_draft_capacity_and_coordinate_errors_preserve_draft(self) -> None:
+        self.page.editor_tabs.setCurrentIndex(2)
+        width = self.page.staged_width
+        accepted = [
+            (index % width, index // width, 0xFF, 0xF2)
+            for index in range(73)
+        ]
+        self.page.trigger_table.set_rows(accepted)
+        self.assertTrue(self.page.commit_pending_changes())
+        self.assertIn("299 / 300 B", self.page.size_label.text())
+        before_overflow = bytes(self.project.working)
+
+        overflow = accepted + [(73 % width, 73 // width, 0xFF, 0xF2)]
+        self.page.trigger_table.set_rows(overflow)
+        self.assertIn("托管池只有 300 字节", self.page.pending_draft_error or "")
+        self.assertFalse(self.page.commit_pending_changes())
+        self.assertEqual(bytes(self.project.working), before_overflow)
+        self.assertEqual(self.page.trigger_table.rows(), overflow)
+
+        out_of_bounds = accepted + [(width, 0, 0xFF, 0xF2)]
+        self.page.trigger_table.set_rows(out_of_bounds)
+        self.assertIn("超出", self.page.pending_draft_error or "")
+        self.assertFalse(self.page.commit_pending_changes())
+        self.assertEqual(bytes(self.project.working), before_overflow)
+        self.assertEqual(self.page.trigger_table.rows(), out_of_bounds)
+
     def test_trigger_tab_right_click_adds_edits_and_deletes_at_map_cell(self) -> None:
         self.page.editor_tabs.setCurrentIndex(2)
         self.application.processEvents()
