@@ -1,0 +1,106 @@
+{
+  "generated_at": "2026-09-22T08:47:20+08:00",
+  "purpose": "Address consistency triage; not a call-site write whitelist",
+  "source": "references/research/fc资料集-v1.16/page_325.html",
+  "source_sha256": "D6926819A483D9D72AC0D6F817AFFBB1604C8451657CAA32CCCB4B87CBDB7151",
+  "rom": "output/rom/DC_kuorong_464K.nes",
+  "rom_sha256": "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E",
+  "expected_call": "38 02 02",
+  "sites": [
+    {
+      "reference_offset": "0x038896",
+      "exact_match": true,
+      "adjacent_matches": [],
+      "rom_bytes_at_reference": "38 02 02"
+    },
+    {
+      "reference_offset": "0x0388BE",
+      "exact_match": true,
+      "adjacent_matches": [],
+      "rom_bytes_at_reference": "38 02 02"
+    },
+    {
+      "reference_offset": "0x038906",
+      "exact_match": true,
+      "adjacent_matches": [],
+      "rom_bytes_at_reference": "38 02 02"
+    },
+    {
+      "reference_offset": "0x03891D",
+      "exact_match": true,
+      "adjacent_matches": [],
+      "rom_bytes_at_reference": "38 02 02"
+    },
+    {
+      "reference_offset": "0x03892F",
+      "exact_match": false,
+      "adjacent_matches": [],
+      "rom_bytes_at_reference": "2D 1D 03"
+    },
+    {
+      "reference_offset": "0x038959",
+      "exact_match": true,
+      "adjacent_matches": [],
+      "rom_bytes_at_reference": "38 02 02"
+    },
+    {
+      "reference_offset": "0x038983",
+      "exact_match": false,
+      "adjacent_matches": [
+        "0x038982"
+      ],
+      "rom_bytes_at_reference": "02 02 2D"
+    },
+    {
+      "reference_offset": "0x0389AC",
+      "exact_match": true,
+      "adjacent_matches": [],
+      "rom_bytes_at_reference": "38 02 02"
+    },
+    {
+      "reference_offset": "0x038FAC",
+      "exact_match": true,
+      "adjacent_matches": [],
+      "rom_bytes_at_reference": "38 02 02"
+    },
+    {
+      "reference_offset": "0x03B41E",
+      "exact_match": false,
+      "adjacent_matches": [],
+      "rom_bytes_at_reference": "EB 8E EB"
+    },
+    {
+      "reference_offset": "0x03B4E3",
+      "exact_match": false,
+      "adjacent_matches": [],
+      "rom_bytes_at_reference": "DD B4 55"
+    },
+    {
+      "reference_offset": "0x03B6B2",
+      "exact_match": false,
+      "adjacent_matches": [],
+      "rom_bytes_at_reference": "A6 9B 06"
+    },
+    {
+      "reference_offset": "0x03B6BE",
+      "exact_match": false,
+      "adjacent_matches": [],
+      "rom_bytes_at_reference": "A6 9B 18"
+    }
+  ],
+  "counts": {
+    "listed": 13,
+    "exact": 7,
+    "adjacent_only": 1,
+    "no_local_match": 5
+  },
+  "candidate_0x38983": {
+    "reference_offset": "0x038983",
+    "exact_match": false,
+    "adjacent_matches": [
+      "0x038982"
+    ],
+    "rom_bytes_at_reference": "02 02 2D"
+  },
+  "conclusion": "0x38983 has an adjacent 0x38982 match, but no exact address match or reference save/reopen golden; keep read-only."
+}

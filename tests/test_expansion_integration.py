@@ -71,6 +71,31 @@ class ExpansionIntegrationTests(unittest.TestCase):
                 )
         self.assertFalse(any(issue.severity == "error" for issue in project.validate()))
 
+    def test_planning_after_reopening_unplanned_trigger_repack_is_supported(self) -> None:
+        baseline = RomProject.load(TARGET_ROM)
+        expected = tuple(
+            baseline.get_map_triggers(map_id)
+            for map_id in range(baseline.scenario_count)
+        )
+        # Any map-page commit can normalize the legacy trigger table into the
+        # managed $9ED4 cave before capacity planning.
+        baseline.set_map_triggers(0, baseline.get_map_triggers(0))
+        with tempfile.TemporaryDirectory() as directory:
+            output = Path(directory) / "unplanned-trigger-repack.nes"
+            baseline.save_as(output, make_backup=False)
+            reopened = RomProject.load(output)
+            self.assertIsNone(reopened.expansion_plan)
+            reopened.configure_expansion(288, 64, 112)
+
+        self.assertIsNotNone(reopened.expansion_plan)
+        self.assertEqual(
+            tuple(
+                reopened.get_map_triggers(map_id)
+                for map_id in range(reopened.scenario_count)
+            ),
+            expected,
+        )
+
     def test_first_link_preserves_representative_original_semantics(self) -> None:
         baseline = RomProject.load(TARGET_ROM)
         project = self._configured()

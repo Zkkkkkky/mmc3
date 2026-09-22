@@ -1,0 +1,89 @@
+{
+  "schema_version": 1,
+  "modules": [
+    "M03",
+    "M04"
+  ],
+  "passed": true,
+  "checks": {
+    "capture_passed": true,
+    "m03_add_enemy_count": true,
+    "m03_add_grows_six_bytes": true,
+    "m03_delete_player_count": true,
+    "m03_delete_shrinks_four_bytes": true,
+    "m03_all_cases_use_reference_sequential_pack": true,
+    "m04_add_record_count": true,
+    "m04_add_grows_four_bytes": true,
+    "m04_delete_record_count": true,
+    "m04_delete_shrinks_five_bytes": true,
+    "m04_all_cases_use_reference_sequential_pack": true,
+    "all_cases_changed_rom": true
+  },
+  "reference": {
+    "baseline_m03": {
+      "map0": {
+        "enemies": 7,
+        "guests": 0,
+        "players": 2,
+        "bytes": 54
+      },
+      "unique_payloads": 25,
+      "used_bytes": 2234,
+      "pointers_are_reference_sequential_pack": true
+    },
+    "add_m03": {
+      "map0": {
+        "enemies": 8,
+        "guests": 0,
+        "players": 2,
+        "bytes": 60
+      },
+      "unique_payloads": 25,
+      "used_bytes": 2240,
+      "pointers_are_reference_sequential_pack": true
+    },
+    "delete_m03": {
+      "map0": {
+        "enemies": 7,
+        "guests": 0,
+        "players": 1,
+        "bytes": 50
+      },
+      "unique_payloads": 25,
+      "used_bytes": 2230,
+      "pointers_are_reference_sequential_pack": true
+    },
+    "baseline_m04": {
+      "map0_records": 1,
+      "total_records": 44,
+      "unique_payloads": 17,
+      "used_bytes": 193,
+      "allocated_bytes": 197,
+      "empty_layout_slot_bytes": 5,
+      "pointers_are_reference_sequential_pack": true
+    },
+    "add_m04": {
+      "map0_records": 2,
+      "total_records": 45,
+      "unique_payloads": 17,
+      "used_bytes": 197,
+      "allocated_bytes": 201,
+      "empty_layout_slot_bytes": 5,
+      "pointers_are_reference_sequential_pack": true
+    },
+    "delete_m04": {
+      "map0_records": 0,
+      "total_records": 43,
+      "unique_payloads": 16,
+      "used_bytes": 188,
+      "allocated_bytes": 192,
+      "empty_layout_slot_bytes": 5,
+      "pointers_are_reference_sequential_pack": true
+    }
+  },
+  "evidence": {
+    "capture": "output/verification/legacy-m03-m04-structural-20260921/report.json",
+    "capture_sha256": "332D51D59E26C615C2C47DB7559EB6054C77942BB604C62CFCD01198E6CE99E7"
+  },
+  "remaining_guard": "Reference structure saves use a sequential shared-pool repack. The product enables verified field edits and structure actions while retaining fixed-layout capacity checks; arbitrary overflow still requires the expanded map capacity plan."
+}

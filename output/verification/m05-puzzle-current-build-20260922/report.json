@@ -1,0 +1,25 @@
+{
+  "module": "M05 机体拼图",
+  "result": "PASS",
+  "evidence_level": "current_product_only",
+  "reference_golden_status": "pending; no action gate released",
+  "source_sha256": "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E",
+  "moved_rom": "output/verification/m05-puzzle-current-build-20260922/m05-puzzle-moved.nes",
+  "moved_sha256": "99AB5D38A29B6AF250E8604723AE4CA0A4109C886FB28BECC359B574AC08B16E",
+  "restored_sha256": "0F8364BEB991DE6828DE1C4A33AE629DC16D384BCC224303D1BB033BDD5D6F1D",
+  "screenshot": "output/verification/m05-puzzle-current-build-20260922/m05-puzzle-draft.png",
+  "checks": {
+    "未扩容时拼图写入被门禁拒绝": true,
+    "门禁失败保持ROM原字节": true,
+    "移动翻转操作在拼图草稿中可见": true,
+    "子窗口确定前ROM未写入": true,
+    "拼图草稿截图保存": true,
+    "子窗口确定后拼图脚本已写入": true,
+    "相邻机体外观未变化": true,
+    "另存ROM全新工程重开两段脚本一致": true,
+    "取消拼图草稿保持ROM字节": true,
+    "撤销整笔拼图事务逐字节恢复": true,
+    "撤销后另存ROM与扩容基线一致": true,
+    "推荐输入ROM未改变": true
+  }
+}

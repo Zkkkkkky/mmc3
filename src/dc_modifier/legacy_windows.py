@@ -2485,6 +2485,7 @@ class DatabaseDialog(TransactionalProjectDialog):
             )
         else:
             add_button.setToolTip("当前记录表没有可安全新增的槽位。")
+        page.add_record_button = add_button
         selection_layout.addWidget(add_button)
 
     @staticmethod

@@ -41,8 +41,6 @@ class MapFeedbackUiTests(QtTestCase):
     def setUp(self) -> None:
         self.project = RomProject.load(DEFAULT_ROM)
         self.page = MapPage()
-        # Deployment remains behind D3; trigger/event editing is now verified.
-        self.page._deployment_write_verified = True
         self.page.resize(1280, 820)
         self.page.set_project(self.project)
         self.page.show()
@@ -53,7 +51,7 @@ class MapFeedbackUiTests(QtTestCase):
         self.page.deleteLater()
         self.application.processEvents()
 
-    def test_default_page_blocks_deployment_but_enables_verified_triggers(self) -> None:
+    def test_default_page_enables_verified_deployment_and_triggers(self) -> None:
         guarded_project = RomProject.load(DEFAULT_ROM)
         guarded = MapPage()
         guarded.set_project(guarded_project)
@@ -61,9 +59,11 @@ class MapFeedbackUiTests(QtTestCase):
         self.application.processEvents()
         try:
             self.assertTrue(guarded.enemy_table.isEnabled())
-            self.assertFalse(guarded.enemy_table.editing_enabled)
+            self.assertTrue(guarded.enemy_table.editing_enabled)
             self.assertTrue(guarded.trigger_table.editing_enabled)
-            self.assertFalse(guarded.canvas.deployment_edit_enabled)
+            guarded.editor_tabs.setCurrentIndex(1)
+            guarded._update_overlays()
+            self.assertTrue(guarded.canvas.deployment_edit_enabled)
             guarded.editor_tabs.setCurrentIndex(2)
             guarded._update_overlays()
             self.assertTrue(guarded.canvas.overlay_move_enabled)
@@ -503,6 +503,27 @@ class MapFeedbackUiTests(QtTestCase):
         self.assertEqual(self.page.enemy_table.rows(), before)
         self.assertIn("容量规划", errors[-1])
         self.assertIn("148", self.page.deployment_editor_status.text())
+
+    def test_fixed_slot_add_then_delete_restores_original_tail_bytes(self) -> None:
+        # Map 0C has 23 verified spare bytes in the recommended ROM, so this
+        # exercises a real fixed-slot structure edit without expansion.
+        self.page.map_list.setCurrentRow(12)
+        offset = self.project.scenario_layout_codec.record_offset(12)
+        capacity = self.project.scenario_layout_codec.capacities[12]
+        before = bytes(self.project.working[offset:offset + capacity])
+        self.assertEqual(self.page.enemy_table.rowCount(), 0)
+        self.page._open_deployment_cell_editor("敌", 0, 0)
+        self.page._save_deployment_cell_editor()
+        self.assertTrue(self.page.commit_pending_changes())
+        self.assertNotEqual(
+            bytes(self.project.working[offset:offset + capacity]), before
+        )
+
+        self.page._remove_deployment_row("敌", 0)
+        self.assertTrue(self.page.commit_pending_changes())
+        self.assertEqual(
+            bytes(self.project.working[offset:offset + capacity]), before
+        )
 
     def test_shop_list_add_drag_commit_and_undo_preserve_record_semantics(self) -> None:
         self.page.editor_tabs.setCurrentIndex(2)

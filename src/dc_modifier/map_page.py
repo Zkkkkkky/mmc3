@@ -1282,7 +1282,12 @@ class MapPage(ProjectPage):
         self._deployment_clipboard: tuple[str, tuple[int, ...]] | None = None
         # Deployment remains guarded.  Trigger/event fields have completed the
         # reference save/reopen audit and are safe to edit in the shipped UI.
-        self._deployment_write_verified = False
+        # M03 direct fields (1380/1380) and representative add/delete structure
+        # saves now have reference-editor evidence.  Fixed layouts still pass
+        # through _ensure_deployment_growth; expanded layouts use the shared
+        # map-resource packer, so opening the editor does not weaken capacity
+        # or coordinate guards.
+        self._deployment_write_verified = True
         self._trigger_write_verified = True
         self._player_slot_cache_key: tuple | None = None
         self._player_slot_snapshots: tuple[dict[int, tuple[int, int]], ...] = ()

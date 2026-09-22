@@ -1,0 +1,72 @@
+{
+  "schema_version": 1,
+  "module": "M03",
+  "scope": "2026-09-22 deployment editing incremental acceptance",
+  "passed": true,
+  "checks": {
+    "editor_is_enabled": true,
+    "editor_opens_existing_record": true,
+    "field_draft_changed_only_target": true,
+    "field_commit_succeeded": true,
+    "field_reopen_exact": true,
+    "add_draft_created": true,
+    "add_commit_succeeded": true,
+    "add_reopen_exact": true,
+    "delete_draft_restores_count": true,
+    "delete_commit_succeeded": true,
+    "delete_reopen_restores_layout": true,
+    "delete_round_trip_byte_exact": true,
+    "copy_paste_and_drag_create_draft": true,
+    "cancel_keeps_project_bytes": true,
+    "cancel_reopen_keeps_layout": true,
+    "structural_report_passed": true,
+    "recommended_rom_hash_unchanged": true
+  },
+  "details": {
+    "source_rom": "D:\\GIT\\mmc3\\output\\rom\\DC_kuorong_464K.nes",
+    "source_profile": "dc-kuorong-mmc3-v2",
+    "edit_map_id": 4,
+    "structure_map_id": 12,
+    "source_sha256": "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E",
+    "field_rom_sha256": "845E91E07D7C03FCD5CC269B985AB34BB8F5C02E1B3C8DABCA8D2FFDE5909F69",
+    "add_rom_sha256": "F295AF85F4644E3419F55CB5D90965157738CDBC492E60240C07913141ADF920",
+    "delete_rom_sha256": "845E91E07D7C03FCD5CC269B985AB34BB8F5C02E1B3C8DABCA8D2FFDE5909F69",
+    "edited_enemy_before": [
+      15,
+      15,
+      45,
+      129,
+      56,
+      33
+    ],
+    "edited_enemy_after": [
+      15,
+      15,
+      45,
+      129,
+      57,
+      33
+    ],
+    "added_enemy": [
+      0,
+      0,
+      0,
+      1,
+      1,
+      0
+    ],
+    "cancel_coordinate": [
+      0,
+      0
+    ]
+  },
+  "artifacts": [
+    "output/verification/m03-incremental-acceptance-20260922/m03-field-edit.nes",
+    "output/verification/m03-incremental-acceptance-20260922/m03-add-enemy.nes",
+    "output/verification/m03-incremental-acceptance-20260922/m03-delete-enemy.nes",
+    "output/verification/m03-incremental-acceptance-20260922/01-existing-record-editor.png",
+    "output/verification/m03-incremental-acceptance-20260922/02-added-enemy.png",
+    "output/verification/m03-incremental-acceptance-20260922/03-cancelled-draft.png"
+  ],
+  "note": "Machine acceptance only; the user-signature row remains user-owned."
+}

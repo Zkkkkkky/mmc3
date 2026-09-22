@@ -1,0 +1,52 @@
+{
+  "module": "M06 人物修改",
+  "result": "PASS",
+  "scope": {
+    "reference_golden_fields_and_actions": 106,
+    "unsafe_add_character": "固定名称、属性和头像池均满，界面可见但禁用并说明原因"
+  },
+  "source_rom": "output/rom/DC_kuorong_464K.nes",
+  "source_sha256": "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E",
+  "outputs": {
+    "edited_rom": "output/verification/m06-character-acceptance-20260922/m06-edited.nes",
+    "edited_sha256": "080CCEE78BF271FC7AF9719AC55F0B167CB59A29340E8C24B5ECB0FEA455108A",
+    "transform_cleared_rom": "output/verification/m06-character-acceptance-20260922/m06-transform-cleared.nes",
+    "transform_restored_rom": "output/verification/m06-character-acceptance-20260922/m06-transform-restored.nes",
+    "transform_restored_sha256": "080CCEE78BF271FC7AF9719AC55F0B167CB59A29340E8C24B5ECB0FEA455108A"
+  },
+  "artifacts": [
+    "output/verification/m06-character-acceptance-20260922/01-character-06-portrait.png",
+    "output/verification/m06-character-acceptance-20260922/02-add-character-guard.png",
+    "output/verification/m06-character-acceptance-20260922/03-character-06-dialogue.png"
+  ],
+  "checks": {
+    "人物06头像选择器为正面25/1、背景27/2": true,
+    "人物06界面选择器与ROM一致": true,
+    "头像预览为64x64真实合成图": true,
+    "头像前景/背景显示开关会改变预览": true,
+    "预览开关不会写ROM": true,
+    "预览开关不会产生字段草稿": true,
+    "新增人物入口可见": true,
+    "固定池满时新增人物入口禁用": true,
+    "新增人物容量原因明确": true,
+    "点击禁用新增入口不写ROM": true,
+    "人物75精神值保存并重开一致": true,
+    "人物75成长值保存并重开一致": true,
+    "人物75机动与击落不消失保存并重开一致": true,
+    "全局精神消耗保存并重开一致": true,
+    "人物06头像颜色保存并重开一致": true,
+    "人物06头像图库位置未漂移": true,
+    "人物06直接台词保存并重开一致": true,
+    "基准ROM未被覆盖": true,
+    "取消前修改已进入窗口会话": true,
+    "数据库取消恢复打开前全部字节": true,
+    "人物06原有4条变形绑定": true,
+    "清空一条变形绑定后保存重开为3条": true,
+    "补回变形绑定后保存重开恢复原4条": true,
+    "变形绑定删后补回字节完全可逆": true,
+    "固定池扩容请求明确报容量不足": true,
+    "容量不足时ROM保持原样": true,
+    "容量不足时表单草稿仍保留": true
+  },
+  "note": "当前构建机器验收；不替代用户最终签收。"
+}

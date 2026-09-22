@@ -1,0 +1,61 @@
+{
+  "schema_version": 1,
+  "module": "M04",
+  "scope": "Current-build GUI-to-disk acceptance; not new reference golden or user signature",
+  "passed": true,
+  "checks": {
+    "normalized_baseline_semantics_unchanged": true,
+    "event_tab_enabled": true,
+    "empty_map_is_empty_not_error": true,
+    "shop_editor_visible": true,
+    "invalid_shops_disabled": true,
+    "add_draft_exact": true,
+    "add_commit": true,
+    "add_reopen_exact": true,
+    "other_maps_unchanged_after_add": true,
+    "existing_record_visible": true,
+    "event_editor_visible": true,
+    "field_draft_exact": true,
+    "field_commit": true,
+    "field_reopen_exact": true,
+    "other_maps_unchanged_after_field": true,
+    "delete_draft_empty": true,
+    "delete_commit": true,
+    "delete_reopen_empty": true,
+    "delete_round_trip_byte_exact": true,
+    "cancel_has_pending_draft": true,
+    "cancel_keeps_project_bytes": true,
+    "reference_structure_report_passed": true,
+    "recommended_rom_unchanged": true
+  },
+  "details": {
+    "source_rom": "D:\\GIT\\mmc3\\output\\rom\\DC_kuorong_464K.nes",
+    "source_sha256": "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E",
+    "normalized_baseline_sha256": "21039E8285F38495A4BFA32367BE7FC715CD79015CDFB27ADC4FCB547F922815",
+    "empty_map": 0,
+    "shop_added": [
+      3,
+      4,
+      255,
+      242
+    ],
+    "shop_rebound": [
+      3,
+      4,
+      255,
+      243
+    ],
+    "field_sha256": "712DE69F9C3C41DC084713748EA6B395DF8C2FBB66515EA757A5A179D83A3CC8",
+    "add_sha256": "11F793117E8A074C375956CADB1BCE70C91DCC6AA593AAA8F3201614F475B542",
+    "delete_sha256": "21039E8285F38495A4BFA32367BE7FC715CD79015CDFB27ADC4FCB547F922815"
+  },
+  "artifacts": [
+    "output/verification/m04-shop-events-20260922/m04-normalized-empty-baseline.nes",
+    "output/verification/m04-shop-events-20260922/m04-field-edit.nes",
+    "output/verification/m04-shop-events-20260922/m04-add-shop.nes",
+    "output/verification/m04-shop-events-20260922/m04-delete-shop.nes",
+    "output/verification/m04-shop-events-20260922/01-shop-rebind.png",
+    "output/verification/m04-shop-events-20260922/02-added-shop.png",
+    "output/verification/m04-shop-events-20260922/03-cancelled-draft.png"
+  ]
+}

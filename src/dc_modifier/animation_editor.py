@@ -1167,9 +1167,20 @@ class MapAnimationEditorDialog(QDialog):
 
     def _change_call(self, offset: int, index: int) -> None:
         try:
+            # The two address/ID-documented sites are verified against the
+            # original ROM value.  After a first draft change, checking that
+            # documentation against the draft would incorrectly lock the
+            # selector and prevent a second edit or a return to the original.
+            if not self.codec.call_is_editable(offset):
+                raise ValueError("此处只识别到调用字节，事件上下文尚未验证，暂不改写。")
             codec = AnimationCodec(self.draft)
-            address, _before, after = codec.call_patch(offset, index)
-            self.draft[address:address + 1] = after
+            if self.draft[offset:offset + 2] != b"\x38\x02":
+                raise ValueError("动画调用指令已变化，不能继续编辑。")
+            if not 0 <= index < codec.count("map"):
+                raise ValueError("动画编号超出指针表。")
+            if not codec.record("map", index).complete:
+                raise ValueError("目标动画包含未验证指令，不能作为新的调用目标。")
+            self.draft[offset + 2] = index
         except ValueError as error:
             self.read_only_status.setText(str(error))
             combo = self.call_combos[offset]

@@ -1486,14 +1486,17 @@ class RomProject:
         # Before automatic planning, trigger edits are repacked into the old
         # Bank $0A cave at $9ED4.  The new runtime hook deliberately occupies
         # that same cave.  We already captured every current trigger above, so
-        # restore only the obsolete pool bytes before installing the hook.
+        # clear only the obsolete pool bytes before installing the hook.  A
+        # directly reopened derived ROM has that repacked pool in
+        # ``self.original`` too, so copying from ``self.original`` would leave
+        # the future Hook site occupied and make planning non-idempotent.
         link_source = bytearray(source_before_link)
         if not self.map_trigger_codec.is_expanded:
             trigger_pool_start = self.map_trigger_codec.pool_offset
             trigger_pool_end = trigger_pool_start + self.map_trigger_codec.pool_capacity
-            link_source[trigger_pool_start:trigger_pool_end] = self.original[
-                trigger_pool_start:trigger_pool_end
-            ]
+            link_source[trigger_pool_start:trigger_pool_end] = bytes(
+                self.map_trigger_codec.pool_capacity
+            )
         before = self._mutation_snapshot()
         try:
             self._reserve_plan_partitions(plan)
@@ -2735,6 +2738,13 @@ class RomProject:
         offset, _before, after = self.scenario_layout_codec.replacement_patch(
             bytes(self.working), layout
         )
+        # A shorter fixed-slot layout must not retain bytes from a previously
+        # longer draft.  They are semantically hidden behind the new FF
+        # terminator, but leave add-then-delete saves byte-different and can be
+        # exposed by later pointer/capacity changes.  Fixed deployment slots
+        # use zero padding, so clear the whole unused tail deterministically.
+        encoded_size = len(self.scenario_layout_codec.encode(layout))
+        after = after[:encoded_size] + bytes(len(after) - encoded_size)
         self.working[offset : offset + len(after)] = after
         self._finish_mutation(before, f"场景 {layout.map_id:02X} · 部署")
 

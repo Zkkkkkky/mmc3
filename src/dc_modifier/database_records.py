@@ -112,7 +112,7 @@ class ReadableCharacterPage(CharacterPage):
         detail = _prepare_readable_page(self)
         self.capability_status = QLabel(
             "可编辑：名称、战斗名称/引用、双方音乐、精神/成长、五项修正、精神与消耗、头像引用/颜色、击落不消失。\n"
-            "战斗台词的 8 个直接绑定和 3 组特殊攻击规则可编辑；变形起飞台词仍在解析。"
+            "战斗台词的 8 个直接绑定、3 组特殊攻击规则和变形起飞绑定可编辑；新增人物因三固定池已满而安全拒绝。"
         )
         self.capability_status.setObjectName("hintText")
         self.capability_status.setWordWrap(True)

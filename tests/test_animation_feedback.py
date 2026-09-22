@@ -392,6 +392,57 @@ class AnimationUiTests(QtTestCase):
     def setUp(self):
         self.project = RomProject.load(ROM)
 
+    def test_every_call_selector_reverses_in_one_window_without_unlocking_unsafe_sites(self):
+        dialog = MapAnimationEditorDialog(project=self.project)
+        self.addCleanup(dialog.close)
+        original = bytes(self.project.working)
+        self.assertEqual(len(dialog.call_combos), 86)
+        editable = 0
+        blocked = 0
+        for offset, animation_id in dialog.codec.calls():
+            combo = dialog.call_combos[offset]
+            replacement = 3 if animation_id == 2 else 2
+            if dialog.codec.call_is_editable(offset):
+                editable += 1
+                self.assertTrue(combo.isEnabled(), hex(offset))
+                combo.setCurrentIndex(replacement)
+                self.assertEqual(dialog.draft[offset + 2], replacement, hex(offset))
+                combo.setCurrentIndex(animation_id)
+                self.assertEqual(dialog.draft[offset + 2], animation_id, hex(offset))
+            else:
+                blocked += 1
+                self.assertFalse(combo.isEnabled(), hex(offset))
+                combo.setCurrentIndex(replacement)
+                self.assertEqual(dialog.draft[offset + 2], animation_id, hex(offset))
+        self.assertEqual((editable, blocked), (76, 10))
+        self.assertEqual(bytes(dialog.draft), original)
+        self.assertEqual(bytes(self.project.working), original)
+
+    def test_documented_calls_allow_second_change_and_survive_save_reopen(self):
+        dialog = MapAnimationEditorDialog(project=self.project)
+        self.addCleanup(dialog.close)
+        original = bytes(self.project.working)
+        offsets = (0x38113, 0x384F2)
+        for offset in offsets:
+            combo = dialog.call_combos[offset]
+            self.assertTrue(combo.isEnabled())
+            combo.setCurrentIndex(2)
+            self.assertEqual(dialog.draft[offset + 2], 2)
+            combo.setCurrentIndex(3)
+            self.assertEqual(dialog.draft[offset + 2], 3)
+        self.assertEqual(bytes(self.project.working), original)
+        dialog.accept()
+        self.assertEqual(dialog.result(), QDialog.DialogCode.Accepted)
+        changed = {index for index, (before, after) in enumerate(zip(original, self.project.working)) if before != after}
+        self.assertEqual(changed, {offset + 2 for offset in offsets})
+        with tempfile.TemporaryDirectory() as directory:
+            saved = Path(directory) / "m12_calls.nes"
+            self.project.save_as(saved, make_backup=False)
+            reopened = RomProject.load(saved)
+            self.assertEqual(bytes(reopened.working), bytes(self.project.working))
+        self.project.undo()
+        self.assertEqual(bytes(self.project.working), original)
+
     def test_map_cancel_discards_scripts_rules_and_calls(self):
         dialog = MapAnimationEditorDialog(project=self.project)
         raw = bytearray(dialog.script_editor.record.raw)
