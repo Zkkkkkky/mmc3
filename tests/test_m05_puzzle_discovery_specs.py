@@ -2,47 +2,82 @@ import json
 import unittest
 from pathlib import Path
 
-from dc_modifier.unit_appearance_dialog import flip_fragment_script
 from tools.golden_pipeline_collect import CaseSpec
 from tools.prepare_m05_legacy_upload_samples import prepare
 
 
 ROOT = Path(__file__).resolve().parents[1]
 DISCOVERY = ROOT / "tools/golden_pipeline/discovery_history"
+CASES = ROOT / "tools/golden_pipeline/cases"
+
+PROMOTED = {
+    "body-puzzle-clear",
+    "body-puzzle-move-up",
+    "body-puzzle-move-down",
+    "body-puzzle-move-left",
+    "body-puzzle-move-right",
+    "body-puzzle-swap-banks",
+    "body-puzzle-template-7x9",
+    "body-puzzle-template-9x7",
+    "body-puzzle-template-10x6",
+    "fragment-puzzle-move-up",
+    "fragment-puzzle-move-down",
+    "fragment-puzzle-move-left",
+    "fragment-puzzle-move-right",
+    "fragment-puzzle-clear",
+    "fragment-puzzle-flip-horizontal",
+    "fragment-puzzle-flip-vertical",
+}
 
 
 RECIPES = {
-    "body-puzzle-clear": (280, "F3 F8 00", "FF"),
-    "body-puzzle-move-up": (360, "F3 F8 00", "F3 F7 00"),
-    "body-puzzle-move-down": (380, "F3 F8 00", "F3 F9 00"),
-    "body-puzzle-move-left": (370, "F3 F8 00", "F3 F8 FF"),
-    "body-puzzle-move-right": (390, "F3 F8 00", "F3 F8 01"),
-    "fragment-puzzle-move-up": (260, "08 C6 60", "08 C5 60"),
-    "fragment-puzzle-move-down": (280, "08 C6 60", "08 C7 60"),
-    "fragment-puzzle-move-left": (270, "08 C6 60", "07 C6 60"),
-    "fragment-puzzle-move-right": (290, "08 C6 60", "09 C6 60"),
-    "fragment-puzzle-clear": (340, "08 C6 60", "00 F0 00 00 FF"),
-    "fragment-puzzle-flip-horizontal": (430, "08 C6 60", "08 C6 60"),
-    "fragment-puzzle-flip-vertical": (440, "08 C6 60", "08 C6 60"),
+    "body-puzzle-clear": (280, "F3 F7 07", "FF "),
+    "body-puzzle-move-up": (360, "F3 F7 07", "F3 F6 07"),
+    "body-puzzle-move-down": (380, "F3 F7 07", "F3 F7 07"),
+    "body-puzzle-move-left": (370, "F3 F7 07", "F3 F7 07"),
+    "body-puzzle-move-right": (390, "F3 F7 07", "F3 F7 08"),
+    "fragment-puzzle-move-up": (260, "06 BE 05", "06 BD 05"),
+    "fragment-puzzle-move-down": (280, "06 BE 05", "06 BF 05"),
+    "fragment-puzzle-move-left": (270, "06 BE 05", "05 BE 05"),
+    "fragment-puzzle-move-right": (290, "06 BE 05", "07 BE 05"),
+    "fragment-puzzle-clear": (340, "06 BE 05", "00 F0 00 00 FF "),
+    "fragment-puzzle-flip-horizontal": (430, "06 BE 05", "72 BE 05"),
+    "fragment-puzzle-flip-vertical": (440, "06 BE 05", "06 BA 05"),
 }
 
 
 class M05PuzzleDiscoverySpecTests(unittest.TestCase):
+    def _path(self, stem: str) -> Path:
+        golden = CASES / f"M05-{stem}-cold-start-01.json"
+        if golden.is_file():
+            return golden
+        return DISCOVERY / f"M05-{stem}-discovery-cold-start-01.json"
+
     def _load(self, stem: str) -> CaseSpec:
-        path = DISCOVERY / f"M05-{stem}-discovery-cold-start-01.json"
+        path = self._path(stem)
         payload = json.loads(path.read_text(encoding="utf-8"))
         return CaseSpec.from_payload(payload)
 
-    def test_all_puzzle_recipes_are_guarded_discovery(self) -> None:
+    def test_puzzle_recipes_have_reviewed_evidence_status(self) -> None:
         files = sorted(DISCOVERY.glob("M05-*-puzzle-*-discovery-cold-start-01.json"))
+        files += sorted(CASES.glob("M05-*-puzzle-*-cold-start-01.json"))
         self.assertEqual(len(files), 17)
         for stem, (control_id, before_prefix, requested_prefix) in RECIPES.items():
             with self.subTest(stem=stem):
                 spec = self._load(stem)
                 self.assertEqual(spec.module, "M05")
-                self.assertEqual(spec.case_kind, "discovery")
-                self.assertEqual(spec.expected_offsets, ())
-                self.assertEqual(spec.required_offsets, ())
+                expected_kind = "golden" if stem in PROMOTED else "discovery"
+                self.assertEqual(spec.case_kind, expected_kind)
+                if expected_kind == "golden":
+                    if spec.expected_noop:
+                        self.assertEqual(spec.expected_offsets, ())
+                        self.assertEqual(spec.required_offsets, ())
+                    else:
+                        self.assertTrue(spec.expected_offsets)
+                        self.assertEqual(spec.required_offsets, spec.expected_offsets)
+                else:
+                    self.assertEqual(spec.expected_offsets, ())
+                    self.assertEqual(spec.required_offsets, ())
                 self.assertEqual(spec.optional_offsets, ())
                 self.assertTrue(str(spec.expected_before).startswith(before_prefix))
                 self.assertTrue(str(spec.requested_value).startswith(requested_prefix))
@@ -51,24 +86,32 @@ class M05PuzzleDiscoverySpecTests(unittest.TestCase):
                     spec.edit_steps,
                 )
 
-    def test_fragment_flip_recipes_toggle_every_orientation_bit(self) -> None:
-        baseline = self._load("fragment-puzzle-move-up").expected_before
-        self.assertIsInstance(baseline, str)
-        original = bytes.fromhex(baseline)
-        for stem, mask in (
-            ("fragment-puzzle-flip-horizontal", 0x40),
-            ("fragment-puzzle-flip-vertical", 0x80),
-        ):
+    def test_fragment_flip_recipes_match_live_reference_results(self) -> None:
+        expected_results = {
+            "fragment-puzzle-flip-horizontal": (
+                "72 BE 05 4E BF 02 4E 2D 04 46 F8 4E E3 01 4E 37 01 4E C8 02 "
+                "46 F8 4E 2D 04 4E E0 03 4E FE 01 46 F8 4E 30 05 4E F8 02 4E "
+                "FF 07 46 F6 4E 10 05 4E F8 03 42 FF "
+            ),
+            "fragment-puzzle-flip-vertical": (
+                "06 BA 05 8E 41 FE 8E D3 FC 82 8E 1D FF 8E C9 FF 8E 38 FE 82 "
+                "8E D3 FC 8E 20 FD 8E 02 FF 82 8E D0 FB 8E 08 FE 8E 01 F9 86 "
+                "0A 8E F0 FB 8E 08 FD 82 FF "
+            ),
+        }
+        for stem, expected in expected_results.items():
             with self.subTest(stem=stem):
-                requested = bytes.fromhex(str(self._load(stem).requested_value))
-                self.assertEqual(requested, flip_fragment_script(original, mask))
+                self.assertEqual(self._load(stem).requested_value, expected)
 
     def test_icon_binding_double_click_recipe_stops_before_empty_save(self) -> None:
-        path = DISCOVERY / "M05-icon-binding-double-click-discovery-cold-start-01.json"
+        path = CASES / "M05-icon-binding-double-click-cold-start-01.json"
         spec = CaseSpec.from_payload(json.loads(path.read_text(encoding="utf-8")))
         self.assertEqual(spec.module, "M05")
-        self.assertEqual(spec.case_kind, "discovery")
+        self.assertEqual(spec.case_kind, "golden")
+        self.assertTrue(spec.expected_noop)
         self.assertEqual(spec.expected_offsets, ())
+        self.assertEqual(spec.expected_before, 2)
+        self.assertEqual(spec.requested_value, 2)
         self.assertIn(
             {
                 "op": "click_control_coords",
@@ -185,14 +228,23 @@ class M05PuzzleDiscoverySpecTests(unittest.TestCase):
             ("10x6", 320),
         ):
             with self.subTest(name=name):
-                path = (
-                    DISCOVERY
-                    / f"M05-body-puzzle-template-{name}-discovery-cold-start-01.json"
-                )
+                path = self._path(f"body-puzzle-template-{name}")
                 spec = CaseSpec.from_payload(json.loads(path.read_text(encoding="utf-8")))
-                self.assertEqual(spec.requested_value, "$capture_after")
-                self.assertEqual(spec.capture_after_step, 1)
-                self.assertEqual(spec.expected_offsets, ())
+                if name in {"8x8", "7x9"}:
+                    self.assertEqual(spec.requested_value, spec.expected_before)
+                    self.assertIsNone(spec.capture_after_step)
+                else:
+                    self.assertNotEqual(spec.requested_value, "$capture_after")
+                    self.assertIsNone(spec.capture_after_step)
+                if name in {"7x9", "9x7", "10x6"}:
+                    self.assertEqual(spec.case_kind, "golden")
+                    if name == "7x9":
+                        self.assertTrue(spec.expected_noop)
+                    else:
+                        self.assertTrue(spec.expected_offsets)
+                else:
+                    self.assertEqual(spec.case_kind, "discovery")
+                    self.assertEqual(spec.expected_offsets, ())
                 self.assertEqual(spec.read_selector["control_id"], 270)
                 self.assertEqual(
                     spec.edit_steps[0],
@@ -201,8 +253,10 @@ class M05PuzzleDiscoverySpecTests(unittest.TestCase):
 
     def test_body_bank_swap_recipe_captures_script_before_closing_dialog(self) -> None:
         spec = self._load("body-puzzle-swap-banks")
-        self.assertEqual(spec.requested_value, "$capture_after")
-        self.assertEqual(spec.capture_after_step, 1)
+        self.assertEqual(spec.requested_value, spec.expected_before)
+        self.assertEqual(spec.case_kind, "golden")
+        self.assertTrue(spec.expected_noop)
+        self.assertIsNone(spec.capture_after_step)
         self.assertEqual(spec.expected_offsets, ())
         self.assertEqual(spec.read_selector["control_id"], 270)
         self.assertEqual(

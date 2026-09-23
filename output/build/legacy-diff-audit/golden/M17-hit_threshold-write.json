@@ -4,6 +4,7 @@
   "field": "hit_threshold",
   "case_id": "write",
   "case_kind": "golden",
+  "expected_noop": false,
   "requested_value": 71,
   "changed_offsets": [
     42062,

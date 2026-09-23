@@ -4,6 +4,7 @@
   "field": "portrait_color_3",
   "case_id": "cold_start_01",
   "case_kind": "golden",
+  "expected_noop": false,
   "requested_value": "03",
   "changed_offsets": [
     43854

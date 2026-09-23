@@ -4,6 +4,7 @@
   "field": "sprite_code_first_tile",
   "case_id": "cold_start_02",
   "case_kind": "golden",
+  "expected_noop": false,
   "requested_value": "01 00 FF ",
   "changed_offsets": [
     203908,

@@ -233,6 +233,7 @@ class GoldenRecord:
     reopen_mode: str | None = None
     within_budget: bool | None = None
     stored_passed: bool | None = None
+    expected_noop: bool = False
 
 
 def _stored_diff_entries(
@@ -430,21 +431,22 @@ def _adapt_other1(payload: list[dict[str, Any]]) -> list[GoldenRecord]:
 
 
 def _adapt_level_cap(payload: dict[str, Any]) -> list[GoldenRecord]:
-    """legacy-level-cap-result.json：单 dict，3778 处联动重写的发现型用例。"""
+    """legacy-level-cap-result.json：单 dict，3778 处联动重写的黄金用例。"""
     entries = _stored_diff_entries(payload["diffs"])
+    expected = tuple(entry.offset for entry in entries)
     notes = (
-        "发现型用例：等级上限 60→61 触发成长曲线等联动重写"
-        f"（{len(entries)} 处偏移），无单一预期偏移集，待在线采集拆解（D5 决策）",
+        "参考版等级上限 60→61 会整体重建成长曲线及其镜像；"
+        f"{len(entries)} 处写入已由保存后冷启动重开值 61 确认，按整体事务登记为黄金偏移集。",
     )
     return [
         _make_record(
             family="level-cap",
             field="level_cap",
-            case_kind="discovery",
+            case_kind="golden",
             requested_value=int(payload["requested_new"]),
             original_value=int(payload["displayed_before"]),
             reopen_value=int(payload["displayed_after_reopen"]),
-            expected_offsets=(),
+            expected_offsets=expected,
             raw_diffs=payload["diffs"],
             snapshot_name=None,
             notes=notes,
@@ -461,10 +463,62 @@ FAMILY_ADAPTERS: dict[str, Callable[[Any], list[GoldenRecord]]] = {
 }
 
 
-def _adapt_live(payload: list[dict[str, Any]]) -> list[GoldenRecord]:
+def resolve_live_result_items(
+    payload: list[dict[str, Any]], repo_root: Path | None = None
+) -> list[dict[str, Any]]:
+    """Resolve compact live-result index entries to their canonical case JSON."""
+    repo = repo_root if repo_root is not None else default_repo_root()
+    resolved: list[dict[str, Any]] = []
+    for item in payload:
+        case_report = item.get("case_report")
+        if case_report is None:
+            resolved.append(item)
+            continue
+        relative = Path(str(case_report))
+        path = (repo / relative).resolve()
+        if relative.is_absolute() or not path.is_relative_to(repo):
+            raise ValueError("Live case_report must stay inside the repo")
+        report = json.loads(path.read_text(encoding="utf-8"))
+        identity = (report.get("module"), report.get("field"), report.get("case_id"))
+        if identity != (item.get("module"), item.get("field"), item.get("case_id")):
+            raise ValueError("Live case_report identity does not match its index entry")
+        resolved.append(report)
+    return resolved
+
+
+def compact_live_result_items(payload: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """Replace duplicated live reports with stable references to case.json files."""
+    compact: list[dict[str, Any]] = []
+    for item in payload:
+        if item.get("case_report") is not None:
+            compact.append(
+                {
+                    "module": item["module"],
+                    "field": item["field"],
+                    "case_id": item["case_id"],
+                    "case_report": item["case_report"],
+                }
+            )
+            continue
+        before = Path(str(item["snapshots"]["before"]["path"]))
+        compact.append(
+            {
+                "module": item["module"],
+                "field": item["field"],
+                "case_id": item["case_id"],
+                "case_report": (before.parent / "case.json").as_posix(),
+            }
+        )
+    compact.sort(key=lambda item: (item["module"], item["field"], item["case_id"]))
+    return compact
+
+
+def _adapt_live(
+    payload: list[dict[str, Any]], repo_root: Path | None = None
+) -> list[GoldenRecord]:
     """Adapt new-process cases into the same registry/archive contract."""
     records: list[GoldenRecord] = []
-    for item in payload:
+    for item in resolve_live_result_items(payload, repo_root):
         before_path = Path(item["snapshots"]["before"]["path"])
         after_path = Path(item["snapshots"]["after"]["path"])
         if before_path.parent != after_path.parent:
@@ -485,7 +539,14 @@ def _adapt_live(payload: list[dict[str, Any]]) -> list[GoldenRecord]:
             and not required
             and not optional
         )
-        if not partitioned or (not required and not unknown_discovery):
+        expected_noop = bool(item.get("expected_noop", False))
+        if expected_noop and (
+            item.get("case_kind") != "golden" or expected or required or optional
+        ):
+            raise ValueError("Live expected_noop must be an empty golden case")
+        if not partitioned or (
+            not required and not unknown_discovery and not expected_noop
+        ):
             raise ValueError("Live required/optional offsets do not partition expected")
         entries = _stored_diff_entries(item["diffs"])
         records.append(
@@ -513,6 +574,7 @@ def _adapt_live(payload: list[dict[str, Any]]) -> list[GoldenRecord]:
                 reopen_mode=str(item["reopen_mode"]),
                 within_budget=bool(item["within_budget"]),
                 stored_passed=bool(item["passed"]),
+                expected_noop=expected_noop,
             )
         )
     return records
@@ -531,7 +593,9 @@ def load_family_records(repo_root: Path | None = None) -> list[GoldenRecord]:
         records.extend(FAMILY_ADAPTERS[family](payload))
     live_path = audit_dir / LIVE_RESULT_JSON
     if live_path.is_file():
-        records.extend(_adapt_live(json.loads(live_path.read_text(encoding="utf-8"))))
+        records.extend(
+            _adapt_live(json.loads(live_path.read_text(encoding="utf-8")), repo)
+        )
     identities = [(record.module, record.field, record.case_id) for record in records]
     if len(set(identities)) != len(identities):
         raise ValueError("Duplicate module/field/case_id in golden records")
@@ -564,6 +628,7 @@ class RegistryEntry:
     required_offsets: tuple[int, ...]
     optional_offsets: tuple[int, ...]
     notes: tuple[str, ...]
+    expected_noop: bool = False
 
 
 def derive_registry(repo_root: Path | None = None) -> list[RegistryEntry]:
@@ -588,6 +653,7 @@ def derive_registry(repo_root: Path | None = None) -> list[RegistryEntry]:
                 field=record.field,
                 case_id=record.case_id,
                 case_kind=record.case_kind,
+                expected_noop=record.expected_noop,
                 source_json=record.source_json,
                 snapshot_before=snapshot_before,
                 snapshot_after=snapshot_after,
@@ -608,6 +674,7 @@ def _registry_entry_payload(entry: RegistryEntry) -> dict[str, Any]:
         "field": entry.field,
         "case_id": entry.case_id,
         "case_kind": entry.case_kind,
+        "expected_noop": entry.expected_noop,
         "source_json": entry.source_json,
         "snapshot_before": entry.snapshot_before,
         "snapshot_after": entry.snapshot_after,

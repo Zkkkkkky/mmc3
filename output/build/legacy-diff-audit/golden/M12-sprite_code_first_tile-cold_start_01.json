@@ -3,7 +3,8 @@
   "module": "M12",
   "field": "sprite_code_first_tile",
   "case_id": "cold_start_01",
-  "case_kind": "discovery",
+  "case_kind": "golden",
+  "expected_noop": false,
   "requested_value": "01 00 FF ",
   "changed_offsets": [
     203908,
@@ -26,8 +27,7 @@
     203908
   ],
   "optional_offsets": [],
-  "extra_allowed": [],
-  "unexpected_offsets": [
+  "extra_allowed": [
     303404,
     303405,
     304673,
@@ -35,12 +35,13 @@
     305017,
     305018
   ],
+  "unexpected_offsets": [],
   "target_changed": [
     203908
   ],
   "expected_not_changed": [],
-  "passed": null,
-  "pending_reason": "在线单字段采集：保存后关闭进程，再以不同 PID 冷启动重开",
+  "passed": true,
+  "pending_reason": null,
   "notes": [
     "在线单字段采集：保存后关闭进程，再以不同 PID 冷启动重开"
   ],

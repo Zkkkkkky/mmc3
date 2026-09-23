@@ -24,6 +24,8 @@ class M05ReferenceControlCatalogTests(unittest.TestCase):
         self.assertEqual(report["counts"]["classified_capacity_boundaries"], 1)
         self.assertEqual(report["counts"]["guarded_actions_with_discovery"], 10)
         self.assertEqual(report["counts"]["prepared_discovery_recipes"], 25)
+        self.assertEqual(report["counts"]["promoted_golden_recipes"], 17)
+        self.assertEqual(report["counts"]["pending_discovery_recipes"], 8)
         self.assertEqual(len(set(report["golden_save_fields"])), 33)
         self.assertEqual(
             set(report["prepared_discovery_recipes"]),
@@ -55,16 +57,21 @@ class M05ReferenceControlCatalogTests(unittest.TestCase):
                 "fragment_puzzle_flip_vertical",
             },
         )
+        recipes = report["prepared_discovery_recipes"].values()
+        self.assertEqual(sum(item["status"] == "promoted_golden" for item in recipes), 17)
+        recipes = report["prepared_discovery_recipes"].values()
+        self.assertEqual(sum(item["status"] == "prepared_not_promoted" for item in recipes), 8)
         self.assertTrue(
             all(
-                item["status"] == "prepared_not_promoted"
-                and item["case_kind"] == "discovery"
-                and item["promotion_guarded"] is True
-                and item["sha256"]
+                item["sha256"]
+                and (
+                    item["promotion_guarded"] is True
+                    or item["promotion_complete"] is True
+                )
                 for item in report["prepared_discovery_recipes"].values()
             )
         )
-        self.assertTrue(report["checks"]["action_discovery_recipes_not_promoted"])
+        self.assertTrue(report["checks"]["action_recipes_reviewed"])
 
     def test_puzzle_dialogs_include_canvas_and_commit_controls(self) -> None:
         report = build()
@@ -100,7 +107,7 @@ class M05ReferenceControlCatalogTests(unittest.TestCase):
         self.assertTrue(
             all(item["prepared_recipe_keys"] for item in report["guarded_pending_actions"])
         )
-        self.assertTrue(report["checks"]["every_pending_action_has_guarded_discovery"])
+        self.assertTrue(report["checks"]["every_pending_action_has_reviewed_recipe"])
         self.assertEqual(
             {item["action"] for item in report["guarded_pending_actions"]},
             {

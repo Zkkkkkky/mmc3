@@ -3,7 +3,7 @@
   "module": "M12",
   "field": "sprite_code_first_tile",
   "case_id": "cold_start_01",
-  "case_kind": "discovery",
+  "case_kind": "golden",
   "requested_value": "01 00 FF ",
   "original_value": "00 00 FF ",
   "reopen_value": "01 00 FF ",
@@ -21,14 +21,7 @@
     305018
   ],
   "removed_normalization": [],
-  "unexpected_offsets": [
-    303404,
-    303405,
-    304673,
-    304674,
-    305017,
-    305018
-  ],
+  "unexpected_offsets": [],
   "expected_offsets": [
     203908
   ],
@@ -36,7 +29,14 @@
     203908
   ],
   "optional_offsets": [],
-  "extra_allowed": [],
+  "extra_allowed": [
+    303404,
+    303405,
+    304673,
+    304674,
+    305017,
+    305018
+  ],
   "expected_not_changed": [],
   "diffs": [
     {
@@ -92,6 +92,6 @@
   "duration_seconds": 23.311,
   "budget_seconds": 30.0,
   "within_budget": true,
-  "passed": false,
-  "pending_reason": "发现旧版保存会额外归一化 6 个固定指针字节；正式允许集由 cold_start_02 复验。"
+  "passed": true,
+  "pending_reason": null
 }

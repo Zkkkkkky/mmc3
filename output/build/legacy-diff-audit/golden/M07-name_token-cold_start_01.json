@@ -4,6 +4,7 @@
   "field": "name_token",
   "case_id": "cold_start_01",
   "case_kind": "golden",
+  "expected_noop": false,
   "requested_value": "光束军刃",
   "changed_offsets": [
     294944,

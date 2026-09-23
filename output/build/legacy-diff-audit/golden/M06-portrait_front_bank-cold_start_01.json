@@ -4,6 +4,7 @@
   "field": "portrait_front_bank",
   "case_id": "cold_start_01",
   "case_kind": "golden",
+  "expected_noop": false,
   "requested_value": 21,
   "changed_offsets": [
     43856,

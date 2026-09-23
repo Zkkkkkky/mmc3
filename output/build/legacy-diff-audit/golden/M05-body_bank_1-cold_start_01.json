@@ -4,6 +4,7 @@
   "field": "body_bank_1",
   "case_id": "cold_start_01",
   "case_kind": "golden",
+  "expected_noop": false,
   "requested_value": 77,
   "changed_offsets": [
     33457,

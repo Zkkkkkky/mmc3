@@ -1,5 +1,6 @@
 param(
-    [switch]$PreflightOnly
+    [switch]$PreflightOnly,
+    [switch]$SkipExisting
 )
 
 $ErrorActionPreference = "Continue"
@@ -12,6 +13,18 @@ $baseline = Join-Path $repoRoot "output\build\legacy-diff-audit\m05-reference-ba
 $legacyExe = Join-Path $repoRoot "output\build\legacy-diff-audit\SRW2_patched.exe"
 $logPath = Join-Path $repoRoot "output\verification\m05-puzzle-discovery.log"
 $caseRoot = Join-Path $repoRoot "tools\golden_pipeline\discovery_history"
+
+function Get-LiveCaseReportPath {
+    param([Parameter(Mandatory = $true)][string]$ConfigPath)
+
+    $caseSpec = ConvertFrom-Json -InputObject (
+        Get-Content -Raw -LiteralPath $ConfigPath -ErrorAction Stop
+    ) -ErrorAction Stop
+    return Join-Path $repoRoot (
+        "output\build\legacy-diff-audit\cases\legacy_live\$($caseSpec.module)\$($caseSpec.field)\$($caseSpec.case_id)\case.json"
+    )
+}
+
 $cases = @(
     "M05-body-upload-bmp-discovery-cold-start-01.json",
     "M05-body-compressed-upload-bmp-discovery-cold-start-01.json",
@@ -20,24 +33,7 @@ $cases = @(
     "M05-icon-upload-bmp-discovery-cold-start-01.json",
     "M05-main-clear-body-discovery-cold-start-01.json",
     "M05-main-clear-fragment-discovery-cold-start-01.json",
-    "M05-icon-binding-double-click-discovery-cold-start-01.json",
-    "M05-body-puzzle-clear-discovery-cold-start-01.json",
-    "M05-body-puzzle-move-up-discovery-cold-start-01.json",
-    "M05-body-puzzle-move-down-discovery-cold-start-01.json",
-    "M05-body-puzzle-move-left-discovery-cold-start-01.json",
-    "M05-body-puzzle-move-right-discovery-cold-start-01.json",
-    "M05-body-puzzle-template-8x8-discovery-cold-start-01.json",
-    "M05-body-puzzle-template-7x9-discovery-cold-start-01.json",
-    "M05-body-puzzle-template-9x7-discovery-cold-start-01.json",
-    "M05-body-puzzle-template-10x6-discovery-cold-start-01.json",
-    "M05-body-puzzle-swap-banks-discovery-cold-start-01.json",
-    "M05-fragment-puzzle-move-up-discovery-cold-start-01.json",
-    "M05-fragment-puzzle-move-down-discovery-cold-start-01.json",
-    "M05-fragment-puzzle-move-left-discovery-cold-start-01.json",
-    "M05-fragment-puzzle-move-right-discovery-cold-start-01.json",
-    "M05-fragment-puzzle-clear-discovery-cold-start-01.json",
-    "M05-fragment-puzzle-flip-horizontal-discovery-cold-start-01.json",
-    "M05-fragment-puzzle-flip-vertical-discovery-cold-start-01.json"
+    "M05-body-puzzle-template-8x8-discovery-cold-start-01.json"
 )
 
 Set-Location -LiteralPath $repoRoot
@@ -58,6 +54,7 @@ if ($LASTEXITCODE -ne 0) {
     throw "M05 legacy upload sample preparation failed with exit code $LASTEXITCODE"
 }
 if ($PreflightOnly) {
+    $existingCount = 0
     foreach ($caseName in $cases) {
         $config = Join-Path $caseRoot $caseName
         $payload = Get-Content -Raw -LiteralPath $config | ConvertFrom-Json
@@ -69,10 +66,19 @@ if ($PreflightOnly) {
         ) {
             throw "M05 discovery preflight rejected unguarded config: $caseName"
         }
+        if (
+            $SkipExisting -and
+            (Test-Path -LiteralPath (Get-LiveCaseReportPath -ConfigPath $config) -PathType Leaf)
+        ) {
+            $existingCount += 1
+        }
     }
     $baselineHash = (Get-FileHash -Algorithm SHA256 -LiteralPath $baseline).Hash
     $legacyExeHash = (Get-FileHash -Algorithm SHA256 -LiteralPath $legacyExe).Hash
     Write-Output "M05 discovery preflight passed: cases=$($cases.Count)"
+    if ($SkipExisting) {
+        Write-Output "existing_cases=$existingCount missing_cases=$($cases.Count - $existingCount)"
+    }
     Write-Output "baseline_sha256=$baselineHash"
     Write-Output "legacy_exe_sha256=$legacyExeHash"
     exit 0
@@ -82,6 +88,14 @@ if ($PreflightOnly) {
 $failed = 0
 foreach ($caseName in $cases) {
     $config = Join-Path $caseRoot $caseName
+    if ($SkipExisting) {
+        $existingCase = Get-LiveCaseReportPath -ConfigPath $config
+        if (Test-Path -LiteralPath $existingCase -PathType Leaf) {
+            "`n=== $caseName ===" | Add-Content -LiteralPath $logPath -Encoding utf8
+            "skipped_existing=$existingCase" | Add-Content -LiteralPath $logPath -Encoding utf8
+            continue
+        }
+    }
     "`n=== $caseName ===" | Add-Content -LiteralPath $logPath -Encoding utf8
     & $python $reporter collect --case-config $config --baseline $baseline 2>&1 |
         Add-Content -LiteralPath $logPath -Encoding utf8

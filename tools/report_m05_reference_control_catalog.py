@@ -20,6 +20,7 @@ GOLDEN = ROOT / "output/reports/golden-coverage-report.json"
 JSON_OUT = ROOT / "output/reports/m05-reference-control-catalog.json"
 MD_OUT = ROOT / "output/reports/m05-reference-control-catalog.md"
 DISCOVERY_DIR = ROOT / "tools/golden_pipeline/discovery_history"
+CASE_DIR = ROOT / "tools/golden_pipeline/cases"
 ACTION_DISCOVERY_RECIPES = {
     "body_compressed_upload_bmp": DISCOVERY_DIR
     / "M05-body-compressed-upload-bmp-discovery-cold-start-01.json",
@@ -72,6 +73,13 @@ ACTION_DISCOVERY_RECIPES = {
     "fragment_puzzle_flip_vertical": DISCOVERY_DIR
     / "M05-fragment-puzzle-flip-vertical-discovery-cold-start-01.json",
 }
+# Reviewed recipes move from discovery_history into the canonical cases
+# directory.  Resolve either location so the catalog remains a history of all
+# 25 action probes while accurately reporting their current evidence state.
+for _recipe_key, _discovery_path in tuple(ACTION_DISCOVERY_RECIPES.items()):
+    _golden_path = CASE_DIR / f"M05-{_recipe_key.replace('_', '-')}-cold-start-01.json"
+    if _golden_path.is_file():
+        ACTION_DISCOVERY_RECIPES[_recipe_key] = _golden_path
 ACTION_RECIPE_COVERAGE = {
     "upload_body": ("body_upload_bmp",),
     "upload_fragment": ("fragment_upload_bmp",),
@@ -161,7 +169,11 @@ def build() -> dict[str, object]:
         for item in coverage["field_details"]
         if item["module"] == "M05" and item["case_kind"] == "golden" and item["passed"] is True
     ]
-    golden_fields = sorted({str(item["field"]) for item in golden_rows})
+    action_fields = set(ACTION_DISCOVERY_RECIPES)
+    golden_fields = sorted(
+        {str(item["field"]) for item in golden_rows}
+        - action_fields
+    )
     non_rom_fields = [
         {"field_id": "upload_body_offset", "surface": "main", "control_id": 170, "classification": "operation_parameter"},
         {"field_id": "upload_fragment_offset", "surface": "main", "control_id": 1300, "classification": "operation_parameter"},
@@ -200,12 +212,30 @@ def build() -> dict[str, object]:
             and payload.get("expected_offsets") == []
             and payload.get("required_offsets") == []
         )
+        promotion_complete = (
+            payload.get("module") == "M05"
+            and payload.get("case_kind") == "golden"
+            and (
+                bool(payload.get("expected_offsets"))
+                or payload.get("expected_noop") is True
+            )
+            and str(payload.get("field")) in {
+                str(item["field"]) for item in golden_rows
+            }
+        )
         discovery_recipes[name] = {
             "path": path.relative_to(ROOT).as_posix(),
             "sha256": hashlib.sha256(path.read_bytes()).hexdigest(),
             "case_kind": payload.get("case_kind"),
             "promotion_guarded": promotion_guarded,
-            "status": "prepared_not_promoted" if promotion_guarded else "invalid_guard",
+            "promotion_complete": promotion_complete,
+            "status": (
+                "promoted_golden"
+                if promotion_complete
+                else "prepared_not_promoted"
+                if promotion_guarded
+                else "invalid_guard"
+            ),
         }
     for action in pending_actions:
         action["prepared_recipe_keys"] = list(
@@ -225,25 +255,34 @@ def build() -> dict[str, object]:
         )
         == 13,
         "golden_fields_unique": len(golden_fields) == 33,
-        "all_golden_fields_passed": len(golden_rows) == 33,
+        "all_golden_fields_passed": len(golden_fields) == 33,
         "non_rom_fields_classified": len(non_rom_fields) == 5,
         "pending_actions_guarded": len(pending_actions) == 10,
         "capacity_boundaries_classified": len(capacity_boundaries) == 1
         and capacity_boundaries[0]["slot_count"] == 255,
-        "every_pending_action_has_guarded_discovery": all(
+        "every_pending_action_has_reviewed_recipe": all(
             action["prepared_recipe_keys"]
             and all(
                 discovery_recipes.get(recipe_key, {}).get("promotion_guarded")
+                or discovery_recipes.get(recipe_key, {}).get("promotion_complete")
                 for recipe_key in action["prepared_recipe_keys"]
             )
             for action in pending_actions
         ),
         "action_discovery_recipes_ready": len(discovery_recipes) == 25
         and all(path.is_file() for path in ACTION_DISCOVERY_RECIPES.values()),
-        "action_discovery_recipes_not_promoted": all(
-            item["promotion_guarded"] for item in discovery_recipes.values()
+        "action_recipes_reviewed": all(
+            item["promotion_guarded"] or item["promotion_complete"]
+            for item in discovery_recipes.values()
         ),
     }
+    promoted_recipe_count = sum(
+        item["status"] == "promoted_golden" for item in discovery_recipes.values()
+    )
+    pending_recipe_count = sum(
+        item["status"] == "prepared_not_promoted" for item in discovery_recipes.values()
+    )
+
     return {
         "schema_version": 1,
         "module": "M05",
@@ -265,6 +304,8 @@ def build() -> dict[str, object]:
             "guarded_pending_actions": len(pending_actions),
             "classified_capacity_boundaries": len(capacity_boundaries),
             "prepared_discovery_recipes": len(discovery_recipes),
+            "promoted_golden_recipes": promoted_recipe_count,
+            "pending_discovery_recipes": pending_recipe_count,
             "guarded_actions_with_discovery": sum(
                 bool(action["prepared_recipe_keys"]) for action in pending_actions
             ),
@@ -290,7 +331,7 @@ def markdown(report: dict[str, object]) -> str:
             f"- 已分类非 ROM 字段：{counts['classified_non_rom_fields']}",
             f"- 保持门禁的动作入口：{counts['guarded_pending_actions']}",
             f"- 已分类容量边界：{counts['classified_capacity_boundaries']}",
-            f"- 已准备但未晋级黄金的动作 discovery 配方：{counts['prepared_discovery_recipes']}",
+            f"- 已审查的动作配方：{counts['prepared_discovery_recipes']}（已晋级黄金 {counts['promoted_golden_recipes']}，仍待动态证据 {counts['pending_discovery_recipes']}）",
             f"- 已由 discovery 覆盖的门禁动作：{counts['guarded_actions_with_discovery']}/{counts['guarded_pending_actions']}",
             f"- 状态：`{report['status']}`",
             "",

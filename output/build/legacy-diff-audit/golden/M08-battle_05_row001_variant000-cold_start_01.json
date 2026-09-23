@@ -4,6 +4,7 @@
   "field": "battle_05_row001_variant000",
   "case_id": "cold_start_01",
   "case_kind": "golden",
+  "expected_noop": false,
   "requested_value": "000：魔神也不成了吗？！",
   "changed_offsets": [
     124837,

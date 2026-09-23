@@ -104,12 +104,17 @@ SNAPSHOT_ROOT = AUDIT_DIR / "cases" / "legacy_globals"
 #: 当前快照中的 discovery 字段（G2 分母排除、G1 不计分子）。
 EXPECTED_DISCOVERY_FIELDS = frozenset(
     {
-        "M06/character_add_overflow",
+        "M05/body_compressed_upload_bmp",
+        "M05/body_puzzle_template_8x8",
+        "M05/body_upload_bmp",
+        "M05/fragment_compressed_upload_bmp",
+        "M05/fragment_upload_bmp",
+        "M05/icon_upload_bmp",
+        "M05/main_clear_body",
+        "M05/main_clear_fragment",
         "M09/experience_level_2",
         "M09/experience_level_60",
-        "M09/level_cap",
         "M12/sprite_anchor_x",
-        "M12/sprite_code_first_tile",
     }
 )
 
@@ -153,11 +158,12 @@ def make_index_entry(
     extra_allowed: tuple[int, ...] = (),
     required_offsets: tuple[int, ...] | None = None,
     optional_offsets: tuple[int, ...] = (),
+    expected_noop: bool = False,
 ) -> dict[str, Any]:
     """按 ``cmd_archive`` 的判定逻辑由核心库复算单条 index 记录。
 
     口径（对齐 ``cmd_archive``）：golden 用例
-    ``passed = (not unexplained) and bool(required)
+    ``passed = (not unexplained) and (bool(required) or expected_noop)
     and set(required) ⊆ set(changed)``；discovery 用例不判定（``passed=None``）。
     ``required_offsets`` 缺省取全部 ``expected_offsets``，
     ``optional_offsets`` 承载同字段跨度内合理可不写的偏移。
@@ -168,7 +174,7 @@ def make_index_entry(
     if case_kind == "golden":
         passed: bool | None = (
             (not result.unexplained)
-            and bool(required)
+            and (bool(required) or expected_noop)
             and not required_missing
         )
     else:
@@ -179,7 +185,7 @@ def make_index_entry(
         "case_id": core.CASE_ID_WRITE,
         "case_kind": case_kind,
         "passed": passed,
-        "expected_known": bool(expected_offsets),
+        "expected_known": bool(expected_offsets) or expected_noop,
         "required_offsets": list(required),
         "optional_offsets": list(optional_offsets),
         "unexpected_count": len(result.unexplained),
@@ -395,6 +401,20 @@ class LiveAdapterTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "partition expected"):
             core._adapt_live([self._item("golden")])
 
+    def test_explicit_golden_noop_accepts_empty_offsets(self) -> None:
+        item = self._item("golden")
+        item.update(
+            {
+                "expected_noop": True,
+                "extra_allowed": [123],
+                "unexpected_offsets": [],
+                "passed": True,
+            }
+        )
+        records = core._adapt_live([item])
+        self.assertTrue(records[0].expected_noop)
+        self.assertEqual(records[0].required_offsets, ())
+
 
 # ---------------------------------------------------------------------------
 # 黄金档案四要素齐全性抽查（产物缺失时跳过）
@@ -512,6 +532,7 @@ class GoldenArchiveSchemaTests(unittest.TestCase):
                     tuple(payload["extra_allowed"]),
                     required_offsets=tuple(payload["required_offsets"]),
                     optional_offsets=tuple(payload["optional_offsets"]),
+                    expected_noop=bool(payload.get("expected_noop", False)),
                 )
                 expected_passed = entry["passed"]
                 if payload["case_kind"] == "golden":

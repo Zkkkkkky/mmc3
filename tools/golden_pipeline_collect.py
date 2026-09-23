@@ -19,7 +19,9 @@ try:
         AUDIT_DIR_RELATIVE,
         ONLINE_FIELD_BUDGET_SECONDS,
         classify_case,
+        compact_live_result_items,
         diff_roms,
+        resolve_live_result_items,
         sha256_bytes,
         write_json_atomic,
     )
@@ -28,7 +30,9 @@ except ImportError:
         AUDIT_DIR_RELATIVE,
         ONLINE_FIELD_BUDGET_SECONDS,
         classify_case,
+        compact_live_result_items,
         diff_roms,
+        resolve_live_result_items,
         sha256_bytes,
         write_json_atomic,
     )
@@ -91,6 +95,7 @@ class CaseSpec:
     field: str
     case_id: str
     case_kind: str
+    expected_noop: bool
     requested_value: int | str
     expected_before: int | str | None
     expected_offsets: tuple[int, ...]
@@ -115,6 +120,9 @@ class CaseSpec:
         case_kind = str(payload.get("case_kind", "golden"))
         if case_kind not in {"golden", "discovery"}:
             raise ValueError("case_kind must be golden or discovery")
+        expected_noop = payload.get("expected_noop", False)
+        if not isinstance(expected_noop, bool):
+            raise ValueError("expected_noop must be a boolean")
         expected = tuple(int(value) for value in payload["expected_offsets"])
         required = tuple(int(value) for value in payload["required_offsets"])
         optional = tuple(int(value) for value in payload.get("optional_offsets", []))
@@ -169,9 +177,10 @@ class CaseSpec:
         if len(set(expected)) != len(expected):
             raise ValueError("expected_offsets contain duplicates")
         if (
-            (case_kind == "golden" and not required)
+            (case_kind == "golden" and not required and not expected_noop)
             or set(required) & set(optional)
             or set(required) | set(optional) != set(expected)
+            or (expected_noop and (case_kind != "golden" or bool(expected)))
         ):
             raise ValueError("required/optional offsets must partition expected offsets")
         if any(value < 0 for value in (*expected, *extra_allowed)):
@@ -271,6 +280,7 @@ class CaseSpec:
             field=str(payload["field"]),
             case_id=str(payload["case_id"]),
             case_kind=case_kind,
+            expected_noop=expected_noop,
             requested_value=requested,
             expected_before=before,
             expected_offsets=expected,
@@ -606,7 +616,7 @@ def collect_case(
     within_budget = elapsed <= effective_budget
     passed = (
         spec.case_kind == "golden"
-        and bool(spec.required_offsets)
+        and (bool(spec.required_offsets) or spec.expected_noop)
         and not classification.unexplained
         and not required_missing
         and reopened == effective_requested
@@ -630,6 +640,7 @@ def collect_case(
         "field": spec.field,
         "case_id": spec.case_id,
         "case_kind": spec.case_kind,
+        "expected_noop": spec.expected_noop,
         "requested_value": effective_requested,
         "requested_value_mode": (
             "captured_mid_action"
@@ -678,12 +689,13 @@ def collect_case(
     }
     write_json_atomic(run_dir / "case.json", report)
     results_path = repo / LIVE_RESULTS_RELATIVE
-    results: list[dict[str, Any]] = (
+    indexed_results: list[dict[str, Any]] = (
         json.loads(results_path.read_text(encoding="utf-8")) if results_path.is_file() else []
     )
+    results = resolve_live_result_items(indexed_results, repo)
     results.append(report)
     results.sort(key=lambda item: (item["module"], item["field"], item["case_id"]))
-    write_json_atomic(results_path, results)
+    write_json_atomic(results_path, compact_live_result_items(results))
     cdl_path.unlink(missing_ok=True)
     return run_dir, report
 

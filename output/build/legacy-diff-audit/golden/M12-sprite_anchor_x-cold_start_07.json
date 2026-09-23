@@ -4,6 +4,7 @@
   "field": "sprite_anchor_x",
   "case_id": "cold_start_07",
   "case_kind": "discovery",
+  "expected_noop": false,
   "requested_value": 1,
   "changed_offsets": [],
   "removed_normalization": [],

@@ -4,6 +4,7 @@
   "field": "slot_4_character",
   "case_id": "write",
   "case_kind": "golden",
+  "expected_noop": false,
   "requested_value": 6,
   "changed_offsets": [
     235107,

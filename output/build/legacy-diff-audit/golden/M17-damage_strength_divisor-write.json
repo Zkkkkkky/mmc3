@@ -4,6 +4,7 @@
   "field": "damage_strength_divisor",
   "case_id": "write",
   "case_kind": "golden",
+  "expected_noop": false,
   "requested_value": 11,
   "changed_offsets": [
     303361,

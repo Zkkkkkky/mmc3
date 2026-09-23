@@ -4,6 +4,7 @@
   "field": "spirit_cost_02",
   "case_id": "cold_start_01",
   "case_kind": "golden",
+  "expected_noop": false,
   "requested_value": 16,
   "changed_offsets": [
     236361

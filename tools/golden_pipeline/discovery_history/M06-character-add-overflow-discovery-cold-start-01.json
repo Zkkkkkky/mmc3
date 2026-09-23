@@ -1,8 +1,0 @@
-{
-  "module":"M06","field":"character_add_overflow","case_id":"cold_start_01","case_kind":"discovery",
-  "requested_value":201,"expected_before":200,"expected_offsets":[],"required_offsets":[],"optional_offsets":[],"extra_allowed":[],
-  "navigation":[{"op":"menu","path":"数据->数据库"},{"op":"window","title":"数据库"},{"op":"click_coords","x":130,"y":73}],
-  "read_navigation":[{"op":"menu","path":"数据->数据库"},{"op":"window","title":"数据库"},{"op":"click_coords","x":130,"y":73}],
-  "edit_steps":[{"op":"click_id_message","class":"Button","control_id":2120},{"op":"click_id","class":"Button","control_id":590}],
-  "read_selector":{"class":"ListBox","control_id":630,"value_type":"list_item_count"}
-}

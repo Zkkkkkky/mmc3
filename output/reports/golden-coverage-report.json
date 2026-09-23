@@ -6,42 +6,84 @@
   },
   "g1": {
     "definition": "已通过黄金对照的字段数 / 登记字段数",
-    "numerator": 211,
-    "denominator": 216,
-    "value": 0.9769,
+    "numerator": 230,
+    "denominator": 241,
+    "value": 0.9544,
     "denominator_scope": "registered_fields",
     "denominator_scope_note": "当前分母为 field_registry.json 登记字段数；最终口径为参考版全部可编辑字段数（主文档第 4/5 章字段清单，M00 第 5 节统计职责），全量采集完成后需以全量字段数重算分母",
     "target": ">=95%"
   },
   "g2": {
     "definition": "unexplained 为空且 expected 已知的 golden 用例占比",
-    "numerator": 212,
-    "denominator": 212,
+    "numerator": 233,
+    "denominator": 233,
     "value": 1.0,
     "target": "=100%"
   },
   "counts": {
-    "registered_fields": 216,
-    "archived_fields": 216,
-    "archived_cases": 219,
-    "golden_cases": 212,
-    "discovery_cases": 7,
-    "passed_golden_cases": 212,
+    "registered_fields": 241,
+    "archived_fields": 241,
+    "archived_cases": 244,
+    "golden_cases": 233,
+    "discovery_cases": 11,
+    "passed_golden_cases": 233,
     "failed_golden_cases": 0,
-    "pending_cases": 7
+    "pending_cases": 11
   },
   "pending_cases": [
     {
-      "module": "M06",
-      "field": "character_add_overflow",
+      "module": "M05",
+      "field": "body_compressed_upload_bmp",
       "case_id": "cold_start_01",
       "case_kind": "discovery",
       "reason": "在线单字段采集：保存后关闭进程，再以不同 PID 冷启动重开"
     },
     {
-      "module": "M06",
-      "field": "character_add_overflow",
-      "case_id": "cold_start_02",
+      "module": "M05",
+      "field": "body_puzzle_template_8x8",
+      "case_id": "cold_start_01",
+      "case_kind": "discovery",
+      "reason": "在线单字段采集：保存后关闭进程，再以不同 PID 冷启动重开"
+    },
+    {
+      "module": "M05",
+      "field": "body_upload_bmp",
+      "case_id": "cold_start_01",
+      "case_kind": "discovery",
+      "reason": "在线单字段采集：保存后关闭进程，再以不同 PID 冷启动重开"
+    },
+    {
+      "module": "M05",
+      "field": "fragment_compressed_upload_bmp",
+      "case_id": "cold_start_01",
+      "case_kind": "discovery",
+      "reason": "在线单字段采集：保存后关闭进程，再以不同 PID 冷启动重开"
+    },
+    {
+      "module": "M05",
+      "field": "fragment_upload_bmp",
+      "case_id": "cold_start_01",
+      "case_kind": "discovery",
+      "reason": "在线单字段采集：保存后关闭进程，再以不同 PID 冷启动重开"
+    },
+    {
+      "module": "M05",
+      "field": "icon_upload_bmp",
+      "case_id": "cold_start_01",
+      "case_kind": "discovery",
+      "reason": "在线单字段采集：保存后关闭进程，再以不同 PID 冷启动重开"
+    },
+    {
+      "module": "M05",
+      "field": "main_clear_body",
+      "case_id": "cold_start_01",
+      "case_kind": "discovery",
+      "reason": "在线单字段采集：保存后关闭进程，再以不同 PID 冷启动重开"
+    },
+    {
+      "module": "M05",
+      "field": "main_clear_fragment",
+      "case_id": "cold_start_01",
       "case_kind": "discovery",
       "reason": "在线单字段采集：保存后关闭进程，再以不同 PID 冷启动重开"
     },
@@ -60,23 +102,9 @@
       "reason": "发现型用例：存量 expected_offset=0（写入偏移未知）且重开读取值不等于请求值，需在线采集补证"
     },
     {
-      "module": "M09",
-      "field": "level_cap",
-      "case_id": "write",
-      "case_kind": "discovery",
-      "reason": "发现型用例：等级上限 60→61 触发成长曲线等联动重写（3778 处偏移），无单一预期偏移集，待在线采集拆解（D5 决策）"
-    },
-    {
       "module": "M12",
       "field": "sprite_anchor_x",
       "case_id": "cold_start_07",
-      "case_kind": "discovery",
-      "reason": "在线单字段采集：保存后关闭进程，再以不同 PID 冷启动重开"
-    },
-    {
-      "module": "M12",
-      "field": "sprite_code_first_tile",
-      "case_id": "cold_start_01",
       "case_kind": "discovery",
       "reason": "在线单字段采集：保存后关闭进程，再以不同 PID 冷启动重开"
     }
@@ -136,6 +164,138 @@
       "removed_normalization_count": 0,
       "unexpected_count": 0,
       "archive": "M05-body_color_3-cold_start_01.json"
+    },
+    {
+      "module": "M05",
+      "field": "body_compressed_upload_bmp",
+      "case_id": "cold_start_01",
+      "case_kind": "discovery",
+      "passed": null,
+      "changed_count": 54840,
+      "removed_normalization_count": 4,
+      "unexpected_count": 54836,
+      "archive": "M05-body_compressed_upload_bmp-cold_start_01.json"
+    },
+    {
+      "module": "M05",
+      "field": "body_puzzle_clear",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "passed": true,
+      "changed_count": 42273,
+      "removed_normalization_count": 4,
+      "unexpected_count": 0,
+      "archive": "M05-body_puzzle_clear-cold_start_01.json"
+    },
+    {
+      "module": "M05",
+      "field": "body_puzzle_move_down",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "passed": true,
+      "changed_count": 39875,
+      "removed_normalization_count": 4,
+      "unexpected_count": 0,
+      "archive": "M05-body_puzzle_move_down-cold_start_01.json"
+    },
+    {
+      "module": "M05",
+      "field": "body_puzzle_move_left",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "passed": true,
+      "changed_count": 39875,
+      "removed_normalization_count": 4,
+      "unexpected_count": 0,
+      "archive": "M05-body_puzzle_move_left-cold_start_01.json"
+    },
+    {
+      "module": "M05",
+      "field": "body_puzzle_move_right",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "passed": true,
+      "changed_count": 52686,
+      "removed_normalization_count": 4,
+      "unexpected_count": 0,
+      "archive": "M05-body_puzzle_move_right-cold_start_01.json"
+    },
+    {
+      "module": "M05",
+      "field": "body_puzzle_move_up",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "passed": true,
+      "changed_count": 52686,
+      "removed_normalization_count": 4,
+      "unexpected_count": 0,
+      "archive": "M05-body_puzzle_move_up-cold_start_01.json"
+    },
+    {
+      "module": "M05",
+      "field": "body_puzzle_swap_banks",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "passed": true,
+      "changed_count": 39875,
+      "removed_normalization_count": 4,
+      "unexpected_count": 0,
+      "archive": "M05-body_puzzle_swap_banks-cold_start_01.json"
+    },
+    {
+      "module": "M05",
+      "field": "body_puzzle_template_10x6",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "passed": true,
+      "changed_count": 53399,
+      "removed_normalization_count": 4,
+      "unexpected_count": 0,
+      "archive": "M05-body_puzzle_template_10x6-cold_start_01.json"
+    },
+    {
+      "module": "M05",
+      "field": "body_puzzle_template_7x9",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "passed": true,
+      "changed_count": 39875,
+      "removed_normalization_count": 4,
+      "unexpected_count": 0,
+      "archive": "M05-body_puzzle_template_7x9-cold_start_01.json"
+    },
+    {
+      "module": "M05",
+      "field": "body_puzzle_template_8x8",
+      "case_id": "cold_start_01",
+      "case_kind": "discovery",
+      "passed": null,
+      "changed_count": 53399,
+      "removed_normalization_count": 4,
+      "unexpected_count": 53395,
+      "archive": "M05-body_puzzle_template_8x8-cold_start_01.json"
+    },
+    {
+      "module": "M05",
+      "field": "body_puzzle_template_9x7",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "passed": true,
+      "changed_count": 53399,
+      "removed_normalization_count": 4,
+      "unexpected_count": 0,
+      "archive": "M05-body_puzzle_template_9x7-cold_start_01.json"
+    },
+    {
+      "module": "M05",
+      "field": "body_upload_bmp",
+      "case_id": "cold_start_01",
+      "case_kind": "discovery",
+      "passed": null,
+      "changed_count": 39875,
+      "removed_normalization_count": 4,
+      "unexpected_count": 39871,
+      "archive": "M05-body_upload_bmp-cold_start_01.json"
     },
     {
       "module": "M05",
@@ -227,6 +387,105 @@
     },
     {
       "module": "M05",
+      "field": "fragment_compressed_upload_bmp",
+      "case_id": "cold_start_01",
+      "case_kind": "discovery",
+      "passed": null,
+      "changed_count": 48961,
+      "removed_normalization_count": 4,
+      "unexpected_count": 48957,
+      "archive": "M05-fragment_compressed_upload_bmp-cold_start_01.json"
+    },
+    {
+      "module": "M05",
+      "field": "fragment_puzzle_clear",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "passed": true,
+      "changed_count": 41514,
+      "removed_normalization_count": 4,
+      "unexpected_count": 0,
+      "archive": "M05-fragment_puzzle_clear-cold_start_01.json"
+    },
+    {
+      "module": "M05",
+      "field": "fragment_puzzle_flip_horizontal",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "passed": true,
+      "changed_count": 48185,
+      "removed_normalization_count": 4,
+      "unexpected_count": 0,
+      "archive": "M05-fragment_puzzle_flip_horizontal-cold_start_01.json"
+    },
+    {
+      "module": "M05",
+      "field": "fragment_puzzle_flip_vertical",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "passed": true,
+      "changed_count": 47235,
+      "removed_normalization_count": 4,
+      "unexpected_count": 0,
+      "archive": "M05-fragment_puzzle_flip_vertical-cold_start_01.json"
+    },
+    {
+      "module": "M05",
+      "field": "fragment_puzzle_move_down",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "passed": true,
+      "changed_count": 47204,
+      "removed_normalization_count": 4,
+      "unexpected_count": 0,
+      "archive": "M05-fragment_puzzle_move_down-cold_start_01.json"
+    },
+    {
+      "module": "M05",
+      "field": "fragment_puzzle_move_left",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "passed": true,
+      "changed_count": 47204,
+      "removed_normalization_count": 4,
+      "unexpected_count": 0,
+      "archive": "M05-fragment_puzzle_move_left-cold_start_01.json"
+    },
+    {
+      "module": "M05",
+      "field": "fragment_puzzle_move_right",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "passed": true,
+      "changed_count": 47204,
+      "removed_normalization_count": 4,
+      "unexpected_count": 0,
+      "archive": "M05-fragment_puzzle_move_right-cold_start_01.json"
+    },
+    {
+      "module": "M05",
+      "field": "fragment_puzzle_move_up",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "passed": true,
+      "changed_count": 47204,
+      "removed_normalization_count": 4,
+      "unexpected_count": 0,
+      "archive": "M05-fragment_puzzle_move_up-cold_start_01.json"
+    },
+    {
+      "module": "M05",
+      "field": "fragment_upload_bmp",
+      "case_id": "cold_start_01",
+      "case_kind": "discovery",
+      "passed": null,
+      "changed_count": 39875,
+      "removed_normalization_count": 4,
+      "unexpected_count": 39871,
+      "archive": "M05-fragment_upload_bmp-cold_start_01.json"
+    },
+    {
+      "module": "M05",
       "field": "hp",
       "case_id": "cold_start_01",
       "case_kind": "golden",
@@ -246,6 +505,50 @@
       "removed_normalization_count": 0,
       "unexpected_count": 0,
       "archive": "M05-hp_growth-cold_start_01.json"
+    },
+    {
+      "module": "M05",
+      "field": "icon_binding_double_click",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "passed": true,
+      "changed_count": 39875,
+      "removed_normalization_count": 4,
+      "unexpected_count": 0,
+      "archive": "M05-icon_binding_double_click-cold_start_01.json"
+    },
+    {
+      "module": "M05",
+      "field": "icon_upload_bmp",
+      "case_id": "cold_start_01",
+      "case_kind": "discovery",
+      "passed": null,
+      "changed_count": 39931,
+      "removed_normalization_count": 4,
+      "unexpected_count": 39927,
+      "archive": "M05-icon_upload_bmp-cold_start_01.json"
+    },
+    {
+      "module": "M05",
+      "field": "main_clear_body",
+      "case_id": "cold_start_01",
+      "case_kind": "discovery",
+      "passed": null,
+      "changed_count": 42273,
+      "removed_normalization_count": 4,
+      "unexpected_count": 42269,
+      "archive": "M05-main_clear_body-cold_start_01.json"
+    },
+    {
+      "module": "M05",
+      "field": "main_clear_fragment",
+      "case_id": "cold_start_01",
+      "case_kind": "discovery",
+      "passed": null,
+      "changed_count": 41514,
+      "removed_normalization_count": 4,
+      "unexpected_count": 41510,
+      "archive": "M05-main_clear_fragment-cold_start_01.json"
     },
     {
       "module": "M05",
@@ -471,22 +774,22 @@
       "module": "M06",
       "field": "character_add_overflow",
       "case_id": "cold_start_01",
-      "case_kind": "discovery",
-      "passed": null,
+      "case_kind": "golden",
+      "passed": true,
       "changed_count": 16479,
       "removed_normalization_count": 4,
-      "unexpected_count": 16475,
+      "unexpected_count": 0,
       "archive": "M06-character_add_overflow-cold_start_01.json"
     },
     {
       "module": "M06",
       "field": "character_add_overflow",
       "case_id": "cold_start_02",
-      "case_kind": "discovery",
-      "passed": null,
+      "case_kind": "golden",
+      "passed": true,
       "changed_count": 16479,
       "removed_normalization_count": 4,
-      "unexpected_count": 16475,
+      "unexpected_count": 0,
       "archive": "M06-character_add_overflow-cold_start_02.json"
     },
     {
@@ -1824,11 +2127,11 @@
       "module": "M09",
       "field": "level_cap",
       "case_id": "write",
-      "case_kind": "discovery",
-      "passed": null,
+      "case_kind": "golden",
+      "passed": true,
       "changed_count": 3778,
       "removed_normalization_count": 6,
-      "unexpected_count": 3772,
+      "unexpected_count": 0,
       "archive": "M09-level_cap-write.json"
     },
     {
@@ -2110,11 +2413,11 @@
       "module": "M12",
       "field": "sprite_code_first_tile",
       "case_id": "cold_start_01",
-      "case_kind": "discovery",
-      "passed": null,
+      "case_kind": "golden",
+      "passed": true,
       "changed_count": 7,
       "removed_normalization_count": 0,
-      "unexpected_count": 6,
+      "unexpected_count": 0,
       "archive": "M12-sprite_code_first_tile-cold_start_01.json"
     },
     {

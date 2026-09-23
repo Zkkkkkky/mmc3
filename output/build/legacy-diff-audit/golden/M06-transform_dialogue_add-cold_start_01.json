@@ -4,6 +4,7 @@
   "field": "transform_dialogue_add",
   "case_id": "cold_start_01",
   "case_kind": "golden",
+  "expected_noop": false,
   "requested_value": 4,
   "changed_offsets": [
     87359,

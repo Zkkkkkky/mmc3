@@ -4,6 +4,7 @@
   "field": "battle_07_alias_row000_variant000",
   "case_id": "cold_start_01",
   "case_kind": "golden",
+  "expected_noop": false,
   "requested_value": "000：卡姆：\\\r\n比丹，刚达Z出发！】\r\n",
   "changed_offsets": [
     125790,

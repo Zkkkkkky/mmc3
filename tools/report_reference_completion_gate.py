@@ -28,6 +28,7 @@ CUSTOM_EVIDENCE = {
     "M16": ("output/reports/m16-reference-field-coverage.json", "safe_denominator_fields"),
 }
 GOLDEN_MODULES = {"M06", "M07", "M17"}
+GOLDEN_EXCLUDED_FIELDS = {"M06": {"character_add_overflow"}}
 ZERO_FIELD_MODULES = {"M01", "M02", "M13", "M15", "M18"}
 EXPECTED_FINAL_SAFE_DENOMINATOR = 6885
 
@@ -64,7 +65,10 @@ def build() -> dict[str, object]:
             evidence_count = 0
             evidence_reason = "module has no persistent reference fields or is explicitly excluded"
         elif module in GOLDEN_MODULES:
-            evidence_count = len(passed_golden.get(module, set()))
+            evidence_count = len(
+                passed_golden.get(module, set())
+                - GOLDEN_EXCLUDED_FIELDS.get(module, set())
+            )
             evidence_passed = scope_complete and evidence_count == denominator
             evidence_path = "output/reports/golden-coverage-report.json"
             evidence_reason = "unique passed golden fields"

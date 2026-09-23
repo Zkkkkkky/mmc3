@@ -4,6 +4,7 @@
   "field": "experience_level_60",
   "case_id": "write",
   "case_kind": "discovery",
+  "expected_noop": false,
   "requested_value": 65536,
   "changed_offsets": [
     303361,

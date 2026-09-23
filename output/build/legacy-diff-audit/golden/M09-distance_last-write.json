@@ -4,6 +4,7 @@
   "field": "distance_last",
   "case_id": "write",
   "case_kind": "golden",
+  "expected_noop": false,
   "requested_value": 5,
   "changed_offsets": [
     46721,

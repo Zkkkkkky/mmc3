@@ -4,6 +4,7 @@
   "field": "strength_growth",
   "case_id": "cold_start_01",
   "case_kind": "golden",
+  "expected_noop": false,
   "requested_value": 207,
   "changed_offsets": [
     297561

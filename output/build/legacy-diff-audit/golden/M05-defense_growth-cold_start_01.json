@@ -4,6 +4,7 @@
   "field": "defense_growth",
   "case_id": "cold_start_01",
   "case_kind": "golden",
+  "expected_noop": false,
   "requested_value": 206,
   "changed_offsets": [
     297562

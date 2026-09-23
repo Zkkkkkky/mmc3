@@ -5,7 +5,7 @@
 - 已分类非 ROM 字段：5
 - 保持门禁的动作入口：10
 - 已分类容量边界：1
-- 已准备但未晋级黄金的动作 discovery 配方：25
+- 已审查的动作配方：25（已晋级黄金 17，仍待动态证据 8）
 - 已由 discovery 覆盖的门禁动作：10/10
 - 状态：`five_surfaces_cataloged_33_save_fields_passed_10_actions_guarded_1_capacity_boundary`
 

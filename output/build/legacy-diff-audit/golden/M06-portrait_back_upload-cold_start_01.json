@@ -4,6 +4,7 @@
   "field": "portrait_back_upload",
   "case_id": "cold_start_01",
   "case_kind": "golden",
+  "expected_noop": false,
   "requested_value": "e0f7789976dae11ee84c0f6f74de69dcaec66c953515bd8ebcecfa167354db62",
   "changed_offsets": [
     561680,

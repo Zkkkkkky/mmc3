@@ -46,6 +46,8 @@
     "guarded_pending_actions": 10,
     "classified_capacity_boundaries": 1,
     "prepared_discovery_recipes": 25,
+    "promoted_golden_recipes": 17,
+    "pending_discovery_recipes": 8,
     "guarded_actions_with_discovery": 10
   },
   "checks": {
@@ -61,9 +63,9 @@
     "non_rom_fields_classified": true,
     "pending_actions_guarded": true,
     "capacity_boundaries_classified": true,
-    "every_pending_action_has_guarded_discovery": true,
+    "every_pending_action_has_reviewed_recipe": true,
     "action_discovery_recipes_ready": true,
-    "action_discovery_recipes_not_promoted": true
+    "action_recipes_reviewed": true
   },
   "golden_save_fields": [
     "body_bank_1",
@@ -245,6 +247,7 @@
       "sha256": "58aea7697120f3b5565b21b43979cc0a3ee6ee6d0aa70c360eb04900813d6939",
       "case_kind": "discovery",
       "promotion_guarded": true,
+      "promotion_complete": false,
       "status": "prepared_not_promoted"
     },
     "fragment_compressed_upload_bmp": {
@@ -252,6 +255,7 @@
       "sha256": "3bed5ea208243a143cab5add09f9442a3405bd93c57c4ee0ec19619d5fc0670d",
       "case_kind": "discovery",
       "promotion_guarded": true,
+      "promotion_complete": false,
       "status": "prepared_not_promoted"
     },
     "main_clear_body": {
@@ -259,6 +263,7 @@
       "sha256": "738f7dded778f6120e157c8c30cc6a1bc979d62fb1ad57b72ee47a414a9eac0b",
       "case_kind": "discovery",
       "promotion_guarded": true,
+      "promotion_complete": false,
       "status": "prepared_not_promoted"
     },
     "main_clear_fragment": {
@@ -266,6 +271,7 @@
       "sha256": "f554b87bf1699f64d37a9d38132cf7fbae5e5c41ef6e5385eaa41be32fcffa75",
       "case_kind": "discovery",
       "promotion_guarded": true,
+      "promotion_complete": false,
       "status": "prepared_not_promoted"
     },
     "body_upload_bmp": {
@@ -273,6 +279,7 @@
       "sha256": "2310a2e81681fcc3c6815954b46758852affcd84c51a175dbeaede32618238b5",
       "case_kind": "discovery",
       "promotion_guarded": true,
+      "promotion_complete": false,
       "status": "prepared_not_promoted"
     },
     "fragment_upload_bmp": {
@@ -280,6 +287,7 @@
       "sha256": "51953a725aadbb23d6e4622d55a5b66c95533ab6f825570f5d9ef3d746e8be56",
       "case_kind": "discovery",
       "promotion_guarded": true,
+      "promotion_complete": false,
       "status": "prepared_not_promoted"
     },
     "icon_upload_bmp": {
@@ -287,133 +295,152 @@
       "sha256": "f2e966d64a3c9a2af4f014b08ab1a8c3a1830e3c1215dea9f56dab028cf88e5d",
       "case_kind": "discovery",
       "promotion_guarded": true,
+      "promotion_complete": false,
       "status": "prepared_not_promoted"
     },
     "icon_binding_double_click": {
-      "path": "tools/golden_pipeline/discovery_history/M05-icon-binding-double-click-discovery-cold-start-01.json",
-      "sha256": "ff92b4087419e0820cb702cfda6ce092890bc81f48ded85310a0565e2f41e951",
-      "case_kind": "discovery",
-      "promotion_guarded": true,
-      "status": "prepared_not_promoted"
+      "path": "tools/golden_pipeline/cases/M05-icon-binding-double-click-cold-start-01.json",
+      "sha256": "7488fdd66f3b10dfbeb4545e0c9b4daed2f1b07178bbf49417c3738e9b3e0e66",
+      "case_kind": "golden",
+      "promotion_guarded": false,
+      "promotion_complete": true,
+      "status": "promoted_golden"
     },
     "body_puzzle_clear": {
-      "path": "tools/golden_pipeline/discovery_history/M05-body-puzzle-clear-discovery-cold-start-01.json",
-      "sha256": "02dada1dfdb1d40b1d3179209ad32525e479389f9199b523b8221aabf8128f10",
-      "case_kind": "discovery",
-      "promotion_guarded": true,
-      "status": "prepared_not_promoted"
+      "path": "tools/golden_pipeline/cases/M05-body-puzzle-clear-cold-start-01.json",
+      "sha256": "15dd58d870c09631974b8dd6d5d81880ea64c7498244796d3bc7259363d5a5f4",
+      "case_kind": "golden",
+      "promotion_guarded": false,
+      "promotion_complete": true,
+      "status": "promoted_golden"
     },
     "body_puzzle_move_up": {
-      "path": "tools/golden_pipeline/discovery_history/M05-body-puzzle-move-up-discovery-cold-start-01.json",
-      "sha256": "ecee9289f8ae9538978f0505585c0fd0d1fab6abfaed76325c03a855c9522c41",
-      "case_kind": "discovery",
-      "promotion_guarded": true,
-      "status": "prepared_not_promoted"
+      "path": "tools/golden_pipeline/cases/M05-body-puzzle-move-up-cold-start-01.json",
+      "sha256": "720af8b29a99b596c47816193a408b209ac81c07a438410b3520be4135576e8d",
+      "case_kind": "golden",
+      "promotion_guarded": false,
+      "promotion_complete": true,
+      "status": "promoted_golden"
     },
     "body_puzzle_move_down": {
-      "path": "tools/golden_pipeline/discovery_history/M05-body-puzzle-move-down-discovery-cold-start-01.json",
-      "sha256": "f28423b37aeabefcb256f99fab0fd46511c1ff0388fd417f88cc6cfeb15d28a6",
-      "case_kind": "discovery",
-      "promotion_guarded": true,
-      "status": "prepared_not_promoted"
+      "path": "tools/golden_pipeline/cases/M05-body-puzzle-move-down-cold-start-01.json",
+      "sha256": "952840e15fb3db9569b3d638d92eae8512ee801bf9c362fa3d0de6a73e86a5b6",
+      "case_kind": "golden",
+      "promotion_guarded": false,
+      "promotion_complete": true,
+      "status": "promoted_golden"
     },
     "body_puzzle_move_left": {
-      "path": "tools/golden_pipeline/discovery_history/M05-body-puzzle-move-left-discovery-cold-start-01.json",
-      "sha256": "1d273b50b93f75bf3321729d6e7f258b877180a765340d05a41644f0a30634a2",
-      "case_kind": "discovery",
-      "promotion_guarded": true,
-      "status": "prepared_not_promoted"
+      "path": "tools/golden_pipeline/cases/M05-body-puzzle-move-left-cold-start-01.json",
+      "sha256": "33a73df3dc805bc149f24965dea0f078b7a6fa35de4af46f709447dd43949ce5",
+      "case_kind": "golden",
+      "promotion_guarded": false,
+      "promotion_complete": true,
+      "status": "promoted_golden"
     },
     "body_puzzle_move_right": {
-      "path": "tools/golden_pipeline/discovery_history/M05-body-puzzle-move-right-discovery-cold-start-01.json",
-      "sha256": "060f9fc82849e8a0e235c0bf52b4fb929e334ec7147a9ae9788eeac2b36275a5",
-      "case_kind": "discovery",
-      "promotion_guarded": true,
-      "status": "prepared_not_promoted"
+      "path": "tools/golden_pipeline/cases/M05-body-puzzle-move-right-cold-start-01.json",
+      "sha256": "e469cedb86ecea45af8c9f76858e1ec21d8899115dea186e6b2e009e601da81e",
+      "case_kind": "golden",
+      "promotion_guarded": false,
+      "promotion_complete": true,
+      "status": "promoted_golden"
     },
     "body_puzzle_template_8x8": {
       "path": "tools/golden_pipeline/discovery_history/M05-body-puzzle-template-8x8-discovery-cold-start-01.json",
-      "sha256": "d04bc69ef4acb7f7a2975e84db4d78ab7d7b9d26e9c1b4b6646314952c26266e",
+      "sha256": "c85cd7789392f9f633efda1d99704b3a273815b7748ea8243337a2c7662af43b",
       "case_kind": "discovery",
       "promotion_guarded": true,
+      "promotion_complete": false,
       "status": "prepared_not_promoted"
     },
     "body_puzzle_template_7x9": {
-      "path": "tools/golden_pipeline/discovery_history/M05-body-puzzle-template-7x9-discovery-cold-start-01.json",
-      "sha256": "245539ce20b4c3e9cfba41516ca0185c8f7d668d8b922dde79cb9125f478b28d",
-      "case_kind": "discovery",
-      "promotion_guarded": true,
-      "status": "prepared_not_promoted"
+      "path": "tools/golden_pipeline/cases/M05-body-puzzle-template-7x9-cold-start-01.json",
+      "sha256": "ee02d82cccc854d1f7e729237bc2be3a5455f0b48767dfd60f5253ad4da39077",
+      "case_kind": "golden",
+      "promotion_guarded": false,
+      "promotion_complete": true,
+      "status": "promoted_golden"
     },
     "body_puzzle_template_9x7": {
-      "path": "tools/golden_pipeline/discovery_history/M05-body-puzzle-template-9x7-discovery-cold-start-01.json",
-      "sha256": "5a2fa5ca11a96b79e167a68cedc1100191876945cf8f828896fc06dfde1bc984",
-      "case_kind": "discovery",
-      "promotion_guarded": true,
-      "status": "prepared_not_promoted"
+      "path": "tools/golden_pipeline/cases/M05-body-puzzle-template-9x7-cold-start-01.json",
+      "sha256": "9818e66044da7cce2638075cd157d455fbc64a86ca1c30e81e1107b2edc81996",
+      "case_kind": "golden",
+      "promotion_guarded": false,
+      "promotion_complete": true,
+      "status": "promoted_golden"
     },
     "body_puzzle_template_10x6": {
-      "path": "tools/golden_pipeline/discovery_history/M05-body-puzzle-template-10x6-discovery-cold-start-01.json",
-      "sha256": "6e41408bcfc2f51f0b9a5811b8879cb70d004609e1fab7eb2a36c32cde176270",
-      "case_kind": "discovery",
-      "promotion_guarded": true,
-      "status": "prepared_not_promoted"
+      "path": "tools/golden_pipeline/cases/M05-body-puzzle-template-10x6-cold-start-01.json",
+      "sha256": "940fd81bcce53c5682d71675b201492b41c35af35ef3d62b74dba98c0e8463fa",
+      "case_kind": "golden",
+      "promotion_guarded": false,
+      "promotion_complete": true,
+      "status": "promoted_golden"
     },
     "body_puzzle_swap_banks": {
-      "path": "tools/golden_pipeline/discovery_history/M05-body-puzzle-swap-banks-discovery-cold-start-01.json",
-      "sha256": "09e0d2da4eb15d471bf88ae694446196619bd2f8ea27ae740bc5f9dcac0f86fc",
-      "case_kind": "discovery",
-      "promotion_guarded": true,
-      "status": "prepared_not_promoted"
+      "path": "tools/golden_pipeline/cases/M05-body-puzzle-swap-banks-cold-start-01.json",
+      "sha256": "d1f214419644229f38a9480a55149d14a170df268aca54c24bf9f70323492266",
+      "case_kind": "golden",
+      "promotion_guarded": false,
+      "promotion_complete": true,
+      "status": "promoted_golden"
     },
     "fragment_puzzle_move_up": {
-      "path": "tools/golden_pipeline/discovery_history/M05-fragment-puzzle-move-up-discovery-cold-start-01.json",
-      "sha256": "cabbaf1e22dcb1d38ab0d0c12ef482b7157bd6cfea05b2bf62fd7f1681b956e5",
-      "case_kind": "discovery",
-      "promotion_guarded": true,
-      "status": "prepared_not_promoted"
+      "path": "tools/golden_pipeline/cases/M05-fragment-puzzle-move-up-cold-start-01.json",
+      "sha256": "2dbeec03e5293ffd6cfc36087f22b9660cfb26ceef56fbd4187a0d7e6ecdff59",
+      "case_kind": "golden",
+      "promotion_guarded": false,
+      "promotion_complete": true,
+      "status": "promoted_golden"
     },
     "fragment_puzzle_move_down": {
-      "path": "tools/golden_pipeline/discovery_history/M05-fragment-puzzle-move-down-discovery-cold-start-01.json",
-      "sha256": "2621360d9cb998f3090ada824b5e6aa2df8c21622144dd59b7485b75a986df98",
-      "case_kind": "discovery",
-      "promotion_guarded": true,
-      "status": "prepared_not_promoted"
+      "path": "tools/golden_pipeline/cases/M05-fragment-puzzle-move-down-cold-start-01.json",
+      "sha256": "9e2ada8525662ea301cd111d986fb5ded0ce7448add0b64b91e1af43c6253c8c",
+      "case_kind": "golden",
+      "promotion_guarded": false,
+      "promotion_complete": true,
+      "status": "promoted_golden"
     },
     "fragment_puzzle_move_left": {
-      "path": "tools/golden_pipeline/discovery_history/M05-fragment-puzzle-move-left-discovery-cold-start-01.json",
-      "sha256": "be0d8e00335d42afe47615859ab0ded7e718a2b17e0c9660162597c21664614d",
-      "case_kind": "discovery",
-      "promotion_guarded": true,
-      "status": "prepared_not_promoted"
+      "path": "tools/golden_pipeline/cases/M05-fragment-puzzle-move-left-cold-start-01.json",
+      "sha256": "38f0a3032e7edb8ee1ad5e07901e73f3af2316406bbee073f0cddb62a14a47a1",
+      "case_kind": "golden",
+      "promotion_guarded": false,
+      "promotion_complete": true,
+      "status": "promoted_golden"
     },
     "fragment_puzzle_move_right": {
-      "path": "tools/golden_pipeline/discovery_history/M05-fragment-puzzle-move-right-discovery-cold-start-01.json",
-      "sha256": "d29f103e88ea97e0c28a29cef4bf3da2f1181f7e907e868b5db64867091b560f",
-      "case_kind": "discovery",
-      "promotion_guarded": true,
-      "status": "prepared_not_promoted"
+      "path": "tools/golden_pipeline/cases/M05-fragment-puzzle-move-right-cold-start-01.json",
+      "sha256": "0b7b3e88511b1224986fb887b1cd23bd72b98204ffc93f818446724e39d1f52a",
+      "case_kind": "golden",
+      "promotion_guarded": false,
+      "promotion_complete": true,
+      "status": "promoted_golden"
     },
     "fragment_puzzle_clear": {
-      "path": "tools/golden_pipeline/discovery_history/M05-fragment-puzzle-clear-discovery-cold-start-01.json",
-      "sha256": "7b06dbd45a9d6ba35fb2bac6aef7d331b5760b8f26536ef16cbb17f7cbddf333",
-      "case_kind": "discovery",
-      "promotion_guarded": true,
-      "status": "prepared_not_promoted"
+      "path": "tools/golden_pipeline/cases/M05-fragment-puzzle-clear-cold-start-01.json",
+      "sha256": "c3225d274b6434454877b6984589f7b6810d1a0f4f048bbc27cdf23e256dc286",
+      "case_kind": "golden",
+      "promotion_guarded": false,
+      "promotion_complete": true,
+      "status": "promoted_golden"
     },
     "fragment_puzzle_flip_horizontal": {
-      "path": "tools/golden_pipeline/discovery_history/M05-fragment-puzzle-flip-horizontal-discovery-cold-start-01.json",
-      "sha256": "010eb5c3c6f0e388831f66a3f4659528bee604c3951c5d26b94afc18fa1bb3c9",
-      "case_kind": "discovery",
-      "promotion_guarded": true,
-      "status": "prepared_not_promoted"
+      "path": "tools/golden_pipeline/cases/M05-fragment-puzzle-flip-horizontal-cold-start-01.json",
+      "sha256": "1fb29b736ebc0376772bdd15852deba3289e020e055dc754e95bdaac3afa1e30",
+      "case_kind": "golden",
+      "promotion_guarded": false,
+      "promotion_complete": true,
+      "status": "promoted_golden"
     },
     "fragment_puzzle_flip_vertical": {
-      "path": "tools/golden_pipeline/discovery_history/M05-fragment-puzzle-flip-vertical-discovery-cold-start-01.json",
-      "sha256": "acde1a2f1c4499204991d94c6a08336c7543c1f7ae41d5c18723e74ec9885913",
-      "case_kind": "discovery",
-      "promotion_guarded": true,
-      "status": "prepared_not_promoted"
+      "path": "tools/golden_pipeline/cases/M05-fragment-puzzle-flip-vertical-cold-start-01.json",
+      "sha256": "3b6af04d894214ed773348c84978281da08d2b3649b03d62b169e797a797ec11",
+      "case_kind": "golden",
+      "promotion_guarded": false,
+      "promotion_complete": true,
+      "status": "promoted_golden"
     }
   },
   "controls": [

@@ -336,7 +336,7 @@ def cmd_archive(args: argparse.Namespace) -> int:
             # Diff, mandatory bytes and saved-value reopen are all required.
             passed = (
                 (not result.unexplained)
-                and bool(required)
+                and (bool(required) or entry.expected_noop)
                 and not required_missing
                 and reopen_matches_request is True
                 and record.within_budget is not False
@@ -357,7 +357,7 @@ def cmd_archive(args: argparse.Namespace) -> int:
                 pending_reason = "在线采集原始判定未通过"
             elif result.unexplained:
                 pending_reason = f"存在 {len(result.unexplained)} 处未被解释的偏移"
-            elif not required:
+            elif not required and not entry.expected_noop:
                 pending_reason = "required_offsets 为空，无法判定"
             else:
                 pending_reason = (
@@ -372,6 +372,7 @@ def cmd_archive(args: argparse.Namespace) -> int:
             "field": entry.field,
             "case_id": entry.case_id,
             "case_kind": entry.case_kind,
+            "expected_noop": entry.expected_noop,
             # 黄金对照四要素（M00 第 4 节 / 主文档 13.5）
             "requested_value": record.requested_value,
             "changed_offsets": list(changed),
@@ -437,10 +438,11 @@ def cmd_archive(args: argparse.Namespace) -> int:
             "field": entry.field,
             "case_id": entry.case_id,
             "case_kind": entry.case_kind,
+            "expected_noop": entry.expected_noop,
             "archive": archive_name,
             "sha256": sha256_file(golden_dir / archive_name),
             "passed": passed,
-            "expected_known": bool(entry.expected_offsets),
+            "expected_known": bool(entry.expected_offsets) or entry.expected_noop,
             "required_offsets": list(entry.required_offsets),
             "optional_offsets": list(entry.optional_offsets),
             "unexpected_count": len(result.unexplained),

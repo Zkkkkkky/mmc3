@@ -4,6 +4,7 @@
   "field": "item_price_18",
   "case_id": "write",
   "case_kind": "golden",
+  "expected_noop": false,
   "requested_value": 10010,
   "changed_offsets": [
     87877,

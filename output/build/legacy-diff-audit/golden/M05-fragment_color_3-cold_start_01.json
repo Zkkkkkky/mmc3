@@ -4,6 +4,7 @@
   "field": "fragment_color_3",
   "case_id": "cold_start_01",
   "case_kind": "golden",
+  "expected_noop": false,
   "requested_value": "3C",
   "changed_offsets": [
     33457,

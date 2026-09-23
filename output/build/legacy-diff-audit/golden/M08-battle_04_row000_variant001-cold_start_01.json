@@ -4,6 +4,7 @@
   "field": "battle_04_row000_variant001",
   "case_id": "cold_start_01",
   "case_kind": "golden",
+  "expected_noop": false,
   "requested_value": "001：你们该退！",
   "changed_offsets": [
     114704,

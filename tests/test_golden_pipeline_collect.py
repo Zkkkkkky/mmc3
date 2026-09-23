@@ -158,8 +158,18 @@ class LiveCollectionTests(unittest.TestCase):
         saved = json.loads((run_dir / "case.json").read_text(encoding="utf-8"))
         self.assertEqual(saved, report)
         indexed = json.loads((self.repo / collector.LIVE_RESULTS_RELATIVE).read_text(encoding="utf-8"))
-        self.assertEqual(indexed, [report])
-        adapted = core._adapt_live(indexed)
+        self.assertEqual(
+            indexed,
+            [
+                {
+                    "module": "M17",
+                    "field": "hit_threshold",
+                    "case_id": "cold_start_01",
+                    "case_report": (run_dir / "case.json").relative_to(self.repo).as_posix(),
+                }
+            ],
+        )
+        adapted = core._adapt_live(indexed, self.repo)
         self.assertEqual(adapted[0].snapshot_dir, run_dir.relative_to(self.repo).as_posix())
         self.assertEqual(adapted[0].reopen_mode, "new_process")
 
