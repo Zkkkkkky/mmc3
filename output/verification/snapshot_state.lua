@@ -1,0 +1,5 @@
+local state=savestate.create([[D:\GIT\mmc3\output\verification\purple-pre.fc0]])
+assert(pcall(savestate.load,state))
+gui.savescreenshotas([[D:\GIT\mmc3\output\verification\state-preview.png]])
+emu.frameadvance()
+emu.exit()

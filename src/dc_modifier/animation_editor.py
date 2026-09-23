@@ -642,7 +642,7 @@ class WeaponAnimationWidget(QTabWidget):
         for title, editor in zip(("我方武器动画", "敌方武器动画"), self.editors):
             self.addTab(editor, title)
             editor.changed.connect(self.changed)
-        self.setMinimumHeight(360)
+        self.setMinimumHeight(350)
 
     def set_record(self, project, weapon_id: int | None) -> None:
         self.project, self.weapon_id = project, weapon_id

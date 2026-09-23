@@ -559,9 +559,9 @@ class LegacyToolDialogTests(QtTestCase):
             ("converter", TextConverterDialog(), (473, 483)),
             ("calculator", AttributeCalculatorDialog(), (1120, 780)),
         )
-        fixed_dialogs = (
+        additional_flexible_dialogs = (
             ("save", SaveEditorDialog(), (1175, 834)),
-            ("other", OtherSettingsDialog(), (1166, 870)),
+            ("other", OtherSettingsDialog(), (1060, 760)),
         )
         font_dialog = FontLibraryDialog(project=self.project)
         self.assertLess(font_dialog.minimumWidth(), font_dialog.maximumWidth())
@@ -587,14 +587,10 @@ class LegacyToolDialogTests(QtTestCase):
                     self.assertTrue(pixmap.save(str(screenshot), "PNG"))
                     self.assertGreater(screenshot.stat().st_size, 2000)
                     dialog.close()
-            for name, dialog, expected in fixed_dialogs:
+            for name, dialog, expected in additional_flexible_dialogs:
                 with self.subTest(dialog=name):
-                    self.assertEqual(
-                        (dialog.minimumWidth(), dialog.minimumHeight()), expected
-                    )
-                    self.assertEqual(
-                        (dialog.maximumWidth(), dialog.maximumHeight()), expected
-                    )
+                    self.assertLess(dialog.minimumWidth(), dialog.maximumWidth())
+                    self.assertLess(dialog.minimumHeight(), dialog.maximumHeight())
                     self._show(dialog)
                     self.assertEqual((dialog.width(), dialog.height()), expected)
                     screenshot = Path(directory) / f"{name}.png"

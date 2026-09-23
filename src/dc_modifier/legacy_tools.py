@@ -30,6 +30,7 @@ from PySide6.QtWidgets import (
     QPlainTextEdit,
     QPushButton,
     QScrollArea,
+    QSizePolicy,
     QSpinBox,
     QTableWidget,
     QTableWidgetItem,
@@ -467,7 +468,7 @@ class DamageMultiplierDialog(QDialog):
 class _BattleSide(QWidget):
     def __init__(self, title: str, project: Any | None) -> None:
         super().__init__()
-        self.setFixedHeight(330)
+        self.setFixedHeight(310)
         self.project = project
         self._growth_codec: LegacyGrowthCodec | None = None
         self._raw_weapon_powers = (0, 0, 0)
@@ -485,6 +486,11 @@ class _BattleSide(QWidget):
         self.character = QComboBox()
         self.unit = QComboBox()
         self.weapon = QComboBox()
+        for selector in (self.character, self.unit, self.weapon):
+            selector.setMinimumWidth(0)
+            selector.setSizePolicy(
+                QSizePolicy.Policy.Ignored, QSizePolicy.Policy.Fixed
+            )
         self.level = QComboBox()
         self.level.addItems([str(value) for value in range(1, 61)])
         self.strength = self._spin(0, 999)
@@ -1029,15 +1035,16 @@ class SaveEditorDialog(QDialog):
         self._staged = False
         self._table_draft = False
         self.setWindowTitle("存档编辑器：")
-        self.setFixedSize(1175, 834)
-        self.setSizeGripEnabled(False)
+        self.resize(1175, 834)
+        self.setMinimumSize(900, 650)
+        self.setSizeGripEnabled(True)
         root = QVBoxLayout(self)
 
         controls = QHBoxLayout()
         controls.addWidget(QLabel("存档:"))
         self.slot_selector = QComboBox()
         self.slot_selector.addItems(("1：没有数据", "2：没有数据", "3：没有数据"))
-        self.slot_selector.setMinimumWidth(265)
+        self.slot_selector.setMinimumWidth(180)
         controls.addWidget(self.slot_selector)
         controls.addSpacing(30)
         controls.addWidget(QLabel("关卡:"))
@@ -1736,8 +1743,9 @@ class OtherSettingsDialog(QDialog):
         super().__init__(parent)
         self.project = project
         self.setWindowTitle("其他")
-        self.setFixedSize(1166, 870)
-        self.setSizeGripEnabled(False)
+        self.resize(1060, 760)
+        self.setMinimumSize(900, 650)
+        self.setSizeGripEnabled(True)
         self.setModal(True)
         root = QVBoxLayout(self)
         self.double_hit_values = self._number_group(
@@ -1758,7 +1766,7 @@ class OtherSettingsDialog(QDialog):
             "道具相关修改 · 超合金Z防御增加",
             (1, 1, 1, 5, 3, 1, 3, 3, 25, 25, 50),
             3,
-            field_width=150,
+            field_width=110,
             stretch=1,
         )
         lower.addLayout(left, 1)
@@ -1902,6 +1910,10 @@ class OtherSettingsDialog(QDialog):
         self.initial_units: list[QComboBox] = []
         for index, unit_id in enumerate(defaults):
             combo = QComboBox()
+            combo.setMinimumWidth(0)
+            combo.setSizePolicy(
+                QSizePolicy.Policy.Ignored, QSizePolicy.Policy.Fixed
+            )
             if self.project is None:
                 kind = "人物" if index % 2 == 0 else "机体"
                 combo.addItem(f"{unit_id:03d}：未载入{kind}", unit_id)

@@ -680,7 +680,12 @@ class LegacyUnitDatabasePage(ProjectPage):
         if not hasattr(self, "detail_scroll"):
             return
         viewport_width = self.detail_scroll.viewport().width()
-        mode = "compact" if viewport_width < 680 else (
+        # Leave enough slack for the vertical scrollbar and platform frame.
+        # At a 900 px dialog the pre-layout viewport can briefly report about
+        # 690 px, then shrink after the medium form establishes its minimum;
+        # choosing the single-column form before that cycle avoids a stale
+        # horizontal scrollbar.
+        mode = "compact" if viewport_width < 720 else (
             "medium" if viewport_width < 780 else "wide"
         )
         if mode == self._compact_data_layout:
@@ -1207,7 +1212,7 @@ class LegacyUnitDatabasePage(ProjectPage):
                     self.special_skill_button.setToolTip(
                         "点击按旧修改器的组合位定义编辑机体特殊技能。"
                     )
-                    self.special_skill_button.setFixedWidth(118)
+                    self.special_skill_button.setFixedWidth(108)
                     self.special_skill_button.clicked.connect(
                         self._edit_special_skill
                     )
@@ -1221,7 +1226,7 @@ class LegacyUnitDatabasePage(ProjectPage):
                     # Keep the three legacy-style attribute columns within the
                     # real 125% DPI viewport.  The former size hints forced the
                     # whole detail page wider than the window by about 45 px.
-                    editor.setFixedWidth(68)
+                    editor.setFixedWidth(63)
                     attribute_grid.addWidget(editor, grid_row, column + 1)
         row.addWidget(attributes, 0, 1)
 
@@ -2419,6 +2424,8 @@ class DatabaseDialog(TransactionalProjectDialog):
         self.setMinimumSize(900, 600)
 
         layout = QVBoxLayout(self)
+        layout.setContentsMargins(5, 5, 5, 5)
+        layout.setSpacing(4)
         self.tabs = QTabWidget()
         self.tabs.setObjectName("legacyDatabaseTabs")
 
@@ -2448,6 +2455,7 @@ class DatabaseDialog(TransactionalProjectDialog):
         layout.addWidget(self.tabs, 1)
 
         footer = QHBoxLayout()
+        footer.setSpacing(4)
         self.database_search = QLineEdit()
         self.database_search.setPlaceholderText("查找名称或ID")
         self.find_next_button = QPushButton("查找下一个")

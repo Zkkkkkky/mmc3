@@ -1,0 +1,8 @@
+f=235 obj=0E addr=8369 raw=21 base=21 final=A1 code=direct
+f=237 obj=0E addr=8378 raw=11 base=11 final=91 code=direct
+f=239 obj=0E addr=839C raw=19 base=19 final=99 code=direct
+f=291 obj=0F addr=83C0 raw=0E base=0E final=8E code=direct
+f=293 obj=0F addr=83C5 raw=0F base=0F final=8F code=direct
+f=295 obj=0F addr=83CA raw=10 base=10 final=90 code=direct
+f=297 obj=0F addr=83D3 raw=06 base=06 final=86 code=direct
+f=299 obj=0F addr=83EB raw=0A base=0A final=8A code=direct

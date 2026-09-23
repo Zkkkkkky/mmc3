@@ -5,7 +5,7 @@ from PySide6.QtGui import QImage, QPixmap
 from PySide6.QtWidgets import (
     QCheckBox, QFileDialog, QFormLayout, QGridLayout, QGroupBox, QHBoxLayout,
     QComboBox, QHeaderView, QLabel, QMessageBox, QPushButton, QSpinBox,
-    QTableWidget, QTableWidgetItem, QTabWidget, QVBoxLayout, QWidget,
+    QSizePolicy, QTableWidget, QTableWidgetItem, QTabWidget, QVBoxLayout, QWidget,
 )
 
 from fc_editor.codecs.character_attributes import (
@@ -48,20 +48,31 @@ class CharacterDialogueWidget(QGroupBox):
         self._baseline = None
         self._loading = False
         outer = QVBoxLayout(self)
+        outer.setContentsMargins(5, 5, 5, 5)
+        outer.setSpacing(4)
         self.status = QLabel(
             "文字段与对话编号指向“战斗对话”页正文；特殊攻击保留现有规则条数。"
         )
         self.status.setObjectName("hintText")
         self.status.setWordWrap(True)
-        outer.addWidget(self.status)
+        self.status.setToolTip(self.status.text())
         tabs = QTabWidget()
+        self.tabs = tabs
+        tabs.setSizePolicy(QSizePolicy.Policy.Ignored, QSizePolicy.Policy.Expanding)
         outer.addWidget(tabs)
 
         direct_page = QWidget()
         grid = QGridLayout(direct_page)
+        grid.setContentsMargins(4, 4, 4, 4)
+        grid.setHorizontalSpacing(4)
+        grid.setVerticalSpacing(2)
         self.direct_controls: list[tuple[QComboBox, QSpinBox]] = []
         for index, label in enumerate(self.DIRECT_LABELS):
             segment = QComboBox()
+            segment.setMinimumWidth(0)
+            segment.setSizePolicy(
+                QSizePolicy.Policy.Ignored, QSizePolicy.Policy.Fixed
+            )
             for value in VALID_SEGMENTS:
                 segment.addItem(f"文字段 ${value:02X}", value)
             dialogue = QSpinBox()
@@ -70,7 +81,7 @@ class CharacterDialogueWidget(QGroupBox):
             dialogue.setDisplayIntegerBase(16)
             segment.currentIndexChanged.connect(self._changed)
             dialogue.valueChanged.connect(self._changed)
-            row, column = index % 4, (index // 4) * 3
+            row, column = index, 0
             grid.addWidget(QLabel(label), row, column)
             grid.addWidget(segment, row, column + 1)
             grid.addWidget(dialogue, row, column + 2)
@@ -355,23 +366,30 @@ class CharacterDetailsWidget(QWidget):
         self._image_drafts: dict[str, tuple[int, bytes]] = {}
         outer = QVBoxLayout(self)
         outer.setContentsMargins(0, 0, 0, 0)
+        outer.setSpacing(4)
+        self.info_panel = QWidget()
+        info_layout = QVBoxLayout(self.info_panel)
+        info_layout.setContentsMargins(0, 0, 0, 0)
+        info_layout.setSpacing(3)
         self.status = QLabel()
         self.status.setWordWrap(True)
-        outer.addWidget(self.status)
+        info_layout.addWidget(self.status)
         self.raw_details = QLabel()
         self.raw_details.setObjectName("hintText")
         self.raw_details.setWordWrap(True)
         self.raw_details.setTextInteractionFlags(Qt.TextInteractionFlag.TextSelectableByMouse)
-        outer.addWidget(self.raw_details)
-        tabs = QTabWidget()
-        outer.addWidget(tabs)
+        info_layout.addWidget(self.raw_details)
         attributes_page = QWidget()
+        self.attributes_page = attributes_page
         attributes_row = QHBoxLayout(attributes_page)
-        attributes_row.setContentsMargins(4, 4, 4, 4)
-        tabs.addTab(attributes_page, "人物属性与精神")
+        attributes_row.setContentsMargins(0, 0, 0, 0)
+        attributes_row.setSpacing(5)
 
         attributes = QGroupBox("人物属性")
         grid = QGridLayout(attributes)
+        grid.setContentsMargins(5, 7, 5, 5)
+        grid.setHorizontalSpacing(5)
+        grid.setVerticalSpacing(3)
         self.fields = {}
         specs = (("spirit", "精神值", 255), ("growth", "精神成长", 250),
                  ("strength", "强度补正", 255), ("movement", "机动补正", 127),
@@ -380,7 +398,7 @@ class CharacterDetailsWidget(QWidget):
         for index, (key, label, maximum) in enumerate(specs):
             spin = QSpinBox()
             spin.setRange(0, maximum)
-            spin.setMaximumWidth(70)
+            spin.setMaximumWidth(62)
             spin.setObjectName(f"character_{key}")
             spin.valueChanged.connect(self._changed)
             self.fields[key] = spin
@@ -395,11 +413,14 @@ class CharacterDetailsWidget(QWidget):
         grid.addWidget(self.shared_attributes, 4, 0, 1, 4)
         self.attribute_sharing = QLabel()
         self.attribute_sharing.setWordWrap(True)
-        grid.addWidget(self.attribute_sharing, 5, 0, 1, 4)
+        self.attribute_sharing.hide()
         attributes_row.addWidget(attributes, 1)
 
         spirits = QGroupBox("精神列表与消耗")
         grid = QGridLayout(spirits)
+        grid.setContentsMargins(5, 7, 5, 5)
+        grid.setHorizontalSpacing(4)
+        grid.setVerticalSpacing(2)
         self.spirits = []
         self.costs = []
         for index, name in enumerate(SPIRIT_NAMES):
@@ -407,7 +428,8 @@ class CharacterDetailsWidget(QWidget):
             check.setObjectName(f"character_spirit_{index}")
             cost = QSpinBox()
             cost.setRange(0, 255)
-            cost.setMaximumWidth(62)
+            cost.setMinimumWidth(46)
+            cost.setMaximumWidth(54)
             cost.setObjectName(f"spirit_cost_{index}")
             check.toggled.connect(self._changed)
             cost.valueChanged.connect(self._changed)
@@ -418,14 +440,41 @@ class CharacterDetailsWidget(QWidget):
             self.costs.append(cost)
         hint = QLabel("消耗值全人物共用；游戏精神菜单最多显示 6 项，按列表顺序取前 6 项。")
         hint.setWordWrap(True)
-        grid.addWidget(hint, 8, 0, 1, 6)
+        hint.hide()
+        spirits.setToolTip(hint.text())
         attributes_row.addWidget(spirits, 2)
 
-        portrait = QGroupBox("头像设置")
-        form = QFormLayout(portrait)
+        portrait = QGroupBox("头像设置与上传")
+        self.portrait_group = portrait
+        portrait_layout = QHBoxLayout(portrait)
+        portrait_layout.setContentsMargins(5, 7, 5, 5)
+        portrait_layout.setSpacing(8)
+        preview = QWidget()
+        row = QHBoxLayout(preview)
+        row.setContentsMargins(0, 0, 0, 0)
+        row.setSpacing(5)
+        self.portrait_preview = QLabel()
+        self.portrait_preview.setFixedSize(64, 64)
+        row.addWidget(self.portrait_preview)
+        visibility = QVBoxLayout()
+        visibility.setSpacing(2)
+        self.show_front = QCheckBox("显示正面")
+        self.show_back = QCheckBox("显示背景")
+        self.show_front.setChecked(True)
+        self.show_back.setChecked(True)
+        self.show_front.toggled.connect(self._render_previews)
+        self.show_back.toggled.connect(self._render_previews)
+        visibility.addWidget(self.show_front)
+        visibility.addWidget(self.show_back)
+        visibility.addStretch()
+        row.addLayout(visibility)
+        portrait_layout.addWidget(preview)
+
         portrait_controls = QWidget()
         portrait_grid = QGridLayout(portrait_controls)
         portrait_grid.setContentsMargins(0, 0, 0, 0)
+        portrait_grid.setHorizontalSpacing(5)
+        portrait_grid.setVerticalSpacing(2)
         self.portrait_fields = {}
         for index, (key, label, minimum, maximum) in enumerate((
             ("front_bank", "正面图库", 0, 255), ("front_slot", "正面位置", 1, 4),
@@ -439,37 +488,32 @@ class CharacterDetailsWidget(QWidget):
             spin.setObjectName(f"portrait_{key}")
             spin.valueChanged.connect(self._changed)
             self.portrait_fields[key] = spin
-            portrait_grid.addWidget(QLabel(label), index // 2, index % 2 * 2)
-            portrait_grid.addWidget(spin, index // 2, index % 2 * 2 + 1)
-        form.addRow(portrait_controls)
+            row_index, column = divmod(index, 4)
+            field = QWidget()
+            field_layout = QVBoxLayout(field)
+            field_layout.setContentsMargins(0, 0, 0, 0)
+            field_layout.setSpacing(1)
+            field_layout.addWidget(QLabel(label))
+            field_layout.addWidget(spin)
+            portrait_grid.addWidget(field, row_index, column)
+        portrait_layout.addWidget(portrait_controls, 1)
+
+        actions_host = QWidget()
+        actions = QGridLayout(actions_host)
+        actions.setContentsMargins(0, 0, 0, 0)
+        actions.setHorizontalSpacing(3)
+        actions.setVerticalSpacing(2)
         self.shared_portrait = QCheckBox("同时修改共用头像记录")
         self.shared_portrait.toggled.connect(self._changed)
-        form.addRow(self.shared_portrait)
+        actions.addWidget(self.shared_portrait, 0, 0, 1, 2)
         self.portrait_sharing = QLabel()
         self.portrait_sharing.setWordWrap(True)
-        form.addRow(self.portrait_sharing)
-        preview = QWidget()
-        row = QHBoxLayout(preview)
-        row.setContentsMargins(0, 0, 0, 0)
-        self.portrait_preview = QLabel()
-        self.portrait_preview.setFixedSize(64, 64)
-        row.addWidget(self.portrait_preview)
-        visibility = QVBoxLayout()
-        self.show_front = QCheckBox("显示正面")
-        self.show_back = QCheckBox("显示背景")
-        self.show_front.setChecked(True)
-        self.show_back.setChecked(True)
-        self.show_front.toggled.connect(self._render_previews)
-        self.show_back.toggled.connect(self._render_previews)
-        visibility.addWidget(self.show_front)
-        visibility.addWidget(self.show_back)
-        visibility.addStretch()
-        row.addLayout(visibility)
-        uploads = QVBoxLayout()
-        for kind, text in (("front", "正面上传"), ("back", "背景上传")):
+        self.portrait_sharing.setMaximumWidth(210)
+        self.portrait_sharing.hide()
+        for column, (kind, text) in enumerate((("front", "正面上传"), ("back", "背景上传"))):
             button = QPushButton(text)
             button.clicked.connect(lambda _checked=False, kind=kind: self._upload_image(kind))
-            uploads.addWidget(button)
+            actions.addWidget(button, 1, column)
         self.portrait_export_button = QPushButton("导出当前头像…")
         self.portrait_export_button.setObjectName("portrait_export_button")
         self.portrait_export_button.setToolTip(
@@ -478,18 +522,15 @@ class CharacterDetailsWidget(QWidget):
         self.portrait_export_button.clicked.connect(
             self.portrait_export_requested.emit
         )
-        uploads.addWidget(self.portrait_export_button)
-        uploads.addStretch()
-        row.addLayout(uploads)
-        row.addStretch()
-        form.addRow(preview)
-        hint = QLabel(
-            "头像由真实 CHR 图块预览。正面图库编号低位选择 2KB 窗口的前/后半，"
+        actions.addWidget(self.portrait_export_button, 2, 0, 1, 2)
+        portrait_layout.addWidget(actions_host)
+        portrait.setToolTip(
+            "头像由真实 CHR 图块预览。正面图库编号低位选择 2KB 窗口的前/后半；"
             "正面与背景位置均按参考版显示为头像1—4。"
         )
-        hint.setWordWrap(True)
-        form.addRow(hint)
-        tabs.addTab(portrait, "头像设置与上传")
+
+        outer.addWidget(portrait)
+        outer.addWidget(attributes_page)
 
     def _state(self):
         return (tuple(spin.value() for spin in self.fields.values()), self.survive.isChecked(),
@@ -604,6 +645,8 @@ class CharacterDetailsWidget(QWidget):
                 names = "、".join(f"{item:03d}" for item in ids[:16])
                 label.setText(f"共用此记录：{names}{'…' if len(ids) > 16 else ''}（{len(ids)} 个）。独立修改需要原数据池有空间。")
                 label.setToolTip("、".join(f"{item:03d} {project.character_display_name(item)}" for item in ids if item < project.profile.character_name_count))
+                toggle = self.shared_portrait if is_portrait else self.shared_attributes
+                toggle.setToolTip(label.text() + "\n" + label.toolTip())
             self.codec = codec
             self._baseline = self._state()
             self.status.setText("修改将随数据库窗口“确定”保存；“取消”会还原本次窗口内的改动。")

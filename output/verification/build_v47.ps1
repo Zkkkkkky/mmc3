@@ -1,0 +1,64 @@
+$source = 'C:\Users\hu\Desktop\测试.nes'
+$target = 'C:\Users\hu\Desktop\测试_敌方武器跨UI_R1复合CHR修复V47.nes'
+$reference = 'D:\GIT\mmc3\output\verification\v47-rebuilt-from-test.nes'
+$rom = [IO.File]::ReadAllBytes($source)
+$chrBase = 0x80010
+
+function Copy-ChrBank([int]$sourceBank, [int]$targetBank) {
+    [Array]::Copy($rom, $chrBase + $sourceBank * 0x400,
+        $rom, $chrBase + $targetBank * 0x400, 0x400)
+}
+function Copy-ChrTile([int]$sourceBank, [int]$sourceTile,
+        [int]$targetBank, [int]$targetTile) {
+    [Array]::Copy($rom, $chrBase + $sourceBank * 0x400 + $sourceTile * 16,
+        $rom, $chrBase + $targetBank * 0x400 + $targetTile * 16, 16)
+}
+
+# MMC3 CHR 反转模式下，8x8 sprite 的 $1800-$1FFF 由 R1 的 2KB 偶数页控制。
+# $30-$33 是原 ROM 中连续四个全空 1KB 页，分别建立顶部和 UI 的内容等价复合页。
+Copy-ChrBank 0xFC 0x30
+Copy-ChrBank 0xFD 0x31
+Copy-ChrBank 0x12 0x32
+Copy-ChrBank 0x13 0x33
+
+# 敌方武器 $86-$A9 位于顶部 R1=$FC 的前 1KB；复制到整回合未用的 $D0-$F3。
+for ($tile = 0x86; $tile -le 0xA9; $tile++) {
+    $targetTile = $tile + 0x4A
+    $sourceLocal = $tile - 0x80
+    $targetLocal = $targetTile - 0xC0
+    Copy-ChrTile 0xFC $sourceLocal 0x31 $targetLocal
+    Copy-ChrTile 0xFC $sourceLocal 0x33 $targetLocal
+}
+
+[Array]::Copy([byte[]](0xA9,0x04,0x85,0x15), 0, $rom, 0x7D0F5, 4)
+
+# 只扫描战斗 OAM；把进入 UI 的敌方武器 $86-$A9 重编号为 $D0-$F3。
+$routine = [byte[]](
+    0xA0,0x00,0xA2,0x40,
+    0xBD,0x00,0x02,0xC9,0x78,0x90,0x17,0xC9,0xF0,0xB0,0x13,
+    0xBD,0x01,0x02,0xC9,0x86,0x90,0x0C,0xC9,0xAA,0xB0,0x08,
+    0x18,0x69,0x4A,0x9D,0x01,0x02,0xA0,0xFF,
+    0xE8,0xE8,0xE8,0xE8,0xD0,0xDC,0x60
+)
+[Array]::Copy($routine, 0, $rom, 0x7F477, $routine.Length)
+
+$wrapper = [byte[]](
+    0x8A,0x48,0x98,0x48,0x20,0x67,0xF4,0x98,
+    0x30,0x03,0x4C,0x65,0xFF,0x4C,0x3B,0xF5
+)
+[Array]::Copy($wrapper, 0, $rom, 0x7F521, $wrapper.Length)
+
+# 命中时只替换 R1：顶部 $FC/$FD -> $30/$31，UI 两段 $12/$13 -> $32/$33。
+$setup = [byte[]](
+    0xA9,0x30,0x8D,0xD9,0x04,
+    0xA9,0x32,0x8D,0xC6,0x03,0x8D,0xC7,0x03,0x60
+)
+[Array]::Copy($setup, 0, $rom, 0x7F54B, $setup.Length)
+
+$finish = [byte[]](0x68,0xA8,0x68,0xAA,0xA5,0x73,0x38,0x60)
+[Array]::Copy($finish, 0, $rom, 0x7FF75, $finish.Length)
+[Array]::Copy([byte[]](0x20,0x11,0xF5), 0, $rom, 0x7FB2C, 3)
+
+[IO.File]::WriteAllBytes($target, $rom)
+[IO.File]::WriteAllBytes($reference, $rom)
+Get-FileHash -Algorithm SHA256 -LiteralPath $target

@@ -1,0 +1,1810 @@
+f=330 sl=-01 pc=FA23 select=80
+f=330 sl=-01 pc=FA29 R0=FC select=80
+f=330 sl=-01 pc=FA2E select=81
+f=330 sl=-01 pc=FA34 R1=FC select=81
+f=330 sl=-01 pc=FA39 select=82
+f=330 sl=-01 pc=FA3F R2=B7 select=82
+f=330 sl=-01 pc=FA44 select=83
+f=330 sl=-01 pc=FA4A R3=BD select=83
+f=330 sl=-01 pc=FA4F select=84
+f=330 sl=-01 pc=FA55 R4=BB select=84
+f=330 sl=-01 pc=FA5A select=85
+f=330 sl=-01 pc=FA60 R5=BF select=85
+f=330 sl=-01 pc=FADD select=86
+f=330 sl=-01 pc=FAE2 R6=18 select=86
+f=330 sl=-01 pc=FAE9 select=87
+f=330 sl=-01 pc=FAEE R7=19 select=87
+f=330 sl=-01 pc=FAF8 select=86
+f=330 sl=-01 pc=FAFE R6=08 select=86
+f=330 sl=-01 pc=FB05 select=87
+f=330 sl=-01 pc=FB0B R7=09 select=87
+f=330 sl=-01 pc=FDA9 select=86
+f=330 sl=-01 pc=FDB1 R6=06 select=86
+f=330 sl=-01 pc=FDBA select=87
+f=330 sl=-01 pc=FDC2 R7=07 select=87
+f=330 sl=-01 pc=FDA9 select=86
+f=330 sl=-01 pc=FDB1 R6=20 select=86
+f=330 sl=-01 pc=FDBA select=87
+f=330 sl=-01 pc=FDC2 R7=21 select=87
+f=330 sl=-01 pc=FDA9 select=86
+f=330 sl=-01 pc=FDB1 R6=08 select=86
+f=330 sl=-01 pc=FDBA select=87
+f=330 sl=-01 pc=FDC2 R7=09 select=87
+f=330 sl=-01 pc=FDA9 select=86
+f=330 sl=-01 pc=FDB1 R6=08 select=86
+f=330 sl=-01 pc=FDBA select=87
+f=330 sl=-01 pc=FDC2 R7=09 select=87
+f=330 sl=-01 pc=FDA9 select=86
+f=330 sl=-01 pc=FDB1 R6=08 select=86
+f=330 sl=-01 pc=FDBA select=87
+f=330 sl=-01 pc=FDC2 R7=09 select=87
+f=330 sl=-01 pc=FDA9 select=86
+f=330 sl=-01 pc=FDB1 R6=08 select=86
+f=330 sl=-01 pc=FDBA select=87
+f=330 sl=-01 pc=FDC2 R7=09 select=87
+f=330 sl=-01 pc=FDA9 select=86
+f=330 sl=-01 pc=FDB1 R6=08 select=86
+f=330 sl=-01 pc=FDBA select=87
+f=330 sl=-01 pc=FDC2 R7=09 select=87
+f=330 sl=-01 pc=FDA9 select=86
+f=330 sl=-01 pc=FDB1 R6=08 select=86
+f=330 sl=-01 pc=FDBA select=87
+f=330 sl=-01 pc=FDC2 R7=09 select=87
+f=330 sl=-01 pc=FDA9 select=86
+f=330 sl=-01 pc=FDB1 R6=08 select=86
+f=330 sl=-01 pc=FDBA select=87
+f=330 sl=-01 pc=FDC2 R7=09 select=87
+f=330 sl=-01 pc=FDA9 select=86
+f=330 sl=-01 pc=FDB1 R6=08 select=86
+f=330 sl=-01 pc=FDBA select=87
+f=330 sl=-01 pc=FDC2 R7=09 select=87
+f=330 sl=-01 pc=FDA9 select=86
+f=330 sl=-01 pc=FDB1 R6=08 select=86
+f=330 sl=-01 pc=FDBA select=87
+f=330 sl=-01 pc=FDC2 R7=09 select=87
+f=330 sl=-01 pc=FC3F select=86
+f=330 sl=-01 pc=FC48 R6=06 select=86
+f=330 sl=-01 pc=FC4F select=87
+f=330 sl=-01 pc=FC58 R7=07 select=87
+f=330 sl=-01 pc=FDA9 select=86
+f=330 sl=-01 pc=FDB1 R6=18 select=86
+f=330 sl=-01 pc=FDBA select=87
+f=330 sl=-01 pc=FDC2 R7=19 select=87
+f=330 sl=-01 pc=FDA9 select=86
+f=330 sl=-01 pc=FDB1 R6=28 select=86
+f=330 sl=-01 pc=FDBA select=87
+f=330 sl=-01 pc=FDC2 R7=29 select=87
+f=330 sl=-01 pc=FDA9 select=86
+f=330 sl=-01 pc=FDB1 R6=28 select=86
+f=330 sl=-01 pc=FDBA select=87
+f=330 sl=-01 pc=FDC2 R7=29 select=87
+f=330 sl=-01 pc=F9B3 select=80
+f=330 sl=-01 pc=F9B9 R0=FC select=80
+f=330 sl=-01 pc=F9BE select=81
+f=330 sl=-01 pc=F9C4 R1=12 select=81
+f=330 sl=-01 pc=F9C9 select=82
+f=330 sl=-01 pc=F9CF R2=B7 select=82
+f=330 sl=-01 pc=F9D4 select=83
+f=330 sl=-01 pc=F9DA R3=01 select=83
+f=330 sl=-01 pc=F9DF select=84
+f=330 sl=-01 pc=F9E5 R4=02 select=84
+f=330 sl=-01 pc=F9EA select=85
+f=330 sl=-01 pc=F9F0 R5=12 select=85
+f=330 sl=-01 pc=F8DB select=87
+f=330 sl=-01 pc=F9B3 select=80
+f=330 sl=-01 pc=F9B9 R0=FC select=80
+f=330 sl=-01 pc=F9BE select=81
+f=330 sl=-01 pc=F9C4 R1=12 select=81
+f=330 sl=-01 pc=F9C9 select=82
+f=330 sl=-01 pc=F9CF R2=00 select=82
+f=330 sl=-01 pc=F9D4 select=83
+f=330 sl=-01 pc=F9DA R3=01 select=83
+f=330 sl=-01 pc=F9DF select=84
+f=330 sl=-01 pc=F9E5 R4=02 select=84
+f=330 sl=-01 pc=F9EA select=85
+f=330 sl=-01 pc=F9F0 R5=12 select=85
+f=330 sl=-01 pc=F8DB select=87
+f=330 sl=-01 pc=FDA9 select=86
+f=330 sl=-01 pc=FDB1 R6=08 select=86
+f=330 sl=-01 pc=FDBA select=87
+f=330 sl=-01 pc=FDC2 R7=09 select=87
+f=330 sl=-01 pc=FDA9 select=86
+f=330 sl=-01 pc=FDB1 R6=08 select=86
+f=330 sl=-01 pc=FDBA select=87
+f=330 sl=-01 pc=FDC2 R7=09 select=87
+f=330 sl=-01 pc=FDA9 select=86
+f=330 sl=-01 pc=FDB1 R6=08 select=86
+f=330 sl=-01 pc=FDBA select=87
+f=330 sl=-01 pc=FDC2 R7=09 select=87
+f=331 sl=-01 pc=FA23 select=80
+f=331 sl=-01 pc=FA29 R0=FC select=80
+f=331 sl=-01 pc=FA2E select=81
+f=331 sl=-01 pc=FA34 R1=FC select=81
+f=331 sl=-01 pc=FA39 select=82
+f=331 sl=-01 pc=FA3F R2=B7 select=82
+f=331 sl=-01 pc=FA44 select=83
+f=331 sl=-01 pc=FA4A R3=BD select=83
+f=331 sl=-01 pc=FA4F select=84
+f=331 sl=-01 pc=FA55 R4=BB select=84
+f=331 sl=-01 pc=FA5A select=85
+f=331 sl=-01 pc=FA60 R5=BF select=85
+f=331 sl=-01 pc=FADD select=86
+f=331 sl=-01 pc=FAE2 R6=18 select=86
+f=331 sl=-01 pc=FAE9 select=87
+f=331 sl=-01 pc=FAEE R7=19 select=87
+f=331 sl=-01 pc=FAF8 select=86
+f=331 sl=-01 pc=FAFE R6=08 select=86
+f=331 sl=-01 pc=FB05 select=87
+f=331 sl=-01 pc=FB0B R7=09 select=87
+f=331 sl=-01 pc=FDA9 select=86
+f=331 sl=-01 pc=FDB1 R6=06 select=86
+f=331 sl=-01 pc=FDBA select=87
+f=331 sl=-01 pc=FDC2 R7=07 select=87
+f=331 sl=-01 pc=FDA9 select=86
+f=331 sl=-01 pc=FDB1 R6=20 select=86
+f=331 sl=-01 pc=FDBA select=87
+f=331 sl=-01 pc=FDC2 R7=21 select=87
+f=331 sl=-01 pc=FDA9 select=86
+f=331 sl=-01 pc=FDB1 R6=08 select=86
+f=331 sl=-01 pc=FDBA select=87
+f=331 sl=-01 pc=FDC2 R7=09 select=87
+f=331 sl=-01 pc=FDA9 select=86
+f=331 sl=-01 pc=FDB1 R6=08 select=86
+f=331 sl=-01 pc=FDBA select=87
+f=331 sl=-01 pc=FDC2 R7=09 select=87
+f=331 sl=-01 pc=FDA9 select=86
+f=331 sl=-01 pc=FDB1 R6=08 select=86
+f=331 sl=-01 pc=FDBA select=87
+f=331 sl=-01 pc=FDC2 R7=09 select=87
+f=331 sl=-01 pc=FDA9 select=86
+f=331 sl=-01 pc=FDB1 R6=08 select=86
+f=331 sl=-01 pc=FDBA select=87
+f=331 sl=-01 pc=FDC2 R7=09 select=87
+f=331 sl=-01 pc=FDA9 select=86
+f=331 sl=-01 pc=FDB1 R6=08 select=86
+f=331 sl=-01 pc=FDBA select=87
+f=331 sl=-01 pc=FDC2 R7=09 select=87
+f=331 sl=-01 pc=FDA9 select=86
+f=331 sl=-01 pc=FDB1 R6=08 select=86
+f=331 sl=-01 pc=FDBA select=87
+f=331 sl=-01 pc=FDC2 R7=09 select=87
+f=331 sl=-01 pc=FDA9 select=86
+f=331 sl=-01 pc=FDB1 R6=08 select=86
+f=331 sl=-01 pc=FDBA select=87
+f=331 sl=-01 pc=FDC2 R7=09 select=87
+f=331 sl=-01 pc=FDA9 select=86
+f=331 sl=-01 pc=FDB1 R6=08 select=86
+f=331 sl=-01 pc=FDBA select=87
+f=331 sl=-01 pc=FDC2 R7=09 select=87
+f=331 sl=-01 pc=FDA9 select=86
+f=331 sl=-01 pc=FDB1 R6=08 select=86
+f=331 sl=-01 pc=FDBA select=87
+f=331 sl=-01 pc=FDC2 R7=09 select=87
+f=331 sl=-01 pc=FC3F select=86
+f=331 sl=-01 pc=FC48 R6=06 select=86
+f=331 sl=-01 pc=FC4F select=87
+f=331 sl=-01 pc=FC58 R7=07 select=87
+f=331 sl=-01 pc=FDA9 select=86
+f=331 sl=-01 pc=FDB1 R6=18 select=86
+f=331 sl=-01 pc=FDBA select=87
+f=331 sl=-01 pc=FDC2 R7=19 select=87
+f=331 sl=-01 pc=FDA9 select=86
+f=331 sl=-01 pc=FDB1 R6=28 select=86
+f=331 sl=-01 pc=FDBA select=87
+f=331 sl=-01 pc=FDC2 R7=29 select=87
+f=331 sl=-01 pc=FDA9 select=86
+f=331 sl=-01 pc=FDB1 R6=28 select=86
+f=331 sl=-01 pc=FDBA select=87
+f=331 sl=-01 pc=FDC2 R7=29 select=87
+f=331 sl=-01 pc=F9B3 select=80
+f=331 sl=-01 pc=F9B9 R0=FC select=80
+f=331 sl=-01 pc=F9BE select=81
+f=331 sl=-01 pc=F9C4 R1=12 select=81
+f=331 sl=-01 pc=F9C9 select=82
+f=331 sl=-01 pc=F9CF R2=B7 select=82
+f=331 sl=-01 pc=F9D4 select=83
+f=331 sl=-01 pc=F9DA R3=01 select=83
+f=331 sl=-01 pc=F9DF select=84
+f=331 sl=-01 pc=F9E5 R4=02 select=84
+f=331 sl=-01 pc=F9EA select=85
+f=331 sl=-01 pc=F9F0 R5=12 select=85
+f=331 sl=-01 pc=F8DB select=87
+f=331 sl=-01 pc=F9B3 select=80
+f=331 sl=-01 pc=F9B9 R0=FC select=80
+f=331 sl=-01 pc=F9BE select=81
+f=331 sl=-01 pc=F9C4 R1=12 select=81
+f=331 sl=-01 pc=F9C9 select=82
+f=331 sl=-01 pc=F9CF R2=00 select=82
+f=331 sl=-01 pc=F9D4 select=83
+f=331 sl=-01 pc=F9DA R3=01 select=83
+f=331 sl=-01 pc=F9DF select=84
+f=331 sl=-01 pc=F9E5 R4=02 select=84
+f=331 sl=-01 pc=F9EA select=85
+f=331 sl=-01 pc=F9F0 R5=12 select=85
+f=331 sl=-01 pc=F8DB select=87
+f=331 sl=-01 pc=FDA9 select=86
+f=331 sl=-01 pc=FDB1 R6=08 select=86
+f=331 sl=-01 pc=FDBA select=87
+f=331 sl=-01 pc=FDC2 R7=09 select=87
+f=331 sl=-01 pc=FDA9 select=86
+f=331 sl=-01 pc=FDB1 R6=08 select=86
+f=331 sl=-01 pc=FDBA select=87
+f=331 sl=-01 pc=FDC2 R7=09 select=87
+f=331 sl=-01 pc=FDA9 select=86
+f=331 sl=-01 pc=FDB1 R6=08 select=86
+f=331 sl=-01 pc=FDBA select=87
+f=331 sl=-01 pc=FDC2 R7=09 select=87
+f=332 sl=-01 pc=FA23 select=80
+f=332 sl=-01 pc=FA29 R0=FC select=80
+f=332 sl=-01 pc=FA2E select=81
+f=332 sl=-01 pc=FA34 R1=FC select=81
+f=332 sl=-01 pc=FA39 select=82
+f=332 sl=-01 pc=FA3F R2=B7 select=82
+f=332 sl=-01 pc=FA44 select=83
+f=332 sl=-01 pc=FA4A R3=BD select=83
+f=332 sl=-01 pc=FA4F select=84
+f=332 sl=-01 pc=FA55 R4=BB select=84
+f=332 sl=-01 pc=FA5A select=85
+f=332 sl=-01 pc=FA60 R5=BF select=85
+f=332 sl=-01 pc=FADD select=86
+f=332 sl=-01 pc=FAE2 R6=18 select=86
+f=332 sl=-01 pc=FAE9 select=87
+f=332 sl=-01 pc=FAEE R7=19 select=87
+f=332 sl=-01 pc=FAF8 select=86
+f=332 sl=-01 pc=FAFE R6=08 select=86
+f=332 sl=-01 pc=FB05 select=87
+f=332 sl=-01 pc=FB0B R7=09 select=87
+f=332 sl=-01 pc=FDA9 select=86
+f=332 sl=-01 pc=FDB1 R6=06 select=86
+f=332 sl=-01 pc=FDBA select=87
+f=332 sl=-01 pc=FDC2 R7=07 select=87
+f=332 sl=-01 pc=FDA9 select=86
+f=332 sl=-01 pc=FDB1 R6=20 select=86
+f=332 sl=-01 pc=FDBA select=87
+f=332 sl=-01 pc=FDC2 R7=21 select=87
+f=332 sl=-01 pc=FDA9 select=86
+f=332 sl=-01 pc=FDB1 R6=08 select=86
+f=332 sl=-01 pc=FDBA select=87
+f=332 sl=-01 pc=FDC2 R7=09 select=87
+f=332 sl=-01 pc=FDA9 select=86
+f=332 sl=-01 pc=FDB1 R6=08 select=86
+f=332 sl=-01 pc=FDBA select=87
+f=332 sl=-01 pc=FDC2 R7=09 select=87
+f=332 sl=-01 pc=FDA9 select=86
+f=332 sl=-01 pc=FDB1 R6=08 select=86
+f=332 sl=-01 pc=FDBA select=87
+f=332 sl=-01 pc=FDC2 R7=09 select=87
+f=332 sl=-01 pc=FDA9 select=86
+f=332 sl=-01 pc=FDB1 R6=08 select=86
+f=332 sl=-01 pc=FDBA select=87
+f=332 sl=-01 pc=FDC2 R7=09 select=87
+f=332 sl=-01 pc=FDA9 select=86
+f=332 sl=-01 pc=FDB1 R6=08 select=86
+f=332 sl=-01 pc=FDBA select=87
+f=332 sl=-01 pc=FDC2 R7=09 select=87
+f=332 sl=-01 pc=FDA9 select=86
+f=332 sl=-01 pc=FDB1 R6=08 select=86
+f=332 sl=-01 pc=FDBA select=87
+f=332 sl=-01 pc=FDC2 R7=09 select=87
+f=332 sl=-01 pc=FDA9 select=86
+f=332 sl=-01 pc=FDB1 R6=08 select=86
+f=332 sl=-01 pc=FDBA select=87
+f=332 sl=-01 pc=FDC2 R7=09 select=87
+f=332 sl=-01 pc=FDA9 select=86
+f=332 sl=-01 pc=FDB1 R6=08 select=86
+f=332 sl=-01 pc=FDBA select=87
+f=332 sl=-01 pc=FDC2 R7=09 select=87
+f=332 sl=-01 pc=FDA9 select=86
+f=332 sl=-01 pc=FDB1 R6=08 select=86
+f=332 sl=-01 pc=FDBA select=87
+f=332 sl=-01 pc=FDC2 R7=09 select=87
+f=332 sl=-01 pc=FC3F select=86
+f=332 sl=-01 pc=FC48 R6=06 select=86
+f=332 sl=-01 pc=FC4F select=87
+f=332 sl=-01 pc=FC58 R7=07 select=87
+f=332 sl=-01 pc=FDA9 select=86
+f=332 sl=-01 pc=FDB1 R6=18 select=86
+f=332 sl=-01 pc=FDBA select=87
+f=332 sl=-01 pc=FDC2 R7=19 select=87
+f=332 sl=-01 pc=FDA9 select=86
+f=332 sl=-01 pc=FDB1 R6=28 select=86
+f=332 sl=-01 pc=FDBA select=87
+f=332 sl=-01 pc=FDC2 R7=29 select=87
+f=332 sl=-01 pc=FDA9 select=86
+f=332 sl=-01 pc=FDB1 R6=28 select=86
+f=332 sl=-01 pc=FDBA select=87
+f=332 sl=-01 pc=FDC2 R7=29 select=87
+f=332 sl=-01 pc=F9B3 select=80
+f=332 sl=-01 pc=F9B9 R0=FC select=80
+f=332 sl=-01 pc=F9BE select=81
+f=332 sl=-01 pc=F9C4 R1=12 select=81
+f=332 sl=-01 pc=F9C9 select=82
+f=332 sl=-01 pc=F9CF R2=B7 select=82
+f=332 sl=-01 pc=F9D4 select=83
+f=332 sl=-01 pc=F9DA R3=01 select=83
+f=332 sl=-01 pc=F9DF select=84
+f=332 sl=-01 pc=F9E5 R4=02 select=84
+f=332 sl=-01 pc=F9EA select=85
+f=332 sl=-01 pc=F9F0 R5=12 select=85
+f=332 sl=-01 pc=F8DB select=87
+f=332 sl=-01 pc=F9B3 select=80
+f=332 sl=-01 pc=F9B9 R0=FC select=80
+f=332 sl=-01 pc=F9BE select=81
+f=332 sl=-01 pc=F9C4 R1=12 select=81
+f=332 sl=-01 pc=F9C9 select=82
+f=332 sl=-01 pc=F9CF R2=00 select=82
+f=332 sl=-01 pc=F9D4 select=83
+f=332 sl=-01 pc=F9DA R3=01 select=83
+f=332 sl=-01 pc=F9DF select=84
+f=332 sl=-01 pc=F9E5 R4=02 select=84
+f=332 sl=-01 pc=F9EA select=85
+f=332 sl=-01 pc=F9F0 R5=12 select=85
+f=332 sl=-01 pc=F8DB select=87
+f=332 sl=-01 pc=FDA9 select=86
+f=332 sl=-01 pc=FDB1 R6=08 select=86
+f=332 sl=-01 pc=FDBA select=87
+f=332 sl=-01 pc=FDC2 R7=09 select=87
+f=332 sl=-01 pc=FDA9 select=86
+f=332 sl=-01 pc=FDB1 R6=08 select=86
+f=332 sl=-01 pc=FDBA select=87
+f=332 sl=-01 pc=FDC2 R7=09 select=87
+f=332 sl=-01 pc=FDA9 select=86
+f=332 sl=-01 pc=FDB1 R6=08 select=86
+f=332 sl=-01 pc=FDBA select=87
+f=332 sl=-01 pc=FDC2 R7=09 select=87
+f=333 sl=-01 pc=FA23 select=80
+f=333 sl=-01 pc=FA29 R0=FC select=80
+f=333 sl=-01 pc=FA2E select=81
+f=333 sl=-01 pc=FA34 R1=FC select=81
+f=333 sl=-01 pc=FA39 select=82
+f=333 sl=-01 pc=FA3F R2=B7 select=82
+f=333 sl=-01 pc=FA44 select=83
+f=333 sl=-01 pc=FA4A R3=BD select=83
+f=333 sl=-01 pc=FA4F select=84
+f=333 sl=-01 pc=FA55 R4=BB select=84
+f=333 sl=-01 pc=FA5A select=85
+f=333 sl=-01 pc=FA60 R5=BF select=85
+f=333 sl=-01 pc=FADD select=86
+f=333 sl=-01 pc=FAE2 R6=18 select=86
+f=333 sl=-01 pc=FAE9 select=87
+f=333 sl=-01 pc=FAEE R7=19 select=87
+f=333 sl=-01 pc=FAF8 select=86
+f=333 sl=-01 pc=FAFE R6=08 select=86
+f=333 sl=-01 pc=FB05 select=87
+f=333 sl=-01 pc=FB0B R7=09 select=87
+f=333 sl=-01 pc=FDA9 select=86
+f=333 sl=-01 pc=FDB1 R6=06 select=86
+f=333 sl=-01 pc=FDBA select=87
+f=333 sl=-01 pc=FDC2 R7=07 select=87
+f=333 sl=-01 pc=FDA9 select=86
+f=333 sl=-01 pc=FDB1 R6=20 select=86
+f=333 sl=-01 pc=FDBA select=87
+f=333 sl=-01 pc=FDC2 R7=21 select=87
+f=333 sl=-01 pc=FDA9 select=86
+f=333 sl=-01 pc=FDB1 R6=08 select=86
+f=333 sl=-01 pc=FDBA select=87
+f=333 sl=-01 pc=FDC2 R7=09 select=87
+f=333 sl=-01 pc=FDA9 select=86
+f=333 sl=-01 pc=FDB1 R6=08 select=86
+f=333 sl=-01 pc=FDBA select=87
+f=333 sl=-01 pc=FDC2 R7=09 select=87
+f=333 sl=-01 pc=FDA9 select=86
+f=333 sl=-01 pc=FDB1 R6=08 select=86
+f=333 sl=-01 pc=FDBA select=87
+f=333 sl=-01 pc=FDC2 R7=09 select=87
+f=333 sl=-01 pc=FDA9 select=86
+f=333 sl=-01 pc=FDB1 R6=08 select=86
+f=333 sl=-01 pc=FDBA select=87
+f=333 sl=-01 pc=FDC2 R7=09 select=87
+f=333 sl=-01 pc=FDA9 select=86
+f=333 sl=-01 pc=FDB1 R6=08 select=86
+f=333 sl=-01 pc=FDBA select=87
+f=333 sl=-01 pc=FDC2 R7=09 select=87
+f=333 sl=-01 pc=FDA9 select=86
+f=333 sl=-01 pc=FDB1 R6=08 select=86
+f=333 sl=-01 pc=FDBA select=87
+f=333 sl=-01 pc=FDC2 R7=09 select=87
+f=333 sl=-01 pc=FDA9 select=86
+f=333 sl=-01 pc=FDB1 R6=08 select=86
+f=333 sl=-01 pc=FDBA select=87
+f=333 sl=-01 pc=FDC2 R7=09 select=87
+f=333 sl=-01 pc=FDA9 select=86
+f=333 sl=-01 pc=FDB1 R6=08 select=86
+f=333 sl=-01 pc=FDBA select=87
+f=333 sl=-01 pc=FDC2 R7=09 select=87
+f=333 sl=-01 pc=FDA9 select=86
+f=333 sl=-01 pc=FDB1 R6=08 select=86
+f=333 sl=-01 pc=FDBA select=87
+f=333 sl=-01 pc=FDC2 R7=09 select=87
+f=333 sl=-01 pc=FC3F select=86
+f=333 sl=-01 pc=FC48 R6=06 select=86
+f=333 sl=-01 pc=FC4F select=87
+f=333 sl=-01 pc=FC58 R7=07 select=87
+f=333 sl=-01 pc=FDA9 select=86
+f=333 sl=-01 pc=FDB1 R6=18 select=86
+f=333 sl=-01 pc=FDBA select=87
+f=333 sl=-01 pc=FDC2 R7=19 select=87
+f=333 sl=-01 pc=FDA9 select=86
+f=333 sl=-01 pc=FDB1 R6=28 select=86
+f=333 sl=-01 pc=FDBA select=87
+f=333 sl=-01 pc=FDC2 R7=29 select=87
+f=333 sl=-01 pc=FDA9 select=86
+f=333 sl=-01 pc=FDB1 R6=28 select=86
+f=333 sl=-01 pc=FDBA select=87
+f=333 sl=-01 pc=FDC2 R7=29 select=87
+f=333 sl=-01 pc=F9B3 select=80
+f=333 sl=-01 pc=F9B9 R0=FC select=80
+f=333 sl=-01 pc=F9BE select=81
+f=333 sl=-01 pc=F9C4 R1=12 select=81
+f=333 sl=-01 pc=F9C9 select=82
+f=333 sl=-01 pc=F9CF R2=B7 select=82
+f=333 sl=-01 pc=F9D4 select=83
+f=333 sl=-01 pc=F9DA R3=01 select=83
+f=333 sl=-01 pc=F9DF select=84
+f=333 sl=-01 pc=F9E5 R4=02 select=84
+f=333 sl=-01 pc=F9EA select=85
+f=333 sl=-01 pc=F9F0 R5=12 select=85
+f=333 sl=-01 pc=F8DB select=87
+f=333 sl=-01 pc=FDA9 select=86
+f=333 sl=-01 pc=FDB1 R6=08 select=86
+f=333 sl=-01 pc=FDBA select=87
+f=333 sl=-01 pc=F9B3 select=80
+f=333 sl=-01 pc=F9B9 R0=FC select=80
+f=333 sl=-01 pc=F9BE select=81
+f=333 sl=-01 pc=F9C4 R1=12 select=81
+f=333 sl=-01 pc=F9C9 select=82
+f=333 sl=-01 pc=F9CF R2=00 select=82
+f=333 sl=-01 pc=F9D4 select=83
+f=333 sl=-01 pc=F9DA R3=01 select=83
+f=333 sl=-01 pc=F9DF select=84
+f=333 sl=-01 pc=F9E5 R4=02 select=84
+f=333 sl=-01 pc=F9EA select=85
+f=333 sl=-01 pc=F9F0 R5=12 select=85
+f=333 sl=-01 pc=F8DB select=87
+f=333 sl=-01 pc=FDC2 R7=09 select=87
+f=333 sl=-01 pc=FDA9 select=86
+f=333 sl=-01 pc=FDB1 R6=08 select=86
+f=333 sl=-01 pc=FDBA select=87
+f=333 sl=-01 pc=FDC2 R7=09 select=87
+f=333 sl=-01 pc=FDA9 select=86
+f=333 sl=-01 pc=FDB1 R6=08 select=86
+f=333 sl=-01 pc=FDBA select=87
+f=333 sl=-01 pc=FDC2 R7=09 select=87
+f=334 sl=-01 pc=FA23 select=80
+f=334 sl=-01 pc=FA29 R0=FC select=80
+f=334 sl=-01 pc=FA2E select=81
+f=334 sl=-01 pc=FA34 R1=FC select=81
+f=334 sl=-01 pc=FA39 select=82
+f=334 sl=-01 pc=FA3F R2=B7 select=82
+f=334 sl=-01 pc=FA44 select=83
+f=334 sl=-01 pc=FA4A R3=BD select=83
+f=334 sl=-01 pc=FA4F select=84
+f=334 sl=-01 pc=FA55 R4=BB select=84
+f=334 sl=-01 pc=FA5A select=85
+f=334 sl=-01 pc=FA60 R5=BF select=85
+f=334 sl=-01 pc=FADD select=86
+f=334 sl=-01 pc=FAE2 R6=18 select=86
+f=334 sl=-01 pc=FAE9 select=87
+f=334 sl=-01 pc=FAEE R7=19 select=87
+f=334 sl=-01 pc=BF0A select=86
+f=334 sl=-01 pc=C8E1 R6=00 select=86
+f=334 sl=-01 pc=C8E6 select=87
+f=334 sl=-01 pc=C8EB R7=01 select=87
+f=334 sl=-01 pc=C900 select=86
+f=334 sl=-01 pc=C905 R6=18 select=86
+f=334 sl=-01 pc=C90A select=87
+f=334 sl=-01 pc=C90F R7=19 select=87
+f=334 sl=-01 pc=BF0A select=86
+f=334 sl=-01 pc=C8E1 R6=00 select=86
+f=334 sl=-01 pc=C8E6 select=87
+f=334 sl=-01 pc=C8EB R7=01 select=87
+f=334 sl=-01 pc=C900 select=86
+f=334 sl=-01 pc=C905 R6=18 select=86
+f=334 sl=-01 pc=C90A select=87
+f=334 sl=-01 pc=C90F R7=19 select=87
+f=334 sl=-01 pc=BF0A select=86
+f=334 sl=-01 pc=C8E1 R6=00 select=86
+f=334 sl=-01 pc=C8E6 select=87
+f=334 sl=-01 pc=C8EB R7=01 select=87
+f=334 sl=-01 pc=C900 select=86
+f=334 sl=-01 pc=C905 R6=18 select=86
+f=334 sl=-01 pc=C90A select=87
+f=334 sl=-01 pc=C90F R7=19 select=87
+f=334 sl=-01 pc=FAF8 select=86
+f=334 sl=-01 pc=FAFE R6=08 select=86
+f=334 sl=-01 pc=FB05 select=87
+f=334 sl=-01 pc=FB0B R7=09 select=87
+f=334 sl=-01 pc=FDA9 select=86
+f=334 sl=-01 pc=FDB1 R6=06 select=86
+f=334 sl=-01 pc=FDBA select=87
+f=334 sl=-01 pc=FDC2 R7=07 select=87
+f=334 sl=-01 pc=FDA9 select=86
+f=334 sl=-01 pc=FDB1 R6=20 select=86
+f=334 sl=-01 pc=FDBA select=87
+f=334 sl=-01 pc=FDC2 R7=21 select=87
+f=334 sl=-01 pc=FDA9 select=86
+f=334 sl=-01 pc=FDB1 R6=08 select=86
+f=334 sl=-01 pc=FDBA select=87
+f=334 sl=-01 pc=FDC2 R7=09 select=87
+f=334 sl=-01 pc=FDA9 select=86
+f=334 sl=-01 pc=FDB1 R6=08 select=86
+f=334 sl=-01 pc=FDBA select=87
+f=334 sl=-01 pc=FDC2 R7=09 select=87
+f=334 sl=-01 pc=FDA9 select=86
+f=334 sl=-01 pc=FDB1 R6=08 select=86
+f=334 sl=-01 pc=FDBA select=87
+f=334 sl=-01 pc=FDC2 R7=09 select=87
+f=334 sl=-01 pc=FDA9 select=86
+f=334 sl=-01 pc=FDB1 R6=08 select=86
+f=334 sl=-01 pc=FDBA select=87
+f=334 sl=-01 pc=FDC2 R7=09 select=87
+f=334 sl=-01 pc=FDA9 select=86
+f=334 sl=-01 pc=FDB1 R6=08 select=86
+f=334 sl=-01 pc=FDBA select=87
+f=334 sl=-01 pc=FDC2 R7=09 select=87
+f=334 sl=-01 pc=FDA9 select=86
+f=334 sl=-01 pc=FDB1 R6=08 select=86
+f=334 sl=-01 pc=FDBA select=87
+f=334 sl=-01 pc=FDC2 R7=09 select=87
+f=334 sl=-01 pc=FDA9 select=86
+f=334 sl=-01 pc=FDB1 R6=08 select=86
+f=334 sl=-01 pc=FDBA select=87
+f=334 sl=-01 pc=FDC2 R7=09 select=87
+f=334 sl=-01 pc=FDA9 select=86
+f=334 sl=-01 pc=FDB1 R6=08 select=86
+f=334 sl=-01 pc=FDBA select=87
+f=334 sl=-01 pc=FDC2 R7=09 select=87
+f=334 sl=-01 pc=FDA9 select=86
+f=334 sl=-01 pc=FDB1 R6=08 select=86
+f=334 sl=-01 pc=FDBA select=87
+f=334 sl=-01 pc=FDC2 R7=09 select=87
+f=334 sl=-01 pc=FC3F select=86
+f=334 sl=-01 pc=FC48 R6=06 select=86
+f=334 sl=-01 pc=FC4F select=87
+f=334 sl=-01 pc=FC58 R7=07 select=87
+f=334 sl=-01 pc=FDA9 select=86
+f=334 sl=-01 pc=FDB1 R6=18 select=86
+f=334 sl=-01 pc=FDBA select=87
+f=334 sl=-01 pc=FDC2 R7=19 select=87
+f=334 sl=-01 pc=FDA9 select=86
+f=334 sl=-01 pc=FDB1 R6=28 select=86
+f=334 sl=-01 pc=FDBA select=87
+f=334 sl=-01 pc=FDC2 R7=29 select=87
+f=334 sl=-01 pc=F9B3 select=80
+f=334 sl=-01 pc=F9B9 R0=FC select=80
+f=334 sl=-01 pc=F9BE select=81
+f=334 sl=-01 pc=F9C4 R1=12 select=81
+f=334 sl=-01 pc=F9C9 select=82
+f=334 sl=-01 pc=F9CF R2=B7 select=82
+f=334 sl=-01 pc=F9D4 select=83
+f=334 sl=-01 pc=F9DA R3=01 select=83
+f=334 sl=-01 pc=F9DF select=84
+f=334 sl=-01 pc=F9E5 R4=02 select=84
+f=334 sl=-01 pc=F9EA select=85
+f=334 sl=-01 pc=F9F0 R5=12 select=85
+f=334 sl=-01 pc=F8DB select=87
+f=334 sl=-01 pc=FDA9 select=86
+f=334 sl=-01 pc=FDB1 R6=28 select=86
+f=334 sl=-01 pc=FDBA select=87
+f=334 sl=-01 pc=FDC2 R7=29 select=87
+f=334 sl=-01 pc=F9B3 select=80
+f=334 sl=-01 pc=F9B9 R0=FC select=80
+f=334 sl=-01 pc=F9BE select=81
+f=334 sl=-01 pc=F9C4 R1=12 select=81
+f=334 sl=-01 pc=F9C9 select=82
+f=334 sl=-01 pc=F9CF R2=00 select=82
+f=334 sl=-01 pc=F9D4 select=83
+f=334 sl=-01 pc=F9DA R3=01 select=83
+f=334 sl=-01 pc=F9DF select=84
+f=334 sl=-01 pc=F9E5 R4=02 select=84
+f=334 sl=-01 pc=F9EA select=85
+f=334 sl=-01 pc=F9F0 R5=12 select=85
+f=334 sl=-01 pc=F8DB select=87
+f=334 sl=-01 pc=FDA9 select=86
+f=334 sl=-01 pc=FDB1 R6=08 select=86
+f=334 sl=-01 pc=FDBA select=87
+f=334 sl=-01 pc=FDC2 R7=09 select=87
+f=334 sl=-01 pc=FDA9 select=86
+f=334 sl=-01 pc=FDB1 R6=08 select=86
+f=334 sl=-01 pc=FDBA select=87
+f=334 sl=-01 pc=FDC2 R7=09 select=87
+f=334 sl=-01 pc=FDA9 select=86
+f=334 sl=-01 pc=FDB1 R6=08 select=86
+f=334 sl=-01 pc=FDBA select=87
+f=334 sl=-01 pc=FDC2 R7=09 select=87
+f=335 sl=-01 pc=FA23 select=80
+f=335 sl=-01 pc=FA29 R0=FC select=80
+f=335 sl=-01 pc=FA2E select=81
+f=335 sl=-01 pc=FA34 R1=FC select=81
+f=335 sl=-01 pc=FA39 select=82
+f=335 sl=-01 pc=FA3F R2=B7 select=82
+f=335 sl=-01 pc=FA44 select=83
+f=335 sl=-01 pc=FA4A R3=BD select=83
+f=335 sl=-01 pc=FA4F select=84
+f=335 sl=-01 pc=FA55 R4=BB select=84
+f=335 sl=-01 pc=FA5A select=85
+f=335 sl=-01 pc=FA60 R5=BF select=85
+f=335 sl=-01 pc=FADD select=86
+f=335 sl=-01 pc=FAE2 R6=18 select=86
+f=335 sl=-01 pc=FAE9 select=87
+f=335 sl=-01 pc=FAEE R7=19 select=87
+f=335 sl=-01 pc=FAF8 select=86
+f=335 sl=-01 pc=FAFE R6=08 select=86
+f=335 sl=-01 pc=FB05 select=87
+f=335 sl=-01 pc=FB0B R7=09 select=87
+f=335 sl=-01 pc=FDA9 select=86
+f=335 sl=-01 pc=FDB1 R6=06 select=86
+f=335 sl=-01 pc=FDBA select=87
+f=335 sl=-01 pc=FDC2 R7=07 select=87
+f=335 sl=-01 pc=FDA9 select=86
+f=335 sl=-01 pc=FDB1 R6=20 select=86
+f=335 sl=-01 pc=FDBA select=87
+f=335 sl=-01 pc=FDC2 R7=21 select=87
+f=335 sl=-01 pc=FDA9 select=86
+f=335 sl=-01 pc=FDB1 R6=08 select=86
+f=335 sl=-01 pc=FDBA select=87
+f=335 sl=-01 pc=FDC2 R7=09 select=87
+f=335 sl=-01 pc=FDA9 select=86
+f=335 sl=-01 pc=FDB1 R6=08 select=86
+f=335 sl=-01 pc=FDBA select=87
+f=335 sl=-01 pc=FDC2 R7=09 select=87
+f=335 sl=-01 pc=FDA9 select=86
+f=335 sl=-01 pc=FDB1 R6=08 select=86
+f=335 sl=-01 pc=FDBA select=87
+f=335 sl=-01 pc=FDC2 R7=09 select=87
+f=335 sl=-01 pc=FDA9 select=86
+f=335 sl=-01 pc=FDB1 R6=08 select=86
+f=335 sl=-01 pc=FDBA select=87
+f=335 sl=-01 pc=FDC2 R7=09 select=87
+f=335 sl=-01 pc=FDA9 select=86
+f=335 sl=-01 pc=FDB1 R6=08 select=86
+f=335 sl=-01 pc=FDBA select=87
+f=335 sl=-01 pc=FDC2 R7=09 select=87
+f=335 sl=-01 pc=FDA9 select=86
+f=335 sl=-01 pc=FDB1 R6=08 select=86
+f=335 sl=-01 pc=FDBA select=87
+f=335 sl=-01 pc=FDC2 R7=09 select=87
+f=335 sl=-01 pc=FDA9 select=86
+f=335 sl=-01 pc=FDB1 R6=08 select=86
+f=335 sl=-01 pc=FDBA select=87
+f=335 sl=-01 pc=FDC2 R7=09 select=87
+f=335 sl=-01 pc=FDA9 select=86
+f=335 sl=-01 pc=FDB1 R6=08 select=86
+f=335 sl=-01 pc=FDBA select=87
+f=335 sl=-01 pc=FDC2 R7=09 select=87
+f=335 sl=-01 pc=FDA9 select=86
+f=335 sl=-01 pc=FDB1 R6=08 select=86
+f=335 sl=-01 pc=FDBA select=87
+f=335 sl=-01 pc=FDC2 R7=09 select=87
+f=335 sl=-01 pc=FC3F select=86
+f=335 sl=-01 pc=FC48 R6=06 select=86
+f=335 sl=-01 pc=FC4F select=87
+f=335 sl=-01 pc=FC58 R7=07 select=87
+f=335 sl=-01 pc=FDA9 select=86
+f=335 sl=-01 pc=FDB1 R6=18 select=86
+f=335 sl=-01 pc=FDBA select=87
+f=335 sl=-01 pc=FDC2 R7=19 select=87
+f=335 sl=-01 pc=FDA9 select=86
+f=335 sl=-01 pc=FDB1 R6=28 select=86
+f=335 sl=-01 pc=FDBA select=87
+f=335 sl=-01 pc=FDC2 R7=29 select=87
+f=335 sl=-01 pc=FDA9 select=86
+f=335 sl=-01 pc=FDB1 R6=28 select=86
+f=335 sl=-01 pc=FDBA select=87
+f=335 sl=-01 pc=FDC2 R7=29 select=87
+f=335 sl=-01 pc=F9B3 select=80
+f=335 sl=-01 pc=F9B9 R0=FC select=80
+f=335 sl=-01 pc=F9BE select=81
+f=335 sl=-01 pc=F9C4 R1=12 select=81
+f=335 sl=-01 pc=F9C9 select=82
+f=335 sl=-01 pc=F9CF R2=B7 select=82
+f=335 sl=-01 pc=F9D4 select=83
+f=335 sl=-01 pc=F9DA R3=01 select=83
+f=335 sl=-01 pc=F9DF select=84
+f=335 sl=-01 pc=F9E5 R4=02 select=84
+f=335 sl=-01 pc=F9EA select=85
+f=335 sl=-01 pc=F9F0 R5=12 select=85
+f=335 sl=-01 pc=F8DB select=87
+f=335 sl=-01 pc=F9B3 select=80
+f=335 sl=-01 pc=F9B9 R0=FC select=80
+f=335 sl=-01 pc=F9BE select=81
+f=335 sl=-01 pc=F9C4 R1=12 select=81
+f=335 sl=-01 pc=F9C9 select=82
+f=335 sl=-01 pc=F9CF R2=00 select=82
+f=335 sl=-01 pc=F9D4 select=83
+f=335 sl=-01 pc=F9DA R3=01 select=83
+f=335 sl=-01 pc=F9DF select=84
+f=335 sl=-01 pc=F9E5 R4=02 select=84
+f=335 sl=-01 pc=F9EA select=85
+f=335 sl=-01 pc=F9F0 R5=12 select=85
+f=335 sl=-01 pc=F8DB select=87
+f=335 sl=-01 pc=FDA9 select=86
+f=335 sl=-01 pc=FDB1 R6=08 select=86
+f=335 sl=-01 pc=FDBA select=87
+f=335 sl=-01 pc=FDC2 R7=09 select=87
+f=335 sl=-01 pc=FDA9 select=86
+f=335 sl=-01 pc=FDB1 R6=08 select=86
+f=335 sl=-01 pc=FDBA select=87
+f=335 sl=-01 pc=FDC2 R7=09 select=87
+f=335 sl=-01 pc=FDA9 select=86
+f=335 sl=-01 pc=FDB1 R6=08 select=86
+f=335 sl=-01 pc=FDBA select=87
+f=335 sl=-01 pc=FDC2 R7=09 select=87
+f=336 sl=-01 pc=FA23 select=80
+f=336 sl=-01 pc=FA29 R0=FC select=80
+f=336 sl=-01 pc=FA2E select=81
+f=336 sl=-01 pc=FA34 R1=FC select=81
+f=336 sl=-01 pc=FA39 select=82
+f=336 sl=-01 pc=FA3F R2=B7 select=82
+f=336 sl=-01 pc=FA44 select=83
+f=336 sl=-01 pc=FA4A R3=BD select=83
+f=336 sl=-01 pc=FA4F select=84
+f=336 sl=-01 pc=FA55 R4=BB select=84
+f=336 sl=-01 pc=FA5A select=85
+f=336 sl=-01 pc=FA60 R5=BF select=85
+f=336 sl=-01 pc=FADD select=86
+f=336 sl=-01 pc=FAE2 R6=18 select=86
+f=336 sl=-01 pc=FAE9 select=87
+f=336 sl=-01 pc=FAEE R7=19 select=87
+f=336 sl=-01 pc=FAF8 select=86
+f=336 sl=-01 pc=FAFE R6=08 select=86
+f=336 sl=-01 pc=FB05 select=87
+f=336 sl=-01 pc=FB0B R7=09 select=87
+f=336 sl=-01 pc=FDA9 select=86
+f=336 sl=-01 pc=FDB1 R6=06 select=86
+f=336 sl=-01 pc=FDBA select=87
+f=336 sl=-01 pc=FDC2 R7=07 select=87
+f=336 sl=-01 pc=FDA9 select=86
+f=336 sl=-01 pc=FDB1 R6=20 select=86
+f=336 sl=-01 pc=FDBA select=87
+f=336 sl=-01 pc=FDC2 R7=21 select=87
+f=336 sl=-01 pc=FDA9 select=86
+f=336 sl=-01 pc=FDB1 R6=08 select=86
+f=336 sl=-01 pc=FDBA select=87
+f=336 sl=-01 pc=FDC2 R7=09 select=87
+f=336 sl=-01 pc=FDA9 select=86
+f=336 sl=-01 pc=FDB1 R6=08 select=86
+f=336 sl=-01 pc=FDBA select=87
+f=336 sl=-01 pc=FDC2 R7=09 select=87
+f=336 sl=-01 pc=FDA9 select=86
+f=336 sl=-01 pc=FDB1 R6=08 select=86
+f=336 sl=-01 pc=FDBA select=87
+f=336 sl=-01 pc=FDC2 R7=09 select=87
+f=336 sl=-01 pc=FDA9 select=86
+f=336 sl=-01 pc=FDB1 R6=08 select=86
+f=336 sl=-01 pc=FDBA select=87
+f=336 sl=-01 pc=FDC2 R7=09 select=87
+f=336 sl=-01 pc=FDA9 select=86
+f=336 sl=-01 pc=FDB1 R6=08 select=86
+f=336 sl=-01 pc=FDBA select=87
+f=336 sl=-01 pc=FDC2 R7=09 select=87
+f=336 sl=-01 pc=FDA9 select=86
+f=336 sl=-01 pc=FDB1 R6=08 select=86
+f=336 sl=-01 pc=FDBA select=87
+f=336 sl=-01 pc=FDC2 R7=09 select=87
+f=336 sl=-01 pc=FDA9 select=86
+f=336 sl=-01 pc=FDB1 R6=08 select=86
+f=336 sl=-01 pc=FDBA select=87
+f=336 sl=-01 pc=FDC2 R7=09 select=87
+f=336 sl=-01 pc=FDA9 select=86
+f=336 sl=-01 pc=FDB1 R6=08 select=86
+f=336 sl=-01 pc=FDBA select=87
+f=336 sl=-01 pc=FDC2 R7=09 select=87
+f=336 sl=-01 pc=FDA9 select=86
+f=336 sl=-01 pc=FDB1 R6=08 select=86
+f=336 sl=-01 pc=FDBA select=87
+f=336 sl=-01 pc=FDC2 R7=09 select=87
+f=336 sl=-01 pc=FC3F select=86
+f=336 sl=-01 pc=FC48 R6=06 select=86
+f=336 sl=-01 pc=FC4F select=87
+f=336 sl=-01 pc=FC58 R7=07 select=87
+f=336 sl=-01 pc=FDA9 select=86
+f=336 sl=-01 pc=FDB1 R6=18 select=86
+f=336 sl=-01 pc=FDBA select=87
+f=336 sl=-01 pc=FDC2 R7=19 select=87
+f=336 sl=-01 pc=FDA9 select=86
+f=336 sl=-01 pc=FDB1 R6=28 select=86
+f=336 sl=-01 pc=FDBA select=87
+f=336 sl=-01 pc=FDC2 R7=29 select=87
+f=336 sl=-01 pc=FDA9 select=86
+f=336 sl=-01 pc=FDB1 R6=28 select=86
+f=336 sl=-01 pc=FDBA select=87
+f=336 sl=-01 pc=FDC2 R7=29 select=87
+f=336 sl=-01 pc=F9B3 select=80
+f=336 sl=-01 pc=F9B9 R0=FC select=80
+f=336 sl=-01 pc=F9BE select=81
+f=336 sl=-01 pc=F9C4 R1=12 select=81
+f=336 sl=-01 pc=F9C9 select=82
+f=336 sl=-01 pc=F9CF R2=B7 select=82
+f=336 sl=-01 pc=F9D4 select=83
+f=336 sl=-01 pc=F9DA R3=01 select=83
+f=336 sl=-01 pc=F9DF select=84
+f=336 sl=-01 pc=F9E5 R4=02 select=84
+f=336 sl=-01 pc=F9EA select=85
+f=336 sl=-01 pc=F9F0 R5=12 select=85
+f=336 sl=-01 pc=F8DB select=87
+f=336 sl=-01 pc=F9B3 select=80
+f=336 sl=-01 pc=F9B9 R0=FC select=80
+f=336 sl=-01 pc=F9BE select=81
+f=336 sl=-01 pc=F9C4 R1=12 select=81
+f=336 sl=-01 pc=F9C9 select=82
+f=336 sl=-01 pc=F9CF R2=00 select=82
+f=336 sl=-01 pc=F9D4 select=83
+f=336 sl=-01 pc=F9DA R3=01 select=83
+f=336 sl=-01 pc=F9DF select=84
+f=336 sl=-01 pc=F9E5 R4=02 select=84
+f=336 sl=-01 pc=F9EA select=85
+f=336 sl=-01 pc=F9F0 R5=12 select=85
+f=336 sl=-01 pc=F8DB select=87
+f=336 sl=-01 pc=FDA9 select=86
+f=336 sl=-01 pc=FDB1 R6=08 select=86
+f=336 sl=-01 pc=FDBA select=87
+f=336 sl=-01 pc=FDC2 R7=09 select=87
+f=336 sl=-01 pc=FDA9 select=86
+f=336 sl=-01 pc=FDB1 R6=08 select=86
+f=336 sl=-01 pc=FDBA select=87
+f=336 sl=-01 pc=FDC2 R7=09 select=87
+f=336 sl=-01 pc=FDA9 select=86
+f=336 sl=-01 pc=FDB1 R6=08 select=86
+f=336 sl=-01 pc=FDBA select=87
+f=336 sl=-01 pc=FDC2 R7=09 select=87
+f=337 sl=-01 pc=FA23 select=80
+f=337 sl=-01 pc=FA29 R0=FC select=80
+f=337 sl=-01 pc=FA2E select=81
+f=337 sl=-01 pc=FA34 R1=FC select=81
+f=337 sl=-01 pc=FA39 select=82
+f=337 sl=-01 pc=FA3F R2=B7 select=82
+f=337 sl=-01 pc=FA44 select=83
+f=337 sl=-01 pc=FA4A R3=BD select=83
+f=337 sl=-01 pc=FA4F select=84
+f=337 sl=-01 pc=FA55 R4=BB select=84
+f=337 sl=-01 pc=FA5A select=85
+f=337 sl=-01 pc=FA60 R5=BF select=85
+f=337 sl=-01 pc=FADD select=86
+f=337 sl=-01 pc=FAE2 R6=18 select=86
+f=337 sl=-01 pc=FAE9 select=87
+f=337 sl=-01 pc=FAEE R7=19 select=87
+f=337 sl=-01 pc=FAF8 select=86
+f=337 sl=-01 pc=FAFE R6=08 select=86
+f=337 sl=-01 pc=FB05 select=87
+f=337 sl=-01 pc=FB0B R7=09 select=87
+f=337 sl=-01 pc=FDA9 select=86
+f=337 sl=-01 pc=FDB1 R6=06 select=86
+f=337 sl=-01 pc=FDBA select=87
+f=337 sl=-01 pc=FDC2 R7=07 select=87
+f=337 sl=-01 pc=FDA9 select=86
+f=337 sl=-01 pc=FDB1 R6=20 select=86
+f=337 sl=-01 pc=FDBA select=87
+f=337 sl=-01 pc=FDC2 R7=21 select=87
+f=337 sl=-01 pc=FDA9 select=86
+f=337 sl=-01 pc=FDB1 R6=08 select=86
+f=337 sl=-01 pc=FDBA select=87
+f=337 sl=-01 pc=FDC2 R7=09 select=87
+f=337 sl=-01 pc=FDA9 select=86
+f=337 sl=-01 pc=FDB1 R6=08 select=86
+f=337 sl=-01 pc=FDBA select=87
+f=337 sl=-01 pc=FDC2 R7=09 select=87
+f=337 sl=-01 pc=FDA9 select=86
+f=337 sl=-01 pc=FDB1 R6=08 select=86
+f=337 sl=-01 pc=FDBA select=87
+f=337 sl=-01 pc=FDC2 R7=09 select=87
+f=337 sl=-01 pc=FDA9 select=86
+f=337 sl=-01 pc=FDB1 R6=08 select=86
+f=337 sl=-01 pc=FDBA select=87
+f=337 sl=-01 pc=FDC2 R7=09 select=87
+f=337 sl=-01 pc=FDA9 select=86
+f=337 sl=-01 pc=FDB1 R6=08 select=86
+f=337 sl=-01 pc=FDBA select=87
+f=337 sl=-01 pc=FDC2 R7=09 select=87
+f=337 sl=-01 pc=FDA9 select=86
+f=337 sl=-01 pc=FDB1 R6=08 select=86
+f=337 sl=-01 pc=FDBA select=87
+f=337 sl=-01 pc=FDC2 R7=09 select=87
+f=337 sl=-01 pc=FDA9 select=86
+f=337 sl=-01 pc=FDB1 R6=08 select=86
+f=337 sl=-01 pc=FDBA select=87
+f=337 sl=-01 pc=FDC2 R7=09 select=87
+f=337 sl=-01 pc=FDA9 select=86
+f=337 sl=-01 pc=FDB1 R6=08 select=86
+f=337 sl=-01 pc=FDBA select=87
+f=337 sl=-01 pc=FDC2 R7=09 select=87
+f=337 sl=-01 pc=FDA9 select=86
+f=337 sl=-01 pc=FDB1 R6=08 select=86
+f=337 sl=-01 pc=FDBA select=87
+f=337 sl=-01 pc=FDC2 R7=09 select=87
+f=337 sl=-01 pc=FC3F select=86
+f=337 sl=-01 pc=FC48 R6=06 select=86
+f=337 sl=-01 pc=FC4F select=87
+f=337 sl=-01 pc=FC58 R7=07 select=87
+f=337 sl=-01 pc=FDA9 select=86
+f=337 sl=-01 pc=FDB1 R6=18 select=86
+f=337 sl=-01 pc=FDBA select=87
+f=337 sl=-01 pc=FDC2 R7=19 select=87
+f=337 sl=-01 pc=FDA9 select=86
+f=337 sl=-01 pc=FDB1 R6=28 select=86
+f=337 sl=-01 pc=FDBA select=87
+f=337 sl=-01 pc=FDC2 R7=29 select=87
+f=337 sl=-01 pc=FDA9 select=86
+f=337 sl=-01 pc=FDB1 R6=28 select=86
+f=337 sl=-01 pc=FDBA select=87
+f=337 sl=-01 pc=FDC2 R7=29 select=87
+f=337 sl=-01 pc=F9B3 select=80
+f=337 sl=-01 pc=F9B9 R0=FC select=80
+f=337 sl=-01 pc=F9BE select=81
+f=337 sl=-01 pc=F9C4 R1=12 select=81
+f=337 sl=-01 pc=F9C9 select=82
+f=337 sl=-01 pc=F9CF R2=B7 select=82
+f=337 sl=-01 pc=F9D4 select=83
+f=337 sl=-01 pc=F9DA R3=01 select=83
+f=337 sl=-01 pc=F9DF select=84
+f=337 sl=-01 pc=F9E5 R4=02 select=84
+f=337 sl=-01 pc=F9EA select=85
+f=337 sl=-01 pc=F9F0 R5=12 select=85
+f=337 sl=-01 pc=F8DB select=87
+f=337 sl=-01 pc=F9B3 select=80
+f=337 sl=-01 pc=F9B9 R0=FC select=80
+f=337 sl=-01 pc=F9BE select=81
+f=337 sl=-01 pc=F9C4 R1=12 select=81
+f=337 sl=-01 pc=F9C9 select=82
+f=337 sl=-01 pc=F9CF R2=00 select=82
+f=337 sl=-01 pc=F9D4 select=83
+f=337 sl=-01 pc=F9DA R3=01 select=83
+f=337 sl=-01 pc=F9DF select=84
+f=337 sl=-01 pc=F9E5 R4=02 select=84
+f=337 sl=-01 pc=F9EA select=85
+f=337 sl=-01 pc=F9F0 R5=12 select=85
+f=337 sl=-01 pc=F8DB select=87
+f=337 sl=-01 pc=FDA9 select=86
+f=337 sl=-01 pc=FDB1 R6=08 select=86
+f=337 sl=-01 pc=FDBA select=87
+f=337 sl=-01 pc=FDC2 R7=09 select=87
+f=337 sl=-01 pc=FDA9 select=86
+f=337 sl=-01 pc=FDB1 R6=08 select=86
+f=337 sl=-01 pc=FDBA select=87
+f=337 sl=-01 pc=FDC2 R7=09 select=87
+f=337 sl=-01 pc=FDA9 select=86
+f=337 sl=-01 pc=FDB1 R6=08 select=86
+f=337 sl=-01 pc=FDBA select=87
+f=337 sl=-01 pc=FDC2 R7=09 select=87
+f=338 sl=-01 pc=FA23 select=80
+f=338 sl=-01 pc=FA29 R0=FC select=80
+f=338 sl=-01 pc=FA2E select=81
+f=338 sl=-01 pc=FA34 R1=FC select=81
+f=338 sl=-01 pc=FA39 select=82
+f=338 sl=-01 pc=FA3F R2=B7 select=82
+f=338 sl=-01 pc=FA44 select=83
+f=338 sl=-01 pc=FA4A R3=BD select=83
+f=338 sl=-01 pc=FA4F select=84
+f=338 sl=-01 pc=FA55 R4=BB select=84
+f=338 sl=-01 pc=FA5A select=85
+f=338 sl=-01 pc=FA60 R5=BF select=85
+f=338 sl=-01 pc=FADD select=86
+f=338 sl=-01 pc=FAE2 R6=18 select=86
+f=338 sl=-01 pc=FAE9 select=87
+f=338 sl=-01 pc=FAEE R7=19 select=87
+f=338 sl=-01 pc=FAF8 select=86
+f=338 sl=-01 pc=FAFE R6=08 select=86
+f=338 sl=-01 pc=FB05 select=87
+f=338 sl=-01 pc=FB0B R7=09 select=87
+f=338 sl=-01 pc=FDA9 select=86
+f=338 sl=-01 pc=FDB1 R6=06 select=86
+f=338 sl=-01 pc=FDBA select=87
+f=338 sl=-01 pc=FDC2 R7=07 select=87
+f=338 sl=-01 pc=FDA9 select=86
+f=338 sl=-01 pc=FDB1 R6=20 select=86
+f=338 sl=-01 pc=FDBA select=87
+f=338 sl=-01 pc=FDC2 R7=21 select=87
+f=338 sl=-01 pc=FDA9 select=86
+f=338 sl=-01 pc=FDB1 R6=08 select=86
+f=338 sl=-01 pc=FDBA select=87
+f=338 sl=-01 pc=FDC2 R7=09 select=87
+f=338 sl=-01 pc=FDA9 select=86
+f=338 sl=-01 pc=FDB1 R6=08 select=86
+f=338 sl=-01 pc=FDBA select=87
+f=338 sl=-01 pc=FDC2 R7=09 select=87
+f=338 sl=-01 pc=FDA9 select=86
+f=338 sl=-01 pc=FDB1 R6=08 select=86
+f=338 sl=-01 pc=FDBA select=87
+f=338 sl=-01 pc=FDC2 R7=09 select=87
+f=338 sl=-01 pc=FDA9 select=86
+f=338 sl=-01 pc=FDB1 R6=08 select=86
+f=338 sl=-01 pc=FDBA select=87
+f=338 sl=-01 pc=FDC2 R7=09 select=87
+f=338 sl=-01 pc=FDA9 select=86
+f=338 sl=-01 pc=FDB1 R6=08 select=86
+f=338 sl=-01 pc=FDBA select=87
+f=338 sl=-01 pc=FDC2 R7=09 select=87
+f=338 sl=-01 pc=FDA9 select=86
+f=338 sl=-01 pc=FDB1 R6=08 select=86
+f=338 sl=-01 pc=FDBA select=87
+f=338 sl=-01 pc=FDC2 R7=09 select=87
+f=338 sl=-01 pc=FDA9 select=86
+f=338 sl=-01 pc=FDB1 R6=08 select=86
+f=338 sl=-01 pc=FDBA select=87
+f=338 sl=-01 pc=FDC2 R7=09 select=87
+f=338 sl=-01 pc=FDA9 select=86
+f=338 sl=-01 pc=FDB1 R6=08 select=86
+f=338 sl=-01 pc=FDBA select=87
+f=338 sl=-01 pc=FDC2 R7=09 select=87
+f=338 sl=-01 pc=FDA9 select=86
+f=338 sl=-01 pc=FDB1 R6=08 select=86
+f=338 sl=-01 pc=FDBA select=87
+f=338 sl=-01 pc=FDC2 R7=09 select=87
+f=338 sl=-01 pc=FC3F select=86
+f=338 sl=-01 pc=FC48 R6=06 select=86
+f=338 sl=-01 pc=FC4F select=87
+f=338 sl=-01 pc=FC58 R7=07 select=87
+f=338 sl=-01 pc=FDA9 select=86
+f=338 sl=-01 pc=FDB1 R6=18 select=86
+f=338 sl=-01 pc=FDBA select=87
+f=338 sl=-01 pc=FDC2 R7=19 select=87
+f=338 sl=-01 pc=FDA9 select=86
+f=338 sl=-01 pc=FDB1 R6=28 select=86
+f=338 sl=-01 pc=FDBA select=87
+f=338 sl=-01 pc=FDC2 R7=29 select=87
+f=338 sl=-01 pc=FDA9 select=86
+f=338 sl=-01 pc=FDB1 R6=28 select=86
+f=338 sl=-01 pc=FDBA select=87
+f=338 sl=-01 pc=FDC2 R7=29 select=87
+f=338 sl=-01 pc=F9B3 select=80
+f=338 sl=-01 pc=F9B9 R0=FC select=80
+f=338 sl=-01 pc=F9BE select=81
+f=338 sl=-01 pc=F9C4 R1=12 select=81
+f=338 sl=-01 pc=F9C9 select=82
+f=338 sl=-01 pc=F9CF R2=B7 select=82
+f=338 sl=-01 pc=F9D4 select=83
+f=338 sl=-01 pc=F9DA R3=01 select=83
+f=338 sl=-01 pc=F9DF select=84
+f=338 sl=-01 pc=F9E5 R4=02 select=84
+f=338 sl=-01 pc=F9EA select=85
+f=338 sl=-01 pc=F9F0 R5=12 select=85
+f=338 sl=-01 pc=F8DB select=87
+f=338 sl=-01 pc=FDA9 select=86
+f=338 sl=-01 pc=FDB1 R6=08 select=86
+f=338 sl=-01 pc=FDBA select=87
+f=338 sl=-01 pc=FDC2 R7=09 select=87
+f=338 sl=-01 pc=F9B3 select=80
+f=338 sl=-01 pc=F9B9 R0=FC select=80
+f=338 sl=-01 pc=F9BE select=81
+f=338 sl=-01 pc=F9C4 R1=12 select=81
+f=338 sl=-01 pc=F9C9 select=82
+f=338 sl=-01 pc=F9CF R2=00 select=82
+f=338 sl=-01 pc=F9D4 select=83
+f=338 sl=-01 pc=F9DA R3=01 select=83
+f=338 sl=-01 pc=F9DF select=84
+f=338 sl=-01 pc=F9E5 R4=02 select=84
+f=338 sl=-01 pc=F9EA select=85
+f=338 sl=-01 pc=F9F0 R5=12 select=85
+f=338 sl=-01 pc=F8DB select=87
+f=338 sl=-01 pc=FDA9 select=86
+f=338 sl=-01 pc=FDB1 R6=08 select=86
+f=338 sl=-01 pc=FDBA select=87
+f=338 sl=-01 pc=FDC2 R7=09 select=87
+f=338 sl=-01 pc=FDA9 select=86
+f=338 sl=-01 pc=FDB1 R6=08 select=86
+f=338 sl=-01 pc=FDBA select=87
+f=338 sl=-01 pc=FDC2 R7=09 select=87
+f=339 sl=-01 pc=FA23 select=80
+f=339 sl=-01 pc=FA29 R0=FC select=80
+f=339 sl=-01 pc=FA2E select=81
+f=339 sl=-01 pc=FA34 R1=FC select=81
+f=339 sl=-01 pc=FA39 select=82
+f=339 sl=-01 pc=FA3F R2=B7 select=82
+f=339 sl=-01 pc=FA44 select=83
+f=339 sl=-01 pc=FA4A R3=BD select=83
+f=339 sl=-01 pc=FA4F select=84
+f=339 sl=-01 pc=FA55 R4=BB select=84
+f=339 sl=-01 pc=FA5A select=85
+f=339 sl=-01 pc=FA60 R5=BF select=85
+f=339 sl=-01 pc=FADD select=86
+f=339 sl=-01 pc=FAE2 R6=18 select=86
+f=339 sl=-01 pc=FAE9 select=87
+f=339 sl=-01 pc=FAEE R7=19 select=87
+f=339 sl=-01 pc=BF0A select=86
+f=339 sl=-01 pc=C8E1 R6=00 select=86
+f=339 sl=-01 pc=C8E6 select=87
+f=339 sl=-01 pc=C8EB R7=01 select=87
+f=339 sl=-01 pc=C900 select=86
+f=339 sl=-01 pc=C905 R6=18 select=86
+f=339 sl=-01 pc=C90A select=87
+f=339 sl=-01 pc=C90F R7=19 select=87
+f=339 sl=-01 pc=BF0A select=86
+f=339 sl=-01 pc=C8E1 R6=00 select=86
+f=339 sl=-01 pc=C8E6 select=87
+f=339 sl=-01 pc=C8EB R7=01 select=87
+f=339 sl=-01 pc=C900 select=86
+f=339 sl=-01 pc=C905 R6=18 select=86
+f=339 sl=-01 pc=C90A select=87
+f=339 sl=-01 pc=C90F R7=19 select=87
+f=339 sl=-01 pc=FAF8 select=86
+f=339 sl=-01 pc=FAFE R6=08 select=86
+f=339 sl=-01 pc=FB05 select=87
+f=339 sl=-01 pc=FB0B R7=09 select=87
+f=339 sl=-01 pc=FDA9 select=86
+f=339 sl=-01 pc=FDB1 R6=06 select=86
+f=339 sl=-01 pc=FDBA select=87
+f=339 sl=-01 pc=FDC2 R7=07 select=87
+f=339 sl=-01 pc=FDA9 select=86
+f=339 sl=-01 pc=FDB1 R6=20 select=86
+f=339 sl=-01 pc=FDBA select=87
+f=339 sl=-01 pc=FDC2 R7=21 select=87
+f=339 sl=-01 pc=FDA9 select=86
+f=339 sl=-01 pc=FDB1 R6=08 select=86
+f=339 sl=-01 pc=FDBA select=87
+f=339 sl=-01 pc=FDC2 R7=09 select=87
+f=339 sl=-01 pc=FDA9 select=86
+f=339 sl=-01 pc=FDB1 R6=08 select=86
+f=339 sl=-01 pc=FDBA select=87
+f=339 sl=-01 pc=FDC2 R7=09 select=87
+f=339 sl=-01 pc=FDA9 select=86
+f=339 sl=-01 pc=FDB1 R6=08 select=86
+f=339 sl=-01 pc=FDBA select=87
+f=339 sl=-01 pc=FDC2 R7=09 select=87
+f=339 sl=-01 pc=FDA9 select=86
+f=339 sl=-01 pc=FDB1 R6=08 select=86
+f=339 sl=-01 pc=FDBA select=87
+f=339 sl=-01 pc=FDC2 R7=09 select=87
+f=339 sl=-01 pc=FDA9 select=86
+f=339 sl=-01 pc=FDB1 R6=08 select=86
+f=339 sl=-01 pc=FDBA select=87
+f=339 sl=-01 pc=FDC2 R7=09 select=87
+f=339 sl=-01 pc=FDA9 select=86
+f=339 sl=-01 pc=FDB1 R6=08 select=86
+f=339 sl=-01 pc=FDBA select=87
+f=339 sl=-01 pc=FDC2 R7=09 select=87
+f=339 sl=-01 pc=FDA9 select=86
+f=339 sl=-01 pc=FDB1 R6=08 select=86
+f=339 sl=-01 pc=FDBA select=87
+f=339 sl=-01 pc=FDC2 R7=09 select=87
+f=339 sl=-01 pc=FDA9 select=86
+f=339 sl=-01 pc=FDB1 R6=08 select=86
+f=339 sl=-01 pc=FDBA select=87
+f=339 sl=-01 pc=FDC2 R7=09 select=87
+f=339 sl=-01 pc=FDA9 select=86
+f=339 sl=-01 pc=FDB1 R6=08 select=86
+f=339 sl=-01 pc=FDBA select=87
+f=339 sl=-01 pc=FDC2 R7=09 select=87
+f=339 sl=-01 pc=FC3F select=86
+f=339 sl=-01 pc=FC48 R6=06 select=86
+f=339 sl=-01 pc=FC4F select=87
+f=339 sl=-01 pc=FC58 R7=07 select=87
+f=339 sl=-01 pc=FDA9 select=86
+f=339 sl=-01 pc=FDB1 R6=18 select=86
+f=339 sl=-01 pc=FDBA select=87
+f=339 sl=-01 pc=FDC2 R7=19 select=87
+f=339 sl=-01 pc=FDA9 select=86
+f=339 sl=-01 pc=FDB1 R6=28 select=86
+f=339 sl=-01 pc=FDBA select=87
+f=339 sl=-01 pc=FDC2 R7=29 select=87
+f=339 sl=-01 pc=F9B3 select=80
+f=339 sl=-01 pc=F9B9 R0=FC select=80
+f=339 sl=-01 pc=F9BE select=81
+f=339 sl=-01 pc=F9C4 R1=12 select=81
+f=339 sl=-01 pc=F9C9 select=82
+f=339 sl=-01 pc=F9CF R2=B7 select=82
+f=339 sl=-01 pc=F9D4 select=83
+f=339 sl=-01 pc=F9DA R3=01 select=83
+f=339 sl=-01 pc=F9DF select=84
+f=339 sl=-01 pc=F9E5 R4=02 select=84
+f=339 sl=-01 pc=F9EA select=85
+f=339 sl=-01 pc=F9F0 R5=12 select=85
+f=339 sl=-01 pc=F8DB select=87
+f=339 sl=-01 pc=FDA9 select=86
+f=339 sl=-01 pc=FDB1 R6=28 select=86
+f=339 sl=-01 pc=FDBA select=87
+f=339 sl=-01 pc=FDC2 R7=29 select=87
+f=339 sl=-01 pc=F9B3 select=80
+f=339 sl=-01 pc=F9B9 R0=FC select=80
+f=339 sl=-01 pc=F9BE select=81
+f=339 sl=-01 pc=F9C4 R1=12 select=81
+f=339 sl=-01 pc=F9C9 select=82
+f=339 sl=-01 pc=F9CF R2=00 select=82
+f=339 sl=-01 pc=F9D4 select=83
+f=339 sl=-01 pc=F9DA R3=01 select=83
+f=339 sl=-01 pc=F9DF select=84
+f=339 sl=-01 pc=F9E5 R4=02 select=84
+f=339 sl=-01 pc=F9EA select=85
+f=339 sl=-01 pc=F9F0 R5=12 select=85
+f=339 sl=-01 pc=F8DB select=87
+f=339 sl=-01 pc=FDA9 select=86
+f=339 sl=-01 pc=FDB1 R6=08 select=86
+f=339 sl=-01 pc=FDBA select=87
+f=339 sl=-01 pc=FDC2 R7=09 select=87
+f=339 sl=-01 pc=FDA9 select=86
+f=339 sl=-01 pc=FDB1 R6=08 select=86
+f=339 sl=-01 pc=FDBA select=87
+f=339 sl=-01 pc=FDC2 R7=09 select=87
+f=339 sl=-01 pc=FDA9 select=86
+f=339 sl=-01 pc=FDB1 R6=08 select=86
+f=339 sl=-01 pc=FDBA select=87
+f=339 sl=-01 pc=FDC2 R7=09 select=87
+f=340 sl=-01 pc=FA23 select=80
+f=340 sl=-01 pc=FA29 R0=FC select=80
+f=340 sl=-01 pc=FA2E select=81
+f=340 sl=-01 pc=FA34 R1=FC select=81
+f=340 sl=-01 pc=FA39 select=82
+f=340 sl=-01 pc=FA3F R2=B7 select=82
+f=340 sl=-01 pc=FA44 select=83
+f=340 sl=-01 pc=FA4A R3=BD select=83
+f=340 sl=-01 pc=FA4F select=84
+f=340 sl=-01 pc=FA55 R4=BB select=84
+f=340 sl=-01 pc=FA5A select=85
+f=340 sl=-01 pc=FA60 R5=BF select=85
+f=340 sl=-01 pc=FADD select=86
+f=340 sl=-01 pc=FAE2 R6=18 select=86
+f=340 sl=-01 pc=FAE9 select=87
+f=340 sl=-01 pc=FAEE R7=19 select=87
+f=340 sl=-01 pc=FAF8 select=86
+f=340 sl=-01 pc=FAFE R6=08 select=86
+f=340 sl=-01 pc=FB05 select=87
+f=340 sl=-01 pc=FB0B R7=09 select=87
+f=340 sl=-01 pc=FDA9 select=86
+f=340 sl=-01 pc=FDB1 R6=06 select=86
+f=340 sl=-01 pc=FDBA select=87
+f=340 sl=-01 pc=FDC2 R7=07 select=87
+f=340 sl=-01 pc=FDA9 select=86
+f=340 sl=-01 pc=FDB1 R6=20 select=86
+f=340 sl=-01 pc=FDBA select=87
+f=340 sl=-01 pc=FDC2 R7=21 select=87
+f=340 sl=-01 pc=FDA9 select=86
+f=340 sl=-01 pc=FDB1 R6=08 select=86
+f=340 sl=-01 pc=FDBA select=87
+f=340 sl=-01 pc=FDC2 R7=09 select=87
+f=340 sl=-01 pc=FDA9 select=86
+f=340 sl=-01 pc=FDB1 R6=08 select=86
+f=340 sl=-01 pc=FDBA select=87
+f=340 sl=-01 pc=FDC2 R7=09 select=87
+f=340 sl=-01 pc=FDA9 select=86
+f=340 sl=-01 pc=FDB1 R6=08 select=86
+f=340 sl=-01 pc=FDBA select=87
+f=340 sl=-01 pc=FDC2 R7=09 select=87
+f=340 sl=-01 pc=FDA9 select=86
+f=340 sl=-01 pc=FDB1 R6=08 select=86
+f=340 sl=-01 pc=FDBA select=87
+f=340 sl=-01 pc=FDC2 R7=09 select=87
+f=340 sl=-01 pc=FDA9 select=86
+f=340 sl=-01 pc=FDB1 R6=08 select=86
+f=340 sl=-01 pc=FDBA select=87
+f=340 sl=-01 pc=FDC2 R7=09 select=87
+f=340 sl=-01 pc=FDA9 select=86
+f=340 sl=-01 pc=FDB1 R6=08 select=86
+f=340 sl=-01 pc=FDBA select=87
+f=340 sl=-01 pc=FDC2 R7=09 select=87
+f=340 sl=-01 pc=FDA9 select=86
+f=340 sl=-01 pc=FDB1 R6=08 select=86
+f=340 sl=-01 pc=FDBA select=87
+f=340 sl=-01 pc=FDC2 R7=09 select=87
+f=340 sl=-01 pc=FDA9 select=86
+f=340 sl=-01 pc=FDB1 R6=08 select=86
+f=340 sl=-01 pc=FDBA select=87
+f=340 sl=-01 pc=FDC2 R7=09 select=87
+f=340 sl=-01 pc=FDA9 select=86
+f=340 sl=-01 pc=FDB1 R6=08 select=86
+f=340 sl=-01 pc=FDBA select=87
+f=340 sl=-01 pc=FDC2 R7=09 select=87
+f=340 sl=-01 pc=FC3F select=86
+f=340 sl=-01 pc=FC48 R6=06 select=86
+f=340 sl=-01 pc=FC4F select=87
+f=340 sl=-01 pc=FC58 R7=07 select=87
+f=340 sl=-01 pc=FDA9 select=86
+f=340 sl=-01 pc=FDB1 R6=18 select=86
+f=340 sl=-01 pc=FDBA select=87
+f=340 sl=-01 pc=FDC2 R7=19 select=87
+f=340 sl=-01 pc=FDA9 select=86
+f=340 sl=-01 pc=FDB1 R6=28 select=86
+f=340 sl=-01 pc=FDBA select=87
+f=340 sl=-01 pc=FDC2 R7=29 select=87
+f=340 sl=-01 pc=FDA9 select=86
+f=340 sl=-01 pc=FDB1 R6=28 select=86
+f=340 sl=-01 pc=FDBA select=87
+f=340 sl=-01 pc=FDC2 R7=29 select=87
+f=340 sl=-01 pc=F9B3 select=80
+f=340 sl=-01 pc=F9B9 R0=FC select=80
+f=340 sl=-01 pc=F9BE select=81
+f=340 sl=-01 pc=F9C4 R1=12 select=81
+f=340 sl=-01 pc=F9C9 select=82
+f=340 sl=-01 pc=F9CF R2=B7 select=82
+f=340 sl=-01 pc=F9D4 select=83
+f=340 sl=-01 pc=F9DA R3=01 select=83
+f=340 sl=-01 pc=F9DF select=84
+f=340 sl=-01 pc=F9E5 R4=02 select=84
+f=340 sl=-01 pc=F9EA select=85
+f=340 sl=-01 pc=F9F0 R5=12 select=85
+f=340 sl=-01 pc=F8DB select=87
+f=340 sl=-01 pc=F9B3 select=80
+f=340 sl=-01 pc=F9B9 R0=FC select=80
+f=340 sl=-01 pc=F9BE select=81
+f=340 sl=-01 pc=F9C4 R1=12 select=81
+f=340 sl=-01 pc=F9C9 select=82
+f=340 sl=-01 pc=F9CF R2=00 select=82
+f=340 sl=-01 pc=F9D4 select=83
+f=340 sl=-01 pc=F9DA R3=01 select=83
+f=340 sl=-01 pc=F9DF select=84
+f=340 sl=-01 pc=F9E5 R4=02 select=84
+f=340 sl=-01 pc=F9EA select=85
+f=340 sl=-01 pc=F9F0 R5=12 select=85
+f=340 sl=-01 pc=F8DB select=87
+f=340 sl=-01 pc=FDA9 select=86
+f=340 sl=-01 pc=FDB1 R6=08 select=86
+f=340 sl=-01 pc=FDBA select=87
+f=340 sl=-01 pc=FDC2 R7=09 select=87
+f=340 sl=-01 pc=FDA9 select=86
+f=340 sl=-01 pc=FDB1 R6=08 select=86
+f=340 sl=-01 pc=FDBA select=87
+f=340 sl=-01 pc=FDC2 R7=09 select=87
+f=340 sl=-01 pc=FDA9 select=86
+f=340 sl=-01 pc=FDB1 R6=08 select=86
+f=340 sl=-01 pc=FDBA select=87
+f=340 sl=-01 pc=FDC2 R7=09 select=87
+f=341 sl=-01 pc=FA23 select=80
+f=341 sl=-01 pc=FA29 R0=FC select=80
+f=341 sl=-01 pc=FA2E select=81
+f=341 sl=-01 pc=FA34 R1=FC select=81
+f=341 sl=-01 pc=FA39 select=82
+f=341 sl=-01 pc=FA3F R2=B7 select=82
+f=341 sl=-01 pc=FA44 select=83
+f=341 sl=-01 pc=FA4A R3=BD select=83
+f=341 sl=-01 pc=FA4F select=84
+f=341 sl=-01 pc=FA55 R4=BB select=84
+f=341 sl=-01 pc=FA5A select=85
+f=341 sl=-01 pc=FA60 R5=BF select=85
+f=341 sl=-01 pc=FADD select=86
+f=341 sl=-01 pc=FAE2 R6=18 select=86
+f=341 sl=-01 pc=FAE9 select=87
+f=341 sl=-01 pc=FAEE R7=19 select=87
+f=341 sl=-01 pc=FAF8 select=86
+f=341 sl=-01 pc=FAFE R6=08 select=86
+f=341 sl=-01 pc=FB05 select=87
+f=341 sl=-01 pc=FB0B R7=09 select=87
+f=341 sl=-01 pc=FDA9 select=86
+f=341 sl=-01 pc=FDB1 R6=06 select=86
+f=341 sl=-01 pc=FDBA select=87
+f=341 sl=-01 pc=FDC2 R7=07 select=87
+f=341 sl=-01 pc=FDA9 select=86
+f=341 sl=-01 pc=FDB1 R6=20 select=86
+f=341 sl=-01 pc=FDBA select=87
+f=341 sl=-01 pc=FDC2 R7=21 select=87
+f=341 sl=-01 pc=FDA9 select=86
+f=341 sl=-01 pc=FDB1 R6=08 select=86
+f=341 sl=-01 pc=FDBA select=87
+f=341 sl=-01 pc=FDC2 R7=09 select=87
+f=341 sl=-01 pc=FDA9 select=86
+f=341 sl=-01 pc=FDB1 R6=08 select=86
+f=341 sl=-01 pc=FDBA select=87
+f=341 sl=-01 pc=FDC2 R7=09 select=87
+f=341 sl=-01 pc=FDA9 select=86
+f=341 sl=-01 pc=FDB1 R6=08 select=86
+f=341 sl=-01 pc=FDBA select=87
+f=341 sl=-01 pc=FDC2 R7=09 select=87
+f=341 sl=-01 pc=FDA9 select=86
+f=341 sl=-01 pc=FDB1 R6=08 select=86
+f=341 sl=-01 pc=FDBA select=87
+f=341 sl=-01 pc=FDC2 R7=09 select=87
+f=341 sl=-01 pc=FDA9 select=86
+f=341 sl=-01 pc=FDB1 R6=08 select=86
+f=341 sl=-01 pc=FDBA select=87
+f=341 sl=-01 pc=FDC2 R7=09 select=87
+f=341 sl=-01 pc=FDA9 select=86
+f=341 sl=-01 pc=FDB1 R6=08 select=86
+f=341 sl=-01 pc=FDBA select=87
+f=341 sl=-01 pc=FDC2 R7=09 select=87
+f=341 sl=-01 pc=FDA9 select=86
+f=341 sl=-01 pc=FDB1 R6=08 select=86
+f=341 sl=-01 pc=FDBA select=87
+f=341 sl=-01 pc=FDC2 R7=09 select=87
+f=341 sl=-01 pc=FDA9 select=86
+f=341 sl=-01 pc=FDB1 R6=08 select=86
+f=341 sl=-01 pc=FDBA select=87
+f=341 sl=-01 pc=FDC2 R7=09 select=87
+f=341 sl=-01 pc=FDA9 select=86
+f=341 sl=-01 pc=FDB1 R6=08 select=86
+f=341 sl=-01 pc=FDBA select=87
+f=341 sl=-01 pc=FDC2 R7=09 select=87
+f=341 sl=-01 pc=FC3F select=86
+f=341 sl=-01 pc=FC48 R6=06 select=86
+f=341 sl=-01 pc=FC4F select=87
+f=341 sl=-01 pc=FC58 R7=07 select=87
+f=341 sl=-01 pc=FDA9 select=86
+f=341 sl=-01 pc=FDB1 R6=18 select=86
+f=341 sl=-01 pc=FDBA select=87
+f=341 sl=-01 pc=FDC2 R7=19 select=87
+f=341 sl=-01 pc=FDA9 select=86
+f=341 sl=-01 pc=FDB1 R6=28 select=86
+f=341 sl=-01 pc=FDBA select=87
+f=341 sl=-01 pc=FDC2 R7=29 select=87
+f=341 sl=-01 pc=FDA9 select=86
+f=341 sl=-01 pc=FDB1 R6=28 select=86
+f=341 sl=-01 pc=FDBA select=87
+f=341 sl=-01 pc=FDC2 R7=29 select=87
+f=341 sl=-01 pc=F9B3 select=80
+f=341 sl=-01 pc=F9B9 R0=FC select=80
+f=341 sl=-01 pc=F9BE select=81
+f=341 sl=-01 pc=F9C4 R1=12 select=81
+f=341 sl=-01 pc=F9C9 select=82
+f=341 sl=-01 pc=F9CF R2=B7 select=82
+f=341 sl=-01 pc=F9D4 select=83
+f=341 sl=-01 pc=F9DA R3=01 select=83
+f=341 sl=-01 pc=F9DF select=84
+f=341 sl=-01 pc=F9E5 R4=02 select=84
+f=341 sl=-01 pc=F9EA select=85
+f=341 sl=-01 pc=F9F0 R5=12 select=85
+f=341 sl=-01 pc=F8DB select=87
+f=341 sl=-01 pc=F9B3 select=80
+f=341 sl=-01 pc=F9B9 R0=FC select=80
+f=341 sl=-01 pc=F9BE select=81
+f=341 sl=-01 pc=F9C4 R1=12 select=81
+f=341 sl=-01 pc=F9C9 select=82
+f=341 sl=-01 pc=F9CF R2=00 select=82
+f=341 sl=-01 pc=F9D4 select=83
+f=341 sl=-01 pc=F9DA R3=01 select=83
+f=341 sl=-01 pc=F9DF select=84
+f=341 sl=-01 pc=F9E5 R4=02 select=84
+f=341 sl=-01 pc=F9EA select=85
+f=341 sl=-01 pc=F9F0 R5=12 select=85
+f=341 sl=-01 pc=F8DB select=87
+f=341 sl=-01 pc=FDA9 select=86
+f=341 sl=-01 pc=FDB1 R6=08 select=86
+f=341 sl=-01 pc=FDBA select=87
+f=341 sl=-01 pc=FDC2 R7=09 select=87
+f=341 sl=-01 pc=FDA9 select=86
+f=341 sl=-01 pc=FDB1 R6=08 select=86
+f=341 sl=-01 pc=FDBA select=87
+f=341 sl=-01 pc=FDC2 R7=09 select=87
+f=341 sl=-01 pc=FDA9 select=86
+f=341 sl=-01 pc=FDB1 R6=08 select=86
+f=341 sl=-01 pc=FDBA select=87
+f=341 sl=-01 pc=FDC2 R7=09 select=87
+f=342 sl=-01 pc=FA23 select=80
+f=342 sl=-01 pc=FA29 R0=FC select=80
+f=342 sl=-01 pc=FA2E select=81
+f=342 sl=-01 pc=FA34 R1=FC select=81
+f=342 sl=-01 pc=FA39 select=82
+f=342 sl=-01 pc=FA3F R2=B7 select=82
+f=342 sl=-01 pc=FA44 select=83
+f=342 sl=-01 pc=FA4A R3=BD select=83
+f=342 sl=-01 pc=FA4F select=84
+f=342 sl=-01 pc=FA55 R4=BB select=84
+f=342 sl=-01 pc=FA5A select=85
+f=342 sl=-01 pc=FA60 R5=BF select=85
+f=342 sl=-01 pc=FADD select=86
+f=342 sl=-01 pc=FAE2 R6=18 select=86
+f=342 sl=-01 pc=FAE9 select=87
+f=342 sl=-01 pc=FAEE R7=19 select=87
+f=342 sl=-01 pc=FAF8 select=86
+f=342 sl=-01 pc=FAFE R6=08 select=86
+f=342 sl=-01 pc=FB05 select=87
+f=342 sl=-01 pc=FB0B R7=09 select=87
+f=342 sl=-01 pc=FDA9 select=86
+f=342 sl=-01 pc=FDB1 R6=06 select=86
+f=342 sl=-01 pc=FDBA select=87
+f=342 sl=-01 pc=FDC2 R7=07 select=87
+f=342 sl=-01 pc=FDA9 select=86
+f=342 sl=-01 pc=FDB1 R6=20 select=86
+f=342 sl=-01 pc=FDBA select=87
+f=342 sl=-01 pc=FDC2 R7=21 select=87
+f=342 sl=-01 pc=FDA9 select=86
+f=342 sl=-01 pc=FDB1 R6=08 select=86
+f=342 sl=-01 pc=FDBA select=87
+f=342 sl=-01 pc=FDC2 R7=09 select=87
+f=342 sl=-01 pc=FDA9 select=86
+f=342 sl=-01 pc=FDB1 R6=08 select=86
+f=342 sl=-01 pc=FDBA select=87
+f=342 sl=-01 pc=FDC2 R7=09 select=87
+f=342 sl=-01 pc=FDA9 select=86
+f=342 sl=-01 pc=FDB1 R6=08 select=86
+f=342 sl=-01 pc=FDBA select=87
+f=342 sl=-01 pc=FDC2 R7=09 select=87
+f=342 sl=-01 pc=FDA9 select=86
+f=342 sl=-01 pc=FDB1 R6=08 select=86
+f=342 sl=-01 pc=FDBA select=87
+f=342 sl=-01 pc=FDC2 R7=09 select=87
+f=342 sl=-01 pc=FDA9 select=86
+f=342 sl=-01 pc=FDB1 R6=08 select=86
+f=342 sl=-01 pc=FDBA select=87
+f=342 sl=-01 pc=FDC2 R7=09 select=87
+f=342 sl=-01 pc=FDA9 select=86
+f=342 sl=-01 pc=FDB1 R6=08 select=86
+f=342 sl=-01 pc=FDBA select=87
+f=342 sl=-01 pc=FDC2 R7=09 select=87
+f=342 sl=-01 pc=FDA9 select=86
+f=342 sl=-01 pc=FDB1 R6=08 select=86
+f=342 sl=-01 pc=FDBA select=87
+f=342 sl=-01 pc=FDC2 R7=09 select=87
+f=342 sl=-01 pc=FDA9 select=86
+f=342 sl=-01 pc=FDB1 R6=08 select=86
+f=342 sl=-01 pc=FDBA select=87
+f=342 sl=-01 pc=FDC2 R7=09 select=87
+f=342 sl=-01 pc=FDA9 select=86
+f=342 sl=-01 pc=FDB1 R6=08 select=86
+f=342 sl=-01 pc=FDBA select=87
+f=342 sl=-01 pc=FDC2 R7=09 select=87
+f=342 sl=-01 pc=FC3F select=86
+f=342 sl=-01 pc=FC48 R6=06 select=86
+f=342 sl=-01 pc=FC4F select=87
+f=342 sl=-01 pc=FC58 R7=07 select=87
+f=342 sl=-01 pc=FDA9 select=86
+f=342 sl=-01 pc=FDB1 R6=18 select=86
+f=342 sl=-01 pc=FDBA select=87
+f=342 sl=-01 pc=FDC2 R7=19 select=87
+f=342 sl=-01 pc=FDA9 select=86
+f=342 sl=-01 pc=FDB1 R6=28 select=86
+f=342 sl=-01 pc=FDBA select=87
+f=342 sl=-01 pc=FDC2 R7=29 select=87
+f=342 sl=-01 pc=FDA9 select=86
+f=342 sl=-01 pc=FDB1 R6=28 select=86
+f=342 sl=-01 pc=FDBA select=87
+f=342 sl=-01 pc=FDC2 R7=29 select=87
+f=342 sl=-01 pc=F9B3 select=80
+f=342 sl=-01 pc=F9B9 R0=FC select=80
+f=342 sl=-01 pc=F9BE select=81
+f=342 sl=-01 pc=F9C4 R1=12 select=81
+f=342 sl=-01 pc=F9C9 select=82
+f=342 sl=-01 pc=F9CF R2=B7 select=82
+f=342 sl=-01 pc=F9D4 select=83
+f=342 sl=-01 pc=F9DA R3=01 select=83
+f=342 sl=-01 pc=F9DF select=84
+f=342 sl=-01 pc=F9E5 R4=02 select=84
+f=342 sl=-01 pc=F9EA select=85
+f=342 sl=-01 pc=F9F0 R5=12 select=85
+f=342 sl=-01 pc=F8DB select=87
+f=342 sl=-01 pc=F9B3 select=80
+f=342 sl=-01 pc=F9B9 R0=FC select=80
+f=342 sl=-01 pc=F9BE select=81
+f=342 sl=-01 pc=F9C4 R1=12 select=81
+f=342 sl=-01 pc=F9C9 select=82
+f=342 sl=-01 pc=F9CF R2=00 select=82
+f=342 sl=-01 pc=F9D4 select=83
+f=342 sl=-01 pc=F9DA R3=01 select=83
+f=342 sl=-01 pc=F9DF select=84
+f=342 sl=-01 pc=F9E5 R4=02 select=84
+f=342 sl=-01 pc=F9EA select=85
+f=342 sl=-01 pc=F9F0 R5=12 select=85
+f=342 sl=-01 pc=F8DB select=87
+f=342 sl=-01 pc=FDA9 select=86
+f=342 sl=-01 pc=FDB1 R6=08 select=86
+f=342 sl=-01 pc=FDBA select=87
+f=342 sl=-01 pc=FDC2 R7=09 select=87
+f=342 sl=-01 pc=FDA9 select=86
+f=342 sl=-01 pc=FDB1 R6=08 select=86
+f=342 sl=-01 pc=FDBA select=87
+f=342 sl=-01 pc=FDC2 R7=09 select=87
+f=342 sl=-01 pc=FDA9 select=86
+f=342 sl=-01 pc=FDB1 R6=08 select=86
+f=342 sl=-01 pc=FDBA select=87
+f=342 sl=-01 pc=FDC2 R7=09 select=87
+f=343 sl=-01 pc=FA23 select=80
+f=343 sl=-01 pc=FA29 R0=FC select=80
+f=343 sl=-01 pc=FA2E select=81
+f=343 sl=-01 pc=FA34 R1=FC select=81
+f=343 sl=-01 pc=FA39 select=82
+f=343 sl=-01 pc=FA3F R2=B7 select=82
+f=343 sl=-01 pc=FA44 select=83
+f=343 sl=-01 pc=FA4A R3=BD select=83
+f=343 sl=-01 pc=FA4F select=84
+f=343 sl=-01 pc=FA55 R4=BB select=84
+f=343 sl=-01 pc=FA5A select=85
+f=343 sl=-01 pc=FA60 R5=BF select=85
+f=343 sl=-01 pc=FADD select=86
+f=343 sl=-01 pc=FAE2 R6=18 select=86
+f=343 sl=-01 pc=FAE9 select=87
+f=343 sl=-01 pc=FAEE R7=19 select=87
+f=343 sl=-01 pc=FAF8 select=86
+f=343 sl=-01 pc=FAFE R6=08 select=86
+f=343 sl=-01 pc=FB05 select=87
+f=343 sl=-01 pc=FB0B R7=09 select=87
+f=343 sl=-01 pc=FDA9 select=86
+f=343 sl=-01 pc=FDB1 R6=06 select=86
+f=343 sl=-01 pc=FDBA select=87
+f=343 sl=-01 pc=FDC2 R7=07 select=87
+f=343 sl=-01 pc=FDA9 select=86
+f=343 sl=-01 pc=FDB1 R6=20 select=86
+f=343 sl=-01 pc=FDBA select=87
+f=343 sl=-01 pc=FDC2 R7=21 select=87
+f=343 sl=-01 pc=FDA9 select=86
+f=343 sl=-01 pc=FDB1 R6=08 select=86
+f=343 sl=-01 pc=FDBA select=87
+f=343 sl=-01 pc=FDC2 R7=09 select=87
+f=343 sl=-01 pc=FDA9 select=86
+f=343 sl=-01 pc=FDB1 R6=08 select=86
+f=343 sl=-01 pc=FDBA select=87
+f=343 sl=-01 pc=FDC2 R7=09 select=87
+f=343 sl=-01 pc=FDA9 select=86
+f=343 sl=-01 pc=FDB1 R6=08 select=86
+f=343 sl=-01 pc=FDBA select=87
+f=343 sl=-01 pc=FDC2 R7=09 select=87
+f=343 sl=-01 pc=FDA9 select=86
+f=343 sl=-01 pc=FDB1 R6=08 select=86
+f=343 sl=-01 pc=FDBA select=87
+f=343 sl=-01 pc=FDC2 R7=09 select=87
+f=343 sl=-01 pc=FDA9 select=86
+f=343 sl=-01 pc=FDB1 R6=08 select=86
+f=343 sl=-01 pc=FDBA select=87
+f=343 sl=-01 pc=FDC2 R7=09 select=87
+f=343 sl=-01 pc=FDA9 select=86
+f=343 sl=-01 pc=FDB1 R6=08 select=86
+f=343 sl=-01 pc=FDBA select=87
+f=343 sl=-01 pc=FDC2 R7=09 select=87
+f=343 sl=-01 pc=FDA9 select=86
+f=343 sl=-01 pc=FDB1 R6=08 select=86
+f=343 sl=-01 pc=FDBA select=87
+f=343 sl=-01 pc=FDC2 R7=09 select=87
+f=343 sl=-01 pc=FDA9 select=86
+f=343 sl=-01 pc=FDB1 R6=08 select=86
+f=343 sl=-01 pc=FDBA select=87
+f=343 sl=-01 pc=FDC2 R7=09 select=87
+f=343 sl=-01 pc=FDA9 select=86
+f=343 sl=-01 pc=FDB1 R6=08 select=86
+f=343 sl=-01 pc=FDBA select=87
+f=343 sl=-01 pc=FDC2 R7=09 select=87
+f=343 sl=-01 pc=FC3F select=86
+f=343 sl=-01 pc=FC48 R6=06 select=86
+f=343 sl=-01 pc=FC4F select=87
+f=343 sl=-01 pc=FC58 R7=07 select=87
+f=343 sl=-01 pc=FDA9 select=86
+f=343 sl=-01 pc=FDB1 R6=18 select=86
+f=343 sl=-01 pc=FDBA select=87
+f=343 sl=-01 pc=FDC2 R7=19 select=87
+f=343 sl=-01 pc=FDA9 select=86
+f=343 sl=-01 pc=FDB1 R6=28 select=86
+f=343 sl=-01 pc=FDBA select=87
+f=343 sl=-01 pc=FDC2 R7=29 select=87
+f=343 sl=-01 pc=FDA9 select=86
+f=343 sl=-01 pc=FDB1 R6=28 select=86
+f=343 sl=-01 pc=FDBA select=87
+f=343 sl=-01 pc=FDC2 R7=29 select=87
+f=343 sl=-01 pc=F9B3 select=80
+f=343 sl=-01 pc=F9B9 R0=FC select=80
+f=343 sl=-01 pc=F9BE select=81
+f=343 sl=-01 pc=F9C4 R1=12 select=81
+f=343 sl=-01 pc=F9C9 select=82
+f=343 sl=-01 pc=F9CF R2=B7 select=82
+f=343 sl=-01 pc=F9D4 select=83
+f=343 sl=-01 pc=F9DA R3=01 select=83
+f=343 sl=-01 pc=F9DF select=84
+f=343 sl=-01 pc=F9E5 R4=02 select=84
+f=343 sl=-01 pc=F9EA select=85
+f=343 sl=-01 pc=F9F0 R5=12 select=85
+f=343 sl=-01 pc=F8DB select=87
+f=343 sl=-01 pc=FDA9 select=86
+f=343 sl=-01 pc=FDB1 R6=08 select=86
+f=343 sl=-01 pc=FDBA select=87
+f=343 sl=-01 pc=FDC2 R7=09 select=87
+f=343 sl=-01 pc=F9B3 select=80
+f=343 sl=-01 pc=F9B9 R0=FC select=80
+f=343 sl=-01 pc=F9BE select=81
+f=343 sl=-01 pc=F9C4 R1=12 select=81
+f=343 sl=-01 pc=F9C9 select=82
+f=343 sl=-01 pc=F9CF R2=00 select=82
+f=343 sl=-01 pc=F9D4 select=83
+f=343 sl=-01 pc=F9DA R3=01 select=83
+f=343 sl=-01 pc=F9DF select=84
+f=343 sl=-01 pc=F9E5 R4=02 select=84
+f=343 sl=-01 pc=F9EA select=85
+f=343 sl=-01 pc=F9F0 R5=12 select=85
+f=343 sl=-01 pc=F8DB select=87
+f=343 sl=-01 pc=FDA9 select=86
+f=343 sl=-01 pc=FDB1 R6=08 select=86
+f=343 sl=-01 pc=FDBA select=87
+f=343 sl=-01 pc=FDC2 R7=09 select=87
+f=343 sl=-01 pc=FDA9 select=86
+f=343 sl=-01 pc=FDB1 R6=08 select=86
+f=343 sl=-01 pc=FDBA select=87
+f=343 sl=-01 pc=FDC2 R7=09 select=87
+f=344 sl=-01 pc=FA23 select=80
+f=344 sl=-01 pc=FA29 R0=FC select=80
+f=344 sl=-01 pc=FA2E select=81
+f=344 sl=-01 pc=FA34 R1=FC select=81
+f=344 sl=-01 pc=FA39 select=82
+f=344 sl=-01 pc=FA3F R2=B7 select=82
+f=344 sl=-01 pc=FA44 select=83
+f=344 sl=-01 pc=FA4A R3=BD select=83
+f=344 sl=-01 pc=FA4F select=84
+f=344 sl=-01 pc=FA55 R4=BB select=84
+f=344 sl=-01 pc=FA5A select=85
+f=344 sl=-01 pc=FA60 R5=BF select=85
+f=344 sl=-01 pc=FADD select=86
+f=344 sl=-01 pc=FAE2 R6=18 select=86
+f=344 sl=-01 pc=FAE9 select=87
+f=344 sl=-01 pc=FAEE R7=19 select=87
+f=344 sl=-01 pc=FAF8 select=86
+f=344 sl=-01 pc=FAFE R6=08 select=86
+f=344 sl=-01 pc=FB05 select=87
+f=344 sl=-01 pc=FB0B R7=09 select=87
+f=344 sl=-01 pc=FDA9 select=86
+f=344 sl=-01 pc=FDB1 R6=06 select=86
+f=344 sl=-01 pc=FDBA select=87
+f=344 sl=-01 pc=FDC2 R7=07 select=87
+f=344 sl=-01 pc=FDA9 select=86
+f=344 sl=-01 pc=FDB1 R6=20 select=86
+f=344 sl=-01 pc=FDBA select=87
+f=344 sl=-01 pc=FDC2 R7=21 select=87
+f=344 sl=-01 pc=FDA9 select=86
+f=344 sl=-01 pc=FDB1 R6=08 select=86
+f=344 sl=-01 pc=FDBA select=87
+f=344 sl=-01 pc=FDC2 R7=09 select=87
+f=344 sl=-01 pc=FDA9 select=86
+f=344 sl=-01 pc=FDB1 R6=08 select=86
+f=344 sl=-01 pc=FDBA select=87
+f=344 sl=-01 pc=FDC2 R7=09 select=87
+f=344 sl=-01 pc=FDA9 select=86
+f=344 sl=-01 pc=FDB1 R6=08 select=86
+f=344 sl=-01 pc=FDBA select=87
+f=344 sl=-01 pc=FDC2 R7=09 select=87
+f=344 sl=-01 pc=FDA9 select=86
+f=344 sl=-01 pc=FDB1 R6=08 select=86
+f=344 sl=-01 pc=FDBA select=87
+f=344 sl=-01 pc=FDC2 R7=09 select=87
+f=344 sl=-01 pc=FDA9 select=86
+f=344 sl=-01 pc=FDB1 R6=08 select=86
+f=344 sl=-01 pc=FDBA select=87
+f=344 sl=-01 pc=FDC2 R7=09 select=87
+f=344 sl=-01 pc=FDA9 select=86
+f=344 sl=-01 pc=FDB1 R6=08 select=86
+f=344 sl=-01 pc=FDBA select=87
+f=344 sl=-01 pc=FDC2 R7=09 select=87
+f=344 sl=-01 pc=FDA9 select=86
+f=344 sl=-01 pc=FDB1 R6=08 select=86
+f=344 sl=-01 pc=FDBA select=87
+f=344 sl=-01 pc=FDC2 R7=09 select=87
+f=344 sl=-01 pc=FDA9 select=86
+f=344 sl=-01 pc=FDB1 R6=08 select=86
+f=344 sl=-01 pc=FDBA select=87
+f=344 sl=-01 pc=FDC2 R7=09 select=87
+f=344 sl=-01 pc=FDA9 select=86
+f=344 sl=-01 pc=FDB1 R6=08 select=86
+f=344 sl=-01 pc=FDBA select=87
+f=344 sl=-01 pc=FDC2 R7=09 select=87
+f=344 sl=-01 pc=FC3F select=86
+f=344 sl=-01 pc=FC48 R6=06 select=86
+f=344 sl=-01 pc=FC4F select=87
+f=344 sl=-01 pc=FC58 R7=07 select=87
+f=344 sl=-01 pc=FDA9 select=86
+f=344 sl=-01 pc=FDB1 R6=18 select=86
+f=344 sl=-01 pc=FDBA select=87
+f=344 sl=-01 pc=FDC2 R7=19 select=87
+f=344 sl=-01 pc=FDA9 select=86
+f=344 sl=-01 pc=FDB1 R6=28 select=86
+f=344 sl=-01 pc=FDBA select=87
+f=344 sl=-01 pc=FDC2 R7=29 select=87
+f=344 sl=-01 pc=FDA9 select=86
+f=344 sl=-01 pc=FDB1 R6=28 select=86
+f=344 sl=-01 pc=FDBA select=87
+f=344 sl=-01 pc=FDC2 R7=29 select=87
+f=344 sl=-01 pc=F9B3 select=80
+f=344 sl=-01 pc=F9B9 R0=FC select=80
+f=344 sl=-01 pc=F9BE select=81
+f=344 sl=-01 pc=F9C4 R1=12 select=81
+f=344 sl=-01 pc=F9C9 select=82
+f=344 sl=-01 pc=F9CF R2=B7 select=82
+f=344 sl=-01 pc=F9D4 select=83
+f=344 sl=-01 pc=F9DA R3=01 select=83
+f=344 sl=-01 pc=F9DF select=84
+f=344 sl=-01 pc=F9E5 R4=02 select=84
+f=344 sl=-01 pc=F9EA select=85
+f=344 sl=-01 pc=F9F0 R5=12 select=85
+f=344 sl=-01 pc=F8DB select=87
+f=344 sl=-01 pc=FDA9 select=86
+f=344 sl=-01 pc=FDB1 R6=08 select=86
+f=344 sl=-01 pc=FDBA select=87
+f=344 sl=-01 pc=FDC2 R7=09 select=87
+f=344 sl=-01 pc=F9B3 select=80
+f=344 sl=-01 pc=F9B9 R0=FC select=80
+f=344 sl=-01 pc=F9BE select=81
+f=344 sl=-01 pc=F9C4 R1=12 select=81
+f=344 sl=-01 pc=F9C9 select=82
+f=344 sl=-01 pc=F9CF R2=00 select=82
+f=344 sl=-01 pc=F9D4 select=83
+f=344 sl=-01 pc=F9DA R3=01 select=83
+f=344 sl=-01 pc=F9DF select=84
+f=344 sl=-01 pc=F9E5 R4=02 select=84
+f=344 sl=-01 pc=F9EA select=85
+f=344 sl=-01 pc=F9F0 R5=12 select=85
+f=344 sl=-01 pc=F8DB select=87
+f=344 sl=-01 pc=FDA9 select=86
+f=344 sl=-01 pc=FDB1 R6=08 select=86
+f=344 sl=-01 pc=FDBA select=87
+f=344 sl=-01 pc=FDC2 R7=09 select=87
+f=344 sl=-01 pc=FDA9 select=86
+f=344 sl=-01 pc=FDB1 R6=08 select=86
+f=344 sl=-01 pc=FDBA select=87
+f=344 sl=-01 pc=FDC2 R7=09 select=87

@@ -17,6 +17,7 @@ from PySide6.QtWidgets import (
     QMessageBox,
     QPushButton,
     QScrollArea,
+    QSizePolicy,
     QSpinBox,
     QSplitter,
     QToolButton,
@@ -53,6 +54,7 @@ def collapsible_details(title: str, content: QWidget) -> QWidget:
     host = QWidget()
     layout = QVBoxLayout(host)
     layout.setContentsMargins(0, 0, 0, 0)
+    layout.setSpacing(3)
     toggle = QToolButton()
     toggle.setText(title)
     toggle.setCheckable(True)
@@ -74,6 +76,8 @@ def _prepare_readable_page(page) -> QVBoxLayout:
     detail = splitter.widget(1)
     detail_layout = detail.layout()
     assert isinstance(detail_layout, QVBoxLayout)
+    detail_layout.setContentsMargins(5, 5, 5, 5)
+    detail_layout.setSpacing(4)
     detail.setMinimumWidth(0)
     page.record_meta.setWordWrap(True)
     advanced = QWidget()
@@ -92,9 +96,9 @@ def _prepare_readable_page(page) -> QVBoxLayout:
                 advanced_layout.addWidget(label)
         advanced_layout.addWidget(field)
     detail_layout.insertWidget(2, collapsible_details("技术详情：指针、共享记录与原始字节", advanced))
-    page.records.setMinimumWidth(180)
-    page.records.setMaximumWidth(400)
-    splitter.setSizes([280, 770])
+    page.records.setMinimumWidth(170)
+    page.records.setMaximumWidth(330)
+    splitter.setSizes([245, 975])
     splitter.setChildrenCollapsible(False)
     scroll = QScrollArea()
     scroll.setWidgetResizable(True)
@@ -119,19 +123,29 @@ class ReadableCharacterPage(CharacterPage):
         )
         self.capability_status.setObjectName("hintText")
         self.capability_status.setWordWrap(True)
-        detail.insertWidget(1, self.capability_status)
+        capability_details = collapsible_details(
+            "功能范围与安全说明", self.capability_status
+        )
+        detail.insertWidget(1, capability_details)
         for label in self.findChildren(QLabel):
             if label.text().startswith("当前人物属性表、头像索引"):
                 label.hide()
         self.original_name.setWordWrap(True)
         identities = [item for item in self.findChildren(QGroupBox) if item.title() in ("名称与战斗名称", "人物战斗音乐")]
+        identity_row = None
         if len(identities) == 2:
             identity_row = QWidget()
             row = QHBoxLayout(identity_row)
             row.setContentsMargins(0, 0, 0, 0)
+            row.setSpacing(5)
             position = detail.indexOf(identities[0])
             for group in identities:
                 detail.removeWidget(group)
+                for editor in group.findChildren(QComboBox):
+                    editor.setMinimumWidth(0)
+                    editor.setSizePolicy(
+                        QSizePolicy.Policy.Ignored, QSizePolicy.Policy.Fixed
+                    )
                 row.addWidget(group, 1)
             detail.insertWidget(position, identity_row)
         self.character_details = CharacterDetailsWidget()
@@ -139,9 +153,36 @@ class ReadableCharacterPage(CharacterPage):
         self.character_details.portrait_export_requested.connect(
             self.export_selected_record
         )
-        detail.insertWidget(detail.count() - 2, self.character_details)
         self.character_dialogue.changed.connect(self._update_pending_state)
-        detail.insertWidget(detail.count() - 2, self.character_dialogue)
+        if identity_row is not None:
+            position = detail.indexOf(identity_row)
+            detail.removeWidget(identity_row)
+        else:
+            position = max(0, detail.count() - 2)
+
+        portrait = self.character_details.portrait_group
+        self.character_details.layout().removeWidget(portrait)
+        detail.insertWidget(position, portrait)
+
+        workspace = QWidget()
+        workspace.setObjectName("characterWorkspace")
+        workspace_layout = QHBoxLayout(workspace)
+        workspace_layout.setContentsMargins(0, 0, 0, 0)
+        workspace_layout.setSpacing(5)
+        left = QWidget()
+        left_layout = QVBoxLayout(left)
+        left_layout.setContentsMargins(0, 0, 0, 0)
+        left_layout.setSpacing(4)
+        if identity_row is not None:
+            left_layout.addWidget(identity_row)
+        left_layout.addWidget(self.character_details)
+        left_layout.addWidget(collapsible_details(
+            "字段说明与原始字节", self.character_details.info_panel
+        ))
+        left_layout.addStretch()
+        workspace_layout.addWidget(left, 5)
+        workspace_layout.addWidget(self.character_dialogue, 4)
+        detail.insertWidget(position + 1, workspace)
 
     def record_text(self, record_id: int) -> str:
         assert self.project is not None
@@ -375,12 +416,20 @@ class ReadableWeaponPage(WeaponPage):
         )
         self.capability_status.setObjectName("hintText")
         self.capability_status.setWordWrap(True)
-        detail.insertWidget(1, self.capability_status)
         self.rom_summary = QLabel("请选择武器以读取完整原始记录。")
         self.rom_summary.setObjectName("hintText")
         self.rom_summary.setWordWrap(True)
         self.rom_summary.setTextInteractionFlags(Qt.TextInteractionFlag.TextSelectableByMouse)
-        detail.insertWidget(2, self.rom_summary)
+        technical_summary = QWidget()
+        technical_summary_layout = QVBoxLayout(technical_summary)
+        technical_summary_layout.setContentsMargins(0, 0, 0, 0)
+        technical_summary_layout.setSpacing(3)
+        technical_summary_layout.addWidget(self.capability_status)
+        technical_summary_layout.addWidget(self.rom_summary)
+        detail.insertWidget(
+            1,
+            collapsible_details("功能范围与 ROM 原始记录", technical_summary),
+        )
         attributes = next(group for group in self.findChildren(QGroupBox) if group.title() == "战斗参数")
         grid = attributes.layout()
         if isinstance(grid, QGridLayout):
@@ -411,8 +460,20 @@ class ReadableWeaponPage(WeaponPage):
         self.extra_status = QLabel()
         self.extra_status.setWordWrap(True)
         form.addRow(self.extra_status)
-        detail.insertWidget(detail.count() - 2, extras)
+        self.extra_status.hide()
+        self.extras_group = extras
+        extras.setToolTip("距离补正引用其他修改1的命中表；武器特技名称与旧修改器一致。")
+        parameter_row = QWidget()
+        parameter_layout = QHBoxLayout(parameter_row)
+        parameter_layout.setContentsMargins(0, 0, 0, 0)
+        parameter_layout.setSpacing(5)
+        position = detail.indexOf(attributes)
+        detail.removeWidget(attributes)
+        parameter_layout.addWidget(attributes, 2)
+        parameter_layout.addWidget(extras, 1)
+        detail.insertWidget(position, parameter_row)
         self.weapon_animation = WeaponAnimationWidget()
+        self.weapon_animation.setMaximumHeight(350)
         self.weapon_animation.changed.connect(self._update_pending_state)
         animation_tools = QHBoxLayout()
         self.animation_code_button = QPushButton("代码编辑")
@@ -548,6 +609,8 @@ class ReadableWeaponPage(WeaponPage):
                 self.distance_correction.setValue(distance)
                 self._extras_enabled = True
                 self.extra_status.setText("距离补正引用“其他修改1”的第 0—3 号命中表；特技名称与旧修改器一致。")
+                self.extra_status.hide()
+                self.extras_group.setToolTip(self.extra_status.text())
                 raw = self.project.weapon_record_bytes(record_id)
                 name_raw = self.project.weapon_name_record_bytes(record_id)
                 self.rom_summary.setText(
@@ -562,6 +625,7 @@ class ReadableWeaponPage(WeaponPage):
             self.weapon_animation.set_record(self.project, record_id)
         except ValueError as error:
             self.extra_status.setText(str(error))
+            self.extra_status.show()
             self.rom_summary.setText(f"原始记录读取失败：{error}")
             self.weapon_animation.setEnabled(False)
         finally:

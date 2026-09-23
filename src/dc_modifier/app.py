@@ -163,7 +163,7 @@ QTabBar::tab {
     background: #f7fbfe;
     border: 1px solid #8ebfd7;
     border-bottom: none;
-    padding: 6px 13px;
+    padding: 4px 10px;
     margin-right: 1px;
 }
 QTabBar::tab:selected {
@@ -172,7 +172,7 @@ QTabBar::tab:selected {
 }
 QLabel#pageTitle, QLabel#pageSubtitle { max-height: 0px; min-height: 0px; }
 QLabel#hintText { color: #53636e; }
-QLabel#sectionTitle { color: #173b50; font-size: 16px; font-weight: 600; }
+QLabel#sectionTitle { color: #173b50; font-size: 15px; font-weight: 600; }
 QLabel#romBadge, QLabel#countBadge {
     background: #e4f5fd;
     border: 1px solid #70bfdf;
@@ -182,7 +182,7 @@ QLabel#pendingBanner, QLabel#editState {
     background: #eef8f0;
     border: 1px solid #97caa2;
     color: #28643a;
-    padding: 5px 8px;
+    padding: 3px 6px;
 }
 QLabel#editState[pending="true"] {
     background: #fff8e5;
@@ -195,8 +195,8 @@ QFrame#metricCard, QGroupBox {
     border-radius: 2px;
 }
 QGroupBox {
-    margin-top: 10px;
-    padding: 11px 7px 7px 7px;
+    margin-top: 7px;
+    padding: 7px 5px 5px 5px;
     font-weight: 600;
 }
 QGroupBox::title {
@@ -217,7 +217,7 @@ QPushButton, QToolButton {
         stop:0 #ffffff, stop:0.5 #d8f3ff, stop:1 #74ccef);
     border: 1px solid #478fac;
     border-radius: 2px;
-    padding: 5px 11px;
+    padding: 3px 8px;
 }
 QPushButton:hover, QToolButton:hover { background: #c5efff; }
 QPushButton:pressed, QToolButton:pressed { background: #8fd7f4; }
@@ -233,7 +233,7 @@ QLineEdit, QSpinBox, QDoubleSpinBox, QComboBox, QPlainTextEdit, QTableWidget, QL
     background: white;
     border: 1px solid #77b8d4;
     border-radius: 0;
-    padding: 3px;
+    padding: 2px;
     selection-background-color: #1686c4;
 }
 QLineEdit:focus, QSpinBox:focus, QDoubleSpinBox:focus, QComboBox:focus, QPlainTextEdit:focus,
@@ -243,7 +243,7 @@ QHeaderView::section {
     border: none;
     border-right: 1px solid #bed5df;
     border-bottom: 1px solid #a9c6d4;
-    padding: 5px;
+    padding: 3px;
     font-weight: 600;
 }
 """

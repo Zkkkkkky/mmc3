@@ -1,0 +1,17 @@
+f=235 address=074F value=C2 pc=EDCB a=C2 x=0F y=04 ptr=9522 data=F9 0F 00 D0 C2 69 0C 11 0E F9
+f=235 address=074E value=C2 pc=EDCB a=C2 x=0E y=04 ptr=952B data=F9 0E 00 D0 C2 69 0C 11 0F 38
+f=291 address=074F value=C2 pc=EDCB a=C2 x=0F y=04 ptr=953C data=F9 0F 80 80 C2 69 10 02 02 04
+f=295 address=074E value=C2 pc=EDCB a=C2 x=0E y=04 ptr=9546 data=F9 0E 80 80 C2 69 10 02 02 04
+f=299 address=074D value=C2 pc=EDCB a=C2 x=0D y=04 ptr=9550 data=F9 0D 80 80 C2 69 10 02 02 04
+f=303 address=074F value=C2 pc=EDCB a=C2 x=0F y=04 ptr=953C data=F9 0F 80 80 C2 69 10 02 02 04
+f=307 address=074E value=C2 pc=EDCB a=C2 x=0E y=04 ptr=9546 data=F9 0E 80 80 C2 69 10 02 02 04
+f=311 address=074D value=C2 pc=EDCB a=C2 x=0D y=04 ptr=9550 data=F9 0D 80 80 C2 69 10 02 02 04
+f=315 address=074F value=C2 pc=EDCB a=C2 x=0F y=04 ptr=953C data=F9 0F 80 80 C2 69 10 02 02 04
+f=319 address=074E value=C2 pc=EDCB a=C2 x=0E y=04 ptr=9546 data=F9 0E 80 80 C2 69 10 02 02 04
+f=323 address=074D value=C2 pc=EDCB a=C2 x=0D y=04 ptr=9550 data=F9 0D 80 80 C2 69 10 02 02 04
+f=327 address=074F value=C2 pc=EDCB a=C2 x=0F y=04 ptr=953C data=F9 0F 80 80 C2 69 10 02 02 04
+f=331 address=074E value=C2 pc=EDCB a=C2 x=0E y=04 ptr=9546 data=F9 0E 80 80 C2 69 10 02 02 04
+f=335 address=074D value=C2 pc=EDCB a=C2 x=0D y=04 ptr=9550 data=F9 0D 80 80 C2 69 10 02 02 04
+f=365 address=074F value=00 pc=EA13 a=00 x=0F y=1D ptr=955F data=0C 40 F3 02 F4 F8 0C 40 F3 02
+f=369 address=074E value=00 pc=EA13 a=00 x=0E y=1D ptr=955F data=0C 40 F3 02 F4 F8 0C 40 F3 02
+f=373 address=074D value=00 pc=EA13 a=00 x=0D y=1D ptr=955F data=0C 40 F3 02 F4 F8 0C 40 F3 02

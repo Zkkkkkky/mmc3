@@ -1,4 +1,4 @@
-local state=savestate.create(0)
+local state=savestate.create()
 emu.speedmode("maximum")
 for frame = 1, 7000 do
   if frame == 100 or frame == 105 then joypad.set(1, {start=true}) end
@@ -14,4 +14,5 @@ for frame = 1, 7000 do
   emu.frameadvance()
 end
 savestate.save(state)
+savestate.persist(state)
 emu.exit()

@@ -14,8 +14,11 @@ from PySide6.QtGui import QColor, QImage
 from PySide6.QtWidgets import (
     QApplication,
     QDialogButtonBox,
+    QGroupBox,
     QListWidgetItem,
     QMessageBox,
+    QScrollArea,
+    QWidget,
 )
 import shiboken6
 
@@ -446,6 +449,54 @@ class DatabaseFeedbackTests(QtTestCase):
         self.assertEqual(page.detail_scroll.horizontalScrollBar().maximum(), 0)
         self.assertEqual(page.detail_scroll.verticalScrollBar().maximum(), 0)
         self.assertEqual(page.weapons_group.geometry().top(), page.basic_group.geometry().top())
+
+    def test_character_page_uses_reference_compact_first_screen_layout(self) -> None:
+        self.dialog.resize(1220, 787)
+        self.dialog.tabs.setCurrentIndex(1)
+        self.dialog.character_page.select_record_id(4)
+        self.app.processEvents()
+
+        page = self.dialog.character_page
+        scroll = page.findChild(QScrollArea)
+        workspace = page.findChild(QWidget, "characterWorkspace")
+        self.assertIsNotNone(scroll)
+        self.assertIsNotNone(workspace)
+        self.assertTrue(page.character_details.portrait_group.isVisible())
+        self.assertLess(
+            page.character_details.portrait_group.geometry().top(),
+            workspace.geometry().top(),
+        )
+        self.assertGreater(
+            page.character_dialogue.geometry().left(),
+            page.character_details.geometry().right(),
+        )
+        self.assertEqual(scroll.horizontalScrollBar().maximum(), 0)
+        self.assertEqual(scroll.verticalScrollBar().maximum(), 0)
+        direct_tops = [
+            segment.geometry().top()
+            for segment, _dialogue in page.character_dialogue.direct_controls
+        ]
+        self.assertEqual(direct_tops, sorted(direct_tops))
+        self.assertEqual(len(set(direct_tops)), len(direct_tops))
+
+    def test_weapon_page_keeps_core_fields_and_animation_on_first_screen(self) -> None:
+        self.dialog.resize(1220, 787)
+        self.dialog.tabs.setCurrentIndex(2)
+        self.dialog.weapon_page.select_record_id(1)
+        self.app.processEvents()
+
+        page = self.dialog.weapon_page
+        scroll = page.findChild(QScrollArea)
+        self.assertIsNotNone(scroll)
+        self.assertEqual(scroll.horizontalScrollBar().maximum(), 0)
+        self.assertEqual(scroll.verticalScrollBar().maximum(), 0)
+        self.assertFalse(page.capability_status.isVisible())
+        self.assertFalse(page.rom_summary.isVisible())
+        parameters = next(
+            group for group in page.findChildren(QGroupBox)
+            if group.title() == "战斗参数"
+        )
+        self.assertEqual(parameters.geometry().top(), page.extras_group.geometry().top())
 
     def test_weapon_usage_jump_keeps_target_when_commit_rebuilds_usage_items(self) -> None:
         self.dialog._select_weapon(1)

@@ -1,7 +1,7 @@
 local out = [[D:\GIT\mmc3\output\verification\v42-purple-]]
 emu.speedmode("maximum")
 for frame = 1, 7500 do
-  if frame == 100 or frame == 105 then joypad.set(1, {start=true}) end
+  if frame >= 100 and frame <= 400 and frame % 20 < 10 then joypad.set(1, {start=true}) end
   if frame >= 180 and frame <= 900 and frame % 8 == 0 then joypad.set(1, {A=true}) end
   if frame == 1100 or frame == 1110 or frame == 1120 then joypad.set(1, {down=true}) end
   if frame == 1130 then joypad.set(1, {left=true}) end
