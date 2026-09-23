@@ -617,7 +617,7 @@ class DesktopEditorSmokeTests(QtTestCase):
 
         self.assertEqual(
             [action.text() for action in self.window.menuBar().actions() if action.isVisible()],
-            ["文件(&F)", "数据(&A)", "扩展功能", "工程", "帮助(&H)"],
+            ["文件(&F)", "数据(&A)", "帮助(&H)", "扩展功能", "工程"],
         )
 
         data_actions = [
@@ -749,7 +749,7 @@ class DesktopEditorSmokeTests(QtTestCase):
         self.application.processEvents()
         self.assertEqual(
             [action.text() for action in self.window.menuBar().actions() if action.isVisible()],
-            ["文件(&F)", "数据(&A)", "扩展功能", "工程", "帮助(&H)"],
+            ["文件(&F)", "数据(&A)", "帮助(&H)", "扩展功能", "工程"],
         )
         self.assertEqual(self.window.findChildren(QToolBar), [])
         for page in self.window.pages:

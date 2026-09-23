@@ -136,6 +136,19 @@ def main() -> int:
     window.resize(1180, 760)
     window.show_page("maps")
     save_capture(application, window, "01-map-editor.png")
+    window.map_page.editor_tabs.setCurrentIndex(1)
+    # The product defaults the large icon bank to collapsed on smaller
+    # screens.  Expand it for the visual golden so the three reference
+    # address rows and their rendered icon sheets can be compared directly.
+    window.map_page.icon_preview_toggle.setChecked(True)
+    window.map_page.deployment_list_toggle.setChecked(False)
+    process_layout(application)
+    save_capture(application, window, "01b-initial-config.png")
+    window.map_page.editor_tabs.setCurrentIndex(2)
+    process_layout(application)
+    save_capture(application, window, "01c-shop-event.png")
+    window.map_page.editor_tabs.setCurrentIndex(0)
+    process_layout(application)
     assert window.project is not None
     if m01_m02_only:
         window._saved_snapshot = None

@@ -564,6 +564,13 @@ class MainWindow(QMainWindow):
         self._legacy_separator(self.data_menu, 20022)
         self.data_menu.addAction(self.other_settings_action)
 
+        # Preserve the reference editor's three primary menus as one
+        # uninterrupted group.  Product-only capabilities stay available,
+        # but follow the legacy File / Data / Help route instead of pushing
+        # Help away from its reference position.
+        help_menu = self.menuBar().addMenu("帮助(&H)")
+        help_menu.addAction(self.about_action)
+
         self.extension_menu = self.menuBar().addMenu("扩展功能")
         self.extension_menu.addAction(self.rom_data_action)
         self.extension_menu.addSeparator()
@@ -586,9 +593,6 @@ class MainWindow(QMainWindow):
         self.project_menu.addAction(self.undo_action)
         self.project_menu.addAction(self.redo_action)
         self.project_menu.addAction(self.validate_action)
-
-        help_menu = self.menuBar().addMenu("帮助(&H)")
-        help_menu.addAction(self.about_action)
 
     def _map_coordinate_changed(self, x: int, y: int) -> None:
         self.x_status.setText(f"X坐标：{x}")

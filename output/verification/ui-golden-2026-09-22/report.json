@@ -1,0 +1,337 @@
+{
+  "schema": "dc-ui-golden-v1",
+  "comparison_basis": "legacy information architecture and visible visualization affordances",
+  "pixel_identity_required": false,
+  "pixel_identity_reason": "参考截图包含 Windows XP 窗口边框且控件渲染器不同；本门禁核对窗口结构、信息层级、可视化内容和操作入口，原始像素哈希仅用于证据追踪。",
+  "pair_count": 11,
+  "expected_pair_count": 11,
+  "missing": [],
+  "passed": true,
+  "pairs": [
+    {
+      "key": "m02-battlefield-map",
+      "module": "M02",
+      "title": "战场地图",
+      "verdict": "legacy_core_plus_extension",
+      "legacy_features": [
+        "三张主页签",
+        "左侧图块与双画笔",
+        "关卡标题和列表",
+        "右侧地图画布",
+        "X/Y 坐标"
+      ],
+      "extensions": [
+        "全景适应与缩放",
+        "对象叠加",
+        "容量规划和显式应用状态"
+      ],
+      "legacy": {
+        "path": "references/legacy_modifier/screenshots/01_战场地图.png",
+        "width": 1257,
+        "height": 998,
+        "sha256": "ACDD0C92A98C490C82730CD34E3E8AC88E298404159CD2A6B4CA823CA7E1C276"
+      },
+      "current": {
+        "path": "docs/images/dc_modifier/01-map-editor.png",
+        "width": 1180,
+        "height": 760,
+        "sha256": "7BB56AC198CBA6C6DE5145663B072A2606DF2239D95A2E51B61294402DCF5779"
+      },
+      "aspect_ratio_delta": 0.2931
+    },
+    {
+      "key": "m03-initial-config",
+      "module": "M03",
+      "title": "初始配置",
+      "verdict": "legacy_core_plus_extension",
+      "legacy_features": [
+        "主窗口第二页签",
+        "三组图标图库",
+        "关卡共享选择",
+        "右侧地图定位"
+      ],
+      "extensions": [
+        "图库按需展开",
+        "部署明细",
+        "地图对象可视化与高级编辑入口"
+      ],
+      "legacy": {
+        "path": "references/legacy_modifier/screenshots/02_初始配置.png",
+        "width": 1257,
+        "height": 998,
+        "sha256": "963E25152F7C19AA23206A07FAB7B79C9EBF5A0A0DCDEF1B0A7F756370AB4210"
+      },
+      "current": {
+        "path": "docs/images/dc_modifier/01b-initial-config.png",
+        "width": 1180,
+        "height": 760,
+        "sha256": "A7538EB0E4AFCB5A944FF827F33A6B0AE233ABAB6B654DEC0A4DCE67614E17F7"
+      },
+      "aspect_ratio_delta": 0.2931
+    },
+    {
+      "key": "m04-shop-event",
+      "module": "M04",
+      "title": "商店事件",
+      "verdict": "legacy_core_plus_extension",
+      "legacy_features": [
+        "主窗口第三页签",
+        "关卡共享选择",
+        "空记录可辨识",
+        "右侧地图定位"
+      ],
+      "extensions": [
+        "事件/商店对象列表",
+        "地图标记",
+        "批量记录入口"
+      ],
+      "legacy": {
+        "path": "references/legacy_modifier/screenshots/03_商店事件.png",
+        "width": 1257,
+        "height": 998,
+        "sha256": "20498A1C65E4772926BC1A8327194CB7ABECDAE98F6219D22891CB9DA671F483"
+      },
+      "current": {
+        "path": "docs/images/dc_modifier/01c-shop-event.png",
+        "width": 1180,
+        "height": 760,
+        "sha256": "717CCA7012E72B89FA24FE52876D104DF25F0543644B800889E862CC5CC35AE7"
+      },
+      "aspect_ratio_delta": 0.2931
+    },
+    {
+      "key": "m05-m10-database",
+      "module": "M05-M10",
+      "title": "数据库六页签",
+      "verdict": "legacy_core_plus_extension",
+      "legacy_features": [
+        "六个一级页签",
+        "左侧记录列表",
+        "图像区",
+        "属性分组",
+        "查找与确定/取消"
+      ],
+      "extensions": [
+        "真实合成预览",
+        "复制/粘贴/导入/导出",
+        "共享记录提示与事务状态"
+      ],
+      "legacy": {
+        "path": "references/legacy_modifier/screenshots/04_数据库.png",
+        "width": 1578,
+        "height": 1053,
+        "sha256": "0B4ECF6CA1816493557FDB2DF80CAEF6443764C3862B7CDAA86FA995C5F4A94C"
+      },
+      "current": {
+        "path": "docs/images/dc_modifier/02-database.png",
+        "width": 1220,
+        "height": 840,
+        "sha256": "6FF004848C5A0F550F1807F87A109D8F7AE0382F8C7BAEFC9F72C46787000074"
+      },
+      "aspect_ratio_delta": 0.0462
+    },
+    {
+      "key": "m11-font-library",
+      "module": "M11",
+      "title": "文字库",
+      "verdict": "legacy_core_plus_extension",
+      "legacy_features": [
+        "16×16 字模网格",
+        "字段选择",
+        "字形替换按钮",
+        "代码与地址",
+        "单一确定按钮"
+      ],
+      "extensions": [
+        "12×12 直接点阵编辑",
+        "网格右键导入/导出与安全分配"
+      ],
+      "legacy": {
+        "path": "references/legacy_modifier/screenshots/05_文字库.png",
+        "width": 951,
+        "height": 866,
+        "sha256": "FB77C29381524E6D6EDE2EA7B24E9898269C4453346A09B00A509A7EB2DA6D30"
+      },
+      "current": {
+        "path": "docs/images/dc_modifier/04-font-library.png",
+        "width": 1000,
+        "height": 780,
+        "sha256": "BFF2B6565F7BD0085A57E460584DC04CD078A328DB0BE6F878798C77AC13DCBD"
+      },
+      "aspect_ratio_delta": 0.1839
+    },
+    {
+      "key": "m12-map-animation",
+      "module": "M12",
+      "title": "地图动画",
+      "verdict": "legacy_core_plus_extension",
+      "legacy_features": [
+        "地图动画/规律/调用三页签",
+        "左侧记录选择",
+        "右侧指令列表",
+        "添加/名称/代码编辑",
+        "确定/取消"
+      ],
+      "extensions": [
+        "原始字节列",
+        "参数级编辑状态",
+        "已验证记录边界提示"
+      ],
+      "legacy": {
+        "path": "references/legacy_modifier/screenshots/06_地图动画.png",
+        "width": 1271,
+        "height": 981,
+        "sha256": "B4B46EB3C49956C5968290E60A5931BD7E1D3FF34CCC0A7B46B036946A263EDC"
+      },
+      "current": {
+        "path": "docs/images/dc_modifier/05-map-animation.png",
+        "width": 1160,
+        "height": 800,
+        "sha256": "30B3D2900C2010FCACD088D395ABDD574944ADBC8AADD69B1E08174A3D225444"
+      },
+      "aspect_ratio_delta": 0.1544
+    },
+    {
+      "key": "m13-text-converter",
+      "module": "M13",
+      "title": "文字转换",
+      "verdict": "legacy_core_aligned",
+      "legacy_features": [
+        "文字与代码双编辑区",
+        "居中的双向转换按钮",
+        "无 ROM 写入控件"
+      ],
+      "extensions": [],
+      "legacy": {
+        "path": "references/legacy_modifier/screenshots/07_文字转换.png",
+        "width": 1257,
+        "height": 998,
+        "sha256": "C9143F9686D819B15530C17153D69DD40ABCBEAAF7F9819D708614112BFA7142"
+      },
+      "current": {
+        "path": "docs/images/dc_modifier/06-text-converter.png",
+        "width": 473,
+        "height": 483,
+        "sha256": "5D9792591319671DD4CFED93490B6AF8198C93B8E68E2549BA7F840F98EEC8C3"
+      },
+      "aspect_ratio_delta": 0.2802
+    },
+    {
+      "key": "m14-scenario",
+      "module": "M14",
+      "title": "剧情事件",
+      "verdict": "legacy_core_plus_extension",
+      "legacy_features": [
+        "六个一级页签",
+        "章节设置与三类事件",
+        "标题预览",
+        "关卡列表",
+        "空间检查与确定/取消"
+      ],
+      "extensions": [
+        "真实 Bank/偏移状态",
+        "原始字节与结构化指令",
+        "更严格的容量报告"
+      ],
+      "legacy": {
+        "path": "references/legacy_modifier/screenshots/08_剧情事件.png",
+        "width": 1490,
+        "height": 966,
+        "sha256": "527B8154EA6B1A7949F9FC9FB79607891CB94D2335979175F4766A73BBEE7505"
+      },
+      "current": {
+        "path": "docs/images/dc_modifier/03-scenario-editor.png",
+        "width": 1180,
+        "height": 780,
+        "sha256": "3DD274D81AF8ABF338295ABD4A5F7FEF93CC4E791BE24194910F3AC377C75B45"
+      },
+      "aspect_ratio_delta": 0.0296
+    },
+    {
+      "key": "m15-attribute-calculator",
+      "module": "M15",
+      "title": "属性计算器",
+      "verdict": "legacy_core_plus_extension",
+      "legacy_features": [
+        "敌我双栏",
+        "人物/机体/武器/等级",
+        "属性计算结果区",
+        "开始计算"
+      ],
+      "extensions": [
+        "从当前 ROM 联动真实属性",
+        "公式只读说明和损坏入口门禁"
+      ],
+      "legacy": {
+        "path": "references/legacy_modifier/screenshots/09_属性计算器.png",
+        "width": 1257,
+        "height": 998,
+        "sha256": "8250D9C53D47713123A190640F9634E011270D5E1BFA7F2261727C768B376694"
+      },
+      "current": {
+        "path": "docs/images/dc_modifier/07-attribute-calculator.png",
+        "width": 1120,
+        "height": 780,
+        "sha256": "3B49CE56B08785250AC34DE1979A8D9022ECD485B69EBA7B8E98441C0D8CE391"
+      },
+      "aspect_ratio_delta": 0.1764
+    },
+    {
+      "key": "m16-save-editor",
+      "module": "M16",
+      "title": "存档修改器",
+      "verdict": "legacy_core_aligned",
+      "legacy_features": [
+        "存档槽与关卡选择",
+        "打开/读取/写入/保存四步",
+        "上下两张十一列表"
+      ],
+      "extensions": [
+        "格式、校验和与未保存状态提示"
+      ],
+      "legacy": {
+        "path": "references/legacy_modifier/screenshots/10_存档修改器.png",
+        "width": 1175,
+        "height": 834,
+        "sha256": "EAA6742E31DE6677F6035DCA9024843E6516D724C55B8707565499A71CB41CEB"
+      },
+      "current": {
+        "path": "docs/images/dc_modifier/08-save-editor.png",
+        "width": 1175,
+        "height": 834,
+        "sha256": "BC280FB6F3A1F925CC1471F50738D1DB7A1D3D5773D6EA2D2CBBCE7067348780"
+      },
+      "aspect_ratio_delta": 0.0
+    },
+    {
+      "key": "m17-other",
+      "module": "M17",
+      "title": "其他",
+      "verdict": "legacy_core_aligned",
+      "legacy_features": [
+        "双击公式",
+        "伤害公式",
+        "命中公式",
+        "十一项道具参数",
+        "六组初始机体",
+        "确定/取消"
+      ],
+      "extensions": [
+        "实时工程值和安全校验提示"
+      ],
+      "legacy": {
+        "path": "references/legacy_modifier/screenshots/11_其他.png",
+        "width": 1166,
+        "height": 870,
+        "sha256": "F1783345F6F647BBB45D29846D64D5F31CB93698483FD8082C0AEE53ABE261F8"
+      },
+      "current": {
+        "path": "docs/images/dc_modifier/09-other-settings.png",
+        "width": 1166,
+        "height": 870,
+        "sha256": "060CC4D58BB8481D595A132B5B5707453C7910044033DA678CAB70D4F8D2B4A0"
+      },
+      "aspect_ratio_delta": 0.0
+    }
+  ]
+}
