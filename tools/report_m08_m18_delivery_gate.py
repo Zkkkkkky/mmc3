@@ -250,7 +250,16 @@ def analyze() -> dict[str, object]:
         "modules": modules,
         "blocking_reasons": [
             "M12 的 6 条无安全参数、31 条动态/不完整背景、三表任意通用搬移和 8 个已逐项审计但证据冲突/不足的调用均按需求保持只读；这是完成态安全门禁，不是待猜写功能。",
-            f"当前正式构建已通过 {current_build_evidence['fullRegression']['testsRun']}/{current_build_evidence['fullRegression']['testsRun']} 全量回归和隐藏自检；Mesen 17/17 是推荐 ROM 运行时基线。Windows 控制接口本轮未暴露本机应用，因此可见点击证据仍沿用历史构建并明确标记不匹配当前 EXE。",
+            (
+                f"当前正式构建已通过 {current_build_evidence['fullRegression']['testsRun']}/{current_build_evidence['fullRegression']['testsRun']} 全量回归和隐藏自检；Mesen 17/17 是推荐 ROM 运行时基线。"
+                + (
+                    "当前 EXE 已完成 Windows 可见点击、头像三图导出和 F7 完整检查。"
+                    if current_build_evidence["nativeUiAutomation"][
+                        "currentBuildClickSmokePerformed"
+                    ]
+                    else "Windows 控制接口本轮未暴露本机应用，因此可见点击证据仍沿用历史构建并明确标记不匹配当前 EXE。"
+                )
+            ),
             "2026-09-21 用户明确确认 M03—M17 按当前实现范围通过；本报告据此记录 M08—M17 用户签收，不扩大任何模块的声明实现范围。",
         ],
     }

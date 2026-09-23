@@ -1,0 +1,12 @@
+25 hit=0 restore=0 d0=00 d1=00 da=00 db=00 pc=F873
+50 hit=0 restore=0 d0=00 d1=00 da=50 db=51 pc=D452
+75 hit=0 restore=0 d0=00 d1=00 da=50 db=51 pc=F872
+100 hit=0 restore=0 d0=00 d1=00 da=50 db=51 pc=F872
+125 hit=0 restore=0 d0=00 d1=00 da=50 db=51 pc=F875
+150 hit=0 restore=0 d0=00 d1=00 da=50 db=51 pc=F871
+175 hit=0 restore=0 d0=00 d1=00 da=50 db=51 pc=F871
+200 hit=0 restore=0 d0=00 d1=00 da=50 db=51 pc=F872
+225 hit=0 restore=0 d0=00 d1=00 da=50 db=51 pc=F875
+250 hit=0 restore=0 d0=00 d1=00 da=50 db=51 pc=D220
+275 hit=0 restore=0 d0=00 d1=00 da=50 db=51 pc=D2A8
+300 hit=0 restore=0 d0=00 d1=00 da=50 db=51 pc=D2AC

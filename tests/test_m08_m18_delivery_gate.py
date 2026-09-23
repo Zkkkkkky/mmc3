@@ -26,7 +26,7 @@ class M08M18DeliveryGateTests(unittest.TestCase):
         self.assertEqual(
             report["current_build_verification"]["self_test_exit_code"], 0
         )
-        self.assertFalse(
+        self.assertTrue(
             report["current_build_verification"][
                 "current_build_click_smoke_performed"
             ]

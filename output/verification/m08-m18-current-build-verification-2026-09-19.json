@@ -44,10 +44,10 @@
     "scope": "当前推荐 ROM 的 Mapper 194、扩展 Bank、双音频引擎、3 首扩展曲、56 个音效与旧引擎切回基线"
   },
   "nativeUiAutomation": {
-    "availableInCurrentSession": false,
-    "observed": "当前正式构建完成隐藏自检；全仓首次运行 769 项时只有交付门禁因验收清单仍登记旧 EXE 哈希失败，其余 768 项通过。更新当前构建证据与清单后，交付门禁定向复验通过。Windows 控制接口未暴露本机应用，未执行当前哈希的可见点击。",
-    "currentBuildClickSmokePerformed": false,
-    "reason": "历史原生窗口烟测继续作为旧构建证据保留，不冒充当前正式 EXE 的可见点击证据。"
+    "availableInCurrentSession": true,
+    "observed": "2026-09-23 使用 Windows Computer Use 实际启动当前正式 EXE，打开推荐 ROM，检查主地图与标题预览，通过 F1 新手向导直达数据库人物头像页；数据库仅保留一个导出入口，导出 004 琉妮的正面、背面、效果三张 32×32 BMP，颜色和合成结果正确；随后从向导进入最终检查并执行 F7，地图事件、三首扩展曲、章节脚本、倍率和 464 KiB 空间检查均显示通过/信息，错误与警告为 0。详细记录见 output/verification/current-build-visible-smoke-20260923/result.json。",
+    "currentBuildClickSmokePerformed": true,
+    "reason": "可见点击、导出落盘和完整检查均针对 SHA-256 为 7E8BE4802BF639280FF28C66E9FA1707408BB49F75C796984037A1E0D61C6556 的当前正式 EXE 执行。"
   },
   "priorPackagedUiSmoke": {
     "path": "output/verification/m08-m18-agent-ui-smoke-2026-09-19.json",

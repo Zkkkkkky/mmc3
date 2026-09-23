@@ -1,0 +1,69 @@
+{
+  "schemaVersion": 1,
+  "performedAt": "2026-09-23T21:50:03+08:00",
+  "operator": "Codex Computer Use",
+  "executable": {
+    "path": "output/app/新DC篇完整修改器.exe",
+    "sha256": "7E8BE4802BF639280FF28C66E9FA1707408BB49F75C796984037A1E0D61C6556"
+  },
+  "inputRom": {
+    "path": "output/rom/DC_kuorong_464K.nes",
+    "sha256": "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E"
+  },
+  "checks": [
+    {
+      "name": "launch_and_map_preview",
+      "passed": true,
+      "observed": "正式 EXE 启动并打开推荐 ROM；地图 001 伏击之战、标题预览和地图图块正常显示，页面状态为可保存。"
+    },
+    {
+      "name": "beginner_guide_routing",
+      "passed": true,
+      "observed": "F1 打开新手操作向导；人物与头像任务可直达数据库人物修改/头像设置与上传页面；最终检查与导出任务可达完整检查流程。"
+    },
+    {
+      "name": "portrait_preview_and_export",
+      "passed": true,
+      "record": "004 琉妮",
+      "observed": "正面、背景和合成预览颜色正常，数据库内只有一个导出当前头像入口。选择目录后生成三张 BMP。",
+      "files": [
+        {
+          "path": "output/verification/current-build-visible-smoke-20260923/portrait-export/4：琉妮/[正面].bmp",
+          "width": 32,
+          "height": 32,
+          "uniqueRgbColors": 4,
+          "sha256": "3BF9B464D74F112E0F07B6CD9F531A68B4E969F14ED98C8ACD5FE1C33821FDDE"
+        },
+        {
+          "path": "output/verification/current-build-visible-smoke-20260923/portrait-export/4：琉妮/[背面].bmp",
+          "width": 32,
+          "height": 32,
+          "uniqueRgbColors": 4,
+          "sha256": "B9EADADC4ACB5B090163BFEB2E7DD1B6CE1742DD089FC4A63B0CC02D932753D2"
+        },
+        {
+          "path": "output/verification/current-build-visible-smoke-20260923/portrait-export/4：琉妮/[效果].bmp",
+          "width": 32,
+          "height": 32,
+          "uniqueRgbColors": 7,
+          "sha256": "7C67339A04660D92694FDC0C28879E74CC7AEA4534240A495DB57722779AC110"
+        }
+      ]
+    },
+    {
+      "name": "full_check_f7",
+      "passed": true,
+      "modifiedBytes": 0,
+      "errors": 0,
+      "warnings": 0,
+      "observed": [
+        "地图事件：32 关共有 1 个事件/商店；事件托管池占用 6 / 300 字节。",
+        "音乐导入：扩展曲槽 Bank $61、$62、$63 各含 1 首有效 FamiStudio 数据。",
+        "章节事件：章节脚本含 2637 条对齐指令，其中 294 条为可视化动作。",
+        "倍率：已验证 4 条章节/劝说者/目标匹配规则。",
+        "空间：托管扩展空间 464 KiB；已分配 0 字节，剩余 475136 字节。"
+      ]
+    }
+  ],
+  "passed": true
+}

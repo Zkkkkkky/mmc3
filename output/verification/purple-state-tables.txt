@@ -1,0 +1,11 @@
+load=true nil
+0 latch=00 ctrl=FF R0=FF R1=FF R2=00 R3=00 R4=FF R5=FF
+1 latch=00 ctrl=FF R0=FF R1=FF R2=00 R3=00 R4=FF R5=FF
+2 latch=FF ctrl=FF R0=FF R1=00 R2=00 R3=FF R4=FF R5=00
+3 latch=FF ctrl=FF R0=FF R1=00 R2=00 R3=FF R4=FF R5=00
+4 latch=FF ctrl=00 R0=00 R1=00 R2=FF R3=FF R4=00 R5=00
+5 latch=FF ctrl=00 R0=00 R1=00 R2=FF R3=FF R4=00 R5=00
+6 latch=00 ctrl=00 R0=00 R1=FF R2=FF R3=00 R4=00 R5=FF
+7 latch=00 ctrl=00 R0=00 R1=FF R2=FF R3=00 R4=00 R5=FF
+8 latch=00 ctrl=FF R0=FF R1=FF R2=00 R3=00 R4=FF R5=FF
+9 latch=00 ctrl=FF R0=FF R1=FF R2=00 R3=00 R4=FF R5=FF
