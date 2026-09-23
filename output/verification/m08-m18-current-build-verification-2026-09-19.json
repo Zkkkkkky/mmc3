@@ -1,18 +1,18 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-09-23T00:00:00+08:00",
+  "generatedAt": "2026-09-23T11:08:14+08:00",
   "formalExecutable": {
     "path": "output/app/新DC篇完整修改器.exe",
-    "sha256": "48C973383E37A8E87A423F81BB5F5AABBB48A11E8C0C629ECE19B9F45272E0D5",
+    "sha256": "E6E6184BAF3A884A4B977F993DFB80A1540DE82CA392A8EC3457E5A9138A2692",
     "checksumFileMatches": true,
     "selfTestExitCode": 0
   },
   "fullRegression": {
     "command": ".\\.venv\\Scripts\\python.exe -m unittest discover -s tests -t . -p \"test_*.py\"",
-    "testsRun": 746,
+    "testsRun": 758,
     "failures": 0,
     "errors": 0,
-    "durationSeconds": 939.587,
+    "durationSeconds": 828.574,
     "passed": true
   },
   "deliveryGate": {
@@ -45,7 +45,7 @@
   },
   "nativeUiAutomation": {
     "availableInCurrentSession": false,
-    "observed": "当前正式构建完成隐藏自检和 746/746 全量回归；本轮 Windows 控制组件两次初始化均因 kernel assets 路径不存在而失败，未执行可见点击。",
+    "observed": "当前正式构建完成隐藏自检和 758/758 全量回归；本轮 Windows 控制接口未暴露本机应用，未执行可见点击。",
     "currentBuildClickSmokePerformed": false,
     "reason": "历史原生窗口烟测继续作为旧构建证据保留，不冒充当前正式 EXE 的可见点击证据。"
   },

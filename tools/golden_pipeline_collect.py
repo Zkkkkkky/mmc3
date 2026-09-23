@@ -102,6 +102,7 @@ class CaseSpec:
     read_navigation: tuple[dict[str, Any], ...]
     edit_steps: tuple[dict[str, Any], ...]
     read_selector: dict[str, Any]
+    capture_after_step: int | None
 
     @classmethod
     def from_payload(cls, payload: dict[str, Any]) -> CaseSpec:
@@ -246,6 +247,18 @@ class CaseSpec:
             for step in (*navigation, *edit_steps, *read_navigation)
         ):
             raise ValueError("$capture_after cannot be written through a $requested step")
+        capture_after_step = payload.get("capture_after_step")
+        if capture_after_step is not None:
+            if not capture_after:
+                raise ValueError("capture_after_step requires $capture_after")
+            if (
+                not isinstance(capture_after_step, int)
+                or isinstance(capture_after_step, bool)
+                or not 1 <= capture_after_step < len(edit_steps)
+            ):
+                raise ValueError(
+                    "capture_after_step must split the nonempty edit_steps sequence"
+                )
         if before is not None and type(before) is not type(requested):
             raise ValueError("expected_before and requested_value must have the same type")
         if (
@@ -271,6 +284,7 @@ class CaseSpec:
             read_navigation=read_navigation,
             edit_steps=edit_steps,
             read_selector=selector,
+            capture_after_step=capture_after_step,
         )
 
 
@@ -533,11 +547,20 @@ def collect_case(
                 raise RuntimeError(
                     f"Baseline display differs: expected {spec.expected_before!r}, got {original!r}"
                 )
-            first.perform(edit_steps, spec.requested_value)
+            if spec.capture_after_step is None:
+                first.perform(edit_steps, spec.requested_value)
+            else:
+                first.perform(
+                    edit_steps[: spec.capture_after_step], spec.requested_value
+                )
             if spec.requested_value == "$capture_after":
                 effective_requested = first.read(spec.read_selector)
                 if effective_requested == original:
                     raise RuntimeError("Captured post-action value did not change")
+            if spec.capture_after_step is not None:
+                first.perform(
+                    edit_steps[spec.capture_after_step :], effective_requested
+                )
             first.save()
         finally:
             first.stop()
@@ -609,7 +632,9 @@ def collect_case(
         "case_kind": spec.case_kind,
         "requested_value": effective_requested,
         "requested_value_mode": (
-            "captured_after_action"
+            "captured_mid_action"
+            if spec.capture_after_step is not None
+            else "captured_after_action"
             if spec.requested_value == "$capture_after"
             else "declared"
         ),

@@ -95,6 +95,24 @@ class CaptureAfterDriver(FakeDriver):
         self.rom.write_bytes(data)
 
 
+class CaptureMidActionDriver(CaptureAfterDriver):
+    first_process_batches: list[list[int]] = []
+
+    def perform(self, steps: tuple[dict[str, Any], ...], requested: int | str) -> None:
+        if self.pid == 4000:
+            self.first_process_batches.append(
+                [int(step.get("control_id", 0)) for step in steps]
+            )
+        if any(step.get("control_id") == 290 for step in steps):
+            self.edited = True
+
+    def save(self) -> None:
+        assert self.rom is not None and self.edited
+        data = bytearray(self.rom.read_bytes())
+        data[10] = 71
+        self.rom.write_bytes(data)
+
+
 class LiveCollectionTests(unittest.TestCase):
     def setUp(self) -> None:
         FakeDriver.next_pid = 4000
@@ -102,6 +120,7 @@ class LiveCollectionTests(unittest.TestCase):
         FakeDriver.stopped = []
         FakeDriver.unexpected_write = False
         FakeDriver.stale_reopen = False
+        CaptureMidActionDriver.first_process_batches = []
         self.temp = tempfile.TemporaryDirectory()
         self.repo = Path(self.temp.name)
         self.audit = self.repo / core.AUDIT_DIR_RELATIVE
@@ -172,6 +191,70 @@ class LiveCollectionTests(unittest.TestCase):
         self.assertEqual(report["requested_value_mode"], "captured_after_action")
         self.assertTrue(report["reopen_matches_request"])
         self.assertFalse(report["passed"])
+
+    def test_discovery_can_capture_before_modal_is_closed(self) -> None:
+        payload = case_payload()
+        payload.update(
+            {
+                "case_kind": "discovery",
+                "requested_value": "$capture_after",
+                "expected_before": "before-hash",
+                "expected_offsets": [],
+                "required_offsets": [],
+                "edit_steps": [
+                    {"op": "click_id", "control_id": 290},
+                    {"op": "click_id", "control_id": 340},
+                    {"op": "click_id", "control_id": 590},
+                ],
+                "capture_after_step": 1,
+                "read_selector": {
+                    "class": "Edit",
+                    "control_id": 270,
+                    "value_type": "str",
+                },
+            }
+        )
+        _, report = collector.collect_case(
+            self.repo,
+            collector.CaseSpec.from_payload(payload),
+            self.baseline,
+            self.exe,
+            CaptureMidActionDriver,
+        )
+        self.assertEqual(report["requested_value"], "after-hash")
+        self.assertEqual(report["requested_value_mode"], "captured_mid_action")
+        self.assertEqual(
+            CaptureMidActionDriver.first_process_batches,
+            [[0], [290], [340, 590]],
+        )
+
+    def test_capture_after_step_is_restricted_to_capture_discovery(self) -> None:
+        payload = case_payload()
+        payload["capture_after_step"] = 1
+        with self.assertRaisesRegex(ValueError, "requires \\$capture_after"):
+            collector.CaseSpec.from_payload(payload)
+
+        payload.update(
+            {
+                "case_kind": "discovery",
+                "requested_value": "$capture_after",
+                "expected_before": "before-hash",
+                "expected_offsets": [],
+                "required_offsets": [],
+                "capture_after_step": 0,
+                "edit_steps": [
+                    {"op": "click_id", "control_id": 290},
+                    {"op": "click_id", "control_id": 340},
+                ],
+                "read_selector": {
+                    "class": "Edit",
+                    "control_id": 270,
+                    "value_type": "str",
+                },
+            }
+        )
+        with self.assertRaisesRegex(ValueError, "must split"):
+            collector.CaseSpec.from_payload(payload)
 
     def test_unexpected_offset_cannot_pass(self) -> None:
         FakeDriver.unexpected_write = True

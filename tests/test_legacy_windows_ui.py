@@ -392,6 +392,8 @@ class LegacyWindowTests(QtTestCase):
         self.assertTrue(page.export_record_button.isVisible())
         self.assertTrue(page.import_record_button.isVisible())
         self.assertFalse(page.add_button.isEnabled())
+        self.assertIn("$01—$FF", page.add_button.toolTip())
+        self.assertIn("第 256 个 ID", page.add_button.toolTip())
         icon = page.icon_preview.pixmap()
         self.assertIsNotNone(icon)
         assert icon is not None

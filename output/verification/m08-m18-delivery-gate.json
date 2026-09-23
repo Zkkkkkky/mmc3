@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-23T08:10:47+08:00",
+  "generated_at": "2026-09-23T11:09:58+08:00",
   "machine_gate_passed": true,
   "implementation_complete": true,
   "user_acceptance_complete": true,
@@ -7,17 +7,17 @@
   "conclusion": "M08—M18 共 11 个模块的机器门禁与当前声明实现范围均通过；M12 已用参考动态黄金把组图首图块开放、X/Y 非持久化锁为只读，其余无安全协议或双证据范围继续门禁。M08—M17 已由用户明确按当前实现范围签收，M18 已由用户现场确认通过；既有只读、延期和参考不可达边界继续保留。",
   "formal_executable": {
     "path": "output/app/新DC篇完整修改器.exe",
-    "sha256": "48C973383E37A8E87A423F81BB5F5AABBB48A11E8C0C629ECE19B9F45272E0D5",
-    "declared_sha256": "48C973383E37A8E87A423F81BB5F5AABBB48A11E8C0C629ECE19B9F45272E0D5",
+    "sha256": "E6E6184BAF3A884A4B977F993DFB80A1540DE82CA392A8EC3457E5A9138A2692",
+    "declared_sha256": "E6E6184BAF3A884A4B977F993DFB80A1540DE82CA392A8EC3457E5A9138A2692",
     "hash_matches": true
   },
   "current_build_verification": {
     "path": "output/verification/m08-m18-current-build-verification-2026-09-19.json",
-    "sha256": "EF772FF5CD29A35520174784C1EAB03BF767794802FC26782185835FAE75CD10",
+    "sha256": "260D20DD476FA0A0ADE581E8B3B5998BF8C9CAFE379624B4BCC50AF60B11382E",
     "full_regression_passed": true,
-    "full_regression_tests": 746,
+    "full_regression_tests": 758,
     "self_test_exit_code": 0,
-    "executable_sha256": "48C973383E37A8E87A423F81BB5F5AABBB48A11E8C0C629ECE19B9F45272E0D5",
+    "executable_sha256": "E6E6184BAF3A884A4B977F993DFB80A1540DE82CA392A8EC3457E5A9138A2692",
     "matches_current_executable": true,
     "current_build_click_smoke_performed": false,
     "mesen_runtime_passed": true,
@@ -167,7 +167,7 @@
   },
   "blocking_reasons": [
     "M12 的 6 条无安全参数、31 条动态/不完整背景、三表任意通用搬移和 8 个已逐项审计但证据冲突/不足的调用均按需求保持只读；这是完成态安全门禁，不是待猜写功能。",
-    "当前正式构建已通过 746/746 全量回归和隐藏自检；Mesen 17/17 是推荐 ROM 运行时基线。Windows 控制组件本轮初始化失败，因此可见点击证据仍沿用历史构建并明确标记不匹配当前 EXE。",
+    "当前正式构建已通过 758/758 全量回归和隐藏自检；Mesen 17/17 是推荐 ROM 运行时基线。Windows 控制接口本轮未暴露本机应用，因此可见点击证据仍沿用历史构建并明确标记不匹配当前 EXE。",
     "2026-09-21 用户明确确认 M03—M17 按当前实现范围通过；本报告据此记录 M08—M17 用户签收，不扩大任何模块的声明实现范围。"
   ]
 }

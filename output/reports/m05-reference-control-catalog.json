@@ -2,7 +2,7 @@
   "schema_version": 1,
   "module": "M05",
   "passed": true,
-  "status": "five_surfaces_cataloged_33_save_fields_passed_11_actions_guarded",
+  "status": "five_surfaces_cataloged_33_save_fields_passed_10_actions_guarded_1_capacity_boundary",
   "sources": {
     "main": {
       "path": "output/verification/legacy-ui-probe-m05-icon-double-click-20260920l/controls/M05_数据库_机体修改.json",
@@ -43,8 +43,10 @@
     },
     "golden_save_fields": 33,
     "classified_non_rom_fields": 5,
-    "guarded_pending_actions": 11,
-    "prepared_discovery_recipes": 16
+    "guarded_pending_actions": 10,
+    "classified_capacity_boundaries": 1,
+    "prepared_discovery_recipes": 25,
+    "guarded_actions_with_discovery": 10
   },
   "checks": {
     "source_files_present": true,
@@ -58,6 +60,8 @@
     "all_golden_fields_passed": true,
     "non_rom_fields_classified": true,
     "pending_actions_guarded": true,
+    "capacity_boundaries_classified": true,
+    "every_pending_action_has_guarded_discovery": true,
     "action_discovery_recipes_ready": true,
     "action_discovery_recipes_not_promoted": true
   },
@@ -130,62 +134,140 @@
   ],
   "guarded_pending_actions": [
     {
-      "control_id": 130,
-      "action": "add_unit",
-      "reason": "pointer relocation save protocol pending"
-    },
-    {
       "control_id": 160,
       "action": "upload_body",
-      "reason": "file and cross-bank save protocol pending"
+      "reason": "file and cross-bank save protocol pending",
+      "prepared_recipe_keys": [
+        "body_upload_bmp"
+      ]
     },
     {
       "control_id": 1310,
       "action": "upload_fragment",
-      "reason": "file and cross-bank save protocol pending"
+      "reason": "file and cross-bank save protocol pending",
+      "prepared_recipe_keys": [
+        "fragment_upload_bmp"
+      ]
     },
     {
       "control_id": 180,
       "action": "compressed_upload_body",
-      "reason": "compression save protocol pending"
+      "reason": "compression save protocol pending",
+      "prepared_recipe_keys": [
+        "body_compressed_upload_bmp"
+      ]
     },
     {
       "control_id": 1290,
       "action": "compressed_upload_fragment",
-      "reason": "compression save protocol pending"
+      "reason": "compression save protocol pending",
+      "prepared_recipe_keys": [
+        "fragment_compressed_upload_bmp"
+      ]
     },
     {
       "control_id": 190,
       "action": "body_puzzle",
-      "reason": "puzzle editor gesture-level save evidence pending"
+      "reason": "puzzle editor gesture-level save evidence pending",
+      "prepared_recipe_keys": [
+        "body_puzzle_clear",
+        "body_puzzle_move_up",
+        "body_puzzle_move_down",
+        "body_puzzle_move_left",
+        "body_puzzle_move_right",
+        "body_puzzle_template_8x8",
+        "body_puzzle_template_7x9",
+        "body_puzzle_template_9x7",
+        "body_puzzle_template_10x6",
+        "body_puzzle_swap_banks"
+      ]
     },
     {
       "control_id": 220,
       "action": "fragment_puzzle",
-      "reason": "puzzle editor gesture-level save evidence pending"
+      "reason": "puzzle editor gesture-level save evidence pending",
+      "prepared_recipe_keys": [
+        "fragment_puzzle_clear",
+        "fragment_puzzle_move_up",
+        "fragment_puzzle_move_down",
+        "fragment_puzzle_move_left",
+        "fragment_puzzle_move_right",
+        "fragment_puzzle_flip_horizontal",
+        "fragment_puzzle_flip_vertical"
+      ]
     },
     {
       "control_id": 1350,
       "action": "icon_binding",
-      "reason": "canvas commit gesture pending"
+      "reason": "canvas commit gesture pending",
+      "prepared_recipe_keys": [
+        "icon_binding_double_click"
+      ]
     },
     {
       "control_id": 2510,
       "action": "upload_icon",
-      "reason": "file upload save protocol pending"
+      "reason": "file upload save protocol pending",
+      "prepared_recipe_keys": [
+        "icon_upload_bmp"
+      ]
     },
     {
       "control_id": 2670,
       "action": "clear_body",
-      "reason": "destructive save layout pending"
+      "reason": "destructive save layout pending",
+      "prepared_recipe_keys": [
+        "main_clear_body"
+      ]
     },
     {
       "control_id": 2680,
       "action": "clear_fragment",
-      "reason": "destructive save layout pending"
+      "reason": "destructive save layout pending",
+      "prepared_recipe_keys": [
+        "main_clear_fragment"
+      ]
+    }
+  ],
+  "classified_capacity_boundaries": [
+    {
+      "control_id": 130,
+      "action": "add_unit",
+      "classification": "byte_id_space_full",
+      "available_ids": "$01-$FF",
+      "slot_count": 255,
+      "product_behavior": "disabled_with_direct_edit_of_existing_empty_slots"
     }
   ],
   "prepared_discovery_recipes": {
+    "body_compressed_upload_bmp": {
+      "path": "tools/golden_pipeline/discovery_history/M05-body-compressed-upload-bmp-discovery-cold-start-01.json",
+      "sha256": "58aea7697120f3b5565b21b43979cc0a3ee6ee6d0aa70c360eb04900813d6939",
+      "case_kind": "discovery",
+      "promotion_guarded": true,
+      "status": "prepared_not_promoted"
+    },
+    "fragment_compressed_upload_bmp": {
+      "path": "tools/golden_pipeline/discovery_history/M05-fragment-compressed-upload-bmp-discovery-cold-start-01.json",
+      "sha256": "3bed5ea208243a143cab5add09f9442a3405bd93c57c4ee0ec19619d5fc0670d",
+      "case_kind": "discovery",
+      "promotion_guarded": true,
+      "status": "prepared_not_promoted"
+    },
+    "main_clear_body": {
+      "path": "tools/golden_pipeline/discovery_history/M05-main-clear-body-discovery-cold-start-01.json",
+      "sha256": "738f7dded778f6120e157c8c30cc6a1bc979d62fb1ad57b72ee47a414a9eac0b",
+      "case_kind": "discovery",
+      "promotion_guarded": true,
+      "status": "prepared_not_promoted"
+    },
+    "main_clear_fragment": {
+      "path": "tools/golden_pipeline/discovery_history/M05-main-clear-fragment-discovery-cold-start-01.json",
+      "sha256": "f554b87bf1699f64d37a9d38132cf7fbae5e5c41ef6e5385eaa41be32fcffa75",
+      "case_kind": "discovery",
+      "promotion_guarded": true,
+      "status": "prepared_not_promoted"
+    },
     "body_upload_bmp": {
       "path": "tools/golden_pipeline/discovery_history/M05-body-upload-bmp-discovery-cold-start-01.json",
       "sha256": "2310a2e81681fcc3c6815954b46758852affcd84c51a175dbeaede32618238b5",
@@ -245,6 +327,41 @@
     "body_puzzle_move_right": {
       "path": "tools/golden_pipeline/discovery_history/M05-body-puzzle-move-right-discovery-cold-start-01.json",
       "sha256": "060f9fc82849e8a0e235c0bf52b4fb929e334ec7147a9ae9788eeac2b36275a5",
+      "case_kind": "discovery",
+      "promotion_guarded": true,
+      "status": "prepared_not_promoted"
+    },
+    "body_puzzle_template_8x8": {
+      "path": "tools/golden_pipeline/discovery_history/M05-body-puzzle-template-8x8-discovery-cold-start-01.json",
+      "sha256": "d04bc69ef4acb7f7a2975e84db4d78ab7d7b9d26e9c1b4b6646314952c26266e",
+      "case_kind": "discovery",
+      "promotion_guarded": true,
+      "status": "prepared_not_promoted"
+    },
+    "body_puzzle_template_7x9": {
+      "path": "tools/golden_pipeline/discovery_history/M05-body-puzzle-template-7x9-discovery-cold-start-01.json",
+      "sha256": "245539ce20b4c3e9cfba41516ca0185c8f7d668d8b922dde79cb9125f478b28d",
+      "case_kind": "discovery",
+      "promotion_guarded": true,
+      "status": "prepared_not_promoted"
+    },
+    "body_puzzle_template_9x7": {
+      "path": "tools/golden_pipeline/discovery_history/M05-body-puzzle-template-9x7-discovery-cold-start-01.json",
+      "sha256": "5a2fa5ca11a96b79e167a68cedc1100191876945cf8f828896fc06dfde1bc984",
+      "case_kind": "discovery",
+      "promotion_guarded": true,
+      "status": "prepared_not_promoted"
+    },
+    "body_puzzle_template_10x6": {
+      "path": "tools/golden_pipeline/discovery_history/M05-body-puzzle-template-10x6-discovery-cold-start-01.json",
+      "sha256": "6e41408bcfc2f51f0b9a5811b8879cb70d004609e1fab7eb2a36c32cde176270",
+      "case_kind": "discovery",
+      "promotion_guarded": true,
+      "status": "prepared_not_promoted"
+    },
+    "body_puzzle_swap_banks": {
+      "path": "tools/golden_pipeline/discovery_history/M05-body-puzzle-swap-banks-discovery-cold-start-01.json",
+      "sha256": "09e0d2da4eb15d471bf88ae694446196619bd2f8ea27ae740bc5f9dcac0f86fc",
       "case_kind": "discovery",
       "promotion_guarded": true,
       "status": "prepared_not_promoted"

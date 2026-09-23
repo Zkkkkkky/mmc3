@@ -33,9 +33,9 @@ class M05PuzzleDiscoverySpecTests(unittest.TestCase):
         payload = json.loads(path.read_text(encoding="utf-8"))
         return CaseSpec.from_payload(payload)
 
-    def test_all_twelve_reversible_recipes_are_guarded_discovery(self) -> None:
+    def test_all_puzzle_recipes_are_guarded_discovery(self) -> None:
         files = sorted(DISCOVERY.glob("M05-*-puzzle-*-discovery-cold-start-01.json"))
-        self.assertEqual(len(files), 12)
+        self.assertEqual(len(files), 17)
         for stem, (control_id, before_prefix, requested_prefix) in RECIPES.items():
             with self.subTest(stem=stem):
                 spec = self._load(stem)
@@ -121,6 +121,94 @@ class M05PuzzleDiscoverySpecTests(unittest.TestCase):
                 self.assertEqual(len(file_steps), 1)
                 self.assertTrue(str(file_steps[0]["value"]).startswith("$repo_path:"))
                 self.assertTrue(str(file_steps[0]["value"]).endswith(f"/{kind}.bmp"))
+
+    def test_main_clear_recipes_capture_changed_preview_before_cold_reopen(self) -> None:
+        for kind, button_id in (("body", 2670), ("fragment", 2680)):
+            with self.subTest(kind=kind):
+                path = DISCOVERY / f"M05-main-clear-{kind}-discovery-cold-start-01.json"
+                spec = CaseSpec.from_payload(json.loads(path.read_text(encoding="utf-8")))
+                self.assertEqual(spec.requested_value, "$capture_after")
+                self.assertEqual(spec.expected_offsets, ())
+                self.assertEqual(spec.read_selector["control_id"], 150)
+                self.assertIn(
+                    {"op": "click_id", "class": "Button", "control_id": button_id},
+                    spec.edit_steps,
+                )
+
+    def test_compressed_upload_recipes_enable_reference_compression(self) -> None:
+        recipes = {
+            "body": (170, 180, 160),
+            "fragment": (1300, 1290, 1310),
+        }
+        for kind, (offset_id, check_id, upload_id) in recipes.items():
+            with self.subTest(kind=kind):
+                path = (
+                    DISCOVERY
+                    / f"M05-{kind}-compressed-upload-bmp-discovery-cold-start-01.json"
+                )
+                spec = CaseSpec.from_payload(json.loads(path.read_text(encoding="utf-8")))
+                self.assertEqual(spec.requested_value, "$capture_after")
+                self.assertEqual(spec.expected_offsets, ())
+                self.assertEqual(spec.read_selector["control_id"], 150)
+                self.assertIn(
+                    {
+                        "op": "set_text",
+                        "class": "Edit",
+                        "control_id": offset_id,
+                        "value": "0",
+                    },
+                    spec.edit_steps,
+                )
+                self.assertIn(
+                    {
+                        "op": "set_check",
+                        "class": "Button",
+                        "control_id": check_id,
+                        "value": 1,
+                    },
+                    spec.edit_steps,
+                )
+                self.assertIn(
+                    {"op": "click_id", "class": "Button", "control_id": upload_id},
+                    spec.edit_steps,
+                )
+                file_step = next(
+                    step for step in spec.edit_steps if step.get("control_id") == 1148
+                )
+                self.assertTrue(str(file_step["value"]).endswith(f"/{kind}.bmp"))
+
+    def test_body_template_recipes_capture_script_before_closing_dialog(self) -> None:
+        for name, button_id in (
+            ("8x8", 290),
+            ("7x9", 300),
+            ("9x7", 310),
+            ("10x6", 320),
+        ):
+            with self.subTest(name=name):
+                path = (
+                    DISCOVERY
+                    / f"M05-body-puzzle-template-{name}-discovery-cold-start-01.json"
+                )
+                spec = CaseSpec.from_payload(json.loads(path.read_text(encoding="utf-8")))
+                self.assertEqual(spec.requested_value, "$capture_after")
+                self.assertEqual(spec.capture_after_step, 1)
+                self.assertEqual(spec.expected_offsets, ())
+                self.assertEqual(spec.read_selector["control_id"], 270)
+                self.assertEqual(
+                    spec.edit_steps[0],
+                    {"op": "click_id", "class": "Button", "control_id": button_id},
+                )
+
+    def test_body_bank_swap_recipe_captures_script_before_closing_dialog(self) -> None:
+        spec = self._load("body-puzzle-swap-banks")
+        self.assertEqual(spec.requested_value, "$capture_after")
+        self.assertEqual(spec.capture_after_step, 1)
+        self.assertEqual(spec.expected_offsets, ())
+        self.assertEqual(spec.read_selector["control_id"], 270)
+        self.assertEqual(
+            spec.edit_steps[0],
+            {"op": "click_id", "class": "Button", "control_id": 450},
+        )
 
 
 if __name__ == "__main__":

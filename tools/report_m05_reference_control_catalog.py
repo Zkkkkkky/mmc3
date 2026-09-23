@@ -21,6 +21,14 @@ JSON_OUT = ROOT / "output/reports/m05-reference-control-catalog.json"
 MD_OUT = ROOT / "output/reports/m05-reference-control-catalog.md"
 DISCOVERY_DIR = ROOT / "tools/golden_pipeline/discovery_history"
 ACTION_DISCOVERY_RECIPES = {
+    "body_compressed_upload_bmp": DISCOVERY_DIR
+    / "M05-body-compressed-upload-bmp-discovery-cold-start-01.json",
+    "fragment_compressed_upload_bmp": DISCOVERY_DIR
+    / "M05-fragment-compressed-upload-bmp-discovery-cold-start-01.json",
+    "main_clear_body": DISCOVERY_DIR
+    / "M05-main-clear-body-discovery-cold-start-01.json",
+    "main_clear_fragment": DISCOVERY_DIR
+    / "M05-main-clear-fragment-discovery-cold-start-01.json",
     "body_upload_bmp": DISCOVERY_DIR
     / "M05-body-upload-bmp-discovery-cold-start-01.json",
     "fragment_upload_bmp": DISCOVERY_DIR
@@ -39,6 +47,16 @@ ACTION_DISCOVERY_RECIPES = {
     / "M05-body-puzzle-move-left-discovery-cold-start-01.json",
     "body_puzzle_move_right": DISCOVERY_DIR
     / "M05-body-puzzle-move-right-discovery-cold-start-01.json",
+    "body_puzzle_template_8x8": DISCOVERY_DIR
+    / "M05-body-puzzle-template-8x8-discovery-cold-start-01.json",
+    "body_puzzle_template_7x9": DISCOVERY_DIR
+    / "M05-body-puzzle-template-7x9-discovery-cold-start-01.json",
+    "body_puzzle_template_9x7": DISCOVERY_DIR
+    / "M05-body-puzzle-template-9x7-discovery-cold-start-01.json",
+    "body_puzzle_template_10x6": DISCOVERY_DIR
+    / "M05-body-puzzle-template-10x6-discovery-cold-start-01.json",
+    "body_puzzle_swap_banks": DISCOVERY_DIR
+    / "M05-body-puzzle-swap-banks-discovery-cold-start-01.json",
     "fragment_puzzle_move_up": DISCOVERY_DIR
     / "M05-fragment-puzzle-move-up-discovery-cold-start-01.json",
     "fragment_puzzle_move_down": DISCOVERY_DIR
@@ -53,6 +71,37 @@ ACTION_DISCOVERY_RECIPES = {
     / "M05-fragment-puzzle-flip-horizontal-discovery-cold-start-01.json",
     "fragment_puzzle_flip_vertical": DISCOVERY_DIR
     / "M05-fragment-puzzle-flip-vertical-discovery-cold-start-01.json",
+}
+ACTION_RECIPE_COVERAGE = {
+    "upload_body": ("body_upload_bmp",),
+    "upload_fragment": ("fragment_upload_bmp",),
+    "compressed_upload_body": ("body_compressed_upload_bmp",),
+    "compressed_upload_fragment": ("fragment_compressed_upload_bmp",),
+    "body_puzzle": (
+        "body_puzzle_clear",
+        "body_puzzle_move_up",
+        "body_puzzle_move_down",
+        "body_puzzle_move_left",
+        "body_puzzle_move_right",
+        "body_puzzle_template_8x8",
+        "body_puzzle_template_7x9",
+        "body_puzzle_template_9x7",
+        "body_puzzle_template_10x6",
+        "body_puzzle_swap_banks",
+    ),
+    "fragment_puzzle": (
+        "fragment_puzzle_clear",
+        "fragment_puzzle_move_up",
+        "fragment_puzzle_move_down",
+        "fragment_puzzle_move_left",
+        "fragment_puzzle_move_right",
+        "fragment_puzzle_flip_horizontal",
+        "fragment_puzzle_flip_vertical",
+    ),
+    "icon_binding": ("icon_binding_double_click",),
+    "upload_icon": ("icon_upload_bmp",),
+    "clear_body": ("main_clear_body",),
+    "clear_fragment": ("main_clear_fragment",),
 }
 
 CONTROL_CLASSES = {"Edit", "ComboBox", "Button", "ListBox"}
@@ -121,7 +170,6 @@ def build() -> dict[str, object]:
         {"field_id": "icon_tile_selector", "surface": "icon_binding", "control_id": 130, "classification": "no_rom_effect_without_canvas_commit"},
     ]
     pending_actions = [
-        {"control_id": 130, "action": "add_unit", "reason": "pointer relocation save protocol pending"},
         {"control_id": 160, "action": "upload_body", "reason": "file and cross-bank save protocol pending"},
         {"control_id": 1310, "action": "upload_fragment", "reason": "file and cross-bank save protocol pending"},
         {"control_id": 180, "action": "compressed_upload_body", "reason": "compression save protocol pending"},
@@ -132,6 +180,16 @@ def build() -> dict[str, object]:
         {"control_id": 2510, "action": "upload_icon", "reason": "file upload save protocol pending"},
         {"control_id": 2670, "action": "clear_body", "reason": "destructive save layout pending"},
         {"control_id": 2680, "action": "clear_fragment", "reason": "destructive save layout pending"},
+    ]
+    capacity_boundaries = [
+        {
+            "control_id": 130,
+            "action": "add_unit",
+            "classification": "byte_id_space_full",
+            "available_ids": "$01-$FF",
+            "slot_count": 255,
+            "product_behavior": "disabled_with_direct_edit_of_existing_empty_slots",
+        }
     ]
     discovery_recipes = {}
     for name, path in ACTION_DISCOVERY_RECIPES.items():
@@ -149,6 +207,10 @@ def build() -> dict[str, object]:
             "promotion_guarded": promotion_guarded,
             "status": "prepared_not_promoted" if promotion_guarded else "invalid_guard",
         }
+    for action in pending_actions:
+        action["prepared_recipe_keys"] = list(
+            ACTION_RECIPE_COVERAGE.get(str(action["action"]), ())
+        )
     checks = {
         "source_files_present": all(path.is_file() for path in sources.values()),
         "main_controls_enumerated": sum(item["surface"] == "main" for item in all_controls) == 56,
@@ -165,8 +227,18 @@ def build() -> dict[str, object]:
         "golden_fields_unique": len(golden_fields) == 33,
         "all_golden_fields_passed": len(golden_rows) == 33,
         "non_rom_fields_classified": len(non_rom_fields) == 5,
-        "pending_actions_guarded": len(pending_actions) == 11,
-        "action_discovery_recipes_ready": len(discovery_recipes) == 16
+        "pending_actions_guarded": len(pending_actions) == 10,
+        "capacity_boundaries_classified": len(capacity_boundaries) == 1
+        and capacity_boundaries[0]["slot_count"] == 255,
+        "every_pending_action_has_guarded_discovery": all(
+            action["prepared_recipe_keys"]
+            and all(
+                discovery_recipes.get(recipe_key, {}).get("promotion_guarded")
+                for recipe_key in action["prepared_recipe_keys"]
+            )
+            for action in pending_actions
+        ),
+        "action_discovery_recipes_ready": len(discovery_recipes) == 25
         and all(path.is_file() for path in ACTION_DISCOVERY_RECIPES.values()),
         "action_discovery_recipes_not_promoted": all(
             item["promotion_guarded"] for item in discovery_recipes.values()
@@ -176,7 +248,7 @@ def build() -> dict[str, object]:
         "schema_version": 1,
         "module": "M05",
         "passed": all(checks.values()),
-        "status": "five_surfaces_cataloged_33_save_fields_passed_11_actions_guarded",
+        "status": "five_surfaces_cataloged_33_save_fields_passed_10_actions_guarded_1_capacity_boundary",
         "sources": {
             name: {
                 "path": path.relative_to(ROOT).as_posix(),
@@ -191,12 +263,17 @@ def build() -> dict[str, object]:
             "golden_save_fields": len(golden_fields),
             "classified_non_rom_fields": len(non_rom_fields),
             "guarded_pending_actions": len(pending_actions),
+            "classified_capacity_boundaries": len(capacity_boundaries),
             "prepared_discovery_recipes": len(discovery_recipes),
+            "guarded_actions_with_discovery": sum(
+                bool(action["prepared_recipe_keys"]) for action in pending_actions
+            ),
         },
         "checks": checks,
         "golden_save_fields": golden_fields,
         "classified_non_rom_fields": non_rom_fields,
         "guarded_pending_actions": pending_actions,
+        "classified_capacity_boundaries": capacity_boundaries,
         "prepared_discovery_recipes": discovery_recipes,
         "controls": all_controls,
     }
@@ -212,10 +289,12 @@ def markdown(report: dict[str, object]) -> str:
             f"- 已通过黄金保存字段：{counts['golden_save_fields']}/33",
             f"- 已分类非 ROM 字段：{counts['classified_non_rom_fields']}",
             f"- 保持门禁的动作入口：{counts['guarded_pending_actions']}",
+            f"- 已分类容量边界：{counts['classified_capacity_boundaries']}",
             f"- 已准备但未晋级黄金的动作 discovery 配方：{counts['prepared_discovery_recipes']}",
+            f"- 已由 discovery 覆盖的门禁动作：{counts['guarded_actions_with_discovery']}/{counts['guarded_pending_actions']}",
             f"- 状态：`{report['status']}`",
             "",
-            "上传、清除、拼图、图标画布提交和新增机体是动作协议，不冒充普通字段；在对应参考版保存布局补证前继续保持写入门禁。完整控件、字段和原因见同名 JSON。",
+            "上传、清除、拼图和图标画布提交是待补参考保存布局的动作协议；新增机体已按字节型 ID 的 255 槽满容量边界分类，产品保持禁用并引导直接编辑现有空白槽。完整控件、字段和原因见同名 JSON。",
             "",
         ]
     )

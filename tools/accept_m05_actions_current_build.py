@@ -84,11 +84,16 @@ def main() -> int:
     require(checks, "战斗预览遍历全部255个机体槽位", preview_count == 255)
     require(checks, "全部战斗预览均为有效128×128图像", previews_are_128)
 
-    # F-026 stays explicitly guarded until pointer relocation has reference proof.
+    # F-026 is a byte-ID capacity boundary: every $01-$FF slot is already listed.
     before_add = bytes(project.working)
     page.add_button.click()
     require(checks, "新增机体按钮保持禁用", not page.add_button.isEnabled())
-    require(checks, "新增机体提示说明指针重定位门禁", "指针重定位" in page.add_button.toolTip())
+    require(
+        checks,
+        "新增机体提示说明255槽容量边界",
+        "$01—$FF" in page.add_button.toolTip()
+        and "第 256 个 ID" in page.add_button.toolTip(),
+    )
     require(checks, "点击禁用按钮不写ROM", bytes(project.working) == before_add)
 
     # F-023: exercise the actual jump button and ensure the outer transaction

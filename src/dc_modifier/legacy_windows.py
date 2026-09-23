@@ -615,7 +615,10 @@ class LegacyUnitDatabasePage(ProjectPage):
         selection_layout.addLayout(record_actions)
         self.add_button = QPushButton("添加")
         self.add_button.setEnabled(False)
-        self.add_button.setToolTip("新增机体所需的指针重定位规则尚未完成验证。")
+        self.add_button.setToolTip(
+            "当前格式的机体 ID $01—$FF 共 255 个槽位均已开放；"
+            "不存在可新增的第 256 个 ID，请直接编辑列表中的空白槽位。"
+        )
         selection_layout.addWidget(self.add_button)
         splitter.addWidget(selection)
 

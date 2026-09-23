@@ -20,12 +20,18 @@ class M05ReferenceControlCatalogTests(unittest.TestCase):
         )
         self.assertEqual(report["counts"]["golden_save_fields"], 33)
         self.assertEqual(report["counts"]["classified_non_rom_fields"], 5)
-        self.assertEqual(report["counts"]["guarded_pending_actions"], 11)
-        self.assertEqual(report["counts"]["prepared_discovery_recipes"], 16)
+        self.assertEqual(report["counts"]["guarded_pending_actions"], 10)
+        self.assertEqual(report["counts"]["classified_capacity_boundaries"], 1)
+        self.assertEqual(report["counts"]["guarded_actions_with_discovery"], 10)
+        self.assertEqual(report["counts"]["prepared_discovery_recipes"], 25)
         self.assertEqual(len(set(report["golden_save_fields"])), 33)
         self.assertEqual(
             set(report["prepared_discovery_recipes"]),
             {
+                "body_compressed_upload_bmp",
+                "fragment_compressed_upload_bmp",
+                "main_clear_body",
+                "main_clear_fragment",
                 "body_upload_bmp",
                 "fragment_upload_bmp",
                 "icon_upload_bmp",
@@ -35,6 +41,11 @@ class M05ReferenceControlCatalogTests(unittest.TestCase):
                 "body_puzzle_move_down",
                 "body_puzzle_move_left",
                 "body_puzzle_move_right",
+                "body_puzzle_template_8x8",
+                "body_puzzle_template_7x9",
+                "body_puzzle_template_9x7",
+                "body_puzzle_template_10x6",
+                "body_puzzle_swap_banks",
                 "fragment_puzzle_move_up",
                 "fragment_puzzle_move_down",
                 "fragment_puzzle_move_left",
@@ -86,10 +97,13 @@ class M05ReferenceControlCatalogTests(unittest.TestCase):
     def test_pending_actions_keep_explicit_reasons(self) -> None:
         report = build()
         self.assertTrue(all(item["reason"] for item in report["guarded_pending_actions"]))
+        self.assertTrue(
+            all(item["prepared_recipe_keys"] for item in report["guarded_pending_actions"])
+        )
+        self.assertTrue(report["checks"]["every_pending_action_has_guarded_discovery"])
         self.assertEqual(
             {item["action"] for item in report["guarded_pending_actions"]},
             {
-                "add_unit",
                 "upload_body",
                 "upload_fragment",
                 "compressed_upload_body",
@@ -101,6 +115,19 @@ class M05ReferenceControlCatalogTests(unittest.TestCase):
                 "clear_body",
                 "clear_fragment",
             },
+        )
+        self.assertEqual(
+            report["classified_capacity_boundaries"],
+            [
+                {
+                    "control_id": 130,
+                    "action": "add_unit",
+                    "classification": "byte_id_space_full",
+                    "available_ids": "$01-$FF",
+                    "slot_count": 255,
+                    "product_behavior": "disabled_with_direct_edit_of_existing_empty_slots",
+                }
+            ],
         )
 
 
