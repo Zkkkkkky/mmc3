@@ -1,3 +1,10 @@
+param(
+    # Exact workspace-relative files to leave out of this manifest refresh.
+    # This is intended for concurrent diagnostic artifacts that must remain
+    # untouched in the working tree but are not part of the handoff package.
+    [string[]]$ExcludeRelativePath = @()
+)
+
 $ErrorActionPreference = "Stop"
 
 $packageRoot = (Resolve-Path -LiteralPath (Join-Path $PSScriptRoot "..")).Path
@@ -12,10 +19,19 @@ $excludedPrefixes = @(
     # User-supplied reverse-engineering snapshots are not handoff files.
     "references\legacy_modifier\"
 )
+$excludedPaths = [System.Collections.Generic.HashSet[string]]::new(
+    [StringComparer]::OrdinalIgnoreCase
+)
+foreach ($path in $ExcludeRelativePath) {
+    [void]$excludedPaths.Add($path.Replace("/", "\"))
+}
 
 $records = Get-ChildItem -LiteralPath $packageRoot -Recurse -File | ForEach-Object {
     $relativePath = [IO.Path]::GetRelativePath($packageRoot, $_.FullName)
     if ($relativePath -eq "output\manifest\文件清单_SHA256.csv") {
+        return
+    }
+    if ($excludedPaths.Contains($relativePath)) {
         return
     }
     if ($relativePath -match "(^|\\)__pycache__\\") {
