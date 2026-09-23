@@ -1225,6 +1225,16 @@ class AnimationCodec:
         """Return the verified context class for an animation call operand."""
         if not 0x38010 <= offset < 0x3C00E or (offset, self.data[offset + 2]) not in self.calls():
             return None
+        # The reference editor's exhaustive save chain changed only the byte
+        # after the same 38 02 opcode at these file offsets and confirmed it
+        # from a fresh process.  The current ROM still has the identical
+        # opcode boundary, so only its animation-id operand is writable.  The
+        # value at $380DF differs between the reference input and this ROM;
+        # address + opcode + isolated saved operand, rather than the old value,
+        # is the compatibility proof.
+        reference_save_sites = {0x380DF, 0x38EEA}
+        if offset in reference_save_sites:
+            return "参考逐字段保存同址黄金"
         prefix = self.data[offset - 3:offset]
         if prefix in (b"\x2d\x1d\x03", b"\x2d\x1d\x0b"):
             return "直接设置/调用序列"

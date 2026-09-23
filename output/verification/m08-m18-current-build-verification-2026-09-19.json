@@ -1,25 +1,25 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-09-21T22:05:05+08:00",
+  "generatedAt": "2026-09-23T00:00:00+08:00",
   "formalExecutable": {
     "path": "output/app/新DC篇完整修改器.exe",
-    "sha256": "72E78D4900BAA7AF64187346A8B51EF20D4D7FF616517E5426B4F6542B98A752",
+    "sha256": "48C973383E37A8E87A423F81BB5F5AABBB48A11E8C0C629ECE19B9F45272E0D5",
     "checksumFileMatches": true,
     "selfTestExitCode": 0
   },
   "fullRegression": {
     "command": ".\\.venv\\Scripts\\python.exe -m unittest discover -s tests -t . -p \"test_*.py\"",
-    "testsRun": 728,
+    "testsRun": 746,
     "failures": 0,
     "errors": 0,
-    "durationSeconds": 867.458,
+    "durationSeconds": 939.587,
     "passed": true
   },
   "deliveryGate": {
     "path": "output/verification/m08-m18-delivery-gate.json",
     "machineGatePassed": true,
     "implementationScopeComplete": "11/11",
-    "userAccepted": "1/11"
+    "userAccepted": "11/11"
   },
   "m12ReferenceEvidence": {
     "path": "output/verification/m12-reference-dynamic-2026-09-19.json",
@@ -44,10 +44,10 @@
     "scope": "当前推荐 ROM 的 Mapper 194、扩展 Bank、双音频引擎、3 首扩展曲、56 个音效与旧引擎切回基线"
   },
   "nativeUiAutomation": {
-    "availableInCurrentSession": true,
-    "observed": "The current packaged EXE (72E78D4…98A752) was controlled through the native Windows UI with the isolated acceptance ROM. M08 battle dialogue, M09 Other 1, M10 Other 2, M11 font editor, M12 map animation, M13 text conversion, M14 scenario, M15 attribute calculator, M16 save editor and M17 Other were opened and inspected. The M13 round trip 啊 -> C8 00 -> 啊 and the M15 read-only calculation both succeeded. M18's legacy Data-menu portrait export entry was confirmed disabled; the 1275/1275 export verifier remains the functional evidence. No ROM or save-file write was made, and the main status remained '已载入 · 无未保存修改'.",
-    "currentBuildClickSmokePerformed": true,
-    "reason": "当前正式构建已完成原生窗口点击烟测；代理现场烟测与用户最终签收仍分层记录。"
+    "availableInCurrentSession": false,
+    "observed": "当前正式构建完成隐藏自检和 746/746 全量回归；本轮 Windows 控制组件两次初始化均因 kernel assets 路径不存在而失败，未执行可见点击。",
+    "currentBuildClickSmokePerformed": false,
+    "reason": "历史原生窗口烟测继续作为旧构建证据保留，不冒充当前正式 EXE 的可见点击证据。"
   },
   "priorPackagedUiSmoke": {
     "path": "output/verification/m08-m18-agent-ui-smoke-2026-09-19.json",
@@ -55,6 +55,6 @@
     "passed": true,
     "appliesToCurrentExecutableHash": false
   },
-  "userAcceptance": false,
-  "overallDeliveryComplete": false
+  "userAcceptance": true,
+  "overallDeliveryComplete": true
 }

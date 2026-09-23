@@ -2,7 +2,7 @@
   "schema_version": 1,
   "module": "M05",
   "passed": true,
-  "status": "controls_cataloged_33_save_fields_passed_11_actions_guarded",
+  "status": "five_surfaces_cataloged_33_save_fields_passed_11_actions_guarded",
   "sources": {
     "main": {
       "path": "output/verification/legacy-ui-probe-m05-icon-double-click-20260920l/controls/M05_数据库_机体修改.json",
@@ -15,34 +15,51 @@
     "icon_binding": {
       "path": "output/verification/legacy-ui-probe-m05-icon-double-click-20260920l/controls/M05_数据库_机体修改_机体图标设置.json",
       "sha256": "476fceb90715874423cddb11f9071f688d44c58c5ab1b28f2d35c851fccb9e81"
+    },
+    "body_puzzle": {
+      "path": "output/verification/legacy-ui-probe/controls/D3_数据库_机体拼图.json",
+      "sha256": "27e337999108a80f576cace44dcd5d197b2a1f4e025035846599f5465bf21345"
+    },
+    "fragment_puzzle": {
+      "path": "output/verification/legacy-ui-probe/controls/D3_数据库_碎片拼图.json",
+      "sha256": "06240ca37e2873790457f44f2313a63edc68d99b9dd256e90e84fdf77ac81e7b"
     }
   },
   "counts": {
-    "controls": 69,
+    "controls": 125,
     "controls_by_surface": {
       "main": 56,
       "special_skill": 8,
-      "icon_binding": 5
+      "icon_binding": 5,
+      "body_puzzle": 29,
+      "fragment_puzzle": 27
     },
     "controls_by_class": {
-      "Button": 36,
-      "ListBox": 1,
-      "Edit": 21,
-      "ComboBox": 11
+      "Button": 69,
+      "ListBox": 2,
+      "Edit": 23,
+      "ComboBox": 18,
+      "Afx:400000:b:10003:900015:0": 13
     },
     "golden_save_fields": 33,
     "classified_non_rom_fields": 5,
-    "guarded_pending_actions": 11
+    "guarded_pending_actions": 11,
+    "prepared_discovery_recipes": 16
   },
   "checks": {
     "source_files_present": true,
     "main_controls_enumerated": true,
     "special_skill_controls_enumerated": true,
     "icon_binding_controls_enumerated": true,
+    "body_puzzle_controls_enumerated": true,
+    "fragment_puzzle_controls_enumerated": true,
+    "puzzle_canvas_controls_enumerated": true,
     "golden_fields_unique": true,
     "all_golden_fields_passed": true,
     "non_rom_fields_classified": true,
-    "pending_actions_guarded": true
+    "pending_actions_guarded": true,
+    "action_discovery_recipes_ready": true,
+    "action_discovery_recipes_not_promoted": true
   },
   "golden_save_fields": [
     "body_bank_1",
@@ -168,6 +185,120 @@
       "reason": "destructive save layout pending"
     }
   ],
+  "prepared_discovery_recipes": {
+    "body_upload_bmp": {
+      "path": "tools/golden_pipeline/discovery_history/M05-body-upload-bmp-discovery-cold-start-01.json",
+      "sha256": "2310a2e81681fcc3c6815954b46758852affcd84c51a175dbeaede32618238b5",
+      "case_kind": "discovery",
+      "promotion_guarded": true,
+      "status": "prepared_not_promoted"
+    },
+    "fragment_upload_bmp": {
+      "path": "tools/golden_pipeline/discovery_history/M05-fragment-upload-bmp-discovery-cold-start-01.json",
+      "sha256": "51953a725aadbb23d6e4622d55a5b66c95533ab6f825570f5d9ef3d746e8be56",
+      "case_kind": "discovery",
+      "promotion_guarded": true,
+      "status": "prepared_not_promoted"
+    },
+    "icon_upload_bmp": {
+      "path": "tools/golden_pipeline/discovery_history/M05-icon-upload-bmp-discovery-cold-start-01.json",
+      "sha256": "f2e966d64a3c9a2af4f014b08ab1a8c3a1830e3c1215dea9f56dab028cf88e5d",
+      "case_kind": "discovery",
+      "promotion_guarded": true,
+      "status": "prepared_not_promoted"
+    },
+    "icon_binding_double_click": {
+      "path": "tools/golden_pipeline/discovery_history/M05-icon-binding-double-click-discovery-cold-start-01.json",
+      "sha256": "ff92b4087419e0820cb702cfda6ce092890bc81f48ded85310a0565e2f41e951",
+      "case_kind": "discovery",
+      "promotion_guarded": true,
+      "status": "prepared_not_promoted"
+    },
+    "body_puzzle_clear": {
+      "path": "tools/golden_pipeline/discovery_history/M05-body-puzzle-clear-discovery-cold-start-01.json",
+      "sha256": "02dada1dfdb1d40b1d3179209ad32525e479389f9199b523b8221aabf8128f10",
+      "case_kind": "discovery",
+      "promotion_guarded": true,
+      "status": "prepared_not_promoted"
+    },
+    "body_puzzle_move_up": {
+      "path": "tools/golden_pipeline/discovery_history/M05-body-puzzle-move-up-discovery-cold-start-01.json",
+      "sha256": "ecee9289f8ae9538978f0505585c0fd0d1fab6abfaed76325c03a855c9522c41",
+      "case_kind": "discovery",
+      "promotion_guarded": true,
+      "status": "prepared_not_promoted"
+    },
+    "body_puzzle_move_down": {
+      "path": "tools/golden_pipeline/discovery_history/M05-body-puzzle-move-down-discovery-cold-start-01.json",
+      "sha256": "f28423b37aeabefcb256f99fab0fd46511c1ff0388fd417f88cc6cfeb15d28a6",
+      "case_kind": "discovery",
+      "promotion_guarded": true,
+      "status": "prepared_not_promoted"
+    },
+    "body_puzzle_move_left": {
+      "path": "tools/golden_pipeline/discovery_history/M05-body-puzzle-move-left-discovery-cold-start-01.json",
+      "sha256": "1d273b50b93f75bf3321729d6e7f258b877180a765340d05a41644f0a30634a2",
+      "case_kind": "discovery",
+      "promotion_guarded": true,
+      "status": "prepared_not_promoted"
+    },
+    "body_puzzle_move_right": {
+      "path": "tools/golden_pipeline/discovery_history/M05-body-puzzle-move-right-discovery-cold-start-01.json",
+      "sha256": "060f9fc82849e8a0e235c0bf52b4fb929e334ec7147a9ae9788eeac2b36275a5",
+      "case_kind": "discovery",
+      "promotion_guarded": true,
+      "status": "prepared_not_promoted"
+    },
+    "fragment_puzzle_move_up": {
+      "path": "tools/golden_pipeline/discovery_history/M05-fragment-puzzle-move-up-discovery-cold-start-01.json",
+      "sha256": "cabbaf1e22dcb1d38ab0d0c12ef482b7157bd6cfea05b2bf62fd7f1681b956e5",
+      "case_kind": "discovery",
+      "promotion_guarded": true,
+      "status": "prepared_not_promoted"
+    },
+    "fragment_puzzle_move_down": {
+      "path": "tools/golden_pipeline/discovery_history/M05-fragment-puzzle-move-down-discovery-cold-start-01.json",
+      "sha256": "2621360d9cb998f3090ada824b5e6aa2df8c21622144dd59b7485b75a986df98",
+      "case_kind": "discovery",
+      "promotion_guarded": true,
+      "status": "prepared_not_promoted"
+    },
+    "fragment_puzzle_move_left": {
+      "path": "tools/golden_pipeline/discovery_history/M05-fragment-puzzle-move-left-discovery-cold-start-01.json",
+      "sha256": "be0d8e00335d42afe47615859ab0ded7e718a2b17e0c9660162597c21664614d",
+      "case_kind": "discovery",
+      "promotion_guarded": true,
+      "status": "prepared_not_promoted"
+    },
+    "fragment_puzzle_move_right": {
+      "path": "tools/golden_pipeline/discovery_history/M05-fragment-puzzle-move-right-discovery-cold-start-01.json",
+      "sha256": "d29f103e88ea97e0c28a29cef4bf3da2f1181f7e907e868b5db64867091b560f",
+      "case_kind": "discovery",
+      "promotion_guarded": true,
+      "status": "prepared_not_promoted"
+    },
+    "fragment_puzzle_clear": {
+      "path": "tools/golden_pipeline/discovery_history/M05-fragment-puzzle-clear-discovery-cold-start-01.json",
+      "sha256": "7b06dbd45a9d6ba35fb2bac6aef7d331b5760b8f26536ef16cbb17f7cbddf333",
+      "case_kind": "discovery",
+      "promotion_guarded": true,
+      "status": "prepared_not_promoted"
+    },
+    "fragment_puzzle_flip_horizontal": {
+      "path": "tools/golden_pipeline/discovery_history/M05-fragment-puzzle-flip-horizontal-discovery-cold-start-01.json",
+      "sha256": "010eb5c3c6f0e388831f66a3f4659528bee604c3951c5d26b94afc18fa1bb3c9",
+      "case_kind": "discovery",
+      "promotion_guarded": true,
+      "status": "prepared_not_promoted"
+    },
+    "fragment_puzzle_flip_vertical": {
+      "path": "tools/golden_pipeline/discovery_history/M05-fragment-puzzle-flip-vertical-discovery-cold-start-01.json",
+      "sha256": "acde1a2f1c4499204991d94c6a08336c7543c1f7ae41d5c18723e74ec9885913",
+      "case_kind": "discovery",
+      "promotion_guarded": true,
+      "status": "prepared_not_promoted"
+    }
+  },
   "controls": [
     {
       "surface": "main",
@@ -650,6 +781,398 @@
       "control_id": 200,
       "class": "Button",
       "text": "确定",
+      "enabled": true
+    },
+    {
+      "surface": "body_puzzle",
+      "control_id": 100,
+      "class": "Button",
+      "text": "参考设置",
+      "enabled": true
+    },
+    {
+      "surface": "body_puzzle",
+      "control_id": 110,
+      "class": "Afx:400000:b:10003:900015:0",
+      "text": "机体类型：",
+      "enabled": true
+    },
+    {
+      "surface": "body_puzzle",
+      "control_id": 120,
+      "class": "ComboBox",
+      "text": "我方小型机",
+      "enabled": true
+    },
+    {
+      "surface": "body_puzzle",
+      "control_id": 130,
+      "class": "Afx:400000:b:10003:900015:0",
+      "text": "图库地址1：",
+      "enabled": true
+    },
+    {
+      "surface": "body_puzzle",
+      "control_id": 140,
+      "class": "ComboBox",
+      "text": "[86]134：A1810",
+      "enabled": true
+    },
+    {
+      "surface": "body_puzzle",
+      "control_id": 150,
+      "class": "ComboBox",
+      "text": "[00]000：80010",
+      "enabled": false
+    },
+    {
+      "surface": "body_puzzle",
+      "control_id": 160,
+      "class": "Afx:400000:b:10003:900015:0",
+      "text": "图库地址2：",
+      "enabled": true
+    },
+    {
+      "surface": "body_puzzle",
+      "control_id": 170,
+      "class": "Button",
+      "text": "代码编辑",
+      "enabled": true
+    },
+    {
+      "surface": "body_puzzle",
+      "control_id": 180,
+      "class": "Button",
+      "text": "图库（提示：左键选择图块）",
+      "enabled": true
+    },
+    {
+      "surface": "body_puzzle",
+      "control_id": 190,
+      "class": "Afx:400000:b:10003:900015:0",
+      "text": "",
+      "enabled": true
+    },
+    {
+      "surface": "body_puzzle",
+      "control_id": 210,
+      "class": "Button",
+      "text": "效果图片(提示：左键编辑图块 右键删除图块)",
+      "enabled": true
+    },
+    {
+      "surface": "body_puzzle",
+      "control_id": 220,
+      "class": "Afx:400000:b:10003:900015:0",
+      "text": "",
+      "enabled": true
+    },
+    {
+      "surface": "body_puzzle",
+      "control_id": 270,
+      "class": "Edit",
+      "text": "F3 F8 00 01 02 F3 01 FE 03 04 00 05 F3 01 FC FD 20 08 F9 17 06 00 FD 20 07 F9 1B 1D FF ",
+      "enabled": true
+    },
+    {
+      "surface": "body_puzzle",
+      "control_id": 280,
+      "class": "Button",
+      "text": "清除",
+      "enabled": true
+    },
+    {
+      "surface": "body_puzzle",
+      "control_id": 290,
+      "class": "Button",
+      "text": "8×8",
+      "enabled": true
+    },
+    {
+      "surface": "body_puzzle",
+      "control_id": 300,
+      "class": "Button",
+      "text": "7×9",
+      "enabled": true
+    },
+    {
+      "surface": "body_puzzle",
+      "control_id": 310,
+      "class": "Button",
+      "text": "9×7",
+      "enabled": true
+    },
+    {
+      "surface": "body_puzzle",
+      "control_id": 320,
+      "class": "Button",
+      "text": "10×6",
+      "enabled": true
+    },
+    {
+      "surface": "body_puzzle",
+      "control_id": 330,
+      "class": "Button",
+      "text": "查看效果",
+      "enabled": true
+    },
+    {
+      "surface": "body_puzzle",
+      "control_id": 340,
+      "class": "Button",
+      "text": "确定",
+      "enabled": true
+    },
+    {
+      "surface": "body_puzzle",
+      "control_id": 350,
+      "class": "Button",
+      "text": "取消",
+      "enabled": true
+    },
+    {
+      "surface": "body_puzzle",
+      "control_id": 360,
+      "class": "Button",
+      "text": "向上移动",
+      "enabled": true
+    },
+    {
+      "surface": "body_puzzle",
+      "control_id": 370,
+      "class": "Button",
+      "text": "向\r\n\r\n左\r\n\r\n移\r\n\r\n动",
+      "enabled": true
+    },
+    {
+      "surface": "body_puzzle",
+      "control_id": 380,
+      "class": "Button",
+      "text": "向下移动",
+      "enabled": true
+    },
+    {
+      "surface": "body_puzzle",
+      "control_id": 390,
+      "class": "Button",
+      "text": "向\r\n\r\n右\r\n\r\n移\r\n\r\n动",
+      "enabled": true
+    },
+    {
+      "surface": "body_puzzle",
+      "control_id": 400,
+      "class": "Button",
+      "text": "显示图块编号",
+      "enabled": true
+    },
+    {
+      "surface": "body_puzzle",
+      "control_id": 430,
+      "class": "Afx:400000:b:10003:900015:0",
+      "text": "当前选择的图块编号：",
+      "enabled": true
+    },
+    {
+      "surface": "body_puzzle",
+      "control_id": 440,
+      "class": "Afx:400000:b:10003:900015:0",
+      "text": "00",
+      "enabled": true
+    },
+    {
+      "surface": "body_puzzle",
+      "control_id": 450,
+      "class": "Button",
+      "text": "调换图库拼图",
+      "enabled": true
+    },
+    {
+      "surface": "fragment_puzzle",
+      "control_id": 100,
+      "class": "Button",
+      "text": "参考设置",
+      "enabled": true
+    },
+    {
+      "surface": "fragment_puzzle",
+      "control_id": 110,
+      "class": "Afx:400000:b:10003:900015:0",
+      "text": "机体类型：",
+      "enabled": true
+    },
+    {
+      "surface": "fragment_puzzle",
+      "control_id": 120,
+      "class": "ComboBox",
+      "text": "我方小型机",
+      "enabled": true
+    },
+    {
+      "surface": "fragment_puzzle",
+      "control_id": 130,
+      "class": "Afx:400000:b:10003:900015:0",
+      "text": "图库地址1：",
+      "enabled": true
+    },
+    {
+      "surface": "fragment_puzzle",
+      "control_id": 140,
+      "class": "ComboBox",
+      "text": "[86]134：A1810",
+      "enabled": false
+    },
+    {
+      "surface": "fragment_puzzle",
+      "control_id": 150,
+      "class": "ComboBox",
+      "text": "[00]000：80010",
+      "enabled": false
+    },
+    {
+      "surface": "fragment_puzzle",
+      "control_id": 160,
+      "class": "Afx:400000:b:10003:900015:0",
+      "text": "图库地址2：",
+      "enabled": true
+    },
+    {
+      "surface": "fragment_puzzle",
+      "control_id": 170,
+      "class": "Button",
+      "text": "图库（提示：左键选择图块）",
+      "enabled": true
+    },
+    {
+      "surface": "fragment_puzzle",
+      "control_id": 180,
+      "class": "Afx:400000:b:10003:900015:0",
+      "text": "",
+      "enabled": true
+    },
+    {
+      "surface": "fragment_puzzle",
+      "control_id": 200,
+      "class": "Button",
+      "text": "效果图片（提示：左键编辑调整图块位置  右键翻转图块）",
+      "enabled": true
+    },
+    {
+      "surface": "fragment_puzzle",
+      "control_id": 210,
+      "class": "Afx:400000:b:10003:900015:0",
+      "text": "",
+      "enabled": true
+    },
+    {
+      "surface": "fragment_puzzle",
+      "control_id": 240,
+      "class": "Button",
+      "text": "确定",
+      "enabled": true
+    },
+    {
+      "surface": "fragment_puzzle",
+      "control_id": 250,
+      "class": "Button",
+      "text": "取消",
+      "enabled": true
+    },
+    {
+      "surface": "fragment_puzzle",
+      "control_id": 260,
+      "class": "Button",
+      "text": "向上移动",
+      "enabled": true
+    },
+    {
+      "surface": "fragment_puzzle",
+      "control_id": 270,
+      "class": "Button",
+      "text": "向\r\n\r\n左\r\n\r\n移\r\n\r\n动",
+      "enabled": true
+    },
+    {
+      "surface": "fragment_puzzle",
+      "control_id": 280,
+      "class": "Button",
+      "text": "向下移动",
+      "enabled": true
+    },
+    {
+      "surface": "fragment_puzzle",
+      "control_id": 290,
+      "class": "Button",
+      "text": "向\r\n\r\n右\r\n\r\n移\r\n\r\n动",
+      "enabled": true
+    },
+    {
+      "surface": "fragment_puzzle",
+      "control_id": 300,
+      "class": "ComboBox",
+      "text": "[66]102：99810",
+      "enabled": true
+    },
+    {
+      "surface": "fragment_puzzle",
+      "control_id": 310,
+      "class": "Afx:400000:b:10003:900015:0",
+      "text": "碎片地址：",
+      "enabled": true
+    },
+    {
+      "surface": "fragment_puzzle",
+      "control_id": 320,
+      "class": "Button",
+      "text": "代码编辑",
+      "enabled": true
+    },
+    {
+      "surface": "fragment_puzzle",
+      "control_id": 330,
+      "class": "Edit",
+      "text": "08 C6 60 06 0E 0A F4 02 0A F6 02 0A FD 02 0A F6 02 02 0E E9 10 06 1C 02 0E 08 F4 0E F0 F4 02 02 0E F2 F8 02 0E FC F8 02 0E 08 FD 02 FF ",
+      "enabled": true
+    },
+    {
+      "surface": "fragment_puzzle",
+      "control_id": 340,
+      "class": "Button",
+      "text": "清除",
+      "enabled": true
+    },
+    {
+      "surface": "fragment_puzzle",
+      "control_id": 350,
+      "class": "Button",
+      "text": "查看效果",
+      "enabled": true
+    },
+    {
+      "surface": "fragment_puzzle",
+      "control_id": 390,
+      "class": "ListBox",
+      "text": "",
+      "enabled": true
+    },
+    {
+      "surface": "fragment_puzzle",
+      "control_id": 400,
+      "class": "Button",
+      "text": "显示图块编号",
+      "enabled": true
+    },
+    {
+      "surface": "fragment_puzzle",
+      "control_id": 430,
+      "class": "Button",
+      "text": "水平镜像翻转",
+      "enabled": true
+    },
+    {
+      "surface": "fragment_puzzle",
+      "control_id": 440,
+      "class": "Button",
+      "text": "垂直平镜像翻转",
       "enabled": true
     }
   ]

@@ -331,7 +331,7 @@ class AnimationCodecTests(unittest.TestCase):
         self.assertEqual(len(self.codec.calls()), 86)
         self.assertEqual(
             sum(self.codec.call_is_editable(offset) for offset, _ in self.codec.calls()),
-            76,
+            78,
         )
         patch = self.codec.call_patch(0x3BB93, 2)
         self.assertEqual(patch, (0x3BB95, b"\x2c", b"\x02"))
@@ -352,6 +352,8 @@ class AnimationCodecTests(unittest.TestCase):
             0x38C27: "奇迹闪烁调用序列",
             0x38113: "资料集地址/编号清单",
             0x384F2: "资料集地址/编号清单",
+            0x380DF: "参考逐字段保存同址黄金",
+            0x38EEA: "参考逐字段保存同址黄金",
         }
         for offset, evidence in expected.items():
             with self.subTest(offset=hex(offset)):
@@ -364,7 +366,7 @@ class AnimationCodecTests(unittest.TestCase):
             for offset, _ in self.codec.calls()
             if not self.codec.call_is_editable(offset)
         ]
-        self.assertEqual(len(readonly), 10)
+        self.assertEqual(len(readonly), 8)
         self.assertIn(0x3804A, readonly)
 
     def test_stale_batch_fails_without_applying_earlier_patches(self):
@@ -414,15 +416,15 @@ class AnimationUiTests(QtTestCase):
                 self.assertFalse(combo.isEnabled(), hex(offset))
                 combo.setCurrentIndex(replacement)
                 self.assertEqual(dialog.draft[offset + 2], animation_id, hex(offset))
-        self.assertEqual((editable, blocked), (76, 10))
+        self.assertEqual((editable, blocked), (78, 8))
         self.assertEqual(bytes(dialog.draft), original)
         self.assertEqual(bytes(self.project.working), original)
 
-    def test_documented_calls_allow_second_change_and_survive_save_reopen(self):
+    def test_verified_calls_allow_second_change_and_survive_save_reopen(self):
         dialog = MapAnimationEditorDialog(project=self.project)
         self.addCleanup(dialog.close)
         original = bytes(self.project.working)
-        offsets = (0x38113, 0x384F2)
+        offsets = (0x380DF, 0x38113, 0x384F2, 0x38EEA)
         for offset in offsets:
             combo = dialog.call_combos[offset]
             self.assertTrue(combo.isEnabled())

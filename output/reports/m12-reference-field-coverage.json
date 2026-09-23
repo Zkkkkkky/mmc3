@@ -1,14 +1,14 @@
 {
-  "generated_at": "2026-09-20T16:54:21+08:00",
+  "generated_at": "2026-09-23T00:37:59+08:00",
   "module": "M12",
   "passed": true,
   "delivery_status": "reference_field_scope_complete_user_pending",
   "logical_fields": 1281,
-  "safe_denominator_fields": 198,
+  "safe_denominator_fields": 241,
   "classification_counts": {
     "no_effect": 894,
-    "reference_persistent_product_blocked": 189,
-    "safe_persistent": 198
+    "reference_persistent_product_narrow_guarded": 146,
+    "safe_persistent": 241
   },
   "checks": {
     "catalog_complete": true,
@@ -18,16 +18,25 @@
     "classification_counts_match": true,
     "all_sprite_first_tile_fields_safe": true,
     "all_names_and_preview_no_effect": true,
-    "all_xy_no_effect": true
+    "all_xy_no_effect": true,
+    "narrow_guarded_families_separated": true,
+    "reference_calls_exactly_crosswalked": true,
+    "reference_calls_product_guarded": true,
+    "reference_calls_still_unmapped": true
   },
   "evidence": {
     "catalog": "output/reports/m12-reference-field-catalog.json",
     "save_summary": "output/verification/legacy-m12-all-fields-20260920/summary.json",
     "metadata_summary": "output/verification/legacy-m12-metadata-fields-20260920/summary.json",
-    "implementation_report": "output/verification/m12-animation-compatibility.json"
+    "implementation_report": "output/verification/m12-animation-compatibility.json",
+    "current_rom": {
+      "path": "output/rom/DC_kuorong_464K.nes",
+      "sha256": "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E"
+    }
   },
   "limitations": [
-    "114 个运行规律整段代码、32 个背景整段代码、24 个精神调用和 19 个地图武器调用虽可由参考版保存，但产品缺少同粒度安全证明，继续禁写。",
+    "114 个运行规律整段代码和 32 个背景整段代码虽可由参考版保存，产品只开放解释器验证的窄参数，整段任意改写继续禁用。",
+    "24 个精神调用和 19 个地图武器调用均精确命中当前 ROM 的同址 38 02 指令，并由产品上下文或参考逐字段同址保存黄金进入安全分母。",
     "496 个名称只在当前参考窗口内变化，新进程全部恢复；产品工程名称属于增强功能，不计参考安全分母。",
     "X/Y、代码编辑动作输入和预览选择器均为 no-effect。"
   ],
@@ -1114,8 +1123,8 @@
       "field_id": "movement_code:000",
       "family": "movement_code",
       "row": 0,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "reference_persistent_product_narrow_guarded",
+      "reason": "参考版整段可持久化；产品已实现解释器验证的窄参数编辑，控制流和其余字节继续禁写。"
     },
     {
       "field_id": "movement_name:001",
@@ -1128,8 +1137,8 @@
       "field_id": "movement_code:001",
       "family": "movement_code",
       "row": 1,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "reference_persistent_product_narrow_guarded",
+      "reason": "参考版整段可持久化；产品已实现解释器验证的窄参数编辑，控制流和其余字节继续禁写。"
     },
     {
       "field_id": "movement_name:002",
@@ -1142,8 +1151,8 @@
       "field_id": "movement_code:002",
       "family": "movement_code",
       "row": 2,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "reference_persistent_product_narrow_guarded",
+      "reason": "参考版整段可持久化；产品已实现解释器验证的窄参数编辑，控制流和其余字节继续禁写。"
     },
     {
       "field_id": "movement_name:003",
@@ -1156,8 +1165,8 @@
       "field_id": "movement_code:003",
       "family": "movement_code",
       "row": 3,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "reference_persistent_product_narrow_guarded",
+      "reason": "参考版整段可持久化；产品已实现解释器验证的窄参数编辑，控制流和其余字节继续禁写。"
     },
     {
       "field_id": "movement_name:004",
@@ -1170,8 +1179,8 @@
       "field_id": "movement_code:004",
       "family": "movement_code",
       "row": 4,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "reference_persistent_product_narrow_guarded",
+      "reason": "参考版整段可持久化；产品已实现解释器验证的窄参数编辑，控制流和其余字节继续禁写。"
     },
     {
       "field_id": "movement_name:005",
@@ -1184,8 +1193,8 @@
       "field_id": "movement_code:005",
       "family": "movement_code",
       "row": 5,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "reference_persistent_product_narrow_guarded",
+      "reason": "参考版整段可持久化；产品已实现解释器验证的窄参数编辑，控制流和其余字节继续禁写。"
     },
     {
       "field_id": "movement_name:006",
@@ -1198,8 +1207,8 @@
       "field_id": "movement_code:006",
       "family": "movement_code",
       "row": 6,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "reference_persistent_product_narrow_guarded",
+      "reason": "参考版整段可持久化；产品已实现解释器验证的窄参数编辑，控制流和其余字节继续禁写。"
     },
     {
       "field_id": "movement_name:007",
@@ -1212,8 +1221,8 @@
       "field_id": "movement_code:007",
       "family": "movement_code",
       "row": 7,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "reference_persistent_product_narrow_guarded",
+      "reason": "参考版整段可持久化；产品已实现解释器验证的窄参数编辑，控制流和其余字节继续禁写。"
     },
     {
       "field_id": "movement_name:008",
@@ -1226,8 +1235,8 @@
       "field_id": "movement_code:008",
       "family": "movement_code",
       "row": 8,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "reference_persistent_product_narrow_guarded",
+      "reason": "参考版整段可持久化；产品已实现解释器验证的窄参数编辑，控制流和其余字节继续禁写。"
     },
     {
       "field_id": "movement_name:009",
@@ -1240,8 +1249,8 @@
       "field_id": "movement_code:009",
       "family": "movement_code",
       "row": 9,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "reference_persistent_product_narrow_guarded",
+      "reason": "参考版整段可持久化；产品已实现解释器验证的窄参数编辑，控制流和其余字节继续禁写。"
     },
     {
       "field_id": "movement_name:010",
@@ -1254,8 +1263,8 @@
       "field_id": "movement_code:010",
       "family": "movement_code",
       "row": 10,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "reference_persistent_product_narrow_guarded",
+      "reason": "参考版整段可持久化；产品已实现解释器验证的窄参数编辑，控制流和其余字节继续禁写。"
     },
     {
       "field_id": "movement_name:011",
@@ -1268,8 +1277,8 @@
       "field_id": "movement_code:011",
       "family": "movement_code",
       "row": 11,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "reference_persistent_product_narrow_guarded",
+      "reason": "参考版整段可持久化；产品已实现解释器验证的窄参数编辑，控制流和其余字节继续禁写。"
     },
     {
       "field_id": "movement_name:012",
@@ -1282,8 +1291,8 @@
       "field_id": "movement_code:012",
       "family": "movement_code",
       "row": 12,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "reference_persistent_product_narrow_guarded",
+      "reason": "参考版整段可持久化；产品已实现解释器验证的窄参数编辑，控制流和其余字节继续禁写。"
     },
     {
       "field_id": "movement_name:013",
@@ -1296,8 +1305,8 @@
       "field_id": "movement_code:013",
       "family": "movement_code",
       "row": 13,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "reference_persistent_product_narrow_guarded",
+      "reason": "参考版整段可持久化；产品已实现解释器验证的窄参数编辑，控制流和其余字节继续禁写。"
     },
     {
       "field_id": "movement_name:014",
@@ -1310,8 +1319,8 @@
       "field_id": "movement_code:014",
       "family": "movement_code",
       "row": 14,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "reference_persistent_product_narrow_guarded",
+      "reason": "参考版整段可持久化；产品已实现解释器验证的窄参数编辑，控制流和其余字节继续禁写。"
     },
     {
       "field_id": "movement_name:015",
@@ -1324,8 +1333,8 @@
       "field_id": "movement_code:015",
       "family": "movement_code",
       "row": 15,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "reference_persistent_product_narrow_guarded",
+      "reason": "参考版整段可持久化；产品已实现解释器验证的窄参数编辑，控制流和其余字节继续禁写。"
     },
     {
       "field_id": "movement_name:016",
@@ -1338,8 +1347,8 @@
       "field_id": "movement_code:016",
       "family": "movement_code",
       "row": 16,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "reference_persistent_product_narrow_guarded",
+      "reason": "参考版整段可持久化；产品已实现解释器验证的窄参数编辑，控制流和其余字节继续禁写。"
     },
     {
       "field_id": "movement_name:017",
@@ -1352,8 +1361,8 @@
       "field_id": "movement_code:017",
       "family": "movement_code",
       "row": 17,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "reference_persistent_product_narrow_guarded",
+      "reason": "参考版整段可持久化；产品已实现解释器验证的窄参数编辑，控制流和其余字节继续禁写。"
     },
     {
       "field_id": "movement_name:018",
@@ -1366,8 +1375,8 @@
       "field_id": "movement_code:018",
       "family": "movement_code",
       "row": 18,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "reference_persistent_product_narrow_guarded",
+      "reason": "参考版整段可持久化；产品已实现解释器验证的窄参数编辑，控制流和其余字节继续禁写。"
     },
     {
       "field_id": "movement_name:019",
@@ -1380,8 +1389,8 @@
       "field_id": "movement_code:019",
       "family": "movement_code",
       "row": 19,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "reference_persistent_product_narrow_guarded",
+      "reason": "参考版整段可持久化；产品已实现解释器验证的窄参数编辑，控制流和其余字节继续禁写。"
     },
     {
       "field_id": "movement_name:020",
@@ -1394,8 +1403,8 @@
       "field_id": "movement_code:020",
       "family": "movement_code",
       "row": 20,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "reference_persistent_product_narrow_guarded",
+      "reason": "参考版整段可持久化；产品已实现解释器验证的窄参数编辑，控制流和其余字节继续禁写。"
     },
     {
       "field_id": "movement_name:021",
@@ -1408,8 +1417,8 @@
       "field_id": "movement_code:021",
       "family": "movement_code",
       "row": 21,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "reference_persistent_product_narrow_guarded",
+      "reason": "参考版整段可持久化；产品已实现解释器验证的窄参数编辑，控制流和其余字节继续禁写。"
     },
     {
       "field_id": "movement_name:022",
@@ -1422,8 +1431,8 @@
       "field_id": "movement_code:022",
       "family": "movement_code",
       "row": 22,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "reference_persistent_product_narrow_guarded",
+      "reason": "参考版整段可持久化；产品已实现解释器验证的窄参数编辑，控制流和其余字节继续禁写。"
     },
     {
       "field_id": "movement_name:023",
@@ -1436,8 +1445,8 @@
       "field_id": "movement_code:023",
       "family": "movement_code",
       "row": 23,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "reference_persistent_product_narrow_guarded",
+      "reason": "参考版整段可持久化；产品已实现解释器验证的窄参数编辑，控制流和其余字节继续禁写。"
     },
     {
       "field_id": "movement_name:024",
@@ -1450,8 +1459,8 @@
       "field_id": "movement_code:024",
       "family": "movement_code",
       "row": 24,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "reference_persistent_product_narrow_guarded",
+      "reason": "参考版整段可持久化；产品已实现解释器验证的窄参数编辑，控制流和其余字节继续禁写。"
     },
     {
       "field_id": "movement_name:025",
@@ -1464,8 +1473,8 @@
       "field_id": "movement_code:025",
       "family": "movement_code",
       "row": 25,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "reference_persistent_product_narrow_guarded",
+      "reason": "参考版整段可持久化；产品已实现解释器验证的窄参数编辑，控制流和其余字节继续禁写。"
     },
     {
       "field_id": "movement_name:026",
@@ -1478,8 +1487,8 @@
       "field_id": "movement_code:026",
       "family": "movement_code",
       "row": 26,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "reference_persistent_product_narrow_guarded",
+      "reason": "参考版整段可持久化；产品已实现解释器验证的窄参数编辑，控制流和其余字节继续禁写。"
     },
     {
       "field_id": "movement_name:027",
@@ -1492,8 +1501,8 @@
       "field_id": "movement_code:027",
       "family": "movement_code",
       "row": 27,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "reference_persistent_product_narrow_guarded",
+      "reason": "参考版整段可持久化；产品已实现解释器验证的窄参数编辑，控制流和其余字节继续禁写。"
     },
     {
       "field_id": "movement_name:028",
@@ -1506,8 +1515,8 @@
       "field_id": "movement_code:028",
       "family": "movement_code",
       "row": 28,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "reference_persistent_product_narrow_guarded",
+      "reason": "参考版整段可持久化；产品已实现解释器验证的窄参数编辑，控制流和其余字节继续禁写。"
     },
     {
       "field_id": "movement_name:029",
@@ -1520,8 +1529,8 @@
       "field_id": "movement_code:029",
       "family": "movement_code",
       "row": 29,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "reference_persistent_product_narrow_guarded",
+      "reason": "参考版整段可持久化；产品已实现解释器验证的窄参数编辑，控制流和其余字节继续禁写。"
     },
     {
       "field_id": "movement_name:030",
@@ -1534,8 +1543,8 @@
       "field_id": "movement_code:030",
       "family": "movement_code",
       "row": 30,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "reference_persistent_product_narrow_guarded",
+      "reason": "参考版整段可持久化；产品已实现解释器验证的窄参数编辑，控制流和其余字节继续禁写。"
     },
     {
       "field_id": "movement_name:031",
@@ -1548,8 +1557,8 @@
       "field_id": "movement_code:031",
       "family": "movement_code",
       "row": 31,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "reference_persistent_product_narrow_guarded",
+      "reason": "参考版整段可持久化；产品已实现解释器验证的窄参数编辑，控制流和其余字节继续禁写。"
     },
     {
       "field_id": "movement_name:032",
@@ -1562,8 +1571,8 @@
       "field_id": "movement_code:032",
       "family": "movement_code",
       "row": 32,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "reference_persistent_product_narrow_guarded",
+      "reason": "参考版整段可持久化；产品已实现解释器验证的窄参数编辑，控制流和其余字节继续禁写。"
     },
     {
       "field_id": "movement_name:033",
@@ -1576,8 +1585,8 @@
       "field_id": "movement_code:033",
       "family": "movement_code",
       "row": 33,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "reference_persistent_product_narrow_guarded",
+      "reason": "参考版整段可持久化；产品已实现解释器验证的窄参数编辑，控制流和其余字节继续禁写。"
     },
     {
       "field_id": "movement_name:034",
@@ -1590,8 +1599,8 @@
       "field_id": "movement_code:034",
       "family": "movement_code",
       "row": 34,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "reference_persistent_product_narrow_guarded",
+      "reason": "参考版整段可持久化；产品已实现解释器验证的窄参数编辑，控制流和其余字节继续禁写。"
     },
     {
       "field_id": "movement_name:035",
@@ -1604,8 +1613,8 @@
       "field_id": "movement_code:035",
       "family": "movement_code",
       "row": 35,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "reference_persistent_product_narrow_guarded",
+      "reason": "参考版整段可持久化；产品已实现解释器验证的窄参数编辑，控制流和其余字节继续禁写。"
     },
     {
       "field_id": "movement_name:036",
@@ -1618,8 +1627,8 @@
       "field_id": "movement_code:036",
       "family": "movement_code",
       "row": 36,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "reference_persistent_product_narrow_guarded",
+      "reason": "参考版整段可持久化；产品已实现解释器验证的窄参数编辑，控制流和其余字节继续禁写。"
     },
     {
       "field_id": "movement_name:037",
@@ -1632,8 +1641,8 @@
       "field_id": "movement_code:037",
       "family": "movement_code",
       "row": 37,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "reference_persistent_product_narrow_guarded",
+      "reason": "参考版整段可持久化；产品已实现解释器验证的窄参数编辑，控制流和其余字节继续禁写。"
     },
     {
       "field_id": "movement_name:038",
@@ -1646,8 +1655,8 @@
       "field_id": "movement_code:038",
       "family": "movement_code",
       "row": 38,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "reference_persistent_product_narrow_guarded",
+      "reason": "参考版整段可持久化；产品已实现解释器验证的窄参数编辑，控制流和其余字节继续禁写。"
     },
     {
       "field_id": "movement_name:039",
@@ -1660,8 +1669,8 @@
       "field_id": "movement_code:039",
       "family": "movement_code",
       "row": 39,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "reference_persistent_product_narrow_guarded",
+      "reason": "参考版整段可持久化；产品已实现解释器验证的窄参数编辑，控制流和其余字节继续禁写。"
     },
     {
       "field_id": "movement_name:040",
@@ -1674,8 +1683,8 @@
       "field_id": "movement_code:040",
       "family": "movement_code",
       "row": 40,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "reference_persistent_product_narrow_guarded",
+      "reason": "参考版整段可持久化；产品已实现解释器验证的窄参数编辑，控制流和其余字节继续禁写。"
     },
     {
       "field_id": "movement_name:041",
@@ -1688,8 +1697,8 @@
       "field_id": "movement_code:041",
       "family": "movement_code",
       "row": 41,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "reference_persistent_product_narrow_guarded",
+      "reason": "参考版整段可持久化；产品已实现解释器验证的窄参数编辑，控制流和其余字节继续禁写。"
     },
     {
       "field_id": "movement_name:042",
@@ -1702,8 +1711,8 @@
       "field_id": "movement_code:042",
       "family": "movement_code",
       "row": 42,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "reference_persistent_product_narrow_guarded",
+      "reason": "参考版整段可持久化；产品已实现解释器验证的窄参数编辑，控制流和其余字节继续禁写。"
     },
     {
       "field_id": "movement_name:043",
@@ -1716,8 +1725,8 @@
       "field_id": "movement_code:043",
       "family": "movement_code",
       "row": 43,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "reference_persistent_product_narrow_guarded",
+      "reason": "参考版整段可持久化；产品已实现解释器验证的窄参数编辑，控制流和其余字节继续禁写。"
     },
     {
       "field_id": "movement_name:044",
@@ -1730,8 +1739,8 @@
       "field_id": "movement_code:044",
       "family": "movement_code",
       "row": 44,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "reference_persistent_product_narrow_guarded",
+      "reason": "参考版整段可持久化；产品已实现解释器验证的窄参数编辑，控制流和其余字节继续禁写。"
     },
     {
       "field_id": "movement_name:045",
@@ -1744,8 +1753,8 @@
       "field_id": "movement_code:045",
       "family": "movement_code",
       "row": 45,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "reference_persistent_product_narrow_guarded",
+      "reason": "参考版整段可持久化；产品已实现解释器验证的窄参数编辑，控制流和其余字节继续禁写。"
     },
     {
       "field_id": "movement_name:046",
@@ -1758,8 +1767,8 @@
       "field_id": "movement_code:046",
       "family": "movement_code",
       "row": 46,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "reference_persistent_product_narrow_guarded",
+      "reason": "参考版整段可持久化；产品已实现解释器验证的窄参数编辑，控制流和其余字节继续禁写。"
     },
     {
       "field_id": "movement_name:047",
@@ -1772,8 +1781,8 @@
       "field_id": "movement_code:047",
       "family": "movement_code",
       "row": 47,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "reference_persistent_product_narrow_guarded",
+      "reason": "参考版整段可持久化；产品已实现解释器验证的窄参数编辑，控制流和其余字节继续禁写。"
     },
     {
       "field_id": "movement_name:048",
@@ -1786,8 +1795,8 @@
       "field_id": "movement_code:048",
       "family": "movement_code",
       "row": 48,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "reference_persistent_product_narrow_guarded",
+      "reason": "参考版整段可持久化；产品已实现解释器验证的窄参数编辑，控制流和其余字节继续禁写。"
     },
     {
       "field_id": "movement_name:049",
@@ -1800,8 +1809,8 @@
       "field_id": "movement_code:049",
       "family": "movement_code",
       "row": 49,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "reference_persistent_product_narrow_guarded",
+      "reason": "参考版整段可持久化；产品已实现解释器验证的窄参数编辑，控制流和其余字节继续禁写。"
     },
     {
       "field_id": "movement_name:050",
@@ -1814,8 +1823,8 @@
       "field_id": "movement_code:050",
       "family": "movement_code",
       "row": 50,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "reference_persistent_product_narrow_guarded",
+      "reason": "参考版整段可持久化；产品已实现解释器验证的窄参数编辑，控制流和其余字节继续禁写。"
     },
     {
       "field_id": "movement_name:051",
@@ -1828,8 +1837,8 @@
       "field_id": "movement_code:051",
       "family": "movement_code",
       "row": 51,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "reference_persistent_product_narrow_guarded",
+      "reason": "参考版整段可持久化；产品已实现解释器验证的窄参数编辑，控制流和其余字节继续禁写。"
     },
     {
       "field_id": "movement_name:052",
@@ -1842,8 +1851,8 @@
       "field_id": "movement_code:052",
       "family": "movement_code",
       "row": 52,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "reference_persistent_product_narrow_guarded",
+      "reason": "参考版整段可持久化；产品已实现解释器验证的窄参数编辑，控制流和其余字节继续禁写。"
     },
     {
       "field_id": "movement_name:053",
@@ -1856,8 +1865,8 @@
       "field_id": "movement_code:053",
       "family": "movement_code",
       "row": 53,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "reference_persistent_product_narrow_guarded",
+      "reason": "参考版整段可持久化；产品已实现解释器验证的窄参数编辑，控制流和其余字节继续禁写。"
     },
     {
       "field_id": "movement_name:054",
@@ -1870,8 +1879,8 @@
       "field_id": "movement_code:054",
       "family": "movement_code",
       "row": 54,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "reference_persistent_product_narrow_guarded",
+      "reason": "参考版整段可持久化；产品已实现解释器验证的窄参数编辑，控制流和其余字节继续禁写。"
     },
     {
       "field_id": "movement_name:055",
@@ -1884,8 +1893,8 @@
       "field_id": "movement_code:055",
       "family": "movement_code",
       "row": 55,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "reference_persistent_product_narrow_guarded",
+      "reason": "参考版整段可持久化；产品已实现解释器验证的窄参数编辑，控制流和其余字节继续禁写。"
     },
     {
       "field_id": "movement_name:056",
@@ -1898,8 +1907,8 @@
       "field_id": "movement_code:056",
       "family": "movement_code",
       "row": 56,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "reference_persistent_product_narrow_guarded",
+      "reason": "参考版整段可持久化；产品已实现解释器验证的窄参数编辑，控制流和其余字节继续禁写。"
     },
     {
       "field_id": "movement_name:057",
@@ -1912,8 +1921,8 @@
       "field_id": "movement_code:057",
       "family": "movement_code",
       "row": 57,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "reference_persistent_product_narrow_guarded",
+      "reason": "参考版整段可持久化；产品已实现解释器验证的窄参数编辑，控制流和其余字节继续禁写。"
     },
     {
       "field_id": "movement_name:058",
@@ -1926,8 +1935,8 @@
       "field_id": "movement_code:058",
       "family": "movement_code",
       "row": 58,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "reference_persistent_product_narrow_guarded",
+      "reason": "参考版整段可持久化；产品已实现解释器验证的窄参数编辑，控制流和其余字节继续禁写。"
     },
     {
       "field_id": "movement_name:059",
@@ -1940,8 +1949,8 @@
       "field_id": "movement_code:059",
       "family": "movement_code",
       "row": 59,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "reference_persistent_product_narrow_guarded",
+      "reason": "参考版整段可持久化；产品已实现解释器验证的窄参数编辑，控制流和其余字节继续禁写。"
     },
     {
       "field_id": "movement_name:060",
@@ -1954,8 +1963,8 @@
       "field_id": "movement_code:060",
       "family": "movement_code",
       "row": 60,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "reference_persistent_product_narrow_guarded",
+      "reason": "参考版整段可持久化；产品已实现解释器验证的窄参数编辑，控制流和其余字节继续禁写。"
     },
     {
       "field_id": "movement_name:061",
@@ -1968,8 +1977,8 @@
       "field_id": "movement_code:061",
       "family": "movement_code",
       "row": 61,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "reference_persistent_product_narrow_guarded",
+      "reason": "参考版整段可持久化；产品已实现解释器验证的窄参数编辑，控制流和其余字节继续禁写。"
     },
     {
       "field_id": "movement_name:062",
@@ -1982,8 +1991,8 @@
       "field_id": "movement_code:062",
       "family": "movement_code",
       "row": 62,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "reference_persistent_product_narrow_guarded",
+      "reason": "参考版整段可持久化；产品已实现解释器验证的窄参数编辑，控制流和其余字节继续禁写。"
     },
     {
       "field_id": "movement_name:063",
@@ -1996,8 +2005,8 @@
       "field_id": "movement_code:063",
       "family": "movement_code",
       "row": 63,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "reference_persistent_product_narrow_guarded",
+      "reason": "参考版整段可持久化；产品已实现解释器验证的窄参数编辑，控制流和其余字节继续禁写。"
     },
     {
       "field_id": "movement_name:064",
@@ -2010,8 +2019,8 @@
       "field_id": "movement_code:064",
       "family": "movement_code",
       "row": 64,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "reference_persistent_product_narrow_guarded",
+      "reason": "参考版整段可持久化；产品已实现解释器验证的窄参数编辑，控制流和其余字节继续禁写。"
     },
     {
       "field_id": "movement_name:065",
@@ -2024,8 +2033,8 @@
       "field_id": "movement_code:065",
       "family": "movement_code",
       "row": 65,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "reference_persistent_product_narrow_guarded",
+      "reason": "参考版整段可持久化；产品已实现解释器验证的窄参数编辑，控制流和其余字节继续禁写。"
     },
     {
       "field_id": "movement_name:066",
@@ -2038,8 +2047,8 @@
       "field_id": "movement_code:066",
       "family": "movement_code",
       "row": 66,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "reference_persistent_product_narrow_guarded",
+      "reason": "参考版整段可持久化；产品已实现解释器验证的窄参数编辑，控制流和其余字节继续禁写。"
     },
     {
       "field_id": "movement_name:067",
@@ -2052,8 +2061,8 @@
       "field_id": "movement_code:067",
       "family": "movement_code",
       "row": 67,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "reference_persistent_product_narrow_guarded",
+      "reason": "参考版整段可持久化；产品已实现解释器验证的窄参数编辑，控制流和其余字节继续禁写。"
     },
     {
       "field_id": "movement_name:068",
@@ -2066,8 +2075,8 @@
       "field_id": "movement_code:068",
       "family": "movement_code",
       "row": 68,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "reference_persistent_product_narrow_guarded",
+      "reason": "参考版整段可持久化；产品已实现解释器验证的窄参数编辑，控制流和其余字节继续禁写。"
     },
     {
       "field_id": "movement_name:069",
@@ -2080,8 +2089,8 @@
       "field_id": "movement_code:069",
       "family": "movement_code",
       "row": 69,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "reference_persistent_product_narrow_guarded",
+      "reason": "参考版整段可持久化；产品已实现解释器验证的窄参数编辑，控制流和其余字节继续禁写。"
     },
     {
       "field_id": "movement_name:070",
@@ -2094,8 +2103,8 @@
       "field_id": "movement_code:070",
       "family": "movement_code",
       "row": 70,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "reference_persistent_product_narrow_guarded",
+      "reason": "参考版整段可持久化；产品已实现解释器验证的窄参数编辑，控制流和其余字节继续禁写。"
     },
     {
       "field_id": "movement_name:071",
@@ -2108,8 +2117,8 @@
       "field_id": "movement_code:071",
       "family": "movement_code",
       "row": 71,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "reference_persistent_product_narrow_guarded",
+      "reason": "参考版整段可持久化；产品已实现解释器验证的窄参数编辑，控制流和其余字节继续禁写。"
     },
     {
       "field_id": "movement_name:072",
@@ -2122,8 +2131,8 @@
       "field_id": "movement_code:072",
       "family": "movement_code",
       "row": 72,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "reference_persistent_product_narrow_guarded",
+      "reason": "参考版整段可持久化；产品已实现解释器验证的窄参数编辑，控制流和其余字节继续禁写。"
     },
     {
       "field_id": "movement_name:073",
@@ -2136,8 +2145,8 @@
       "field_id": "movement_code:073",
       "family": "movement_code",
       "row": 73,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "reference_persistent_product_narrow_guarded",
+      "reason": "参考版整段可持久化；产品已实现解释器验证的窄参数编辑，控制流和其余字节继续禁写。"
     },
     {
       "field_id": "movement_name:074",
@@ -2150,8 +2159,8 @@
       "field_id": "movement_code:074",
       "family": "movement_code",
       "row": 74,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "reference_persistent_product_narrow_guarded",
+      "reason": "参考版整段可持久化；产品已实现解释器验证的窄参数编辑，控制流和其余字节继续禁写。"
     },
     {
       "field_id": "movement_name:075",
@@ -2164,8 +2173,8 @@
       "field_id": "movement_code:075",
       "family": "movement_code",
       "row": 75,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "reference_persistent_product_narrow_guarded",
+      "reason": "参考版整段可持久化；产品已实现解释器验证的窄参数编辑，控制流和其余字节继续禁写。"
     },
     {
       "field_id": "movement_name:076",
@@ -2178,8 +2187,8 @@
       "field_id": "movement_code:076",
       "family": "movement_code",
       "row": 76,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "reference_persistent_product_narrow_guarded",
+      "reason": "参考版整段可持久化；产品已实现解释器验证的窄参数编辑，控制流和其余字节继续禁写。"
     },
     {
       "field_id": "movement_name:077",
@@ -2192,8 +2201,8 @@
       "field_id": "movement_code:077",
       "family": "movement_code",
       "row": 77,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "reference_persistent_product_narrow_guarded",
+      "reason": "参考版整段可持久化；产品已实现解释器验证的窄参数编辑，控制流和其余字节继续禁写。"
     },
     {
       "field_id": "movement_name:078",
@@ -2206,8 +2215,8 @@
       "field_id": "movement_code:078",
       "family": "movement_code",
       "row": 78,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "reference_persistent_product_narrow_guarded",
+      "reason": "参考版整段可持久化；产品已实现解释器验证的窄参数编辑，控制流和其余字节继续禁写。"
     },
     {
       "field_id": "movement_name:079",
@@ -2220,8 +2229,8 @@
       "field_id": "movement_code:079",
       "family": "movement_code",
       "row": 79,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "reference_persistent_product_narrow_guarded",
+      "reason": "参考版整段可持久化；产品已实现解释器验证的窄参数编辑，控制流和其余字节继续禁写。"
     },
     {
       "field_id": "movement_name:080",
@@ -2234,8 +2243,8 @@
       "field_id": "movement_code:080",
       "family": "movement_code",
       "row": 80,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "reference_persistent_product_narrow_guarded",
+      "reason": "参考版整段可持久化；产品已实现解释器验证的窄参数编辑，控制流和其余字节继续禁写。"
     },
     {
       "field_id": "movement_name:081",
@@ -2248,8 +2257,8 @@
       "field_id": "movement_code:081",
       "family": "movement_code",
       "row": 81,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "reference_persistent_product_narrow_guarded",
+      "reason": "参考版整段可持久化；产品已实现解释器验证的窄参数编辑，控制流和其余字节继续禁写。"
     },
     {
       "field_id": "movement_name:082",
@@ -2262,8 +2271,8 @@
       "field_id": "movement_code:082",
       "family": "movement_code",
       "row": 82,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "reference_persistent_product_narrow_guarded",
+      "reason": "参考版整段可持久化；产品已实现解释器验证的窄参数编辑，控制流和其余字节继续禁写。"
     },
     {
       "field_id": "movement_name:083",
@@ -2276,8 +2285,8 @@
       "field_id": "movement_code:083",
       "family": "movement_code",
       "row": 83,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "reference_persistent_product_narrow_guarded",
+      "reason": "参考版整段可持久化；产品已实现解释器验证的窄参数编辑，控制流和其余字节继续禁写。"
     },
     {
       "field_id": "movement_name:084",
@@ -2290,8 +2299,8 @@
       "field_id": "movement_code:084",
       "family": "movement_code",
       "row": 84,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "reference_persistent_product_narrow_guarded",
+      "reason": "参考版整段可持久化；产品已实现解释器验证的窄参数编辑，控制流和其余字节继续禁写。"
     },
     {
       "field_id": "movement_name:085",
@@ -2304,8 +2313,8 @@
       "field_id": "movement_code:085",
       "family": "movement_code",
       "row": 85,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "reference_persistent_product_narrow_guarded",
+      "reason": "参考版整段可持久化；产品已实现解释器验证的窄参数编辑，控制流和其余字节继续禁写。"
     },
     {
       "field_id": "movement_name:086",
@@ -2318,8 +2327,8 @@
       "field_id": "movement_code:086",
       "family": "movement_code",
       "row": 86,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "reference_persistent_product_narrow_guarded",
+      "reason": "参考版整段可持久化；产品已实现解释器验证的窄参数编辑，控制流和其余字节继续禁写。"
     },
     {
       "field_id": "movement_name:087",
@@ -2332,8 +2341,8 @@
       "field_id": "movement_code:087",
       "family": "movement_code",
       "row": 87,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "reference_persistent_product_narrow_guarded",
+      "reason": "参考版整段可持久化；产品已实现解释器验证的窄参数编辑，控制流和其余字节继续禁写。"
     },
     {
       "field_id": "movement_name:088",
@@ -2346,8 +2355,8 @@
       "field_id": "movement_code:088",
       "family": "movement_code",
       "row": 88,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "reference_persistent_product_narrow_guarded",
+      "reason": "参考版整段可持久化；产品已实现解释器验证的窄参数编辑，控制流和其余字节继续禁写。"
     },
     {
       "field_id": "movement_name:089",
@@ -2360,8 +2369,8 @@
       "field_id": "movement_code:089",
       "family": "movement_code",
       "row": 89,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "reference_persistent_product_narrow_guarded",
+      "reason": "参考版整段可持久化；产品已实现解释器验证的窄参数编辑，控制流和其余字节继续禁写。"
     },
     {
       "field_id": "movement_name:090",
@@ -2374,8 +2383,8 @@
       "field_id": "movement_code:090",
       "family": "movement_code",
       "row": 90,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "reference_persistent_product_narrow_guarded",
+      "reason": "参考版整段可持久化；产品已实现解释器验证的窄参数编辑，控制流和其余字节继续禁写。"
     },
     {
       "field_id": "movement_name:091",
@@ -2388,8 +2397,8 @@
       "field_id": "movement_code:091",
       "family": "movement_code",
       "row": 91,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "reference_persistent_product_narrow_guarded",
+      "reason": "参考版整段可持久化；产品已实现解释器验证的窄参数编辑，控制流和其余字节继续禁写。"
     },
     {
       "field_id": "movement_name:092",
@@ -2402,8 +2411,8 @@
       "field_id": "movement_code:092",
       "family": "movement_code",
       "row": 92,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "reference_persistent_product_narrow_guarded",
+      "reason": "参考版整段可持久化；产品已实现解释器验证的窄参数编辑，控制流和其余字节继续禁写。"
     },
     {
       "field_id": "movement_name:093",
@@ -2416,8 +2425,8 @@
       "field_id": "movement_code:093",
       "family": "movement_code",
       "row": 93,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "reference_persistent_product_narrow_guarded",
+      "reason": "参考版整段可持久化；产品已实现解释器验证的窄参数编辑，控制流和其余字节继续禁写。"
     },
     {
       "field_id": "movement_name:094",
@@ -2430,8 +2439,8 @@
       "field_id": "movement_code:094",
       "family": "movement_code",
       "row": 94,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "reference_persistent_product_narrow_guarded",
+      "reason": "参考版整段可持久化；产品已实现解释器验证的窄参数编辑，控制流和其余字节继续禁写。"
     },
     {
       "field_id": "movement_name:095",
@@ -2444,8 +2453,8 @@
       "field_id": "movement_code:095",
       "family": "movement_code",
       "row": 95,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "reference_persistent_product_narrow_guarded",
+      "reason": "参考版整段可持久化；产品已实现解释器验证的窄参数编辑，控制流和其余字节继续禁写。"
     },
     {
       "field_id": "movement_name:096",
@@ -2458,8 +2467,8 @@
       "field_id": "movement_code:096",
       "family": "movement_code",
       "row": 96,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "reference_persistent_product_narrow_guarded",
+      "reason": "参考版整段可持久化；产品已实现解释器验证的窄参数编辑，控制流和其余字节继续禁写。"
     },
     {
       "field_id": "movement_name:097",
@@ -2472,8 +2481,8 @@
       "field_id": "movement_code:097",
       "family": "movement_code",
       "row": 97,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "reference_persistent_product_narrow_guarded",
+      "reason": "参考版整段可持久化；产品已实现解释器验证的窄参数编辑，控制流和其余字节继续禁写。"
     },
     {
       "field_id": "movement_name:098",
@@ -2486,8 +2495,8 @@
       "field_id": "movement_code:098",
       "family": "movement_code",
       "row": 98,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "reference_persistent_product_narrow_guarded",
+      "reason": "参考版整段可持久化；产品已实现解释器验证的窄参数编辑，控制流和其余字节继续禁写。"
     },
     {
       "field_id": "movement_name:099",
@@ -2500,8 +2509,8 @@
       "field_id": "movement_code:099",
       "family": "movement_code",
       "row": 99,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "reference_persistent_product_narrow_guarded",
+      "reason": "参考版整段可持久化；产品已实现解释器验证的窄参数编辑，控制流和其余字节继续禁写。"
     },
     {
       "field_id": "movement_name:100",
@@ -2514,8 +2523,8 @@
       "field_id": "movement_code:100",
       "family": "movement_code",
       "row": 100,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "reference_persistent_product_narrow_guarded",
+      "reason": "参考版整段可持久化；产品已实现解释器验证的窄参数编辑，控制流和其余字节继续禁写。"
     },
     {
       "field_id": "movement_name:101",
@@ -2528,8 +2537,8 @@
       "field_id": "movement_code:101",
       "family": "movement_code",
       "row": 101,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "reference_persistent_product_narrow_guarded",
+      "reason": "参考版整段可持久化；产品已实现解释器验证的窄参数编辑，控制流和其余字节继续禁写。"
     },
     {
       "field_id": "movement_name:102",
@@ -2542,8 +2551,8 @@
       "field_id": "movement_code:102",
       "family": "movement_code",
       "row": 102,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "reference_persistent_product_narrow_guarded",
+      "reason": "参考版整段可持久化；产品已实现解释器验证的窄参数编辑，控制流和其余字节继续禁写。"
     },
     {
       "field_id": "movement_name:103",
@@ -2556,8 +2565,8 @@
       "field_id": "movement_code:103",
       "family": "movement_code",
       "row": 103,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "reference_persistent_product_narrow_guarded",
+      "reason": "参考版整段可持久化；产品已实现解释器验证的窄参数编辑，控制流和其余字节继续禁写。"
     },
     {
       "field_id": "movement_name:104",
@@ -2570,8 +2579,8 @@
       "field_id": "movement_code:104",
       "family": "movement_code",
       "row": 104,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "reference_persistent_product_narrow_guarded",
+      "reason": "参考版整段可持久化；产品已实现解释器验证的窄参数编辑，控制流和其余字节继续禁写。"
     },
     {
       "field_id": "movement_name:105",
@@ -2584,8 +2593,8 @@
       "field_id": "movement_code:105",
       "family": "movement_code",
       "row": 105,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "reference_persistent_product_narrow_guarded",
+      "reason": "参考版整段可持久化；产品已实现解释器验证的窄参数编辑，控制流和其余字节继续禁写。"
     },
     {
       "field_id": "movement_name:106",
@@ -2598,8 +2607,8 @@
       "field_id": "movement_code:106",
       "family": "movement_code",
       "row": 106,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "reference_persistent_product_narrow_guarded",
+      "reason": "参考版整段可持久化；产品已实现解释器验证的窄参数编辑，控制流和其余字节继续禁写。"
     },
     {
       "field_id": "movement_name:107",
@@ -2612,8 +2621,8 @@
       "field_id": "movement_code:107",
       "family": "movement_code",
       "row": 107,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "reference_persistent_product_narrow_guarded",
+      "reason": "参考版整段可持久化；产品已实现解释器验证的窄参数编辑，控制流和其余字节继续禁写。"
     },
     {
       "field_id": "movement_name:108",
@@ -2626,8 +2635,8 @@
       "field_id": "movement_code:108",
       "family": "movement_code",
       "row": 108,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "reference_persistent_product_narrow_guarded",
+      "reason": "参考版整段可持久化；产品已实现解释器验证的窄参数编辑，控制流和其余字节继续禁写。"
     },
     {
       "field_id": "movement_name:109",
@@ -2640,8 +2649,8 @@
       "field_id": "movement_code:109",
       "family": "movement_code",
       "row": 109,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "reference_persistent_product_narrow_guarded",
+      "reason": "参考版整段可持久化；产品已实现解释器验证的窄参数编辑，控制流和其余字节继续禁写。"
     },
     {
       "field_id": "movement_name:110",
@@ -2654,8 +2663,8 @@
       "field_id": "movement_code:110",
       "family": "movement_code",
       "row": 110,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "reference_persistent_product_narrow_guarded",
+      "reason": "参考版整段可持久化；产品已实现解释器验证的窄参数编辑，控制流和其余字节继续禁写。"
     },
     {
       "field_id": "movement_name:111",
@@ -2668,8 +2677,8 @@
       "field_id": "movement_code:111",
       "family": "movement_code",
       "row": 111,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "reference_persistent_product_narrow_guarded",
+      "reason": "参考版整段可持久化；产品已实现解释器验证的窄参数编辑，控制流和其余字节继续禁写。"
     },
     {
       "field_id": "movement_name:112",
@@ -2682,8 +2691,8 @@
       "field_id": "movement_code:112",
       "family": "movement_code",
       "row": 112,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "reference_persistent_product_narrow_guarded",
+      "reason": "参考版整段可持久化；产品已实现解释器验证的窄参数编辑，控制流和其余字节继续禁写。"
     },
     {
       "field_id": "movement_name:113",
@@ -2696,8 +2705,8 @@
       "field_id": "movement_code:113",
       "family": "movement_code",
       "row": 113,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "reference_persistent_product_narrow_guarded",
+      "reason": "参考版整段可持久化；产品已实现解释器验证的窄参数编辑，控制流和其余字节继续禁写。"
     },
     {
       "field_id": "sprite_name:000",
@@ -8261,8 +8270,8 @@
       "field_id": "background_code:000",
       "family": "background_code",
       "row": 0,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "reference_persistent_product_narrow_guarded",
+      "reason": "参考版整段可持久化；产品已实现解释器验证的窄参数编辑，控制流和其余字节继续禁写。"
     },
     {
       "field_id": "background_name:001",
@@ -8275,8 +8284,8 @@
       "field_id": "background_code:001",
       "family": "background_code",
       "row": 1,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "reference_persistent_product_narrow_guarded",
+      "reason": "参考版整段可持久化；产品已实现解释器验证的窄参数编辑，控制流和其余字节继续禁写。"
     },
     {
       "field_id": "background_name:002",
@@ -8289,8 +8298,8 @@
       "field_id": "background_code:002",
       "family": "background_code",
       "row": 2,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "reference_persistent_product_narrow_guarded",
+      "reason": "参考版整段可持久化；产品已实现解释器验证的窄参数编辑，控制流和其余字节继续禁写。"
     },
     {
       "field_id": "background_name:003",
@@ -8303,8 +8312,8 @@
       "field_id": "background_code:003",
       "family": "background_code",
       "row": 3,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "reference_persistent_product_narrow_guarded",
+      "reason": "参考版整段可持久化；产品已实现解释器验证的窄参数编辑，控制流和其余字节继续禁写。"
     },
     {
       "field_id": "background_name:004",
@@ -8317,8 +8326,8 @@
       "field_id": "background_code:004",
       "family": "background_code",
       "row": 4,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "reference_persistent_product_narrow_guarded",
+      "reason": "参考版整段可持久化；产品已实现解释器验证的窄参数编辑，控制流和其余字节继续禁写。"
     },
     {
       "field_id": "background_name:005",
@@ -8331,8 +8340,8 @@
       "field_id": "background_code:005",
       "family": "background_code",
       "row": 5,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "reference_persistent_product_narrow_guarded",
+      "reason": "参考版整段可持久化；产品已实现解释器验证的窄参数编辑，控制流和其余字节继续禁写。"
     },
     {
       "field_id": "background_name:006",
@@ -8345,8 +8354,8 @@
       "field_id": "background_code:006",
       "family": "background_code",
       "row": 6,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "reference_persistent_product_narrow_guarded",
+      "reason": "参考版整段可持久化；产品已实现解释器验证的窄参数编辑，控制流和其余字节继续禁写。"
     },
     {
       "field_id": "background_name:007",
@@ -8359,8 +8368,8 @@
       "field_id": "background_code:007",
       "family": "background_code",
       "row": 7,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "reference_persistent_product_narrow_guarded",
+      "reason": "参考版整段可持久化；产品已实现解释器验证的窄参数编辑，控制流和其余字节继续禁写。"
     },
     {
       "field_id": "background_name:008",
@@ -8373,8 +8382,8 @@
       "field_id": "background_code:008",
       "family": "background_code",
       "row": 8,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "reference_persistent_product_narrow_guarded",
+      "reason": "参考版整段可持久化；产品已实现解释器验证的窄参数编辑，控制流和其余字节继续禁写。"
     },
     {
       "field_id": "background_name:009",
@@ -8387,8 +8396,8 @@
       "field_id": "background_code:009",
       "family": "background_code",
       "row": 9,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "reference_persistent_product_narrow_guarded",
+      "reason": "参考版整段可持久化；产品已实现解释器验证的窄参数编辑，控制流和其余字节继续禁写。"
     },
     {
       "field_id": "background_name:010",
@@ -8401,8 +8410,8 @@
       "field_id": "background_code:010",
       "family": "background_code",
       "row": 10,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "reference_persistent_product_narrow_guarded",
+      "reason": "参考版整段可持久化；产品已实现解释器验证的窄参数编辑，控制流和其余字节继续禁写。"
     },
     {
       "field_id": "background_name:011",
@@ -8415,8 +8424,8 @@
       "field_id": "background_code:011",
       "family": "background_code",
       "row": 11,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "reference_persistent_product_narrow_guarded",
+      "reason": "参考版整段可持久化；产品已实现解释器验证的窄参数编辑，控制流和其余字节继续禁写。"
     },
     {
       "field_id": "background_name:012",
@@ -8429,8 +8438,8 @@
       "field_id": "background_code:012",
       "family": "background_code",
       "row": 12,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "reference_persistent_product_narrow_guarded",
+      "reason": "参考版整段可持久化；产品已实现解释器验证的窄参数编辑，控制流和其余字节继续禁写。"
     },
     {
       "field_id": "background_name:013",
@@ -8443,8 +8452,8 @@
       "field_id": "background_code:013",
       "family": "background_code",
       "row": 13,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "reference_persistent_product_narrow_guarded",
+      "reason": "参考版整段可持久化；产品已实现解释器验证的窄参数编辑，控制流和其余字节继续禁写。"
     },
     {
       "field_id": "background_name:014",
@@ -8457,8 +8466,8 @@
       "field_id": "background_code:014",
       "family": "background_code",
       "row": 14,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "reference_persistent_product_narrow_guarded",
+      "reason": "参考版整段可持久化；产品已实现解释器验证的窄参数编辑，控制流和其余字节继续禁写。"
     },
     {
       "field_id": "background_name:015",
@@ -8471,8 +8480,8 @@
       "field_id": "background_code:015",
       "family": "background_code",
       "row": 15,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "reference_persistent_product_narrow_guarded",
+      "reason": "参考版整段可持久化；产品已实现解释器验证的窄参数编辑，控制流和其余字节继续禁写。"
     },
     {
       "field_id": "background_name:016",
@@ -8485,8 +8494,8 @@
       "field_id": "background_code:016",
       "family": "background_code",
       "row": 16,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "reference_persistent_product_narrow_guarded",
+      "reason": "参考版整段可持久化；产品已实现解释器验证的窄参数编辑，控制流和其余字节继续禁写。"
     },
     {
       "field_id": "background_name:017",
@@ -8499,8 +8508,8 @@
       "field_id": "background_code:017",
       "family": "background_code",
       "row": 17,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "reference_persistent_product_narrow_guarded",
+      "reason": "参考版整段可持久化；产品已实现解释器验证的窄参数编辑，控制流和其余字节继续禁写。"
     },
     {
       "field_id": "background_name:018",
@@ -8513,8 +8522,8 @@
       "field_id": "background_code:018",
       "family": "background_code",
       "row": 18,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "reference_persistent_product_narrow_guarded",
+      "reason": "参考版整段可持久化；产品已实现解释器验证的窄参数编辑，控制流和其余字节继续禁写。"
     },
     {
       "field_id": "background_name:019",
@@ -8527,8 +8536,8 @@
       "field_id": "background_code:019",
       "family": "background_code",
       "row": 19,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "reference_persistent_product_narrow_guarded",
+      "reason": "参考版整段可持久化；产品已实现解释器验证的窄参数编辑，控制流和其余字节继续禁写。"
     },
     {
       "field_id": "background_name:020",
@@ -8541,8 +8550,8 @@
       "field_id": "background_code:020",
       "family": "background_code",
       "row": 20,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "reference_persistent_product_narrow_guarded",
+      "reason": "参考版整段可持久化；产品已实现解释器验证的窄参数编辑，控制流和其余字节继续禁写。"
     },
     {
       "field_id": "background_name:021",
@@ -8555,8 +8564,8 @@
       "field_id": "background_code:021",
       "family": "background_code",
       "row": 21,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "reference_persistent_product_narrow_guarded",
+      "reason": "参考版整段可持久化；产品已实现解释器验证的窄参数编辑，控制流和其余字节继续禁写。"
     },
     {
       "field_id": "background_name:022",
@@ -8569,8 +8578,8 @@
       "field_id": "background_code:022",
       "family": "background_code",
       "row": 22,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "reference_persistent_product_narrow_guarded",
+      "reason": "参考版整段可持久化；产品已实现解释器验证的窄参数编辑，控制流和其余字节继续禁写。"
     },
     {
       "field_id": "background_name:023",
@@ -8583,8 +8592,8 @@
       "field_id": "background_code:023",
       "family": "background_code",
       "row": 23,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "reference_persistent_product_narrow_guarded",
+      "reason": "参考版整段可持久化；产品已实现解释器验证的窄参数编辑，控制流和其余字节继续禁写。"
     },
     {
       "field_id": "background_name:024",
@@ -8597,8 +8606,8 @@
       "field_id": "background_code:024",
       "family": "background_code",
       "row": 24,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "reference_persistent_product_narrow_guarded",
+      "reason": "参考版整段可持久化；产品已实现解释器验证的窄参数编辑，控制流和其余字节继续禁写。"
     },
     {
       "field_id": "background_name:025",
@@ -8611,8 +8620,8 @@
       "field_id": "background_code:025",
       "family": "background_code",
       "row": 25,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "reference_persistent_product_narrow_guarded",
+      "reason": "参考版整段可持久化；产品已实现解释器验证的窄参数编辑，控制流和其余字节继续禁写。"
     },
     {
       "field_id": "background_name:026",
@@ -8625,8 +8634,8 @@
       "field_id": "background_code:026",
       "family": "background_code",
       "row": 26,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "reference_persistent_product_narrow_guarded",
+      "reason": "参考版整段可持久化；产品已实现解释器验证的窄参数编辑，控制流和其余字节继续禁写。"
     },
     {
       "field_id": "background_name:027",
@@ -8639,8 +8648,8 @@
       "field_id": "background_code:027",
       "family": "background_code",
       "row": 27,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "reference_persistent_product_narrow_guarded",
+      "reason": "参考版整段可持久化；产品已实现解释器验证的窄参数编辑，控制流和其余字节继续禁写。"
     },
     {
       "field_id": "background_name:028",
@@ -8653,8 +8662,8 @@
       "field_id": "background_code:028",
       "family": "background_code",
       "row": 28,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "reference_persistent_product_narrow_guarded",
+      "reason": "参考版整段可持久化；产品已实现解释器验证的窄参数编辑，控制流和其余字节继续禁写。"
     },
     {
       "field_id": "background_name:029",
@@ -8667,8 +8676,8 @@
       "field_id": "background_code:029",
       "family": "background_code",
       "row": 29,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "reference_persistent_product_narrow_guarded",
+      "reason": "参考版整段可持久化；产品已实现解释器验证的窄参数编辑，控制流和其余字节继续禁写。"
     },
     {
       "field_id": "background_name:030",
@@ -8681,8 +8690,8 @@
       "field_id": "background_code:030",
       "family": "background_code",
       "row": 30,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "reference_persistent_product_narrow_guarded",
+      "reason": "参考版整段可持久化；产品已实现解释器验证的窄参数编辑，控制流和其余字节继续禁写。"
     },
     {
       "field_id": "background_name:031",
@@ -8695,309 +8704,481 @@
       "field_id": "background_code:031",
       "family": "background_code",
       "row": 31,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "reference_persistent_product_narrow_guarded",
+      "reason": "参考版整段可持久化；产品已实现解释器验证的窄参数编辑，控制流和其余字节继续禁写。"
     },
     {
       "field_id": "spirit_animation:000",
       "family": "spirit_animation",
       "row": 0,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "safe_persistent",
+      "reason": "参考保存偏移减二后精确命中当前 ROM 的 38 02 调用，且产品完整上下文白名单允许只改编号字节。",
+      "current_call_offset": "0x03891D",
+      "reference_before": "02",
+      "current_value": "02",
+      "current_context_evidence": "直接设置/调用序列"
     },
     {
       "field_id": "spirit_animation:001",
       "family": "spirit_animation",
       "row": 1,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "safe_persistent",
+      "reason": "参考保存偏移减二后精确命中当前 ROM 的 38 02 调用，且产品完整上下文白名单允许只改编号字节。",
+      "current_call_offset": "0x0389B9",
+      "reference_before": "03",
+      "current_value": "03",
+      "current_context_evidence": "直接设置/调用序列"
     },
     {
       "field_id": "spirit_animation:002",
       "family": "spirit_animation",
       "row": 2,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "safe_persistent",
+      "reason": "参考保存偏移减二后精确命中当前 ROM 的 38 02 调用，且产品完整上下文白名单允许只改编号字节。",
+      "current_call_offset": "0x03B88B",
+      "reference_before": "36",
+      "current_value": "36",
+      "current_context_evidence": "直接设置/调用序列"
     },
     {
       "field_id": "spirit_animation:003",
       "family": "spirit_animation",
       "row": 3,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "safe_persistent",
+      "reason": "参考保存偏移减二后精确命中当前 ROM 的 38 02 调用，且产品完整上下文白名单允许只改编号字节。",
+      "current_call_offset": "0x038A95",
+      "reference_before": "05",
+      "current_value": "05",
+      "current_context_evidence": "直接设置/调用序列"
     },
     {
       "field_id": "spirit_animation:004",
       "family": "spirit_animation",
       "row": 4,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "safe_persistent",
+      "reason": "参考保存偏移减二后精确命中当前 ROM 的 38 02 调用，且产品完整上下文白名单允许只改编号字节。",
+      "current_call_offset": "0x038A2A",
+      "reference_before": "06",
+      "current_value": "06",
+      "current_context_evidence": "直接设置/调用序列"
     },
     {
       "field_id": "spirit_animation:005",
       "family": "spirit_animation",
       "row": 5,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "safe_persistent",
+      "reason": "参考保存偏移减二后精确命中当前 ROM 的 38 02 调用，且产品完整上下文白名单允许只改编号字节。",
+      "current_call_offset": "0x038959",
+      "reference_before": "02",
+      "current_value": "02",
+      "current_context_evidence": "直接设置/调用序列"
     },
     {
       "field_id": "spirit_animation:006",
       "family": "spirit_animation",
       "row": 6,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "safe_persistent",
+      "reason": "参考保存偏移减二后精确命中当前 ROM 的 38 02 调用，且产品完整上下文白名单允许只改编号字节。",
+      "current_call_offset": "0x03B8B3",
+      "reference_before": "22",
+      "current_value": "22",
+      "current_context_evidence": "直接设置/调用序列"
     },
     {
       "field_id": "spirit_animation:007",
       "family": "spirit_animation",
       "row": 7,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "safe_persistent",
+      "reason": "参考保存偏移减二后精确命中当前 ROM 的 38 02 调用，且产品完整上下文白名单允许只改编号字节。",
+      "current_call_offset": "0x0389CE",
+      "reference_before": "19",
+      "current_value": "19",
+      "current_context_evidence": "直接设置/调用序列"
     },
     {
       "field_id": "spirit_animation:008",
       "family": "spirit_animation",
       "row": 8,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "safe_persistent",
+      "reason": "参考保存偏移减二后精确命中当前 ROM 的 38 02 调用，且产品完整上下文白名单允许只改编号字节。",
+      "current_call_offset": "0x038AD2",
+      "reference_before": "04",
+      "current_value": "04",
+      "current_context_evidence": "直接设置/调用序列"
     },
     {
       "field_id": "spirit_animation:009",
       "family": "spirit_animation",
       "row": 9,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "safe_persistent",
+      "reason": "参考保存偏移减二后精确命中当前 ROM 的 38 02 调用，且产品完整上下文白名单允许只改编号字节。",
+      "current_call_offset": "0x03B6EB",
+      "reference_before": "17",
+      "current_value": "17",
+      "current_context_evidence": "直接设置/调用序列"
     },
     {
       "field_id": "spirit_animation:010",
       "family": "spirit_animation",
       "row": 10,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "safe_persistent",
+      "reason": "参考保存偏移减二后精确命中当前 ROM 的 38 02 调用，且产品完整上下文白名单允许只改编号字节。",
+      "current_call_offset": "0x038A3D",
+      "reference_before": "23",
+      "current_value": "23",
+      "current_context_evidence": "直接设置/调用序列"
     },
     {
       "field_id": "spirit_animation:011",
       "family": "spirit_animation",
       "row": 11,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "safe_persistent",
+      "reason": "参考保存偏移减二后精确命中当前 ROM 的 38 02 调用，且产品完整上下文白名单允许只改编号字节。",
+      "current_call_offset": "0x038C9D",
+      "reference_before": "16",
+      "current_value": "16",
+      "current_context_evidence": "直接设置/调用序列"
     },
     {
       "field_id": "spirit_animation:012",
       "family": "spirit_animation",
       "row": 12,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "safe_persistent",
+      "reason": "参考保存偏移减二后精确命中当前 ROM 的 38 02 调用，且产品完整上下文白名单允许只改编号字节。",
+      "current_call_offset": "0x038C27",
+      "reference_before": "0A",
+      "current_value": "0A",
+      "current_context_evidence": "奇迹闪烁调用序列"
     },
     {
       "field_id": "spirit_animation:013",
       "family": "spirit_animation",
       "row": 13,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "safe_persistent",
+      "reason": "参考保存偏移减二后精确命中当前 ROM 的 38 02 调用，且产品完整上下文白名单允许只改编号字节。",
+      "current_call_offset": "0x0388BE",
+      "reference_before": "02",
+      "current_value": "02",
+      "current_context_evidence": "直接设置/调用序列"
     },
     {
       "field_id": "spirit_animation:014",
       "family": "spirit_animation",
       "row": 14,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "safe_persistent",
+      "reason": "参考保存偏移减二后精确命中当前 ROM 的 38 02 调用，且产品完整上下文白名单允许只改编号字节。",
+      "current_call_offset": "0x03B723",
+      "reference_before": "24",
+      "current_value": "24",
+      "current_context_evidence": "直接设置/调用序列"
     },
     {
       "field_id": "spirit_animation:015",
       "family": "spirit_animation",
       "row": 15,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "safe_persistent",
+      "reason": "参考保存偏移减二后精确命中当前 ROM 的 38 02 调用，且产品完整上下文白名单允许只改编号字节。",
+      "current_call_offset": "0x03B673",
+      "reference_before": "33",
+      "current_value": "33",
+      "current_context_evidence": "直接设置/调用序列"
     },
     {
       "field_id": "spirit_animation:016",
       "family": "spirit_animation",
       "row": 16,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "safe_persistent",
+      "reason": "参考保存偏移减二后精确命中当前 ROM 的 38 02 调用，且产品完整上下文白名单允许只改编号字节。",
+      "current_call_offset": "0x03884B",
+      "reference_before": "09",
+      "current_value": "09",
+      "current_context_evidence": "直接设置/调用序列"
     },
     {
       "field_id": "spirit_animation:017",
       "family": "spirit_animation",
       "row": 17,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "safe_persistent",
+      "reason": "参考保存偏移减二后精确命中当前 ROM 的 38 02 调用，且产品完整上下文白名单允许只改编号字节。",
+      "current_call_offset": "0x03B6D3",
+      "reference_before": "04",
+      "current_value": "2B",
+      "current_context_evidence": "直接设置/调用序列"
     },
     {
       "field_id": "spirit_animation:018",
       "family": "spirit_animation",
       "row": 18,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "safe_persistent",
+      "reason": "参考保存偏移减二后精确命中当前 ROM 的 38 02 调用，且产品完整上下文白名单允许只改编号字节。",
+      "current_call_offset": "0x038906",
+      "reference_before": "02",
+      "current_value": "02",
+      "current_context_evidence": "直接设置/调用序列"
     },
     {
       "field_id": "spirit_animation:019",
       "family": "spirit_animation",
       "row": 19,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "safe_persistent",
+      "reason": "参考保存偏移减二后精确命中当前 ROM 的 38 02 调用，且产品完整上下文白名单允许只改编号字节。",
+      "current_call_offset": "0x038CB2",
+      "reference_before": "18",
+      "current_value": "18",
+      "current_context_evidence": "直接设置/调用序列"
     },
     {
       "field_id": "spirit_animation:020",
       "family": "spirit_animation",
       "row": 20,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "safe_persistent",
+      "reason": "参考保存偏移减二后精确命中当前 ROM 的 38 02 调用，且产品完整上下文白名单允许只改编号字节。",
+      "current_call_offset": "0x03B7B6",
+      "reference_before": "21",
+      "current_value": "21",
+      "current_context_evidence": "直接设置/调用序列"
     },
     {
       "field_id": "spirit_animation:021",
       "family": "spirit_animation",
       "row": 21,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "safe_persistent",
+      "reason": "参考保存偏移减二后精确命中当前 ROM 的 38 02 调用，且产品完整上下文白名单允许只改编号字节。",
+      "current_call_offset": "0x03B7E6",
+      "reference_before": "1A",
+      "current_value": "1A",
+      "current_context_evidence": "直接设置/调用序列"
     },
     {
       "field_id": "spirit_animation:022",
       "family": "spirit_animation",
       "row": 22,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "safe_persistent",
+      "reason": "参考保存偏移减二后精确命中当前 ROM 的 38 02 调用，且产品完整上下文白名单允许只改编号字节。",
+      "current_call_offset": "0x03B82B",
+      "reference_before": "34",
+      "current_value": "34",
+      "current_context_evidence": "直接设置/调用序列"
     },
     {
       "field_id": "spirit_animation:023",
       "family": "spirit_animation",
       "row": 23,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "safe_persistent",
+      "reason": "参考保存偏移减二后精确命中当前 ROM 的 38 02 调用，且产品完整上下文白名单允许只改编号字节。",
+      "current_call_offset": "0x03B85B",
+      "reference_before": "35",
+      "current_value": "35",
+      "current_context_evidence": "直接设置/调用序列"
     },
     {
       "field_id": "map_weapon_animation_1:000",
       "family": "map_weapon_animation_1",
       "row": 0,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "safe_persistent",
+      "reason": "参考保存偏移减二后精确命中当前 ROM 的 38 02 调用，且产品完整上下文白名单允许只改编号字节。",
+      "current_call_offset": "0x03BB93",
+      "reference_before": "2C",
+      "current_value": "2C",
+      "current_context_evidence": "直接设置/调用序列"
     },
     {
       "field_id": "map_weapon_animation_1:001",
       "family": "map_weapon_animation_1",
       "row": 1,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "safe_persistent",
+      "reason": "参考保存偏移减二后精确命中当前 ROM 的 38 02 调用，且产品完整上下文白名单允许只改编号字节。",
+      "current_call_offset": "0x038FBE",
+      "reference_before": "0E",
+      "current_value": "0E",
+      "current_context_evidence": "直接设置/调用序列"
     },
     {
       "field_id": "map_weapon_animation_1:002",
       "family": "map_weapon_animation_1",
       "row": 2,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "safe_persistent",
+      "reason": "参考保存偏移减二后精确命中当前 ROM 的 38 02 调用，且产品完整上下文白名单允许只改编号字节。",
+      "current_call_offset": "0x03BF33",
+      "reference_before": "43",
+      "current_value": "2E",
+      "current_context_evidence": "直接设置/调用序列"
     },
     {
       "field_id": "map_weapon_animation_1:003",
       "family": "map_weapon_animation_1",
       "row": 3,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "safe_persistent",
+      "reason": "参考保存偏移减二后精确命中当前 ROM 的 38 02 调用，且产品完整上下文白名单允许只改编号字节。",
+      "current_call_offset": "0x03BBC7",
+      "reference_before": "4D",
+      "current_value": "1C",
+      "current_context_evidence": "直接设置/调用序列"
     },
     {
       "field_id": "map_weapon_animation_1:004",
       "family": "map_weapon_animation_1",
       "row": 4,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "safe_persistent",
+      "reason": "参考保存偏移减二后精确命中当前 ROM 的 38 02 调用，且产品完整上下文白名单允许只改编号字节。",
+      "current_call_offset": "0x03BE73",
+      "reference_before": "1C",
+      "current_value": "1C",
+      "current_context_evidence": "直接设置/调用序列"
     },
     {
       "field_id": "map_weapon_animation_1:005",
       "family": "map_weapon_animation_1",
       "row": 5,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "safe_persistent",
+      "reason": "参考保存偏移减二后精确命中当前 ROM 的 38 02 调用，且产品完整上下文白名单允许只改编号字节。",
+      "current_call_offset": "0x03BD06",
+      "reference_before": "42",
+      "current_value": "1B",
+      "current_context_evidence": "直接设置/调用序列"
     },
     {
       "field_id": "map_weapon_animation_1:006",
       "family": "map_weapon_animation_1",
       "row": 6,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "safe_persistent",
+      "reason": "参考保存偏移减二后精确命中当前 ROM 的 38 02 调用，且产品完整上下文白名单允许只改编号字节。",
+      "current_call_offset": "0x03BD16",
+      "reference_before": "1B",
+      "current_value": "2D",
+      "current_context_evidence": "直接设置/调用序列"
     },
     {
       "field_id": "map_weapon_animation_1:007",
       "family": "map_weapon_animation_1",
       "row": 7,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "safe_persistent",
+      "reason": "参考保存偏移减二后精确命中当前 ROM 的 38 02 调用，且产品完整上下文白名单允许只改编号字节。",
+      "current_call_offset": "0x03B659",
+      "reference_before": "43",
+      "current_value": "31",
+      "current_context_evidence": "直接设置/调用序列"
     },
     {
       "field_id": "map_weapon_animation_1:008",
       "family": "map_weapon_animation_1",
       "row": 8,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "safe_persistent",
+      "reason": "参考保存偏移减二后精确命中当前 ROM 的 38 02 调用，且产品完整上下文白名单允许只改编号字节。",
+      "current_call_offset": "0x03BCD3",
+      "reference_before": "2F",
+      "current_value": "2F",
+      "current_context_evidence": "直接设置/调用序列"
     },
     {
       "field_id": "map_weapon_animation_1:009",
       "family": "map_weapon_animation_1",
       "row": 9,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "safe_persistent",
+      "reason": "参考保存偏移减二后精确命中当前 ROM 的 38 02 调用，且产品完整上下文白名单允许只改编号字节。",
+      "current_call_offset": "0x03BD78",
+      "reference_before": "1F",
+      "current_value": "1D",
+      "current_context_evidence": "直接设置/调用序列"
     },
     {
       "field_id": "map_weapon_animation_2:009",
       "family": "map_weapon_animation_2",
       "row": 9,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "safe_persistent",
+      "reason": "参考保存偏移减二后精确命中当前 ROM 的 38 02 调用，且产品完整上下文白名单允许只改编号字节。",
+      "current_call_offset": "0x03BE4B",
+      "reference_before": "1D",
+      "current_value": "20",
+      "current_context_evidence": "直接设置/调用序列"
     },
     {
       "field_id": "map_weapon_animation_3:009",
       "family": "map_weapon_animation_3",
       "row": 9,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "safe_persistent",
+      "reason": "参考保存偏移减二后精确命中当前 ROM 的 38 02 调用，且产品完整上下文白名单允许只改编号字节。",
+      "current_call_offset": "0x03BE5C",
+      "reference_before": "20",
+      "current_value": "1E",
+      "current_context_evidence": "直接设置/调用序列"
     },
     {
       "field_id": "map_weapon_animation_4:009",
       "family": "map_weapon_animation_4",
       "row": 9,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "safe_persistent",
+      "reason": "参考保存偏移减二后精确命中当前 ROM 的 38 02 调用，且产品完整上下文白名单允许只改编号字节。",
+      "current_call_offset": "0x03BD67",
+      "reference_before": "1E",
+      "current_value": "1F",
+      "current_context_evidence": "直接设置/调用序列"
     },
     {
       "field_id": "map_weapon_animation_1:010",
       "family": "map_weapon_animation_1",
       "row": 10,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "safe_persistent",
+      "reason": "参考保存偏移减二后精确命中当前 ROM 的 38 02 调用，且产品完整上下文白名单允许只改编号字节。",
+      "current_call_offset": "0x03BF5B",
+      "reference_before": "27",
+      "current_value": "27",
+      "current_context_evidence": "直接设置/调用序列"
     },
     {
       "field_id": "map_weapon_animation_2:010",
       "family": "map_weapon_animation_2",
       "row": 10,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "safe_persistent",
+      "reason": "参考保存偏移减二后精确命中当前 ROM 的 38 02 调用，且产品完整上下文白名单允许只改编号字节。",
+      "current_call_offset": "0x03BF6C",
+      "reference_before": "2A",
+      "current_value": "2A",
+      "current_context_evidence": "直接设置/调用序列"
     },
     {
       "field_id": "map_weapon_animation_3:010",
       "family": "map_weapon_animation_3",
       "row": 10,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "safe_persistent",
+      "reason": "参考保存偏移减二后精确命中当前 ROM 的 38 02 调用，且产品完整上下文白名单允许只改编号字节。",
+      "current_call_offset": "0x03BF7D",
+      "reference_before": "28",
+      "current_value": "28",
+      "current_context_evidence": "直接设置/调用序列"
     },
     {
       "field_id": "map_weapon_animation_4:010",
       "family": "map_weapon_animation_4",
       "row": 10,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "safe_persistent",
+      "reason": "参考保存偏移减二后精确命中当前 ROM 的 38 02 调用，且产品完整上下文白名单允许只改编号字节。",
+      "current_call_offset": "0x03BC37",
+      "reference_before": "29",
+      "current_value": "29",
+      "current_context_evidence": "直接设置/调用序列"
     },
     {
       "field_id": "map_weapon_animation_1:011",
       "family": "map_weapon_animation_1",
       "row": 11,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "safe_persistent",
+      "reason": "参考保存偏移减二后精确命中当前 ROM 的 38 02 调用，且产品完整上下文白名单允许只改编号字节。",
+      "current_call_offset": "0x0380DF",
+      "reference_before": "13",
+      "current_value": "3E",
+      "current_context_evidence": "参考逐字段保存同址黄金"
     },
     {
       "field_id": "map_weapon_animation_1:012",
       "family": "map_weapon_animation_1",
       "row": 12,
-      "classification": "reference_persistent_product_blocked",
-      "reason": "参考版可持久化，但产品只开放更窄的已验证参数或缺少精确调用映射，继续禁写。"
+      "classification": "safe_persistent",
+      "reason": "参考保存偏移减二后精确命中当前 ROM 的 38 02 调用，且产品完整上下文白名单允许只改编号字节。",
+      "current_call_offset": "0x038EEA",
+      "reference_before": "15",
+      "current_value": "15",
+      "current_context_evidence": "参考逐字段保存同址黄金"
     }
   ]
 }

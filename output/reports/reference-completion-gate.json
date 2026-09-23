@@ -7,7 +7,7 @@
     "scope_complete": 18,
     "scope_incomplete": 0,
     "evidence_passed": 18,
-    "safe_denominator_fields": 6842
+    "safe_denominator_fields": 6885
   },
   "checks": {
     "all_18_modules_present": true,
@@ -133,12 +133,12 @@
     {
       "module": "M12",
       "scope_complete": true,
-      "denominator_count": 198,
+      "denominator_count": 241,
       "evidence_path": "output/reports/m12-reference-field-coverage.json",
-      "evidence_count": 198,
+      "evidence_count": 241,
       "evidence_passed": true,
       "evidence_reason": "custom exhaustive report",
-      "classification": "field_scope_complete_with_no_effect_and_product_blocked_exclusions"
+      "classification": "field_scope_complete_with_crosswalked_calls_and_guarded_exclusions"
     },
     {
       "module": "M13",

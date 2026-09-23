@@ -25,9 +25,9 @@ class ReferenceCompletionGateTests(unittest.TestCase):
             report["checks"]["final_safe_denominator_matches_reviewed_scope"]
         )
 
-    def test_complete_gate_requires_the_reviewed_6842_field_denominator(self) -> None:
+    def test_complete_gate_requires_the_reviewed_6885_field_denominator(self) -> None:
         report = build()
-        self.assertEqual(EXPECTED_FINAL_SAFE_DENOMINATOR, 6842)
+        self.assertEqual(EXPECTED_FINAL_SAFE_DENOMINATOR, 6885)
         if report["passed"]:
             self.assertEqual(report["counts"]["scope_complete"], 18)
             self.assertEqual(report["counts"]["evidence_passed"], 18)

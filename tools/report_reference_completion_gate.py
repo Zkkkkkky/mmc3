@@ -29,7 +29,7 @@ CUSTOM_EVIDENCE = {
 }
 GOLDEN_MODULES = {"M06", "M07", "M17"}
 ZERO_FIELD_MODULES = {"M01", "M02", "M13", "M15", "M18"}
-EXPECTED_FINAL_SAFE_DENOMINATOR = 6842
+EXPECTED_FINAL_SAFE_DENOMINATOR = 6885
 
 
 def nested(payload: dict[str, object], key: str | tuple[str, str]) -> object:

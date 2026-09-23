@@ -1,0 +1,36 @@
+{
+  "module": "M05",
+  "field": "fragment_upload_bmp",
+  "case_id": "cold_start_01",
+  "case_kind": "discovery",
+  "requested_value": "$capture_after",
+  "expected_before": null,
+  "expected_offsets": [],
+  "required_offsets": [],
+  "optional_offsets": [],
+  "extra_allowed": [],
+  "navigation": [
+    {"op": "menu", "path": "\u6570\u636e->\u6570\u636e\u5e93"},
+    {"op": "window", "title": "\u6570\u636e\u5e93"},
+    {"op": "list_select", "class": "ListBox", "control_id": 120, "row": 1}
+  ],
+  "read_navigation": [
+    {"op": "menu", "path": "\u6570\u636e->\u6570\u636e\u5e93"},
+    {"op": "window", "title": "\u6570\u636e\u5e93"},
+    {"op": "list_select", "class": "ListBox", "control_id": 120, "row": 1}
+  ],
+  "edit_steps": [
+    {"op": "set_text", "class": "Edit", "control_id": 1300, "value": "0"},
+    {"op": "click_id", "class": "Button", "control_id": 1310},
+    {"op": "window", "title": "\u6253\u5f00\u56fe\u7247"},
+    {"op": "set_text", "class": "Edit", "control_id": 1148, "value": "$repo_path:output/build/legacy-diff-audit/m05-upload-samples/fragment.bmp"},
+    {"op": "click_id", "class": "Button", "control_id": 1},
+    {"op": "window", "title": "\u6570\u636e\u5e93", "settle_seconds": 1.0},
+    {"op": "click_id", "class": "Button", "control_id": 590}
+  ],
+  "read_selector": {
+    "class": "Afx:400000:b:10003:900015:0",
+    "control_id": 150,
+    "value_type": "control_pixel_sha256"
+  }
+}

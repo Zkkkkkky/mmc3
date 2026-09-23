@@ -7,14 +7,22 @@
     "weapon_unique_record": true,
     "all_weapon_ids_visible": true,
     "field_editor_enabled": true,
+    "usage_list_matches_real_slots": true,
+    "usage_button_jumps_to_unit": true,
     "field_draft_exists": true,
     "project_unchanged_before_apply": true,
     "field_apply_clears_draft": true,
     "field_values_applied": true,
     "exact_three_byte_delta": true,
     "range_and_reserved_nibbles_preserved": true,
+    "ally_enemy_animation_tabs": true,
+    "ally_animation_has_editable_parameter": true,
+    "enemy_animation_has_editable_parameter": true,
+    "both_animation_modes_pending": true,
+    "both_animation_modes_applied": true,
     "outer_dialog_accepted": true,
     "save_reopen_exact": true,
+    "animation_modes_save_reopen_exact": true,
     "four_rule_tabs_and_counts": true,
     "rule_fields_read_only": true,
     "rule_browsing_zero_write": true,
@@ -26,7 +34,7 @@
   "details": {
     "source_rom": "D:\\GIT\\mmc3\\output\\rom\\DC_kuorong_464K.nes",
     "source_sha256": "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E",
-    "edited_rom_sha256": "952AF30A8048C49E727E6BD1780BE883E2EE97894DA8C7BC5A343F67F9B5CC99",
+    "edited_rom_sha256": "7D33BACF0A20D226BA28C15F52F6757AAE52A499C1659829B07212A7938EF911",
     "weapon_id": 1,
     "record_offset": "0x0490CF",
     "record_before": "00 6E 00 05 05 02",
@@ -36,6 +44,17 @@
       "0x0490D0",
       "0x0490D1"
     ],
+    "usage_weapon_id": 1,
+    "usage_unit_ids": [
+      17,
+      21,
+      23,
+      81
+    ],
+    "animation_offsets": {
+      "ally": "0x044230",
+      "enemy": "0x040230"
+    },
     "rule_counts": {
       "weapon_beam": 255,
       "weapon_movement_1": 252,
@@ -46,7 +65,8 @@
   "artifacts": [
     "output/verification/m07-weapon-current-build-20260922/m07-weapon-edited.nes",
     "output/verification/m07-weapon-current-build-20260922/01-weapon-field-draft.png",
-    "output/verification/m07-weapon-current-build-20260922/02-four-rule-libraries.png"
+    "output/verification/m07-weapon-current-build-20260922/02-weapon-modes-and-usage.png",
+    "output/verification/m07-weapon-current-build-20260922/03-four-rule-libraries.png"
   ],
   "note": "Machine acceptance does not expand the 2026-09-21 user sign-off or unlock read-only rule code."
 }

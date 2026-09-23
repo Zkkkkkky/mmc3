@@ -1,0 +1,49 @@
+$ErrorActionPreference = "Continue"
+
+$repoRoot = Split-Path -Parent $PSScriptRoot
+$python = Join-Path $repoRoot ".venv\Scripts\python.exe"
+$reporter = Join-Path $repoRoot "tools\report_golden_coverage.py"
+$samplePreparer = Join-Path $repoRoot "tools\prepare_m05_legacy_upload_samples.py"
+$baseline = Join-Path $repoRoot "output\build\legacy-diff-audit\m05-reference-baseline.nes"
+$logPath = Join-Path $repoRoot "output\verification\m05-puzzle-discovery.log"
+$caseRoot = Join-Path $repoRoot "tools\golden_pipeline\discovery_history"
+$cases = @(
+    "M05-body-upload-bmp-discovery-cold-start-01.json",
+    "M05-fragment-upload-bmp-discovery-cold-start-01.json",
+    "M05-icon-upload-bmp-discovery-cold-start-01.json",
+    "M05-icon-binding-double-click-discovery-cold-start-01.json",
+    "M05-body-puzzle-clear-discovery-cold-start-01.json",
+    "M05-body-puzzle-move-up-discovery-cold-start-01.json",
+    "M05-body-puzzle-move-down-discovery-cold-start-01.json",
+    "M05-body-puzzle-move-left-discovery-cold-start-01.json",
+    "M05-body-puzzle-move-right-discovery-cold-start-01.json",
+    "M05-fragment-puzzle-move-up-discovery-cold-start-01.json",
+    "M05-fragment-puzzle-move-down-discovery-cold-start-01.json",
+    "M05-fragment-puzzle-move-left-discovery-cold-start-01.json",
+    "M05-fragment-puzzle-move-right-discovery-cold-start-01.json",
+    "M05-fragment-puzzle-clear-discovery-cold-start-01.json",
+    "M05-fragment-puzzle-flip-horizontal-discovery-cold-start-01.json",
+    "M05-fragment-puzzle-flip-vertical-discovery-cold-start-01.json"
+)
+
+Set-Location -LiteralPath $repoRoot
+& $python $samplePreparer
+if ($LASTEXITCODE -ne 0) {
+    throw "M05 legacy upload sample preparation failed with exit code $LASTEXITCODE"
+}
+"M05 action discovery started: $(Get-Date -Format o)" |
+    Set-Content -LiteralPath $logPath -Encoding utf8
+$failed = 0
+foreach ($caseName in $cases) {
+    $config = Join-Path $caseRoot $caseName
+    "`n=== $caseName ===" | Add-Content -LiteralPath $logPath -Encoding utf8
+    & $python $reporter collect --case-config $config --baseline $baseline 2>&1 |
+        Add-Content -LiteralPath $logPath -Encoding utf8
+    if ($LASTEXITCODE -ne 0) {
+        $failed += 1
+        "exit_code=$LASTEXITCODE" | Add-Content -LiteralPath $logPath -Encoding utf8
+    }
+}
+"`nM05 action discovery finished: $(Get-Date -Format o); failed=$failed" |
+    Add-Content -LiteralPath $logPath -Encoding utf8
+exit $failed

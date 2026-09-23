@@ -92,11 +92,11 @@
     },
     {
       "module": "M12",
-      "classification": "field_scope_complete_with_no_effect_and_product_blocked_exclusions",
+      "classification": "field_scope_complete_with_crosswalked_calls_and_guarded_exclusions",
       "denominator_complete": true,
-      "denominator_count": 198,
+      "denominator_count": 241,
       "known_families": ["地图/运行/组图/背景规律参数", "动画调用", "名称"],
-      "remaining": "参考版 1281 个逻辑入口已全部枚举并完成保存/冷读分类：198 个组图首图块单字节字段进入安全分母；114 个运行规律整段代码、32 个背景整段代码、24 个精神调用和 19 个地图武器调用虽可持久化，但产品缺少同粒度安全证明，189 项继续禁写；496 个名称、396 个 X/Y、代码编辑动作输入和预览选择器共 894 项为 no-effect。"
+      "remaining": "参考版 1281 个逻辑入口已全部枚举并完成保存/冷读分类：198 个组图首图块和 43 个同址调用字段进入安全分母 241；114 个运行规律和 32 个背景规律整段代码虽可持久化，产品仅开放解释器验证的窄参数；496 个名称、396 个 X/Y、代码编辑动作输入和预览选择器共 894 项为 no-effect。"
     },
     {
       "module": "M13",

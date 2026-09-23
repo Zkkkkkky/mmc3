@@ -46,8 +46,8 @@ class M12AnimationReportTests(unittest.TestCase):
         self.assertTrue(report["checks"]["sprite_anchor_write_is_rejected"])
         animation_calls = evidence["animation_calls"]
         self.assertEqual(animation_calls["detected"], 86)
-        self.assertEqual(animation_calls["editable"], 76)
-        self.assertEqual(animation_calls["read_only"], 10)
+        self.assertEqual(animation_calls["editable"], 78)
+        self.assertEqual(animation_calls["read_only"], 8)
         self.assertEqual(
             animation_calls["verified_contexts"],
             {
@@ -57,20 +57,19 @@ class M12AnimationReportTests(unittest.TestCase):
                 "连续动画调用序列": 4,
                 "奇迹闪烁调用序列": 4,
                 "资料集地址/编号清单": 2,
+                "参考逐字段保存同址黄金": 2,
             },
         )
         read_only_sites = animation_calls["read_only_sites"]
-        self.assertEqual(len(read_only_sites), 10)
+        self.assertEqual(len(read_only_sites), 8)
         self.assertEqual(
             [site["file_offset"] for site in read_only_sites],
             [
                 "0x03804A",
-                "0x0380DF",
                 "0x0384B0",
                 "0x03853D",
                 "0x038982",
                 "0x038E68",
-                "0x038EEA",
                 "0x038EF3",
                 "0x03B9DC",
                 "0x03B9E0",
@@ -80,7 +79,6 @@ class M12AnimationReportTests(unittest.TestCase):
             {site["reason_code"] for site in read_only_sites},
             {
                 "reference_value_conflict",
-                "no_matching_reference_context",
                 "id_meaning_only",
                 "reference_address_mismatch",
                 "embedded_vm_data_unverified",

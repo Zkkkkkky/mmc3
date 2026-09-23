@@ -1,0 +1,10 @@
+{
+  "module": "M05", "field": "fragment_puzzle_flip_horizontal", "case_id": "cold_start_01", "case_kind": "discovery",
+  "requested_value": "08 C6 60 46 0E 4A F4 42 4A F6 42 4A FD 42 4A F6 42 42 4E E9 10 46 1C 42 4E 08 F4 4E F0 F4 42 42 4E F2 F8 42 4E FC F8 42 4E 08 FD 42 FF",
+  "expected_before": "08 C6 60 06 0E 0A F4 02 0A F6 02 0A FD 02 0A F6 02 02 0E E9 10 06 1C 02 0E 08 F4 0E F0 F4 02 02 0E F2 F8 02 0E FC F8 02 0E 08 FD 02 FF",
+  "expected_offsets": [], "required_offsets": [], "optional_offsets": [], "extra_allowed": [],
+  "navigation": [{"op":"menu","path":"数据->数据库"},{"op":"window","title":"数据库"},{"op":"list_select","class":"ListBox","control_id":120,"row":1},{"op":"click_id","class":"Button","control_id":220},{"op":"window","title":"碎片拼图"}],
+  "read_navigation": [{"op":"menu","path":"数据->数据库"},{"op":"window","title":"数据库"},{"op":"list_select","class":"ListBox","control_id":120,"row":1},{"op":"click_id","class":"Button","control_id":220},{"op":"window","title":"碎片拼图"}],
+  "edit_steps": [{"op":"click_id","class":"Button","control_id":430},{"op":"assert_value","class":"Edit","control_id":330,"value_type":"str","value":"$requested"},{"op":"click_id","class":"Button","control_id":240},{"op":"window","title":"数据库"},{"op":"click_id","class":"Button","control_id":590}],
+  "read_selector": {"class":"Edit","control_id":330,"value_type":"str"}
+}

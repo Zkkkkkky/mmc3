@@ -10,26 +10,69 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 EVIDENCE = ROOT / "output/verification/legacy-ui-probe-m05-icon-double-click-20260920l/controls"
+LEGACY_EVIDENCE = ROOT / "output/verification/legacy-ui-probe/controls"
 MAIN = EVIDENCE / "M05_数据库_机体修改.json"
 SKILL = EVIDENCE / "M05_数据库_机体修改_特殊技能.json"
 ICON = EVIDENCE / "M05_数据库_机体修改_机体图标设置.json"
+BODY_PUZZLE = LEGACY_EVIDENCE / "D3_数据库_机体拼图.json"
+FRAGMENT_PUZZLE = LEGACY_EVIDENCE / "D3_数据库_碎片拼图.json"
 GOLDEN = ROOT / "output/reports/golden-coverage-report.json"
 JSON_OUT = ROOT / "output/reports/m05-reference-control-catalog.json"
 MD_OUT = ROOT / "output/reports/m05-reference-control-catalog.md"
+DISCOVERY_DIR = ROOT / "tools/golden_pipeline/discovery_history"
+ACTION_DISCOVERY_RECIPES = {
+    "body_upload_bmp": DISCOVERY_DIR
+    / "M05-body-upload-bmp-discovery-cold-start-01.json",
+    "fragment_upload_bmp": DISCOVERY_DIR
+    / "M05-fragment-upload-bmp-discovery-cold-start-01.json",
+    "icon_upload_bmp": DISCOVERY_DIR
+    / "M05-icon-upload-bmp-discovery-cold-start-01.json",
+    "icon_binding_double_click": DISCOVERY_DIR
+    / "M05-icon-binding-double-click-discovery-cold-start-01.json",
+    "body_puzzle_clear": DISCOVERY_DIR
+    / "M05-body-puzzle-clear-discovery-cold-start-01.json",
+    "body_puzzle_move_up": DISCOVERY_DIR
+    / "M05-body-puzzle-move-up-discovery-cold-start-01.json",
+    "body_puzzle_move_down": DISCOVERY_DIR
+    / "M05-body-puzzle-move-down-discovery-cold-start-01.json",
+    "body_puzzle_move_left": DISCOVERY_DIR
+    / "M05-body-puzzle-move-left-discovery-cold-start-01.json",
+    "body_puzzle_move_right": DISCOVERY_DIR
+    / "M05-body-puzzle-move-right-discovery-cold-start-01.json",
+    "fragment_puzzle_move_up": DISCOVERY_DIR
+    / "M05-fragment-puzzle-move-up-discovery-cold-start-01.json",
+    "fragment_puzzle_move_down": DISCOVERY_DIR
+    / "M05-fragment-puzzle-move-down-discovery-cold-start-01.json",
+    "fragment_puzzle_move_left": DISCOVERY_DIR
+    / "M05-fragment-puzzle-move-left-discovery-cold-start-01.json",
+    "fragment_puzzle_move_right": DISCOVERY_DIR
+    / "M05-fragment-puzzle-move-right-discovery-cold-start-01.json",
+    "fragment_puzzle_clear": DISCOVERY_DIR
+    / "M05-fragment-puzzle-clear-discovery-cold-start-01.json",
+    "fragment_puzzle_flip_horizontal": DISCOVERY_DIR
+    / "M05-fragment-puzzle-flip-horizontal-discovery-cold-start-01.json",
+    "fragment_puzzle_flip_vertical": DISCOVERY_DIR
+    / "M05-fragment-puzzle-flip-vertical-discovery-cold-start-01.json",
+}
 
 CONTROL_CLASSES = {"Edit", "ComboBox", "Button", "ListBox"}
 
 
-def controls(path: Path, surface: str) -> list[dict[str, object]]:
+def controls(
+    path: Path,
+    surface: str,
+    *,
+    include_custom_controls: bool = False,
+) -> list[dict[str, object]]:
     payload = json.loads(path.read_text(encoding="utf-8"))
     result: list[dict[str, object]] = []
 
     def walk(node: dict[str, object]) -> None:
-        if (
-            node.get("visible")
-            and int(node.get("ctrl_id", 0))
-            and str(node.get("class")) in CONTROL_CLASSES
-        ):
+        control_class = str(node.get("class"))
+        is_supported_class = control_class in CONTROL_CLASSES or (
+            include_custom_controls and control_class.startswith("Afx:")
+        )
+        if node.get("visible") and int(node.get("ctrl_id", 0)) and is_supported_class:
             result.append(
                 {
                     "surface": surface,
@@ -47,8 +90,22 @@ def controls(path: Path, surface: str) -> list[dict[str, object]]:
 
 
 def build() -> dict[str, object]:
-    sources = {"main": MAIN, "special_skill": SKILL, "icon_binding": ICON}
-    all_controls = [item for name, path in sources.items() for item in controls(path, name)]
+    sources = {
+        "main": MAIN,
+        "special_skill": SKILL,
+        "icon_binding": ICON,
+        "body_puzzle": BODY_PUZZLE,
+        "fragment_puzzle": FRAGMENT_PUZZLE,
+    }
+    all_controls = [
+        item
+        for name, path in sources.items()
+        for item in controls(
+            path,
+            name,
+            include_custom_controls=name in {"body_puzzle", "fragment_puzzle"},
+        )
+    ]
     coverage = json.loads(GOLDEN.read_text(encoding="utf-8"))
     golden_rows = [
         item
@@ -76,21 +133,50 @@ def build() -> dict[str, object]:
         {"control_id": 2670, "action": "clear_body", "reason": "destructive save layout pending"},
         {"control_id": 2680, "action": "clear_fragment", "reason": "destructive save layout pending"},
     ]
+    discovery_recipes = {}
+    for name, path in ACTION_DISCOVERY_RECIPES.items():
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        promotion_guarded = (
+            payload.get("module") == "M05"
+            and payload.get("case_kind") == "discovery"
+            and payload.get("expected_offsets") == []
+            and payload.get("required_offsets") == []
+        )
+        discovery_recipes[name] = {
+            "path": path.relative_to(ROOT).as_posix(),
+            "sha256": hashlib.sha256(path.read_bytes()).hexdigest(),
+            "case_kind": payload.get("case_kind"),
+            "promotion_guarded": promotion_guarded,
+            "status": "prepared_not_promoted" if promotion_guarded else "invalid_guard",
+        }
     checks = {
         "source_files_present": all(path.is_file() for path in sources.values()),
         "main_controls_enumerated": sum(item["surface"] == "main" for item in all_controls) == 56,
         "special_skill_controls_enumerated": sum(item["surface"] == "special_skill" for item in all_controls) == 8,
         "icon_binding_controls_enumerated": sum(item["surface"] == "icon_binding" for item in all_controls) == 5,
+        "body_puzzle_controls_enumerated": sum(item["surface"] == "body_puzzle" for item in all_controls) == 29,
+        "fragment_puzzle_controls_enumerated": sum(item["surface"] == "fragment_puzzle" for item in all_controls) == 27,
+        "puzzle_canvas_controls_enumerated": sum(
+            item["surface"] in {"body_puzzle", "fragment_puzzle"}
+            and str(item["class"]).startswith("Afx:")
+            for item in all_controls
+        )
+        == 13,
         "golden_fields_unique": len(golden_fields) == 33,
         "all_golden_fields_passed": len(golden_rows) == 33,
         "non_rom_fields_classified": len(non_rom_fields) == 5,
         "pending_actions_guarded": len(pending_actions) == 11,
+        "action_discovery_recipes_ready": len(discovery_recipes) == 16
+        and all(path.is_file() for path in ACTION_DISCOVERY_RECIPES.values()),
+        "action_discovery_recipes_not_promoted": all(
+            item["promotion_guarded"] for item in discovery_recipes.values()
+        ),
     }
     return {
         "schema_version": 1,
         "module": "M05",
         "passed": all(checks.values()),
-        "status": "controls_cataloged_33_save_fields_passed_11_actions_guarded",
+        "status": "five_surfaces_cataloged_33_save_fields_passed_11_actions_guarded",
         "sources": {
             name: {
                 "path": path.relative_to(ROOT).as_posix(),
@@ -105,11 +191,13 @@ def build() -> dict[str, object]:
             "golden_save_fields": len(golden_fields),
             "classified_non_rom_fields": len(non_rom_fields),
             "guarded_pending_actions": len(pending_actions),
+            "prepared_discovery_recipes": len(discovery_recipes),
         },
         "checks": checks,
         "golden_save_fields": golden_fields,
         "classified_non_rom_fields": non_rom_fields,
         "guarded_pending_actions": pending_actions,
+        "prepared_discovery_recipes": discovery_recipes,
         "controls": all_controls,
     }
 
@@ -120,10 +208,11 @@ def markdown(report: dict[str, object]) -> str:
         [
             "# M05 参考版控件与保存字段目录",
             "",
-            f"- 三个界面共枚举控件：{counts['controls']}（主界面 56、特殊技能 8、图标设置 5）",
+            f"- 五个界面共枚举可见控件：{counts['controls']}（主界面 56、特殊技能 8、图标设置 5、机体拼图 29、碎片拼图 27）",
             f"- 已通过黄金保存字段：{counts['golden_save_fields']}/33",
             f"- 已分类非 ROM 字段：{counts['classified_non_rom_fields']}",
             f"- 保持门禁的动作入口：{counts['guarded_pending_actions']}",
+            f"- 已准备但未晋级黄金的动作 discovery 配方：{counts['prepared_discovery_recipes']}",
             f"- 状态：`{report['status']}`",
             "",
             "上传、清除、拼图、图标画布提交和新增机体是动作协议，不冒充普通字段；在对应参考版保存布局补证前继续保持写入门禁。完整控件、字段和原因见同名 JSON。",

@@ -75,6 +75,26 @@ class FakeDriver:
             FakeDriver.stopped.append(self.pid)
 
 
+class CaptureAfterDriver(FakeDriver):
+    def __init__(self) -> None:
+        super().__init__()
+        self.edited = False
+
+    def perform(self, steps: tuple[dict[str, Any], ...], requested: int | str) -> None:
+        if any(step["op"] == "click_id" for step in steps):
+            self.edited = True
+
+    def read(self, selector: dict[str, Any]) -> str:
+        assert self.rom is not None
+        return "after-hash" if self.edited or self.rom.read_bytes()[10] == 71 else "before-hash"
+
+    def save(self) -> None:
+        assert self.rom is not None and self.edited
+        data = bytearray(self.rom.read_bytes())
+        data[10] = 71
+        self.rom.write_bytes(data)
+
+
 class LiveCollectionTests(unittest.TestCase):
     def setUp(self) -> None:
         FakeDriver.next_pid = 4000
@@ -123,6 +143,35 @@ class LiveCollectionTests(unittest.TestCase):
         adapted = core._adapt_live(indexed)
         self.assertEqual(adapted[0].snapshot_dir, run_dir.relative_to(self.repo).as_posix())
         self.assertEqual(adapted[0].reopen_mode, "new_process")
+
+    def test_discovery_can_capture_unknown_post_action_visual_value(self) -> None:
+        payload = case_payload()
+        payload.update(
+            {
+                "case_kind": "discovery",
+                "requested_value": "$capture_after",
+                "expected_before": "before-hash",
+                "expected_offsets": [],
+                "required_offsets": [],
+                "edit_steps": [{"op": "click_id", "control_id": 160}],
+                "read_selector": {
+                    "class": "Afx:preview",
+                    "control_id": 150,
+                    "value_type": "control_pixel_sha256",
+                },
+            }
+        )
+        _, report = collector.collect_case(
+            self.repo,
+            collector.CaseSpec.from_payload(payload),
+            self.baseline,
+            self.exe,
+            CaptureAfterDriver,
+        )
+        self.assertEqual(report["requested_value"], "after-hash")
+        self.assertEqual(report["requested_value_mode"], "captured_after_action")
+        self.assertTrue(report["reopen_matches_request"])
+        self.assertFalse(report["passed"])
 
     def test_unexpected_offset_cannot_pass(self) -> None:
         FakeDriver.unexpected_write = True
@@ -259,6 +308,33 @@ class LiveCollectionTests(unittest.TestCase):
         del payload["edit_steps"][0]["value"]
         with self.assertRaises(ValueError):
             collector.CaseSpec.from_payload(payload)
+
+    def test_assert_value_accepts_combo_index(self) -> None:
+        payload = case_payload()
+        payload["edit_steps"] = [
+            {
+                "op": "assert_value",
+                "class": "ComboBox",
+                "control_id": 130,
+                "value": "$requested",
+                "value_type": "combo_index",
+            }
+        ]
+        spec = collector.CaseSpec.from_payload(payload)
+        self.assertEqual(spec.edit_steps[0]["value_type"], "combo_index")
+
+    def test_repo_path_placeholder_is_resolved_and_cannot_escape(self) -> None:
+        sample = self.repo / "evidence" / "sample.bmp"
+        sample.parent.mkdir()
+        sample.write_bytes(b"BM")
+        steps = ({"op": "set_text", "control_id": 1148, "value": "$repo_path:evidence/sample.bmp"},)
+        resolved = collector._resolve_repo_step_paths(steps, self.repo)
+        self.assertEqual(resolved[0]["value"], str(sample.resolve()))
+        with self.assertRaises(ValueError):
+            collector._resolve_repo_step_paths(
+                ({"op": "set_text", "control_id": 1148, "value": "$repo_path:../outside.bmp"},),
+                self.repo,
+            )
 
     def test_checkbox_write_and_read_are_whitelisted_and_bounded(self) -> None:
         payload = case_payload()

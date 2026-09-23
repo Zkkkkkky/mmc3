@@ -94,7 +94,7 @@ class ReferenceSaveMatrixTests(unittest.TestCase):
         self.assertTrue(report["final_denominator_ready"])
         self.assertEqual(report["counts"]["field_scope_modules_complete"], 18)
         self.assertEqual(report["counts"]["field_scope_modules_incomplete"], 0)
-        self.assertEqual(report["counts"]["known_final_denominator_fields"], 6842)
+        self.assertEqual(report["counts"]["known_final_denominator_fields"], 6885)
         self.assertEqual(report["counts"]["configured_unarchived_fields"], 0)
         self.assertGreaterEqual(report["counts"]["configured_discovery_fields"], 1)
         incomplete = {

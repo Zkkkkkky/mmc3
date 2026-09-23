@@ -126,6 +126,9 @@ def analyze() -> dict[str, object]:
     current_build_evidence = json.loads(
         CURRENT_BUILD_EVIDENCE.read_text(encoding="utf-8")
     )
+    verified_exe_hash = str(
+        current_build_evidence["formalExecutable"]["sha256"]
+    ).upper()
     agent_ui_smoke = json.loads(AGENT_UI_SMOKE.read_text(encoding="utf-8"))
     smoked_exe_hash = str(agent_ui_smoke["executable"]["sha256"]).upper()
 
@@ -134,6 +137,14 @@ def analyze() -> dict[str, object]:
         evidence_path = ROOT / str(declaration["evidence"])
         checklist_path = ROOT / str(declaration["checklist"])
         evidence = json.loads(evidence_path.read_text(encoding="utf-8"))
+        checklist_text = (
+            checklist_path.read_text(encoding="utf-8")
+            if checklist_path.is_file()
+            else ""
+        )
+        checklist_declares_current_executable = (
+            module == "M17" or expected_exe_hash in checklist_text.upper()
+        )
         modules[module] = {
             "status": declaration["status"],
             "implementation_scope_complete": declaration["implementation_scope_complete"],
@@ -142,15 +153,21 @@ def analyze() -> dict[str, object]:
             "evidence_sha256": _sha256(evidence_path),
             "checklist": str(declaration["checklist"]),
             "checklist_exists": checklist_path.is_file(),
+            "checklist_declares_current_executable": checklist_declares_current_executable,
             # Standing rule: only an explicit user decision can change this.
             "user_acceptance": USER_ACCEPTANCE.get(module, "pending"),
         }
 
     machine_gate_passed = (
         actual_exe_hash == expected_exe_hash
+        and verified_exe_hash == actual_exe_hash
+        and current_build_evidence["formalExecutable"]["selfTestExitCode"] == 0
+        and current_build_evidence["fullRegression"]["passed"] is True
         and actual_rom_hash == EXPECTED_ROM_SHA256
         and all(
-            item["machine_gate_passed"] and item["checklist_exists"]
+            item["machine_gate_passed"]
+            and item["checklist_exists"]
+            and item["checklist_declares_current_executable"]
             for item in modules.values()
         )
     )
@@ -193,6 +210,8 @@ def analyze() -> dict[str, object]:
             "self_test_exit_code": current_build_evidence["formalExecutable"][
                 "selfTestExitCode"
             ],
+            "executable_sha256": verified_exe_hash,
+            "matches_current_executable": verified_exe_hash == actual_exe_hash,
             "current_build_click_smoke_performed": current_build_evidence[
                 "nativeUiAutomation"
             ]["currentBuildClickSmokePerformed"],
@@ -230,8 +249,8 @@ def analyze() -> dict[str, object]:
         },
         "modules": modules,
         "blocking_reasons": [
-            "M12 的 6 条无安全参数、31 条动态/不完整背景、三表任意通用搬移和 10 个已逐项审计但证据冲突/不足的调用均按需求保持只读；这是完成态安全门禁，不是待猜写功能。",
-            "前一构建 A0675C1…B1C0 与当前构建 72E78D4…98A752 均已完成 Windows 原生代理烟测；当前构建另通过 728/728 全量回归、隐藏自检及 Mesen 17/17 运行时基线。M12 参考窗口三页签及组图首图块保存/冷启动重开已取得动态证据。",
+            "M12 的 6 条无安全参数、31 条动态/不完整背景、三表任意通用搬移和 8 个已逐项审计但证据冲突/不足的调用均按需求保持只读；这是完成态安全门禁，不是待猜写功能。",
+            "当前正式构建已通过 746/746 全量回归和隐藏自检；Mesen 17/17 是推荐 ROM 运行时基线。Windows 控制组件本轮初始化失败，因此可见点击证据仍沿用历史构建并明确标记不匹配当前 EXE。",
             "2026-09-21 用户明确确认 M03—M17 按当前实现范围通过；本报告据此记录 M08—M17 用户签收，不扩大任何模块的声明实现范围。",
         ],
     }

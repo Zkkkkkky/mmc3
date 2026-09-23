@@ -48,11 +48,6 @@ READ_ONLY_CALL_AUDIT = {
         "reason_code": "reference_value_conflict",
         "reason": "资料集 page_325.html 记为 $3804A→$0C，当前 ROM 同址却是 $00；编号冲突，不能按参考项解禁。",
     },
-    0x380DF: {
-        "animation_id": 0x3E,
-        "reason_code": "no_matching_reference_context",
-        "reason": "资料集未列出该地址，邻近字节也不匹配已验证的六类调用上下文。",
-    },
     0x384B0: {
         "animation_id": 0x10,
         "reason_code": "id_meaning_only",
@@ -72,11 +67,6 @@ READ_ONLY_CALL_AUDIT = {
         "animation_id": 0x14,
         "reason_code": "id_meaning_only",
         "reason": "资料集只说明动画 $14 的显示含义，未列出该地址，前置序列也未在精神/战斗流程清单中复现。",
-    },
-    0x38EEA: {
-        "animation_id": 0x15,
-        "reason_code": "id_meaning_only",
-        "reason": "资料集只说明动画 $15 的显示含义，未列出该地址，当前邻近事件指令语义不足以证明写入安全。",
     },
     0x38EF3: {
         "animation_id": 0x12,
@@ -429,7 +419,7 @@ def analyze(rom_path: Path) -> dict[str, object]:
         ),
         "verified_call_contexts_complete": (
             len(calls) == 86
-            and sum(call_evidence.values()) == 76
+            and sum(call_evidence.values()) == 78
             and call_evidence
             == {
                 "直接设置/调用序列": 56,
@@ -438,6 +428,7 @@ def analyze(rom_path: Path) -> dict[str, object]:
                 "连续动画调用序列": 4,
                 "奇迹闪烁调用序列": 4,
                 "资料集地址/编号清单": 2,
+                "参考逐字段保存同址黄金": 2,
             }
         ),
         "read_only_call_audit_complete": (
@@ -446,7 +437,7 @@ def analyze(rom_path: Path) -> dict[str, object]:
                 offset: int(audit["animation_id"])
                 for offset, audit in READ_ONLY_CALL_AUDIT.items()
             }
-            and len(read_only_call_details) == 10
+            and len(read_only_call_details) == 8
             and all(
                 detail["reason_code"] != "audit_missing"
                 for detail in read_only_call_details
@@ -504,7 +495,7 @@ def analyze(rom_path: Path) -> dict[str, object]:
         "delivery_status": "implementation_complete_guarded_scope",
         "conclusion": (
             "M12 当前安全交付范围已实现：六表读取、等长动画/运行编辑、组图首图块动态黄金、"
-            "76/86 个已核对调用点与 F-069 拼图播放通过门禁；背景 106 槽已全量分类并开放 "
+            "78/86 个已核对调用点与 F-069 拼图播放通过门禁；背景 106 槽已全量分类并开放 "
             "69 条解释器已验证参数，三类预留槽复制和工程名称写回已开放。旧版 X/Y 非持久化及"
             "其余未证范围均保持只读。"
         ),
@@ -668,8 +659,8 @@ def analyze(rom_path: Path) -> dict[str, object]:
             "运行规律 $12 的循环次数来自运行时参数，$21 会切换运行时指针页；两项保留明确门禁。",
             "预览图库、00/80 映射和整图翻转只影响可视验证，不写 ROM。",
             "背景规律 106 槽中 75 条具有完整唯一边界，69 条含可写绘制参数；另 6 条无安全参数、31 条含动态或不完整边界并保持只读。",
-            "86 个静态动画调用中 76 个具有资料集与当前 ROM 一致的完整上下文或地址/编号双证据；其余 10 个字节命中保持只读。",
-            "10 个只读调用均已记录 Bank/CPU 地址、邻近原码和锁定原因；资料冲突或疑似错位不按推测解禁。",
+            "86 个静态动画调用中 78 个具有完整上下文、资料集双证据或参考逐字段同址保存黄金；其余 8 个字节命中保持只读。",
+            "8 个只读调用均已记录 Bank/CPU 地址、邻近原码和锁定原因；资料冲突或疑似错位不按推测解禁。",
             "地图动画添加只使用 $3F—$98 和 2306 字节全零池；运行规律复制只使用 $7D—$9C 与 32 字节尾池并原子改绑唯一同角色引用；组图复制只使用 $EB—$F6 与 88 字节尾池。",
             "动画与规律名称写入 .dcmod 工程元数据，不改变 ROM 字节或全局默认配置。",
             "参考 EXE 已完成组图首图块单字段保存/全新进程重开黄金；X/Y 现场值可变但不持久化，产品保持只读。",

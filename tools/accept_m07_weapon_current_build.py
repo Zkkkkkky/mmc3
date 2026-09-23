@@ -13,6 +13,7 @@ os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
+from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QApplication, QDialog, QMessageBox
 from unittest.mock import patch
 
@@ -20,6 +21,7 @@ from dc_modifier.app import DEFAULT_ROM
 from dc_modifier.database_records import weapon_extra_values
 from dc_modifier.legacy_windows import DatabaseDialog
 from dc_modifier.weapon_rule_library import WEAPON_RULE_TABLES, WeaponRuleLibraryDialog
+from fc_editor.codecs.animation import AnimationCodec
 from fc_rom_editor_core import RomProject
 
 
@@ -52,6 +54,35 @@ def main() -> int:
     checks["weapon_unique_record"] = page.shared_weapon_record_ids(WEAPON_ID) == (WEAPON_ID,)
     checks["all_weapon_ids_visible"] = page.records.count() == 255
     checks["field_editor_enabled"] = page.fields["hit"].isEnabled() and page.weapon_skill.isEnabled()
+
+    # F-039: the usage tab is built from the real unit weapon slots, and its
+    # actual button must navigate back to the selected unit.
+    expected_usage = tuple(
+        unit_id
+        for unit_id in range(1, project.unit_count)
+        if WEAPON_ID in project.get_unit_weapons(unit_id)
+    )
+    actual_usage = tuple(
+        int(page.usage_list.item(row).data(Qt.ItemDataRole.UserRole))
+        for row in range(page.usage_list.count())
+    )
+    checks["usage_list_matches_real_slots"] = bool(expected_usage) and actual_usage == expected_usage
+    page.weapon_animation.setCurrentIndex(2)
+    page.usage_list.setCurrentRow(0)
+    jump = next(
+        button
+        for button in page.findChildren(type(page.apply_button))
+        if button.text() == "转到所选机体"
+    )
+    jump.click()
+    app.processEvents()
+    checks["usage_button_jumps_to_unit"] = (
+        dialog.tabs.currentIndex() == 0
+        and dialog.unit_page.current_id == expected_usage[0]
+    )
+    dialog._select_weapon(WEAPON_ID)
+    page = dialog.weapon_page
+
     page.fields["hit"].setValue(111)
     page.weapon_skill.setCurrentIndex(11)
     page.distance_correction.setValue(2)
@@ -72,6 +103,48 @@ def main() -> int:
         new_record[0] & 0x0F == old_record[0] & 0x0F
         and new_record[2] & 0xF0 == old_record[2] & 0xF0
     )
+
+    # F-041: both mode tabs must decode real scripts and independently accept
+    # one legal same-length parameter change through the normal Apply action.
+    checks["ally_enemy_animation_tabs"] = (
+        page.weapon_animation.count() == 3
+        and page.weapon_animation.tabText(0) == "我方武器动画"
+        and page.weapon_animation.tabText(1) == "敌方武器动画"
+        and page.weapon_animation.tabText(2) == "使用此武器的机体"
+    )
+    expected_animation: dict[str, bytes] = {}
+    animation_offsets: dict[str, int] = {}
+    for kind, editor in zip(("ally", "enemy"), page.weapon_animation.editors):
+        assert editor.record is not None
+        replacement = bytearray(editor.record.raw)
+        parameter_changed = False
+        for instruction in editor.record.instructions:
+            for local, low, high in instruction.editable:
+                byte_index = instruction.offset - editor.record.offset + local
+                candidate = low if replacement[byte_index] != low else high
+                if candidate != replacement[byte_index]:
+                    replacement[byte_index] = candidate
+                    parameter_changed = True
+                    break
+            if parameter_changed:
+                break
+        checks[f"{kind}_animation_has_editable_parameter"] = parameter_changed
+        expected_animation[kind] = bytes(replacement)
+        animation_offsets[kind] = editor.record.offset
+        editor.code_edit.setPlainText(bytes(replacement).hex(" ").upper())
+    checks["both_animation_modes_pending"] = all(
+        editor.has_pending_changes() for editor in page.weapon_animation.editors
+    )
+    with patch("dc_modifier.database_records.QMessageBox.question", return_value=QMessageBox.StandardButton.Yes):
+        page.apply_record()
+    checks["both_animation_modes_applied"] = all(
+        bytes(project.working[offset:offset + len(expected_animation[kind])])
+        == expected_animation[kind]
+        for kind, offset in animation_offsets.items()
+    ) and not page.weapon_animation.has_pending_changes()
+    page.weapon_animation.setCurrentIndex(1)
+    page.grab().save(str(OUT / "02-weapon-modes-and-usage.png"))
+
     dialog.accept()
     checks["outer_dialog_accepted"] = dialog.result() == QDialog.DialogCode.Accepted
     project.save_as(EDIT_ROM, make_backup=False)
@@ -83,6 +156,11 @@ def main() -> int:
         reopened.weapon_record_bytes(WEAPON_ID) == new_record
         and reopened.get_weapon_value(WEAPON_ID, "hit") == 111
         and weapon_extra_values(reopened, WEAPON_ID) == (11, 2)
+    )
+    reopened_animations = AnimationCodec(reopened.working)
+    checks["animation_modes_save_reopen_exact"] = all(
+        reopened_animations.record(kind, WEAPON_ID).raw == expected
+        for kind, expected in expected_animation.items()
     )
 
     # The four reference-shaped rule libraries are browsers, not code editors.
@@ -103,7 +181,7 @@ def main() -> int:
         rules.tabs.setCurrentIndex(next(index for index in range(4) if rules.tabs.tabText(index) == table.title))
         rules.lists[table.key].setCurrentRow(table.count - 1)
         app.processEvents()
-    rules.grab().save(str(OUT / "02-four-rule-libraries.png"))
+    rules.grab().save(str(OUT / "03-four-rule-libraries.png"))
     rules.reject()
     rules.deleteLater()
     app.processEvents()
@@ -143,11 +221,22 @@ def main() -> int:
             "record_before": old_record.hex(" ").upper(),
             "record_after": new_record.hex(" ").upper(),
             "changed_offsets": [f"0x{index:06X}" for index in sorted(changed)],
+            "usage_weapon_id": WEAPON_ID,
+            "usage_unit_ids": list(expected_usage),
+            "animation_offsets": {
+                kind: f"0x{offset:06X}"
+                for kind, offset in animation_offsets.items()
+            },
             "rule_counts": counts,
         },
         "artifacts": [
             str(path.relative_to(ROOT)).replace("\\", "/")
-            for path in (EDIT_ROM, OUT / "01-weapon-field-draft.png", OUT / "02-four-rule-libraries.png")
+            for path in (
+                EDIT_ROM,
+                OUT / "01-weapon-field-draft.png",
+                OUT / "02-weapon-modes-and-usage.png",
+                OUT / "03-four-rule-libraries.png",
+            )
         ],
         "note": "Machine acceptance does not expand the 2026-09-21 user sign-off or unlock read-only rule code.",
     }

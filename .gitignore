@@ -7,6 +7,7 @@ __pycache__/
 
 # Generated build work
 output/build/pyinstaller-work/
+output/build/legacy-diff-audit/m05-upload-samples/
 
 # Local Codex, scratch, and emulator state
 .codex-remote-attachments/

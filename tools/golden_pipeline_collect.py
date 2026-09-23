@@ -181,14 +181,21 @@ class CaseSpec:
         if not navigation or not read_navigation or not edit_steps:
             raise ValueError("navigation, read_navigation and edit_steps must be nonempty")
         selector = dict(payload["read_selector"])
-        if selector.get("class") not in {
+        selector_class = selector.get("class")
+        if selector_class not in {
             "Edit",
             "ComboBox",
             "Button",
             "Static",
             "ListBox",
             "_EL_PicBox",
-        }:
+        } and not (
+            isinstance(selector_class, str)
+            and (
+                selector_class.startswith("Afx:")
+                or selector_class.startswith("_EL_")
+            )
+        ):
             raise ValueError("Unsupported read selector class")
         if not isinstance(selector.get("control_id"), int):
             raise ValueError("read selector needs an integer control_id")
@@ -222,12 +229,29 @@ class CaseSpec:
         before = payload.get("expected_before")
         if not isinstance(requested, (int, str)) or isinstance(requested, bool):
             raise ValueError("requested_value must be an integer or string")
+        capture_after = requested == "$capture_after"
+        if capture_after and case_kind != "discovery":
+            raise ValueError("$capture_after is restricted to discovery cases")
+        if capture_after and selector.get("value_type") in {
+            "int",
+            "check",
+            "combo_index",
+            "combo_item_count",
+            "list_item_count",
+            "checkbox_pixel",
+        }:
+            raise ValueError("$capture_after requires a string-valued read selector")
+        if capture_after and any(
+            step.get("value") == "$requested"
+            for step in (*navigation, *edit_steps, *read_navigation)
+        ):
+            raise ValueError("$capture_after cannot be written through a $requested step")
         if before is not None and type(before) is not type(requested):
             raise ValueError("expected_before and requested_value must have the same type")
         if (
             selector.get("value_type")
             in {"int", "check", "combo_index", "combo_item_count", "list_item_count", "checkbox_pixel"}
-        ) != isinstance(requested, int):
+        ) != (isinstance(requested, int) and not capture_after):
             raise ValueError("read selector value_type must match requested_value")
         return cls(
             module=module,
@@ -315,11 +339,11 @@ def _validate_steps(raw: Any) -> tuple[dict[str, Any], ...]:
             raise ValueError("click_count must be 1 or 2")
         if op == "assert_value" and not (
             isinstance(item.get("control_id"), int)
-            and item.get("value_type", "str") in {"int", "str"}
+            and item.get("value_type", "str") in {"int", "str", "combo_index"}
             and "value" in item
         ):
             raise ValueError(
-                "assert_value requires control_id, value and int/str value_type"
+                "assert_value requires control_id, value and int/str/combo_index value_type"
             )
         steps.append(dict(item))
     return tuple(steps)
@@ -327,6 +351,26 @@ def _validate_steps(raw: Any) -> tuple[dict[str, Any], ...]:
 
 def _within(path: Path, parent: Path) -> bool:
     return path == parent or parent in path.parents
+
+
+def _resolve_repo_step_paths(
+    steps: tuple[dict[str, Any], ...], repo_root: Path
+) -> tuple[dict[str, Any], ...]:
+    """Expand guarded ``$repo_path:`` values used by native file dialogs."""
+
+    resolved_steps: list[dict[str, Any]] = []
+    repo = repo_root.resolve()
+    for source in steps:
+        item = dict(source)
+        value = item.get("value")
+        if isinstance(value, str) and value.startswith("$repo_path:"):
+            relative = value.removeprefix("$repo_path:")
+            candidate = (repo / relative).resolve()
+            if not relative or not _within(candidate, repo) or not candidate.is_file():
+                raise ValueError(f"Invalid or missing repository file: {relative!r}")
+            item["value"] = str(candidate)
+        resolved_steps.append(item)
+    return tuple(resolved_steps)
 
 
 def _owner_drawn_spirit_checkbox_state(image: Any, item_index: int) -> int:
@@ -473,19 +517,27 @@ def collect_case(
     second_pid: int | None = None
     original: int | str | None = None
     reopened: int | str | None = None
+    effective_requested: int | str = spec.requested_value
+    navigation = _resolve_repo_step_paths(spec.navigation, repo)
+    edit_steps = _resolve_repo_step_paths(spec.edit_steps, repo)
+    read_navigation = _resolve_repo_step_paths(spec.read_navigation, repo)
 
     try:
         first = driver_factory()
         try:
             first_pid = first.launch(executable, executable.parent)
             first.open_rom(after_path)
-            first.perform(spec.navigation, spec.requested_value)
+            first.perform(navigation, spec.requested_value)
             original = first.read(spec.read_selector)
             if spec.expected_before is not None and original != spec.expected_before:
                 raise RuntimeError(
                     f"Baseline display differs: expected {spec.expected_before!r}, got {original!r}"
                 )
-            first.perform(spec.edit_steps, spec.requested_value)
+            first.perform(edit_steps, spec.requested_value)
+            if spec.requested_value == "$capture_after":
+                effective_requested = first.read(spec.read_selector)
+                if effective_requested == original:
+                    raise RuntimeError("Captured post-action value did not change")
             first.save()
         finally:
             first.stop()
@@ -497,7 +549,7 @@ def collect_case(
             if second_pid == first_pid:
                 raise RuntimeError("Cold reopen reused the first process ID")
             second.open_rom(after_path)
-            second.perform(spec.read_navigation, spec.requested_value)
+            second.perform(read_navigation, effective_requested)
             reopened = second.read(spec.read_selector)
         finally:
             second.stop()
@@ -534,7 +586,7 @@ def collect_case(
         and bool(spec.required_offsets)
         and not classification.unexplained
         and not required_missing
-        and reopened == spec.requested_value
+        and reopened == effective_requested
         and within_budget
     )
     reasons: list[str] = []
@@ -544,7 +596,7 @@ def collect_case(
         reasons.append(f"{len(classification.unexplained)} unexplained offsets")
     if required_missing:
         reasons.append(f"{len(required_missing)} required offsets unchanged")
-    if reopened != spec.requested_value:
+    if reopened != effective_requested:
         reasons.append("cold reopen value differs from request")
     if not within_budget:
         reasons.append(f"{elapsed:.2f}s exceeds {effective_budget:.2f}s budget")
@@ -555,10 +607,15 @@ def collect_case(
         "field": spec.field,
         "case_id": spec.case_id,
         "case_kind": spec.case_kind,
-        "requested_value": spec.requested_value,
+        "requested_value": effective_requested,
+        "requested_value_mode": (
+            "captured_after_action"
+            if spec.requested_value == "$capture_after"
+            else "declared"
+        ),
         "original_value": original,
         "reopen_value": reopened,
-        "reopen_matches_request": reopened == spec.requested_value,
+        "reopen_matches_request": reopened == effective_requested,
         "reopen_mode": "new_process",
         "first_pid": first_pid,
         "second_pid": second_pid,
@@ -1259,9 +1316,13 @@ class Win32LegacyDriver:
                 expected = (
                     requested if step["value"] == "$requested" else step["value"]
                 )
-                actual: int | str = self._control(
-                    step["control_id"], step.get("class")
-                ).window_text()
+                control = self._control(step["control_id"], step.get("class"))
+                actual: int | str
+                if step.get("value_type") == "combo_index":
+                    actual = int(control.selected_index())
+                    expected = int(expected)
+                else:
+                    actual = control.window_text()
                 if step.get("value_type", "str") == "int":
                     actual = int(actual)
                     expected = int(expected)

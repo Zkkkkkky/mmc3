@@ -3,8 +3,8 @@
 - 状态：`complete`
 - 范围封口：18/18
 - 证据通过：18/18
-- 当前安全字段分母：6842
-- 封口目标安全字段分母：6842
+- 当前安全字段分母：6885
+- 封口目标安全字段分母：6885
 
 | 模块 | 范围封口 | 安全分母 | 证据通过 | 证据 |
 |---|---|---:|---|---|
@@ -19,7 +19,7 @@
 | M09 | 是 | 412 | 是 | output/verification/legacy-m09-all-fields-20260920/summary.json |
 | M10 | 是 | 134 | 是 | output/verification/legacy-m10-all-fields-20260920/summary.json |
 | M11 | 是 | 672 | 是 | output/verification/legacy-m11-all-fields-20260920/summary.json |
-| M12 | 是 | 198 | 是 | output/reports/m12-reference-field-coverage.json |
+| M12 | 是 | 241 | 是 | output/reports/m12-reference-field-coverage.json |
 | M13 | 是 | 0 | 是 | module has no persistent reference fields or is explicitly excluded |
 | M14 | 是 | 2674 | 是 | output/reports/m14-reference-save-coverage.json |
 | M15 | 是 | 0 | 是 | module has no persistent reference fields or is explicitly excluded |
