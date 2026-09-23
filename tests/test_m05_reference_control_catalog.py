@@ -72,6 +72,31 @@ class M05ReferenceControlCatalogTests(unittest.TestCase):
             )
         )
         self.assertTrue(report["checks"]["action_recipes_reviewed"])
+        self.assertTrue(
+            report["checks"]["pending_recipes_have_explicit_dynamic_blockers"]
+        )
+        pending = {
+            name: item
+            for name, item in report["prepared_discovery_recipes"].items()
+            if item["status"] == "prepared_not_promoted"
+        }
+        self.assertEqual(len(pending), 8)
+        self.assertTrue(
+            all(item["dynamic_evidence"] is not None for item in pending.values())
+        )
+        self.assertIn(
+            "exceeds_30_second_budget",
+            pending["body_upload_bmp"]["promotion_blockers"],
+        )
+        self.assertTrue(
+            pending["body_upload_bmp"]["dynamic_evidence"][
+                "reopen_matches_original"
+            ]
+        )
+        self.assertIn(
+            "cold_reopen_does_not_match_expected",
+            pending["main_clear_body"]["promotion_blockers"],
+        )
 
     def test_puzzle_dialogs_include_canvas_and_commit_controls(self) -> None:
         report = build()

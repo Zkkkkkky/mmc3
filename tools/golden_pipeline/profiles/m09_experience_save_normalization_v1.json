@@ -1,0 +1,8 @@
+{
+  "schema_version": 1,
+  "name": "m09_experience_save_normalization_v1",
+  "description": "参考版其他1经验表点击确定并保存时的稳定全局重写集合；等级2与等级60两个独立冷启动用例产生相同写集合、相同输出ROM，且请求值均未在新进程重开后持久化。",
+  "source_case": "output/build/legacy-diff-audit/cases/legacy_live/M09/experience_level_2/cold_start_01/case.json",
+  "source_case_sha256": "0a13260da5ff64b58ca605cf7ef61340c9e0d81139bc9bf7598b319e39ba8199",
+  "exclude_offsets": []
+}

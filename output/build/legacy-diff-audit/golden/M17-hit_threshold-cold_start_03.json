@@ -26,6 +26,7 @@
   "reopen_value": 71,
   "original_value": 70,
   "reopen_matches_request": true,
+  "reopen_matches_expected": true,
   "reopen_mode": "new_process",
   "expected_offsets": [
     42062

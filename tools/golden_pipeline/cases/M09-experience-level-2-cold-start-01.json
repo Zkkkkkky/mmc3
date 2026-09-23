@@ -1,0 +1,83 @@
+{
+  "module": "M09",
+  "field": "experience_level_2",
+  "case_id": "cold_start_01",
+  "case_kind": "golden",
+  "requested_value": 81,
+  "expected_before": 80,
+  "expected_offsets": [],
+  "required_offsets": [],
+  "optional_offsets": [],
+  "extra_allowed": [],
+  "navigation": [
+    {
+      "op": "menu",
+      "path": "数据->数据库"
+    },
+    {
+      "op": "window",
+      "title": "数据库"
+    },
+    {
+      "op": "click_coords",
+      "x": 390,
+      "y": 62
+    },
+    {
+      "op": "list_select",
+      "class": "SysListView32",
+      "control_id": 1570,
+      "row": 1,
+      "column": 0
+    }
+  ],
+  "read_navigation": [
+    {
+      "op": "menu",
+      "path": "数据->数据库"
+    },
+    {
+      "op": "window",
+      "title": "数据库"
+    },
+    {
+      "op": "click_coords",
+      "x": 390,
+      "y": 62
+    },
+    {
+      "op": "list_select",
+      "class": "SysListView32",
+      "control_id": 1570,
+      "row": 1,
+      "column": 0
+    }
+  ],
+  "edit_steps": [
+    {
+      "op": "set_text",
+      "class": "Edit",
+      "control_id": 1620,
+      "value": "$requested"
+    },
+    {
+      "op": "assert_value",
+      "class": "Edit",
+      "control_id": 1620,
+      "value": "$requested",
+      "value_type": "int"
+    },
+    {
+      "op": "click_id",
+      "class": "Button",
+      "control_id": 590
+    }
+  ],
+  "read_selector": {
+    "class": "Edit",
+    "control_id": 1620,
+    "value_type": "int"
+  },
+  "expected_noop": true,
+  "extra_allowed_profile": "m09_experience_save_normalization_v1"
+}

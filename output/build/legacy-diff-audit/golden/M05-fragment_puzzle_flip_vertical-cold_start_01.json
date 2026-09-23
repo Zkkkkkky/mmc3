@@ -47252,6 +47252,7 @@
   "reopen_value": "06 BA 05 8E 41 FE 8E D3 FC 82 8E 1D FF 8E C9 FF 8E 38 FE 82 8E D3 FC 8E 20 FD 8E 02 FF 82 8E D0 FB 8E 08 FE 8E 01 F9 86 0A 8E F0 FB 8E 08 FD 82 FF ",
   "original_value": "06 BE 05 0E 41 02 0E D3 04 02 0E 1D 01 0E C9 01 0E 38 02 02 0E D3 04 0E 20 03 0E 02 01 02 0E D0 05 0E 08 02 0E 01 07 06 0A 0E F0 05 0E 08 03 02 FF ",
   "reopen_matches_request": true,
+  "reopen_matches_expected": true,
   "reopen_mode": "new_process",
   "expected_offsets": [
     327700,

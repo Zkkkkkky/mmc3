@@ -3,8 +3,8 @@
   "module": "M09",
   "field": "experience_level_60",
   "case_id": "write",
-  "case_kind": "discovery",
-  "expected_noop": false,
+  "case_kind": "golden",
+  "expected_noop": true,
   "requested_value": 65536,
   "changed_offsets": [
     303361,
@@ -25,6 +25,7 @@
   "reopen_value": 65535,
   "original_value": 65535,
   "reopen_matches_request": false,
+  "reopen_matches_expected": true,
   "reopen_mode": "historical_result",
   "expected_offsets": [],
   "required_offsets": [],
@@ -33,11 +34,9 @@
   "unexpected_offsets": [],
   "target_changed": [],
   "expected_not_changed": [],
-  "passed": null,
-  "pending_reason": "发现型用例：存量 expected_offset=0（写入偏移未知）且重开读取值不等于请求值，需在线采集补证",
-  "notes": [
-    "发现型用例：存量 expected_offset=0（写入偏移未知）且重开读取值不等于请求值，需在线采集补证"
-  ],
+  "passed": true,
+  "pending_reason": null,
+  "notes": [],
   "provenance": {
     "source_json": "output/build/legacy-diff-audit/legacy-other1-results.json"
   },

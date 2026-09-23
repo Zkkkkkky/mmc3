@@ -1,0 +1,8 @@
+{
+  "module": "M09",
+  "field": "experience_level_2",
+  "case_id": "cold_start_01",
+  "error": "AppStartError: Could not create the process \"D:\\GIT\\mmc3\\output\\build\\legacy-diff-audit\\SRW2_patched.exe\"\nError returned by CreateProcess: (740, 'CreateProcess', '请求的操作需要提升。')",
+  "first_pid": null,
+  "second_pid": null
+}

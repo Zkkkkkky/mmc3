@@ -13,6 +13,7 @@
   "reopen_value": 181,
   "original_value": 180,
   "reopen_matches_request": true,
+  "reopen_matches_expected": true,
   "reopen_mode": "new_process",
   "expected_offsets": [
     301069

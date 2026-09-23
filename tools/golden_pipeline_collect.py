@@ -1247,6 +1247,18 @@ class Win32LegacyDriver:
 
                 listbox = self._control(step["control_id"], step.get("class", "ListBox"))
                 row = int(step["row"])
+                if step.get("class") == "SysListView32":
+                    # The reference MFC list view reloads the adjacent editor
+                    # only for real focus/keyboard selection notifications.
+                    # Direct item clicks can leave the editor bound to row 0.
+                    listbox.click_input(coords=(35, 45))
+                    listbox.set_focus()
+                    listbox.type_keys(
+                        "{HOME}" + (f"{{DOWN {row}}}" if row else ""),
+                        set_foreground=True,
+                    )
+                    time.sleep(0.2)
+                    continue
                 result = win32gui.SendMessage(listbox.handle, 0x0186, row, 0)  # LB_SETCURSEL
                 if result == -1:
                     raise RuntimeError(f"ListBox row {row} is out of range")

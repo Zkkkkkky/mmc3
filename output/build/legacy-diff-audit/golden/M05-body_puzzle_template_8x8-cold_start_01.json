@@ -53416,6 +53416,7 @@
   "reopen_value": "F3 F9 00 FD 20 08 F9 40 00 FF ",
   "original_value": "F3 F7 07 01 F3 01 FA 02 F3 00 04 03 F3 01 F8 F9 0A 04 F3 01 F8 F9 08 0E F3 01 F7 F9 09 16 F3 01 F6 FD 20 09 F9 11 1F F3 01 FA FD 20 06 F9 0C 30 00 F9 04 3C FF ",
   "reopen_matches_request": false,
+  "reopen_matches_expected": false,
   "reopen_mode": "new_process",
   "expected_offsets": [],
   "required_offsets": [],

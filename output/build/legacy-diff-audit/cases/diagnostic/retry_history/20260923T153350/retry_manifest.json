@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "reason": "repeat-confirmed-noop-but-exceeded-30s-budget",
+  "timestamp": "20260923T153350",
+  "moved": [
+    {
+      "module": "M05",
+      "field": "body_upload_bmp",
+      "case_id": "cold_start_02",
+      "from": "output/build/legacy-diff-audit/cases/legacy_live/M05/body_upload_bmp/cold_start_02",
+      "to": "output/build/legacy-diff-audit/cases/diagnostic/retry_history/20260923T153350/M05/body_upload_bmp/cold_start_02",
+      "had_case_json": true,
+      "had_error_json": false
+    }
+  ],
+  "live_result_rows_removed": 1
+}

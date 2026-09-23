@@ -39948,6 +39948,7 @@
   "reopen_value": "27f964e15dbfea6296032d4d7b26333faed67093e36a864e9d33d3fda7a0cfa5",
   "original_value": "6137377c7cc87833442bc263bfadcde4db54e9266a0a47e5969fe48a7c763078",
   "reopen_matches_request": false,
+  "reopen_matches_expected": false,
   "reopen_mode": "new_process",
   "expected_offsets": [],
   "required_offsets": [],

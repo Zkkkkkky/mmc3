@@ -3,7 +3,7 @@
   "module": "M12",
   "field": "sprite_anchor_x",
   "case_id": "cold_start_07",
-  "case_kind": "discovery",
+  "case_kind": "golden",
   "requested_value": 1,
   "original_value": 0,
   "reopen_value": 0,
@@ -14,17 +14,11 @@
   "changed_offsets": [],
   "removed_normalization": [],
   "unexpected_offsets": [],
-  "expected_offsets": [
-    203906
-  ],
-  "required_offsets": [
-    203906
-  ],
+  "expected_offsets": [],
+  "required_offsets": [],
   "optional_offsets": [],
   "extra_allowed": [],
-  "expected_not_changed": [
-    203906
-  ],
+  "expected_not_changed": [],
   "diffs": [],
   "snapshots": {
     "before": {
@@ -43,6 +37,7 @@
   "duration_seconds": 24.369,
   "budget_seconds": 30.0,
   "within_budget": true,
-  "passed": false,
-  "pending_reason": "否定发现：旧版界面值可改，但确定/保存不写锚点字节，冷启动回读仍为 0。"
+  "passed": true,
+  "pending_reason": null,
+  "expected_noop": true
 }

@@ -3,30 +3,25 @@
   "module": "M12",
   "field": "sprite_anchor_x",
   "case_id": "cold_start_07",
-  "case_kind": "discovery",
-  "expected_noop": false,
+  "case_kind": "golden",
+  "expected_noop": true,
   "requested_value": 1,
   "changed_offsets": [],
   "removed_normalization": [],
   "reopen_value": 0,
   "original_value": 0,
   "reopen_matches_request": false,
+  "reopen_matches_expected": true,
   "reopen_mode": "new_process",
-  "expected_offsets": [
-    203906
-  ],
-  "required_offsets": [
-    203906
-  ],
+  "expected_offsets": [],
+  "required_offsets": [],
   "optional_offsets": [],
   "extra_allowed": [],
   "unexpected_offsets": [],
   "target_changed": [],
-  "expected_not_changed": [
-    203906
-  ],
-  "passed": null,
-  "pending_reason": "在线单字段采集：保存后关闭进程，再以不同 PID 冷启动重开",
+  "expected_not_changed": [],
+  "passed": true,
+  "pending_reason": null,
   "notes": [
     "在线单字段采集：保存后关闭进程，再以不同 PID 冷启动重开"
   ],

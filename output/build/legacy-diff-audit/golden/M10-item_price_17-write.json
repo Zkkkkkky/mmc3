@@ -26,6 +26,7 @@
   "reopen_value": 4010,
   "original_value": 4000,
   "reopen_matches_request": true,
+  "reopen_matches_expected": true,
   "reopen_mode": "historical_result",
   "expected_offsets": [
     87875,

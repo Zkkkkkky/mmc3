@@ -65,7 +65,8 @@
     "capacity_boundaries_classified": true,
     "every_pending_action_has_reviewed_recipe": true,
     "action_discovery_recipes_ready": true,
-    "action_recipes_reviewed": true
+    "action_recipes_reviewed": true,
+    "pending_recipes_have_explicit_dynamic_blockers": true
   },
   "golden_save_fields": [
     "body_bank_1",
@@ -248,6 +249,22 @@
       "case_kind": "discovery",
       "promotion_guarded": true,
       "promotion_complete": false,
+      "dynamic_evidence": {
+        "archive": "output/build/legacy-diff-audit/golden/M05-body_compressed_upload_bmp-cold_start_01.json",
+        "duration_seconds": 73.665,
+        "budget_seconds": 30.0,
+        "within_budget": false,
+        "changed_count": 54840,
+        "removed_normalization_count": 4,
+        "reopen_matches_request": false,
+        "reopen_matches_expected": false,
+        "reopen_matches_original": false
+      },
+      "promotion_blockers": [
+        "exceeds_30_second_budget",
+        "cold_reopen_does_not_match_expected",
+        "save_layout_not_reviewed"
+      ],
       "status": "prepared_not_promoted"
     },
     "fragment_compressed_upload_bmp": {
@@ -256,6 +273,22 @@
       "case_kind": "discovery",
       "promotion_guarded": true,
       "promotion_complete": false,
+      "dynamic_evidence": {
+        "archive": "output/build/legacy-diff-audit/golden/M05-fragment_compressed_upload_bmp-cold_start_01.json",
+        "duration_seconds": 68.89,
+        "budget_seconds": 30.0,
+        "within_budget": false,
+        "changed_count": 48961,
+        "removed_normalization_count": 4,
+        "reopen_matches_request": false,
+        "reopen_matches_expected": false,
+        "reopen_matches_original": false
+      },
+      "promotion_blockers": [
+        "exceeds_30_second_budget",
+        "cold_reopen_does_not_match_expected",
+        "save_layout_not_reviewed"
+      ],
       "status": "prepared_not_promoted"
     },
     "main_clear_body": {
@@ -264,6 +297,21 @@
       "case_kind": "discovery",
       "promotion_guarded": true,
       "promotion_complete": false,
+      "dynamic_evidence": {
+        "archive": "output/build/legacy-diff-audit/golden/M05-main_clear_body-cold_start_01.json",
+        "duration_seconds": 12.773,
+        "budget_seconds": 30.0,
+        "within_budget": true,
+        "changed_count": 42273,
+        "removed_normalization_count": 4,
+        "reopen_matches_request": false,
+        "reopen_matches_expected": false,
+        "reopen_matches_original": false
+      },
+      "promotion_blockers": [
+        "cold_reopen_does_not_match_expected",
+        "save_layout_not_reviewed"
+      ],
       "status": "prepared_not_promoted"
     },
     "main_clear_fragment": {
@@ -272,6 +320,21 @@
       "case_kind": "discovery",
       "promotion_guarded": true,
       "promotion_complete": false,
+      "dynamic_evidence": {
+        "archive": "output/build/legacy-diff-audit/golden/M05-main_clear_fragment-cold_start_01.json",
+        "duration_seconds": 12.821,
+        "budget_seconds": 30.0,
+        "within_budget": true,
+        "changed_count": 41514,
+        "removed_normalization_count": 4,
+        "reopen_matches_request": false,
+        "reopen_matches_expected": false,
+        "reopen_matches_original": false
+      },
+      "promotion_blockers": [
+        "cold_reopen_does_not_match_expected",
+        "save_layout_not_reviewed"
+      ],
       "status": "prepared_not_promoted"
     },
     "body_upload_bmp": {
@@ -280,6 +343,22 @@
       "case_kind": "discovery",
       "promotion_guarded": true,
       "promotion_complete": false,
+      "dynamic_evidence": {
+        "archive": "output/build/legacy-diff-audit/golden/M05-body_upload_bmp-cold_start_01.json",
+        "duration_seconds": 65.066,
+        "budget_seconds": 30.0,
+        "within_budget": false,
+        "changed_count": 39875,
+        "removed_normalization_count": 4,
+        "reopen_matches_request": false,
+        "reopen_matches_expected": false,
+        "reopen_matches_original": true
+      },
+      "promotion_blockers": [
+        "exceeds_30_second_budget",
+        "cold_reopen_does_not_match_expected",
+        "save_layout_not_reviewed"
+      ],
       "status": "prepared_not_promoted"
     },
     "fragment_upload_bmp": {
@@ -288,6 +367,22 @@
       "case_kind": "discovery",
       "promotion_guarded": true,
       "promotion_complete": false,
+      "dynamic_evidence": {
+        "archive": "output/build/legacy-diff-audit/golden/M05-fragment_upload_bmp-cold_start_01.json",
+        "duration_seconds": 68.889,
+        "budget_seconds": 30.0,
+        "within_budget": false,
+        "changed_count": 39875,
+        "removed_normalization_count": 4,
+        "reopen_matches_request": false,
+        "reopen_matches_expected": false,
+        "reopen_matches_original": true
+      },
+      "promotion_blockers": [
+        "exceeds_30_second_budget",
+        "cold_reopen_does_not_match_expected",
+        "save_layout_not_reviewed"
+      ],
       "status": "prepared_not_promoted"
     },
     "icon_upload_bmp": {
@@ -296,6 +391,22 @@
       "case_kind": "discovery",
       "promotion_guarded": true,
       "promotion_complete": false,
+      "dynamic_evidence": {
+        "archive": "output/build/legacy-diff-audit/golden/M05-icon_upload_bmp-cold_start_01.json",
+        "duration_seconds": 69.355,
+        "budget_seconds": 30.0,
+        "within_budget": false,
+        "changed_count": 39931,
+        "removed_normalization_count": 4,
+        "reopen_matches_request": false,
+        "reopen_matches_expected": false,
+        "reopen_matches_original": false
+      },
+      "promotion_blockers": [
+        "exceeds_30_second_budget",
+        "cold_reopen_does_not_match_expected",
+        "save_layout_not_reviewed"
+      ],
       "status": "prepared_not_promoted"
     },
     "icon_binding_double_click": {
@@ -304,6 +415,18 @@
       "case_kind": "golden",
       "promotion_guarded": false,
       "promotion_complete": true,
+      "dynamic_evidence": {
+        "archive": "output/build/legacy-diff-audit/golden/M05-icon_binding_double_click-cold_start_01.json",
+        "duration_seconds": 13.645,
+        "budget_seconds": 30.0,
+        "within_budget": true,
+        "changed_count": 39875,
+        "removed_normalization_count": 4,
+        "reopen_matches_request": true,
+        "reopen_matches_expected": true,
+        "reopen_matches_original": true
+      },
+      "promotion_blockers": [],
       "status": "promoted_golden"
     },
     "body_puzzle_clear": {
@@ -312,6 +435,18 @@
       "case_kind": "golden",
       "promotion_guarded": false,
       "promotion_complete": true,
+      "dynamic_evidence": {
+        "archive": "output/build/legacy-diff-audit/golden/M05-body_puzzle_clear-cold_start_01.json",
+        "duration_seconds": 23.872,
+        "budget_seconds": 30.0,
+        "within_budget": true,
+        "changed_count": 42273,
+        "removed_normalization_count": 4,
+        "reopen_matches_request": true,
+        "reopen_matches_expected": true,
+        "reopen_matches_original": false
+      },
+      "promotion_blockers": [],
       "status": "promoted_golden"
     },
     "body_puzzle_move_up": {
@@ -320,6 +455,18 @@
       "case_kind": "golden",
       "promotion_guarded": false,
       "promotion_complete": true,
+      "dynamic_evidence": {
+        "archive": "output/build/legacy-diff-audit/golden/M05-body_puzzle_move_up-cold_start_01.json",
+        "duration_seconds": 13.281,
+        "budget_seconds": 30.0,
+        "within_budget": true,
+        "changed_count": 52686,
+        "removed_normalization_count": 4,
+        "reopen_matches_request": true,
+        "reopen_matches_expected": true,
+        "reopen_matches_original": false
+      },
+      "promotion_blockers": [],
       "status": "promoted_golden"
     },
     "body_puzzle_move_down": {
@@ -328,6 +475,18 @@
       "case_kind": "golden",
       "promotion_guarded": false,
       "promotion_complete": true,
+      "dynamic_evidence": {
+        "archive": "output/build/legacy-diff-audit/golden/M05-body_puzzle_move_down-cold_start_01.json",
+        "duration_seconds": 12.846,
+        "budget_seconds": 30.0,
+        "within_budget": true,
+        "changed_count": 39875,
+        "removed_normalization_count": 4,
+        "reopen_matches_request": true,
+        "reopen_matches_expected": true,
+        "reopen_matches_original": true
+      },
+      "promotion_blockers": [],
       "status": "promoted_golden"
     },
     "body_puzzle_move_left": {
@@ -336,6 +495,18 @@
       "case_kind": "golden",
       "promotion_guarded": false,
       "promotion_complete": true,
+      "dynamic_evidence": {
+        "archive": "output/build/legacy-diff-audit/golden/M05-body_puzzle_move_left-cold_start_01.json",
+        "duration_seconds": 13.464,
+        "budget_seconds": 30.0,
+        "within_budget": true,
+        "changed_count": 39875,
+        "removed_normalization_count": 4,
+        "reopen_matches_request": true,
+        "reopen_matches_expected": true,
+        "reopen_matches_original": true
+      },
+      "promotion_blockers": [],
       "status": "promoted_golden"
     },
     "body_puzzle_move_right": {
@@ -344,6 +515,18 @@
       "case_kind": "golden",
       "promotion_guarded": false,
       "promotion_complete": true,
+      "dynamic_evidence": {
+        "archive": "output/build/legacy-diff-audit/golden/M05-body_puzzle_move_right-cold_start_01.json",
+        "duration_seconds": 13.04,
+        "budget_seconds": 30.0,
+        "within_budget": true,
+        "changed_count": 52686,
+        "removed_normalization_count": 4,
+        "reopen_matches_request": true,
+        "reopen_matches_expected": true,
+        "reopen_matches_original": false
+      },
+      "promotion_blockers": [],
       "status": "promoted_golden"
     },
     "body_puzzle_template_8x8": {
@@ -352,6 +535,21 @@
       "case_kind": "discovery",
       "promotion_guarded": true,
       "promotion_complete": false,
+      "dynamic_evidence": {
+        "archive": "output/build/legacy-diff-audit/golden/M05-body_puzzle_template_8x8-cold_start_01.json",
+        "duration_seconds": 14.735,
+        "budget_seconds": 30.0,
+        "within_budget": true,
+        "changed_count": 53399,
+        "removed_normalization_count": 4,
+        "reopen_matches_request": false,
+        "reopen_matches_expected": false,
+        "reopen_matches_original": false
+      },
+      "promotion_blockers": [
+        "cold_reopen_does_not_match_expected",
+        "save_layout_not_reviewed"
+      ],
       "status": "prepared_not_promoted"
     },
     "body_puzzle_template_7x9": {
@@ -360,6 +558,18 @@
       "case_kind": "golden",
       "promotion_guarded": false,
       "promotion_complete": true,
+      "dynamic_evidence": {
+        "archive": "output/build/legacy-diff-audit/golden/M05-body_puzzle_template_7x9-cold_start_01.json",
+        "duration_seconds": 13.056,
+        "budget_seconds": 30.0,
+        "within_budget": true,
+        "changed_count": 39875,
+        "removed_normalization_count": 4,
+        "reopen_matches_request": true,
+        "reopen_matches_expected": true,
+        "reopen_matches_original": true
+      },
+      "promotion_blockers": [],
       "status": "promoted_golden"
     },
     "body_puzzle_template_9x7": {
@@ -368,6 +578,18 @@
       "case_kind": "golden",
       "promotion_guarded": false,
       "promotion_complete": true,
+      "dynamic_evidence": {
+        "archive": "output/build/legacy-diff-audit/golden/M05-body_puzzle_template_9x7-cold_start_01.json",
+        "duration_seconds": 13.368,
+        "budget_seconds": 30.0,
+        "within_budget": true,
+        "changed_count": 53399,
+        "removed_normalization_count": 4,
+        "reopen_matches_request": true,
+        "reopen_matches_expected": true,
+        "reopen_matches_original": false
+      },
+      "promotion_blockers": [],
       "status": "promoted_golden"
     },
     "body_puzzle_template_10x6": {
@@ -376,6 +598,18 @@
       "case_kind": "golden",
       "promotion_guarded": false,
       "promotion_complete": true,
+      "dynamic_evidence": {
+        "archive": "output/build/legacy-diff-audit/golden/M05-body_puzzle_template_10x6-cold_start_01.json",
+        "duration_seconds": 13.313,
+        "budget_seconds": 30.0,
+        "within_budget": true,
+        "changed_count": 53399,
+        "removed_normalization_count": 4,
+        "reopen_matches_request": true,
+        "reopen_matches_expected": true,
+        "reopen_matches_original": false
+      },
+      "promotion_blockers": [],
       "status": "promoted_golden"
     },
     "body_puzzle_swap_banks": {
@@ -384,6 +618,18 @@
       "case_kind": "golden",
       "promotion_guarded": false,
       "promotion_complete": true,
+      "dynamic_evidence": {
+        "archive": "output/build/legacy-diff-audit/golden/M05-body_puzzle_swap_banks-cold_start_01.json",
+        "duration_seconds": 12.866,
+        "budget_seconds": 30.0,
+        "within_budget": true,
+        "changed_count": 39875,
+        "removed_normalization_count": 4,
+        "reopen_matches_request": true,
+        "reopen_matches_expected": true,
+        "reopen_matches_original": true
+      },
+      "promotion_blockers": [],
       "status": "promoted_golden"
     },
     "fragment_puzzle_move_up": {
@@ -392,6 +638,18 @@
       "case_kind": "golden",
       "promotion_guarded": false,
       "promotion_complete": true,
+      "dynamic_evidence": {
+        "archive": "output/build/legacy-diff-audit/golden/M05-fragment_puzzle_move_up-cold_start_01.json",
+        "duration_seconds": 13.473,
+        "budget_seconds": 30.0,
+        "within_budget": true,
+        "changed_count": 47204,
+        "removed_normalization_count": 4,
+        "reopen_matches_request": true,
+        "reopen_matches_expected": true,
+        "reopen_matches_original": false
+      },
+      "promotion_blockers": [],
       "status": "promoted_golden"
     },
     "fragment_puzzle_move_down": {
@@ -400,6 +658,18 @@
       "case_kind": "golden",
       "promotion_guarded": false,
       "promotion_complete": true,
+      "dynamic_evidence": {
+        "archive": "output/build/legacy-diff-audit/golden/M05-fragment_puzzle_move_down-cold_start_01.json",
+        "duration_seconds": 18.087,
+        "budget_seconds": 30.0,
+        "within_budget": true,
+        "changed_count": 47204,
+        "removed_normalization_count": 4,
+        "reopen_matches_request": true,
+        "reopen_matches_expected": true,
+        "reopen_matches_original": false
+      },
+      "promotion_blockers": [],
       "status": "promoted_golden"
     },
     "fragment_puzzle_move_left": {
@@ -408,6 +678,18 @@
       "case_kind": "golden",
       "promotion_guarded": false,
       "promotion_complete": true,
+      "dynamic_evidence": {
+        "archive": "output/build/legacy-diff-audit/golden/M05-fragment_puzzle_move_left-cold_start_01.json",
+        "duration_seconds": 14.325,
+        "budget_seconds": 30.0,
+        "within_budget": true,
+        "changed_count": 47204,
+        "removed_normalization_count": 4,
+        "reopen_matches_request": true,
+        "reopen_matches_expected": true,
+        "reopen_matches_original": false
+      },
+      "promotion_blockers": [],
       "status": "promoted_golden"
     },
     "fragment_puzzle_move_right": {
@@ -416,6 +698,18 @@
       "case_kind": "golden",
       "promotion_guarded": false,
       "promotion_complete": true,
+      "dynamic_evidence": {
+        "archive": "output/build/legacy-diff-audit/golden/M05-fragment_puzzle_move_right-cold_start_01.json",
+        "duration_seconds": 18.632,
+        "budget_seconds": 30.0,
+        "within_budget": true,
+        "changed_count": 47204,
+        "removed_normalization_count": 4,
+        "reopen_matches_request": true,
+        "reopen_matches_expected": true,
+        "reopen_matches_original": false
+      },
+      "promotion_blockers": [],
       "status": "promoted_golden"
     },
     "fragment_puzzle_clear": {
@@ -424,6 +718,18 @@
       "case_kind": "golden",
       "promotion_guarded": false,
       "promotion_complete": true,
+      "dynamic_evidence": {
+        "archive": "output/build/legacy-diff-audit/golden/M05-fragment_puzzle_clear-cold_start_01.json",
+        "duration_seconds": 13.852,
+        "budget_seconds": 30.0,
+        "within_budget": true,
+        "changed_count": 41514,
+        "removed_normalization_count": 4,
+        "reopen_matches_request": true,
+        "reopen_matches_expected": true,
+        "reopen_matches_original": false
+      },
+      "promotion_blockers": [],
       "status": "promoted_golden"
     },
     "fragment_puzzle_flip_horizontal": {
@@ -432,6 +738,18 @@
       "case_kind": "golden",
       "promotion_guarded": false,
       "promotion_complete": true,
+      "dynamic_evidence": {
+        "archive": "output/build/legacy-diff-audit/golden/M05-fragment_puzzle_flip_horizontal-cold_start_01.json",
+        "duration_seconds": 13.151,
+        "budget_seconds": 30.0,
+        "within_budget": true,
+        "changed_count": 48185,
+        "removed_normalization_count": 4,
+        "reopen_matches_request": true,
+        "reopen_matches_expected": true,
+        "reopen_matches_original": false
+      },
+      "promotion_blockers": [],
       "status": "promoted_golden"
     },
     "fragment_puzzle_flip_vertical": {
@@ -440,6 +758,18 @@
       "case_kind": "golden",
       "promotion_guarded": false,
       "promotion_complete": true,
+      "dynamic_evidence": {
+        "archive": "output/build/legacy-diff-audit/golden/M05-fragment_puzzle_flip_vertical-cold_start_01.json",
+        "duration_seconds": 15.333,
+        "budget_seconds": 30.0,
+        "within_budget": true,
+        "changed_count": 47235,
+        "removed_normalization_count": 4,
+        "reopen_matches_request": true,
+        "reopen_matches_expected": true,
+        "reopen_matches_original": false
+      },
+      "promotion_blockers": [],
       "status": "promoted_golden"
     }
   },

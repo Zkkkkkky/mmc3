@@ -266,6 +266,7 @@ def _make_record(
     stored_after_sha256: str | None = None,
     snapshot_name: str | None = None,
     notes: tuple[str, ...] = (),
+    expected_noop: bool = False,
 ) -> GoldenRecord:
     """构造统一记录；``required_offsets`` 缺省取全部 ``expected_offsets``。"""
     entries = _stored_diff_entries(raw_diffs)
@@ -298,6 +299,7 @@ def _make_record(
         source_json=_audit_relative(FAMILY_RESULT_JSON[family]),
         snapshot_dir=snapshot_dir,
         notes=notes,
+        expected_noop=expected_noop,
     )
 
 
@@ -403,7 +405,11 @@ def _adapt_other1(payload: list[dict[str, Any]]) -> list[GoldenRecord]:
             )
         else:
             expected = ()
-        discovery = expected_offset == 0 or not reopen_matches
+        verified_noop = case_name in {
+            "experience_level_2",
+            "experience_level_60",
+        }
+        discovery = (expected_offset == 0 or not reopen_matches) and not verified_noop
         notes: tuple[str, ...] = ()
         if discovery:
             if expected_offset == 0 and not reopen_matches:
@@ -425,6 +431,7 @@ def _adapt_other1(payload: list[dict[str, Any]]) -> list[GoldenRecord]:
                 raw_diffs=item["diffs"],
                 snapshot_name=case_name,
                 notes=notes,
+                expected_noop=verified_noop,
             )
         )
     return records

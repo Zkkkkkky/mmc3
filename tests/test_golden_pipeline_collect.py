@@ -402,6 +402,21 @@ class LiveCollectionTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             collector.CaseSpec.from_payload(payload)
 
+    def test_listview_selection_uses_the_same_bounded_row_operation(self) -> None:
+        payload = case_payload()
+        payload["navigation"] = [
+            {
+                "op": "list_select",
+                "class": "SysListView32",
+                "control_id": 1570,
+                "row": 59,
+                "column": 0,
+            }
+        ]
+        spec = collector.CaseSpec.from_payload(payload)
+        self.assertEqual(spec.navigation[0]["class"], "SysListView32")
+        self.assertEqual(spec.navigation[0]["row"], 59)
+
     def test_assert_value_accepts_combo_index(self) -> None:
         payload = case_payload()
         payload["edit_steps"] = [

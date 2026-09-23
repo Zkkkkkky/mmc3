@@ -14,6 +14,7 @@
   "reopen_value": "000：卡姆：\\\r\n比丹，刚达Z出发！】\r\n",
   "original_value": "000：卡姆：\\\r\n比旦，刚达Z出发！】\r\n",
   "reopen_matches_request": true,
+  "reopen_matches_expected": true,
   "reopen_mode": "new_process",
   "expected_offsets": [
     125790,

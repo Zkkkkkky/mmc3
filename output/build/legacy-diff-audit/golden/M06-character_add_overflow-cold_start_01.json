@@ -16496,6 +16496,7 @@
   "reopen_value": 201,
   "original_value": 200,
   "reopen_matches_request": true,
+  "reopen_matches_expected": true,
   "reopen_mode": "new_process",
   "expected_offsets": [
     32796,

@@ -55,6 +55,35 @@ def _promote_report(
     )
 
 
+def _promote_noop_report(report: dict[str, Any]) -> None:
+    if report["changed_offsets"] or report["diffs"]:
+        raise RuntimeError("Reviewed no-op evidence unexpectedly changed ROM bytes")
+    if report["requested_value"] == report["original_value"]:
+        raise RuntimeError("Reviewed no-op evidence did not exercise a value change")
+    if report["reopen_value"] != report["original_value"]:
+        raise RuntimeError("Reviewed no-op evidence did not cold-reopen to the original value")
+    if report["first_pid"] == report["second_pid"]:
+        raise RuntimeError("Reviewed no-op evidence did not use a fresh process")
+    if report["snapshots"]["before"]["sha256"] != report["snapshots"]["after"]["sha256"]:
+        raise RuntimeError("Reviewed no-op snapshots are not byte-identical")
+    if report["within_budget"] is not True:
+        raise RuntimeError("Reviewed no-op evidence exceeded the performance budget")
+    report.update(
+        {
+            "case_kind": "golden",
+            "expected_noop": True,
+            "expected_offsets": [],
+            "required_offsets": [],
+            "optional_offsets": [],
+            "extra_allowed": [],
+            "unexpected_offsets": [],
+            "expected_not_changed": [],
+            "passed": True,
+            "pending_reason": None,
+        }
+    )
+
+
 def main() -> int:
     live = resolve_live_result_items(_read(LIVE_RESULTS), ROOT)
     by_key = {
@@ -119,9 +148,117 @@ def main() -> int:
     by_key[m12_key].clear()
     by_key[m12_key].update(m12)
 
+    # The reference sprite-anchor spinner visibly accepts 0 -> 1, but OK/save
+    # writes no ROM byte and a fresh process reopens at the original 0.  This
+    # is a reviewed negative contract, so archive it as an explicit golden
+    # no-op instead of leaving the read-only product boundary as discovery.
+    anchor_key = ("M12", "sprite_anchor_x", "cold_start_07")
+    anchor_path = (
+        AUDIT / "cases/legacy_live/M12/sprite_anchor_x/cold_start_07/case.json"
+    )
+    anchor = _read(anchor_path)
+    _promote_noop_report(anchor)
+    _write(anchor_path, anchor)
+    by_key[anchor_key].clear()
+    by_key[anchor_key].update(anchor)
+
+    anchor_config_path = CASES / "M12-sprite-anchor-x-cold-start-01.json"
+    anchor_config = _read(anchor_config_path)
+    anchor_config.update(
+        {
+            "case_id": "cold_start_07",
+            "case_kind": "golden",
+            "expected_noop": True,
+            "expected_offsets": [],
+            "required_offsets": [],
+            "optional_offsets": [],
+            "extra_allowed": [],
+        }
+    )
+    _write(anchor_config_path, anchor_config)
+
+    # Two independent experience rows produced the exact same whole-save
+    # rewrite and byte-identical output ROM.  Neither requested value survived
+    # a fresh-process reopen, so the rewrite is normalization rather than an
+    # experience-field write.
+    experience_fields = ("experience_level_2", "experience_level_60")
+    experience_reports: list[dict[str, Any]] = []
+    for field in experience_fields:
+        key = ("M09", field, "cold_start_01")
+        report_path = (
+            AUDIT / "cases/legacy_live/M09" / field / "cold_start_01/case.json"
+        )
+        report = _read(report_path)
+        if report["requested_value"] == report["original_value"]:
+            raise RuntimeError(f"M09 {field} did not exercise a value change")
+        if report["reopen_value"] != report["original_value"]:
+            raise RuntimeError(f"M09 {field} did not reopen to its original value")
+        if report["first_pid"] == report["second_pid"]:
+            raise RuntimeError(f"M09 {field} did not use a fresh process")
+        if report["within_budget"] is not True:
+            raise RuntimeError(f"M09 {field} exceeded the performance budget")
+        experience_reports.append(report)
+
+    normalization = [int(value) for value in experience_reports[0]["changed_offsets"]]
+    if not normalization:
+        raise RuntimeError("M09 experience save normalization is empty")
+    if any(
+        [int(value) for value in report["changed_offsets"]] != normalization
+        or report["snapshots"]["after"]["sha256"]
+        != experience_reports[0]["snapshots"]["after"]["sha256"]
+        for report in experience_reports[1:]
+    ):
+        raise RuntimeError("M09 experience no-op repeats do not have identical rewrites")
+
+    for field, report in zip(experience_fields, experience_reports, strict=True):
+        report.update(
+            {
+                "case_kind": "golden",
+                "expected_noop": True,
+                "expected_offsets": [],
+                "required_offsets": [],
+                "optional_offsets": [],
+                "extra_allowed": normalization,
+                "unexpected_offsets": [],
+                "expected_not_changed": [],
+                "passed": True,
+                "pending_reason": None,
+            }
+        )
+        report_path = (
+            AUDIT / "cases/legacy_live/M09" / field / "cold_start_01/case.json"
+        )
+        _write(report_path, report)
+        key = ("M09", field, "cold_start_01")
+        by_key[key].clear()
+        by_key[key].update(report)
+
+        stem = field.replace("_", "-")
+        old_config = DISCOVERY / f"M09-{stem}-discovery-cold-start-01.json"
+        new_config = CASES / f"M09-{stem}-cold-start-01.json"
+        source = old_config if old_config.is_file() else new_config
+        config = _read(source)
+        config.update(
+            {
+                "case_kind": "golden",
+                "expected_noop": True,
+                "expected_offsets": [],
+                "required_offsets": [],
+                "optional_offsets": [],
+                "extra_allowed": [],
+                "extra_allowed_profile": "m09_experience_save_normalization_v1",
+            }
+        )
+        _write(new_config, config)
+        if source != new_config:
+            source.unlink()
+
     live.sort(key=lambda item: (item["module"], item["field"], item["case_id"]))
     _write(LIVE_RESULTS, compact_live_result_items(live))
-    print("Promoted M06 overflow repeats and M12 sprite-code duplicate")
+    print(
+        "Promoted M06 overflow repeats, M12 sprite-code duplicate, "
+        "M12 sprite-anchor no-op, and M09 experience no-op repeats"
+    )
     return 0
 
 

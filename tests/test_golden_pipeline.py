@@ -112,9 +112,6 @@ EXPECTED_DISCOVERY_FIELDS = frozenset(
         "M05/icon_upload_bmp",
         "M05/main_clear_body",
         "M05/main_clear_fragment",
-        "M09/experience_level_2",
-        "M09/experience_level_60",
-        "M12/sprite_anchor_x",
     }
 )
 
@@ -538,11 +535,33 @@ class GoldenArchiveSchemaTests(unittest.TestCase):
                 if payload["case_kind"] == "golden":
                     expected_passed = bool(
                         expected_passed
-                        and payload["reopen_matches_request"] is True
+                        and payload["reopen_matches_expected"] is True
                         and (payload["duration_seconds"] is None
                              or payload["duration_seconds"] <= 30)
                     )
                 self.assertIs(expected_passed, payload["passed"])
+
+    def test_m12_sprite_anchor_archives_verified_negative_persistence(self) -> None:
+        payload = load_json(GOLDEN_DIR / "M12-sprite_anchor_x-cold_start_07.json")
+        self.assertEqual(payload["case_kind"], "golden")
+        self.assertIs(payload["expected_noop"], True)
+        self.assertEqual(payload["changed_offsets"], [])
+        self.assertIs(payload["reopen_matches_request"], False)
+        self.assertIs(payload["reopen_matches_expected"], True)
+        self.assertIs(payload["passed"], True)
+
+    def test_m09_experience_archives_verified_negative_persistence(self) -> None:
+        for case_id in ("write", "cold_start_01"):
+            for field in ("experience_level_2", "experience_level_60"):
+                with self.subTest(field=field, case_id=case_id):
+                    payload = load_json(
+                        GOLDEN_DIR / f"M09-{field}-{case_id}.json"
+                    )
+                    self.assertEqual(payload["case_kind"], "golden")
+                    self.assertIs(payload["expected_noop"], True)
+                    self.assertIs(payload["reopen_matches_request"], False)
+                    self.assertIs(payload["reopen_matches_expected"], True)
+                    self.assertIs(payload["passed"], True)
 
 
 # ---------------------------------------------------------------------------

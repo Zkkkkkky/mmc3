@@ -17,6 +17,7 @@ ICON = EVIDENCE / "M05_数据库_机体修改_机体图标设置.json"
 BODY_PUZZLE = LEGACY_EVIDENCE / "D3_数据库_机体拼图.json"
 FRAGMENT_PUZZLE = LEGACY_EVIDENCE / "D3_数据库_碎片拼图.json"
 GOLDEN = ROOT / "output/reports/golden-coverage-report.json"
+GOLDEN_ARCHIVE_DIR = ROOT / "output/build/legacy-diff-audit/golden"
 JSON_OUT = ROOT / "output/reports/m05-reference-control-catalog.json"
 MD_OUT = ROOT / "output/reports/m05-reference-control-catalog.md"
 DISCOVERY_DIR = ROOT / "tools/golden_pipeline/discovery_history"
@@ -193,6 +194,11 @@ def build() -> dict[str, object]:
         {"control_id": 2670, "action": "clear_body", "reason": "destructive save layout pending"},
         {"control_id": 2680, "action": "clear_fragment", "reason": "destructive save layout pending"},
     ]
+    coverage_by_field = {
+        str(item["field"]): item
+        for item in coverage["field_details"]
+        if item["module"] == "M05"
+    }
     capacity_boundaries = [
         {
             "control_id": 130,
@@ -223,12 +229,43 @@ def build() -> dict[str, object]:
                 str(item["field"]) for item in golden_rows
             }
         )
+        coverage_row = coverage_by_field.get(name)
+        dynamic_evidence = None
+        promotion_blockers: list[str] = []
+        if coverage_row is not None:
+            archive_path = GOLDEN_ARCHIVE_DIR / str(coverage_row["archive"])
+            archive = json.loads(archive_path.read_text(encoding="utf-8"))
+            dynamic_evidence = {
+                "archive": archive_path.relative_to(ROOT).as_posix(),
+                "duration_seconds": archive.get("duration_seconds"),
+                "budget_seconds": archive.get("budget_seconds"),
+                "within_budget": archive.get("within_budget"),
+                "changed_count": len(archive.get("changed_offsets", [])),
+                "removed_normalization_count": len(
+                    archive.get("removed_normalization", [])
+                ),
+                "reopen_matches_request": archive.get("reopen_matches_request"),
+                "reopen_matches_expected": archive.get("reopen_matches_expected"),
+                "reopen_matches_original": archive.get("reopen_value")
+                == archive.get("original_value"),
+            }
+            if not promotion_complete:
+                if archive.get("within_budget") is not True:
+                    promotion_blockers.append("exceeds_30_second_budget")
+                if archive.get("reopen_matches_expected") is not True:
+                    promotion_blockers.append("cold_reopen_does_not_match_expected")
+                if not archive.get("expected_offsets") and not archive.get(
+                    "expected_noop"
+                ):
+                    promotion_blockers.append("save_layout_not_reviewed")
         discovery_recipes[name] = {
             "path": path.relative_to(ROOT).as_posix(),
             "sha256": hashlib.sha256(path.read_bytes()).hexdigest(),
             "case_kind": payload.get("case_kind"),
             "promotion_guarded": promotion_guarded,
             "promotion_complete": promotion_complete,
+            "dynamic_evidence": dynamic_evidence,
+            "promotion_blockers": promotion_blockers,
             "status": (
                 "promoted_golden"
                 if promotion_complete
@@ -274,6 +311,11 @@ def build() -> dict[str, object]:
         "action_recipes_reviewed": all(
             item["promotion_guarded"] or item["promotion_complete"]
             for item in discovery_recipes.values()
+        ),
+        "pending_recipes_have_explicit_dynamic_blockers": all(
+            item["promotion_blockers"]
+            for item in discovery_recipes.values()
+            if item["status"] == "prepared_not_promoted"
         ),
     }
     promoted_recipe_count = sum(
@@ -336,6 +378,7 @@ def markdown(report: dict[str, object]) -> str:
             f"- 状态：`{report['status']}`",
             "",
             "上传、清除、拼图和图标画布提交是待补参考保存布局的动作协议；新增机体已按字节型 ID 的 255 槽满容量边界分类，产品保持禁用并引导直接编辑现有空白槽。完整控件、字段和原因见同名 JSON。",
+            "剩余 8 个配方均已记录动态采集时长、冷重开结果和明确晋级阻断原因；在满足 30 秒预算且确认保存布局前不会误升为黄金证据。",
             "",
         ]
     )

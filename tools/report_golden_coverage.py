@@ -327,6 +327,13 @@ def cmd_archive(args: argparse.Namespace) -> int:
         reopen_matches_request: bool | None = None
         if record.reopen_value is not None and record.requested_value is not None:
             reopen_matches_request = record.reopen_value == record.requested_value
+        reopen_matches_expected: bool | None = reopen_matches_request
+        if entry.expected_noop:
+            reopen_matches_expected = (
+                record.reopen_value is not None
+                and record.original_value is not None
+                and record.reopen_value == record.original_value
+            )
         passed: bool | None = None
         within_hard_budget = (
             record.duration_seconds is None
@@ -338,7 +345,7 @@ def cmd_archive(args: argparse.Namespace) -> int:
                 (not result.unexplained)
                 and (bool(required) or entry.expected_noop)
                 and not required_missing
-                and reopen_matches_request is True
+                and reopen_matches_expected is True
                 and record.within_budget is not False
                 and within_hard_budget
                 and record.stored_passed is not False
@@ -349,8 +356,12 @@ def cmd_archive(args: argparse.Namespace) -> int:
                 record.notes[0] if record.notes else "发现型用例，待在线采集补证"
             )
         elif passed is False:
-            if reopen_matches_request is not True:
-                pending_reason = "重开读取值不等于请求值，或缺少重开证据"
+            if reopen_matches_expected is not True:
+                pending_reason = (
+                    "预期无写入用例重开值不等于原值，或缺少重开证据"
+                    if entry.expected_noop
+                    else "重开读取值不等于请求值，或缺少重开证据"
+                )
             elif record.within_budget is False or not within_hard_budget:
                 pending_reason = "在线采集超出每字段 30 秒性能预算"
             elif record.stored_passed is False:
@@ -381,6 +392,7 @@ def cmd_archive(args: argparse.Namespace) -> int:
             # 判定与解释
             "original_value": record.original_value,
             "reopen_matches_request": reopen_matches_request,
+            "reopen_matches_expected": reopen_matches_expected,
             "reopen_mode": record.reopen_mode or "historical_result",
             "expected_offsets": list(entry.expected_offsets),
             "required_offsets": list(entry.required_offsets),

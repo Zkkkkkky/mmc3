@@ -6,29 +6,29 @@
   },
   "g1": {
     "definition": "已通过黄金对照的字段数 / 登记字段数",
-    "numerator": 230,
+    "numerator": 233,
     "denominator": 241,
-    "value": 0.9544,
+    "value": 0.9668,
     "denominator_scope": "registered_fields",
     "denominator_scope_note": "当前分母为 field_registry.json 登记字段数；最终口径为参考版全部可编辑字段数（主文档第 4/5 章字段清单，M00 第 5 节统计职责），全量采集完成后需以全量字段数重算分母",
     "target": ">=95%"
   },
   "g2": {
     "definition": "unexplained 为空且 expected 已知的 golden 用例占比",
-    "numerator": 233,
-    "denominator": 233,
+    "numerator": 238,
+    "denominator": 238,
     "value": 1.0,
     "target": "=100%"
   },
   "counts": {
     "registered_fields": 241,
     "archived_fields": 241,
-    "archived_cases": 244,
-    "golden_cases": 233,
-    "discovery_cases": 11,
-    "passed_golden_cases": 233,
+    "archived_cases": 246,
+    "golden_cases": 238,
+    "discovery_cases": 8,
+    "passed_golden_cases": 238,
     "failed_golden_cases": 0,
-    "pending_cases": 11
+    "pending_cases": 8
   },
   "pending_cases": [
     {
@@ -84,27 +84,6 @@
       "module": "M05",
       "field": "main_clear_fragment",
       "case_id": "cold_start_01",
-      "case_kind": "discovery",
-      "reason": "在线单字段采集：保存后关闭进程，再以不同 PID 冷启动重开"
-    },
-    {
-      "module": "M09",
-      "field": "experience_level_2",
-      "case_id": "write",
-      "case_kind": "discovery",
-      "reason": "发现型用例：存量 expected_offset=0（写入偏移未知）且重开读取值不等于请求值，需在线采集补证"
-    },
-    {
-      "module": "M09",
-      "field": "experience_level_60",
-      "case_id": "write",
-      "case_kind": "discovery",
-      "reason": "发现型用例：存量 expected_offset=0（写入偏移未知）且重开读取值不等于请求值，需在线采集补证"
-    },
-    {
-      "module": "M12",
-      "field": "sprite_anchor_x",
-      "case_id": "cold_start_07",
       "case_kind": "discovery",
       "reason": "在线单字段采集：保存后关闭进程，再以不同 PID 冷启动重开"
     }
@@ -2104,9 +2083,20 @@
     {
       "module": "M09",
       "field": "experience_level_2",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "passed": true,
+      "changed_count": 36025,
+      "removed_normalization_count": 4,
+      "unexpected_count": 0,
+      "archive": "M09-experience_level_2-cold_start_01.json"
+    },
+    {
+      "module": "M09",
+      "field": "experience_level_2",
       "case_id": "write",
-      "case_kind": "discovery",
-      "passed": null,
+      "case_kind": "golden",
+      "passed": true,
       "changed_count": 6,
       "removed_normalization_count": 6,
       "unexpected_count": 0,
@@ -2115,9 +2105,20 @@
     {
       "module": "M09",
       "field": "experience_level_60",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "passed": true,
+      "changed_count": 36025,
+      "removed_normalization_count": 4,
+      "unexpected_count": 0,
+      "archive": "M09-experience_level_60-cold_start_01.json"
+    },
+    {
+      "module": "M09",
+      "field": "experience_level_60",
       "case_id": "write",
-      "case_kind": "discovery",
-      "passed": null,
+      "case_kind": "golden",
+      "passed": true,
       "changed_count": 6,
       "removed_normalization_count": 6,
       "unexpected_count": 0,
@@ -2402,8 +2403,8 @@
       "module": "M12",
       "field": "sprite_anchor_x",
       "case_id": "cold_start_07",
-      "case_kind": "discovery",
-      "passed": null,
+      "case_kind": "golden",
+      "passed": true,
       "changed_count": 0,
       "removed_normalization_count": 0,
       "unexpected_count": 0,

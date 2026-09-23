@@ -3,11 +3,11 @@
   "archive_dir": "output/build/legacy-diff-audit/golden",
   "registry": "tools/golden_pipeline/cases/field_registry.json",
   "summary": {
-    "total_cases": 244,
-    "archived_cases": 244,
-    "golden_cases": 233,
-    "discovery_cases": 11,
-    "passed_golden_cases": 233,
+    "total_cases": 246,
+    "archived_cases": 246,
+    "golden_cases": 238,
+    "discovery_cases": 8,
+    "passed_golden_cases": 238,
     "failed_golden_cases": 0,
     "missing_snapshots": [],
     "unregistered_snapshots": [
@@ -26,7 +26,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M05-body_bank_1-cold_start_01.json",
-      "sha256": "d1e239fdf4cc30abe4b479befa99d1de56d5bb5f21554ed689709709a9cede31",
+      "sha256": "4f0b66862a473d26ca78b171251705688c8862709ac2d013f0aeaebcb608c8fa",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -45,7 +45,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M05-body_bank_2-cold_start_01.json",
-      "sha256": "078325bfca068e24b94f6bc25e6407ee2a074b91d2a7e33f8692011c4d4be1b5",
+      "sha256": "6c293f475d1a15ad02970b062dbdcce8bf4d6fd186c1728951bd9d6827ca15a9",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -64,7 +64,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M05-body_color_1-cold_start_01.json",
-      "sha256": "495a538a2f6f1bd633de0ee77b72e996ce0b6802a648df1c3a56a44d9ae15966",
+      "sha256": "59d27e2f2843461cc65f71d4a80f7318925bc43e9d87e055f1cf3d001c2261a3",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -83,7 +83,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M05-body_color_2-cold_start_01.json",
-      "sha256": "148a8479a45fc238965044a8b77a95d1c53eebd0f9a4669116454be5066dcd5a",
+      "sha256": "02fe747cc063818cf5029060ec88ca857bfb4b6740899740b3cfb645e343ff7c",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -102,7 +102,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M05-body_color_3-cold_start_01.json",
-      "sha256": "239ba33269872aa4de8bc52e8163839224154203f56dda64b48d775f96eb4066",
+      "sha256": "c8685d1f39889ac8cabdcfbf9da6f18644926e4f4f7eb98e41e5d1d4d26c2ee2",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -121,7 +121,7 @@
       "case_kind": "discovery",
       "expected_noop": false,
       "archive": "M05-body_compressed_upload_bmp-cold_start_01.json",
-      "sha256": "a6648194ed60c089c73612e85099a638c92a3891961bce065d1fb9d90260591b",
+      "sha256": "f3e1fb8b1a5d61e6d93ca4e31b5e285ad0d574dc4d332fca0cf92ae7421930ac",
       "passed": null,
       "expected_known": false,
       "required_offsets": [],
@@ -138,7 +138,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M05-body_puzzle_clear-cold_start_01.json",
-      "sha256": "2a5c90b3dd5c49fdd9250b0e9e5b3c286d6151537010cac43925d791cfff01ff",
+      "sha256": "77cfb82c1f60e0dbe57b072e8e15bc08e407de29a7df3885fc61d36c4f7c2170",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -2554,7 +2554,7 @@
       "case_kind": "golden",
       "expected_noop": true,
       "archive": "M05-body_puzzle_move_down-cold_start_01.json",
-      "sha256": "f28c14e5c84fda7187fcc48645d81e512d74e6a8665555d368e65cb61768165e",
+      "sha256": "50657eb8e70939538f808d9c217d045e1945fbceef9dd82f59f3812bf1c202c0",
       "passed": true,
       "expected_known": true,
       "required_offsets": [],
@@ -2571,7 +2571,7 @@
       "case_kind": "golden",
       "expected_noop": true,
       "archive": "M05-body_puzzle_move_left-cold_start_01.json",
-      "sha256": "dc85b7900e585d1e5ddc3c5428d51ff9663a6ee7fc0f473a047c7cd112d26cd5",
+      "sha256": "a6b60923ac65033cb9d4ca9a1bcbe75405736a14e7d7aa78d1874fd3a2479b83",
       "passed": true,
       "expected_known": true,
       "required_offsets": [],
@@ -2588,7 +2588,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M05-body_puzzle_move_right-cold_start_01.json",
-      "sha256": "ba5b682c3405a03657431560ba71027b20643b74085ef86dd44ef7a5d4115874",
+      "sha256": "683b3c234b6aabe3fd802f89cd3df10aac102b1dd67999c4a242a8587bf1105d",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -15417,7 +15417,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M05-body_puzzle_move_up-cold_start_01.json",
-      "sha256": "f109bb1046f0a419cb85b27618b58716cbdebdb7d3456dc46f0e61ce290c993a",
+      "sha256": "91a34e969a0c3ce694e17c5ac03cff6ea5bcad002f1630690358bc415b21f870",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -28246,7 +28246,7 @@
       "case_kind": "golden",
       "expected_noop": true,
       "archive": "M05-body_puzzle_swap_banks-cold_start_01.json",
-      "sha256": "5a3025f2a8bb20757c071a09ca5b5d82b7eac468bf42a8603c9f27453af364f2",
+      "sha256": "375ff949a8dea4733a71cb7f7e385bc9d454f26186c5a3c55b2823fe1218e690",
       "passed": true,
       "expected_known": true,
       "required_offsets": [],
@@ -28263,7 +28263,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M05-body_puzzle_template_10x6-cold_start_01.json",
-      "sha256": "17ee0ce3330307fff6018fa6115ae2562ca735e4dff908b1381a368f8b5e61ca",
+      "sha256": "820ab5b82112a26e898a603dd74881b18e2c0a1af028f4c11850709a0e0ff7af",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -41805,7 +41805,7 @@
       "case_kind": "golden",
       "expected_noop": true,
       "archive": "M05-body_puzzle_template_7x9-cold_start_01.json",
-      "sha256": "ab76579412dd6afc1e38381f250a47285e61dd56aefdf5f92a980d28fd716d77",
+      "sha256": "525499e5b534c5cfd9d503a79c67b74156dbf5ec1dda0832ece345de0e5a07b7",
       "passed": true,
       "expected_known": true,
       "required_offsets": [],
@@ -41822,7 +41822,7 @@
       "case_kind": "discovery",
       "expected_noop": false,
       "archive": "M05-body_puzzle_template_8x8-cold_start_01.json",
-      "sha256": "88ed78378efac468aa1d14fed10cf5bb10a097b1f57280bae8bfa46f796db7a1",
+      "sha256": "dfb6337efff0d95abfb017df3bb5168348b29813516174557231aa378d195452",
       "passed": null,
       "expected_known": false,
       "required_offsets": [],
@@ -41839,7 +41839,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M05-body_puzzle_template_9x7-cold_start_01.json",
-      "sha256": "2d29c045f9754388f4a15ec08751e39f3940b611c94f5d25ffd22571a874ccdc",
+      "sha256": "6445bd6b96dcff4441b3e68a837368f6d4713162a582dc848ff8d04170414700",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -55381,7 +55381,7 @@
       "case_kind": "discovery",
       "expected_noop": false,
       "archive": "M05-body_upload_bmp-cold_start_01.json",
-      "sha256": "0818fef29d9e8d54050093b067cddf3d4fa2cf5aa9aee186df3d57ba091de3ce",
+      "sha256": "9f753cc9c7432fd125a2ab05d0811e08f5ce05c530f46cee7829382d13dc5db5",
       "passed": null,
       "expected_known": false,
       "required_offsets": [],
@@ -55398,7 +55398,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M05-captain-cold_start_01.json",
-      "sha256": "692a361dd16859b90124eda699eacb5d941817717026aa2f45b2c88db117c408",
+      "sha256": "cc67b59d2df40dabd11eb00d9837bf89754871df3295b3ea34b7a924cb7e1c65",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -55417,7 +55417,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M05-defense-cold_start_01.json",
-      "sha256": "9ee1a4d2d78b822653afc551ec40c80087d7102fe3bc7d100aebb352d14e153b",
+      "sha256": "4dccb4f88553c2c7c7403b6cee81d476461db72333e897b66bd5c3c19bff5418",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -55436,7 +55436,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M05-defense_growth-cold_start_01.json",
-      "sha256": "fbc70fd7be10d3de0259b16447580cfe1e7f87892bc882bb089f28fd87b97b5d",
+      "sha256": "1fb4e55e98d743cd4e7782df80a9a79b45ab333af17378b6dd741768f00e7037",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -55455,7 +55455,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M05-experience-cold_start_01.json",
-      "sha256": "76834e3c638258dbbd98c962a292694fd9884c99e07495f19c49c408b57d829f",
+      "sha256": "1d1e16dd68a0105834671e090ab44a542790f6bba1a38d8132e80e8f0b5c57dc",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -55474,7 +55474,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M05-fragment_bank-cold_start_01.json",
-      "sha256": "fb33625d6d300d0c4d8dc20825d9484a645196d4a5f67928879250c916ad1586",
+      "sha256": "69f4ecec40e512123eb38d575e8b0dbfcf82a4cd16f7fd077ce256b1c7eab968",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -55493,7 +55493,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M05-fragment_color_1-cold_start_01.json",
-      "sha256": "974eff2f822c392f27253d2d10aa9206f7683e3e4378d8ed4dbef34076f66fbc",
+      "sha256": "c80815f575b31a8ad9e6d1d5a75808e0c02bc01d051b4d5258cb6ba33fc5289d",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -55512,7 +55512,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M05-fragment_color_2-cold_start_01.json",
-      "sha256": "aa61fa46cee8ee88d3b68d61f95f649ae607e325002ccdad3d6b857f909b7e3c",
+      "sha256": "156742ec8362945c527d9107f25993303e0f84cc48bc3f4e02ac40071ccb71a5",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -55531,7 +55531,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M05-fragment_color_3-cold_start_01.json",
-      "sha256": "9e9442fc7ffaa653c3bbf2044a455abeb41f5239e196711a345f337cdc6fd43f",
+      "sha256": "d438a9a20ae8087392ea63dd3a92bc5f2a3a29b7d3e6241b7876a0944b6d2a7d",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -55550,7 +55550,7 @@
       "case_kind": "discovery",
       "expected_noop": false,
       "archive": "M05-fragment_compressed_upload_bmp-cold_start_01.json",
-      "sha256": "29b3201698708722af422fbdf5fbbff99030d7f6512917d7b38c24fb11b52d1e",
+      "sha256": "33dc262dd1681ef01da6f4cab0fbc4998b4ae1492f100172ada8995fc9d624c8",
       "passed": null,
       "expected_known": false,
       "required_offsets": [],
@@ -55567,7 +55567,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M05-fragment_puzzle_clear-cold_start_01.json",
-      "sha256": "8e22552df19d60db291cc75a6ff0883e71362dc3444b5c41c4fcd5d5594d51da",
+      "sha256": "c58c4c4f38e114cf21a3b9bcc5654674dec9ec3ae01afadd41a43deb1e129023",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -57224,7 +57224,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M05-fragment_puzzle_flip_horizontal-cold_start_01.json",
-      "sha256": "7e8a27deacbdc839d79b5e38ae852d8dd7520b7f5a92dc9c38708170ddebe36c",
+      "sha256": "9afc5b64b060563fd23226b7915d5cad7dc9f58e1c8cdb229fbcc2d0aa1dbb85",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -65552,7 +65552,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M05-fragment_puzzle_flip_vertical-cold_start_01.json",
-      "sha256": "3c3d234c414e590eeaf05390ff6352ba8868acfbdfb6271e42dd5db9b157763c",
+      "sha256": "7573ad5a77d2d9086d80371504b2461ba369534a3e321bc078f123f0261697ae",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -72930,7 +72930,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M05-fragment_puzzle_move_down-cold_start_01.json",
-      "sha256": "d033e389ec9a8046c053f365b3e4283de45d01fced9a5e88212534a2f99a83c9",
+      "sha256": "dd291f9776829c872a1b3ad9a63d48e086137762006c0e058e8aec8ab0c079fa",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -80277,7 +80277,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M05-fragment_puzzle_move_left-cold_start_01.json",
-      "sha256": "e8b988a1fbc69afa66571072c169dc725c0f10b06b5b596b97267065ea0e6f91",
+      "sha256": "787ebb88c085c78114832cb3ef3c0b3b76aa567e490fe77acd2bb63ef61c3a8c",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -87624,7 +87624,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M05-fragment_puzzle_move_right-cold_start_01.json",
-      "sha256": "153e19d676bbba6eef9919573820b0fd278a1d57ff5f4ea6d811c4a1def1c462",
+      "sha256": "f110e942df5957c447b1bdb51537112e6f15025196c9e863d867bda5a0502a8a",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -94971,7 +94971,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M05-fragment_puzzle_move_up-cold_start_01.json",
-      "sha256": "f2bc77f836d09b6b0d97d6e15ff9e7c603090cec98ef3404fdae0378a32b046c",
+      "sha256": "e972dd509878889b3b50ba547b5e5584e3d238c762509bf77ae1974d1e4d285f",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -102318,7 +102318,7 @@
       "case_kind": "discovery",
       "expected_noop": false,
       "archive": "M05-fragment_upload_bmp-cold_start_01.json",
-      "sha256": "fac8ed20024b455ac532e9f280a096678ef2a03be280035119541396fd71c89a",
+      "sha256": "4f036fd56154054643fae0fdd5057be8dc63ce89844154e36090613d2d986cb4",
       "passed": null,
       "expected_known": false,
       "required_offsets": [],
@@ -102335,7 +102335,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M05-hp-cold_start_01.json",
-      "sha256": "021ec4f546de52c62f945f05ac2922b6f5fb14cfb1f07d2a5862052bc3c0aeb2",
+      "sha256": "696de88087b20e61f71b475da87df8061c8dc16f8b7aea8c29079191bbce246c",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -102354,7 +102354,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M05-hp_growth-cold_start_01.json",
-      "sha256": "e19b1679750247bd9c2aa93538b64ab524768b56d9582b1d05fb18c7485417f6",
+      "sha256": "3657b1273b6d0b10d1d56068e1cd03ef85b7b8d090ec98ace2c15da3be0454d0",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -102373,7 +102373,7 @@
       "case_kind": "golden",
       "expected_noop": true,
       "archive": "M05-icon_binding_double_click-cold_start_01.json",
-      "sha256": "8f0345354558f38297629112f9b415e3e6cdaf11aa6b4bf1f616bd388314f436",
+      "sha256": "a0f6cde53cbee4c9bea95af79c7055e59d8b100ec4f2333800753d77566b96f7",
       "passed": true,
       "expected_known": true,
       "required_offsets": [],
@@ -102390,7 +102390,7 @@
       "case_kind": "discovery",
       "expected_noop": false,
       "archive": "M05-icon_upload_bmp-cold_start_01.json",
-      "sha256": "ab6c5a2738388b9a981d886d34115067ff1ecfea8b5916c5785ef9bcb5a1e49a",
+      "sha256": "14ef64cd81811b783ae74bd9a4a66deb37691d1eb9479bb7793599a8c6fe16f8",
       "passed": null,
       "expected_known": false,
       "required_offsets": [],
@@ -102407,7 +102407,7 @@
       "case_kind": "discovery",
       "expected_noop": false,
       "archive": "M05-main_clear_body-cold_start_01.json",
-      "sha256": "a240e7ce1f9e7ca601fa06a10fd0de4a56d48db9758bd32b979c1eb26d904ed7",
+      "sha256": "af2c5c099a8972e4f93dbb19f87ec8396e73783699a5ed8b2ce4b5fba4e03551",
       "passed": null,
       "expected_known": false,
       "required_offsets": [],
@@ -102424,7 +102424,7 @@
       "case_kind": "discovery",
       "expected_noop": false,
       "archive": "M05-main_clear_fragment-cold_start_01.json",
-      "sha256": "f65e58cdf6580a59626c309035ab005be05b60eb829be2263712bed2ce009335",
+      "sha256": "256fa85e16598309da489343cf6d9734003b2abb65ae29ffb87c1f3f7fbbe495",
       "passed": null,
       "expected_known": false,
       "required_offsets": [],
@@ -102441,7 +102441,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M05-money-cold_start_01.json",
-      "sha256": "2036ae121040b0e3a2a9d0e763db39606fd9dda45afde17c35a9bb513221d35e",
+      "sha256": "4cd0c84cbd10b74154558197dd83bd94af0d05910bd79f0008b05aa7b7045ad5",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -102460,7 +102460,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M05-movement-cold_start_01.json",
-      "sha256": "749dca1043779dbda46e12fde8179c453a16c0d162703d43384c76e4d870d610",
+      "sha256": "1bc8462d9969781dcfd1aa74c9440993d7b3847b19200c0c45206b1c3c7de22e",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -102479,7 +102479,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M05-name-cold_start_01.json",
-      "sha256": "4840b704eed7de218f9a220c36b53b75078abd8ca835f950a3075b646745471c",
+      "sha256": "6283d58b65481cd6bb897051fcb03c82d053dd0f1d81f88ba4942e23f30025ee",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -102499,7 +102499,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M05-special_skill_base-cold_start_01.json",
-      "sha256": "dfa90927beac01136b31b7cc495c141fceeec9377eb00c8db1d5311e0e718a3a",
+      "sha256": "76f7c4dd14a51e47d07589fccca19cd81fdf6c8cf6abc91d7e1cb2df8206b84b",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -102518,7 +102518,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M05-special_skill_dimension-cold_start_01.json",
-      "sha256": "e59ddf2fe9c698dde9d8794fab8823d70986661768e7494fa9d5891e1a34c465",
+      "sha256": "6fca291f76702672bed1fadd22ace6e216a519b04023c0e77e3aa0a8b109c6c0",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -102537,7 +102537,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M05-special_skill_first_strike-cold_start_01.json",
-      "sha256": "658af12633c06d496095b1cbb414d1b612ba31df92dd99b48e46976879cd6c04",
+      "sha256": "32f15e39477fa76fa123a25653a2c4e1f7fbab91502e9cbbf072022a8682b738",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -102556,7 +102556,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M05-special_skill_hit_and_away-cold_start_01.json",
-      "sha256": "d39e2f84acec2f39fb6dbc8474cdacf7c5374b818510953ab81203e10b8b0779",
+      "sha256": "a474abea9f9605c1127ca1252629649940b12987f3bd75510b1896800fcce04d",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -102575,7 +102575,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M05-special_skill_reflect-cold_start_01.json",
-      "sha256": "28d855071f860a0d923cbc1a7cd3331a71a065e58c551c4def3282b53e750ebf",
+      "sha256": "eb00301a089e63114161cbe64fc640fa338a97db0074f63eca2c171852a795b4",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -102594,7 +102594,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M05-special_skill_twist-cold_start_01.json",
-      "sha256": "79f0d11fadc10d0314caef6eb661a2be1a769fae9be2fa0a09c3cb2ed52bcbba",
+      "sha256": "c542e9f15954408fc499b7dd76b13364a58339c2fcc95c028491fe3547dbec66",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -102613,7 +102613,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M05-speed-cold_start_01.json",
-      "sha256": "bd02e40faddb3c0c36dd2290c5b1044216f7e515f6a976c341ef02cfcc62b44b",
+      "sha256": "b5cbd17d5dd678829a66915a77f4765fd33099d50c060f5040f9a8d3ed63449f",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -102632,7 +102632,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M05-speed_growth-cold_start_01.json",
-      "sha256": "50157ff4682a47b03913462c037281b91b5df693f894b90c357adf07f52c3abd",
+      "sha256": "8e1690bb8fa19cf83967f3e39d02d051ba0566e5e6ed6acbfe7e57c74a793e30",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -102651,7 +102651,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M05-strength-cold_start_01.json",
-      "sha256": "95a87522f80645022bdb393ef1b29231f5a1c4980ee0e69ad133d998b6858fd8",
+      "sha256": "3b273226a8a239deeadc6b0feab027dc067b075fe8037dec533b7b22eb51d33c",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -102670,7 +102670,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M05-strength_growth-cold_start_01.json",
-      "sha256": "c3fa04ed76986b1a83c7570e40dfed12936edd1f39cc455c16dde973c401349e",
+      "sha256": "ec52ef86c9ec23d1d614c6a0f480866610f5e11b5f8f01bff1e76b9616437905",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -102689,7 +102689,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M05-terrain-cold_start_01.json",
-      "sha256": "93687b6052c242794011d74e286fc656959a5c16cc88e6d6f14fcbbb1610c5a7",
+      "sha256": "dc6dc6d1d986726bd4022a96902d03ed5cd9241bd6dbedb1dd2629bf89060c8b",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -102708,7 +102708,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M05-transform-cold_start_01.json",
-      "sha256": "ec28dce360003a296d1a87aa14c7c0ca6d9253b7401788fa35ad98ae19f7d30b",
+      "sha256": "f5e945bb7555425175daeb8d0a4a6eb252f93103e9819fb01cadbb539606dc1e",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -102727,7 +102727,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M05-unit_type-cold_start_01.json",
-      "sha256": "79eb1cf6039abf47ec99ad43fbae21d9ffd31593afc8af4e17353ddd6a566cb6",
+      "sha256": "f4d95f706f7951eb8960b2dcac2543ae71b12393d19891d00645dce66315f631",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -102746,7 +102746,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M05-weapon_1-cold_start_01.json",
-      "sha256": "ede3b225784ddff16378d0b0c5bd417367e8105fcd0c04c3a6125d08ccb270e8",
+      "sha256": "6df653535b9e79d14afeb4b415ba0eabf94b104b54fdcd4f1b973810fa62ee72",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -102765,7 +102765,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M05-weapon_2-cold_start_01.json",
-      "sha256": "00d7740c039174681c8a43fc1f8a3d63ed44b7bd2a36170671160c4d69f92d6b",
+      "sha256": "b2793291d441b029a76849dbd455f119c1bb8f30bed41b06e19618229eb8f830",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -102784,7 +102784,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M06-ally_music-cold_start_01.json",
-      "sha256": "f4361aa80f47d07f8c87524d18127cdddc65e6db8aeb4dedae598c6a74b61a1d",
+      "sha256": "37ad02e52de8ae701f8fd327391b64e5b621a796877f51635f47e9a895f0df65",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -102803,7 +102803,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M06-battle_name-cold_start_01.json",
-      "sha256": "cb62e86a56b8d68dd50174ca9cc168986f3c8340ed03ba5896f878446016acb8",
+      "sha256": "f50154a1b39b988c4e257984955cd45248166e617c1609e1570a41bf5ffd5c3f",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -102822,7 +102822,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M06-character_add_overflow-cold_start_01.json",
-      "sha256": "c411184283f040f71b0529c060518a69612ccae3887b50f473b26c594d2436e0",
+      "sha256": "7e5db68eeaedd961bc85234d0771292c21010279e94a1fe577c2a877021ec537",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -119319,7 +119319,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M06-character_add_overflow-cold_start_02.json",
-      "sha256": "1f897129dde270a837aba2801ce09a6a9c2be80edc1afbc61df72e740b749fd2",
+      "sha256": "cea89fca7836714d82db1762c87979d761e4097f2dc92859ce30cf24dbbbe918",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -135816,7 +135816,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M06-defeat_persist-cold_start_01.json",
-      "sha256": "3d42539fb7a8279f69036a95f71f09d49c15843efe2b3c9a61f2c8742b6b3384",
+      "sha256": "818dbd363fde90f6470e4265e3d2cb9dcd691e287d01d9b263d4650101975dc2",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -135836,7 +135836,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M06-defense_bonus-cold_start_01.json",
-      "sha256": "79f6f7654c591202dd4e034dedec7d05beb23d7f1ea04ed3ec56737db05e389f",
+      "sha256": "f0f7f5410387b6cdea745a50670e50666035cdeb3efa00545b68c253cfc60dfb",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -135856,7 +135856,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M06-dialogue_attack_blocked_number-cold_start_01.json",
-      "sha256": "b05f3ba17810a65c9604360e530bc899d2b8cccb17fad9a47507214cdc721bed",
+      "sha256": "3a02fc09ee313d11f0d9bc97fc37460be85834ef2f8640187fe34c1861ac58be",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -135875,7 +135875,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M06-dialogue_attack_blocked_segment-cold_start_01.json",
-      "sha256": "e02e77c5bef062bd357a1e37375f355948609759d9fa07efa188701f3610c6f7",
+      "sha256": "11b95ed8fc04fe1cf90e7b382888c78d87e487243e9b9e228f6800ac14c0ddaa",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -135894,7 +135894,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M06-dialogue_attack_hit_number-cold_start_01.json",
-      "sha256": "101ddba888942f765f70dc4b52627654bd5446ceac92ad88960b4a5cfda4d8d8",
+      "sha256": "1b3e6edfefe36ddc57ff900f879ca763e4e559993da28bf2e2e463df1a19a172",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -135913,7 +135913,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M06-dialogue_attack_hit_segment-cold_start_01.json",
-      "sha256": "c956dd20494e3f4569fe4095ed8690e3e4d0b68a2bd5f1ba5bbdcd9b2d0845dd",
+      "sha256": "11d86a2bdf377a98eea75574bf8468fee7a7dc2e8d385645ec3d3e207bfd1fc3",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -135932,7 +135932,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M06-dialogue_defense_destroyed_number-cold_start_01.json",
-      "sha256": "2d52593523703be8c7463e1addf5af774ce311159390b5f973222b20d4053f33",
+      "sha256": "347d4b47026e0087d1e2ea4c35c8561016ded9736d7a71e492b87dba6db96fba",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -135951,7 +135951,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M06-dialogue_defense_destroyed_segment-cold_start_01.json",
-      "sha256": "637b4b9965bbb06ebd9435855671641700d8b043faf091fefb5e0a07ffb03592",
+      "sha256": "c42bc2bc981ba28aa68098058f146f12f797d61d063e32a184d1c0f2b790bd73",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -135970,7 +135970,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M06-dialogue_defense_heavy_damage_number-cold_start_01.json",
-      "sha256": "c12e552ae7c676e10c985c521a90d9e3550b1fe229d58ed0f3d53933d6b607c6",
+      "sha256": "fc925efe72d9f3374c0781e812cee60eb2b4a54498e3f1072266d29b8fd3d476",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -135989,7 +135989,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M06-dialogue_defense_heavy_damage_segment-cold_start_01.json",
-      "sha256": "bb39d7b6b47cf586aa468e779a34a049a9c0892c28d5f6c541badfac7ced125e",
+      "sha256": "2e9d0cfd730c842126366f8e5cbbc809399967e1f0ed65630d81a76650bfea6d",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -136008,7 +136008,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M06-dialogue_defense_light_damage_number-cold_start_01.json",
-      "sha256": "1757348b40a23389a26fc25f73f7ebfbba946ec3a01beee7545c9edf7aa9efff",
+      "sha256": "52ce30637b57d6b8bf8ec15ba940d04c9e17534e385281fc5ddd0e2f29fc5e45",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -136027,7 +136027,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M06-dialogue_defense_light_damage_segment-cold_start_01.json",
-      "sha256": "088ab4e89a1dd845c34af4f301c4b0861b867487df9761b94ef1c33feb6b6420",
+      "sha256": "a3ad63a2932ab2bca1e915c9388a1ce16aa0a20f2db6ece37b04e44d78ab3168",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -136046,7 +136046,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M06-dialogue_defense_medium_damage_number-cold_start_01.json",
-      "sha256": "38b50e0cdceb26b9cd4ecf7cd2857f01939bb25857413053875b7e6557d40807",
+      "sha256": "c3d15069eb15fbcde0088c9cd211cf45e4bc7474356c8fb54fdd971ff203563e",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -136065,7 +136065,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M06-dialogue_defense_medium_damage_segment-cold_start_01.json",
-      "sha256": "0b53d63ee1792d7b433234132ec86dc9c203b668ede2c6b946b045c80cab8edf",
+      "sha256": "a4c355034c8d2e19933f01cb746a542b63571acbb8998f7fd5bcbc2bcb344467",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -136084,7 +136084,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M06-dialogue_defense_no_damage_number-cold_start_01.json",
-      "sha256": "0cb98808c407e4235694c92c28d8a252624d79525bab2929ad8a7ef0082b7d01",
+      "sha256": "ec9311ac205a33642af405444b0f7f7697c6b487ada06f8c4f6963088d6b88fa",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -136103,7 +136103,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M06-dialogue_defense_no_damage_segment-cold_start_01.json",
-      "sha256": "a6da01d2ac482aa5c60e67a2b66094088d2a88a0a5f7872c15bfc212d1f16396",
+      "sha256": "e014ef2c57307f60630d414faf52236539a81c5db23f099e605d6859dfd24323",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -136122,7 +136122,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M06-dialogue_defense_success_number-cold_start_01.json",
-      "sha256": "08d9bfd20ca4cda289aa8e01bc526cc9bbd050bb9a5bc42d32e4f7045deb9b49",
+      "sha256": "6ad80a883e379a958d413b67284e9674855edd02549748a9143ce206a36de189",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -136141,7 +136141,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M06-dialogue_defense_success_segment-cold_start_01.json",
-      "sha256": "1e3b59b83dffa859fa4616f0c27a22677e2b4e2d9ee89ff0f6eb641abdc0804f",
+      "sha256": "fcd3199fcc8f27a609e0c09dd80a5128ede7ab8801c7eeb8f46843225131577c",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -136160,7 +136160,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M06-dialogue_special_attack_1_end-cold_start_01.json",
-      "sha256": "50877833ec09b6daa848c820bd37be173040cb1282e1b1f0539cdfe6e87eb320",
+      "sha256": "949f7a44837de29b938a5c3ca35153b80e52eef2f4fc6f1d9c782b5fdffd85a6",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -136179,7 +136179,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M06-dialogue_special_attack_1_number-cold_start_01.json",
-      "sha256": "449942a7b28de47cc8239a11847a2132e6354b80aadf155c53780f6f7681b0dc",
+      "sha256": "9b5bc072339914f7bea38e5f40d31e0e0804f3e127fa33e19a98c8e91f07daa1",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -136198,7 +136198,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M06-dialogue_special_attack_1_segment-cold_start_01.json",
-      "sha256": "182841581316b56b260f40328be1605319a8ed1d6ee3f016a871df4dfb33f2ec",
+      "sha256": "3eced813ff7440d864cdbec8b33b9ba438bae38d807a5dabb8a2510c2bb14040",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -136217,7 +136217,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M06-dialogue_special_attack_1_start-cold_start_01.json",
-      "sha256": "29c6a6db6bee42126084a7c04686a814caf8731abb115a2fbf64d29000723484",
+      "sha256": "386e0562fd81bee992344a56bb2e0cc6f41433e9996a428c9970ad3dd9988ff3",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -136236,7 +136236,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M06-dialogue_special_attack_2_end-cold_start_01.json",
-      "sha256": "b44398466aafd8c38b8ee1c4481adce4ad19797a51596052b798600504ad5d6e",
+      "sha256": "084ced1443dc0431f74a6b2046f6b6b808fab96ba228ffbae0e0cf0ea4a1a30a",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -136255,7 +136255,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M06-dialogue_special_attack_2_number-cold_start_01.json",
-      "sha256": "23033b61df12232f162bdc0b5630253bbe9f02c9817d9957d2cadfb82f2355c8",
+      "sha256": "01dd30d6ba254c262ee1d7efd46dbd812f420901208b93d6d0039a3f54d6fb2c",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -136274,7 +136274,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M06-dialogue_special_attack_2_segment-cold_start_01.json",
-      "sha256": "b568dcd7eedd5764639c6e1389fb3fde4519f622b9e92dd2494a00c3d881bf41",
+      "sha256": "4314b2b703e9b4ad38c00029a149325bbbc034068ff9ef34c85850ba5f103a6d",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -136293,7 +136293,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M06-dialogue_special_attack_2_start-cold_start_01.json",
-      "sha256": "de375e861f72c82f6e5f2f606de2e43d897398a5a85241848d1b5723a95aeace",
+      "sha256": "dd1bfc4422490a0f96cc5e966743362f10a8d0d73d057202e75ba0b1ac6e0662",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -136312,7 +136312,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M06-dialogue_special_attack_3_end-cold_start_01.json",
-      "sha256": "ef24a65cf574a0f09b83d8b5f224b819c275555b7b4b1b5921b374d82dbd4c3e",
+      "sha256": "53ae6b4a29da271f4c5c8e9061dbb919a298c2a61a8f27d982b09a56a9fe57ce",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -136331,7 +136331,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M06-dialogue_special_attack_3_number-cold_start_01.json",
-      "sha256": "fc568e0472269b49a12e6962cf93a07af63cc053ea852cab46ad92eb5678020f",
+      "sha256": "ad3eded8adeba789ac384f1fe22b55dafbc25ef444f209f9fd5bc9ac2933f9e3",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -136350,7 +136350,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M06-dialogue_special_attack_3_segment-cold_start_01.json",
-      "sha256": "0a626f702ef2578a941d2c8cbe91099df84be53346863e999914ab1750786ce3",
+      "sha256": "23fe6adcb84360d1f44e0e0e56d40aa6dfd90f259d92fae882e72b0f096e33bb",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -136369,7 +136369,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M06-dialogue_special_attack_3_start-cold_start_01.json",
-      "sha256": "dcf0c180fbcd83dae587a918a3288a06ce9636fd767b855dd175011cf54a5fc7",
+      "sha256": "0fbdd3e248667eaa6782e5451edb13cd1d3572da2178f99706ab0885ababceb8",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -136388,7 +136388,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M06-enemy_music-cold_start_01.json",
-      "sha256": "69e4abac586fd2fe8212c3657e12dbd7cec7ef5701a8309b093988c5815ef208",
+      "sha256": "34c27c24f048a73af1e686bde25d79ac7f30ebf1d8e7ca4228112d41815c9788",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -136407,7 +136407,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M06-growth_curve-cold_start_01.json",
-      "sha256": "0a84775f6f001432c8df102d89a3b3d5ed6bded1b73c219ab182e4324f425f61",
+      "sha256": "884c0d75116edbef4c487d232b1d26e6e64407dbcb3db1db4a1eb568c519c1c7",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -136426,7 +136426,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M06-growth_fixed-cold_start_01.json",
-      "sha256": "38e449d3d3f9b60b7c05ad54433925c4e0eb21c6361ed936c22e7b29c84cdd9e",
+      "sha256": "3d9a626fdc0795fb858ab4e6b390632748dbfa6513182129119e72caffe305a4",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -136445,7 +136445,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M06-hp_bonus-cold_start_01.json",
-      "sha256": "e8b7e922d9293823f8e6bda5e5c77a347cc4c5fa1f4bdb59f3972959b97f05ff",
+      "sha256": "966f210d110d67e7c10d32ca66422324797bc1a6e136b7cf462aa60c269a40c7",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -136465,7 +136465,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M06-mobility_bonus-cold_start_01.json",
-      "sha256": "f77044b8d80bbc96603c68553ba8a74e652b7bb987c449d52889b6e711c15909",
+      "sha256": "5131a77884b58ed9afa7ba482082e24d7d8c263cb32e7dfa75375290593c1462",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -136485,7 +136485,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M06-name-cold_start_01.json",
-      "sha256": "e5dcd5e0c253de1cc8e97e858ba3dbc33142a838118e0e0933052b4c64ff4434",
+      "sha256": "4ed96375c62dcd416aa28fb6d0d8bb37fca7c71e0c407569de7303594461c964",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -136504,7 +136504,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M06-portrait_back_bank-cold_start_01.json",
-      "sha256": "51d8c62d96fdba08e87beb2b817d20487d36218584c56b9908a3ce5cf274df93",
+      "sha256": "a9689e33b3b1c20df55338dea58041685a02d039ba7895faf79f21ec57248212",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -136523,7 +136523,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M06-portrait_back_slot-cold_start_01.json",
-      "sha256": "c7a9c3791240947528e2f4acc621e3d5b56fcaf95dfe29e39632c27e18bdcc40",
+      "sha256": "a02eef860b52692c8aa286374b0a1b0a7847f14b3975405ad3b995dfbb33dc9f",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -136542,7 +136542,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M06-portrait_back_upload-cold_start_01.json",
-      "sha256": "12bf368d2ab65675eb6a563f2d8c8fd4717e797c8cc022f2f9593c2bf7115d82",
+      "sha256": "407c4d7c48a315062d0d962e6139ec985d18543aafda1e9d05972ab853c4c00d",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -136561,7 +136561,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M06-portrait_color_1-cold_start_01.json",
-      "sha256": "c9a646859adee69ce80f034971bec863053234619c7954196d29fe675b74539a",
+      "sha256": "9c3e6e48d371bf0890b99e11ab12cf4579e7a0cf9fa45dc1e0d7d12c59513a75",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -136580,7 +136580,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M06-portrait_color_2-cold_start_01.json",
-      "sha256": "8f6880c38bea317f87b4d7de23b2b72c59e76686fa3b22b9728b9e79c9ccd494",
+      "sha256": "8e6dfbd8ed1e558db550be3025ab1e11e9b49abe9926bc2dee2c20877a03ffc5",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -136599,7 +136599,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M06-portrait_color_3-cold_start_01.json",
-      "sha256": "b2877c93edf4f8530475ab1b65c669b4dafc2e8cc64df4e5cef80bae0193629f",
+      "sha256": "eef61bbac1af63aee04fc0391333a09731a983a4ae8b5489c11fabff9e51e2fa",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -136618,7 +136618,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M06-portrait_front_bank-cold_start_01.json",
-      "sha256": "be7aa0a951cbc32e93ab87bc7a2c486f3e53ca6b56d7146a5960aebbf07046fc",
+      "sha256": "985b784b481bda740c24b9539de68c3098e48fcd1a18fbcb1fbd7284fd0b3615",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -136638,7 +136638,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M06-portrait_front_slot-cold_start_01.json",
-      "sha256": "6731f4d48b97834bab712c38839e1a743f0ca3091c0dfe7177f19d64e61f1d5f",
+      "sha256": "09f710fb19c7d097e8effe2bd3c768dadd309be4da70e35f11ff8cb992b34f1f",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -136657,7 +136657,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M06-portrait_front_upload-cold_start_01.json",
-      "sha256": "e215e5f38692fc7cd9ced046c565b2d054321f258b1c8c13a531b1e951f3501a",
+      "sha256": "0d9eff4ec435e462c35a27ba451f49f32153242304e4d95b6678904b3fb2fb4d",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -136676,7 +136676,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M06-sp-cold_start_01.json",
-      "sha256": "e803f19bbdea503d2ff2444979844219172de424292e3f1a6262b5120afac9fe",
+      "sha256": "2f5705e44711b01f6b06bd4b9b76d3d83bc4d49af7b66d0dbc61d9c23b8dfd7d",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -136695,7 +136695,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M06-speed_bonus-cold_start_01.json",
-      "sha256": "96c9e2617b8ef67358cd68d92c151f74d58b6a81fe99307348a0ac85fafaf5e3",
+      "sha256": "54614a284bc7861e550136952e055a30d8ee69a7da698f1bc6a37763284589bd",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -136715,7 +136715,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M06-spirit_01-cold_start_01.json",
-      "sha256": "4a78cd5413602cc0cef2377e8e5630a1c4bd908ccdb23c8b829475855f6b0530",
+      "sha256": "dbed0f33b8d410447c447b3da3f1dd16640ae7f51d6bf0d31ded25ccad015d52",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -136734,7 +136734,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M06-spirit_02-cold_start_01.json",
-      "sha256": "cfb976ad1652c5bf7b1b590f010d9afd6e245b4ac02bd3792170205d35222688",
+      "sha256": "6b87bbd5fd0a681be1b9ec02e7c301d18ed691e23a8b4dc6e854e41baa573b8a",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -136753,7 +136753,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M06-spirit_03-cold_start_01.json",
-      "sha256": "abdbc4c965f35d688756d741e785460f3f2678a3054ff4bfa2301343317f827c",
+      "sha256": "852d478e5a51a6616b1112933cc01da47b205d8994535b24cd8c7793a94eadce",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -136772,7 +136772,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M06-spirit_04-cold_start_01.json",
-      "sha256": "75b506315ca45b52d236c722bc84b508075a680d2e62837aa08907e50a84211f",
+      "sha256": "4fbcacd3e9dd56122423dce2f384e1a64d2968e59f829537f5d347c49a62aa66",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -136791,7 +136791,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M06-spirit_05-cold_start_01.json",
-      "sha256": "9b01e74fcb441bb7f370316a53054d716c4548c2b731ae623cd429266a8f6962",
+      "sha256": "8a56881427e2b7426dc3a7b4d9dd94c3d89cd326864acca5c5d0b41f39545691",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -136810,7 +136810,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M06-spirit_06-cold_start_01.json",
-      "sha256": "e19838b868f52121771b9c8b4b77c03d002f3ddc7760b887fb9fffcfbfe021a7",
+      "sha256": "21858a2a271f1ffa482d2455117fd0499c2c30858584d85e25b84549107be996",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -136829,7 +136829,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M06-spirit_07-cold_start_01.json",
-      "sha256": "d5353a25cd3a046875a29cf7bcfe040cb4ba1f78c8e0d06cebaca62b0ec74eaf",
+      "sha256": "1b58565948d8875760bf9a03feb504018fe20093d00cbda5c9ef9ae1f8ee7fa8",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -136848,7 +136848,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M06-spirit_08-cold_start_01.json",
-      "sha256": "ce6378b9ee61dcc3b0658b8372fdce4853c7bd39479f29a2554bcf2cc46e355a",
+      "sha256": "0c05c01075c8860c77f89fb74be24c7190cb4f47d7ba1a36dd6f29ae5f0cc045",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -136867,7 +136867,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M06-spirit_09-cold_start_01.json",
-      "sha256": "7375939d5df32c13d51256f8ddb387d27140a0e9838779e2b31a84588085e8c0",
+      "sha256": "de1c94f09fdec23aab0a2692b0728a25ae24209ef1fab6eb625c7da5526e3531",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -136886,7 +136886,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M06-spirit_10-cold_start_01.json",
-      "sha256": "c942def4ab7bbfcc6f703a2734233ccc5f071abf3cd340e683e6e59cf493ced7",
+      "sha256": "f75405a72e502bcf79d456d392de57a679177845c54398e368165016c98752fc",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -136905,7 +136905,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M06-spirit_11-cold_start_01.json",
-      "sha256": "7a56e1471bbd9c2aa606234b1f0d14962684e40979592066082dd3fbe000e2eb",
+      "sha256": "7c31b2241f7ea48e7da8bf494606349673c3cb642d025ff54bf14e3687075634",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -136924,7 +136924,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M06-spirit_12-cold_start_01.json",
-      "sha256": "70f9e83ed12938969c38316c80c7f515e2f2e409928c9453efca17fdb7c4af62",
+      "sha256": "9d428099f74236967b3b0139e8a0dfe809f83b07a50b2f51d4c853797a5735da",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -136943,7 +136943,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M06-spirit_13-cold_start_01.json",
-      "sha256": "d1d771dd48d6e5b0b4f322166beda4c6caa25d10973dbd349978d367410bf053",
+      "sha256": "87d46e30f30dbed745063f9868f32b261e44f6cce0e786f557d39106353f9736",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -136962,7 +136962,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M06-spirit_14-cold_start_01.json",
-      "sha256": "e1a4010b9aedbd53fc23d00b9c9054871d1e3457717e2e230a30b44803673df3",
+      "sha256": "ff3608098d6b5d9d19fccde021c0d0d57ae322d7eaedc0222dcb0583fcd02a4d",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -136981,7 +136981,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M06-spirit_15-cold_start_01.json",
-      "sha256": "2324e28760089e5629270a1075d8fe2855c8ac94956bd1e8ae736b31c2205cf5",
+      "sha256": "4304ae16c984f85ef8cf1fe8181ee8d954168f53e4f7db760d530c92979372e9",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -137000,7 +137000,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M06-spirit_16-cold_start_01.json",
-      "sha256": "bd66f201f55c212b7f0323600c93a362c35ff4f8afe17c237474918620abb817",
+      "sha256": "4ceedb08ed65dd1b1c8ba072369d3c132b06e38c302406b1e1602f85310df847",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -137019,7 +137019,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M06-spirit_17-cold_start_01.json",
-      "sha256": "1f3aef9bd69bcb18cb10445f4fc831bb9fda1c982ccc23144a44c181abeca6d3",
+      "sha256": "89494782c1d71534062bd4cfcf94209bb8c62caf2ac1bcd9578fe2c31a6719e0",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -137038,7 +137038,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M06-spirit_18-cold_start_01.json",
-      "sha256": "1ba26db33f0f1833f450da8f663cc650feea7b2d51bebac997581f4c94c83cef",
+      "sha256": "dac4c1691678a9fa01409c8b8c8d36fa5ceeb1a48e43495062d25938f21c1cbd",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -137057,7 +137057,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M06-spirit_19-cold_start_01.json",
-      "sha256": "2775fa73410a05d96f8dece4f472b5115a4b00936c374dff76c8d7a1f325ab65",
+      "sha256": "7d2c3fb70b587c9c7a18b22877094f736af42ddc6abb94b3e2ad3f960756f44c",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -137076,7 +137076,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M06-spirit_20-cold_start_01.json",
-      "sha256": "c9c0fc194d16ddaab741c6f721edc6c2e89884ca967cc7370dd190150e02cd9d",
+      "sha256": "4ad9dbbede01fef2bf1d8bc37f3dcc7ef1331cf0ac19deb5e5d4e459d051ee31",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -137095,7 +137095,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M06-spirit_21-cold_start_01.json",
-      "sha256": "40b26ac2913379c73a93f9d983857cc16c6dc0329b68ce22d21cf4d274d838f1",
+      "sha256": "f6f74c9b1470f3baadd06826c80fdd9a84f5e0ee15d573469158937f96938593",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -137114,7 +137114,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M06-spirit_22-cold_start_01.json",
-      "sha256": "ad0487a3c3678f642628815f915308b49918004e72890e17a5741eb8dfe5c66f",
+      "sha256": "342cc3878ba9551b3e222b5ff1054d48ef160aecdfa2e2b925433503486232d3",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -137133,7 +137133,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M06-spirit_23-cold_start_01.json",
-      "sha256": "228271f993d6c1736035f1dfe5b83688a31cc7a05479e72126bd1b38fb50f473",
+      "sha256": "1e7f95ae81c050936e7790056fdedb3e87153d24854835a13e19c8e8825f189b",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -137152,7 +137152,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M06-spirit_24-cold_start_01.json",
-      "sha256": "39747b4240b798b283b95f51715fc068dc7a5bedd8c8f00f0c2ac2d9db3ffc18",
+      "sha256": "9302e0de130c6f5e047020acd0c87122f47ebc656a7d6ce8ec129cba6234e9d0",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -137171,7 +137171,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M06-spirit_cost_01-cold_start_01.json",
-      "sha256": "46f20c55c3b6e8171865ce983ed9edf00362118377da326d53340c21541bf40f",
+      "sha256": "0f322962838dbd11a89554c3c8868f9863ea150b4d4958a3e6f8c96f7dfb974a",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -137190,7 +137190,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M06-spirit_cost_02-cold_start_01.json",
-      "sha256": "953ca2fd2645935980f0403f8766e15b302457fa90a1d7837a89a3628294e50e",
+      "sha256": "be99e69dd1ef16b1daea7cf314f84c9e80a0df0839f84d51a09d0cca975fd936",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -137209,7 +137209,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M06-spirit_cost_03-cold_start_01.json",
-      "sha256": "3481f491f6e7682f7921cc9a0070463819993dd169eed4527ee42ad1f384c24a",
+      "sha256": "0559e707502c84c395351d359123e4d91352751597ec095c0477d745c47f5b1a",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -137228,7 +137228,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M06-spirit_cost_04-cold_start_01.json",
-      "sha256": "76bfef218010c81ca995d740c11514a02b1bd7ecb334c408e1e14c06a40bf63d",
+      "sha256": "c22b19fd9ffd20eaea8677bb83bb89b1001b5d0c8ea5e752158d83d620494dae",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -137247,7 +137247,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M06-spirit_cost_05-cold_start_01.json",
-      "sha256": "fab0751b9646e6487bf6de1f99f832b44a5897ef69bcc12f20b068656bf3e209",
+      "sha256": "bf75bd504cbbf6a43f2f0940de1cc929e39f35d52c56190ef9192d13a6061bdf",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -137266,7 +137266,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M06-spirit_cost_06-cold_start_01.json",
-      "sha256": "efb1a5c3c20b55f90819796629a966d483f695c9425ff32b46118c0e037d4a15",
+      "sha256": "fe28007f1277e1cd30a1c14993666076950fbec566c48fe46fbf28e90049190a",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -137285,7 +137285,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M06-spirit_cost_07-cold_start_01.json",
-      "sha256": "6b58f26761abbc6188b437faae5fb139b41ccfc08b66a122aebd978476697737",
+      "sha256": "7ded5db994bbf0e6a928a1824aee5b35d3f7e90077a627f3170f848202e3abe4",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -137304,7 +137304,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M06-spirit_cost_08-cold_start_01.json",
-      "sha256": "70884e9cd88e2ceebfa0889cb48ba288fef4f00b0e08b570b95d50b5e0616d95",
+      "sha256": "702f5bf2ab83194da8e4f3df08fcc3d554a3c6747a738e50c1f36e497e02e4dd",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -137323,7 +137323,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M06-spirit_cost_09-cold_start_01.json",
-      "sha256": "175dd8d1da00462403523d2c646db96afd6395830c6d134af79a8381ce808771",
+      "sha256": "f0e50cf7585557ce4a731bd32df73789c71ca056d200b88121919e5819134104",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -137342,7 +137342,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M06-spirit_cost_10-cold_start_01.json",
-      "sha256": "bb1e2382694472fe184c8e50fea1b6e91465a4a3dd36dbb78ad56bb14ee88ffd",
+      "sha256": "d991935c142a9bd9d0a627982095fa3ea17548ecfc22399aa3150ab9a0d19d73",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -137361,7 +137361,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M06-spirit_cost_11-cold_start_01.json",
-      "sha256": "3c23c06d2a6fbb1830105c17ac4762a255d18c5cfc3128eb5f3c7d7a1333073c",
+      "sha256": "4b76d5390a4f28269808c1d35a10ae46cb05146e8b784e58a0866606639ad7ed",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -137380,7 +137380,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M06-spirit_cost_12-cold_start_01.json",
-      "sha256": "938a48f73ce42d4b35e0cc2563bd4940344e67d99574fdb099107c3131c413da",
+      "sha256": "17bf05253394fe7e4a604b41fed24b73350ecdbe6945d4886c6f74f70a339144",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -137399,7 +137399,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M06-spirit_cost_13-cold_start_01.json",
-      "sha256": "7eb5a59b888dc5aea227ef9e98ab230ca70ca7aeda02cebbadf04d9637148986",
+      "sha256": "5d671e21a2ff6cc5dfa1e2631830f86429573a7dbc9ffeec5cd7c694436df76a",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -137418,7 +137418,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M06-spirit_cost_14-cold_start_01.json",
-      "sha256": "6c70b17700759e5b4e4b4b4c4b6c4d6293cfbb4ae6ff815efaec43bed3b8b160",
+      "sha256": "6d9ed67e7ba50831af5dce8b423d7821b7d24f46cb31127abab1b6542750f753",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -137437,7 +137437,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M06-spirit_cost_15-cold_start_01.json",
-      "sha256": "cec52f9de7646e879e51a5ec76297f67c508b80c1acbb610fbf78d7f62f93ba4",
+      "sha256": "10974f5a523eed8e4e111e573467732b4c6ca5de9e6ead2ea941993a6e8c31ae",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -137456,7 +137456,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M06-spirit_cost_16-cold_start_01.json",
-      "sha256": "6abbd332baf3067b6175cb02066263ff7a345bcf6ac6bd26a5ae598d2109a573",
+      "sha256": "fe2e52285a0a8eefe8493128ce0280de58b913afaa6483c3e459b4945cacdab9",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -137475,7 +137475,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M06-spirit_cost_17-cold_start_01.json",
-      "sha256": "e42a14f02f007f8af2c30c14202e501a243eb9a95aefca0dadffc8a28553690b",
+      "sha256": "66c791aa53100f36de1bb220b7d6118f2851546b57807d13353cd3b6e6449706",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -137494,7 +137494,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M06-spirit_cost_18-cold_start_01.json",
-      "sha256": "feaed5d49d69260fb524e1f4d028235435fd95a5b5a3a6fff5558ea1c6519ce4",
+      "sha256": "2e75f51ca179fbd7dde98ca4467a14db0e7021c058e5ad4691bd7c7e4cff819a",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -137513,7 +137513,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M06-spirit_cost_19-cold_start_01.json",
-      "sha256": "45282315f632f34c88d39c74082cb6c0d90dcdc31a74025a6cf755a5a2781b93",
+      "sha256": "ce06734e30aa79fa43b1a8c7cb674db3525004c2dae6d3982d68787b2d044c3f",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -137532,7 +137532,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M06-spirit_cost_20-cold_start_01.json",
-      "sha256": "f17e132033138ff10f1198e7e2d96fa6b9e604b5ae3c5cba5fec0726da583de2",
+      "sha256": "00e523431ccff4fa5bbc93f402c34a2ffc4250df15b93ea46a83c37a68093494",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -137551,7 +137551,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M06-spirit_cost_21-cold_start_01.json",
-      "sha256": "7e19b2e389a3f53401a995d76c00ee382e8308bd2f1dbf5d89a8b69b2cdb6c76",
+      "sha256": "8c4ddd32969251810dd93933719ce7fcc571b4a5aa5fa5dc6b8be7fec31fc3b3",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -137570,7 +137570,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M06-spirit_cost_22-cold_start_01.json",
-      "sha256": "42c58e716bf5bfba25d951411cb632caf508062af759c521982667e69825f570",
+      "sha256": "7a415b15dd2215c46dfd29d01516a0c6194b8566e16ae1abc25e46d1040d7c66",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -137589,7 +137589,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M06-spirit_cost_23-cold_start_01.json",
-      "sha256": "51b3bc31bf7ac7a3f964acc0055ac10c5b5a479bbd8a6a6b903b0d57e8c2d3cd",
+      "sha256": "17aef859c78c521c552b54372df7302c52ec868019644cc7eebadda95c5a273d",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -137608,7 +137608,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M06-spirit_cost_24-cold_start_01.json",
-      "sha256": "f19ca3c8206530fc90152507bb855ecdca64bec7018175062fcf3c7104670be8",
+      "sha256": "cda90adacfd0326313ef0e2c675493dcc0b96a82ae10140a9b2bcbf893cf48fe",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -137627,7 +137627,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M06-strength_bonus-cold_start_01.json",
-      "sha256": "3b086050eadb60fb14f7fb2aeaf9ca8a0e5dcf0ade0dcb63f16e30614019e091",
+      "sha256": "56251fcecec6d46b82588050975866cc1e783fd2a3913046cc0a501ab0754ed9",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -137647,7 +137647,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M06-transform_dialogue_2_end-cold_start_01.json",
-      "sha256": "e6b49bbf62a95e744fbe7806f2f09e0e0393ca01d322f91fa772251095113bbb",
+      "sha256": "20f413cb9b95a6a351508762ae5c7ae5b4ba68eb37ad78c0103426f8605d763f",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -137666,7 +137666,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M06-transform_dialogue_2_number-cold_start_01.json",
-      "sha256": "70ba05fd48eb170a503c9543fa6d66329afa5f53504dc207497cc5c55524b630",
+      "sha256": "f7300eab7344e707ce43e17620b080bc7b56c1239440feb16bbbb54f5eaa8636",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -137685,7 +137685,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M06-transform_dialogue_2_start-cold_start_01.json",
-      "sha256": "291c33f3d5df25d4df614edb9d2cfc6d31d45f41ce3d5525973ecc9a0fdc4620",
+      "sha256": "1b0fa1218c712c4ef96e695a69599c5b38eb2332476e9cac515dceb7857f9c55",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -137704,7 +137704,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M06-transform_dialogue_add-cold_start_01.json",
-      "sha256": "37ecbd1593a697b174b3cfd77c2dd16d4996074335a74f3c748710cc5386714a",
+      "sha256": "c017db3089e8c88326f0334cf267d34fe72aa172ac97986a8e03b6346f1fdf40",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -137723,7 +137723,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M06-transform_dialogue_clear-cold_start_01.json",
-      "sha256": "beff10c381cd6bb740829538d66f604ea540d52a2ad6ce5fe8c9ada8bda193f2",
+      "sha256": "842860d8cdaaf311a972ddba8fcc1bf36e7fa03063be54caa0fe5102e8cc05f0",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -137742,7 +137742,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M06-transform_dialogue_end-cold_start_01.json",
-      "sha256": "76f790cb2b0d1502d68d81a34dedbaffcf1e541d284de874fa93604a1bb551ae",
+      "sha256": "a85f80007bcccad2616913d7e093472f32a58612e720df1d8e4122507caf5ddf",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -137761,7 +137761,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M06-transform_dialogue_number-cold_start_01.json",
-      "sha256": "585f0749c726043b8705606c976919f9dcca40a400d1eacd5542cc0398fec9f4",
+      "sha256": "ffccedfc5b54e5dd2badb911ed081a765d60288103bd334ff8f001edad2717a3",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -137780,7 +137780,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M06-transform_dialogue_start-cold_start_01.json",
-      "sha256": "18592a3707b6857631b78d87d34a9b8b8a255072d6d72746cc1c217edc79a386",
+      "sha256": "f37f8444ba3cde2f84d6cd9da7ff9a0cc6acdafe8df57a1cf2f149ec7f57c1ad",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -137799,7 +137799,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M07-distance_correction-cold_start_01.json",
-      "sha256": "5337c8c9cb901f6b9212661bf2a86dfa4229403c650a473507eb74c4a3f8d6ac",
+      "sha256": "8c051ac1eb3bad847b29d583a4278efeae7100b1b4b579b05b8a1b243e47eeb2",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -137818,7 +137818,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M07-hit-cold_start_01.json",
-      "sha256": "f4f311b0fc29db64f25a67e774f59412d1821d14815bdfe3884600e92a69bad6",
+      "sha256": "7bf31f2071fcbaa4febefaba6daae1cb3c9cc583d96a248e08f7ad7c2ab9d1fe",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -137837,7 +137837,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M07-max_range-cold_start_01.json",
-      "sha256": "8433b0f7c630db28f27042ff9ab54373618fe9dd71d2dd3b92f4d745e57da3fe",
+      "sha256": "5b515cae5dee681fab690411ab872d77dc4e631b0cef383cdb0305f68c4f2471",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -137856,7 +137856,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M07-name_token-cold_start_01.json",
-      "sha256": "63f3109e66d751bb20d94f839d07a2a1aed91b9e5a89c7c53a58a6143e673bd6",
+      "sha256": "07e6fb00ede0eef6be6a155d7d674c06aecde1d2158a3e1f3890eb0c85a2e467",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -137875,7 +137875,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M07-power_air-cold_start_01.json",
-      "sha256": "9aa2cdc75b7d7751c504260e3ffd6003b9bff9052c1d988ecb46a0e4ae4b9b56",
+      "sha256": "850c3ccf25c933fd96a6811b57665e0ede72f93da59a80a8bf67b99ec133a763",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -137894,7 +137894,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M07-power_land-cold_start_01.json",
-      "sha256": "98d662315d5bae016220f32d29b874ac37b45f5078d0a135c9c62bfb33341de1",
+      "sha256": "1cb40538171730e30ac72ee38b1906b14ab446ad0a266c65ca280dcd1660906a",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -137913,7 +137913,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M07-power_sea-cold_start_01.json",
-      "sha256": "565ba2724d9707147059c7153ad11d4f21c0b50e0b80cd2b245f612022c8d609",
+      "sha256": "8834c0160f71e135f4d1e4a2f078560b88bcd20f22150f6147956d234e7b15ae",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -137932,7 +137932,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M07-weapon_skill-cold_start_01.json",
-      "sha256": "b3b04017958ebe5fe495c2c12eb63588f51a7bce1dad69f0c4cac47eeeb31d79",
+      "sha256": "68ba964a2b967ccfb61c22a3c63fc9afe15e7a853fb747fe6775bd957ae1a095",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -137951,7 +137951,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M08-battle_00_row000_variant000-cold_start_01.json",
-      "sha256": "628384697d6ac1060635cc3aa92b868e79d5f45f1e17b425d38f75a1893e746e",
+      "sha256": "f66215e0bffd9400062a01e101fa3d7a411897331b2025d1c7c6c5afc762269e",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -137970,7 +137970,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M08-battle_01_row000_variant000-cold_start_01.json",
-      "sha256": "adf46cb8c24ee65f601ec96841ba88fca13a29ca5462e9b389f9e6fc33e7e850",
+      "sha256": "a80b28236912938f2d79ab126fc9f101c7b5b3420727dd9a95836a52162a0d22",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -137990,7 +137990,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M08-battle_04_row000_variant001-cold_start_01.json",
-      "sha256": "1aee50a7ad18c7272c5bf0123a4eaff9162e0b1ed73af48bf4b75feed5d58ec3",
+      "sha256": "59f026b146b6a6638a86a1dd1890f35d494190f26e077d5d73229d49393f5f19",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -138009,7 +138009,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M08-battle_05_row001_variant000-cold_start_01.json",
-      "sha256": "6ccb5bf26808d3ce0bda0a0b87f5adecf624132f764e7d4334b919b02d78156d",
+      "sha256": "94e1dd1dd2b24cb8853708ef70d21a53ee1b4cdb37fe6e102428c34a098e0d5e",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -138029,7 +138029,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M08-battle_07_alias_row000_variant000-cold_start_01.json",
-      "sha256": "aa79239cc76d8cc8a507bd90618c3e54a048fd4150271e6d3b9a50fcd2f1b1f1",
+      "sha256": "a8f122a2ce0d4e918206702fe86eb530200e42ea666832636e602f88726605f3",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -138049,7 +138049,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M09-distance_first-write.json",
-      "sha256": "7e490eeafa19348aa84d06adcd93ff130ad3d165fbfe0708eec410beb64d8b47",
+      "sha256": "7a626359fa2cb1e2255e22030d7b0c96c31d0ca584a5fba3967be2dc04397d97",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -138068,7 +138068,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M09-distance_last-write.json",
-      "sha256": "1ec15eee11a7634f9605f3781242dbc7c3595a1ae7c55ae6d4e8260ee0a9461a",
+      "sha256": "ef18ae63f6780b90dc50ec6c20efd7d128a211b944fd705aebf9192ac4ed3964",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -138080,39 +138080,73 @@
       "removed_normalization_count": 6,
       "pending_reason": null
     },
+    "M09/experience_level_2/cold_start_01": {
+      "module": "M09",
+      "field": "experience_level_2",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "expected_noop": true,
+      "archive": "M09-experience_level_2-cold_start_01.json",
+      "sha256": "b3fa19bc483c8ab5ffc4bc470997898857555aa68fbc67a0cd8c05cc04af3854",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 36025,
+      "removed_normalization_count": 4,
+      "pending_reason": null
+    },
     "M09/experience_level_2/write": {
       "module": "M09",
       "field": "experience_level_2",
       "case_id": "write",
-      "case_kind": "discovery",
-      "expected_noop": false,
+      "case_kind": "golden",
+      "expected_noop": true,
       "archive": "M09-experience_level_2-write.json",
-      "sha256": "dcf0a3982821fd902858760e77c3053085e01f72fa9428b2c66ded603ac70070",
-      "passed": null,
-      "expected_known": false,
+      "sha256": "dab4b170534a3d0a8b13a5c71bd070a35c23f1af2e348e666f9bc053c9f1884e",
+      "passed": true,
+      "expected_known": true,
       "required_offsets": [],
       "optional_offsets": [],
       "unexpected_count": 0,
       "changed_count": 6,
       "removed_normalization_count": 6,
-      "pending_reason": "发现型用例：存量 expected_offset=0（写入偏移未知）且重开读取值不等于请求值，需在线采集补证"
+      "pending_reason": null
+    },
+    "M09/experience_level_60/cold_start_01": {
+      "module": "M09",
+      "field": "experience_level_60",
+      "case_id": "cold_start_01",
+      "case_kind": "golden",
+      "expected_noop": true,
+      "archive": "M09-experience_level_60-cold_start_01.json",
+      "sha256": "9d2d9b51af2df1583741d3fc847754dee9ab18bd0225311c44db8af3e128bd66",
+      "passed": true,
+      "expected_known": true,
+      "required_offsets": [],
+      "optional_offsets": [],
+      "unexpected_count": 0,
+      "changed_count": 36025,
+      "removed_normalization_count": 4,
+      "pending_reason": null
     },
     "M09/experience_level_60/write": {
       "module": "M09",
       "field": "experience_level_60",
       "case_id": "write",
-      "case_kind": "discovery",
-      "expected_noop": false,
+      "case_kind": "golden",
+      "expected_noop": true,
       "archive": "M09-experience_level_60-write.json",
-      "sha256": "29c4c5e364243f4762296ca71b2b182e19fa9d9d782a63f726225f024b20e19f",
-      "passed": null,
-      "expected_known": false,
+      "sha256": "d221d35e9f8ab84b98a25510c29986df3d9855aa58a143fab42a60c782811c88",
+      "passed": true,
+      "expected_known": true,
       "required_offsets": [],
       "optional_offsets": [],
       "unexpected_count": 0,
       "changed_count": 6,
       "removed_normalization_count": 6,
-      "pending_reason": "发现型用例：存量 expected_offset=0（写入偏移未知）且重开读取值不等于请求值，需在线采集补证"
+      "pending_reason": null
     },
     "M09/level_cap/write": {
       "module": "M09",
@@ -138121,7 +138155,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M09-level_cap-write.json",
-      "sha256": "19157c0c9badc4b5c99913656d9b87c7a3b79afed320922eba2aa4f8281052b1",
+      "sha256": "649163407ad241154bf1ec00f259f64cbbd309c0439bc8ce8b6d173600c3b266",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -141917,7 +141951,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M10-item_price_01-write.json",
-      "sha256": "8ba05e6399622196f794aae65368b5dfb04d05abde5e9d58cb2e71da10cc0931",
+      "sha256": "7af3c1e19138c30adb983f7fb744f52ec922663258f03b69caf11abd34dede09",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -141938,7 +141972,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M10-item_price_02-write.json",
-      "sha256": "2d8e918713bf81ed3b81cded06685de52a8ebb215e2dd9016b5bef3ea3dc227e",
+      "sha256": "2d4d01c9d0584b105f32c590b31fc02dbd57934850860395ae1e2239c04406d7",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -141959,7 +141993,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M10-item_price_03-write.json",
-      "sha256": "261e089cfbec0d216ee0abffda62b0b5bd78012cb8a5bae2fe6441f3e6fe90b2",
+      "sha256": "cfa08849e927ac8597500dd131559b48ef4dfe28c9784d958d68cd928585286d",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -141980,7 +142014,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M10-item_price_04-write.json",
-      "sha256": "f28563e464822fccb3dd5e139476fd73ea9618392b8def297eb6f8a07c0fc258",
+      "sha256": "e21de64f5f921aa2caf3ab839c5db6eac03134dd1230147bda07192d0b0b301f",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -142001,7 +142035,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M10-item_price_05-write.json",
-      "sha256": "ee96700028c9eb0afbd72306de912319f200588c514edb57409133e557e7ec90",
+      "sha256": "da54f1a84c3cf25ec854106cf44a2d5d26a2dbff517fc2d947c1edf0512fa716",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -142022,7 +142056,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M10-item_price_06-write.json",
-      "sha256": "09a999167956cad51151568895484cb061530224b8a6db1cb2ebc1c9f915b213",
+      "sha256": "e580eaa295b3d61f2b210c23d01ab6a7db40311fb723ceba428ef5bed61f5a69",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -142043,7 +142077,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M10-item_price_07-write.json",
-      "sha256": "f229bc783aeff0c09c89c0298ec753bf519d35c1443fbd7307d520e27b62d846",
+      "sha256": "ec29c4f75af640026bdb760cbaca82b4757aaaec23d1376a25a03cc20434ae9b",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -142064,7 +142098,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M10-item_price_08-write.json",
-      "sha256": "cdaddd36624cde034703416e417c25575095aad16edeae43ac5562c30a2b0ebc",
+      "sha256": "3433afcbd8129bda733405ba51cf3610cbbdd0b6d40206fd1c9a76cd342790d6",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -142085,7 +142119,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M10-item_price_09-write.json",
-      "sha256": "9ea59f95665b13356137e70aef9686c2e9c0491da7ddfa49634c0bfb2f68eb2d",
+      "sha256": "c96f5453640045f1250044faf7cd231a4be72715431e9ecd760e9ffa6b498e4a",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -142106,7 +142140,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M10-item_price_10-write.json",
-      "sha256": "17de41f422d293ef732cbb923e452700be3278078940614331423dccd82f73ad",
+      "sha256": "fca465495d1b434d28627586954e2ad8eb0a72d8004e8d446c454fbd272e74f2",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -142127,7 +142161,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M10-item_price_11-write.json",
-      "sha256": "92dd420193f4988599d384fa6797be29d5db09b6a262094f04d19220b8b0d2a3",
+      "sha256": "894241b134e816e69911367660b3e5b6697080a38cfeda9fabe64178157814ef",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -142148,7 +142182,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M10-item_price_12-write.json",
-      "sha256": "3c66078b9f03fe76cd9e7808cf5c91d2a3a384bcb171b92a53ffe23d9269d5c9",
+      "sha256": "d6f708b362004e6ec4724f741418e48a80fc4d41528a80f3103364d0068be58e",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -142169,7 +142203,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M10-item_price_13-write.json",
-      "sha256": "5fc9967e9a1add4d3e7edb4c50d64e7a5d15d6f4332a1730f0b13e8755f93873",
+      "sha256": "854bd535515eac483cb92cc3f6066a5d36c1955af1026429da42853c17fbb06d",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -142190,7 +142224,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M10-item_price_14-write.json",
-      "sha256": "57db8608e62947f6018661b8620b3f65b860fdecc24c736514619241cbb3e0c2",
+      "sha256": "6429fb9064492d2c5e74cfcb968021274464c0b1a527088d969750646ee05c07",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -142211,7 +142245,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M10-item_price_15-write.json",
-      "sha256": "97bec56c5b944dd44d10aa8dbe8b218674d33aa7622189f72c35d44a7fb1f938",
+      "sha256": "34af280ed5128132b6eec15aedc8f151da769d86a2428de8f99aeee7dd9d4a65",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -142232,7 +142266,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M10-item_price_16-write.json",
-      "sha256": "089ab491d1cbaf714854c2320cbd088516cf8cf0bd63f16e139e98b43ba2d936",
+      "sha256": "7e30652450519fe9a9b839f13453b1b0a85101f246fe24af2fa0ecefbac5afeb",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -142253,7 +142287,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M10-item_price_17-write.json",
-      "sha256": "428a330028544f8ca17367f599e92cfd93b595a96930b117d0c2fbbf468e7b44",
+      "sha256": "54c7da21bcf176945db393405c2a8dfe2d7b0925e8903d71aead4445bad1f6c8",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -142274,7 +142308,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M10-item_price_18-write.json",
-      "sha256": "6c40b87cb71b38e132ec1842d4a45ff9456b0493f4d2247e5b10163369de7c30",
+      "sha256": "bc6da571e3be878ebf17722b6d6c7aa222b69e45365a749e3cb97f44b4fed745",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -142295,7 +142329,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M10-item_price_19-write.json",
-      "sha256": "ceb9c0e842bd2ce19fbc24e0d84e24519d3df0a6e96ce219a7ba1f3ce6f5cec0",
+      "sha256": "2e4cc6d21fd6cceb42deedb749dfca0f8319adea0fc6aaf3b36b643a02180d5c",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -142316,7 +142350,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M10-item_price_20-write.json",
-      "sha256": "eff35b774fd6cddb99bf3eed3315c3e6017c1eb828758353173062b12a09b04e",
+      "sha256": "d1876b87a7ab95a6ad25d774e96aa273db21a0377f4c10956dfec9c43342a25b",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -142337,7 +142371,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M10-item_price_21-write.json",
-      "sha256": "63be8871d6e8954e1fb4f0c6f7069c02b006d70d6ba01cd604d6db7e64c21bbf",
+      "sha256": "2fa29da0e0067b22029ed5de2c5c5fd18a924a398c72cb30121c42e8aa8fb396",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -142358,7 +142392,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M10-item_price_22-write.json",
-      "sha256": "bd305ff3d64e60052612c750c57f9fd8e611168954957cb6af96720f40adedc5",
+      "sha256": "d4748d1a61b7e5ee225ba3a2fc866f52b8b6d5c70b682f917fc54f4a2e34c2e7",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -142379,7 +142413,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M10-item_price_23-write.json",
-      "sha256": "88f171f75743a2bb64cf9c566331da5cbf7b18ba9e1105bd573dca556dfe1307",
+      "sha256": "86e74bc313bf3fde44f0396dfbb1d4b56da2c1fc7636e468422d107fc195bda3",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -142400,7 +142434,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M10-item_price_24-write.json",
-      "sha256": "e4cc3e864093f06cd02ace096223f14468947620a919ca22d531d7ddfcea66c2",
+      "sha256": "c54e76780abf2b0ff1fea6c1aa4ab52f88f8a3b8bfd0cf3bd72cc822fa5d316a",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -142418,20 +142452,18 @@
       "module": "M12",
       "field": "sprite_anchor_x",
       "case_id": "cold_start_07",
-      "case_kind": "discovery",
-      "expected_noop": false,
+      "case_kind": "golden",
+      "expected_noop": true,
       "archive": "M12-sprite_anchor_x-cold_start_07.json",
-      "sha256": "7bcba8b6dcd1fdb7e4a0c382cd6357f3a0b0b2a60ac1ef8229de229f0f3f7a5e",
-      "passed": null,
+      "sha256": "d37644e7870711c43c19ebf537cf786a67d3d65e3bb56928964ce59a4d285a6b",
+      "passed": true,
       "expected_known": true,
-      "required_offsets": [
-        203906
-      ],
+      "required_offsets": [],
       "optional_offsets": [],
       "unexpected_count": 0,
       "changed_count": 0,
       "removed_normalization_count": 0,
-      "pending_reason": "在线单字段采集：保存后关闭进程，再以不同 PID 冷启动重开"
+      "pending_reason": null
     },
     "M12/sprite_code_first_tile/cold_start_01": {
       "module": "M12",
@@ -142440,7 +142472,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M12-sprite_code_first_tile-cold_start_01.json",
-      "sha256": "b61ed60e42d20317e91126dc39040997be05dcbe41f49b2f20adec8a065ec15a",
+      "sha256": "f4ad248978a248bab1d722879264fd6ecdaf380d7ba9c70383b938e6ca8624f0",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -142459,7 +142491,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M12-sprite_code_first_tile-cold_start_02.json",
-      "sha256": "388c5f41e3d26e59fcf79997d2c0f88e7e418679c4b297968598e70232280ae9",
+      "sha256": "5a2bd12c5b512df405e615ac9bc3e9f7e696dcdab1e9d3de03f4fb5ae7056387",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -142478,7 +142510,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M17-damage_defense_divisor-write.json",
-      "sha256": "408f98a37d3d91b5d4ea34e6d6188858369ebdd9c748d40098e56955be458c48",
+      "sha256": "8fbda004d77e08eec244a27c2c41ee91a3384f0b2dab8e8420061fad71318c6c",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -142497,7 +142529,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M17-damage_defense_multiplier-write.json",
-      "sha256": "d9a77290c4976c8458d5ac3cd7acc8abe1e3c0440672bbeada9231fcd06ffab7",
+      "sha256": "387564d75e2a9c3659e56aad9a3364c8f0fb7eb32c53b11fa01cd982ec714a33",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -142516,7 +142548,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M17-damage_strength_divisor-write.json",
-      "sha256": "e5faeecac57cb0df03d5e6baff91337ede0e68d2ba40a958d1998b8d758a5ca3",
+      "sha256": "940df60e2e1b79599b238230b40741f08b8b0f454d57d1626250694d0cab3dcb",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -142535,7 +142567,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M17-damage_strength_multiplier-write.json",
-      "sha256": "75ce831929d5e1f9ca221cee131390e4b86ff96108b92517b5d64acfb9722dbc",
+      "sha256": "2be990319ad6128127925297363e40d4e725476660ff31a648ab88ea6832e4e1",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -142554,7 +142586,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M17-damage_weapon_multiplier-write.json",
-      "sha256": "29acbbbf76e6a9664ed785127bf5b1ff23b93f8f47145b110afe286146494137",
+      "sha256": "8e24a6da4a5b6d63be6470ba693684db22bb22c42a3b2c2676eb3a4ecfe06e68",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -142573,7 +142605,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M17-double_hit_attack_percent-write.json",
-      "sha256": "c450b710bf339b1ef804039eb867d2dd82d957e2753ba2724f613df9e56d9400",
+      "sha256": "0fa99ecd4343ac63b6592f690d88619c390da71ac137833c831c67cfbdf8b32e",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -142593,7 +142625,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M17-double_hit_bonus-write.json",
-      "sha256": "e4cf46590eaff825f00daa960941760af75bf2a4fab1a9152795cbb09bad7532",
+      "sha256": "15d11d770286f0a462c02e2418969dde712cec9f4d78343625b1cc6a848b344e",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -142613,7 +142645,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M17-double_hit_defense_percent-write.json",
-      "sha256": "cb6ec94d77976971b0960f5ad0a6e3891ad17f47d10db1a862b31c682ae20637",
+      "sha256": "fa56aab3f1e65a42a4e219e79ab1fc676fbdd0b5fba386659277ba848ec69137",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -142633,7 +142665,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M17-hit_threshold-cold_start_03.json",
-      "sha256": "4124beb51ca655c7bf304aa012da8510091b9c6df566b4669a8a7e80be1fa8dc",
+      "sha256": "71b6141daa8aa8873d866bb2a094eac5ed891ae46d38cf3571f34f09e42dba8c",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -142652,7 +142684,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M17-hit_threshold-write.json",
-      "sha256": "0e81d25f4008cacbd0b73d823c6c2d2afa07023367698d395908ec0af3cde958",
+      "sha256": "987beb754dd89f81d3b188b7b7819cb0e33edb731feee3dfc7d46abf5f9d0dd5",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -142671,7 +142703,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M17-item_01-write.json",
-      "sha256": "6c4d6bb8b242f2f2315116f0526a3948c977d0bd99db96df07f59c5934e8f247",
+      "sha256": "ece45c5709b0f26acce466284315b2209118a7e1c5558f854343857aa50cf153",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -142690,7 +142722,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M17-item_02-write.json",
-      "sha256": "219512a1b59f6c45c6e85d02c230bc4757af726e9bfdd056ee331d7aa85515a1",
+      "sha256": "83a9fb94317afc1ee4e6554969e23feda03de25ec9c58aed80b30da2adb0af3f",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -142709,7 +142741,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M17-item_03-write.json",
-      "sha256": "91b9a5b7870e758aae6b038cddcc47905201bc349f94479d57d282b2d93e8c54",
+      "sha256": "649398ea7396a9c519faef8bc277c279cf1c4e6e0bc862f6e1b50341ecdf48b5",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -142728,7 +142760,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M17-item_04-write.json",
-      "sha256": "1b2fbfdf0ccc58b27ed880075df39f1dd6a3a5458494b5018f5b00d754682529",
+      "sha256": "80e45e509ea768d503c2e625e1b9be57d983453c8595c950d4878ec582bf45ea",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -142747,7 +142779,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M17-item_05-write.json",
-      "sha256": "9bf798a5b867e1b96523b8fb2d7386030b2ecd3034917e79d2339d97be97ddc2",
+      "sha256": "a2d056061a4272b49e38ea919180d35f540136e9a03fa03b58d0d73b62117eb6",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -142766,7 +142798,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M17-item_06-write.json",
-      "sha256": "3e8f99ac19cd6e3eb6fe9c38f4bd4e4bf2b9fc8dca3aae11bfe35d32b87df506",
+      "sha256": "1e2ca4df23760658bd7f57be24e7acd9a7aa147aefdc8d5532329dc0f0c7f53f",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -142785,7 +142817,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M17-item_07-write.json",
-      "sha256": "8234abcafc62ce383e62ce4c23ddf025a1af900f2a9b72caaca1d7b3a51225ca",
+      "sha256": "ea15edb0dbadeb82c436f99f6d619d133e4f2a7ada5bb7c5559ff22f1f7eea46",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -142804,7 +142836,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M17-item_08-write.json",
-      "sha256": "71f21c14f2085aa0521649b7691eacbf76d57e5598f846dc3d4e17019bb457cc",
+      "sha256": "39f1065d8919425205dba1435e635d5cc5a3211e8da3b41270034106df36d705",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -142823,7 +142855,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M17-item_09-write.json",
-      "sha256": "00e29a5f37cd1aa7b627ac721fb9807964ff169ccce686248d24e69d7a16db84",
+      "sha256": "ef7f8535e25f61ca3728e4e13b53ef1dc4d257fd3c3c0201c02df594948273e5",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -142842,7 +142874,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M17-item_10-write.json",
-      "sha256": "21eade235ae483982a98b08da9cba2cff4b722eecbc0e5db50ef9b19a64826fe",
+      "sha256": "b36ad0de4bfa1a0359b0a71e8047e284b2c4eb3e825ec0f3c5c7c48de3bd842c",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -142861,7 +142893,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M17-item_11-write.json",
-      "sha256": "544f3dc8bd4b7c8011d12fe063c3e193a5fa38312a9d8037db12981078870f38",
+      "sha256": "0681cce94f4918ab379547495c4141109c40a6ba05e82b8a4e1dd79b73929b70",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -142880,7 +142912,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M17-slot_1_character-write.json",
-      "sha256": "effb1e95654c5ca568df755419e3c82d0ab4a698c7ec1d363da4cecf0ebf406f",
+      "sha256": "1d18e877d80313cdcfe5d66cbc6731fd7dcdb28407dcb58df410a3962aa522dc",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -142899,7 +142931,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M17-slot_1_unit-write.json",
-      "sha256": "fe6d0fb931d880dbce30bfab57b67f4723107ca8e0835b331846bf663b07d50c",
+      "sha256": "c64fbc0ebdc7bcbc1b8374e6d209761492c6da83371f81bd2282116766f86153",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -142918,7 +142950,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M17-slot_2_character-write.json",
-      "sha256": "4671ccc81fc96662eb2a133e90a0803e8843c01b0316db55837dec0b24dc8675",
+      "sha256": "fdd7beb65e609a03e2a2409f0ef831a93b78f027920cc51b87980fe343ff3d08",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -142937,7 +142969,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M17-slot_2_unit-write.json",
-      "sha256": "e15890ece696f438d36be5ffe7863e5b4229c036baa2b62b18bdcffdf8c61377",
+      "sha256": "707fac5034b3f521fc6009755ef57660108ed27f0e446ea480d69bf18d88123b",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -142956,7 +142988,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M17-slot_3_character-write.json",
-      "sha256": "8cc2b88798b66589df9b37c8f8e82e490f40869c3d080f54ec0ee0d2fa782b73",
+      "sha256": "c52b1ab3ef75ff26ed3cf07c5e781a4e92451d048429e6c0b41ef205af8704da",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -142975,7 +143007,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M17-slot_3_unit-write.json",
-      "sha256": "2d9f7b8f0ba53b395305ad1884615fee393b6edc903c216803dd00da4b52bc93",
+      "sha256": "1d919897f1276a40bef37afabcea0404730335829204a05bcbe64bca7cb5539d",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -142994,7 +143026,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M17-slot_4_character-write.json",
-      "sha256": "da4ebcdc2168b0e1244984ec7259f7e2ad28eae2295d95e184445b118b116bf8",
+      "sha256": "16e3f78a9aed7ab759a746d04b5d3b4e1a7e6d31e0ed87e6c998a55ef9315cca",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -143013,7 +143045,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M17-slot_4_unit-write.json",
-      "sha256": "1fcd4fe3dd96f3427adce57f297074c703b0defb22e24dfa2c0cafe8e9bc7b3e",
+      "sha256": "dfd479cdc5cf198e3fc00106db7bcd475f4c49b29ec26437fb3d2ceae569471f",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -143032,7 +143064,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M17-slot_5_character-write.json",
-      "sha256": "feec49cedcd4e7ebb1f175f08b9e5f4fa22b22e0ac5f08543e13abc78f9bf6a8",
+      "sha256": "55f32e2c2ee0c72e4a461587257fdc8b36b691033475f68281754b366d1fc071",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -143051,7 +143083,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M17-slot_5_unit-write.json",
-      "sha256": "206133439b7a5471afa5ec9c3910caed92901b291ba97c1a03e282d6c2f6c394",
+      "sha256": "30a8c095ade4f825cc1cccef10b7dd913476a040db754b4b4ff331ce99181def",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -143070,7 +143102,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M17-slot_6_character-write.json",
-      "sha256": "9d6e846537a48ac7cdc65588bb2096fb02accddc4e20a2032b3459c72a71981c",
+      "sha256": "005520ce9c17616a677c3a09c4200c3d35763e3e60d843ae67e5332bebcb62ea",
       "passed": true,
       "expected_known": true,
       "required_offsets": [
@@ -143089,7 +143121,7 @@
       "case_kind": "golden",
       "expected_noop": false,
       "archive": "M17-slot_6_unit-write.json",
-      "sha256": "9b116e48698b41c12bc292133f4be80eff4cdf5035318c3fb6caa930e7366461",
+      "sha256": "e81ec4b085c2d589a20420f370996387318b858558569c2bdc9c02b703e8b187",
       "passed": true,
       "expected_known": true,
       "required_offsets": [

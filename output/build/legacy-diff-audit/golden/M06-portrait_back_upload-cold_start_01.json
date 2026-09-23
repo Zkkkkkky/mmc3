@@ -86,6 +86,7 @@
   "reopen_value": "e0f7789976dae11ee84c0f6f74de69dcaec66c953515bd8ebcecfa167354db62",
   "original_value": "1c9fdefc3fedebedbd65c52d2ddf212c5729d5076e2086186321bb204caef309",
   "reopen_matches_request": true,
+  "reopen_matches_expected": true,
   "reopen_mode": "new_process",
   "expected_offsets": [
     561680

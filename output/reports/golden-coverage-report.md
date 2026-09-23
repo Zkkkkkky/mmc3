@@ -7,8 +7,8 @@
 
 | 指标 | 数值 | 目标 |
 | --- | --- | --- |
-| G1 黄金对照覆盖率 | 230/241 = 95.44% | >=95% |
-| G2 逐字段差分通过率 | 233/233 = 100.00% | =100% |
+| G1 黄金对照覆盖率 | 233/241 = 96.68% | >=95% |
+| G2 逐字段差分通过率 | 238/238 = 100.00% | =100% |
 
 > G1 分母口径 `denominator_scope=registered_fields`：当前分母为 field_registry.json 登记字段数；最终口径为参考版全部可编辑字段数（主文档第 4/5 章字段清单，M00 第 5 节统计职责），全量采集完成后需以全量字段数重算分母
 
@@ -18,11 +18,11 @@
 | --- | --- |
 | 注册字段（登记用例） | 241 |
 | 已归档字段 | 241 |
-| golden 用例 | 233 |
-| discovery 用例 | 11 |
-| 通过 golden 用例 | 233 |
+| golden 用例 | 238 |
+| discovery 用例 | 8 |
+| 通过 golden 用例 | 238 |
 | 未通过 golden 用例 | 0 |
-| 待解释用例 | 11 |
+| 待解释用例 | 8 |
 
 ## 待解释用例清单
 
@@ -36,9 +36,6 @@
 | M05 | icon_upload_bmp | cold_start_01 | discovery | 在线单字段采集：保存后关闭进程，再以不同 PID 冷启动重开 |
 | M05 | main_clear_body | cold_start_01 | discovery | 在线单字段采集：保存后关闭进程，再以不同 PID 冷启动重开 |
 | M05 | main_clear_fragment | cold_start_01 | discovery | 在线单字段采集：保存后关闭进程，再以不同 PID 冷启动重开 |
-| M09 | experience_level_2 | write | discovery | 发现型用例：存量 expected_offset=0（写入偏移未知）且重开读取值不等于请求值，需在线采集补证 |
-| M09 | experience_level_60 | write | discovery | 发现型用例：存量 expected_offset=0（写入偏移未知）且重开读取值不等于请求值，需在线采集补证 |
-| M12 | sprite_anchor_x | cold_start_07 | discovery | 在线单字段采集：保存后关闭进程，再以不同 PID 冷启动重开 |
 
 ## 逐字段明细
 
@@ -225,8 +222,10 @@
 | M08 | battle_07_alias_row000_variant000 | golden | true | 2 | 0 | 0 | M08-battle_07_alias_row000_variant000-cold_start_01.json |
 | M09 | distance_first | golden | true | 7 | 6 | 0 | M09-distance_first-write.json |
 | M09 | distance_last | golden | true | 7 | 6 | 0 | M09-distance_last-write.json |
-| M09 | experience_level_2 | discovery | - | 6 | 6 | 0 | M09-experience_level_2-write.json |
-| M09 | experience_level_60 | discovery | - | 6 | 6 | 0 | M09-experience_level_60-write.json |
+| M09 | experience_level_2 | golden | true | 36025 | 4 | 0 | M09-experience_level_2-cold_start_01.json |
+| M09 | experience_level_2 | golden | true | 6 | 6 | 0 | M09-experience_level_2-write.json |
+| M09 | experience_level_60 | golden | true | 36025 | 4 | 0 | M09-experience_level_60-cold_start_01.json |
+| M09 | experience_level_60 | golden | true | 6 | 6 | 0 | M09-experience_level_60-write.json |
 | M09 | level_cap | golden | true | 3778 | 6 | 0 | M09-level_cap-write.json |
 | M10 | item_price_01 | golden | true | 7 | 6 | 0 | M10-item_price_01-write.json |
 | M10 | item_price_02 | golden | true | 7 | 6 | 0 | M10-item_price_02-write.json |
@@ -252,7 +251,7 @@
 | M10 | item_price_22 | golden | true | 7 | 6 | 0 | M10-item_price_22-write.json |
 | M10 | item_price_23 | golden | true | 7 | 6 | 0 | M10-item_price_23-write.json |
 | M10 | item_price_24 | golden | true | 7 | 6 | 0 | M10-item_price_24-write.json |
-| M12 | sprite_anchor_x | discovery | - | 0 | 0 | 0 | M12-sprite_anchor_x-cold_start_07.json |
+| M12 | sprite_anchor_x | golden | true | 0 | 0 | 0 | M12-sprite_anchor_x-cold_start_07.json |
 | M12 | sprite_code_first_tile | golden | true | 7 | 0 | 0 | M12-sprite_code_first_tile-cold_start_01.json |
 | M12 | sprite_code_first_tile | golden | true | 7 | 0 | 0 | M12-sprite_code_first_tile-cold_start_02.json |
 | M17 | damage_defense_divisor | golden | true | 7 | 6 | 0 | M17-damage_defense_divisor-write.json |
