@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-23T00:37:59+08:00",
+  "generated_at": "2026-09-23T20:29:33+08:00",
   "passed": true,
   "delivery_status": "implementation_complete_guarded_scope",
   "conclusion": "M12 当前安全交付范围已实现：六表读取、等长动画/运行编辑、组图首图块动态黄金、78/86 个已核对调用点与 F-069 拼图播放通过门禁；背景 106 槽已全量分类并开放 69 条解释器已验证参数，三类预留槽复制和工程名称写回已开放。旧版 X/Y 非持久化及其余未证范围均保持只读。",
@@ -125,7 +125,7 @@
           "context_range": "0x038042-0x038054",
           "context": "0E 07 2D 14 00 80 A9 05 38 02 00 14 00 81 AB BB 80 49 80",
           "reason_code": "reference_value_conflict",
-          "reason": "资料集 page_325.html 记为 $3804A→$0C，当前 ROM 同址却是 $00；编号冲突，不能按参考项解禁。"
+          "reason": "资料编号冲突：资料记为 $3804A→$0C，当前 ROM 同址为 $00；不能按冲突编号改写。"
         },
         {
           "file_offset": "0x0384B0",
@@ -135,7 +135,7 @@
           "context_range": "0x0384A8-0x0384BA",
           "context": "03 A6 1E 0D 15 FF A8 05 38 02 10 19 03 2D 22 45 05 2B FB",
           "reason_code": "id_meaning_only",
-          "reason": "资料集只说明动画 $10 的显示含义，未给出该调用地址或可核对的完整前置序列。"
+          "reason": "只有编号含义：只确认动画 $10 的含义，尚无该调用地址或完整前置序列证据。"
         },
         {
           "file_offset": "0x03853D",
@@ -145,7 +145,7 @@
           "context_range": "0x038535-0x038547",
           "context": "03 A7 1E 0D 15 FF A8 05 38 02 10 19 03 2D 22 45 05 2B FB",
           "reason_code": "id_meaning_only",
-          "reason": "资料集只说明动画 $10 的显示含义，未给出该调用地址或可核对的完整前置序列。"
+          "reason": "只有编号含义：只确认动画 $10 的含义，尚无该调用地址或完整前置序列证据。"
         },
         {
           "file_offset": "0x038982",
@@ -155,7 +155,7 @@
           "context_range": "0x03897A-0x03898C",
           "context": "2D 1C 0A A1 8A 1B 92 8A 38 02 02 2D 36 00 00 00 39 03 0A",
           "reason_code": "reference_address_mismatch",
-          "reason": "资料集 page_325.html 记为 $38983→$02，而当前 ROM 调用起点是 $38982；虽疑似文档偏一字节，仍不把推测当精确地址证据。"
+          "reason": "资料地址不一致：资料写作 $38983→$02，当前 ROM 调用起点为 $38982；不把疑似偏一字节当作地址证据。"
         },
         {
           "file_offset": "0x038E68",
@@ -165,7 +165,7 @@
           "context_range": "0x038E60-0x038E72",
           "context": "00 14 00 4F 14 04 0A 05 38 02 14 06 03 3D 22 2D 14 03 19",
           "reason_code": "id_meaning_only",
-          "reason": "资料集只说明动画 $14 的显示含义，未列出该地址，前置序列也未在精神/战斗流程清单中复现。"
+          "reason": "只有编号含义：只确认动画 $14 的含义；资料未列出该地址，前置序列也未在已验证流程中复现。"
         },
         {
           "file_offset": "0x038EF3",
@@ -175,7 +175,7 @@
           "context_range": "0x038EEB-0x038EFD",
           "context": "02 15 1A E1 1A E1 2B FA 38 02 12 06 03 1B 28 80 36 1B D0",
           "reason_code": "id_meaning_only",
-          "reason": "资料集只说明动画 $12 的显示含义，未列出该地址，当前邻近事件指令语义不足以证明写入安全。"
+          "reason": "只有编号含义：只确认动画 $12 的含义；邻近事件指令不足以证明这一字节可以安全改写。"
         },
         {
           "file_offset": "0x03B9DC",
@@ -185,7 +185,7 @@
           "context_range": "0x03B9D4-0x03B9E6",
           "context": "60 AE D5 B9 2D 1D 03 55 38 02 37 3B 38 02 3D 2A 36 03 45",
           "reason_code": "embedded_vm_data_unverified",
-          "reason": "该命中位于 6502 子程序后的嵌入式数据段；资料集没有地址、编号或脚本入口的双重证据。"
+          "reason": "嵌入数据未验证：命中位于 6502 子程序后的嵌入数据段，没有调用地址与脚本入口的双重证据。"
         },
         {
           "file_offset": "0x03B9E0",
@@ -195,7 +195,7 @@
           "context_range": "0x03B9D8-0x03B9EA",
           "context": "2D 1D 03 55 38 02 37 3B 38 02 3D 2A 36 03 45 05 1B C8 B9",
           "reason_code": "embedded_vm_data_unverified",
-          "reason": "该命中紧邻另一处未验证命中并位于嵌入式数据段；没有已验证的调用链头，不能因连续字节外观解禁。"
+          "reason": "嵌入数据未验证：命中紧邻另一处未验证数据，没有已验证调用链头，不能只凭 38 02 字节外观改写。"
         }
       ],
       "reference_audit": {

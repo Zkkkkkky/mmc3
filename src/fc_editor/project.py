@@ -258,7 +258,11 @@ class ProjectDocument:
     def add_animation_label(self, kind: str, index: int, label: str) -> None:
         """Persist a project-local animation/rule label without changing ROM bytes."""
 
-        if kind not in {"map", "background", "movement", "sprite"}:
+        if kind not in {
+            "map", "background", "movement", "sprite",
+            "weapon_beam", "weapon_movement_1", "weapon_movement_2",
+            "weapon_picture",
+        }:
             raise ValueError(f"未知动画名称类型：{kind}")
         if not 0 <= index <= 0xFF:
             raise ValueError("动画名称序号必须在 00—FF 之间。")
@@ -302,6 +306,12 @@ class ProjectDocument:
 
         self._validate_base(rom)
         codec = AnimationCodec(rom.data)
+        weapon_label_counts = {
+            "weapon_beam": 0xFF,
+            "weapon_movement_1": 0xFC,
+            "weapon_movement_2": 0xFA,
+            "weapon_picture": 0xFF,
+        }
         result: dict[tuple[str, int], str] = {}
         for index, operation in enumerate(self.operations):
             if not isinstance(operation, dict) or operation.get("kind") != "animation.set_label":
@@ -310,9 +320,14 @@ class ProjectDocument:
                 kind = str(operation["animationKind"])
                 entry_index = int(operation["index"])
                 label = str(operation["label"])
-                if kind not in {"map", "background", "movement", "sprite"}:
+                if kind not in {"map", "background", "movement", "sprite"} | set(weapon_label_counts):
                     raise ValueError(f"未知类型 {kind!r}")
-                if not 0 <= entry_index < codec.count(kind):
+                valid_index = (
+                    1 <= entry_index <= weapon_label_counts[kind]
+                    if kind in weapon_label_counts
+                    else 0 <= entry_index < codec.count(kind)
+                )
+                if not valid_index:
                     raise ValueError("序号越界")
                 if not label.strip() or label != label.strip() or len(label) > 80:
                     raise ValueError("名称必须为 1—80 个无首尾空白的字符")
@@ -1008,7 +1023,11 @@ class ProjectDocument:
                     animation_kind = str(operation["animationKind"])
                     entry_index = int(operation["index"])
                     label = str(operation["label"])
-                    if animation_kind not in {"map", "background", "movement", "sprite"}:
+                    if animation_kind not in {
+                        "map", "background", "movement", "sprite",
+                        "weapon_beam", "weapon_movement_1",
+                        "weapon_movement_2", "weapon_picture",
+                    }:
                         raise ProjectFormatError("工程动画名称类型无效。")
                     if not 0 <= entry_index <= 0xFF:
                         raise ProjectFormatError("工程动画名称序号越界。")

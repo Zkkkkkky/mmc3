@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-23T11:09:58+08:00",
+  "generated_at": "2026-09-23T20:51:53+08:00",
   "machine_gate_passed": true,
   "implementation_complete": true,
   "user_acceptance_complete": true,
@@ -7,17 +7,17 @@
   "conclusion": "M08—M18 共 11 个模块的机器门禁与当前声明实现范围均通过；M12 已用参考动态黄金把组图首图块开放、X/Y 非持久化锁为只读，其余无安全协议或双证据范围继续门禁。M08—M17 已由用户明确按当前实现范围签收，M18 已由用户现场确认通过；既有只读、延期和参考不可达边界继续保留。",
   "formal_executable": {
     "path": "output/app/新DC篇完整修改器.exe",
-    "sha256": "E6E6184BAF3A884A4B977F993DFB80A1540DE82CA392A8EC3457E5A9138A2692",
-    "declared_sha256": "E6E6184BAF3A884A4B977F993DFB80A1540DE82CA392A8EC3457E5A9138A2692",
+    "sha256": "7E8BE4802BF639280FF28C66E9FA1707408BB49F75C796984037A1E0D61C6556",
+    "declared_sha256": "7E8BE4802BF639280FF28C66E9FA1707408BB49F75C796984037A1E0D61C6556",
     "hash_matches": true
   },
   "current_build_verification": {
     "path": "output/verification/m08-m18-current-build-verification-2026-09-19.json",
-    "sha256": "260D20DD476FA0A0ADE581E8B3B5998BF8C9CAFE379624B4BCC50AF60B11382E",
+    "sha256": "4A59F720063C4F749EBB7E5BBB2DA1D09E0B2F3C7498AFE8D3E72C91BBE8A68A",
     "full_regression_passed": true,
-    "full_regression_tests": 758,
+    "full_regression_tests": 769,
     "self_test_exit_code": 0,
-    "executable_sha256": "E6E6184BAF3A884A4B977F993DFB80A1540DE82CA392A8EC3457E5A9138A2692",
+    "executable_sha256": "7E8BE4802BF639280FF28C66E9FA1707408BB49F75C796984037A1E0D61C6556",
     "matches_current_executable": true,
     "current_build_click_smoke_performed": false,
     "mesen_runtime_passed": true,
@@ -92,7 +92,7 @@
       "implementation_scope_complete": true,
       "machine_gate_passed": true,
       "evidence": "output/verification/m12-animation-compatibility.json",
-      "evidence_sha256": "5536E10CE830E0498543F43A077EECDB01B66E832986D5DC2CA647D0AA8BF5CD",
+      "evidence_sha256": "7A14970C32C7A7E67D2DD4B84ED0B9387738B0EFD399FBE7280EE0C9A43A9AA6",
       "checklist": "docs/M12验收清单.md",
       "checklist_exists": true,
       "checklist_declares_current_executable": true,
@@ -125,7 +125,7 @@
       "implementation_scope_complete": true,
       "machine_gate_passed": true,
       "evidence": "output/verification/m15-attribute-calculator.json",
-      "evidence_sha256": "30F77C98100A679D470FFD5ABC4AA813DB919BF342C2CA7C0114773DC78CB39A",
+      "evidence_sha256": "22A397CF3BDBC6874F6A5EC8443712503B7B88E7640097C9520709995646781B",
       "checklist": "docs/M15验收清单.md",
       "checklist_exists": true,
       "checklist_declares_current_executable": true,
@@ -158,7 +158,7 @@
       "implementation_scope_complete": true,
       "machine_gate_passed": true,
       "evidence": "output/verification/m18-unit-export-verification.json",
-      "evidence_sha256": "9B06D7E814B1FBF0AC431102CDF94910D7947471D0AE92443989A917978C9215",
+      "evidence_sha256": "B63E485073DA9C17BC9DB05F3FC15C47F3D1FC98A152EC5AD8C5EB4B3E08145A",
       "checklist": "docs/M18验收清单.md",
       "checklist_exists": true,
       "checklist_declares_current_executable": true,
@@ -167,7 +167,7 @@
   },
   "blocking_reasons": [
     "M12 的 6 条无安全参数、31 条动态/不完整背景、三表任意通用搬移和 8 个已逐项审计但证据冲突/不足的调用均按需求保持只读；这是完成态安全门禁，不是待猜写功能。",
-    "当前正式构建已通过 758/758 全量回归和隐藏自检；Mesen 17/17 是推荐 ROM 运行时基线。Windows 控制接口本轮未暴露本机应用，因此可见点击证据仍沿用历史构建并明确标记不匹配当前 EXE。",
+    "当前正式构建已通过 769/769 全量回归和隐藏自检；Mesen 17/17 是推荐 ROM 运行时基线。Windows 控制接口本轮未暴露本机应用，因此可见点击证据仍沿用历史构建并明确标记不匹配当前 EXE。",
     "2026-09-21 用户明确确认 M03—M17 按当前实现范围通过；本报告据此记录 M08—M17 用户签收，不扩大任何模块的声明实现范围。"
   ]
 }

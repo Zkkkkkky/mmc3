@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-09-21T23:15:21+08:00",
+  "generated_at": "2026-09-23T19:02:51+08:00",
   "passed": true,
   "delivery_status": "implementation_complete_reference_and_user_pending",
-  "conclusion": "M15 机体/人物/武器/等级联动、完整命中/双击/伤害公式、M17 实时参数和 D6 禁用按钮均通过实现侧门禁；参考 EXE 逐行动态黄金与用户签收仍待完成。",
+  "conclusion": "M15 机体/人物/武器/等级联动、完整命中/双击/伤害公式、M17 实时参数和不写 ROM 的临时倍率编辑均通过实现侧门禁；参考 EXE 逐行动态黄金与用户签收仍待完成。",
   "rom": {
     "path": "output/rom/DC_kuorong_464K.nes",
     "size": 1310736,
@@ -132,7 +132,7 @@
     "calculator_never_writes_rom": true,
     "damage_multiplier_and_invalid_input": true,
     "m17_live_parameter_link_and_undo": true,
-    "broken_multiplier_buttons_are_safe": true,
+    "transient_multiplier_buttons_are_safe": true,
     "archived_firepower_examples": true,
     "distance_terrain_damage_and_defense_compose": true,
     "double_hit_is_strictly_greater": true,

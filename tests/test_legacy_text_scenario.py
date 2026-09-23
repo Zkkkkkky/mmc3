@@ -409,15 +409,15 @@ class LegacyTextScenarioUiTests(QtTestCase):
         self.project.undo()
         self.assertEqual(bytes(self.project.working), before)
 
-    def test_system_text_page_shows_reference_escape_note_and_disables_append(self) -> None:
+    def test_system_text_page_shows_reference_escape_note_and_capacity_entry(self) -> None:
         page = LegacyTextPage(("system",))
         self.widgets.append(page)
         page.set_project(self.project)
         self.assertTrue(page.system_note.isVisibleTo(page))
         self.assertIn('"{"加3字节16进制', page.system_note.text())
         self.assertTrue(page.add_button.isVisibleTo(page))
-        self.assertFalse(page.add_button.isEnabled())
-        self.assertIn("原记录容量", page.add_button.toolTip())
+        self.assertTrue(page.add_button.isEnabled())
+        self.assertIn("容量说明", page.add_button.toolTip())
 
     def test_growth_hex_dialog_edits_first_60_values_and_preserves_tail(self) -> None:
         values = tuple(index % 16 for index in range(99))

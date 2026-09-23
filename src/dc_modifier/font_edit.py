@@ -112,6 +112,12 @@ class FontEditingMixin:
         edit_layout.insertWidget(5, self.glyph_canvas, 0, Qt.AlignmentFlag.AlignHCenter)
         self.glyph_canvas.changed.connect(self._font_pixels_changed)
         self.write_button.clicked.connect(self.stage_current_glyph)
+        self.write_button.setToolTip(
+            "先在 12×12 点阵中左键绘制、右键擦除；点阵变化后即可写入当前字模草稿，"
+            "最后按“确定”一次提交。"
+            if self._font_writable
+            else "当前 ROM 的字模写入布局未经验证，仅可预览。"
+        )
         self.choose_font_button.clicked.connect(self.choose_font)
         # Keep the legacy caption; the verified implementation currently
         # applies it to the selected font page without relocating glyphs.

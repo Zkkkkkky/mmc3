@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 import os
+from pathlib import Path
+import tempfile
 import unittest
 
 os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
@@ -63,6 +65,38 @@ class WeaponRuleLibraryUiTests(QtTestCase):
         )
         self.assertIn("FD 20 20", dialog.codes["weapon_beam"].toPlainText())
         self.assertTrue(dialog.codes["weapon_beam"].isReadOnly())
+        self.assertFalse(dialog.names["weapon_beam"].isReadOnly())
+
+    def test_weapon_rule_name_accept_cancel_undo_and_project_reopen(self) -> None:
+        project = RomProject.load(DEFAULT_ROM)
+        cancelled = WeaponRuleLibraryDialog(project)
+        self.addCleanup(cancelled.deleteLater)
+        cancelled.names["weapon_beam"].setText("取消名称")
+        cancelled.names["weapon_beam"].textEdited.emit("取消名称")
+        cancelled.reject()
+        self.assertFalse(project.animation_label_overrides)
+
+        dialog = WeaponRuleLibraryDialog(project)
+        self.addCleanup(dialog.deleteLater)
+        dialog.names["weapon_beam"].setText("光束测试名称")
+        dialog.names["weapon_beam"].textEdited.emit("光束测试名称")
+        dialog.accept()
+        self.assertEqual(
+            project.animation_label_overrides[("weapon_beam", 1)],
+            "光束测试名称",
+        )
+        self.assertTrue(project.can_undo)
+
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "weapon-rule-name.dcmod"
+            project.save_project(path)
+            reopened = RomProject.load_project(path, DEFAULT_ROM)
+        self.assertEqual(
+            reopened.animation_label_overrides[("weapon_beam", 1)],
+            "光束测试名称",
+        )
+        project.undo()
+        self.assertFalse(project.animation_label_overrides)
 
 
 if __name__ == "__main__":

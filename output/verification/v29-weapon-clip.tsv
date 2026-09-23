@@ -1,0 +1,4 @@
+load	true	nil
+inject	90	E0
+clip_return	F0	F0
+summary	injected=true	clip_hits=1

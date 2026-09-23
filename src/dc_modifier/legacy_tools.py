@@ -425,6 +425,45 @@ class TextConverterDialog(QDialog):
         self._set_success(f"代码转文字完成：{len(raw)} 字节。")
 
 
+class DamageMultiplierDialog(QDialog):
+    """Edit one calculator side's transient damage multiplier."""
+
+    def __init__(self, numerator: int, denominator: int, parent: QWidget | None = None) -> None:
+        super().__init__(parent)
+        self.setWindowTitle("更改伤害倍数")
+        self.setModal(True)
+
+        layout = QVBoxLayout(self)
+        explanation = QLabel("该倍数只影响本次属性计算，不会写入 ROM。")
+        explanation.setWordWrap(True)
+        layout.addWidget(explanation)
+
+        form = QFormLayout()
+        self.numerator = QSpinBox()
+        self.numerator.setRange(1, 99)
+        self.numerator.setValue(max(1, min(99, numerator)))
+        self.denominator = QSpinBox()
+        self.denominator.setRange(1, 99)
+        self.denominator.setValue(max(1, min(99, denominator)))
+        form.addRow("分子", self.numerator)
+        form.addRow("分母", self.denominator)
+        layout.addLayout(form)
+
+        buttons = QHBoxLayout()
+        buttons.addStretch()
+        accept = QPushButton("确定")
+        cancel = QPushButton("取消")
+        accept.clicked.connect(self.accept)
+        cancel.clicked.connect(self.reject)
+        buttons.addWidget(accept)
+        buttons.addWidget(cancel)
+        layout.addLayout(buttons)
+
+    @property
+    def values(self) -> tuple[int, int]:
+        return self.numerator.value(), self.denominator.value()
+
+
 class _BattleSide(QWidget):
     def __init__(self, title: str, project: Any | None) -> None:
         super().__init__()
@@ -465,10 +504,10 @@ class _BattleSide(QWidget):
         self.multiplier_edit = QLineEdit("1/1")
         self.multiplier_edit.setMaximumWidth(76)
         self.change_multiplier_button = QPushButton("更改倍数")
-        self.change_multiplier_button.setEnabled(False)
         self.change_multiplier_button.setToolTip(
-            "参考版此功能损坏；按 D6 决策禁用，不复刻运行时错误。"
+            "设置当前一侧的伤害倍率；只影响本次计算，不写入 ROM。"
         )
+        self.change_multiplier_button.clicked.connect(self._edit_multiplier)
         self.character_summary = QLabel("人物属性：尚未读取")
         self.character_summary.hide()
         self.weapon_summary = QLabel("武器属性：未选择武器")
@@ -734,6 +773,20 @@ class _BattleSide(QWidget):
         self.multiplier_denominator.setValue(denominator)
         self.multiplier_edit.setText(f"{numerator}/{denominator}")
         self.multiplier_edit.setToolTip("")
+
+    def _edit_multiplier(self) -> None:
+        self._parse_multiplier()
+        dialog = DamageMultiplierDialog(
+            self.multiplier_numerator.value(),
+            self.multiplier_denominator.value(),
+            self,
+        )
+        if dialog.exec() != QDialog.DialogCode.Accepted:
+            return
+        numerator, denominator = dialog.values
+        self.multiplier_numerator.setValue(numerator)
+        self.multiplier_denominator.setValue(denominator)
+        self._sync_multiplier_from_parts(0)
 
     def _sync_multiplier_from_parts(self, _value: int) -> None:
         self.multiplier_edit.setText(

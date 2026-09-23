@@ -13,6 +13,42 @@ import struct
 BytePatch = tuple[int, bytes, bytes]
 
 
+READ_ONLY_CALL_AUDIT: dict[int, tuple[str, str]] = {
+    0x3804A: (
+        "资料编号冲突",
+        "资料记为 $3804A→$0C，当前 ROM 同址为 $00；不能按冲突编号改写。",
+    ),
+    0x384B0: (
+        "只有编号含义",
+        "只确认动画 $10 的含义，尚无该调用地址或完整前置序列证据。",
+    ),
+    0x3853D: (
+        "只有编号含义",
+        "只确认动画 $10 的含义，尚无该调用地址或完整前置序列证据。",
+    ),
+    0x38982: (
+        "资料地址不一致",
+        "资料写作 $38983→$02，当前 ROM 调用起点为 $38982；不把疑似偏一字节当作地址证据。",
+    ),
+    0x38E68: (
+        "只有编号含义",
+        "只确认动画 $14 的含义；资料未列出该地址，前置序列也未在已验证流程中复现。",
+    ),
+    0x38EF3: (
+        "只有编号含义",
+        "只确认动画 $12 的含义；邻近事件指令不足以证明这一字节可以安全改写。",
+    ),
+    0x3B9DC: (
+        "嵌入数据未验证",
+        "命中位于 6502 子程序后的嵌入数据段，没有调用地址与脚本入口的双重证据。",
+    ),
+    0x3B9E0: (
+        "嵌入数据未验证",
+        "命中紧邻另一处未验证数据，没有已验证调用链头，不能只凭 38 02 字节外观改写。",
+    ),
+}
+
+
 @dataclass(frozen=True)
 class AnimationInstruction:
     offset: int
@@ -1141,6 +1177,29 @@ class AnimationCodec:
                 result.append(index)
         return tuple(result)
 
+    def background_edit_status(self, index: int) -> tuple[bool, str]:
+        """Explain the exact safe-write state of one background-rule slot."""
+
+        record = self.record("background", index)
+        decoded, complete = decode_background_rule(record.raw, record.offset)
+        consumed = sum(len(row.raw) for row in decoded)
+        editable_count = sum(len(row.editable) for row in decoded)
+        if complete and consumed == len(record.raw) and editable_count:
+            return True, f"边界完整；{editable_count} 个已验证绘制参数可改"
+        if complete and consumed == len(record.raw):
+            return False, "边界完整，但只有控制/资源指令，没有可安全修改的绘制参数"
+        if complete:
+            return False, f"在结束码后还有 {len(record.raw) - consumed} 字节，无法证明属于本记录"
+        if decoded:
+            last = decoded[-1]
+            relative = last.offset - record.offset
+            if "后续边界" not in last.text and "未验证" not in last.text:
+                return False, (
+                    f"到达指针边界但没有背景结束码；最后一项 +${relative:04X} 为{last.text}"
+                )
+            return False, f"+${relative:04X}：{last.text}"
+        return False, "空记录或没有可验证的指令边界"
+
     def background_static_reference_indices(self) -> tuple[int, ...]:
         """Return rules referenced by complete current map-animation scripts."""
 
@@ -1273,6 +1332,18 @@ class AnimationCodec:
         # The CHM listings and current ROM must agree on a complete context.
         # The remaining raw byte matches stay inspectable but read-only.
         return self.call_evidence(offset) is not None
+
+    def call_status(self, offset: int) -> tuple[bool, str]:
+        """Return a beginner-facing status instead of a generic disabled state."""
+
+        evidence = self.call_evidence(offset)
+        if evidence is not None:
+            return True, f"可改：{evidence}；只写动画编号字节"
+        title, reason = READ_ONLY_CALL_AUDIT.get(
+            offset,
+            ("上下文未验证", "只识别到 38 02 字节外观，尚未证明它是可写动画调用。"),
+        )
+        return False, f"只读：{title}。{reason}"
 
 
 def apply_animation_patches(project, patches: tuple[BytePatch, ...], description: str) -> None:

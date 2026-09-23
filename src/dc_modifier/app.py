@@ -505,6 +505,9 @@ class MainWindow(QMainWindow):
         self.undo_action = self._action("撤销", self.undo, "Ctrl+Alt+Z")
         self.redo_action = self._action("重做", self.redo, "Ctrl+Alt+Y")
         self.validate_action = self._action("完整检查", self.validate_project, "F7")
+        self.beginner_guide_action = self._action(
+            "新手操作向导", self.show_beginner_guide, "F1"
+        )
         self.about_action = self._action("关于", self.show_about)
         self.page_actions = {
             key: self._action(
@@ -588,6 +591,8 @@ class MainWindow(QMainWindow):
         self.project_menu.addAction(self.validate_action)
 
         help_menu = self.menuBar().addMenu("帮助(&H)")
+        help_menu.addAction(self.beginner_guide_action)
+        help_menu.addSeparator()
         help_menu.addAction(self.about_action)
 
     def _map_coordinate_changed(self, x: int, y: int) -> None:
@@ -1316,6 +1321,57 @@ class MainWindow(QMainWindow):
             "撤销/重做、资源视图、ROM/IPS构建与结构验证。\n\n"
             "修改器不会覆盖基准ROM。对外发布时请优先分发IPS补丁，不要直接分发ROM。",
         )
+
+    def show_beginner_guide(self) -> None:
+        from .beginner_guide import BeginnerGuideDialog
+        from .window_layout import fit_dialog_to_screen
+
+        dialog = BeginnerGuideDialog(self, has_project=self.project is not None)
+        dialog.route_requested.connect(
+            lambda route: QTimer.singleShot(
+                0, lambda selected=route: self._open_beginner_route(selected)
+            )
+        )
+        fit_dialog_to_screen(dialog)
+        dialog.exec()
+        dialog.deleteLater()
+
+    def _open_beginner_route(self, route: str) -> None:
+        if route == "open_rom":
+            self.open_rom_dialog()
+            return
+        if route == "save":
+            self.open_save_editor()
+            return
+        if self.project is None:
+            QMessageBox.information(self, "请先打开 ROM", "请先按 Ctrl+O 选择一个 .nes ROM。")
+            return
+        if route == "maps":
+            self.show_page("maps")
+            return
+        if route.startswith("database:"):
+            dialog = self._prepare_database_dialog()
+            if dialog is None:
+                return
+            dialog.tabs.setCurrentIndex(int(route.split(":", 1)[1]))
+            self._execute_database_dialog(dialog)
+            return
+        actions = {
+            "scenario": self.open_scenario,
+            "font": self.open_font_library,
+            "animation": self.open_map_animation,
+            "converter": self.open_text_converter,
+            "calculator": self.open_attribute_calculator,
+            "music": lambda: self._open_extension_page("music"),
+            "unit_import": lambda: self._open_extension_page("unit_import"),
+            "resources": lambda: self._open_extension_page("resources"),
+            "changes": lambda: self._open_extension_page("changes"),
+        }
+        action = actions.get(route)
+        if action is None:
+            QMessageBox.warning(self, "向导入口无效", f"未知的新手向导入口：{route}")
+            return
+        action()
 
     def dragEnterEvent(self, event: QDragEnterEvent) -> None:
         urls = event.mimeData().urls()

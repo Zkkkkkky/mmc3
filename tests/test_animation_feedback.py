@@ -340,6 +340,7 @@ class AnimationCodecTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             self.codec.call_patch(0x3BB94, 2)
         self.assertFalse(self.codec.call_is_editable(0x3804A))
+        self.assertIn("资料编号冲突", self.codec.call_status(0x3804A)[1])
         with self.assertRaises(ValueError):
             self.codec.call_patch(0x3804A, 2)
 
@@ -368,6 +369,17 @@ class AnimationCodecTests(unittest.TestCase):
         ]
         self.assertEqual(len(readonly), 8)
         self.assertIn(0x3804A, readonly)
+
+    def test_background_and_call_guards_explain_the_exact_reason(self):
+        editable, status = self.codec.background_edit_status(3)
+        self.assertTrue(editable)
+        self.assertIn("已验证绘制参数", status)
+        editable, status = self.codec.background_edit_status(2)
+        self.assertFalse(editable)
+        self.assertIn("没有背景结束码", status)
+        editable, status = self.codec.call_status(0x3B9DC)
+        self.assertFalse(editable)
+        self.assertIn("嵌入数据未验证", status)
 
     def test_stale_batch_fails_without_applying_earlier_patches(self):
         first = self.codec.record("ally", 1)
@@ -495,19 +507,30 @@ class AnimationUiTests(QtTestCase):
         self.assertFalse(self.project.can_undo)
         dialog.reject()
 
-    def test_reference_secondary_dialog_entries_do_not_guess_unverified_writes(self):
+    def test_pointer_dialog_locates_existing_animation_without_writing_rom(self):
         dialog = MapAnimationEditorDialog(project=self.project)
         before = bytes(dialog.draft)
         self.assertFalse(dialog.script_editor.code_edit.isVisible())
+        target = dialog.codec.pointers["map"][2]
         with patch.object(
             AnimationPointerDialog,
             "exec",
             return_value=QDialog.DialogCode.Accepted,
+        ), patch.object(
+            AnimationPointerDialog,
+            "pointer",
+            return_value=target,
         ):
             dialog.code_button.click()
-        self.assertFalse(dialog.script_editor.code_edit.isVisible())
-        self.assertIn("0080", dialog.script_editor.status.text())
+        self.assertEqual(dialog.animation_list.currentRow(), 2)
+        self.assertFalse(dialog.script_editor.code_edit.isHidden())
+        self.assertIn(f"${target:04X}", dialog.script_editor.status.text())
+        self.assertIn("只允许修改已验证参数", dialog.script_editor.status.text())
         self.assertEqual(bytes(dialog.draft), before)
+
+        pointer_dialog = AnimationPointerDialog(pointer=target)
+        self.assertEqual(pointer_dialog.value(), target.to_bytes(2, "little").hex().upper())
+        self.assertEqual(pointer_dialog.pointer(), target)
 
         sprite = dialog.codec.record("sprite", dialog.rule_lists["sprite"].currentRow())
         preview = SpritePuzzlePreviewDialog(

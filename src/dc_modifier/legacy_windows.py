@@ -614,11 +614,11 @@ class LegacyUnitDatabasePage(ProjectPage):
             record_actions.addWidget(button, index // 2, index % 2)
         selection_layout.addLayout(record_actions)
         self.add_button = QPushButton("添加")
-        self.add_button.setEnabled(False)
         self.add_button.setToolTip(
             "当前格式的机体 ID $01—$FF 共 255 个槽位均已开放；"
-            "不存在可新增的第 256 个 ID，请直接编辑列表中的空白槽位。"
+            "点击可查看容量说明；不会生成格式无法表示的第 256 个 ID。"
         )
+        self.add_button.clicked.connect(self._show_add_capacity)
         selection_layout.addWidget(self.add_button)
         splitter.addWidget(selection)
 
@@ -661,6 +661,16 @@ class LegacyUnitDatabasePage(ProjectPage):
         splitter.setSizes([245, 1115])
         splitter.splitterMoved.connect(lambda *_args: self._arrange_data_groups())
         self._compact_data_layout: str | None = None
+
+    def _show_add_capacity(self) -> None:
+        QMessageBox.information(
+            self,
+            "机体容量已满",
+            "当前 ROM 的机体编号是单字节，$01—$FF 共 255 个 ID 已全部存在，"
+            "不能再创建第 256 个机体。\n\n"
+            "如需替换未使用机体，请在左侧选择目标 ID，再使用“复制/粘贴”或“导入”；"
+            "共享属性记录会在提交前列出全部受影响 ID。",
+        )
 
     def resizeEvent(self, event) -> None:  # noqa: N802 - Qt API
         super().resizeEvent(event)
@@ -1820,8 +1830,8 @@ class LegacyGlobalTablesPage(ProjectPage):
         level_cap_row = QHBoxLayout()
         self.level_cap_value = QLabel("当前等级上限：—")
         self.level_cap_button = QPushButton("更改等级上限")
-        self.level_cap_button.setEnabled(False)
         self.level_cap_button.setToolTip("当前ROM的等级上限布局尚未验证。")
+        self.level_cap_button.clicked.connect(self._show_level_cap_boundary)
         level_cap_row.addWidget(self.level_cap_value)
         level_cap_row.addStretch()
         level_cap_row.addWidget(self.level_cap_button)
@@ -1888,7 +1898,7 @@ class LegacyGlobalTablesPage(ProjectPage):
             self.apply_button.setEnabled(False)
             self.reset_button.setEnabled(supported)
             self.level_cap_value.setText("当前等级上限：—")
-            self.level_cap_button.setEnabled(False)
+            self.level_cap_button.setEnabled(supported)
             self.level_cap_button.setToolTip("当前ROM的等级上限布局尚未验证。")
             if not supported:
                 self.experience_table.clearContents()
@@ -1925,6 +1935,22 @@ class LegacyGlobalTablesPage(ProjectPage):
         finally:
             self._loading = False
         self._update_pending_state()
+
+    def _show_level_cap_boundary(self) -> None:
+        if not self._is_supported:
+            return
+        try:
+            level_cap = self.project.get_verified_level_cap()
+        except ValueError as error:
+            QMessageBox.warning(self, "等级上限未验证", str(error))
+            return
+        QMessageBox.information(
+            self,
+            "等级上限容量",
+            f"当前 ROM 已使用完整的 {level_cap} 级经验表和成长记录容量。\n\n"
+            "超过 99 级需要同时扩展经验表、成长记录并修改运行时代码；"
+            "旧版 60→61 样本与当前 ROM 布局不兼容，因此本次不会改写 ROM。",
+        )
 
     @staticmethod
     def _parse_cell(
@@ -2475,19 +2501,28 @@ class DatabaseDialog(TransactionalProjectDialog):
         if not isinstance(selection_layout, QVBoxLayout):
             return
         add_button = QPushButton("添加")
-        add_button.setEnabled(False)
         if isinstance(page, ReadableCharacterPage):
-            add_button.setToolTip(
+            capacity_message = (
                 "当前已列出人物 $01—$C8。参考版继续添加会重排多个全局数据区；"
                 "固定名称、属性和头像池均无剩余容量，因此安全模式拒绝新增。"
             )
+            add_button.setToolTip(capacity_message + " 点击查看容量说明。")
         elif isinstance(page, ReadableWeaponPage):
-            add_button.setToolTip(
+            capacity_message = (
                 "当前已列出完整的 8 位武器 ID $01—$FF；没有可新增的 ID，"
                 "参考版在此容量下点击添加也不产生记录。"
             )
+            add_button.setToolTip(capacity_message + " 点击查看容量说明。")
         else:
-            add_button.setToolTip("当前记录表没有可安全新增的槽位。")
+            capacity_message = "当前记录表没有可安全新增的槽位。"
+            add_button.setToolTip(capacity_message)
+        add_button.clicked.connect(
+            lambda _checked=False, host=page, message=capacity_message: QMessageBox.information(
+                host,
+                "记录容量已满",
+                message + "\n\n本次操作不会修改 ROM。",
+            )
+        )
         page.add_record_button = add_button
         selection_layout.addWidget(add_button)
 
@@ -3093,9 +3128,11 @@ class ScenarioDialog(TransactionalProjectDialog):
         self.setup_event_tabs = QTabWidget()
         self.setup_event_tabs.setObjectName("legacyScenarioEventTabs")
         self.setup_event_lists: list[QListWidget] = []
+        self.setup_event_edit_buttons: list[QPushButton] = []
         for label, controller in zip(self.EVENT_TAB_LABELS, self.setup_event_pages):
-            panel, overview = self._setup_event_list_panel(controller)
+            panel, overview, edit_button = self._setup_event_list_panel(controller)
             self.setup_event_lists.append(overview)
+            self.setup_event_edit_buttons.append(edit_button)
             self.setup_event_tabs.addTab(panel, label)
         event_layout.addWidget(self.setup_event_tabs)
         page_layout.addWidget(event_group, 1)
@@ -3103,7 +3140,7 @@ class ScenarioDialog(TransactionalProjectDialog):
 
     def _setup_event_list_panel(
         self, controller: LegacyScenarioEventsPage
-    ) -> tuple[QWidget, QListWidget]:
+    ) -> tuple[QWidget, QListWidget, QPushButton]:
         """Expose the reference list while keeping raw editing in a dialog."""
 
         host = QWidget()
@@ -3119,8 +3156,16 @@ class ScenarioDialog(TransactionalProjectDialog):
                 page, "事件指令编辑"
             )
         )
+        edit_button = QPushButton("编辑所选事件指令…")
+        edit_button.setToolTip("打开当前所选事件的等长参数编辑器；也可以双击列表行。")
+        edit_button.clicked.connect(
+            lambda _checked=False, page=controller: self._open_advanced_editor(
+                page, "事件指令编辑"
+            )
+        )
         layout.addWidget(overview, 1)
-        return host, overview
+        layout.addWidget(edit_button, 0, Qt.AlignmentFlag.AlignLeft)
+        return host, overview, edit_button
 
     def _event_list_panel(
         self, controller: EventPage

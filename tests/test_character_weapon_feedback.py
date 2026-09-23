@@ -441,15 +441,17 @@ class CharacterWeaponUiFeedbackTests(QtTestCase):
             self.page.apply_record()
         self.assertEqual(CharacterAttributesCodec(self.project).read(1).spirit, 1)
 
-    def test_add_character_entry_is_visible_but_safely_disabled_for_full_pools(self) -> None:
+    def test_add_character_entry_explains_full_pools_without_writing(self) -> None:
         self.dialog.tabs.setCurrentIndex(1)
         self.app.processEvents()
         button = self.page.add_record_button
         self.assertTrue(button.isVisible())
-        self.assertFalse(button.isEnabled())
+        self.assertTrue(button.isEnabled())
         self.assertIn("$01—$C8", button.toolTip())
         self.assertIn("固定名称、属性和头像池均无剩余容量", button.toolTip())
-        button.click()
+        with patch("dc_modifier.legacy_windows.QMessageBox.information") as info:
+            button.click()
+        self.assertIn("不会修改 ROM", info.call_args.args[2])
         self.assertEqual(bytes(self.project.working), self.before)
 
     def test_shared_character_edit_lists_affected_ids_and_defaults_to_cancel(self) -> None:

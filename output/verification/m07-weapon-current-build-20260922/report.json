@@ -24,7 +24,7 @@
     "save_reopen_exact": true,
     "animation_modes_save_reopen_exact": true,
     "four_rule_tabs_and_counts": true,
-    "rule_fields_read_only": true,
+    "rule_names_editable_and_code_read_only": true,
     "rule_browsing_zero_write": true,
     "invalid_animation_rejected": true,
     "invalid_animation_atomic": true,

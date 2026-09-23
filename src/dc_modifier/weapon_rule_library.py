@@ -10,6 +10,7 @@ from PySide6.QtWidgets import (
     QLabel,
     QLineEdit,
     QListWidget,
+    QMessageBox,
     QPlainTextEdit,
     QTabWidget,
     QVBoxLayout,
@@ -103,6 +104,8 @@ class WeaponRuleLibraryDialog(QDialog):
         super().__init__(parent)
         self.project = project
         self.catalog = WeaponRuleCatalog(project.working)
+        self.overrides = dict(getattr(project, "animation_label_overrides", {}))
+        self.defaults: dict[str, tuple[str, ...]] = {}
         self.setWindowTitle("规律")
         self.resize(940, 680)
         root = QVBoxLayout(self)
@@ -125,6 +128,7 @@ class WeaponRuleLibraryDialog(QDialog):
             layout = QHBoxLayout(page)
             listing = QListWidget()
             defaults = animation_names(table.filename, table.count)
+            self.defaults[table.key] = defaults
             listing.addItems(
                 f"[{rule_id:02X}]{rule_id:03d}："
                 f"{overrides.get((table.key, rule_id), defaults[rule_id - 1])}"
@@ -139,7 +143,7 @@ class WeaponRuleLibraryDialog(QDialog):
             details.addWidget(status)
             details.addWidget(QLabel("规律名称（当前配置）"))
             name = QLineEdit()
-            name.setReadOnly(True)
+            name.setMaxLength(80)
             details.addWidget(name)
             details.addWidget(QLabel("代码（只读）"))
             code = QPlainTextEdit()
@@ -155,9 +159,17 @@ class WeaponRuleLibraryDialog(QDialog):
             listing.currentRowChanged.connect(
                 lambda row, item=table: self._select(item, row)
             )
+            name.textEdited.connect(
+                lambda text, item=table: self._rename(item, text)
+            )
             listing.setCurrentRow(0)
-        buttons = QDialogButtonBox(QDialogButtonBox.StandardButton.Close)
-        buttons.button(QDialogButtonBox.StandardButton.Close).setText("关闭")
+        buttons = QDialogButtonBox(
+            QDialogButtonBox.StandardButton.Ok
+            | QDialogButtonBox.StandardButton.Cancel
+        )
+        buttons.button(QDialogButtonBox.StandardButton.Ok).setText("确定")
+        buttons.button(QDialogButtonBox.StandardButton.Cancel).setText("取消")
+        buttons.accepted.connect(self.accept)
         buttons.rejected.connect(self.reject)
         root.addWidget(buttons)
 
@@ -175,3 +187,25 @@ class WeaponRuleLibraryDialog(QDialog):
             f"规律 ${rule_id:02X} · 文件地址 0x{offset:06X} · {len(raw)} 字节"
             + (f" · 共享：{shared}" if shared else " · 独立记录")
         )
+
+    def _rename(self, table: WeaponRuleTable, text: str) -> None:
+        row = self.lists[table.key].currentRow()
+        if row < 0:
+            return
+        rule_id = row + 1
+        default = self.defaults[table.key][row]
+        if text == default:
+            self.overrides.pop((table.key, rule_id), None)
+        else:
+            self.overrides[(table.key, rule_id)] = text
+        self.lists[table.key].item(row).setText(
+            f"[{rule_id:02X}]{rule_id:03d}：{text}"
+        )
+
+    def accept(self) -> None:
+        try:
+            self.project.replace_animation_label_overrides(self.overrides)
+        except ValueError as error:
+            QMessageBox.warning(self, "无法保存规律名称", str(error))
+            return
+        super().accept()

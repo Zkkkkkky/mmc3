@@ -163,7 +163,8 @@ def main() -> int:
         for kind, expected in expected_animation.items()
     )
 
-    # The four reference-shaped rule libraries are browsers, not code editors.
+    # The four rule libraries keep code read-only while project-local names
+    # are editable and cancelable without touching ROM bytes.
     rules_before = bytes(reopened.working)
     rules = WeaponRuleLibraryDialog(reopened)
     rules.show()
@@ -173,8 +174,8 @@ def main() -> int:
         rules.tabs.count() == 4
         and list(counts.values()) == [255, 252, 250, 255]
     )
-    checks["rule_fields_read_only"] = all(
-        rules.names[table.key].isReadOnly() and rules.codes[table.key].isReadOnly()
+    checks["rule_names_editable_and_code_read_only"] = all(
+        not rules.names[table.key].isReadOnly() and rules.codes[table.key].isReadOnly()
         for table in WEAPON_RULE_TABLES
     )
     for table in WEAPON_RULE_TABLES:

@@ -75,6 +75,9 @@ class M05ReferenceControlCatalogTests(unittest.TestCase):
         self.assertTrue(
             report["checks"]["pending_recipes_have_explicit_dynamic_blockers"]
         )
+        self.assertTrue(
+            report["checks"]["pending_recipes_have_actionable_classification"]
+        )
         pending = {
             name: item
             for name, item in report["prepared_discovery_recipes"].items()
@@ -92,6 +95,14 @@ class M05ReferenceControlCatalogTests(unittest.TestCase):
             pending["body_upload_bmp"]["dynamic_evidence"][
                 "reopen_matches_original"
             ]
+        )
+        self.assertEqual(
+            pending["body_upload_bmp"]["evidence_classification"],
+            "reference_action_not_persistent",
+        )
+        self.assertEqual(
+            pending["main_clear_body"]["evidence_classification"],
+            "reference_cold_reopen_mismatch",
         )
         self.assertIn(
             "cold_reopen_does_not_match_expected",

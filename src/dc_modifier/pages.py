@@ -172,8 +172,8 @@ class OverviewPage(ProjectPage):
         guide_layout = QVBoxLayout(guide)
         guide_layout.addWidget(
             QLabel(
-                "1. 打开 DC_kuorong_464K.nes　→　2. 自动规划扩展容量　→　"
-                "3. 修改并随时验证　→　4. 保存工程并构建ROM/IPS"
+                "1. 打开推荐 ROM　→　2. 选择要改的模块　→　3. 页内暂存/应用　→　"
+                "4. 窗口点确定　→　5. Ctrl+S 另存 ROM 并用模拟器测试"
             )
         )
         safety = QLabel(
@@ -182,6 +182,13 @@ class OverviewPage(ProjectPage):
         safety.setWordWrap(True)
         safety.setObjectName("hintText")
         guide_layout.addWidget(safety)
+        beginner_hint = QLabel(
+            "第一次使用或不清楚按钮顺序时，按 F1 打开“新手操作向导”；"
+            "它会说明每个模块能改什么，并可直接跳转。"
+        )
+        beginner_hint.setWordWrap(True)
+        beginner_hint.setObjectName("hintText")
+        guide_layout.addWidget(beginner_hint)
         layout.addWidget(guide)
         quick_group = QGroupBox("常用入口")
         quick_layout = QGridLayout(quick_group)

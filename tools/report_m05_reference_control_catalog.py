@@ -232,6 +232,8 @@ def build() -> dict[str, object]:
         coverage_row = coverage_by_field.get(name)
         dynamic_evidence = None
         promotion_blockers: list[str] = []
+        evidence_classification = "not_collected"
+        next_evidence_step = "run_reference_discovery"
         if coverage_row is not None:
             archive_path = GOLDEN_ARCHIVE_DIR / str(coverage_row["archive"])
             archive = json.loads(archive_path.read_text(encoding="utf-8"))
@@ -258,6 +260,23 @@ def build() -> dict[str, object]:
                     "expected_noop"
                 ):
                     promotion_blockers.append("save_layout_not_reviewed")
+                if dynamic_evidence["reopen_matches_original"]:
+                    evidence_classification = "reference_action_not_persistent"
+                    next_evidence_step = (
+                        "confirm_whether_the_reference_action_is_preview_only; "
+                        "do_not_require_product_to_copy_a_non_persistent_save"
+                    )
+                elif dynamic_evidence["reopen_matches_expected"] is not True:
+                    evidence_classification = "reference_cold_reopen_mismatch"
+                    next_evidence_step = (
+                        "identify_normalization_or_secondary_resource_writes_and_repeat_cold_reopen"
+                    )
+                else:
+                    evidence_classification = "reference_layout_review_pending"
+                    next_evidence_step = "review_changed_offsets_and_promote_the_recipe"
+            else:
+                evidence_classification = "promoted_golden"
+                next_evidence_step = "none"
         discovery_recipes[name] = {
             "path": path.relative_to(ROOT).as_posix(),
             "sha256": hashlib.sha256(path.read_bytes()).hexdigest(),
@@ -266,6 +285,8 @@ def build() -> dict[str, object]:
             "promotion_complete": promotion_complete,
             "dynamic_evidence": dynamic_evidence,
             "promotion_blockers": promotion_blockers,
+            "evidence_classification": evidence_classification,
+            "next_evidence_step": next_evidence_step,
             "status": (
                 "promoted_golden"
                 if promotion_complete
@@ -314,6 +335,13 @@ def build() -> dict[str, object]:
         ),
         "pending_recipes_have_explicit_dynamic_blockers": all(
             item["promotion_blockers"]
+            for item in discovery_recipes.values()
+            if item["status"] == "prepared_not_promoted"
+        ),
+        "pending_recipes_have_actionable_classification": all(
+            item["evidence_classification"]
+            in {"reference_action_not_persistent", "reference_cold_reopen_mismatch"}
+            and item["next_evidence_step"] != "none"
             for item in discovery_recipes.values()
             if item["status"] == "prepared_not_promoted"
         ),
@@ -379,6 +407,7 @@ def markdown(report: dict[str, object]) -> str:
             "",
             "上传、清除、拼图和图标画布提交是待补参考保存布局的动作协议；新增机体已按字节型 ID 的 255 槽满容量边界分类，产品保持禁用并引导直接编辑现有空白槽。完整控件、字段和原因见同名 JSON。",
             "剩余 8 个配方均已记录动态采集时长、冷重开结果和明确晋级阻断原因；在满足 30 秒预算且确认保存布局前不会误升为黄金证据。",
+            "其中普通主体/碎片上传在冷重开后回到原值，归类为“参考动作未形成持久保存”；压缩上传、主界面清除、图标上传和 8×8 模板则归类为“参考冷重开不匹配”。两类都不影响当前产品功能可用，但不能作为 1:1 保存协议黄金。",
             "",
         ]
     )

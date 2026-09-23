@@ -30,16 +30,21 @@ def animation_names(filename: str, count: int, first: int = 0) -> tuple[str, ...
 
 
 class AnimationPointerDialog(QDialog):
-    """Reference-shaped pointer prompt kept read-only until its protocol is known."""
+    """Reference-shaped prompt for locating an existing animation pointer."""
 
-    def __init__(self, parent: QWidget | None = None) -> None:
+    def __init__(
+        self,
+        parent: QWidget | None = None,
+        *,
+        pointer: int = 0x8000,
+    ) -> None:
         super().__init__(parent)
         self.setWindowTitle("请输入：")
         self.setModal(True)
         self.setFixedSize(380, 170)
         root = QVBoxLayout(self)
         root.addWidget(QLabel("请输入动画指针"))
-        self.pointer_edit = QLineEdit("0080")
+        self.pointer_edit = QLineEdit(pointer.to_bytes(2, "little").hex().upper())
         self.pointer_edit.setInputMask("HHHH;_")
         self.pointer_edit.selectAll()
         root.addWidget(self.pointer_edit)
@@ -54,6 +59,12 @@ class AnimationPointerDialog(QDialog):
 
     def value(self) -> str:
         return self.pointer_edit.text().upper()
+
+    def pointer(self) -> int:
+        raw = bytes.fromhex(self.value())
+        if len(raw) != 2:
+            raise ValueError("动画指针必须是两个十六进制字节。")
+        return int.from_bytes(raw, "little")
 
 
 class SpritePuzzlePreviewDialog(QDialog):
@@ -446,6 +457,7 @@ class SpritePuzzlePreviewDialog(QDialog):
 class AnimationScriptWidget(QWidget):
     """A draft script editor; the caller owns its enclosing transaction."""
     changed = Signal()
+    pointer_requested = Signal(int)
 
     def __init__(self, parent: QWidget | None = None, *, legacy_pointer_dialog: bool = False) -> None:
         super().__init__(parent)
@@ -518,11 +530,17 @@ class AnimationScriptWidget(QWidget):
 
     def _toggle_code(self) -> None:
         if self.legacy_pointer_dialog:
-            dialog = AnimationPointerDialog(self)
+            pointer = 0x8000
+            if self.codec is not None and self.record is not None:
+                pointer = self.codec.pointers[self.record.kind][self.record.index]
+            dialog = AnimationPointerDialog(self, pointer=pointer)
             if dialog.exec() == QDialog.DialogCode.Accepted:
-                self.status.setText(
-                    f"已输入指针 {dialog.value()}；参考版指针协议尚未完成差分验证，本次不改写 ROM。"
-                )
+                try:
+                    selected = dialog.pointer()
+                except ValueError as error:
+                    self.status.setText(str(error))
+                else:
+                    self.pointer_requested.emit(selected)
             return
         self._toggle_raw_code()
 
@@ -722,10 +740,34 @@ class MapAnimationEditorDialog(QDialog):
         group.setMaximumWidth(320)
         layout.addWidget(group, 1)
         self.script_editor = AnimationScriptWidget(legacy_pointer_dialog=True)
+        self.script_editor.pointer_requested.connect(self._jump_to_animation_pointer)
         self.instruction_table = self.script_editor.instruction_table
         self.code_button = self.script_editor.code_button
         layout.addWidget(self.script_editor, 3)
         return page
+
+    def _jump_to_animation_pointer(self, pointer: int) -> None:
+        matches = [
+            index
+            for index, value in enumerate(self.codec.pointers["map"])
+            if value == pointer
+        ]
+        if not matches:
+            self.script_editor.status.setText(
+                f"指针 ${pointer:04X} 不属于当前地图动画表；未修改 ROM。"
+            )
+            return
+        target = matches[0]
+        self.animation_list.setCurrentRow(target)
+        if self.animation_list.currentRow() != target:
+            return
+        self.script_editor.code_edit.show()
+        aliases = "、".join(f"${index:02X}" for index in matches)
+        self.script_editor.status.setText(
+            f"已定位指针 ${pointer:04X}（动画 {aliases}）；"
+            "等长代码区已展开，只允许修改已验证参数。"
+        )
+        self.script_editor.code_edit.setFocus()
 
     def _flush_script(self) -> bool:
         try:
@@ -1034,11 +1076,11 @@ class MapAnimationEditorDialog(QDialog):
                                          + (f" · 与 {len(record.aliases)} 项共享" if record.aliases else ""))
         if kind == "background":
             self._background_index = row
-            editable = row in AnimationCodec(self.draft).background_editable_indices()
+            editable, explanation = AnimationCodec(self.draft).background_edit_status(row)
             self.rule_codes[kind].setReadOnly(not editable)
             self.rule_statuses[kind].setText(
                 self.rule_statuses[kind].text()
-                + (" · 指令边界完整，仅已验证绘制参数可改" if editable else " · 含动态/不完整边界，只读")
+                + f" · {explanation}"
             )
         if kind == "movement":
             self._movement_index = row
@@ -1137,9 +1179,10 @@ class MapAnimationEditorDialog(QDialog):
         hint = QLabel("从当前事件脚本识别 38 02 动画调用；显示真实文件地址。未证明精神名称关联的调用不猜测名称。")
         hint.setWordWrap(True)
         layout.addWidget(hint)
-        self.call_table = QTableWidget(0, 3)
-        self.call_table.setHorizontalHeaderLabels(("调用位置", "当前动画", "动画指令"))
+        self.call_table = QTableWidget(0, 4)
+        self.call_table.setHorizontalHeaderLabels(("调用位置", "当前动画", "状态/原因", "动画指令"))
         self.call_table.horizontalHeader().setSectionResizeMode(1, QHeaderView.ResizeMode.Stretch)
+        self.call_table.horizontalHeader().setSectionResizeMode(2, QHeaderView.ResizeMode.Stretch)
         self.call_table.setEditTriggers(QTableWidget.EditTrigger.NoEditTriggers)
         self.call_table.setAlternatingRowColors(True)
         self.call_combos: dict[int, QComboBox] = {}
@@ -1151,17 +1194,21 @@ class MapAnimationEditorDialog(QDialog):
             for i, name in enumerate(self.names):
                 combo.addItem(f"[{i:02X}]{i:03d}：{name}", i)
             combo.setCurrentIndex(index)
-            if not self.codec.call_is_editable(offset):
+            editable, explanation = self.codec.call_status(offset)
+            if not editable:
                 combo.setEnabled(False)
-                combo.setToolTip("此处已识别到调用字节，但事件上下文未验证；保留只读。")
+                combo.setToolTip(explanation)
             else:
-                combo.setToolTip(f"已核对：{self.codec.call_evidence(offset)}；仅改动画编号字节。")
+                combo.setToolTip(explanation)
             combo.currentIndexChanged.connect(lambda selected, address=offset: self._change_call(address, selected))
             self.call_table.setCellWidget(row, 1, combo)
             self.call_combos[offset] = combo
+            status_item = QTableWidgetItem(explanation)
+            status_item.setToolTip(explanation)
+            self.call_table.setItem(row, 2, status_item)
             jump = QPushButton("查看动画")
             jump.clicked.connect(lambda checked=False, box=combo: self._show_call_animation(box.currentIndex()))
-            self.call_table.setCellWidget(row, 2, jump)
+            self.call_table.setCellWidget(row, 3, jump)
         layout.addWidget(self.call_table, 1)
         return page
 

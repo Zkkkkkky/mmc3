@@ -105,11 +105,13 @@ def main() -> int:
 
     add_button = page.add_record_button
     require(checks, "新增人物入口可见", add_button.isVisible())
-    require(checks, "固定池满时新增人物入口禁用", not add_button.isEnabled())
+    require(checks, "固定池满时新增人物入口提供容量诊断", add_button.isEnabled())
     require(checks, "新增人物容量原因明确", "$01—$C8" in add_button.toolTip() and "固定名称、属性和头像池均无剩余容量" in add_button.toolTip())
     before_add = bytes(project.working)
-    add_button.click()
-    require(checks, "点击禁用新增入口不写ROM", bytes(project.working) == before_add)
+    with patch.object(QMessageBox, "information") as information:
+        add_button.click()
+    require(checks, "新增人物容量诊断已显示", information.call_count == 1)
+    require(checks, "点击容量诊断不写ROM", bytes(project.working) == before_add)
     artifacts.append(save_widget(add_button.parentWidget(), "02-add-character-guard.png"))
 
     # B. Edit unique fixed-size fields, portrait color and a dialogue binding.

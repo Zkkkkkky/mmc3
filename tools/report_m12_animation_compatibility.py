@@ -16,6 +16,7 @@ if str(SRC) not in sys.path:
 
 from fc_editor.codecs.animation import (  # noqa: E402
     AnimationCodec,
+    READ_ONLY_CALL_AUDIT,
     TABLES,
     decode_background_rule,
     decode_sprite_composition,
@@ -42,47 +43,21 @@ REFERENCE_AUDIT_FILES = (
     ROOT / "references" / "research" / "fc资料集-v1.16" / "武器动画指针.htm",
     ROOT / "references" / "research" / "fc资料集-v1.16" / "武器动画标志代码.htm",
 )
-READ_ONLY_CALL_AUDIT = {
-    0x3804A: {
-        "animation_id": 0x00,
-        "reason_code": "reference_value_conflict",
-        "reason": "资料集 page_325.html 记为 $3804A→$0C，当前 ROM 同址却是 $00；编号冲突，不能按参考项解禁。",
-    },
-    0x384B0: {
-        "animation_id": 0x10,
-        "reason_code": "id_meaning_only",
-        "reason": "资料集只说明动画 $10 的显示含义，未给出该调用地址或可核对的完整前置序列。",
-    },
-    0x3853D: {
-        "animation_id": 0x10,
-        "reason_code": "id_meaning_only",
-        "reason": "资料集只说明动画 $10 的显示含义，未给出该调用地址或可核对的完整前置序列。",
-    },
-    0x38982: {
-        "animation_id": 0x02,
-        "reason_code": "reference_address_mismatch",
-        "reason": "资料集 page_325.html 记为 $38983→$02，而当前 ROM 调用起点是 $38982；虽疑似文档偏一字节，仍不把推测当精确地址证据。",
-    },
-    0x38E68: {
-        "animation_id": 0x14,
-        "reason_code": "id_meaning_only",
-        "reason": "资料集只说明动画 $14 的显示含义，未列出该地址，前置序列也未在精神/战斗流程清单中复现。",
-    },
-    0x38EF3: {
-        "animation_id": 0x12,
-        "reason_code": "id_meaning_only",
-        "reason": "资料集只说明动画 $12 的显示含义，未列出该地址，当前邻近事件指令语义不足以证明写入安全。",
-    },
-    0x3B9DC: {
-        "animation_id": 0x37,
-        "reason_code": "embedded_vm_data_unverified",
-        "reason": "该命中位于 6502 子程序后的嵌入式数据段；资料集没有地址、编号或脚本入口的双重证据。",
-    },
-    0x3B9E0: {
-        "animation_id": 0x3D,
-        "reason_code": "embedded_vm_data_unverified",
-        "reason": "该命中紧邻另一处未验证命中并位于嵌入式数据段；没有已验证的调用链头，不能因连续字节外观解禁。",
-    },
+READ_ONLY_REASON_CODES = {
+    0x3804A: "reference_value_conflict",
+    0x38982: "reference_address_mismatch",
+    0x3B9DC: "embedded_vm_data_unverified",
+    0x3B9E0: "embedded_vm_data_unverified",
+}
+READ_ONLY_EXPECTED_IDS = {
+    0x3804A: 0x00,
+    0x384B0: 0x10,
+    0x3853D: 0x10,
+    0x38982: 0x02,
+    0x38E68: 0x14,
+    0x38EF3: 0x12,
+    0x3B9DC: 0x37,
+    0x3B9E0: 0x3D,
 }
 
 
@@ -170,7 +145,10 @@ def analyze(rom_path: Path) -> dict[str, object]:
     ]
     read_only_call_details = []
     for offset, animation_id in read_only_calls:
-        audit = READ_ONLY_CALL_AUDIT.get(offset, {})
+        title, reason = READ_ONLY_CALL_AUDIT.get(
+            offset,
+            ("上下文未验证", "缺少逐项审计结论。"),
+        )
         context_start = offset - 8
         context_end = offset + 11
         bank = (offset - 16) // 0x2000
@@ -183,8 +161,8 @@ def analyze(rom_path: Path) -> dict[str, object]:
                 "animation_id": f"${animation_id:02X}",
                 "context_range": f"0x{context_start:06X}-0x{context_end - 1:06X}",
                 "context": data[context_start:context_end].hex(" ").upper(),
-                "reason_code": audit.get("reason_code", "audit_missing"),
-                "reason": audit.get("reason", "缺少逐项审计结论。"),
+                "reason_code": READ_ONLY_REASON_CODES.get(offset, "id_meaning_only"),
+                "reason": f"{title}：{reason}",
             }
         )
     reference_audit_hashes = {
@@ -433,10 +411,7 @@ def analyze(rom_path: Path) -> dict[str, object]:
         ),
         "read_only_call_audit_complete": (
             {offset: animation_id for offset, animation_id in read_only_calls}
-            == {
-                offset: int(audit["animation_id"])
-                for offset, audit in READ_ONLY_CALL_AUDIT.items()
-            }
+            == READ_ONLY_EXPECTED_IDS
             and len(read_only_call_details) == 8
             and all(
                 detail["reason_code"] != "audit_missing"

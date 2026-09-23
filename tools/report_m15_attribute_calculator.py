@@ -26,7 +26,10 @@ from dc_modifier.battle_calculator import (  # noqa: E402
     normalized_special_code,
     reference_firepower,
 )
-from dc_modifier.legacy_tools import AttributeCalculatorDialog  # noqa: E402
+from dc_modifier.legacy_tools import (  # noqa: E402
+    AttributeCalculatorDialog,
+    DamageMultiplierDialog,
+)
 from fc_rom_editor_core import RomProject  # noqa: E402
 
 
@@ -140,11 +143,14 @@ def analyze(rom_path: Path) -> dict[str, object]:
         undo_restored = bytes(project.working) == initial_working
 
         buttons = [button.text() for button in dialog.findChildren(QPushButton)]
-        buttons_are_disabled = all(
-            not side.change_multiplier_button.isEnabled()
-            and "参考版此功能损坏" in side.change_multiplier_button.toolTip()
+        multiplier_buttons_are_safe = all(
+            side.change_multiplier_button.isEnabled()
+            and "不写入 ROM" in side.change_multiplier_button.toolTip()
             for side in (dialog.enemy, dialog.ally)
         )
+        multiplier_editor = DamageMultiplierDialog(3, 2)
+        multiplier_editor_values = multiplier_editor.values
+        multiplier_editor.close()
 
         boundary_attacker = BattleSideState(
             strength=100,
@@ -262,7 +268,11 @@ def analyze(rom_path: Path) -> dict[str, object]:
                 and undo_description == "伤害公式"
                 and undo_restored
             ),
-            "broken_multiplier_buttons_are_safe": buttons_are_disabled,
+            "transient_multiplier_buttons_are_safe": (
+                multiplier_buttons_are_safe
+                and multiplier_editor_values == (3, 2)
+                and bytes(project.working) == initial_working
+            ),
             "archived_firepower_examples": (
                 reference_firepower(36, 10) == 368
                 and reference_firepower(33, 10) == 338
@@ -304,7 +314,7 @@ def analyze(rom_path: Path) -> dict[str, object]:
             "delivery_status": "implementation_complete_reference_and_user_pending",
             "conclusion": (
                 "M15 机体/人物/武器/等级联动、完整命中/双击/伤害公式、"
-                "M17 实时参数和 D6 禁用按钮均通过实现侧门禁；"
+                "M17 实时参数和不写 ROM 的临时倍率编辑均通过实现侧门禁；"
                 "参考 EXE 逐行动态黄金与用户签收仍待完成。"
             ),
             "rom": {

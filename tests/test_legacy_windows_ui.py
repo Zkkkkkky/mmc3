@@ -185,9 +185,12 @@ class LegacyWindowTests(QtTestCase):
             ),
         )
         self.assertEqual(page.level_cap_value.text(), "当前等级上限：99")
-        self.assertFalse(page.level_cap_button.isEnabled())
+        self.assertTrue(page.level_cap_button.isEnabled())
         self.assertIn("99级布局", page.level_cap_button.toolTip())
         self.assertIn("audit.nes", page.level_cap_button.toolTip())
+        with patch("dc_modifier.legacy_windows.QMessageBox.information") as info:
+            page.level_cap_button.click()
+        self.assertIn("不会改写 ROM", info.call_args.args[2])
 
     def test_experience_table_rejects_non_monotonic_thresholds(self) -> None:
         project = RomProject.load(DEFAULT_ROM)
@@ -391,9 +394,12 @@ class LegacyWindowTests(QtTestCase):
         self.assertTrue(page.paste_record_button.isVisible())
         self.assertTrue(page.export_record_button.isVisible())
         self.assertTrue(page.import_record_button.isVisible())
-        self.assertFalse(page.add_button.isEnabled())
+        self.assertTrue(page.add_button.isEnabled())
         self.assertIn("$01—$FF", page.add_button.toolTip())
         self.assertIn("第 256 个 ID", page.add_button.toolTip())
+        with patch("dc_modifier.legacy_windows.QMessageBox.information") as info:
+            page.add_button.click()
+        self.assertIn("不能再创建第 256 个机体", info.call_args.args[2])
         icon = page.icon_preview.pixmap()
         self.assertIsNotNone(icon)
         assert icon is not None
@@ -463,6 +469,11 @@ class LegacyWindowTests(QtTestCase):
                     dialog.setup_event_lists, dialog.setup_event_pages
                 )
             )
+        )
+        self.assertEqual(len(dialog.setup_event_edit_buttons), 3)
+        self.assertTrue(all(button.isEnabled() for button in dialog.setup_event_edit_buttons))
+        self.assertTrue(
+            all(button.text() == "编辑所选事件指令…" for button in dialog.setup_event_edit_buttons)
         )
         self.assertEqual(dialog.space_button.text(), ScenarioDialog.SPACE_BUTTON_TEXT)
         self.assertTrue(dialog.space_button.isEnabled())

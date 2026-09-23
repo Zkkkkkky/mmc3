@@ -1673,14 +1673,28 @@ class RomProject:
         from fc_editor.codecs.animation import AnimationCodec
 
         codec = AnimationCodec(self.working)
+        weapon_label_counts = {
+            "weapon_beam": 0xFF,
+            "weapon_movement_1": 0xFC,
+            "weapon_movement_2": 0xFA,
+            "weapon_picture": 0xFF,
+        }
         checked: dict[tuple[str, int], str] = {}
         for key, label in labels.items():
             if not isinstance(key, tuple) or len(key) != 2:
                 raise ValueError("动画名称键必须为 (类型, 序号)。")
             kind, index = key
-            if kind not in {"map", "background", "movement", "sprite"}:
+            if kind not in {"map", "background", "movement", "sprite"} | set(weapon_label_counts):
                 raise ValueError(f"未知动画名称类型：{kind}")
-            if not isinstance(index, int) or not 0 <= index < codec.count(kind):
+            valid_index = (
+                isinstance(index, int)
+                and (
+                    1 <= index <= weapon_label_counts[kind]
+                    if kind in weapon_label_counts
+                    else 0 <= index < codec.count(kind)
+                )
+            )
+            if not valid_index:
                 raise ValueError(f"{kind} 动画名称序号越界：{index}")
             normalized = label.strip()
             if not normalized or normalized != label or len(normalized) > 80:

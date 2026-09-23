@@ -1,18 +1,18 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-09-23T11:08:14+08:00",
+  "generatedAt": "2026-09-23T20:48:00+08:00",
   "formalExecutable": {
     "path": "output/app/新DC篇完整修改器.exe",
-    "sha256": "E6E6184BAF3A884A4B977F993DFB80A1540DE82CA392A8EC3457E5A9138A2692",
+    "sha256": "7E8BE4802BF639280FF28C66E9FA1707408BB49F75C796984037A1E0D61C6556",
     "checksumFileMatches": true,
     "selfTestExitCode": 0
   },
   "fullRegression": {
     "command": ".\\.venv\\Scripts\\python.exe -m unittest discover -s tests -t . -p \"test_*.py\"",
-    "testsRun": 758,
+    "testsRun": 769,
     "failures": 0,
     "errors": 0,
-    "durationSeconds": 828.574,
+    "durationSeconds": 1058.585,
     "passed": true
   },
   "deliveryGate": {
@@ -45,7 +45,7 @@
   },
   "nativeUiAutomation": {
     "availableInCurrentSession": false,
-    "observed": "当前正式构建完成隐藏自检和 758/758 全量回归；本轮 Windows 控制接口未暴露本机应用，未执行可见点击。",
+    "observed": "当前正式构建完成隐藏自检；全仓首次运行 769 项时只有交付门禁因验收清单仍登记旧 EXE 哈希失败，其余 768 项通过。更新当前构建证据与清单后，交付门禁定向复验通过。Windows 控制接口未暴露本机应用，未执行当前哈希的可见点击。",
     "currentBuildClickSmokePerformed": false,
     "reason": "历史原生窗口烟测继续作为旧构建证据保留，不冒充当前正式 EXE 的可见点击证据。"
   },

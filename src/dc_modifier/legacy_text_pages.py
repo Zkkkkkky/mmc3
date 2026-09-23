@@ -88,11 +88,11 @@ class LegacyTextPage(ProjectPage):
         self.system_note.setStyleSheet("color: #b00020;")
         self.system_note.setVisible(group_keys == ("system",))
         self.add_button = QPushButton("添加")
-        self.add_button.setEnabled(False)
         self.add_button.setVisible(group_keys == ("system",))
         self.add_button.setToolTip(
-            "系统文字池没有经过黄金对照验证的追加/搬移规则；当前只允许原记录容量内修改。"
+            "系统文字池没有经过黄金对照验证的追加/搬移规则；点击查看容量说明。"
         )
+        self.add_button.clicked.connect(self._show_add_boundary)
         buttons.addWidget(self.system_note, 1)
         buttons.addWidget(self.add_button)
         buttons.addStretch()
@@ -106,6 +106,15 @@ class LegacyTextPage(ProjectPage):
         self.search_edit.textChanged.connect(self._filter)
         self.apply_button.clicked.connect(self.apply_changes)
         self.reset_button.clicked.connect(self.reset_current)
+
+    def _show_add_boundary(self) -> None:
+        QMessageBox.information(
+            self,
+            "系统文字容量",
+            "当前系统文字使用固定指针表和固定文字池，只能在原记录容量内修改。\n\n"
+            "新增记录需要同时扩大指针表并搬移后续数据；参考保存协议尚未形成可验证闭环，"
+            "因此本次不会修改 ROM。",
+        )
 
     def set_embedded_single_record_mode(self) -> None:
         """Reduce the generic text page to the editor used by M10's item panel."""

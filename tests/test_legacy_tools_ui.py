@@ -14,6 +14,7 @@ from PySide6.QtWidgets import QApplication, QGroupBox, QPushButton, QWidget
 
 from dc_modifier.legacy_tools import (
     AttributeCalculatorDialog,
+    DamageMultiplierDialog,
     FontLibraryDialog,
     MapAnimationDialog,
     OtherSettingsDialog,
@@ -66,6 +67,7 @@ class LegacyToolDialogTests(QtTestCase):
         self.assertEqual(dialog.code_value.text(), "C800")
         self.assertEqual(dialog.address_value.text(), "070010")
         self.assertFalse(dialog.write_button.isEnabled())
+        self.assertIn("点阵变化后即可写入", dialog.write_button.toolTip())
         self.assertEqual(dialog.replace_all_button.isEnabled(), self.project is not None)
         self._show(dialog)
         visible_buttons = {
@@ -269,12 +271,20 @@ class LegacyToolDialogTests(QtTestCase):
         self.assertLessEqual(side.hp.value(), 9999)
         dialog.close()
 
-    def test_attribute_calculator_disables_broken_multiplier_buttons(self) -> None:
+    def test_attribute_calculator_enables_safe_transient_multiplier_editor(self) -> None:
         dialog = AttributeCalculatorDialog(project=self.project)
         for side in (dialog.enemy, dialog.ally):
-            self.assertFalse(side.change_multiplier_button.isEnabled())
-            self.assertIn("参考版此功能损坏", side.change_multiplier_button.toolTip())
+            self.assertTrue(side.change_multiplier_button.isEnabled())
+            self.assertIn("不写入 ROM", side.change_multiplier_button.toolTip())
             self.assertEqual(side.level.count(), 60)
+        dialog.close()
+
+    def test_damage_multiplier_dialog_clamps_and_returns_values(self) -> None:
+        dialog = DamageMultiplierDialog(0, 120)
+        self.assertEqual(dialog.values, (1, 99))
+        dialog.numerator.setValue(3)
+        dialog.denominator.setValue(2)
+        self.assertEqual(dialog.values, (3, 2))
         dialog.close()
 
     def test_attribute_calculator_reads_changed_m17_parameters_without_writing_rom(self) -> None:
