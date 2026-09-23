@@ -105,7 +105,6 @@ SNAPSHOT_ROOT = AUDIT_DIR / "cases" / "legacy_globals"
 EXPECTED_DISCOVERY_FIELDS = frozenset(
     {
         "M05/body_compressed_upload_bmp",
-        "M05/body_puzzle_template_8x8",
         "M05/body_upload_bmp",
         "M05/fragment_compressed_upload_bmp",
         "M05/fragment_upload_bmp",
@@ -1072,6 +1071,35 @@ class CliMissingInputsTests(unittest.TestCase):
         code, message = self._run_in_empty_repo("stats")
         self.assertEqual(code, 2)
         self.assertIn("不存在", message)
+
+
+class VerifyScopeTests(unittest.TestCase):
+    """发布复核可排除已分类、但本来就不作为黄金依据的 discovery。"""
+
+    def test_golden_only_skips_discovery_before_snapshot_checks(self) -> None:
+        discovery = mock.Mock(case_kind="discovery")
+        discovery.snapshot_dir = None
+        stdout = io.StringIO()
+        with mock.patch.object(cli, "load_family_records", return_value=[discovery]):
+            with contextlib.redirect_stdout(stdout):
+                code = cli.main(["verify", "--golden-only"])
+        self.assertEqual(code, 0)
+        self.assertIn("skipped-discovery 1", stdout.getvalue())
+
+    def test_default_verify_still_reports_missing_discovery(self) -> None:
+        discovery = mock.Mock(
+            module="M05",
+            field="preview_only",
+            case_id="cold_start_01",
+            case_kind="discovery",
+            snapshot_dir=None,
+        )
+        stdout = io.StringIO()
+        with mock.patch.object(cli, "load_family_records", return_value=[discovery]):
+            with contextlib.redirect_stdout(stdout):
+                code = cli.main(["verify"])
+        self.assertEqual(code, 2)
+        self.assertIn("[MISS]", stdout.getvalue())
 
 
 # ---------------------------------------------------------------------------

@@ -52,6 +52,15 @@ PROMOTED_NOOP_FIELDS = (
     "icon_binding_double_click",
 )
 
+# The original 8x8 recipe accidentally hard-coded the value captured before
+# clicking the template button.  Its cold-reopen value is the deterministic
+# 8x8 script produced by that button, and the run is within budget.  Preserve
+# the mistaken capture in the promoted report while correcting request
+# semantics for coverage.
+CORRECTED_PROMOTED_FIELDS = {
+    "body_puzzle_template_8x8": "F3 F9 00 FD 20 08 F9 40 00 FF ",
+}
+
 
 def _read_json(path: Path) -> Any:
     return json.loads(path.read_text(encoding="utf-8"))
@@ -231,10 +240,74 @@ def main() -> int:
         result_by_field[field].clear()
         result_by_field[field].update(promoted)
 
+    for field, corrected_request in CORRECTED_PROMOTED_FIELDS.items():
+        report_path = _case_report(field)
+        report = _read_json(report_path)
+        captured_request = report["requested_value"]
+        if (
+            captured_request != report["original_value"]
+            or report["reopen_value"] != corrected_request
+            or report["within_budget"] is not True
+        ):
+            raise RuntimeError(f"{field}: corrected request evidence is incomplete")
+        action_after = (ROOT / report["snapshots"]["after"]["path"]).read_bytes()
+        if len(action_after) != len(baseline_after):
+            raise RuntimeError(f"{field}: ROM size differs from normalization baseline")
+        expected = [
+            offset
+            for offset, (baseline_value, action_value) in enumerate(
+                zip(baseline_after, action_after)
+            )
+            if baseline_value != action_value
+        ]
+        if not expected:
+            raise RuntimeError(f"{field}: action has no independent ROM difference")
+
+        source_config = _config(field)
+        config = _read_json(source_config)
+        config.update(
+            {
+                "case_kind": "golden",
+                "requested_value": corrected_request,
+                "expected_offsets": expected,
+                "required_offsets": expected,
+                "optional_offsets": [],
+                "extra_allowed": [],
+                "extra_allowed_profile": PROFILE_NAME,
+            }
+        )
+        _write_json(_golden_config(field), config)
+        source_config.unlink()
+
+        promoted = dict(report)
+        promoted.update(
+            {
+                "case_kind": "golden",
+                "captured_requested_value": captured_request,
+                "request_correction_reason": (
+                    "discovery recipe captured the pre-click script; cold reopen is the known 8x8 template"
+                ),
+                "requested_value": corrected_request,
+                "reopen_matches_request": True,
+                "expected_offsets": expected,
+                "required_offsets": expected,
+                "optional_offsets": [],
+                "extra_allowed": list(common_offsets),
+                "extra_allowed_profile": PROFILE_NAME,
+                "unexpected_offsets": [],
+                "expected_not_changed": [],
+                "passed": True,
+                "pending_reason": None,
+            }
+        )
+        _write_json(report_path, promoted)
+        result_by_field[field].clear()
+        result_by_field[field].update(promoted)
+
     live_results.sort(key=lambda item: (item["module"], item["field"], item["case_id"]))
     _write_json(LIVE_RESULTS, compact_live_result_items(live_results))
     print(
-        f"Promoted {len(PROMOTED_FIELDS)} M05 write cases and "
+        f"Promoted {len(PROMOTED_FIELDS) + len(CORRECTED_PROMOTED_FIELDS)} M05 write cases and "
         f"{len(PROMOTED_NOOP_FIELDS)} no-op cases; "
         f"normalization_offsets={len(common_offsets)}"
     )

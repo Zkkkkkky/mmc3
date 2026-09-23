@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-09-23T20:48:00+08:00",
+  "generatedAt": "2026-09-24T00:05:01+08:00",
   "formalExecutable": {
     "path": "output/app/新DC篇完整修改器.exe",
     "sha256": "7E8BE4802BF639280FF28C66E9FA1707408BB49F75C796984037A1E0D61C6556",
@@ -8,11 +8,11 @@
     "selfTestExitCode": 0
   },
   "fullRegression": {
-    "command": ".\\.venv\\Scripts\\python.exe -m unittest discover -s tests -t . -p \"test_*.py\"",
-    "testsRun": 769,
+    "command": "$env:PYTHONPATH = (Join-Path (Get-Location) 'src'); .\\.venv\\Scripts\\python.exe -m unittest discover -s tests -p \"test_*.py\"",
+    "testsRun": 772,
     "failures": 0,
     "errors": 0,
-    "durationSeconds": 1058.585,
+    "durationSeconds": 1104.052,
     "passed": true
   },
   "deliveryGate": {

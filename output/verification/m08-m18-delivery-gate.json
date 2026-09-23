@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-23T21:59:22+08:00",
+  "generated_at": "2026-09-24T00:11:39+08:00",
   "machine_gate_passed": true,
   "implementation_complete": true,
   "user_acceptance_complete": true,
@@ -13,9 +13,9 @@
   },
   "current_build_verification": {
     "path": "output/verification/m08-m18-current-build-verification-2026-09-19.json",
-    "sha256": "89A3FAB831963830BA47CC4A4BC77336E2605FBF70312D5E19192E184657F6E2",
+    "sha256": "0C0C8646B4D386D0C4DEBA4AD2F74F01AD69D403FFA1607EA638A05BE30F7D45",
     "full_regression_passed": true,
-    "full_regression_tests": 769,
+    "full_regression_tests": 772,
     "self_test_exit_code": 0,
     "executable_sha256": "7E8BE4802BF639280FF28C66E9FA1707408BB49F75C796984037A1E0D61C6556",
     "matches_current_executable": true,
@@ -158,7 +158,7 @@
       "implementation_scope_complete": true,
       "machine_gate_passed": true,
       "evidence": "output/verification/m18-unit-export-verification.json",
-      "evidence_sha256": "B63E485073DA9C17BC9DB05F3FC15C47F3D1FC98A152EC5AD8C5EB4B3E08145A",
+      "evidence_sha256": "602C60B0B2B617F02362DE1542A6FA6F47DF50E7447134EDF30F9314822EA75D",
       "checklist": "docs/M18验收清单.md",
       "checklist_exists": true,
       "checklist_declares_current_executable": true,
@@ -167,7 +167,7 @@
   },
   "blocking_reasons": [
     "M12 的 6 条无安全参数、31 条动态/不完整背景、三表任意通用搬移和 8 个已逐项审计但证据冲突/不足的调用均按需求保持只读；这是完成态安全门禁，不是待猜写功能。",
-    "当前正式构建已通过 769/769 全量回归和隐藏自检；Mesen 17/17 是推荐 ROM 运行时基线。当前 EXE 已完成 Windows 可见点击、头像三图导出和 F7 完整检查。",
+    "当前正式构建已通过 772/772 全量回归和隐藏自检；Mesen 17/17 是推荐 ROM 运行时基线。当前 EXE 已完成 Windows 可见点击、头像三图导出和 F7 完整检查。",
     "2026-09-21 用户明确确认 M03—M17 按当前实现范围通过；本报告据此记录 M08—M17 用户签收，不扩大任何模块的声明实现范围。"
   ]
 }

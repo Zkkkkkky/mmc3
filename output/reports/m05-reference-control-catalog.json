@@ -2,7 +2,7 @@
   "schema_version": 1,
   "module": "M05",
   "passed": true,
-  "status": "five_surfaces_cataloged_33_save_fields_passed_10_actions_guarded_1_capacity_boundary",
+  "status": "five_surfaces_cataloged_33_save_fields_passed_18_action_goldens_7_non_golden_resolved_0_unresolved",
   "sources": {
     "main": {
       "path": "output/verification/legacy-ui-probe-m05-icon-double-click-20260920l/controls/M05_数据库_机体修改.json",
@@ -23,6 +23,10 @@
     "fragment_puzzle": {
       "path": "output/verification/legacy-ui-probe/controls/D3_数据库_碎片拼图.json",
       "sha256": "06240ca37e2873790457f44f2313a63edc68d99b9dd256e90e84fdf77ac81e7b"
+    },
+    "pending_action_analysis": {
+      "path": "output/reports/m05-pending-action-analysis.json",
+      "sha256": "4af2e19f02eab203c310d233972f9c8b428f01804934ffcfb00bb79aeb2f942b"
     }
   },
   "counts": {
@@ -46,8 +50,10 @@
     "guarded_pending_actions": 10,
     "classified_capacity_boundaries": 1,
     "prepared_discovery_recipes": 25,
-    "promoted_golden_recipes": 17,
-    "pending_discovery_recipes": 8,
+    "promoted_golden_recipes": 18,
+    "pending_discovery_recipes": 7,
+    "resolved_non_golden_recipes": 7,
+    "unresolved_discovery_recipes": 0,
     "guarded_actions_with_discovery": 10
   },
   "checks": {
@@ -67,7 +73,8 @@
     "action_discovery_recipes_ready": true,
     "action_recipes_reviewed": true,
     "pending_recipes_have_explicit_dynamic_blockers": true,
-    "pending_recipes_have_actionable_classification": true
+    "pending_recipes_have_actionable_classification": true,
+    "pending_recipes_semantically_resolved": true
   },
   "golden_save_fields": [
     "body_bank_1",
@@ -261,13 +268,426 @@
         "reopen_matches_expected": false,
         "reopen_matches_original": false
       },
+      "pending_action_analysis": {
+        "classification": "reference_resource_save_confirmed_capture_mismatch",
+        "conclusion": "BMP 的 55 个非空图块按参考四色映射压缩后，880 字节与保存 ROM 的目标图库逐字节一致；资源保存协议已确认，冷重开控件像素哈希不是可靠判据。",
+        "durationSeconds": 73.665,
+        "withinBudget": false,
+        "changedFromInputCount": 54840,
+        "reopenMatchesRequest": false,
+        "reopenMatchesOriginal": false,
+        "inputSha256": "C5D2C1DFBE0DC39AFC9EFFD314C082F121B98C9AD67C4825B1C9DD4B9E991954",
+        "outputSha256": "85AC2E19D13065B03B52B344529B8F39AF485822296F4280D51B2C70395774AA",
+        "actionSpecificDiff": {
+          "count": 14965,
+          "rangeCount": 1055,
+          "minimum": "0x050012",
+          "maximum": "0x09337F",
+          "firstRanges": [
+            {
+              "start": "0x050012",
+              "end": "0x050014",
+              "length": 3
+            },
+            {
+              "start": "0x050026",
+              "end": "0x050026",
+              "length": 1
+            },
+            {
+              "start": "0x050028",
+              "end": "0x050028",
+              "length": 1
+            },
+            {
+              "start": "0x05002A",
+              "end": "0x05002A",
+              "length": 1
+            },
+            {
+              "start": "0x05002C",
+              "end": "0x05002C",
+              "length": 1
+            },
+            {
+              "start": "0x05002E",
+              "end": "0x05002E",
+              "length": 1
+            },
+            {
+              "start": "0x050030",
+              "end": "0x050030",
+              "length": 1
+            },
+            {
+              "start": "0x050032",
+              "end": "0x050032",
+              "length": 1
+            },
+            {
+              "start": "0x050034",
+              "end": "0x050034",
+              "length": 1
+            },
+            {
+              "start": "0x050036",
+              "end": "0x050036",
+              "length": 1
+            },
+            {
+              "start": "0x050038",
+              "end": "0x050038",
+              "length": 1
+            },
+            {
+              "start": "0x05003A",
+              "end": "0x05003A",
+              "length": 1
+            },
+            {
+              "start": "0x05003C",
+              "end": "0x05003C",
+              "length": 1
+            },
+            {
+              "start": "0x05003E",
+              "end": "0x05003E",
+              "length": 1
+            },
+            {
+              "start": "0x050040",
+              "end": "0x050040",
+              "length": 1
+            },
+            {
+              "start": "0x050042",
+              "end": "0x050042",
+              "length": 1
+            },
+            {
+              "start": "0x050044",
+              "end": "0x050044",
+              "length": 1
+            },
+            {
+              "start": "0x050046",
+              "end": "0x050046",
+              "length": 1
+            },
+            {
+              "start": "0x050048",
+              "end": "0x050048",
+              "length": 1
+            },
+            {
+              "start": "0x05004A",
+              "end": "0x05004A",
+              "length": 1
+            },
+            {
+              "start": "0x05004C",
+              "end": "0x05004C",
+              "length": 1
+            },
+            {
+              "start": "0x05004E",
+              "end": "0x05004E",
+              "length": 1
+            },
+            {
+              "start": "0x050050",
+              "end": "0x050050",
+              "length": 1
+            },
+            {
+              "start": "0x050052",
+              "end": "0x050052",
+              "length": 1
+            }
+          ]
+        },
+        "actionSpecificRegions": {
+          "unitCompositionPair": {
+            "fileRange": "0x050010-0x05400F",
+            "count": 14241,
+            "rangeCount": 983,
+            "minimum": "0x050012",
+            "maximum": "0x053D45",
+            "firstRanges": [
+              {
+                "start": "0x050012",
+                "end": "0x050014",
+                "length": 3
+              },
+              {
+                "start": "0x050026",
+                "end": "0x050026",
+                "length": 1
+              },
+              {
+                "start": "0x050028",
+                "end": "0x050028",
+                "length": 1
+              },
+              {
+                "start": "0x05002A",
+                "end": "0x05002A",
+                "length": 1
+              },
+              {
+                "start": "0x05002C",
+                "end": "0x05002C",
+                "length": 1
+              },
+              {
+                "start": "0x05002E",
+                "end": "0x05002E",
+                "length": 1
+              },
+              {
+                "start": "0x050030",
+                "end": "0x050030",
+                "length": 1
+              },
+              {
+                "start": "0x050032",
+                "end": "0x050032",
+                "length": 1
+              },
+              {
+                "start": "0x050034",
+                "end": "0x050034",
+                "length": 1
+              },
+              {
+                "start": "0x050036",
+                "end": "0x050036",
+                "length": 1
+              },
+              {
+                "start": "0x050038",
+                "end": "0x050038",
+                "length": 1
+              },
+              {
+                "start": "0x05003A",
+                "end": "0x05003A",
+                "length": 1
+              },
+              {
+                "start": "0x05003C",
+                "end": "0x05003C",
+                "length": 1
+              },
+              {
+                "start": "0x05003E",
+                "end": "0x05003E",
+                "length": 1
+              },
+              {
+                "start": "0x050040",
+                "end": "0x050040",
+                "length": 1
+              },
+              {
+                "start": "0x050042",
+                "end": "0x050042",
+                "length": 1
+              },
+              {
+                "start": "0x050044",
+                "end": "0x050044",
+                "length": 1
+              },
+              {
+                "start": "0x050046",
+                "end": "0x050046",
+                "length": 1
+              },
+              {
+                "start": "0x050048",
+                "end": "0x050048",
+                "length": 1
+              },
+              {
+                "start": "0x05004A",
+                "end": "0x05004A",
+                "length": 1
+              },
+              {
+                "start": "0x05004C",
+                "end": "0x05004C",
+                "length": 1
+              },
+              {
+                "start": "0x05004E",
+                "end": "0x05004E",
+                "length": 1
+              },
+              {
+                "start": "0x050050",
+                "end": "0x050050",
+                "length": 1
+              },
+              {
+                "start": "0x050052",
+                "end": "0x050052",
+                "length": 1
+              }
+            ]
+          },
+          "activeChr": {
+            "fileRange": "0x080010-0x0C000F",
+            "count": 724,
+            "rangeCount": 72,
+            "minimum": "0x09301F",
+            "maximum": "0x09337F",
+            "firstRanges": [
+              {
+                "start": "0x09301F",
+                "end": "0x09301F",
+                "length": 1
+              },
+              {
+                "start": "0x093024",
+                "end": "0x093026",
+                "length": 3
+              },
+              {
+                "start": "0x09302D",
+                "end": "0x09302D",
+                "length": 1
+              },
+              {
+                "start": "0x09302F",
+                "end": "0x09302F",
+                "length": 1
+              },
+              {
+                "start": "0x093032",
+                "end": "0x093037",
+                "length": 6
+              },
+              {
+                "start": "0x09303B",
+                "end": "0x09303F",
+                "length": 5
+              },
+              {
+                "start": "0x093041",
+                "end": "0x093049",
+                "length": 9
+              },
+              {
+                "start": "0x09304B",
+                "end": "0x09304F",
+                "length": 5
+              },
+              {
+                "start": "0x093052",
+                "end": "0x093052",
+                "length": 1
+              },
+              {
+                "start": "0x093056",
+                "end": "0x093057",
+                "length": 2
+              },
+              {
+                "start": "0x09305A",
+                "end": "0x09305A",
+                "length": 1
+              },
+              {
+                "start": "0x09305E",
+                "end": "0x09305F",
+                "length": 2
+              },
+              {
+                "start": "0x093063",
+                "end": "0x093067",
+                "length": 5
+              },
+              {
+                "start": "0x09306B",
+                "end": "0x09306E",
+                "length": 4
+              },
+              {
+                "start": "0x093070",
+                "end": "0x09307F",
+                "length": 16
+              },
+              {
+                "start": "0x093083",
+                "end": "0x093085",
+                "length": 3
+              },
+              {
+                "start": "0x093087",
+                "end": "0x09308B",
+                "length": 5
+              },
+              {
+                "start": "0x09308D",
+                "end": "0x093097",
+                "length": 11
+              },
+              {
+                "start": "0x093099",
+                "end": "0x0930B7",
+                "length": 31
+              },
+              {
+                "start": "0x0930B9",
+                "end": "0x0930CF",
+                "length": 23
+              },
+              {
+                "start": "0x0930D7",
+                "end": "0x0930D7",
+                "length": 1
+              },
+              {
+                "start": "0x0930DD",
+                "end": "0x0930DF",
+                "length": 3
+              },
+              {
+                "start": "0x0930E2",
+                "end": "0x0930E7",
+                "length": 6
+              },
+              {
+                "start": "0x0930E9",
+                "end": "0x093125",
+                "length": 61
+              }
+            ]
+          },
+          "unclassified": {
+            "count": 0,
+            "rangeCount": 0,
+            "minimum": null,
+            "maximum": null,
+            "firstRanges": []
+          }
+        },
+        "semanticEvidence": {
+          "kind": "compressed_body_tiles",
+          "nonblankTileCount": 55,
+          "targetFirstTile": "0x1300",
+          "encodedBytes": 880,
+          "exactBytesMatch": true
+        }
+      },
       "promotion_blockers": [
         "exceeds_30_second_budget",
         "cold_reopen_does_not_match_expected",
         "save_layout_not_reviewed"
       ],
-      "evidence_classification": "reference_cold_reopen_mismatch",
-      "next_evidence_step": "identify_normalization_or_secondary_resource_writes_and_repeat_cold_reopen",
+      "evidence_classification": "reference_resource_save_confirmed_capture_mismatch",
+      "next_evidence_step": "replace_control_pixel_hash_with_resource_byte_semantic_selector",
       "status": "prepared_not_promoted"
     },
     "fragment_compressed_upload_bmp": {
@@ -287,13 +707,427 @@
         "reopen_matches_expected": false,
         "reopen_matches_original": false
       },
+      "pending_action_analysis": {
+        "classification": "reference_resource_save_confirmed_capture_mismatch",
+        "conclusion": "按保存脚本的 23 个坐标依次裁取并清除已消费像素后，生成的 368 字节与目标图库逐字节一致；压缩碎片保存协议已确认，冷重开控件像素哈希不是可靠判据。",
+        "durationSeconds": 68.89,
+        "withinBudget": false,
+        "changedFromInputCount": 48961,
+        "reopenMatchesRequest": false,
+        "reopenMatchesOriginal": false,
+        "inputSha256": "C5D2C1DFBE0DC39AFC9EFFD314C082F121B98C9AD67C4825B1C9DD4B9E991954",
+        "outputSha256": "1B5A18496D91FD2271C71158D1DC39013E5900B2A04691DF835CD4B25A7303C0",
+        "actionSpecificDiff": {
+          "count": 9086,
+          "rangeCount": 623,
+          "minimum": "0x050014",
+          "maximum": "0x0BF179",
+          "firstRanges": [
+            {
+              "start": "0x050014",
+              "end": "0x050014",
+              "length": 1
+            },
+            {
+              "start": "0x0517E2",
+              "end": "0x0517E2",
+              "length": 1
+            },
+            {
+              "start": "0x0517E4",
+              "end": "0x0517E4",
+              "length": 1
+            },
+            {
+              "start": "0x0517E6",
+              "end": "0x0517E6",
+              "length": 1
+            },
+            {
+              "start": "0x0517E8",
+              "end": "0x0517E8",
+              "length": 1
+            },
+            {
+              "start": "0x0517EA",
+              "end": "0x0517EA",
+              "length": 1
+            },
+            {
+              "start": "0x0517EC",
+              "end": "0x0517EC",
+              "length": 1
+            },
+            {
+              "start": "0x0517EE",
+              "end": "0x0517EE",
+              "length": 1
+            },
+            {
+              "start": "0x0517F0",
+              "end": "0x0517F0",
+              "length": 1
+            },
+            {
+              "start": "0x0517F2",
+              "end": "0x0517F2",
+              "length": 1
+            },
+            {
+              "start": "0x0517F4",
+              "end": "0x0517F4",
+              "length": 1
+            },
+            {
+              "start": "0x0517F6",
+              "end": "0x0517F6",
+              "length": 1
+            },
+            {
+              "start": "0x0517F8",
+              "end": "0x0517F8",
+              "length": 1
+            },
+            {
+              "start": "0x0517FA",
+              "end": "0x0517FA",
+              "length": 1
+            },
+            {
+              "start": "0x0517FC",
+              "end": "0x0517FC",
+              "length": 1
+            },
+            {
+              "start": "0x0517FE",
+              "end": "0x0517FE",
+              "length": 1
+            },
+            {
+              "start": "0x051800",
+              "end": "0x051800",
+              "length": 1
+            },
+            {
+              "start": "0x051802",
+              "end": "0x051802",
+              "length": 1
+            },
+            {
+              "start": "0x051804",
+              "end": "0x051804",
+              "length": 1
+            },
+            {
+              "start": "0x051806",
+              "end": "0x051808",
+              "length": 3
+            },
+            {
+              "start": "0x05180A",
+              "end": "0x05180A",
+              "length": 1
+            },
+            {
+              "start": "0x05180C",
+              "end": "0x05180C",
+              "length": 1
+            },
+            {
+              "start": "0x05180E",
+              "end": "0x05180E",
+              "length": 1
+            },
+            {
+              "start": "0x051810",
+              "end": "0x051810",
+              "length": 1
+            }
+          ]
+        },
+        "actionSpecificRegions": {
+          "unitCompositionPair": {
+            "fileRange": "0x050010-0x05400F",
+            "count": 8792,
+            "rangeCount": 592,
+            "minimum": "0x050014",
+            "maximum": "0x053D46",
+            "firstRanges": [
+              {
+                "start": "0x050014",
+                "end": "0x050014",
+                "length": 1
+              },
+              {
+                "start": "0x0517E2",
+                "end": "0x0517E2",
+                "length": 1
+              },
+              {
+                "start": "0x0517E4",
+                "end": "0x0517E4",
+                "length": 1
+              },
+              {
+                "start": "0x0517E6",
+                "end": "0x0517E6",
+                "length": 1
+              },
+              {
+                "start": "0x0517E8",
+                "end": "0x0517E8",
+                "length": 1
+              },
+              {
+                "start": "0x0517EA",
+                "end": "0x0517EA",
+                "length": 1
+              },
+              {
+                "start": "0x0517EC",
+                "end": "0x0517EC",
+                "length": 1
+              },
+              {
+                "start": "0x0517EE",
+                "end": "0x0517EE",
+                "length": 1
+              },
+              {
+                "start": "0x0517F0",
+                "end": "0x0517F0",
+                "length": 1
+              },
+              {
+                "start": "0x0517F2",
+                "end": "0x0517F2",
+                "length": 1
+              },
+              {
+                "start": "0x0517F4",
+                "end": "0x0517F4",
+                "length": 1
+              },
+              {
+                "start": "0x0517F6",
+                "end": "0x0517F6",
+                "length": 1
+              },
+              {
+                "start": "0x0517F8",
+                "end": "0x0517F8",
+                "length": 1
+              },
+              {
+                "start": "0x0517FA",
+                "end": "0x0517FA",
+                "length": 1
+              },
+              {
+                "start": "0x0517FC",
+                "end": "0x0517FC",
+                "length": 1
+              },
+              {
+                "start": "0x0517FE",
+                "end": "0x0517FE",
+                "length": 1
+              },
+              {
+                "start": "0x051800",
+                "end": "0x051800",
+                "length": 1
+              },
+              {
+                "start": "0x051802",
+                "end": "0x051802",
+                "length": 1
+              },
+              {
+                "start": "0x051804",
+                "end": "0x051804",
+                "length": 1
+              },
+              {
+                "start": "0x051806",
+                "end": "0x051808",
+                "length": 3
+              },
+              {
+                "start": "0x05180A",
+                "end": "0x05180A",
+                "length": 1
+              },
+              {
+                "start": "0x05180C",
+                "end": "0x05180C",
+                "length": 1
+              },
+              {
+                "start": "0x05180E",
+                "end": "0x05180E",
+                "length": 1
+              },
+              {
+                "start": "0x051810",
+                "end": "0x051810",
+                "length": 1
+              }
+            ]
+          },
+          "activeChr": {
+            "fileRange": "0x080010-0x0C000F",
+            "count": 294,
+            "rangeCount": 31,
+            "minimum": "0x0BF011",
+            "maximum": "0x0BF179",
+            "firstRanges": [
+              {
+                "start": "0x0BF011",
+                "end": "0x0BF02F",
+                "length": 31
+              },
+              {
+                "start": "0x0BF031",
+                "end": "0x0BF034",
+                "length": 4
+              },
+              {
+                "start": "0x0BF037",
+                "end": "0x0BF03C",
+                "length": 6
+              },
+              {
+                "start": "0x0BF03E",
+                "end": "0x0BF044",
+                "length": 7
+              },
+              {
+                "start": "0x0BF048",
+                "end": "0x0BF04D",
+                "length": 6
+              },
+              {
+                "start": "0x0BF050",
+                "end": "0x0BF055",
+                "length": 6
+              },
+              {
+                "start": "0x0BF057",
+                "end": "0x0BF07F",
+                "length": 41
+              },
+              {
+                "start": "0x0BF081",
+                "end": "0x0BF087",
+                "length": 7
+              },
+              {
+                "start": "0x0BF089",
+                "end": "0x0BF0B5",
+                "length": 45
+              },
+              {
+                "start": "0x0BF0B8",
+                "end": "0x0BF0BD",
+                "length": 6
+              },
+              {
+                "start": "0x0BF0C0",
+                "end": "0x0BF0E4",
+                "length": 37
+              },
+              {
+                "start": "0x0BF0E7",
+                "end": "0x0BF100",
+                "length": 26
+              },
+              {
+                "start": "0x0BF102",
+                "end": "0x0BF103",
+                "length": 2
+              },
+              {
+                "start": "0x0BF105",
+                "end": "0x0BF108",
+                "length": 4
+              },
+              {
+                "start": "0x0BF10A",
+                "end": "0x0BF10B",
+                "length": 2
+              },
+              {
+                "start": "0x0BF10D",
+                "end": "0x0BF10D",
+                "length": 1
+              },
+              {
+                "start": "0x0BF10F",
+                "end": "0x0BF112",
+                "length": 4
+              },
+              {
+                "start": "0x0BF114",
+                "end": "0x0BF114",
+                "length": 1
+              },
+              {
+                "start": "0x0BF118",
+                "end": "0x0BF11A",
+                "length": 3
+              },
+              {
+                "start": "0x0BF11C",
+                "end": "0x0BF11C",
+                "length": 1
+              },
+              {
+                "start": "0x0BF120",
+                "end": "0x0BF121",
+                "length": 2
+              },
+              {
+                "start": "0x0BF123",
+                "end": "0x0BF134",
+                "length": 18
+              },
+              {
+                "start": "0x0BF138",
+                "end": "0x0BF13C",
+                "length": 5
+              },
+              {
+                "start": "0x0BF140",
+                "end": "0x0BF148",
+                "length": 9
+              }
+            ]
+          },
+          "unclassified": {
+            "count": 0,
+            "rangeCount": 0,
+            "minimum": null,
+            "maximum": null,
+            "firstRanges": []
+          }
+        },
+        "semanticEvidence": {
+          "kind": "compressed_fragment_tiles",
+          "scriptPlacementCount": 23,
+          "targetFirstTile": "0x3F00",
+          "encodedBytes": 368,
+          "consumeOverlappingPixels": true,
+          "exactBytesMatch": true
+        }
+      },
       "promotion_blockers": [
         "exceeds_30_second_budget",
         "cold_reopen_does_not_match_expected",
         "save_layout_not_reviewed"
       ],
-      "evidence_classification": "reference_cold_reopen_mismatch",
-      "next_evidence_step": "identify_normalization_or_secondary_resource_writes_and_repeat_cold_reopen",
+      "evidence_classification": "reference_resource_save_confirmed_capture_mismatch",
+      "next_evidence_step": "replace_control_pixel_hash_with_resource_byte_semantic_selector",
       "status": "prepared_not_promoted"
     },
     "main_clear_body": {
@@ -313,12 +1147,424 @@
         "reopen_matches_expected": false,
         "reopen_matches_original": false
       },
+      "pending_action_analysis": {
+        "classification": "reference_clear_save_confirmed_capture_mismatch",
+        "conclusion": "动作涉及的目标 CHR 非零字节在保存后全部清零；清除语义已确认，冷重开整控件像素哈希不是可靠判据。",
+        "durationSeconds": 12.773,
+        "withinBudget": true,
+        "changedFromInputCount": 42273,
+        "reopenMatchesRequest": false,
+        "reopenMatchesOriginal": false,
+        "inputSha256": "C5D2C1DFBE0DC39AFC9EFFD314C082F121B98C9AD67C4825B1C9DD4B9E991954",
+        "outputSha256": "E8B6F9E145D04471E28B714D8D515072D29A4A9127F23FFA85840028E1C7CA87",
+        "actionSpecificDiff": {
+          "count": 2398,
+          "rangeCount": 253,
+          "minimum": "0x050024",
+          "maximum": "0x09340B",
+          "firstRanges": [
+            {
+              "start": "0x050024",
+              "end": "0x050024",
+              "length": 1
+            },
+            {
+              "start": "0x050026",
+              "end": "0x050026",
+              "length": 1
+            },
+            {
+              "start": "0x050028",
+              "end": "0x050028",
+              "length": 1
+            },
+            {
+              "start": "0x05002A",
+              "end": "0x05002A",
+              "length": 1
+            },
+            {
+              "start": "0x05002C",
+              "end": "0x05002C",
+              "length": 1
+            },
+            {
+              "start": "0x05002E",
+              "end": "0x050030",
+              "length": 3
+            },
+            {
+              "start": "0x050032",
+              "end": "0x050032",
+              "length": 1
+            },
+            {
+              "start": "0x050034",
+              "end": "0x050038",
+              "length": 5
+            },
+            {
+              "start": "0x05003A",
+              "end": "0x05003A",
+              "length": 1
+            },
+            {
+              "start": "0x05003C",
+              "end": "0x05003C",
+              "length": 1
+            },
+            {
+              "start": "0x05003E",
+              "end": "0x05003E",
+              "length": 1
+            },
+            {
+              "start": "0x050040",
+              "end": "0x050042",
+              "length": 3
+            },
+            {
+              "start": "0x050044",
+              "end": "0x050044",
+              "length": 1
+            },
+            {
+              "start": "0x050046",
+              "end": "0x050046",
+              "length": 1
+            },
+            {
+              "start": "0x050048",
+              "end": "0x050048",
+              "length": 1
+            },
+            {
+              "start": "0x05004A",
+              "end": "0x05004C",
+              "length": 3
+            },
+            {
+              "start": "0x05004E",
+              "end": "0x05004E",
+              "length": 1
+            },
+            {
+              "start": "0x050050",
+              "end": "0x050050",
+              "length": 1
+            },
+            {
+              "start": "0x050052",
+              "end": "0x050052",
+              "length": 1
+            },
+            {
+              "start": "0x050054",
+              "end": "0x050054",
+              "length": 1
+            },
+            {
+              "start": "0x050056",
+              "end": "0x050058",
+              "length": 3
+            },
+            {
+              "start": "0x05005A",
+              "end": "0x05005A",
+              "length": 1
+            },
+            {
+              "start": "0x05005C",
+              "end": "0x05005C",
+              "length": 1
+            },
+            {
+              "start": "0x05005E",
+              "end": "0x05005E",
+              "length": 1
+            }
+          ]
+        },
+        "actionSpecificRegions": {
+          "unitCompositionPair": {
+            "fileRange": "0x050010-0x05400F",
+            "count": 1727,
+            "rangeCount": 151,
+            "minimum": "0x050024",
+            "maximum": "0x050908",
+            "firstRanges": [
+              {
+                "start": "0x050024",
+                "end": "0x050024",
+                "length": 1
+              },
+              {
+                "start": "0x050026",
+                "end": "0x050026",
+                "length": 1
+              },
+              {
+                "start": "0x050028",
+                "end": "0x050028",
+                "length": 1
+              },
+              {
+                "start": "0x05002A",
+                "end": "0x05002A",
+                "length": 1
+              },
+              {
+                "start": "0x05002C",
+                "end": "0x05002C",
+                "length": 1
+              },
+              {
+                "start": "0x05002E",
+                "end": "0x050030",
+                "length": 3
+              },
+              {
+                "start": "0x050032",
+                "end": "0x050032",
+                "length": 1
+              },
+              {
+                "start": "0x050034",
+                "end": "0x050038",
+                "length": 5
+              },
+              {
+                "start": "0x05003A",
+                "end": "0x05003A",
+                "length": 1
+              },
+              {
+                "start": "0x05003C",
+                "end": "0x05003C",
+                "length": 1
+              },
+              {
+                "start": "0x05003E",
+                "end": "0x05003E",
+                "length": 1
+              },
+              {
+                "start": "0x050040",
+                "end": "0x050042",
+                "length": 3
+              },
+              {
+                "start": "0x050044",
+                "end": "0x050044",
+                "length": 1
+              },
+              {
+                "start": "0x050046",
+                "end": "0x050046",
+                "length": 1
+              },
+              {
+                "start": "0x050048",
+                "end": "0x050048",
+                "length": 1
+              },
+              {
+                "start": "0x05004A",
+                "end": "0x05004C",
+                "length": 3
+              },
+              {
+                "start": "0x05004E",
+                "end": "0x05004E",
+                "length": 1
+              },
+              {
+                "start": "0x050050",
+                "end": "0x050050",
+                "length": 1
+              },
+              {
+                "start": "0x050052",
+                "end": "0x050052",
+                "length": 1
+              },
+              {
+                "start": "0x050054",
+                "end": "0x050054",
+                "length": 1
+              },
+              {
+                "start": "0x050056",
+                "end": "0x050058",
+                "length": 3
+              },
+              {
+                "start": "0x05005A",
+                "end": "0x05005A",
+                "length": 1
+              },
+              {
+                "start": "0x05005C",
+                "end": "0x05005C",
+                "length": 1
+              },
+              {
+                "start": "0x05005E",
+                "end": "0x05005E",
+                "length": 1
+              }
+            ]
+          },
+          "activeChr": {
+            "fileRange": "0x080010-0x0C000F",
+            "count": 671,
+            "rangeCount": 102,
+            "minimum": "0x093026",
+            "maximum": "0x09340B",
+            "firstRanges": [
+              {
+                "start": "0x093026",
+                "end": "0x093026",
+                "length": 1
+              },
+              {
+                "start": "0x09302F",
+                "end": "0x09302F",
+                "length": 1
+              },
+              {
+                "start": "0x093036",
+                "end": "0x093037",
+                "length": 2
+              },
+              {
+                "start": "0x09303B",
+                "end": "0x09303F",
+                "length": 5
+              },
+              {
+                "start": "0x093042",
+                "end": "0x093049",
+                "length": 8
+              },
+              {
+                "start": "0x09304C",
+                "end": "0x09304F",
+                "length": 4
+              },
+              {
+                "start": "0x093052",
+                "end": "0x093052",
+                "length": 1
+              },
+              {
+                "start": "0x09305A",
+                "end": "0x09305A",
+                "length": 1
+              },
+              {
+                "start": "0x093063",
+                "end": "0x093063",
+                "length": 1
+              },
+              {
+                "start": "0x093065",
+                "end": "0x093066",
+                "length": 2
+              },
+              {
+                "start": "0x09306B",
+                "end": "0x09306B",
+                "length": 1
+              },
+              {
+                "start": "0x09306D",
+                "end": "0x09306E",
+                "length": 2
+              },
+              {
+                "start": "0x093070",
+                "end": "0x09307F",
+                "length": 16
+              },
+              {
+                "start": "0x093087",
+                "end": "0x093087",
+                "length": 1
+              },
+              {
+                "start": "0x09308D",
+                "end": "0x09308F",
+                "length": 3
+              },
+              {
+                "start": "0x093092",
+                "end": "0x093097",
+                "length": 6
+              },
+              {
+                "start": "0x093099",
+                "end": "0x09309F",
+                "length": 7
+              },
+              {
+                "start": "0x0930A1",
+                "end": "0x0930AB",
+                "length": 11
+              },
+              {
+                "start": "0x0930AE",
+                "end": "0x0930B7",
+                "length": 10
+              },
+              {
+                "start": "0x0930B9",
+                "end": "0x0930C0",
+                "length": 8
+              },
+              {
+                "start": "0x0930C7",
+                "end": "0x0930C9",
+                "length": 3
+              },
+              {
+                "start": "0x0930CE",
+                "end": "0x0930CE",
+                "length": 1
+              },
+              {
+                "start": "0x0930D7",
+                "end": "0x0930D7",
+                "length": 1
+              },
+              {
+                "start": "0x0930DF",
+                "end": "0x0930DF",
+                "length": 1
+              }
+            ]
+          },
+          "unclassified": {
+            "count": 0,
+            "rangeCount": 0,
+            "minimum": null,
+            "maximum": null,
+            "firstRanges": []
+          }
+        },
+        "semanticEvidence": {
+          "kind": "clear_nonzero_target_bytes",
+          "actionSpecificChrBytes": 671,
+          "allActionSpecificChrBytesZeroAfter": true,
+          "allActionSpecificChrBytesNonzeroBefore": true
+        }
+      },
       "promotion_blockers": [
         "cold_reopen_does_not_match_expected",
         "save_layout_not_reviewed"
       ],
-      "evidence_classification": "reference_cold_reopen_mismatch",
-      "next_evidence_step": "identify_normalization_or_secondary_resource_writes_and_repeat_cold_reopen",
+      "evidence_classification": "reference_clear_save_confirmed_capture_mismatch",
+      "next_evidence_step": "replace_control_pixel_hash_with_resource_byte_semantic_selector",
       "status": "prepared_not_promoted"
     },
     "main_clear_fragment": {
@@ -338,12 +1584,424 @@
         "reopen_matches_expected": false,
         "reopen_matches_original": false
       },
+      "pending_action_analysis": {
+        "classification": "reference_clear_save_confirmed_capture_mismatch",
+        "conclusion": "动作涉及的目标 CHR 非零字节在保存后全部清零；清除语义已确认，冷重开整控件像素哈希不是可靠判据。",
+        "durationSeconds": 12.821,
+        "withinBudget": true,
+        "changedFromInputCount": 41514,
+        "reopenMatchesRequest": false,
+        "reopenMatchesOriginal": false,
+        "inputSha256": "C5D2C1DFBE0DC39AFC9EFFD314C082F121B98C9AD67C4825B1C9DD4B9E991954",
+        "outputSha256": "F73F89BA5D85D4B6D98E699AB4369AC61507E0899DB6B80EAAAF995FC96A35FD",
+        "actionSpecificDiff": {
+          "count": 1639,
+          "rangeCount": 194,
+          "minimum": "0x0517E0",
+          "maximum": "0x0BF179",
+          "firstRanges": [
+            {
+              "start": "0x0517E0",
+              "end": "0x0517E0",
+              "length": 1
+            },
+            {
+              "start": "0x0517E2",
+              "end": "0x0517E6",
+              "length": 5
+            },
+            {
+              "start": "0x0517E8",
+              "end": "0x0517E8",
+              "length": 1
+            },
+            {
+              "start": "0x0517EA",
+              "end": "0x0517EA",
+              "length": 1
+            },
+            {
+              "start": "0x0517EC",
+              "end": "0x0517EC",
+              "length": 1
+            },
+            {
+              "start": "0x0517EE",
+              "end": "0x0517F0",
+              "length": 3
+            },
+            {
+              "start": "0x0517F2",
+              "end": "0x0517F2",
+              "length": 1
+            },
+            {
+              "start": "0x0517F4",
+              "end": "0x0517F4",
+              "length": 1
+            },
+            {
+              "start": "0x0517F6",
+              "end": "0x0517F6",
+              "length": 1
+            },
+            {
+              "start": "0x0517F8",
+              "end": "0x0517FC",
+              "length": 5
+            },
+            {
+              "start": "0x0517FE",
+              "end": "0x0517FE",
+              "length": 1
+            },
+            {
+              "start": "0x051800",
+              "end": "0x051800",
+              "length": 1
+            },
+            {
+              "start": "0x051802",
+              "end": "0x051802",
+              "length": 1
+            },
+            {
+              "start": "0x051804",
+              "end": "0x051804",
+              "length": 1
+            },
+            {
+              "start": "0x051806",
+              "end": "0x051806",
+              "length": 1
+            },
+            {
+              "start": "0x051808",
+              "end": "0x051808",
+              "length": 1
+            },
+            {
+              "start": "0x05180A",
+              "end": "0x05180A",
+              "length": 1
+            },
+            {
+              "start": "0x05180C",
+              "end": "0x05180C",
+              "length": 1
+            },
+            {
+              "start": "0x05180E",
+              "end": "0x05180E",
+              "length": 1
+            },
+            {
+              "start": "0x051810",
+              "end": "0x051810",
+              "length": 1
+            },
+            {
+              "start": "0x051812",
+              "end": "0x051812",
+              "length": 1
+            },
+            {
+              "start": "0x051814",
+              "end": "0x051816",
+              "length": 3
+            },
+            {
+              "start": "0x051818",
+              "end": "0x051818",
+              "length": 1
+            },
+            {
+              "start": "0x05181A",
+              "end": "0x05181A",
+              "length": 1
+            }
+          ]
+        },
+        "actionSpecificRegions": {
+          "unitCompositionPair": {
+            "fileRange": "0x050010-0x05400F",
+            "count": 1444,
+            "rangeCount": 159,
+            "minimum": "0x0517E0",
+            "maximum": "0x051FA1",
+            "firstRanges": [
+              {
+                "start": "0x0517E0",
+                "end": "0x0517E0",
+                "length": 1
+              },
+              {
+                "start": "0x0517E2",
+                "end": "0x0517E6",
+                "length": 5
+              },
+              {
+                "start": "0x0517E8",
+                "end": "0x0517E8",
+                "length": 1
+              },
+              {
+                "start": "0x0517EA",
+                "end": "0x0517EA",
+                "length": 1
+              },
+              {
+                "start": "0x0517EC",
+                "end": "0x0517EC",
+                "length": 1
+              },
+              {
+                "start": "0x0517EE",
+                "end": "0x0517F0",
+                "length": 3
+              },
+              {
+                "start": "0x0517F2",
+                "end": "0x0517F2",
+                "length": 1
+              },
+              {
+                "start": "0x0517F4",
+                "end": "0x0517F4",
+                "length": 1
+              },
+              {
+                "start": "0x0517F6",
+                "end": "0x0517F6",
+                "length": 1
+              },
+              {
+                "start": "0x0517F8",
+                "end": "0x0517FC",
+                "length": 5
+              },
+              {
+                "start": "0x0517FE",
+                "end": "0x0517FE",
+                "length": 1
+              },
+              {
+                "start": "0x051800",
+                "end": "0x051800",
+                "length": 1
+              },
+              {
+                "start": "0x051802",
+                "end": "0x051802",
+                "length": 1
+              },
+              {
+                "start": "0x051804",
+                "end": "0x051804",
+                "length": 1
+              },
+              {
+                "start": "0x051806",
+                "end": "0x051806",
+                "length": 1
+              },
+              {
+                "start": "0x051808",
+                "end": "0x051808",
+                "length": 1
+              },
+              {
+                "start": "0x05180A",
+                "end": "0x05180A",
+                "length": 1
+              },
+              {
+                "start": "0x05180C",
+                "end": "0x05180C",
+                "length": 1
+              },
+              {
+                "start": "0x05180E",
+                "end": "0x05180E",
+                "length": 1
+              },
+              {
+                "start": "0x051810",
+                "end": "0x051810",
+                "length": 1
+              },
+              {
+                "start": "0x051812",
+                "end": "0x051812",
+                "length": 1
+              },
+              {
+                "start": "0x051814",
+                "end": "0x051816",
+                "length": 3
+              },
+              {
+                "start": "0x051818",
+                "end": "0x051818",
+                "length": 1
+              },
+              {
+                "start": "0x05181A",
+                "end": "0x05181A",
+                "length": 1
+              }
+            ]
+          },
+          "activeChr": {
+            "fileRange": "0x080010-0x0C000F",
+            "count": 195,
+            "rangeCount": 35,
+            "minimum": "0x0BF060",
+            "maximum": "0x0BF179",
+            "firstRanges": [
+              {
+                "start": "0x0BF060",
+                "end": "0x0BF065",
+                "length": 6
+              },
+              {
+                "start": "0x0BF067",
+                "end": "0x0BF06D",
+                "length": 7
+              },
+              {
+                "start": "0x0BF06F",
+                "end": "0x0BF0B5",
+                "length": 71
+              },
+              {
+                "start": "0x0BF0B8",
+                "end": "0x0BF0BD",
+                "length": 6
+              },
+              {
+                "start": "0x0BF0C0",
+                "end": "0x0BF0C0",
+                "length": 1
+              },
+              {
+                "start": "0x0BF0C5",
+                "end": "0x0BF0C8",
+                "length": 4
+              },
+              {
+                "start": "0x0BF0CD",
+                "end": "0x0BF0D6",
+                "length": 10
+              },
+              {
+                "start": "0x0BF0D8",
+                "end": "0x0BF0DE",
+                "length": 7
+              },
+              {
+                "start": "0x0BF0E0",
+                "end": "0x0BF0E2",
+                "length": 3
+              },
+              {
+                "start": "0x0BF0E8",
+                "end": "0x0BF0EA",
+                "length": 3
+              },
+              {
+                "start": "0x0BF0F0",
+                "end": "0x0BF100",
+                "length": 17
+              },
+              {
+                "start": "0x0BF102",
+                "end": "0x0BF103",
+                "length": 2
+              },
+              {
+                "start": "0x0BF105",
+                "end": "0x0BF105",
+                "length": 1
+              },
+              {
+                "start": "0x0BF107",
+                "end": "0x0BF108",
+                "length": 2
+              },
+              {
+                "start": "0x0BF10A",
+                "end": "0x0BF10B",
+                "length": 2
+              },
+              {
+                "start": "0x0BF10D",
+                "end": "0x0BF10D",
+                "length": 1
+              },
+              {
+                "start": "0x0BF10F",
+                "end": "0x0BF112",
+                "length": 4
+              },
+              {
+                "start": "0x0BF114",
+                "end": "0x0BF114",
+                "length": 1
+              },
+              {
+                "start": "0x0BF118",
+                "end": "0x0BF11A",
+                "length": 3
+              },
+              {
+                "start": "0x0BF11C",
+                "end": "0x0BF11C",
+                "length": 1
+              },
+              {
+                "start": "0x0BF121",
+                "end": "0x0BF121",
+                "length": 1
+              },
+              {
+                "start": "0x0BF124",
+                "end": "0x0BF124",
+                "length": 1
+              },
+              {
+                "start": "0x0BF126",
+                "end": "0x0BF126",
+                "length": 1
+              },
+              {
+                "start": "0x0BF128",
+                "end": "0x0BF129",
+                "length": 2
+              }
+            ]
+          },
+          "unclassified": {
+            "count": 0,
+            "rangeCount": 0,
+            "minimum": null,
+            "maximum": null,
+            "firstRanges": []
+          }
+        },
+        "semanticEvidence": {
+          "kind": "clear_nonzero_target_bytes",
+          "actionSpecificChrBytes": 195,
+          "allActionSpecificChrBytesZeroAfter": true,
+          "allActionSpecificChrBytesNonzeroBefore": true
+        }
+      },
       "promotion_blockers": [
         "cold_reopen_does_not_match_expected",
         "save_layout_not_reviewed"
       ],
-      "evidence_classification": "reference_cold_reopen_mismatch",
-      "next_evidence_step": "identify_normalization_or_secondary_resource_writes_and_repeat_cold_reopen",
+      "evidence_classification": "reference_clear_save_confirmed_capture_mismatch",
+      "next_evidence_step": "replace_control_pixel_hash_with_resource_byte_semantic_selector",
       "status": "prepared_not_promoted"
     },
     "body_upload_bmp": {
@@ -363,13 +2021,57 @@
         "reopen_matches_expected": false,
         "reopen_matches_original": true
       },
+      "pending_action_analysis": {
+        "classification": "reference_preview_only_confirmed",
+        "conclusion": "保存结果与普通上传共同归一化基线逐字节一致，且全新进程重开恢复原预览；该入口不形成可持久化上传协议。",
+        "durationSeconds": 65.066,
+        "withinBudget": false,
+        "changedFromInputCount": 39875,
+        "reopenMatchesRequest": false,
+        "reopenMatchesOriginal": true,
+        "inputSha256": "C5D2C1DFBE0DC39AFC9EFFD314C082F121B98C9AD67C4825B1C9DD4B9E991954",
+        "outputSha256": "3FA93AF52B2100A44CF3BAEEAE76C950204C9DD0288C5125AF845F400B1FA2D7",
+        "actionSpecificDiff": {
+          "count": 0,
+          "rangeCount": 0,
+          "minimum": null,
+          "maximum": null,
+          "firstRanges": []
+        },
+        "actionSpecificRegions": {
+          "unitCompositionPair": {
+            "fileRange": "0x050010-0x05400F",
+            "count": 0,
+            "rangeCount": 0,
+            "minimum": null,
+            "maximum": null,
+            "firstRanges": []
+          },
+          "activeChr": {
+            "fileRange": "0x080010-0x0C000F",
+            "count": 0,
+            "rangeCount": 0,
+            "minimum": null,
+            "maximum": null,
+            "firstRanges": []
+          },
+          "unclassified": {
+            "count": 0,
+            "rangeCount": 0,
+            "minimum": null,
+            "maximum": null,
+            "firstRanges": []
+          }
+        },
+        "semanticEvidence": null
+      },
       "promotion_blockers": [
         "exceeds_30_second_budget",
         "cold_reopen_does_not_match_expected",
         "save_layout_not_reviewed"
       ],
-      "evidence_classification": "reference_action_not_persistent",
-      "next_evidence_step": "confirm_whether_the_reference_action_is_preview_only; do_not_require_product_to_copy_a_non_persistent_save",
+      "evidence_classification": "reference_preview_only_confirmed",
+      "next_evidence_step": "exclude_from_reference_save_golden_denominator",
       "status": "prepared_not_promoted"
     },
     "fragment_upload_bmp": {
@@ -389,13 +2091,57 @@
         "reopen_matches_expected": false,
         "reopen_matches_original": true
       },
+      "pending_action_analysis": {
+        "classification": "reference_preview_only_confirmed",
+        "conclusion": "保存结果与普通上传共同归一化基线逐字节一致，且全新进程重开恢复原预览；该入口不形成可持久化上传协议。",
+        "durationSeconds": 68.889,
+        "withinBudget": false,
+        "changedFromInputCount": 39875,
+        "reopenMatchesRequest": false,
+        "reopenMatchesOriginal": true,
+        "inputSha256": "C5D2C1DFBE0DC39AFC9EFFD314C082F121B98C9AD67C4825B1C9DD4B9E991954",
+        "outputSha256": "3FA93AF52B2100A44CF3BAEEAE76C950204C9DD0288C5125AF845F400B1FA2D7",
+        "actionSpecificDiff": {
+          "count": 0,
+          "rangeCount": 0,
+          "minimum": null,
+          "maximum": null,
+          "firstRanges": []
+        },
+        "actionSpecificRegions": {
+          "unitCompositionPair": {
+            "fileRange": "0x050010-0x05400F",
+            "count": 0,
+            "rangeCount": 0,
+            "minimum": null,
+            "maximum": null,
+            "firstRanges": []
+          },
+          "activeChr": {
+            "fileRange": "0x080010-0x0C000F",
+            "count": 0,
+            "rangeCount": 0,
+            "minimum": null,
+            "maximum": null,
+            "firstRanges": []
+          },
+          "unclassified": {
+            "count": 0,
+            "rangeCount": 0,
+            "minimum": null,
+            "maximum": null,
+            "firstRanges": []
+          }
+        },
+        "semanticEvidence": null
+      },
       "promotion_blockers": [
         "exceeds_30_second_budget",
         "cold_reopen_does_not_match_expected",
         "save_layout_not_reviewed"
       ],
-      "evidence_classification": "reference_action_not_persistent",
-      "next_evidence_step": "confirm_whether_the_reference_action_is_preview_only; do_not_require_product_to_copy_a_non_persistent_save",
+      "evidence_classification": "reference_preview_only_confirmed",
+      "next_evidence_step": "exclude_from_reference_save_golden_denominator",
       "status": "prepared_not_promoted"
     },
     "icon_upload_bmp": {
@@ -415,13 +2161,134 @@
         "reopen_matches_expected": false,
         "reopen_matches_original": false
       },
+      "pending_action_analysis": {
+        "classification": "reference_upload_clears_target",
+        "conclusion": "彩色 16×16 BMP 保存后目标四图块全部为零；参考入口没有形成有效图标上传协议，不得要求产品复制该破坏性结果。",
+        "durationSeconds": 69.355,
+        "withinBudget": false,
+        "changedFromInputCount": 39931,
+        "reopenMatchesRequest": false,
+        "reopenMatchesOriginal": false,
+        "inputSha256": "C5D2C1DFBE0DC39AFC9EFFD314C082F121B98C9AD67C4825B1C9DD4B9E991954",
+        "outputSha256": "81B8AC4551FA0F2F9EA18515ABE49383A3D3F1A93C3DF043F45AF4307C20BA5B",
+        "actionSpecificDiff": {
+          "count": 56,
+          "rangeCount": 7,
+          "minimum": "0x091890",
+          "maximum": "0x0918CE",
+          "firstRanges": [
+            {
+              "start": "0x091890",
+              "end": "0x0918B1",
+              "length": 34
+            },
+            {
+              "start": "0x0918B3",
+              "end": "0x0918B6",
+              "length": 4
+            },
+            {
+              "start": "0x0918B8",
+              "end": "0x0918BE",
+              "length": 7
+            },
+            {
+              "start": "0x0918C0",
+              "end": "0x0918C2",
+              "length": 3
+            },
+            {
+              "start": "0x0918C4",
+              "end": "0x0918C5",
+              "length": 2
+            },
+            {
+              "start": "0x0918C8",
+              "end": "0x0918CC",
+              "length": 5
+            },
+            {
+              "start": "0x0918CE",
+              "end": "0x0918CE",
+              "length": 1
+            }
+          ]
+        },
+        "actionSpecificRegions": {
+          "unitCompositionPair": {
+            "fileRange": "0x050010-0x05400F",
+            "count": 0,
+            "rangeCount": 0,
+            "minimum": null,
+            "maximum": null,
+            "firstRanges": []
+          },
+          "activeChr": {
+            "fileRange": "0x080010-0x0C000F",
+            "count": 56,
+            "rangeCount": 7,
+            "minimum": "0x091890",
+            "maximum": "0x0918CE",
+            "firstRanges": [
+              {
+                "start": "0x091890",
+                "end": "0x0918B1",
+                "length": 34
+              },
+              {
+                "start": "0x0918B3",
+                "end": "0x0918B6",
+                "length": 4
+              },
+              {
+                "start": "0x0918B8",
+                "end": "0x0918BE",
+                "length": 7
+              },
+              {
+                "start": "0x0918C0",
+                "end": "0x0918C2",
+                "length": 3
+              },
+              {
+                "start": "0x0918C4",
+                "end": "0x0918C5",
+                "length": 2
+              },
+              {
+                "start": "0x0918C8",
+                "end": "0x0918CC",
+                "length": 5
+              },
+              {
+                "start": "0x0918CE",
+                "end": "0x0918CE",
+                "length": 1
+              }
+            ]
+          },
+          "unclassified": {
+            "count": 0,
+            "rangeCount": 0,
+            "minimum": null,
+            "maximum": null,
+            "firstRanges": []
+          }
+        },
+        "semanticEvidence": {
+          "kind": "icon_target_cleared_instead_of_imported",
+          "sampleHasNonblackPixels": true,
+          "targetFourTilesAllZeroAfter": true,
+          "targetFirstTile": "0x1188"
+        }
+      },
       "promotion_blockers": [
         "exceeds_30_second_budget",
         "cold_reopen_does_not_match_expected",
         "save_layout_not_reviewed"
       ],
-      "evidence_classification": "reference_cold_reopen_mismatch",
-      "next_evidence_step": "identify_normalization_or_secondary_resource_writes_and_repeat_cold_reopen",
+      "evidence_classification": "reference_upload_clears_target",
+      "next_evidence_step": "exclude_invalid_destructive_reference_upload",
       "status": "prepared_not_promoted"
     },
     "icon_binding_double_click": {
@@ -441,6 +2308,7 @@
         "reopen_matches_expected": true,
         "reopen_matches_original": true
       },
+      "pending_action_analysis": null,
       "promotion_blockers": [],
       "evidence_classification": "promoted_golden",
       "next_evidence_step": "none",
@@ -463,6 +2331,7 @@
         "reopen_matches_expected": true,
         "reopen_matches_original": false
       },
+      "pending_action_analysis": null,
       "promotion_blockers": [],
       "evidence_classification": "promoted_golden",
       "next_evidence_step": "none",
@@ -485,6 +2354,7 @@
         "reopen_matches_expected": true,
         "reopen_matches_original": false
       },
+      "pending_action_analysis": null,
       "promotion_blockers": [],
       "evidence_classification": "promoted_golden",
       "next_evidence_step": "none",
@@ -507,6 +2377,7 @@
         "reopen_matches_expected": true,
         "reopen_matches_original": true
       },
+      "pending_action_analysis": null,
       "promotion_blockers": [],
       "evidence_classification": "promoted_golden",
       "next_evidence_step": "none",
@@ -529,6 +2400,7 @@
         "reopen_matches_expected": true,
         "reopen_matches_original": true
       },
+      "pending_action_analysis": null,
       "promotion_blockers": [],
       "evidence_classification": "promoted_golden",
       "next_evidence_step": "none",
@@ -551,17 +2423,18 @@
         "reopen_matches_expected": true,
         "reopen_matches_original": false
       },
+      "pending_action_analysis": null,
       "promotion_blockers": [],
       "evidence_classification": "promoted_golden",
       "next_evidence_step": "none",
       "status": "promoted_golden"
     },
     "body_puzzle_template_8x8": {
-      "path": "tools/golden_pipeline/discovery_history/M05-body-puzzle-template-8x8-discovery-cold-start-01.json",
-      "sha256": "c85cd7789392f9f633efda1d99704b3a273815b7748ea8243337a2c7662af43b",
-      "case_kind": "discovery",
-      "promotion_guarded": true,
-      "promotion_complete": false,
+      "path": "tools/golden_pipeline/cases/M05-body-puzzle-template-8x8-cold-start-01.json",
+      "sha256": "3baff6915c6700b6a4c4214c6bbd983631f825ec73317ded6682c204d6bfed56",
+      "case_kind": "golden",
+      "promotion_guarded": false,
+      "promotion_complete": true,
       "dynamic_evidence": {
         "archive": "output/build/legacy-diff-audit/golden/M05-body_puzzle_template_8x8-cold_start_01.json",
         "duration_seconds": 14.735,
@@ -569,17 +2442,300 @@
         "within_budget": true,
         "changed_count": 53399,
         "removed_normalization_count": 4,
-        "reopen_matches_request": false,
-        "reopen_matches_expected": false,
+        "reopen_matches_request": true,
+        "reopen_matches_expected": true,
         "reopen_matches_original": false
       },
-      "promotion_blockers": [
-        "cold_reopen_does_not_match_expected",
-        "save_layout_not_reviewed"
-      ],
-      "evidence_classification": "reference_cold_reopen_mismatch",
-      "next_evidence_step": "identify_normalization_or_secondary_resource_writes_and_repeat_cold_reopen",
-      "status": "prepared_not_promoted"
+      "pending_action_analysis": {
+        "classification": "reference_save_promoted_after_request_correction",
+        "conclusion": "配方误把点击前脚本登记为请求值；冷重开得到已知 8×8 模板脚本，且动作专属写入全部位于机体拼图脚本对。原误登记值已作为审计字段保留，本次 14.735 秒证据已晋级黄金。",
+        "durationSeconds": 14.735,
+        "withinBudget": true,
+        "changedFromInputCount": 53399,
+        "reopenMatchesRequest": true,
+        "reopenMatchesOriginal": false,
+        "inputSha256": "C5D2C1DFBE0DC39AFC9EFFD314C082F121B98C9AD67C4825B1C9DD4B9E991954",
+        "outputSha256": "5A917F25AE2C9D47C837672EB3F3F0211623735806EC37DC96D14EDF053965AC",
+        "actionSpecificDiff": {
+          "count": 13524,
+          "rangeCount": 1204,
+          "minimum": "0x050012",
+          "maximum": "0x053D11",
+          "firstRanges": [
+            {
+              "start": "0x050012",
+              "end": "0x050012",
+              "length": 1
+            },
+            {
+              "start": "0x050014",
+              "end": "0x050014",
+              "length": 1
+            },
+            {
+              "start": "0x050026",
+              "end": "0x050026",
+              "length": 1
+            },
+            {
+              "start": "0x050028",
+              "end": "0x050028",
+              "length": 1
+            },
+            {
+              "start": "0x05002A",
+              "end": "0x05002A",
+              "length": 1
+            },
+            {
+              "start": "0x05002C",
+              "end": "0x05002C",
+              "length": 1
+            },
+            {
+              "start": "0x05002E",
+              "end": "0x050030",
+              "length": 3
+            },
+            {
+              "start": "0x050032",
+              "end": "0x050032",
+              "length": 1
+            },
+            {
+              "start": "0x050034",
+              "end": "0x050036",
+              "length": 3
+            },
+            {
+              "start": "0x050038",
+              "end": "0x050038",
+              "length": 1
+            },
+            {
+              "start": "0x05003A",
+              "end": "0x05003A",
+              "length": 1
+            },
+            {
+              "start": "0x05003C",
+              "end": "0x05003C",
+              "length": 1
+            },
+            {
+              "start": "0x05003E",
+              "end": "0x05003E",
+              "length": 1
+            },
+            {
+              "start": "0x050040",
+              "end": "0x050042",
+              "length": 3
+            },
+            {
+              "start": "0x050044",
+              "end": "0x050044",
+              "length": 1
+            },
+            {
+              "start": "0x050046",
+              "end": "0x050046",
+              "length": 1
+            },
+            {
+              "start": "0x050048",
+              "end": "0x050048",
+              "length": 1
+            },
+            {
+              "start": "0x05004A",
+              "end": "0x05004C",
+              "length": 3
+            },
+            {
+              "start": "0x05004E",
+              "end": "0x05004E",
+              "length": 1
+            },
+            {
+              "start": "0x050050",
+              "end": "0x050050",
+              "length": 1
+            },
+            {
+              "start": "0x050052",
+              "end": "0x050052",
+              "length": 1
+            },
+            {
+              "start": "0x050054",
+              "end": "0x050054",
+              "length": 1
+            },
+            {
+              "start": "0x050056",
+              "end": "0x050058",
+              "length": 3
+            },
+            {
+              "start": "0x05005A",
+              "end": "0x05005A",
+              "length": 1
+            }
+          ]
+        },
+        "actionSpecificRegions": {
+          "unitCompositionPair": {
+            "fileRange": "0x050010-0x05400F",
+            "count": 13524,
+            "rangeCount": 1204,
+            "minimum": "0x050012",
+            "maximum": "0x053D11",
+            "firstRanges": [
+              {
+                "start": "0x050012",
+                "end": "0x050012",
+                "length": 1
+              },
+              {
+                "start": "0x050014",
+                "end": "0x050014",
+                "length": 1
+              },
+              {
+                "start": "0x050026",
+                "end": "0x050026",
+                "length": 1
+              },
+              {
+                "start": "0x050028",
+                "end": "0x050028",
+                "length": 1
+              },
+              {
+                "start": "0x05002A",
+                "end": "0x05002A",
+                "length": 1
+              },
+              {
+                "start": "0x05002C",
+                "end": "0x05002C",
+                "length": 1
+              },
+              {
+                "start": "0x05002E",
+                "end": "0x050030",
+                "length": 3
+              },
+              {
+                "start": "0x050032",
+                "end": "0x050032",
+                "length": 1
+              },
+              {
+                "start": "0x050034",
+                "end": "0x050036",
+                "length": 3
+              },
+              {
+                "start": "0x050038",
+                "end": "0x050038",
+                "length": 1
+              },
+              {
+                "start": "0x05003A",
+                "end": "0x05003A",
+                "length": 1
+              },
+              {
+                "start": "0x05003C",
+                "end": "0x05003C",
+                "length": 1
+              },
+              {
+                "start": "0x05003E",
+                "end": "0x05003E",
+                "length": 1
+              },
+              {
+                "start": "0x050040",
+                "end": "0x050042",
+                "length": 3
+              },
+              {
+                "start": "0x050044",
+                "end": "0x050044",
+                "length": 1
+              },
+              {
+                "start": "0x050046",
+                "end": "0x050046",
+                "length": 1
+              },
+              {
+                "start": "0x050048",
+                "end": "0x050048",
+                "length": 1
+              },
+              {
+                "start": "0x05004A",
+                "end": "0x05004C",
+                "length": 3
+              },
+              {
+                "start": "0x05004E",
+                "end": "0x05004E",
+                "length": 1
+              },
+              {
+                "start": "0x050050",
+                "end": "0x050050",
+                "length": 1
+              },
+              {
+                "start": "0x050052",
+                "end": "0x050052",
+                "length": 1
+              },
+              {
+                "start": "0x050054",
+                "end": "0x050054",
+                "length": 1
+              },
+              {
+                "start": "0x050056",
+                "end": "0x050058",
+                "length": 3
+              },
+              {
+                "start": "0x05005A",
+                "end": "0x05005A",
+                "length": 1
+              }
+            ]
+          },
+          "activeChr": {
+            "fileRange": "0x080010-0x0C000F",
+            "count": 0,
+            "rangeCount": 0,
+            "minimum": null,
+            "maximum": null,
+            "firstRanges": []
+          },
+          "unclassified": {
+            "count": 0,
+            "rangeCount": 0,
+            "minimum": null,
+            "maximum": null,
+            "firstRanges": []
+          }
+        },
+        "semanticEvidence": null
+      },
+      "promotion_blockers": [],
+      "evidence_classification": "promoted_golden",
+      "next_evidence_step": "none",
+      "status": "promoted_golden"
     },
     "body_puzzle_template_7x9": {
       "path": "tools/golden_pipeline/cases/M05-body-puzzle-template-7x9-cold-start-01.json",
@@ -598,6 +2754,7 @@
         "reopen_matches_expected": true,
         "reopen_matches_original": true
       },
+      "pending_action_analysis": null,
       "promotion_blockers": [],
       "evidence_classification": "promoted_golden",
       "next_evidence_step": "none",
@@ -620,6 +2777,7 @@
         "reopen_matches_expected": true,
         "reopen_matches_original": false
       },
+      "pending_action_analysis": null,
       "promotion_blockers": [],
       "evidence_classification": "promoted_golden",
       "next_evidence_step": "none",
@@ -642,6 +2800,7 @@
         "reopen_matches_expected": true,
         "reopen_matches_original": false
       },
+      "pending_action_analysis": null,
       "promotion_blockers": [],
       "evidence_classification": "promoted_golden",
       "next_evidence_step": "none",
@@ -664,6 +2823,7 @@
         "reopen_matches_expected": true,
         "reopen_matches_original": true
       },
+      "pending_action_analysis": null,
       "promotion_blockers": [],
       "evidence_classification": "promoted_golden",
       "next_evidence_step": "none",
@@ -686,6 +2846,7 @@
         "reopen_matches_expected": true,
         "reopen_matches_original": false
       },
+      "pending_action_analysis": null,
       "promotion_blockers": [],
       "evidence_classification": "promoted_golden",
       "next_evidence_step": "none",
@@ -708,6 +2869,7 @@
         "reopen_matches_expected": true,
         "reopen_matches_original": false
       },
+      "pending_action_analysis": null,
       "promotion_blockers": [],
       "evidence_classification": "promoted_golden",
       "next_evidence_step": "none",
@@ -730,6 +2892,7 @@
         "reopen_matches_expected": true,
         "reopen_matches_original": false
       },
+      "pending_action_analysis": null,
       "promotion_blockers": [],
       "evidence_classification": "promoted_golden",
       "next_evidence_step": "none",
@@ -752,6 +2915,7 @@
         "reopen_matches_expected": true,
         "reopen_matches_original": false
       },
+      "pending_action_analysis": null,
       "promotion_blockers": [],
       "evidence_classification": "promoted_golden",
       "next_evidence_step": "none",
@@ -774,6 +2938,7 @@
         "reopen_matches_expected": true,
         "reopen_matches_original": false
       },
+      "pending_action_analysis": null,
       "promotion_blockers": [],
       "evidence_classification": "promoted_golden",
       "next_evidence_step": "none",
@@ -796,6 +2961,7 @@
         "reopen_matches_expected": true,
         "reopen_matches_original": false
       },
+      "pending_action_analysis": null,
       "promotion_blockers": [],
       "evidence_classification": "promoted_golden",
       "next_evidence_step": "none",
@@ -818,6 +2984,7 @@
         "reopen_matches_expected": true,
         "reopen_matches_original": false
       },
+      "pending_action_analysis": null,
       "promotion_blockers": [],
       "evidence_classification": "promoted_golden",
       "next_evidence_step": "none",

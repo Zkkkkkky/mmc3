@@ -230,21 +230,18 @@ class M05PuzzleDiscoverySpecTests(unittest.TestCase):
             with self.subTest(name=name):
                 path = self._path(f"body-puzzle-template-{name}")
                 spec = CaseSpec.from_payload(json.loads(path.read_text(encoding="utf-8")))
-                if name in {"8x8", "7x9"}:
+                if name == "7x9":
                     self.assertEqual(spec.requested_value, spec.expected_before)
                     self.assertIsNone(spec.capture_after_step)
                 else:
                     self.assertNotEqual(spec.requested_value, "$capture_after")
                     self.assertIsNone(spec.capture_after_step)
-                if name in {"7x9", "9x7", "10x6"}:
+                if name in {"8x8", "7x9", "9x7", "10x6"}:
                     self.assertEqual(spec.case_kind, "golden")
                     if name == "7x9":
                         self.assertTrue(spec.expected_noop)
                     else:
                         self.assertTrue(spec.expected_offsets)
-                else:
-                    self.assertEqual(spec.case_kind, "discovery")
-                    self.assertEqual(spec.expected_offsets, ())
                 self.assertEqual(spec.read_selector["control_id"], 270)
                 self.assertEqual(
                     spec.edit_steps[0],

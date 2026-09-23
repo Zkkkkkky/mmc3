@@ -10,7 +10,8 @@
 - ``stats``：从档案索引与注册表生成 G1/G2 覆盖率统计报告
   （``output/reports/golden-coverage-report.json`` 与 ``.md``）；
 - ``verify``：对 cases/ 快照复算差分并与存量 JSON 已存档结果比对，
-  输出逐用例 pass/fail 汇总与总体退出码（0=全一致，1=有差异，2=有缺失）。
+  输出逐用例 pass/fail 汇总与总体退出码（0=全一致，1=有差异，2=有缺失）；
+  发布复核可加 ``--golden-only``，只严格核验已晋升黄金的用例。
 - ``collect``：按 JSON 操作配方驱动隔离参考 EXE，单字段保存后关闭进程，
   以新进程重开读取，再自动归档与统计。
 
@@ -799,6 +800,14 @@ def cmd_verify(args: argparse.Namespace) -> int:
     except FileNotFoundError as error:
         print(f"错误：{error}", file=sys.stderr)
         return 2
+    golden_only = bool(getattr(args, "golden_only", False))
+    skipped_discovery_count = 0
+    if golden_only:
+        skipped_discovery_count = sum(
+            1 for record in records if record.case_kind == "discovery"
+        )
+        records = [record for record in records if record.case_kind == "golden"]
+
     pass_count = 0
     fail_count = 0
     missing_count = 0
@@ -884,7 +893,8 @@ def cmd_verify(args: argparse.Namespace) -> int:
     print()
     print(
         f"verify 汇总：{total} 用例，pass {pass_count}，fail {fail_count}，"
-        f"missing {missing_count}，known-exception {len(known_exception_cases)}"
+        f"missing {missing_count}，known-exception {len(known_exception_cases)}，"
+        f"skipped-discovery {skipped_discovery_count}"
     )
     if known_exception_cases:
         print(f"known-exception 用例：{'；'.join(known_exception_cases)}")
@@ -957,6 +967,11 @@ def build_parser() -> argparse.ArgumentParser:
     verify_parser = subparsers.add_parser(
         "verify",
         help="对 cases 快照复算差分并与存量 JSON 已存档结果比对",
+    )
+    verify_parser.add_argument(
+        "--golden-only",
+        action="store_true",
+        help="发布复核：仅严格核验 golden；已分类 discovery 由参考完成门禁管理",
     )
     verify_parser.set_defaults(handler=cmd_verify)
 

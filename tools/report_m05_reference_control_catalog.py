@@ -20,6 +20,7 @@ GOLDEN = ROOT / "output/reports/golden-coverage-report.json"
 GOLDEN_ARCHIVE_DIR = ROOT / "output/build/legacy-diff-audit/golden"
 JSON_OUT = ROOT / "output/reports/m05-reference-control-catalog.json"
 MD_OUT = ROOT / "output/reports/m05-reference-control-catalog.md"
+PENDING_ACTION_ANALYSIS = ROOT / "output/reports/m05-pending-action-analysis.json"
 DISCOVERY_DIR = ROOT / "tools/golden_pipeline/discovery_history"
 CASE_DIR = ROOT / "tools/golden_pipeline/cases"
 ACTION_DISCOVERY_RECIPES = {
@@ -148,6 +149,10 @@ def controls(
 
 
 def build() -> dict[str, object]:
+    pending_action_analysis = json.loads(
+        PENDING_ACTION_ANALYSIS.read_text(encoding="utf-8")
+    )
+    pending_action_cases = pending_action_analysis["cases"]
     sources = {
         "main": MAIN,
         "special_skill": SKILL,
@@ -277,6 +282,24 @@ def build() -> dict[str, object]:
             else:
                 evidence_classification = "promoted_golden"
                 next_evidence_step = "none"
+        action_analysis = pending_action_cases.get(name)
+        if not promotion_complete and action_analysis is not None:
+            evidence_classification = action_analysis["classification"]
+            if evidence_classification == "reference_preview_only_confirmed":
+                next_evidence_step = "exclude_from_reference_save_golden_denominator"
+            elif evidence_classification in {
+                "reference_resource_save_confirmed_capture_mismatch",
+                "reference_clear_save_confirmed_capture_mismatch",
+            }:
+                next_evidence_step = (
+                    "replace_control_pixel_hash_with_resource_byte_semantic_selector"
+                )
+            elif evidence_classification == "reference_upload_clears_target":
+                next_evidence_step = "exclude_invalid_destructive_reference_upload"
+            elif evidence_classification == "reference_secondary_resource_write_unresolved":
+                next_evidence_step = (
+                    "locate_secondary_resource_binding_from_action_specific_offsets_and_repeat_cold_reopen"
+                )
         discovery_recipes[name] = {
             "path": path.relative_to(ROOT).as_posix(),
             "sha256": hashlib.sha256(path.read_bytes()).hexdigest(),
@@ -284,6 +307,7 @@ def build() -> dict[str, object]:
             "promotion_guarded": promotion_guarded,
             "promotion_complete": promotion_complete,
             "dynamic_evidence": dynamic_evidence,
+            "pending_action_analysis": action_analysis,
             "promotion_blockers": promotion_blockers,
             "evidence_classification": evidence_classification,
             "next_evidence_step": next_evidence_step,
@@ -340,8 +364,25 @@ def build() -> dict[str, object]:
         ),
         "pending_recipes_have_actionable_classification": all(
             item["evidence_classification"]
-            in {"reference_action_not_persistent", "reference_cold_reopen_mismatch"}
+            in {
+                "reference_preview_only_confirmed",
+                "reference_resource_save_confirmed_capture_mismatch",
+                "reference_clear_save_confirmed_capture_mismatch",
+                "reference_upload_clears_target",
+                "reference_secondary_resource_write_unresolved",
+            }
             and item["next_evidence_step"] != "none"
+            for item in discovery_recipes.values()
+            if item["status"] == "prepared_not_promoted"
+        ),
+        "pending_recipes_semantically_resolved": all(
+            item["evidence_classification"]
+            in {
+                "reference_preview_only_confirmed",
+                "reference_resource_save_confirmed_capture_mismatch",
+                "reference_clear_save_confirmed_capture_mismatch",
+                "reference_upload_clears_target",
+            }
             for item in discovery_recipes.values()
             if item["status"] == "prepared_not_promoted"
         ),
@@ -352,18 +393,41 @@ def build() -> dict[str, object]:
     pending_recipe_count = sum(
         item["status"] == "prepared_not_promoted" for item in discovery_recipes.values()
     )
+    resolved_non_golden_count = sum(
+        item["status"] == "prepared_not_promoted"
+        and item["evidence_classification"]
+        in {
+            "reference_preview_only_confirmed",
+            "reference_resource_save_confirmed_capture_mismatch",
+            "reference_clear_save_confirmed_capture_mismatch",
+            "reference_upload_clears_target",
+        }
+        for item in discovery_recipes.values()
+    )
+    unresolved_recipe_count = sum(
+        item["status"] == "prepared_not_promoted"
+        and item["evidence_classification"]
+        == "reference_secondary_resource_write_unresolved"
+        for item in discovery_recipes.values()
+    )
 
     return {
         "schema_version": 1,
         "module": "M05",
         "passed": all(checks.values()),
-        "status": "five_surfaces_cataloged_33_save_fields_passed_10_actions_guarded_1_capacity_boundary",
+        "status": "five_surfaces_cataloged_33_save_fields_passed_18_action_goldens_7_non_golden_resolved_0_unresolved",
         "sources": {
             name: {
                 "path": path.relative_to(ROOT).as_posix(),
                 "sha256": hashlib.sha256(path.read_bytes()).hexdigest(),
             }
             for name, path in sources.items()
+        }
+        | {
+            "pending_action_analysis": {
+                "path": PENDING_ACTION_ANALYSIS.relative_to(ROOT).as_posix(),
+                "sha256": hashlib.sha256(PENDING_ACTION_ANALYSIS.read_bytes()).hexdigest(),
+            }
         },
         "counts": {
             "controls": len(all_controls),
@@ -376,6 +440,8 @@ def build() -> dict[str, object]:
             "prepared_discovery_recipes": len(discovery_recipes),
             "promoted_golden_recipes": promoted_recipe_count,
             "pending_discovery_recipes": pending_recipe_count,
+            "resolved_non_golden_recipes": resolved_non_golden_count,
+            "unresolved_discovery_recipes": unresolved_recipe_count,
             "guarded_actions_with_discovery": sum(
                 bool(action["prepared_recipe_keys"]) for action in pending_actions
             ),
@@ -402,12 +468,13 @@ def markdown(report: dict[str, object]) -> str:
             f"- 保持门禁的动作入口：{counts['guarded_pending_actions']}",
             f"- 已分类容量边界：{counts['classified_capacity_boundaries']}",
             f"- 已审查的动作配方：{counts['prepared_discovery_recipes']}（已晋级黄金 {counts['promoted_golden_recipes']}，仍待动态证据 {counts['pending_discovery_recipes']}）",
+            f"- 非黄金但语义已关闭：{counts['resolved_non_golden_recipes']}；未解决：{counts['unresolved_discovery_recipes']}",
             f"- 已由 discovery 覆盖的门禁动作：{counts['guarded_actions_with_discovery']}/{counts['guarded_pending_actions']}",
             f"- 状态：`{report['status']}`",
             "",
             "上传、清除、拼图和图标画布提交是待补参考保存布局的动作协议；新增机体已按字节型 ID 的 255 槽满容量边界分类，产品保持禁用并引导直接编辑现有空白槽。完整控件、字段和原因见同名 JSON。",
-            "剩余 8 个配方均已记录动态采集时长、冷重开结果和明确晋级阻断原因；在满足 30 秒预算且确认保存布局前不会误升为黄金证据。",
-            "其中普通主体/碎片上传在冷重开后回到原值，归类为“参考动作未形成持久保存”；压缩上传、主界面清除、图标上传和 8×8 模板则归类为“参考冷重开不匹配”。两类都不影响当前产品功能可用，但不能作为 1:1 保存协议黄金。",
+            "剩余 7 个配方均已记录动态采集时长、冷重开结果和明确晋级阻断原因；在满足 30 秒预算且确认保存布局前不会误升为黄金证据。",
+            "其中普通主体/碎片上传已确认是参考版仅预览动作；8×8 模板修正请求值后以 14.735 秒证据晋级黄金。压缩主体的 55 个图块/880 字节及压缩碎片的 23 个图块/368 字节均与独立编码完全一致，主体/碎片清除的目标非零 CHR 字节全部归零；这四项保存语义已确认，只需把不可靠的整控件截图哈希换成资源字节判据。图标上传把彩色样本保存成四个全零图块，是无效破坏性参考动作；未解码动作已清零。",
             "",
         ]
     )

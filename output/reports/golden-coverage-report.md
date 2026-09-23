@@ -7,8 +7,8 @@
 
 | 指标 | 数值 | 目标 |
 | --- | --- | --- |
-| G1 黄金对照覆盖率 | 233/241 = 96.68% | >=95% |
-| G2 逐字段差分通过率 | 238/238 = 100.00% | =100% |
+| G1 黄金对照覆盖率 | 234/241 = 97.10% | >=95% |
+| G2 逐字段差分通过率 | 239/239 = 100.00% | =100% |
 
 > G1 分母口径 `denominator_scope=registered_fields`：当前分母为 field_registry.json 登记字段数；最终口径为参考版全部可编辑字段数（主文档第 4/5 章字段清单，M00 第 5 节统计职责），全量采集完成后需以全量字段数重算分母
 
@@ -18,18 +18,17 @@
 | --- | --- |
 | 注册字段（登记用例） | 241 |
 | 已归档字段 | 241 |
-| golden 用例 | 238 |
-| discovery 用例 | 8 |
-| 通过 golden 用例 | 238 |
+| golden 用例 | 239 |
+| discovery 用例 | 7 |
+| 通过 golden 用例 | 239 |
 | 未通过 golden 用例 | 0 |
-| 待解释用例 | 8 |
+| 待解释用例 | 7 |
 
 ## 待解释用例清单
 
 | 模块 | 字段 | 用例 | 类型 | 原因 |
 | --- | --- | --- | --- | --- |
 | M05 | body_compressed_upload_bmp | cold_start_01 | discovery | 在线单字段采集：保存后关闭进程，再以不同 PID 冷启动重开 |
-| M05 | body_puzzle_template_8x8 | cold_start_01 | discovery | 在线单字段采集：保存后关闭进程，再以不同 PID 冷启动重开 |
 | M05 | body_upload_bmp | cold_start_01 | discovery | 在线单字段采集：保存后关闭进程，再以不同 PID 冷启动重开 |
 | M05 | fragment_compressed_upload_bmp | cold_start_01 | discovery | 在线单字段采集：保存后关闭进程，再以不同 PID 冷启动重开 |
 | M05 | fragment_upload_bmp | cold_start_01 | discovery | 在线单字段采集：保存后关闭进程，再以不同 PID 冷启动重开 |
@@ -55,7 +54,7 @@
 | M05 | body_puzzle_swap_banks | golden | true | 39875 | 4 | 0 | M05-body_puzzle_swap_banks-cold_start_01.json |
 | M05 | body_puzzle_template_10x6 | golden | true | 53399 | 4 | 0 | M05-body_puzzle_template_10x6-cold_start_01.json |
 | M05 | body_puzzle_template_7x9 | golden | true | 39875 | 4 | 0 | M05-body_puzzle_template_7x9-cold_start_01.json |
-| M05 | body_puzzle_template_8x8 | discovery | - | 53399 | 4 | 53395 | M05-body_puzzle_template_8x8-cold_start_01.json |
+| M05 | body_puzzle_template_8x8 | golden | true | 53399 | 4 | 0 | M05-body_puzzle_template_8x8-cold_start_01.json |
 | M05 | body_puzzle_template_9x7 | golden | true | 53399 | 4 | 0 | M05-body_puzzle_template_9x7-cold_start_01.json |
 | M05 | body_upload_bmp | discovery | - | 39875 | 4 | 39871 | M05-body_upload_bmp-cold_start_01.json |
 | M05 | captain | golden | true | 1706 | 0 | 0 | M05-captain-cold_start_01.json |

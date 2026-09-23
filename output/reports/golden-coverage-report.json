@@ -6,17 +6,17 @@
   },
   "g1": {
     "definition": "已通过黄金对照的字段数 / 登记字段数",
-    "numerator": 233,
+    "numerator": 234,
     "denominator": 241,
-    "value": 0.9668,
+    "value": 0.971,
     "denominator_scope": "registered_fields",
     "denominator_scope_note": "当前分母为 field_registry.json 登记字段数；最终口径为参考版全部可编辑字段数（主文档第 4/5 章字段清单，M00 第 5 节统计职责），全量采集完成后需以全量字段数重算分母",
     "target": ">=95%"
   },
   "g2": {
     "definition": "unexplained 为空且 expected 已知的 golden 用例占比",
-    "numerator": 238,
-    "denominator": 238,
+    "numerator": 239,
+    "denominator": 239,
     "value": 1.0,
     "target": "=100%"
   },
@@ -24,23 +24,16 @@
     "registered_fields": 241,
     "archived_fields": 241,
     "archived_cases": 246,
-    "golden_cases": 238,
-    "discovery_cases": 8,
-    "passed_golden_cases": 238,
+    "golden_cases": 239,
+    "discovery_cases": 7,
+    "passed_golden_cases": 239,
     "failed_golden_cases": 0,
-    "pending_cases": 8
+    "pending_cases": 7
   },
   "pending_cases": [
     {
       "module": "M05",
       "field": "body_compressed_upload_bmp",
-      "case_id": "cold_start_01",
-      "case_kind": "discovery",
-      "reason": "在线单字段采集：保存后关闭进程，再以不同 PID 冷启动重开"
-    },
-    {
-      "module": "M05",
-      "field": "body_puzzle_template_8x8",
       "case_id": "cold_start_01",
       "case_kind": "discovery",
       "reason": "在线单字段采集：保存后关闭进程，再以不同 PID 冷启动重开"
@@ -247,11 +240,11 @@
       "module": "M05",
       "field": "body_puzzle_template_8x8",
       "case_id": "cold_start_01",
-      "case_kind": "discovery",
-      "passed": null,
+      "case_kind": "golden",
+      "passed": true,
       "changed_count": 53399,
       "removed_normalization_count": 4,
-      "unexpected_count": 53395,
+      "unexpected_count": 0,
       "archive": "M05-body_puzzle_template_8x8-cold_start_01.json"
     },
     {

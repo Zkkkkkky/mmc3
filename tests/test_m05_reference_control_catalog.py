@@ -24,8 +24,10 @@ class M05ReferenceControlCatalogTests(unittest.TestCase):
         self.assertEqual(report["counts"]["classified_capacity_boundaries"], 1)
         self.assertEqual(report["counts"]["guarded_actions_with_discovery"], 10)
         self.assertEqual(report["counts"]["prepared_discovery_recipes"], 25)
-        self.assertEqual(report["counts"]["promoted_golden_recipes"], 17)
-        self.assertEqual(report["counts"]["pending_discovery_recipes"], 8)
+        self.assertEqual(report["counts"]["promoted_golden_recipes"], 18)
+        self.assertEqual(report["counts"]["pending_discovery_recipes"], 7)
+        self.assertEqual(report["counts"]["resolved_non_golden_recipes"], 7)
+        self.assertEqual(report["counts"]["unresolved_discovery_recipes"], 0)
         self.assertEqual(len(set(report["golden_save_fields"])), 33)
         self.assertEqual(
             set(report["prepared_discovery_recipes"]),
@@ -58,9 +60,9 @@ class M05ReferenceControlCatalogTests(unittest.TestCase):
             },
         )
         recipes = report["prepared_discovery_recipes"].values()
-        self.assertEqual(sum(item["status"] == "promoted_golden" for item in recipes), 17)
+        self.assertEqual(sum(item["status"] == "promoted_golden" for item in recipes), 18)
         recipes = report["prepared_discovery_recipes"].values()
-        self.assertEqual(sum(item["status"] == "prepared_not_promoted" for item in recipes), 8)
+        self.assertEqual(sum(item["status"] == "prepared_not_promoted" for item in recipes), 7)
         self.assertTrue(
             all(
                 item["sha256"]
@@ -78,12 +80,13 @@ class M05ReferenceControlCatalogTests(unittest.TestCase):
         self.assertTrue(
             report["checks"]["pending_recipes_have_actionable_classification"]
         )
+        self.assertTrue(report["checks"]["pending_recipes_semantically_resolved"])
         pending = {
             name: item
             for name, item in report["prepared_discovery_recipes"].items()
             if item["status"] == "prepared_not_promoted"
         }
-        self.assertEqual(len(pending), 8)
+        self.assertEqual(len(pending), 7)
         self.assertTrue(
             all(item["dynamic_evidence"] is not None for item in pending.values())
         )
@@ -98,11 +101,35 @@ class M05ReferenceControlCatalogTests(unittest.TestCase):
         )
         self.assertEqual(
             pending["body_upload_bmp"]["evidence_classification"],
-            "reference_action_not_persistent",
+            "reference_preview_only_confirmed",
+        )
+        self.assertEqual(
+            pending["body_upload_bmp"]["pending_action_analysis"][
+                "actionSpecificDiff"
+            ]["count"],
+            0,
         )
         self.assertEqual(
             pending["main_clear_body"]["evidence_classification"],
-            "reference_cold_reopen_mismatch",
+            "reference_clear_save_confirmed_capture_mismatch",
+        )
+        self.assertGreater(
+            pending["main_clear_body"]["pending_action_analysis"][
+                "actionSpecificDiff"
+            ]["count"],
+            0,
+        )
+        self.assertEqual(
+            pending["body_compressed_upload_bmp"]["evidence_classification"],
+            "reference_resource_save_confirmed_capture_mismatch",
+        )
+        self.assertEqual(
+            pending["icon_upload_bmp"]["evidence_classification"],
+            "reference_upload_clears_target",
+        )
+        self.assertEqual(
+            report["prepared_discovery_recipes"]["body_puzzle_template_8x8"]["status"],
+            "promoted_golden",
         )
         self.assertIn(
             "cold_reopen_does_not_match_expected",
