@@ -12,6 +12,7 @@ from .story_text import StoryTextCodec
 # consecutively and each starts with the text-window prologue below.
 CHAPTER_VICTORY_PRG_BANK = 0x3D
 CHAPTER_VICTORY_CPU_START = 0x8000
+CHAPTER_VICTORY_CPU_END = 0x8289
 CHAPTER_VICTORY_HEADER = bytes.fromhex("FC 20 0F FD 40")
 CHAPTER_VICTORY_COUNT = 13
 
@@ -33,7 +34,7 @@ class ChapterVictoryRecord:
 
 
 class ChapterVictoryCodec:
-    """Lossless fixed-capacity access to the playable chapter objectives.
+    """Lossless shared-pool access to the playable chapter objectives.
 
     The first thirteen records have been correlated with the reference
     editor's chapter list.  An ``FF`` byte can also be the low byte of a DC
@@ -48,6 +49,18 @@ class ChapterVictoryCodec:
     ) -> None:
         self.rom = rom
         self._source = rom.data if data is None else bytes(data)
+        baseline = self._scan_records(bytes(rom.data))
+        self.pool_file_start = self.file_offset()
+        self.pool_file_end = self.pool_file_start + (
+            CHAPTER_VICTORY_CPU_END - CHAPTER_VICTORY_CPU_START
+        )
+        used_end = baseline[-1].file_offset + baseline[-1].capacity
+        if baseline[0].file_offset != self.pool_file_start or (
+            used_end > self.pool_file_end
+        ) or any(
+            value != 0xFF for value in bytes(rom.data)[used_end:self.pool_file_end]
+        ):
+            raise RomFormatError("初始胜利文字基准记录未完整覆盖已验证数据池。")
         self._records = self._scan_records(self._source)
 
     @staticmethod
@@ -128,28 +141,35 @@ class ChapterVictoryCodec:
             raw[len(CHAPTER_VICTORY_HEADER) : -1],
         )
 
-    def replacement_patch(
+    def replacement_patches(
         self,
         data: bytes | bytearray,
         scenario_id: int,
         body: bytes,
-    ) -> tuple[int, bytes, bytes]:
-        current = self.decode(scenario_id, data)
+    ) -> tuple[tuple[int, bytes, bytes], ...]:
+        current_codec = ChapterVictoryCodec(self.rom, data)
+        current = current_codec.decode(scenario_id, data)
         replacement = CHAPTER_VICTORY_HEADER + bytes(body) + b"\xFF"
-        if len(replacement) != current.capacity:
-            raise ValueError(
-                "初始胜利文字必须保持当前记录容量："
-                f"正文 {current.body_capacity} 字节，当前 {len(body)} 字节。"
-            )
         if StoryTextCodec.standalone_terminator_end(replacement) != len(replacement):
             raise ValueError("初始胜利文字正文不能包含独立 FF 结束码。")
-        return current.file_offset, current.raw, replacement
+        records = [record.raw for record in current_codec.records]
+        records[scenario_id] = replacement
+        capacity = self.pool_file_end - self.pool_file_start
+        used = sum(len(record) for record in records)
+        if used > capacity:
+            raise ValueError(
+                f"初始胜利文字共享池容量不足：需要 {used} 字节，"
+                f"固定容量为 {capacity} 字节。请缩短其他关卡文字。"
+            )
+        packed = b"".join(records) + b"\xFF" * (capacity - used)
+        before = bytes(data[self.pool_file_start : self.pool_file_end])
+        return ((self.pool_file_start, before, packed),)
 
     def round_trip(self, scenario_id: int) -> bool:
         record = self.decode(scenario_id)
-        offset, before, after = self.replacement_patch(
+        patches = self.replacement_patches(
             self._source,
             scenario_id,
             record.body,
         )
-        return offset == record.file_offset and before == after == record.raw
+        return all(before == after for _offset, before, after in patches)

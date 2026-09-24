@@ -529,15 +529,9 @@ class StoryPage(ProjectPage):
         assert self.project is not None
         assert self.current_selector is not None
         assert self.current_index is not None
-        current = self.project.get_story_text(
-            self.current_selector, self.current_index
-        ).raw
-        if self.project.expansion_plan is None and len(replacement) != len(current):
-            raise ValueError("当前 ROM 尚未自动规划剧情空间，文本必须保持原长度。")
-        if self.project.expansion_plan is not None:
-            self.project.story_text_replacement_usage(
-                self.current_selector, self.current_index, replacement
-            )
+        self.project.story_text_replacement_usage(
+            self.current_selector, self.current_index, replacement
+        )
 
     def _decoded_changed(self) -> None:
         if self._syncing_decoded:
@@ -567,13 +561,10 @@ class StoryPage(ProjectPage):
             if not changed:
                 self._decoded_dirty = False
             self._validate_replacement(encoded)
-            if self.project.expansion_plan is not None:
-                used, capacity = self.project.story_text_replacement_usage(
-                    self.current_selector, self.current_index, encoded
-                )
-                status = f"文本组预计 {used} / {capacity} 字节 · 可自动重排"
-            else:
-                status = "长度正确"
+            used, capacity = self.project.story_text_replacement_usage(
+                self.current_selector, self.current_index, encoded
+            )
+            status = f"文本组预计 {used} / {capacity} 字节 · 可自动重排"
             staged = " · 有尚未应用的改动" if changed else " · 与当前工程一致"
             self.length_label.setText(
                 f"Unicode编码后 {len(encoded)} 字节 · {status}{staged}"
@@ -630,16 +621,11 @@ class StoryPage(ProjectPage):
                 self.current_selector, self.current_index
             ).raw
             changed = parsed != current
-            if self.project.expansion_plan is not None:
-                used, capacity = self.project.story_text_replacement_usage(
-                    self.current_selector, self.current_index, parsed
-                )
-                valid = True
-                status = f"文本组预计 {used} / {capacity} 字节 · 可自动重排"
-            else:
-                capacity = len(current)
-                valid = length == capacity
-                status = "长度正确" if valid else "当前ROM必须保持等长"
+            used, capacity = self.project.story_text_replacement_usage(
+                self.current_selector, self.current_index, parsed
+            )
+            valid = True
+            status = f"文本组预计 {used} / {capacity} 字节 · 可自动重排"
             staged = " · 有尚未应用的改动" if changed else " · 与当前工程一致"
             self.length_label.setText(
                 f"输入 {length} 字节 · {status}{staged}"

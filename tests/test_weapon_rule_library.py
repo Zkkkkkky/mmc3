@@ -45,6 +45,17 @@ class WeaponRuleCatalogTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "指针表"):
             WeaponRuleCatalog(broken)
 
+    def test_hidden_prefix_can_be_included_for_complete_inspection(self) -> None:
+        table = WEAPON_RULE_TABLES[0]
+        offset, visible, aliases = self.catalog.record(table, 1)
+        full_offset, complete, full_aliases = self.catalog.record(
+            table, 1, include_hidden=True
+        )
+        self.assertEqual(full_offset, offset)
+        self.assertEqual(full_aliases, aliases)
+        self.assertEqual(complete[table.hidden_prefix:], visible)
+        self.assertEqual(len(complete), len(visible) + table.hidden_prefix)
+
 
 class WeaponRuleLibraryUiTests(QtTestCase):
     @classmethod
@@ -66,6 +77,41 @@ class WeaponRuleLibraryUiTests(QtTestCase):
         self.assertIn("FD 20 20", dialog.codes["weapon_beam"].toPlainText())
         self.assertTrue(dialog.codes["weapon_beam"].isReadOnly())
         self.assertFalse(dialog.names["weapon_beam"].isReadOnly())
+
+    def test_search_complete_copy_and_full_page_export_text(self) -> None:
+        project = RomProject.load(DEFAULT_ROM)
+        dialog = WeaponRuleLibraryDialog(project)
+        self.addCleanup(dialog.deleteLater)
+        table = WEAPON_RULE_TABLES[0]
+
+        dialog.searches[table.key].setText("2")
+        dialog._find_next(table)
+        self.assertEqual(dialog.lists[table.key].currentRow(), 1)
+
+        visible = dialog.codes[table.key].toPlainText()
+        dialog.complete_checks[table.key].setChecked(True)
+        complete = dialog.codes[table.key].toPlainText()
+        self.assertGreater(len(complete), len(visible))
+        self.assertIn("完整记录", dialog.statuses[table.key].text())
+
+        dialog._copy_current(table)
+        copied = QApplication.clipboard().text()
+        self.assertIn("光束组图规律 $02", copied)
+        self.assertIn("文件地址：0x", copied)
+        self.assertIn("代码：", copied)
+
+        exported = dialog._all_text(table)
+        self.assertIn("# 记录数：255", exported)
+        self.assertIn("$EF\t指针:$A0A5", exported)
+        self.assertIn("保留/控制项", exported)
+        self.assertEqual(
+            len([line for line in exported.splitlines() if line.startswith("$")]),
+            table.count,
+        )
+
+        dialog.lists[table.key].setCurrentRow(0xEF - 1)
+        self.assertEqual(dialog.codes[table.key].toPlainText(), "")
+        self.assertIn("保留/控制项", dialog.statuses[table.key].text())
 
     def test_weapon_rule_name_accept_cancel_undo_and_project_reopen(self) -> None:
         project = RomProject.load(DEFAULT_ROM)

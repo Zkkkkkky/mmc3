@@ -10,10 +10,12 @@ from PySide6.QtWidgets import (
     QGridLayout, QGroupBox,
 )
 
+from fc_editor.codecs.chapter_event import ACTION_FIELDS
 from fc_editor.codecs.legacy_scenario import LegacyScenarioCodec
 from fc_editor.codecs.legacy_text import LegacyTextCodec, decode_legacy_text
 from fc_editor.codecs.legacy_text_growth import LegacyGrowthCodec
 from fc_editor.codecs.legacy_text_shop import LegacyShopCodec
+from fc_editor.dc_text import DC_STOCK_MUSIC_LABELS
 
 from .pages import ProjectPage
 
@@ -21,9 +23,8 @@ from .pages import ProjectPage
 class LegacyTextPage(ProjectPage):
     """Shared real-ROM text editor for battle dialogue, system and item text.
 
-    Battle dialogue can repack its verified fixed-bank arenas.  System and item
-    text retain their original-record capacity because their relocation rules
-    are separate and have not been verified.
+    Battle dialogue, system text and item descriptions repack their verified
+    fixed pools while preserving aliases and control tokens.
     """
 
     def __init__(self, group_keys: tuple[str, ...] = ("battle_00", "battle_01", "battle_04", "battle_05")) -> None:
@@ -90,7 +91,8 @@ class LegacyTextPage(ProjectPage):
         self.add_button = QPushButton("添加")
         self.add_button.setVisible(group_keys == ("system",))
         self.add_button.setToolTip(
-            "系统文字池没有经过黄金对照验证的追加/搬移规则；点击查看容量说明。"
+            "现有 221 项可在共享池内变长；新增编号会扩大指针表，仍保持关闭。"
+            "点击查看容量说明。"
         )
         self.add_button.clicked.connect(self._show_add_boundary)
         buttons.addWidget(self.system_note, 1)
@@ -111,9 +113,9 @@ class LegacyTextPage(ProjectPage):
         QMessageBox.information(
             self,
             "系统文字容量",
-            "当前系统文字使用固定指针表和固定文字池，只能在原记录容量内修改。\n\n"
-            "新增记录需要同时扩大指针表并搬移后续数据；参考保存协议尚未形成可验证闭环，"
-            "因此本次不会修改 ROM。",
+            "当前 221 项系统文字会在固定共享池内自动重排，因此单条可以变长，"
+            "但总占用不能超过池容量。\n\n"
+            "“添加”会改变指针表项数和后续布局，仍未开放；请编辑已有编号。",
         )
 
     def set_embedded_single_record_mode(self) -> None:
@@ -260,7 +262,7 @@ class LegacyTextPage(ProjectPage):
             if key.startswith("battle_"):
                 result.add(("battle_text_bank", self.codec.group_by_key[key].bank))
             else:
-                result.add(("rom_offset", self.codec.record(*identity).file_offset))
+                result.add(("legacy_text_pool", key))
         return frozenset(result)
 
     @property
@@ -279,6 +281,14 @@ class LegacyTextPage(ProjectPage):
                 raise ValueError("当前文字已在其他页面修改，请先还原本页草稿再重新编辑。")
         if self._drafts and all(key.startswith("battle_") for key, _index, _variant in self._drafts):
             return codec.battle_repack_patches(self._drafts)
+        simple_keys = {
+            key for key, _index, _variant in self._drafts
+            if not key.startswith("battle_")
+        }
+        if self._drafts and len(simple_keys) == 1:
+            return codec.simple_group_repack_patches(
+                next(iter(simple_keys)), self._drafts
+            )
         by_offset = {}
         for identity, text in self._drafts.items():
             patch = codec.replacement_patch(*identity, text)
@@ -320,9 +330,11 @@ class LegacyTextPage(ProjectPage):
                     f"共用此正文的条目：{len(record.shared_by)}。"
                 )
             else:
+                usage = self.codec.simple_group_usage(key, self._drafts)
                 self.status_label.setText(
-                    f"原记录 {len(record.raw)} 字节；保留控制码和结束码，"
-                    "可在原容量内修改正文。"
+                    f"当前记录 {len(record.raw)} 字节；共享池 "
+                    f"{usage.used}/{usage.capacity} 字节，剩余 {usage.free} 字节。"
+                    "保留控制码和结束码后可变长，暂存时自动重排全部指针。"
                     f"共用此正文的条目：{len(record.shared_by)}。"
                 )
 
@@ -399,22 +411,105 @@ class LegacyScenarioEventsPage(ProjectPage):
             try:
                 self.codec = LegacyScenarioCodec(self.project.working)
                 self._instructions = self.codec.instructions(self.scenario_id, self.phase)
+                address_rows = {
+                    instruction.address: index
+                    for index, instruction in enumerate(self._instructions)
+                }
                 for index, instruction in enumerate(self._instructions):
-                    extra = instruction.raw[1:].hex(" ").upper()
-                    if instruction.opcode in (0x40, 0x41, 0x42, 0x44):
-                        selector = instruction.raw[-2] + 0x30
-                        text_id = instruction.raw[-1]
-                        try:
-                            extra = decode_legacy_text(self.project.get_story_text(selector, text_id).raw).replace("\n", " ").replace("⟦结束⟧", "")
-                        except (KeyError, ValueError, IndexError):
-                            pass
-                    self.record_list.addItem(f"{index:03d}: {instruction.label}：{extra}")
+                    self.record_list.addItem(
+                        self._instruction_summary(index, instruction, address_rows)
+                    )
             except (ValueError, IndexError) as error:
                 self.status_label.setText(str(error))
         self._loading = False
         self.setEnabled(self.codec is not None)
         self.record_list.setCurrentRow(0 if self.record_list.count() else -1)
         self._select()
+
+    def _story_summary(self, instruction) -> str:
+        if self.project is None or len(instruction.raw) < 3:
+            return ""
+        selector = instruction.raw[-2] + 0x30
+        text_id = instruction.raw[-1]
+        try:
+            text = decode_legacy_text(
+                self.project.get_story_text(selector, text_id).raw
+            )
+        except (KeyError, ValueError, IndexError):
+            return f"文本组 ${selector:02X}，编号 ${text_id:02X}"
+        return text.replace("\n", " ").replace("⟦结束⟧", "").strip()
+
+    def _named_parameter(self, label: str, value: int) -> str:
+        if self.project is None:
+            return f"${value:02X}"
+        if "人物" in label:
+            return f"${value:02X} {self.project.character_display_name(value)}"
+        if "机体" in label and value:
+            return f"${value:02X} {self.project.unit_display_name(value)}"
+        return f"${value:02X}"
+
+    def _instruction_summary(self, index, instruction, address_rows) -> str:
+        """Render one beginner-facing line using verified operands and names."""
+
+        raw = instruction.raw
+        opcode = instruction.opcode
+        terminal = "，结束本事件组" if raw[0] & 0x80 else ""
+        if opcode in (0x59, 0x5A) and len(raw) >= 2:
+            music_index = raw[1] - 0x81
+            music = (
+                DC_STOCK_MUSIC_LABELS[music_index]
+                if 0 <= music_index < len(DC_STOCK_MUSIC_LABELS)
+                else f"音乐命令 ${raw[1]:02X}"
+            )
+            side = "我方" if opcode == 0x59 else "敌方"
+            detail = f"播放{side}地图音乐：“{music}”"
+        elif opcode == 0x01 and len(raw) >= 2:
+            value = raw[1]
+            scope = "全局" if value & 0x80 else "本关"
+            detail = f"判断：{scope}开关 {value & 0x0F} 是否打开？"
+        elif opcode in (0x55, 0x57, 0x58) and len(raw) >= 3:
+            target = int.from_bytes(raw[1:3], "little")
+            row = address_rows.get(target)
+            destination = f"第 {row:03d} 条" if row is not None else "脚本外地址"
+            condition = {0x55: "直接", 0x57: "是", 0x58: "否"}[opcode]
+            detail = f"{condition}：跳到 {destination}（${target:04X}）"
+        elif opcode in (0x40, 0x41, 0x42, 0x44):
+            kind = {
+                0x40: "无光标对白",
+                0x41: "人物对白",
+                0x42: "对白调用",
+                0x44: "显示文字",
+            }[opcode]
+            detail = f"{kind}{terminal}：{self._story_summary(instruction)}"
+            terminal = ""
+        elif opcode == 0x43 and len(raw) >= 2:
+            detail = f"打开文字窗口：样式/位置 ${raw[1]:02X}"
+        elif opcode == 0x45:
+            detail = "关闭文字窗口"
+        elif opcode == 0x46 and len(raw) >= 3:
+            detail = f"移动光标到地图坐标 X={raw[1]}，Y={raw[2]}"
+        elif opcode == 0x27 and len(raw) >= 2:
+            detail = f"判断：选项 {max(1, raw[1] >> 4)} 是否被选择？"
+        elif opcode == 0x3C and len(raw) >= 2:
+            detail = f"开始选项事件：{raw[1]} 个选项"
+        elif opcode == 0x5C and len(raw) >= 5:
+            address = int.from_bytes(raw[1:3], "little")
+            detail = (
+                f"设置内存地址 ${address:04X} 的值为 ${raw[3]:02X}"
+                f"（模式 ${raw[4]:02X}）"
+            )
+        else:
+            labels = ACTION_FIELDS.get(opcode, ())
+            values = raw[1:]
+            if labels and len(labels) == len(values):
+                parameters = "，".join(
+                    f"{label}={self._named_parameter(label, value)}"
+                    for label, value in zip(labels, values)
+                )
+            else:
+                parameters = " ".join(f"${value:02X}" for value in values)
+            detail = instruction.label + (f"：{parameters}" if parameters else "")
+        return f"{index:03d}: {detail}{terminal}"
 
     def _select(self, *_args) -> None:
         if self._loading:
@@ -930,7 +1025,10 @@ class LegacyShopPage(ProjectPage):
 
     @property
     def pending_draft_keys(self):
-        return frozenset([*( ("rom_offset", self.codec.record(key).file_offset) for key in self._drafts), *( ("rom_offset", self.text_codec.record("system", key).file_offset) for key in self._text_drafts)])
+        return frozenset([
+            *(("rom_offset", self.codec.record(key).file_offset) for key in self._drafts),
+            *(("legacy_text_pool", "system") for _key in self._text_drafts),
+        ])
 
     @property
     def pending_draft_key(self):
@@ -950,12 +1048,16 @@ class LegacyShopPage(ProjectPage):
                 raise ValueError("商店已在其他页面变化，请还原草稿后重新编辑。")
             patch = codec.replacement_patch(shop_id, *values)
             patches[patch[0]] = patch
+        system_drafts = {}
         for text_id, text in self._text_drafts.items():
             if text_codec.record("system", text_id).raw != self.text_codec.record("system", text_id).raw:
                 raise ValueError("对话已在其他页面变化，请还原草稿后重新编辑。")
-            patch = text_codec.replacement_patch("system", text_id, 0, text)
+            system_drafts[("system", text_id, 0)] = text
+        for patch in text_codec.simple_group_repack_patches(
+            "system", system_drafts
+        ) if system_drafts else ():
             if patch[0] in patches and patch != patches[patch[0]]:
-                raise ValueError("共用文字存在不同草稿，请只保留一份修改。")
+                raise ValueError("系统文字池与商店记录发生意外重叠。")
             patches[patch[0]] = patch
         return tuple(patches.values())
 

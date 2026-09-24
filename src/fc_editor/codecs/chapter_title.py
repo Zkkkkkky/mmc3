@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+import struct
 
 from ..errors import RomFormatError
 from ..rom_image import RomImage
@@ -12,6 +13,8 @@ CHAPTER_TITLE_POINTER_TABLE_OFFSET = 0x16111
 CHAPTER_TITLE_PRG_BANK = 0x0B
 CHAPTER_TITLE_CPU_BASE = 0xA000
 CHAPTER_TITLE_FILE_BASE = 0x16010
+CHAPTER_TITLE_POOL_START = 0xAB7A
+CHAPTER_TITLE_POOL_END = 0xB0DE
 
 
 @dataclass(frozen=True)
@@ -41,7 +44,7 @@ class ChapterTitleRecord:
 
 
 class ChapterTitleCodec:
-    """Fixed-capacity access to the 32 chapter-title tile scripts.
+    """Access to the 32 chapter-title tile scripts and their shared pool.
 
     The active DC layout extends the original title pointer table to 32
     entries.  Each record consists of one or more ``FE X Y WIDTH`` commands,
@@ -57,6 +60,20 @@ class ChapterTitleCodec:
     ) -> None:
         self.rom = rom
         self._source = rom.data if data is None else bytes(data)
+        baseline = self._scan_layouts(bytes(rom.data))
+        self.pool_file_start = self.pointer_to_file_offset(CHAPTER_TITLE_POOL_START)
+        self.pool_file_end = self.pointer_to_file_offset(CHAPTER_TITLE_POOL_END)
+        ordered = sorted((offset, size) for _pointer, offset, size in baseline)
+        if any(
+            offset + size != ordered[index + 1][0]
+            for index, (offset, size) in enumerate(ordered[:-1])
+        ) or ordered[0][0] != self.pool_file_start:
+            raise RomFormatError("关卡标题基准脚本不是连续的独立数据池。")
+        used_end = ordered[-1][0] + ordered[-1][1]
+        if used_end > self.pool_file_end or any(
+            value != 0xFF for value in bytes(rom.data)[used_end:self.pool_file_end]
+        ):
+            raise RomFormatError("关卡标题数据越过安全池或尾部不是空闲填充。")
         self._layouts = self._scan_layouts(self._source)
 
     @staticmethod
@@ -173,12 +190,8 @@ class ChapterTitleCodec:
         chr_banks: tuple[int, int, int],
         raw: bytes,
     ) -> tuple[tuple[int, bytes, bytes], ...]:
-        current = self.decode(scenario_id, data)
-        if len(raw) != current.capacity:
-            raise ValueError(
-                "关卡标题脚本必须保持当前容量："
-                f"{current.capacity} 字节，当前 {len(raw)} 字节。"
-            )
+        current_codec = ChapterTitleCodec(self.rom, data)
+        current = current_codec.decode(scenario_id, data)
         try:
             self.parse_segments(bytes(raw))
         except RomFormatError as error:
@@ -190,11 +203,47 @@ class ChapterTitleCodec:
             raise ValueError(
                 f"CHR 图库必须在 00—{chr_bank_count - 1:02X} 之间。"
             )
+        records = [
+            current_codec.decode(index, data).raw
+            for index in range(CHAPTER_TITLE_COUNT)
+        ]
+        records[scenario_id] = bytes(raw)
+        capacity = self.pool_file_end - self.pool_file_start
+        used = sum(len(record) for record in records)
+        if used > capacity:
+            raise ValueError(
+                f"关卡标题共享池容量不足：需要 {used} 字节，"
+                f"固定容量为 {capacity} 字节。请缩短其他关卡标题。"
+            )
+        cursor = self.pool_file_start
+        pointers: list[int] = []
+        packed = bytearray()
+        for record in records:
+            pointers.append(
+                CHAPTER_TITLE_CPU_BASE + cursor - CHAPTER_TITLE_FILE_BASE
+            )
+            packed.extend(record)
+            cursor += len(record)
+        packed.extend(b"\xFF" * (capacity - len(packed)))
+
         chr_offset = CHAPTER_TITLE_CHR_TABLE_OFFSET + scenario_id * 3
         old_banks = bytes(data[chr_offset : chr_offset + 3])
+        table_size = CHAPTER_TITLE_COUNT * 2
+        table_before = bytes(
+            data[
+                CHAPTER_TITLE_POINTER_TABLE_OFFSET:
+                CHAPTER_TITLE_POINTER_TABLE_OFFSET + table_size
+            ]
+        )
+        pool_before = bytes(data[self.pool_file_start : self.pool_file_end])
         return (
             (chr_offset, old_banks, bytes(chr_banks)),
-            (current.file_offset, current.raw, bytes(raw)),
+            (
+                CHAPTER_TITLE_POINTER_TABLE_OFFSET,
+                table_before,
+                struct.pack(f"<{len(pointers)}H", *pointers),
+            ),
+            (self.pool_file_start, pool_before, bytes(packed)),
         )
 
     def round_trip(self, scenario_id: int) -> bool:

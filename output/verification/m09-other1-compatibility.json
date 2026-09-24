@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-21T23:15:05+08:00",
+  "generated_at": "2026-09-24T11:04:44+08:00",
   "passed": true,
   "delivery_status": "reference_field_scope_complete_product_compatibility_and_user_pending",
   "conclusion": "M09 当前 99 级安全范围、经验/命中表、系统文字和成长编辑均通过实现侧门禁；参考 audit.nes 的 414 个逻辑入口保存/冷读已全部完成。参考 5×16/60 级/30 字节与当前 4×16/99 级/50 字节布局差异和用户签收继续保留。",
@@ -130,7 +130,7 @@
       "invalid_value_rejection": "成长方式需要 99 个 0—15 的整数。"
     },
     "level_cap": {
-      "generated_at": "2026-09-21T23:15:05+08:00",
+      "generated_at": "2026-09-24T11:04:44+08:00",
       "passed": true,
       "conclusion": "当前受支持 ROM 已是固定 99 级布局；旧版 audit.nes 的 60→61 3778 字节重排不兼容，不能应用到当前产品。",
       "supported_rom": {

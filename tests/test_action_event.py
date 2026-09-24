@@ -6,6 +6,7 @@ from unittest.mock import patch
 
 os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 
+from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QApplication
 
 from dc_modifier.app import DEFAULT_ROM
@@ -137,6 +138,19 @@ class ActionEventCodecTests(unittest.TestCase):
             self.project.delete_action_event_instruction(0, 1)
         self.assertEqual(bytes(self.project.working), before)
 
+    def test_clear_below_is_one_atomic_undoable_operation(self) -> None:
+        before = bytes(self.project.working)
+        selected = self.project.get_action_event(0xFD).raw
+
+        self.project.clear_action_events_below(0xFD)
+
+        self.assertEqual(self.project.get_action_event(0xFD).raw, selected)
+        self.assertEqual(self.project.get_action_event(0xFE).raw, b"\xDF")
+        self.assertEqual(self.project.get_action_event(0xFF).raw, b"\xDF")
+        self.assertEqual(self.project.undo_description, "清空行动 $FE—$FF")
+        self.project.undo()
+        self.assertEqual(bytes(self.project.working), before)
+
 
 class ActionEventUiTests(QtTestCase):
     @classmethod
@@ -164,6 +178,110 @@ class ActionEventUiTests(QtTestCase):
         self.assertEqual(page.insert_after_button.text(), "插入（接下）")
         self.assertIn("2541 / 2751", page.capacity_status.text())
 
+    def test_action_and_instruction_lists_expose_right_click_commands(self) -> None:
+        page = self.dialog.action_event_page
+        self.assertEqual(
+            page.action_list.contextMenuPolicy(),
+            Qt.ContextMenuPolicy.CustomContextMenu,
+        )
+        self.assertEqual(
+            page.instruction_list.contextMenuPolicy(),
+            Qt.ContextMenuPolicy.CustomContextMenu,
+        )
+        self.assertIn("右键", page.action_list.toolTip())
+        self.assertIn("右键", page.instruction_list.toolTip())
+        self.assertEqual(
+            [action.text() for action in page._build_action_context_menu().actions()],
+            ["复制", "粘贴", "清空下方"],
+        )
+        self.assertEqual(
+            [
+                action.text()
+                for action in page._build_instruction_context_menu().actions()
+                if not action.isSeparator()
+            ],
+            [
+                "插入（接上）",
+                "插入（接下）",
+                "添加增援",
+                "编辑",
+                "代码编辑",
+                "剪切",
+                "复制",
+                "复制全部",
+                "粘贴",
+                "粘贴全部",
+                "删除",
+                "清空",
+            ],
+        )
+
+        before = bytes(self.project.working)
+        copy_action = next(
+            action
+            for action in page._build_instruction_context_menu().actions()
+            if action.text() == "复制"
+        )
+        copy_action.trigger()
+        self.assertEqual(
+            QApplication.clipboard().text(),
+            page._selected_instruction().raw.hex(" ").upper(),
+        )
+        self.assertEqual(bytes(self.project.working), before)
+
+    def test_reference_copy_all_paste_all_and_clear_are_structural(self) -> None:
+        page = self.dialog.action_event_page
+        source = self.project.get_action_event(0)
+        page.copy_all_instructions()
+        page.action_list.setCurrentRow(2)
+        self.application.processEvents()
+        page.paste_all_instructions()
+        pasted = self.project.get_action_event(2)
+        self.assertEqual(
+            ActionEventCodecTests._semantic_signature(pasted),
+            ActionEventCodecTests._semantic_signature(source),
+        )
+
+        page.clear_action()
+        self.assertEqual(self.project.get_action_event(2).raw, b"\xDF")
+
+    def test_action_menu_clear_below_preserves_selected_action(self) -> None:
+        page = self.dialog.action_event_page
+        source = self.project.get_action_event(0)
+        self.project.replace_action_event(
+            0xFF,
+            source.raw,
+            source_pointer=source.pointer,
+        )
+        page.refresh()
+        page.action_list.setCurrentRow(0xFE)
+        self.application.processEvents()
+        selected_before = self.project.get_action_event(0xFE).raw
+
+        page.clear_actions_below()
+
+        self.assertEqual(self.project.get_action_event(0xFE).raw, selected_before)
+        self.assertEqual(self.project.get_action_event(0xFF).raw, b"\xDF")
+
+    def test_add_reinforcement_only_prefills_verified_opcode(self) -> None:
+        page = self.dialog.action_event_page
+        before_count = len(self.project.get_action_event(0).instructions)
+        with (
+            patch(
+                "dc_modifier.action_event_page.EventInstructionDialog.exec",
+                return_value=1,
+            ),
+            patch(
+                "dc_modifier.action_event_page.EventInstructionDialog.raw",
+                return_value=bytes.fromhex("4B 00 00 00 00 00 00"),
+            ),
+        ):
+            page._add_reinforcement()
+
+        record = self.project.get_action_event(0)
+        self.assertEqual(len(record.instructions), before_count + 1)
+        self.assertEqual(record.instructions[1].raw, bytes.fromhex("4B 00 00 00 00 00 00"))
+
     def test_variable_length_draft_commits_before_action_switch(self) -> None:
         page = self.dialog.action_event_page
         page.raw.setText("60 05")
@@ -176,6 +294,22 @@ class ActionEventUiTests(QtTestCase):
         )
         self.assertEqual(page.current_action_id, 2)
         self.assertFalse(page.has_pending_draft)
+
+    def test_visual_editor_applies_one_action_instruction(self) -> None:
+        page = self.dialog.action_event_page
+        instruction = page._selected_instruction()
+        replacement = bytes((instruction.raw_opcode ^ 0x80, *instruction.raw[1:]))
+        before = bytes(self.project.working)
+        with (
+            patch("dc_modifier.action_event_page.EventInstructionDialog.exec", return_value=1),
+            patch("dc_modifier.action_event_page.EventInstructionDialog.raw", return_value=replacement),
+        ):
+            page._open_instruction_editor()
+        self.assertNotEqual(bytes(self.project.working), before)
+        self.assertEqual(
+            self.project.get_action_event(page.current_action_id).instructions[0].raw,
+            replacement,
+        )
 
     def test_invalid_draft_blocks_action_switch(self) -> None:
         page = self.dialog.action_event_page

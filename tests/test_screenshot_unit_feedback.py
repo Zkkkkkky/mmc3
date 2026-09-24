@@ -518,6 +518,29 @@ class ScreenshotUnitTests(QtTestCase):
         dialog._composition_pressed(x, y, Qt.MouseButton.RightButton.value)
         self.assertEqual(len(decode_unit_body_script(dialog.body_script, 64)), before_count - 1)
 
+    def test_fragment_reference_page_selects_side_by_side_banks_and_flips_hit(self) -> None:
+        dialog = UnitAppearanceDialog(self.project, 0x09)
+        self.addCleanup(dialog.close)
+        dialog._select_library_tile("fragment", 72, 8)
+        self.assertEqual(dialog._selected_fragment_tile, 0x49)
+        fragments = decode_unit_fragment_script(dialog.fragment_script)
+        origin_x = 0x78 if dialog._type_code() & 0x40 else 0
+        target = None
+        for placement in fragments:
+            x = placement.x + origin_x + 4
+            y = placement.y + 4
+            if 0 <= x < 128 and 0 <= y < 128:
+                _body, _body_hits, current, hits = dialog._composition_hits(x, y)
+                if hits:
+                    target = (x, y, hits[-1], current[hits[-1]].flip_horizontal)
+                    break
+        self.assertIsNotNone(target)
+        x, y, index, before_flip = target
+        dialog._fragment_composition_pressed(x, y, Qt.MouseButton.RightButton.value)
+        updated = decode_unit_fragment_script(dialog.fragment_script)
+        self.assertEqual(len(updated), len(fragments))
+        self.assertEqual(updated[index].flip_horizontal, not before_flip)
+
     def test_chr_tile_editor_exports_legacy_8x8_bmp(self) -> None:
         editor = ChrTileEditorDialog(tuple(index % 4 for index in range(64)), "test")
         self.addCleanup(editor.close)
@@ -755,8 +778,8 @@ class ScreenshotUnitTests(QtTestCase):
         self.assertEqual(dialog.color_swatches, [])
         self.assertEqual(dialog.windowTitle(), "机体拼图")
         self.assertFalse(dialog.preview_tabs.tabBar().isVisible())
-        self.assertTrue(dialog.body_import_button.isVisible())
-        self.assertTrue(dialog.body_export_button.isVisible())
+        self.assertFalse(dialog.body_import_button.isVisible())
+        self.assertFalse(dialog.body_export_button.isVisible())
         self.assertEqual(dialog.body_import_offset.value(), 0)
         self.assertTrue(dialog.body_compress_upload.isChecked())
         self.assertEqual(dialog.fragment_import_offset.value(), 0)
@@ -800,7 +823,11 @@ class ScreenshotUnitTests(QtTestCase):
             wraps=render_unit_battle_preview,
         ) as render_preview:
             dialog.refresh_preview()
-        self.assertFalse(render_preview.call_args.kwargs["show_fragments"])
+        render_modes = {
+            (call.kwargs.get("show_body", True), call.kwargs["show_fragments"])
+            for call in render_preview.call_args_list
+        }
+        self.assertEqual(render_modes, {(True, False), (False, True)})
         self.assertEqual(set(dialog.body_move_buttons), {"up", "left", "right", "down"})
         self.assertEqual(dialog.unit_type_editor.size(), dialog.bank_editors[1].size())
         self.assertEqual(dialog.minimumSize(), dialog.maximumSize())
@@ -830,6 +857,34 @@ class ScreenshotUnitTests(QtTestCase):
         self.assertNotEqual(
             after_numbering.pixelColor(24, 12),
             after_numbering.pixelColor(25, 12),
+        )
+        dialog.preview_tabs.setCurrentIndex(1)
+        self.app.processEvents()
+        self.assertEqual(dialog.windowTitle(), "碎片拼图")
+        self.assertEqual((dialog.width(), dialog.height()), (887, 708))
+        self.assertFalse(dialog.body_reference_group.isVisible())
+        self.assertFalse(dialog.body_code_group.isVisible())
+        self.assertEqual(
+            (dialog.fragment_library_preview.pixmap().width(),
+             dialog.fragment_library_preview.pixmap().height()),
+            (384, 192),
+        )
+        self.assertEqual(
+            (dialog.fragment_library_preview.source_width,
+             dialog.fragment_library_preview.source_height),
+            (128, 64),
+        )
+        self.assertEqual(
+            (dialog.fragment_composition_preview.pixmap().width(),
+             dialog.fragment_composition_preview.pixmap().height()),
+            (384, 384),
+        )
+        self.assertEqual(set(dialog.fragment_move_buttons), {"up", "left", "right", "down"})
+        self.assertFalse(dialog.fragment_import_button.isVisible())
+        self.assertFalse(dialog.fragment_export_button.isVisible())
+        self.assertLess(
+            dialog.fragment_move_buttons["up"].geometry().top(),
+            dialog.fragment_composition_preview.geometry().top(),
         )
         body = render_unit_body_composition(
             self.project,

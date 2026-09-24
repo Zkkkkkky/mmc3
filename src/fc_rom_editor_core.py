@@ -79,6 +79,7 @@ from fc_editor.expansion_map import (
     read_expanded_map_payloads,
 )
 from fc_editor.expansion_story import (
+    in_place_story_repack_patches,
     STORY_DATA_CAPACITY,
     STORY_DATA_START,
     VERIFIED_STORY_SELECTORS,
@@ -615,16 +616,18 @@ class RomProject:
             if ActionEventCodec.supports(self.original)
             else None
         )
-        self.chapter_title_codec = (
+        self.base_chapter_title_codec = (
             ChapterTitleCodec(self.rom_image, self.original)
             if ChapterTitleCodec.supports(self.original)
             else None
         )
-        self.chapter_victory_codec = (
+        self.chapter_title_codec = self.base_chapter_title_codec
+        self.base_chapter_victory_codec = (
             ChapterVictoryCodec(self.rom_image, self.original)
             if ChapterVictoryCodec.supports(self.original)
             else None
         )
+        self.chapter_victory_codec = self.base_chapter_victory_codec
         self.persuasion_rule_codec = (
             PersuasionRuleCodec(self.rom_image)
             if self.rom_image.profile.persuasion_rules is not None
@@ -662,6 +665,14 @@ class RomProject:
             self._reserve_direct_reopen_guards(initial_plan)
         self.pointer_by_id = self.unit_codec.pointers
         self.ids_by_pointer = self.unit_codec.ids_by_pointer
+        if self.base_chapter_title_codec is not None:
+            self.chapter_title_codec = ChapterTitleCodec(
+                self.rom_image, self.working
+            )
+        if self.base_chapter_victory_codec is not None:
+            self.chapter_victory_codec = ChapterVictoryCodec(
+                self.rom_image, self.working
+            )
         self._refresh_dynamic_codecs()
         self._undo_stack: list[EditHistoryEntry] = []
         self._redo_stack: list[EditHistoryEntry] = []
@@ -930,7 +941,9 @@ class RomProject:
             self.map_codec = self.base_map_codec
             self.scenario_layout_codec = self.base_scenario_layout_codec
             self.map_trigger_codec = self.base_map_trigger_codec
-            self.story_text_codec = self.base_story_text_codec
+            # Verified story groups can be repacked in place without linker
+            # metadata. Rebuild the pointer cache after edits and undo/redo.
+            self.story_text_codec = StoryTextCodec(self.rom_image, self.working)
         else:
             if plan.flags & FLAG_UNITS:
                 if len(plan.unit_banks) < 6:
@@ -1017,6 +1030,14 @@ class RomProject:
             )
         self.pointer_by_id = self.unit_codec.pointers
         self.ids_by_pointer = self.unit_codec.ids_by_pointer
+        if self.base_chapter_title_codec is not None:
+            self.chapter_title_codec = ChapterTitleCodec(
+                self.rom_image, self.working
+            )
+        if self.base_chapter_victory_codec is not None:
+            self.chapter_victory_codec = ChapterVictoryCodec(
+                self.rom_image, self.working
+            )
 
     @property
     def unit_count(self) -> int:
@@ -2086,8 +2107,10 @@ class RomProject:
     ) -> tuple[int, ...]:
         if self.weapon_name_codec is None:
             raise ValueError("当前 ROM 的武器名称表尚未验证。")
+        source = self.original if original else self.working
         return self.weapon_name_codec.source_ids(
-            self.get_weapon_name_pointer(weapon_id, original=original)
+            self.get_weapon_name_pointer(weapon_id, original=original),
+            source,
         )
 
     def weapon_name_record_bytes(
@@ -2135,15 +2158,15 @@ class RomProject:
     def set_weapon_name_text(self, weapon_id: int, text: str) -> None:
         if self.weapon_name_codec is None:
             raise ValueError("当前 ROM 的武器名称表尚未验证。")
-        pointer = self.weapon_name_codec.pointer(weapon_id, bytes(self.working))
-        offset = self.weapon_name_codec.pointer_to_file_offset(pointer)
-        raw = self.weapon_name_codec.record_bytes(weapon_id, bytes(self.working))
-        self._replace_terminated_name(
-            offset,
-            self._terminated_capacity(raw, "武器名称"),
-            text,
-            f"武器 {weapon_id:02X} · 直接修改名称",
+        before = self._mutation_snapshot()
+        patches = self.weapon_name_codec.repack_name(
+            self.working, weapon_id, text
         )
+        for offset, expected, replacement in patches:
+            if bytes(self.working[offset : offset + len(expected)]) != expected:
+                raise ValueError("武器名称池已变化，请重新载入后再试。")
+            self.working[offset : offset + len(replacement)] = replacement
+        self._finish_mutation(before, f"武器 {weapon_id:02X} · 名称池重排")
 
     def weapon_display_name(self, weapon_id: int) -> str:
         if self.weapon_name_codec is None:
@@ -2408,8 +2431,15 @@ class RomProject:
         if self.weapon_name_codec is None:
             return ()
         options: list[tuple[int, int, str, tuple[int, ...]]] = []
-        for pointer in sorted(self.weapon_name_codec.ids_by_pointer):
-            source_ids = self.weapon_name_codec.source_ids(pointer)
+        current = bytes(self.working)
+        pointers = sorted(
+            {
+                self.weapon_name_codec.pointer(weapon_id, current)
+                for weapon_id in range(self.profile.weapon_name_pointer_count)
+            }
+        )
+        for pointer in pointers:
+            source_ids = self.weapon_name_codec.source_ids(pointer, current)
             if not source_ids:
                 continue
             source_id = source_ids[0]
@@ -2437,8 +2467,30 @@ class RomProject:
         if self.weapon_name_codec is None:
             raise ValueError("当前 ROM 的武器名称表尚未验证。")
         before = self._mutation_snapshot()
-        offset = self.weapon_name_codec.pointer_offset(weapon_id)
-        self.working[offset : offset + 2] = self.original[offset : offset + 2]
+        original_raw = self.weapon_name_codec._terminated_record(
+            self.weapon_name_codec.record_bytes(weapon_id, self.original)
+        )
+        current = bytes(self.working)
+        matching_pointer = next(
+            (
+                self.weapon_name_codec.pointer(candidate, current)
+                for candidate in range(self.profile.weapon_name_pointer_count)
+                if self.weapon_name_codec._terminated_record(
+                    self.weapon_name_codec.record_bytes(candidate, current)
+                ) == original_raw
+            ),
+            None,
+        )
+        if matching_pointer is not None:
+            offset = self.weapon_name_codec.pointer_offset(weapon_id)
+            self.working[offset : offset + 2] = matching_pointer.to_bytes(2, "little")
+        else:
+            for offset, expected, replacement in self.weapon_name_codec.repack_raw(
+                self.working, weapon_id, original_raw
+            ):
+                if bytes(self.working[offset : offset + len(expected)]) != expected:
+                    raise ValueError("武器名称池已变化，请重新载入后再试。")
+                self.working[offset : offset + len(replacement)] = replacement
         self._finish_mutation(before, f"武器 {weapon_id:02X} · 还原名称")
 
     def get_unit_weapons(
@@ -3012,6 +3064,35 @@ class RomProject:
             f"行动 ${action_id:02X} · 删除指令 {instruction_index + 1}",
         )
 
+    def replace_action_event(
+        self,
+        action_id: int,
+        raw: bytes,
+        *,
+        source_pointer: int | None = None,
+    ) -> None:
+        if self.action_event_codec is None:
+            raise ValueError("当前 ROM 没有已验证的独立行动事件表。")
+        patches = self.action_event_codec.record_replacement_patches(
+            self.working,
+            action_id,
+            raw,
+            source_pointer=source_pointer,
+        )
+        self._apply_action_event_patches(
+            patches,
+            f"行动 ${action_id:02X} · 替换完整记录",
+        )
+
+    def clear_action_events_below(self, action_id: int) -> None:
+        if self.action_event_codec is None:
+            raise ValueError("当前 ROM 没有已验证的独立行动事件表。")
+        if not 0 <= action_id < 0x100:
+            raise IndexError(f"行动 ID ${action_id:02X} 超出范围。")
+        with self.transaction(f"清空行动 ${action_id + 1:02X}—$FF"):
+            for target_id in range(action_id + 1, 0x100):
+                self.replace_action_event(target_id, b"\xDF")
+
     def reset_action_event(self, action_id: int) -> None:
         if self.action_event_codec is None:
             raise ValueError("当前 ROM 没有已验证的独立行动事件表。")
@@ -3039,8 +3120,14 @@ class RomProject:
     ) -> ChapterTitleRecord:
         if self.chapter_title_codec is None:
             raise ValueError("当前 ROM 没有已验证的关卡标题拼图表。")
+        codec = (
+            self.base_chapter_title_codec
+            if original
+            else self.chapter_title_codec
+        )
+        assert codec is not None
         source = self.original if original else self.working
-        return self.chapter_title_codec.decode(scenario_id, source)
+        return codec.decode(scenario_id, source)
 
     def set_chapter_title(
         self,
@@ -3059,6 +3146,9 @@ class RomProject:
         )
         for offset, _old, after in patches:
             self.working[offset : offset + len(after)] = after
+        self.chapter_title_codec = ChapterTitleCodec(
+            self.rom_image, self.working
+        )
         self._finish_mutation(before, f"关卡 {scenario_id + 1:03d} · 标题拼图")
 
     def reset_chapter_title(self, scenario_id: int) -> None:
@@ -3077,19 +3167,29 @@ class RomProject:
     ) -> ChapterVictoryRecord:
         if self.chapter_victory_codec is None:
             raise ValueError("当前 ROM 没有已验证的初始胜利文字表。")
+        codec = (
+            self.base_chapter_victory_codec
+            if original
+            else self.chapter_victory_codec
+        )
+        assert codec is not None
         source = self.original if original else self.working
-        return self.chapter_victory_codec.decode(scenario_id, source)
+        return codec.decode(scenario_id, source)
 
     def set_chapter_victory_body(self, scenario_id: int, body: bytes) -> None:
         if self.chapter_victory_codec is None:
             raise ValueError("当前 ROM 没有已验证的初始胜利文字表。")
         before = self._mutation_snapshot()
-        offset, _old, after = self.chapter_victory_codec.replacement_patch(
+        patches = self.chapter_victory_codec.replacement_patches(
             self.working,
             scenario_id,
             body,
         )
-        self.working[offset : offset + len(after)] = after
+        for offset, _old, after in patches:
+            self.working[offset : offset + len(after)] = after
+        self.chapter_victory_codec = ChapterVictoryCodec(
+            self.rom_image, self.working
+        )
         self._finish_mutation(before, f"关卡 {scenario_id + 1:03d} · 初始胜利文字")
 
     def reset_chapter_victory(self, scenario_id: int) -> None:
@@ -3116,11 +3216,19 @@ class RomProject:
         """Dry-run a text replacement and return used/available group bytes."""
 
         plan = self.expansion_plan
-        if plan is None or selector not in VERIFIED_STORY_SELECTORS:
+        if selector not in VERIFIED_STORY_SELECTORS:
             record = self.get_story_text(selector, index)
             if len(data) != record.capacity:
                 raise ValueError(f"当前记录必须保持 {record.capacity} 字节。")
             return len(data), record.capacity
+        if plan is None:
+            records = extract_story_group(
+                self.story_text_codec, selector, self.working
+            ).with_replacement(index, bytes(data))
+            used, capacity, _patches = in_place_story_repack_patches(
+                self.story_text_codec, records, self.working
+            )
+            return used, capacity
         candidate = plan if plan.story_pair_for(selector) else plan.with_story_selector(selector)
         pair = candidate.story_pair_for(selector)
         if pair is None:
@@ -3186,6 +3294,30 @@ class RomProject:
                 f"剧情文本 ${selector:02X}:{index:02X} · 自动扩容",
             )
             return
+        if selector in VERIFIED_STORY_SELECTORS:
+            records = extract_story_group(
+                self.story_text_codec, selector, self.working
+            )
+            if records.record_for_index(index).raw == bytes(data):
+                return
+            _used, _capacity, patches = in_place_story_repack_patches(
+                self.story_text_codec,
+                records.with_replacement(index, bytes(data)),
+                self.working,
+            )
+            before_snapshot = self._mutation_snapshot()
+            for offset, expected, replacement in patches:
+                if bytes(self.working[offset : offset + len(expected)]) != expected:
+                    raise ValueError("剧情文本池已变化，请重新载入后再试。")
+                self.working[offset : offset + len(replacement)] = replacement
+            self.story_text_codec = StoryTextCodec(
+                self.rom_image, self.working
+            )
+            self._finish_mutation(
+                before_snapshot,
+                f"剧情文本 ${selector:02X}:{index:02X}",
+            )
+            return
         before_snapshot = self._mutation_snapshot()
         offset, _before, after = self.story_text_codec.replacement_patch(
             bytes(self.working), selector, index, data
@@ -3197,10 +3329,7 @@ class RomProject:
         )
 
     def reset_story_text(self, selector: int, index: int) -> None:
-        if (
-            self.expansion_plan is not None
-            and selector in VERIFIED_STORY_SELECTORS
-        ):
+        if selector in VERIFIED_STORY_SELECTORS:
             original = extract_story_group(
                 self.base_story_text_codec, selector, self.original
             ).record_for_index(index)

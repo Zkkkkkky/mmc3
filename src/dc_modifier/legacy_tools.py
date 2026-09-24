@@ -149,8 +149,8 @@ class FontLibraryDialog(FontEditingMixin, QDialog):
         )
         self.current_token = bytes((0xC8, 0x00))
         self.setWindowTitle("字库编辑")
-        self.resize(1000, 780)
-        self.setMinimumSize(850, 620)
+        self.resize(940, 700)
+        self.setMinimumSize(800, 580)
         self.setSizeGripEnabled(True)
         self.setModal(True)
 
@@ -908,8 +908,8 @@ class AttributeCalculatorDialog(QDialog):
         super().__init__(parent)
         self.project = project
         self.setWindowTitle("战斗属性计算器")
-        self.resize(1120, 780)
-        self.setMinimumSize(900, 650)
+        self.resize(920, 650)
+        self.setMinimumSize(850, 600)
         self.setSizeGripEnabled(True)
         root = QVBoxLayout(self)
         sides = QHBoxLayout()
@@ -1035,8 +1035,8 @@ class SaveEditorDialog(QDialog):
         self._staged = False
         self._table_draft = False
         self.setWindowTitle("存档编辑器：")
-        self.resize(1175, 834)
-        self.setMinimumSize(900, 650)
+        self.resize(950, 650)
+        self.setMinimumSize(850, 580)
         self.setSizeGripEnabled(True)
         root = QVBoxLayout(self)
 
@@ -1743,8 +1743,8 @@ class OtherSettingsDialog(QDialog):
         super().__init__(parent)
         self.project = project
         self.setWindowTitle("其他")
-        self.resize(1060, 760)
-        self.setMinimumSize(900, 650)
+        self.resize(820, 620)
+        self.setMinimumSize(760, 560)
         self.setSizeGripEnabled(True)
         self.setModal(True)
         root = QVBoxLayout(self)

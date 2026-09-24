@@ -8,12 +8,14 @@ from unittest.mock import patch
 
 os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 
+from PySide6.QtCore import QPoint, Qt
 from PySide6.QtWidgets import QApplication, QDialog
 
 from fc_editor.codecs.animation import (
     AnimationCodec,
     apply_animation_patches,
     decode_background_rule,
+    decode_script,
     decode_sprite_composition,
     decode_sprite_timeline,
 )
@@ -77,6 +79,45 @@ class AnimationCodecTests(unittest.TestCase):
         changed[0] = 0xE1
         with self.assertRaises(ValueError):
             self.codec.script_patch(record, bytes(changed))
+
+    def test_weapon_movement_command_is_one_editable_instruction(self):
+        rows, complete = decode_script(bytes.fromhex("42 69 02 06 07 FF"), 0x100)
+        self.assertTrue(complete)
+        self.assertEqual([row.raw for row in rows], [bytes.fromhex("42 69 02 06 07"), b"\xFF"])
+        self.assertIn("调用物体运行规律1", rows[0].text)
+        self.assertEqual(len(rows[0].editable), 4)
+
+    def test_weapon_sequence_insert_relocates_later_records_and_rebases_pointers(self):
+        record = self.codec.record("ally", 1)
+        later_before = self.codec.record("ally", 3)
+        replacement = record.raw[:-1] + b"\x01\xFF"
+        patch = self.codec.script_sequence_patch(record, replacement)
+        self.assertGreater(len(patch[1]), len(record.raw))
+        apply_animation_patches(self.project, (patch,), "插入武器动画指令")
+        changed = AnimationCodec(self.project.working)
+        self.assertEqual(changed.record("ally", 1).raw, replacement)
+        later_after = changed.record("ally", 3)
+        self.assertEqual(later_after.raw, later_before.raw)
+        self.assertEqual(later_after.offset, later_before.offset + 1)
+        self.assertFalse([issue for issue in self.project.validate() if issue.severity == "error"])
+        with tempfile.TemporaryDirectory() as directory:
+            saved = Path(directory) / "weapon_sequence_insert.nes"
+            self.project.save_as(saved, make_backup=False)
+            reopened = AnimationCodec(RomProject.load(saved).working)
+            self.assertEqual(reopened.record("ally", 1).raw, replacement)
+            self.assertEqual(reopened.record("ally", 3).raw, later_before.raw)
+            self.assertEqual(reopened.record("ally", 3).offset, later_before.offset + 1)
+
+    def test_weapon_sequence_delete_keeps_terminator_and_next_record(self):
+        record = self.codec.record("ally", 1)
+        later = self.codec.record("ally", 3)
+        replacement = b"".join(row.raw for row in record.instructions[1:])
+        patch = self.codec.script_sequence_patch(record, replacement)
+        apply_animation_patches(self.project, (patch,), "删除武器动画指令")
+        changed = AnimationCodec(self.project.working)
+        self.assertEqual(changed.record("ally", 1).raw, replacement)
+        self.assertEqual(changed.record("ally", 3).raw, later.raw)
+        self.assertEqual(changed.record("ally", 3).offset, later.offset)
 
     def test_map_animation_clone_uses_reserved_slot_and_relocates_loops(self):
         new_index, patches = self.codec.clone_map_animation_patches(0)
@@ -510,6 +551,11 @@ class AnimationUiTests(QtTestCase):
     def test_pointer_dialog_locates_existing_animation_without_writing_rom(self):
         dialog = MapAnimationEditorDialog(project=self.project)
         before = bytes(dialog.draft)
+        self.assertEqual(
+            dialog.instruction_table.contextMenuPolicy(),
+            Qt.ContextMenuPolicy.DefaultContextMenu,
+        )
+        self.assertIn("参考版地图动画", dialog.instruction_table.toolTip())
         self.assertFalse(dialog.script_editor.code_edit.isVisible())
         target = dialog.codec.pointers["map"][2]
         with patch.object(
@@ -729,4 +775,56 @@ class AnimationUiTests(QtTestCase):
         self.assertEqual(self.project.working[0x44231], 0x10)
         self.assertEqual(self.project.working[0x40231], 0x10)
         self.assertFalse(widget.has_pending_changes())
+        widget.close()
+
+    def test_weapon_animation_rows_have_right_click_parameter_editor(self):
+        widget = WeaponAnimationWidget()
+        widget.set_record(self.project, 1)
+        editor = widget.editors[0]
+        self.assertEqual(
+            editor.instruction_table.contextMenuPolicy(),
+            Qt.ContextMenuPolicy.CustomContextMenu,
+        )
+        self.assertIn("右键", editor.instruction_table.toolTip())
+        row = next(
+            index
+            for index, instruction in enumerate(editor.record.instructions)
+            if instruction.editable
+        )
+        editor.instruction_table.setCurrentCell(row, 0)
+        with patch("dc_modifier.animation_editor.QMenu.popup") as popup:
+            editor._show_instruction_context_menu(QPoint(-1, -1))
+        popup.assert_called_once()
+        widget.close()
+
+    def test_weapon_animation_right_click_edit_changes_only_verified_parameter_draft(self):
+        widget = WeaponAnimationWidget()
+        widget.set_record(self.project, 1)
+        editor = widget.editors[0]
+        row = next(
+            index
+            for index, instruction in enumerate(editor.record.instructions)
+            if instruction.editable
+        )
+        instruction = editor.record.instructions[row]
+        before_rom = bytes(self.project.working)
+        before_draft = bytes.fromhex(editor.code_edit.toPlainText())
+        current = []
+        expected = set()
+        for local, low, high in instruction.editable:
+            index = instruction.offset - editor.record.offset + local
+            value = before_draft[index]
+            replacement = low if value != low else high
+            current.append(replacement)
+            if value != replacement:
+                expected.add(index)
+        editor._apply_instruction_values(row, tuple(current))
+        after_draft = bytes.fromhex(editor.code_edit.toPlainText())
+        changed = {
+            index for index, (left, right) in enumerate(zip(before_draft, after_draft))
+            if left != right
+        }
+        self.assertEqual(changed, expected)
+        self.assertTrue(widget.has_pending_changes())
+        self.assertEqual(bytes(self.project.working), before_rom)
         widget.close()

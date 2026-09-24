@@ -3,6 +3,7 @@ from __future__ import annotations
 from collections.abc import Mapping
 from dataclasses import dataclass
 from functools import lru_cache
+import struct
 
 from ..dc_text import default_dc_text_table
 from ..errors import RomFormatError
@@ -65,6 +66,18 @@ class LegacyBattleTextUsage:
 
 
 @dataclass(frozen=True)
+class LegacySimpleTextUsage:
+    key: str
+    capacity: int
+    used: int
+    text_records: int
+
+    @property
+    def free(self) -> int:
+        return self.capacity - self.used
+
+
+@dataclass(frozen=True)
 class LegacyTextRecord:
     group_key: str
     index: int
@@ -95,9 +108,8 @@ def decode_legacy_text(raw: bytes) -> str:
 class LegacyTextCodec:
     """Verified DC pointer tables, including F8 random-dialogue indirection.
 
-    Battle dialogue can be repacked inside verified same-bank arenas while
-    preserving aliases, F8 directories, and control bytes. System text and
-    item descriptions remain limited to their original terminated records.
+    All verified text pools can be repacked while preserving aliases and
+    control bytes. Battle dialogue additionally preserves F8 directories.
     """
 
     def __init__(self, data: bytes | bytearray, *, capacity_data: bytes | bytearray | None = None) -> None:
@@ -223,6 +235,109 @@ class LegacyTextCodec:
         before = self.data[record.file_offset:record.file_offset + capacity]
         after = encoded + before[len(encoded):]
         return record.file_offset, before, after
+
+    def simple_group_usage(
+        self,
+        key: str,
+        replacements: Mapping[tuple[str, int, int], str] | None = None,
+    ) -> LegacySimpleTextUsage:
+        _pointers, records = self._encode_simple_group(key, replacements or {})
+        group = self.group_by_key[key]
+        used = sum(len(raw) for raw in records.values())
+        return LegacySimpleTextUsage(
+            key,
+            group.pool_end - group.pool_start,
+            used,
+            len(records),
+        )
+
+    def _encode_simple_group(
+        self,
+        key: str,
+        replacements: Mapping[tuple[str, int, int], str],
+    ) -> tuple[tuple[int, ...], dict[int, bytes]]:
+        if key.startswith("battle_"):
+            raise ValueError("战斗文字必须使用带随机目录的专用重排器。")
+        group = self.group_by_key[key]
+        table_offset = self.offset(group.bank, group.table)
+        pointers = tuple(
+            self.word(table_offset + index * 2)
+            for index in range(group.count)
+        )
+        records = {
+            pointer: self._raw_at(group, pointer)
+            for pointer in sorted(set(pointers))
+        }
+        drafted: dict[int, bytes] = {}
+        for identity, text in replacements.items():
+            draft_key, index, variant = identity
+            if draft_key != key:
+                continue
+            if variant != 0:
+                raise ValueError(f"{group.label}没有随机分支。")
+            record = self.record(key, index, variant)
+            encoded = default_dc_text_table().encode_preserving_tokens(
+                record.raw, text
+            )
+            if self.protected_tokens(encoded) != self.protected_tokens(record.raw):
+                raise ValueError("请保留全部控制码、参数和结束码，只修改正文文字。")
+            if not encoded or encoded[-1] != 0xFF:
+                raise ValueError("请保留末尾结束码。")
+            previous = drafted.setdefault(record.pointer, encoded)
+            if previous != encoded:
+                raise ValueError("共用同一文字的两个编号存在不同草稿，请保留一份修改。")
+            records[record.pointer] = encoded
+        return pointers, records
+
+    def simple_group_repack_patches(
+        self,
+        key: str,
+        replacements: Mapping[tuple[str, int, int], str],
+    ) -> tuple[tuple[int, bytes, bytes], ...]:
+        pointers, records = self._encode_simple_group(key, replacements)
+        group = self.group_by_key[key]
+        capacity = group.pool_end - group.pool_start
+        used = sum(len(raw) for raw in records.values())
+        if used > capacity:
+            raise ValueError(
+                f"{group.label}共享池容量不足：需要 {used} 字节，"
+                f"固定容量为 {capacity} 字节。请缩短同组其他文字。"
+            )
+        cursor = group.pool_start
+        assigned: dict[int, int] = {}
+        packed = bytearray()
+        for pointer in sorted(records):
+            assigned[pointer] = cursor
+            raw = records[pointer]
+            packed.extend(raw)
+            cursor += len(raw)
+        filler_source = (
+            self._capacity_codec.data
+            if self._capacity_codec is not None
+            else self.data
+        )
+        relocated = tuple(assigned[pointer] for pointer in pointers)
+        table_offset = self.offset(group.bank, group.table)
+        table_size = group.count * 2
+        pool_offset = self.offset(group.bank, group.pool_start)
+        packed.extend(
+            filler_source[
+                pool_offset + len(packed):pool_offset + capacity
+            ]
+        )
+        patches = (
+            (
+                table_offset,
+                self.data[table_offset:table_offset + table_size],
+                struct.pack(f"<{len(relocated)}H", *relocated),
+            ),
+            (
+                pool_offset,
+                self.data[pool_offset:pool_offset + capacity],
+                bytes(packed),
+            ),
+        )
+        return tuple(patch for patch in patches if patch[1] != patch[2])
 
     @staticmethod
     def _battle_bank(key: str) -> int:

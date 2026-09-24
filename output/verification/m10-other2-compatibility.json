@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-21T23:15:06+08:00",
+  "generated_at": "2026-09-24T11:04:45+08:00",
   "passed": true,
   "delivery_status": "reference_field_scope_complete_user_pending",
   "conclusion": "M10 参考版 254 个逻辑入口已逐字段保存并完成全新进程回读；134 个安全字段进入最终分母，风险入口维持产品禁写，仅待用户签收。",

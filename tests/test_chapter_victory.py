@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 import os
+from pathlib import Path
+import tempfile
 import unittest
 from unittest.mock import patch
 
@@ -61,10 +63,30 @@ class ChapterVictoryCodecTests(unittest.TestCase):
         self.assertEqual(self.project.get_chapter_victory(0).body, record.body)
         self.assertEqual(self.project.get_chapter_victory(1).raw, following)
 
-    def test_length_change_and_embedded_terminator_are_rejected(self) -> None:
+    def test_shared_pool_allows_balanced_length_changes_and_rejects_overflow(self) -> None:
+        first = self.project.get_chapter_victory(0)
+        second = self.project.get_chapter_victory(1)
+        self.project.set_chapter_victory_body(0, first.body[:-1])
+        self.project.set_chapter_victory_body(1, second.body + b"\x00")
+        self.assertEqual(self.project.get_chapter_victory(0).body, first.body[:-1])
+        self.assertEqual(self.project.get_chapter_victory(1).body, second.body + b"\x00")
+        with tempfile.TemporaryDirectory() as directory:
+            output = Path(directory) / "victory-repacked.nes"
+            self.project.save_as(output)
+            reopened = RomProject.load(output)
+            self.assertEqual(reopened.get_chapter_victory(0).body, first.body[:-1])
+            self.assertEqual(reopened.get_chapter_victory(1).body, second.body + b"\x00")
+        self.project.undo()
+        self.project.undo()
+        self.assertEqual(self.project.get_chapter_victory(0), first)
+        self.assertEqual(self.project.get_chapter_victory(1), second)
+
+        with self.assertRaisesRegex(ValueError, "共享池容量不足"):
+            self.project.set_chapter_victory_body(0, first.body + b"\x00")
+        self.assertEqual(self.project.get_chapter_victory(0), first)
+
+    def test_embedded_terminator_is_rejected(self) -> None:
         record = self.project.get_chapter_victory(0)
-        with self.assertRaisesRegex(ValueError, "必须保持当前记录容量"):
-            self.project.set_chapter_victory_body(0, record.body + b"\x00")
         embedded = b"\xFF" + record.body[1:]
         with self.assertRaisesRegex(ValueError, "不能包含独立 FF"):
             self.project.set_chapter_victory_body(0, embedded)

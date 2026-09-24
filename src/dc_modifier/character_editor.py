@@ -4,8 +4,9 @@ from PySide6.QtCore import Qt, Signal
 from PySide6.QtGui import QImage, QPixmap
 from PySide6.QtWidgets import (
     QCheckBox, QFileDialog, QFormLayout, QGridLayout, QGroupBox, QHBoxLayout,
-    QComboBox, QHeaderView, QLabel, QMessageBox, QPushButton, QSpinBox,
-    QSizePolicy, QTableWidget, QTableWidgetItem, QTabWidget, QVBoxLayout, QWidget,
+    QComboBox, QDialog, QDialogButtonBox, QHeaderView, QLabel, QLineEdit,
+    QMessageBox, QPushButton, QSpinBox, QSizePolicy, QTableWidget,
+    QTableWidgetItem, QTabWidget, QVBoxLayout, QWidget,
 )
 
 from fc_editor.codecs.character_attributes import (
@@ -16,7 +17,9 @@ from fc_editor.codecs.character_dialogue import (
     CharacterDialogueRecord, DialogueBinding, DialogueRule,
     TransformDialogueBinding, VALID_SEGMENTS,
 )
+from fc_editor.codecs.legacy_text import LegacyTextCodec
 from .database_graphics import palette_color
+from .map_page import NesColorButton
 from .portrait_export import PORTRAIT_BACKGROUND_PALETTE_NES
 
 
@@ -29,6 +32,213 @@ def legacy_portrait_selectors(record: PortraitRecord) -> tuple[int, int, int, in
         record.back_bank,
         record.back_slot + 1,
     )
+
+
+class LegacyValueCombo(QComboBox):
+    """Reference-style selector with the QSpinBox API used by old tests."""
+
+    valueChanged = Signal(int)
+
+    def __init__(self, minimum: int, maximum: int, formatter, parent=None) -> None:
+        super().__init__(parent)
+        for value in range(minimum, maximum + 1):
+            self.addItem(formatter(value), value)
+        self.currentIndexChanged.connect(
+            lambda _index: self.valueChanged.emit(self.value())
+        )
+
+    def value(self) -> int:
+        return int(self.currentData())
+
+    def setValue(self, value: int) -> None:
+        index = self.findData(int(value))
+        if index >= 0:
+            self.setCurrentIndex(index)
+
+
+class NesColorField(NesColorButton):
+    """NES swatch with a QSpinBox-compatible value API."""
+
+    valueChanged = Signal(int)
+
+    def __init__(self, value: int = 0, parent=None) -> None:
+        super().__init__(value, parent)
+        self.value_changed.connect(self.valueChanged.emit)
+        self.setMinimumSize(72, 30)
+
+    def value(self) -> int:
+        return self._value
+
+    def setValue(self, value: int) -> None:
+        self.set_value(value)
+
+
+class SpiritCostDialog(QDialog):
+    def __init__(self, name: str, value: int, parent=None) -> None:
+        super().__init__(parent)
+        self.setWindowTitle("精神修改")
+        form = QFormLayout(self)
+        name_field = QLineEdit(name)
+        name_field.setReadOnly(True)
+        self.cost = QSpinBox()
+        self.cost.setRange(0, 255)
+        self.cost.setValue(value)
+        form.addRow("精神名称", name_field)
+        form.addRow("精神消耗", self.cost)
+        buttons = QDialogButtonBox(
+            QDialogButtonBox.StandardButton.Ok
+            | QDialogButtonBox.StandardButton.Cancel
+        )
+        buttons.accepted.connect(self.accept)
+        buttons.rejected.connect(self.reject)
+        form.addRow(buttons)
+
+
+class SpiritCheckBox(QCheckBox):
+    editRequested = Signal()
+
+    def mouseDoubleClickEvent(self, event) -> None:
+        self.editRequested.emit()
+        event.accept()
+
+
+def dialogue_preview(
+    project, segment: int, dialogue: int, codec: LegacyTextCodec | None = None
+) -> str:
+    """Return a compact real-text preview without creating any widgets."""
+
+    try:
+        key = {
+            0x00: "battle_00",
+            0x01: "battle_01",
+            0x04: "battle_04",
+            0x05: "battle_05",
+            0x07: "system",
+        }[segment]
+        text = (codec or LegacyTextCodec(project.working)).record(
+            key, dialogue
+        ).text
+        return text.replace("\n", " ").replace("⟦结束⟧", "").strip() or "空文本"
+    except (AttributeError, IndexError, KeyError, ValueError):
+        return "未定义/不可读"
+
+
+class DialogueBindingDialog(QDialog):
+    """Readable picker for one battle-dialogue binding."""
+
+    SEGMENT_LABELS = {
+        0x00: "00 · 进攻战斗对话",
+        0x01: "01 · 进攻特殊对话",
+        0x04: "04 · 防御战斗对话",
+        0x05: "05 · 防御特殊对话",
+        0x07: "07 · 系统文字",
+    }
+
+    def __init__(
+        self, project, segment: int, dialogue: int, parent=None,
+        *, text_codec: LegacyTextCodec | None = None,
+    ) -> None:
+        super().__init__(parent)
+        self.project = project
+        self.text_codec = text_codec or LegacyTextCodec(project.working)
+        self.setWindowTitle("选择战斗对话")
+        form = QFormLayout(self)
+        self.segment = QComboBox()
+        for value in VALID_SEGMENTS:
+            self.segment.addItem(self.SEGMENT_LABELS[value], value)
+        self.dialogue = QComboBox()
+        self.segment.currentIndexChanged.connect(self._load_dialogues)
+        form.addRow("文字组", self.segment)
+        form.addRow("对话正文", self.dialogue)
+        hint = QLabel("列表显示实际文本预览；编号保留在每项开头，便于与参考版核对。")
+        hint.setWordWrap(True)
+        hint.setObjectName("hintText")
+        form.addRow(hint)
+        buttons = QDialogButtonBox(
+            QDialogButtonBox.StandardButton.Ok
+            | QDialogButtonBox.StandardButton.Cancel
+        )
+        buttons.accepted.connect(self.accept)
+        buttons.rejected.connect(self.reject)
+        form.addRow(buttons)
+        self.segment.setCurrentIndex(self.segment.findData(segment))
+        self._load_dialogues()
+        index = self.dialogue.findData(dialogue)
+        self.dialogue.setCurrentIndex(max(0, index))
+
+    def _preview(self, segment: int, dialogue: int) -> str:
+        return dialogue_preview(
+            self.project, segment, dialogue, self.text_codec
+        )
+
+    def _load_dialogues(self, *_args) -> None:
+        previous = self.dialogue.currentData()
+        segment = int(self.segment.currentData())
+        count = 0x10 if segment == 0x01 else 0x40 if segment == 0x05 else 0xDD if segment == 0x07 else 0x100
+        self.dialogue.clear()
+        for value in range(count):
+            self.dialogue.addItem(
+                f"${value:02X} · {self._preview(segment, value)}", value
+            )
+        if previous is not None:
+            index = self.dialogue.findData(previous)
+            if index >= 0:
+                self.dialogue.setCurrentIndex(index)
+
+    def binding(self) -> DialogueBinding:
+        return DialogueBinding(
+            int(self.segment.currentData()), int(self.dialogue.currentData())
+        )
+
+
+class RuleConditionDialog(QDialog):
+    """Named selectors for the two polymorphic legacy condition bytes."""
+
+    def __init__(self, project, actor: int, weapon: int, parent=None) -> None:
+        super().__init__(parent)
+        self.setWindowTitle("特殊攻击条件")
+        form = QFormLayout(self)
+        self.actor = QComboBox()
+        self.weapon = QComboBox()
+        for value in range(0x100):
+            try:
+                character_name = project.character_display_name(value)
+            except (IndexError, ValueError):
+                character_name = "—"
+            try:
+                unit_name = project.unit_display_name(value)
+            except (IndexError, ValueError):
+                unit_name = "—"
+            try:
+                weapon_name = project.weapon_display_name(value)
+            except (IndexError, ValueError):
+                weapon_name = "—"
+            self.actor.addItem(
+                f"${value:02X} · 人物 {character_name} / 机体 {unit_name}", value
+            )
+            self.weapon.addItem(
+                f"${value:02X} · 武器 {weapon_name} / 机体 {unit_name}", value
+            )
+        self.actor.setCurrentIndex(self.actor.findData(actor))
+        self.weapon.setCurrentIndex(self.weapon.findData(weapon))
+        form.addRow("人物/机体条件", self.actor)
+        form.addRow("武器/机体条件", self.weapon)
+        hint = QLabel(
+            "旧格式会按规则类型把同一字节解释为人物或机体、武器或机体；"
+            "因此同时显示两种名称，保存仍保持原始编号。"
+        )
+        hint.setWordWrap(True)
+        form.addRow(hint)
+        buttons = QDialogButtonBox(
+            QDialogButtonBox.StandardButton.Ok
+            | QDialogButtonBox.StandardButton.Cancel
+        )
+        buttons.accepted.connect(self.accept)
+        buttons.rejected.connect(self.reject)
+        form.addRow(buttons)
+
+    def values(self) -> tuple[int, int]:
+        return int(self.actor.currentData()), int(self.weapon.currentData())
 
 
 class CharacterDialogueWidget(QGroupBox):
@@ -46,6 +256,7 @@ class CharacterDialogueWidget(QGroupBox):
         self.character_id = None
         self.codec = None
         self._baseline = None
+        self._text_codec = None
         self._loading = False
         outer = QVBoxLayout(self)
         outer.setContentsMargins(5, 5, 5, 5)
@@ -67,6 +278,7 @@ class CharacterDialogueWidget(QGroupBox):
         grid.setHorizontalSpacing(4)
         grid.setVerticalSpacing(2)
         self.direct_controls: list[tuple[QComboBox, QSpinBox]] = []
+        self.direct_buttons: list[QPushButton] = []
         for index, label in enumerate(self.DIRECT_LABELS):
             segment = QComboBox()
             segment.setMinimumWidth(0)
@@ -81,15 +293,26 @@ class CharacterDialogueWidget(QGroupBox):
             dialogue.setDisplayIntegerBase(16)
             segment.currentIndexChanged.connect(self._changed)
             dialogue.valueChanged.connect(self._changed)
+            segment.hide()
+            dialogue.hide()
+            choose = QPushButton()
+            choose.setObjectName(f"character_dialogue_{index}")
+            choose.setToolTip("点击选择文字组，并按实际正文预览选择台词。")
+            choose.clicked.connect(
+                lambda _checked=False, row=index: self._choose_direct_dialogue(row)
+            )
             row, column = index, 0
             grid.addWidget(QLabel(label), row, column)
-            grid.addWidget(segment, row, column + 1)
-            grid.addWidget(dialogue, row, column + 2)
+            grid.addWidget(choose, row, column + 1, 1, 2)
             self.direct_controls.append((segment, dialogue))
+            self.direct_buttons.append(choose)
         tabs.addTab(direct_page, "直接台词（2攻/6防）")
 
         self.rule_tables: list[QTableWidget] = []
-        for label in self.RULE_LABELS:
+        for group_index, label in enumerate(self.RULE_LABELS):
+            page = QWidget()
+            page_layout = QVBoxLayout(page)
+            page_layout.setContentsMargins(4, 4, 4, 4)
             table = QTableWidget(0, 4)
             table.setHorizontalHeaderLabels(
                 ("人物/机体条件", "武器/机体条件", "文字段", "对话编号")
@@ -98,7 +321,31 @@ class CharacterDialogueWidget(QGroupBox):
             table.verticalHeader().setVisible(False)
             table.cellChanged.connect(self._changed)
             self.rule_tables.append(table)
-            tabs.addTab(table, label)
+            page_layout.addWidget(table)
+            rule_actions = QHBoxLayout()
+            add_rule = QPushButton("新增规则")
+            edit_condition = QPushButton("编辑条件…")
+            edit_rule = QPushButton("选择台词…")
+            remove_rule = QPushButton("删除选中规则")
+            add_rule.clicked.connect(
+                lambda _checked=False, group=group_index: self._add_rule(group)
+            )
+            edit_condition.clicked.connect(
+                lambda _checked=False, group=group_index: self._choose_rule_condition(group)
+            )
+            edit_rule.clicked.connect(
+                lambda _checked=False, group=group_index: self._choose_rule_dialogue(group)
+            )
+            remove_rule.clicked.connect(
+                lambda _checked=False, group=group_index: self._remove_rule(group)
+            )
+            rule_actions.addWidget(add_rule)
+            rule_actions.addWidget(edit_condition)
+            rule_actions.addWidget(edit_rule)
+            rule_actions.addWidget(remove_rule)
+            rule_actions.addStretch()
+            page_layout.addLayout(rule_actions)
+            tabs.addTab(page, label)
 
         transform_page = QWidget()
         transform_layout = QVBoxLayout(transform_page)
@@ -131,16 +378,18 @@ class CharacterDialogueWidget(QGroupBox):
         tabs.addTab(transform_page, "变形起飞")
 
     @staticmethod
-    def _hex_item(value: int) -> QTableWidgetItem:
-        item = QTableWidgetItem(f"{value:02X}")
-        item.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
+    def _hex_item(value: int, detail: str = "") -> QTableWidgetItem:
+        item = QTableWidgetItem(
+            f"{value:02X}" + (f" · {detail}" if detail else "")
+        )
+        item.setToolTip(detail)
         return item
 
     @staticmethod
     def _parse_hex(item: QTableWidgetItem | None, label: str) -> int:
         if item is None:
             raise ValueError(f"{label}不能为空。")
-        text = item.text().strip().removeprefix("$")
+        text = item.text().strip().split("·", 1)[0].strip().removeprefix("$")
         try:
             value = int(text, 16)
         except ValueError as error:
@@ -151,7 +400,138 @@ class CharacterDialogueWidget(QGroupBox):
 
     def _changed(self, *_args) -> None:
         if not self._loading:
+            self._refresh_direct_buttons()
             self.changed.emit()
+
+    def _binding_text(self, binding: DialogueBinding) -> str:
+        segment = DialogueBindingDialog.SEGMENT_LABELS.get(
+            binding.segment, f"文字段 ${binding.segment:02X}"
+        )
+        preview = dialogue_preview(
+            self.project, binding.segment, binding.dialogue, self._text_codec
+        )
+        return f"{segment} · ${binding.dialogue:02X} · {preview}"
+
+    def _refresh_direct_buttons(self) -> None:
+        for button, (segment, dialogue) in zip(
+            self.direct_buttons, self.direct_controls
+        ):
+            if segment.currentData() is None:
+                button.setText("未绑定")
+                continue
+            button.setText(
+                self._binding_text(
+                    DialogueBinding(int(segment.currentData()), dialogue.value())
+                )
+            )
+
+    def _choose_direct_dialogue(self, index: int) -> None:
+        segment, dialogue = self.direct_controls[index]
+        picker = DialogueBindingDialog(
+            self.project, int(segment.currentData()), dialogue.value(), self,
+            text_codec=self._text_codec,
+        )
+        if picker.exec() != QDialog.DialogCode.Accepted:
+            return
+        binding = picker.binding()
+        segment.setCurrentIndex(segment.findData(binding.segment))
+        dialogue.setValue(binding.dialogue)
+
+    def _add_rule(self, group: int) -> None:
+        picker = DialogueBindingDialog(
+            self.project, 0x00, 0x00, self, text_codec=self._text_codec
+        )
+        if picker.exec() != QDialog.DialogCode.Accepted:
+            return
+        binding = picker.binding()
+        table = self.rule_tables[group]
+        row = table.rowCount()
+        table.insertRow(row)
+        for column, value in enumerate(
+            (0x00, 0x00, binding.segment, binding.dialogue)
+        ):
+            detail = self._rule_detail(column, value)
+            if column == 3:
+                detail = dialogue_preview(
+                    self.project, binding.segment, binding.dialogue,
+                    self._text_codec,
+                )
+            table.setItem(row, column, self._hex_item(value, detail))
+        table.setCurrentCell(row, 0)
+        self._changed()
+
+    def _rule_detail(self, column: int, value: int) -> str:
+        if self.project is None:
+            return ""
+        try:
+            if column == 0:
+                character = self.project.character_display_name(value)
+                unit = self.project.unit_display_name(value)
+                return f"人物 {character} / 机体 {unit}"
+            if column == 1:
+                weapon = self.project.weapon_display_name(value)
+                unit = self.project.unit_display_name(value)
+                return f"武器 {weapon} / 机体 {unit}"
+            if column == 2:
+                return DialogueBindingDialog.SEGMENT_LABELS.get(value, "未知文字组")
+        except (IndexError, KeyError, ValueError):
+            return "该编号没有可用名称"
+        return ""
+
+    def _remove_rule(self, group: int) -> None:
+        table = self.rule_tables[group]
+        row = table.currentRow()
+        if row < 0 and table.rowCount():
+            row = table.rowCount() - 1
+        if row >= 0:
+            table.removeRow(row)
+            self._changed()
+
+    def _choose_rule_condition(self, group: int) -> None:
+        table = self.rule_tables[group]
+        row = table.currentRow()
+        if row < 0:
+            return
+        actor = self._parse_hex(table.item(row, 0), "人物/机体条件")
+        weapon = self._parse_hex(table.item(row, 1), "武器/机体条件")
+        picker = RuleConditionDialog(self.project, actor, weapon, self)
+        if picker.exec() != QDialog.DialogCode.Accepted:
+            return
+        actor, weapon = picker.values()
+        table.setItem(row, 0, self._hex_item(actor, self._rule_detail(0, actor)))
+        table.setItem(row, 1, self._hex_item(weapon, self._rule_detail(1, weapon)))
+        self._changed()
+
+    def _choose_rule_dialogue(self, group: int) -> None:
+        table = self.rule_tables[group]
+        row = table.currentRow()
+        if row < 0:
+            return
+        segment = self._parse_hex(table.item(row, 2), "文字段")
+        dialogue = self._parse_hex(table.item(row, 3), "对话编号")
+        picker = DialogueBindingDialog(
+            self.project, segment, dialogue, self,
+            text_codec=self._text_codec,
+        )
+        if picker.exec() != QDialog.DialogCode.Accepted:
+            return
+        binding = picker.binding()
+        table.setItem(
+            row, 2, self._hex_item(
+                binding.segment,
+                DialogueBindingDialog.SEGMENT_LABELS[binding.segment],
+            )
+        )
+        table.setItem(
+            row, 3, self._hex_item(
+                binding.dialogue,
+                dialogue_preview(
+                    self.project, binding.segment, binding.dialogue,
+                    self._text_codec,
+                ),
+            )
+        )
+        self._changed()
 
     def _dialogue_state(self):
         direct = tuple(
@@ -206,6 +586,7 @@ class CharacterDialogueWidget(QGroupBox):
     def set_record(self, project, character_id: int | None) -> None:
         self.project, self.character_id = project, character_id
         self.codec = None
+        self._text_codec = None
         self._baseline = None
         if (
             project is None
@@ -217,6 +598,7 @@ class CharacterDialogueWidget(QGroupBox):
         self._loading = True
         try:
             codec = project.character_dialogue_codec
+            self._text_codec = LegacyTextCodec(project.working)
             record = codec.read(character_id, project.working)
             for (segment, dialogue), binding in zip(self.direct_controls, record.direct):
                 segment.setCurrentIndex(segment.findData(binding.segment))
@@ -228,21 +610,37 @@ class CharacterDialogueWidget(QGroupBox):
                         rule.actor_or_unit, rule.weapon_or_unit,
                         rule.segment, rule.dialogue,
                     )):
-                        table.setItem(row, column, self._hex_item(value))
+                        detail = self._rule_detail(column, value)
+                        if column == 3:
+                            detail = dialogue_preview(
+                                project, rule.segment, rule.dialogue,
+                                self._text_codec,
+                            )
+                        table.setItem(row, column, self._hex_item(value, detail))
             transforms = codec.character_transform_bindings(
                 character_id, project.working
             )
             self.transform_table.setRowCount(len(transforms))
             for row, binding in enumerate(transforms):
-                for column, value in enumerate((
-                    binding.unit_start, binding.unit_end, binding.dialogue,
-                )):
-                    self.transform_table.setItem(row, column, self._hex_item(value))
+                values = (binding.unit_start, binding.unit_end, binding.dialogue)
+                details = (
+                    project.unit_display_name(binding.unit_start),
+                    project.unit_display_name(binding.unit_end),
+                    dialogue_preview(
+                        project, 0x05, binding.dialogue, self._text_codec
+                    ),
+                )
+                for column, (value, detail) in enumerate(zip(values, details)):
+                    self.transform_table.setItem(
+                        row, column, self._hex_item(value, detail)
+                    )
             aliases = codec.shared_ids(character_id, project.working)
             self.status.setText(
-                "现有规则可逐字节编辑；为保持已验证记录边界，暂不增删规则。"
+                "直接台词可按正文预览选择；特殊规则可新增、删除或修改，"
+                "保存时会在已验证共享池容量内安全重排。"
                 f" 共用此台词记录：{'、'.join(f'{item:03d}' for item in aliases)}。"
             )
+            self._refresh_direct_buttons()
             self.codec = codec
             self._baseline = self._state()
             self.setEnabled(True)
@@ -299,14 +697,21 @@ class CharacterDialogueWidget(QGroupBox):
     def pending_patches(self):
         if self.codec is None or self.character_id is None:
             return ()
-        patch = self.codec.patch(
-            self.project.working, self.character_id, self.record()
-        )
+        record = self.record()
+        before = self.codec.raw_record(self.character_id, self.project.working)
+        if len(record.encode()) == len(before):
+            dialogue_patches = tuple(filter(None, (
+                self.codec.patch(self.project.working, self.character_id, record),
+            )))
+        else:
+            dialogue_patches = self.codec.repack_patches(
+                self.project.working, self.character_id, record
+            )
         transform_patch = self.codec.transform_patch(
             self.project.working, self.character_id, self.transform_records()
         )
-        return tuple(
-            item for item in (patch, transform_patch) if item is not None
+        return dialogue_patches + tuple(
+            item for item in (transform_patch,) if item is not None
         )
 
     def shared_change_impacts(self):
@@ -332,13 +737,22 @@ class CharacterDialogueWidget(QGroupBox):
     def reset_to_original(self) -> None:
         if self.codec is None or self.character_id is None:
             return
-        patch = self.codec.patch(
-            self.project.working,
-            self.character_id,
-            self.codec.read(self.character_id, self.project.original),
-        )
-        if patch is not None:
-            apply_verified_patches(self.project, (patch,), "还原人物战斗台词绑定")
+        original_record = self.codec.read(self.character_id, self.project.original)
+        if len(original_record.encode()) == len(
+            self.codec.raw_record(self.character_id, self.project.working)
+        ):
+            patch = self.codec.patch(
+                self.project.working, self.character_id, original_record
+            )
+            dialogue_patches = tuple(filter(None, (patch,)))
+        else:
+            dialogue_patches = self.codec.repack_patches(
+                self.project.working, self.character_id, original_record
+            )
+        if dialogue_patches:
+            apply_verified_patches(
+                self.project, dialogue_patches, "还原人物战斗台词绑定"
+            )
         transform_patch = self.codec.transform_patch(
             self.project.working,
             self.character_id,
@@ -424,7 +838,7 @@ class CharacterDetailsWidget(QWidget):
         self.spirits = []
         self.costs = []
         for index, name in enumerate(SPIRIT_NAMES):
-            check = QCheckBox(name)
+            check = SpiritCheckBox(name)
             check.setObjectName(f"character_spirit_{index}")
             cost = QSpinBox()
             cost.setRange(0, 255)
@@ -433,9 +847,16 @@ class CharacterDetailsWidget(QWidget):
             cost.setObjectName(f"spirit_cost_{index}")
             check.toggled.connect(self._changed)
             cost.valueChanged.connect(self._changed)
-            row, col = index % 8, index // 8 * 2
+            cost.valueChanged.connect(
+                lambda _value, spirit=index: self._refresh_spirit_label(spirit)
+            )
+            check.editRequested.connect(
+                lambda spirit=index: self._edit_spirit_cost(spirit)
+            )
+            check.setToolTip("勾选人物拥有的精神；双击修改全局消耗。")
+            cost.hide()
+            row, col = index % 8, index // 8
             grid.addWidget(check, row, col)
-            grid.addWidget(cost, row, col + 1)
             self.spirits.append(check)
             self.costs.append(cost)
         hint = QLabel("消耗值全人物共用；游戏精神菜单最多显示 6 项，按列表顺序取前 6 项。")
@@ -482,9 +903,17 @@ class CharacterDetailsWidget(QWidget):
             ("color0", "头像颜色1", 0, 63), ("color1", "头像颜色2", 0, 63),
             ("color2", "头像颜色3", 0, 63),
         )):
-            spin = QSpinBox()
-            spin.setRange(minimum, maximum)
-            spin.setMaximumWidth(100)
+            if key.startswith("color"):
+                spin = NesColorField()
+            elif key.endswith("bank"):
+                spin = LegacyValueCombo(
+                    minimum, maximum, lambda value: f"图库: {value:03d}"
+                )
+            else:
+                spin = LegacyValueCombo(
+                    minimum, maximum, lambda value: f"头像{value}"
+                )
+            spin.setMaximumWidth(120)
             spin.setObjectName(f"portrait_{key}")
             spin.valueChanged.connect(self._changed)
             self.portrait_fields[key] = spin
@@ -531,6 +960,18 @@ class CharacterDetailsWidget(QWidget):
 
         outer.addWidget(portrait)
         outer.addWidget(attributes_page)
+
+    def _refresh_spirit_label(self, index: int) -> None:
+        self.spirits[index].setText(
+            f"{SPIRIT_NAMES[index]}：{self.costs[index].value()}"
+        )
+
+    def _edit_spirit_cost(self, index: int) -> None:
+        dialog = SpiritCostDialog(
+            SPIRIT_NAMES[index], self.costs[index].value(), self
+        )
+        if dialog.exec() == QDialog.DialogCode.Accepted:
+            self.costs[index].setValue(dialog.cost.value())
 
     def _state(self):
         return (tuple(spin.value() for spin in self.fields.values()), self.survive.isChecked(),

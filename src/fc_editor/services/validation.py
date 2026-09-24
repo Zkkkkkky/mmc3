@@ -390,16 +390,32 @@ def validate_project(project: ProjectView) -> tuple[ValidationIssue, ...]:
                     )
 
     if project.weapon_name_codec is not None:
-        valid_pointers = set(project.weapon_name_codec.original_pointers)
+        first_pointer = project.profile.weapon_name_first_pointer
+        end_pointer = project.profile.weapon_name_data_end_pointer
+        assert first_pointer is not None and end_pointer is not None
         for weapon_id in range(1, project.weapon_count):
             pointer = project.get_weapon_name_pointer(weapon_id)
-            if pointer not in valid_pointers:
+            if not first_pointer <= pointer < end_pointer:
                 issues.append(
                     ValidationIssue(
                         "error",
                         "武器名称",
                         f"武器 {weapon_id:02X} 的名称指针 ${pointer:04X} "
-                        "未指向已验证的原生名称。",
+                        "超出已验证的共享名称池。",
+                    )
+                )
+                continue
+            try:
+                raw = project.weapon_name_codec.record_bytes(
+                    weapon_id, project.working
+                )
+                project.weapon_name_codec._terminated_record(raw)
+            except (RomFormatError, ValueError):
+                issues.append(
+                    ValidationIssue(
+                        "error",
+                        "武器名称",
+                        f"武器 {weapon_id:02X} 的名称记录边界或结束码无效。",
                     )
                 )
 

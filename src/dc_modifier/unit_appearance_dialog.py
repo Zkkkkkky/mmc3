@@ -282,6 +282,61 @@ class ChrTileEditorDialog(QDialog):
         return encode_legacy_bmp24(8, 8, pixels)
 
 
+class FragmentPlacementDialog(QDialog):
+    """Beginner-facing editor for one item in the fragment composition."""
+
+    def __init__(self, placement, parent=None) -> None:
+        super().__init__(parent)
+        self.setWindowTitle("编辑碎片图块位置")
+        root = QVBoxLayout(self)
+        hint = QLabel("修改当前碎片的位置、图块和翻转状态；确定后先保留在拼图草稿中。")
+        hint.setWordWrap(True)
+        root.addWidget(hint)
+        form = QGridLayout()
+        self.x_editor = QSpinBox()
+        self.y_editor = QSpinBox()
+        self.tile_editor = HexByteSpinBox()
+        for editor, value in (
+            (self.x_editor, placement.x),
+            (self.y_editor, placement.y),
+        ):
+            editor.setRange(-128, 255)
+            editor.setValue(value)
+        self.tile_editor.setRange(0, 127)
+        self.tile_editor.setValue(placement.tile_index)
+        form.addWidget(QLabel("X 坐标"), 0, 0)
+        form.addWidget(self.x_editor, 0, 1)
+        form.addWidget(QLabel("Y 坐标"), 1, 0)
+        form.addWidget(self.y_editor, 1, 1)
+        form.addWidget(QLabel("图块编号"), 2, 0)
+        form.addWidget(self.tile_editor, 2, 1)
+        self.horizontal = QCheckBox("水平翻转")
+        self.vertical = QCheckBox("垂直翻转")
+        self.horizontal.setChecked(placement.flip_horizontal)
+        self.vertical.setChecked(placement.flip_vertical)
+        form.addWidget(self.horizontal, 3, 0)
+        form.addWidget(self.vertical, 3, 1)
+        root.addLayout(form)
+        buttons = QDialogButtonBox(
+            QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel
+        )
+        buttons.button(QDialogButtonBox.StandardButton.Ok).setText("确定")
+        buttons.button(QDialogButtonBox.StandardButton.Cancel).setText("取消")
+        buttons.accepted.connect(self.accept)
+        buttons.rejected.connect(self.reject)
+        root.addWidget(buttons)
+
+    def updated(self, placement):
+        return replace(
+            placement,
+            x=self.x_editor.value(),
+            y=self.y_editor.value(),
+            tile_index=self.tile_editor.value(),
+            flip_horizontal=self.horizontal.isChecked(),
+            flip_vertical=self.vertical.isChecked(),
+        )
+
+
 class _DraftChrProject:
     def __init__(self, project, draft_tiles: dict[int, tuple[int, ...]]) -> None:
         self._project = project
@@ -507,11 +562,49 @@ def legacy_body_library_image(
     return result
 
 
+def legacy_fragment_library_image(
+    image: QImage, selected_tile: int, *, show_numbers: bool
+) -> QImage:
+    """Render the two fragment CHR pages side by side like the reference tool."""
+
+    scale = 3
+    tile_size = 8 * scale
+    result = image.scaled(
+        128 * scale,
+        64 * scale,
+        Qt.AspectRatioMode.IgnoreAspectRatio,
+        Qt.TransformationMode.FastTransformation,
+    )
+    painter = QPainter(result)
+    painter.setRenderHint(QPainter.RenderHint.Antialiasing, False)
+    if show_numbers:
+        font = painter.font()
+        font.setPixelSize(8)
+        font.setBold(True)
+        painter.setFont(font)
+        for tile in range(128):
+            bank, local = divmod(tile, 64)
+            x = (bank * 8 + local % 8) * tile_size
+            y = local // 8 * tile_size
+            painter.fillRect(x, y, 16, 10, QColor(0, 0, 0, 72))
+            painter.setPen(QColor("#ffffff"))
+            painter.drawText(x + 1, y + 8, f"{tile:02X}")
+    _draw_scaled_grid(painter, result.width(), result.height(), tile_size)
+    selected_bank, selected_local = divmod(selected_tile, 64)
+    selected_x = (selected_bank * 8 + selected_local % 8) * tile_size
+    selected_y = selected_local // 8 * tile_size
+    painter.setPen(QPen(QColor("#ff3048"), 2))
+    painter.drawRect(selected_x, selected_y, tile_size - 1, tile_size - 1)
+    painter.end()
+    return result
+
+
 def numbered_composition_image(
     image: QImage,
     appearance,
     target_size: int = 384,
     *,
+    include_body: bool = True,
     include_fragments: bool = True,
 ) -> QImage:
     """Overlay the actual body/fragment tile IDs like the legacy inspector."""
@@ -550,15 +643,16 @@ def numbered_composition_image(
             f"{tile_index:02X}",
         )
 
-    body_origin_x = 15 if appearance.configuration[0] & 0x40 else 0
-    for placement in decode_unit_body_script(
-        appearance.body_script, len(appearance.secondary_banks) * 64
-    ):
-        draw_number(
-            placement.tile_index,
-            (placement.x + body_origin_x) * 8,
-            (placement.y + 15) * 8,
-        )
+    if include_body:
+        body_origin_x = 15 if appearance.configuration[0] & 0x40 else 0
+        for placement in decode_unit_body_script(
+            appearance.body_script, len(appearance.secondary_banks) * 64
+        ):
+            draw_number(
+                placement.tile_index,
+                (placement.x + body_origin_x) * 8,
+                (placement.y + 15) * 8,
+            )
     if include_fragments:
         fragment_origin_x = 0x78 if appearance.configuration[0] & 0x40 else 0
         for placement in decode_unit_fragment_script(appearance.fragment_script):
@@ -577,6 +671,7 @@ def legacy_composition_image(
     appearance,
     *,
     show_numbers: bool,
+    include_body: bool = True,
     include_fragments: bool = True,
     target_size: int = 384,
 ) -> QImage:
@@ -587,6 +682,7 @@ def legacy_composition_image(
             image,
             appearance,
             target_size,
+            include_body=include_body,
             include_fragments=include_fragments,
         )
     else:
@@ -697,6 +793,7 @@ class UnitAppearanceDialog(QDialog):
         self.color_buttons = self.color_swatches
         reference_code_row = QHBoxLayout()
         reference_group = QGroupBox("参考设置")
+        self.body_reference_group = reference_group
         bank_form = QGridLayout(reference_group)
         bank_form.setHorizontalSpacing(6)
         bank_form.setVerticalSpacing(4)
@@ -745,6 +842,7 @@ class UnitAppearanceDialog(QDialog):
         reference_code_row.addWidget(reference_group, 2)
 
         body_code_group = QGroupBox("代码编辑")
+        self.body_code_group = body_code_group
         body_code_layout = QVBoxLayout(body_code_group)
         self.body_script_view = QPlainTextEdit()
         self.body_script_view.setLineWrapMode(QPlainTextEdit.LineWrapMode.WidgetWidth)
@@ -799,7 +897,7 @@ class UnitAppearanceDialog(QDialog):
         library_layout.setSpacing(4)
         library_layout.setAlignment(Qt.AlignmentFlag.AlignTop)
         body_header = QWidget()
-        body_header.setFixedHeight(64)
+        body_header.setFixedHeight(34)
         body_header_layout = QVBoxLayout(body_header)
         body_header_layout.setContentsMargins(0, 0, 0, 0)
         body_header_layout.setSpacing(4)
@@ -807,7 +905,12 @@ class UnitAppearanceDialog(QDialog):
         self.body_selection.setStyleSheet("color:#d00000; font-weight:600;")
         self.body_selection.setFixedHeight(24)
         body_header_layout.addWidget(self.body_selection)
-        body_import_options = QHBoxLayout()
+        # Keep the upload options available to the database-page shortcuts,
+        # but do not expose an extra row that the reference puzzle window
+        # does not have.  Import/export remain in the library context menu.
+        body_advanced_options = QWidget(body_header)
+        body_import_options = QHBoxLayout(body_advanced_options)
+        body_import_options.setContentsMargins(0, 0, 0, 0)
         body_import_options.setSpacing(4)
         body_import_options.addWidget(QLabel("导图偏移"))
         self.body_import_offset = QSpinBox()
@@ -823,7 +926,7 @@ class UnitAppearanceDialog(QDialog):
             "勾选时等比缩放并居中；取消时要求图片为8像素整数倍且不超过64×64。"
         )
         body_import_options.addWidget(self.body_compress_upload)
-        body_header_layout.addLayout(body_import_options)
+        body_advanced_options.hide()
         body_header_layout.addStretch()
         library_layout.addWidget(body_header)
         self.body_library_preview = InteractivePreviewLabel()
@@ -849,8 +952,7 @@ class UnitAppearanceDialog(QDialog):
         self.swap_body_library.toggled.connect(self._swap_body_library_toggled)
         body_tools.addWidget(self.swap_body_library)
         library_layout.addLayout(body_tools)
-        body_import_actions = QHBoxLayout()
-        body_import_actions.setSpacing(4)
+        body_import_actions = QWidget(library_group)
         self.body_import_button = QPushButton("上传机体…")
         self.body_import_button.setToolTip(
             "按导图偏移和压缩上传选项导入图片，并生成主体拼图代码。"
@@ -864,8 +966,8 @@ class UnitAppearanceDialog(QDialog):
         for button in (
             self.body_import_button, self.body_export_button, clear_body_library
         ):
-            body_import_actions.addWidget(button)
-        library_layout.addLayout(body_import_actions)
+            button.setParent(body_import_actions)
+        body_import_actions.hide()
         self.body_library_group = library_group
         body_grid.addWidget(library_group, 0, 0)
 
@@ -877,7 +979,7 @@ class UnitAppearanceDialog(QDialog):
         composition_grid.setHorizontalSpacing(8)
         composition_grid.setVerticalSpacing(4)
         composition_grid.setAlignment(Qt.AlignmentFlag.AlignTop)
-        composition_grid.setRowMinimumHeight(0, 64)
+        composition_grid.setRowMinimumHeight(0, 34)
         composition_grid.setRowMinimumHeight(1, 384)
         composition_grid.setRowMinimumHeight(2, 24)
         composition_grid.setColumnMinimumWidth(0, 24)
@@ -913,116 +1015,167 @@ class UnitAppearanceDialog(QDialog):
 
         fragment_tab = QWidget()
         fragment_layout = QVBoxLayout(fragment_tab)
-        fragment_reference = QGroupBox("碎片图库设置")
-        fragment_reference_layout = QHBoxLayout(fragment_reference)
-        fragment_reference_layout.addWidget(self.bank_labels[0])
-        fragment_reference_layout.addWidget(self.bank_editors[0])
-        fragment_reference_layout.addStretch()
-        fragment_layout.addWidget(fragment_reference)
-        fragment_hint = QLabel(
-            "这里仅显示碎片图库的全部原始图块，并使用碎片三色；"
-            "左键选择图块，右键导入、复制、粘贴、删除或清空。"
-            "它不是机体主体的一部分，也不应与主体三色逐项相同。"
+        fragment_layout.setContentsMargins(0, 0, 0, 0)
+        fragment_layout.setSpacing(4)
+
+        fragment_top = QHBoxLayout()
+        fragment_reference = QGroupBox("参考设置")
+        fragment_reference.setFixedWidth(400)
+        fragment_reference_layout = QGridLayout(fragment_reference)
+        fragment_reference_layout.setHorizontalSpacing(6)
+        fragment_reference_layout.setVerticalSpacing(4)
+        self.fragment_unit_type_editor = QComboBox()
+        for index in range(self.unit_type_editor.count()):
+            self.fragment_unit_type_editor.addItem(
+                self.unit_type_editor.itemText(index), self.unit_type_editor.itemData(index)
+            )
+        self.fragment_unit_type_editor.setCurrentIndex(self.unit_type_editor.currentIndex())
+        fragment_reference_layout.addWidget(QLabel("机体类型"), 0, 0)
+        fragment_reference_layout.addWidget(self.fragment_unit_type_editor, 0, 1)
+        fragment_reference_layout.addWidget(QLabel("图库地址1"), 0, 2)
+        self.fragment_bank_proxies: list[ChrBankComboBox] = []
+        for source in self.bank_editors:
+            proxy = ChrBankComboBox(project, bank_max)
+            proxy.setValue(source.value())
+            proxy.setFixedSize(128, 22)
+            self.fragment_bank_proxies.append(proxy)
+        fragment_reference_layout.addWidget(self.fragment_bank_proxies[1], 0, 3)
+        fragment_reference_layout.addWidget(QLabel("碎片地址"), 1, 0)
+        fragment_reference_layout.addWidget(self.fragment_bank_proxies[0], 1, 1)
+        fragment_reference_layout.addWidget(QLabel("图库地址2"), 1, 2)
+        fragment_reference_layout.addWidget(self.fragment_bank_proxies[2], 1, 3)
+        self.fragment_unit_type_editor.currentIndexChanged.connect(
+            lambda index: self.unit_type_editor.setCurrentIndex(index)
         )
-        fragment_hint.setWordWrap(True)
-        fragment_layout.addWidget(fragment_hint)
-        self.fragment_library_preview = InteractivePreviewLabel()
-        self.fragment_library_preview.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.fragment_library_preview.setStyleSheet("background:black; border:1px solid #333;")
-        self.fragment_library_preview.setMinimumHeight(360)
-        fragment_layout.addWidget(self.fragment_library_preview, 1)
-        self.fragment_placements_view = QPlainTextEdit()
-        self.fragment_placements_view.setReadOnly(True)
-        self.fragment_placements_view.setMaximumHeight(116)
-        self.fragment_placements_view.setToolTip("由当前碎片脚本实时解码的图块、坐标与翻转状态")
-        fragment_layout.addWidget(self.fragment_placements_view)
-        fragment_tools = QGridLayout()
-        self.show_fragment_numbers = QCheckBox("显示图块编号")
-        self.show_fragment_numbers.toggled.connect(self.refresh_preview)
-        fragment_tools.addWidget(self.show_fragment_numbers, 0, 0)
-        self.fragment_selection = QLabel("已选碎片图块 $00")
-        fragment_tools.addWidget(self.fragment_selection, 0, 1, 1, 3)
-        fragment_tools.addWidget(QLabel("导图偏移"), 0, 4)
-        self.fragment_import_offset = QSpinBox()
-        self.fragment_import_offset.setRange(0, 127)
-        self.fragment_import_offset.setFixedWidth(58)
-        self.fragment_import_offset.setToolTip(
-            "导入的第一个图块写到碎片2KB图库的此编号。"
+        self.unit_type_editor.currentIndexChanged.connect(
+            lambda index: self.fragment_unit_type_editor.setCurrentIndex(index)
         )
-        fragment_tools.addWidget(self.fragment_import_offset, 0, 5)
-        self.fragment_compress_upload = QCheckBox("压缩上传")
-        self.fragment_compress_upload.setChecked(True)
-        self.fragment_compress_upload.setToolTip(
-            "勾选时等比缩放到64×128；取消时要求图片正好为64×128。"
+        for source, proxy in zip(self.bank_editors, self.fragment_bank_proxies):
+            proxy.valueChanged.connect(source.setValue)
+            source.valueChanged.connect(proxy.setValue)
+        fragment_top.addWidget(fragment_reference)
+
+        fragment_code_group = QGroupBox("代码编辑")
+        fragment_code_layout = QVBoxLayout(fragment_code_group)
+        self.fragment_script_view = QPlainTextEdit()
+        self.fragment_script_view.setLineWrapMode(QPlainTextEdit.LineWrapMode.WidgetWidth)
+        self.fragment_script_view.setPlainText(self.appearance.fragment_script.hex(" ").upper())
+        self.fragment_script_view.setMaximumHeight(66)
+        fragment_script_font = self.fragment_script_view.font()
+        fragment_script_font.setPointSize(8)
+        self.fragment_script_view.setFont(fragment_script_font)
+        fragment_code_layout.addWidget(self.fragment_script_view)
+        fragment_code_actions = QHBoxLayout()
+        clear_fragment = QPushButton("清除")
+        clear_fragment.clicked.connect(
+            lambda: self._replace_script("fragment", bytes.fromhex("00 F0 00 00 FF"))
         )
-        fragment_tools.addWidget(self.fragment_compress_upload, 0, 6, 1, 2)
-        for column, (caption, dx, dy) in enumerate(
-            (("←", -1, 0), ("→", 1, 0), ("↑", 0, -1), ("↓", 0, 1))
-        ):
-            button = QPushButton(caption)
-            button.setFixedWidth(42)
-            button.setToolTip("按 1 像素移动整组碎片")
-            button.clicked.connect(lambda _checked=False, x=dx, y=dy: self._move_fragment(x, y))
-            fragment_tools.addWidget(button, 1, column)
-        horizontal_quick = QPushButton("水平翻转")
-        vertical_quick = QPushButton("垂直翻转")
+        validate_fragment = QPushButton("查看效果")
+        validate_fragment.clicked.connect(self.apply_script_text)
+        horizontal_quick = QPushButton("水平镜像翻转")
+        vertical_quick = QPushButton("垂直镜像翻转")
         horizontal_quick.clicked.connect(lambda: self._flip_fragment(0x40))
         vertical_quick.clicked.connect(lambda: self._flip_fragment(0x80))
-        fragment_tools.addWidget(horizontal_quick, 1, 4)
-        fragment_tools.addWidget(vertical_quick, 1, 5)
+        for button in (clear_fragment, validate_fragment, horizontal_quick, vertical_quick):
+            fragment_code_actions.addWidget(button)
+        fragment_code_layout.addLayout(fragment_code_actions)
+        fragment_top.addWidget(fragment_code_group, 1)
+        fragment_layout.addLayout(fragment_top)
+
+        fragment_content = QHBoxLayout()
+        fragment_content.setSpacing(4)
+        fragment_library_group = QGroupBox("图库（提示：左键选择图块）")
+        fragment_library_group.setStyleSheet(legacy_frame_style)
+        fragment_library_group.setFixedSize(400, 523)
+        fragment_library_layout = QVBoxLayout(fragment_library_group)
+        fragment_library_layout.setContentsMargins(4, 5, 4, 7)
+        fragment_library_layout.setSpacing(4)
+        self.fragment_library_preview = InteractivePreviewLabel()
+        self.fragment_library_preview.setAlignment(
+            Qt.AlignmentFlag.AlignHCenter | Qt.AlignmentFlag.AlignTop
+        )
+        self.fragment_library_preview.setStyleSheet("background:black; border:1px solid #333;")
+        self.fragment_library_preview.setFixedSize(384, 192)
+        fragment_library_layout.addWidget(
+            self.fragment_library_preview, 0, Qt.AlignmentFlag.AlignHCenter
+        )
+        self.show_fragment_numbers = QCheckBox("显示图块编号")
+        self.show_fragment_numbers.toggled.connect(self.refresh_preview)
+        fragment_library_layout.addWidget(self.show_fragment_numbers)
+        self.fragment_placements_view = QPlainTextEdit()
+        self.fragment_placements_view.setReadOnly(True)
+        self.fragment_placements_view.setFixedHeight(260)
+        fragment_library_layout.addWidget(self.fragment_placements_view)
+        hidden_fragment_tools = QWidget(fragment_library_group)
+        self.fragment_selection = QLabel("已选碎片图块 $00")
+        self.fragment_import_offset = QSpinBox()
+        self.fragment_import_offset.setRange(0, 127)
+        self.fragment_compress_upload = QCheckBox("压缩上传")
+        self.fragment_compress_upload.setChecked(True)
         self.fragment_import_button = QPushButton("导入BMP…")
-        self.fragment_import_button.setToolTip("导入图块或完整碎片图库，其他尺寸会自动压缩")
         self.fragment_import_button.clicked.connect(lambda: self._import_library("fragment"))
-        fragment_tools.addWidget(self.fragment_import_button, 1, 6)
         self.fragment_export_button = QPushButton("导出BMP…")
-        self.fragment_export_button.setToolTip("导出完整 64×128 碎片图库")
         self.fragment_export_button.clicked.connect(lambda: self._export_library("fragment"))
-        fragment_tools.addWidget(self.fragment_export_button, 1, 7)
-        fragment_tools.setColumnStretch(8, 1)
-        fragment_layout.addLayout(fragment_tools)
+        for widget in (
+            self.fragment_selection, self.fragment_import_offset,
+            self.fragment_compress_upload, self.fragment_import_button,
+            self.fragment_export_button,
+        ):
+            widget.setParent(hidden_fragment_tools)
+        hidden_fragment_tools.hide()
+        fragment_content.addWidget(fragment_library_group)
+
+        fragment_composition_group = QGroupBox(
+            "效果图片（提示：左键编辑调整图块位置，右键翻转图块）"
+        )
+        fragment_composition_group.setStyleSheet(legacy_frame_style)
+        fragment_composition_group.setFixedSize(451, 523)
+        fragment_composition_grid = QGridLayout(fragment_composition_group)
+        fragment_composition_grid.setContentsMargins(4, 5, 4, 7)
+        fragment_composition_grid.setHorizontalSpacing(4)
+        fragment_composition_grid.setVerticalSpacing(4)
+        self.fragment_composition_preview = InteractivePreviewLabel()
+        self.fragment_composition_preview.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.fragment_composition_preview.setStyleSheet("background:black; border:1px solid #333;")
+        self.fragment_composition_preview.setFixedSize(384, 384)
+        fragment_composition_grid.addWidget(self.fragment_composition_preview, 1, 1)
+        self.fragment_move_buttons: dict[str, QPushButton] = {}
+        for key, caption, dx, dy, row_index, column_index in (
+            ("up", "向上移动", 0, -1, 0, 1),
+            ("left", "向\n左\n移\n动", -1, 0, 1, 0),
+            ("right", "向\n右\n移\n动", 1, 0, 1, 2),
+            ("down", "向下移动", 0, 1, 2, 1),
+        ):
+            button = QPushButton(caption)
+            button.clicked.connect(
+                lambda _checked=False, x=dx, y=dy: self._move_fragment(x, y)
+            )
+            if key in ("left", "right"):
+                button.setFixedSize(24, 168)
+                button.setStyleSheet("padding:0;")
+            else:
+                button.setFixedSize(134, 24)
+            fragment_composition_grid.addWidget(
+                button, row_index, column_index, Qt.AlignmentFlag.AlignCenter
+            )
+            self.fragment_move_buttons[key] = button
+        fragment_content.addWidget(fragment_composition_group)
+        fragment_layout.addLayout(fragment_content)
         preview_tabs.addTab(fragment_tab, "碎片原始图库")
 
         script_tab = QWidget()
         script_layout = QGridLayout(script_tab)
-        script_layout.addWidget(QLabel("主体拼图脚本已移到窗口顶部，可与效果图同时查看。"), 0, 0)
-        script_layout.addWidget(QLabel("碎片拼图脚本"), 0, 1)
+        script_layout.addWidget(QLabel("主体与碎片脚本已移到各自参考版页面。"), 0, 0)
         body_script_note = QLabel("使用顶部“主体代码编辑”及其模板按钮。")
         body_script_note.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.fragment_script_view = QPlainTextEdit()
-        self.fragment_script_view.setLineWrapMode(QPlainTextEdit.LineWrapMode.WidgetWidth)
-        self.fragment_script_view.setPlainText(self.appearance.fragment_script.hex(" ").upper())
         script_layout.addWidget(body_script_note, 1, 0)
-        script_layout.addWidget(self.fragment_script_view, 1, 1)
-        fragment_actions = QHBoxLayout()
-        refresh_scripts = QPushButton("验证脚本并刷新效果")
-        refresh_scripts.clicked.connect(self.apply_script_text)
-        script_layout.addWidget(refresh_scripts, 2, 0)
-        clear_fragment = QPushButton("清除碎片")
-        clear_fragment.clicked.connect(
-            lambda: self._replace_script("fragment", bytes.fromhex("00 F0 00 00 FF"))
-        )
-        fragment_actions.addWidget(clear_fragment)
-        for caption, dx, dy in (("←", -1, 0), ("→", 1, 0), ("↑", 0, -1), ("↓", 0, 1)):
-            button = QPushButton(caption)
-            button.setToolTip("碎片按 1 像素移动")
-            button.clicked.connect(
-                lambda _checked=False, x=dx, y=dy: self._move_fragment(x, y)
-            )
-            fragment_actions.addWidget(button)
-        horizontal = QPushButton("水平翻转")
-        vertical = QPushButton("垂直翻转")
-        horizontal.clicked.connect(lambda: self._flip_fragment(0x40))
-        vertical.clicked.connect(lambda: self._flip_fragment(0x80))
-        fragment_actions.addWidget(horizontal)
-        fragment_actions.addWidget(vertical)
-        fragment_actions.addStretch()
-        script_layout.addLayout(fragment_actions, 2, 1)
         preview_tabs.addTab(script_tab, "拼图脚本原码")
         self.preview_tabs = preview_tabs
         self.previews = (
             self.body_library_preview,
             self.body_composition_preview,
             self.fragment_library_preview,
+            self.fragment_composition_preview,
         )
         self.status = QLabel()
         self.status.setWordWrap(True)
@@ -1052,8 +1205,13 @@ class UnitAppearanceDialog(QDialog):
             lambda point: self._show_library_menu("fragment", point)
         )
         self.body_composition_preview.image_pressed.connect(self._composition_pressed)
+        self.fragment_composition_preview.image_pressed.connect(
+            self._fragment_composition_pressed
+        )
+        preview_tabs.currentChanged.connect(self._page_changed)
         self._last_composition_point = (0, 0)
         self._type_changed()
+        self._page_changed(preview_tabs.currentIndex())
         self.refresh_preview()
 
     def values(self) -> tuple[int, ...]:
@@ -1081,6 +1239,8 @@ class UnitAppearanceDialog(QDialog):
                 min(self.bank_editors[1].value() + 1, self.bank_editors[2].count() - 1)
             )
         self.bank_editors[2].setEnabled(large)
+        if hasattr(self, "fragment_bank_proxies"):
+            self.fragment_bank_proxies[2].setEnabled(large)
         self.bank_descriptions[2].setEnabled(large)
         self.swap_body_library.setEnabled(large)
         rebuilt_for_small = False
@@ -1201,9 +1361,13 @@ class UnitAppearanceDialog(QDialog):
         return banks[bank_slot] * 64 + tile
 
     def _select_library_tile(self, kind: str, x: int, y: int) -> None:
-        bank_slot = y // 64
-        local_y = y % 64
-        local_tile = bank_slot * 64 + (local_y // 8) * 8 + x // 8
+        if kind == "fragment":
+            bank_slot = x // 64
+            local_tile = bank_slot * 64 + (y // 8) * 8 + (x % 64) // 8
+        else:
+            bank_slot = y // 64
+            local_y = y % 64
+            local_tile = bank_slot * 64 + (local_y // 8) * 8 + x // 8
         if local_tile >= len(self._library_banks(kind)) * 64:
             return
         if kind == "body":
@@ -1424,6 +1588,7 @@ class UnitAppearanceDialog(QDialog):
                 f"导图偏移 ${import_offset:02X} 后只剩 {len(indices) - import_offset} 个图块，"
                 f"无法容纳 {tile_count} 个图块。"
             )
+
         for local_index in indices:
             absolute = self._absolute_tile("body", local_index)
             self._remember_original_tile(absolute)
@@ -1445,6 +1610,13 @@ class UnitAppearanceDialog(QDialog):
             f"{width}×{height} 图块，从偏移 ${import_offset:02X} 写入并生成对应主体拼图脚本；"
             "确定后才写入 ROM。"
         )
+
+    def _page_changed(self, index: int) -> None:
+        fragment_page = index == 1
+        self.body_reference_group.setVisible(not fragment_page)
+        self.body_code_group.setVisible(not fragment_page)
+        self.setWindowTitle("碎片拼图" if fragment_page else "机体拼图")
+        self.setFixedSize(887 if fragment_page else 730, 708)
 
     def _show_library_menu(self, kind: str, point: QPoint) -> None:
         menu = QMenu(self)
@@ -1487,6 +1659,32 @@ class UnitAppearanceDialog(QDialog):
                 self._edit_tile("body", body[index].tile_index)
             elif button == Qt.MouseButton.RightButton.value:
                 self._delete_body_at(body, index)
+
+    def _fragment_composition_pressed(self, x: int, y: int, button: int) -> None:
+        self._last_composition_point = (x, y)
+        _body, _body_hits, fragments, fragment_hits = self._composition_hits(x, y)
+        if not fragment_hits:
+            return
+        index = fragment_hits[-1]
+        if button == Qt.MouseButton.LeftButton.value:
+            self._edit_fragment_at(fragments, index)
+        elif button == Qt.MouseButton.RightButton.value:
+            self._flip_fragment_at(fragments, index)
+
+    def _edit_fragment_at(self, placements, index: int) -> None:
+        placements = list(placements)
+        editor = FragmentPlacementDialog(placements[index], self)
+        if editor.exec() == QDialog.DialogCode.Accepted:
+            placements[index] = editor.updated(placements[index])
+            self._replace_script("fragment", encode_fragment_placements(placements))
+
+    def _flip_fragment_at(self, placements, index: int) -> None:
+        placements = list(placements)
+        placement = placements[index]
+        placements[index] = replace(
+            placement, flip_horizontal=not placement.flip_horizontal
+        )
+        self._replace_script("fragment", encode_fragment_placements(placements))
 
     def _delete_body_at(self, placements, index: int) -> None:
         placements = list(placements)
@@ -1544,20 +1742,33 @@ class UnitAppearanceDialog(QDialog):
         body_composition_pixmap = QPixmap.fromImage(composition_display)
         self.body_composition_preview.set_source_pixmap(body_composition_pixmap, 128, 128)
         fragment_picture = render_chr_banks(
-            draft_project, (fragment_bank, fragment_bank + 1), values[3:6], columns=1,
+            draft_project, (fragment_bank, fragment_bank + 1), values[3:6], columns=2,
             display_palette=WORK_PALETTE,
         )
-        fragment_display = (
-            numbered_library_image(fragment_picture, self._selected_fragment_tile)
-            if self.show_fragment_numbers.isChecked()
-            else selected_library_image(fragment_picture, self._selected_fragment_tile)
-        )
-        fragment_pixmap = QPixmap.fromImage(fragment_display).scaled(
-            166, 333, Qt.AspectRatioMode.KeepAspectRatio,
-            Qt.TransformationMode.FastTransformation,
+        fragment_display = legacy_fragment_library_image(
+            fragment_picture,
+            self._selected_fragment_tile,
+            show_numbers=self.show_fragment_numbers.isChecked(),
         )
         self.fragment_library_preview.set_source_pixmap(
-            fragment_pixmap, fragment_picture.width(), fragment_picture.height()
+            QPixmap.fromImage(fragment_display), 128, 64
+        )
+        fragment_composition = render_unit_battle_preview(
+            draft_project,
+            preview_appearance,
+            show_body=False,
+            show_fragments=True,
+            display_palette=WORK_PALETTE,
+        )
+        fragment_composition_display = legacy_composition_image(
+            fragment_composition,
+            preview_appearance,
+            show_numbers=self.show_fragment_numbers.isChecked(),
+            include_body=False,
+            include_fragments=True,
+        )
+        self.fragment_composition_preview.set_source_pixmap(
+            QPixmap.fromImage(fragment_composition_display), 128, 128
         )
         self.body_library_preview.setToolTip(
             "当前主体图库：" + " / ".join(
@@ -1573,9 +1784,13 @@ class UnitAppearanceDialog(QDialog):
         self.fragment_library_preview.setToolTip(
             f"碎片图库：${fragment_bank:02X} / ${fragment_bank + 1:02X}"
         )
+        self.fragment_composition_preview.setToolTip(
+            f"碎片脚本 {len(self.fragment_script)} 字节；左键编辑命中图块，"
+            "右键删除命中拼图项"
+        )
         fragment_placements = decode_unit_fragment_script(self.fragment_script)
         self.fragment_placements_view.setPlainText("\n".join(
-            f"{index:03d}  X:{item.x:4d}  Y:{item.y:4d}  图块:${item.tile_index:02X}  "
+            f"{index:03d}: X:{item.x:03d}  Y:{item.y:03d}  图块:{item.tile_index:02X}  翻转标志:"
             + ("水平" if item.flip_horizontal else "")
             + ("垂直" if item.flip_vertical else "")
             + ("不翻转" if not item.flip_horizontal and not item.flip_vertical else "")

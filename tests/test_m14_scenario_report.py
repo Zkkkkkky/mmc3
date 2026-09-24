@@ -80,13 +80,15 @@ class M14ScenarioReportTests(unittest.TestCase):
         self.assertFalse(report["story_text"]["split_37"]["relocatable"])
         self.assertEqual(report["chapter_victory"]["record_count"], 13)
         self.assertEqual(report["chapter_victory"]["start_file_offset"], "0x07A010")
-        self.assertTrue(report["chapter_victory"]["fixed_capacity"])
+        self.assertTrue(report["chapter_victory"]["fixed_total_pool"])
+        self.assertTrue(report["chapter_victory"]["variable_record_length"])
         self.assertEqual(report["chapter_titles"]["record_count"], 32)
         self.assertEqual(
             report["chapter_titles"]["pointer_table_file_offset"],
             "0x016111",
         )
-        self.assertTrue(report["chapter_titles"]["pointer_table_unchanged"])
+        self.assertTrue(report["chapter_titles"]["fixed_total_pool"])
+        self.assertTrue(report["chapter_titles"]["variable_record_length"])
         self.assertEqual(report["incomplete_requirements"], [])
         self.assertTrue(
             report["checks"][
@@ -98,7 +100,7 @@ class M14ScenarioReportTests(unittest.TestCase):
         )
         self.assertTrue(
             report["checks"][
-                "chapter_victory_table_and_fixed_capacity_edit_are_exact"
+                "chapter_victory_shared_pool_edit_is_exact"
             ]
         )
         self.assertTrue(
@@ -106,7 +108,7 @@ class M14ScenarioReportTests(unittest.TestCase):
         )
         self.assertTrue(
             report["checks"][
-                "chapter_title_tables_and_fixed_capacity_edit_are_exact"
+                "chapter_title_tables_and_shared_pool_edit_are_exact"
             ]
         )
         self.assertTrue(

@@ -105,6 +105,7 @@ class CharacterDialogueCodec:
         pointers = struct.unpack(f"<{profile.character_dialogue_count}H", raw)
         if any(not 0x8000 <= pointer < profile.character_dialogue_data_end_pointer for pointer in pointers):
             raise RomFormatError("人物台词指针超出已验证数据区。")
+        self._pool_start = min(pointers)
         self._validate_all(rom.data)
         self.transform_bindings(rom.data)
 
@@ -226,6 +227,76 @@ class CharacterDialogueCodec:
             return None
         offset = self.pointer_to_file_offset(self.pointer(character_id, data))
         return offset, before, after
+
+    def repack_patches(
+        self,
+        data: bytes | bytearray,
+        character_id: int,
+        record: CharacterDialogueRecord,
+    ) -> tuple[BytePatch, ...]:
+        """Resize one shared dialogue record and safely rebuild its fixed pool.
+
+        Character IDs which shared the edited pointer continue to share the
+        replacement.  Other alias groups and their bytes are preserved.  The
+        operation is rejected before producing patches when the verified pool
+        is too small.
+        """
+
+        self._check_id(character_id)
+        source = bytes(data)
+        target_pointer = self.pointer(character_id, source)
+        replacement = record.encode()
+        pointers = self._pointers(source)
+        unique_pointers = tuple(sorted(set(pointers)))
+        pool_start = self._pool_start
+        pool_end = self.rom.profile.character_dialogue_data_end_pointer
+        assert pool_end is not None
+        capacity = pool_end - pool_start
+
+        records: dict[int, bytes] = {}
+        for pointer in unique_pointers:
+            owner = pointers.index(pointer) + 1
+            records[pointer] = (
+                replacement if pointer == target_pointer
+                else self._record_bytes(owner, source)
+            )
+
+        encoded_records = [records[pointer] for pointer in unique_pointers]
+        packed_size = sum(len(raw) for raw in encoded_records)
+        if packed_size > capacity:
+            raise ValueError(
+                f"人物台词共享池容量不足：需要 {packed_size} 字节，"
+                f"固定容量为 {capacity} 字节。请先删除不用的特殊规则。"
+            )
+        # Records have no explicit length field: the next pointer (or the fixed
+        # pool end) is their boundary.  Right-aligning keeps the final record
+        # ending exactly at that boundary when a rule is inserted or removed.
+        cursor = pool_end - packed_size
+        remapped: dict[int, int] = {}
+        packed = bytearray()
+        for pointer in unique_pointers:
+            raw = records[pointer]
+            remapped[pointer] = cursor
+            packed.extend(raw)
+            cursor += len(raw)
+
+        table_offset = self.rom.profile.character_dialogue_pointer_table_offset
+        assert table_offset is not None
+        table_size = len(pointers) * 2
+        before_table = source[table_offset : table_offset + table_size]
+        after_table = struct.pack(
+            f"<{len(pointers)}H", *(remapped[pointer] for pointer in pointers)
+        )
+        pool_offset = self.pointer_to_file_offset(pool_start)
+        before_pool = source[pool_offset : pool_offset + capacity]
+        leading = capacity - len(packed)
+        after_pool = before_pool[:leading] + bytes(packed)
+        patches = []
+        if before_table != after_table:
+            patches.append((table_offset, before_table, after_table))
+        if before_pool != after_pool:
+            patches.append((pool_offset, before_pool, after_pool))
+        return tuple(patches)
 
     def _validate_all(self, data: bytes) -> None:
         seen: set[int] = set()

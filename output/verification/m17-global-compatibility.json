@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-21T23:15:23+08:00",
+  "generated_at": "2026-09-24T19:09:04+08:00",
   "passed": true,
   "delivery_status": "aligned_regression_guard_user_checklist_pending",
   "conclusion": "M17 的 20 个公式/道具字段和 12 个初始阵容字段均通过产品侧单字段差分、撤销、镜像/哨兵和拒绝边界；33 个参考黄金用例档案完整、共覆盖 32 个逻辑字段。",
@@ -185,231 +185,231 @@
         "field": "damage_defense_divisor",
         "case_id": "write",
         "archive": "M17-damage_defense_divisor-write.json",
-        "sha256": "26738EE85A0D33D6293045BC32C60A7139FD72A147B88A981F4E5EF759F154B6",
+        "sha256": "8FBDA004D77E08EEC244A27C2C41EE91A3384F0B2DAB8E8420061FAD71318C6C",
         "valid": true
       },
       {
         "field": "damage_defense_multiplier",
         "case_id": "write",
         "archive": "M17-damage_defense_multiplier-write.json",
-        "sha256": "15DB6BD16E13435B2D1A64CD5073E7FD4CA356CA0E8DE1AE8571217F03F87B93",
+        "sha256": "387564D75E2A9C3659E56AAD9A3364C8F0FB7EB32C53B11FA01CD982EC714A33",
         "valid": true
       },
       {
         "field": "damage_strength_divisor",
         "case_id": "write",
         "archive": "M17-damage_strength_divisor-write.json",
-        "sha256": "8BDCB8B56C0FD7163DA4621ACF4611E44080DB104EE75AA4A3864CD6B639065A",
+        "sha256": "940DF60E2E1B79599B238230B40741F08B8B0F454D57D1626250694D0CAB3DCB",
         "valid": true
       },
       {
         "field": "damage_strength_multiplier",
         "case_id": "write",
         "archive": "M17-damage_strength_multiplier-write.json",
-        "sha256": "6A65DB38CDC3F0507703D53446A7FEC1C78A080B9334A3A09125FE37D90FFF90",
+        "sha256": "2BE990319AD6128127925297363E40D4E725476660FF31A648AB88EA6832E4E1",
         "valid": true
       },
       {
         "field": "damage_weapon_multiplier",
         "case_id": "write",
         "archive": "M17-damage_weapon_multiplier-write.json",
-        "sha256": "9D0C5C4DA451AA8F402F3369DEBFAFD8D61DD66F3A371547BF96F8C8C1A205F5",
+        "sha256": "8E24A6DA4A5B6D63BE6470BA693684DB22BB22C42A3B2C2676EB3A4ECFE06E68",
         "valid": true
       },
       {
         "field": "double_hit_attack_percent",
         "case_id": "write",
         "archive": "M17-double_hit_attack_percent-write.json",
-        "sha256": "54A9EDCD445DE95A713818BFE1A863CB17192DE91A93A11971BB0D91A5210924",
+        "sha256": "0FA99ECD4343AC63B6592F690D88619C390DA71AC137833C831C67CFBDF8B32E",
         "valid": true
       },
       {
         "field": "double_hit_bonus",
         "case_id": "write",
         "archive": "M17-double_hit_bonus-write.json",
-        "sha256": "8B24F378C8CB82460ACC05C07B4C97B9DD8A671288D89F68B861D5219349457A",
+        "sha256": "15D11D770286F0A462C02E2418969DDE712CEC9F4D78343625B1CC6A848B344E",
         "valid": true
       },
       {
         "field": "double_hit_defense_percent",
         "case_id": "write",
         "archive": "M17-double_hit_defense_percent-write.json",
-        "sha256": "21E6B43FDA0ECF8A9C587B34EF5DE277EB726F55C41E5E1F96BD7E84A4351271",
+        "sha256": "FA56AAB3F1E65A42A4E219E79AB1FC676FBDD0B5FBA386659277BA848EC69137",
         "valid": true
       },
       {
         "field": "hit_threshold",
         "case_id": "cold_start_03",
         "archive": "M17-hit_threshold-cold_start_03.json",
-        "sha256": "47AEE2357B4185C60DCF2EBEA68E7FDD7A2A0CD47116CDB9E91FA77D40B8F848",
+        "sha256": "71B6141DAA8AA8873D866BB2A094EAC5ED891AE46D38CF3571F34F09E42DBA8C",
         "valid": true
       },
       {
         "field": "hit_threshold",
         "case_id": "write",
         "archive": "M17-hit_threshold-write.json",
-        "sha256": "3707BCA1DB3EA6F7D5154914683520C49DE098BE201F1B1E667945F94F4B0056",
+        "sha256": "987BEB754DD89F81D3B188B7B7819CB0E33EDB731FEEE3DFC7D46ABF5F9D0DD5",
         "valid": true
       },
       {
         "field": "item_01",
         "case_id": "write",
         "archive": "M17-item_01-write.json",
-        "sha256": "D608D56517126D8C0241D8F5FDF6699959FCE49096839041FC8286E67EABC743",
+        "sha256": "ECE45C5709B0F26ACCE466284315B2209118A7E1C5558F854343857AA50CF153",
         "valid": true
       },
       {
         "field": "item_02",
         "case_id": "write",
         "archive": "M17-item_02-write.json",
-        "sha256": "9CD808B4EC5D7F6573E0FA7DE05D33D7CEA6923907CEE46A2CF999D1037D43F8",
+        "sha256": "83A9FB94317AFC1EE4E6554969E23FEDA03DE25EC9C58AED80B30DA2ADB0AF3F",
         "valid": true
       },
       {
         "field": "item_03",
         "case_id": "write",
         "archive": "M17-item_03-write.json",
-        "sha256": "D45A1FB82ADC34F4DAC08489311B39FFC147EB38B4EC79C7F0106DA7902E342F",
+        "sha256": "649398EA7396A9C519FAEF8BC277C279CF1C4E6E0BC862F6E1B50341ECDF48B5",
         "valid": true
       },
       {
         "field": "item_04",
         "case_id": "write",
         "archive": "M17-item_04-write.json",
-        "sha256": "86EE8110B9359D92CF90CB2B864240929C99BC878459CD98B6A18CD6562D6AE1",
+        "sha256": "80E45E509EA768D503C2E625E1B9BE57D983453C8595C950D4878EC582BF45EA",
         "valid": true
       },
       {
         "field": "item_05",
         "case_id": "write",
         "archive": "M17-item_05-write.json",
-        "sha256": "357C641B46E2D4A37B42B6915152754E3F347BB49CB2D8C9A7C6045CDD5CB8C3",
+        "sha256": "A2D056061A4272B49E38EA919180D35F540136E9A03FA03B58D0D73B62117EB6",
         "valid": true
       },
       {
         "field": "item_06",
         "case_id": "write",
         "archive": "M17-item_06-write.json",
-        "sha256": "74A2C519E6F0AB8001DB044FC8162B34E39AACE072D7D1B88765BABC91BB7CF7",
+        "sha256": "1E2CA4DF23760658BD7F57BE24E7ACD9A7AA147AEFDC8D5532329DC0F0C7F53F",
         "valid": true
       },
       {
         "field": "item_07",
         "case_id": "write",
         "archive": "M17-item_07-write.json",
-        "sha256": "4593DF4769DE6ED45BE67D26F2824FABDE9E6BBC000BF0A5FAD576E3E0EA9013",
+        "sha256": "EA15EDB0DBADEB82C436F99F6D619D133E4F2A7ADA5BB7C5559FF22F1F7EEA46",
         "valid": true
       },
       {
         "field": "item_08",
         "case_id": "write",
         "archive": "M17-item_08-write.json",
-        "sha256": "3CC133D3F1B38D3E04D77F6759BFEB1BCEB0AF5D75F4A96B37E2E7CC56F88515",
+        "sha256": "39F1065D8919425205DBA1435E635D5CC5A3211E8DA3B41270034106DF36D705",
         "valid": true
       },
       {
         "field": "item_09",
         "case_id": "write",
         "archive": "M17-item_09-write.json",
-        "sha256": "A94F1B5E9BD7DFE577FDC8AAE5163C3942C67F659CE523A14057EF701383B171",
+        "sha256": "EF7F8535E25F61CA3728E4E13B53EF1DC4D257FD3C3C0201C02DF594948273E5",
         "valid": true
       },
       {
         "field": "item_10",
         "case_id": "write",
         "archive": "M17-item_10-write.json",
-        "sha256": "4F8F381298DDCF0886C2FA5DF51ACE6EDCF71733DAEFC6C412B63C35FAF06453",
+        "sha256": "B36AD0DE4BFA1A0359B0A71E8047E284B2C4EB3E825EC0F3C5C7C48DE3BD842C",
         "valid": true
       },
       {
         "field": "item_11",
         "case_id": "write",
         "archive": "M17-item_11-write.json",
-        "sha256": "34FE2AD402E06B247840EF4C66980F6D79A7BF2F115ECD1711F5B8F868D086AE",
+        "sha256": "0681CCE94F4918AB379547495C4141109C40A6BA05E82B8A4E1DD79B73929B70",
         "valid": true
       },
       {
         "field": "slot_1_character",
         "case_id": "write",
         "archive": "M17-slot_1_character-write.json",
-        "sha256": "35231F22FAD6D37FCFE61819A92EC5E1AA02FB79F3FD06F256685F94DEC927F5",
+        "sha256": "1D18E877D80313CDCFE5D66CBC6731FD7DCDB28407DCB58DF410A3962AA522DC",
         "valid": true
       },
       {
         "field": "slot_1_unit",
         "case_id": "write",
         "archive": "M17-slot_1_unit-write.json",
-        "sha256": "6D3FDAC6F49726104ABC199B51518A75AC3A7DB9EEE5192DF5EDAF72FEB0071E",
+        "sha256": "C64FBC0EBDC7BCBC1B8374E6D209761492C6DA83371F81BD2282116766F86153",
         "valid": true
       },
       {
         "field": "slot_2_character",
         "case_id": "write",
         "archive": "M17-slot_2_character-write.json",
-        "sha256": "A67AF1DADAB64E0F6D577C072DD1D58296428844B411579A9F1ED8AE612111FD",
+        "sha256": "FDD7BEB65E609A03E2A2409F0EF831A93B78F027920CC51B87980FE343FF3D08",
         "valid": true
       },
       {
         "field": "slot_2_unit",
         "case_id": "write",
         "archive": "M17-slot_2_unit-write.json",
-        "sha256": "06B5F79E121BEE13D4B5EE5955861E55D33D21FD4FB97809AA7340C70A89E3F7",
+        "sha256": "707FAC5034B3F521FC6009755EF57660108ED27F0E446EA480D69BF18D88123B",
         "valid": true
       },
       {
         "field": "slot_3_character",
         "case_id": "write",
         "archive": "M17-slot_3_character-write.json",
-        "sha256": "905C4534DFFEA5C349AD4C6D5FFFB561EEDF2A1750528845814B3F65D934079F",
+        "sha256": "C52B1AB3EF75FF26ED3CF07C5E781A4E92451D048429E6C0B41EF205AF8704DA",
         "valid": true
       },
       {
         "field": "slot_3_unit",
         "case_id": "write",
         "archive": "M17-slot_3_unit-write.json",
-        "sha256": "E159C28527523A7FAA4F26F6C54AFEB40DB29B50854C3739E573B22FC0E469E1",
+        "sha256": "1D919897F1276A40BEF37AFABCEA0404730335829204A05BCBE64BCA7CB5539D",
         "valid": true
       },
       {
         "field": "slot_4_character",
         "case_id": "write",
         "archive": "M17-slot_4_character-write.json",
-        "sha256": "CFDB041099ED4A220A9F9704627A6C5565716E81D430F7F73FE55EA4DDF8C2A6",
+        "sha256": "16E3F78A9AED7AB759A746D04B5D3B4E1A7E6D31E0ED87E6C998A55EF9315CCA",
         "valid": true
       },
       {
         "field": "slot_4_unit",
         "case_id": "write",
         "archive": "M17-slot_4_unit-write.json",
-        "sha256": "CEE8B3A57380B973A3464680FF8F880BD0979A2DB954DB24A8845B5BEC574A83",
+        "sha256": "DFD479CDC5CF198E3FC00106DB7BCD475F4C49B29EC26437FB3D2CEAE569471F",
         "valid": true
       },
       {
         "field": "slot_5_character",
         "case_id": "write",
         "archive": "M17-slot_5_character-write.json",
-        "sha256": "D3319A0082B4A6F1EC91FD77923BF21D675F38BF6E0CE18F3C3F6B9BEE3C7728",
+        "sha256": "55F32E2C2EE0C72E4A461587257FDC8B36B691033475F68281754B366D1FC071",
         "valid": true
       },
       {
         "field": "slot_5_unit",
         "case_id": "write",
         "archive": "M17-slot_5_unit-write.json",
-        "sha256": "DB0E60F96476579CCD48A96BAA338CF7FCDA890CA67016F50F1507CE1B4F3AA2",
+        "sha256": "30A8C095ADE4F825CC1CCCEF10B7DD913476A040DB754B4B4FF331CE99181DEF",
         "valid": true
       },
       {
         "field": "slot_6_character",
         "case_id": "write",
         "archive": "M17-slot_6_character-write.json",
-        "sha256": "5935461039CE6D547D416749F6930244A06127F24C0506E849545980A589A782",
+        "sha256": "005520CE9C17616A677C3A09C4200C3D35763E3E60D843AE67E5332BEBCB62EA",
         "valid": true
       },
       {
         "field": "slot_6_unit",
         "case_id": "write",
         "archive": "M17-slot_6_unit-write.json",
-        "sha256": "7DEF598530D85FB86160303F828FF5E87C2E079595CB102694130CD97BF05DA3",
+        "sha256": "E81EC4B085C2D589A20420F370996387318B858558569C2BDC9C02B703E8B187",
         "valid": true
       }
     ]

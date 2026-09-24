@@ -535,6 +535,31 @@ class EditorProjectTests(unittest.TestCase):
             self.assertEqual(reopened.character_display_name(0x13), "查理")
             self.assertEqual(reopened.weapon_display_name(0x0B), "光束军刀")
 
+    def test_weapon_name_shared_pool_allows_balanced_growth(self) -> None:
+        project = RomProject.load(TARGET_ROM)
+        first = project.weapon_display_name(0x0B)
+        second = project.weapon_display_name(0x0D)
+        aliases = project.weapon_name_source_ids(0x0B)
+        before = bytes(project.working)
+
+        project.set_weapon_name_text(0x0B, "A")
+        project.set_weapon_name_text(0x0D, second + "A")
+        self.assertEqual(project.weapon_display_name(0x0B), "A")
+        self.assertEqual(project.weapon_display_name(0x0D), second + "A")
+        self.assertEqual(project.weapon_name_source_ids(0x0B), aliases)
+        self.assertFalse(any(issue.severity == "error" for issue in project.validate()))
+
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "weapon-name-pool.dcmod"
+            project.save_project(path)
+            reopened = RomProject.load_project(path, TARGET_ROM)
+            self.assertEqual(reopened.weapon_display_name(0x0B), "A")
+            self.assertEqual(reopened.weapon_display_name(0x0D), second + "A")
+        project.undo()
+        project.undo()
+        self.assertEqual(bytes(project.working), before)
+        self.assertEqual(project.weapon_display_name(0x0B), first)
+
     def test_direct_name_rejects_overflow_without_mutation(self) -> None:
         project = RomProject.load(TARGET_ROM)
         before = bytes(project.working)

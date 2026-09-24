@@ -478,7 +478,7 @@ class ReadableWeaponPage(WeaponPage):
         animation_tools = QHBoxLayout()
         self.animation_code_button = QPushButton("代码编辑")
         self.animation_code_button.setToolTip(
-            "展开当前我方/敌方动画页的等长十六进制代码编辑区。"
+            "展开当前我方/敌方动画页的等长十六进制代码编辑区；常用参数也可直接右键动画指令编辑。"
         )
         self.animation_code_button.clicked.connect(self._open_animation_code)
         self.animation_rules_button = QPushButton("规律…")

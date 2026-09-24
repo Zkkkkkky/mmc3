@@ -114,7 +114,12 @@ class LegacyToolDialogTests(QtTestCase):
             ["地图动画", "规律", "动画调用"],
         )
         self.assertEqual(dialog.animation_list.count(), 153)
-        self.assertEqual(dialog.instruction_table.rowCount(), 11)
+        # The command editor keeps spare rows visible so a beginner can see
+        # where structural insertion would occur.  The selected ROM record
+        # itself still contains the verified 11 decoded commands.
+        record = dialog.codec.record("map", 1)
+        self.assertEqual(len(record.instructions), 11)
+        self.assertGreaterEqual(dialog.instruction_table.rowCount(), len(record.instructions))
         self.assertIn("切换 00 区域图库", dialog.instruction_table.item(0, 0).text())
         self.assertEqual(dialog.instruction_table.item(0, 1).text(), "E0 0A")
         self.assertTrue(dialog.add_button.isEnabled())
@@ -122,6 +127,14 @@ class LegacyToolDialogTests(QtTestCase):
         self.assertTrue(dialog.code_button.isEnabled())
         self.assertIn("当前 ROM", dialog.read_only_status.text())
         self.assertEqual(dialog.rule_lists["movement"].count(), 157)
+        self.assertEqual(dialog.rule_category_tabs.count(), 3)
+        self.assertEqual(
+            [
+                dialog.rule_category_tabs.tabText(index)
+                for index in range(dialog.rule_category_tabs.count())
+            ],
+            ["背景规律", "运行规律", "组图规律"],
+        )
         self.assertGreater(dialog.call_table.rowCount(), 50)
         self._show(dialog)
         self.assertLess(self._top(dialog.animation_list, dialog), self._top(dialog.add_button, dialog))
@@ -557,11 +570,11 @@ class LegacyToolDialogTests(QtTestCase):
     def test_tool_geometry_and_offscreen_screenshots_render(self) -> None:
         flexible_dialogs = (
             ("converter", TextConverterDialog(), (473, 483)),
-            ("calculator", AttributeCalculatorDialog(), (1120, 780)),
+            ("calculator", AttributeCalculatorDialog(), (920, 650)),
         )
         additional_flexible_dialogs = (
-            ("save", SaveEditorDialog(), (1175, 834)),
-            ("other", OtherSettingsDialog(), (1060, 760)),
+            ("save", SaveEditorDialog(), (950, 650)),
+            ("other", OtherSettingsDialog(), (820, 620)),
         )
         font_dialog = FontLibraryDialog(project=self.project)
         self.assertLess(font_dialog.minimumWidth(), font_dialog.maximumWidth())

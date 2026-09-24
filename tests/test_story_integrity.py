@@ -13,6 +13,46 @@ TARGET_ROM = ROOT / "output" / "rom" / "DC_kuorong_464K.nes"
 
 
 class StoryIntegrityTests(unittest.TestCase):
+    def test_verified_story_group_repacks_in_place_without_expansion_plan(self) -> None:
+        project = RomProject.load(TARGET_ROM)
+        self.assertIsNone(project.expansion_plan)
+        original = project.get_story_text(0x32, 0)
+        replacement = original.raw[:-1] + b"\x01\xFF"
+        before = bytes(project.working)
+
+        used, capacity = project.story_text_replacement_usage(
+            0x32, 0, replacement
+        )
+        self.assertLess(used, capacity)
+        project.set_story_text_raw(0x32, 0, replacement)
+        self.assertEqual(project.get_story_text(0x32, 0).raw, replacement)
+        self.assertIsNone(project.expansion_plan)
+        project.undo()
+        self.assertEqual(bytes(project.working), before)
+        self.assertEqual(project.get_story_text(0x32, 0).raw, original.raw)
+        project.redo()
+        self.assertEqual(project.get_story_text(0x32, 0).raw, replacement)
+
+    def test_selector_39_repack_preserves_adjacent_runtime_data(self) -> None:
+        project = RomProject.load(TARGET_ROM)
+        codec = project.story_text_codec
+        group = codec.group_by_selector[0x39]
+        protected = codec.cpu_to_file_offset(group.prg_bank, 0x887E)
+        before = bytes(project.working[protected:protected + 0x100])
+        donor = project.get_story_text(0x39, 1)
+        project.set_story_text_raw(0x39, 1, donor.raw[2:])
+        record = project.get_story_text(0x39, 0)
+        replacement = record.raw[:-1] + record.raw[:2] + b"\xFF"
+        project.set_story_text_raw(0x39, 0, replacement)
+        self.assertEqual(
+            bytes(project.working[protected:protected + 0x100]), before
+        )
+
+        snapshot = bytes(project.working)
+        with self.assertRaisesRegex(ValueError, "安全池容量"):
+            project.set_story_text_raw(0x39, 0, b"\x01" * 0x800 + b"\xFF")
+        self.assertEqual(bytes(project.working), snapshot)
+
     def test_standalone_terminator_scan_is_glyph_token_safe(self) -> None:
         # FF is data when it follows a confirmed two-byte Chinese glyph lead.
         self.assertIsNone(StoryTextCodec.standalone_terminator_end(b"\xB8\xFF"))

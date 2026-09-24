@@ -6,13 +6,15 @@ from pathlib import Path
 from typing import Any
 
 from PySide6.QtCore import QSize, Qt, QTimer, Signal
-from PySide6.QtGui import QPixmap, QShowEvent
+from PySide6.QtGui import QColor, QPainter, QPen, QPixmap, QShowEvent
 from PySide6.QtWidgets import (
     QAbstractItemView,
+    QApplication,
     QBoxLayout,
     QCheckBox,
     QComboBox,
     QDialog,
+    QDialogButtonBox,
     QFileDialog,
     QFormLayout,
     QGridLayout,
@@ -23,6 +25,7 @@ from PySide6.QtWidgets import (
     QLineEdit,
     QListWidget,
     QListWidgetItem,
+    QMenu,
     QMessageBox,
     QPlainTextEdit,
     QPushButton,
@@ -48,6 +51,7 @@ from fc_rom_editor_core import RomProject
 
 from .action_event_page import ActionEventPage
 from .event_page import EventPage
+from .event_instruction_dialog import EventCodeDialog, EventInstructionDialog
 from .database_graphics import (
     decode_unit_body_script,
     palette_color,
@@ -2420,7 +2424,7 @@ class DatabaseDialog(TransactionalProjectDialog):
         parent: QWidget | None = None,
     ) -> None:
         super().__init__(project, title="数据库", parent=parent)
-        self.resize(1220, 840)
+        self.resize(1100, 760)
         self.setMinimumSize(900, 600)
 
         layout = QVBoxLayout(self)
@@ -2679,7 +2683,7 @@ class DatabaseDialog(TransactionalProjectDialog):
 
 
 class ChapterTitleDialog(QDialog):
-    """Safe fixed-capacity editor for one verified title tile script."""
+    """Safe shared-pool editor for one verified title tile script."""
 
     def __init__(
         self,
@@ -2691,51 +2695,89 @@ class ChapterTitleDialog(QDialog):
         self.project = project
         self.scenario_id = scenario_id
         self.record = project.get_chapter_title(scenario_id)
+        self._loading_segment = False
+        self._segment_initialized = False
         self.setWindowTitle("标题拼图")
-        self.resize(780, 650)
+        self.resize(700, 470)
+        self.setMinimumSize(660, 440)
 
         layout = QVBoxLayout(self)
-        summary = QLabel(
-            f"关卡 {scenario_id + 1:03d} · Bank $0B:${self.record.pointer:04X} · "
-            f"文件 0x{self.record.file_offset:05X} · "
-            f"固定 {self.record.capacity} 字节"
-        )
-        summary.setObjectName("hintText")
-        layout.addWidget(summary)
+        controls = QGridLayout()
+        self.segment_selector = QComboBox()
+        self.segment_x = QSpinBox()
+        self.segment_y = QSpinBox()
+        self.segment_width = QSpinBox()
+        for spin in (self.segment_x, self.segment_y, self.segment_width):
+            spin.setRange(0, 255)
+            spin.setMinimumWidth(68)
+        self.segment_width.setRange(1, 127)
+        self.segment_tiles = QLineEdit()
+        self.segment_tiles.setVisible(False)
+        self.segment_apply = QPushButton("应用当前段")
+        self.segment_apply.setVisible(False)
+        self.show_tile_numbers = QCheckBox("显示图块编号")
+        self.refresh_button = QPushButton("刷新")
+        self.code_button = QPushButton("查看拼图代码")
+        # The reference window labels the stored Y byte as title X and the
+        # stored X byte as title Y; preserve that visible convention.
+        controls.addWidget(QLabel("标题X坐标："), 0, 0)
+        controls.addWidget(self.segment_y, 0, 1)
+        controls.addWidget(QLabel("标题Y坐标："), 0, 2)
+        controls.addWidget(self.segment_x, 0, 3)
+        controls.addWidget(QLabel("标题宽度："), 0, 4)
+        controls.addWidget(self.segment_width, 0, 5)
+        controls.addWidget(self.refresh_button, 0, 6)
+        controls.addWidget(self.code_button, 0, 7)
+        layout.addLayout(controls)
 
-        bank_group = QGroupBox("三个 CHR 图库（每页 64 图块）")
-        bank_layout = QGridLayout(bank_group)
-        self.bank_spins: list[QSpinBox] = []
-        self.bank_previews: list[QLabel] = []
-        bank_limit = max(0, project.chr_tile_count // 64 - 1)
-        for index, value in enumerate(self.record.chr_banks):
-            spin = QSpinBox()
-            spin.setRange(0, bank_limit)
-            spin.setDisplayIntegerBase(16)
-            spin.setPrefix("$")
-            spin.setValue(value)
-            spin.valueChanged.connect(self._refresh_preview)
-            preview = QLabel()
-            preview.setAlignment(Qt.AlignmentFlag.AlignCenter)
-            preview.setMinimumSize(136, 136)
-            preview.setStyleSheet("background: black; border: 1px solid #404040;")
-            bank_layout.addWidget(QLabel(f"图库 {index + 1}"), 0, index)
-            bank_layout.addWidget(spin, 1, index)
-            bank_layout.addWidget(preview, 2, index)
-            self.bank_spins.append(spin)
-            self.bank_previews.append(preview)
-        layout.addWidget(bank_group)
-
-        preview_group = QGroupBox("标题预览（脚本最后一段）")
-        preview_layout = QVBoxLayout(preview_group)
+        layout.addWidget(QLabel("图块："))
         self.title_preview = QLabel()
         self.title_preview.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.title_preview.setMinimumHeight(72)
+        self.title_preview.setMaximumHeight(86)
         self.title_preview.setStyleSheet("background: black; border: 1px solid #202020;")
-        preview_layout.addWidget(self.title_preview)
-        layout.addWidget(preview_group)
+        layout.addWidget(self.title_preview)
 
         self.segment_table = QTableWidget(0, 5)
+        self.segment_table.hide()
+        self.code_edit = QPlainTextEdit(self.record.raw.hex(" ").upper())
+        self.code_edit.setObjectName("chapterTitleCode")
+        self.code_edit.hide()
+        self.code_edit.textChanged.connect(self._refresh_preview)
+
+        bank_layout = QGridLayout()
+        self.bank_spins: list[ChrBankComboBox] = []
+        self.bank_previews: list[QLabel] = []
+        bank_limit = max(0, project.chr_tile_count // 64 - 1)
+        for index, value in enumerate(self.record.chr_banks):
+            selector = ChrBankComboBox()
+            selector.set_project(project)
+            selector.setRange(0, bank_limit)
+            selector.setValue(value)
+            selector.valueChanged.connect(self._refresh_preview)
+            preview = QLabel()
+            preview.setAlignment(Qt.AlignmentFlag.AlignCenter)
+            preview.setMinimumSize(150, 150)
+            preview.setSizePolicy(
+                QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding
+            )
+            preview.setStyleSheet("background: black; border: 1px solid #404040;")
+            bank_layout.addWidget(QLabel(f"图库地址{index + 1}："), 0, index)
+            bank_layout.addWidget(selector, 1, index)
+            bank_layout.addWidget(preview, 2, index)
+            self.bank_spins.append(selector)
+            self.bank_previews.append(preview)
+        layout.addLayout(bank_layout, 1)
+
+        footer = QHBoxLayout()
+        self.selected_tile_label = QLabel("当前选中图块：00")
+        self.selected_tile_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        footer.addWidget(self.show_tile_numbers)
+        footer.addStretch(1)
+        footer.addWidget(self.selected_tile_label)
+        footer.addStretch(1)
+        layout.addLayout(footer)
+
         self.segment_table.setHorizontalHeaderLabels(
             ("段", "X", "Y", "宽度", "图块数")
         )
@@ -2743,32 +2785,25 @@ class ChapterTitleDialog(QDialog):
             QHeaderView.ResizeMode.Stretch
         )
         self.segment_table.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
-        self.segment_table.setMaximumHeight(130)
-        layout.addWidget(self.segment_table)
-
-        layout.addWidget(QLabel("拼图代码（FE X Y 宽度 + 两行图块；FF 结束）"))
-        self.code_edit = QPlainTextEdit(self.record.raw.hex(" ").upper())
-        self.code_edit.setObjectName("chapterTitleCode")
-        self.code_edit.setMaximumHeight(120)
-        self.code_edit.textChanged.connect(self._refresh_preview)
-        layout.addWidget(self.code_edit)
         self.status = QLabel()
         self.status.setObjectName("hintText")
         self.status.setWordWrap(True)
-        layout.addWidget(self.status)
+        self.status.hide()
 
         buttons = QHBoxLayout()
-        self.refresh_button = QPushButton("刷新预览")
         self.ok_button = QPushButton("确定")
         self.cancel_button = QPushButton("取消")
-        self.refresh_button.clicked.connect(self._refresh_preview)
+        self.refresh_button.clicked.connect(self._apply_segment_fields)
+        self.code_button.clicked.connect(self._open_code_editor)
         self.ok_button.clicked.connect(self.accept)
         self.cancel_button.clicked.connect(self.reject)
-        buttons.addWidget(self.refresh_button)
         buttons.addStretch(1)
         buttons.addWidget(self.ok_button)
         buttons.addWidget(self.cancel_button)
         layout.addLayout(buttons)
+        self.segment_selector.currentIndexChanged.connect(self._load_segment)
+        self.segment_apply.clicked.connect(self._apply_segment_fields)
+        self.show_tile_numbers.toggled.connect(self._refresh_preview)
         self._refresh_preview()
 
     def _banks(self) -> tuple[int, int, int]:
@@ -2807,14 +2842,24 @@ class ChapterTitleDialog(QDialog):
                     (bank,),
                     CHAPTER_TITLE_PALETTE_NES[1:],
                 )
-                preview.setPixmap(
-                    QPixmap.fromImage(image).scaled(
-                        128,
-                        128,
-                        Qt.AspectRatioMode.KeepAspectRatio,
-                        Qt.TransformationMode.FastTransformation,
-                    )
+                pixmap = QPixmap.fromImage(image).scaled(
+                    128,
+                    128,
+                    Qt.AspectRatioMode.KeepAspectRatio,
+                    Qt.TransformationMode.FastTransformation,
                 )
+                if self.show_tile_numbers.isChecked():
+                    painter = QPainter(pixmap)
+                    painter.setPen(QPen(QColor("#ffd500")))
+                    scale = max(1, pixmap.width() // 64)
+                    for tile in range(64):
+                        painter.drawText(
+                            (tile % 8) * 8 * scale + 1,
+                            (tile // 8) * 8 * scale + min(11, 8 * scale - 1),
+                            f"{tile:02X}",
+                        )
+                    painter.end()
+                preview.setPixmap(pixmap)
             self.title_preview.setPixmap(
                 render_title_segment(
                     self.project,
@@ -2829,10 +2874,27 @@ class ChapterTitleDialog(QDialog):
                 ):
                     text = str(value) if column in (0, 3, 4) else f"${value:02X}"
                     self.segment_table.setItem(row, column, QTableWidgetItem(text))
+            selected = self.segment_selector.currentIndex()
+            if not self._segment_initialized:
+                selected = len(segments) - 1
+                self._segment_initialized = True
+            self.segment_selector.blockSignals(True)
+            self.segment_selector.clear()
+            for index, segment in enumerate(segments):
+                self.segment_selector.addItem(
+                    f"段 {index + 1} · X=${segment.x:02X} Y=${segment.y:02X} "
+                    f"宽 {segment.width}",
+                    index,
+                )
+            self.segment_selector.setCurrentIndex(
+                min(max(selected, 0), len(segments) - 1)
+            )
+            self.segment_selector.blockSignals(False)
+            self._load_segment()
             self.status.setStyleSheet("color: #18794e;")
             self.status.setText(
-                f"结构有效 · {len(raw)} / {self.record.capacity} 字节 · "
-                f"{len(segments)} 段 · 指针保持不变"
+                f"结构有效 · 当前记录 {len(raw)} 字节 · "
+                f"{len(segments)} 段 · 保存时自动重排 32 项标题指针"
             )
             self.ok_button.setEnabled(True)
         except (RomFormatError, ValueError) as error:
@@ -2841,6 +2903,94 @@ class ChapterTitleDialog(QDialog):
             self.status.setStyleSheet("color: #b42318;")
             self.status.setText(str(error))
             self.ok_button.setEnabled(False)
+
+    def _open_code_editor(self) -> None:
+        """Keep raw code available without occupying the reference layout."""
+
+        dialog = QDialog(self)
+        dialog.setWindowTitle("标题拼图代码")
+        dialog.resize(620, 260)
+        layout = QVBoxLayout(dialog)
+        hint = QLabel(
+            "高级功能：每段格式为 FE X Y 宽度 图块…，最后以 FF 结束。"
+            "普通修改只需使用主窗口中的坐标、宽度和图库。"
+        )
+        hint.setWordWrap(True)
+        layout.addWidget(hint)
+        editor = QPlainTextEdit(self.code_edit.toPlainText())
+        editor.setObjectName("chapterTitleCodePopup")
+        layout.addWidget(editor, 1)
+        buttons = QDialogButtonBox(
+            QDialogButtonBox.StandardButton.Ok
+            | QDialogButtonBox.StandardButton.Cancel
+        )
+        buttons.button(QDialogButtonBox.StandardButton.Ok).setText("确定")
+        buttons.button(QDialogButtonBox.StandardButton.Cancel).setText("取消")
+        buttons.accepted.connect(dialog.accept)
+        buttons.rejected.connect(dialog.reject)
+        layout.addWidget(buttons)
+        if dialog.exec() == QDialog.DialogCode.Accepted:
+            self.code_edit.setPlainText(editor.toPlainText())
+
+    def _load_segment(self, *_args) -> None:
+        try:
+            segments = ChapterTitleCodec.parse_segments(self._raw())
+            index = self.segment_selector.currentData()
+            index = 0 if index is None else int(index)
+            segment = segments[index]
+        except (IndexError, RomFormatError, ValueError):
+            return
+        self._loading_segment = True
+        try:
+            self.segment_x.setValue(segment.x)
+            self.segment_y.setValue(segment.y)
+            self.segment_width.setValue(segment.width)
+            self.segment_tiles.setText(segment.tiles.hex(" ").upper())
+        finally:
+            self._loading_segment = False
+
+    def _apply_segment_fields(self) -> None:
+        if self._loading_segment:
+            return
+        try:
+            segments = list(ChapterTitleCodec.parse_segments(self._raw()))
+            index = self.segment_selector.currentData()
+            index = 0 if index is None else int(index)
+            compact = " ".join(self.segment_tiles.text().split())
+            tiles = bytes.fromhex(compact)
+            width = self.segment_width.value()
+            if len(tiles) != width * 2:
+                raise ValueError(
+                    f"宽度 {width} 需要 {width * 2} 个图块，当前为 {len(tiles)} 个。"
+                )
+            replacement = bytearray()
+            for segment_index, segment in enumerate(segments):
+                if segment_index == index:
+                    x = self.segment_x.value()
+                    y = self.segment_y.value()
+                    segment_width = width
+                    segment_tiles = tiles
+                else:
+                    x = segment.x
+                    y = segment.y
+                    segment_width = segment.width
+                    segment_tiles = segment.tiles
+                replacement.extend((0xFE, x, y, segment_width))
+                replacement.extend(segment_tiles)
+            replacement.append(0xFF)
+            codec = self.project.chapter_title_codec
+            if codec is None:
+                raise ValueError("当前 ROM 没有已验证的关卡标题表。")
+            codec.replacement_patches(
+                self.project.working,
+                self.scenario_id,
+                self._banks(),
+                bytes(replacement),
+            )
+        except (IndexError, RomFormatError, ValueError) as error:
+            QMessageBox.warning(self, "无法应用标题段", str(error))
+            return
+        self.code_edit.setPlainText(bytes(replacement).hex(" ").upper())
 
     def accept(self) -> None:
         try:
@@ -2856,7 +3006,7 @@ class ChapterTitleDialog(QDialog):
 
 
 class ScenarioDialog(TransactionalProjectDialog):
-    """Reference-shaped scenario window backed by hidden verified editors."""
+    """Reference-shaped scenario window with right-click event editors."""
 
     TAB_LABELS = (
         "关卡设置",
@@ -3136,11 +3286,9 @@ class ScenarioDialog(TransactionalProjectDialog):
         self.setup_event_tabs = QTabWidget()
         self.setup_event_tabs.setObjectName("legacyScenarioEventTabs")
         self.setup_event_lists: list[QListWidget] = []
-        self.setup_event_edit_buttons: list[QPushButton] = []
         for label, controller in zip(self.EVENT_TAB_LABELS, self.setup_event_pages):
-            panel, overview, edit_button = self._setup_event_list_panel(controller)
+            panel, overview = self._setup_event_list_panel(controller)
             self.setup_event_lists.append(overview)
-            self.setup_event_edit_buttons.append(edit_button)
             self.setup_event_tabs.addTab(panel, label)
         event_layout.addWidget(self.setup_event_tabs)
         page_layout.addWidget(event_group, 1)
@@ -3148,8 +3296,8 @@ class ScenarioDialog(TransactionalProjectDialog):
 
     def _setup_event_list_panel(
         self, controller: LegacyScenarioEventsPage
-    ) -> tuple[QWidget, QListWidget, QPushButton]:
-        """Expose the reference list while keeping raw editing in a dialog."""
+    ) -> tuple[QWidget, QListWidget]:
+        """Expose the reference list; editing starts from its right-click menu."""
 
         host = QWidget()
         layout = QVBoxLayout(host)
@@ -3157,23 +3305,145 @@ class ScenarioDialog(TransactionalProjectDialog):
         overview = QListWidget()
         overview.setAlternatingRowColors(True)
         overview.setUniformItemSizes(True)
-        overview.setToolTip("双击事件指令打开等长参数编辑。")
+        overview.setToolTip("鼠标右键事件指令，再选择“编辑”或“代码编辑”。")
         overview.currentRowChanged.connect(controller.record_list.setCurrentRow)
-        overview.itemDoubleClicked.connect(
-            lambda _item, page=controller: self._open_advanced_editor(
-                page, "事件指令编辑"
-            )
-        )
-        edit_button = QPushButton("编辑所选事件指令…")
-        edit_button.setToolTip("打开当前所选事件的等长参数编辑器；也可以双击列表行。")
-        edit_button.clicked.connect(
-            lambda _checked=False, page=controller: self._open_advanced_editor(
-                page, "事件指令编辑"
-            )
-        )
+        self._attach_setup_event_context_menu(overview, controller)
         layout.addWidget(overview, 1)
-        layout.addWidget(edit_button, 0, Qt.AlignmentFlag.AlignLeft)
-        return host, overview, edit_button
+        return host, overview
+
+    @staticmethod
+    def _disabled_structure_action(action, explanation: str) -> None:
+        action.setEnabled(False)
+        action.setToolTip(explanation)
+        action.setStatusTip(explanation)
+
+    def _build_setup_event_context_menu(
+        self,
+        listing: QListWidget,
+        controller: LegacyScenarioEventsPage,
+    ) -> QMenu:
+        """Build the reference event menu without inventing script relocation."""
+
+        menu = QMenu(listing)
+        blocked = "章节脚本结构重排尚无该 ROM 的安全证据，当前只开放等长编辑。"
+        insert_before = menu.addAction("插入(接上)")
+        insert_after = menu.addAction("插入(接下)")
+        self._disabled_structure_action(insert_before, blocked)
+        self._disabled_structure_action(insert_after, blocked)
+        menu.addSeparator()
+        reinforcement = menu.addAction("添加增援")
+        self._disabled_structure_action(reinforcement, blocked)
+        menu.addSeparator()
+        edit = menu.addAction("编辑")
+        edit.triggered.connect(
+            lambda: self._open_advanced_editor(controller, "事件指令")
+        )
+        code = menu.addAction("代码编辑")
+        code.triggered.connect(lambda: self._open_setup_event_code_editor(controller))
+        menu.addSeparator()
+        cut = menu.addAction("剪切")
+        self._disabled_structure_action(cut, blocked)
+        copy = menu.addAction("复制")
+        copy.triggered.connect(lambda: self._copy_setup_event(controller, False))
+        copy_all = menu.addAction("复制全部")
+        copy_all.triggered.connect(lambda: self._copy_setup_event(controller, True))
+        paste = menu.addAction("粘贴")
+        paste.triggered.connect(lambda: self._paste_setup_event(controller, False))
+        paste_all = menu.addAction("粘贴全部")
+        paste_all.triggered.connect(lambda: self._paste_setup_event(controller, True))
+        menu.addSeparator()
+        delete = menu.addAction("删除")
+        clear = menu.addAction("清空")
+        self._disabled_structure_action(delete, blocked)
+        self._disabled_structure_action(clear, blocked)
+        has_selection = listing.currentItem() is not None
+        for action in (edit, code, copy, copy_all, paste, paste_all):
+            action.setEnabled(has_selection)
+        return menu
+
+    def _attach_setup_event_context_menu(
+        self, listing: QListWidget, controller: LegacyScenarioEventsPage
+    ) -> None:
+        listing.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
+
+        def show(position) -> None:
+            item = listing.itemAt(position)
+            if item is None:
+                return
+            listing.setCurrentItem(item)
+            self._build_setup_event_context_menu(listing, controller).exec(
+                listing.viewport().mapToGlobal(position)
+            )
+
+        listing.customContextMenuRequested.connect(show)
+
+    def _open_setup_event_code_editor(
+        self, controller: LegacyScenarioEventsPage
+    ) -> None:
+        row = controller.record_list.currentRow()
+        if not 0 <= row < len(controller._instructions):
+            return
+        instruction = controller._instructions[row]
+        dialog = EventCodeDialog(instruction.raw, len(instruction.raw), self)
+        if dialog.exec() != QDialog.DialogCode.Accepted:
+            return
+        controller.raw_edit.setText(dialog.raw().hex(" ").upper())
+        controller.apply_changes()
+        self._refresh_overviews()
+
+    @staticmethod
+    def _copy_setup_event(
+        controller: LegacyScenarioEventsPage, copy_all: bool
+    ) -> None:
+        if copy_all:
+            lines = [
+                controller._drafts.get(item.file_offset, item.raw.hex(" ").upper())
+                for item in controller._instructions
+            ]
+            QApplication.clipboard().setText("\n".join(lines))
+            return
+        row = controller.record_list.currentRow()
+        if 0 <= row < len(controller._instructions):
+            item = controller._instructions[row]
+            QApplication.clipboard().setText(
+                controller._drafts.get(item.file_offset, item.raw.hex(" ").upper())
+            )
+
+    def _paste_setup_event(
+        self, controller: LegacyScenarioEventsPage, paste_all: bool
+    ) -> None:
+        text = QApplication.clipboard().text().strip()
+        rows = [line.strip() for line in text.splitlines() if line.strip()]
+        if not paste_all:
+            rows = [text]
+            targets = [controller.record_list.currentRow()]
+        else:
+            targets = list(range(len(controller._instructions)))
+        if len(rows) != len(targets):
+            QMessageBox.warning(
+                self,
+                "无法粘贴事件指令",
+                f"需要 {len(targets)} 条等长指令，剪贴板中有 {len(rows)} 条。",
+            )
+            return
+        replacements: list[tuple[Any, bytes]] = []
+        try:
+            for row, raw_text in zip(targets, rows):
+                if not 0 <= row < len(controller._instructions):
+                    raise ValueError("请先选择一条事件指令。")
+                instruction = controller._instructions[row]
+                raw = bytes.fromhex(raw_text)
+                controller.codec.replacement_patch(instruction, raw)
+                replacements.append((instruction, raw))
+        except (AttributeError, ValueError, IndexError) as error:
+            QMessageBox.warning(self, "无法粘贴事件指令", str(error))
+            return
+        for instruction, raw in replacements:
+            if raw == instruction.raw:
+                controller._drafts.pop(instruction.file_offset, None)
+            else:
+                controller._drafts[instruction.file_offset] = raw.hex(" ").upper()
+        controller._select()
 
     def _event_list_panel(
         self, controller: EventPage
@@ -3187,6 +3457,7 @@ class ScenarioDialog(TransactionalProjectDialog):
         overview = QListWidget()
         overview.setAlternatingRowColors(True)
         overview.setUniformItemSizes(True)
+        overview.setToolTip("双击或右键所选事件打开参数编辑器。")
         overview.setProperty("eventSearch", search)
         search.textChanged.connect(
             lambda text, listing=overview: self._filter_story_overview(listing, text)
@@ -3206,6 +3477,13 @@ class ScenarioDialog(TransactionalProjectDialog):
             lambda _item, page=controller: self._open_advanced_editor(
                 page, "事件参数编辑"
             )
+        )
+        self._attach_edit_context_menu(
+            overview,
+            "编辑所选事件参数…",
+            lambda page=controller: self._open_advanced_editor(
+                page, "事件参数编辑"
+            ),
         )
         layout.addWidget(search)
         layout.addWidget(overview, 1)
@@ -3241,6 +3519,9 @@ class ScenarioDialog(TransactionalProjectDialog):
         group_layout = QVBoxLayout(group)
         self.persuasion_overview_list = QListWidget()
         self.persuasion_overview_list.setAlternatingRowColors(True)
+        self.persuasion_overview_list.setToolTip(
+            "双击或右键所选规则打开劝降条件编辑器。"
+        )
         self.persuasion_overview_list.currentItemChanged.connect(
             self._select_persuasion_item
         )
@@ -3252,6 +3533,13 @@ class ScenarioDialog(TransactionalProjectDialog):
             lambda _item: self._open_advanced_editor(
                 self.persuasion_page, "劝降事件编辑"
             )
+        )
+        self._attach_edit_context_menu(
+            self.persuasion_overview_list,
+            "编辑所选劝降条件…",
+            lambda: self._open_advanced_editor(
+                self.persuasion_page, "劝降事件编辑"
+            ),
         )
         group_layout.addWidget(self.persuasion_overview_list, 1)
         scope_note = QLabel("这里列出全部已验证规则；所在关卡是每条规则自身的条件，不受关卡侧栏筛选。")
@@ -3288,6 +3576,7 @@ class ScenarioDialog(TransactionalProjectDialog):
         overview = QListWidget()
         overview.setAlternatingRowColors(True)
         overview.setUniformItemSizes(True)
+        overview.setToolTip("双击或右键所选文字打开编辑器。")
         overview.setProperty("textGroupSelector", selector)
         overview.setProperty("textSearch", search)
         selector.currentIndexChanged.connect(
@@ -3313,6 +3602,13 @@ class ScenarioDialog(TransactionalProjectDialog):
                 page, caption
             )
         )
+        self._attach_edit_context_menu(
+            overview,
+            f"编辑所选{title}…",
+            lambda page=controller, caption=title: self._open_advanced_editor(
+                page, caption
+            ),
+        )
         note = QLabel(note_text)
         note.setObjectName("hintText")
         note.setWordWrap(True)
@@ -3326,6 +3622,37 @@ class ScenarioDialog(TransactionalProjectDialog):
         setattr(self, f"{attribute_name}_group_selector", selector)
         setattr(self, f"{attribute_name}_search", search)
         return host
+
+    @staticmethod
+    def _build_edit_context_menu(
+        listing: QListWidget,
+        action_text: str,
+        callback: Callable[[], None],
+    ) -> QMenu:
+        menu = QMenu(listing)
+        action = menu.addAction(action_text)
+        action.triggered.connect(callback)
+        action.setEnabled(listing.currentItem() is not None)
+        return menu
+
+    def _attach_edit_context_menu(
+        self,
+        listing: QListWidget,
+        action_text: str,
+        callback: Callable[[], None],
+    ) -> None:
+        listing.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
+
+        def show(position) -> None:
+            item = listing.itemAt(position)
+            if item is None:
+                return
+            listing.setCurrentItem(item)
+            self._build_edit_context_menu(
+                listing, action_text, callback
+            ).exec(listing.viewport().mapToGlobal(position))
+
+        listing.customContextMenuRequested.connect(show)
 
     def _configure_event_views(self) -> None:
         map_index = self.map_event_page.kind_filter.findText("触发条件与行动判定")
@@ -3563,7 +3890,7 @@ class ScenarioDialog(TransactionalProjectDialog):
             self.initial_victory.setPlainText(display)
             self.initial_victory_status.setText(
                 f"ROM $3D:${0x8000 + record.file_offset - 0x7A010:04X} · "
-                f"正文 {record.body_capacity} 字节 · 当前固定容量"
+                f"正文 {record.body_capacity} 字节 · 13 关共享池内可变长"
             )
         finally:
             self.initial_victory.blockSignals(previous)
@@ -3595,14 +3922,13 @@ class ScenarioDialog(TransactionalProjectDialog):
             body = self._pending_initial_victory_body()
             if self.project is None or self.project.chapter_victory_codec is None:
                 raise ValueError("当前 ROM 没有已验证的初始胜利文字表。")
-            record = self.project.get_chapter_victory(self.current_scenario_id)
-            self.project.chapter_victory_codec.replacement_patch(
+            self.project.chapter_victory_codec.replacement_patches(
                 self.project.working,
                 self.current_scenario_id,
                 body,
             )
             self.initial_victory_status.setText(
-                f"正文 {len(body)} / {record.body_capacity} 字节 · 有尚未应用的改动"
+                f"正文 {len(body)} 字节 · 共享池可重排 · 有尚未应用的改动"
             )
             self.initial_victory_status.setStyleSheet(
                 "color: #b45309; font-weight: 650;"
@@ -3686,7 +4012,8 @@ class ScenarioDialog(TransactionalProjectDialog):
                 instruction = page._instructions[row]
                 item.setToolTip(
                     f"Bank ${instruction.bank:02X} · ${instruction.address:04X} · "
-                    f"{instruction.raw.hex(' ').upper()}\n双击打开等长参数编辑。"
+                    f"{instruction.raw.hex(' ').upper()}\n"
+                    "选择后在下方编辑；右键打开事件菜单。"
                 )
             overview.addItem(item)
         if overview.count():
@@ -3857,6 +4184,46 @@ class ScenarioDialog(TransactionalProjectDialog):
         self._refresh_story_overview(self.victory_page, self.victory_overview_list)
 
     def _open_advanced_editor(self, page: ProjectPage, title: str) -> None:
+        if isinstance(page, LegacyScenarioEventsPage):
+            row = page.record_list.currentRow()
+            if not 0 <= row < len(page._instructions):
+                return
+            instruction = page._instructions[row]
+            dialog = EventInstructionDialog(
+                instruction.raw,
+                self,
+                title=title,
+                context=(
+                    f"{LegacyScenarioCodec.PHASE_LABELS[page.phase]} · "
+                    f"关卡 {page.scenario_id + 1:03d} · "
+                    f"Bank ${instruction.bank:02X}:${instruction.address:04X}"
+                ),
+            )
+            if dialog.exec() != QDialog.DialogCode.Accepted:
+                return
+            page.raw_edit.setText(dialog.raw().hex(" ").upper())
+            page.apply_changes()
+            self._refresh_overviews()
+            return
+        if isinstance(page, EventPage):
+            instruction = page._selected_instruction()
+            if instruction is None:
+                return
+            dialog = EventInstructionDialog(
+                instruction.raw,
+                self,
+                title=title,
+                context=(
+                    f"地址 ${instruction.address:04X} · "
+                    f"{page._context_text(instruction)}"
+                ),
+            )
+            if dialog.exec() != QDialog.DialogCode.Accepted:
+                return
+            page.raw.setText(dialog.raw().hex(" ").upper())
+            page._apply_raw()
+            self._refresh_overviews()
+            return
         popup = QDialog(self)
         popup.setWindowTitle(title)
         popup.setModal(True)

@@ -462,6 +462,8 @@ class LegacyWindowTests(QtTestCase):
                 for index in range(dialog.setup_event_tabs.count())
             )
         )
+        self.assertFalse(hasattr(dialog, "setup_event_editors"))
+        self.assertFalse(hasattr(dialog, "setup_event_edit_buttons"))
         self.assertTrue(
             all(
                 overview is not page.record_list
@@ -470,11 +472,59 @@ class LegacyWindowTests(QtTestCase):
                 )
             )
         )
-        self.assertEqual(len(dialog.setup_event_edit_buttons), 3)
-        self.assertTrue(all(button.isEnabled() for button in dialog.setup_event_edit_buttons))
-        self.assertTrue(
-            all(button.text() == "编辑所选事件指令…" for button in dialog.setup_event_edit_buttons)
+        context_lists = (
+            *dialog.setup_event_lists,
+            dialog.persuasion_overview_list,
+            dialog.map_event_list,
+            dialog.story_overview_list,
+            dialog.victory_overview_list,
         )
+        self.assertTrue(
+            all(
+                listing.contextMenuPolicy()
+                == Qt.ContextMenuPolicy.CustomContextMenu
+                for listing in context_lists
+            )
+        )
+        self.assertTrue(all("右键" in listing.toolTip() for listing in context_lists))
+        setup_menu = dialog._build_setup_event_context_menu(
+            dialog.setup_event_lists[0],
+            dialog.setup_event_pages[0],
+        )
+        self.assertEqual(
+            [action.text() for action in setup_menu.actions()],
+            [
+                "插入(接上)",
+                "插入(接下)",
+                "",
+                "添加增援",
+                "",
+                "编辑",
+                "代码编辑",
+                "",
+                "剪切",
+                "复制",
+                "复制全部",
+                "粘贴",
+                "粘贴全部",
+                "",
+                "删除",
+                "清空",
+            ],
+        )
+        enabled = {
+            action.text(): action.isEnabled()
+            for action in setup_menu.actions()
+            if not action.isSeparator()
+        }
+        self.assertFalse(enabled["插入(接上)"])
+        self.assertFalse(enabled["添加增援"])
+        self.assertTrue(enabled["编辑"])
+        self.assertTrue(enabled["代码编辑"])
+        self.assertTrue(enabled["复制"])
+        self.assertTrue(enabled["粘贴"])
+        self.assertFalse(enabled["删除"])
+        self.assertFalse(enabled["清空"])
         self.assertEqual(dialog.space_button.text(), ScenarioDialog.SPACE_BUTTON_TEXT)
         self.assertTrue(dialog.space_button.isEnabled())
         self.assertFalse(dialog.action_event_page.isHidden())
@@ -541,7 +591,7 @@ class LegacyWindowTests(QtTestCase):
 
         self.assertEqual(controller.record_list.currentRow(), 1)
         self.assertEqual(overview.item(1).text(), controller.record_list.item(1).text())
-        self.assertIn("双击", overview.item(1).toolTip())
+        self.assertIn("右键", overview.item(1).toolTip())
 
     def test_scenario_open_does_not_manufacture_unknown_opcode_drafts(self) -> None:
         dialog = self._show(ScenarioDialog(self.project, initial_scenario_id=0))

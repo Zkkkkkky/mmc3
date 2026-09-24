@@ -11,6 +11,7 @@ from PySide6.QtWidgets import (
     QLineEdit,
     QListWidget,
     QListWidgetItem,
+    QMenu,
     QPushButton,
     QSplitter,
     QVBoxLayout,
@@ -22,6 +23,7 @@ from fc_editor.codecs.action_event import ActionEventRecord
 from fc_editor.codecs.chapter_event import ChapterEventCodec
 
 from .pages import ProjectPage
+from .event_instruction_dialog import EventInstructionDialog
 
 
 def _load_action_names() -> tuple[str, ...]:
@@ -55,6 +57,8 @@ class ActionEventPage(ProjectPage):
     """Reference-shaped editor for the independent 256-entry action table."""
 
     transaction_sync_group = "action_event"
+    _instruction_clipboard: bytes | None = None
+    _record_clipboard: tuple[bytes, int] | None = None
 
     def __init__(self) -> None:
         super().__init__()
@@ -81,6 +85,12 @@ class ActionEventPage(ProjectPage):
         self.action_list = QListWidget()
         self.action_list.setAlternatingRowColors(True)
         self.action_list.setUniformItemSizes(True)
+        self.action_list.setContextMenuPolicy(
+            Qt.ContextMenuPolicy.CustomContextMenu
+        )
+        self.action_list.setToolTip(
+            "右键菜单与参考版一致：复制、粘贴完整行动，或清空当前项下方的行动。"
+        )
         actions_layout.addWidget(self.action_list)
         splitter.addWidget(actions)
 
@@ -92,6 +102,13 @@ class ActionEventPage(ProjectPage):
         self.instruction_list = QListWidget()
         self.instruction_list.setAlternatingRowColors(True)
         self.instruction_list.setUniformItemSizes(True)
+        self.instruction_list.setContextMenuPolicy(
+            Qt.ContextMenuPolicy.CustomContextMenu
+        )
+        self.instruction_list.setToolTip(
+            "右键菜单与参考版一致：接上/接下、添加增援、编辑、代码编辑、"
+            "剪切、复制、复制全部、粘贴、粘贴全部、删除和清空。"
+        )
         self.raw = QLineEdit()
         self.raw.setPlaceholderText("一条完整指令，例如 60 05")
         self.pending_state = QLabel("请选择指令。")
@@ -104,10 +121,12 @@ class ActionEventPage(ProjectPage):
         editor_layout.addWidget(self.pending_state)
 
         edit_buttons = QHBoxLayout()
+        self.visual_edit_button = QPushButton("可视化编辑…")
         self.apply_button = QPushButton("编辑")
         self.insert_before_button = QPushButton("插入（接上）")
         self.insert_after_button = QPushButton("插入（接下）")
         self.delete_button = QPushButton("删除")
+        edit_buttons.addWidget(self.visual_edit_button)
         edit_buttons.addWidget(self.apply_button)
         edit_buttons.addWidget(self.insert_before_button)
         edit_buttons.addWidget(self.insert_after_button)
@@ -138,7 +157,14 @@ class ActionEventPage(ProjectPage):
         self.search.textChanged.connect(self._filter_actions)
         self.action_list.currentItemChanged.connect(self._action_changed)
         self.instruction_list.currentItemChanged.connect(self._instruction_changed)
+        self.action_list.customContextMenuRequested.connect(
+            self._show_action_context_menu
+        )
+        self.instruction_list.customContextMenuRequested.connect(
+            self._show_instruction_context_menu
+        )
         self.raw.textChanged.connect(self._update_pending_state)
+        self.visual_edit_button.clicked.connect(self._open_instruction_editor)
         self.apply_button.clicked.connect(self._apply_raw)
         self.insert_before_button.clicked.connect(
             lambda: self._insert_raw(after=False)
@@ -151,6 +177,120 @@ class ActionEventPage(ProjectPage):
         self.paste_button.clicked.connect(self.paste_instruction)
         self.reset_button.clicked.connect(self._reset_action)
         self._set_editor_enabled(False)
+
+    @staticmethod
+    def _select_context_item(listing: QListWidget, position) -> bool:
+        item = listing.itemAt(position)
+        if item is None:
+            return False
+        listing.setCurrentItem(item)
+        return True
+
+    def _build_action_context_menu(self) -> QMenu:
+        menu = QMenu(self.action_list)
+        copy = menu.addAction("复制")
+        copy.triggered.connect(self.copy_all_instructions)
+        paste = menu.addAction("粘贴")
+        paste.triggered.connect(self.paste_all_instructions)
+        clear = menu.addAction("清空下方")
+        clear.triggered.connect(self.clear_actions_below)
+        enabled = self._record() is not None
+        copy.setEnabled(enabled)
+        paste.setEnabled(enabled and type(self)._record_clipboard is not None)
+        clear.setEnabled(enabled)
+        return menu
+
+    def _show_action_context_menu(self, position) -> None:
+        if not self._select_context_item(self.action_list, position):
+            return
+        self._build_action_context_menu().exec(
+            self.action_list.viewport().mapToGlobal(position)
+        )
+
+    def _focus_raw_editor(self) -> None:
+        if self._selected_instruction() is None:
+            return
+        self.raw.setFocus(Qt.FocusReason.ShortcutFocusReason)
+        self.raw.selectAll()
+
+    def _open_instruction_editor(self) -> None:
+        instruction = self._selected_instruction()
+        if instruction is None:
+            return
+        try:
+            raw = self._candidate_raw() if self.has_pending_draft else instruction.raw
+        except Exception as error:
+            self.show_error(error)
+            return
+        dialog = EventInstructionDialog(
+            raw,
+            self,
+            title="行动事件指令编辑",
+            context=(
+                f"行动 ${self.current_action_id:02X} · 指令 {instruction.index + 1:03d} · "
+                f"Bank $26:${instruction.address:04X}"
+            ),
+        )
+        if dialog.exec() != dialog.DialogCode.Accepted:
+            return
+        self.raw.setText(dialog.raw().hex(" ").upper())
+        self._apply_raw()
+
+    def _build_instruction_context_menu(self) -> QMenu:
+        menu = QMenu(self.instruction_list)
+        insert_before = menu.addAction("插入（接上）")
+        insert_before.triggered.connect(lambda: self._insert_raw(after=False))
+        insert_after = menu.addAction("插入（接下）")
+        insert_after.triggered.connect(lambda: self._insert_raw(after=True))
+        menu.addSeparator()
+        reinforcement = menu.addAction("添加增援")
+        reinforcement.triggered.connect(self._add_reinforcement)
+        menu.addSeparator()
+        edit = menu.addAction("编辑")
+        edit.triggered.connect(self._open_instruction_editor)
+        code_edit = menu.addAction("代码编辑")
+        code_edit.triggered.connect(self._focus_raw_editor)
+        menu.addSeparator()
+        cut = menu.addAction("剪切")
+        cut.triggered.connect(self.cut_instruction)
+        copy = menu.addAction("复制")
+        copy.triggered.connect(self.copy_instruction)
+        copy_all = menu.addAction("复制全部")
+        copy_all.triggered.connect(self.copy_all_instructions)
+        paste = menu.addAction("粘贴")
+        paste.triggered.connect(self.paste_instruction)
+        paste_all = menu.addAction("粘贴全部")
+        paste_all.triggered.connect(self.paste_all_instructions)
+        delete = menu.addAction("删除")
+        delete.triggered.connect(self._delete_instruction)
+        clear = menu.addAction("清空")
+        clear.triggered.connect(self.clear_action)
+        enabled = self._selected_instruction() is not None
+        for action in (
+            insert_before,
+            insert_after,
+            reinforcement,
+            edit,
+            code_edit,
+            cut,
+            copy,
+            copy_all,
+            paste,
+            paste_all,
+            delete,
+            clear,
+        ):
+            action.setEnabled(enabled)
+        paste.setEnabled(enabled and type(self)._instruction_clipboard is not None)
+        paste_all.setEnabled(enabled and type(self)._record_clipboard is not None)
+        return menu
+
+    def _show_instruction_context_menu(self, position) -> None:
+        if not self._select_context_item(self.instruction_list, position):
+            return
+        self._build_instruction_context_menu().exec(
+            self.instruction_list.viewport().mapToGlobal(position)
+        )
 
     @staticmethod
     def _parse_hex(text: str) -> bytes:
@@ -196,6 +336,7 @@ class ActionEventPage(ProjectPage):
     def _set_editor_enabled(self, enabled: bool) -> None:
         for widget in (
             self.raw,
+            self.visual_edit_button,
             self.apply_button,
             self.insert_before_button,
             self.insert_after_button,
@@ -513,16 +654,130 @@ class ActionEventPage(ProjectPage):
         except Exception as error:
             self.show_error(error)
             return
+        type(self)._instruction_clipboard = raw
         QApplication.clipboard().setText(raw.hex(" ").upper())
 
     def paste_instruction(self) -> None:
         try:
-            raw = self._parse_hex(QApplication.clipboard().text())
+            raw = type(self)._instruction_clipboard
+            if raw is None:
+                raw = self._parse_hex(QApplication.clipboard().text())
             self._validate_instruction(raw)
         except Exception as error:
             self.show_error(error)
             return
         self.raw.setText(raw.hex(" ").upper())
+
+    def cut_instruction(self) -> None:
+        if self._selected_instruction() is None:
+            return
+        self.copy_instruction()
+        self._delete_instruction()
+
+    def copy_all_instructions(self) -> None:
+        record = self._record()
+        if record is None:
+            return
+        type(self)._record_clipboard = (record.raw, record.pointer)
+        QApplication.clipboard().setText(record.raw.hex(" ").upper())
+        self.pending_state.setText(
+            f"已复制整个行动：{len(record.instructions)} 条，{len(record.raw)} 字节。"
+        )
+        self.pending_state.setStyleSheet("color: #18794e;")
+
+    def paste_all_instructions(self) -> None:
+        if self.project is None or self.current_action_id is None:
+            return
+        payload = type(self)._record_clipboard
+        if payload is None:
+            self.show_error(ValueError("请先复制一个完整行动。"))
+            return
+        raw, source_pointer = payload
+        try:
+            action_id = self.current_action_id
+            self.project.replace_action_event(
+                action_id,
+                raw,
+                source_pointer=source_pointer,
+            )
+        except Exception as error:
+            self.show_error(error)
+            return
+        self.refresh()
+        self._select_action(action_id)
+        self._populate_instructions(0)
+        self.project_changed.emit(f"已粘贴整个行动到 ${action_id:02X}")
+
+    def clear_action(self) -> None:
+        if self.project is None or self.current_action_id is None:
+            return
+        try:
+            action_id = self.current_action_id
+            self.project.replace_action_event(action_id, b"\xDF")
+        except Exception as error:
+            self.show_error(error)
+            return
+        self.refresh()
+        self._select_action(action_id)
+        self._populate_instructions(0)
+        self.project_changed.emit(f"已清空行动 ${action_id:02X}")
+
+    def clear_actions_below(self) -> None:
+        if self.project is None or self.current_action_id is None:
+            return
+        action_id = self.current_action_id
+        if action_id >= 0xFF:
+            self.pending_state.setText("当前已经是最后一个行动，下方没有可清空的项目。")
+            self.pending_state.setStyleSheet("color: #9a5b00;")
+            return
+        try:
+            self.project.clear_action_events_below(action_id)
+        except Exception as error:
+            self.show_error(error)
+            return
+        self.refresh()
+        self._select_action(action_id)
+        self._populate_instructions(0)
+        self.project_changed.emit(
+            f"已清空行动 ${action_id + 1:02X}—$FF（保留当前行动 ${action_id:02X}）"
+        )
+
+    def _add_reinforcement(self) -> None:
+        if (
+            self.project is None
+            or self.current_action_id is None
+            or self.current_instruction_index is None
+        ):
+            return
+        # 参考版“添加增援”进入七字节敌军增援编辑。只预置已验证的
+        # 敌军增援操作码；坐标、人物、机体、等级和标志均由用户确认。
+        dialog = EventInstructionDialog(
+            bytes.fromhex("4B 00 00 00 00 00 00"),
+            self,
+            title="添加增援",
+            context=(
+                f"行动 ${self.current_action_id:02X} · "
+                "敌军增援（X、Y、人物、机体、等级、AI/标志）"
+            ),
+        )
+        if dialog.exec() != dialog.DialogCode.Accepted:
+            return
+        try:
+            action_id = self.current_action_id
+            index = self.current_instruction_index
+            self.project.insert_action_event_instruction(
+                action_id,
+                index,
+                dialog.raw(),
+                after=True,
+            )
+        except Exception as error:
+            self.show_error(error)
+            return
+        self.refresh()
+        self._select_action(action_id)
+        self._populate_instructions(index + 1)
+        self.project_changed.emit(f"已向行动 ${action_id:02X} 添加增援")
 
     def _reset_action(self) -> None:
         if self.project is None or self.current_action_id is None:

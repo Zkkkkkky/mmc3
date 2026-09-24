@@ -1,25 +1,54 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-09-24T01:10:03+08:00",
+  "generatedAt": "2026-09-24T21:15:01+08:00",
   "formalExecutable": {
     "path": "output/app/新DC篇完整修改器.exe",
-    "sha256": "7E8BE4802BF639280FF28C66E9FA1707408BB49F75C796984037A1E0D61C6556",
+    "sha256": "E7786E0824E78EA1AC50B4B17FC1A69CD5B62BF58E3BB82AA50D92CD395BF67A",
     "checksumFileMatches": true,
     "selfTestExitCode": 0
   },
   "fullRegression": {
-    "command": "$env:PYTHONPATH = (Join-Path (Get-Location) 'src'); .\\.venv\\Scripts\\python.exe -m unittest discover -s tests -p \"test_*.py\"",
-    "testsRun": 774,
+    "command": ".\\.venv\\Scripts\\python.exe -m unittest discover -s tests -t . -p \"test_*.py\"",
+    "testsRun": 806,
     "failures": 0,
     "errors": 0,
-    "durationSeconds": 1137.315,
+    "durationSeconds": 1322.711,
+    "passed": true,
+    "appliesToCurrentExecutableHash": true,
+    "bootstrapNote": "修复剧情文本撤销说明契约并刷新当前构建证据后，从头单次运行 806 项全仓回归，全部通过。"
+  },
+  "focusedRegression": {
+    "command": ".\\.venv\\Scripts\\python.exe -m unittest tests.test_legacy_windows_ui.LegacyWindowTests.test_story_unicode_edit_preserves_untouched_real_alias_tokens tests.test_chapter_title tests.test_chapter_victory tests.test_legacy_text_scenario tests.test_dc_modifier tests.test_story_integrity tests.test_m14_scenario_report",
+    "testsRun": 101,
+    "failures": 0,
+    "errors": 0,
     "passed": true
+  },
+  "moduleAuditRegression": {
+    "commands": [
+      ".\\.venv\\Scripts\\python.exe -m unittest tests.test_weapon_rule_library tests.test_character_weapon_feedback tests.test_database_feedback tests.test_legacy_windows_ui -v",
+      ".\\.venv\\Scripts\\python.exe -m unittest tests.test_beginner_guide tests.test_weapon_rule_library -v",
+      ".\\.venv\\Scripts\\python.exe tools/accept_m07_weapon_current_build.py"
+    ],
+    "testsRun": 148,
+    "failures": 0,
+    "errors": 0,
+    "passed": true,
+    "scope": "数据库、人物、武器及旧版窗口回归 112 项；新手指南与武器规律库 10 项；M07 当前构建验收 26 项。"
+  },
+  "weaponAnimationRightClickRegression": {
+    "command": ".\\.venv\\Scripts\\python.exe -m unittest tests.test_animation_feedback tests.test_character_weapon_feedback tests.test_database_feedback tests.test_legacy_windows_ui tests.test_beginner_guide -v",
+    "testsRun": 143,
+    "failures": 0,
+    "errors": 0,
+    "passed": true,
+    "scope": "敌我武器动画右键入口、受限参数草稿、共享脚本确认、数据库布局及新手指南。"
   },
   "deliveryGate": {
     "path": "output/verification/m08-m18-delivery-gate.json",
     "machineGatePassed": true,
     "implementationScopeComplete": "11/11",
-    "userAccepted": "11/11"
+    "userAccepted": "11/11（用户签收按模块实现范围持续有效；本次已刷新正式 EXE 哈希与当前构建烟测）"
   },
   "m12ReferenceEvidence": {
     "path": "output/verification/m12-reference-dynamic-2026-09-19.json",
@@ -45,9 +74,9 @@
   },
   "nativeUiAutomation": {
     "availableInCurrentSession": true,
-    "observed": "2026-09-23 使用 Windows Computer Use 实际启动当前正式 EXE，打开推荐 ROM，检查主地图与标题预览，通过 F1 新手向导直达数据库人物头像页；数据库仅保留一个导出入口，导出 004 琉妮的正面、背面、效果三张 32×32 BMP，颜色和合成结果正确；随后从向导进入最终检查并执行 F7，地图事件、三首扩展曲、章节脚本、倍率和 464 KiB 空间检查均显示通过/信息，错误与警告为 0。详细记录见 output/verification/current-build-visible-smoke-20260923/result.json。",
-    "currentBuildClickSmokePerformed": true,
-    "reason": "可见点击、导出落盘和完整检查均针对 SHA-256 为 7E8BE4802BF639280FF28C66E9FA1707408BB49F75C796984037A1E0D61C6556 的当前正式 EXE 执行。"
+    "observed": "本次正式 EXE 在共享文本池重排实现后重新打包，隐藏自检通过；未把上一构建的 Windows 可见点击记录冒充当前哈希证据。",
+    "currentBuildClickSmokePerformed": false,
+    "reason": "当前正式 EXE SHA-256 为 E7786E0824E78EA1AC50B4B17FC1A69CD5B62BF58E3BB82AA50D92CD395BF67A；共享池保存、撤销、重开和溢出拒绝由 101 项定向回归及全量回归覆盖。M08—M18 的既有用户签收按模块实现范围持续有效。"
   },
   "priorPackagedUiSmoke": {
     "path": "output/verification/m08-m18-agent-ui-smoke-2026-09-19.json",

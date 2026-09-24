@@ -473,8 +473,8 @@ class DatabaseFeedbackTests(QtTestCase):
         self.assertEqual(scroll.horizontalScrollBar().maximum(), 0)
         self.assertEqual(scroll.verticalScrollBar().maximum(), 0)
         direct_tops = [
-            segment.geometry().top()
-            for segment, _dialogue in page.character_dialogue.direct_controls
+            button.geometry().top()
+            for button in page.character_dialogue.direct_buttons
         ]
         self.assertEqual(direct_tops, sorted(direct_tops))
         self.assertEqual(len(set(direct_tops)), len(direct_tops))

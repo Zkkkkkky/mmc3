@@ -304,6 +304,39 @@ class CharacterCodecFeedbackTests(unittest.TestCase):
         self.project.undo()
         self.assertEqual(codec.read(character_id, self.project.working), record)
 
+    def test_character_dialogue_rule_resize_repacks_pool_and_preserves_aliases(self) -> None:
+        codec = self.project.character_dialogue_codec
+        assert codec is not None
+        character_id = next(
+            item for item in range(1, 0xC9)
+            if any(codec.read(item, self.project.working).rules)
+        )
+        before = {
+            item: codec.read(item, self.project.working)
+            for item in range(1, 0xC9)
+        }
+        aliases = codec.shared_ids(character_id, self.project.working)
+        groups = [list(group) for group in before[character_id].rules]
+        group_index = next(index for index, group in enumerate(groups) if group)
+        groups[group_index].pop()
+        replacement = replace(
+            before[character_id], rules=tuple(tuple(group) for group in groups)
+        )
+        patches = codec.repack_patches(
+            self.project.working, character_id, replacement
+        )
+        self.assertTrue(patches)
+        apply_verified_patches(self.project, patches, "人物特殊台词规则删除")
+        for item in range(1, 0xC9):
+            expected = replacement if item in aliases else before[item]
+            self.assertEqual(codec.read(item, self.project.working), expected)
+        restore = codec.repack_patches(
+            self.project.working, character_id, before[character_id]
+        )
+        apply_verified_patches(self.project, restore, "人物特殊台词规则恢复")
+        for item in range(1, 0xC9):
+            self.assertEqual(codec.read(item, self.project.working), before[item])
+
     def test_transform_dialogue_table_has_fixed_capacity_and_repackages_locally(self) -> None:
         codec = self.project.character_dialogue_codec
         assert codec is not None
@@ -416,6 +449,23 @@ class CharacterWeaponUiFeedbackTests(QtTestCase):
             {QColor(*self._palette_rgb(0x0F)).name().upper()},
         )
         self.assertFalse(self.widget.has_pending_changes())
+
+    def test_reference_friendly_portrait_spirit_and_dialogue_controls(self) -> None:
+        self.assertIn("图库:", self.widget.portrait_fields["front_bank"].currentText())
+        self.assertEqual(
+            self.widget.portrait_fields["front_slot"].currentText(), "头像4"
+        )
+        color = self.widget.portrait_fields["color0"]
+        self.assertTrue(color.text().startswith("$"))
+        self.assertIn("点击展开64色", color.toolTip())
+        self.assertIn("：", self.widget.spirits[0].text())
+        self.assertIn("双击", self.widget.spirits[0].toolTip())
+        dialogue = self.page.character_dialogue
+        self.assertEqual(len(dialogue.direct_buttons), 8)
+        self.assertIn("·", dialogue.direct_buttons[0].text())
+        self.assertNotIn("未定义/不可读", dialogue.direct_buttons[0].text())
+        self.assertTrue(dialogue.direct_controls[0][0].isHidden())
+        self.assertTrue(dialogue.direct_controls[0][1].isHidden())
 
     @staticmethod
     def _palette_rgb(index: int) -> tuple[int, int, int]:

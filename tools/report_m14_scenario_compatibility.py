@@ -424,11 +424,13 @@ def analyze(rom_path: Path = DEFAULT_ROM) -> dict[str, object]:
     )
     story_project.undo()
     story_undo_exact = bytes(story_project.working) == story_before
-    story_length_change_rejected = False
-    try:
-        story_project.set_story_text_raw(0x32, 10, story_sample.raw[:-1])
-    except ValueError:
-        story_length_change_rejected = bytes(story_project.working) == story_before
+    story_growth = story_sample.raw[:-1] + b"\x01\xFF"
+    story_project.set_story_text_raw(0x32, 10, story_growth)
+    story_growth_exact = (
+        story_project.get_story_text(0x32, 10).raw == story_growth
+        and story_project.expansion_plan is None
+    )
+    story_project.undo()
 
     split_project = RomProject.load(rom_path)
     split_project.configure_expansion(304, 48, 112)
@@ -511,16 +513,17 @@ def analyze(rom_path: Path = DEFAULT_ROM) -> dict[str, object]:
     )
     victory_project.undo()
     victory_undo_exact = bytes(victory_project.working) == victory_before
-    victory_length_change_rejected = False
-    try:
-        victory_project.set_chapter_victory_body(
-            0,
-            victory_sample.body + b"\x00",
-        )
-    except ValueError:
-        victory_length_change_rejected = (
-            bytes(victory_project.working) == victory_before
-        )
+    victory_project.set_chapter_victory_body(0, victory_sample.body[:-1])
+    victory_project.set_chapter_victory_body(
+        1, victory_records[1].body + b"\x00"
+    )
+    victory_variable_length_exact = (
+        victory_project.get_chapter_victory(0).body == victory_sample.body[:-1]
+        and victory_project.get_chapter_victory(1).body
+        == victory_records[1].body + b"\x00"
+    )
+    victory_project.undo()
+    victory_project.undo()
 
     title_project = RomProject.load(rom_path)
     title_before = bytes(title_project.working)
@@ -565,17 +568,29 @@ def analyze(rom_path: Path = DEFAULT_ROM) -> dict[str, object]:
     )
     title_project.undo()
     title_undo_exact = bytes(title_project.working) == title_before
-    title_length_change_rejected = False
-    try:
-        title_project.set_chapter_title(
-            0,
-            title_sample.chr_banks,
-            title_sample.raw + b"\x00",
-        )
-    except ValueError:
-        title_length_change_rejected = (
-            bytes(title_project.working) == title_before
-        )
+    first_segment = title_sample.segments[-1]
+    title_shorter = (
+        title_sample.raw[: -(len(first_segment.tiles) + 5)]
+        + bytes((0xFE, first_segment.x, first_segment.y, first_segment.width - 1))
+        + first_segment.tiles[:-2]
+        + b"\xFF"
+    )
+    second_segment = title_following.segments[-1]
+    title_longer = (
+        title_following.raw[: -(len(second_segment.tiles) + 5)]
+        + bytes((0xFE, second_segment.x, second_segment.y, second_segment.width + 1))
+        + second_segment.tiles
+        + second_segment.tiles[-2:]
+        + b"\xFF"
+    )
+    title_project.set_chapter_title(0, title_sample.chr_banks, title_shorter)
+    title_project.set_chapter_title(1, title_following.chr_banks, title_longer)
+    title_variable_length_exact = (
+        title_project.get_chapter_title(0).raw == title_shorter
+        and title_project.get_chapter_title(1).raw == title_longer
+    )
+    title_project.undo()
+    title_project.undo()
 
     application = QApplication.instance() or QApplication([])
     ui_project = RomProject.load(rom_path)
@@ -723,10 +738,10 @@ def analyze(rom_path: Path = DEFAULT_ROM) -> dict[str, object]:
             and story_no_op_roundtrips
             and token_boundaries_lossless
         ),
-        "story_equal_length_edit_and_undo_are_exact": (
+        "story_pool_repack_and_undo_are_exact": (
             story_reopen_exact
             and story_undo_exact
-            and story_length_change_rejected
+            and story_growth_exact
             and bool(story_differences)
         ),
         "split_37_layout_and_in_place_edit_are_exact": (
@@ -747,7 +762,7 @@ def analyze(rom_path: Path = DEFAULT_ROM) -> dict[str, object]:
             and split_undo_exact
             and split_sentinel_rejected
         ),
-        "chapter_victory_table_and_fixed_capacity_edit_are_exact": (
+        "chapter_victory_shared_pool_edit_is_exact": (
             victory_codec.count == CHAPTER_VICTORY_COUNT == 13
             and victory_records[0].file_offset == 0x7A010
             and all(
@@ -768,9 +783,9 @@ def analyze(rom_path: Path = DEFAULT_ROM) -> dict[str, object]:
             )
             and victory_reopen_exact
             and victory_undo_exact
-            and victory_length_change_rejected
+            and victory_variable_length_exact
         ),
-        "chapter_title_tables_and_fixed_capacity_edit_are_exact": (
+        "chapter_title_tables_and_shared_pool_edit_are_exact": (
             title_codec.count == CHAPTER_TITLE_COUNT == 32
             and title_sample.pointer == 0xAB7A
             and title_sample.file_offset == 0x16B8A
@@ -781,7 +796,7 @@ def analyze(rom_path: Path = DEFAULT_ROM) -> dict[str, object]:
             and title_pointer_table_unchanged
             and title_reopen_exact
             and title_undo_exact
-            and title_length_change_rejected
+            and title_variable_length_exact
             and set(title_differences)
             == {
                 CHAPTER_TITLE_CHR_TABLE_OFFSET,
@@ -934,7 +949,8 @@ def analyze(rom_path: Path = DEFAULT_ROM) -> dict[str, object]:
             "changed_offsets": [
                 f"0x{offset:06X}" for offset in victory_differences
             ],
-            "fixed_capacity": True,
+            "fixed_total_pool": True,
+            "variable_record_length": True,
         },
         "chapter_titles": {
             "pointer_table_file_offset": "0x016111",
@@ -951,7 +967,8 @@ def analyze(rom_path: Path = DEFAULT_ROM) -> dict[str, object]:
                     f"0x{offset:06X}" for offset in title_differences
                 ],
             },
-            "fixed_capacity": True,
+            "fixed_total_pool": True,
+            "variable_record_length": True,
             "pointer_table_unchanged": title_pointer_table_unchanged,
         },
         "product_ui": {

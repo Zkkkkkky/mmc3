@@ -11,7 +11,7 @@ from PySide6.QtWidgets import (
 
 from fc_editor.codecs.animation import (
     AnimationCodec, AnimationRecord, SpriteComposition, apply_animation_patches,
-    decode_sprite_composition, decode_sprite_timeline,
+    decode_script, decode_sprite_composition, decode_sprite_timeline,
 )
 from .workspace import ROOT
 
@@ -65,6 +65,153 @@ class AnimationPointerDialog(QDialog):
         if len(raw) != 2:
             raise ValueError("动画指针必须是两个十六进制字节。")
         return int.from_bytes(raw, "little")
+
+
+class AnimationInstructionDialog(QDialog):
+    """Beginner-facing editor for one verified, fixed-length instruction."""
+
+    def __init__(
+        self,
+        parent: QWidget | None = None,
+        *,
+        instruction,
+        values: tuple[int, ...],
+    ) -> None:
+        super().__init__(parent)
+        self.setWindowTitle("编辑武器动画指令")
+        self.setModal(True)
+        self.setMinimumWidth(500)
+        root = QVBoxLayout(self)
+        summary = QLabel(
+            f"{instruction.text}\n"
+            f"ROM 地址：${instruction.offset:06X}　原始字节：{instruction.raw.hex(' ').upper()}"
+        )
+        summary.setWordWrap(True)
+        root.addWidget(summary)
+        form = QFormLayout()
+        self.parameter_editors: list[QSpinBox] = []
+        for value, (local, low, high) in zip(values, instruction.editable):
+            editor = QSpinBox()
+            editor.setRange(low, high)
+            editor.setDisplayIntegerBase(16)
+            editor.setPrefix("$ ")
+            editor.setValue(value)
+            editor.setToolTip(
+                f"允许范围 ${low:02X}—${high:02X}；只替换当前指令的第 {local + 1} 字节。"
+            )
+            form.addRow(f"参数 +{local}", editor)
+            self.parameter_editors.append(editor)
+        root.addLayout(form)
+        hint = QLabel(
+            "这里只修改当前指令中已验证的参数字节，不改变脚本长度、指令边界或动画指针。"
+        )
+        hint.setWordWrap(True)
+        root.addWidget(hint)
+        buttons = QDialogButtonBox(
+            QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel
+        )
+        buttons.button(QDialogButtonBox.StandardButton.Ok).setText("应用到草稿")
+        buttons.button(QDialogButtonBox.StandardButton.Cancel).setText("取消")
+        buttons.accepted.connect(self.accept)
+        buttons.rejected.connect(self.reject)
+        root.addWidget(buttons)
+
+    def parameter_values(self) -> tuple[int, ...]:
+        return tuple(editor.value() for editor in self.parameter_editors)
+
+
+_WEAPON_COMMAND_PRESETS = (
+    ("等待（帧）", bytes.fromhex("01"), "一字节等待时间，01—DF 帧。"),
+    ("F4 定义声音", bytes.fromhex("F4 00"), "参数为音乐或音效编号。"),
+    ("F0 定义颜色", bytes.fromhex("F0 11 03 0F 16 20"), "区域、数量和颜色值；默认是物理区域三色。"),
+    ("F2 定义光束图库", bytes.fromhex("F2 22 01 00"), "区域、数量和图库编号。"),
+    ("F3 定义光束规律", bytes.fromhex("F3 00 00"), "资源编号和规律编号。"),
+    ("E0 切换 00 区域图库", bytes.fromhex("E0 00"), "参数为图库编号。"),
+    ("E1 切换 01 区域图库", bytes.fromhex("E1 00"), "参数为图库编号。"),
+    ("FD 移动屏幕", bytes.fromhex("FD 00 00"), "X、Y 为有符号位移字节。"),
+    ("FE 跳转重复", bytes.fromhex("FE 02 00 80"), "重复次数和 CPU 小端目标地址。"),
+    ("F9 创建物体", bytes.fromhex("F9 00 00 00 00 00 00 00 00"), "物体、坐标、规律、组图和 X/Y 规律。"),
+    ("42 定义物体运行规律 1", bytes.fromhex("42 69 00 00 00"), "标志、组图、X 规律、Y 规律。"),
+    ("C2 定义物体运行规律 2", bytes.fromhex("C2 69 00 00 00"), "标志、组图、X 规律、Y 规律。"),
+    ("FF 动画结束", bytes.fromhex("FF"), "每段动画必须保留一个结束指令。"),
+)
+
+
+def _weapon_command_preset_index(raw: bytes) -> int:
+    if len(raw) == 1 and raw[0] < 0xE0 and raw[0] not in (0x42, 0xC2):
+        return 0
+    for index, (_label, preset, _hint) in enumerate(_WEAPON_COMMAND_PRESETS[1:], 1):
+        if raw and raw[0] == preset[0]:
+            return index
+    return 0
+
+
+class WeaponAnimationCommandDialog(QDialog):
+    """Choose and fully edit one reference-compatible weapon command."""
+
+    def __init__(self, parent=None, *, raw: bytes | None = None) -> None:
+        super().__init__(parent)
+        self.setWindowTitle("武器指令")
+        self.setModal(True)
+        self.setMinimumWidth(620)
+        root = QVBoxLayout(self)
+        form = QFormLayout()
+        self.command_type = QComboBox()
+        for label, _preset, hint in _WEAPON_COMMAND_PRESETS:
+            self.command_type.addItem(label)
+            self.command_type.setItemData(self.command_type.count() - 1, hint, Qt.ItemDataRole.ToolTipRole)
+        form.addRow("指令类型", self.command_type)
+        self.raw_edit = QLineEdit()
+        self.raw_edit.setPlaceholderText("例如：F9 0F C8 B0 20 09 F9 11 15")
+        form.addRow("完整字节", self.raw_edit)
+        root.addLayout(form)
+        self.help_label = QLabel()
+        self.help_label.setWordWrap(True)
+        root.addWidget(self.help_label)
+        self.preview_label = QLabel()
+        self.preview_label.setWordWrap(True)
+        root.addWidget(self.preview_label)
+        self.buttons = QDialogButtonBox(
+            QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel
+        )
+        self.buttons.button(QDialogButtonBox.StandardButton.Ok).setText("应用指令")
+        self.buttons.button(QDialogButtonBox.StandardButton.Cancel).setText("取消")
+        self.buttons.accepted.connect(self.accept)
+        self.buttons.rejected.connect(self.reject)
+        root.addWidget(self.buttons)
+        self.command_type.currentIndexChanged.connect(self._select_preset)
+        self.raw_edit.textChanged.connect(self._validate)
+        initial = raw if raw is not None else _WEAPON_COMMAND_PRESETS[0][1]
+        self.command_type.setCurrentIndex(_weapon_command_preset_index(initial))
+        self.raw_edit.setText(initial.hex(" ").upper())
+        self._validate()
+
+    def _select_preset(self, index: int) -> None:
+        _label, preset, _hint = _WEAPON_COMMAND_PRESETS[index]
+        self.raw_edit.setText(preset.hex(" ").upper())
+
+    def _validate(self) -> bool:
+        self.help_label.setText(_WEAPON_COMMAND_PRESETS[self.command_type.currentIndex()][2])
+        try:
+            raw = bytes.fromhex(self.raw_edit.text())
+            if not raw:
+                raise ValueError("请输入指令字节。")
+            probe = raw if raw == b"\xFF" else raw + b"\xFF"
+            rows, complete = decode_script(probe, 0)
+            if not complete or not rows or rows[0].raw != raw:
+                raise ValueError("字节必须恰好组成一条受支持的完整指令。")
+            self.preview_label.setText(f"预览：{rows[0].text}")
+            self.preview_label.setStyleSheet("color: #176b2c;")
+            self.buttons.button(QDialogButtonBox.StandardButton.Ok).setEnabled(True)
+            return True
+        except ValueError as error:
+            self.preview_label.setText(f"不能应用：{error}")
+            self.preview_label.setStyleSheet("color: #a32626;")
+            self.buttons.button(QDialogButtonBox.StandardButton.Ok).setEnabled(False)
+            return False
+
+    def command(self) -> bytes:
+        return bytes.fromhex(self.raw_edit.text())
 
 
 class SpritePuzzlePreviewDialog(QDialog):
@@ -458,6 +605,7 @@ class AnimationScriptWidget(QWidget):
     """A draft script editor; the caller owns its enclosing transaction."""
     changed = Signal()
     pointer_requested = Signal(int)
+    _command_clipboard: tuple[bytes, ...] = ()
 
     def __init__(self, parent: QWidget | None = None, *, legacy_pointer_dialog: bool = False) -> None:
         super().__init__(parent)
@@ -478,11 +626,35 @@ class AnimationScriptWidget(QWidget):
         self.instruction_table.setAlternatingRowColors(True)
         self.instruction_table.setSelectionBehavior(QTableWidget.SelectionBehavior.SelectRows)
         self.instruction_table.currentCellChanged.connect(self._select_instruction)
-        if self.legacy_pointer_dialog:
+        if not legacy_pointer_dialog:
             self.instruction_table.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
-            self.instruction_table.customContextMenuRequested.connect(self._show_code_context_menu)
+            self.instruction_table.customContextMenuRequested.connect(self._show_instruction_context_menu)
+        self.instruction_table.cellDoubleClicked.connect(
+            lambda row, _column: self.edit_instruction(row)
+        )
+        self.instruction_table.setToolTip(
+            "参考版地图动画不使用武器动画右键菜单：左侧“添加”复制整套动画；"
+            "此处选择指令后编辑已验证参数，“代码编辑”按指针定位。"
+            if legacy_pointer_dialog
+            else "双击或右键可全面编辑单武器动画；支持插入、替换、剪切、复制、粘贴、删除和清空。"
+        )
         self.instruction_table.setMinimumHeight(200)
         root.addWidget(self.instruction_table, 1)
+        self.structure_bar = QWidget()
+        structure_layout = QHBoxLayout(self.structure_bar)
+        structure_layout.setContentsMargins(0, 0, 0, 0)
+        for text, slot in (
+            ("插入指令", self.insert_instruction),
+            ("编辑指令", self.edit_instruction),
+            ("删除指令", self.delete_instruction),
+            ("清空动画", self.clear_instructions),
+        ):
+            button = QPushButton(text)
+            button.clicked.connect(slot)
+            structure_layout.addWidget(button)
+        structure_layout.addStretch()
+        self.structure_bar.setVisible(not legacy_pointer_dialog)
+        root.addWidget(self.structure_bar)
         self.parameters = QWidget()
         self.parameter_layout = QHBoxLayout(self.parameters)
         self.parameter_layout.setContentsMargins(0, 0, 0, 0)
@@ -491,12 +663,18 @@ class AnimationScriptWidget(QWidget):
         self.code_button.clicked.connect(self._toggle_code)
         root.addWidget(self.code_button, 0, Qt.AlignmentFlag.AlignLeft)
         self.code_edit = QPlainTextEdit()
-        self.code_edit.setPlaceholderText("等长十六进制代码")
+        self.code_edit.setPlaceholderText("完整动画十六进制代码（必须以 FF 结束）")
         self.code_edit.setMaximumHeight(130)
         self.code_edit.textChanged.connect(self._code_changed)
         self.code_edit.hide()
         root.addWidget(self.code_edit)
-        hint = QLabel("选择一条指令可调整参数。代码编辑仅接受已有指令的颜色、等待、图库、坐标、音乐和循环次数；共享指针的动画同步变化。")
+        hint = QLabel(
+            "地图动画按参考版流程制作：先在左侧选择最接近的完整动画，点“添加”复制到预留槽，"
+            "再逐条调整已验证参数；“代码编辑”输入已有动画指针用于定位，不改写指针。"
+            if legacy_pointer_dialog
+            else "武器动画可按指令新增、替换、删除和组合；写入范围不会越过下一条动画。"
+            "共享同一指针的武器会同步变化。高级用户也可展开完整代码。"
+        )
         hint.setWordWrap(True)
         root.addWidget(hint)
 
@@ -505,23 +683,50 @@ class AnimationScriptWidget(QWidget):
         self.record = self.codec.record(kind, index)
         record = self.record
         self._set_code(record.raw)
-        self.instruction_table.setRowCount(len(record.instructions))
-        for row, instruction in enumerate(record.instructions):
-            item = QTableWidgetItem(f"{row:03d}：{instruction.text}")
-            item.setToolTip(f"文件地址 ${instruction.offset:06X}")
-            self.instruction_table.setItem(row, 0, item)
-            self.instruction_table.setItem(row, 1, QTableWidgetItem(instruction.raw.hex(" ").upper()))
-        self.instruction_table.resizeRowsToContents()
+        self._refresh_instruction_table()
         aliases = ", ".join(f"${i:02X}" for i in record.aliases[:12])
         if len(record.aliases) > 12:
             aliases += f"…共 {len(record.aliases)} 项"
-        self.status.setText(f"当前 ROM · ${record.offset:06X} · {len(record.raw)} 字节"
+        capacity = self.codec.script_capacity(record) if record.offset else 0
+        self.status.setText(f"当前 ROM · ${record.offset:06X} · 已用 {len(record.raw)}/{capacity} 字节"
                             + (f" · 共享：{aliases}" if aliases else " · 独立记录")
                             + ("" if record.complete else " · 包含未验证内容"))
-        self.code_button.setEnabled(any(i.editable for i in record.instructions))
+        self.code_button.setEnabled(record.complete)
         self.code_edit.setReadOnly(not self.code_button.isEnabled())
         self.instruction_table.setCurrentCell(0, 0)
         self._select_instruction(0, 0, -1, -1)
+
+    def _draft_instructions(self):
+        if self.record is None:
+            return (), False
+        try:
+            raw = bytes.fromhex(self.code_edit.toPlainText())
+        except ValueError:
+            return (), False
+        return decode_script(raw, self.record.offset)
+
+    def _refresh_instruction_table(self) -> None:
+        rows, complete = self._draft_instructions()
+        visible_rows = max(20, len(rows) + (0 if len(rows) >= 20 else 1))
+        blocked = self.instruction_table.blockSignals(True)
+        self.instruction_table.setRowCount(visible_rows)
+        for row in range(visible_rows):
+            if row < len(rows):
+                instruction = rows[row]
+                item = QTableWidgetItem(f"{row:03d}：{instruction.text}")
+                item.setToolTip(f"文件地址 ${instruction.offset:06X}")
+                raw_item = QTableWidgetItem(instruction.raw.hex(" ").upper())
+            else:
+                item = QTableWidgetItem(f"{row:03d}：空代码")
+                item.setToolTip("右键或点击“插入指令”，会在动画结束前新增一条指令。")
+                raw_item = QTableWidgetItem("")
+                item.setForeground(QColor("#777777"))
+            self.instruction_table.setItem(row, 0, item)
+            self.instruction_table.setItem(row, 1, raw_item)
+        self.instruction_table.blockSignals(blocked)
+        self.instruction_table.resizeRowsToContents()
+        if not complete and self.record is not None:
+            self.status.setText("当前草稿不是完整动画；请修正代码或撤销本次编辑。")
 
     def _set_code(self, data: bytes) -> None:
         blocked = self.code_edit.blockSignals(True)
@@ -549,27 +754,174 @@ class AnimationScriptWidget(QWidget):
         if self.code_edit.isVisible():
             self.code_edit.setFocus()
 
-    def _show_code_context_menu(self, position) -> None:
+    def _show_instruction_context_menu(self, position) -> None:
+        row = self.instruction_table.rowAt(position.y())
+        if row >= 0:
+            self.instruction_table.setCurrentCell(row, 0)
+        else:
+            row = self.instruction_table.currentRow()
         menu = QMenu(self.instruction_table)
+        rows, complete = self._draft_instructions()
+        actual = 0 <= row < len(rows)
+        is_end = actual and rows[row].raw == b"\xFF"
+        insert_action = menu.addAction("插入")
+        insert_action.setEnabled(complete and not self.legacy_pointer_dialog)
+        insert_action.triggered.connect(lambda: self.insert_instruction(row))
+        edit_action = menu.addAction("编辑")
+        edit_action.setEnabled(actual and not is_end and not self.legacy_pointer_dialog)
+        edit_action.triggered.connect(lambda: self.edit_instruction(row))
+        cut_action = menu.addAction("剪切")
+        cut_action.setEnabled(actual and not is_end and not self.legacy_pointer_dialog)
+        cut_action.triggered.connect(lambda: self.cut_instruction(row))
+        copy_action = menu.addAction("复制")
+        copy_action.setEnabled(actual and not is_end)
+        copy_action.triggered.connect(lambda: self.copy_instruction(row))
+        copy_all_action = menu.addAction("复制全部")
+        copy_all_action.setEnabled(bool(rows))
+        copy_all_action.triggered.connect(self.copy_all_instructions)
+        paste_action = menu.addAction("粘贴")
+        paste_action.setEnabled(bool(self._command_clipboard) and not self.legacy_pointer_dialog)
+        paste_action.triggered.connect(lambda: self.paste_instructions(row, False))
+        paste_all_action = menu.addAction("粘贴全部")
+        paste_all_action.setEnabled(bool(self._command_clipboard) and not self.legacy_pointer_dialog)
+        paste_all_action.triggered.connect(lambda: self.paste_instructions(row, True))
+        delete_action = menu.addAction("删除")
+        delete_action.setEnabled(actual and not is_end and not self.legacy_pointer_dialog)
+        delete_action.triggered.connect(lambda: self.delete_instruction(row))
+        clear_action = menu.addAction("清空")
+        clear_action.setEnabled(complete and not self.legacy_pointer_dialog)
+        clear_action.triggered.connect(self.clear_instructions)
+        menu.addSeparator()
         action = menu.addAction(
-            "隐藏等长代码编辑区" if self.code_edit.isVisible() else "显示等长代码编辑区"
+            "隐藏完整代码编辑区" if self.code_edit.isVisible() else "显示完整代码编辑区"
         )
         action.triggered.connect(self._toggle_raw_code)
-        menu.exec(self.instruction_table.viewport().mapToGlobal(position))
+        menu.popup(self.instruction_table.viewport().mapToGlobal(position))
+
+    def edit_instruction(self, row: int | None = None) -> None:
+        if self.record is None or self.legacy_pointer_dialog:
+            return
+        if row is None or isinstance(row, bool):
+            row = self.instruction_table.currentRow()
+        rows, complete = self._draft_instructions()
+        if not complete or not 0 <= row < len(rows) or rows[row].raw == b"\xFF":
+            return
+        dialog = WeaponAnimationCommandDialog(self, raw=rows[row].raw)
+        if dialog.exec() == QDialog.DialogCode.Accepted:
+            commands = [instruction.raw for instruction in rows]
+            commands[row] = dialog.command()
+            self._replace_commands(commands, row)
+        dialog.deleteLater()
+
+    def insert_instruction(self, row: int | None = None) -> None:
+        if self.record is None or self.legacy_pointer_dialog:
+            return
+        rows, complete = self._draft_instructions()
+        if not complete:
+            return
+        commands = [instruction.raw for instruction in rows]
+        end = max(0, len(commands) - 1)
+        target = self.instruction_table.currentRow() if row is None or isinstance(row, bool) else row
+        target = min(max(0, target), end)
+        dialog = WeaponAnimationCommandDialog(self)
+        if dialog.exec() == QDialog.DialogCode.Accepted:
+            command = dialog.command()
+            if command == b"\xFF":
+                self.status.setText("结束指令由编辑器自动保留；请选择其他指令插入。")
+            else:
+                commands.insert(target, command)
+                self._replace_commands(commands, target)
+        dialog.deleteLater()
+
+    def _apply_instruction_values(self, row: int, values: tuple[int, ...]) -> None:
+        """Keep the compact parameter controls in sync with structural edits."""
+
+        rows, complete = self._draft_instructions()
+        if not complete or not 0 <= row < len(rows):
+            raise ValueError("当前动画草稿不是完整指令序列。")
+        instruction = rows[row]
+        if len(values) != len(instruction.editable):
+            raise ValueError("动画指令参数数量不匹配。")
+        command = bytearray(instruction.raw)
+        for value, (local, low, high) in zip(values, instruction.editable):
+            if not low <= value <= high:
+                raise ValueError(f"动画参数必须在 ${low:02X}—${high:02X} 范围内。")
+            command[local] = value
+        commands = [current.raw for current in rows]
+        commands[row] = bytes(command)
+        if not self._replace_commands(commands, row):
+            raise ValueError(self.status.text())
+
+    def _replace_commands(self, commands: list[bytes] | tuple[bytes, ...], selected: int = 0) -> bool:
+        if self.record is None or self.codec is None:
+            return False
+        normalized = [bytes(command) for command in commands if command != b"\xFF"] + [b"\xFF"]
+        replacement = b"".join(normalized)
+        try:
+            self.codec.script_sequence_patch(self.record, replacement)
+        except ValueError as error:
+            self.status.setText(f"未修改：{error}")
+            return False
+        self._set_code(replacement)
+        self._code_changed()
+        self.instruction_table.setCurrentCell(min(selected, len(normalized) - 1), 0)
+        return True
+
+    def copy_instruction(self, row: int | None = None) -> None:
+        rows, complete = self._draft_instructions()
+        if row is None:
+            row = self.instruction_table.currentRow()
+        if complete and 0 <= row < len(rows) and rows[row].raw != b"\xFF":
+            type(self)._command_clipboard = (rows[row].raw,)
+            self.status.setText("已复制 1 条武器动画指令。")
+
+    def copy_all_instructions(self) -> None:
+        rows, complete = self._draft_instructions()
+        if complete:
+            type(self)._command_clipboard = tuple(
+                instruction.raw for instruction in rows if instruction.raw != b"\xFF"
+            )
+            self.status.setText(f"已复制 {len(self._command_clipboard)} 条武器动画指令。")
+
+    def cut_instruction(self, row: int | None = None) -> None:
+        if row is None:
+            row = self.instruction_table.currentRow()
+        self.copy_instruction(row)
+        self.delete_instruction(row)
+
+    def paste_instructions(self, row: int | None = None, replace_all: bool = False) -> None:
+        if not self._command_clipboard:
+            return
+        rows, complete = self._draft_instructions()
+        if not complete:
+            return
+        if replace_all:
+            self._replace_commands(list(self._command_clipboard), 0)
+            return
+        commands = [instruction.raw for instruction in rows]
+        end = max(0, len(commands) - 1)
+        target = self.instruction_table.currentRow() if row is None else row
+        target = min(max(0, target), end)
+        commands[target:target] = self._command_clipboard
+        self._replace_commands(commands, target)
+
+    def delete_instruction(self, row: int | None = None) -> None:
+        rows, complete = self._draft_instructions()
+        if row is None or isinstance(row, bool):
+            row = self.instruction_table.currentRow()
+        if not complete or not 0 <= row < len(rows) or rows[row].raw == b"\xFF":
+            return
+        commands = [instruction.raw for instruction in rows]
+        del commands[row]
+        self._replace_commands(commands, max(0, row - 1))
+
+    def clear_instructions(self, *_args) -> None:
+        if self.record is not None and not self.legacy_pointer_dialog:
+            self._replace_commands([b"\xFF"], 0)
 
     def _code_changed(self) -> None:
         if self.record is not None:
-            from fc_editor.codecs.animation import decode_script
-            try:
-                raw = bytes.fromhex(self.code_edit.toPlainText())
-                rows, _complete = decode_script(raw, self.record.offset)
-                if len(rows) == self.instruction_table.rowCount():
-                    for row, instruction in enumerate(rows):
-                        self.instruction_table.item(row, 0).setText(f"{row:03d}：{instruction.text}")
-                        self.instruction_table.item(row, 1).setText(instruction.raw.hex(" ").upper())
-                    self.instruction_table.resizeRowsToContents()
-            except ValueError:
-                pass
+            self._refresh_instruction_table()
         self.changed.emit()
 
     def has_pending_changes(self) -> bool:
@@ -587,16 +939,19 @@ class AnimationScriptWidget(QWidget):
             replacement = bytes.fromhex(self.code_edit.toPlainText())
         except ValueError as error:
             raise ValueError("动画代码须为完整的两位十六进制字节。") from error
-        return self.codec.script_patch(self.record, replacement)
+        if self.legacy_pointer_dialog:
+            return self.codec.script_patch(self.record, replacement)
+        return self.codec.script_sequence_patch(self.record, replacement)
 
     def _select_instruction(self, row: int, *_args) -> None:
         while self.parameter_layout.count():
             item = self.parameter_layout.takeAt(0)
             if item.widget() is not None:
                 item.widget().deleteLater()
-        if self.record is None or not 0 <= row < len(self.record.instructions):
+        rows, complete = self._draft_instructions()
+        if self.record is None or not complete or not 0 <= row < len(rows):
             return
-        instruction = self.record.instructions[row]
+        instruction = rows[row]
         if not instruction.editable:
             self.parameter_layout.addWidget(QLabel("此条指令的控制字节及引用保持原值。"))
         for local, low, high in instruction.editable:
@@ -622,9 +977,11 @@ class AnimationScriptWidget(QWidget):
             return
         try:
             replacement = bytearray(bytes.fromhex(self.code_edit.toPlainText()))
-            if len(replacement) != len(self.record.raw):
-                raise ValueError("请先修正代码长度。")
+            if not 0 <= index < len(replacement):
+                raise ValueError("当前参数位置已不在动画草稿内。")
             replacement[index] = value
+            if self.codec is not None and not self.legacy_pointer_dialog:
+                self.codec.script_sequence_patch(self.record, bytes(replacement))
             self._set_code(replacement)
             self._code_changed()
         except ValueError as error:
@@ -673,8 +1030,8 @@ class MapAnimationEditorDialog(QDialog):
         super().__init__(parent)
         self.project = project
         self.setWindowTitle("地图动画")
-        self.resize(1160, 800)
-        self.setMinimumSize(850, 620)
+        self.resize(900, 680)
+        self.setMinimumSize(820, 600)
         self._selected = -1
         self._movement_index = -1
         self._background_index = -1
@@ -843,7 +1200,10 @@ class MapAnimationEditorDialog(QDialog):
 
     def _rules_tab(self) -> QWidget:
         page = QWidget()
-        layout = QHBoxLayout(page)
+        layout = QVBoxLayout(page)
+        self.rule_category_tabs = QTabWidget()
+        self.rule_category_tabs.setObjectName("legacyAnimationRuleTabs")
+        layout.addWidget(self.rule_category_tabs, 1)
         self.rule_lists: dict[str, QListWidget] = {}
         self.rule_codes: dict[str, QPlainTextEdit] = {}
         self.rule_statuses: dict[str, QLabel] = {}
@@ -961,7 +1321,17 @@ class MapAnimationEditorDialog(QDialog):
                 )
                 notice.setWordWrap(True)
                 box.addWidget(notice)
-            layout.addWidget(group, 1)
+            # The reference editor shows one rule family at a time.  Keeping
+            # all three full editors side by side makes every field narrow and
+            # is especially unusable at Windows display scaling above 100%.
+            host = QWidget()
+            host_layout = QHBoxLayout(host)
+            host_layout.setContentsMargins(6, 6, 6, 6)
+            host_layout.addStretch(1)
+            group.setMaximumWidth(520)
+            host_layout.addWidget(group, 0)
+            host_layout.addStretch(1)
+            self.rule_category_tabs.addTab(host, title)
         for kind, listing in self.rule_lists.items():
             listing.setCurrentRow(1 if kind == "movement" else 0)
         return page

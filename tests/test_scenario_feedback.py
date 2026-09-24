@@ -125,7 +125,7 @@ class ScenarioFeedbackTests(QtTestCase):
         instruction = next(item for item in page._instructions if item.opcode == 0x51)
         page._select_address(instruction.address)
         self.assertFalse(page.has_pending_draft)
-        self.assertIn("语义未验证", page.parameter_labels[0].text())
+        self.assertIn("事件开关", page.parameter_labels[0].text())
         page.parameters[0].setValue(instruction.parameters[0] ^ 1)
         self.assertTrue(page.has_pending_draft)
         page.copy_instruction()

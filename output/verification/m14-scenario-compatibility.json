@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-21T23:15:20+08:00",
+  "generated_at": "2026-09-24T21:23:01+08:00",
   "passed": true,
   "delivery_status": "implementation_complete",
   "conclusion": "M14 的静态布局、三类关卡脚本、256 项独立行动表、行动池接上/接下变长重排、四条劝降规则、八个文本组（含 $37 分离布局）、13 条初始胜利文字、32 组真实标题拼图和事务边界可重复通过；当前交付范围实现完成，但仍待参考 EXE 动态黄金和用户签收。",
@@ -312,7 +312,8 @@
       "0x07A015",
       "0x07A016"
     ],
-    "fixed_capacity": true
+    "fixed_total_pool": true,
+    "variable_record_length": true
   },
   "chapter_titles": {
     "pointer_table_file_offset": "0x016111",
@@ -335,7 +336,8 @@
         "0x016B9E"
       ]
     },
-    "fixed_capacity": true,
+    "fixed_total_pool": true,
+    "variable_record_length": true,
     "pointer_table_unchanged": true
   },
   "product_ui": {
@@ -373,10 +375,10 @@
     "action_insert_delete_repack_and_undo_are_exact": true,
     "persuasion_first_four_only_and_pointer_safe": true,
     "eight_supported_story_groups_roundtrip_losslessly": true,
-    "story_equal_length_edit_and_undo_are_exact": true,
+    "story_pool_repack_and_undo_are_exact": true,
     "split_37_layout_and_in_place_edit_are_exact": true,
-    "chapter_victory_table_and_fixed_capacity_edit_are_exact": true,
-    "chapter_title_tables_and_fixed_capacity_edit_are_exact": true,
+    "chapter_victory_shared_pool_edit_is_exact": true,
+    "chapter_title_tables_and_shared_pool_edit_are_exact": true,
     "six_tabs_match_declared_order": true,
     "three_setup_tabs_match_declared_order": true,
     "title_preview_is_rom_bound_and_editable": true,

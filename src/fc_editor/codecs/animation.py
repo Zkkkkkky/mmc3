@@ -399,7 +399,16 @@ def decode_script(raw: bytes, start: int) -> tuple[tuple[AnimationInstruction, .
         editable: list[tuple[int, int, int]] = []
         text = ""
         tail = raw[cursor:]
-        if op < 0xE0:
+        if op in (0x42, 0xC2):
+            size = 5
+            if len(tail) >= size:
+                text = (
+                    f"调用物体运行规律{'1' if op == 0x42 else '2'}："
+                    f"标志 ${tail[1]:02X}，组图 ${tail[2]:02X}，"
+                    f"X 规律 ${tail[3]:02X}，Y 规律 ${tail[4]:02X}"
+                )
+                editable = [(i, 0, 255) for i in range(1, size)]
+        elif op < 0xE0:
             text = f"等待：{op:03d} 帧" if op else "等待：256 帧（00）"
             editable = [(0, 1, 0xDF)]
         elif op in (0xE0, 0xE1):
@@ -692,6 +701,108 @@ class AnimationCodec:
         if complete != record.complete or tuple(len(x.raw) for x in decoded) != tuple(len(x.raw) for x in record.instructions):
             raise ValueError("编辑改变了动画指令边界。")
         return record.offset, record.raw, bytes(replacement)
+
+    def script_capacity(self, record: AnimationRecord) -> int:
+        """Return the pointer-bounded byte allocation owned by one script."""
+
+        if record.kind not in ("map", "ally", "enemy"):
+            raise ValueError("当前资源不是动画脚本。")
+        current = self.record(record.kind, record.index)
+        if current != record:
+            raise ValueError("动画原值已变化，请重新载入。")
+        table = TABLE_BY_KIND[record.kind]
+        pointer = self.pointers[record.kind][record.index]
+        if not pointer:
+            return 0
+        end = min(
+            (candidate for candidate in self.pointers[record.kind] if candidate > pointer),
+            default=table.end,
+        )
+        return end - pointer
+
+    def script_sequence_patch(
+        self,
+        record: AnimationRecord,
+        replacement: bytes,
+    ) -> BytePatch:
+        """Replace a complete script inside its existing pointer allocation.
+
+        Unlike :meth:`script_patch`, this is the reference editor's structural
+        path: instruction boundaries and total used length may change, while
+        the pointer table and the next record remain untouched.
+        """
+
+        current = self.record(record.kind, record.index)
+        if current != record:
+            raise ValueError("动画原值已变化，请重新载入。")
+        if not current.complete:
+            raise ValueError("当前动画含未验证或截断指令，不能进行结构编辑。")
+        decoded, complete = decode_script(replacement, record.offset)
+        consumed = sum(len(instruction.raw) for instruction in decoded)
+        if not complete or consumed != len(replacement):
+            raise ValueError("动画必须由完整指令组成，并以 FF 动画结束结束。")
+        capacity = self.script_capacity(record)
+        if len(replacement) <= capacity:
+            before = bytes(self.data[record.offset:record.offset + capacity])
+            after = bytearray(before)
+            after[:len(replacement)] = replacement
+            # Old trailing commands must not reappear if a later structural
+            # edit grows the script again.  FF is an inert terminator here.
+            if len(replacement) < len(record.raw):
+                after[len(replacement):len(record.raw)] = b"\xFF" * (
+                    len(record.raw) - len(replacement)
+                )
+            return record.offset, before, bytes(after)
+
+        # Packed weapon scripts normally end exactly where the next script
+        # begins.  Grow one record by moving the later records as a block and
+        # rebasing every later pointer, matching the reference editor's insert
+        # behavior.  The table's verified upper bound is never crossed.
+        extra = len(replacement) - capacity
+        table = TABLE_BY_KIND[record.kind]
+        pointers = self.pointers[record.kind]
+        unique_pointers = sorted(set(pointer for pointer in pointers if pointer))
+        used_end = max(
+            pointer + len(self.record(record.kind, pointers.index(pointer)).raw)
+            for pointer in unique_pointers
+        )
+        if used_end + extra > table.end:
+            raise ValueError(
+                f"动画区只剩 {table.end - used_end} 字节，新增指令需要 {extra} 字节。"
+            )
+        pointer_table_offset = table.offset(table.table)
+        span_end = table.offset(used_end + extra)
+        before = bytes(self.data[pointer_table_offset:span_end])
+        after = bytearray(before)
+        rebased = tuple(
+            pointer + extra if pointer > self.pointers[record.kind][record.index] else pointer
+            for pointer in pointers
+        )
+        struct.pack_into(f"<{len(rebased)}H", after, 0, *rebased)
+        next_offset = record.offset + capacity
+        used_end_offset = table.offset(used_end)
+        source = bytes(self.data[next_offset:used_end_offset])
+        destination = next_offset + extra - pointer_table_offset
+        after[destination:destination + len(source)] = source
+        # FE stores an absolute CPU address.  If a moved script contains an
+        # internal jump into the moved suffix, rebase that target as well.
+        for later_pointer in unique_pointers:
+            if later_pointer <= self.pointers[record.kind][record.index]:
+                continue
+            later_record = self.record(
+                record.kind,
+                pointers.index(later_pointer),
+            )
+            for instruction in later_record.instructions:
+                if instruction.raw[:1] != b"\xFE" or len(instruction.raw) != 4:
+                    continue
+                target = int.from_bytes(instruction.raw[2:4], "little")
+                if self.pointers[record.kind][record.index] + capacity <= target < used_end:
+                    moved_row = instruction.offset + extra - pointer_table_offset
+                    after[moved_row + 2:moved_row + 4] = (target + extra).to_bytes(2, "little")
+        local = record.offset - pointer_table_offset
+        after[local:local + len(replacement)] = replacement
+        return pointer_table_offset, before, bytes(after)
 
     def clone_map_animation_patches(
         self,

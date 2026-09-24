@@ -225,6 +225,49 @@ class LegacyTextScenarioCodecTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "控制码"):
             codec.replacement_patch("system", 2, 0, record.text.replace("<FCFFFF>", "", 1))
 
+    def test_system_shared_pool_allows_growth_and_preserves_aliases(self) -> None:
+        codec = LegacyTextCodec(self.data)
+        identity = ("system", 2, 0)
+        record = codec.record(*identity)
+        replacement = record.text.replace("⟦结束⟧", "机⟦结束⟧")
+        usage = codec.simple_group_usage("system", {identity: replacement})
+        self.assertGreater(usage.free, 0)
+        patches = codec.simple_group_repack_patches(
+            "system", {identity: replacement}
+        )
+        repacked_data = self._apply_patches(self.data, patches)
+        reopened = LegacyTextCodec(repacked_data)
+        self.assertEqual(reopened.record(*identity).text, replacement)
+        self.assertEqual(
+            reopened.record(*identity).shared_by,
+            record.shared_by,
+        )
+
+    def test_item_description_pool_balances_shrink_and_growth(self) -> None:
+        codec = LegacyTextCodec(self.data)
+        shorter_id = ("item_description", 0, 0)
+        longer_id = ("item_description", 1, 0)
+        shorter = codec.record(*shorter_id).text.replace("防御力增加1点", "防御")
+        longer = codec.record(*longer_id).text.replace("速度", "反应速度")
+        usage = codec.simple_group_usage(
+            "item_description",
+            {shorter_id: shorter, longer_id: longer},
+        )
+        self.assertLessEqual(usage.used, usage.capacity)
+        patches = codec.simple_group_repack_patches(
+            "item_description",
+            {shorter_id: shorter, longer_id: longer},
+        )
+        reopened = LegacyTextCodec(self._apply_patches(self.data, patches))
+        self.assertEqual(reopened.record(*shorter_id).text, shorter)
+        self.assertEqual(reopened.record(*longer_id).text, longer)
+
+        with self.assertRaisesRegex(ValueError, "共享池容量不足"):
+            codec.simple_group_repack_patches(
+                "item_description",
+                {longer_id: longer},
+            )
+
     def test_item_descriptions_match_source_and_preserve_shared_empty_slots(self) -> None:
         codec = LegacyTextCodec(self.data)
         self.assertIn("防御力增加1点", codec.record("item_description", 0).text)

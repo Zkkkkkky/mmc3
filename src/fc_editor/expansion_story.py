@@ -10,6 +10,10 @@ from .errors import RomFormatError
 
 
 VERIFIED_STORY_SELECTORS = (0x32, 0x33, 0x36, 0x38, 0x39, 0x3A, 0x3B)
+# The V5.1/current-ROM groups use one fixed 16 KiB window each.  All verified
+# groups own their zero-filled tail through $BFFF except $39: bytes from $887E
+# onward contain unrelated runtime data and must never enter the text arena.
+IN_PLACE_STORY_DATA_END = {0x39: 0x887E}
 STORY_PAIR_SIZE = PRG_BANK_SIZE * 2
 STORY_POINTER_TABLE = 0x8010
 STORY_POINTER_COUNT = 0xFF
@@ -294,3 +298,63 @@ def build_story_group(
                 record.indices[0], replacement_by_alias[record.source_pointer]
             )
     return pack_story_group(records, first_bank)
+
+
+def in_place_story_repack_patches(
+    codec: StoryTextCodec,
+    records: StoryGroupRecords,
+    data: bytes | bytearray,
+) -> tuple[int, int, tuple[tuple[int, bytes, bytes], ...]]:
+    """Pack one current-ROM text group in its verified original arena.
+
+    This is the reference editor's pointer-table + contiguous-pool strategy,
+    adapted to the current ROM's per-selector banks.  It never crosses the
+    group boundary and explicitly protects selector $39's adjacent data.
+    """
+
+    group = codec.group_by_selector[records.selector]
+    if group.pointer_table != STORY_POINTER_TABLE or group.data_start != STORY_DATA_START:
+        raise ValueError(
+            f"剧情文本组 ${records.selector:02X} 不是已验证的独立池布局。"
+        )
+    pool_end = IN_PLACE_STORY_DATA_END.get(records.selector, group.data_end)
+    if not group.data_start < pool_end <= group.data_end:
+        raise ValueError("剧情文本安全池边界无效。")
+    capacity = pool_end - group.data_start
+    used = sum(len(record.raw) for record in records.records)
+    if used > capacity:
+        raise ValueError(
+            f"剧情文本组 ${records.selector:02X} 需要 {used} 字节，"
+            f"当前安全池容量为 {capacity} 字节；请缩短同组其他文本。"
+        )
+
+    cursor = group.data_start
+    pointers = [0] * records.count
+    packed = bytearray()
+    for record in records.records:
+        for index in record.indices:
+            pointers[index] = cursor
+        packed.extend(record.raw)
+        cursor += len(record.raw)
+    packed.extend(b"\x00" * (capacity - len(packed)))
+
+    source = bytes(data)
+    table_offset = codec.cpu_to_file_offset(group.prg_bank, group.pointer_table)
+    table_size = group.count * 2
+    pool_offset = codec.cpu_to_file_offset(group.prg_bank, group.data_start)
+    after_table = struct.pack(f"<{len(pointers)}H", *pointers)
+    patches = (
+        (
+            table_offset,
+            source[table_offset : table_offset + table_size],
+            after_table,
+        ),
+        (
+            pool_offset,
+            source[pool_offset : pool_offset + capacity],
+            bytes(packed),
+        ),
+    )
+    return used, capacity, tuple(
+        patch for patch in patches if patch[1] != patch[2]
+    )

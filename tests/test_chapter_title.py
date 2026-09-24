@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 import os
+from pathlib import Path
+import tempfile
 import unittest
 
 os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
@@ -15,6 +17,7 @@ from fc_editor.codecs.chapter_title import (
     CHAPTER_TITLE_CHR_TABLE_OFFSET,
     CHAPTER_TITLE_COUNT,
     CHAPTER_TITLE_POINTER_TABLE_OFFSET,
+    ChapterTitleCodec,
 )
 from fc_rom_editor_core import RomProject
 
@@ -70,14 +73,50 @@ class ChapterTitleCodecTests(unittest.TestCase):
         self.project.undo()
         self.assertEqual(bytes(self.project.working), before)
 
-    def test_invalid_length_structure_and_chr_page_are_rejected(self) -> None:
+    def test_shared_pool_allows_balanced_length_changes_and_rejects_overflow(self) -> None:
         current = self.project.get_chapter_title(0)
-        with self.assertRaisesRegex(ValueError, "必须保持当前容量"):
+        following = self.project.get_chapter_title(1)
+        first = current.segments[-1]
+        shorter = (
+            current.raw[: -(len(first.tiles) + 5)]
+            + bytes((0xFE, first.x, first.y, first.width - 1))
+            + first.tiles[:-2]
+            + b"\xFF"
+        )
+        self.project.set_chapter_title(0, current.chr_banks, shorter)
+        self.assertEqual(len(self.project.get_chapter_title(0).raw), len(current.raw) - 2)
+
+        second = following.segments[-1]
+        longer = (
+            following.raw[: -(len(second.tiles) + 5)]
+            + bytes((0xFE, second.x, second.y, second.width + 1))
+            + second.tiles
+            + second.tiles[-2:]
+            + b"\xFF"
+        )
+        self.project.set_chapter_title(1, following.chr_banks, longer)
+        self.assertEqual(len(self.project.get_chapter_title(1).raw), len(following.raw) + 2)
+        with tempfile.TemporaryDirectory() as directory:
+            output = Path(directory) / "title-repacked.nes"
+            self.project.save_as(output)
+            reopened = RomProject.load(output)
+            self.assertEqual(reopened.get_chapter_title(0).raw, shorter)
+            self.assertEqual(reopened.get_chapter_title(1).raw, longer)
+        self.project.undo()
+        self.project.undo()
+        self.assertEqual(self.project.get_chapter_title(0), current)
+        self.assertEqual(self.project.get_chapter_title(1), following)
+
+        with self.assertRaisesRegex(ValueError, "共享池容量不足"):
             self.project.set_chapter_title(
                 0,
                 current.chr_banks,
-                current.raw + b"\x00",
+                longer,
             )
+        self.assertEqual(self.project.get_chapter_title(0), current)
+
+    def test_invalid_structure_and_chr_page_are_rejected(self) -> None:
+        current = self.project.get_chapter_title(0)
         invalid = bytearray(current.raw)
         invalid[0] = 0x00
         with self.assertRaisesRegex(ValueError, "必须以 FE 开始"):
@@ -155,6 +194,7 @@ class ChapterTitleUiTests(QtTestCase):
     def test_title_library_preview_uses_the_same_exact_nes_gray_ramp(self) -> None:
         dialog = self.show(ChapterTitleDialog(self.project, 0))
         image = dialog.bank_previews[0].pixmap().toImage()
+        scale = image.width() // 64
         bank = self.project.get_chapter_title(0).chr_banks[0]
         found: dict[int, tuple[int, int]] = {}
         for tile_index in range(64):
@@ -162,8 +202,8 @@ class ChapterTitleUiTests(QtTestCase):
             for pixel, value in enumerate(tile):
                 if value and value not in found:
                     found[value] = (
-                        (tile_index % 8 * 8 + pixel % 8) * 2,
-                        (tile_index // 8 * 8 + pixel // 8) * 2,
+                        (tile_index % 8 * 8 + pixel % 8) * scale,
+                        (tile_index // 8 * 8 + pixel // 8) * scale,
                     )
         self.assertEqual(set(found), {1, 2, 3})
         for index, (x, y) in found.items():
@@ -187,6 +227,35 @@ class ChapterTitleUiTests(QtTestCase):
         self.assertEqual(self.project.get_chapter_title(0).raw, bytes(replacement))
         self.assertNotEqual(bytes(self.project.working), before)
         self.assertTrue(self.project.can_undo)
+
+    def test_title_dialog_exposes_reference_segment_fields_and_tile_numbers(self) -> None:
+        dialog = self.show(ChapterTitleDialog(self.project, 0))
+        record = self.project.get_chapter_title(0)
+        segment = record.segments[-1]
+        self.assertEqual(dialog.segment_selector.count(), len(record.segments))
+        self.assertEqual(dialog.segment_x.value(), segment.x)
+        self.assertEqual(dialog.segment_y.value(), segment.y)
+        self.assertEqual(dialog.segment_width.value(), segment.width)
+        self.assertEqual(
+            bytes.fromhex(dialog.segment_tiles.text()),
+            segment.tiles,
+        )
+        dialog.show_tile_numbers.setChecked(True)
+        self.application.processEvents()
+        self.assertFalse(dialog.bank_previews[0].pixmap().isNull())
+
+    def test_title_structured_segment_edit_updates_raw_without_changing_capacity(self) -> None:
+        dialog = self.show(ChapterTitleDialog(self.project, 0))
+        original = self.project.get_chapter_title(0)
+        segment = original.segments[-1]
+        changed = bytearray(segment.tiles)
+        changed[0] ^= 1
+        dialog.segment_tiles.setText(bytes(changed).hex(" ").upper())
+        dialog.segment_apply.click()
+        self.application.processEvents()
+        raw = bytes.fromhex(dialog.code_edit.toPlainText())
+        self.assertEqual(len(raw), original.capacity)
+        self.assertEqual(ChapterTitleCodec.parse_segments(raw)[-1].tiles, bytes(changed))
 
 
 if __name__ == "__main__":
