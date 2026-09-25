@@ -358,3 +358,79 @@ def in_place_story_repack_patches(
     return used, capacity, tuple(
         patch for patch in patches if patch[1] != patch[2]
     )
+
+
+def split_story_37_repack_patches(
+    codec: StoryTextCodec,
+    index: int,
+    replacement: bytes,
+    data: bytes | bytearray,
+) -> tuple[int, int, tuple[tuple[int, bytes, bytes], ...]]:
+    """Repack selector $37 while preserving its external slot-$00 pointer.
+
+    $37 stores its 52-entry pointer table *after* the text arena.  Index $00
+    targets a non-text runtime structure outside that arena; indices $01-$33
+    form 34 token-terminated alias records inside the fixed 734-byte pool.
+    """
+
+    selector = 0x37
+    if not 1 <= index < 52:
+        raise ValueError("剧情文本 $37:$00 是非文本结构，只允许编辑 $01—$33。")
+    _validate_record(bytes(replacement))
+    group = codec.group_by_selector[selector]
+    pointers = codec.pointers(selector)
+    usable = sorted(
+        pointer
+        for pointer in set(pointers[1:])
+        if group.data_start <= pointer < group.data_end
+    )
+    if len(usable) != 34 or any(
+        pointer not in usable for pointer in pointers[1:]
+    ):
+        raise RomFormatError("剧情文本 $37 的 34 条物理记录布局已变化。")
+    source = bytes(data)
+    records: dict[int, bytes] = {}
+    for position, pointer in enumerate(usable):
+        end_pointer = usable[position + 1] if position + 1 < len(usable) else group.data_end
+        start = codec.cpu_to_file_offset(group.prg_bank, pointer)
+        end = codec.cpu_to_file_offset(group.prg_bank, end_pointer - 1) + 1
+        bounded = source[start:end]
+        length = _terminated_length(bounded)
+        if position + 1 < len(usable) and length != len(bounded):
+            raise RomFormatError("剧情文本 $37 的相邻记录之间含未归属数据。")
+        records[pointer] = bounded[:length]
+    records[pointers[index]] = bytes(replacement)
+
+    capacity = group.data_end - group.data_start
+    used = sum(len(records[pointer]) for pointer in usable)
+    if used > capacity:
+        raise ValueError(
+            f"剧情文本 $37 需要 {used} 字节，固定容量为 {capacity} 字节；"
+            "请先缩短同组其他文本。"
+        )
+    cursor = group.data_start
+    relocated: dict[int, int] = {}
+    packed = bytearray()
+    for pointer in usable:
+        relocated[pointer] = cursor
+        raw = records[pointer]
+        packed.extend(raw)
+        cursor += len(raw)
+    packed.extend(b"\x00" * (capacity - len(packed)))
+    after_pointers = (pointers[0], *(relocated[pointer] for pointer in pointers[1:]))
+    table_offset = codec.cpu_to_file_offset(group.prg_bank, group.pointer_table)
+    pool_offset = codec.cpu_to_file_offset(group.prg_bank, group.data_start)
+    table_size = group.count * 2
+    patches = (
+        (
+            table_offset,
+            source[table_offset:table_offset + table_size],
+            struct.pack(f"<{group.count}H", *after_pointers),
+        ),
+        (
+            pool_offset,
+            source[pool_offset:pool_offset + capacity],
+            bytes(packed),
+        ),
+    )
+    return used, capacity, tuple(patch for patch in patches if patch[1] != patch[2])

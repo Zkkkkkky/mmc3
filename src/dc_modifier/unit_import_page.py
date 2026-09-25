@@ -22,6 +22,7 @@ from PySide6.QtWidgets import (
 from fc_editor.unit_package import UnitPackage
 
 from .pages import ProjectPage, page_title
+from .beginner_ui import collapsible_details, task_hint
 from .chr_widget import ChrGraphicsWidget
 from .unit_packages import affected_unit_ids, apply_unit_package, package_from_project
 from .workspace import default_export_path, writable_output_path
@@ -39,6 +40,10 @@ class UnitImportPage(ProjectPage):
         )
         layout.addWidget(title)
         layout.addWidget(subtitle)
+        self.task_hint = task_hint(
+            "操作：① 选择来源或打开机体包　② 选择目标机体　③ 点击“覆盖目标机体”"
+        )
+        layout.addWidget(self.task_hint)
 
         self.tabs = QTabWidget()
         package_tab = QWidget()
@@ -77,7 +82,6 @@ class UnitImportPage(ProjectPage):
         chr_layout.addWidget(QLabel("数量"))
         chr_layout.addWidget(self.chr_tile_count)
         chr_layout.addStretch()
-        package_root.addWidget(chr_group)
 
         package_group = QGroupBox("2. 载入机体包")
         package_layout = QVBoxLayout(package_group)
@@ -124,7 +128,13 @@ class UnitImportPage(ProjectPage):
         )
         scope.setObjectName("hintText")
         scope.setWordWrap(True)
-        package_root.addWidget(scope)
+        diagnostics = QWidget()
+        diagnostics_layout = QVBoxLayout(diagnostics)
+        diagnostics_layout.setContentsMargins(0, 0, 0, 0)
+        diagnostics_layout.addWidget(chr_group)
+        diagnostics_layout.addWidget(scope)
+        self.advanced_details = collapsible_details(diagnostics)
+        package_root.addWidget(self.advanced_details)
         package_root.addStretch()
 
     def refresh(self) -> None:

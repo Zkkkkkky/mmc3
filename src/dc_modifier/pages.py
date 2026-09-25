@@ -30,6 +30,7 @@ from PySide6.QtWidgets import (
     QSplitter,
     QTableWidget,
     QTableWidgetItem,
+    QTabWidget,
     QToolButton,
     QVBoxLayout,
     QWidget,
@@ -42,6 +43,7 @@ from fc_editor.resources import ResourceGraph
 from fc_rom_editor_core import RomProject, compact_ids
 
 from .music_import import assemble_famistudio_music_source, load_music_bank
+from .beginner_ui import collapsible_details, task_hint
 from .workspace import default_export_path, writable_output_path
 
 
@@ -595,7 +597,7 @@ class UnitPage(SearchableRecordPage):
         self.name_reference.currentIndexChanged.connect(self._update_pending_state)
         identity_form.addRow("名称引用", self.name_reference)
         self.name_text = QLineEdit()
-        self.name_text.setPlaceholderText("在当前名称原槽容量内直接修改")
+        self.name_text.setPlaceholderText("在机体名称共享池总容量内修改，可先缩短再增长")
         self.name_text.textChanged.connect(self._update_pending_state)
         identity_form.addRow("直接修改名称", self.name_text)
         self.weapon_slots = (QComboBox(), QComboBox())
@@ -1013,7 +1015,7 @@ class CharacterPage(SearchableRecordPage):
         self.name_reference.currentIndexChanged.connect(self._update_pending_state)
         identity_form.addRow("战斗名称引用", self.name_reference)
         self.name_text = QLineEdit()
-        self.name_text.setPlaceholderText("在当前名称原槽容量内直接修改")
+        self.name_text.setPlaceholderText("在人物名称共享池总容量内修改，可先缩短再增长")
         self.name_text.textChanged.connect(self._update_pending_state)
         identity_form.addRow("战斗名称", self.name_text)
         self.name_tokens = QLineEdit()
@@ -1403,7 +1405,7 @@ class WeaponPage(SearchableRecordPage):
         self.name_reference.currentIndexChanged.connect(self._update_pending_state)
         form.addRow("名称引用", self.name_reference)
         self.name_text = QLineEdit()
-        self.name_text.setPlaceholderText("在当前名称原槽容量内直接修改")
+        self.name_text.setPlaceholderText("在武器名称共享池总容量内修改，可先缩短再增长")
         self.name_text.textChanged.connect(self._update_pending_state)
         form.addRow("直接修改名称", self.name_text)
         self.name_tokens = QLineEdit()
@@ -1693,6 +1695,10 @@ class MusicPage(SearchableRecordPage):
         )
         outer.addWidget(title)
         outer.addWidget(subtitle)
+        self.task_hint = task_hint(
+            "操作：① 左侧选择人物或音乐选择器　② 选择攻击与被攻击曲目　③ 点击“应用当前绑定”"
+        )
+        outer.addWidget(self.task_hint)
         splitter = QSplitter()
         left = QWidget()
         left_layout = QVBoxLayout(left)
@@ -1721,7 +1727,6 @@ class MusicPage(SearchableRecordPage):
         detail_layout.addLayout(form)
         self.original_binding = QLabel("基准ROM：—")
         self.original_binding.setObjectName("hintText")
-        detail_layout.addWidget(self.original_binding)
         self.pending_state = QLabel("选择记录后可编辑。")
         self.pending_state.setObjectName("editState")
         detail_layout.addWidget(self.pending_state)
@@ -1787,6 +1792,12 @@ class MusicPage(SearchableRecordPage):
         detail_layout.addWidget(self.music_import_toggle)
         detail_layout.addWidget(import_group)
         import_group.hide()
+        diagnostics = QWidget()
+        diagnostics_layout = QVBoxLayout(diagnostics)
+        diagnostics_layout.setContentsMargins(0, 0, 0, 0)
+        diagnostics_layout.addWidget(self.original_binding)
+        self.advanced_details = collapsible_details(diagnostics)
+        detail_layout.addWidget(self.advanced_details)
         detail_layout.addStretch()
         splitter.addWidget(detail)
         splitter.setSizes([420, 650])
@@ -1950,6 +1961,7 @@ class MusicPage(SearchableRecordPage):
             self.record_heading.setText("请选择音乐选择器")
             self.original_binding.setText("基准ROM：—")
             self.pending_state.setText("选择记录后可编辑。")
+            self.pending_state.show()
             self.apply_button.setEnabled(False)
             return
         binding = self.project.get_battle_music_binding(record_id)
@@ -1986,6 +1998,7 @@ class MusicPage(SearchableRecordPage):
         )
         self.apply_button.setEnabled(changed)
         self.pending_state.setText("● 有尚未应用的绑定" if changed else "✓ 当前表单已应用")
+        self.pending_state.setVisible(changed)
         self.pending_state.setProperty("pending", changed)
         self.pending_state.style().unpolish(self.pending_state)
         self.pending_state.style().polish(self.pending_state)
@@ -2059,6 +2072,10 @@ class ResourcePage(ProjectPage):
         )
         layout.addWidget(title)
         layout.addWidget(subtitle)
+        self.task_hint = task_hint(
+            "操作：使用推荐分配后点击“自动分区并接通”；普通修改不需要查看地址或资源表。"
+        )
+        layout.addWidget(self.task_hint)
         self.capacity_label = QLabel("尚未载入ROM")
         self.capacity_label.setObjectName("sectionTitle")
         self.capacity = QProgressBar()
@@ -2160,9 +2177,7 @@ class ResourcePage(ProjectPage):
         self.allocation_table.setAlternatingRowColors(True)
         self.allocation_table.itemSelectionChanged.connect(self._update_button_state)
         managed_layout.addWidget(self.allocation_table)
-        layout.addWidget(managed_group)
-
-        layout.addWidget(QLabel("ROM布局与保护范围"))
+        self.layout_table_label = QLabel("ROM布局与保护范围")
         self.table = QTableWidget(0, 6)
         self.table.setHorizontalHeaderLabels(
             ("资源", "类型", "文件起点", "文件终点", "大小", "写入策略")
@@ -2174,7 +2189,15 @@ class ResourcePage(ProjectPage):
         self.table.horizontalHeader().setSectionResizeMode(4, QHeaderView.ResizeMode.ResizeToContents)
         self.table.horizontalHeader().setSectionResizeMode(5, QHeaderView.ResizeMode.ResizeToContents)
         self.table.setAlternatingRowColors(True)
-        layout.addWidget(self.table, 1)
+        diagnostics = QWidget()
+        diagnostics_layout = QVBoxLayout(diagnostics)
+        diagnostics_layout.setContentsMargins(0, 0, 0, 0)
+        diagnostics_layout.addWidget(managed_group)
+        diagnostics_layout.addWidget(self.layout_table_label)
+        diagnostics_layout.addWidget(self.table, 1)
+        self.advanced_details = collapsible_details(diagnostics)
+        layout.addWidget(self.advanced_details, 1)
+        layout.addStretch()
 
     def set_project(self, project: RomProject | None) -> None:
         if project is not self.project:
@@ -2502,6 +2525,10 @@ class ChangesPage(ProjectPage):
         )
         layout.addWidget(title)
         layout.addWidget(subtitle)
+        self.task_hint = task_hint(
+            "操作：点击“运行完整检查”；先处理错误，再另存 ROM 并进入模拟器测试。"
+        )
+        layout.addWidget(self.task_hint)
         toolbar = QHBoxLayout()
         refresh_button = QPushButton("刷新")
         refresh_button.clicked.connect(self.refresh)
@@ -2515,19 +2542,18 @@ class ChangesPage(ProjectPage):
         toolbar.addStretch()
         toolbar.addWidget(self.summary)
         layout.addLayout(toolbar)
-        splitter = QSplitter(Qt.Orientation.Vertical)
         self.changes = QTableWidget(0, 4)
         self.changes.setHorizontalHeaderLabels(("文件范围", "长度", "说明", "字节变化"))
         self.changes.horizontalHeader().setSectionResizeMode(2, QHeaderView.ResizeMode.Stretch)
         self.changes.setAlternatingRowColors(True)
-        splitter.addWidget(self.changes)
         self.validation = QTableWidget(0, 3)
         self.validation.setHorizontalHeaderLabels(("级别", "模块", "结果"))
         self.validation.horizontalHeader().setSectionResizeMode(2, QHeaderView.ResizeMode.Stretch)
         self.validation.setAlternatingRowColors(True)
-        splitter.addWidget(self.validation)
-        splitter.setSizes([330, 260])
-        layout.addWidget(splitter, 1)
+        self.result_tabs = QTabWidget()
+        self.result_tabs.addTab(self.validation, "检查结果")
+        self.result_tabs.addTab(self.changes, "技术差异（高级）")
+        layout.addWidget(self.result_tabs, 1)
 
     def refresh(self) -> None:
         self.changes.setRowCount(0)

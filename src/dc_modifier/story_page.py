@@ -29,6 +29,7 @@ from fc_editor.text_table import TextTable
 from fc_editor.dc_text import concise_dc_text, default_dc_text_table
 
 from .pages import ProjectPage, page_title, readonly_item
+from .beginner_ui import task_hint
 from .workspace import default_export_path, writable_output_path
 
 
@@ -56,6 +57,10 @@ class StoryPage(ProjectPage):
         )
         outer.addWidget(title)
         outer.addWidget(subtitle)
+        self.task_hint = task_hint(
+            "操作：① 选择文本组和文字　② 在“文字编辑”中修改　③ 点击“应用当前文本”"
+        )
+        outer.addWidget(self.task_hint)
         splitter = QSplitter()
 
         left = QWidget()
@@ -100,7 +105,6 @@ class StoryPage(ProjectPage):
         self.meta.setObjectName("hintText")
         self.meta.setWordWrap(True)
         right_layout.addWidget(self.heading)
-        right_layout.addWidget(self.meta)
         table_row = QHBoxLayout()
         self.table_status = QLabel(
             f"内置新DC码表 · {len(self.text_table.byte_to_text)} 条有效映射"
@@ -128,7 +132,6 @@ class StoryPage(ProjectPage):
         right_layout.addWidget(self.editor_tabs, 3)
         self.length_label = QLabel("—")
         self.length_label.setObjectName("hintText")
-        right_layout.addWidget(self.length_label)
         buttons = QHBoxLayout()
         parse_button = QPushButton("刷新Token解析")
         parse_button.clicked.connect(self._render_tokens)
@@ -156,6 +159,8 @@ class StoryPage(ProjectPage):
         self.advanced_toggle.setArrowType(Qt.ArrowType.RightArrow)
         self.advanced_panel = QGroupBox("码表与 Token 解析")
         advanced_layout = QVBoxLayout(self.advanced_panel)
+        advanced_layout.addWidget(self.meta)
+        advanced_layout.addWidget(self.length_label)
         advanced_layout.addLayout(table_row)
         advanced_buttons = QHBoxLayout()
         advanced_buttons.addWidget(parse_button)

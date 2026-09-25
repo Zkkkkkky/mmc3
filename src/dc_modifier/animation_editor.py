@@ -14,6 +14,7 @@ from fc_editor.codecs.animation import (
     decode_script, decode_sprite_composition, decode_sprite_timeline,
 )
 from .workspace import ROOT
+from .beginner_ui import collapsible_details, task_hint
 
 
 def animation_names(filename: str, count: int, first: int = 0) -> tuple[str, ...]:
@@ -82,6 +83,10 @@ class AnimationInstructionDialog(QDialog):
         self.setModal(True)
         self.setMinimumWidth(500)
         root = QVBoxLayout(self)
+        self.task_hint = task_hint(
+            "操作：选择动画或规律后修改；右键动画指令可插入、编辑、复制或删除；最后点击“确定”。"
+        )
+        root.addWidget(self.task_hint)
         summary = QLabel(
             f"{instruction.text}\n"
             f"ROM 地址：${instruction.offset:06X}　原始字节：{instruction.raw.hex(' ').upper()}"
@@ -147,11 +152,36 @@ def _weapon_command_preset_index(raw: bytes) -> int:
 
 
 class WeaponAnimationCommandDialog(QDialog):
-    """Choose and fully edit one reference-compatible weapon command."""
+    """Insert a command or edit only the parameters of an existing command."""
 
-    def __init__(self, parent=None, *, raw: bytes | None = None) -> None:
+    def __init__(
+        self,
+        parent=None,
+        *,
+        raw: bytes | None = None,
+        allow_type_change: bool | None = None,
+        operation: str = "edit",
+    ) -> None:
         super().__init__(parent)
-        self.setWindowTitle("武器指令")
+        if allow_type_change is None:
+            allow_type_change = raw is None
+        self.allow_type_change = allow_type_change
+        self._original = bytes(raw) if raw is not None else None
+        self._original_type = (
+            _weapon_command_preset_index(self._original)
+            if self._original is not None
+            else None
+        )
+        self.operation = operation
+        self.setWindowTitle(
+            "设置新武器动画指令参数"
+            if operation == "insert"
+            else (
+                "插入武器动画指令"
+                if self.allow_type_change
+                else "编辑武器动画参数"
+            )
+        )
         self.setModal(True)
         self.setMinimumWidth(620)
         root = QVBoxLayout(self)
@@ -174,7 +204,9 @@ class WeaponAnimationCommandDialog(QDialog):
         self.buttons = QDialogButtonBox(
             QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel
         )
-        self.buttons.button(QDialogButtonBox.StandardButton.Ok).setText("应用指令")
+        self.buttons.button(QDialogButtonBox.StandardButton.Ok).setText(
+            "插入指令" if operation == "insert" else "应用参数"
+        )
         self.buttons.button(QDialogButtonBox.StandardButton.Cancel).setText("取消")
         self.buttons.accepted.connect(self.accept)
         self.buttons.rejected.connect(self.reject)
@@ -183,6 +215,11 @@ class WeaponAnimationCommandDialog(QDialog):
         self.raw_edit.textChanged.connect(self._validate)
         initial = raw if raw is not None else _WEAPON_COMMAND_PRESETS[0][1]
         self.command_type.setCurrentIndex(_weapon_command_preset_index(initial))
+        self.command_type.setEnabled(self.allow_type_change)
+        if not self.allow_type_change:
+            self.command_type.setToolTip(
+                "参考版右键“编辑”只修改当前指令参数；要更换类型请删除后使用“插入”。"
+            )
         self.raw_edit.setText(initial.hex(" ").upper())
         self._validate()
 
@@ -200,6 +237,16 @@ class WeaponAnimationCommandDialog(QDialog):
             rows, complete = decode_script(probe, 0)
             if not complete or not rows or rows[0].raw != raw:
                 raise ValueError("字节必须恰好组成一条受支持的完整指令。")
+            if not self.allow_type_change and self._original is not None:
+                if len(raw) != len(self._original):
+                    raise ValueError(
+                        "右键“编辑”只能修改当前指令参数，不能改变指令长度；"
+                        "请使用删除和插入更换指令。"
+                    )
+                if _weapon_command_preset_index(raw) != self._original_type:
+                    raise ValueError(
+                        "右键“编辑”不能更换指令类型；请使用删除和插入更换指令。"
+                    )
             self.preview_label.setText(f"预览：{rows[0].text}")
             self.preview_label.setStyleSheet("color: #176b2c;")
             self.buttons.button(QDialogButtonBox.StandardButton.Ok).setEnabled(True)
@@ -212,6 +259,59 @@ class WeaponAnimationCommandDialog(QDialog):
 
     def command(self) -> bytes:
         return bytes.fromhex(self.raw_edit.text())
+
+
+class WeaponAnimationCommandPaletteDialog(QDialog):
+    """Reference-style first step used only to choose a new command type."""
+
+    def __init__(self, parent: QWidget | None = None) -> None:
+        super().__init__(parent)
+        self.setWindowTitle("选择要插入的武器动画指令")
+        self.setModal(True)
+        self.setMinimumSize(520, 430)
+        root = QVBoxLayout(self)
+        hint = QLabel(
+            "这里只选择要新增的指令，不显示当前指令参数。"
+            "选定后再进入该新指令自己的参数窗口。"
+        )
+        hint.setObjectName("hintText")
+        hint.setWordWrap(True)
+        root.addWidget(hint)
+        self.command_list = QListWidget()
+        for index, (label, _preset, description) in enumerate(_WEAPON_COMMAND_PRESETS):
+            item = QListWidgetItem(label)
+            item.setData(Qt.ItemDataRole.UserRole, index)
+            item.setToolTip(description)
+            self.command_list.addItem(item)
+        self.command_list.setAlternatingRowColors(True)
+        self.command_list.setCurrentRow(0)
+        self.command_list.itemDoubleClicked.connect(lambda _item: self.accept())
+        root.addWidget(self.command_list, 1)
+        self.description = QLabel()
+        self.description.setWordWrap(True)
+        root.addWidget(self.description)
+        self.command_list.currentRowChanged.connect(self._update_description)
+        self._update_description(0)
+        self.buttons = QDialogButtonBox(
+            QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel
+        )
+        self.buttons.button(QDialogButtonBox.StandardButton.Ok).setText("下一步：设置参数")
+        self.buttons.button(QDialogButtonBox.StandardButton.Cancel).setText("取消")
+        self.buttons.accepted.connect(self.accept)
+        self.buttons.rejected.connect(self.reject)
+        root.addWidget(self.buttons)
+
+    def _update_description(self, row: int) -> None:
+        if 0 <= row < len(_WEAPON_COMMAND_PRESETS):
+            self.description.setText(_WEAPON_COMMAND_PRESETS[row][2])
+        else:
+            self.description.clear()
+
+    def preset(self) -> bytes:
+        row = self.command_list.currentRow()
+        if not 0 <= row < len(_WEAPON_COMMAND_PRESETS):
+            raise ValueError("尚未选择要插入的武器动画指令。")
+        return _WEAPON_COMMAND_PRESETS[row][1]
 
 
 class SpritePuzzlePreviewDialog(QDialog):
@@ -806,7 +906,11 @@ class AnimationScriptWidget(QWidget):
         rows, complete = self._draft_instructions()
         if not complete or not 0 <= row < len(rows) or rows[row].raw == b"\xFF":
             return
-        dialog = WeaponAnimationCommandDialog(self, raw=rows[row].raw)
+        dialog = WeaponAnimationCommandDialog(
+            self,
+            raw=rows[row].raw,
+            allow_type_change=False,
+        )
         if dialog.exec() == QDialog.DialogCode.Accepted:
             commands = [instruction.raw for instruction in rows]
             commands[row] = dialog.command()
@@ -823,7 +927,18 @@ class AnimationScriptWidget(QWidget):
         end = max(0, len(commands) - 1)
         target = self.instruction_table.currentRow() if row is None or isinstance(row, bool) else row
         target = min(max(0, target), end)
-        dialog = WeaponAnimationCommandDialog(self)
+        palette = WeaponAnimationCommandPaletteDialog(self)
+        if palette.exec() != QDialog.DialogCode.Accepted:
+            palette.deleteLater()
+            return
+        preset = palette.preset()
+        palette.deleteLater()
+        dialog = WeaponAnimationCommandDialog(
+            self,
+            raw=preset,
+            allow_type_change=False,
+            operation="insert",
+        )
         if dialog.exec() == QDialog.DialogCode.Accepted:
             command = dialog.command()
             if command == b"\xFF":
@@ -1122,7 +1237,7 @@ class MapAnimationEditorDialog(QDialog):
         aliases = "、".join(f"${index:02X}" for index in matches)
         self.script_editor.status.setText(
             f"已定位指针 ${pointer:04X}（动画 {aliases}）；"
-            "等长代码区已展开，只允许修改已验证参数。"
+            "结构代码区已展开；可增删完整指令，地址与循环目标会安全重定位。"
         )
         self.script_editor.code_edit.setFocus()
 
@@ -1210,6 +1325,7 @@ class MapAnimationEditorDialog(QDialog):
         self.rule_names: dict[str, list[str]] = {}
         self.rule_name_edits: dict[str, QLineEdit] = {}
         self.rule_add_buttons: dict[str, QPushButton] = {}
+        self.rule_apply_buttons: dict[str, QPushButton] = {}
         self._movement_roles = self.codec.movement_roles()
         for kind, title, filename, first in (
             ("background", "背景规律", "背景规律名称.ini", 0),
@@ -1259,7 +1375,6 @@ class MapAnimationEditorDialog(QDialog):
             status = QLabel()
             status.setWordWrap(True)
             self.rule_statuses[kind] = status
-            box.addWidget(status)
             code = QPlainTextEdit()
             code.setReadOnly(True)
             self.rule_codes[kind] = code
@@ -1267,6 +1382,7 @@ class MapAnimationEditorDialog(QDialog):
             if kind == "sprite":
                 code.setReadOnly(False)
                 apply = QPushButton("应用首图块")
+                self.rule_apply_buttons[kind] = apply
                 apply.setToolTip(
                     "仅首图块字节已有参考版保存/全新进程重开黄金；X/Y 与后续拼图指令保持只读。"
                 )
@@ -1303,10 +1419,11 @@ class MapAnimationEditorDialog(QDialog):
                     )
                 form.addRow("起始 X", self.sprite_x)
                 form.addRow("起始 Y", self.sprite_y)
-                box.addLayout(form)
-                box.addWidget(QLabel("X/Y 仅展示；可编辑代码仅限黄金验证的首图块字节。"))
+                self.sprite_readonly_details = QWidget()
+                self.sprite_readonly_details.setLayout(form)
             elif kind == "movement":
                 apply = QPushButton("应用等长代码")
+                self.rule_apply_buttons[kind] = apply
                 apply.clicked.connect(self._apply_movement_code)
                 box.addWidget(apply)
                 notice = QLabel("根据实际调用区分组图帧和坐标位移。可改帧、位移、音效和循环次数；跳转、长度与控制码保持原值。")
@@ -1314,6 +1431,7 @@ class MapAnimationEditorDialog(QDialog):
                 box.addWidget(notice)
             else:
                 apply = QPushButton("应用等长代码")
+                self.rule_apply_buttons[kind] = apply
                 apply.clicked.connect(self._apply_background_code)
                 box.addWidget(apply)
                 notice = QLabel(
@@ -1321,6 +1439,13 @@ class MapAnimationEditorDialog(QDialog):
                 )
                 notice.setWordWrap(True)
                 box.addWidget(notice)
+            diagnostics = QWidget()
+            diagnostics_layout = QVBoxLayout(diagnostics)
+            diagnostics_layout.setContentsMargins(0, 0, 0, 0)
+            diagnostics_layout.addWidget(status)
+            if kind == "sprite":
+                diagnostics_layout.addWidget(self.sprite_readonly_details)
+            box.addWidget(collapsible_details(diagnostics))
             # The reference editor shows one rule family at a time.  Keeping
             # all three full editors side by side makes every field narrow and
             # is especially unusable at Windows display scaling above 100%.
@@ -1448,6 +1573,8 @@ class MapAnimationEditorDialog(QDialog):
             self._background_index = row
             editable, explanation = AnimationCodec(self.draft).background_edit_status(row)
             self.rule_codes[kind].setReadOnly(not editable)
+            self.rule_codes[kind].setVisible(editable)
+            self.rule_apply_buttons[kind].setVisible(editable)
             self.rule_statuses[kind].setText(
                 self.rule_statuses[kind].text()
                 + f" · {explanation}"
@@ -1456,6 +1583,8 @@ class MapAnimationEditorDialog(QDialog):
             self._movement_index = row
             roles = self._movement_roles.get(row, set())
             self.rule_codes[kind].setReadOnly(len(roles) != 1)
+            self.rule_codes[kind].setVisible(len(roles) == 1)
+            self.rule_apply_buttons[kind].setVisible(len(roles) == 1)
             self.rule_statuses[kind].setText(self.rule_statuses[kind].text() + " · " +
                                             ({"frames": "组图帧序列", "axis": "坐标位移"}.get(next(iter(roles)), "")
                                              if len(roles) == 1 else "运行方式未唯一确认，只读"))
@@ -1546,7 +1675,7 @@ class MapAnimationEditorDialog(QDialog):
     def _calls_tab(self) -> QWidget:
         page = QWidget()
         layout = QVBoxLayout(page)
-        hint = QLabel("从当前事件脚本识别 38 02 动画调用；显示真实文件地址。未证明精神名称关联的调用不猜测名称。")
+        hint = QLabel("这里只显示已经确认可以修改的动画调用；选择新动画后会随窗口“确定”一起保存。")
         hint.setWordWrap(True)
         layout.addWidget(hint)
         self.call_table = QTableWidget(0, 4)
@@ -1556,6 +1685,7 @@ class MapAnimationEditorDialog(QDialog):
         self.call_table.setEditTriggers(QTableWidget.EditTrigger.NoEditTriggers)
         self.call_table.setAlternatingRowColors(True)
         self.call_combos: dict[int, QComboBox] = {}
+        self.call_editable_rows: list[tuple[int, bool]] = []
         calls = self.codec.calls()
         self.call_table.setRowCount(len(calls))
         for row, (offset, index) in enumerate(calls):
@@ -1579,8 +1709,25 @@ class MapAnimationEditorDialog(QDialog):
             jump = QPushButton("查看动画")
             jump.clicked.connect(lambda checked=False, box=combo: self._show_call_animation(box.currentIndex()))
             self.call_table.setCellWidget(row, 3, jump)
+            self.call_editable_rows.append((row, editable))
+            self.call_table.setRowHidden(row, not editable)
+        self.call_table.setColumnHidden(0, True)
+        self.call_table.setColumnHidden(2, True)
+        diagnostics = QWidget()
+        diagnostics_layout = QVBoxLayout(diagnostics)
+        diagnostics_layout.setContentsMargins(0, 0, 0, 0)
+        self.show_readonly_calls = QCheckBox("显示不可编辑的调用、地址和原因")
+        self.show_readonly_calls.toggled.connect(self._toggle_call_diagnostics)
+        diagnostics_layout.addWidget(self.show_readonly_calls)
+        layout.addWidget(collapsible_details(diagnostics))
         layout.addWidget(self.call_table, 1)
         return page
+
+    def _toggle_call_diagnostics(self, enabled: bool) -> None:
+        self.call_table.setColumnHidden(0, not enabled)
+        self.call_table.setColumnHidden(2, not enabled)
+        for row, editable in self.call_editable_rows:
+            self.call_table.setRowHidden(row, not editable and not enabled)
 
     def _change_call(self, offset: int, index: int) -> None:
         try:

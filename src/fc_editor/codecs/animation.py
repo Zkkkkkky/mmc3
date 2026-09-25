@@ -7,6 +7,7 @@ Only existing operands may change; pointers and control flow stay intact.
 from __future__ import annotations
 
 from dataclasses import dataclass
+from difflib import SequenceMatcher
 import struct
 
 
@@ -725,11 +726,12 @@ class AnimationCodec:
         record: AnimationRecord,
         replacement: bytes,
     ) -> BytePatch:
-        """Replace a complete script inside its existing pointer allocation.
+        """Replace one complete script and relocate proven ``FE`` targets.
 
-        Unlike :meth:`script_patch`, this is the reference editor's structural
-        path: instruction boundaries and total used length may change, while
-        the pointer table and the next record remain untouched.
+        Structural edits may move instructions inside the selected script and,
+        after its pointer-bounded allocation is exhausted, all later scripts.
+        Every affected absolute target must still resolve to an instruction
+        boundary; deleting a referenced instruction therefore fails closed.
         """
 
         current = self.record(record.kind, record.index)
@@ -741,26 +743,11 @@ class AnimationCodec:
         consumed = sum(len(instruction.raw) for instruction in decoded)
         if not complete or consumed != len(replacement):
             raise ValueError("动画必须由完整指令组成，并以 FF 动画结束结束。")
-        capacity = self.script_capacity(record)
-        if len(replacement) <= capacity:
-            before = bytes(self.data[record.offset:record.offset + capacity])
-            after = bytearray(before)
-            after[:len(replacement)] = replacement
-            # Old trailing commands must not reappear if a later structural
-            # edit grows the script again.  FF is an inert terminator here.
-            if len(replacement) < len(record.raw):
-                after[len(replacement):len(record.raw)] = b"\xFF" * (
-                    len(record.raw) - len(replacement)
-                )
-            return record.offset, before, bytes(after)
-
-        # Packed weapon scripts normally end exactly where the next script
-        # begins.  Grow one record by moving the later records as a block and
-        # rebasing every later pointer, matching the reference editor's insert
-        # behavior.  The table's verified upper bound is never crossed.
-        extra = len(replacement) - capacity
         table = TABLE_BY_KIND[record.kind]
         pointers = self.pointers[record.kind]
+        selected_pointer = pointers[record.index]
+        capacity = self.script_capacity(record)
+        extra = max(0, len(replacement) - capacity)
         unique_pointers = sorted(set(pointer for pointer in pointers if pointer))
         used_end = max(
             pointer + len(self.record(record.kind, pointers.index(pointer)).raw)
@@ -774,34 +761,81 @@ class AnimationCodec:
         span_end = table.offset(used_end + extra)
         before = bytes(self.data[pointer_table_offset:span_end])
         after = bytearray(before)
-        rebased = tuple(
-            pointer + extra if pointer > self.pointers[record.kind][record.index] else pointer
-            for pointer in pointers
-        )
+        rebased = tuple(pointer + extra if pointer > selected_pointer else pointer for pointer in pointers)
         struct.pack_into(f"<{len(rebased)}H", after, 0, *rebased)
         next_offset = record.offset + capacity
         used_end_offset = table.offset(used_end)
-        source = bytes(self.data[next_offset:used_end_offset])
-        destination = next_offset + extra - pointer_table_offset
-        after[destination:destination + len(source)] = source
-        # FE stores an absolute CPU address.  If a moved script contains an
-        # internal jump into the moved suffix, rebase that target as well.
-        for later_pointer in unique_pointers:
-            if later_pointer <= self.pointers[record.kind][record.index]:
+        if extra:
+            source = bytes(self.data[next_offset:used_end_offset])
+            destination = next_offset + extra - pointer_table_offset
+            after[destination:destination + len(source)] = source
+
+        # Match unchanged instructions across the edit.  This deliberately
+        # uses whole instruction bytes: if a referenced row itself was
+        # rewritten so heavily that its identity cannot be proven, saving is
+        # refused instead of guessing which duplicate opcode was intended.
+        old_rows = current.instructions
+        old_keys = [row.raw for row in old_rows]
+        new_keys = [row.raw for row in decoded]
+        boundary_map: dict[int, int] = {selected_pointer: selected_pointer}
+        matcher = SequenceMatcher(a=old_keys, b=new_keys, autojunk=False)
+        for old_at, new_at, size in matcher.get_matching_blocks():
+            for step in range(size):
+                old_local = old_rows[old_at + step].offset - record.offset
+                new_local = decoded[new_at + step].offset - record.offset
+                boundary_map[selected_pointer + old_local] = selected_pointer + new_local
+        # The byte immediately after the record is also a boundary, although
+        # normal FE loops target an instruction rather than this sentinel.
+        boundary_map[selected_pointer + len(record.raw)] = selected_pointer + len(replacement)
+
+        moved_start = selected_pointer + capacity
+
+        def relocate_target(target: int) -> int:
+            if selected_pointer <= target < selected_pointer + len(record.raw):
+                try:
+                    return boundary_map[target]
+                except KeyError as error:
+                    raise ValueError(
+                        f"动画循环目标 CPU ${target:04X} 对应的指令已删除或无法唯一识别。"
+                    ) from error
+            if moved_start <= target < used_end:
+                return target + extra
+            return target
+
+        def write_target(instruction_offset: int, target: int) -> None:
+            local = instruction_offset - pointer_table_offset + 2
+            after[local:local + 2] = target.to_bytes(2, "little")
+
+        # Rebase FE operands in every other script, including an earlier
+        # script that jumps into the selected or moved suffix script.
+        for pointer in unique_pointers:
+            if pointer == selected_pointer:
                 continue
-            later_record = self.record(
-                record.kind,
-                pointers.index(later_pointer),
-            )
-            for instruction in later_record.instructions:
+            other = self.record(record.kind, pointers.index(pointer))
+            shift = extra if pointer > selected_pointer else 0
+            for instruction in other.instructions:
                 if instruction.raw[:1] != b"\xFE" or len(instruction.raw) != 4:
                     continue
                 target = int.from_bytes(instruction.raw[2:4], "little")
-                if self.pointers[record.kind][record.index] + capacity <= target < used_end:
-                    moved_row = instruction.offset + extra - pointer_table_offset
-                    after[moved_row + 2:moved_row + 4] = (target + extra).to_bytes(2, "little")
+                relocated = relocate_target(target)
+                if relocated != target:
+                    write_target(instruction.offset + shift, relocated)
+
         local = record.offset - pointer_table_offset
         after[local:local + len(replacement)] = replacement
+        if len(replacement) < len(record.raw):
+            after[local + len(replacement):local + len(record.raw)] = b"\xFF" * (
+                len(record.raw) - len(replacement)
+            )
+        # Finally rewrite the selected script's own FE operands.  They still
+        # contain pre-edit CPU addresses because insert/delete UI operations
+        # preserve the original instruction bytes.
+        for instruction in decoded:
+            if instruction.raw[:1] != b"\xFE" or len(instruction.raw) != 4:
+                continue
+            target = int.from_bytes(instruction.raw[2:4], "little")
+            relocated = relocate_target(target)
+            write_target(instruction.offset, relocated)
         return pointer_table_offset, before, bytes(after)
 
     def clone_map_animation_patches(

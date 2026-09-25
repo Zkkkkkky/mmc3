@@ -1324,7 +1324,6 @@ class MapPage(ProjectPage):
         tile_tab = QWidget()
         tile_layout = QVBoxLayout(tile_tab)
         tile_layout.setContentsMargins(8, 8, 8, 8)
-
         brush_group = QGroupBox("地图图块设置")
         brush_group.setMinimumHeight(210)
         brush_layout = QVBoxLayout(brush_group)

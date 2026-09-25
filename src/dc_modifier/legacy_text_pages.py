@@ -15,9 +15,9 @@ from fc_editor.codecs.legacy_scenario import LegacyScenarioCodec
 from fc_editor.codecs.legacy_text import LegacyTextCodec, decode_legacy_text
 from fc_editor.codecs.legacy_text_growth import LegacyGrowthCodec
 from fc_editor.codecs.legacy_text_shop import LegacyShopCodec
-from fc_editor.dc_text import DC_STOCK_MUSIC_LABELS
 
 from .pages import ProjectPage
+from .event_preview import reference_event_preview
 
 
 class LegacyTextPage(ProjectPage):
@@ -73,7 +73,6 @@ class LegacyTextPage(ProjectPage):
         right_layout.addWidget(self.editor_title)
         right_layout.addWidget(self.text_edit, 2)
         right_layout.addWidget(self.view_tabs, 1)
-        right_layout.addWidget(self.status_label)
         splitter.addWidget(left)
         splitter.addWidget(right)
         splitter.setSizes([300, 650])
@@ -101,6 +100,7 @@ class LegacyTextPage(ProjectPage):
         buttons.addWidget(self.apply_button)
         buttons.addWidget(self.reset_button)
         layout.addLayout(buttons)
+        layout.addWidget(self.status_label)
         self.group_combo.currentIndexChanged.connect(self._populate_records)
         self.record_list.currentRowChanged.connect(self._populate_variants)
         self.variant_list.currentRowChanged.connect(self._select_variant)
@@ -368,6 +368,15 @@ class LegacyTextPage(ProjectPage):
             self.text_edit.setPlainText(LegacyTextCodec(self.project.original).record(*self._selected).text)
 
 
+REFERENCE_EVENT_MUSIC_LABELS = (
+    "大卫音乐", "盖塔音乐", "加代音乐", "古莲音乐", "吉尔变身音乐",
+    "安东音乐", "未知音乐2", "地球我方音乐", "地球敌方音乐", "存档音乐",
+    "敌方增援音乐2", "游戏结束音乐", "宇宙我方音乐", "敌方增援音乐1",
+    "升级音乐", "吉尔音乐", "瓦尔音乐", "宇宙敌方音乐", "未知音乐1",
+    "通关音乐",
+)
+
+
 class LegacyScenarioEventsPage(ProjectPage):
     def __init__(self, phase: int = 0) -> None:
         super().__init__()
@@ -448,68 +457,19 @@ class LegacyScenarioEventsPage(ProjectPage):
             return f"${value:02X} {self.project.unit_display_name(value)}"
         return f"${value:02X}"
 
-    def _instruction_summary(self, index, instruction, address_rows) -> str:
-        """Render one beginner-facing line using verified operands and names."""
+    def _character_name(self, value: int) -> str:
+        if self.project is None:
+            return f"人物 ${value:02X}"
+        return self.project.character_display_name(value)
 
-        raw = instruction.raw
-        opcode = instruction.opcode
-        terminal = "，结束本事件组" if raw[0] & 0x80 else ""
-        if opcode in (0x59, 0x5A) and len(raw) >= 2:
-            music_index = raw[1] - 0x81
-            music = (
-                DC_STOCK_MUSIC_LABELS[music_index]
-                if 0 <= music_index < len(DC_STOCK_MUSIC_LABELS)
-                else f"音乐命令 ${raw[1]:02X}"
-            )
-            side = "我方" if opcode == 0x59 else "敌方"
-            detail = f"播放{side}地图音乐：“{music}”"
-        elif opcode == 0x01 and len(raw) >= 2:
-            value = raw[1]
-            scope = "全局" if value & 0x80 else "本关"
-            detail = f"判断：{scope}开关 {value & 0x0F} 是否打开？"
-        elif opcode in (0x55, 0x57, 0x58) and len(raw) >= 3:
-            target = int.from_bytes(raw[1:3], "little")
-            row = address_rows.get(target)
-            destination = f"第 {row:03d} 条" if row is not None else "脚本外地址"
-            condition = {0x55: "直接", 0x57: "是", 0x58: "否"}[opcode]
-            detail = f"{condition}：跳到 {destination}（${target:04X}）"
-        elif opcode in (0x40, 0x41, 0x42, 0x44):
-            kind = {
-                0x40: "无光标对白",
-                0x41: "人物对白",
-                0x42: "对白调用",
-                0x44: "显示文字",
-            }[opcode]
-            detail = f"{kind}{terminal}：{self._story_summary(instruction)}"
-            terminal = ""
-        elif opcode == 0x43 and len(raw) >= 2:
-            detail = f"打开文字窗口：样式/位置 ${raw[1]:02X}"
-        elif opcode == 0x45:
-            detail = "关闭文字窗口"
-        elif opcode == 0x46 and len(raw) >= 3:
-            detail = f"移动光标到地图坐标 X={raw[1]}，Y={raw[2]}"
-        elif opcode == 0x27 and len(raw) >= 2:
-            detail = f"判断：选项 {max(1, raw[1] >> 4)} 是否被选择？"
-        elif opcode == 0x3C and len(raw) >= 2:
-            detail = f"开始选项事件：{raw[1]} 个选项"
-        elif opcode == 0x5C and len(raw) >= 5:
-            address = int.from_bytes(raw[1:3], "little")
-            detail = (
-                f"设置内存地址 ${address:04X} 的值为 ${raw[3]:02X}"
-                f"（模式 ${raw[4]:02X}）"
-            )
-        else:
-            labels = ACTION_FIELDS.get(opcode, ())
-            values = raw[1:]
-            if labels and len(labels) == len(values):
-                parameters = "，".join(
-                    f"{label}={self._named_parameter(label, value)}"
-                    for label, value in zip(labels, values)
-                )
-            else:
-                parameters = " ".join(f"${value:02X}" for value in values)
-            detail = instruction.label + (f"：{parameters}" if parameters else "")
-        return f"{index:03d}: {detail}{terminal}"
+    def _instruction_summary(self, index, instruction, address_rows) -> str:
+        return reference_event_preview(
+            instruction,
+            index=index,
+            project=self.project,
+            address_rows=address_rows,
+            story_summary=self._story_summary,
+        )
 
     def _select(self, *_args) -> None:
         if self._loading:
@@ -565,6 +525,7 @@ class LegacyScenarioEventsPage(ProjectPage):
     def _patches(self):
         codec = LegacyScenarioCodec(self.project.working) if self.project is not None and self.has_pending_draft else self.codec
         result = []
+        structural = []
         for item in self._instructions:
             if item.file_offset not in self._drafts:
                 continue
@@ -572,7 +533,15 @@ class LegacyScenarioEventsPage(ProjectPage):
                 raw = bytes.fromhex(self._drafts[item.file_offset])
             except ValueError as error:
                 raise ValueError("事件字节必须是完整的十六进制数，例如 59 88。") from error
-            result.append(codec.replacement_patch(item, raw))
+            if len(raw) == len(item.raw):
+                result.append(codec.replacement_patch(item, raw))
+            else:
+                structural.append((item, raw))
+        if structural:
+            if len(structural) != 1 or result:
+                raise ValueError("变长事件一次只能暂存一条；请应用后再编辑下一条。")
+            item, raw = structural[0]
+            return codec.replacement_patches(item, raw)
         return tuple(result)
 
     @property
@@ -904,8 +873,8 @@ class LegacyShopPage(ProjectPage):
         self.status_label.setWordWrap(True)
         layout.addWidget(self.status_label)
         self.apply_button = QPushButton("暂存商店与对话")
-        layout.addWidget(self.apply_button)
         self.discard_button = QPushButton("放弃本页草稿")
+        layout.addWidget(self.apply_button)
         layout.addWidget(self.discard_button)
         self.shop_combo.currentIndexChanged.connect(self._load)
         self.shop_combo.currentIndexChanged.connect(self._sync_shop_list)

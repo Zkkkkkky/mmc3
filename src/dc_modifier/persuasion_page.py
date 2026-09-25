@@ -20,6 +20,7 @@ from PySide6.QtWidgets import (
 from fc_editor.dc_text import dc_map_label
 
 from .pages import ProjectPage, page_title, readonly_item
+from .beginner_ui import task_hint
 
 
 class PersuasionPage(ProjectPage):
@@ -36,10 +37,10 @@ class PersuasionPage(ProjectPage):
         )
         layout.addWidget(title)
         layout.addWidget(subtitle)
-        scope_note = QLabel("全局劝降规则表：每条规则独立指定所在关卡、劝说者与目标。切换其他页的关卡不会改变这里的选择。")
-        scope_note.setWordWrap(True)
-        scope_note.setObjectName("hintText")
-        layout.addWidget(scope_note)
+        self.task_hint = task_hint(
+            "操作：① 选择一条规则　② 选择关卡、劝说者和目标　③ 点击“应用劝降条件”"
+        )
+        layout.addWidget(self.task_hint)
 
         splitter = QSplitter()
         self.table = QTableWidget(0, 6)
@@ -76,7 +77,6 @@ class PersuasionPage(ProjectPage):
         self.raw_value.setTextInteractionFlags(
             Qt.TextInteractionFlag.TextSelectableByMouse
         )
-        form.addRow("规则槽位", self.slot_value)
         form.addRow("所在章节", self.chapter)
         form.addRow("劝说者", self.persuader)
         form.addRow("被劝说目标", self.target)
@@ -91,6 +91,7 @@ class PersuasionPage(ProjectPage):
         self.advanced_toggle.setArrowType(Qt.ArrowType.RightArrow)
         self.advanced_panel = QGroupBox("规则原始信息（只读）")
         advanced_form = QFormLayout(self.advanced_panel)
+        advanced_form.addRow("规则槽位", self.slot_value)
         advanced_form.addRow("成功脚本", self.script_value)
         advanced_form.addRow("原始3字节", self.raw_value)
         self.advanced_panel.hide()
@@ -108,13 +109,13 @@ class PersuasionPage(ProjectPage):
         editor_layout.addWidget(self.advanced_toggle)
         editor_layout.addWidget(self.advanced_panel)
 
-        note = QLabel(
+        self.note = QLabel(
             "已确认原ROM有4条可用规则。其余28个表槽位只是占位，"
             "没有独立安全脚本，修改器不会把它们伪装成可用事件。"
         )
-        note.setObjectName("hintText")
-        note.setWordWrap(True)
-        editor_layout.addWidget(note)
+        self.note.setObjectName("hintText")
+        self.note.setWordWrap(True)
+        advanced_form.addRow(self.note)
         editor_layout.addStretch()
         splitter.addWidget(editor)
         splitter.setStretchFactor(0, 3)
@@ -254,6 +255,7 @@ class PersuasionPage(ProjectPage):
         if any(value is None for value in values):
             self.raw_value.setText("—")
             self.pending_state.setText("请选择劝降条件")
+            self.pending_state.show()
             self.apply_button.setEnabled(False)
             return
         self.raw_value.setText(" ".join(f"{int(value):02X}" for value in values))
@@ -269,6 +271,7 @@ class PersuasionPage(ProjectPage):
         self.pending_state.setText(
             "● 当前条件尚未应用" if changed else "✓ 与当前工程一致"
         )
+        self.pending_state.setVisible(changed)
 
     def _apply(self) -> None:
         if self.project is None or self.current_slot is None:

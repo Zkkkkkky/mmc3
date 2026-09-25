@@ -241,6 +241,42 @@ def analyze(rom_path: Path = DEFAULT_ROM) -> dict[str, object]:
             }
         )
 
+    # Bank-local structural proof: shrink one instruction, verify that a
+    # later absolute jump moved with it, then grow it back byte-for-byte.
+    structural_item = legacy.instructions(0, 0)[0]
+    structural_jump = next(
+        item
+        for chapter in range(32)
+        for item in legacy.instructions(chapter, 0)
+        if item.opcode in ACTION_EVENT_JUMP_OPCODES
+        and int.from_bytes(item.raw[1:3], "little") > structural_item.address
+    )
+    structural_target = int.from_bytes(structural_jump.raw[1:3], "little")
+    structural_data = bytearray(source)
+    for offset, before, after in legacy.replacement_patches(
+        structural_item, b"\xDF"
+    ):
+        assert bytes(structural_data[offset:offset + len(before)]) == before
+        structural_data[offset:offset + len(after)] = after
+    structural_reopened = LegacyScenarioCodec(structural_data)
+    structural_moved_jump = next(
+        item
+        for chapter in range(32)
+        for item in structural_reopened.instructions(chapter, 0)
+        if item.address == structural_jump.address - 1
+    )
+    legacy_structural_relocation_exact = (
+        structural_reopened.instructions(0, 0)[0].raw == b"\xDF"
+        and int.from_bytes(structural_moved_jump.raw[1:3], "little")
+        == structural_target - 1
+    )
+    for offset, before, after in structural_reopened.replacement_patches(
+        structural_reopened.instructions(0, 0)[0], structural_item.raw
+    ):
+        assert bytes(structural_data[offset:offset + len(before)]) == before
+        structural_data[offset:offset + len(after)] = after
+    legacy_structural_restore_exact = bytes(structural_data) == source
+
     event_project = RomProject.load(rom_path)
     event_before = bytes(event_project.working)
     pointer_ranges = _pointer_table_ranges(event_project)
@@ -479,6 +515,20 @@ def analyze(rom_path: Path = DEFAULT_ROM) -> dict[str, object]:
         split_project.set_story_text_raw(0x37, 0, b"\xFF")
     except ValueError:
         split_sentinel_rejected = bytes(split_project.working) == split_before
+    split_donor = split_project.get_story_text(0x37, 1)
+    split_receiver = split_project.get_story_text(0x37, 2)
+    split_project.set_story_text_raw(0x37, 1, split_donor.raw[2:])
+    split_growth = (
+        split_receiver.raw[:-1] + split_receiver.raw[:2] + b"\xFF"
+    )
+    split_project.set_story_text_raw(0x37, 2, split_growth)
+    split_variable_length_exact = (
+        split_project.get_story_text(0x37, 1).raw == split_donor.raw[2:]
+        and split_project.get_story_text(0x37, 2).raw == split_growth
+    )
+    split_project.reset_story_text(0x37, 2)
+    split_project.reset_story_text(0x37, 1)
+    split_variable_reset_exact = bytes(split_project.working) == split_before
 
     victory_project = RomProject.load(rom_path)
     victory_before = bytes(victory_project.working)
@@ -690,6 +740,10 @@ def analyze(rom_path: Path = DEFAULT_ROM) -> dict[str, object]:
             and legacy_boundaries_exact
         ),
         "legacy_three_phase_samples_are_isolated": legacy_samples_isolated,
+        "legacy_chapter_structural_relocation_and_restore_are_exact": (
+            legacy_structural_relocation_exact
+            and legacy_structural_restore_exact
+        ),
         "global_event_block_is_complete": (
             len(all_events) == 2637
             and len(actions) == 294
@@ -744,7 +798,7 @@ def analyze(rom_path: Path = DEFAULT_ROM) -> dict[str, object]:
             and story_growth_exact
             and bool(story_differences)
         ),
-        "split_37_layout_and_in_place_edit_are_exact": (
+        "split_37_layout_and_pool_repack_are_exact": (
             split_group.prg_bank == 0x0E
             and split_group.pointer_table == 0x9E28
             and (split_group.data_start, split_group.data_end)
@@ -761,6 +815,8 @@ def analyze(rom_path: Path = DEFAULT_ROM) -> dict[str, object]:
             and split_pointer_table_unchanged
             and split_undo_exact
             and split_sentinel_rejected
+            and split_variable_length_exact
+            and split_variable_reset_exact
         ),
         "chapter_victory_shared_pool_edit_is_exact": (
             victory_codec.count == CHAPTER_VICTORY_COUNT == 13
@@ -813,7 +869,7 @@ def analyze(rom_path: Path = DEFAULT_ROM) -> dict[str, object]:
         "passed": all(checks.values()),
         "delivery_status": "implementation_complete",
         "conclusion": (
-            "M14 的静态布局、三类关卡脚本、256 项独立行动表、"
+            "M14 的静态布局、三类关卡脚本及 Bank 内变长重定位、256 项独立行动表、"
             "行动池接上/接下变长重排、四条劝降规则、"
             "八个文本组（含 $37 分离布局）、13 条初始胜利文字、"
             "32 组真实标题拼图和事务边界可重复通过；"
@@ -935,7 +991,9 @@ def analyze(rom_path: Path = DEFAULT_ROM) -> dict[str, object]:
                 ],
                 "descriptor_unchanged": split_descriptor_unchanged,
                 "pointer_table_unchanged": split_pointer_table_unchanged,
-                "relocatable": False,
+                "relocatable": True,
+                "fixed_total_pool": True,
+                "variable_record_length": True,
             },
         },
         "chapter_victory": {
@@ -983,7 +1041,7 @@ def analyze(rom_path: Path = DEFAULT_ROM) -> dict[str, object]:
         "limitations": [
             "参考程序仍处于提权模态窗口，次级编辑对话框无法可靠动态重放。",
             "按钮 690 对独立行动表按 Bank $26 单独计算；劝降与地图事件仍按已验证章节脚本边界报告。",
-            "接上/接下变长能力只对已验证的 Bank $26 独立行动池开放；三类章节脚本仍保持等长边界。",
+            "章节脚本只在各自 $1E/$1B/$1F 固定 Bank 池内重排；重叠分支解释、悬空跳转或容量不足会原子拒绝。",
             "自动报告证明实现边界，不等于参考动态黄金或用户验收。",
         ],
     }

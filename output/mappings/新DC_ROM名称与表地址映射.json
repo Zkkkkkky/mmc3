@@ -45817,8 +45817,8 @@
       "fields": [
         "X",
         "Y",
-        "机体ID",
         "人物ID",
+        "机体ID",
         "等级",
         "AI/标志"
       ]
@@ -45830,8 +45830,8 @@
       "fields": [
         "X",
         "Y",
-        "机体ID",
         "人物ID",
+        "机体ID",
         "等级",
         "AI/标志"
       ]
@@ -46118,43 +46118,72 @@
       "opcode": 31,
       "hexOpcode": "$1F",
       "label": "提升五围（仅限我方，行动）",
-      "fields": []
+      "fields": [
+        "提升数值",
+        "附加标志"
+      ]
     },
     {
       "opcode": 32,
       "hexOpcode": "$20",
       "label": "剩余HP判定",
-      "fields": []
+      "fields": [
+        "HP低字节",
+        "HP高字节"
+      ]
     },
     {
       "opcode": 33,
       "hexOpcode": "$21",
       "label": "地址量位判定",
-      "fields": []
+      "fields": [
+        "地址低字节",
+        "地址高字节",
+        "位掩码"
+      ]
     },
     {
       "opcode": 34,
       "hexOpcode": "$22",
       "label": "属性某位判定（行动）",
-      "fields": []
+      "fields": [
+        "属性地址低字节",
+        "属性地址高字节",
+        "位掩码"
+      ]
     },
     {
       "opcode": 35,
       "hexOpcode": "$23",
       "label": "属性值少于判定（行动）",
-      "fields": []
+      "fields": [
+        "属性地址低字节",
+        "属性地址高字节",
+        "比较值",
+        "附加标志"
+      ]
     },
     {
       "opcode": 36,
       "hexOpcode": "$24",
       "label": "范围内机体数量判定",
-      "fields": []
+      "fields": [
+        "左上X",
+        "左上Y",
+        "右下X",
+        "右下Y",
+        "机体数量",
+        "阵营/状态"
+      ]
     },
     {
       "opcode": 37,
       "hexOpcode": "$25",
       "label": "周围机体数量判定（行动）",
-      "fields": []
+      "fields": [
+        "范围",
+        "机体数量"
+      ]
     },
     {
       "opcode": 38,
@@ -46222,73 +46251,109 @@
       "opcode": 48,
       "hexOpcode": "$30",
       "label": "播放战场动画",
-      "fields": []
+      "fields": [
+        "战场动画ID"
+      ]
     },
     {
       "opcode": 49,
       "hexOpcode": "$31",
       "label": "人物 HP 增减",
-      "fields": []
+      "fields": [
+        "HP变化值低字节",
+        "HP变化值高字节"
+      ]
     },
     {
       "opcode": 50,
       "hexOpcode": "$32",
       "label": "人物 HP 增减（变体）",
-      "fields": []
+      "fields": [
+        "HP变化值低字节",
+        "HP变化值高字节"
+      ]
     },
     {
       "opcode": 51,
       "hexOpcode": "$33",
       "label": "人物 HP 增减（变体）",
-      "fields": []
+      "fields": [
+        "HP变化值低字节",
+        "HP变化值高字节"
+      ]
     },
     {
       "opcode": 52,
       "hexOpcode": "$34",
       "label": "按百分比恢复 HP",
-      "fields": []
+      "fields": [
+        "恢复百分比"
+      ]
     },
     {
       "opcode": 53,
       "hexOpcode": "$35",
       "label": "设置或取消状态位",
-      "fields": []
+      "fields": [
+        "状态地址低字节",
+        "状态位",
+        "设置/取消状态"
+      ]
     },
     {
       "opcode": 54,
       "hexOpcode": "$36",
       "label": "强制移动某人（行动）",
-      "fields": []
+      "fields": [
+        "目标人物ID"
+      ]
     },
     {
       "opcode": 55,
       "hexOpcode": "$37",
       "label": "保留条件 $37（默认处理）",
-      "fields": []
+      "fields": [
+        "扩展参数1",
+        "扩展参数2"
+      ]
     },
     {
       "opcode": 56,
       "hexOpcode": "$38",
       "label": "传送到人物周围",
-      "fields": []
+      "fields": [
+        "目标人物ID"
+      ]
     },
     {
       "opcode": 57,
       "hexOpcode": "$39",
       "label": "恢复精神值",
-      "fields": []
+      "fields": [
+        "精神恢复值"
+      ]
     },
     {
       "opcode": 58,
       "hexOpcode": "$3A",
       "label": "范围内机体 HP 增减",
-      "fields": []
+      "fields": [
+        "左上X",
+        "左上Y",
+        "右下X",
+        "右下Y",
+        "HP变化值低字节",
+        "HP变化值高字节",
+        "阵营/状态"
+      ]
     },
     {
       "opcode": 59,
       "hexOpcode": "$3B",
       "label": "敌方精神效果",
-      "fields": []
+      "fields": [
+        "精神效果ID"
+      ]
     },
     {
       "opcode": 60,
@@ -46302,19 +46367,35 @@
       "opcode": 61,
       "hexOpcode": "$3D",
       "label": "范围内机体 HP 增减（变体）",
-      "fields": []
+      "fields": [
+        "左上X",
+        "左上Y",
+        "右下X",
+        "右下Y",
+        "HP变化值低字节",
+        "HP变化值高字节",
+        "阵营/状态"
+      ]
     },
     {
       "opcode": 62,
       "hexOpcode": "$3E",
       "label": "周围机体 HP 增减",
-      "fields": []
+      "fields": [
+        "范围",
+        "HP变化值低字节",
+        "HP变化值高字节"
+      ]
     },
     {
       "opcode": 63,
       "hexOpcode": "$3F",
       "label": "周围机体 HP 增减（变体）",
-      "fields": []
+      "fields": [
+        "范围",
+        "HP变化值低字节",
+        "HP变化值高字节"
+      ]
     },
     {
       "opcode": 64,
@@ -46523,7 +46604,11 @@
       "opcode": 86,
       "hexOpcode": "$56",
       "label": "否定判定",
-      "fields": []
+      "fields": [
+        "重复地址低字节",
+        "重复地址高字节",
+        "重复/状态"
+      ]
     },
     {
       "opcode": 87,
@@ -46546,7 +46631,7 @@
     {
       "opcode": 89,
       "hexOpcode": "$59",
-      "label": "设置我方阶段音乐",
+      "label": "播放我方地图音乐",
       "fields": [
         "音乐命令"
       ]
@@ -46554,7 +46639,7 @@
     {
       "opcode": 90,
       "hexOpcode": "$5A",
-      "label": "设置敌方阶段音乐",
+      "label": "播放敌方地图音乐",
       "fields": [
         "音乐命令"
       ]
@@ -46570,34 +46655,34 @@
     {
       "opcode": 92,
       "hexOpcode": "$5C",
-      "label": "等待指定帧数",
+      "label": "属性置数（单字节）",
       "fields": [
-        "地址低字节",
-        "地址高字节",
-        "写入值",
-        "模式"
+        "属性地址（低字节）",
+        "属性地址（高字节）",
+        "属性值",
+        "置数/增加/减少与偏移"
       ]
     },
     {
       "opcode": 93,
       "hexOpcode": "$5D",
-      "label": "等待指定帧数（变体）",
+      "label": "属性置数（双字节）",
       "fields": [
-        "参数1",
-        "参数2",
-        "参数3",
-        "参数4",
-        "参数5",
-        "参数6",
-        "参数7"
+        "属性地址（低字节）",
+        "属性地址（高字节）",
+        "属性值（低字节）",
+        "属性值（高字节）",
+        "运算方式",
+        "偏移值",
+        "附加参数"
       ]
     },
     {
       "opcode": 94,
       "hexOpcode": "$5E",
-      "label": "等待指定帧数（变体）",
+      "label": "等待指定帧数",
       "fields": [
-        "帧数"
+        "等待帧数"
       ]
     },
     {
@@ -46701,25 +46786,39 @@
       "opcode": 109,
       "hexOpcode": "$6D",
       "label": "直接获得经验与金钱",
-      "fields": []
+      "fields": [
+        "经验值低字节",
+        "经验值高字节",
+        "金钱低字节",
+        "金钱高字节"
+      ]
     },
     {
       "opcode": 110,
       "hexOpcode": "$6E",
       "label": "指定队友离队",
-      "fields": []
+      "fields": [
+        "人物ID"
+      ]
     },
     {
       "opcode": 111,
       "hexOpcode": "$6F",
       "label": "人物直接加入队伍",
-      "fields": []
+      "fields": [
+        "人物ID",
+        "机体ID",
+        "等级",
+        "队伍/成长参数"
+      ]
     },
     {
       "opcode": 112,
       "hexOpcode": "$70",
       "label": "提升队员等级",
-      "fields": []
+      "fields": [
+        "提升等级"
+      ]
     },
     {
       "opcode": 113,
@@ -46743,7 +46842,9 @@
       "opcode": 116,
       "hexOpcode": "$74",
       "label": "扩展事件指令 $74",
-      "fields": []
+      "fields": [
+        "扩展参数"
+      ]
     },
     {
       "opcode": 117,
@@ -46752,8 +46853,8 @@
       "fields": [
         "X",
         "Y",
-        "机体ID",
         "人物ID",
+        "机体ID",
         "等级",
         "AI/标志"
       ]
@@ -46765,8 +46866,8 @@
       "fields": [
         "X",
         "Y",
-        "机体ID",
         "人物ID",
+        "机体ID",
         "等级",
         "AI/标志"
       ]

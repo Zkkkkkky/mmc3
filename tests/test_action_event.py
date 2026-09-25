@@ -177,6 +177,11 @@ class ActionEventUiTests(QtTestCase):
         self.assertEqual(page.insert_before_button.text(), "插入（接上）")
         self.assertEqual(page.insert_after_button.text(), "插入（接下）")
         self.assertIn("2541 / 2751", page.capacity_status.text())
+        self.assertTrue(page.raw.isHidden())
+        self.assertTrue(page.pending_state.isHidden())
+        self.assertTrue(page.visual_edit_button.isHidden())
+        self.assertTrue(page.insert_before_button.isHidden())
+        self.assertTrue(page.insert_after_button.isHidden())
 
     def test_action_and_instruction_lists_expose_right_click_commands(self) -> None:
         page = self.dialog.action_event_page
@@ -268,11 +273,11 @@ class ActionEventUiTests(QtTestCase):
         before_count = len(self.project.get_action_event(0).instructions)
         with (
             patch(
-                "dc_modifier.action_event_page.EventInstructionDialog.exec",
+                "dc_modifier.action_event_page.EventParameterDialog.exec",
                 return_value=1,
             ),
             patch(
-                "dc_modifier.action_event_page.EventInstructionDialog.raw",
+                "dc_modifier.action_event_page.EventParameterDialog.raw",
                 return_value=bytes.fromhex("4B 00 00 00 00 00 00"),
             ),
         ):
@@ -281,6 +286,25 @@ class ActionEventUiTests(QtTestCase):
         record = self.project.get_action_event(0)
         self.assertEqual(len(record.instructions), before_count + 1)
         self.assertEqual(record.instructions[1].raw, bytes.fromhex("4B 00 00 00 00 00 00"))
+
+    def test_insert_uses_reference_instruction_palette(self) -> None:
+        page = self.dialog.action_event_page
+        before_count = len(self.project.get_action_event(0).instructions)
+        with (
+            patch(
+                "dc_modifier.action_event_page.EventInstructionDialog.exec",
+                return_value=1,
+            ),
+            patch(
+                "dc_modifier.action_event_page.EventInstructionDialog.raw",
+                return_value=bytes.fromhex("59 88"),
+            ),
+        ):
+            page._insert_raw(after=True)
+
+        record = self.project.get_action_event(0)
+        self.assertEqual(len(record.instructions), before_count + 1)
+        self.assertEqual(record.instructions[1].raw, bytes.fromhex("59 88"))
 
     def test_variable_length_draft_commits_before_action_switch(self) -> None:
         page = self.dialog.action_event_page
@@ -301,8 +325,8 @@ class ActionEventUiTests(QtTestCase):
         replacement = bytes((instruction.raw_opcode ^ 0x80, *instruction.raw[1:]))
         before = bytes(self.project.working)
         with (
-            patch("dc_modifier.action_event_page.EventInstructionDialog.exec", return_value=1),
-            patch("dc_modifier.action_event_page.EventInstructionDialog.raw", return_value=replacement),
+            patch("dc_modifier.action_event_page.EventParameterDialog.exec", return_value=1),
+            patch("dc_modifier.action_event_page.EventParameterDialog.raw", return_value=replacement),
         ):
             page._open_instruction_editor()
         self.assertNotEqual(bytes(self.project.working), before)

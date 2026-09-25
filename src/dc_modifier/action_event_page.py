@@ -23,7 +23,13 @@ from fc_editor.codecs.action_event import ActionEventRecord
 from fc_editor.codecs.chapter_event import ChapterEventCodec
 
 from .pages import ProjectPage
-from .event_instruction_dialog import EventInstructionDialog
+from .beginner_ui import collapsible_details, task_hint
+from .event_instruction_dialog import (
+    EventCodeDialog,
+    EventInstructionDialog,
+    EventParameterDialog,
+)
+from .event_preview import reference_event_preview
 
 
 def _load_action_names() -> tuple[str, ...]:
@@ -69,9 +75,13 @@ class ActionEventPage(ProjectPage):
         self._changing_selection = False
 
         layout = QVBoxLayout(self)
+        self.task_hint = task_hint(
+            "操作：① 选择行动　② 右键事件指令　③ 选择插入、编辑、复制或删除"
+        )
+        layout.addWidget(self.task_hint)
         controls = QHBoxLayout()
         self.search = QLineEdit()
-        self.search.setPlaceholderText("搜索行动名、ID或原始字节…")
+        self.search.setPlaceholderText("搜索行动名或ID…")
         self.search.setClearButtonEnabled(True)
         self.count_badge = QLabel("0 个行动")
         self.count_badge.setObjectName("countBadge")
@@ -114,9 +124,9 @@ class ActionEventPage(ProjectPage):
         self.pending_state = QLabel("请选择指令。")
         self.pending_state.setObjectName("pendingBanner")
         self.pending_state.setWordWrap(True)
-        editor_layout.addWidget(self.record_status)
         editor_layout.addWidget(self.instruction_list, 1)
-        editor_layout.addWidget(QLabel("当前指令原码"))
+        self.raw_label = QLabel("当前指令原码")
+        editor_layout.addWidget(self.raw_label)
         editor_layout.addWidget(self.raw)
         editor_layout.addWidget(self.pending_state)
 
@@ -142,6 +152,26 @@ class ActionEventPage(ProjectPage):
         transfer_buttons.addStretch()
         transfer_buttons.addWidget(self.reset_button)
         editor_layout.addLayout(transfer_buttons)
+
+        # The reference window keeps the action page as a readable list.  It
+        # only reveals parameters after the user explicitly chooses Edit or
+        # Code Edit from the right-click menu.  Keep the programmatic controls
+        # for compatibility/tests, but do not embed the current raw command or
+        # duplicate action buttons in the page itself.
+        self.raw_label.hide()
+        self.raw.hide()
+        self.pending_state.hide()
+        for button in (
+            self.visual_edit_button,
+            self.apply_button,
+            self.insert_before_button,
+            self.insert_after_button,
+            self.delete_button,
+            self.copy_button,
+            self.paste_button,
+            self.reset_button,
+        ):
+            button.hide()
         splitter.addWidget(editor)
         splitter.setStretchFactor(0, 2)
         splitter.setStretchFactor(1, 5)
@@ -152,7 +182,13 @@ class ActionEventPage(ProjectPage):
         )
         self.capacity_status.setWordWrap(True)
         self.capacity_status.setStyleSheet("color: #9a5b00;")
-        layout.addWidget(self.capacity_status)
+        diagnostics = QWidget()
+        diagnostics_layout = QVBoxLayout(diagnostics)
+        diagnostics_layout.setContentsMargins(0, 0, 0, 0)
+        diagnostics_layout.addWidget(self.record_status)
+        diagnostics_layout.addWidget(self.capacity_status)
+        self.advanced_details = collapsible_details(diagnostics)
+        layout.addWidget(self.advanced_details)
 
         self.search.textChanged.connect(self._filter_actions)
         self.action_list.currentItemChanged.connect(self._action_changed)
@@ -207,11 +243,20 @@ class ActionEventPage(ProjectPage):
             self.action_list.viewport().mapToGlobal(position)
         )
 
-    def _focus_raw_editor(self) -> None:
-        if self._selected_instruction() is None:
+    def _open_code_editor(self) -> None:
+        instruction = self._selected_instruction()
+        if instruction is None:
             return
-        self.raw.setFocus(Qt.FocusReason.ShortcutFocusReason)
-        self.raw.selectAll()
+        try:
+            raw = self._candidate_raw() if self.has_pending_draft else instruction.raw
+        except Exception as error:
+            self.show_error(error)
+            return
+        dialog = EventCodeDialog(raw, None, self)
+        if dialog.exec() != dialog.DialogCode.Accepted:
+            return
+        self.raw.setText(dialog.raw().hex(" ").upper())
+        self._apply_raw()
 
     def _open_instruction_editor(self) -> None:
         instruction = self._selected_instruction()
@@ -222,7 +267,7 @@ class ActionEventPage(ProjectPage):
         except Exception as error:
             self.show_error(error)
             return
-        dialog = EventInstructionDialog(
+        dialog = EventParameterDialog(
             raw,
             self,
             title="行动事件指令编辑",
@@ -249,7 +294,7 @@ class ActionEventPage(ProjectPage):
         edit = menu.addAction("编辑")
         edit.triggered.connect(self._open_instruction_editor)
         code_edit = menu.addAction("代码编辑")
-        code_edit.triggered.connect(self._focus_raw_editor)
+        code_edit.triggered.connect(self._open_code_editor)
         menu.addSeparator()
         cut = menu.addAction("剪切")
         cut.triggered.connect(self.cut_instruction)
@@ -435,11 +480,18 @@ class ActionEventPage(ProjectPage):
         self.instruction_list.blockSignals(True)
         self.instruction_list.clear()
         if record is not None:
+            address_rows = {
+                instruction.address: instruction.index
+                for instruction in record.instructions
+            }
             for instruction in record.instructions:
-                terminal = " · 结束" if instruction.is_terminal else ""
                 item = QListWidgetItem(
-                    f"{instruction.index:03d}: {instruction.label}{terminal} · "
-                    f"{instruction.raw.hex(' ').upper()}"
+                    reference_event_preview(
+                        instruction,
+                        index=instruction.index,
+                        project=self.project,
+                        address_rows=address_rows,
+                    )
                 )
                 item.setData(Qt.ItemDataRole.UserRole, instruction.index)
                 item.setToolTip(
@@ -603,7 +655,25 @@ class ActionEventPage(ProjectPage):
         try:
             if self.has_pending_draft and self.pending_draft_error is not None:
                 raise ValueError(self.pending_draft_error)
-            raw = self._candidate_raw()
+            preset = self._candidate_raw()
+        except Exception as error:
+            self.show_error(error)
+            return
+        dialog = EventInstructionDialog(
+            preset,
+            self,
+            title="插入事件指令",
+            allow_variable_length=True,
+            context=(
+                f"行动 ${self.current_action_id:02X} · "
+                f"在第 {self.current_instruction_index + 1} 条"
+                f"{'之后' if after else '之前'}插入"
+            ),
+        )
+        if dialog.exec() != dialog.DialogCode.Accepted:
+            return
+        try:
+            raw = dialog.raw()
             action_id = self.current_action_id
             index = self.current_instruction_index
             self.project.insert_action_event_instruction(
@@ -751,7 +821,7 @@ class ActionEventPage(ProjectPage):
             return
         # 参考版“添加增援”进入七字节敌军增援编辑。只预置已验证的
         # 敌军增援操作码；坐标、人物、机体、等级和标志均由用户确认。
-        dialog = EventInstructionDialog(
+        dialog = EventParameterDialog(
             bytes.fromhex("4B 00 00 00 00 00 00"),
             self,
             title="添加增援",
@@ -759,6 +829,7 @@ class ActionEventPage(ProjectPage):
                 f"行动 ${self.current_action_id:02X} · "
                 "敌军增援（X、Y、人物、机体、等级、AI/标志）"
             ),
+            project=self.project,
         )
         if dialog.exec() != dialog.DialogCode.Accepted:
             return

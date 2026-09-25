@@ -157,6 +157,13 @@ class LegacyWindowTests(QtTestCase):
         project = RomProject.load(DEFAULT_ROM)
         dialog = self._show(DatabaseDialog(project))
         page = dialog.other_page_1
+        dialog.tabs.setCurrentWidget(page)
+        self.application.processEvents()
+
+        self.assertEqual(page.other1_splitter.count(), 3)
+        self.assertTrue(page.system_contents.isVisibleTo(dialog))
+        self.assertTrue(page.growth_contents.isVisibleTo(dialog))
+        self.assertTrue(page.global_contents.isVisibleTo(dialog))
 
         experience = tuple(
             int(page.experience_table.item(row, 1).text())
@@ -517,15 +524,19 @@ class LegacyWindowTests(QtTestCase):
             for action in setup_menu.actions()
             if not action.isSeparator()
         }
-        self.assertFalse(enabled["插入(接上)"])
-        self.assertFalse(enabled["添加增援"])
+        self.assertTrue(enabled["插入(接上)"])
+        self.assertTrue(enabled["添加增援"])
         self.assertTrue(enabled["编辑"])
         self.assertTrue(enabled["代码编辑"])
         self.assertTrue(enabled["复制"])
         self.assertTrue(enabled["粘贴"])
-        self.assertFalse(enabled["删除"])
-        self.assertFalse(enabled["清空"])
+        self.assertTrue(enabled["删除"])
+        self.assertTrue(enabled["清空"])
         self.assertEqual(dialog.space_button.text(), ScenarioDialog.SPACE_BUTTON_TEXT)
+        self.assertEqual(
+            dialog.space_button.toolTip(),
+            "显示八组剧情文本、三组章节事件池和 Bank $26 独立行动表的占用、容量和剩余字节。",
+        )
         self.assertTrue(dialog.space_button.isEnabled())
         self.assertFalse(dialog.action_event_page.isHidden())
         self.assertEqual(dialog.action_event_page.action_list.count(), 0x100)

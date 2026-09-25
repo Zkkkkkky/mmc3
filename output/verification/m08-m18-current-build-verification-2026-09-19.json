@@ -1,21 +1,21 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-09-24T21:15:01+08:00",
+  "generatedAt": "2026-09-25T11:11:46+08:00",
   "formalExecutable": {
     "path": "output/app/新DC篇完整修改器.exe",
-    "sha256": "E7786E0824E78EA1AC50B4B17FC1A69CD5B62BF58E3BB82AA50D92CD395BF67A",
+    "sha256": "F08EB5869704CAC5971A749B39FC88C5D52D65825E7065FA6351C3EA95F8F1E2",
     "checksumFileMatches": true,
     "selfTestExitCode": 0
   },
   "fullRegression": {
     "command": ".\\.venv\\Scripts\\python.exe -m unittest discover -s tests -t . -p \"test_*.py\"",
-    "testsRun": 806,
+    "testsRun": 818,
     "failures": 0,
     "errors": 0,
-    "durationSeconds": 1322.711,
+    "durationSeconds": 1291.833,
     "passed": true,
     "appliesToCurrentExecutableHash": true,
-    "bootstrapNote": "修复剧情文本撤销说明契约并刷新当前构建证据后，从头单次运行 806 项全仓回归，全部通过。"
+    "bootstrapNote": "把同类修复扩展到全模块后，从头运行 818 项全部通过：武器动画插入改为纯类型目录后再开新指令参数页，独立行动主页面移除内嵌当前原码和重复按钮；随后以相同源码重建正式 EXE并通过隐藏自检。"
   },
   "focusedRegression": {
     "command": ".\\.venv\\Scripts\\python.exe -m unittest tests.test_legacy_windows_ui.LegacyWindowTests.test_story_unicode_edit_preserves_untouched_real_alias_tokens tests.test_chapter_title tests.test_chapter_victory tests.test_legacy_text_scenario tests.test_dc_modifier tests.test_story_integrity tests.test_m14_scenario_report",
@@ -43,6 +43,17 @@
     "errors": 0,
     "passed": true,
     "scope": "敌我武器动画右键入口、受限参数草稿、共享脚本确认、数据库布局及新手指南。"
+  },
+  "crossModuleInteractionAudit": {
+    "commands": [
+      ".\\.venv\\Scripts\\python.exe -m unittest tests.test_action_event tests.test_animation_feedback tests.test_event_instruction_dialog tests.test_legacy_windows_ui",
+      ".\\.venv\\Scripts\\python.exe -m unittest tests.test_action_event.ActionEventUiTests tests.test_animation_feedback.AnimationUiTests.test_weapon_edit_and_insert_use_separate_command_flows tests.test_event_instruction_dialog.EventInstructionDialogTests"
+    ],
+    "testsRun": 123,
+    "failures": 0,
+    "errors": 0,
+    "passed": true,
+    "scope": "事件、武器动画与旧窗口组合回归 104 项；插入/编辑分离、行动页列表化与事件专用参数窗定向回归 19 项。"
   },
   "deliveryGate": {
     "path": "output/verification/m08-m18-delivery-gate.json",
@@ -74,9 +85,9 @@
   },
   "nativeUiAutomation": {
     "availableInCurrentSession": true,
-    "observed": "本次正式 EXE 在共享文本池重排实现后重新打包，隐藏自检通过；未把上一构建的 Windows 可见点击记录冒充当前哈希证据。",
-    "currentBuildClickSmokePerformed": false,
-    "reason": "当前正式 EXE SHA-256 为 E7786E0824E78EA1AC50B4B17FC1A69CD5B62BF58E3BB82AA50D92CD395BF67A；共享池保存、撤销、重开和溢出拒绝由 101 项定向回归及全量回归覆盖。M08—M18 的既有用户签收按模块实现范围持续有效。"
+    "observed": "Computer Use 启动本次正式 EXE，载入仓库 ROM 并打开剧情事件窗口；关卡事件显示旧版自然语言列表，行动事件页只显示行动/指令双列表与容量说明，不再内嵌当前原码或重复操作按钮。取消退出后主状态仍为无未保存修改。",
+    "currentBuildClickSmokePerformed": true,
+    "reason": "当前正式 EXE SHA-256 为 F08EB5869704CAC5971A749B39FC88C5D52D65825E7065FA6351C3EA95F8F1E2；已完成可见启动、载入、剧情事件关卡页/行动页切换与取消退出烟测。武器动画两段式插入由离屏 UI 与全仓回归覆盖。M08—M18 的既有用户签收按模块实现范围持续有效。"
   },
   "priorPackagedUiSmoke": {
     "path": "output/verification/m08-m18-agent-ui-smoke-2026-09-19.json",

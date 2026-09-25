@@ -26,6 +26,7 @@ from fc_editor.codecs.chapter_event import ACTION_FIELDS, ACTION_LABELS
 from fc_editor.dc_text import dc_map_label
 
 from .pages import ProjectPage, page_title, readonly_item
+from .beginner_ui import task_hint
 
 
 EVENT_GROUPS = (
@@ -81,6 +82,10 @@ class EventPage(ProjectPage):
         )
         layout.addWidget(title)
         layout.addWidget(subtitle)
+        self.task_hint = task_hint(
+            "操作：① 筛选并选择事件　② 选择事件操作并修改参数　③ 点击“应用模板参数”"
+        )
+        layout.addWidget(self.task_hint)
 
         filters = QHBoxLayout()
         self.scenario_filter = QComboBox()
@@ -138,12 +143,10 @@ class EventPage(ProjectPage):
         self.context_value.setWordWrap(True)
         self.template = QComboBox()
         self.terminal = QCheckBox("结束本事件组（操作码高位）")
-        form.addRow("脚本地址", self.address_value)
-        form.addRow("章节归属", self.context_value)
         self.pending_state = QLabel("请选择事件动作")
         self.pending_state.setObjectName("pendingBanner")
         form.addRow("编辑状态", self.pending_state)
-        form.addRow("兼容模板", self.template)
+        form.addRow("事件操作", self.template)
         form.addRow("执行控制", self.terminal)
         self.parameter_labels: list[QLabel] = []
         self.parameters: list[QSpinBox] = []
@@ -188,6 +191,10 @@ class EventPage(ProjectPage):
         self.advanced_toggle.setToolButtonStyle(Qt.ToolButtonStyle.ToolButtonTextBesideIcon)
         self.advanced_panel = QGroupBox("等长原始指令")
         advanced_layout = QVBoxLayout(self.advanced_panel)
+        advanced_form = QFormLayout()
+        advanced_form.addRow("脚本地址", self.address_value)
+        advanced_form.addRow("章节归属", self.context_value)
+        advanced_layout.addLayout(advanced_form)
         advanced_layout.addWidget(self.raw)
         advanced_buttons = QHBoxLayout()
         self.copy_button = QPushButton("复制当前指令")
@@ -207,7 +214,7 @@ class EventPage(ProjectPage):
         )
         safety.setWordWrap(True)
         safety.setStyleSheet("color: #9a5b00;")
-        editor_layout.addWidget(safety)
+        advanced_layout.addWidget(safety)
         editor_layout.addStretch()
         splitter.addWidget(editor)
         splitter.setStretchFactor(0, 3)
@@ -508,6 +515,7 @@ class EventPage(ProjectPage):
             self.terminal.setChecked(False)
             self.template.addItem("无可用指令", None)
             self.pending_state.setText("请选择事件动作")
+            self.pending_state.show()
         else:
             self.address_value.setText(
                 f"${instruction.address:04X} / 文件 0x{instruction.file_offset:X} / {len(instruction.raw)} 字节"
@@ -570,6 +578,7 @@ class EventPage(ProjectPage):
             self._raw_draft_changed = False
             self._raw_draft_invalid = False
             self.pending_state.setText("请选择事件动作")
+            self.pending_state.show()
             self.apply_template_button.setEnabled(False)
             self.apply_raw_button.setEnabled(False)
             return
@@ -596,6 +605,7 @@ class EventPage(ProjectPage):
                 f"● 原始字节必须保持 {len(instruction.raw)} 字节；当前输入不可应用"
             )
             self.pending_state.setStyleSheet("color: #b42318; font-weight: 650;")
+            self.pending_state.show()
         else:
             self.pending_state.setText(
                 "● 当前参数尚未应用" if pending else "✓ 与当前工程一致"
@@ -605,6 +615,7 @@ class EventPage(ProjectPage):
                 if pending
                 else "color: #2e7d4f;"
             )
+            self.pending_state.setVisible(pending)
 
     @property
     def has_pending_draft(self) -> bool:

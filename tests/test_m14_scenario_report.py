@@ -77,7 +77,10 @@ class M14ScenarioReportTests(unittest.TestCase):
             report["story_text"]["split_37"]["protected_non_text_slots"],
             ["$00"],
         )
-        self.assertFalse(report["story_text"]["split_37"]["relocatable"])
+        self.assertTrue(report["story_text"]["split_37"]["relocatable"])
+        self.assertTrue(
+            report["story_text"]["split_37"]["variable_record_length"]
+        )
         self.assertEqual(report["chapter_victory"]["record_count"], 13)
         self.assertEqual(report["chapter_victory"]["start_file_offset"], "0x07A010")
         self.assertTrue(report["chapter_victory"]["fixed_total_pool"])
@@ -121,6 +124,14 @@ class M14ScenarioReportTests(unittest.TestCase):
             report["checks"][
                 "action_insert_delete_repack_and_undo_are_exact"
             ]
+        )
+        self.assertTrue(
+            report["checks"][
+                "legacy_chapter_structural_relocation_and_restore_are_exact"
+            ]
+        )
+        self.assertTrue(
+            report["checks"]["split_37_layout_and_pool_repack_are_exact"]
         )
 
 

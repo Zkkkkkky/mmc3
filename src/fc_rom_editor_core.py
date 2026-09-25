@@ -80,6 +80,7 @@ from fc_editor.expansion_map import (
 )
 from fc_editor.expansion_story import (
     in_place_story_repack_patches,
+    split_story_37_repack_patches,
     STORY_DATA_CAPACITY,
     STORY_DATA_START,
     VERIFIED_STORY_SELECTORS,
@@ -89,13 +90,18 @@ from fc_editor.expansion_story import (
 )
 from fc_editor.expansion_unit import (
     ATTRIBUTE_TABLE,
+    ATTRIBUTE_OLD_DATA_END,
+    ATTRIBUTE_OLD_DATA_START,
     CONFIGURATION_CAVE_END,
     CONFIGURATION_CAVE_START,
     CONFIGURATION_TABLE,
     CORE_CAVE_END,
     CORE_CAVE_START,
     NAME_TABLE,
+    NAME_OLD_DATA_END,
+    NAME_OLD_DATA_START,
     SINGLE_RESOURCE_TABLE,
+    SINGLE_RESOURCE_DATA_START,
     SOURCE_CONFIGURATION_PAIR,
     SOURCE_CORE_PAIR,
     UNIT_ATTRIBUTE_SELECTOR,
@@ -103,6 +109,7 @@ from fc_editor.expansion_unit import (
     UNIT_CONFIGURATION_SELECTOR,
     UNIT_FRAGMENT_SELECTOR,
     UNIT_NAME_SELECTOR,
+    UNIT_ID_COUNT,
     UnitExpansionRecords,
     extract_unit_expansion_records,
     pack_unit_expansion,
@@ -390,6 +397,21 @@ DC_UNIT_NAME_PROFILE_KEYS = frozenset(
 )
 
 
+def unit_name_pool_spans(plan: ExpansionPlan | None) -> tuple[tuple[int, int], ...]:
+    """Return only the name spans proven by the unit resource linker."""
+
+    if plan is None or not plan.flags & FLAG_UNITS:
+        return ((NAME_OLD_DATA_START, NAME_OLD_DATA_END),)
+    if len(plan.unit_banks) == 10:
+        return ((SINGLE_RESOURCE_DATA_START, 0xC000),)
+    attribute_end = CORE_CAVE_START + UNIT_ID_COUNT * UNIT_RECORD_SIZE
+    return (
+        (attribute_end, CORE_CAVE_END),
+        (ATTRIBUTE_OLD_DATA_START, ATTRIBUTE_OLD_DATA_END),
+        (NAME_OLD_DATA_START, NAME_OLD_DATA_END),
+    )
+
+
 def mapper_number(header: bytes) -> int:
     return (header[6] >> 4) | (header[7] & 0xF0)
 
@@ -526,10 +548,18 @@ class RomProject:
                     bank_file_offset(initial_name_bank) + initial_name_table - 0x8000
                 ),
                 pair_first_bank=initial_name_bank,
+                pool_spans=unit_name_pool_spans(initial_plan),
             )
         else:
             self.base_unit_codec = UnitCodec(self.rom_image)
-            self.base_unit_name_codec = UnitNameReferenceCodec(self.rom_image)
+            self.base_unit_name_codec = UnitNameReferenceCodec(
+                self.rom_image,
+                pool_spans=(
+                    unit_name_pool_spans(None)
+                    if self.profile.key in DC_UNIT_NAME_PROFILE_KEYS
+                    else ()
+                ),
+            )
         if initial_plan is not None and initial_plan.flags & FLAG_UNITS:
             self._unit_name_baseline_pointers = (
                 self._derive_unit_name_baseline_pointers(initial_plan)
@@ -979,6 +1009,7 @@ class RomProject:
                     ),
                     pair_first_bank=name_bank,
                     original_pointers=self._unit_name_baseline_pointers,
+                    pool_spans=unit_name_pool_spans(plan),
                 )
                 if self.profile.unit_weapon_table_offset is not None:
                     self.unit_weapon_codec = UnitWeaponCodec(
@@ -1472,7 +1503,7 @@ class RomProject:
         name_source_ids: list[int] = []
         for unit_id in range(1, self.unit_count):
             pointer = self.unit_name_codec.pointer(unit_id, source_before_link)
-            source_ids = self.unit_name_codec.source_ids(pointer)
+            source_ids = self.unit_name_codec.source_ids(pointer, source_before_link)
             if not source_ids:
                 raise RomFormatError(
                     f"机体 ${unit_id:02X} 的名称引用 ${pointer:04X} 无法识别。"
@@ -1767,7 +1798,7 @@ class RomProject:
         name_source_ids: list[int] = []
         for current_id in range(1, self.unit_count):
             pointer = self.unit_name_codec.pointer(current_id, bytes(self.working))
-            source_ids = self.unit_name_codec.source_ids(pointer)
+            source_ids = self.unit_name_codec.source_ids(pointer, self.working)
             if not source_ids:
                 raise ValueError(f"机体 ${current_id:02X} 的名称引用无法识别。")
             name_source_ids.append(source_ids[0])
@@ -2538,7 +2569,10 @@ class RomProject:
         original: bool = False,
     ) -> tuple[int, ...]:
         codec = self.base_unit_name_codec if original else self.unit_name_codec
-        return codec.source_ids(self.get_unit_name_pointer(unit_id, original=original))
+        source = self.original if original else self.working
+        return codec.source_ids(
+            self.get_unit_name_pointer(unit_id, original=original), source
+        )
 
     def unit_alias_table(self) -> dict[int, str]:
         if self.profile.key in DC_UNIT_NAME_PROFILE_KEYS:
@@ -2548,7 +2582,7 @@ class RomProject:
         return {}
 
     def unit_name_pointer_display_name(self, pointer: int) -> str:
-        source_ids = self.unit_name_codec.source_ids(pointer)
+        source_ids = self.unit_name_codec.source_ids(pointer, self.working)
         if not source_ids:
             return f"未知原生名称 ${pointer:04X}"
         aliases = self.unit_alias_table()
@@ -2579,18 +2613,7 @@ class RomProject:
     ) -> bytes:
         codec = self.base_unit_name_codec if original else self.unit_name_codec
         source = self.original if original else self.working
-        pointer = codec.pointer(unit_id, source)
-        bank = (
-            codec.pair_first_bank
-            if codec.pair_first_bank is not None
-            else (codec.pointer_table_offset - 16) // PRG_BANK_SIZE
-        )
-        offset = bank_file_offset(bank) + pointer - 0x8000
-        limit = min(len(source), bank_file_offset(bank) + 2 * PRG_BANK_SIZE)
-        terminator = source.find(b"\xFF", offset, limit)
-        if terminator < 0:
-            raise RomFormatError(f"机体 ${unit_id:02X} 名称没有 $FF 结束码。")
-        return bytes(source[offset : terminator + 1])
+        return codec.record_bytes(unit_id, source)
 
     def unit_display_name(self, unit_id: int) -> str:
         label = concise_dc_text(self.unit_name_record_bytes(unit_id))
@@ -2599,21 +2622,13 @@ class RomProject:
         return "空白/未分配机体槽"
 
     def set_unit_name_text(self, unit_id: int, text: str) -> None:
-        codec = self.unit_name_codec
-        pointer = codec.pointer(unit_id, bytes(self.working))
-        bank = (
-            codec.pair_first_bank
-            if codec.pair_first_bank is not None
-            else (codec.pointer_table_offset - 16) // PRG_BANK_SIZE
-        )
-        offset = bank_file_offset(bank) + pointer - 0x8000
-        raw = self.unit_name_record_bytes(unit_id)
-        self._replace_terminated_name(
-            offset,
-            len(raw),
-            text,
-            f"机体 {unit_id:02X} · 直接修改名称",
-        )
+        before = self._mutation_snapshot()
+        patches = self.unit_name_codec.repack_name(self.working, unit_id, text)
+        for offset, expected, replacement in patches:
+            if bytes(self.working[offset : offset + len(expected)]) != expected:
+                raise ValueError("机体名称池已变化，请重新载入后再试。")
+            self.working[offset : offset + len(replacement)] = replacement
+        self._finish_mutation(before, f"机体 {unit_id:02X} · 名称池重排")
 
     def unit_name_reference_options(
         self,
@@ -2621,7 +2636,7 @@ class RomProject:
         options: list[tuple[int, int, str, tuple[int, ...]]] = []
         seen_pointers: set[int] = set()
         for source_id in range(1, self.unit_count):
-            pointer = self.unit_name_codec.original_pointers[source_id]
+            pointer = self.unit_name_codec.pointer(source_id, self.working)
             if pointer in seen_pointers:
                 continue
             seen_pointers.add(pointer)
@@ -2630,7 +2645,7 @@ class RomProject:
                     source_id,
                     pointer,
                     self.unit_name_pointer_display_name(pointer),
-                    self.unit_name_codec.source_ids(pointer),
+                    self.unit_name_codec.source_ids(pointer, self.working),
                 )
             )
         return tuple(options)
@@ -2655,9 +2670,9 @@ class RomProject:
             self._initial_expansion_plan is not None
             and self._initial_expansion_plan.flags & FLAG_UNITS
         ):
-            source_ids = self.unit_name_codec.source_ids(original_pointer)
+            source_ids = self.unit_name_codec.baseline_source_ids(original_pointer)
         else:
-            source_ids = self.base_unit_name_codec.source_ids(original_pointer)
+            source_ids = self.base_unit_name_codec.baseline_source_ids(original_pointer)
         if not source_ids:
             raise RomFormatError(
                 f"机体 ${unit_id:02X} 的原始名称引用 "
@@ -3216,6 +3231,11 @@ class RomProject:
         """Dry-run a text replacement and return used/available group bytes."""
 
         plan = self.expansion_plan
+        if selector == 0x37:
+            used, capacity, _patches = split_story_37_repack_patches(
+                self.story_text_codec, index, bytes(data), self.working
+            )
+            return used, capacity
         if selector not in VERIFIED_STORY_SELECTORS:
             record = self.get_story_text(selector, index)
             if len(data) != record.capacity:
@@ -3240,6 +3260,24 @@ class RomProject:
 
     def set_story_text_raw(self, selector: int, index: int, data: bytes) -> None:
         plan = self.expansion_plan
+        if selector == 0x37:
+            current = self.get_story_text(selector, index)
+            if current.raw == bytes(data):
+                return
+            _used, _capacity, patches = split_story_37_repack_patches(
+                self.story_text_codec, index, bytes(data), self.working
+            )
+            before_snapshot = self._mutation_snapshot()
+            for offset, expected, replacement in patches:
+                if bytes(self.working[offset:offset + len(expected)]) != expected:
+                    raise ValueError("剧情文本 $37 数据池已变化，请重新载入后再试。")
+                self.working[offset:offset + len(replacement)] = replacement
+            self.story_text_codec = StoryTextCodec(self.rom_image, self.working)
+            self._finish_mutation(
+                before_snapshot,
+                f"剧情文本 $37:{index:02X}",
+            )
+            return
         if plan is not None and selector in VERIFIED_STORY_SELECTORS:
             records = extract_story_group(
                 self.story_text_codec, selector, self.working
@@ -3329,6 +3367,12 @@ class RomProject:
         )
 
     def reset_story_text(self, selector: int, index: int) -> None:
+        if selector == 0x37:
+            original = self.base_story_text_codec.decode(
+                selector, index, self.original
+            )
+            self.set_story_text_raw(selector, index, original.raw)
+            return
         if selector in VERIFIED_STORY_SELECTORS:
             original = extract_story_group(
                 self.base_story_text_codec, selector, self.original
@@ -3877,12 +3921,38 @@ class RomProject:
                     )
                     covered_offsets.add(config_offset + slot)
 
-        for unit_id in (() if units_are_linked else range(1, self.unit_count)):
+        unit_name_pool_repacked = False
+        if not units_are_linked and self.unit_name_codec.pool_spans:
+            table_start = self.unit_name_codec.pointer_table_offset
+            table_end = table_start + self.profile.unit_name_count * 2
+            unit_name_pool_repacked = (
+                self.working[table_start:table_end]
+                != self.original[table_start:table_end]
+                or any(
+                    self.working[
+                        self.unit_name_codec.pointer_to_file_offset(start) :
+                        self.unit_name_codec.pointer_to_file_offset(start) + end - start
+                    ]
+                    != self.original[
+                        self.unit_name_codec.pointer_to_file_offset(start) :
+                        self.unit_name_codec.pointer_to_file_offset(start) + end - start
+                    ]
+                    for start, end in self.unit_name_codec.pool_spans
+                )
+            )
+        unit_name_reference_ids = (
+            ()
+            if units_are_linked or unit_name_pool_repacked
+            else range(1, self.unit_count)
+        )
+        for unit_id in unit_name_reference_ids:
             original_pointer = self.get_unit_name_pointer(unit_id, original=True)
             current_pointer = self.get_unit_name_pointer(unit_id)
             if original_pointer == current_pointer:
                 continue
-            source_ids = self.unit_name_codec.source_ids(current_pointer)
+            source_ids = self.unit_name_codec.source_ids(
+                current_pointer, self.working
+            )
             if not source_ids:
                 continue
             document.add_unit_name_reference(

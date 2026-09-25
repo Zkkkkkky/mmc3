@@ -308,6 +308,50 @@ class LegacyTextScenarioCodecTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "调度"):
             LegacyScenarioCodec(data)
 
+    def test_scenario_structural_edit_relocates_pointers_and_jumps_and_reopens(self) -> None:
+        codec = LegacyScenarioCodec(self.data)
+        selected = codec.instructions(0, 0)[0]
+        jump = next(
+            item
+            for chapter in range(32)
+            for item in codec.instructions(chapter, 0)
+            if item.opcode in codec.JUMP_OPCODES
+            and int.from_bytes(item.raw[1:3], "little") > selected.address
+        )
+        old_target = int.from_bytes(jump.raw[1:3], "little")
+        shrunk = self._apply_patches(
+            self.data, codec.replacement_patches(selected, b"\xDF")
+        )
+        reopened = LegacyScenarioCodec(shrunk)
+        self.assertEqual(reopened.instructions(0, 0)[0].raw, b"\xDF")
+        moved_jump = next(
+            item
+            for chapter in range(32)
+            for item in reopened.instructions(chapter, 0)
+            if item.address == jump.address - 1
+        )
+        self.assertEqual(
+            int.from_bytes(moved_jump.raw[1:3], "little"), old_target - 1
+        )
+
+        restored = self._apply_patches(
+            shrunk,
+            reopened.replacement_patches(
+                reopened.instructions(0, 0)[0], selected.raw
+            ),
+        )
+        self.assertEqual(restored, self.data)
+
+    def test_scenario_structural_edit_rejects_overlapping_branch_view(self) -> None:
+        codec = LegacyScenarioCodec(self.data)
+        selected = next(
+            item
+            for item in codec.instructions(9, 2)
+            if item.address == 0xBE9A
+        )
+        with self.assertRaisesRegex(ValueError, "同时属于.*分支解释"):
+            codec.replacement_patches(selected, b"\xDF")
+
     def test_growth_reader_nibble_order_shared_records_and_last_padding(self) -> None:
         codec = LegacyGrowthCodec(self.data)
         self.assertEqual(codec.verified_level_cap, 99)
@@ -482,8 +526,19 @@ class LegacyTextScenarioUiTests(QtTestCase):
         page = LegacyScenarioEventsPage(0)
         self.widgets.append(page)
         page.set_project(self.project)
-        self.assertIn("播放我方地图音乐", page.record_list.item(0).text())
+        self.assertEqual(
+            page.record_list.item(0).text(),
+            "000: 播放我方地图音乐：地球我方音乐",
+        )
         self.assertIn("请你选择琉妮驾驶的机体", page.record_list.item(10).text())
+        end_page = LegacyScenarioEventsPage(1)
+        self.widgets.append(end_page)
+        end_page.set_project(self.project)
+        self.assertEqual(end_page.record_list.item(0).text(), "000: 事件结束")
+        live_page = LegacyScenarioEventsPage(2)
+        self.widgets.append(live_page)
+        live_page.set_project(self.project)
+        self.assertEqual(live_page.record_list.item(2).text(), "002: 判断：第3回合？")
         page.raw_edit.setText("59 87")
         self.assertTrue(page.has_pending_draft)
         self.assertTrue(page.commit_pending_changes())

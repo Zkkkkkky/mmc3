@@ -51,7 +51,11 @@ from fc_rom_editor_core import RomProject
 
 from .action_event_page import ActionEventPage
 from .event_page import EventPage
-from .event_instruction_dialog import EventCodeDialog, EventInstructionDialog
+from .event_instruction_dialog import (
+    EventCodeDialog,
+    EventInstructionDialog,
+    EventParameterDialog,
+)
 from .database_graphics import (
     decode_unit_body_script,
     palette_color,
@@ -60,7 +64,7 @@ from .database_graphics import (
     render_unit_battle_preview,
 )
 from .database_records import (
-    ReadableCharacterPage, ReadableWeaponPage, collapsible_details, readable_references,
+    ReadableCharacterPage, ReadableWeaponPage, readable_references,
 )
 from .map_page import (
     CHAPTER_TITLE_PALETTE_NES,
@@ -591,6 +595,7 @@ class LegacyUnitDatabasePage(ProjectPage):
         self.record_count = QLabel("尚未载入机体。")
         self.record_count.setWordWrap(True)
         self.record_count.setObjectName("hintText")
+        self.record_count.hide()
         selection_layout.addWidget(self.record_count)
         record_actions = QGridLayout()
         self.copy_record_button = QPushButton("复制")
@@ -684,11 +689,6 @@ class LegacyUnitDatabasePage(ProjectPage):
         if not hasattr(self, "detail_scroll"):
             return
         viewport_width = self.detail_scroll.viewport().width()
-        # Leave enough slack for the vertical scrollbar and platform frame.
-        # At a 900 px dialog the pre-layout viewport can briefly report about
-        # 690 px, then shrink after the medium form establishes its minimum;
-        # choosing the single-column form before that cycle avoids a stale
-        # horizontal scrollbar.
         mode = "compact" if viewport_width < 720 else (
             "medium" if viewport_width < 780 else "wide"
         )
@@ -1815,16 +1815,8 @@ class LegacyGlobalTablesPage(ProjectPage):
         super().__init__()
         self._loading = False
         root = QVBoxLayout(self)
-        notice = QLabel(
-            "已接通参考页中的升级累计经验表和武器距离命中补正表。"
-            "“系统文字”页签可编辑实际系统文本。升级阈值可改，总经验和升级还需随之计算。"
-        )
-        notice.setWordWrap(True)
-        notice.setObjectName("hintText")
-        root.addWidget(notice)
-
-        tables = QHBoxLayout()
-        experience_group = QGroupBox("升级累计经验 · 等级1—99")
+        experience_group = QGroupBox("升级经验")
+        self.experience_group = experience_group
         experience_layout = QVBoxLayout(experience_group)
         self.experience_table = QTableWidget(99, 4)
         self.experience_table.setHorizontalHeaderLabels(("等级", "升级阈值", "总经验", "升级还需"))
@@ -1845,9 +1837,11 @@ class LegacyGlobalTablesPage(ProjectPage):
         level_cap_row.addStretch()
         level_cap_row.addWidget(self.level_cap_button)
         experience_layout.addLayout(level_cap_row)
-        tables.addWidget(experience_group, 3)
+        tables = QHBoxLayout()
+        tables.addWidget(experience_group, 11)
 
-        distance_group = QGroupBox("武器距离命中补正 · 距离1—16")
+        distance_group = QGroupBox("武器距离命中补正")
+        self.distance_group = distance_group
         distance_layout = QVBoxLayout(distance_group)
         self.distance_table = QTableWidget(4, 16)
         self.distance_table.setHorizontalHeaderLabels(
@@ -1862,20 +1856,22 @@ class LegacyGlobalTablesPage(ProjectPage):
         self.distance_table.setAlternatingRowColors(True)
         self.distance_table.itemChanged.connect(self._update_pending_state)
         distance_layout.addWidget(self.distance_table)
-        tables.addWidget(distance_group, 5)
+        tables.addWidget(distance_group, 10)
         root.addLayout(tables, 1)
 
         footer = QHBoxLayout()
         self.pending_state = QLabel("当前ROM没有已验证的全局表。")
         self.pending_state.setObjectName("pendingBanner")
-        self.apply_button = QPushButton("暂存经验与命中补正")
+        self.apply_button = QPushButton("应用当前表格修改")
         self.apply_button.clicked.connect(self.apply_changes)
         self.reset_button = QPushButton("还原两张表")
         self.reset_button.clicked.connect(self.reset_tables)
-        footer.addWidget(self.pending_state, 1)
+        footer.addStretch()
         footer.addWidget(self.apply_button)
         footer.addWidget(self.reset_button)
         root.addLayout(footer)
+        root.addWidget(self.pending_state)
+        self.pending_state.hide()
 
     @property
     def _is_supported(self) -> bool:
@@ -1913,6 +1909,7 @@ class LegacyGlobalTablesPage(ProjectPage):
                 self.experience_table.clearContents()
                 self.distance_table.clearContents()
                 self.pending_state.setText("当前ROM没有已验证的全局表。")
+                self.pending_state.show()
                 return
             experience = self.project.get_experience_totals()
             corrections = self.project.get_distance_hit_corrections()
@@ -2041,6 +2038,7 @@ class LegacyGlobalTablesPage(ProjectPage):
             return
         if not self._is_supported:
             self.pending_state.setText("当前ROM没有已验证的全局表。")
+            self.pending_state.show()
             self.apply_button.setEnabled(False)
             return
         error = self.pending_draft_error
@@ -2058,10 +2056,13 @@ class LegacyGlobalTablesPage(ProjectPage):
         self.apply_button.setEnabled(pending and error is None)
         if error is not None:
             self.pending_state.setText(f"● {error}")
+            self.pending_state.show()
         elif pending:
             self.pending_state.setText("● 有尚未暂存的经验/命中补正改动")
+            self.pending_state.show()
         else:
             self.pending_state.setText("✓ 两张表与当前工程一致")
+            self.pending_state.hide()
 
     def commit_pending_changes(self) -> bool:
         if not self.has_pending_draft:
@@ -2111,14 +2112,6 @@ class LegacyItemTablePage(ProjectPage):
         self._loaded_name_texts: tuple[str, ...] = ()
         self._description_page: LegacyTextPage | None = None
         root = QVBoxLayout(self)
-        notice = QLabel(
-            "已接通24项道具名称和价格。价格按参考窗口显示为ROM原值×10；"
-            "道具说明可在“道具说明”页签编辑。商店与店员对话按对应页面的已验证范围操作。"
-        )
-        notice.setWordWrap(True)
-        notice.setObjectName("hintText")
-        root.addWidget(notice)
-
         self.item_table = QTableWidget(self.ITEM_COUNT, 3)
         self.item_table.setHorizontalHeaderLabels(("编号", "道具名称", "显示价格"))
         self.item_table.verticalHeader().setVisible(False)
@@ -2159,14 +2152,16 @@ class LegacyItemTablePage(ProjectPage):
         footer = QHBoxLayout()
         self.pending_state = QLabel("当前ROM没有已验证的道具表。")
         self.pending_state.setObjectName("pendingBanner")
-        self.apply_button = QPushButton("暂存道具名称与价格")
+        self.apply_button = QPushButton("应用当前道具修改")
         self.apply_button.clicked.connect(self.apply_changes)
         self.reset_button = QPushButton("还原名称与价格")
         self.reset_button.clicked.connect(self.reset_items)
-        footer.addWidget(self.pending_state, 1)
+        footer.addStretch()
         footer.addWidget(self.apply_button)
         footer.addWidget(self.reset_button)
         root.addLayout(footer)
+        root.addWidget(self.pending_state)
+        self.pending_state.hide()
 
     @property
     def _is_supported(self) -> bool:
@@ -2199,6 +2194,7 @@ class LegacyItemTablePage(ProjectPage):
                 self._loaded_name_texts = ()
                 self.item_table.clearContents()
                 self.pending_state.setText("当前ROM没有已验证的道具名称/价格表。")
+                self.pending_state.show()
                 return
             names = self.project.get_item_name_records()
             prices = self.project.get_item_prices()
@@ -2357,6 +2353,7 @@ class LegacyItemTablePage(ProjectPage):
             return
         if not self._is_supported:
             self.pending_state.setText("当前ROM没有已验证的道具名称/价格表。")
+            self.pending_state.show()
             self.apply_button.setEnabled(False)
             return
         error = self.pending_draft_error
@@ -2364,10 +2361,13 @@ class LegacyItemTablePage(ProjectPage):
         self.apply_button.setEnabled(pending and error is None)
         if error is not None:
             self.pending_state.setText(f"● {error}")
+            self.pending_state.show()
         elif pending:
             self.pending_state.setText("● 有尚未暂存的道具名称/价格改动")
+            self.pending_state.show()
         else:
             self.pending_state.setText("✓ 道具名称与价格和当前工程一致")
+            self.pending_state.hide()
 
     def commit_pending_changes(self) -> bool:
         if not self.has_pending_draft:
@@ -2452,8 +2452,11 @@ class DatabaseDialog(TransactionalProjectDialog):
         self.item_description_page = self.register_page(LegacyTextPage(("item_description",)))
         self.growth_page = self.register_page(LegacyGrowthPage())
         self.shop_page = self.register_page(LegacyShopPage())
-        self._add_detail_tabs(self.other_page_1, "经验与命中补正", self.system_text_page, "系统文字")
-        self.other_page_1.detail_tabs.addTab(self.growth_page, "成长方式")
+        self._compose_other1(
+            self.other_page_1,
+            self.system_text_page,
+            self.growth_page,
+        )
         self.other_page_2.bind_description_page(self.item_description_page)
         self._compose_other2(self.other_page_2, self.shop_page)
         layout.addWidget(self.tabs, 1)
@@ -2476,9 +2479,6 @@ class DatabaseDialog(TransactionalProjectDialog):
             lambda _index: self._sync_active_search(self.database_search.text())
         )
         self.tabs.currentChanged.connect(self._refresh_database_context)
-        self.other_page_1.detail_tabs.currentChanged.connect(
-            lambda _index: self._sync_active_search(self.database_search.text())
-        )
         footer.addWidget(self.database_search, 1)
         footer.addWidget(self.find_next_button)
         footer.addWidget(self.find_previous_button)
@@ -2549,6 +2549,41 @@ class DatabaseDialog(TransactionalProjectDialog):
         tabs.addTab(extra, extra_label)
         page.detail_tabs = tabs
         layout.addWidget(tabs)
+
+    @staticmethod
+    def _compose_other1(
+        page: LegacyGlobalTablesPage,
+        system_page: LegacyTextPage,
+        growth_page: LegacyGrowthPage,
+    ) -> None:
+        """Match the reference four-column Other 1 page."""
+
+        global_contents = QWidget()
+        global_contents.setLayout(page.layout())
+
+        system_contents = QWidget()
+        system_contents.setLayout(system_page.layout())
+        growth_contents = QWidget()
+        growth_contents.setLayout(growth_page.layout())
+
+        splitter = QSplitter(Qt.Orientation.Horizontal)
+        splitter.setObjectName("legacyOther1Panels")
+        splitter.setChildrenCollapsible(False)
+        splitter.addWidget(system_contents)
+        splitter.addWidget(growth_contents)
+        splitter.addWidget(global_contents)
+        splitter.setStretchFactor(0, 7)
+        splitter.setStretchFactor(1, 4)
+        splitter.setStretchFactor(2, 9)
+        splitter.setSizes((440, 250, 560))
+
+        layout = QVBoxLayout(page)
+        layout.setContentsMargins(0, 0, 0, 0)
+        layout.addWidget(splitter)
+        page.other1_splitter = splitter
+        page.system_contents = system_contents
+        page.growth_contents = growth_contents
+        page.global_contents = global_contents
 
     @staticmethod
     def _compose_other2(page: LegacyItemTablePage, shop_page: LegacyShopPage) -> None:
@@ -2627,6 +2662,8 @@ class DatabaseDialog(TransactionalProjectDialog):
 
     def _active_search_page(self) -> ProjectPage | None:
         current = self.tabs.currentWidget()
+        if current is self.other_page_1:
+            return self.system_text_page
         tabs = getattr(current, "detail_tabs", None)
         if tabs is not None and isinstance(tabs.currentWidget(), ProjectPage):
             current = tabs.currentWidget()
@@ -3235,10 +3272,8 @@ class ScenarioDialog(TransactionalProjectDialog):
 
         settings = QGroupBox("基本设置")
         settings_layout = QVBoxLayout(settings)
-        settings_layout.addWidget(QLabel("标题:"))
         self.chapter_title = QLineEdit()
         self.chapter_title.setReadOnly(True)
-        settings_layout.addWidget(self.chapter_title)
         settings_layout.addWidget(QLabel("初始胜利文字:"))
         self.initial_victory = QPlainTextEdit()
         self.initial_victory.setMaximumHeight(118)
@@ -3263,7 +3298,6 @@ class ScenarioDialog(TransactionalProjectDialog):
         page = QWidget()
         page_layout = QVBoxLayout(page)
         page_layout.setContentsMargins(5, 5, 5, 5)
-
         title_art = QGroupBox("标题拼图设置")
         title_layout = QHBoxLayout(title_art)
         self.title_preview = QLabel("请选择关卡")
@@ -3322,17 +3356,22 @@ class ScenarioDialog(TransactionalProjectDialog):
         listing: QListWidget,
         controller: LegacyScenarioEventsPage,
     ) -> QMenu:
-        """Build the reference event menu without inventing script relocation."""
+        """Build the reference event menu with verified Bank-local relocation."""
 
         menu = QMenu(listing)
-        blocked = "章节脚本结构重排尚无该 ROM 的安全证据，当前只开放等长编辑。"
         insert_before = menu.addAction("插入(接上)")
         insert_after = menu.addAction("插入(接下)")
-        self._disabled_structure_action(insert_before, blocked)
-        self._disabled_structure_action(insert_after, blocked)
+        insert_before.triggered.connect(
+            lambda: self._insert_setup_event(controller, after=False)
+        )
+        insert_after.triggered.connect(
+            lambda: self._insert_setup_event(controller, after=True)
+        )
         menu.addSeparator()
         reinforcement = menu.addAction("添加增援")
-        self._disabled_structure_action(reinforcement, blocked)
+        reinforcement.triggered.connect(
+            lambda: self._insert_setup_reinforcement(controller)
+        )
         menu.addSeparator()
         edit = menu.addAction("编辑")
         edit.triggered.connect(
@@ -3342,7 +3381,7 @@ class ScenarioDialog(TransactionalProjectDialog):
         code.triggered.connect(lambda: self._open_setup_event_code_editor(controller))
         menu.addSeparator()
         cut = menu.addAction("剪切")
-        self._disabled_structure_action(cut, blocked)
+        cut.triggered.connect(lambda: self._cut_setup_event(controller))
         copy = menu.addAction("复制")
         copy.triggered.connect(lambda: self._copy_setup_event(controller, False))
         copy_all = menu.addAction("复制全部")
@@ -3354,10 +3393,13 @@ class ScenarioDialog(TransactionalProjectDialog):
         menu.addSeparator()
         delete = menu.addAction("删除")
         clear = menu.addAction("清空")
-        self._disabled_structure_action(delete, blocked)
-        self._disabled_structure_action(clear, blocked)
+        delete.triggered.connect(lambda: self._delete_setup_event(controller))
+        clear.triggered.connect(lambda: self._clear_setup_event(controller))
         has_selection = listing.currentItem() is not None
-        for action in (edit, code, copy, copy_all, paste, paste_all):
+        for action in (
+            insert_before, insert_after, reinforcement, edit, code, cut,
+            copy, copy_all, paste, paste_all, delete, clear,
+        ):
             action.setEnabled(has_selection)
         return menu
 
@@ -3384,12 +3426,121 @@ class ScenarioDialog(TransactionalProjectDialog):
         if not 0 <= row < len(controller._instructions):
             return
         instruction = controller._instructions[row]
-        dialog = EventCodeDialog(instruction.raw, len(instruction.raw), self)
+        dialog = EventCodeDialog(instruction.raw, None, self)
         if dialog.exec() != QDialog.DialogCode.Accepted:
             return
         controller.raw_edit.setText(dialog.raw().hex(" ").upper())
         controller.apply_changes()
         self._refresh_overviews()
+
+    def _apply_setup_event_patches(
+        self,
+        controller: LegacyScenarioEventsPage,
+        patches,
+        description: str,
+    ) -> bool:
+        if controller.project is None:
+            return False
+        try:
+            controller.project._apply_legacy_global_patches(patches, description)
+        except Exception as error:
+            QMessageBox.warning(self, "事件结构未修改", str(error))
+            return False
+        controller._drafts.clear()
+        controller.refresh()
+        self._refresh_overviews()
+        controller.project_changed.emit(description)
+        return True
+
+    def _insert_setup_event(
+        self,
+        controller: LegacyScenarioEventsPage,
+        *,
+        after: bool,
+        preset: bytes = b"\xDF",
+        title: str = "插入事件指令",
+    ) -> None:
+        row = controller.record_list.currentRow()
+        if not 0 <= row < len(controller._instructions) or controller.project is None:
+            return
+        instruction = controller._instructions[row]
+        dialog = EventInstructionDialog(
+            preset,
+            self,
+            title=title,
+            allow_variable_length=True,
+            context=(
+                f"{LegacyScenarioCodec.PHASE_LABELS[controller.phase]} · "
+                f"Bank ${instruction.bank:02X}:${instruction.address:04X} · "
+                f"{'接下' if after else '接上'}"
+            ),
+        )
+        if dialog.exec() != QDialog.DialogCode.Accepted:
+            return
+        try:
+            codec = LegacyScenarioCodec(controller.project.working)
+            current = next(
+                item
+                for item in codec.instructions(controller.scenario_id, controller.phase)
+                if item.address == instruction.address
+            )
+            patches = codec.insertion_patches(current, dialog.raw(), after=after)
+        except Exception as error:
+            QMessageBox.warning(self, "无法插入事件", str(error))
+            return
+        self._apply_setup_event_patches(controller, patches, "章节事件插入")
+
+    def _insert_setup_reinforcement(
+        self, controller: LegacyScenarioEventsPage
+    ) -> None:
+        self._insert_setup_event(
+            controller,
+            after=True,
+            preset=bytes.fromhex("4B 00 00 00 00 00 00"),
+            title="添加敌军增援",
+        )
+
+    def _delete_setup_event(
+        self, controller: LegacyScenarioEventsPage
+    ) -> None:
+        row = controller.record_list.currentRow()
+        if not 0 <= row < len(controller._instructions) or controller.project is None:
+            return
+        instruction = controller._instructions[row]
+        try:
+            codec = LegacyScenarioCodec(controller.project.working)
+            current = next(
+                item
+                for item in codec.instructions(controller.scenario_id, controller.phase)
+                if item.address == instruction.address
+            )
+            patches = codec.deletion_patches(current)
+        except Exception as error:
+            QMessageBox.warning(self, "无法删除事件", str(error))
+            return
+        self._apply_setup_event_patches(controller, patches, "章节事件删除")
+
+    def _cut_setup_event(self, controller: LegacyScenarioEventsPage) -> None:
+        self._copy_setup_event(controller, False)
+        self._delete_setup_event(controller)
+
+    def _clear_setup_event(self, controller: LegacyScenarioEventsPage) -> None:
+        row = controller.record_list.currentRow()
+        if not 0 <= row < len(controller._instructions) or controller.project is None:
+            return
+        instruction = controller._instructions[row]
+        try:
+            codec = LegacyScenarioCodec(controller.project.working)
+            current = next(
+                item
+                for item in codec.instructions(controller.scenario_id, controller.phase)
+                if item.address == instruction.address
+            )
+            patches = codec.replacement_patches(current, b"\xDF")
+        except Exception as error:
+            QMessageBox.warning(self, "无法清空事件", str(error))
+            return
+        self._apply_setup_event_patches(controller, patches, "章节事件清空")
 
     @staticmethod
     def _copy_setup_event(
@@ -3433,7 +3584,10 @@ class ScenarioDialog(TransactionalProjectDialog):
                     raise ValueError("请先选择一条事件指令。")
                 instruction = controller._instructions[row]
                 raw = bytes.fromhex(raw_text)
-                controller.codec.replacement_patch(instruction, raw)
+                if paste_all:
+                    controller.codec.replacement_patch(instruction, raw)
+                else:
+                    controller.codec._validate_sequence(raw)
                 replacements.append((instruction, raw))
         except (AttributeError, ValueError, IndexError) as error:
             QMessageBox.warning(self, "无法粘贴事件指令", str(error))
@@ -4189,7 +4343,7 @@ class ScenarioDialog(TransactionalProjectDialog):
             if not 0 <= row < len(page._instructions):
                 return
             instruction = page._instructions[row]
-            dialog = EventInstructionDialog(
+            dialog = EventParameterDialog(
                 instruction.raw,
                 self,
                 title=title,
@@ -4209,7 +4363,7 @@ class ScenarioDialog(TransactionalProjectDialog):
             instruction = page._selected_instruction()
             if instruction is None:
                 return
-            dialog = EventInstructionDialog(
+            dialog = EventParameterDialog(
                 instruction.raw,
                 self,
                 title=title,

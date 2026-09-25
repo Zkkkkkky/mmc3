@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-09-24T21:23:01+08:00",
+  "generated_at": "2026-09-25T09:57:32+08:00",
   "passed": true,
   "delivery_status": "implementation_complete",
-  "conclusion": "M14 的静态布局、三类关卡脚本、256 项独立行动表、行动池接上/接下变长重排、四条劝降规则、八个文本组（含 $37 分离布局）、13 条初始胜利文字、32 组真实标题拼图和事务边界可重复通过；当前交付范围实现完成，但仍待参考 EXE 动态黄金和用户签收。",
+  "conclusion": "M14 的静态布局、三类关卡脚本及 Bank 内变长重定位、256 项独立行动表、行动池接上/接下变长重排、四条劝降规则、八个文本组（含 $37 分离布局）、13 条初始胜利文字、32 组真实标题拼图和事务边界可重复通过；当前交付范围实现完成，但仍待参考 EXE 动态黄金和用户签收。",
   "rom": {
     "path": "output/rom/DC_kuorong_464K.nes",
     "size": 1310736,
@@ -297,7 +297,9 @@
       ],
       "descriptor_unchanged": true,
       "pointer_table_unchanged": true,
-      "relocatable": false
+      "relocatable": true,
+      "fixed_total_pool": true,
+      "variable_record_length": true
     }
   },
   "chapter_victory": {
@@ -368,6 +370,7 @@
     "reference_button_690_handler_and_message_shape_are_exact": true,
     "legacy_96_groups_are_instruction_aligned": true,
     "legacy_three_phase_samples_are_isolated": true,
+    "legacy_chapter_structural_relocation_and_restore_are_exact": true,
     "global_event_block_is_complete": true,
     "global_event_edit_is_one_byte_and_pointer_safe": true,
     "variable_length_opcode_is_atomically_rejected": true,
@@ -376,7 +379,7 @@
     "persuasion_first_four_only_and_pointer_safe": true,
     "eight_supported_story_groups_roundtrip_losslessly": true,
     "story_pool_repack_and_undo_are_exact": true,
-    "split_37_layout_and_in_place_edit_are_exact": true,
+    "split_37_layout_and_pool_repack_are_exact": true,
     "chapter_victory_shared_pool_edit_is_exact": true,
     "chapter_title_tables_and_shared_pool_edit_are_exact": true,
     "six_tabs_match_declared_order": true,
@@ -392,7 +395,7 @@
   "limitations": [
     "参考程序仍处于提权模态窗口，次级编辑对话框无法可靠动态重放。",
     "按钮 690 对独立行动表按 Bank $26 单独计算；劝降与地图事件仍按已验证章节脚本边界报告。",
-    "接上/接下变长能力只对已验证的 Bank $26 独立行动池开放；三类章节脚本仍保持等长边界。",
+    "章节脚本只在各自 $1E/$1B/$1F 固定 Bank 池内重排；重叠分支解释、悬空跳转或容量不足会原子拒绝。",
     "自动报告证明实现边界，不等于参考动态黄金或用户验收。"
   ]
 }

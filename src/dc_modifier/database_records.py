@@ -26,6 +26,7 @@ from PySide6.QtWidgets import (
 )
 
 from .pages import CharacterPage, WeaponPage, compact_ids
+from .beginner_ui import collapsible_details
 from .character_editor import CharacterDetailsWidget, CharacterDialogueWidget
 from .animation_editor import WeaponAnimationWidget
 from .workspace import ROOT
@@ -48,26 +49,6 @@ def readable_references(combo: QComboBox) -> None:
             combo.setItemText(index, f"{name}  [${int(combo.itemData(index)):02X}]")
     combo.setMinimumContentsLength(12)
     combo.setSizeAdjustPolicy(QComboBox.SizeAdjustPolicy.AdjustToMinimumContentsLengthWithIcon)
-
-
-def collapsible_details(title: str, content: QWidget) -> QWidget:
-    host = QWidget()
-    layout = QVBoxLayout(host)
-    layout.setContentsMargins(0, 0, 0, 0)
-    layout.setSpacing(3)
-    toggle = QToolButton()
-    toggle.setText(title)
-    toggle.setCheckable(True)
-    toggle.setToolButtonStyle(Qt.ToolButtonStyle.ToolButtonTextBesideIcon)
-    toggle.setArrowType(Qt.ArrowType.RightArrow)
-    toggle.toggled.connect(content.setVisible)
-    toggle.toggled.connect(lambda expanded: toggle.setArrowType(
-        Qt.ArrowType.DownArrow if expanded else Qt.ArrowType.RightArrow
-    ))
-    layout.addWidget(toggle)
-    layout.addWidget(content)
-    content.hide()
-    return host
 
 
 def _prepare_readable_page(page) -> QVBoxLayout:
@@ -95,7 +76,10 @@ def _prepare_readable_page(page) -> QVBoxLayout:
                 parent_layout.removeWidget(label)
                 advanced_layout.addWidget(label)
         advanced_layout.addWidget(field)
-    detail_layout.insertWidget(2, collapsible_details("技术详情：指针、共享记录与原始字节", advanced))
+    advanced_host = collapsible_details(advanced)
+    page.advanced_details_content = advanced
+    page.advanced_details_host = advanced_host
+    detail_layout.insertWidget(2, advanced_host)
     page.records.setMinimumWidth(170)
     page.records.setMaximumWidth(330)
     splitter.setSizes([245, 975])
@@ -124,7 +108,7 @@ class ReadableCharacterPage(CharacterPage):
         self.capability_status.setObjectName("hintText")
         self.capability_status.setWordWrap(True)
         capability_details = collapsible_details(
-            "功能范围与安全说明", self.capability_status
+            self.capability_status, "功能范围与安全说明"
         )
         detail.insertWidget(1, capability_details)
         for label in self.findChildren(QLabel):
@@ -177,7 +161,7 @@ class ReadableCharacterPage(CharacterPage):
             left_layout.addWidget(identity_row)
         left_layout.addWidget(self.character_details)
         left_layout.addWidget(collapsible_details(
-            "字段说明与原始字节", self.character_details.info_panel
+            self.character_details.info_panel, "字段说明与原始字节"
         ))
         left_layout.addStretch()
         workspace_layout.addWidget(left, 5)
@@ -410,6 +394,13 @@ class ReadableWeaponPage(WeaponPage):
         self._extras_enabled = False
         super().__init__()
         detail = _prepare_readable_page(self)
+        self.task_hint = QLabel(
+            "操作：① 左侧选择武器　② 修改名称、参数或动画　③ 点击“应用当前武器修改”"
+        )
+        self.task_hint.setObjectName("editState")
+        self.task_hint.setWordWrap(True)
+        detail.insertWidget(1, self.task_hint)
+        self.pending_state.hide()
         self.capability_status = QLabel(
             "可编辑：名称引用、射程、命中、距离补正、武器特技、对空/陆/海攻击力及双方动画的已验证参数。"
             "共享6字节记录或共享动画脚本写入前会列出全部受影响ID。"
@@ -420,16 +411,17 @@ class ReadableWeaponPage(WeaponPage):
         self.rom_summary.setObjectName("hintText")
         self.rom_summary.setWordWrap(True)
         self.rom_summary.setTextInteractionFlags(Qt.TextInteractionFlag.TextSelectableByMouse)
-        technical_summary = QWidget()
-        technical_summary_layout = QVBoxLayout(technical_summary)
-        technical_summary_layout.setContentsMargins(0, 0, 0, 0)
-        technical_summary_layout.setSpacing(3)
-        technical_summary_layout.addWidget(self.capability_status)
-        technical_summary_layout.addWidget(self.rom_summary)
-        detail.insertWidget(
-            1,
-            collapsible_details("功能范围与 ROM 原始记录", technical_summary),
-        )
+        self.advanced_details_content.layout().addWidget(self.capability_status)
+        self.advanced_details_content.layout().addWidget(self.rom_summary)
+        for field, text in (
+            (self.name_reference, "沿用已有名称"),
+            (self.name_text, "直接输入名称"),
+        ):
+            form = field.parentWidget().layout()
+            if isinstance(form, QFormLayout):
+                label = form.labelForField(field)
+                if isinstance(label, QLabel):
+                    label.setText(text)
         attributes = next(group for group in self.findChildren(QGroupBox) if group.title() == "战斗参数")
         grid = attributes.layout()
         if isinstance(grid, QGridLayout):
@@ -440,12 +432,11 @@ class ReadableWeaponPage(WeaponPage):
                     widget.hide()
                     widget.deleteLater()
             for index, field in enumerate(WEAPON_FIELDS):
-                row, col = index // 3, index % 3 * 3
+                row, col = index // 3, index % 3 * 2
                 self.fields[field.key].setMaximumWidth(75)
                 grid.addWidget(QLabel(field.label), row, col)
                 grid.addWidget(self.fields[field.key], row, col + 1)
-                self.original_values[field.key].setToolTip("基准 ROM 原值")
-                grid.addWidget(self.original_values[field.key], row, col + 2)
+                self.original_values[field.key].hide()
         extras = QGroupBox("武器特技与距离补正")
         form = QFormLayout(extras)
         self.weapon_skill = QComboBox()
@@ -478,7 +469,8 @@ class ReadableWeaponPage(WeaponPage):
         animation_tools = QHBoxLayout()
         self.animation_code_button = QPushButton("代码编辑")
         self.animation_code_button.setToolTip(
-            "展开当前我方/敌方动画页的等长十六进制代码编辑区；常用参数也可直接右键动画指令编辑。"
+            "展开当前我方/敌方动画页的完整十六进制代码编辑区；可插入、删除合法指令，"
+            "空间不足或循环目标悬空时会拒绝保存。"
         )
         self.animation_code_button.clicked.connect(self._open_animation_code)
         self.animation_rules_button = QPushButton("规律…")
@@ -639,11 +631,13 @@ class ReadableWeaponPage(WeaponPage):
         super()._update_pending_state()
         animation = getattr(self, "weapon_animation", None)
         if animation is None or self.project is None or self.current_id is None:
+            self.pending_state.setVisible(self.apply_button.isEnabled())
             return
         extra_pending = self._extras_enabled and weapon_extra_values(self.project, self.current_id) != (self.weapon_skill.currentData(), self.distance_correction.value())
         if extra_pending or (animation.isEnabled() and animation.has_pending_changes()):
             self.apply_button.setEnabled(True)
             self.pending_state.setText("● 有尚未暂存的武器特技、距离补正或动画改动")
+        self.pending_state.setVisible(self.apply_button.isEnabled())
 
     def apply_record(self) -> None:
         if self.project is None or self.current_id is None:

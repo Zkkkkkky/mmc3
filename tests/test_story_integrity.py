@@ -142,7 +142,7 @@ class StoryIntegrityTests(unittest.TestCase):
         replacement = record.raw[:1] + bytes((record.raw[1] ^ 1,)) + record.raw[2:]
         self.assertEqual(
             project.story_text_replacement_usage(0x37, 1, replacement),
-            (record.capacity, record.capacity),
+            (734, 734),
         )
         project.set_story_text_raw(0x37, 1, replacement)
         changed = tuple(
@@ -158,7 +158,36 @@ class StoryIntegrityTests(unittest.TestCase):
 
         project.undo()
         self.assertEqual(bytes(project.working), before)
-        with self.assertRaisesRegex(ValueError, "空/哨兵记录"):
+
+    def test_split_selector_37_balances_variable_records_and_resets_exactly(self) -> None:
+        project = RomProject.load(TARGET_ROM)
+        before = bytes(project.working)
+        donor = project.get_story_text(0x37, 1)
+        receiver = project.get_story_text(0x37, 2)
+        self.assertGreater(len(donor.raw), 2)
+
+        project.set_story_text_raw(0x37, 1, donor.raw[2:])
+        grown = receiver.raw[:-1] + receiver.raw[:2] + b"\xFF"
+        used, capacity = project.story_text_replacement_usage(0x37, 2, grown)
+        self.assertEqual(used, capacity)
+        project.set_story_text_raw(0x37, 2, grown)
+        self.assertEqual(project.get_story_text(0x37, 1).raw, donor.raw[2:])
+        self.assertEqual(project.get_story_text(0x37, 2).raw, grown)
+
+        project.reset_story_text(0x37, 2)
+        project.reset_story_text(0x37, 1)
+        self.assertEqual(bytes(project.working), before)
+
+    def test_split_selector_37_rejects_pool_overflow_atomically(self) -> None:
+        project = RomProject.load(TARGET_ROM)
+        before = bytes(project.working)
+        record = project.get_story_text(0x37, 1)
+        with self.assertRaisesRegex(ValueError, "固定容量"):
+            project.set_story_text_raw(
+                0x37, 1, record.raw[:-1] + b"\x01\xFF"
+            )
+        self.assertEqual(bytes(project.working), before)
+        with self.assertRaisesRegex(ValueError, "非文本结构"):
             project.set_story_text_raw(0x37, 0, b"\xFF")
         self.assertEqual(bytes(project.working), before)
 

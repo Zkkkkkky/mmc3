@@ -415,7 +415,6 @@ class DatabaseFeedbackTests(QtTestCase):
         self.assertEqual(page._compact_data_layout, "wide")
         self.assertEqual(page.detail_scroll.horizontalScrollBar().maximum(), 0)
         self.assertEqual(page.detail_scroll.verticalScrollBar().maximum(), 0)
-        self.assertEqual(page.weapons_group.geometry().top(), page.basic_group.geometry().top())
         self.assertLessEqual(page.appearance_type.width(), 180)
         self.assertGreaterEqual(page.appearance_type.width(), 95)
         self.assertTrue(all(

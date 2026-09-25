@@ -1039,7 +1039,6 @@ class SaveEditorDialog(QDialog):
         self.setMinimumSize(850, 580)
         self.setSizeGripEnabled(True)
         root = QVBoxLayout(self)
-
         controls = QHBoxLayout()
         controls.addWidget(QLabel("存档:"))
         self.slot_selector = QComboBox()
@@ -1759,7 +1758,8 @@ class OtherSettingsDialog(QDialog):
         lower = QHBoxLayout()
         left = QVBoxLayout()
         self.hit_values = self._number_group(
-            left, "命中计算公式", (70,), 1, fixed_height=110, field_width=72
+            left, "命中计算公式", (70,), 1,
+            fixed_height=110, field_width=72
         )
         self.item_values = self._number_group(
             left,

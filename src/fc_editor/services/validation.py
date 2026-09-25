@@ -361,13 +361,15 @@ def validate_project(project: ProjectView) -> tuple[ValidationIssue, ...]:
                 ValidationIssue("error", "机体", f"机体 {unit_id:02X} 记录长度错误。")
             )
         name_pointer = project.get_unit_name_pointer(unit_id)
-        if not project.unit_name_codec.source_ids(name_pointer):
+        try:
+            project.unit_name_codec.record_bytes(unit_id, project.working)
+        except (RomFormatError, ValueError):
             issues.append(
                 ValidationIssue(
                     "error",
                     "名称",
                     f"机体 {unit_id:02X} 的名称指针 ${name_pointer:04X} "
-                    "未指向已验证的原生名称。",
+                    "超出已验证共享池或记录结束码无效。",
                 )
             )
     for weapon_id in range(1, project.weapon_count):

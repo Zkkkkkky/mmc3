@@ -9,7 +9,7 @@ from unittest.mock import patch
 os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 
 from PySide6.QtCore import QPoint, Qt
-from PySide6.QtWidgets import QApplication, QDialog
+from PySide6.QtWidgets import QApplication, QDialog, QDialogButtonBox
 
 from fc_editor.codecs.animation import (
     AnimationCodec,
@@ -25,6 +25,8 @@ from dc_modifier.animation_editor import (
     MapAnimationEditorDialog,
     SpritePuzzlePreviewDialog,
     WeaponAnimationWidget,
+    WeaponAnimationCommandDialog,
+    WeaponAnimationCommandPaletteDialog,
 )
 from tests.qt_test_case import QtTestCase
 
@@ -118,6 +120,46 @@ class AnimationCodecTests(unittest.TestCase):
         self.assertEqual(changed.record("ally", 1).raw, replacement)
         self.assertEqual(changed.record("ally", 3).raw, later.raw)
         self.assertEqual(changed.record("ally", 3).offset, later.offset)
+
+    def test_weapon_sequence_insert_rebases_internal_fe_target(self):
+        record = self.codec.record("ally", 4)
+        target_row = record.instructions[12]
+        loop_row = record.instructions[14]
+        self.assertEqual(
+            int.from_bytes(loop_row.raw[2:4], "little"),
+            self.codec.pointers["ally"][4]
+            + target_row.offset
+            - record.offset,
+        )
+        replacement = b"".join(
+            row.raw for row in record.instructions[:12]
+        ) + b"\x01" + b"".join(
+            row.raw for row in record.instructions[12:]
+        )
+        patch = self.codec.script_sequence_patch(record, replacement)
+        apply_animation_patches(self.project, (patch,), "插入循环目标前指令")
+        changed = AnimationCodec(self.project.working)
+        changed_record = changed.record("ally", 4)
+        changed_loop = next(
+            row for row in changed_record.instructions if row.raw[:1] == b"\xFE"
+        )
+        self.assertEqual(
+            int.from_bytes(changed_loop.raw[2:4], "little"),
+            self.codec.pointers["ally"][4]
+            + target_row.offset
+            - record.offset
+            + 1,
+        )
+
+    def test_weapon_sequence_delete_rejects_referenced_instruction(self):
+        record = self.codec.record("ally", 4)
+        replacement = b"".join(
+            row.raw
+            for index, row in enumerate(record.instructions)
+            if index != 12
+        )
+        with self.assertRaisesRegex(ValueError, "循环目标.*已删除"):
+            self.codec.script_sequence_patch(record, replacement)
 
     def test_map_animation_clone_uses_reserved_slot_and_relocates_loops(self):
         new_index, patches = self.codec.clone_map_animation_patches(0)
@@ -571,7 +613,8 @@ class AnimationUiTests(QtTestCase):
         self.assertEqual(dialog.animation_list.currentRow(), 2)
         self.assertFalse(dialog.script_editor.code_edit.isHidden())
         self.assertIn(f"${target:04X}", dialog.script_editor.status.text())
-        self.assertIn("只允许修改已验证参数", dialog.script_editor.status.text())
+        self.assertIn("结构代码区已展开", dialog.script_editor.status.text())
+        self.assertIn("循环目标会安全重定位", dialog.script_editor.status.text())
         self.assertEqual(bytes(dialog.draft), before)
 
         pointer_dialog = AnimationPointerDialog(pointer=target)
@@ -796,6 +839,38 @@ class AnimationUiTests(QtTestCase):
             editor._show_instruction_context_menu(QPoint(-1, -1))
         popup.assert_called_once()
         widget.close()
+
+    def test_weapon_edit_and_insert_use_separate_command_flows(self):
+        edit = WeaponAnimationCommandDialog(raw=bytes.fromhex("F4 03"))
+        self.addCleanup(edit.close)
+        self.assertFalse(edit.allow_type_change)
+        self.assertFalse(edit.command_type.isEnabled())
+        self.assertEqual(edit.windowTitle(), "编辑武器动画参数")
+        edit.raw_edit.setText("E0 00")
+        self.assertFalse(
+            edit.buttons.button(QDialogButtonBox.StandardButton.Ok).isEnabled()
+        )
+        self.assertIn("不能更换指令类型", edit.preview_label.text())
+
+        palette = WeaponAnimationCommandPaletteDialog()
+        self.addCleanup(palette.close)
+        self.assertEqual(palette.windowTitle(), "选择要插入的武器动画指令")
+        self.assertFalse(hasattr(palette, "raw_edit"))
+        self.assertFalse(hasattr(palette, "parameter_editors"))
+        palette.command_list.setCurrentRow(1)
+        self.assertEqual(palette.preset(), bytes.fromhex("F4 00"))
+
+        insert_parameters = WeaponAnimationCommandDialog(
+            raw=palette.preset(),
+            allow_type_change=False,
+            operation="insert",
+        )
+        self.addCleanup(insert_parameters.close)
+        self.assertFalse(insert_parameters.command_type.isEnabled())
+        self.assertEqual(
+            insert_parameters.windowTitle(),
+            "设置新武器动画指令参数",
+        )
 
     def test_weapon_animation_right_click_edit_changes_only_verified_parameter_draft(self):
         widget = WeaponAnimationWidget()

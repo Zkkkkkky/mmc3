@@ -560,10 +560,57 @@ class EditorProjectTests(unittest.TestCase):
         self.assertEqual(bytes(project.working), before)
         self.assertEqual(project.weapon_display_name(0x0B), first)
 
+    def test_unit_name_shared_pool_allows_balanced_growth(self) -> None:
+        project = RomProject.load(TARGET_ROM)
+        first = project.unit_display_name(0x01)
+        second = project.unit_display_name(0x02)
+        aliases = project.unit_name_source_ids(0x01)
+        before = bytes(project.working)
+
+        project.set_unit_name_text(0x01, "A")
+        project.set_unit_name_text(0x02, second + "A")
+        self.assertEqual(project.unit_display_name(0x01), "A")
+        self.assertEqual(project.unit_display_name(0x02), second + "A")
+        self.assertEqual(project.unit_name_source_ids(0x01), aliases)
+        self.assertFalse(any(issue.severity == "error" for issue in project.validate()))
+        expected_source_ids = project.unit_name_codec.baseline_source_ids(
+            project.unit_name_codec.original_pointers[0x02]
+        )
+        project.set_unit_name_reference(0x03, 0x02)
+        self.assertEqual(project.unit_name_source_ids(0x03), expected_source_ids)
+        project.undo()
+
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "unit-name-pool.dcmod"
+            project.save_project(path)
+            reopened = RomProject.load_project(path, TARGET_ROM)
+            self.assertEqual(reopened.unit_display_name(0x01), "A")
+            self.assertEqual(reopened.unit_display_name(0x02), second + "A")
+        project.undo()
+        project.undo()
+        self.assertEqual(bytes(project.working), before)
+        self.assertEqual(project.unit_display_name(0x01), first)
+
+    def test_unit_name_growth_rejects_when_canonical_record_is_unreferenced(self) -> None:
+        project = RomProject.load(TARGET_ROM)
+        unique_id = next(
+            ids[0]
+            for pointer, ids in project.unit_name_codec.ids_by_pointer.items()
+            if pointer and len(ids) == 1 and ids[0] > 0
+        )
+        target_id = 0x02 if unique_id != 0x02 else 0x03
+        project.set_unit_name_reference(unique_id, target_id)
+        before = bytes(project.working)
+        with self.assertRaisesRegex(ValueError, "未被引用的规范记录"):
+            project.set_unit_name_text(
+                target_id, project.unit_display_name(target_id) + "A"
+            )
+        self.assertEqual(bytes(project.working), before)
+
     def test_direct_name_rejects_overflow_without_mutation(self) -> None:
         project = RomProject.load(TARGET_ROM)
         before = bytes(project.working)
-        with self.assertRaisesRegex(ValueError, "当前原槽只有"):
+        with self.assertRaisesRegex(ValueError, "机体名称共享池容量不足"):
             project.set_unit_name_text(0x01, "这是一个肯定放不下的超长机体名称")
         self.assertEqual(bytes(project.working), before)
 
