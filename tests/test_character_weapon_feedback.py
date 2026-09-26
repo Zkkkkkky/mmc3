@@ -9,9 +9,15 @@ from unittest.mock import patch
 
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QImage, QColor
-from PySide6.QtWidgets import QApplication, QMessageBox
+from PySide6.QtWidgets import (
+    QApplication, QGroupBox, QMessageBox, QPushButton,
+)
 
 from dc_modifier.app import DEFAULT_ROM
+from dc_modifier.character_editor import (
+    DialogueBindingDialog, DialogueRuleDialog, DialogueRuleGroupDialog,
+    SpiritCostDialog, TransformDialogueDialog,
+)
 from dc_modifier.legacy_windows import DatabaseDialog
 from dc_modifier.portrait_export import PORTRAIT_BACKGROUND_PALETTE_NES
 from dc_modifier.weapon_animation_test import (
@@ -24,7 +30,7 @@ from fc_editor.codecs.character_attributes import (
     CharacterAttributesCodec, PortraitRecord, apply_verified_patches,
     weapon_extra_patches, weapon_extra_values,
 )
-from fc_editor.codecs.character_dialogue import TransformDialogueBinding
+from fc_editor.codecs.character_dialogue import DialogueRule, TransformDialogueBinding
 from fc_rom_editor_core import RomProject
 from tests.qt_test_case import QtTestCase
 
@@ -462,10 +468,89 @@ class CharacterWeaponUiFeedbackTests(QtTestCase):
         self.assertIn("双击", self.widget.spirits[0].toolTip())
         dialogue = self.page.character_dialogue
         self.assertEqual(len(dialogue.direct_buttons), 8)
-        self.assertIn("·", dialogue.direct_buttons[0].text())
+        self.assertNotIn("·", dialogue.direct_buttons[0].text())
+        self.assertIn("·", dialogue.direct_buttons[0].toolTip())
         self.assertNotIn("未定义/不可读", dialogue.direct_buttons[0].text())
+        self.assertEqual(dialogue.attack_group.title(), "攻击对话")
+        self.assertEqual(dialogue.defense_group.title(), "防御对话")
+        self.assertEqual(dialogue.transform_group.title(), "变形起飞对话")
+        self.assertEqual(len(dialogue.rule_buttons), 3)
         self.assertTrue(dialogue.direct_controls[0][0].isHidden())
         self.assertTrue(dialogue.direct_controls[0][1].isHidden())
+
+    def test_reference_shaped_embedded_dialogue_editors(self) -> None:
+        codec = self.project.character_dialogue_codec
+        assert codec is not None
+        record = codec.read(4, self.project.working)
+        direct = DialogueBindingDialog(
+            self.project, record.direct[0].segment, record.direct[0].dialogue,
+            title="攻击对话",
+        )
+        self.assertEqual(direct.windowTitle(), "攻击对话")
+        self.assertEqual(direct.segment.currentText(), f"{record.direct[0].segment:02X}")
+        self.assertTrue(direct.dialogue.currentText().startswith("["))
+        rule_group = next(
+            (index, group) for index, group in enumerate(record.rules) if group
+        )
+        rule = DialogueRuleDialog(
+            self.project, rule_group[0], rule_group[1][0]
+        )
+        self.assertEqual(rule.windowTitle(), "攻击对话")
+        self.assertEqual(rule.mode.currentText(), rule.MODE_LABELS[rule_group[0]])
+        self.assertEqual(rule.raw_list.count(), 1)
+        self.assertIn("特殊对话限制（起始至终止）", [
+            group.title() for group in rule.findChildren(QGroupBox)
+        ])
+        binding = TransformDialogueBinding(6, 0, 0xFF, 0)
+        transform = TransformDialogueDialog(self.project, binding)
+        self.assertEqual(transform.windowTitle(), "防御对话")
+        self.assertTrue(transform.start.currentText().startswith("[00]000："))
+        direct.deleteLater()
+        rule.deleteLater()
+        transform.deleteLater()
+
+    def test_attack_dialogue_group_matches_reference_single_window(self) -> None:
+        rules = [
+            DialogueRule(0x07, 0x08, 0x00, 0x52),
+            DialogueRule(0x09, 0x0A, 0x00, 0x53),
+            DialogueRule(0x0B, 0x0E, 0x00, 0x54),
+            DialogueRule(0x00, 0xFF, 0x00, 0x51),
+        ]
+        dialog = DialogueRuleGroupDialog(self.project, 0, rules)
+        self.assertEqual(dialog.windowTitle(), "攻击对话")
+        self.assertEqual((dialog.width(), dialog.height()), (560, 494))
+        self.assertEqual(dialog.raw_list.height(), 216)
+        self.assertEqual(dialog.raw_list.count(), 4)
+        self.assertEqual(dialog.raw_list.item(0).text(), "01: 07 08 00 52")
+        self.assertEqual(dialog.raw_list.item(3).text(), "04: 00 FF 00 51")
+        self.assertEqual(dialog.mode.currentText(), "我方武器限制")
+        self.assertEqual(dialog.segment.currentText(), "00")
+        self.assertTrue(dialog.dialogue.currentText().startswith("[52]082："))
+        self.assertEqual(
+            [button.text() for button in dialog.findChildren(QPushButton)],
+            ["确定", "取消"],
+        )
+        dialog.raw_list.setCurrentRow(1)
+        self.assertEqual(dialog.start.currentData(), 0x09)
+        self.assertEqual(dialog.end.currentData(), 0x0A)
+        dialog.dialogue.setCurrentIndex(dialog.dialogue.findData(0x54))
+        _, updated = dialog.result_values()
+        self.assertEqual(updated[1].dialogue, 0x54)
+        self.assertEqual(dialog.raw_list.item(1).text(), "02: 09 0A 00 54")
+        dialog.deleteLater()
+
+    def test_spirit_cost_dialog_uses_reference_compact_layout(self) -> None:
+        dialog = SpiritCostDialog("毅力", 10)
+        dialog.show()
+        self.app.processEvents()
+        self.assertEqual(dialog.windowTitle(), "精神修改")
+        self.assertEqual((dialog.width(), dialog.height()), (472, 155))
+        self.assertEqual(dialog.cost.value(), 10)
+        self.assertEqual(
+            [button.text() for button in dialog.findChildren(QPushButton)],
+            ["确定", "取消"],
+        )
+        dialog.deleteLater()
 
     @staticmethod
     def _palette_rgb(index: int) -> tuple[int, int, int]:

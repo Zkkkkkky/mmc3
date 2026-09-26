@@ -15,6 +15,7 @@ from PySide6.QtWidgets import (
     QApplication,
     QDialogButtonBox,
     QGroupBox,
+    QLabel,
     QListWidgetItem,
     QMessageBox,
     QScrollArea,
@@ -234,6 +235,7 @@ class DatabaseFeedbackTests(QtTestCase):
         self.addCleanup(dialog.close)
         dialog.show()
         self.app.processEvents()
+        self.assertEqual((dialog.width(), dialog.height()), (530, 388))
         self.assertEqual(len(dialog.icon_buttons), 48)
         self.assertTrue(all(button.autoRaise() for button in dialog.icon_buttons))
         self.assertLessEqual(dialog.minimumWidth(), 700)
@@ -450,7 +452,7 @@ class DatabaseFeedbackTests(QtTestCase):
         self.assertEqual(page.weapons_group.geometry().top(), page.basic_group.geometry().top())
 
     def test_character_page_uses_reference_compact_first_screen_layout(self) -> None:
-        self.dialog.resize(1220, 787)
+        self.dialog.resize(1380, 840)
         self.dialog.tabs.setCurrentIndex(1)
         self.dialog.character_page.select_record_id(4)
         self.app.processEvents()
@@ -461,22 +463,54 @@ class DatabaseFeedbackTests(QtTestCase):
         self.assertIsNotNone(scroll)
         self.assertIsNotNone(workspace)
         self.assertTrue(page.character_details.portrait_group.isVisible())
+        self.assertGreaterEqual(page.records.width(), 280)
+        portrait = page.character_details.portrait_group
+        self.assertEqual(portrait.title(), "头像设置")
+        portrait_labels = {label.text() for label in portrait.findChildren(QLabel)}
+        self.assertNotIn("正面位置", portrait_labels)
+        self.assertNotIn("背景位置", portrait_labels)
+        self.assertFalse(page.character_details.shared_portrait.isVisible())
+        self.assertFalse(page.character_details.shared_attributes.isVisible())
+        self.assertFalse(page.advanced_details_host.isVisible())
+        self.assertFalse(page.capability_status.isVisible())
+        self.assertFalse(page.original_name.isVisible())
+        self.assertFalse(page.original_music.isVisible())
+        page.character_details.portrait_advanced_button.click()
+        self.app.processEvents()
+        self.assertTrue(page.character_details.shared_portrait.isVisible())
+        self.assertTrue(page.character_details.shared_attributes.isVisible())
         self.assertLess(
             page.character_details.portrait_group.geometry().top(),
             workspace.geometry().top(),
         )
         self.assertGreater(
             page.character_dialogue.geometry().left(),
-            page.character_details.geometry().right(),
+            page.character_reference_left.geometry().right(),
         )
         self.assertEqual(scroll.horizontalScrollBar().maximum(), 0)
         self.assertEqual(scroll.verticalScrollBar().maximum(), 0)
-        direct_tops = [
+        self.assertEqual(page.basic_group.title(), "基本设置")
+        self.assertFalse(page.name_reference.isVisible())
+        self.assertTrue(page.ally_music.currentText().startswith("音乐"))
+        self.assertTrue(page.enemy_music.currentText().startswith("音乐"))
+        attributes = page.character_details.attributes_group
+        spirits = page.character_details.spirits_group
+        self.assertEqual(page.basic_group.geometry().top(), attributes.geometry().top())
+        self.assertLess(page.basic_group.geometry().left(), attributes.geometry().left())
+        self.assertGreater(spirits.geometry().top(), page.basic_group.geometry().bottom())
+        self.assertLessEqual(spirits.geometry().left(), page.basic_group.geometry().left())
+        self.assertGreaterEqual(spirits.geometry().right(), attributes.geometry().right())
+        attack_tops = [
             button.geometry().top()
-            for button in page.character_dialogue.direct_buttons
+            for button in page.character_dialogue.direct_buttons[:2]
         ]
-        self.assertEqual(direct_tops, sorted(direct_tops))
-        self.assertEqual(len(set(direct_tops)), len(direct_tops))
+        defense_tops = [
+            button.geometry().top()
+            for button in page.character_dialogue.direct_buttons[2:]
+        ]
+        self.assertEqual(attack_tops, sorted(attack_tops))
+        self.assertEqual(defense_tops, sorted(defense_tops))
+        self.assertEqual(len(set(defense_tops)), 6)
 
     def test_weapon_page_keeps_core_fields_and_animation_on_first_screen(self) -> None:
         self.dialog.resize(1220, 787)

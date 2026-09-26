@@ -101,6 +101,10 @@ class ReadableCharacterPage(CharacterPage):
         self.character_dialogue = CharacterDialogueWidget()
         super().__init__()
         detail = _prepare_readable_page(self)
+        character_splitter = self.findChild(QSplitter)
+        assert character_splitter is not None
+        self.records.setMinimumWidth(280)
+        character_splitter.setSizes([300, 1020])
         self.capability_status = QLabel(
             "可编辑：名称、战斗名称/引用、双方音乐、精神/成长、五项修正、精神与消耗、头像引用/颜色、击落不消失。\n"
             "战斗台词的 8 个直接绑定、3 组特殊攻击规则和变形起飞绑定可编辑；新增人物因三固定池已满而安全拒绝。"
@@ -111,39 +115,61 @@ class ReadableCharacterPage(CharacterPage):
             self.capability_status, "功能范围与安全说明"
         )
         detail.insertWidget(1, capability_details)
+        capability_details.hide()
+        self.advanced_details_host.hide()
+        for field in (self.original_name, self.original_music):
+            form = field.parentWidget().layout()
+            if isinstance(form, QFormLayout):
+                label = form.labelForField(field)
+                if label is not None:
+                    label.hide()
+            field.hide()
         for label in self.findChildren(QLabel):
             if label.text().startswith("当前人物属性表、头像索引"):
                 label.hide()
         self.original_name.setWordWrap(True)
-        identities = [item for item in self.findChildren(QGroupBox) if item.title() in ("名称与战斗名称", "人物战斗音乐")]
-        identity_row = None
+        identities = [
+            item for item in self.findChildren(QGroupBox)
+            if item.title() in ("名称与战斗名称", "人物战斗音乐")
+        ]
+        position = max(0, detail.count() - 2)
         if len(identities) == 2:
-            identity_row = QWidget()
-            row = QHBoxLayout(identity_row)
-            row.setContentsMargins(0, 0, 0, 0)
-            row.setSpacing(5)
             position = detail.indexOf(identities[0])
             for group in identities:
                 detail.removeWidget(group)
-                for editor in group.findChildren(QComboBox):
-                    editor.setMinimumWidth(0)
-                    editor.setSizePolicy(
-                        QSizePolicy.Policy.Ignored, QSizePolicy.Policy.Fixed
-                    )
-                row.addWidget(group, 1)
-            detail.insertWidget(position, identity_row)
+                group.hide()
+
+        reference_form = self.name_reference.parentWidget().layout()
+        if isinstance(reference_form, QFormLayout):
+            reference_label = reference_form.labelForField(self.name_reference)
+            if reference_label is not None:
+                reference_label.hide()
+        self.name_reference.hide()
+        self.name_reference.setEnabled(False)
+
+        self.basic_group = QGroupBox("基本设置")
+        self.basic_group.setMinimumWidth(205)
+        basic_form = QFormLayout(self.basic_group)
+        basic_form.setContentsMargins(7, 9, 7, 7)
+        basic_form.setHorizontalSpacing(5)
+        basic_form.setVerticalSpacing(4)
+        basic_form.addRow("名称：", self.normal_name_text)
+        basic_form.addRow("战斗名称：", self.name_text)
+        basic_form.addRow("我方战斗音乐：", self.ally_music)
+        basic_form.addRow("敌方战斗音乐：", self.enemy_music)
+        for editor in (
+            self.normal_name_text, self.name_text, self.ally_music, self.enemy_music
+        ):
+            editor.setMinimumWidth(100)
+            editor.setSizePolicy(
+                QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed
+            )
         self.character_details = CharacterDetailsWidget()
         self.character_details.changed.connect(self._update_pending_state)
         self.character_details.portrait_export_requested.connect(
             self.export_selected_record
         )
         self.character_dialogue.changed.connect(self._update_pending_state)
-        if identity_row is not None:
-            position = detail.indexOf(identity_row)
-            detail.removeWidget(identity_row)
-        else:
-            position = max(0, detail.count() - 2)
-
         portrait = self.character_details.portrait_group
         self.character_details.layout().removeWidget(portrait)
         detail.insertWidget(position, portrait)
@@ -153,19 +179,35 @@ class ReadableCharacterPage(CharacterPage):
         workspace_layout = QHBoxLayout(workspace)
         workspace_layout.setContentsMargins(0, 0, 0, 0)
         workspace_layout.setSpacing(5)
-        left = QWidget()
-        left_layout = QVBoxLayout(left)
-        left_layout.setContentsMargins(0, 0, 0, 0)
-        left_layout.setSpacing(4)
-        if identity_row is not None:
-            left_layout.addWidget(identity_row)
-        left_layout.addWidget(self.character_details)
-        left_layout.addWidget(collapsible_details(
-            self.character_details.info_panel, "字段说明与原始字节"
-        ))
-        left_layout.addStretch()
-        workspace_layout.addWidget(left, 5)
+        details_layout = self.character_details.attributes_page.layout()
+        assert isinstance(details_layout, QHBoxLayout)
+        details_layout.removeWidget(self.character_details.attributes_group)
+        details_layout.removeWidget(self.character_details.spirits_group)
+
+        reference_left = QWidget()
+        self.character_reference_left = reference_left
+        reference_left.setObjectName("characterReferenceLeft")
+        reference_grid = QGridLayout(reference_left)
+        reference_grid.setContentsMargins(0, 0, 0, 0)
+        reference_grid.setHorizontalSpacing(5)
+        reference_grid.setVerticalSpacing(4)
+        reference_grid.addWidget(self.basic_group, 0, 0)
+        reference_grid.addWidget(self.character_details.attributes_group, 0, 1)
+        reference_grid.addWidget(
+            self.character_details.spirits_group, 1, 0, 1, 2
+        )
+        reference_grid.setColumnStretch(0, 1)
+        reference_grid.setColumnStretch(1, 1)
+        reference_grid.setRowStretch(2, 1)
+        self.character_details.attributes_group.setMinimumWidth(245)
+        self.character_details.spirits_group.setMinimumWidth(500)
+
+        workspace_layout.addWidget(reference_left, 5)
         workspace_layout.addWidget(self.character_dialogue, 4)
+        self.character_dialogue.setMinimumWidth(410)
+        workspace_layout.setAlignment(
+            self.character_dialogue, Qt.AlignmentFlag.AlignTop
+        )
         detail.insertWidget(position + 1, workspace)
 
     def record_text(self, record_id: int) -> str:
@@ -234,6 +276,23 @@ class ReadableCharacterPage(CharacterPage):
         self._loading_details = True
         try:
             super().load_record(record_id)
+            self.name_reference.setEnabled(False)
+            self.name_reference.hide()
+            for combo in (self.ally_music, self.enemy_music):
+                for index in range(combo.count()):
+                    value = combo.itemData(index)
+                    if value is None:
+                        continue
+                    original = combo.itemText(index)
+                    if original.startswith("音乐"):
+                        original = str(
+                            combo.itemData(index, Qt.ItemDataRole.ToolTipRole)
+                            or original
+                        )
+                    combo.setItemData(
+                        index, original, Qt.ItemDataRole.ToolTipRole
+                    )
+                    combo.setItemText(index, f"音乐{int(value):02X}")
             self.character_details.set_record(self.project, record_id)
             self.character_dialogue.set_record(self.project, record_id)
         finally:

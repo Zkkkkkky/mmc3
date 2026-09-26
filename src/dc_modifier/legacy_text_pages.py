@@ -581,6 +581,16 @@ class LegacyScenarioEventsPage(ProjectPage):
         self.refresh()
 
 
+class _GrowthHexEdit(QPlainTextEdit):
+    """Multiline legacy edit with the former single-line compatibility API."""
+
+    def text(self) -> str:
+        return self.toPlainText()
+
+    def setText(self, text: str) -> None:  # noqa: N802 - Qt compatibility
+        self.setPlainText(text)
+
+
 class GrowthHexDialog(QDialog):
     """Reference-shaped editor for the first 60 growth nibbles."""
 
@@ -595,17 +605,19 @@ class GrowthHexDialog(QDialog):
         if len(values) < self.VALUE_COUNT:
             raise ValueError("成长方式至少需要60级数据。")
         self.setWindowTitle("成长属性")
+        self.setFixedSize(376, 160)
         self._tail = tuple(values[self.VALUE_COUNT :])
         layout = QVBoxLayout(self)
-        layout.addWidget(QLabel("请输入60位十六进制成长串（每位0—F）："))
-        self.hex_edit = QLineEdit(
+        self.hex_edit = _GrowthHexEdit()
+        self.hex_edit.setPlainText(
             "".join(f"{value:X}" for value in values[: self.VALUE_COUNT])
         )
-        self.hex_edit.setMaxLength(self.VALUE_COUNT)
+        self.hex_edit.setFixedHeight(72)
         self.hex_edit.setObjectName("legacyGrowthHex")
         layout.addWidget(self.hex_edit)
         self.length_label = QLabel()
         self.length_label.setObjectName("legacyGrowthHexLength")
+        self.length_label.setStyleSheet("color: red;")
         layout.addWidget(self.length_label)
         self.buttons = QDialogButtonBox(
             QDialogButtonBox.StandardButton.Ok
@@ -620,18 +632,17 @@ class GrowthHexDialog(QDialog):
         self._validate()
 
     def _validate(self) -> None:
-        text = self.hex_edit.text().strip()
+        text = self.hex_edit.toPlainText().strip()
         valid = len(text) == self.VALUE_COUNT and all(
             character in "0123456789abcdefABCDEF" for character in text
         )
         self.length_label.setText(
-            f"当前长度：{len(text)} / {self.VALUE_COUNT}"
-            + ("" if valid else "（必须为60位十六进制）")
+            f"长度： {len(text)}"
         )
         self.buttons.button(QDialogButtonBox.StandardButton.Ok).setEnabled(valid)
 
     def values(self) -> tuple[int, ...]:
-        text = self.hex_edit.text().strip()
+        text = self.hex_edit.toPlainText().strip()
         if len(text) != self.VALUE_COUNT or any(
             character not in "0123456789abcdefABCDEF" for character in text
         ):

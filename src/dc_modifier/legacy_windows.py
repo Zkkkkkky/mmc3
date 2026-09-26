@@ -386,12 +386,13 @@ class _LegacyUnitController(UnitPage):
 
 
 UNIT_SPECIAL_FLAGS: tuple[tuple[int, str], ...] = (
-    (0x08, "视层装甲反射系统（反伤）"),
+    (0x08, "积层装甲反射系统（反伤）"),
     (0x10, "先制攻击"),
     (0x20, "一击脱离（仅限我方）"),
     (0x40, "异次元连接系统"),
-    (0x80, "扭曲力场"),
+    (0x80, "扭曲力场（间无）"),
 )
+UNIT_SPECIAL_DIALOG_FLAGS = tuple(reversed(UNIT_SPECIAL_FLAGS))
 UNIT_SPECIAL_LOW_BITS: tuple[str, ...] = (
     "无",
     "T防御系统",
@@ -428,49 +429,41 @@ class UnitSpecialEditorDialog(QDialog):
         super().__init__(parent)
         if not 0 <= value <= 0xFF:
             raise ValueError("机体特殊技能必须在 $00—$FF 之间。")
-        self.setWindowTitle("机体特殊技能")
+        self.setWindowTitle("机体特技")
         self.setModal(True)
-        self.setMinimumWidth(390)
+        self.setFixedSize(380, 273)
 
-        root = QVBoxLayout(self)
-        hint = QLabel("按旧修改器的 $77F7 位定义编辑；下拉项与勾选能力可以组合。")
-        hint.setWordWrap(True)
-        hint.setObjectName("hintText")
-        root.addWidget(hint)
+        root = QGridLayout(self)
+        root.setContentsMargins(12, 12, 12, 12)
+        root.setHorizontalSpacing(10)
+        root.setVerticalSpacing(0)
 
         self.low_bits = QComboBox()
         for low_value, label in enumerate(UNIT_SPECIAL_LOW_BITS):
-            self.low_bits.addItem(f"{low_value:02X}：{label}", low_value)
+            self.low_bits.addItem(f"{low_value:02d}：{label}", low_value)
         self.low_bits.setCurrentIndex(value & 0x07)
-        form = QFormLayout()
-        form.addRow("低三位组合", self.low_bits)
-        root.addLayout(form)
-
-        flags = QGroupBox("已命名能力")
-        flags_layout = QVBoxLayout(flags)
+        self.low_bits.setFixedWidth(250)
         self.flag_checks: dict[int, QCheckBox] = {}
-        for mask, label in UNIT_SPECIAL_FLAGS:
-            check = QCheckBox(f"{label}（${mask:02X}）")
+        for row, (mask, label) in enumerate(UNIT_SPECIAL_DIALOG_FLAGS):
+            check = QCheckBox(label)
             check.setChecked(bool(value & mask))
             check.toggled.connect(self._refresh_summary)
-            flags_layout.addWidget(check)
+            root.addWidget(check, row, 0)
             self.flag_checks[mask] = check
-        root.addWidget(flags)
+        root.addWidget(self.low_bits, len(UNIT_SPECIAL_DIALOG_FLAGS), 0)
 
         self.summary = QLabel()
-        self.summary.setObjectName("pendingState")
-        self.summary.setWordWrap(True)
-        root.addWidget(self.summary)
+        self.summary.hide()
 
-        buttons = QHBoxLayout()
-        buttons.addStretch()
         ok_button = QPushButton("确定")
         cancel_button = QPushButton("取消")
+        ok_button.setFixedSize(100, 30)
+        cancel_button.setFixedSize(100, 30)
         ok_button.clicked.connect(self.accept)
         cancel_button.clicked.connect(self.reject)
-        buttons.addWidget(ok_button)
-        buttons.addWidget(cancel_button)
-        root.addLayout(buttons)
+        root.addWidget(ok_button, 0, 1)
+        root.addWidget(cancel_button, 1, 1)
+        root.setRowStretch(len(UNIT_SPECIAL_DIALOG_FLAGS) + 1, 1)
         self.low_bits.currentIndexChanged.connect(self._refresh_summary)
         self._refresh_summary()
 
@@ -2424,7 +2417,7 @@ class DatabaseDialog(TransactionalProjectDialog):
         parent: QWidget | None = None,
     ) -> None:
         super().__init__(project, title="数据库", parent=parent)
-        self.resize(1100, 760)
+        self.resize(1380, 840)
         self.setMinimumSize(900, 600)
 
         layout = QVBoxLayout(self)

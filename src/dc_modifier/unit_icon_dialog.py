@@ -45,14 +45,14 @@ class UnitIconBindingDialog(QDialog):
         self.selected_bank = 0
         self.selected_icon_index = 0
         self.setWindowTitle("机体图标设置")
-        self.setMinimumWidth(680)
+        self.setFixedSize(530, 388)
 
         root = QVBoxLayout(self)
         hint = QLabel(
             "机体图标图库会随关卡动态切换。先选择机体出现关卡，再从该关卡实际加载的48个图标中选择。"
         )
         hint.setWordWrap(True)
-        root.addWidget(hint)
+        hint.hide()
 
         selector_box = QGroupBox("图标选择")
         selectors = QGridLayout(selector_box)
@@ -88,7 +88,7 @@ class UnitIconBindingDialog(QDialog):
             row, column = divmod(position, 16)
             number = QLabel(f"{position + 1:02d}")
             number.setAlignment(Qt.AlignmentFlag.AlignCenter)
-            number.setFixedSize(39, 18)
+            number.setFixedSize(32, 18)
             grid.addWidget(number, row * 2, column)
             button = QToolButton()
             button.setCheckable(True)
@@ -96,7 +96,7 @@ class UnitIconBindingDialog(QDialog):
             button.setAutoRaise(True)
             button.setToolButtonStyle(Qt.ToolButtonStyle.ToolButtonIconOnly)
             button.setIconSize(QSize(32, 32))
-            button.setFixedSize(39, 34)
+            button.setFixedSize(32, 32)
             button.setStyleSheet(
                 "QToolButton { background:#000; border:none; padding:1px; }"
                 "QToolButton:checked { border:2px solid #FF3333; padding:0; }"
@@ -106,11 +106,11 @@ class UnitIconBindingDialog(QDialog):
             )
             grid.addWidget(button, row * 2 + 1, column)
             self.icon_buttons.append(button)
-        self.icon_grid.setFixedHeight(164)
+        self.icon_grid.setFixedHeight(154)
         root.addWidget(self.icon_grid)
 
         self.route_status = QLabel()
-        root.addWidget(self.route_status)
+        self.route_status.hide()
         buttons = QDialogButtonBox(
             QDialogButtonBox.StandardButton.Ok
             | QDialogButtonBox.StandardButton.Cancel

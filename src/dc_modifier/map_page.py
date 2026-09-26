@@ -388,13 +388,15 @@ class NesPaletteDialog(QDialog):
     def __init__(self, current: int, parent=None) -> None:
         super().__init__(parent)
         self.selected_value = current
-        self.setWindowTitle("选择 NES 颜色")
+        self.setWindowTitle("调色板选择")
+        self.setFixedSize(530, 175)
         grid = QGridLayout(self)
-        grid.setSpacing(3)
+        grid.setContentsMargins(10, 10, 10, 10)
+        grid.setSpacing(0)
         for value in range(0x40):
             color = palette_color(value)
             button = QPushButton(f"{value:02X}")
-            button.setFixedSize(40, 38)
+            button.setFixedSize(32, 32)
             button.setToolTip(
                 f"NES 色号 ${value:02X} · RGB {color.name().upper()}（FCEUX.pal）"
             )

@@ -24,6 +24,8 @@ from dc_modifier.database_graphics import (
 )
 from dc_modifier.legacy_windows import (
     DatabaseDialog,
+    UNIT_SPECIAL_DIALOG_FLAGS,
+    UNIT_SPECIAL_FLAGS,
     UnitSpecialEditorDialog,
     unit_special_summary,
 )
@@ -151,6 +153,13 @@ class ScreenshotUnitTests(QtTestCase):
         self.assertEqual(dialog.value(), 0x16)
         self.assertTrue(dialog.flag_checks[0x10].isChecked())
         self.assertIn("先制攻击", dialog.summary.text())
+        self.assertEqual(dialog.windowTitle(), "机体特技")
+        self.assertEqual(
+            [dialog.flag_checks[mask].text() for mask, _label in UNIT_SPECIAL_DIALOG_FLAGS],
+            [label for _mask, label in UNIT_SPECIAL_DIALOG_FLAGS],
+        )
+        self.assertEqual(dialog.low_bits.itemText(1), "01：T防御系统")
+        self.assertFalse(dialog.summary.isVisible())
         dialog.flag_checks[0x20].setChecked(True)
         dialog.low_bits.setCurrentIndex(3)
         self.assertEqual(dialog.value(), 0x33)
@@ -161,7 +170,7 @@ class ScreenshotUnitTests(QtTestCase):
         self.addCleanup(database.close)
         page = database.unit_page
         page.fields["special"].setValue(0xD8)
-        self.assertIn("视层装甲反射", page.special_skill_button.text())
+        self.assertIn("积层装甲反射", page.special_skill_button.text())
         self.assertIn("先制攻击", page.special_skill_button.toolTip())
         self.assertIn("异次元连接系统", page.special_skill_button.toolTip())
         self.assertIn("扭曲力场", page.special_skill_button.toolTip())

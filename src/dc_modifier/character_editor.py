@@ -5,7 +5,7 @@ from PySide6.QtGui import QImage, QPixmap
 from PySide6.QtWidgets import (
     QCheckBox, QFileDialog, QFormLayout, QGridLayout, QGroupBox, QHBoxLayout,
     QComboBox, QDialog, QDialogButtonBox, QHeaderView, QLabel, QLineEdit,
-    QMessageBox, QPushButton, QSpinBox, QSizePolicy, QTableWidget,
+    QListWidget, QMenu, QMessageBox, QPushButton, QSpinBox, QSizePolicy, QTableWidget,
     QTableWidgetItem, QTabWidget, QVBoxLayout, QWidget,
 )
 
@@ -77,21 +77,27 @@ class SpiritCostDialog(QDialog):
     def __init__(self, name: str, value: int, parent=None) -> None:
         super().__init__(parent)
         self.setWindowTitle("精神修改")
-        form = QFormLayout(self)
+        self.setFixedSize(472, 155)
+        root = QGridLayout(self)
         name_field = QLineEdit(name)
         name_field.setReadOnly(True)
+        name_field.setToolTip("精神名称来自参考配置；本窗口只修改ROM中的全局消耗值。")
         self.cost = QSpinBox()
         self.cost.setRange(0, 255)
         self.cost.setValue(value)
-        form.addRow("精神名称", name_field)
-        form.addRow("精神消耗", self.cost)
-        buttons = QDialogButtonBox(
-            QDialogButtonBox.StandardButton.Ok
-            | QDialogButtonBox.StandardButton.Cancel
-        )
-        buttons.accepted.connect(self.accept)
-        buttons.rejected.connect(self.reject)
-        form.addRow(buttons)
+        root.addWidget(QLabel("精神名称："), 0, 0)
+        root.addWidget(name_field, 0, 1)
+        root.addWidget(QLabel("精神消耗："), 1, 0)
+        root.addWidget(self.cost, 1, 1)
+        ok = QPushButton("确定")
+        cancel = QPushButton("取消")
+        ok.setFixedSize(110, 32)
+        cancel.setFixedSize(110, 32)
+        ok.clicked.connect(self.accept)
+        cancel.clicked.connect(self.reject)
+        root.addWidget(ok, 0, 2)
+        root.addWidget(cancel, 1, 2)
+        root.setColumnStretch(1, 1)
 
 
 class SpiritCheckBox(QCheckBox):
@@ -124,7 +130,7 @@ def dialogue_preview(
 
 
 class DialogueBindingDialog(QDialog):
-    """Readable picker for one battle-dialogue binding."""
+    """Reference-shaped picker for one battle-dialogue binding."""
 
     SEGMENT_LABELS = {
         0x00: "00 · 进攻战斗对话",
@@ -137,30 +143,35 @@ class DialogueBindingDialog(QDialog):
     def __init__(
         self, project, segment: int, dialogue: int, parent=None,
         *, text_codec: LegacyTextCodec | None = None,
+        title: str = "防御对话",
     ) -> None:
         super().__init__(parent)
         self.project = project
         self.text_codec = text_codec or LegacyTextCodec(project.working)
-        self.setWindowTitle("选择战斗对话")
-        form = QFormLayout(self)
+        self.setWindowTitle(title)
+        self.setFixedSize(578, 160)
+        root = QVBoxLayout(self)
+        group = QGroupBox("文字段")
+        row = QHBoxLayout(group)
         self.segment = QComboBox()
         for value in VALID_SEGMENTS:
-            self.segment.addItem(self.SEGMENT_LABELS[value], value)
+            self.segment.addItem(f"{value:02X}", value)
+        self.segment.setFixedWidth(92)
         self.dialogue = QComboBox()
+        self.dialogue.setMinimumWidth(390)
         self.segment.currentIndexChanged.connect(self._load_dialogues)
-        form.addRow("文字组", self.segment)
-        form.addRow("对话正文", self.dialogue)
-        hint = QLabel("列表显示实际文本预览；编号保留在每项开头，便于与参考版核对。")
-        hint.setWordWrap(True)
-        hint.setObjectName("hintText")
-        form.addRow(hint)
+        row.addWidget(self.segment)
+        row.addWidget(self.dialogue, 1)
+        root.addWidget(group)
         buttons = QDialogButtonBox(
             QDialogButtonBox.StandardButton.Ok
             | QDialogButtonBox.StandardButton.Cancel
         )
+        buttons.button(QDialogButtonBox.StandardButton.Ok).setText("确定")
+        buttons.button(QDialogButtonBox.StandardButton.Cancel).setText("取消")
         buttons.accepted.connect(self.accept)
         buttons.rejected.connect(self.reject)
-        form.addRow(buttons)
+        root.addWidget(buttons)
         self.segment.setCurrentIndex(self.segment.findData(segment))
         self._load_dialogues()
         index = self.dialogue.findData(dialogue)
@@ -178,7 +189,7 @@ class DialogueBindingDialog(QDialog):
         self.dialogue.clear()
         for value in range(count):
             self.dialogue.addItem(
-                f"${value:02X} · {self._preview(segment, value)}", value
+                f"[{value:02X}]{value:03d}： {self._preview(segment, value)}", value
             )
         if previous is not None:
             index = self.dialogue.findData(previous)
@@ -241,36 +252,450 @@ class RuleConditionDialog(QDialog):
         return int(self.actor.currentData()), int(self.weapon.currentData())
 
 
+class DialogueRuleDialog(QDialog):
+    """Reference-shaped editor for one special battle-dialogue rule."""
+
+    MODE_LABELS = ("我方武器限制", "敌方人物限制", "敌方机体限制")
+
+    def __init__(
+        self, project, group: int, rule: DialogueRule, parent=None,
+        *, text_codec: LegacyTextCodec | None = None,
+    ) -> None:
+        super().__init__(parent)
+        self.project = project
+        self.text_codec = text_codec or LegacyTextCodec(project.working)
+        self.setWindowTitle("攻击对话")
+        self.setFixedSize(560, 494)
+        root = QVBoxLayout(self)
+        self.raw_list = QListWidget()
+        self.raw_list.addItem(
+            "01："
+            f"{rule.actor_or_unit:02X} {rule.weapon_or_unit:02X} "
+            f"{rule.segment:02X} {rule.dialogue:02X} "
+        )
+        self.raw_list.setCurrentRow(0)
+        root.addWidget(self.raw_list, 1)
+
+        limits = QGroupBox("特殊对话限制（起始至终止）")
+        limit_layout = QGridLayout(limits)
+        self.mode = QComboBox()
+        for index, label in enumerate(self.MODE_LABELS):
+            self.mode.addItem(label, index)
+        self.start = QComboBox()
+        self.end = QComboBox()
+        limit_layout.addWidget(self.mode, 0, 0, 1, 2)
+        limit_layout.addWidget(self.start, 1, 0)
+        limit_layout.addWidget(self.end, 1, 1)
+        root.addWidget(limits)
+
+        text_group = QGroupBox("文字段")
+        text_layout = QHBoxLayout(text_group)
+        self.segment = QComboBox()
+        for value in VALID_SEGMENTS:
+            self.segment.addItem(f"{value:02X}", value)
+        self.segment.setFixedWidth(92)
+        self.dialogue = QComboBox()
+        text_layout.addWidget(self.segment)
+        text_layout.addWidget(self.dialogue, 1)
+        root.addWidget(text_group)
+
+        buttons = QDialogButtonBox(
+            QDialogButtonBox.StandardButton.Ok
+            | QDialogButtonBox.StandardButton.Cancel
+        )
+        buttons.button(QDialogButtonBox.StandardButton.Ok).setText("确定")
+        buttons.button(QDialogButtonBox.StandardButton.Cancel).setText("取消")
+        buttons.accepted.connect(self.accept)
+        buttons.rejected.connect(self.reject)
+        root.addWidget(buttons)
+
+        self.mode.currentIndexChanged.connect(self._load_limits)
+        self.segment.currentIndexChanged.connect(self._load_dialogues)
+        self.mode.setCurrentIndex(max(0, min(2, group)))
+        self._load_limits()
+        self.start.setCurrentIndex(self.start.findData(rule.actor_or_unit))
+        self.end.setCurrentIndex(self.end.findData(rule.weapon_or_unit))
+        self.segment.setCurrentIndex(self.segment.findData(rule.segment))
+        self._load_dialogues()
+        self.dialogue.setCurrentIndex(self.dialogue.findData(rule.dialogue))
+
+    def _load_limits(self, *_args) -> None:
+        old_start, old_end = self.start.currentData(), self.end.currentData()
+        self.start.clear()
+        self.end.clear()
+        mode = int(self.mode.currentData())
+        for value in range(0x100):
+            try:
+                if mode == 0:
+                    name = self.project.weapon_display_name(value)
+                elif mode == 1:
+                    name = self.project.character_display_name(value)
+                else:
+                    name = self.project.unit_display_name(value)
+            except (IndexError, KeyError, ValueError):
+                name = ""
+            label = f"[{value:02X}]{value:03d}：{name}"
+            self.start.addItem(label, value)
+            self.end.addItem(label, value)
+        for combo, previous in ((self.start, old_start), (self.end, old_end)):
+            if previous is not None and combo.findData(previous) >= 0:
+                combo.setCurrentIndex(combo.findData(previous))
+
+    def _load_dialogues(self, *_args) -> None:
+        previous = self.dialogue.currentData()
+        segment = int(self.segment.currentData())
+        count = 0x10 if segment == 0x01 else 0x40 if segment == 0x05 else 0xDD if segment == 0x07 else 0x100
+        self.dialogue.clear()
+        for value in range(count):
+            self.dialogue.addItem(
+                f"[{value:02X}]{value:03d}： "
+                f"{dialogue_preview(self.project, segment, value, self.text_codec)}",
+                value,
+            )
+        if previous is not None and self.dialogue.findData(previous) >= 0:
+            self.dialogue.setCurrentIndex(self.dialogue.findData(previous))
+
+    def result_value(self) -> tuple[int, DialogueRule]:
+        return int(self.mode.currentData()), DialogueRule(
+            int(self.start.currentData()), int(self.end.currentData()),
+            int(self.segment.currentData()), int(self.dialogue.currentData()),
+        )
+
+
+class DialogueRuleGroupDialog(QDialog):
+    """Reference attack-dialogue window with list and editor in one dialog."""
+
+    MODE_LABELS = DialogueRuleDialog.MODE_LABELS
+
+    def __init__(
+        self, project, group: int, rules: list[DialogueRule], parent=None,
+        *, text_codec: LegacyTextCodec | None = None,
+    ) -> None:
+        super().__init__(parent)
+        self.project = project
+        self.text_codec = text_codec or LegacyTextCodec(project.working)
+        self._rules = list(rules) or [DialogueRule(0x00, 0x00, 0x00, 0x00)]
+        self._current_row = -1
+        self._loading = False
+        self.setWindowTitle("攻击对话")
+        self.setFixedSize(560, 494)
+
+        root = QVBoxLayout(self)
+        root.setContentsMargins(6, 6, 6, 6)
+        root.setSpacing(5)
+        self.raw_list = QListWidget()
+        self.raw_list.setContextMenuPolicy(
+            Qt.ContextMenuPolicy.CustomContextMenu
+        )
+        self.raw_list.setFixedHeight(216)
+        self.raw_list.setToolTip("选择一条规则后在下方修改；右键可新增或删除规则。")
+        root.addWidget(self.raw_list, 1)
+
+        limits = QGroupBox("特殊对话限制（起始至终止）")
+        limit_layout = QGridLayout(limits)
+        self.mode = QComboBox()
+        for index, label in enumerate(self.MODE_LABELS):
+            self.mode.addItem(label, index)
+        self.start = QComboBox()
+        self.end = QComboBox()
+        limit_layout.addWidget(self.mode, 0, 0, 1, 2)
+        limit_layout.addWidget(self.start, 1, 0)
+        limit_layout.addWidget(self.end, 1, 1)
+        root.addWidget(limits)
+
+        text_group = QGroupBox("文字段")
+        text_layout = QHBoxLayout(text_group)
+        self.segment = QComboBox()
+        for value in VALID_SEGMENTS:
+            self.segment.addItem(f"{value:02X}", value)
+        self.segment.setFixedWidth(92)
+        self.dialogue = QComboBox()
+        text_layout.addWidget(self.segment)
+        text_layout.addWidget(self.dialogue, 1)
+        root.addWidget(text_group)
+
+        buttons = QDialogButtonBox(
+            QDialogButtonBox.StandardButton.Ok
+            | QDialogButtonBox.StandardButton.Cancel
+        )
+        buttons.button(QDialogButtonBox.StandardButton.Ok).setText("确定")
+        buttons.button(QDialogButtonBox.StandardButton.Cancel).setText("取消")
+        buttons.accepted.connect(self._accept)
+        buttons.rejected.connect(self.reject)
+        root.addWidget(buttons)
+
+        self.mode.currentIndexChanged.connect(self._mode_changed)
+        self.start.currentIndexChanged.connect(self._field_changed)
+        self.end.currentIndexChanged.connect(self._field_changed)
+        self.segment.currentIndexChanged.connect(self._segment_changed)
+        self.dialogue.currentIndexChanged.connect(self._field_changed)
+        self.raw_list.currentRowChanged.connect(self._select_row)
+        self.raw_list.customContextMenuRequested.connect(self._show_rule_menu)
+
+        self._loading = True
+        self.mode.setCurrentIndex(max(0, min(2, group)))
+        self._load_limits()
+        self._loading = False
+        self._refresh_raw_list()
+        self.raw_list.setCurrentRow(0)
+
+    @staticmethod
+    def _raw_text(index: int, rule: DialogueRule) -> str:
+        return (
+            f"{index + 1:02d}: {rule.actor_or_unit:02X} "
+            f"{rule.weapon_or_unit:02X} {rule.segment:02X} {rule.dialogue:02X}"
+        )
+
+    def _refresh_raw_list(self) -> None:
+        current = self.raw_list.currentRow()
+        self.raw_list.blockSignals(True)
+        self.raw_list.clear()
+        for index, rule in enumerate(self._rules):
+            self.raw_list.addItem(self._raw_text(index, rule))
+        self.raw_list.blockSignals(False)
+        if self._rules:
+            self.raw_list.setCurrentRow(min(max(0, current), len(self._rules) - 1))
+
+    def _load_limits(self) -> None:
+        old_start, old_end = self.start.currentData(), self.end.currentData()
+        self.start.blockSignals(True)
+        self.end.blockSignals(True)
+        self.start.clear()
+        self.end.clear()
+        mode = int(self.mode.currentData())
+        for value in range(0x100):
+            try:
+                if mode == 0:
+                    name = self.project.weapon_display_name(value)
+                elif mode == 1:
+                    name = self.project.character_display_name(value)
+                else:
+                    name = self.project.unit_display_name(value)
+            except (IndexError, KeyError, ValueError):
+                name = ""
+            label = f"[{value:02X}]{value:03d}：{name}"
+            self.start.addItem(label, value)
+            self.end.addItem(label, value)
+        for combo, previous in ((self.start, old_start), (self.end, old_end)):
+            index = combo.findData(previous)
+            combo.setCurrentIndex(index if index >= 0 else 0)
+        self.start.blockSignals(False)
+        self.end.blockSignals(False)
+
+    def _load_dialogues(self, selected: int | None = None) -> None:
+        previous = self.dialogue.currentData() if selected is None else selected
+        self.dialogue.blockSignals(True)
+        self.dialogue.clear()
+        segment = int(self.segment.currentData())
+        count = (
+            0x10 if segment == 0x01 else 0x40 if segment == 0x05
+            else 0xDD if segment == 0x07 else 0x100
+        )
+        for value in range(count):
+            self.dialogue.addItem(
+                f"[{value:02X}]{value:03d}： "
+                f"{dialogue_preview(self.project, segment, value, self.text_codec)}",
+                value,
+            )
+        index = self.dialogue.findData(previous)
+        self.dialogue.setCurrentIndex(index if index >= 0 else 0)
+        self.dialogue.blockSignals(False)
+
+    def _select_row(self, row: int) -> None:
+        if self._loading or row < 0 or row >= len(self._rules):
+            return
+        self._store_current()
+        self._current_row = row
+        rule = self._rules[row]
+        self._loading = True
+        self.start.setCurrentIndex(self.start.findData(rule.actor_or_unit))
+        self.end.setCurrentIndex(self.end.findData(rule.weapon_or_unit))
+        self.segment.setCurrentIndex(self.segment.findData(rule.segment))
+        self._load_dialogues(rule.dialogue)
+        self._loading = False
+
+    def _store_current(self) -> None:
+        if self._current_row < 0 or self._loading:
+            return
+        values = (
+            self.start.currentData(), self.end.currentData(),
+            self.segment.currentData(), self.dialogue.currentData(),
+        )
+        if any(value is None for value in values):
+            return
+        self._rules[self._current_row] = DialogueRule(
+            *(int(value) for value in values)
+        )
+        item = self.raw_list.item(self._current_row)
+        if item is not None:
+            item.setText(self._raw_text(
+                self._current_row, self._rules[self._current_row]
+            ))
+
+    def _field_changed(self, *_args) -> None:
+        if not self._loading:
+            self._store_current()
+
+    def _segment_changed(self, *_args) -> None:
+        if self._loading:
+            return
+        self._load_dialogues()
+        self._store_current()
+
+    def _mode_changed(self, *_args) -> None:
+        if self._loading:
+            return
+        self._loading = True
+        self._load_limits()
+        if self._current_row >= 0:
+            rule = self._rules[self._current_row]
+            self.start.setCurrentIndex(self.start.findData(rule.actor_or_unit))
+            self.end.setCurrentIndex(self.end.findData(rule.weapon_or_unit))
+        self._loading = False
+
+    def _show_rule_menu(self, position) -> None:
+        menu = QMenu(self)
+        add = menu.addAction("新增规则")
+        remove = menu.addAction("删除规则")
+        remove.setEnabled(len(self._rules) > 1 and self.raw_list.currentRow() >= 0)
+        chosen = menu.exec(self.raw_list.mapToGlobal(position))
+        if chosen is add:
+            self._store_current()
+            self._rules.append(DialogueRule(0x00, 0x00, 0x00, 0x00))
+            self._refresh_raw_list()
+            self.raw_list.setCurrentRow(len(self._rules) - 1)
+        elif chosen is remove:
+            row = self.raw_list.currentRow()
+            if row >= 0 and len(self._rules) > 1:
+                del self._rules[row]
+                self._current_row = -1
+                self._refresh_raw_list()
+                self.raw_list.setCurrentRow(min(row, len(self._rules) - 1))
+
+    def _accept(self) -> None:
+        self._store_current()
+        self.accept()
+
+    def result_values(self) -> tuple[int, tuple[DialogueRule, ...]]:
+        self._store_current()
+        return int(self.mode.currentData()), tuple(self._rules)
+
+
+class TransformDialogueDialog(QDialog):
+    """Reference-shaped transform/launch dialogue binding editor."""
+
+    def __init__(
+        self, project, binding: TransformDialogueBinding, parent=None,
+        *, text_codec: LegacyTextCodec | None = None,
+    ) -> None:
+        super().__init__(parent)
+        self.project = project
+        self.character_id = binding.character_id
+        self.text_codec = text_codec or LegacyTextCodec(project.working)
+        self.setWindowTitle("防御对话")
+        self.setFixedSize(560, 230)
+        root = QVBoxLayout(self)
+        limits = QGroupBox("机体限定（起点至终点）")
+        limit_layout = QHBoxLayout(limits)
+        self.start = QComboBox()
+        self.end = QComboBox()
+        for value in range(0x100):
+            try:
+                name = project.unit_display_name(value)
+            except (IndexError, ValueError):
+                name = ""
+            label = f"[{value:02X}]{value:03d}：{name}"
+            self.start.addItem(label, value)
+            self.end.addItem(label, value)
+        self.start.setCurrentIndex(self.start.findData(binding.unit_start))
+        self.end.setCurrentIndex(self.end.findData(binding.unit_end))
+        limit_layout.addWidget(self.start)
+        limit_layout.addWidget(self.end)
+        root.addWidget(limits)
+
+        text_group = QGroupBox("文字段")
+        text_layout = QHBoxLayout(text_group)
+        segment = QComboBox()
+        segment.addItem("05", 0x05)
+        segment.setEnabled(False)
+        segment.setFixedWidth(92)
+        self.dialogue = QComboBox()
+        for value in range(0x40):
+            self.dialogue.addItem(
+                f"[{value:02X}]{value:03d}： "
+                f"{dialogue_preview(project, 0x05, value, self.text_codec)}",
+                value,
+            )
+        self.dialogue.setCurrentIndex(self.dialogue.findData(binding.dialogue))
+        text_layout.addWidget(segment)
+        text_layout.addWidget(self.dialogue, 1)
+        root.addWidget(text_group)
+        buttons = QDialogButtonBox(
+            QDialogButtonBox.StandardButton.Ok
+            | QDialogButtonBox.StandardButton.Cancel
+        )
+        buttons.button(QDialogButtonBox.StandardButton.Ok).setText("确定")
+        buttons.button(QDialogButtonBox.StandardButton.Cancel).setText("取消")
+        buttons.accepted.connect(self.accept)
+        buttons.rejected.connect(self.reject)
+        root.addWidget(buttons)
+
+    def binding(self) -> TransformDialogueBinding:
+        return TransformDialogueBinding(
+            self.character_id, int(self.start.currentData()),
+            int(self.end.currentData()), int(self.dialogue.currentData()),
+        )
+
+
 class CharacterDialogueWidget(QGroupBox):
     changed = Signal()
 
     DIRECT_LABELS = (
-        "攻击命中", "攻击受阻", "防御成功", "防御未受伤",
-        "防御轻伤", "防御中伤", "防御重伤", "被击落",
+        "无力反击", "攻击受阻", "防御成功", "未受损伤",
+        "轻微损伤", "中度损伤", "重度损伤", "被击落",
     )
     RULE_LABELS = ("一次攻击", "二次攻击", "三次攻击")
+    REFERENCE_ATTACK_LABELS = (
+        "一次攻击", "二次攻击", "可以反击", "无力反击", "攻击受阻"
+    )
 
     def __init__(self) -> None:
-        super().__init__("战斗台词绑定")
+        super().__init__()
+        self.setFlat(True)
         self.project = None
         self.character_id = None
         self.codec = None
         self._baseline = None
         self._text_codec = None
         self._loading = False
-        outer = QVBoxLayout(self)
-        outer.setContentsMargins(5, 5, 5, 5)
-        outer.setSpacing(4)
+        outer = QGridLayout(self)
+        outer.setContentsMargins(0, 0, 0, 0)
+        outer.setHorizontalSpacing(5)
+        outer.setVerticalSpacing(4)
         self.status = QLabel(
             "文字段与对话编号指向“战斗对话”页正文；特殊攻击保留现有规则条数。"
         )
         self.status.setObjectName("hintText")
         self.status.setWordWrap(True)
         self.status.setToolTip(self.status.text())
+        self.status.hide()
         tabs = QTabWidget()
         self.tabs = tabs
-        tabs.setSizePolicy(QSizePolicy.Policy.Ignored, QSizePolicy.Policy.Expanding)
-        outer.addWidget(tabs)
+        tabs.hide()
+
+        attack_group = QGroupBox("攻击对话")
+        self.attack_group = attack_group
+        attack_grid = QGridLayout(attack_group)
+        attack_grid.setContentsMargins(7, 9, 7, 7)
+        attack_grid.setHorizontalSpacing(5)
+        attack_grid.setVerticalSpacing(3)
+
+        defense_group = QGroupBox("防御对话")
+        self.defense_group = defense_group
+        defense_grid = QGridLayout(defense_group)
+        defense_grid.setContentsMargins(7, 9, 7, 7)
+        defense_grid.setHorizontalSpacing(5)
+        defense_grid.setVerticalSpacing(3)
 
         direct_page = QWidget()
         grid = QGridLayout(direct_page)
@@ -280,14 +705,14 @@ class CharacterDialogueWidget(QGroupBox):
         self.direct_controls: list[tuple[QComboBox, QSpinBox]] = []
         self.direct_buttons: list[QPushButton] = []
         for index, label in enumerate(self.DIRECT_LABELS):
-            segment = QComboBox()
+            segment = QComboBox(direct_page)
             segment.setMinimumWidth(0)
             segment.setSizePolicy(
                 QSizePolicy.Policy.Ignored, QSizePolicy.Policy.Fixed
             )
             for value in VALID_SEGMENTS:
                 segment.addItem(f"文字段 ${value:02X}", value)
-            dialogue = QSpinBox()
+            dialogue = QSpinBox(direct_page)
             dialogue.setRange(0, 0xFF)
             dialogue.setPrefix("$")
             dialogue.setDisplayIntegerBase(16)
@@ -296,19 +721,31 @@ class CharacterDialogueWidget(QGroupBox):
             segment.hide()
             dialogue.hide()
             choose = QPushButton()
+            choose.setMinimumWidth(0)
+            choose.setSizePolicy(
+                QSizePolicy.Policy.Ignored, QSizePolicy.Policy.Fixed
+            )
             choose.setObjectName(f"character_dialogue_{index}")
             choose.setToolTip("点击选择文字组，并按实际正文预览选择台词。")
             choose.clicked.connect(
                 lambda _checked=False, row=index: self._choose_direct_dialogue(row)
             )
-            row, column = index, 0
-            grid.addWidget(QLabel(label), row, column)
-            grid.addWidget(choose, row, column + 1, 1, 2)
+            if index < 2:
+                row = index + 3
+                attack_grid.addWidget(
+                    QLabel(self.REFERENCE_ATTACK_LABELS[row]), row, 0
+                )
+                attack_grid.addWidget(choose, row, 1)
+            else:
+                row = index - 2
+                defense_grid.addWidget(QLabel(label), row, 0)
+                defense_grid.addWidget(choose, row, 1)
             self.direct_controls.append((segment, dialogue))
             self.direct_buttons.append(choose)
         tabs.addTab(direct_page, "直接台词（2攻/6防）")
 
         self.rule_tables: list[QTableWidget] = []
+        self.rule_buttons: list[QPushButton] = []
         for group_index, label in enumerate(self.RULE_LABELS):
             page = QWidget()
             page_layout = QVBoxLayout(page)
@@ -320,7 +757,25 @@ class CharacterDialogueWidget(QGroupBox):
             table.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeMode.Stretch)
             table.verticalHeader().setVisible(False)
             table.cellChanged.connect(self._changed)
+            table.cellDoubleClicked.connect(
+                lambda _row, _column, group=group_index: self._edit_rule(group)
+            )
             self.rule_tables.append(table)
+            rule_button = QPushButton()
+            rule_button.setMinimumWidth(0)
+            rule_button.setSizePolicy(
+                QSizePolicy.Policy.Ignored, QSizePolicy.Policy.Fixed
+            )
+            rule_button.setObjectName(f"character_dialogue_rule_{group_index}")
+            rule_button.setToolTip("点击编辑这一类攻击台词的全部条件规则。")
+            rule_button.clicked.connect(
+                lambda _checked=False, group=group_index: self._manage_rule_group(group)
+            )
+            attack_grid.addWidget(
+                QLabel(self.REFERENCE_ATTACK_LABELS[group_index]), group_index, 0
+            )
+            attack_grid.addWidget(rule_button, group_index, 1)
+            self.rule_buttons.append(rule_button)
             page_layout.addWidget(table)
             rule_actions = QHBoxLayout()
             add_rule = QPushButton("新增规则")
@@ -359,6 +814,9 @@ class CharacterDialogueWidget(QGroupBox):
         )
         self.transform_table.verticalHeader().setVisible(False)
         self.transform_table.cellChanged.connect(self._changed)
+        self.transform_table.cellDoubleClicked.connect(
+            lambda _row, _column: self._edit_transform()
+        )
         transform_layout.addWidget(self.transform_table)
         buttons = QHBoxLayout()
         add = QPushButton("添加变形台词绑定")
@@ -376,6 +834,28 @@ class CharacterDialogueWidget(QGroupBox):
         hint.setWordWrap(True)
         transform_layout.addWidget(hint)
         tabs.addTab(transform_page, "变形起飞")
+
+        transform_group = QGroupBox("变形起飞对话")
+        self.transform_group = transform_group
+        transform_row = QHBoxLayout(transform_group)
+        transform_row.setContentsMargins(7, 9, 7, 7)
+        transform_row.setSpacing(5)
+        transform_row.addWidget(QLabel("变形对话："))
+        self.transform_button = QPushButton()
+        self.transform_button.setMinimumWidth(0)
+        self.transform_button.setSizePolicy(
+            QSizePolicy.Policy.Ignored, QSizePolicy.Policy.Fixed
+        )
+        self.transform_button.clicked.connect(self._manage_transform_bindings)
+        transform_row.addWidget(self.transform_button, 1)
+        self.transform_clear_button = QPushButton("清空")
+        self.transform_clear_button.clicked.connect(self._remove_transform)
+        transform_row.addWidget(self.transform_clear_button)
+
+        outer.addWidget(attack_group, 0, 0)
+        outer.addWidget(defense_group, 1, 0)
+        outer.addWidget(transform_group, 2, 0)
+        outer.setRowStretch(3, 1)
 
     @staticmethod
     def _hex_item(value: int, detail: str = "") -> QTableWidgetItem:
@@ -401,6 +881,8 @@ class CharacterDialogueWidget(QGroupBox):
     def _changed(self, *_args) -> None:
         if not self._loading:
             self._refresh_direct_buttons()
+            self._refresh_rule_buttons()
+            self._refresh_transform_button()
             self.changed.emit()
 
     def _binding_text(self, binding: DialogueBinding) -> str:
@@ -419,17 +901,163 @@ class CharacterDialogueWidget(QGroupBox):
             if segment.currentData() is None:
                 button.setText("未绑定")
                 continue
-            button.setText(
-                self._binding_text(
-                    DialogueBinding(int(segment.currentData()), dialogue.value())
-                )
+            binding = DialogueBinding(
+                int(segment.currentData()), dialogue.value()
             )
+            button.setText(dialogue_preview(
+                self.project, binding.segment, binding.dialogue, self._text_codec
+            ))
+            button.setToolTip(self._binding_text(binding))
+
+    def _refresh_rule_buttons(self) -> None:
+        for group, (button, table) in enumerate(zip(
+            self.rule_buttons, self.rule_tables
+        )):
+            if table.rowCount() == 0:
+                button.setText("无")
+                button.setToolTip("点击新增此类攻击台词规则。")
+                continue
+            previews = []
+            for row in range(table.rowCount()):
+                segment = self._parse_hex(table.item(row, 2), "文字段")
+                dialogue = self._parse_hex(table.item(row, 3), "对话编号")
+                previews.append(dialogue_preview(
+                    self.project, segment, dialogue, self._text_codec
+                ))
+            button.setText(
+                previews[0]
+                + (f"（共 {len(previews)} 条）" if len(previews) > 1 else "")
+            )
+            button.setToolTip(
+                f"{self.RULE_LABELS[group]}规则：\n" + "\n".join(previews)
+            )
+
+    def _refresh_transform_button(self) -> None:
+        rows = self.transform_table.rowCount()
+        if rows == 0:
+            self.transform_button.setText("无")
+            self.transform_button.setToolTip("点击添加变形起飞台词绑定。")
+            self.transform_clear_button.setEnabled(False)
+            return
+        previews = []
+        for row in range(rows):
+            dialogue = self._parse_hex(
+                self.transform_table.item(row, 2), "变形台词"
+            )
+            previews.append(dialogue_preview(
+                self.project, 0x05, dialogue, self._text_codec
+            ))
+        self.transform_button.setText(
+            previews[0] + (f"（共 {rows} 条）" if rows > 1 else "")
+        )
+        self.transform_button.setToolTip("\n".join(previews))
+        self.transform_clear_button.setEnabled(True)
+
+    def _manage_rule_group(self, group: int) -> None:
+        table = self.rule_tables[group]
+        rules = []
+        for row in range(table.rowCount()):
+            values = tuple(
+                self._parse_hex(table.item(row, column), "特殊对话规则")
+                for column in range(4)
+            )
+            rules.append(DialogueRule(*values))
+        dialog = DialogueRuleGroupDialog(
+            self.project, group, rules, self, text_codec=self._text_codec
+        )
+        if dialog.exec() != QDialog.DialogCode.Accepted:
+            return
+        target_group, updated = dialog.result_values()
+        self._loading = True
+        table.setRowCount(0)
+        target = self.rule_tables[target_group]
+        if target_group != group:
+            start_row = target.rowCount()
+        else:
+            start_row = 0
+        for offset, rule in enumerate(updated):
+            row = start_row + offset
+            target.insertRow(row)
+            for column, value in enumerate((
+                rule.actor_or_unit, rule.weapon_or_unit,
+                rule.segment, rule.dialogue,
+            )):
+                detail = self._rule_detail(column, value)
+                if column == 3:
+                    detail = dialogue_preview(
+                        self.project, rule.segment, rule.dialogue,
+                        self._text_codec,
+                    )
+                target.setItem(row, column, self._hex_item(value, detail))
+        self._loading = False
+        self._changed()
+
+    def _manage_transform_bindings(self) -> None:
+        rows = self.transform_table.rowCount()
+        if rows == 0:
+            self._add_transform()
+            return
+        if rows == 1:
+            self.transform_table.setCurrentCell(0, 0)
+            self._edit_transform()
+            return
+        dialog = QDialog(self)
+        dialog.setWindowTitle("防御对话")
+        dialog.resize(540, 280)
+        root = QVBoxLayout(dialog)
+        items = QListWidget()
+        root.addWidget(items)
+
+        def refresh() -> None:
+            current = max(0, items.currentRow())
+            items.clear()
+            for row in range(self.transform_table.rowCount()):
+                start = self.transform_table.item(row, 0).text()
+                end = self.transform_table.item(row, 1).text()
+                text = self.transform_table.item(row, 2).text().split("·", 1)[-1].strip()
+                items.addItem(f"{row + 1:02d}  {start} → {end}：{text}")
+            if items.count():
+                items.setCurrentRow(min(current, items.count() - 1))
+
+        actions = QHBoxLayout()
+        add = QPushButton("添加")
+        edit = QPushButton("编辑")
+        remove = QPushButton("删除")
+        done = QPushButton("关闭")
+        for button in (add, edit, remove):
+            actions.addWidget(button)
+        actions.addStretch()
+        actions.addWidget(done)
+        root.addLayout(actions)
+
+        def edit_selected() -> None:
+            if items.currentRow() < 0:
+                return
+            self.transform_table.setCurrentCell(items.currentRow(), 0)
+            self._edit_transform()
+            refresh()
+
+        def remove_selected() -> None:
+            if items.currentRow() < 0:
+                return
+            self.transform_table.setCurrentCell(items.currentRow(), 0)
+            self._remove_transform()
+            refresh()
+
+        add.clicked.connect(lambda: (self._add_transform(), refresh()))
+        edit.clicked.connect(edit_selected)
+        remove.clicked.connect(remove_selected)
+        items.itemDoubleClicked.connect(lambda _item: edit_selected())
+        done.clicked.connect(dialog.accept)
+        refresh()
+        dialog.exec()
 
     def _choose_direct_dialogue(self, index: int) -> None:
         segment, dialogue = self.direct_controls[index]
         picker = DialogueBindingDialog(
             self.project, int(segment.currentData()), dialogue.value(), self,
             text_codec=self._text_codec,
+            title="攻击对话" if index < 2 else "防御对话",
         )
         if picker.exec() != QDialog.DialogCode.Accepted:
             return
@@ -438,22 +1066,24 @@ class CharacterDialogueWidget(QGroupBox):
         dialogue.setValue(binding.dialogue)
 
     def _add_rule(self, group: int) -> None:
-        picker = DialogueBindingDialog(
-            self.project, 0x00, 0x00, self, text_codec=self._text_codec
+        picker = DialogueRuleDialog(
+            self.project, group, DialogueRule(0x00, 0x00, 0x00, 0x00), self,
+            text_codec=self._text_codec,
         )
         if picker.exec() != QDialog.DialogCode.Accepted:
             return
-        binding = picker.binding()
-        table = self.rule_tables[group]
+        target_group, rule = picker.result_value()
+        table = self.rule_tables[target_group]
         row = table.rowCount()
         table.insertRow(row)
-        for column, value in enumerate(
-            (0x00, 0x00, binding.segment, binding.dialogue)
-        ):
+        for column, value in enumerate((
+            rule.actor_or_unit, rule.weapon_or_unit,
+            rule.segment, rule.dialogue,
+        )):
             detail = self._rule_detail(column, value)
             if column == 3:
                 detail = dialogue_preview(
-                    self.project, binding.segment, binding.dialogue,
+                    self.project, rule.segment, rule.dialogue,
                     self._text_codec,
                 )
             table.setItem(row, column, self._hex_item(value, detail))
@@ -488,50 +1118,44 @@ class CharacterDialogueWidget(QGroupBox):
             self._changed()
 
     def _choose_rule_condition(self, group: int) -> None:
-        table = self.rule_tables[group]
-        row = table.currentRow()
-        if row < 0:
-            return
-        actor = self._parse_hex(table.item(row, 0), "人物/机体条件")
-        weapon = self._parse_hex(table.item(row, 1), "武器/机体条件")
-        picker = RuleConditionDialog(self.project, actor, weapon, self)
-        if picker.exec() != QDialog.DialogCode.Accepted:
-            return
-        actor, weapon = picker.values()
-        table.setItem(row, 0, self._hex_item(actor, self._rule_detail(0, actor)))
-        table.setItem(row, 1, self._hex_item(weapon, self._rule_detail(1, weapon)))
-        self._changed()
+        self._edit_rule(group)
 
-    def _choose_rule_dialogue(self, group: int) -> None:
+    def _edit_rule(self, group: int) -> None:
         table = self.rule_tables[group]
         row = table.currentRow()
         if row < 0:
             return
-        segment = self._parse_hex(table.item(row, 2), "文字段")
-        dialogue = self._parse_hex(table.item(row, 3), "对话编号")
-        picker = DialogueBindingDialog(
-            self.project, segment, dialogue, self,
+        values = tuple(
+            self._parse_hex(table.item(row, column), "特殊对话规则")
+            for column in range(4)
+        )
+        picker = DialogueRuleDialog(
+            self.project, group, DialogueRule(*values), self,
             text_codec=self._text_codec,
         )
         if picker.exec() != QDialog.DialogCode.Accepted:
             return
-        binding = picker.binding()
-        table.setItem(
-            row, 2, self._hex_item(
-                binding.segment,
-                DialogueBindingDialog.SEGMENT_LABELS[binding.segment],
-            )
-        )
-        table.setItem(
-            row, 3, self._hex_item(
-                binding.dialogue,
-                dialogue_preview(
-                    self.project, binding.segment, binding.dialogue,
-                    self._text_codec,
-                ),
-            )
-        )
+        target_group, rule = picker.result_value()
+        if target_group != group:
+            table.removeRow(row)
+            table = self.rule_tables[target_group]
+            row = table.rowCount()
+            table.insertRow(row)
+        for column, value in enumerate((
+            rule.actor_or_unit, rule.weapon_or_unit,
+            rule.segment, rule.dialogue,
+        )):
+            detail = self._rule_detail(column, value)
+            if column == 3:
+                detail = dialogue_preview(
+                    self.project, rule.segment, rule.dialogue, self._text_codec
+                )
+            table.setItem(row, column, self._hex_item(value, detail))
+        table.setCurrentCell(row, 0)
         self._changed()
+
+    def _choose_rule_dialogue(self, group: int) -> None:
+        self._edit_rule(group)
 
     def _dialogue_state(self):
         direct = tuple(
@@ -568,11 +1192,63 @@ class CharacterDialogueWidget(QGroupBox):
     def _add_transform(self) -> None:
         if self._loading or self.character_id is None:
             return
+        picker = TransformDialogueDialog(
+            self.project,
+            TransformDialogueBinding(self.character_id, 0x00, 0xFF, 0x00),
+            self,
+            text_codec=self._text_codec,
+        )
+        if picker.exec() != QDialog.DialogCode.Accepted:
+            return
+        binding = picker.binding()
         row = self.transform_table.rowCount()
         self.transform_table.insertRow(row)
-        for column, value in enumerate((0x00, 0xFF, 0x00)):
-            self.transform_table.setItem(row, column, self._hex_item(value))
+        values = (binding.unit_start, binding.unit_end, binding.dialogue)
+        details = (
+            self.project.unit_display_name(binding.unit_start),
+            self.project.unit_display_name(binding.unit_end),
+            dialogue_preview(
+                self.project, 0x05, binding.dialogue, self._text_codec
+            ),
+        )
+        for column, (value, detail) in enumerate(zip(values, details)):
+            self.transform_table.setItem(
+                row, column, self._hex_item(value, detail)
+            )
         self.transform_table.setCurrentCell(row, 0)
+        self._changed()
+
+    def _edit_transform(self) -> None:
+        if self.character_id is None:
+            return
+        row = self.transform_table.currentRow()
+        if row < 0:
+            return
+        values = tuple(
+            self._parse_hex(self.transform_table.item(row, column), "变形台词")
+            for column in range(3)
+        )
+        picker = TransformDialogueDialog(
+            self.project,
+            TransformDialogueBinding(self.character_id, *values),
+            self,
+            text_codec=self._text_codec,
+        )
+        if picker.exec() != QDialog.DialogCode.Accepted:
+            return
+        binding = picker.binding()
+        values = (binding.unit_start, binding.unit_end, binding.dialogue)
+        details = (
+            self.project.unit_display_name(binding.unit_start),
+            self.project.unit_display_name(binding.unit_end),
+            dialogue_preview(
+                self.project, 0x05, binding.dialogue, self._text_codec
+            ),
+        )
+        for column, (value, detail) in enumerate(zip(values, details)):
+            self.transform_table.setItem(
+                row, column, self._hex_item(value, detail)
+            )
         self._changed()
 
     def _remove_transform(self) -> None:
@@ -641,6 +1317,8 @@ class CharacterDialogueWidget(QGroupBox):
                 f" 共用此台词记录：{'、'.join(f'{item:03d}' for item in aliases)}。"
             )
             self._refresh_direct_buttons()
+            self._refresh_rule_buttons()
+            self._refresh_transform_button()
             self.codec = codec
             self._baseline = self._state()
             self.setEnabled(True)
@@ -800,6 +1478,7 @@ class CharacterDetailsWidget(QWidget):
         attributes_row.setSpacing(5)
 
         attributes = QGroupBox("人物属性")
+        self.attributes_group = attributes
         grid = QGridLayout(attributes)
         grid.setContentsMargins(5, 7, 5, 5)
         grid.setHorizontalSpacing(5)
@@ -825,12 +1504,14 @@ class CharacterDetailsWidget(QWidget):
         self.shared_attributes = QCheckBox("同时修改共用属性记录")
         self.shared_attributes.toggled.connect(self._changed)
         grid.addWidget(self.shared_attributes, 4, 0, 1, 4)
+        self.shared_attributes.hide()
         self.attribute_sharing = QLabel()
         self.attribute_sharing.setWordWrap(True)
         self.attribute_sharing.hide()
         attributes_row.addWidget(attributes, 1)
 
         spirits = QGroupBox("精神列表与消耗")
+        self.spirits_group = spirits
         grid = QGridLayout(spirits)
         grid.setContentsMargins(5, 7, 5, 5)
         grid.setHorizontalSpacing(4)
@@ -865,18 +1546,15 @@ class CharacterDetailsWidget(QWidget):
         spirits.setToolTip(hint.text())
         attributes_row.addWidget(spirits, 2)
 
-        portrait = QGroupBox("头像设置与上传")
+        portrait = QGroupBox("头像设置")
         self.portrait_group = portrait
-        portrait_layout = QHBoxLayout(portrait)
-        portrait_layout.setContentsMargins(5, 7, 5, 5)
-        portrait_layout.setSpacing(8)
-        preview = QWidget()
-        row = QHBoxLayout(preview)
-        row.setContentsMargins(0, 0, 0, 0)
-        row.setSpacing(5)
+        portrait_layout = QGridLayout(portrait)
+        portrait_layout.setContentsMargins(6, 8, 6, 6)
+        portrait_layout.setHorizontalSpacing(4)
+        portrait_layout.setVerticalSpacing(3)
         self.portrait_preview = QLabel()
         self.portrait_preview.setFixedSize(64, 64)
-        row.addWidget(self.portrait_preview)
+        portrait_layout.addWidget(self.portrait_preview, 0, 0, 2, 1)
         visibility = QVBoxLayout()
         visibility.setSpacing(2)
         self.show_front = QCheckBox("显示正面")
@@ -888,21 +1566,25 @@ class CharacterDetailsWidget(QWidget):
         visibility.addWidget(self.show_front)
         visibility.addWidget(self.show_back)
         visibility.addStretch()
-        row.addLayout(visibility)
-        portrait_layout.addWidget(preview)
+        portrait_layout.addLayout(visibility, 0, 1, 2, 1)
 
-        portrait_controls = QWidget()
-        portrait_grid = QGridLayout(portrait_controls)
-        portrait_grid.setContentsMargins(0, 0, 0, 0)
-        portrait_grid.setHorizontalSpacing(5)
-        portrait_grid.setVerticalSpacing(2)
+        upload_actions = QVBoxLayout()
+        upload_actions.setSpacing(2)
+        for kind, text in (("front", "正面上传"), ("back", "背景上传")):
+            button = QPushButton(text)
+            button.clicked.connect(
+                lambda _checked=False, kind=kind: self._upload_image(kind)
+            )
+            upload_actions.addWidget(button)
+        portrait_layout.addLayout(upload_actions, 0, 2, 2, 1)
+
         self.portrait_fields = {}
-        for index, (key, label, minimum, maximum) in enumerate((
-            ("front_bank", "正面图库", 0, 255), ("front_slot", "正面位置", 1, 4),
-            ("back_bank", "背景图库", 0, 255), ("back_slot", "背景位置", 1, 4),
+        for key, _label, minimum, maximum in (
+            ("front_bank", "正面图库", 0, 255), ("front_slot", "", 1, 4),
+            ("back_bank", "背景图库", 0, 255), ("back_slot", "", 1, 4),
             ("color0", "头像颜色1", 0, 63), ("color1", "头像颜色2", 0, 63),
             ("color2", "头像颜色3", 0, 63),
-        )):
+        ):
             if key.startswith("color"):
                 spin = NesColorField()
             elif key.endswith("bank"):
@@ -913,36 +1595,47 @@ class CharacterDetailsWidget(QWidget):
                 spin = LegacyValueCombo(
                     minimum, maximum, lambda value: f"头像{value}"
                 )
-            spin.setMaximumWidth(120)
+            if key.endswith("bank"):
+                spin.setMaximumWidth(100)
+            elif key.endswith("slot"):
+                spin.setMaximumWidth(78)
+            else:
+                spin.setMaximumWidth(84)
             spin.setObjectName(f"portrait_{key}")
             spin.valueChanged.connect(self._changed)
             self.portrait_fields[key] = spin
-            row_index, column = divmod(index, 4)
-            field = QWidget()
-            field_layout = QVBoxLayout(field)
-            field_layout.setContentsMargins(0, 0, 0, 0)
-            field_layout.setSpacing(1)
-            field_layout.addWidget(QLabel(label))
-            field_layout.addWidget(spin)
-            portrait_grid.addWidget(field, row_index, column)
-        portrait_layout.addWidget(portrait_controls, 1)
 
-        actions_host = QWidget()
-        actions = QGridLayout(actions_host)
-        actions.setContentsMargins(0, 0, 0, 0)
-        actions.setHorizontalSpacing(3)
-        actions.setVerticalSpacing(2)
+        selector_specs = (
+            ("正面图库：", "front_bank", "front_slot"),
+            ("背景图库：", "back_bank", "back_slot"),
+        )
+        for column, (label, bank_key, slot_key) in enumerate(selector_specs, 3):
+            portrait_layout.addWidget(QLabel(label), 0, column)
+            selector = QWidget()
+            selector_row = QHBoxLayout(selector)
+            selector_row.setContentsMargins(0, 0, 0, 0)
+            selector_row.setSpacing(3)
+            selector_row.addWidget(self.portrait_fields[bank_key])
+            selector_row.addWidget(self.portrait_fields[slot_key])
+            portrait_layout.addWidget(selector, 1, column)
+
+        for column, (label, key) in enumerate((
+            ("头像颜色1：", "color0"),
+            ("头像颜色2：", "color1"),
+            ("头像颜色3：", "color2"),
+        ), 5):
+            portrait_layout.addWidget(QLabel(label), 0, column)
+            portrait_layout.addWidget(self.portrait_fields[key], 1, column)
+
+        utility_actions = QVBoxLayout()
+        utility_actions.setSpacing(2)
         self.shared_portrait = QCheckBox("同时修改共用头像记录")
         self.shared_portrait.toggled.connect(self._changed)
-        actions.addWidget(self.shared_portrait, 0, 0, 1, 2)
+        self.shared_portrait.hide()
         self.portrait_sharing = QLabel()
         self.portrait_sharing.setWordWrap(True)
         self.portrait_sharing.setMaximumWidth(210)
         self.portrait_sharing.hide()
-        for column, (kind, text) in enumerate((("front", "正面上传"), ("back", "背景上传"))):
-            button = QPushButton(text)
-            button.clicked.connect(lambda _checked=False, kind=kind: self._upload_image(kind))
-            actions.addWidget(button, 1, column)
         self.portrait_export_button = QPushButton("导出当前头像…")
         self.portrait_export_button.setObjectName("portrait_export_button")
         self.portrait_export_button.setToolTip(
@@ -951,11 +1644,23 @@ class CharacterDetailsWidget(QWidget):
         self.portrait_export_button.clicked.connect(
             self.portrait_export_requested.emit
         )
-        actions.addWidget(self.portrait_export_button, 2, 0, 1, 2)
-        portrait_layout.addWidget(actions_host)
+        utility_actions.addWidget(self.portrait_export_button)
+        self.portrait_advanced_button = QPushButton("高级…")
+        self.portrait_advanced_button.setCheckable(True)
+        self.portrait_advanced_button.setToolTip(
+            "仅在多个人物共用同一属性或头像记录、且需要一起修改时使用。"
+        )
+        self.portrait_advanced_button.toggled.connect(
+            self.shared_portrait.setVisible
+        )
+        self.portrait_advanced_button.toggled.connect(
+            self.shared_attributes.setVisible
+        )
+        utility_actions.addWidget(self.portrait_advanced_button)
+        portrait_layout.addLayout(utility_actions, 0, 8, 2, 1)
+        portrait_layout.setColumnStretch(8, 1)
         portrait.setToolTip(
-            "头像由真实 CHR 图块预览。正面图库编号低位选择 2KB 窗口的前/后半；"
-            "正面与背景位置均按参考版显示为头像1—4。"
+            "选择正面、背景和三种颜色；上传图片后点数据库窗口的“确定”保存。"
         )
 
         outer.addWidget(portrait)

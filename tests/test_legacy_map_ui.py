@@ -221,6 +221,8 @@ class LegacyMapUiTests(QtTestCase):
         self.assertEqual(button.text(), "$2A")
         self.assertIn("#4CDC48", button.toolTip())
         picker = NesPaletteDialog(0x2A)
+        self.assertEqual(picker.windowTitle(), "调色板选择")
+        self.assertEqual((picker.width(), picker.height()), (530, 175))
         picker_layout = picker.layout()
         self.assertIsNotNone(picker_layout.itemAtPosition(0, 15))
         self.assertIsNotNone(picker_layout.itemAtPosition(1, 0))
