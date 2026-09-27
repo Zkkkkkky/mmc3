@@ -463,7 +463,13 @@ class DatabaseFeedbackTests(QtTestCase):
         self.assertIsNotNone(scroll)
         self.assertIsNotNone(workspace)
         self.assertTrue(page.character_details.portrait_group.isVisible())
-        self.assertGreaterEqual(page.records.width(), 280)
+        self.assertGreaterEqual(page.records.width(), 250)
+        self.assertLessEqual(page.records.width(), 315)
+        self.assertEqual(page.records.currentItem().text(), "[04]004：琉妮")
+        self.assertEqual(page.character_list_heading.text(), "人物选择")
+        self.assertFalse(page.record_heading.isVisible())
+        self.assertFalse(page.pending_state.isVisible())
+        self.assertFalse(page.apply_button.isVisible())
         portrait = page.character_details.portrait_group
         self.assertEqual(portrait.title(), "头像设置")
         portrait_labels = {label.text() for label in portrait.findChildren(QLabel)}

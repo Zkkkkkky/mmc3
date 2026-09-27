@@ -88,10 +88,14 @@ def main() -> int:
     page._open_trigger_cell_editor(3, 4, shop=True)
     app.processEvents()
     checks["shop_editor_visible"] = page.trigger_cell_dialog.isVisible() and page.trigger_shop_radio.isChecked()
-    shop_model = page.trigger_shop_combo.model()
-    checks["invalid_shops_disabled"] = all(
-        not shop_model.item(page.trigger_shop_combo.findData(shop_id)).isEnabled()
-        for shop_id in range(0xF5, 0xFF)
+    checks["shop_catalog_only_exposes_real_records"] = (
+        page.trigger_shop_combo.count() == 5
+        and [page.trigger_shop_combo.itemData(index) for index in range(5)]
+        == list(range(0xF0, 0xF5))
+        and all(
+            page.trigger_shop_combo.findData(shop_id) == -1
+            for shop_id in range(0xF5, 0x100)
+        )
     )
     page.trigger_shop_combo.setCurrentIndex(page.trigger_shop_combo.findData(0xF2))
     page._save_trigger_cell_editor()

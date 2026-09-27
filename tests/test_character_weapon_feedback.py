@@ -464,6 +464,8 @@ class CharacterWeaponUiFeedbackTests(QtTestCase):
         color = self.widget.portrait_fields["color0"]
         self.assertTrue(color.text().startswith("$"))
         self.assertIn("点击展开64色", color.toolTip())
+        self.assertEqual(color.swatch.text(), "")
+        self.assertEqual(color.number.value(), color.value())
         self.assertIn("：", self.widget.spirits[0].text())
         self.assertIn("双击", self.widget.spirits[0].toolTip())
         dialogue = self.page.character_dialogue
@@ -477,6 +479,22 @@ class CharacterWeaponUiFeedbackTests(QtTestCase):
         self.assertEqual(len(dialogue.rule_buttons), 3)
         self.assertTrue(dialogue.direct_controls[0][0].isHidden())
         self.assertTrue(dialogue.direct_controls[0][1].isHidden())
+        codec = self.project.character_dialogue_codec
+        assert codec is not None
+        record = codec.read(4, self.project.working)
+        for ui_index, record_index in enumerate(dialogue.UI_DIRECT_TO_RECORD):
+            segment, number = dialogue.direct_controls[ui_index]
+            self.assertEqual(int(segment.currentData()), record.direct[record_index].segment)
+            self.assertEqual(number.value(), record.direct[record_index].dialogue)
+        for ui_group, record_group in enumerate(dialogue.UI_RULE_TO_RECORD):
+            self.assertEqual(
+                dialogue.rule_tables[ui_group].rowCount(),
+                len(record.rules[record_group]),
+            )
+        self.assertEqual(dialogue.record(), record)
+        self.assertEqual(dialogue.transform_selector.itemText(
+            dialogue.transform_selector.count() - 1
+        ), "添加")
 
     def test_reference_shaped_embedded_dialogue_editors(self) -> None:
         codec = self.project.character_dialogue_codec

@@ -6,6 +6,7 @@ import json
 import tempfile
 import unittest
 import zipfile
+from dataclasses import replace
 from pathlib import Path
 
 from fc_editor.codecs.battle_music import BattleMusicCodec
@@ -31,6 +32,7 @@ from fc_editor.profiles import (
 from fc_editor.project import ProjectDocument
 from fc_editor.resources import Allocation, BankAllocator, ResourceGraph
 from fc_editor.rom_image import RomImage
+from fc_editor.models import ScenarioEntity
 from fc_editor.unit_package import UnitPackage, UnitPackageAsset
 from fc_editor.text_table import TextTable
 from fc_rom_editor_core import RomProject, apply_ips
@@ -123,6 +125,7 @@ class DcExpandedProfileTests(unittest.TestCase):
         for selector in story_codec.selectors:
             self.assertTrue(story_codec.round_trip(selector, 0))
         self.assertEqual(chr_codec.tile_count, 0x4000)
+
         for tile_index in (0, 1, 0x1FF, 0x200, 0x3FFF):
             pixels = chr_codec.decode_tile(tile_index)
             self.assertEqual(chr_codec.encode_tile(pixels), chr_codec.tile_bytes(tile_index))
@@ -143,6 +146,145 @@ class DcExpandedProfileTests(unittest.TestCase):
                 for item in chapter_event_codec.instructions()
             )
         )
+
+    def test_legacy_terrain_partition_repack_uses_shared_bank_capacity(self) -> None:
+        project = RomProject.load(LEGACY_ROM)
+        original = bytes(project.working)
+        map0 = project.get_map(0)
+        map1 = project.get_map(1)
+
+        project.set_map_tiles(
+            0,
+            map0.width,
+            map0.height,
+            tuple(0 for _ in map0.tiles),
+        )
+        pointer_after_shrink = project.map_codec.pointers[2]
+
+        grown_tiles = list(map1.tiles)
+        for index in range(10):
+            grown_tiles[index] = index % 2
+        grown = project.map_codec.encode(
+            map1.width, map1.height, tuple(grown_tiles)
+        )
+        self.assertGreater(len(grown), project.map_codec.capacities[1])
+
+        project.set_map_tiles(
+            1, map1.width, map1.height, tuple(grown_tiles)
+        )
+        self.assertEqual(project.get_map(1).tiles, tuple(grown_tiles))
+        self.assertEqual(
+            project.map_codec.pointers[2],
+            pointer_after_shrink + len(grown) - len(map1.raw),
+        )
+        used, capacity = project.map_resource_replacement_usage(
+            1, map1.width, map1.height, tuple(grown_tiles)
+        )
+        self.assertLessEqual(used, capacity)
+
+        project.undo()
+        project.undo()
+        self.assertEqual(bytes(project.working), original)
+
+    def test_legacy_terrain_partition_can_use_verified_bank_tail(self) -> None:
+        project = RomProject.load(LEGACY_ROM)
+        original = bytes(project.working)
+        map0 = project.get_map(0)
+        map1_pointer = project.map_codec.pointers[1]
+        tiles = list(map0.tiles)
+        self.assertEqual((tiles[3], len(map0.raw)), (5, 324))
+        tiles[3] = 0
+        encoded = project.map_codec.encode(
+            map0.width, map0.height, tuple(tiles)
+        )
+        self.assertEqual(len(encoded), len(map0.raw) + 2)
+
+        used, capacity = project.map_resource_replacement_usage(
+            0, map0.width, map0.height, tuple(tiles)
+        )
+        self.assertEqual((used, capacity), (6711, 6722))
+        self.assertEqual(
+            project.legacy_map_terrain_total_usage(
+                0, map0.width, map0.height, tuple(tiles)
+            ),
+            (14476, 17730),
+        )
+
+        project.set_map_tiles(0, map0.width, map0.height, tuple(tiles))
+        self.assertEqual(project.get_map(0).tiles, tuple(tiles))
+        self.assertEqual(project.map_codec.pointers[1], map1_pointer + 2)
+        with tempfile.TemporaryDirectory() as directory:
+            saved_path = Path(directory) / "map-bank-tail.nes"
+            project.save_as(saved_path, make_backup=False)
+            reopened = RomProject.load(saved_path)
+            self.assertEqual(reopened.get_map(0).tiles, tuple(tiles))
+            self.assertEqual(
+                reopened.map_codec.storage_usage(0, reopened.working),
+                (6711, 6722),
+            )
+        project.undo()
+        self.assertEqual(bytes(project.working), original)
+
+    def test_legacy_terrain_growth_cascades_maps_across_dynamic_bank_boundaries(self) -> None:
+        project = RomProject.load(LEGACY_ROM)
+        original = bytes(project.working)
+        map0 = project.get_map(0)
+        map21 = project.get_map(0x21)
+        map29 = project.get_map(0x29)
+        map1_pointer = project.map_codec.pointers[1]
+        tiles: list[int] = []
+        for row in range(map0.height):
+            start = row * map0.width
+            tiles.extend(map0.tiles[start : start + map0.width])
+            tiles.append(0)
+        draft = tuple(tiles)
+
+        self.assertEqual(
+            project.map_resource_replacement_usage(0, 28, 26, draft),
+            (6453, 6722),
+        )
+        self.assertEqual(
+            project.legacy_map_terrain_total_usage(0, 28, 26, draft),
+            (14520, 17730),
+        )
+        project.set_map_tiles(0, 28, 26, draft)
+
+        self.assertEqual(project.working[0x5BA3], 0x21)
+        self.assertEqual(project.working[0x5BB7], 0x29)
+        self.assertEqual(
+            tuple((item.first_id, item.end_id) for item in project.map_codec.storage_ranges),
+            ((0x00, 0x21), (0x21, 0x29), (0x29, 0x64)),
+        )
+        self.assertEqual(project.map_codec.pointers[1], map1_pointer + 46)
+        self.assertEqual(project.map_codec.pointers[0x21], 0xB500)
+        self.assertEqual(project.map_codec.pointers[0x29], 0xA000)
+        self.assertEqual(project.get_map(0x21).tiles, map21.tiles)
+        self.assertEqual(project.get_map(0x29).tiles, map29.tiles)
+        self.assertTrue(all(project.map_codec.round_trip(index) for index in range(100)))
+
+        with tempfile.TemporaryDirectory() as directory:
+            saved_path = Path(directory) / "map-dynamic-banks.nes"
+            project.save_as(saved_path, make_backup=False)
+            reopened = RomProject.load(saved_path)
+            self.assertEqual(reopened.get_map(0).tiles, draft)
+            self.assertEqual(reopened.get_map(0x21).tiles, map21.tiles)
+            self.assertEqual(reopened.get_map(0x29).tiles, map29.tiles)
+            self.assertEqual(
+                tuple(
+                    (item.first_id, item.end_id)
+                    for item in reopened.map_codec.storage_ranges
+                ),
+                ((0x00, 0x21), (0x21, 0x29), (0x29, 0x64)),
+            )
+            project_path = Path(directory) / "map-dynamic-banks.dcmod"
+            project.save_project(project_path)
+            reopened_project = RomProject.load_project(project_path, LEGACY_ROM)
+            self.assertEqual(reopened_project.get_map(0).tiles, draft)
+            self.assertEqual(reopened_project.get_map(0x21).tiles, map21.tiles)
+            self.assertEqual(reopened_project.get_map(0x29).tiles, map29.tiles)
+
+        project.undo()
+        self.assertEqual(bytes(project.working), original)
 
     def test_current_battle_music_bindings(self) -> None:
         codec = BattleMusicCodec(self.rom)
@@ -362,7 +504,11 @@ class EditorProjectTests(unittest.TestCase):
         self.assertTrue(project.supports_map_triggers)
         self.assertEqual(project.get_map_triggers(0), ())
         original = bytes(project.working)
-        entry = MapTrigger(3, 4, 0xFF, 0xF2)
+        entry = MapTrigger(3, 4, 0x12, 0xF2)
+        self.assertTrue(entry.matches_character(0x12))
+        self.assertFalse(entry.matches_character(0x11))
+        self.assertTrue(MapTrigger(3, 4, 0xFF, 0).matches_character(0x00))
+        self.assertTrue(MapTrigger(3, 4, 0xFF, 0).matches_character(0xFE))
         project.set_map_triggers(0, (entry,))
         self.assertEqual(project.get_map_triggers(0), (entry,))
         self.assertEqual(
@@ -382,6 +528,26 @@ class EditorProjectTests(unittest.TestCase):
             self.assertEqual(reopened.get_map_triggers(0), (entry,))
         project.undo()
         self.assertEqual(project.get_map_triggers(0), ())
+
+    def test_map_trigger_character_gate_precedes_kind_and_uses_player_path(self) -> None:
+        project = RomProject.load(TARGET_ROM)
+        codec = project.map_trigger_codec
+        self.assertIsNotNone(codec)
+        assert codec is not None
+
+        def bank10(cpu_address: int, size: int) -> bytes:
+            offset = codec.cpu_to_file_offset(cpu_address)
+            return bytes(project.working[offset : offset + size])
+
+        # The active character comparison is executed before the fourth byte
+        # is read and split into map-event (< F0) or shop (>= F0).
+        self.assertEqual(bank10(0x95E0, 6), bytes.fromhex("B1 00 C9 FF F0 1E"))
+        self.assertEqual(bank10(0x95E6, 7), bytes.fromhex("20 87 C0 C5 05 F0 17"))
+        self.assertEqual(bank10(0x9605, 6), bytes.fromhex("B1 00 C9 F0 B0 0F"))
+        # The caller-side selectors separate controllable player slots 00-0A
+        # from the enemy path, whose valid slots begin at 0E.
+        self.assertEqual(bank10(0x8288, 6), bytes.fromhex("29 1F C9 0B B0 E4"))
+        self.assertEqual(bank10(0x82E2, 10), bytes.fromhex("A5 01 10 8C 29 1F C9 0E 90 86"))
 
     def test_map_trigger_validation_rejects_bad_coordinates_and_duplicates(self) -> None:
         project = RomProject.load(TARGET_ROM)
@@ -403,17 +569,34 @@ class EditorProjectTests(unittest.TestCase):
         project = RomProject.load(TARGET_ROM)
         record = project.get_map(0)
         self.assertGreaterEqual(record.width * record.height, 74)
+        codec = project.map_trigger_codec
+        self.assertIsNotNone(codec)
+        assert codec is not None
+        self.assertEqual(codec.pool_capacity, 310)
+        gap_start = codec.cpu_to_file_offset(codec.spec.original_data_end)
+        gap_end = codec.cpu_to_file_offset(codec.spec.managed_data_start)
+        protected_gap = bytes(project.working[gap_start:gap_end])
         accepted = tuple(
             MapTrigger(index % record.width, index // record.width, 0xFF, 0xF2)
-            for index in range(73)
+            for index in range(74)
         )
         overflow = accepted + (
-            MapTrigger(73 % record.width, 73 // record.width, 0xFF, 0xF2),
+            MapTrigger(74 % record.width, 74 // record.width, 0xFF, 0xF2),
         )
         project.set_map_triggers(0, accepted)
-        self.assertEqual(project.map_trigger_codec.storage_used(project.working), 299)
+        self.assertEqual(project.map_trigger_codec.storage_used(project.working), 307)
+        self.assertEqual(bytes(project.working[gap_start:gap_end]), protected_gap)
+        self.assertTrue(
+            all(
+                codec.spec.original_data_start <= codec.pointer(map_id, project.working)
+                < codec.spec.original_data_end
+                or codec.spec.managed_data_start <= codec.pointer(map_id, project.working)
+                < codec.spec.managed_data_end
+                for map_id in range(codec.spec.scenario_count)
+            )
+        )
         before_overflow = bytes(project.working)
-        with self.assertRaisesRegex(ValueError, "托管池只有 300 字节"):
+        with self.assertRaisesRegex(ValueError, "分段共享池只有 310 字节"):
             project.set_map_triggers(0, overflow)
         self.assertEqual(bytes(project.working), before_overflow)
         self.assertEqual(project.get_map_triggers(0), accepted)
@@ -422,7 +605,117 @@ class EditorProjectTests(unittest.TestCase):
             project.save_as(path, make_backup=False)
             reopened = RomProject.load(path)
             self.assertEqual(reopened.get_map_triggers(0), accepted)
-            self.assertEqual(reopened.map_trigger_codec.storage_used(reopened.working), 299)
+            self.assertEqual(reopened.map_trigger_codec.storage_used(reopened.working), 307)
+
+    def test_scenario_shared_pool_repack_matches_reference_and_reopens(self) -> None:
+        project = RomProject.load(TARGET_ROM)
+        codec = project.scenario_layout_codec
+        self.assertEqual(
+            (codec.storage_used(project.working), codec.pool_capacity),
+            (1236, 6891),
+        )
+        before = bytes(project.working)
+        layout = project.get_scenario_layout(0)
+        changed = replace(
+            layout,
+            enemies=(ScenarioEntity(0, 0, 1, 1, 1, 0),),
+        )
+        self.assertEqual(codec.storage_used_after(project.working, 0, changed), 1246)
+        project.set_scenario_layout(changed)
+        self.assertEqual(project.get_scenario_layout(0).enemies, changed.enemies)
+        self.assertEqual(
+            project.scenario_layout_codec.storage_used(project.working), 1246
+        )
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "scenario-shared-pool.nes"
+            project.save_as(path, make_backup=False)
+            reopened = RomProject.load(path)
+            self.assertEqual(reopened.get_scenario_layout(0).enemies, changed.enemies)
+            self.assertEqual(
+                reopened.scenario_layout_codec.storage_used(reopened.working), 1246
+            )
+            project_path = Path(directory) / "scenario-shared-pool.dcmod"
+            project.save_project(project_path)
+            replayed = RomProject.load_project(project_path, TARGET_ROM)
+            self.assertEqual(replayed.get_scenario_layout(0).enemies, changed.enemies)
+            self.assertEqual(
+                replayed.scenario_layout_codec.storage_used(replayed.working), 1246
+            )
+        project.undo()
+        self.assertEqual(bytes(project.working), before)
+
+    def test_scenario_shared_pool_overflow_is_atomic(self) -> None:
+        project = RomProject.load(TARGET_ROM)
+        before = bytes(project.working)
+        layout = project.get_scenario_layout(0)
+        changed = replace(
+            layout,
+            prelude=(0,) * 6800,
+        )
+        self.assertGreater(
+            project.scenario_layout_codec.storage_used_after(
+                project.working, 0, changed
+            ),
+            project.scenario_layout_codec.pool_capacity,
+        )
+        with self.assertRaisesRegex(ValueError, "32.*共享池"):
+            project.set_scenario_layout(changed)
+        self.assertEqual(bytes(project.working), before)
+
+    def test_scenario_can_grow_past_stock_end_then_link_expansion(self) -> None:
+        project = RomProject.load(TARGET_ROM)
+        layout = project.get_scenario_layout(0)
+        changed = replace(
+            layout,
+            enemies=tuple(
+                ScenarioEntity(index, 0, index + 1, index + 1, 1, 0)
+                for index in range(4)
+            ),
+        )
+        projected = project.scenario_layout_codec.storage_used_after(
+            project.working, 0, changed
+        )
+        self.assertGreater(projected, 1259)
+        self.assertLess(projected, project.scenario_layout_codec.pool_capacity)
+        project.set_scenario_layout(changed)
+        self.assertEqual(project.get_scenario_layout(0).enemies, changed.enemies)
+        project.configure_expansion(288, 64, 112)
+        self.assertEqual(project.get_scenario_layout(0).enemies, changed.enemies)
+
+    def test_scenario_user_case_1258_to_1264_saves_and_reopens(self) -> None:
+        project = RomProject.load(TARGET_ROM)
+        layout = project.get_scenario_layout(0)
+        staged = replace(
+            layout,
+            enemies=tuple(
+                ScenarioEntity(index, 0, index + 1, index + 1, 1, 0)
+                for index in range(3)
+            ),
+        )
+        project.set_scenario_layout(staged)
+        self.assertEqual(
+            project.scenario_layout_codec.storage_used(project.working), 1258
+        )
+        changed = replace(
+            staged,
+            enemies=staged.enemies + (ScenarioEntity(4, 0, 4, 4, 1, 0),),
+        )
+        self.assertEqual(
+            project.scenario_layout_codec.storage_used_after(
+                project.working, 0, changed
+            ),
+            1264,
+        )
+        project.set_scenario_layout(changed)
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "scenario-1264.nes"
+            project.save_as(path, make_backup=False)
+            reopened = RomProject.load(path)
+            self.assertEqual(reopened.get_scenario_layout(0).enemies, changed.enemies)
+            self.assertEqual(
+                reopened.scenario_layout_codec.storage_used(reopened.working),
+                1264,
+            )
 
     def test_campaign_map_tiles_render_from_active_chr(self) -> None:
         project = RomProject.load(TARGET_ROM)
@@ -449,8 +742,9 @@ class EditorProjectTests(unittest.TestCase):
         self.assertEqual(project.character_display_name(0x17), "空白/未分配人物槽")
         self.assertEqual(
             project.character_display_name(0x1D),
-            "占位/未命名人物槽（原ROM“？？？”）",
+            "？？？",
         )
+        self.assertEqual(project.character_display_name(0x1E), "？？？")
         self.assertEqual(project.battle_music_selector_label(0x13), "睿智之神")
         self.assertNotEqual(project.profile.battle_music.tracks[1].label, "原曲 01")
         self.assertFalse(

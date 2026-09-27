@@ -4,13 +4,15 @@ import sys
 from ctypes import wintypes
 from pathlib import Path
 
-from PySide6.QtCore import QPoint, QRect, Qt, QTimer, Signal
+from PySide6.QtCore import QEvent, QObject, QPoint, QRect, Qt, QTimer, Signal
 from PySide6.QtGui import (
     QAction, QCloseEvent, QColor, QDragEnterEvent, QDropEvent, QFont,
     QKeySequence, QPolygon,
 )
 from PySide6.QtWidgets import (
     QApplication,
+    QAbstractSpinBox,
+    QComboBox,
     QDialog,
     QDialogButtonBox,
     QFileDialog,
@@ -79,6 +81,23 @@ def _forget_active_editor() -> None:
     _ACTIVE_EDITOR_WINDOW = None
 
 
+class _PageRegistry(list[ProjectPage]):
+    """List-compatible page registry with transparent first-use population."""
+
+    def __init__(self, initializer) -> None:
+        super().__init__()
+        self._initializer = initializer
+
+    def __getitem__(self, index):
+        value = super().__getitem__(index)
+        if isinstance(index, slice):
+            for page in value:
+                self._initializer(page)
+        else:
+            self._initializer(value)
+        return value
+
+
 class VisibleArrowStyle(QProxyStyle):
     """Draw high-contrast arrows for every numeric spin control."""
 
@@ -141,110 +160,233 @@ class VisibleArrowStyle(QProxyStyle):
         return result
 
 
+class ControlWheelGuard(QObject):
+    """Prevent an ordinary scroll gesture from silently editing a field."""
+
+    def eventFilter(self, watched, event) -> bool:  # noqa: N802
+        if (
+            event.type() == QEvent.Type.Wheel
+            and isinstance(watched, (QAbstractSpinBox, QComboBox))
+            and not event.modifiers() & Qt.KeyboardModifier.ControlModifier
+        ):
+            event.ignore()
+            return True
+        return super().eventFilter(watched, event)
+
+
 STYLE_SHEET = """
 QMainWindow, QDialog, QWidget {
-    background: #f3f7fb;
-    color: #111111;
+    background: #f4f6f7;
+    color: #26343d;
 }
-QMenuBar, QMenu, QStatusBar { background: #fbfdff; }
-QMenuBar { border-bottom: 1px solid #86c7e7; }
-QMenuBar::item { padding: 5px 12px; }
+QMenuBar, QMenu, QStatusBar { background: #ffffff; }
+QMenuBar {
+    border-bottom: 1px solid #d8e0e5;
+    padding: 2px 4px;
+}
+QMenuBar::item {
+    border-radius: 4px;
+    padding: 6px 12px;
+}
 QMenuBar::item:selected, QMenu::item:selected {
-    background: #cdefff;
-    color: #092b3d;
+    background: #e7f1f4;
+    color: #245b6a;
 }
-QMenu::item { padding: 5px 30px 5px 22px; }
+QMenu {
+    border: 1px solid #cfd9df;
+    border-radius: 6px;
+    padding: 4px;
+}
+QMenu::item {
+    border-radius: 4px;
+    padding: 6px 30px 6px 22px;
+}
+QMenu::item:enabled { color: #26343d; }
+QMenu::item:disabled {
+    background: #eef1f3;
+    color: #a8b0b5;
+}
+QMenu::item:disabled:selected {
+    background: #eef1f3;
+    color: #a8b0b5;
+}
+QMenu::separator {
+    height: 1px;
+    background: #e2e8ec;
+    margin: 4px 8px;
+}
 QTabWidget::pane {
-    background: #f7fbfe;
-    border: 1px solid #6fc4eb;
+    background: #ffffff;
+    border: 1px solid #aebdc5;
+    border-radius: 6px;
     top: -1px;
 }
 QTabBar::tab {
-    background: #f7fbfe;
-    border: 1px solid #8ebfd7;
+    background: #edf1f3;
+    color: #586873;
+    border: 1px solid #b2c0c8;
     border-bottom: none;
-    padding: 4px 10px;
-    margin-right: 1px;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    padding: 7px 13px;
+    margin-right: 2px;
 }
 QTabBar::tab:selected {
-    background: white;
-    color: #1837a0;
+    background: #ffffff;
+    color: #2c6879;
+    border-top: 2px solid #4b8290;
+    padding-top: 6px;
+    font-weight: 600;
+}
+QTabBar::tab:hover:!selected {
+    background: #e4ecef;
 }
 QLabel#pageTitle, QLabel#pageSubtitle { max-height: 0px; min-height: 0px; }
-QLabel#hintText { color: #53636e; }
-QLabel#sectionTitle { color: #173b50; font-size: 15px; font-weight: 600; }
+QLabel#hintText { color: #65747d; }
+QLabel#deploymentSelectionPreview {
+    background: #f1f7f8;
+    border: 1px solid #c3d9df;
+    border-radius: 5px;
+    color: #315c68;
+    padding: 5px 8px;
+}
+QLabel#sectionTitle { color: #315c68; font-size: 15px; font-weight: 600; }
 QLabel#romBadge, QLabel#countBadge {
-    background: #e4f5fd;
-    border: 1px solid #70bfdf;
-    padding: 2px 7px;
+    background: #edf5f7;
+    border: 1px solid #bfd6dc;
+    border-radius: 9px;
+    padding: 3px 8px;
 }
 QLabel#pendingBanner, QLabel#editState {
-    background: #eef8f0;
-    border: 1px solid #97caa2;
-    color: #28643a;
-    padding: 3px 6px;
+    background: #eef6f1;
+    border: 1px solid #b9d5c2;
+    border-radius: 5px;
+    color: #376247;
+    padding: 5px 8px;
 }
 QLabel#editState[pending="true"] {
-    background: #fff8e5;
-    border-color: #dcb768;
-    color: #835100;
+    background: #fbf5e9;
+    border-color: #dfc995;
+    color: #745c24;
 }
 QFrame#metricCard, QGroupBox {
-    background: #fbfdff;
-    border: 1px solid #62c3ed;
-    border-radius: 2px;
+    background: #ffffff;
+    border: 1px solid #aebdc5;
+    border-radius: 7px;
 }
 QGroupBox {
-    margin-top: 7px;
-    padding: 7px 5px 5px 5px;
+    margin-top: 9px;
+    padding: 9px 7px 7px 7px;
     font-weight: 600;
 }
 QGroupBox::title {
     subcontrol-origin: margin;
-    left: 10px;
-    padding: 0 4px;
+    left: 12px;
+    background: #edf4f6;
+    color: #2f6170;
+    border-radius: 3px;
+    padding: 1px 6px;
 }
-QLabel#metricLabel { color: #53636e; font-size: 12px; }
+QLabel#metricLabel { color: #65747d; font-size: 12px; }
 QLabel#metricValue { font-size: 15px; font-weight: 600; }
 QLabel#emptyState {
     background: white;
-    border: 1px dashed #8fb8cc;
-    color: #5f6970;
+    border: 1px dashed #aebfc8;
+    border-radius: 6px;
+    color: #65747d;
     padding: 18px;
 }
 QPushButton, QToolButton {
-    background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
-        stop:0 #ffffff, stop:0.5 #d8f3ff, stop:1 #74ccef);
-    border: 1px solid #478fac;
-    border-radius: 2px;
-    padding: 3px 8px;
+    background: #f8fafb;
+    color: #31444f;
+    border: 1px solid #a6b6bf;
+    border-radius: 5px;
+    padding: 5px 10px;
 }
-QPushButton:hover, QToolButton:hover { background: #c5efff; }
-QPushButton:pressed, QToolButton:pressed { background: #8fd7f4; }
+QPushButton:hover, QToolButton:hover {
+    background: #edf4f6;
+    border-color: #7fa8b4;
+}
+QPushButton:pressed, QToolButton:pressed { background: #dcebed; }
 QPushButton:disabled, QToolButton:disabled {
-    background: #edf1f3;
-    border-color: #bdc8ce;
-    color: #8b969c;
+    background: #f0f2f3;
+    border-color: #d8dee2;
+    color: #9aa5ab;
 }
-QPushButton#primaryButton { font-weight: 600; }
-QPushButton#terrainButton { min-width: 38px; min-height: 34px; padding: 1px; }
-QPushButton#terrainButton:checked { border: 2px solid #164a9a; background: #b9e9ff; }
+QPushButton#primaryButton {
+    background: #3f7f8f;
+    border-color: #3f7f8f;
+    color: #ffffff;
+    font-weight: 600;
+}
+QPushButton#primaryButton:hover { background: #356f7e; }
+QPushButton#primaryButton:pressed { background: #2e6370; }
+QPushButton#terrainButton {
+    min-width: 32px; max-width: 32px;
+    min-height: 32px; max-height: 32px;
+    border: none; border-radius: 0; padding: 0; margin: 0;
+    background: transparent;
+}
+QPushButton#terrainButton:hover,
+QPushButton#terrainButton:pressed,
+QPushButton#terrainButton:focus { border: none; background: transparent; }
+QPushButton#terrainButton:checked {
+    border: 1px solid #164a9a; background: transparent;
+}
 QLineEdit, QSpinBox, QDoubleSpinBox, QComboBox, QPlainTextEdit, QTableWidget, QListWidget {
-    background: white;
-    border: 1px solid #77b8d4;
-    border-radius: 0;
-    padding: 2px;
-    selection-background-color: #1686c4;
+    background: #ffffff;
+    border: 1px solid #aebdc5;
+    border-radius: 4px;
+    padding: 3px 5px;
+    selection-background-color: #4c8594;
+    selection-color: #ffffff;
 }
 QLineEdit:focus, QSpinBox:focus, QDoubleSpinBox:focus, QComboBox:focus, QPlainTextEdit:focus,
-QTableWidget:focus, QListWidget:focus { border: 1px solid #1879ac; }
+QTableWidget:focus, QListWidget:focus { border: 1px solid #5f94a2; }
+QListWidget::item, QTableWidget::item { padding: 3px; }
+QListWidget::item:alternate, QTableWidget::item:alternate { background: #f5f7f8; }
+QListWidget::item:hover, QTableWidget::item:hover { background: #edf3f5; }
+QListWidget::item:selected, QTableWidget::item:selected,
+QListWidget::item:selected:!active, QTableWidget::item:selected:!active {
+    background: #3f7f8f;
+    color: #ffffff;
+}
 QHeaderView::section {
-    background: #e9f5fb;
+    background: #edf2f4;
+    color: #41545f;
     border: none;
-    border-right: 1px solid #bed5df;
-    border-bottom: 1px solid #a9c6d4;
-    padding: 3px;
+    border-right: 1px solid #d6dfe4;
+    border-bottom: 1px solid #c8d3d9;
+    padding: 5px;
     font-weight: 600;
+}
+QScrollBar:vertical {
+    background: transparent;
+    width: 11px;
+    margin: 2px;
+}
+QScrollBar::handle:vertical {
+    background: #bdc9cf;
+    border-radius: 4px;
+    min-height: 28px;
+}
+QScrollBar::handle:vertical:hover { background: #9eafb7; }
+QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical { height: 0; }
+QScrollBar:horizontal {
+    background: transparent;
+    height: 11px;
+    margin: 2px;
+}
+QScrollBar::handle:horizontal {
+    background: #bdc9cf;
+    border-radius: 4px;
+    min-width: 28px;
+}
+QScrollBar::handle:horizontal:hover { background: #9eafb7; }
+QScrollBar::add-line:horizontal, QScrollBar::sub-line:horizontal { width: 0; }
+QStatusBar {
+    color: #5f6f78;
+    border-top: 1px solid #d8e0e5;
 }
 """
 
@@ -349,9 +491,16 @@ class MainWindow(QMainWindow):
         self._saved_snapshot: bytes | None = None
         self._saved_allocations: tuple[object, ...] | None = None
         self.setWindowTitle(LEGACY_WINDOW_TITLE)
-        self.resize(1180, 760)
-        self.setMinimumSize(900, 600)
+        # Keep the initial footprint close to the reference editor on a
+        # 125%-scaled Windows desktop.  Users can still enlarge the window,
+        # but opening a ROM should not occupy almost the entire screen.
+        # The native frame adds 30 logical pixels on the reference Windows
+        # desktop.  671 client pixels therefore produce a 701 logical / 876
+        # physical-pixel outer window at 125% DPI, matching the legacy editor.
+        self.resize(850, 671)
+        self.setMinimumSize(800, 600)
         self._stale_pages: set[ProjectPage] = set()
+        self._uninitialized_pages: set[ProjectPage] = set()
         self._count_snapshot: bytes | None = None
         self._changed_byte_count = 0
         self._database_dialog: QDialog | None = None
@@ -363,7 +512,9 @@ class MainWindow(QMainWindow):
         # are constructed afresh in independent transaction dialogs.
         self.navigation = QListWidget(self)
         self.navigation.hide()
-        self.pages: list[ProjectPage] = []
+        self.pages: list[ProjectPage] = _PageRegistry(
+            self._ensure_page_initialized
+        )
         self.page_index: dict[str, int] = {}
         self.page_stack_index: dict[str, int] = {}
         self.workspace = QStackedWidget()
@@ -443,7 +594,11 @@ class MainWindow(QMainWindow):
         if key not in self.page_stack_index:
             raise KeyError(f"未知页面：{key}")
         page = self.pages[self.page_index[key]]
-        if page in self._stale_pages and not page.has_pending_draft:
+        if page in self._uninitialized_pages:
+            page.refresh()
+            self._uninitialized_pages.discard(page)
+            self._stale_pages.discard(page)
+        elif page in self._stale_pages and not page.has_pending_draft:
             page.refresh()
             self._stale_pages.discard(page)
         self.workspace.setCurrentIndex(self.page_stack_index[key])
@@ -452,6 +607,14 @@ class MainWindow(QMainWindow):
         self.navigation.setCurrentRow(row)
         self.navigation.blockSignals(False)
         self.module_status.setText(self.navigation.item(row).text())
+
+    def _ensure_page_initialized(self, page: ProjectPage) -> None:
+        """Populate a deferred page when UI routing or integrations request it."""
+
+        if page in self._uninitialized_pages:
+            page.refresh()
+            self._uninitialized_pages.discard(page)
+            self._stale_pages.discard(page)
 
     def _show_page_by_index(self, row: int) -> None:
         if not 0 <= row < len(self.pages):
@@ -937,9 +1100,15 @@ class MainWindow(QMainWindow):
         self._saved_snapshot = bytes(project.working) if saved_snapshot is None else saved_snapshot
         self._saved_allocations = project.resource_allocator.allocations
         self._count_snapshot = None
-        self._stale_pages.clear()
+        self._stale_pages = set(self.pages)
+        self._uninitialized_pages = set(self.pages)
         for page in self.pages:
-            page.set_project(project)
+            if page is self.map_page:
+                page.set_project(project)
+                self._stale_pages.discard(page)
+                self._uninitialized_pages.discard(page)
+            else:
+                page.set_project_deferred(project)
         self._update_window_state()
 
     def _activate_project(
@@ -1429,6 +1598,8 @@ def run() -> int:
     application.setStyle(VisibleArrowStyle("Fusion"))
     application.setFont(QFont("Microsoft YaHei UI", 10))
     application.setStyleSheet(STYLE_SHEET)
+    wheel_guard = ControlWheelGuard(application)
+    application.installEventFilter(wheel_guard)
     if self_test:
         window = MainWindow(open_default=True)
         window.show()

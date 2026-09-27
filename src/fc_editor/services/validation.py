@@ -457,6 +457,7 @@ def validate_project(project: ProjectView) -> tuple[ValidationIssue, ...]:
                     f"地图 {map_id:02X} 压缩后 {len(encoded)} 字节，容量仅 {record.capacity}。",
                 )
             )
+    scenario_payloads: list[bytes] = []
     for map_id in range(project.scenario_count):
         record = project.get_map(map_id)
         layout = project.get_scenario_layout(map_id)
@@ -464,26 +465,42 @@ def validate_project(project: ProjectView) -> tuple[ValidationIssue, ...]:
             project.scenario_layout_codec.validate_layout(
                 layout, record.width, record.height
             )
-            layout_size = len(project.scenario_layout_codec.encode(layout))
+            scenario_payloads.append(project.scenario_layout_codec.encode(layout))
         except ValueError as error:
             issues.append(
                 ValidationIssue("error", "部署", f"场景 {map_id:02X}：{error}")
             )
-            layout_size = (
-                len(layout.prelude)
-                + 4
-                + len(layout.enemies) * 6
-                + len(layout.guests) * 6
-                + len(layout.player_placements) * 4
-            )
-        if layout_size > layout.capacity:
+    scenario_used = sum(len(payload) for payload in set(scenario_payloads))
+    if expanded_map_usage is None:
+        scenario_capacity = project.scenario_layout_codec.pool_capacity
+        if scenario_used > scenario_capacity:
             issues.append(
                 ValidationIssue(
                     "error",
                     "部署",
-                    f"场景 {map_id:02X} 部署数据 {layout_size} 字节，容量仅 {layout.capacity}。",
+                    f"32 关初始配置需要 {scenario_used} 字节，"
+                    f"共享池仅 {scenario_capacity} 字节。",
                 )
             )
+        else:
+            issues.append(
+                ValidationIssue(
+                    "info",
+                    "部署",
+                    f"32 关初始配置共享池占用 "
+                    f"{scenario_used} / {scenario_capacity} 字节，保存时自动重排。",
+                )
+            )
+    else:
+        used, capacity = expanded_map_usage
+        issues.append(
+            ValidationIssue(
+                "info",
+                "部署",
+                f"初始配置记录去重后共 {scenario_used} 字节；"
+                f"地形/部署/事件共享池占用 {used} / {capacity} 字节。",
+            )
+        )
     if project.map_trigger_codec is not None:
         total_triggers = 0
         for map_id in range(project.map_trigger_codec.spec.scenario_count):
@@ -524,7 +541,7 @@ def validate_project(project: ProjectView) -> tuple[ValidationIssue, ...]:
                         + (
                             f"地形/部署/事件共享池占用 {used} / {capacity} 字节。"
                             if expanded_map_usage is not None
-                            else f"事件托管池占用 {used} / {capacity} 字节。"
+                            else f"事件/商店共享池占用 {used} / {capacity} 字节，保存时自动重排。"
                         ),
                     )
                 )

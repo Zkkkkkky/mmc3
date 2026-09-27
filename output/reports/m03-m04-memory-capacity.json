@@ -1,0 +1,93 @@
+{
+  "schemaVersion": 1,
+  "rom": {
+    "path": "output\\rom\\DC_kuorong_464K.nes",
+    "sha256": "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E",
+    "profile": "dc-kuorong-mmc3-v2"
+  },
+  "initialConfiguration": {
+    "prgBank": "$25",
+    "pointerTableFileOffset": "0x4A425",
+    "poolCpuRange": [
+      "$A455",
+      "$BF40"
+    ],
+    "poolFileRange": [
+      "0x4A465",
+      "0x4BF50"
+    ],
+    "chapterCount": 32,
+    "uniqueLayouts": 11,
+    "semanticBytesAllChapters": 1320,
+    "usedBytesAfterDedup": 1236,
+    "capacityBytes": 6891,
+    "freeBytes": 5655,
+    "capacityBoundary": "Bank $25 的下一段已验证部署加载程序始于 $BF40；$A940 只是原始正文末尾与扩容 Hook 地址。",
+    "recordCounts": {
+      "enemies": 140,
+      "guests": 10,
+      "playerPlacements": 73
+    },
+    "allocation": "32关按地图顺序去重并连续重排；敌/客记录6字节，我方记录4字节。"
+  },
+  "mapEventsAndShops": {
+    "prgBank": "$0A",
+    "pointerTableCpuAddress": "$987E",
+    "pointerTableFileOffset": "0x1588E",
+    "sourceDataCpuRange": [
+      "$9946",
+      "$9950"
+    ],
+    "storageSegments": [
+      {
+        "cpuRange": [
+          "$9946",
+          "$9950"
+        ],
+        "fileRange": [
+          "0x15956",
+          "0x15960"
+        ],
+        "capacityBytes": 10
+      },
+      {
+        "cpuRange": [
+          "$9ED4",
+          "$A000"
+        ],
+        "fileRange": [
+          "0x15EE4",
+          "0x16010"
+        ],
+        "capacityBytes": 300
+      }
+    ],
+    "chapterCount": 32,
+    "uniqueLayouts": 2,
+    "semanticBytes": 6,
+    "allocatedBytes": 10,
+    "capacityBytes": 310,
+    "freeBytes": 300,
+    "minimumUniqueSlotBytes": 5,
+    "recordCounts": {
+      "events": 1,
+      "shops": 0
+    },
+    "allocation": "32关去重后写入原始10 B区与尾部300 B区；每条4字节，FF结束；空表物理槽至少5字节。"
+  },
+  "expandedLayout": {
+    "relationship": "启用地图容量规划后，地形、初始配置、地图事件/商店改为共用所分配的8 KiB地图Bank池。",
+    "singleRecordLimit": "任何单条地形、部署或触发表都不得跨越一个8 KiB Bank。"
+  },
+  "referenceEvidence": {
+    "report": "output/reports/m03-m04-structural-compatibility.json",
+    "verifiedBehavior": "旧修改器新增/删除后顺序重排共享池；商店事件空表保留5字节槽。"
+  },
+  "checks": {
+    "scenario_pool_fits": true,
+    "trigger_pool_fits": true,
+    "scenario_first_pointer_matches_profile": true,
+    "trigger_empty_layout_uses_five_byte_slot": true
+  },
+  "passed": true
+}

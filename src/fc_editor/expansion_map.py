@@ -299,11 +299,24 @@ def build_map_resource_patches(
         TRIGGER_DISPATCH_CALL_PATCH,
         "地图事件 Hook",
     )
-    if _slice(source, SCENARIO_HOOK_OFFSET, len(SCENARIO_HOOK_CODE), "部署 Hook 空洞") not in (
-        bytes(len(SCENARIO_HOOK_CODE)),
-        SCENARIO_HOOK_CODE,
+    scenario_resolve = _slice(
+        source,
+        SCENARIO_RESOLVE_CALL_OFFSET,
+        len(SCENARIO_RESOLVE_CALL_ORIGINAL),
+        "部署解析 Hook",
+    )
+    scenario_hook = _slice(
+        source, SCENARIO_HOOK_OFFSET, len(SCENARIO_HOOK_CODE), "部署 Hook 区"
+    )
+    # In an unlinked ROM this address lies inside the legacy deployment pool.
+    # The reference editor may legitimately grow packed deployment data across
+    # $A940.  Linking has already captured that semantic data and relocates it
+    # before this patch overwrites the bytes with the bank-selection hook.
+    if (
+        scenario_resolve == SCENARIO_RESOLVE_CALL_PATCH
+        and scenario_hook != SCENARIO_HOOK_CODE
     ):
-        raise RomFormatError("部署 Hook 空洞已被其他数据占用。")
+        raise RomFormatError("已链接 ROM 的部署 Hook 代码不完整。")
     if _slice(source, TRIGGER_HOOK_OFFSET, len(TRIGGER_HOOK_CODE), "事件 Hook 空洞") not in (
         bytes(len(TRIGGER_HOOK_CODE)),
         TRIGGER_HOOK_CODE,

@@ -8,7 +8,7 @@
     "event_tab_enabled": true,
     "empty_map_is_empty_not_error": true,
     "shop_editor_visible": true,
-    "invalid_shops_disabled": true,
+    "shop_catalog_only_exposes_real_records": true,
     "add_draft_exact": true,
     "add_commit": true,
     "add_reopen_exact": true,
@@ -31,7 +31,7 @@
   "details": {
     "source_rom": "D:\\GIT\\mmc3\\output\\rom\\DC_kuorong_464K.nes",
     "source_sha256": "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E",
-    "normalized_baseline_sha256": "21039E8285F38495A4BFA32367BE7FC715CD79015CDFB27ADC4FCB547F922815",
+    "normalized_baseline_sha256": "A0249C2A6CAC16BC37AC90721836C11833EFEB01AC354383A606D0625B0813CC",
     "empty_map": 0,
     "shop_added": [
       3,
@@ -45,9 +45,9 @@
       255,
       243
     ],
-    "field_sha256": "712DE69F9C3C41DC084713748EA6B395DF8C2FBB66515EA757A5A179D83A3CC8",
-    "add_sha256": "11F793117E8A074C375956CADB1BCE70C91DCC6AA593AAA8F3201614F475B542",
-    "delete_sha256": "21039E8285F38495A4BFA32367BE7FC715CD79015CDFB27ADC4FCB547F922815"
+    "field_sha256": "0BD4D96D36067BCE0E6033368C0C24B64CA139C48C3855CCCD6E77718DB4578E",
+    "add_sha256": "25AAE93A20F08CC8D84630FDF4EA9F3FC331FBD0E4C69D6277867B193FC7833D",
+    "delete_sha256": "A0249C2A6CAC16BC37AC90721836C11833EFEB01AC354383A606D0625B0813CC"
   },
   "artifacts": [
     "output/verification/m04-shop-events-20260922/m04-normalized-empty-baseline.nes",

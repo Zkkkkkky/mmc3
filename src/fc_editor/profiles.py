@@ -334,6 +334,7 @@ class RomProfile:
     map_triggers: MapTriggerSpec | None = None
     persuasion_rules: PersuasionRuleSpec | None = None
     legacy_global_data: LegacyGlobalDataSpec | None = None
+    map_storage_boundary_offsets: tuple[int, ...] = ()
 
     def map_storage(self, map_id: int) -> MapStorageRange:
         for storage in self.map_storage_ranges:
@@ -565,15 +566,19 @@ MMC5_PROFILE = RomProfile(
     map_count=V51_PROFILE.map_count,
     map_first_pointer=V51_PROFILE.map_first_pointer,
     map_storage_ranges=(
-        MapStorageRange(0x00, 0x22, 0x03, 0xA000, 0xBFF3),
-        MapStorageRange(0x22, 0x2A, 0x34, 0xA000, 0xBF34),
-        MapStorageRange(0x2A, 0x64, 0x35, 0xA000, 0xB421),
+        MapStorageRange(0x00, 0x22, 0x03, 0xA000, 0xC000),
+        MapStorageRange(0x22, 0x2A, 0x34, 0xA000, 0xC000),
+        MapStorageRange(0x2A, 0x64, 0x35, 0xA000, 0xC000),
     ),
+    map_storage_boundary_offsets=(0x5BA3, 0x5BB7),
     scenario_pointer_table_offset=0x4A425,
     scenario_count=0x20,
     scenario_data_prg_bank=0x25,
     scenario_data_window_base=0xA000,
-    scenario_data_end_pointer=0xA940,
+    # The reference editor owns the whole deployment area up to the loader at
+    # $BF40.  $A940 is only the stock payload's current end (and the optional
+    # expansion hook site), not the legacy pool boundary.
+    scenario_data_end_pointer=0xBF40,
     scenario_first_pointer=0xA455,
     story_text_groups=MMC5_STORY_TEXT_GROUPS,
     growth_curve_max=255,
@@ -652,6 +657,7 @@ DC_EXPANDED_MMC3_LEGACY_PROFILE = RomProfile(
     map_count=MMC5_PROFILE.map_count,
     map_first_pointer=MMC5_PROFILE.map_first_pointer,
     map_storage_ranges=MMC5_PROFILE.map_storage_ranges,
+    map_storage_boundary_offsets=MMC5_PROFILE.map_storage_boundary_offsets,
     scenario_pointer_table_offset=MMC5_PROFILE.scenario_pointer_table_offset,
     scenario_count=MMC5_PROFILE.scenario_count,
     scenario_data_prg_bank=MMC5_PROFILE.scenario_data_prg_bank,

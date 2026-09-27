@@ -12,6 +12,7 @@ from PySide6.QtCore import QPersistentModelIndex
 from PySide6.QtWidgets import QApplication, QDialog, QMessageBox
 
 from dc_modifier.app import MainWindow
+from dc_modifier.event_page import EventPage
 from dc_modifier.legacy_tools import FontLibraryDialog, TextConverterDialog
 from dc_modifier.pages import UnitPage
 from dc_modifier.window_layout import fit_dialog_to_screen
@@ -205,6 +206,55 @@ class FontFeedbackTests(QtTestCase):
             window.show_page("units")
             self.assertEqual(refresh.call_count, 1)
         window.close()
+
+    def test_rom_activation_defers_hidden_module_population(self) -> None:
+        window = MainWindow(open_default=False)
+        with patch.object(EventPage, "refresh", autospec=True) as event_refresh:
+            window._activate_project(self.project)
+            self.assertEqual(event_refresh.call_count, 0)
+            self.assertEqual(window.map_page.map_list.count(), self.project.map_count)
+            window.show_page("events")
+            self.assertEqual(event_refresh.call_count, 1)
+        window.close()
+
+    def test_map_capacity_previews_reuse_unchanged_payloads(self) -> None:
+        record = self.project.get_map(0)
+        codec = self.project.map_codec
+        with patch.object(codec, "decode", wraps=codec.decode) as decode:
+            first = self.project.legacy_map_terrain_total_usage(
+                0, record.width, record.height, record.tiles
+            )
+            first_calls = decode.call_count
+            second = self.project.legacy_map_terrain_total_usage(
+                0, record.width, record.height, record.tiles
+            )
+            self.assertEqual(second, first)
+            self.assertEqual(decode.call_count, first_calls)
+            self.assertLessEqual(first_calls, self.project.map_count)
+
+        layout = self.project.get_scenario_layout(0)
+        scenario_codec = self.project.scenario_layout_codec
+        with patch.object(scenario_codec, "decode", wraps=scenario_codec.decode) as decode:
+            first = scenario_codec.storage_used_after(None, 0, layout)
+            first_calls = decode.call_count
+            self.assertEqual(scenario_codec.storage_used_after(None, 0, layout), first)
+            self.assertEqual(decode.call_count, first_calls)
+
+        trigger_codec = self.project.map_trigger_codec
+        assert trigger_codec is not None
+        triggers = self.project.get_map_triggers(0)
+        with patch.object(trigger_codec, "decode", wraps=trigger_codec.decode) as decode:
+            first = trigger_codec.storage_used_after(None, 0, triggers)
+            first_calls = decode.call_count
+            self.assertEqual(trigger_codec.storage_used_after(None, 0, triggers), first)
+            self.assertEqual(decode.call_count, first_calls)
+
+    def test_chapter_event_parser_reuses_unchanged_script(self) -> None:
+        codec = self.project.chapter_event_codec
+        assert codec is not None
+        first = codec.instructions(self.project.working)
+        second = codec.instructions(self.project.working)
+        self.assertIs(second, first)
 
 
 if __name__ == "__main__":

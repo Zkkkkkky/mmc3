@@ -12,6 +12,14 @@ from ..rom_image import RomImage
 
 @dataclass(frozen=True)
 class MapTrigger:
+    """One four-byte battlefield trigger record.
+
+    The original Bank $0A runtime reads the third byte at $95E0.  $FF branches
+    directly to the action at $9604; every other value is compared with the
+    active character ID before the fourth byte is dispatched as an event or
+    shop.  ``matches_character`` deliberately mirrors that verified rule.
+    """
+
     x: int
     y: int
     character_id: int
@@ -28,6 +36,11 @@ class MapTrigger:
     def to_bytes(self) -> bytes:
         return bytes((self.x, self.y, self.character_id, self.event_id))
 
+    def matches_character(self, character_id: int) -> bool:
+        """Mirror the verified runtime character gate for this trigger."""
+
+        return self.character_id == 0xFF or self.character_id == character_id
+
 
 @dataclass(frozen=True)
 class MapTriggerLayout:
@@ -39,12 +52,17 @@ class MapTriggerLayout:
 class MapTriggerCodec:
     """Lossless editor for X/Y/character/event map triggers.
 
-    The original ROM stores the table and a tiny shared pool in Bank $0A. On
-    first edit all 32 layouts are deterministically repacked into the verified
-    zero-filled tail at $9ED4-$9FFF, leaving the old data untouched.
+    The original ROM stores the table and a tiny shared pool in Bank $0A.  The
+    expanded FamiStudio build has two safe, non-contiguous spans: the original
+    ten bytes at $9946-$994F and the zero-filled tail at $9ED4-$9FFF.  The
+    occupied bytes between them must never be treated as trigger storage.
     """
 
     TERMINATOR = 0xFF
+    # The reference editor advances at least one full four-byte record plus the
+    # FF terminator for an empty unique layout.  This physical allocation, not
+    # the one-byte semantic payload, is what consumes the shared pool.
+    MINIMUM_SLOT_SIZE = 5
 
     def __init__(
         self,
@@ -60,6 +78,7 @@ class MapTriggerCodec:
         self.rom = rom
         self.spec = spec
         self._source = rom.data if data is None else bytes(data)
+        self._layout_cache: tuple[MapTriggerLayout, ...] | None = None
         self.pointer_table_offset = self.cpu_to_file_offset(spec.pointer_table)
         raw = self._source[
             self.pointer_table_offset : self.pointer_table_offset
@@ -91,15 +110,43 @@ class MapTriggerCodec:
 
     @property
     def pool_offset(self) -> int:
+        """First storage span; callers needing coverage must use pool_segments."""
+
         if self.is_expanded:
             return min(int(item.file_offset) for item in self._locations)
-        return self.cpu_to_file_offset(self.spec.managed_data_start)
+        return self.cpu_to_file_offset(self.spec.original_data_start)
+
+    @property
+    def pool_segments(self) -> tuple[tuple[int, int, int], ...]:
+        """Return ``(CPU pointer, file offset, capacity)`` storage spans."""
+
+        if self.is_expanded:
+            unique: dict[int, tuple[int, int, int]] = {}
+            for item in self._locations:
+                offset = int(item.file_offset)
+                unique.setdefault(
+                    offset,
+                    (int(item.pointer), offset, int(item.capacity)),
+                )
+            return tuple(unique.values())
+        return (
+            (
+                self.spec.original_data_start,
+                self.cpu_to_file_offset(self.spec.original_data_start),
+                self.spec.original_data_end - self.spec.original_data_start,
+            ),
+            (
+                self.spec.managed_data_start,
+                self.cpu_to_file_offset(self.spec.managed_data_start),
+                self.spec.managed_data_end - self.spec.managed_data_start,
+            ),
+        )
 
     @property
     def pool_capacity(self) -> int:
         if self.is_expanded and self._expanded_capacity is not None:
             return self._expanded_capacity
-        return self.spec.managed_data_end - self.spec.managed_data_start
+        return sum(capacity for _pointer, _offset, capacity in self.pool_segments)
 
     def pointer(self, map_id: int, data: bytes | bytearray | None = None) -> int:
         if not 0 <= map_id < self.spec.scenario_count:
@@ -151,7 +198,18 @@ class MapTriggerCodec:
         raise RomFormatError(f"关卡 ${map_id:02X} 的地图触发器缺少 FF 结束码。")
 
     def layouts(self, data: bytes | bytearray | None = None) -> tuple[MapTriggerLayout, ...]:
-        return tuple(self.decode(map_id, data) for map_id in range(self.spec.scenario_count))
+        source = self._source if data is None else bytes(data)
+        if source is self._source or source == self._source:
+            if self._layout_cache is None:
+                self._layout_cache = tuple(
+                    self.decode(map_id, self._source)
+                    for map_id in range(self.spec.scenario_count)
+                )
+            return self._layout_cache
+        return tuple(
+            self.decode(map_id, source)
+            for map_id in range(self.spec.scenario_count)
+        )
 
     @classmethod
     def validate_entries(
@@ -188,7 +246,7 @@ class MapTriggerCodec:
 
     def repack_patches(
         self,
-        data: bytes | bytearray,
+        data: bytes | bytearray | None,
         map_id: int,
         entries: tuple[MapTrigger, ...],
     ) -> tuple[tuple[int, bytes, bytes], ...]:
@@ -201,33 +259,74 @@ class MapTriggerCodec:
         encoded_by_map = [self.encode_entries(layout.entries) for layout in self.layouts(source)]
         encoded_by_map[map_id] = self.encode_entries(entries)
 
-        pool = bytearray(self.pool_capacity)
-        address_by_payload: dict[bytes, int] = {}
-        cursor = 0
-        pointers: list[int] = []
-        for payload in encoded_by_map:
-            address = address_by_payload.get(payload)
-            if address is None:
-                if cursor + len(payload) > len(pool):
-                    raise ValueError(
-                        f"地图触发器压缩后需要 {cursor + len(payload)} 字节，"
-                        f"托管池只有 {len(pool)} 字节。"
-                    )
-                address = self.spec.managed_data_start + cursor
-                pool[cursor : cursor + len(payload)] = payload
-                address_by_payload[payload] = address
-                cursor += len(payload)
-            pointers.append(address)
+        pointers, packed_segments, _used = self._pack_unexpanded(encoded_by_map)
 
         pointer_after = struct.pack(f"<{len(pointers)}H", *pointers)
         pointer_before = source[
             self.pointer_table_offset : self.pointer_table_offset + len(pointer_after)
         ]
-        pool_before = source[self.pool_offset : self.pool_offset + self.pool_capacity]
-        return (
-            (self.pointer_table_offset, pointer_before, pointer_after),
-            (self.pool_offset, pool_before, bytes(pool)),
+        patches: list[tuple[int, bytes, bytes]] = [
+            (self.pointer_table_offset, pointer_before, pointer_after)
+        ]
+        for (_pointer, offset, capacity), packed in zip(
+            self.pool_segments, packed_segments
+        ):
+            patches.append(
+                (offset, source[offset : offset + capacity], packed)
+            )
+        return tuple(patches)
+
+    def _pack_unexpanded(
+        self,
+        payloads_by_map: Sequence[bytes],
+    ) -> tuple[tuple[int, ...], tuple[bytes, ...], int]:
+        """Pack unique payloads into the safe 10 B + 300 B split pool."""
+
+        if self.is_expanded:
+            raise ValueError("扩展地图事件必须通过地图共享池统一重排。")
+        unique = list(dict.fromkeys(bytes(payload) for payload in payloads_by_map))
+        allocated = [max(len(payload), self.MINIMUM_SLOT_SIZE) for payload in unique]
+        segments = self.pool_segments
+        if len(segments) != 2:
+            raise RomFormatError("地图事件分段池结构无效。")
+        first_capacity = segments[0][2]
+        tail_capacity = segments[1][2]
+
+        # Choose a deterministic subset for the tiny original span.  Dynamic
+        # programming avoids rejecting a valid 307/310 B layout merely because
+        # its large first record cannot fit in the ten-byte span.
+        choices: dict[int, tuple[int, ...]] = {0: ()}
+        for index, size in enumerate(allocated):
+            for used, indices in tuple(sorted(choices.items(), reverse=True)):
+                candidate = used + size
+                if candidate <= first_capacity and candidate not in choices:
+                    choices[candidate] = (*indices, index)
+        first_used = max(choices)
+        first_indices = set(choices[first_used])
+        tail_used = sum(
+            size for index, size in enumerate(allocated) if index not in first_indices
         )
+        used = sum(allocated)
+        if tail_used > tail_capacity:
+            raise ValueError(
+                f"地图触发器重排后需要 {used} 字节，"
+                f"分段共享池只有 {self.pool_capacity} 字节"
+                f"（原始区 {first_capacity} B + 尾部区 {tail_capacity} B）。"
+            )
+
+        buffers = [bytearray(first_capacity), bytearray(tail_capacity)]
+        cursors = [0, 0]
+        address_by_payload: dict[bytes, int] = {}
+        for index, payload in enumerate(unique):
+            segment_index = 0 if index in first_indices else 1
+            cursor = cursors[segment_index]
+            size = allocated[index]
+            pointer = segments[segment_index][0] + cursor
+            buffers[segment_index][cursor : cursor + len(payload)] = payload
+            cursors[segment_index] += size
+            address_by_payload[payload] = pointer
+        pointers = tuple(address_by_payload[bytes(payload)] for payload in payloads_by_map)
+        return pointers, tuple(bytes(buffer) for buffer in buffers), used
 
     def semantic_digest(self, layout: MapTriggerLayout) -> str:
         return hashlib.sha256(self.encode_entries(layout.entries)).hexdigest().upper()
@@ -236,7 +335,7 @@ class MapTriggerCodec:
         payloads = {
             self.encode_entries(layout.entries) for layout in self.layouts(data)
         }
-        return sum(len(payload) for payload in payloads)
+        return sum(max(len(payload), self.MINIMUM_SLOT_SIZE) for payload in payloads)
 
     def storage_used_after(
         self,
@@ -249,10 +348,5 @@ class MapTriggerCodec:
         self.validate_entries(entries)
         payloads = [self.encode_entries(layout.entries) for layout in self.layouts(data)]
         payloads[map_id] = self.encode_entries(entries)
-        used = sum(len(payload) for payload in set(payloads))
-        if used > self.pool_capacity:
-            raise ValueError(
-                f"地图触发器压缩后需要 {used} 字节，"
-                f"托管池只有 {self.pool_capacity} 字节。"
-            )
+        _pointers, _segments, used = self._pack_unexpanded(payloads)
         return used

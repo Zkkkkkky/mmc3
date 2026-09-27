@@ -41959,14 +41959,14 @@
     {
       "id": 29,
       "hexId": "$1D",
-      "name": "占位/未命名人物槽（原ROM“？？？”）",
+      "name": "？？？",
       "pointer": "$9665",
       "tokens": "9E 9E 9E FF"
     },
     {
       "id": 30,
       "hexId": "$1E",
-      "name": "占位/未命名人物槽（原ROM“？？？”）",
+      "name": "？？？",
       "pointer": "$9665",
       "tokens": "9E 9E 9E FF"
     },
@@ -44184,7 +44184,7 @@
     {
       "id": 29,
       "hexId": "$1D",
-      "label": "占位/未命名人物槽（原ROM“？？？”）",
+      "label": "？？？",
       "attackerCommand": "$90",
       "attackerTrack": "$90 · 瓦尔主题曲",
       "defenderCommand": "$8F",
@@ -44193,7 +44193,7 @@
     {
       "id": 30,
       "hexId": "$1E",
-      "label": "占位/未命名人物槽（原ROM“？？？”）",
+      "label": "？？？",
       "attackerCommand": "$90",
       "attackerTrack": "$90 · 瓦尔主题曲",
       "defenderCommand": "$00",

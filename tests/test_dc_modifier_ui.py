@@ -11,15 +11,17 @@ from unittest.mock import patch
 
 os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 
-from PySide6.QtCore import QRect, Qt, QUrl
-from PySide6.QtGui import QAction, QImage, QPainter
+from PySide6.QtCore import QPoint, QPointF, QRect, Qt, QUrl
+from PySide6.QtGui import QAction, QImage, QPainter, QWheelEvent
 from PySide6.QtWidgets import (
     QApplication,
+    QComboBox,
     QDialog,
     QFileDialog,
     QLabel,
     QMessageBox,
     QPushButton,
+    QSpinBox,
     QStyle,
     QStyleOptionSpinBox,
     QToolBar,
@@ -28,8 +30,9 @@ from shiboken6 import isValid
 
 import dc_modifier.workspace as workspace_module
 from dc_modifier.app import (
+    ControlWheelGuard,
     LEGACY_ROM, LEGACY_WINDOW_TITLE, LauncherWindow, MainWindow,
-    VisibleArrowStyle, startup_rom_from_arguments,
+    STYLE_SHEET, VisibleArrowStyle, startup_rom_from_arguments,
 )
 from dc_modifier.event_page import EventPage
 from dc_modifier.legacy_windows import DatabaseDialog, ScenarioDialog
@@ -63,6 +66,76 @@ class DesktopEditorSmokeTests(QtTestCase):
     def setUp(self) -> None:
         self.window = MainWindow(open_default=True)
         self.assertIsNotNone(self.window.project)
+
+    def test_disabled_menu_items_have_explicit_high_contrast_style(self) -> None:
+        self.assertIn("QMenu::item:disabled", STYLE_SHEET)
+        self.assertIn("background: #eef1f3", STYLE_SHEET)
+        self.assertIn("color: #a8b0b5", STYLE_SHEET)
+
+    def test_section_boundaries_keep_a_calm_visible_accent(self) -> None:
+        self.assertIn("border-top: 2px solid #4b8290", STYLE_SHEET)
+        self.assertIn("QGroupBox::title", STYLE_SHEET)
+        self.assertIn("background: #edf4f6", STYLE_SHEET)
+        self.assertIn("color: #2f6170", STYLE_SHEET)
+
+    def test_native_combo_arrows_and_selected_rows_remain_visible(self) -> None:
+        self.assertNotIn("QComboBox::drop-down", STYLE_SHEET)
+        self.assertIn("QListWidget::item:selected:!active", STYLE_SHEET)
+        self.assertIn("background: #3f7f8f", STYLE_SHEET)
+        self.assertIn("color: #ffffff", STYLE_SHEET)
+
+    def test_plain_wheel_cannot_accidentally_change_field_values(self) -> None:
+        guard = ControlWheelGuard(self.application)
+        self.application.installEventFilter(guard)
+        try:
+            for editor in (QSpinBox(), QComboBox()):
+                if isinstance(editor, QSpinBox):
+                    editor.setRange(0, 10)
+                    editor.setValue(5)
+                    value = editor.value
+                else:
+                    editor.addItems(("A", "B", "C"))
+                    editor.setCurrentIndex(1)
+                    value = editor.currentIndex
+                editor.show()
+                self.application.processEvents()
+                before = value()
+                wheel = QWheelEvent(
+                    QPointF(5, 5), QPointF(5, 5), QPoint(), QPoint(0, 120),
+                    Qt.MouseButton.NoButton, Qt.KeyboardModifier.NoModifier,
+                    Qt.ScrollPhase.ScrollUpdate, False,
+                )
+                QApplication.sendEvent(editor, wheel)
+                self.assertEqual(value(), before)
+                deliberate_wheel = QWheelEvent(
+                    QPointF(5, 5), QPointF(5, 5), QPoint(), QPoint(0, 120),
+                    Qt.MouseButton.NoButton, Qt.KeyboardModifier.ControlModifier,
+                    Qt.ScrollPhase.ScrollUpdate, False,
+                )
+                QApplication.sendEvent(editor, deliberate_wheel)
+                self.assertNotEqual(value(), before)
+                editor.close()
+        finally:
+            self.application.removeEventFilter(guard)
+
+    def test_main_window_opens_at_reference_scale_without_locking_resize(self) -> None:
+        self.assertEqual(
+            (self.window.width(), self.window.height()),
+            (850, 671),
+        )
+        self.assertEqual(
+            (self.window.minimumWidth(), self.window.minimumHeight()),
+            (800, 600),
+        )
+        page = self.window.map_page
+        self.assertEqual(page.navigator.minimumWidth(), 285)
+        self.assertEqual(page.navigator.maximumWidth(), 430)
+
+        self.window.resize(1180, 760)
+        self.assertEqual(
+            (self.window.width(), self.window.height()),
+            (1180, 760),
+        )
 
     def test_database_window_is_reused_between_openings(self) -> None:
         with patch.object(
@@ -240,7 +313,7 @@ class DesktopEditorSmokeTests(QtTestCase):
             self.assertEqual(
                 [empty.map_page.editor_tabs.tabText(index)
                  for index in range(empty.map_page.editor_tabs.count())],
-                ["战场地图", "初始配置", "商店事件"],
+                ["战场地图", "初始配置", "地图事件/商店"],
             )
             self.assertEqual(empty.windowTitle(), LEGACY_WINDOW_TITLE)
             self.assertEqual(
@@ -280,7 +353,7 @@ class DesktopEditorSmokeTests(QtTestCase):
             self.assertEqual(len(empty.map_page.canvas.tile_images), 16)
             self.assertFalse(empty.map_page.canvas.tile_images[0].isNull())
             self.assertTrue(all(
-                not button.icon().isNull()
+                not button._tile_pixmap.isNull()
                 for button in empty.map_page.terrain_buttons.buttons()
             ))
             self.assertGreater(empty.map_page.canvas.map_width, 0)
@@ -790,7 +863,7 @@ class DesktopEditorSmokeTests(QtTestCase):
                 map_page.editor_tabs.tabText(index)
                 for index in range(map_page.editor_tabs.count())
             ],
-            ["战场地图", "初始配置", "商店事件"],
+            ["战场地图", "初始配置", "地图事件/商店"],
         )
 
     def test_resource_page_tracks_managed_import_and_undo(self) -> None:
@@ -1342,9 +1415,11 @@ class DesktopEditorSmokeTests(QtTestCase):
         self.assertIs(page.main_splitter.widget(1), page.canvas_host)
         self.assertEqual(page.navigator.layout().indexOf(page.editor_tabs), 0)
         self.assertLess(page.editor_tabs.geometry().bottom(), page.chapter_group.geometry().top())
-        self.assertGreaterEqual(page.chapter_group.minimumHeight(), 260)
-        self.assertFalse(page.icon_preview_toggle.isChecked())
+        self.assertGreaterEqual(page.chapter_group.minimumHeight(), 235)
         self.assertFalse(page.icon_preview_group.isVisible())
+        self.assertFalse(page.add_deployment_button.isVisible())
+        self.assertFalse(page.edit_deployment_button.isVisible())
+        self.assertFalse(page.copy_deployment_button.isVisible())
         self.assertTrue(page.fit_view.isChecked())
         self.assertFalse(page.zoom.isEnabled())
 

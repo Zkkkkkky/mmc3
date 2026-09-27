@@ -437,6 +437,8 @@ class ChapterEventCodec:
         self.rom = rom
         self.spec = spec
         self.phase_pointers = self._read_phase_pointers(rom.data)
+        self._instruction_cache_block: bytes | None = None
+        self._instruction_cache: tuple[ChapterEventInstruction, ...] = ()
         self._validate_phase_pointers(self.phase_pointers)
         # Validate that the known baseline is instruction-aligned.
         self.instructions(rom.data)
@@ -507,12 +509,14 @@ class ChapterEventCodec:
         return tuple(contexts)
 
     def instructions(self, data: bytes | bytearray | None = None) -> tuple[ChapterEventInstruction, ...]:
-        source = self.rom.data if data is None else bytes(data)
+        source = self.rom.data if data is None else data
         start = self.data_address_to_file_offset(self.spec.data_start)
         end = start + self.spec.data_end - self.spec.data_start
-        block = source[start:end]
+        block = bytes(source[start:end])
         if len(block) != end - start:
             raise RomFormatError("章节事件脚本区不完整。")
+        if block == self._instruction_cache_block:
+            return self._instruction_cache
         result = []
         cursor = 0
         while cursor < len(block):
@@ -532,7 +536,10 @@ class ChapterEventCodec:
                 )
             )
             cursor += length
-        return tuple(result)
+        instructions = tuple(result)
+        self._instruction_cache_block = block
+        self._instruction_cache = instructions
+        return instructions
 
     def actions(self, data: bytes | bytearray | None = None) -> tuple[ChapterEventInstruction, ...]:
         return tuple(

@@ -103,8 +103,22 @@ class ReadableCharacterPage(CharacterPage):
         detail = _prepare_readable_page(self)
         character_splitter = self.findChild(QSplitter)
         assert character_splitter is not None
-        self.records.setMinimumWidth(280)
-        character_splitter.setSizes([300, 1020])
+        list_panel = character_splitter.widget(0)
+        list_panel.setMinimumWidth(255)
+        list_panel.setMaximumWidth(320)
+        self.records.setMinimumWidth(250)
+        self.records.setMaximumWidth(315)
+        self.character_list_heading = QLabel("人物选择")
+        list_layout = list_panel.layout()
+        if isinstance(list_layout, QVBoxLayout):
+            list_layout.insertWidget(0, self.character_list_heading)
+        character_splitter.setSizes([310, 1010])
+        self.record_heading.hide()
+        self.pending_state.hide()
+        self.apply_button.hide()
+        for button in self.findChildren(QPushButton):
+            if button.text() in ("复制到其他ID…", "还原此人物"):
+                button.hide()
         self.capability_status = QLabel(
             "可编辑：名称、战斗名称/引用、双方音乐、精神/成长、五项修正、精神与消耗、头像引用/颜色、击落不消失。\n"
             "战斗台词的 8 个直接绑定、3 组特殊攻击规则和变形起飞绑定可编辑；新增人物因三固定池已满而安全拒绝。"
@@ -212,7 +226,16 @@ class ReadableCharacterPage(CharacterPage):
 
     def record_text(self, record_id: int) -> str:
         assert self.project is not None
-        return f"{record_id:03d}  {self.project.character_normal_display_name(record_id)}"
+        return (
+            f"[{record_id:02X}]{record_id:03d}："
+            f"{self.project.character_normal_display_name(record_id)}"
+        )
+
+    def showEvent(self, event) -> None:  # noqa: N802 - Qt override
+        super().showEvent(event)
+        self.record_heading.hide()
+        self.pending_state.hide()
+        self.apply_button.hide()
 
     def preferred_record_id(self) -> int | None:
         if self.project is None:
@@ -311,6 +334,9 @@ class ReadableCharacterPage(CharacterPage):
         if dialogue is not None and dialogue.has_pending_changes():
             self.apply_button.setEnabled(True)
             self.pending_state.setText("● 有尚未暂存的人物战斗台词绑定改动")
+        self.record_heading.hide()
+        self.pending_state.hide()
+        self.apply_button.hide()
 
     def apply_record(self) -> None:
         if self.project is None or self.current_id is None:

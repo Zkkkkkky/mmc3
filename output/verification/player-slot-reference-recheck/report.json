@@ -1,0 +1,128 @@
+{
+  "schema_version": 3,
+  "reference_source": "isolated legacy modifier + unmodified legacy ROM",
+  "reference_screenshots": [
+    "screenshots/legacy-map05.png",
+    "screenshots/legacy-map13.png"
+  ],
+  "expected_first_tiles": [
+    "$00",
+    "$08",
+    "$0C",
+    "$14",
+    "$18",
+    "$20",
+    "$34",
+    "$30",
+    "$40",
+    "$00",
+    "$1C"
+  ],
+  "expected_visible_labels": [
+    "编号00: 琉妮  西奥妮",
+    "编号01: 白河愁  古兰森",
+    "编号02: 夏亚  夏亚专用·扎古",
+    "编号03: 葵丝  亚古特·多加",
+    "编号04: 西罗克  帕拉斯",
+    "编号05: 萨拉  卡扎C",
+    "编号06: 姬娜  龙飞",
+    "编号07: 拉坎  扎古III",
+    "编号08: 零  睿智之神",
+    "编号09:",
+    "编号0A: 蕾柯亚  玛拉塞"
+  ],
+  "checks": [
+    {
+      "slot": "$00",
+      "reference_map": 13,
+      "character_id": 4,
+      "unit_id": 9,
+      "first_tile": "$00",
+      "pixel_mismatch_count": 0
+    },
+    {
+      "slot": "$01",
+      "reference_map": 13,
+      "character_id": 5,
+      "unit_id": 13,
+      "first_tile": "$08",
+      "pixel_mismatch_count": 0
+    },
+    {
+      "slot": "$02",
+      "reference_map": 13,
+      "character_id": 6,
+      "unit_id": 15,
+      "first_tile": "$0C",
+      "pixel_mismatch_count": 0
+    },
+    {
+      "slot": "$03",
+      "reference_map": 13,
+      "character_id": 7,
+      "unit_id": 17,
+      "first_tile": "$14",
+      "pixel_mismatch_count": 0
+    },
+    {
+      "slot": "$04",
+      "reference_map": 13,
+      "character_id": 8,
+      "unit_id": 19,
+      "first_tile": "$18",
+      "pixel_mismatch_count": 0
+    },
+    {
+      "slot": "$05",
+      "reference_map": 13,
+      "character_id": 9,
+      "unit_id": 23,
+      "first_tile": "$20",
+      "pixel_mismatch_count": 0
+    },
+    {
+      "slot": "$06",
+      "reference_map": 13,
+      "character_id": 18,
+      "unit_id": 33,
+      "first_tile": "$34",
+      "pixel_mismatch_count": 0
+    },
+    {
+      "slot": "$07",
+      "reference_map": 13,
+      "character_id": 19,
+      "unit_id": 32,
+      "first_tile": "$30",
+      "pixel_mismatch_count": 0
+    },
+    {
+      "slot": "$08",
+      "reference_map": 13,
+      "character_id": 20,
+      "unit_id": 37,
+      "first_tile": "$40",
+      "pixel_mismatch_count": 0
+    },
+    {
+      "slot": "$09",
+      "reference_map": 5,
+      "character_id": null,
+      "unit_id": 1,
+      "visible_label_is_blank": true,
+      "first_tile": "$00",
+      "pixel_mismatch_count": 0
+    },
+    {
+      "slot": "$0A",
+      "reference_map": 13,
+      "character_id": 10,
+      "unit_id": 21,
+      "first_tile": "$1C",
+      "pixel_mismatch_count": 0
+    }
+  ],
+  "visible_label_match_count": 11,
+  "visible_label_mismatch_count": 0,
+  "passed": true
+}

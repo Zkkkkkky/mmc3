@@ -695,15 +695,8 @@ class RomProject:
             self._reserve_direct_reopen_guards(initial_plan)
         self.pointer_by_id = self.unit_codec.pointers
         self.ids_by_pointer = self.unit_codec.ids_by_pointer
-        if self.base_chapter_title_codec is not None:
-            self.chapter_title_codec = ChapterTitleCodec(
-                self.rom_image, self.working
-            )
-        if self.base_chapter_victory_codec is not None:
-            self.chapter_victory_codec = ChapterVictoryCodec(
-                self.rom_image, self.working
-            )
         self._refresh_dynamic_codecs()
+        self._revision = 0
         self._undo_stack: list[EditHistoryEntry] = []
         self._redo_stack: list[EditHistoryEntry] = []
         self._transaction_depth = 0
@@ -824,6 +817,7 @@ class RomProject:
             )
         )
         self._redo_stack.clear()
+        self._revision += 1
 
     @contextmanager
     def transaction(self, description: str) -> Iterator[None]:
@@ -893,6 +887,7 @@ class RomProject:
         self.font_character_overrides = dict(entry.font_mappings_before)
         self.animation_label_overrides = dict(entry.animation_labels_before)
         self._refresh_dynamic_codecs()
+        self._revision += 1
         self._redo_stack.append(entry)
         return entry.description
 
@@ -908,6 +903,7 @@ class RomProject:
         self.font_character_overrides = dict(entry.font_mappings_after)
         self.animation_label_overrides = dict(entry.animation_labels_after)
         self._refresh_dynamic_codecs()
+        self._revision += 1
         self._undo_stack.append(entry)
         return entry.description
 
@@ -922,6 +918,12 @@ class RomProject:
     @property
     def profile(self):
         return self.rom_image.profile
+
+    @property
+    def revision(self) -> int:
+        """Monotonic edit generation used by UI-side derived-data caches."""
+
+        return self._revision
 
     @property
     def expansion_plan(self) -> ExpansionPlan | None:
@@ -968,9 +970,15 @@ class RomProject:
             self.unit_codec = self.base_unit_codec
             self.unit_name_codec = self.base_unit_name_codec
             self.unit_weapon_codec = self.base_unit_weapon_codec
-            self.map_codec = self.base_map_codec
-            self.scenario_layout_codec = self.base_scenario_layout_codec
-            self.map_trigger_codec = self.base_map_trigger_codec
+            self.map_codec = MapCodec(self.rom_image, self.working)
+            self.scenario_layout_codec = ScenarioLayoutCodec(
+                self.rom_image, self.working
+            )
+            self.map_trigger_codec = (
+                MapTriggerCodec(self.rom_image, self.working)
+                if self.base_map_trigger_codec is not None
+                else None
+            )
             # Verified story groups can be repacked in place without linker
             # metadata. Rebuild the pointer cache after edits and undo/redo.
             self.story_text_codec = StoryTextCodec(self.rom_image, self.working)
@@ -1046,9 +1054,15 @@ class RomProject:
                     expanded_capacity=len(plan.map_banks) * PRG_BANK_SIZE,
                 )
             else:
-                self.map_codec = self.base_map_codec
-                self.scenario_layout_codec = self.base_scenario_layout_codec
-                self.map_trigger_codec = self.base_map_trigger_codec
+                self.map_codec = MapCodec(self.rom_image, self.working)
+                self.scenario_layout_codec = ScenarioLayoutCodec(
+                    self.rom_image, self.working
+                )
+                self.map_trigger_codec = (
+                    MapTriggerCodec(self.rom_image, self.working)
+                    if self.base_map_trigger_codec is not None
+                    else None
+                )
             overrides = {
                 selector: pair[0]
                 for selector in plan.expanded_story_selectors
@@ -1067,7 +1081,9 @@ class RomProject:
             )
         if self.base_chapter_victory_codec is not None:
             self.chapter_victory_codec = ChapterVictoryCodec(
-                self.rom_image, self.working
+                self.rom_image,
+                self.working,
+                baseline_records=self.base_chapter_victory_codec.records,
             )
 
     @property
@@ -1535,20 +1551,28 @@ class RomProject:
             )
             for map_id in range(self.map_trigger_codec.spec.scenario_count)
         )
-        # Before automatic planning, trigger edits are repacked into the old
-        # Bank $0A cave at $9ED4.  The new runtime hook deliberately occupies
-        # that same cave.  We already captured every current trigger above, so
-        # clear only the obsolete pool bytes before installing the hook.  A
-        # directly reopened derived ROM has that repacked pool in
-        # ``self.original`` too, so copying from ``self.original`` would leave
-        # the future Hook site occupied and make planning non-idempotent.
+        # Before automatic planning, trigger and deployment edits are repacked
+        # into legacy pools that overlap future linker caves.  We already
+        # captured every semantic record above, so clear only those obsolete
+        # pool bytes in the linker's source view.  This lets the reference
+        # editor grow deployments beyond the stock $A940 payload end while the
+        # planner still relocates them safely before installing map/unit hooks.
+        # A directly reopened derived ROM may contain those repacked pools in
+        # ``self.original`` too, so copying from the original would not help.
         link_source = bytearray(source_before_link)
+        scenario_pool_start = self.scenario_layout_codec.pool_offset
+        scenario_pool_end = (
+            scenario_pool_start + self.scenario_layout_codec.pool_capacity
+        )
+        link_source[scenario_pool_start:scenario_pool_end] = bytes(
+            self.scenario_layout_codec.pool_capacity
+        )
         if not self.map_trigger_codec.is_expanded:
-            trigger_pool_start = self.map_trigger_codec.pool_offset
-            trigger_pool_end = trigger_pool_start + self.map_trigger_codec.pool_capacity
-            link_source[trigger_pool_start:trigger_pool_end] = bytes(
-                self.map_trigger_codec.pool_capacity
-            )
+            for _pointer, trigger_pool_start, capacity in (
+                self.map_trigger_codec.pool_segments
+            ):
+                trigger_pool_end = trigger_pool_start + capacity
+                link_source[trigger_pool_start:trigger_pool_end] = bytes(capacity)
         before = self._mutation_snapshot()
         try:
             self._reserve_plan_partitions(plan)
@@ -1562,7 +1586,7 @@ class RomProject:
             )
             plan = self._link_unit_resources(
                 plan,
-                source_data=source_before_link,
+                source_data=link_source,
                 records=unit_records,
                 name_source_ids=tuple(name_source_ids),
             )
@@ -2222,7 +2246,9 @@ class RomProject:
         if not label or not label.strip("-_ "):
             return "空白/未分配人物槽"
         if label and all(character in "?？" for character in label):
-            return f"占位/未命名人物槽（原ROM“{label}”）"
+            # “？？？” is an intentional, usable unknown-character identity in
+            # the game, not an empty or unnamed database slot.
+            return label
         return label
 
     def character_normal_display_name(self, character_id: int) -> str:
@@ -2688,7 +2714,7 @@ class RomProject:
     def get_map(self, map_id: int, *, original: bool = False) -> MapRecord:
         if original:
             return self.base_map_codec.decode(map_id, self.original)
-        return self.map_codec.decode(map_id, bytes(self.working))
+        return self.map_codec.decode(map_id)
 
     def _commit_expanded_map_resources(
         self,
@@ -2731,7 +2757,15 @@ class RomProject:
         plan = self.expansion_plan
         if plan is None or not plan.flags & FLAG_MAPS:
             encoded = self.map_codec.encode(width, height, tiles)
-            return len(encoded), self.map_codec.capacities[map_id]
+            used, capacity = self.map_codec.storage_usage(
+                map_id, replacement=encoded
+            )
+            if used > capacity:
+                raise ValueError(
+                    f"地图分区重排后需要 {used} 字节，"
+                    f"分区总容量只有 {capacity} 字节。"
+                )
+            return used, capacity
         payloads = read_expanded_map_payloads(self.working)
         terrain_records = list(payloads.terrain)
         scenario_records = list(payloads.scenarios)
@@ -2745,6 +2779,59 @@ class RomProject:
             terrain_records, scenario_records, trigger_records, plan.map_banks
         )
         return packed.used_bytes, packed.capacity
+
+    def legacy_map_terrain_total_usage(
+        self,
+        map_id: int,
+        width: int,
+        height: int,
+        tiles: tuple[int, ...],
+    ) -> tuple[int, int]:
+        """Return all-partition terrain usage for a legacy-layout draft."""
+
+        plan = self.expansion_plan
+        if plan is not None and plan.flags & FLAG_MAPS:
+            raise ValueError("扩展地图请读取统一地图共享池容量。")
+        encoded = self.map_codec.encode(width, height, tiles)
+        return self.map_codec.total_storage_usage(
+            replacement_map_id=map_id,
+            replacement=encoded,
+        )
+
+    def map_resource_usage_breakdown(
+        self,
+        map_id: int,
+        width: int,
+        height: int,
+        tiles: tuple[int, ...],
+        layout: ScenarioLayout,
+        triggers: tuple[MapTrigger, ...],
+    ) -> tuple[int, int, int, int, int]:
+        """Return terrain/deployment/trigger and total usage for an expanded draft."""
+
+        plan = self.expansion_plan
+        if plan is None or not plan.flags & FLAG_MAPS:
+            raise ValueError("当前 ROM 未接通统一地图共享池。")
+        payloads = read_expanded_map_payloads(self.working)
+        terrain_records = list(payloads.terrain)
+        scenario_records = list(payloads.scenarios)
+        trigger_records = list(payloads.triggers)
+        terrain_records[map_id] = self.map_codec.encode(width, height, tiles)
+        scenario_records[map_id] = self.scenario_layout_codec.encode(layout)
+        trigger_records[map_id] = self.map_trigger_codec.encode_entries(triggers)
+        packed = pack_map_resources(
+            terrain_records, scenario_records, trigger_records, plan.map_banks
+        )
+        terrain_used = sum(len(payload) for payload in terrain_records)
+        scenario_used = sum(len(payload) for payload in set(scenario_records))
+        trigger_used = sum(len(payload) for payload in set(trigger_records))
+        return (
+            terrain_used,
+            scenario_used,
+            trigger_used,
+            packed.used_bytes,
+            packed.capacity,
+        )
 
     def set_map_tiles(
         self,
@@ -2766,10 +2853,12 @@ class RomProject:
             )
             return
         before = self._mutation_snapshot()
-        offset, _before, after = self.map_codec.replacement_patch(
+        patches = self.map_codec.repack_patches(
             bytes(self.working), map_id, width, height, tiles
         )
-        self.working[offset : offset + len(after)] = after
+        for offset, _before, after in patches:
+            self.working[offset : offset + len(after)] = after
+        self.map_codec = MapCodec(self.rom_image, self.working)
         self._finish_mutation(before, f"地图 {map_id:02X} · 地形")
 
     def reset_map(self, map_id: int) -> None:
@@ -2780,13 +2869,8 @@ class RomProject:
                 map_id, original.width, original.height, original.tiles
             )
             return
-        before = self._mutation_snapshot()
-        offset = self.map_codec.record_offset(map_id)
-        capacity = self.map_codec.capacities[map_id]
-        self.working[offset : offset + capacity] = self.original[
-            offset : offset + capacity
-        ]
-        self._finish_mutation(before, f"地图 {map_id:02X} · 还原地形")
+        original = self.get_map(map_id, original=True)
+        self.set_map_tiles(map_id, original.width, original.height, original.tiles)
 
     def get_scenario_layout(
         self,
@@ -2796,7 +2880,7 @@ class RomProject:
     ) -> ScenarioLayout:
         if original:
             return self.base_scenario_layout_codec.decode(map_id, self.original)
-        return self.scenario_layout_codec.decode(map_id, bytes(self.working))
+        return self.scenario_layout_codec.decode(map_id)
 
     def set_scenario_layout(self, layout: ScenarioLayout) -> None:
         map_record = self.get_map(layout.map_id)
@@ -2816,17 +2900,13 @@ class RomProject:
             )
             return
         before = self._mutation_snapshot()
-        offset, _before, after = self.scenario_layout_codec.replacement_patch(
-            bytes(self.working), layout
+        for offset, _before, after in self.scenario_layout_codec.repack_patches(
+            bytes(self.working), layout.map_id, layout
+        ):
+            self.working[offset : offset + len(after)] = after
+        self.scenario_layout_codec = ScenarioLayoutCodec(
+            self.rom_image, self.working
         )
-        # A shorter fixed-slot layout must not retain bytes from a previously
-        # longer draft.  They are semantically hidden behind the new FF
-        # terminator, but leave add-then-delete saves byte-different and can be
-        # exposed by later pointer/capacity changes.  Fixed deployment slots
-        # use zero padding, so clear the whole unused tail deterministically.
-        encoded_size = len(self.scenario_layout_codec.encode(layout))
-        after = after[:encoded_size] + bytes(len(after) - encoded_size)
-        self.working[offset : offset + len(after)] = after
         self._finish_mutation(before, f"场景 {layout.map_id:02X} · 部署")
 
     def reset_scenario_layout(self, map_id: int) -> None:
@@ -2834,13 +2914,7 @@ class RomProject:
         if plan is not None and plan.flags & FLAG_SCENARIOS:
             self.set_scenario_layout(self.get_scenario_layout(map_id, original=True))
             return
-        before = self._mutation_snapshot()
-        offset = self.scenario_layout_codec.record_offset(map_id)
-        capacity = self.scenario_layout_codec.capacities[map_id]
-        self.working[offset : offset + capacity] = self.original[
-            offset : offset + capacity
-        ]
-        self._finish_mutation(before, f"场景 {map_id:02X} · 还原部署")
+        self.set_scenario_layout(self.get_scenario_layout(map_id, original=True))
 
     def get_map_triggers(
         self,
@@ -2854,7 +2928,7 @@ class RomProject:
             if self.base_map_trigger_codec is None:
                 raise ValueError("当前 ROM 没有已验证的地图事件表。")
             return self.base_map_trigger_codec.decode(map_id, self.original).entries
-        return self.map_trigger_codec.decode(map_id, bytes(self.working)).entries
+        return self.map_trigger_codec.decode(map_id).entries
 
     def _replace_map_triggers(
         self,
@@ -2883,6 +2957,7 @@ class RomProject:
             bytes(self.working), map_id, entries
         ):
             self.working[offset : offset + len(after)] = after
+        self.map_trigger_codec = MapTriggerCodec(self.rom_image, self.working)
         self._finish_mutation(before_snapshot, description)
 
     def set_map_triggers(
@@ -2951,10 +3026,9 @@ class RomProject:
     def chapter_event_instructions(self, *, actions_only: bool = False):
         if self.chapter_event_codec is None:
             return ()
-        source = bytes(self.working)
         if actions_only:
-            return self.chapter_event_codec.actions(source)
-        return self.chapter_event_codec.instructions(source)
+            return self.chapter_event_codec.actions(self.working)
+        return self.chapter_event_codec.instructions(self.working)
 
     def set_chapter_event_instruction(self, address: int, replacement: bytes) -> None:
         if self.chapter_event_codec is None:
@@ -3203,7 +3277,9 @@ class RomProject:
         for offset, _old, after in patches:
             self.working[offset : offset + len(after)] = after
         self.chapter_victory_codec = ChapterVictoryCodec(
-            self.rom_image, self.working
+            self.rom_image,
+            self.working,
+            baseline_records=self.base_chapter_victory_codec.records,
         )
         self._finish_mutation(before, f"关卡 {scenario_id + 1:03d} · 初始胜利文字")
 
@@ -3520,8 +3596,10 @@ class RomProject:
             pointer_end = pointer_start + self.map_trigger_codec.spec.scenario_count * 2
             if pointer_start <= offset < pointer_end:
                 return f"地图 {(offset - pointer_start) // 2:02X} · 事件指针"
-            pool_start = self.map_trigger_codec.pool_offset
-            if pool_start <= offset < pool_start + self.map_trigger_codec.pool_capacity:
+            if any(
+                pool_start <= offset < pool_start + capacity
+                for _pointer, pool_start, capacity in self.map_trigger_codec.pool_segments
+            ):
                 return "地图事件与商店托管数据"
         if self.chapter_event_codec is not None:
             spec = self.chapter_event_codec.spec
@@ -4023,15 +4101,53 @@ class RomProject:
                 current_map.tiles,
                 self.map_codec.semantic_digest(original_map),
             )
-            offset = self.map_codec.record_offset(map_id)
-            covered_offsets.update(range(offset, offset + self.map_codec.capacities[map_id]))
-
-        seen_scenario_pointers: set[int] = set()
-        for map_id in (() if maps_are_linked else range(self.scenario_count)):
-            pointer = self.scenario_layout_codec.pointers[map_id]
-            if pointer in seen_scenario_pointers:
+            if self.profile.map_storage_boundary_offsets:
+                covered_offsets.update(self.profile.map_storage_boundary_offsets)
+                pointer_start = self.profile.map_pointer_table_offset
+                covered_offsets.update(
+                    range(pointer_start, pointer_start + self.map_count * 2)
+                )
+                for storage in self.base_map_codec.storage_ranges:
+                    first_pointer = self.base_map_codec.pointers[storage.first_id]
+                    pool_start = (
+                        16
+                        + storage.prg_bank * PRG_BANK_SIZE
+                        + first_pointer
+                        - storage.window_base
+                    )
+                    covered_offsets.update(
+                        range(
+                            pool_start,
+                            pool_start + storage.data_end_pointer - first_pointer,
+                        )
+                    )
                 continue
-            seen_scenario_pointers.add(pointer)
+            storage = self.profile.map_storage(map_id)
+            pointer_start = (
+                self.profile.map_pointer_table_offset + storage.first_id * 2
+            )
+            covered_offsets.update(
+                range(
+                    pointer_start,
+                    pointer_start + (storage.end_id - storage.first_id) * 2,
+                )
+            )
+            first_pointer = self.base_map_codec.pointers[storage.first_id]
+            pool_start = (
+                16
+                + storage.prg_bank * PRG_BANK_SIZE
+                + first_pointer
+                - storage.window_base
+            )
+            covered_offsets.update(
+                range(
+                    pool_start,
+                    pool_start + storage.data_end_pointer - first_pointer,
+                )
+            )
+
+        scenarios_changed = False
+        for map_id in (() if maps_are_linked else range(self.scenario_count)):
             original_layout = self.get_scenario_layout(map_id, original=True)
             current_layout = self.get_scenario_layout(map_id)
             if (
@@ -4043,9 +4159,18 @@ class RomProject:
                 current_layout,
                 self.scenario_layout_codec.semantic_digest(original_layout),
             )
-            offset = self.scenario_layout_codec.record_offset(map_id)
+            scenarios_changed = True
+        if scenarios_changed:
+            pointer_start = self.scenario_layout_codec.pointer_table_offset
             covered_offsets.update(
-                range(offset, offset + self.scenario_layout_codec.capacities[map_id])
+                range(pointer_start, pointer_start + self.scenario_count * 2)
+            )
+            pool_start = self.scenario_layout_codec.pool_offset
+            covered_offsets.update(
+                range(
+                    pool_start,
+                    pool_start + self.scenario_layout_codec.pool_capacity,
+                )
             )
 
         if self.map_trigger_codec is not None and not maps_are_linked:
@@ -4067,10 +4192,10 @@ class RomProject:
                 pointer_start = self.map_trigger_codec.pointer_table_offset
                 pointer_size = self.map_trigger_codec.spec.scenario_count * 2
                 covered_offsets.update(range(pointer_start, pointer_start + pointer_size))
-                pool_start = self.map_trigger_codec.pool_offset
-                covered_offsets.update(
-                    range(pool_start, pool_start + self.map_trigger_codec.pool_capacity)
-                )
+                for _pointer, pool_start, capacity in (
+                    self.map_trigger_codec.pool_segments
+                ):
+                    covered_offsets.update(range(pool_start, pool_start + capacity))
 
         for group in self.story_text_groups:
             if plan is not None and plan.story_pair_for(group.selector) is not None:

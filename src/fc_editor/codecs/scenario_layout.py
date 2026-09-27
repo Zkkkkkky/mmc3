@@ -29,6 +29,7 @@ class ScenarioLayoutCodec:
     ) -> None:
         self.rom = rom
         self._source = rom.data if data is None else bytes(data)
+        self._encoded_payload_cache: tuple[bytes, ...] | None = None
         self.pointer_table_offset = (
             rom.profile.scenario_pointer_table_offset
             if pointer_table_offset is None
@@ -114,6 +115,22 @@ class ScenarioLayoutCodec:
                 f"Scenario ID must be between 00 and {self.rom.profile.scenario_count - 1:02X}"
             )
         return self.offsets[map_id]
+
+    @property
+    def pool_pointer(self) -> int:
+        """First byte of the legacy shared deployment pool."""
+
+        if self._relocated:
+            raise ValueError("扩展部署记录属于统一地图共享池。")
+        return self.rom.profile.scenario_first_pointer
+
+    @property
+    def pool_offset(self) -> int:
+        return self.pointer_to_file_offset(self.pool_pointer)
+
+    @property
+    def pool_capacity(self) -> int:
+        return self.data_end_pointer - self.pool_pointer
 
     @staticmethod
     def _read_until_sentinel(block: bytes, cursor: int, label: str) -> tuple[tuple[int, ...], int]:
@@ -244,6 +261,104 @@ class ScenarioLayoutCodec:
         before = bytes(data[offset : offset + capacity])
         after = encoded + before[len(encoded) :]
         return offset, before, after
+
+    def _encoded_payloads(self, data: bytes | bytearray | None = None) -> list[bytes]:
+        source = self._source if data is None else bytes(data)
+        if source is self._source or source == self._source:
+            if self._encoded_payload_cache is None:
+                self._encoded_payload_cache = tuple(
+                    self.encode(self.decode(map_id, self._source))
+                    for map_id in range(self.rom.profile.scenario_count)
+                )
+            return list(self._encoded_payload_cache)
+        return [
+            self.encode(self.decode(map_id, source))
+            for map_id in range(self.rom.profile.scenario_count)
+        ]
+
+    @staticmethod
+    def _unique_storage_used(payloads: Sequence[bytes]) -> int:
+        return sum(len(payload) for payload in dict.fromkeys(payloads))
+
+    def storage_used(self, data: bytes | bytearray | None = None) -> int:
+        """Bytes occupied after the reference editor's deduplicating repack."""
+
+        return self._unique_storage_used(self._encoded_payloads(data))
+
+    def storage_used_after(
+        self,
+        data: bytes | bytearray | None,
+        map_id: int,
+        layout: ScenarioLayout,
+    ) -> int:
+        if not 0 <= map_id < self.rom.profile.scenario_count:
+            raise IndexError("初始配置关卡 ID 超出范围。")
+        if layout.map_id != map_id:
+            raise ValueError("初始配置关卡 ID 不一致。")
+        return self.storage_used_after_payload(
+            data, map_id, self.encode(layout)
+        )
+
+    def storage_used_after_payload(
+        self,
+        data: bytes | bytearray | None,
+        map_id: int,
+        payload: bytes,
+    ) -> int:
+        if not 0 <= map_id < self.rom.profile.scenario_count:
+            raise IndexError("初始配置关卡 ID 超出范围。")
+        if not payload:
+            raise ValueError("初始配置编码不能为空。")
+        payloads = self._encoded_payloads(data)
+        payloads[map_id] = bytes(payload)
+        return self._unique_storage_used(payloads)
+
+    def repack_patches(
+        self,
+        data: bytes | bytearray,
+        map_id: int,
+        layout: ScenarioLayout,
+    ) -> tuple[tuple[int, bytes, bytes], ...]:
+        """Repack all 32 layouts exactly like the verified reference editor."""
+
+        if self._relocated:
+            raise ValueError("扩展部署必须通过地图共享池统一重排。")
+        source = bytes(data)
+        if not 0 <= map_id < self.rom.profile.scenario_count:
+            raise IndexError("初始配置关卡 ID 超出范围。")
+        if layout.map_id != map_id:
+            raise ValueError("初始配置关卡 ID 不一致。")
+        payloads = self._encoded_payloads(source)
+        payloads[map_id] = self.encode(layout)
+
+        pool = bytearray(self.pool_capacity)
+        address_by_payload: dict[bytes, int] = {}
+        cursor = 0
+        pointers: list[int] = []
+        for payload in payloads:
+            address = address_by_payload.get(payload)
+            if address is None:
+                required = cursor + len(payload)
+                if required > self.pool_capacity:
+                    raise ValueError(
+                        f"初始配置重排后需要 {required} 字节，"
+                        f"32 关共享池只有 {self.pool_capacity} 字节。"
+                    )
+                address = self.pool_pointer + cursor
+                pool[cursor:required] = payload
+                address_by_payload[payload] = address
+                cursor = required
+            pointers.append(address)
+
+        pointer_after = struct.pack(f"<{len(pointers)}H", *pointers)
+        pointer_before = source[
+            self.pointer_table_offset : self.pointer_table_offset + len(pointer_after)
+        ]
+        pool_before = source[self.pool_offset : self.pool_offset + self.pool_capacity]
+        return (
+            (self.pointer_table_offset, pointer_before, pointer_after),
+            (self.pool_offset, pool_before, bytes(pool)),
+        )
 
     def round_trip(self, map_id: int) -> bool:
         layout = self.decode(map_id)

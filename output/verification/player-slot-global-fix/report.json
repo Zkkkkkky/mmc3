@@ -1,0 +1,327 @@
+{
+  "rom": "D:\\GIT\\mmc3\\output\\rom\\DC_kuorong_464K.nes",
+  "slot_legend": {
+    "00": {
+      "character": 4,
+      "unit": 9
+    },
+    "01": {
+      "character": 5,
+      "unit": 13
+    },
+    "02": {
+      "character": 6,
+      "unit": 15
+    },
+    "03": {
+      "character": 7,
+      "unit": 17
+    },
+    "04": {
+      "character": 8,
+      "unit": 19
+    },
+    "05": {
+      "character": 9,
+      "unit": 23
+    },
+    "06": {
+      "character": 2,
+      "unit": 6
+    },
+    "07": {
+      "character": 3,
+      "unit": 7
+    },
+    "08": {
+      "character": 4,
+      "unit": 8
+    },
+    "09": {
+      "character": 5,
+      "unit": 9
+    },
+    "0A": {
+      "character": 10,
+      "unit": 10
+    }
+  },
+  "chapters": [
+    {
+      "map_id": 0,
+      "records": 0,
+      "referenced_slots": [],
+      "missing_slots": []
+    },
+    {
+      "map_id": 1,
+      "records": 0,
+      "referenced_slots": [],
+      "missing_slots": []
+    },
+    {
+      "map_id": 2,
+      "records": 0,
+      "referenced_slots": [],
+      "missing_slots": []
+    },
+    {
+      "map_id": 3,
+      "records": 0,
+      "referenced_slots": [],
+      "missing_slots": []
+    },
+    {
+      "map_id": 4,
+      "records": 9,
+      "referenced_slots": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        8,
+        9,
+        10
+      ],
+      "missing_slots": []
+    },
+    {
+      "map_id": 5,
+      "records": 9,
+      "referenced_slots": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        8,
+        9,
+        10
+      ],
+      "missing_slots": []
+    },
+    {
+      "map_id": 6,
+      "records": 10,
+      "referenced_slots": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        7,
+        8,
+        9,
+        10
+      ],
+      "missing_slots": []
+    },
+    {
+      "map_id": 7,
+      "records": 0,
+      "referenced_slots": [],
+      "missing_slots": []
+    },
+    {
+      "map_id": 8,
+      "records": 8,
+      "referenced_slots": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        10
+      ],
+      "missing_slots": []
+    },
+    {
+      "map_id": 9,
+      "records": 8,
+      "referenced_slots": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "missing_slots": []
+    },
+    {
+      "map_id": 10,
+      "records": 9,
+      "referenced_slots": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        10
+      ],
+      "missing_slots": []
+    },
+    {
+      "map_id": 11,
+      "records": 10,
+      "referenced_slots": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        10
+      ],
+      "missing_slots": []
+    },
+    {
+      "map_id": 12,
+      "records": 10,
+      "referenced_slots": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        10
+      ],
+      "missing_slots": []
+    },
+    {
+      "map_id": 13,
+      "records": 0,
+      "referenced_slots": [],
+      "missing_slots": []
+    },
+    {
+      "map_id": 14,
+      "records": 0,
+      "referenced_slots": [],
+      "missing_slots": []
+    },
+    {
+      "map_id": 15,
+      "records": 0,
+      "referenced_slots": [],
+      "missing_slots": []
+    },
+    {
+      "map_id": 16,
+      "records": 0,
+      "referenced_slots": [],
+      "missing_slots": []
+    },
+    {
+      "map_id": 17,
+      "records": 0,
+      "referenced_slots": [],
+      "missing_slots": []
+    },
+    {
+      "map_id": 18,
+      "records": 0,
+      "referenced_slots": [],
+      "missing_slots": []
+    },
+    {
+      "map_id": 19,
+      "records": 0,
+      "referenced_slots": [],
+      "missing_slots": []
+    },
+    {
+      "map_id": 20,
+      "records": 0,
+      "referenced_slots": [],
+      "missing_slots": []
+    },
+    {
+      "map_id": 21,
+      "records": 0,
+      "referenced_slots": [],
+      "missing_slots": []
+    },
+    {
+      "map_id": 22,
+      "records": 0,
+      "referenced_slots": [],
+      "missing_slots": []
+    },
+    {
+      "map_id": 23,
+      "records": 0,
+      "referenced_slots": [],
+      "missing_slots": []
+    },
+    {
+      "map_id": 24,
+      "records": 0,
+      "referenced_slots": [],
+      "missing_slots": []
+    },
+    {
+      "map_id": 25,
+      "records": 0,
+      "referenced_slots": [],
+      "missing_slots": []
+    },
+    {
+      "map_id": 26,
+      "records": 0,
+      "referenced_slots": [],
+      "missing_slots": []
+    },
+    {
+      "map_id": 27,
+      "records": 0,
+      "referenced_slots": [],
+      "missing_slots": []
+    },
+    {
+      "map_id": 28,
+      "records": 0,
+      "referenced_slots": [],
+      "missing_slots": []
+    },
+    {
+      "map_id": 29,
+      "records": 0,
+      "referenced_slots": [],
+      "missing_slots": []
+    },
+    {
+      "map_id": 30,
+      "records": 0,
+      "referenced_slots": [],
+      "missing_slots": []
+    },
+    {
+      "map_id": 31,
+      "records": 0,
+      "referenced_slots": [],
+      "missing_slots": []
+    }
+  ],
+  "total_player_records": 73,
+  "missing_slot_count": 0,
+  "passed": true
+}

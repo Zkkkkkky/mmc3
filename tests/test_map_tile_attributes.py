@@ -67,6 +67,77 @@ class MapTileAttributeCodecTests(unittest.TestCase):
         self.assertEqual(sea_patch[1][0] & 0x80, 0)
         self.assertEqual(sea_patch[2][0] & 0x80, 0x80)
 
+    def test_heal_tile_and_ratio_follow_verified_runtime_operands(self) -> None:
+        original = self.project.get_map_tileset_attributes("D")
+        self.assertEqual(original.heal_ratio, 30)
+        self.assertEqual(
+            [index for index, tile in enumerate(original.tiles) if tile.heal],
+            [0x0A],
+        )
+        self.assertEqual(
+            bytes(
+                self.project.working[
+                    MapTileAttributeCodec.HEAL_TILE_OPERAND - 5 :
+                    MapTileAttributeCodec.HEAL_TILE_OPERAND + 1
+                ]
+            ),
+            bytes.fromhex("B1 08 29 0F C9 0A"),
+        )
+        changed_tiles = tuple(
+            replace(tile, heal=index == 2)
+            for index, tile in enumerate(original.tiles)
+        )
+        changed = replace(original, tiles=changed_tiles, heal_ratio=45)
+        patches = MapTileAttributeCodec.patches(
+            self.project.working, "D", changed
+        )
+        global_patches = {
+            offset: (before[0], after[0])
+            for offset, before, after in patches
+            if offset in {
+                MapTileAttributeCodec.HEAL_TILE_OPERAND,
+                MapTileAttributeCodec.HEAL_RATIO_OPERAND,
+            }
+        }
+        self.assertEqual(
+            global_patches,
+            {
+                MapTileAttributeCodec.HEAL_TILE_OPERAND: (0x0A, 0x02),
+                MapTileAttributeCodec.HEAL_RATIO_OPERAND: (0x1E, 45),
+            },
+        )
+
+        self.project.set_map_tileset_attributes("D", changed)
+        for key in "ABCDEFG":
+            decoded = self.project.get_map_tileset_attributes(key)
+            self.assertEqual(decoded.heal_ratio, 45)
+            self.assertTrue(decoded.tiles[2].heal)
+            self.assertEqual(sum(tile.heal for tile in decoded.tiles), 1)
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "heal-settings.nes"
+            self.project.save_as(path, make_backup=False)
+            reopened = RomProject.load(path)
+            self.assertEqual(
+                reopened.get_map_tileset_attributes("A").heal_ratio, 45
+            )
+            self.assertTrue(
+                reopened.get_map_tileset_attributes("G").tiles[2].heal
+            )
+        self.project.undo()
+        self.assertEqual(self.project.get_map_tileset_attributes("D"), original)
+
+    def test_heal_tile_is_global_and_exclusive(self) -> None:
+        original = self.project.get_map_tileset_attributes("A")
+        invalid = replace(
+            original,
+            tiles=tuple(
+                replace(tile, heal=index in (1, 2))
+                for index, tile in enumerate(original.tiles)
+            ),
+        )
+        with self.assertRaisesRegex(ValueError, "只支持一个"):
+            MapTileAttributeCodec.patches(self.project.working, "A", invalid)
+
     def test_shared_battlefield_palettes_match_verified_rom_template(self) -> None:
         self.assertEqual(
             VERIFIED_BATTLEFIELD_PALETTES,

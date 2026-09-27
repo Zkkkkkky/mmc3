@@ -46,10 +46,12 @@ class ChapterVictoryCodec:
         self,
         rom: RomImage,
         data: bytes | bytearray | None = None,
+        *,
+        baseline_records: tuple[ChapterVictoryRecord, ...] | None = None,
     ) -> None:
         self.rom = rom
         self._source = rom.data if data is None else bytes(data)
-        baseline = self._scan_records(bytes(rom.data))
+        baseline = baseline_records or self._scan_records(bytes(rom.data))
         self.pool_file_start = self.file_offset()
         self.pool_file_end = self.pool_file_start + (
             CHAPTER_VICTORY_CPU_END - CHAPTER_VICTORY_CPU_START
@@ -61,7 +63,11 @@ class ChapterVictoryCodec:
             value != 0xFF for value in bytes(rom.data)[used_end:self.pool_file_end]
         ):
             raise RomFormatError("初始胜利文字基准记录未完整覆盖已验证数据池。")
-        self._records = self._scan_records(self._source)
+        self._records = (
+            baseline
+            if self._source is rom.data or self._source == rom.data
+            else self._scan_records(self._source)
+        )
 
     @staticmethod
     def file_offset() -> int:

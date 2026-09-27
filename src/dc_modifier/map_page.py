@@ -2,12 +2,13 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from PySide6.QtCore import QPoint, QRect, QSize, Qt, Signal
+from PySide6.QtCore import QPoint, QRect, QSize, Qt, QTimer, Signal
 from PySide6.QtGui import (
     QColor, QFont, QFontDatabase, QIcon, QImage, QMouseEvent, QPainter,
-    QPen, QPixmap, QStandardItemModel,
+    QPen, QPixmap, QPolygon, QStandardItemModel,
 )
 from PySide6.QtWidgets import (
+    QAbstractSpinBox,
     QAbstractItemView,
     QButtonGroup,
     QComboBox,
@@ -21,6 +22,7 @@ from PySide6.QtWidgets import (
     QHeaderView,
     QLabel,
     QLineEdit,
+    QListView,
     QListWidget,
     QListWidgetItem,
     QMenu,
@@ -33,6 +35,7 @@ from PySide6.QtWidgets import (
     QTableWidget,
     QTableWidgetItem,
     QTabWidget,
+    QToolButton,
     QToolTip,
     QVBoxLayout,
     QWidget,
@@ -40,11 +43,13 @@ from PySide6.QtWidgets import (
 
 from fc_editor.dc_text import dc_map_label
 from fc_editor.errors import RomFormatError
+from fc_editor.expansion import FLAG_MAPS
 from fc_editor.codecs.character_attributes import (
     CharacterAttributesCodec,
     weapon_extra_values,
 )
 from fc_editor.codecs.legacy_text_growth import LegacyGrowthCodec
+from fc_editor.codecs.legacy_scenario import LegacyScenarioCodec
 from fc_editor.codecs.map_trigger import MapTrigger
 from fc_editor.codecs.map_tile_attribute import (
     MapTileAttribute,
@@ -95,6 +100,72 @@ MAP_ICON_PALETTES_NES = {
     "客": (0x0F, 0x30, 0x2A, 0x1A),
     "我": ICON_PALETTE_NES,
 }
+
+
+class TopAnchoredComboBox(QComboBox):
+    """Keep large ROM catalogs compact and expose their first item immediately."""
+
+    def __init__(self, visible_rows: int, parent: QWidget | None = None) -> None:
+        super().__init__(parent)
+        self.setView(QListView(self))
+        self.setMaxVisibleItems(visible_rows)
+        # Windows' native popup style ignores maxVisibleItems for non-editable
+        # combo boxes.  Opt this control into Qt's bounded list popup.
+        self.setStyleSheet("QComboBox { combobox-popup: 0; }")
+
+    def showPopup(self) -> None:
+        super().showPopup()
+        # QComboBox normally centres the current item.  Event IDs can contain
+        # hundreds of entries, which made “地图事件 1” inaccessible without a
+        # long upward scroll.  Re-anchor after Qt has laid out the popup.
+        self.view().scrollToTop()
+        QTimer.singleShot(0, self.view().scrollToTop)
+
+
+class VisibleArrowComboBox(QComboBox):
+    """Compact combo box whose arrow remains visible under the app theme."""
+
+    def paintEvent(self, event) -> None:
+        super().paintEvent(event)
+        painter = QPainter(self)
+        painter.setRenderHint(QPainter.RenderHint.Antialiasing, True)
+        painter.setPen(Qt.PenStyle.NoPen)
+        painter.setBrush(QColor("#40535D" if self.isEnabled() else "#9AA5AB"))
+        center_x = self.width() - 10
+        center_y = self.height() // 2
+        painter.drawPolygon(
+            QPolygon(
+                (
+                    QPoint(center_x - 4, center_y - 2),
+                    QPoint(center_x + 4, center_y - 2),
+                    QPoint(center_x, center_y + 3),
+                )
+            )
+        )
+        painter.end()
+
+def _legacy_dpi_tile_pixmap(
+    image: QImage, logical_size: int, device_pixel_ratio: float
+) -> QPixmap:
+    """Reproduce the reference editor's two-stage pixel-art DPI scaling."""
+
+    base = QPixmap.fromImage(image).scaled(
+        logical_size,
+        logical_size,
+        Qt.AspectRatioMode.IgnoreAspectRatio,
+        Qt.TransformationMode.FastTransformation,
+    )
+    ratio = max(1.0, float(device_pixel_ratio))
+    physical_size = max(logical_size, round(logical_size * ratio))
+    if physical_size != logical_size:
+        base = base.scaled(
+            physical_size,
+            physical_size,
+            Qt.AspectRatioMode.IgnoreAspectRatio,
+            Qt.TransformationMode.SmoothTransformation,
+        )
+        base.setDevicePixelRatio(ratio)
+    return base
 
 # The reference title renderer maps nonzero CHR indices from light to dark.
 # The paired screenshots show index 1 as the white main stroke and index 3 as
@@ -168,7 +239,24 @@ class TerrainButton(QPushButton):
     def __init__(self, tile: int) -> None:
         super().__init__("")
         self.tile = tile
+        self._tile_pixmap = QPixmap()
         self.setAccessibleName(f"位图{tile:X}")
+
+    def set_tile_pixmap(self, pixmap: QPixmap) -> None:
+        self._tile_pixmap = pixmap
+        self.update()
+
+    def paintEvent(self, event) -> None:
+        if self._tile_pixmap.isNull():
+            super().paintEvent(event)
+            return
+        painter = QPainter(self)
+        painter.setRenderHint(QPainter.RenderHint.SmoothPixmapTransform, False)
+        painter.drawPixmap(QPoint(0, 0), self._tile_pixmap)
+        if self.isChecked():
+            painter.setPen(QPen(QColor("#2b769b"), 1))
+            painter.drawRect(self.rect().adjusted(0, 0, -1, -1))
+        painter.end()
 
     def mousePressEvent(self, event: QMouseEvent) -> None:
         if event.button() == Qt.MouseButton.RightButton:
@@ -176,6 +264,41 @@ class TerrainButton(QPushButton):
             event.accept()
             return
         super().mousePressEvent(event)
+
+
+class DimensionArrowButton(QToolButton):
+    """One consistently styled direction button for both map dimensions."""
+
+    def __init__(self, direction: Qt.ArrowType) -> None:
+        super().__init__()
+        self.direction = direction
+        self.setArrowType(Qt.ArrowType.NoArrow)
+
+    def paintEvent(self, event) -> None:
+        super().paintEvent(event)
+        center_x = self.width() // 2
+        center_y = self.height() // 2
+        if self.direction == Qt.ArrowType.UpArrow:
+            points = ((center_x, center_y - 3),
+                      (center_x - 3, center_y + 2),
+                      (center_x + 3, center_y + 2))
+        elif self.direction == Qt.ArrowType.DownArrow:
+            points = ((center_x - 3, center_y - 2),
+                      (center_x + 3, center_y - 2),
+                      (center_x, center_y + 3))
+        elif self.direction == Qt.ArrowType.LeftArrow:
+            points = ((center_x - 3, center_y),
+                      (center_x + 2, center_y - 3),
+                      (center_x + 2, center_y + 3))
+        else:
+            points = ((center_x + 3, center_y),
+                      (center_x - 2, center_y - 3),
+                      (center_x - 2, center_y + 3))
+        painter = QPainter(self)
+        painter.setPen(Qt.PenStyle.NoPen)
+        painter.setBrush(QColor("#42677a"))
+        painter.drawPolygon(QPolygon([QPoint(x, y) for x, y in points]))
+        painter.end()
 
 
 def render_unit_icon_bank(
@@ -360,7 +483,7 @@ def render_title_segment(
     )
 
 
-def render_chapter_title(project, scenario_id: int, *, scale: int = 3) -> QPixmap:
+def render_chapter_title(project, scenario_id: int, *, scale: int = 2) -> QPixmap:
     """Render the verified in-ROM title tile script for one chapter.
 
     The legacy preview intentionally shows the last draw segment: the earlier
@@ -468,35 +591,32 @@ class TileAttributeDialog(QDialog):
         self.project = project
         self.tileset_key = tileset_key.upper()
         self.setWindowTitle("编辑图块属性")
-        self.resize(1040, 700)
+        self.resize(880, 610)
+        self.setMinimumSize(820, 520)
         root = QVBoxLayout(self)
+        root.setContentsMargins(10, 8, 10, 8)
+        root.setSpacing(6)
         self.notice = QLabel()
         self.notice.setWordWrap(True)
         root.addWidget(self.notice)
 
         self.color_group = QGroupBox("颜色表1（NES 色号）")
         color_layout = QHBoxLayout(self.color_group)
-        self.color_spins: list[QSpinBox] = []
+        color_layout.setContentsMargins(8, 12, 8, 6)
+        color_layout.setSpacing(6)
         self.color_buttons: list[NesColorButton] = []
         for index in range(3):
             color_layout.addWidget(QLabel(f"颜色{index + 1}"))
             color_button = NesColorButton()
+            color_button.setFixedSize(80, 28)
             color_button.setAccessibleName(f"颜色表1颜色{index + 1}色块")
+            color_button.setToolTip("点击选择 NES 色号")
             self.color_buttons.append(color_button)
             color_layout.addWidget(color_button)
-            spin = QSpinBox()
-            spin.setRange(0, 0x3F)
-            spin.setDisplayIntegerBase(16)
-            spin.setPrefix("$")
-            spin.setAccessibleName(f"颜色表1颜色{index + 1}")
-            spin.setToolTip("可直接输入十六进制色号；也可点击左侧色块选择")
-            self.color_spins.append(spin)
-            color_layout.addWidget(spin)
-            spin.valueChanged.connect(color_button.set_value)
-            color_button.value_changed.connect(spin.setValue)
+            color_button.value_changed.connect(self._refresh_color_visuals)
         color_layout.addStretch(1)
         self.palette_preview = QLabel()
-        self.palette_preview.setFixedSize(144, 40)
+        self.palette_preview.setFixedSize(120, 30)
         self.palette_preview.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.palette_preview.setAccessibleName("颜色表1四色预览")
         color_layout.addWidget(QLabel("组合预览"))
@@ -505,8 +625,11 @@ class TileAttributeDialog(QDialog):
 
         self.shared_palette_group = QGroupBox("颜色表2、3（公用真实色号，只读）")
         shared_layout = QGridLayout(self.shared_palette_group)
+        shared_layout.setContentsMargins(8, 12, 8, 6)
+        shared_layout.setHorizontalSpacing(8)
+        shared_layout.setVerticalSpacing(3)
         shared_hint = QLabel(
-            "已用基准 ROM 的地图加载流程和运行时调色板完成验证；公用表不属于图库属性记录，因此只读。"
+            "公用颜色表已按 ROM 加载流程和运行时调色板验证，不属于图库属性记录，因此只读。"
         )
         shared_hint.setWordWrap(True)
         shared_layout.addWidget(shared_hint, 0, 0, 1, 3)
@@ -515,7 +638,7 @@ class TileAttributeDialog(QDialog):
         for row, palette_index in enumerate((2, 3), start=1):
             shared_layout.addWidget(QLabel(f"颜色表{palette_index}"), row, 0)
             preview = QLabel()
-            preview.setFixedSize(144, 32)
+            preview.setFixedSize(120, 24)
             preview.setAccessibleName(f"颜色表{palette_index}只读预览")
             self.shared_palette_previews[palette_index] = preview
             shared_layout.addWidget(preview, row, 1)
@@ -526,49 +649,92 @@ class TileAttributeDialog(QDialog):
         shared_layout.setColumnStretch(2, 1)
         root.addWidget(self.shared_palette_group)
 
-        self.table = QTableWidget(16, 7)
+        self.table = QTableWidget(16, 9)
+        self.table.setIconSize(QSize(18, 18))
         self.table.setHorizontalHeaderLabels(
-            ("位图", "属性颜色表（原码）", "防御补正", "海", "空中移动", "陆地移动", "海上移动")
+            (
+                "位图", "颜色表", "防御补正", "海", "回血",
+                "回复%", "空中移动", "陆地移动", "海上移动",
+            )
         )
         self.table.verticalHeader().setVisible(False)
-        self.table.horizontalHeader().setSectionResizeMode(0, QHeaderView.ResizeMode.ResizeToContents)
-        for column in range(1, 7):
-            self.table.horizontalHeader().setSectionResizeMode(column, QHeaderView.ResizeMode.Stretch)
+        self.table.verticalHeader().setDefaultSectionSize(28)
+        self.table.horizontalHeader().setFixedHeight(28)
+        self.table.horizontalHeader().setSectionResizeMode(
+            0, QHeaderView.ResizeMode.ResizeToContents
+        )
+        for column, width in (
+            (1, 96), (2, 88), (3, 44), (4, 50), (5, 68),
+            (6, 132), (7, 132), (8, 132),
+        ):
+            self.table.horizontalHeader().setSectionResizeMode(
+                column, QHeaderView.ResizeMode.Fixed
+            )
+            self.table.setColumnWidth(column, width)
+        self.table.horizontalHeader().setStretchLastSection(True)
         self.palette_boxes: list[QComboBox] = []
         self.defense_spins: list[QSpinBox] = []
         self.sea_checks: list[QCheckBox] = []
+        self.heal_checks: list[QCheckBox] = []
+        self.heal_ratio_spins: list[QSpinBox] = []
         self.air_boxes: list[QComboBox] = []
         self.land_boxes: list[QComboBox] = []
         self.sea_boxes: list[QComboBox] = []
+        self._syncing_heal_controls = False
         for tile_index in range(16):
             tile_item = QTableWidgetItem(f"位图{tile_index:X}")
             if tile_index < len(images):
                 tile_item.setIcon(QIcon(QPixmap.fromImage(images[tile_index])))
             tile_item.setFlags(tile_item.flags() & ~Qt.ItemFlag.ItemIsEditable)
             self.table.setItem(tile_index, 0, tile_item)
-            palette = QComboBox()
-            palette.addItems(("背景色", "颜色表1", "颜色表2（公用）", "颜色表3（公用）"))
-            palette.setIconSize(QSize(56, 14))
+            palette = VisibleArrowComboBox()
+            palette.setFixedHeight(24)
+            palette.addItems(("背景色", "颜色表1", "颜色表2", "颜色表3"))
             palette.setAccessibleName(f"位图{tile_index:X}颜色表")
             palette.setToolTip(
-                "旧版属性记录中的颜色表原码；保留显示和写回，但图块预览以游戏内地形效果为准。"
+                "属性记录中的颜色表编号；颜色表2、3为公用只读色号。"
             )
             palette.currentIndexChanged.connect(self._refresh_color_visuals)
             self.table.setCellWidget(tile_index, 1, palette)
             self.palette_boxes.append(palette)
             defense = QSpinBox()
+            defense.setFixedHeight(24)
             defense.setRange(0, 127)
             defense.setSuffix("%")
             defense.setAccessibleName(f"位图{tile_index:X}防御补正")
             self.table.setCellWidget(tile_index, 2, defense)
             self.defense_spins.append(defense)
             sea = QCheckBox("是")
+            sea.setFixedHeight(24)
             sea.setAccessibleName(f"位图{tile_index:X}海属性")
             self.table.setCellWidget(tile_index, 3, sea)
             self.sea_checks.append(sea)
+            heal = QCheckBox("是")
+            heal.setFixedHeight(24)
+            heal.setAccessibleName(f"位图{tile_index:X}回血属性")
+            heal.setToolTip(
+                "游戏按图块低四位判断回血，因此全图库共用且只能选择一个图块。"
+            )
+            heal.toggled.connect(
+                lambda checked, index=tile_index: self._set_heal_tile(index, checked)
+            )
+            self.table.setCellWidget(tile_index, 4, heal)
+            self.heal_checks.append(heal)
+            heal_ratio = QSpinBox()
+            heal_ratio.setRange(1, 100)
+            heal_ratio.setSuffix("%")
+            heal_ratio.setFixedHeight(24)
+            heal_ratio.setAccessibleName(f"位图{tile_index:X}血量回复比例")
+            heal_ratio.setToolTip(
+                "地形回血与母舰搭载共用 ROM 中的同一个全局比例。"
+            )
+            heal_ratio.valueChanged.connect(self._set_heal_ratio)
+            self.table.setCellWidget(tile_index, 5, heal_ratio)
+            self.heal_ratio_spins.append(heal_ratio)
             movement_boxes: list[QComboBox] = []
-            for column, label in ((4, "空中"), (5, "陆地"), (6, "海上")):
-                movement = QComboBox()
+            for column, label in ((6, "空中"), (7, "陆地"), (8, "海上")):
+                movement = VisibleArrowComboBox()
+                movement.setFixedHeight(24)
                 movement.addItems(self.MOVE_LABELS)
                 movement.setAccessibleName(f"位图{tile_index:X}{label}移动补正")
                 self.table.setCellWidget(tile_index, column, movement)
@@ -586,6 +752,8 @@ class TileAttributeDialog(QDialog):
         self.buttons.button(QDialogButtonBox.StandardButton.Save).setText("应用")
         self.buttons.button(QDialogButtonBox.StandardButton.Cancel).setText("取消")
         self.buttons.button(QDialogButtonBox.StandardButton.RestoreDefaults).setText("还原为打开 ROM 时的值")
+        for button in self.buttons.buttons():
+            button.setFixedHeight(26)
         self.buttons.accepted.connect(self.accept)
         self.buttons.rejected.connect(self.reject)
         self.buttons.button(QDialogButtonBox.StandardButton.RestoreDefaults).clicked.connect(self._load_original)
@@ -597,10 +765,13 @@ class TileAttributeDialog(QDialog):
         )
         if self._supported:
             self.notice.setText(
-                f"图库 {self.tileset_key}：颜色表、防御补正、海属性及空/陆/海移动补正"
-                "已完成字段级差分验证。颜色表2、3为公用表，本窗口只修改颜色表1。"
-                "属性颜色表列保留旧版原码。若扩展 ROM 漏写已确认水面图块的海属性，"
-                "界面会勾选提示，应用时补写。所有图块预览均按游戏内地形效果显示。"
+                f"图库 {self.tileset_key}：可编辑颜色表1、防御、海属性及空/陆/海移动；"
+                "回血图块与比例为全图库共用。颜色表2、3只读。"
+            )
+            self.notice.setToolTip(
+                "字段级差分已验证。若扩展 ROM 漏写已确认水面图块的海属性，"
+                "界面会勾选提示，并在应用时补写。属性颜色表保留原码，"
+                "图块按游戏内效果预览。"
             )
             self._load(project.get_map_tileset_attributes(self.tileset_key))
         else:
@@ -611,14 +782,14 @@ class TileAttributeDialog(QDialog):
             self.table.setEnabled(False)
             self.buttons.button(QDialogButtonBox.StandardButton.Save).setEnabled(False)
             self.buttons.button(QDialogButtonBox.StandardButton.RestoreDefaults).setEnabled(False)
-        for spin in self.color_spins:
-            spin.valueChanged.connect(self._refresh_color_visuals)
         self._refresh_shared_palette_visuals()
         self._refresh_color_visuals()
 
     def _load(self, value: MapTilesetAttributes) -> None:
-        for spin, color in zip(self.color_spins, value.colors, strict=True):
-            spin.setValue(color)
+        for button, color in zip(self.color_buttons, value.colors, strict=True):
+            button.blockSignals(True)
+            button.set_value(color)
+            button.blockSignals(False)
         for index, tile in enumerate(value.tiles):
             self.palette_boxes[index].setCurrentIndex(tile.palette)
             self.defense_spins[index].setValue(tile.defense)
@@ -634,15 +805,58 @@ class TileAttributeDialog(QDialog):
                 if not inferred_sea
                 else "ROM 漏写海属性；已按旧修改器备份与相同水面 CHR 识别。应用后会补写标志。"
             )
+            self.heal_checks[index].blockSignals(True)
+            self.heal_checks[index].setChecked(tile.heal)
+            self.heal_checks[index].blockSignals(False)
+            self.heal_ratio_spins[index].blockSignals(True)
+            self.heal_ratio_spins[index].setValue(value.heal_ratio)
+            self.heal_ratio_spins[index].blockSignals(False)
             self.air_boxes[index].setCurrentIndex(tile.air_move)
             self.land_boxes[index].setCurrentIndex(tile.land_move)
             self.sea_boxes[index].setCurrentIndex(tile.sea_move)
+        self._sync_heal_enabled_state()
         self._refresh_color_visuals()
 
+    def _set_heal_tile(self, tile_index: int, checked: bool) -> None:
+        if self._syncing_heal_controls:
+            return
+        self._syncing_heal_controls = True
+        try:
+            if checked:
+                for index, checkbox in enumerate(self.heal_checks):
+                    if index == tile_index or not checkbox.isChecked():
+                        continue
+                    checkbox.blockSignals(True)
+                    checkbox.setChecked(False)
+                    checkbox.blockSignals(False)
+            self._sync_heal_enabled_state()
+        finally:
+            self._syncing_heal_controls = False
+
+    def _set_heal_ratio(self, value: int) -> None:
+        if self._syncing_heal_controls:
+            return
+        self._syncing_heal_controls = True
+        try:
+            for spin in self.heal_ratio_spins:
+                if spin.value() == value:
+                    continue
+                spin.blockSignals(True)
+                spin.setValue(value)
+                spin.blockSignals(False)
+        finally:
+            self._syncing_heal_controls = False
+
+    def _sync_heal_enabled_state(self) -> None:
+        for checkbox, spin in zip(
+            self.heal_checks, self.heal_ratio_spins, strict=True
+        ):
+            spin.setEnabled(checkbox.isChecked())
+
     def _refresh_color_visuals(self, _value: int | None = None) -> None:
-        colors = tuple(spin.value() for spin in self.color_spins)
+        colors = tuple(button.value for button in self.color_buttons)
         preview_colors = (palette_color(0x0F), *(palette_color(value) for value in colors))
-        preview = self._palette_strip(preview_colors, 144, 40)
+        preview = self._palette_strip(preview_colors, 120, 30)
         self.palette_preview.setPixmap(preview)
         self.palette_preview.setToolTip(
             "共同背景色 $0F + " + " / ".join(f"${value:02X}" for value in colors)
@@ -651,17 +865,6 @@ class TileAttributeDialog(QDialog):
             return
         attributes = self._value()
         self._refresh_shared_palette_visuals()
-        palette_icons = {
-            0: self._palette_strip(self._verified_palette(0), 56, 14),
-            1: self._palette_strip(preview_colors, 56, 14),
-        }
-        for palette_index in (2, 3):
-            palette_icons[palette_index] = self._palette_strip(
-                self._verified_palette(palette_index), 56, 14
-            )
-        for box in self.palette_boxes:
-            for palette_index, icon in palette_icons.items():
-                box.setItemIcon(palette_index, QIcon(icon))
         images = render_tileset(
             self.project, self.tileset_key, attributes=attributes
         )
@@ -704,7 +907,7 @@ class TileAttributeDialog(QDialog):
             values = VERIFIED_BATTLEFIELD_PALETTES[palette_index]
             colors = self._verified_palette(palette_index)
             preview = self.shared_palette_previews[palette_index]
-            preview.setPixmap(self._palette_strip(colors, 144, 32))
+            preview.setPixmap(self._palette_strip(colors, 120, 24))
             preview.setToolTip(
                 f"颜色表{palette_index}真实 NES 色号："
                 + " / ".join(f"${value:02X}" for value in values)
@@ -717,7 +920,7 @@ class TileAttributeDialog(QDialog):
                 else []
             )
             text = "色号：" + " · ".join(f"${value:02X}" for value in values)
-            text += "\n属性原码引用图块：" + (
+            text += "　引用图块：" + (
                 "、".join(f"{index:X}" for index in used) if used else "未确认"
             )
             self.shared_palette_tiles[palette_index].setText(text)
@@ -736,11 +939,17 @@ class TileAttributeDialog(QDialog):
                 self.air_boxes[index].currentIndex(),
                 self.land_boxes[index].currentIndex(),
                 self.sea_boxes[index].currentIndex(),
+                self.heal_checks[index].isChecked(),
             )
             for index in range(16)
         )
-        colors = tuple(spin.value() for spin in self.color_spins)
-        return MapTilesetAttributes(colors, current.graphic_selector, tiles)  # type: ignore[arg-type]
+        colors = tuple(button.value for button in self.color_buttons)
+        return MapTilesetAttributes(  # type: ignore[arg-type]
+            colors,
+            current.graphic_selector,
+            tiles,
+            self.heal_ratio_spins[0].value(),
+        )
 
     def accept(self) -> None:
         if not self._supported:
@@ -771,7 +980,9 @@ class MapCanvas(QWidget):
         self.map_height = 0
         self.tiles: list[int] = []
         self.cell_size = 24
-        self.selected_tile = 0
+        # The reference editor opens with the green ground tile as the left
+        # brush and the four-quadrant tile as the right brush.
+        self.selected_tile = 1
         self.right_selected_tile = 0
         self.tile_images: tuple[QImage, ...] = ()
         self.show_tile_ids = False
@@ -788,7 +999,7 @@ class MapCanvas(QWidget):
         self.setMouseTracking(True)
 
     def sizeHint(self) -> QSize:
-        return QSize(self.map_width * self.cell_size + 1, self.map_height * self.cell_size + 1)
+        return QSize(self.map_width * self.cell_size, self.map_height * self.cell_size)
 
     def set_content(
         self,
@@ -820,6 +1031,12 @@ class MapCanvas(QWidget):
     def paintEvent(self, _event) -> None:
         painter = QPainter(self)
         painter.setRenderHint(QPainter.RenderHint.Antialiasing, False)
+        # The legacy Win32 editor is DPI-virtualized by Windows, so its 16 px
+        # terrain cells acquire a softly interpolated 20 px presentation at
+        # 125% scaling.  Use the same interpolation deliberately; nearest-
+        # neighbour scaling preserves the ROM colours but makes the cyan sea
+        # highlights look substantially brighter and harsher than reference.
+        painter.setRenderHint(QPainter.RenderHint.SmoothPixmapTransform, True)
         for y in range(self.map_height):
             for x in range(self.map_width):
                 tile = self.tiles[y * self.map_width + x]
@@ -833,8 +1050,6 @@ class MapCanvas(QWidget):
                     painter.drawImage(rect, self.tile_images[tile])
                 else:
                     painter.fillRect(rect, TERRAIN_COLORS[tile])
-                painter.setPen(QPen(QColor(0, 0, 0, 45), 1))
-                painter.drawRect(rect)
                 if self.show_tile_ids and self.cell_size >= 25:
                     badge = QRect(rect.left() + 1, rect.top() + 1, 12, 12)
                     painter.fillRect(badge, QColor(255, 255, 255, 190))
@@ -847,6 +1062,7 @@ class MapCanvas(QWidget):
             "事": QColor("#7b4dd8"),
             "店": QColor("#07866f"),
         }
+        overlay_font = QFont(painter.font())
         for side, x, y, label, row in self.overlays:
             if not 0 <= x < self.map_width or not 0 <= y < self.map_height:
                 continue
@@ -873,22 +1089,40 @@ class MapCanvas(QWidget):
             # but do not invent a numbered machine marker on the battlefield.
             if side == "我":
                 continue
-            margin = max(2, self.cell_size // 7)
+            margin = max(1, self.cell_size // 16)
             rect = QRect(
                 x * self.cell_size + margin,
                 y * self.cell_size + margin,
                 self.cell_size - margin * 2,
                 self.cell_size - margin * 2,
             )
-            painter.setBrush(side_colors[side])
-            painter.setPen(QPen(Qt.GlobalColor.white, 1))
-            painter.drawEllipse(rect)
+            if side in ("事", "店"):
+                # Match the reference editor: a full-cell white placard with a
+                # red “事”/“商” remains obvious on every terrain texture.
+                painter.fillRect(rect, QColor("#fffdf7"))
+                painter.setBrush(Qt.BrushStyle.NoBrush)
+                painter.setPen(QPen(QColor("#d72525"), 1))
+                painter.drawRect(rect.adjusted(0, 0, -1, -1))
+                marker_font = QFont(painter.font())
+                marker_font.setBold(True)
+                marker_font.setPixelSize(max(10, self.cell_size - 6))
+                painter.setFont(marker_font)
+                painter.drawText(
+                    rect,
+                    Qt.AlignmentFlag.AlignCenter,
+                    "商" if side == "店" else "事",
+                )
+                painter.setFont(overlay_font)
+            else:
+                painter.setBrush(side_colors[side])
+                painter.setPen(QPen(Qt.GlobalColor.white, 2))
+                painter.drawEllipse(rect)
             if self.selected_overlay == (side, row):
                 painter.setBrush(Qt.BrushStyle.NoBrush)
                 painter.setPen(QPen(QColor("#ffe45e"), 3))
                 painter.drawRect(rect.adjusted(-2, -2, 2, 2))
                 painter.setPen(Qt.GlobalColor.white)
-            if self.cell_size >= 20:
+            if side not in ("事", "店") and self.cell_size >= 20:
                 painter.drawText(rect, Qt.AlignmentFlag.AlignCenter, label)
 
     def _cell_at(self, position: QPoint) -> tuple[int, int] | None:
@@ -1049,6 +1283,7 @@ class ByteEntryTable(QTableWidget):
         self.clipboard_row: tuple[int, ...] | None = None
         self.editing_enabled = True
         self.editing_buttons: tuple[QPushButton, ...] = ()
+        self._active_row_count = 0
         self._choice_labels: dict[int, tuple[str, ...]] = {}
         self._choice_models: dict[int, QStandardItemModel] = {}
         self.setHorizontalHeaderLabels(headers)
@@ -1065,21 +1300,27 @@ class ByteEntryTable(QTableWidget):
         previous = self.blockSignals(True)
         self.setUpdatesEnabled(False)
         try:
-            while self.rowCount() > len(rows):
-                self.removeRow(self.rowCount() - 1)
-            while self.rowCount() < len(rows):
-                self.add_row(rows[self.rowCount()])
+            while QTableWidget.rowCount(self) < len(rows):
+                self._append_editor_row()
+            self._active_row_count = len(rows)
+            for row in range(QTableWidget.rowCount(self)):
+                self.setRowHidden(row, row >= self._active_row_count)
             for row, values in enumerate(rows):
                 for column, value in enumerate(values):
                     editor = self.cellWidget(row, column)
                     provider = self.label_providers.get(column)
-                    if isinstance(editor, QComboBox) and provider is not None:
-                        model = self._choice_model(column, provider)
-                        if editor.model() is not model:
-                            editor.setModel(model)
-                        editor.setCurrentIndex(editor.findData(value))
-                    elif isinstance(editor, QSpinBox):
-                        editor.setValue(value)
+                    if editor is not None:
+                        editor_previous = editor.blockSignals(True)
+                        try:
+                            if isinstance(editor, QComboBox) and provider is not None:
+                                model = self._choice_model(column, provider)
+                                if editor.model() is not model:
+                                    editor.setModel(model)
+                                editor.setCurrentIndex(editor.findData(value))
+                            elif isinstance(editor, QSpinBox):
+                                editor.setValue(value)
+                        finally:
+                            editor.blockSignals(editor_previous)
             if rows:
                 self.setCurrentCell(0, 0)
         finally:
@@ -1087,6 +1328,28 @@ class ByteEntryTable(QTableWidget):
             self.blockSignals(previous)
         self.values_changed.emit()
         self.set_editing_enabled(self.editing_enabled)
+
+    def rowCount(self) -> int:  # noqa: N802
+        """Return logical rows while retaining hidden editor rows for reuse."""
+
+        return getattr(self, "_active_row_count", 0)
+
+    def _append_editor_row(self) -> None:
+        """Create one reusable physical row without changing logical data."""
+
+        row = QTableWidget.rowCount(self)
+        QTableWidget.insertRow(self, row)
+        for column in range(self.columnCount()):
+            provider = self.label_providers.get(column)
+            editor = self._take_editor(column, provider)
+            editor_previous = editor.blockSignals(True)
+            if provider is not None:
+                assert isinstance(editor, QComboBox)
+                editor.setModel(self._choice_model(column, provider))
+            self.setCellWidget(row, column, editor)
+            editor.setEnabled(self.editing_enabled)
+            editor.blockSignals(editor_previous)
+        self.setRowHidden(row, True)
 
     def _take_editor(self, column: int, provider) -> QWidget:
         if provider is not None:
@@ -1136,24 +1399,10 @@ class ByteEntryTable(QTableWidget):
             return False
         values = values or tuple(0 for _ in self.headers)
         row = self.rowCount() if row is None else max(0, min(row, self.rowCount()))
-        self.insertRow(row)
-        for column, value in enumerate(values):
-            provider = self.label_providers.get(column)
-            editor = self._take_editor(column, provider)
-            previous = editor.blockSignals(True)
-            if provider is not None:
-                assert isinstance(editor, QComboBox)
-                editor.setModel(self._choice_model(column, provider))
-                editor.setCurrentIndex(editor.findData(value))
-            else:
-                assert isinstance(editor, QSpinBox)
-                editor.setValue(value)
-            editor.blockSignals(previous)
-            self.setCellWidget(row, column, editor)
-            editor.show()
-            editor.setEnabled(self.editing_enabled)
+        updated = self.rows()
+        updated.insert(row, values)
+        self.set_rows(updated)
         self.setCurrentCell(row, 0)
-        self.values_changed.emit()
         return True
 
     def invalidate_choice_models(self) -> None:
@@ -1180,9 +1429,15 @@ class ByteEntryTable(QTableWidget):
 
     def remove_selected(self) -> None:
         row = self.currentRow()
-        if row >= 0:
-            self.removeRow(row)
-            self.values_changed.emit()
+        if 0 <= row < self.rowCount():
+            self.remove_row(row)
+
+    def remove_row(self, row: int) -> None:
+        if not 0 <= row < self.rowCount():
+            return
+        updated = self.rows()
+        updated.pop(row)
+        self.set_rows(updated)
 
     def rows(self) -> list[tuple[int, ...]]:
         result: list[tuple[int, ...]] = []
@@ -1269,6 +1524,44 @@ class MapPage(ProjectPage):
 
     def __init__(self) -> None:
         super().__init__()
+        self.setObjectName("mapPage")
+        self.setStyleSheet(
+            "QWidget#mapPage QGroupBox {"
+            " border: 1px solid #9eafb8; border-radius: 7px; background: #ffffff; }"
+            "QWidget#mapPage QTabWidget#subTabs::pane {"
+            " border: 1px solid #9eafb8; border-radius: 7px; background: #ffffff; }"
+            "QWidget#mapPage QComboBox, QWidget#mapPage QSpinBox, "
+            "QWidget#mapPage QListWidget { border-color: #a7b7bf; }"
+            "QWidget#mapPage QComboBox#mapTilesetCombo {"
+            " min-height: 22px; padding-left: 4px; "
+            "font-size: 11px; "
+            "border: 1px solid #9fb1ba; background: #ffffff; }"
+            "QWidget#mapPage QWidget#mapDimensionsRow {"
+            " border: 1px solid #a7b7bf; border-radius: 6px; background: #f7f9fa; }"
+            "QWidget#mapPage QPushButton, QWidget#mapPage QToolButton {"
+            " border-color: #9fb1ba; }"
+            "QWidget#mapPage QToolButton#mapDimensionArrow {"
+            " padding: 0; margin: 0; border: 1px solid #b5c5cd; "
+            "border-radius: 2px; background: #eef3f5; }"
+            "QWidget#mapPage QToolButton#mapDimensionArrow:hover {"
+            " background: #e1ecef; border-color: #7d9faa; }"
+            "QWidget#mapPage QToolButton#mapDimensionArrow:pressed {"
+            " background: #d2e2e6; }"
+            "QWidget#mapPage QScrollArea#mapScrollArea {"
+            " border: 1px solid #9eafb8; border-radius: 5px; background: #e9eef0; }"
+            "QWidget#mapPage QListWidget#mapChapterList {"
+            " border: 1px solid #9eafb8; border-radius: 5px; font-size: 13px; }"
+            "QWidget#mapPage QListWidget#mapChapterList::item {"
+            " min-height: 18px; padding: 1px 6px; border-radius: 3px; }"
+            "QWidget#mapPage QListWidget#mapChapterList::item:alternate {"
+            " background: #f5f7f8; }"
+            "QWidget#mapPage QListWidget#mapChapterList::item:hover {"
+            " background: #eaf1f3; color: #26343d; }"
+            "QWidget#mapPage QListWidget#mapChapterList::item:selected {"
+            " background: #4b8290; color: white; }"
+            "QToolTip { color: #24333d; background-color: #fffdf5; "
+            "border: 1px solid #c3b98e; padding: 5px; }"
+        )
         self.current_map_id: int | None = None
         self.staged_tiles: list[int] = []
         self.staged_width = 1
@@ -1293,6 +1586,7 @@ class MapPage(ProjectPage):
         self._trigger_write_verified = True
         self._player_slot_cache_key: tuple | None = None
         self._player_slot_snapshots: tuple[dict[int, tuple[int, int]], ...] = ()
+        self._chapter_title_cache: dict[tuple[int, int, int], QPixmap] = {}
         self._icon_sheet_cache: dict[int, QImage] = {}
         self._map_icon_cache: dict[
             tuple[tuple[int, int, int], str, int], QImage
@@ -1307,7 +1601,7 @@ class MapPage(ProjectPage):
         self._growth_codec_cache: LegacyGrowthCodec | None = None
         self._trigger_payload_cache: tuple[bytes, ...] | None = None
         outer = QVBoxLayout(self)
-        outer.setContentsMargins(8, 8, 8, 8)
+        outer.setContentsMargins(3, 8, 5, 8)
         self.main_splitter = QSplitter(Qt.Orientation.Horizontal)
         self.main_splitter.setObjectName("mapMainSplitter")
         self.main_splitter.setChildrenCollapsible(False)
@@ -1316,19 +1610,24 @@ class MapPage(ProjectPage):
         # on the left, with the complete battlefield occupying the right side.
         self.navigator = QWidget()
         self.navigator.setObjectName("mapLeftPane")
-        self.navigator.setMinimumWidth(330)
-        self.navigator.setMaximumWidth(620)
+        self.navigator.setMinimumWidth(285)
+        self.navigator.setMaximumWidth(430)
         inspector_layout = QVBoxLayout(self.navigator)
-        inspector_layout.setContentsMargins(0, 0, 8, 0)
+        inspector_layout.setContentsMargins(0, 0, 0, 0)
+        inspector_layout.setSpacing(8)
 
         self.editor_tabs = QTabWidget()
         self.editor_tabs.setObjectName("subTabs")
         tile_tab = QWidget()
         tile_layout = QVBoxLayout(tile_tab)
         tile_layout.setContentsMargins(8, 8, 8, 8)
-        brush_group = QGroupBox("地图图块设置")
-        brush_group.setMinimumHeight(210)
-        brush_layout = QVBoxLayout(brush_group)
+        self.brush_group = QGroupBox("地图图块设置")
+        # Keep the border close to its contents instead of leaving a large
+        # empty block above the bottom edge.
+        self.brush_group.setMinimumHeight(195)
+        brush_layout = QVBoxLayout(self.brush_group)
+        brush_layout.setContentsMargins(8, 8, 8, 8)
+        brush_layout.setSpacing(4)
         bitmap_row = QHBoxLayout()
         self.bitmap_selector = QComboBox()
         for key in TILESET_BANKS:
@@ -1341,6 +1640,7 @@ class MapPage(ProjectPage):
         self.terrain = QComboBox(self)
         for tile in range(16):
             self.terrain.addItem(f"位图{tile:X}", tile)
+        self.terrain.setCurrentIndex(1)
         self.terrain.currentIndexChanged.connect(self._terrain_selected)
         self.terrain.hide()
         self.tile_attribute_button = QPushButton("编辑图块属性")
@@ -1348,68 +1648,112 @@ class MapPage(ProjectPage):
         bitmap_row.addWidget(self.tile_attribute_button)
         brush_layout.addLayout(bitmap_row)
 
-        palette = QGridLayout()
-        palette.setSpacing(2)
+        self.terrain_palette = QWidget()
+        self.terrain_palette.setObjectName("terrainPalette")
+        self.terrain_palette.setFixedSize(256, 65)
+        self.terrain_palette.setStyleSheet(
+            "QWidget#terrainPalette { background: #000000; border: none; }"
+        )
+        palette = QGridLayout(self.terrain_palette)
+        palette.setContentsMargins(0, 0, 0, 0)
+        palette.setHorizontalSpacing(0)
+        # A dedicated black row cannot be swallowed by either tile's paint
+        # path or by fractional Windows DPI scaling.
+        palette.setVerticalSpacing(1)
+        palette.setAlignment(
+            Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignTop
+        )
         self.terrain_buttons = QButtonGroup(self)
         self.terrain_buttons.setExclusive(True)
         for tile in range(16):
             button = TerrainButton(tile)
             button.setObjectName("terrainButton")
             button.setCheckable(True)
-            button.setMinimumSize(34, 34)
-            button.setIconSize(QSize(30, 30))
+            button.setFixedSize(32, 32)
+            button.setIconSize(QSize(32, 32))
             button.setToolTip(
                 f"位图{tile:X}：左键设为左键画笔，右键设为右键画笔"
             )
             button.setStyleSheet(
-                "QPushButton { background: #e8edf2; color: #475569; }"
-                "QPushButton:checked { border: 3px solid #082f49; }"
+                "QPushButton#terrainButton { border: none; border-radius: 0; "
+                "padding: 0; margin: 0; min-width: 32px; max-width: 32px; "
+                "min-height: 32px; max-height: 32px; "
+                "background: transparent; }"
+                "QPushButton#terrainButton:hover, "
+                "QPushButton#terrainButton:pressed, "
+                "QPushButton#terrainButton:focus { border: none; "
+                "background: transparent; }"
+                "QPushButton#terrainButton:checked { border: 1px solid #2b769b; "
+                "background: transparent; }"
             )
             self.terrain_buttons.addButton(button, tile)
             button.clicked.connect(lambda _checked=False, value=tile: self.terrain.setCurrentIndex(value))
             button.right_clicked.connect(self._select_right_brush)
             palette.addWidget(button, tile // 8, tile % 8)
-        self.terrain_buttons.button(0).setChecked(True)
-        brush_layout.addLayout(palette)
+        self.terrain_buttons.button(1).setChecked(True)
+        brush_layout.addWidget(
+            self.terrain_palette,
+            0,
+            Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignTop,
+        )
+        # Restore the reference editor's breathing room between the 8×2 tile
+        # sheet and the left/library/right brush summary row.
+        brush_layout.addSpacing(8)
 
         brush_row = QHBoxLayout()
+        brush_row.setSpacing(4)
         left_brush = QVBoxLayout()
+        left_brush.setSpacing(2)
+        left_brush.setAlignment(Qt.AlignmentFlag.AlignTop)
         left_caption = QLabel("左键")
         left_caption.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        left_caption.setFixedHeight(18)
         self.left_brush_preview = QLabel("暂无图块")
         self.left_brush_preview.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.left_brush_preview.setFixedSize(40, 40)
+        self.left_brush_preview.setFixedSize(32, 32)
         self.left_brush_preview.setStyleSheet(
-            "background: #e8edf2; color: #475569; border: 1px solid #7d8790;"
+            "background: #edf1f3; color: #52636d; border: 1px solid #9eabb2;"
         )
         left_brush.addWidget(left_caption)
         left_brush.addWidget(self.left_brush_preview)
-        brush_row.addLayout(left_brush)
+        brush_row.addLayout(left_brush, 3)
 
         library = QVBoxLayout()
+        library.setSpacing(2)
         library_caption = QLabel("图库选择")
         library_caption.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        library_caption.setFixedHeight(18)
         self.tileset = QComboBox()
+        self.tileset.setObjectName("mapTilesetCombo")
+        # Keep the complete bank/address text visible beside the drop-down arrow.
+        self.tileset.setFixedSize(128, 24)
+        # Keep the closed selector compact like the reference editor, while
+        # allowing every real six-digit CHR address to remain visible in the
+        # popup list.
+        self.tileset.view().setMinimumWidth(180)
         for key, bank in TILESET_BANKS.items():
             self.tileset.addItem(f"[{bank:02X}]{bank:03d}: 图库{key}", key)
         self.tileset.currentIndexChanged.connect(self._refresh_tile_visuals)
         library.addWidget(library_caption)
         library.addWidget(self.tileset)
         library.addStretch()
-        brush_row.addLayout(library, 1)
+        brush_row.addLayout(library, 5)
 
         right_brush = QVBoxLayout()
+        right_brush.setSpacing(2)
+        right_brush.setAlignment(Qt.AlignmentFlag.AlignTop)
         right_caption = QLabel("右键")
         right_caption.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        right_caption.setFixedHeight(18)
         self.right_brush_preview = QLabel("暂无图块")
         self.right_brush_preview.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.right_brush_preview.setFixedSize(40, 40)
+        self.right_brush_preview.setFixedSize(32, 32)
         self.right_brush_preview.setStyleSheet(
-            "background: #e8edf2; color: #475569; border: 1px solid #7d8790;"
+            "background: #edf1f3; color: #52636d; border: 1px solid #9eabb2;"
         )
         right_brush.addWidget(right_caption)
         right_brush.addWidget(self.right_brush_preview)
-        brush_row.addLayout(right_brush)
+        brush_row.addLayout(right_brush, 3)
         brush_layout.addLayout(brush_row)
 
         self.right_terrain = QComboBox(self)
@@ -1429,33 +1773,96 @@ class MapPage(ProjectPage):
         brush_hint = self.brush_hint
         brush_hint.setObjectName("hintText")
         brush_hint.setWordWrap(True)
-        tile_layout.addWidget(brush_group)
+        tile_layout.addWidget(self.brush_group)
 
         dimensions = QWidget()
+        dimensions.setObjectName("mapDimensionsRow")
         dimensions_layout = QGridLayout(dimensions)
-        dimensions_layout.setContentsMargins(8, 0, 8, 0)
+        dimensions_layout.setContentsMargins(10, 6, 10, 6)
         self.width_editor = QSpinBox()
         self.width_editor.setRange(1, 32)
         self.height_editor = QSpinBox()
         self.height_editor.setRange(1, 32)
         self.width_display = QSpinBox()
         self.width_display.setRange(1, 32)
+        self.width_display.setButtonSymbols(
+            QAbstractSpinBox.ButtonSymbols.NoButtons
+        )
+        self.width_display.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.height_display = QSpinBox()
+        self.height_display.setObjectName("mapHeightSpin")
         self.height_display.setRange(1, 32)
+        self.height_display.setButtonSymbols(
+            QAbstractSpinBox.ButtonSymbols.NoButtons
+        )
+        self.height_display.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.width_display.setAccessibleName("地图宽度")
         self.height_display.setAccessibleName("地图高度")
         self.width_display.valueChanged.connect(self._resize_map_from_main)
         self.height_display.valueChanged.connect(self._resize_map_from_main)
         self.resize_button = QPushButton("调整尺寸")
         self.resize_button.clicked.connect(self._resize_map)
+        self.width_decrease_button = DimensionArrowButton(Qt.ArrowType.LeftArrow)
+        self.width_decrease_button.setObjectName("mapDimensionArrow")
+        self.width_decrease_button.setAutoRepeat(True)
+        self.width_decrease_button.setFixedSize(15, 28)
+        self.width_decrease_button.setToolTip("地图宽度减 1")
+        self.width_decrease_button.clicked.connect(self.width_display.stepDown)
+        self.width_increase_button = DimensionArrowButton(Qt.ArrowType.RightArrow)
+        self.width_increase_button.setObjectName("mapDimensionArrow")
+        self.width_increase_button.setAutoRepeat(True)
+        self.width_increase_button.setFixedSize(15, 28)
+        self.width_increase_button.setToolTip("地图宽度加 1")
+        self.width_increase_button.clicked.connect(self.width_display.stepUp)
+        self.height_decrease_button = DimensionArrowButton(Qt.ArrowType.DownArrow)
+        self.height_decrease_button.setObjectName("mapDimensionArrow")
+        self.height_decrease_button.setAutoRepeat(True)
+        self.height_decrease_button.setFixedSize(15, 14)
+        self.height_decrease_button.setToolTip("地图高度减 1")
+        self.height_decrease_button.clicked.connect(self.height_display.stepDown)
+        self.height_increase_button = DimensionArrowButton(Qt.ArrowType.UpArrow)
+        self.height_increase_button.setObjectName("mapDimensionArrow")
+        self.height_increase_button.setAutoRepeat(True)
+        self.height_increase_button.setFixedSize(15, 14)
+        self.height_increase_button.setToolTip("地图高度加 1")
+        self.height_increase_button.clicked.connect(self.height_display.stepUp)
+        height_control = QWidget()
+        height_control.setFixedWidth(68)
+        height_control_layout = QHBoxLayout(height_control)
+        height_control_layout.setContentsMargins(0, 0, 0, 0)
+        height_control_layout.setSpacing(0)
+        self.height_display.setFixedHeight(28)
+        height_control_layout.addWidget(self.height_display, 1)
+        height_arrow_column = QWidget()
+        height_arrow_column.setFixedSize(15, 28)
+        height_arrow_layout = QVBoxLayout(height_arrow_column)
+        height_arrow_layout.setContentsMargins(0, 0, 0, 0)
+        height_arrow_layout.setSpacing(0)
+        height_arrow_layout.addWidget(self.height_increase_button)
+        height_arrow_layout.addWidget(self.height_decrease_button)
+        height_control_layout.addWidget(height_arrow_column)
+        width_control = QWidget()
+        width_control.setFixedWidth(68)
+        width_control_layout = QHBoxLayout(width_control)
+        width_control_layout.setContentsMargins(0, 0, 0, 0)
+        width_control_layout.setSpacing(0)
+        self.width_display.setFixedHeight(28)
+        width_control_layout.addWidget(self.width_display, 1)
+        width_control_layout.addWidget(self.width_decrease_button)
+        width_control_layout.addWidget(self.width_increase_button)
         dimensions_layout.addWidget(QLabel("地图高度"), 0, 0)
-        dimensions_layout.addWidget(self.height_display, 0, 1)
+        dimensions_layout.addWidget(height_control, 0, 1)
         dimensions_layout.addWidget(QLabel("地图宽度"), 0, 2)
-        dimensions_layout.addWidget(self.width_display, 0, 3)
+        dimensions_layout.addWidget(width_control, 0, 3)
         self.prelude = QLineEdit()
         self.prelude.setPlaceholderText("前导字节，例如 01 02；不含 FF")
         self.prelude.textChanged.connect(self._update_size_label)
         tile_layout.addWidget(dimensions)
+        # The reference editor deliberately leaves one compact separator row
+        # between the size controls and the black title strip.  Keeping that
+        # rhythm also prevents the chapter selector from visually merging into
+        # the map-block controls on high-DPI Windows displays.
+        tile_layout.addSpacing(8)
 
         self.title_preview = QLabel("未载入ROM")
         self.title_preview.setObjectName("legacyMapTitlePreview")
@@ -1463,44 +1870,39 @@ class MapPage(ProjectPage):
         self.title_preview.setMinimumHeight(48)
         self.title_preview.setMaximumHeight(64)
         self.title_preview.setStyleSheet(
-            "background: #000000; color: #dce6f0; border: 1px solid #202020;"
+            "background: #111719; color: #dce6f0; border: 1px solid #2c373c; "
+            "border-radius: 5px;"
         )
         tile_layout.addWidget(self.title_preview)
         self.open_map_advanced_button = QPushButton("高级地图数据…")
         self.open_map_advanced_button.clicked.connect(self._show_map_advanced)
-        tile_layout.addWidget(
-            self.open_map_advanced_button,
-            0,
-            Qt.AlignmentFlag.AlignRight,
+        self.capacity_help_button = QPushButton("容量规划…")
+        self.capacity_help_button.setToolTip(
+            "原记录容量不足时，可在464 KiB版本中规划并接通地图共享池；保留当前地图草稿。"
         )
+        self.capacity_help_button.clicked.connect(self._open_capacity_planner)
         tile_layout.addStretch()
         self.editor_tabs.addTab(tile_tab, "战场地图")
 
         initial_tab = QWidget()
         initial_layout = QVBoxLayout(initial_tab)
         initial_layout.setContentsMargins(8, 8, 8, 8)
-        self.deployment_summary = QLabel("选择地图以查看实际部署")
+        # Keep the semantic summary available to diagnostics, but do not show
+        # the explanatory paragraph in the reference-style initial tab.
+        self.deployment_summary = QLabel("选择地图以查看实际部署", initial_tab)
         self.deployment_summary.setWordWrap(True)
-        initial_layout.addWidget(self.deployment_summary)
-        self.deployment_objects = QListWidget()
+        self.deployment_summary.hide()
+        self.deployment_objects = QListWidget(initial_tab)
         self.deployment_objects.setAlternatingRowColors(True)
         self.deployment_objects.currentItemChanged.connect(self._object_list_selected)
         self.deployment_objects.itemClicked.connect(self._object_list_selected)
         self.deployment_objects.itemDoubleClicked.connect(self._object_list_activated)
         self.deployment_objects.setMinimumHeight(65)
         self.deployment_objects.setMaximumHeight(120)
-        self.icon_preview_toggle = QPushButton("展开机体图标库（只读）")
-        self.icon_preview_toggle.setCheckable(True)
-        self.icon_preview_toggle.setMaximumSize(220, 30)
-        icon_group = QGroupBox("机体图标（对应地图小图标编号，只读）")
-        icon_group.setMaximumHeight(195)
+        self.deployment_objects.hide()
+        icon_group = QGroupBox("机体图标")
+        icon_group.setFixedHeight(325)
         self.icon_preview_group = icon_group
-        self.icon_preview_toggle.toggled.connect(self._toggle_icon_preview)
-        initial_layout.addWidget(
-            self.icon_preview_toggle,
-            0,
-            Qt.AlignmentFlag.AlignRight,
-        )
         icon_group_layout = QGridLayout(icon_group)
         icon_group_layout.setContentsMargins(8, 6, 8, 6)
         icon_group_layout.setHorizontalSpacing(6)
@@ -1508,12 +1910,12 @@ class MapPage(ProjectPage):
         self.icon_bank_selectors: list[QComboBox] = []
         self.icon_sheet_labels: list[QLabel] = []
         for slot, default_bank in enumerate(SCENARIO_MAP_ICON_BANKS[0], start=1):
-            address_label = QLabel(f"地址{slot}")
+            address_label = QLabel(f"图标地址{slot}:")
             address_label.setAlignment(
                 Qt.AlignmentFlag.AlignRight | Qt.AlignmentFlag.AlignVCenter
             )
             selector = QComboBox()
-            selector.setFixedWidth(150)
+            selector.setFixedWidth(180)
             selector.setMaxVisibleItems(20)
             selector.setToolTip(
                 "只读兼容选择：切换活动CHR图标预览，不改写关卡图标绑定。"
@@ -1527,61 +1929,43 @@ class MapPage(ProjectPage):
             preview.setAlignment(
                 Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter
             )
-            preview.setFixedSize(192, 48)
-            preview.setToolTip(
-                "16 个 2×2 图块图标，按战场运行时蓝色表 $0F $30 $21 $02 显示。"
-            )
+            preview.setFixedSize(256, 64)
             preview.setStyleSheet("background: transparent; border: none;")
-            row = slot - 1
+            row = (slot - 1) * 2
             icon_group_layout.addWidget(address_label, row, 0)
-            icon_group_layout.addWidget(selector, row, 1)
-            icon_group_layout.addWidget(preview, row, 2)
+            icon_group_layout.addWidget(selector, row, 1, 1, 2)
+            icon_group_layout.addWidget(preview, row + 1, 0, 1, 3)
             self.icon_bank_selectors.append(selector)
             self.icon_sheet_labels.append(preview)
-        icon_group_layout.setColumnStretch(3, 1)
+        icon_group_layout.setColumnStretch(2, 1)
         initial_layout.addWidget(icon_group)
-        self.icon_preview_toggle.setChecked(False)
-        icon_group.setVisible(False)
-        initial_layout.addWidget(self.deployment_objects, 1)
-        self.deployment_list_toggle = QPushButton("展开部署明细列表")
-        self.deployment_list_toggle.setCheckable(True)
-        self.deployment_list_toggle.setMaximumSize(180, 30)
-        self.deployment_list_toggle.toggled.connect(
-            self._toggle_deployment_list
-        )
-        initial_layout.insertWidget(
-            initial_layout.indexOf(self.deployment_objects),
-            self.deployment_list_toggle,
-            0,
-            Qt.AlignmentFlag.AlignRight,
-        )
-        self.deployment_list_toggle.setChecked(True)
-        self.deployment_objects.setVisible(True)
-        self.open_deployment_button = QPushButton("编辑部署 / 添加 / 复制…")
-        self.open_deployment_button.setMaximumSize(210, 30)
-        self.open_deployment_button.setToolTip(
-            "扩展功能；图标地址选择本身仍为只读兼容预览，不会猜写绑定。"
-        )
-        self.open_deployment_button.clicked.connect(self._show_deployment_advanced)
-        initial_layout.addWidget(
-            self.open_deployment_button,
-            0,
-            Qt.AlignmentFlag.AlignRight,
-        )
+        icon_group.setVisible(True)
+        initial_layout.addStretch()
 
-        self.deployment_dialog = QDialog(self)
-        self.deployment_dialog.setWindowTitle("部署编辑 · 可同时操作地图")
-        self.deployment_dialog.setModal(False)
-        self.deployment_dialog.resize(1020, 650)
-        deployment_layout = QVBoxLayout(self.deployment_dialog)
-        deployment_hint = QLabel(
-            "选择列表或地图机体图标可联动定位；地图右键直接编辑、新增或删除，"
-            "双击图标也可编辑，左键拖动修改坐标。"
-            "敌军最多18、客军3、我方出击位11；黄色边框表示选中对象。关闭窗口保留草稿。"
+        self.edit_deployment_button = QPushButton("编辑")
+        self.edit_deployment_button.setToolTip("编辑地图上当前选中的部署机体")
+        self.edit_deployment_button.clicked.connect(self._edit_selected_deployment)
+        self.add_deployment_button = QPushButton("添加")
+        self.add_deployment_button.setToolTip(
+            "在鼠标当前所在地图格添加部署；未指向地图时从 (0,0) 开始设置"
         )
-        deployment_hint.setObjectName("hintText")
-        deployment_hint.setWordWrap(True)
-        deployment_layout.addWidget(deployment_hint)
+        self.add_deployment_button.clicked.connect(self._add_deployment_from_toolbar)
+        self.copy_deployment_button = QPushButton("复制")
+        self.copy_deployment_button.setToolTip("复制地图上当前选中的部署机体")
+        self.copy_deployment_button.clicked.connect(self._duplicate_selected_deployment)
+        for button in (
+            self.edit_deployment_button,
+            self.add_deployment_button,
+            self.copy_deployment_button,
+        ):
+            button.setVisible(False)
+
+        # Keep the editable tables as an internal data model for the map and the
+        # three direct action buttons.  The former expandable/detail dialog is
+        # intentionally gone from the product UI.
+        self.deployment_model_host = QWidget(initial_tab)
+        self.deployment_model_host.hide()
+        deployment_layout = QVBoxLayout(self.deployment_model_host)
         self.deployment_tabs = QTabWidget()
         self.deployment_tabs.setObjectName("subTabs")
         enemy_host = QWidget()
@@ -1623,52 +2007,38 @@ class MapPage(ProjectPage):
         )
         self.deployment_tabs.addTab(player_host, "我方出击位")
         deployment_layout.addWidget(self.deployment_tabs, 1)
-        deployment_close = QDialogButtonBox(QDialogButtonBox.StandardButton.Close)
-        deployment_close.rejected.connect(self.deployment_dialog.close)
-        deployment_layout.addWidget(deployment_close)
         self._build_deployment_cell_dialog()
         self.editor_tabs.addTab(initial_tab, "初始配置")
 
         trigger_tab = QWidget()
         trigger_layout = QVBoxLayout(trigger_tab)
         trigger_layout.setContentsMargins(8, 8, 8, 8)
-        self.trigger_summary = QLabel("选择地图以查看商店与事件")
+        self.trigger_summary = QLabel("选择关卡后，可查看地图事件和商店入口")
         self.trigger_summary.setWordWrap(True)
         trigger_layout.addWidget(self.trigger_summary)
         self.trigger_objects = QListWidget()
+        self.trigger_objects.setObjectName("triggerObjectList")
         self.trigger_objects.setAlternatingRowColors(True)
         self.trigger_objects.currentItemChanged.connect(self._object_list_selected)
         self.trigger_objects.itemClicked.connect(self._object_list_selected)
         self.trigger_objects.itemDoubleClicked.connect(self._object_list_activated)
         trigger_layout.addWidget(self.trigger_objects, 1)
-        self.open_trigger_button = QPushButton("打开全部事件记录…")
-        self.open_trigger_button.clicked.connect(self._show_trigger_advanced)
-        self.open_trigger_button.setToolTip(
-            "地图上的常用编辑已移到右键菜单；这里用于批量查看和调整全部记录。"
-        )
-        trigger_layout.addWidget(
-            self.open_trigger_button,
-            0,
-            Qt.AlignmentFlag.AlignRight,
-        )
-
         self.trigger_dialog = QDialog(self)
-        self.trigger_dialog.setWindowTitle("高级地图事件与商店编辑")
+        self.trigger_dialog.setWindowTitle("全部地图事件与商店")
         self.trigger_dialog.setModal(False)
         self.trigger_dialog.resize(900, 580)
         trigger_dialog_layout = QVBoxLayout(self.trigger_dialog)
         trigger_hint = QLabel(
-            "编辑踩点触发的剧情事件或商店。限定人物为 $FF 时任何人物都可触发；"
-            "事件号 $F0—$FF 表示商店 0—15。常用操作可直接在地图上右键完成；"
-            "紫色“事”和绿色“店”圆点仍可拖动定位。"
+            "这里列出人物走到指定格子时触发的内容。地图上的白底红字“事”表示地图事件，"
+            "白底红字“商”表示商店入口；选择“任意我方人物”时，任意我方单位走到该格都能触发。"
         )
         trigger_hint.setObjectName("hintText")
         trigger_hint.setWordWrap(True)
         trigger_dialog_layout.addWidget(trigger_hint)
         self.trigger_table = self._deployment_group(
             trigger_dialog_layout,
-            "地图事件与商店",
-            ("X", "Y", "限定人物", "事件/商店"),
+            "地图事件与商店入口",
+            ("X", "Y", "触发人物", "触发内容"),
             {2: self._trigger_character_label, 3: self._trigger_event_label},
             default_values=(0, 0, 0xFF, 0),
         )
@@ -1678,58 +2048,54 @@ class MapPage(ProjectPage):
         trigger_dialog_layout.addWidget(trigger_close)
 
         self.trigger_cell_dialog = QDialog(self)
-        self.trigger_cell_dialog.setWindowTitle("商店设置")
+        self.trigger_cell_dialog.setWindowTitle("设置地图事件")
         self.trigger_cell_dialog.setModal(True)
         trigger_cell_layout = QVBoxLayout(self.trigger_cell_dialog)
         trigger_cell_form = QFormLayout()
-        coordinate_row = QHBoxLayout()
         self.trigger_x_editor = QSpinBox()
         self.trigger_y_editor = QSpinBox()
         for editor in (self.trigger_x_editor, self.trigger_y_editor):
             editor.setRange(0, 255)
-        coordinate_row.addWidget(QLabel("X"))
-        coordinate_row.addWidget(self.trigger_x_editor)
-        coordinate_row.addWidget(QLabel("Y"))
-        coordinate_row.addWidget(self.trigger_y_editor)
-        coordinate_row.addStretch()
-        trigger_cell_form.addRow("地图坐标", coordinate_row)
-        self.trigger_character_combo = QComboBox()
-        self.trigger_character_combo.setMaxVisibleItems(24)
-        trigger_cell_form.addRow("限定人物", self.trigger_character_combo)
-        self.trigger_shop_combo = QComboBox()
-        for shop_id in range(0xF0, 0x100):
-            self.trigger_shop_combo.addItem(
-                (
-                    f"${shop_id:02X}：无效商店目录（指向地图触发表）"
-                    if 0xF5 <= shop_id <= 0xFE
-                    else f"{shop_id - 0xF0:02d}：商店 ${shop_id:02X}"
-                ),
-                shop_id,
-            )
-        shop_model = self.trigger_shop_combo.model()
-        if isinstance(shop_model, QStandardItemModel):
-            for shop_id in range(0xF5, 0xFF):
-                shop_model.item(self.trigger_shop_combo.findData(shop_id)).setEnabled(False)
-        trigger_cell_form.addRow("商店选择", self.trigger_shop_combo)
-        self.trigger_event_combo = QComboBox()
-        self.trigger_event_combo.setMaxVisibleItems(24)
-        for event_id in range(0xF0):
-            self.trigger_event_combo.addItem(
-                f"{event_id + 1:03d}：{self._trigger_event_label(event_id)}",
-                event_id,
-            )
-        trigger_cell_form.addRow("地图事件", self.trigger_event_combo)
-        trigger_cell_layout.addLayout(trigger_cell_form)
-        kind_row = QHBoxLayout()
-        self.trigger_shop_radio = QRadioButton("商店")
-        self.trigger_event_radio = QRadioButton("事件")
+        self.trigger_character_combo = TopAnchoredComboBox(10)
+        self.trigger_character_combo.setToolTip(
+            "ROM 会在我方人物走到该格时比较人物编号；选择“任意我方人物”会写入 $FF，"
+            "游戏遇到 $FF 会直接通过人物判断。这个判断位于事件/商店分流之前，"
+            "所以地图事件同样可以限定人物；旧修改器只是没有开放这项能力。"
+            "敌方单位走另一条行动路径，不会因 $FF 获得触发资格。"
+        )
+        trigger_cell_form.addRow("谁可以触发", self.trigger_character_combo)
+        kind_widget = QWidget()
+        kind_row = QHBoxLayout(kind_widget)
+        kind_row.setContentsMargins(0, 0, 0, 0)
+        self.trigger_shop_radio = QRadioButton("进入商店")
+        self.trigger_event_radio = QRadioButton("触发地图事件")
         self.trigger_event_radio.setChecked(True)
         self.trigger_shop_radio.toggled.connect(self._trigger_kind_changed)
         self.trigger_event_radio.toggled.connect(self._trigger_kind_changed)
-        kind_row.addWidget(self.trigger_shop_radio)
         kind_row.addWidget(self.trigger_event_radio)
+        kind_row.addWidget(self.trigger_shop_radio)
         kind_row.addStretch()
-        trigger_cell_layout.addLayout(kind_row)
+        trigger_cell_form.addRow("触发后", kind_widget)
+        self.trigger_shop_combo = QComboBox()
+        self.trigger_shop_combo.setMaxVisibleItems(5)
+        for shop_id in range(0xF0, 0xF5):
+            self.trigger_shop_combo.addItem(
+                f"商店 {shop_id - 0xF0 + 1}",
+                shop_id,
+            )
+        trigger_cell_form.addRow("进入哪家商店", self.trigger_shop_combo)
+        self.trigger_event_combo = TopAnchoredComboBox(10)
+        for event_id in range(0xF0):
+            self.trigger_event_combo.addItem(
+                self._trigger_event_label(event_id),
+                event_id,
+            )
+        trigger_cell_form.addRow("执行哪个事件", self.trigger_event_combo)
+        trigger_cell_layout.addLayout(trigger_cell_form)
+        self.trigger_kind_hint = QLabel()
+        self.trigger_kind_hint.setObjectName("hintText")
+        self.trigger_kind_hint.setWordWrap(True)
+        trigger_cell_layout.addWidget(self.trigger_kind_hint)
         self.trigger_cell_buttons = QDialogButtonBox(
             QDialogButtonBox.StandardButton.Ok
             | QDialogButtonBox.StandardButton.Cancel
@@ -1748,26 +2114,24 @@ class MapPage(ProjectPage):
         self.trigger_delete_button.clicked.connect(self._delete_edited_trigger)
         trigger_cell_layout.addWidget(self.trigger_cell_buttons)
         self._trigger_kind_changed()
-        self.editor_tabs.addTab(trigger_tab, "商店事件")
+        self.editor_tabs.addTab(trigger_tab, "地图事件/商店")
 
         self.chapter_group = QGroupBox("关卡选择")
         chapter_layout = QVBoxLayout(self.chapter_group)
-        self.search = QLineEdit()
-        self.search.setPlaceholderText("搜索关卡名、地图ID…")
-        self.search.setClearButtonEnabled(True)
-        self.search.textChanged.connect(self._filter_maps)
-        self.map_count_label = QLabel("0 个地图")
-        self.map_count_label.setObjectName("countBadge")
-        search_row = QHBoxLayout()
-        search_row.addWidget(self.search, 1)
-        search_row.addWidget(self.map_count_label)
-        chapter_layout.addLayout(search_row)
+        # Reserve the title band instead of letting the first list row crowd
+        # or cover the group-box caption at Windows fractional DPI values.
+        chapter_layout.setContentsMargins(8, 18, 8, 8)
+        chapter_layout.setSpacing(0)
         self.map_list = QListWidget()
+        self.map_list.setObjectName("mapChapterList")
+        chapter_font = QFont(self.map_list.font())
+        chapter_font.setPixelSize(13)
+        self.map_list.setFont(chapter_font)
         self.map_list.setAlternatingRowColors(True)
         self.map_list.setUniformItemSizes(True)
         self.map_list.currentItemChanged.connect(self._map_selected)
         chapter_layout.addWidget(self.map_list)
-        self.chapter_group.setMinimumHeight(260)
+        self.chapter_group.setMinimumHeight(235)
         inspector_layout.addWidget(self.editor_tabs, 2)
         inspector_layout.addWidget(self.chapter_group, 3)
         self.editor_tabs.currentChanged.connect(self._editor_mode_changed)
@@ -1777,7 +2141,7 @@ class MapPage(ProjectPage):
         self.canvas_host.setObjectName("mapPreviewPane")
         self.canvas_host.setMinimumWidth(360)
         canvas_layout = QVBoxLayout(self.canvas_host)
-        canvas_layout.setContentsMargins(8, 0, 0, 0)
+        canvas_layout.setContentsMargins(0, 0, 0, 0)
         self.zoom = QSpinBox()
         self.zoom.setRange(8, 40)
         self.zoom.setValue(24)
@@ -1792,6 +2156,7 @@ class MapPage(ProjectPage):
         self.y_position_label = QLabel("Y坐标：—")
         for coordinate_label in (self.position_label, self.y_position_label):
             coordinate_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+            coordinate_label.hide()
         self.size_label = QLabel("—")
         self.size_label.setObjectName("hintText")
         self.canvas = MapCanvas()
@@ -1817,31 +2182,45 @@ class MapPage(ProjectPage):
             Qt.ScrollBarPolicy.ScrollBarAsNeeded
         )
         self.map_scroll.setAlignment(
-            Qt.AlignmentFlag.AlignHCenter | Qt.AlignmentFlag.AlignTop
+            Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignTop
         )
         self.map_scroll.viewport_resized.connect(self._fit_map_to_viewport)
-        preview_toolbar = QHBoxLayout()
-        preview_toolbar.addWidget(self.fit_view)
-        preview_toolbar.addWidget(QLabel("缩放"))
-        preview_toolbar.addWidget(self.zoom)
         self.show_all_objects = QCheckBox("叠加全部对象")
         self.show_all_objects.setToolTip("在地形页同时显示部署、事件和商店；编辑对象页不会误画地形。")
         self.show_all_objects.toggled.connect(self._update_overlays)
-        preview_toolbar.addWidget(self.show_all_objects)
-        preview_toolbar.addStretch()
-        self.capacity_help_button = QPushButton("容量规划…")
-        self.capacity_help_button.setToolTip(
-            "原记录容量不足时，可在464 KiB版本中规划并接通地图共享池；保留当前地图草稿。"
-        )
-        self.capacity_help_button.clicked.connect(self._open_capacity_planner)
-        preview_toolbar.addWidget(self.capacity_help_button)
-        canvas_layout.addLayout(preview_toolbar)
         canvas_layout.addWidget(self.map_scroll, 1)
 
-        info_row = QHBoxLayout()
-        info_row.addWidget(self.position_label, 1)
-        info_row.addWidget(self.y_position_label, 1)
-        canvas_layout.addLayout(info_row)
+        self.deployment_selection_preview = QLabel(
+            "配置预览：左键选择地图上的已配置单位"
+        )
+        self.deployment_selection_preview.setObjectName("deploymentSelectionPreview")
+        self.deployment_selection_preview.setWordWrap(True)
+        self.deployment_selection_preview.setMinimumHeight(42)
+        self.deployment_selection_preview.setMaximumHeight(54)
+        self.deployment_selection_preview.setToolTip(
+            "左键选择单位后显示配置摘要；双击或点击“编辑”可修改。"
+        )
+        self.deployment_selection_preview.hide()
+        canvas_layout.addWidget(self.deployment_selection_preview)
+
+        deployment_action_row = QHBoxLayout()
+        deployment_action_row.setContentsMargins(0, 2, 0, 0)
+        deployment_action_row.addWidget(self.edit_deployment_button)
+        deployment_action_row.addWidget(self.add_deployment_button)
+        deployment_action_row.addWidget(self.copy_deployment_button)
+        deployment_action_row.addStretch()
+        canvas_layout.addLayout(deployment_action_row)
+
+        self.reset_button = QPushButton("还原当前地图")
+        self.reset_button.clicked.connect(self.reset_current)
+        self.reset_button.setToolTip("将当前地图、部署和事件恢复为打开工程时的内容")
+        map_action_row = QHBoxLayout()
+        map_action_row.setContentsMargins(0, 2, 0, 0)
+        map_action_row.addWidget(self.reset_button)
+        map_action_row.addStretch()
+        map_action_row.addWidget(self.open_map_advanced_button)
+        map_action_row.addWidget(self.capacity_help_button)
+        canvas_layout.addLayout(map_action_row)
 
         self.pending_state = QLabel("尚未载入ROM：按 Ctrl+O 或“文件→打开”选择基准ROM。")
         self.pending_state.setObjectName("editState")
@@ -1849,9 +2228,7 @@ class MapPage(ProjectPage):
         self.apply_button.setObjectName("primaryButton")
         self.apply_button.clicked.connect(self.apply_changes)
         self.apply_button.setEnabled(False)
-        self.reset_button = QPushButton("还原")
-        self.reset_button.clicked.connect(self.reset_current)
-        self.size_label.setWordWrap(True)
+        self.size_label.setWordWrap(False)
         self.pending_state.setWordWrap(True)
         canvas_layout.addWidget(self.size_label)
         status_row = QHBoxLayout()
@@ -1868,7 +2245,7 @@ class MapPage(ProjectPage):
 
         self.main_splitter.setStretchFactor(0, 0)
         self.main_splitter.setStretchFactor(1, 1)
-        self.main_splitter.setSizes([440, 920])
+        self.main_splitter.setSizes([305, 680])
         outer.addWidget(self.main_splitter, 1)
         self._create_map_advanced_dialog()
 
@@ -1892,6 +2269,13 @@ class MapPage(ProjectPage):
 
         display_group = QGroupBox("预览与兼容工具")
         display_layout = QVBoxLayout(display_group)
+        preview_controls = QHBoxLayout()
+        preview_controls.addWidget(self.fit_view)
+        preview_controls.addWidget(QLabel("缩放"))
+        preview_controls.addWidget(self.zoom)
+        preview_controls.addWidget(self.show_all_objects)
+        preview_controls.addStretch()
+        display_layout.addLayout(preview_controls)
         display_layout.addWidget(self.show_ids)
         display_layout.addWidget(self.tileset_meta)
         display_layout.addWidget(self.brush_hint)
@@ -1903,7 +2287,6 @@ class MapPage(ProjectPage):
         root.addStretch()
 
         buttons = QHBoxLayout()
-        buttons.addWidget(self.reset_button)
         buttons.addStretch()
         close_buttons = QDialogButtonBox(QDialogButtonBox.StandardButton.Close)
         close_buttons.rejected.connect(self.map_advanced_dialog.close)
@@ -1922,10 +2305,121 @@ class MapPage(ProjectPage):
         self._commit_error = None
         self._update_size_label()
 
-    def _show_deployment_advanced(self) -> None:
-        self.deployment_dialog.show()
-        self.deployment_dialog.raise_()
-        self.deployment_dialog.activateWindow()
+    def _selected_deployment(self) -> tuple[str, int] | None:
+        selected = self.canvas.selected_overlay
+        if selected is None or selected[0] not in ("敌", "客", "我"):
+            return None
+        side, row = selected
+        if not 0 <= row < self._object_table(side).rowCount():
+            return None
+        return side, row
+
+    def _sync_deployment_action_buttons(self) -> None:
+        visible = self.editor_tabs.currentIndex() == 1
+        enabled = (
+            visible
+            and self.project is not None
+            and self._deployment_write_verified
+            and self.current_map_id is not None
+            and self.current_map_id < self.project.scenario_count
+        )
+        selected = self._selected_deployment()
+        for button in (
+            self.edit_deployment_button,
+            self.add_deployment_button,
+            self.copy_deployment_button,
+        ):
+            button.setVisible(visible)
+        self.add_deployment_button.setEnabled(enabled)
+        self.edit_deployment_button.setEnabled(enabled and selected is not None)
+        self.copy_deployment_button.setEnabled(enabled and selected is not None)
+        self._update_deployment_selection_preview(visible, selected)
+
+    def _update_deployment_selection_preview(
+        self,
+        visible: bool | None = None,
+        selected: tuple[str, int] | None = None,
+    ) -> None:
+        """Keep a persistent compact preview for the map's selected deployment."""
+
+        if visible is None:
+            visible = self.editor_tabs.currentIndex() == 1
+        self.deployment_selection_preview.setVisible(visible)
+        if not visible:
+            return
+        if selected is None:
+            selected = self._selected_deployment()
+        if selected is None:
+            self.deployment_selection_preview.setText(
+                "配置预览：左键选择地图上的已配置单位"
+            )
+            self.deployment_selection_preview.setToolTip(
+                "左键选择单位后显示配置摘要；双击或点击“编辑”可修改。"
+            )
+            return
+
+        side, row = selected
+        values = self._object_table(side).rows()[row]
+        x, y = values[:2]
+        side_name = {"敌": "敌军", "客": "客军", "我": "我方出击位"}[side]
+        header = f"配置预览｜{side_name} {row + 1:02d}｜坐标 ({x:02d},{y:02d})"
+        action_id = values[3] if side == "我" else values[5]
+        action = self._action_choice_label(action_id).split(" · ")[0]
+        if side == "我":
+            roster_index = values[2]
+            player = self._player_slot_state().get(roster_index)
+            if player is None:
+                details = (
+                    f"等级：队伍槽 ${roster_index:02X}（当前关卡无机体）｜"
+                    "行动：玩家自控"
+                )
+            else:
+                pilot_id, unit_id = player
+                details = (
+                    f"驾驶员 {self._character_choice_label(pilot_id).split(' · ')[0]}｜"
+                    f"机体 {self._unit_choice_label(unit_id).split(' · ')[0]}｜"
+                    f"等级：队伍槽 ${roster_index:02X}｜行动：玩家自控"
+                )
+        else:
+            pilot_id, unit_id, level = values[2:5]
+            details = (
+                f"驾驶员 {self._character_choice_label(pilot_id).split(' · ')[0]}｜"
+                f"机体 {self._unit_choice_label(unit_id).split(' · ')[0]}｜"
+                f"等级 {level}｜行动 {action}"
+            )
+        self.deployment_selection_preview.setText(f"{header}\n{details}")
+        self.deployment_selection_preview.setToolTip(
+            self._deployment_description(side, values)
+            + "\n\n双击单位或点击“编辑”可修改；左键拖动可调整坐标。"
+        )
+
+    def _edit_selected_deployment(self) -> None:
+        selected = self._selected_deployment()
+        if selected is not None:
+            self._open_deployment_record(*selected)
+
+    def _add_deployment_from_toolbar(self) -> None:
+        selected = self._selected_deployment()
+        side = selected[0] if selected is not None else "敌"
+        if self.hovered_cell is not None:
+            x, y = self.hovered_cell
+        elif selected is not None:
+            x, y = self._object_table(side).rows()[selected[1]][:2]
+        else:
+            x, y = (0, 0)
+        self._open_deployment_cell_editor(side, x, y)
+
+    def _duplicate_selected_deployment(self) -> None:
+        selected = self._selected_deployment()
+        if selected is None:
+            return
+        side, row = selected
+        table = self._object_table(side)
+        table.setCurrentCell(row, 0)
+        before = table.rowCount()
+        self._duplicate_deployment(table)
+        if table.rowCount() > before:
+            self._open_deployment_record(side, row + 1)
 
     def _build_deployment_cell_dialog(self) -> None:
         """Build the compact reference-style editor used from the map menu."""
@@ -1933,9 +2427,10 @@ class MapPage(ProjectPage):
         self.deployment_cell_dialog = QDialog(self)
         self.deployment_cell_dialog.setWindowTitle("配置设置")
         self.deployment_cell_dialog.setModal(False)
-        self.deployment_cell_dialog.setMinimumWidth(500)
+        self.deployment_cell_dialog.setMinimumWidth(430)
         root = QVBoxLayout(self.deployment_cell_dialog)
-        form = QFormLayout()
+        root.setContentsMargins(10, 10, 10, 10)
+        root.setSpacing(8)
 
         self.deployment_side_combo = QComboBox()
         for side, label in (("我", "我方配置"), ("敌", "敌方配置"), ("客", "客军配置")):
@@ -1944,18 +2439,13 @@ class MapPage(ProjectPage):
         self.deployment_y_editor = QSpinBox()
         for editor in (self.deployment_x_editor, self.deployment_y_editor):
             editor.setRange(0, 255)
-        coordinate_row = QWidget()
-        coordinate_layout = QHBoxLayout(coordinate_row)
-        coordinate_layout.setContentsMargins(0, 0, 0, 0)
-        coordinate_layout.addWidget(QLabel("X"))
-        coordinate_layout.addWidget(self.deployment_x_editor)
-        coordinate_layout.addWidget(QLabel("Y"))
-        coordinate_layout.addWidget(self.deployment_y_editor)
-
         self.deployment_character_combo = QComboBox()
         self.deployment_unit_combo = QComboBox()
-        self.deployment_level_editor = QSpinBox()
-        self.deployment_level_editor.setRange(1, 255)
+        self.deployment_level_editor = QComboBox()
+        self.deployment_level_editor.setMaxVisibleItems(24)
+        self._deployment_level_cap = 99
+        for level in range(1, self._deployment_level_cap + 1):
+            self.deployment_level_editor.addItem(f"等级：{level:02d}", level)
         self.deployment_action_combo = QComboBox()
         self.deployment_action_combo.setMaxVisibleItems(24)
         for action_id, label in enumerate(ACTION_NAMES):
@@ -1965,21 +2455,61 @@ class MapPage(ProjectPage):
         self.deployment_roster_combo = QComboBox()
         self.deployment_roster_combo.setMaxVisibleItems(24)
 
-        form.addRow("类型", self.deployment_side_combo)
-        form.addRow("坐标", coordinate_row)
-        form.addRow("驾驶员", self.deployment_character_combo)
-        form.addRow("机体", self.deployment_unit_combo)
-        form.addRow("等级", self.deployment_level_editor)
-        form.addRow("行动", self.deployment_action_combo)
-        form.addRow("我方队伍槽", self.deployment_roster_combo)
-        root.addLayout(form)
+        # The reference editor keeps this window deliberately dense: type on
+        # top, then pilot/unit and level/action in two columns.  Limiting the
+        # combo size hint prevents a long database label from widening the
+        # complete dialog after the first open.
+        for combo in (
+            self.deployment_side_combo,
+            self.deployment_character_combo,
+            self.deployment_unit_combo,
+            self.deployment_level_editor,
+            self.deployment_action_combo,
+            self.deployment_roster_combo,
+        ):
+            combo.setSizeAdjustPolicy(
+                QComboBox.SizeAdjustPolicy.AdjustToMinimumContentsLengthWithIcon
+            )
+            combo.setMinimumContentsLength(14)
+
+        type_group = QGroupBox("选择类型")
+        type_layout = QHBoxLayout(type_group)
+        type_layout.setContentsMargins(10, 14, 10, 8)
+        type_layout.addWidget(QLabel("类型："))
+        type_layout.addWidget(self.deployment_side_combo, 1)
+        root.addWidget(type_group)
+
+        self.deployment_details_group = QGroupBox("配置信息")
+        details = QGridLayout(self.deployment_details_group)
+        details.setContentsMargins(10, 14, 10, 8)
+        details.setHorizontalSpacing(10)
+        details.setVerticalSpacing(5)
+        details.addWidget(QLabel("机师："), 0, 0)
+        details.addWidget(QLabel("机体："), 0, 1)
+        details.addWidget(self.deployment_character_combo, 1, 0)
+        details.addWidget(self.deployment_unit_combo, 1, 1)
+        details.addWidget(QLabel("等级："), 2, 0)
+        details.addWidget(QLabel("行动："), 2, 1)
+        details.addWidget(self.deployment_level_editor, 3, 0)
+        details.addWidget(self.deployment_action_combo, 3, 1)
+        details.setColumnStretch(0, 1)
+        details.setColumnStretch(1, 1)
+        root.addWidget(self.deployment_details_group)
+
+        self.deployment_player_group = QGroupBox("我方机组编号")
+        player_layout = QHBoxLayout(self.deployment_player_group)
+        player_layout.setContentsMargins(10, 14, 10, 8)
+        player_layout.addWidget(self.deployment_roster_combo, 1)
+        root.addWidget(self.deployment_player_group)
 
         self.deployment_editor_status = QLabel()
         self.deployment_editor_status.setObjectName("hintText")
         self.deployment_editor_status.setWordWrap(True)
+        self.deployment_editor_status.hide()
         root.addWidget(self.deployment_editor_status)
         self.deployment_capacity_button = QPushButton("容量不足时打开容量规划…")
         self.deployment_capacity_button.clicked.connect(self._open_capacity_planner)
+        self.deployment_capacity_button.hide()
         root.addWidget(
             self.deployment_capacity_button,
             0,
@@ -1989,7 +2519,7 @@ class MapPage(ProjectPage):
             QDialogButtonBox.StandardButton.Save
             | QDialogButtonBox.StandardButton.Cancel
         )
-        buttons.button(QDialogButtonBox.StandardButton.Save).setText("保存配置")
+        buttons.button(QDialogButtonBox.StandardButton.Save).setText("确定")
         buttons.button(QDialogButtonBox.StandardButton.Cancel).setText("取消")
         buttons.accepted.connect(self._save_deployment_cell_editor)
         buttons.rejected.connect(self.deployment_cell_dialog.reject)
@@ -2000,15 +2530,37 @@ class MapPage(ProjectPage):
         )
 
     def _refresh_deployment_editor_choices(self) -> None:
-        for combo, provider in (
-            (self.deployment_character_combo, self._character_choice_label),
-            (self.deployment_unit_combo, self._unit_choice_label),
+        level_cap = 99
+        if self.project is not None:
+            level_cap = self.project.get_verified_level_cap()
+        if level_cap != self._deployment_level_cap:
+            selected_level = self.deployment_level_editor.currentData()
+            self.deployment_level_editor.blockSignals(True)
+            self.deployment_level_editor.clear()
+            for level in range(1, level_cap + 1):
+                self.deployment_level_editor.addItem(f"等级：{level:02d}", level)
+            target_level = min(
+                level_cap,
+                max(1, int(selected_level) if selected_level is not None else 1),
+            )
+            self.deployment_level_editor.setCurrentIndex(
+                self.deployment_level_editor.findData(target_level)
+            )
+            self.deployment_level_editor.blockSignals(False)
+            self._deployment_level_cap = level_cap
+
+        for combo, labeler in (
+            (
+                self.deployment_character_combo,
+                self._deployment_character_choice_label,
+            ),
+            (self.deployment_unit_combo, self._deployment_unit_choice_label),
         ):
             selected = combo.currentData()
             combo.blockSignals(True)
             combo.clear()
             for record_id in range(256):
-                combo.addItem(provider(record_id), record_id)
+                combo.addItem(labeler(record_id), record_id)
             combo.setCurrentIndex(combo.findData(selected if selected is not None else 0))
             combo.blockSignals(False)
 
@@ -2016,7 +2568,7 @@ class MapPage(ProjectPage):
         self.deployment_roster_combo.clear()
         for slot in range(256):
             self.deployment_roster_combo.addItem(
-                self._player_slot_choice_label(slot), slot
+                self._deployment_player_slot_choice_label(slot), slot
             )
         self.deployment_roster_combo.setCurrentIndex(
             self.deployment_roster_combo.findData(
@@ -2035,16 +2587,26 @@ class MapPage(ProjectPage):
         self.deployment_roster_combo.setEnabled(
             self._deployment_write_verified and player
         )
+        self.deployment_details_group.setEnabled(
+            self._deployment_write_verified and not player
+        )
+        self.deployment_player_group.setEnabled(
+            self._deployment_write_verified and player
+        )
         if not self._deployment_write_verified:
             self.deployment_editor_status.setText(
                 "当前仅供核对；逐字段黄金对照完成前不能修改或写回部署记录。"
             )
+            self.deployment_editor_status.show()
         else:
-            self.deployment_editor_status.setText(
+            self.deployment_side_combo.setToolTip(
                 "我方记录保存队伍槽和行动；驾驶员、机体由当前关卡的队伍状态自动解析。"
                 if player
                 else "敌军/客军记录保存驾驶员、机体、等级和行动；全部选项按原始字节写回。"
             )
+            self.deployment_editor_status.clear()
+            self.deployment_editor_status.hide()
+            self.deployment_capacity_button.hide()
         self.deployment_editor_status.setStyleSheet("")
 
     def _open_deployment_cell_editor(
@@ -2055,6 +2617,9 @@ class MapPage(ProjectPage):
         row: int | None = None,
     ) -> None:
         self._refresh_deployment_editor_choices()
+        self.deployment_editor_status.clear()
+        self.deployment_editor_status.hide()
+        self.deployment_capacity_button.hide()
         self._deployment_edit_source = None if row is None else (side, row)
         values = None
         if row is not None:
@@ -2090,11 +2655,14 @@ class MapPage(ProjectPage):
             self.deployment_unit_combo.setCurrentIndex(
                 self.deployment_unit_combo.findData(unit_id)
             )
-            self.deployment_level_editor.setValue(level)
+            self.deployment_level_editor.setCurrentIndex(
+                self.deployment_level_editor.findData(level)
+            )
         self.deployment_action_combo.setCurrentIndex(
             self.deployment_action_combo.findData(action_id)
         )
         self._deployment_editor_side_changed()
+        self.deployment_cell_dialog.adjustSize()
         self.deployment_cell_dialog.show()
         self.deployment_cell_dialog.raise_()
         self.deployment_cell_dialog.activateWindow()
@@ -2115,7 +2683,7 @@ class MapPage(ProjectPage):
             y,
             int(self.deployment_character_combo.currentData()),
             int(self.deployment_unit_combo.currentData()),
-            self.deployment_level_editor.value(),
+            int(self.deployment_level_editor.currentData()),
             action_id,
         )
 
@@ -2145,58 +2713,47 @@ class MapPage(ProjectPage):
                 return
             row = target.rowCount() - 1
             source_table = self._object_table(source[0])
-            source_table.removeRow(source[1])
-            source_table.values_changed.emit()
+            source_table.remove_row(source[1])
         self._deployment_edit_source = (side, row)
         self._select_object(side, row)
         self.deployment_cell_dialog.accept()
 
     def _ensure_deployment_growth(self, extra_bytes: int) -> bool:
-        """Keep fixed-layout ROMs from ending with an unsavable deployment draft."""
+        """Keep the shared deployment pool from ending with an unsavable draft."""
 
         if (
             extra_bytes <= 0
             or self.project is None
-            or self.project.expansion_plan is not None
             or self.current_map_id is None
             or self.current_map_id >= self.project.scenario_count
         ):
             return True
+        plan = self.project.expansion_plan
+        if plan is not None and plan.flags & FLAG_MAPS:
+            return True
         layout = self._staged_layout()
-        used = len(self.project.scenario_layout_codec.encode(layout))
-        capacity = self.project.scenario_layout_codec.capacities[self.current_map_id]
-        if used + extra_bytes <= capacity:
+        codec = self.project.scenario_layout_codec
+        encoded = codec.encode(layout)
+        used = codec.storage_used_after_payload(
+            self.project.working,
+            self.current_map_id,
+            encoded + bytes(extra_bytes),
+        )
+        capacity = codec.pool_capacity
+        if used <= capacity:
             return True
         message = (
-            f"本关部署固定槽为 {capacity} 字节，当前已用 {used} 字节；"
-            f"新增记录还需要 {extra_bytes} 字节。请先打开“容量规划”并应用地图扩展容量，"
+            f"32 关初始配置自动重排后需要 {used} 字节，"
+            f"共享池只有 {capacity} 字节。请先打开“容量规划”并应用地图扩展容量，"
             "再保存这条配置。"
         )
         self.deployment_editor_status.setText(message)
         self.deployment_editor_status.setStyleSheet("color:#b42318; font-weight:600;")
+        self.deployment_editor_status.show()
+        self.deployment_capacity_button.show()
+        self.deployment_cell_dialog.adjustSize()
         self.show_error(ValueError(message))
         return False
-
-    def _toggle_icon_preview(self, expanded: bool) -> None:
-        self.icon_preview_group.setVisible(expanded)
-        self.icon_preview_toggle.setText(
-            "收起机体图标库（只读）"
-            if expanded
-            else "展开机体图标库（只读）"
-        )
-        if expanded:
-            self._refresh_icon_sheets()
-
-    def _toggle_deployment_list(self, expanded: bool) -> None:
-        self.deployment_objects.setVisible(expanded)
-        self.deployment_list_toggle.setText(
-            "收起部署明细列表" if expanded else "展开部署明细列表"
-        )
-
-    def _show_trigger_advanced(self) -> None:
-        self.trigger_dialog.show()
-        self.trigger_dialog.raise_()
-        self.trigger_dialog.activateWindow()
 
     def _trigger_kind_changed(self, _checked: bool = False) -> None:
         is_shop = self.trigger_shop_radio.isChecked()
@@ -2204,12 +2761,17 @@ class MapPage(ProjectPage):
         self.trigger_event_combo.setEnabled(
             self._trigger_write_verified and not is_shop
         )
+        self.trigger_kind_hint.setText(
+            "符合上方人物条件的我方单位走到这个格子时，打开所选商店。"
+            if is_shop
+            else "符合上方人物条件的我方单位走到这个格子时，执行所选地图事件。"
+        )
 
     def _refresh_trigger_character_choices(self) -> None:
         selected = self.trigger_character_combo.currentData()
         self.trigger_character_combo.blockSignals(True)
         self.trigger_character_combo.clear()
-        # “任何人物”是地图事件最常用的限定条件，固定放在下拉框首项，
+        # “不限人物”是地图事件最常用的限定条件，固定放在下拉框首项，
         # 避免每次都要滚动到 256 项列表末尾选择 $FF。
         for character_id in (0xFF, *range(0xFF)):
             self.trigger_character_combo.addItem(
@@ -2249,13 +2811,21 @@ class MapPage(ProjectPage):
         self.trigger_shop_radio.setChecked(shop)
         self.trigger_event_radio.setChecked(not shop)
         selector = self.trigger_shop_combo if shop else self.trigger_event_combo
-        selector.setCurrentIndex(selector.findData(event_id))
+        selector_index = selector.findData(event_id)
+        if selector_index < 0:
+            self.show_error(
+                ValueError(
+                    f"商店编号 ${event_id:02X} 不是有效商店；ROM 仅定义了 $F0—$F4。"
+                )
+            )
+            return
+        selector.setCurrentIndex(selector_index)
         self.trigger_delete_button.setVisible(row is not None)
         self.trigger_delete_button.setText(
-            "删除商店" if shop else "删除地图事件"
+            "删除商店入口" if shop else "删除地图事件"
         )
         self.trigger_cell_dialog.setWindowTitle(
-            "商店设置" if shop else "地图事件设置"
+            "设置商店入口" if shop else "设置地图事件"
         )
         self._trigger_kind_changed()
         self.trigger_cell_dialog.show()
@@ -2265,11 +2835,15 @@ class MapPage(ProjectPage):
     def _save_trigger_cell_editor(self) -> None:
         if not self._trigger_write_verified:
             return
-        event_id = int(
+        event_data = (
             self.trigger_shop_combo.currentData()
             if self.trigger_shop_radio.isChecked()
             else self.trigger_event_combo.currentData()
         )
+        if event_data is None:
+            self.show_error(ValueError("请先选择有效的商店或地图事件。"))
+            return
+        event_id = int(event_data)
         values = (
             self.trigger_x_editor.value(),
             self.trigger_y_editor.value(),
@@ -2293,8 +2867,7 @@ class MapPage(ProjectPage):
             return
         if not 0 <= row < self.trigger_table.rowCount():
             return
-        self.trigger_table.removeRow(row)
-        self.trigger_table.values_changed.emit()
+        self.trigger_table.remove_row(row)
         self.canvas.selected_overlay = None
 
     def _delete_edited_trigger(self) -> None:
@@ -2319,14 +2892,11 @@ class MapPage(ProjectPage):
         ]
         menu = QMenu(self.canvas)
         self._trigger_context_menu = menu
-        coordinate = menu.addAction(f"坐标 X:{x}  Y:{y}")
-        coordinate.setEnabled(False)
-        menu.addSeparator()
         if len(rows) == 1:
             row = rows[0]
             event_id = self.trigger_table.rows()[row][3]
             edit = menu.addAction(
-                "编辑商店" if event_id >= 0xF0 else "编辑地图事件"
+                "编辑商店入口" if event_id >= 0xF0 else "编辑地图事件"
             )
             edit.triggered.connect(
                 lambda _checked=False, row=row: self._open_trigger_cell_editor(x, y, row)
@@ -2345,9 +2915,16 @@ class MapPage(ProjectPage):
         add.triggered.connect(
             lambda _checked=False: self._open_trigger_cell_editor(x, y)
         )
+        add_shop = menu.addAction("添加商店入口")
+        add_shop.triggered.connect(
+            lambda _checked=False: self._open_trigger_cell_editor(x, y, shop=True)
+        )
         if len(rows) == 1:
             row = rows[0]
-            delete = menu.addAction("删除地图事件")
+            event_id = self.trigger_table.rows()[row][3]
+            delete = menu.addAction(
+                "删除商店入口" if event_id >= 0xF0 else "删除地图事件"
+            )
             delete.triggered.connect(
                 lambda _checked=False, row=row: self._remove_trigger_row(row)
             )
@@ -2415,7 +2992,8 @@ class MapPage(ProjectPage):
             return None
         values = table.rows()[row]
         if side == "我":
-            player = self._player_slot_state().get(values[2])
+            roster_index = values[2]
+            player = self._player_slot_state().get(roster_index)
             if player is None:
                 self.show_error(ValueError("当前队伍槽没有可解析的驾驶员和机体。"))
                 return None
@@ -2442,8 +3020,7 @@ class MapPage(ProjectPage):
         table = self._object_table(side)
         if not 0 <= row < table.rowCount():
             return
-        table.removeRow(row)
-        table.values_changed.emit()
+        table.remove_row(row)
         self.canvas.selected_overlay = None
 
     def _show_deployment_context_menu(
@@ -2472,19 +3049,34 @@ class MapPage(ProjectPage):
         ]
         menu = QMenu(self.canvas)
         self._deployment_context_menu = menu
-        coordinate = menu.addAction(f"坐标 X:{x}  Y:{y}")
-        coordinate.setEnabled(False)
-        menu.addSeparator()
+
+        # Match the reference editor's one-step flow: “添加配置” opens the
+        # common editor immediately and the type is chosen inside that dialog.
+        # The previous side submenu made the same operation take an extra
+        # pointer movement and duplicated the dialog's type selector.
+        default_side = records[0][0] if len(records) == 1 else "敌"
+        add = menu.addAction("添加配置")
+        add.setEnabled(
+            any(
+                table.max_rows is None or table.rowCount() < table.max_rows
+                for table in (self.enemy_table, self.guest_table, self.player_table)
+            )
+        )
+        add.triggered.connect(
+            lambda _checked=False, side=default_side: self._add_deployment_at(
+                side, x, y
+            )
+        )
 
         if len(records) == 1:
             side, row, _values = records[0]
-            edit = menu.addAction(f"更改{side}军初始配置")
+            edit = menu.addAction("更改配置")
             edit.triggered.connect(
                 lambda _checked=False, side=side, row=row:
                 self._open_deployment_record(side, row)
             )
         elif records:
-            edit_menu = menu.addMenu("编辑此格初始配置")
+            edit_menu = menu.addMenu("更改配置")
             for side, row, _values in records:
                 action = edit_menu.addAction(
                     self.canvas.overlay_descriptions.get(
@@ -2495,21 +3087,9 @@ class MapPage(ProjectPage):
                     lambda _checked=False, side=side, row=row:
                     self._open_deployment_record(side, row)
                 )
-
-        add_menu = menu.addMenu("在此格添加配置")
-        for side, label in (("敌", "敌军"), ("客", "客军"), ("我", "我方出击位")):
-            table = self._object_table(side)
-            action = add_menu.addAction(label)
-            action.setEnabled(
-                table.max_rows is None or table.rowCount() < table.max_rows
-            )
-            action.triggered.connect(
-                lambda _checked=False, side=side: self._add_deployment_at(
-                    side, x, y
-                )
-            )
-
-        menu.addSeparator()
+        else:
+            edit = menu.addAction("更改配置")
+            edit.setEnabled(False)
         if len(records) == 1:
             side, row, _values = records[0]
             database = menu.addAction("更改属性")
@@ -2517,7 +3097,7 @@ class MapPage(ProjectPage):
                 lambda _checked=False, side=side, row=row:
                 self._open_deployment_database_record(side, row)
             )
-            experience = menu.addAction("击落经验计算器")
+            experience = menu.addAction("击杀经验计算器")
             experience.triggered.connect(
                 lambda _checked=False, side=side, row=row:
                 self._open_deployment_experience(side, row)
@@ -2527,12 +3107,12 @@ class MapPage(ProjectPage):
                 lambda _checked=False, side=side, row=row:
                 self._open_deployment_attributes(side, row)
             )
-            copy = menu.addAction("复制配置")
+            copy = menu.addAction("复制")
             copy.triggered.connect(
                 lambda _checked=False, side=side, row=row:
                 self._copy_deployment_record(side, row)
             )
-            cut = menu.addAction("剪切配置")
+            cut = menu.addAction("剪切")
             cut.triggered.connect(
                 lambda _checked=False, side=side, row=row:
                 self._copy_deployment_record(side, row, cut=True)
@@ -2540,15 +3120,17 @@ class MapPage(ProjectPage):
         else:
             database = menu.addAction("更改属性")
             database.setEnabled(False)
-            experience = menu.addAction("击落经验计算器")
+            experience = menu.addAction("击杀经验计算器")
             experience.setEnabled(False)
             attributes = menu.addAction("加到属性计算器")
             attributes.setEnabled(False)
-            copy = menu.addAction("复制配置")
+            copy = menu.addAction("复制")
             copy.setEnabled(False)
-            cut = menu.addAction("剪切配置")
+            cut = menu.addAction("剪切")
             cut.setEnabled(False)
-        paste = menu.addAction("粘贴配置")
+        paste = menu.addAction("粘贴")
+        # Empty ground only accepts a new record or a previously copied/cut
+        # record.  Record-specific operations still require an exact hit.
         paste.setEnabled(self._deployment_clipboard is not None)
         paste.triggered.connect(
             lambda _checked=False: self._paste_deployment_at(x, y)
@@ -2556,13 +3138,13 @@ class MapPage(ProjectPage):
 
         if len(records) == 1:
             side, row, _values = records[0]
-            delete = menu.addAction(f"删除{side}军初始配置")
+            delete = menu.addAction("删除配置")
             delete.triggered.connect(
                 lambda _checked=False, side=side, row=row:
                 self._remove_deployment_row(side, row)
             )
         elif records:
-            delete_menu = menu.addMenu("删除此格初始配置")
+            delete_menu = menu.addMenu("删除配置")
             for side, row, _values in reversed(records):
                 action = delete_menu.addAction(
                     self.canvas.overlay_descriptions.get(
@@ -2574,7 +3156,7 @@ class MapPage(ProjectPage):
                     self._remove_deployment_row(side, row)
                 )
         else:
-            delete = menu.addAction("删除初始配置")
+            delete = menu.addAction("删除配置")
             delete.setEnabled(False)
         menu.popup(global_position)
 
@@ -2699,6 +3281,7 @@ class MapPage(ProjectPage):
             self.canvas.update()
         finally:
             self._selecting_object = False
+        self._sync_deployment_action_buttons()
 
     def _activate_object(self, side: str, row: int) -> None:
         if side in ("事", "店"):
@@ -2712,58 +3295,70 @@ class MapPage(ProjectPage):
         self._select_object(side, row)
 
     def _player_slot_state(self) -> dict[int, tuple[int, int]]:
-        """Resolve the ROM-defined player party at the current chapter start.
+        """Resolve the player party at the selected chapter's entrance.
 
-        The six-entry initial table is only the starting state.  Chapter event
-        opcodes $6F/$6E add and remove runtime party slots, while $4D/$4E can
-        replace their pilot or machine.  Replaying those records up to (but
-        not including) the selected chapter prevents later real machines from
-        falling back to numbered circles.
+        The old editor does not simulate the runtime party.  It starts with the
+        six editable initial members and accumulates only $6F “join member”
+        records from the three banked chapter-event partitions.  Those records
+        expose slot, pilot and machine to this configuration view.  Leave and
+        transfer opcodes are deliberately ignored: legacy probes show that the
+        configuration combo keeps joined members after those runtime events.
+        Shared physical instructions are applied once at their earliest
+        chapter/phase, and the selected chapter sees the preceding snapshots.
         """
 
         if self.project is None or self.current_map_id is None:
             return {}
         roster = tuple(self.project.get_initial_roster())
-        codec = self.project.chapter_event_codec
-        event_bytes = b""
-        if codec is not None:
-            start = codec.data_address_to_file_offset(codec.spec.data_start)
-            size = codec.spec.data_end - codec.spec.data_start
-            event_bytes = bytes(self.project.working[start : start + size])
-        cache_key = (id(self.project), roster, event_bytes)
+        source = self.project.working
+        pointer_start = min(LegacyScenarioCodec.POINTER_TABLES)
+        pointer_end = max(LegacyScenarioCodec.POINTER_TABLES) + 64
+        event_signature = (
+            bytes(source[pointer_start:pointer_end]),
+            *(
+                bytes(
+                    source[
+                        LegacyScenarioCodec._bank_offset(bank):
+                        LegacyScenarioCodec._bank_offset(bank, end)
+                    ]
+                )
+                for bank, end in sorted(LegacyScenarioCodec.BANK_ENDS.items())
+            ),
+        )
+        cache_key = (id(self.project), roster, event_signature)
         if cache_key != self._player_slot_cache_key:
-            slots = {index: pair for index, pair in enumerate(roster)}
+            slots = {
+                index: pair
+                for index, pair in enumerate(roster[:6])
+                if pair != (0, 0)
+            }
+            scheduled: dict[int, list] = {
+                scenario_id: []
+                for scenario_id in range(self.project.scenario_count)
+            }
+            codec = LegacyScenarioCodec(source)
+            physical_instructions = {}
+            for scenario_id in range(self.project.scenario_count):
+                for phase in range(3):
+                    for instruction in codec.instructions(scenario_id, phase):
+                        physical_instructions.setdefault(
+                            instruction.file_offset,
+                            instruction,
+                        )
+            for instruction in physical_instructions.values():
+                scheduled[instruction.scenario_id].append(
+                    (instruction.phase, instruction.file_offset, instruction)
+                )
+
             snapshots: list[dict[int, tuple[int, int]]] = []
-            instructions = (
-                self.project.chapter_event_instructions()
-                if codec is not None
-                else ()
-            )
             for scenario_id in range(self.project.scenario_count):
                 snapshots.append(dict(slots))
-                for phase in range(3):
-                    for instruction in instructions:
-                        if not any(
-                            context.scenario_id == scenario_id
-                            and context.phase == phase
-                            for context in instruction.contexts
-                        ):
-                            continue
-                        parameters = instruction.parameters
-                        if instruction.opcode == 0x6F and len(parameters) >= 3:
-                            slots[parameters[0]] = (parameters[1], parameters[2])
-                        elif instruction.opcode == 0x6E and parameters:
-                            slots.pop(parameters[0], None)
-                        elif instruction.opcode == 0x4D and len(parameters) >= 3:
-                            target, pilot_id, unit_id = parameters[:3]
-                            for slot, (current_pilot, _unit) in tuple(slots.items()):
-                                if current_pilot == target:
-                                    slots[slot] = (pilot_id, unit_id)
-                        elif instruction.opcode == 0x4E and len(parameters) >= 2:
-                            target, unit_id = parameters[:2]
-                            for slot, (pilot_id, _unit) in tuple(slots.items()):
-                                if pilot_id == target:
-                                    slots[slot] = (pilot_id, unit_id)
+                for _phase, _address, instruction in sorted(scheduled[scenario_id]):
+                    parameters = instruction.raw[1:]
+                    if instruction.opcode == 0x6F and len(parameters) >= 3:
+                        slot, character_id, unit_id = parameters[:3]
+                        if 0 <= slot < 11:
+                            slots[slot] = (character_id, unit_id)
             self._player_slot_cache_key = cache_key
             self._player_slot_snapshots = tuple(snapshots)
         if 0 <= self.current_map_id < len(self._player_slot_snapshots):
@@ -2814,6 +3409,14 @@ class MapPage(ProjectPage):
                 )
                 descriptions[(kind, row)] = description
                 item = QListWidgetItem(text)
+                if side == "事":
+                    item_font = item.font()
+                    item_font.setBold(True)
+                    item.setFont(item_font)
+                    if kind == "店":
+                        item.setForeground(QColor("#145c3a"))
+                    else:
+                        item.setForeground(QColor("#5930a8"))
                 item.setToolTip(
                     description
                     + (
@@ -2864,11 +3467,16 @@ class MapPage(ProjectPage):
                 )
             )
         count = self.trigger_table.rowCount()
+        shop_count = sum(
+            values[3] >= 0xF0 for values in self.trigger_table.rows()
+        )
+        event_count = count - shop_count
         self.trigger_summary.setText(
             (
-                f"本关共 {count} 条地图触发记录。紫色=事件，绿色=商店；"
+                f"本关有 {event_count} 个地图事件、{shop_count} 个商店入口。"
+                "地图上的白底红字“事”是地图事件，白底红字“商”是商店入口；"
                 + (
-                    "在地图上右键添加、编辑或删除。"
+                    "在地图上右键即可添加、编辑或删除。"
                     if self._trigger_write_verified
                     else "记录只读；选择条目可定位。"
                 )
@@ -2881,6 +3489,7 @@ class MapPage(ProjectPage):
                 )
             )
         )
+        self._sync_deployment_action_buttons()
 
     def _add_deployment(
         self,
@@ -2944,6 +3553,12 @@ class MapPage(ProjectPage):
         self._unit_choice_cache[unit_id] = result
         return result
 
+    def _deployment_unit_choice_label(self, unit_id: int) -> str:
+        """Format one unit exactly like the reference configuration combo."""
+
+        name = self._unit_choice_label(unit_id).split(" · ")[0]
+        return f"[{unit_id:02X}]{unit_id:03d}: {name}"
+
     @staticmethod
     def _action_choice_label(action_id: int) -> str:
         return f"{ACTION_NAMES[action_id]} · ${action_id:02X}"
@@ -2958,6 +3573,20 @@ class MapPage(ProjectPage):
             f"{self._unit_choice_label(unit_id).split(' · ')[0]} · ${roster_index:02X}"
         )
 
+    def _deployment_player_slot_choice_label(self, roster_index: int) -> str:
+        """Use the compact reference wording inside “配置设置”."""
+
+        player = self._player_slot_state().get(roster_index)
+        if player is None:
+            # The reference combo leaves unused rows empty after the colon.
+            # Keep the explanatory “空队伍槽” wording in tooltips/previews,
+            # but do not add it to this 1:1 dropdown surface.
+            return f"编号{roster_index:02X}:"
+        character_id, unit_id = player
+        character = self._character_choice_label(character_id).split(" · ")[0]
+        unit = self._unit_choice_label(unit_id).split(" · ")[0]
+        return f"编号{roster_index:02X}: {character}  {unit}"
+
     def _character_choice_label(self, character_id: int) -> str:
         cached = self._character_choice_cache.get(character_id)
         if cached is not None:
@@ -2971,12 +3600,18 @@ class MapPage(ProjectPage):
         self._character_choice_cache[character_id] = result
         return result
 
+    def _deployment_character_choice_label(self, character_id: int) -> str:
+        """Format one pilot exactly like the reference configuration combo."""
+
+        name = self._character_choice_label(character_id).split(" · ")[0]
+        return f"[{character_id:02X}]{character_id:03d}: {name}"
+
     def _trigger_character_label(self, character_id: int) -> str:
         if character_id == 0xFF:
-            return "任何人物 · $FF"
+            return "任意我方人物"
         if self.project is not None and character_id < self.project.profile.character_name_count:
-            return f"{self.project.character_display_name(character_id)} · ${character_id:02X}"
-        return f"无效人物ID · ${character_id:02X}"
+            return f"仅限 {self.project.character_display_name(character_id)}"
+        return f"未知人物（编号 ${character_id:02X}）"
 
     def _deployment_description(self, side: str, values: tuple[int, ...]) -> str:
         """Return a reference-style, ROM-backed battlefield tooltip."""
@@ -2987,8 +3622,11 @@ class MapPage(ProjectPage):
         cached = self._deployment_description_cache.get(cache_key)
         if cached is not None:
             return cached
-        action_id = values[3] if side == "我" else values[5]
-        action = self._action_choice_label(action_id)
+        action = (
+            "玩家自控"
+            if side == "我"
+            else self._action_choice_label(values[5])
+        )
         if side == "我":
             roster_index = values[2]
             player = self._player_slot_state().get(roster_index)
@@ -3069,13 +3707,18 @@ class MapPage(ProjectPage):
                 weapon_ids = self.project.get_unit_weapons(unit_id)
             except ValueError:
                 weapon_ids = ()
-            for slot, weapon_id in enumerate(weapon_ids, start=1):
+            for slot in (1, 2):
+                weapon_id = weapon_ids[slot - 1] if slot <= len(weapon_ids) else 0
+                if weapon_id == 0:
+                    lines.append(f"武器{slot}：无")
+                    continue
                 if not 0 < weapon_id < self.project.weapon_count:
+                    lines.append(f"武器{slot}：无效编号 ${weapon_id:02X}")
                     continue
                 weapon = self.project.weapon_codec.decode_record(
                     weapon_id, self.project.working
                 )
-                weapon_skill, _distance = weapon_extra_values(
+                weapon_skill, distance = weapon_extra_values(
                     self.project, weapon_id
                 )
                 weapon_description = self._weapon_description_cache.get(weapon_id)
@@ -3083,7 +3726,7 @@ class MapPage(ProjectPage):
                     weapon_description = (
                         f"{self.project.weapon_display_name(weapon_id)} · ${weapon_id:02X} "
                         f"射程 {weapon.get('max_range')} · 命中 {weapon.get('hit')} · "
-                        f"特技 {weapon_skill} · "
+                        f"特技 {weapon_skill} · 距离补正表 {distance} · "
                         f"火力 空/陆/海 {weapon.get('power_air')}/"
                         f"{weapon.get('power_land')}/{weapon.get('power_sea')}"
                     )
@@ -3099,10 +3742,10 @@ class MapPage(ProjectPage):
     @staticmethod
     def _trigger_event_label(event_id: int) -> str:
         if 0xF5 <= event_id <= 0xFE:
-            return f"无效商店目录（指向地图触发表）· ${event_id:02X}"
+            return f"不可使用的商店编号（${event_id:02X}）"
         if event_id >= 0xF0:
-            return f"商店 {event_id & 0x0F} · ${event_id:02X}"
-        return f"地图事件 ${event_id:02X}"
+            return f"商店 {event_id - 0xF0 + 1}"
+        return f"地图事件 {event_id + 1}"
 
     def refresh(self) -> None:
         previous = self.current_map_id
@@ -3115,6 +3758,7 @@ class MapPage(ProjectPage):
         self._weapon_description_cache.clear()
         self._growth_codec_cache = None
         self._trigger_payload_cache = None
+        self._chapter_title_cache.clear()
         self._refresh_trigger_character_choices()
         for table in (self.enemy_table, self.guest_table, self.player_table, self.trigger_table):
             table.invalidate_choice_models()
@@ -3133,28 +3777,12 @@ class MapPage(ProjectPage):
                 )
                 self.map_list.addItem(item)
         self.map_list.blockSignals(False)
-        self._filter_maps(self.search.text())
         if self.map_list.count():
             row = min(previous or 0, self.map_list.count() - 1)
             self.map_list.blockSignals(True)
             self.map_list.setCurrentRow(row)
             self.map_list.blockSignals(False)
             self._map_selected(self.map_list.currentItem(), None)
-
-    def _filter_maps(self, text: str) -> None:
-        query = text.strip().lower()
-        visible_count = 0
-        for row in range(self.map_list.count()):
-            item = self.map_list.item(row)
-            map_id = int(item.data(Qt.ItemDataRole.UserRole))
-            visible = not (
-                bool(query)
-                and query not in item.text().lower()
-                and query not in (str(map_id), f"{map_id:02x}")
-            )
-            item.setHidden(not visible)
-            visible_count += int(visible)
-        self.map_count_label.setText(f"{visible_count} 个地图")
 
     def _map_selected(self, item: QListWidgetItem | None, _previous: QListWidgetItem | None) -> None:
         if self.project is None or item is None:
@@ -3201,9 +3829,12 @@ class MapPage(ProjectPage):
         assert self.project is not None and self.current_map_id is not None
         record = self.project.get_map(self.current_map_id)
         self.title_preview.setText("")
-        self.title_preview.setPixmap(
-            render_chapter_title(self.project, self.current_map_id)
-        )
+        title_key = (id(self.project), self.project.revision, self.current_map_id)
+        title = self._chapter_title_cache.get(title_key)
+        if title is None:
+            title = render_chapter_title(self.project, self.current_map_id)
+            self._chapter_title_cache[title_key] = title
+        self.title_preview.setPixmap(title)
         self.staged_width = record.width
         self.staged_height = record.height
         self.staged_tiles = list(record.tiles)
@@ -3287,6 +3918,7 @@ class MapPage(ProjectPage):
         ):
             widget.setEnabled(deployment_enabled)
         self._deployment_editor_side_changed()
+        self._sync_deployment_action_buttons()
         for widget in (
             self.trigger_x_editor, self.trigger_y_editor,
             self.trigger_character_combo, self.trigger_shop_radio,
@@ -3294,18 +3926,6 @@ class MapPage(ProjectPage):
         ):
             widget.setEnabled(trigger_enabled)
         self._trigger_kind_changed()
-        self.open_deployment_button.setText(
-            "编辑部署 / 添加 / 复制…" if deployment_enabled else "查看部署记录…"
-        )
-        self.open_trigger_button.setText(
-            "打开全部事件记录…" if trigger_enabled else "查看事件与商店记录…"
-        )
-        notice = "写入需先完成参考版控件枚举和逐字段保存对照。"
-        if not deployment_enabled:
-            self.open_deployment_button.setToolTip(notice)
-        if not trigger_enabled:
-            self.open_trigger_button.setToolTip(notice)
-
     def _bitmap_selector_changed(self, _index: int) -> None:
         key = self.bitmap_selector.currentData()
         target = self.tileset.findData(key)
@@ -3330,8 +3950,25 @@ class MapPage(ProjectPage):
     def _select_right_brush(self, tile: int) -> None:
         self.right_terrain.setCurrentIndex(self.right_terrain.findData(tile))
 
+    def _tile_attribute_tooltip(self, key: str, tile: int) -> str:
+        if (
+            self.project is None
+            or not self.project.supports_map_tile_attributes
+            or key not in MapTileAttributeCodec.KEYS
+        ):
+            return f"位图{tile:X}\n图库 {key} 的图块属性尚未完成验证，仅提供图形预览。"
+        value = self.project.get_map_tileset_attributes(key).tiles[tile]
+        sea = value.sea or MapTileAttributeCodec.is_visual_sea(key, tile)
+        return (
+            f"位图{tile:X} · 图库 {key}\n"
+            f"颜色表：{value.palette}    防御补正：{value.defense}\n"
+            f"海属性：{'是' if sea else '否'}\n"
+            f"移动补正：空 {value.air_move} / 陆 {value.land_move} / 海 {value.sea_move}"
+        )
+
     def _update_brush_previews(self) -> None:
         images = self.canvas.tile_images
+        key = str(self.tileset.currentData() or "—")
         for label, tile in (
             (self.left_brush_preview, self.canvas.selected_tile),
             (self.right_brush_preview, self.canvas.right_selected_tile),
@@ -3344,8 +3981,10 @@ class MapPage(ProjectPage):
                     Qt.TransformationMode.FastTransformation,
                 )
                 label.setPixmap(pixmap)
-                label.setToolTip(f"位图{tile:X}")
-                label.setStyleSheet("background: black; border: 1px solid #7d8790;")
+                label.setToolTip(self._tile_attribute_tooltip(key, tile))
+                label.setStyleSheet(
+                    "background: #f8fafb; border: 1px solid #7d8790;"
+                )
             else:
                 label.setPixmap(QPixmap())
                 label.setText("暂无图块" if self.project is None else f"位图{tile:X}")
@@ -3401,14 +4040,17 @@ class MapPage(ProjectPage):
             preview.setText("")
             preview.setPixmap(
                 QPixmap.fromImage(image).scaled(
-                    192,
-                    48,
+                    256,
+                    64,
                     Qt.AspectRatioMode.KeepAspectRatio,
                     Qt.TransformationMode.FastTransformation,
                 )
             )
 
-    def _editor_mode_changed(self, _index: int) -> None:
+    def _editor_mode_changed(self, index: int) -> None:
+        if index == 1:
+            self._refresh_icon_sheets()
+        self._sync_deployment_action_buttons()
         self._update_overlays()
 
     def _refresh_tile_visuals(self) -> None:
@@ -3428,27 +4070,26 @@ class MapPage(ProjectPage):
         for tile, image in enumerate(images):
             button = self.terrain_buttons.button(tile)
             if button is not None:
-                button.setIcon(
-                    QIcon(
-                        QPixmap.fromImage(image).scaled(
-                            40,
-                            40,
-                            Qt.AspectRatioMode.IgnoreAspectRatio,
-                            Qt.TransformationMode.FastTransformation,
-                        )
-                    )
+                pixmap = _legacy_dpi_tile_pixmap(
+                    image, 32, button.devicePixelRatioF()
                 )
-                button.setStyleSheet(
-                    "QPushButton { background: #f8fbfd; color: #13293a; }"
-                    "QPushButton:checked { border: 3px solid #082f49; }"
-                )
+                # Draw the DPR-aware pixmap directly.  Passing it through
+                # QIcon makes Qt choose and rescale another representation,
+                # which discards the reference editor's DPI interpolation.
+                button.setIcon(QIcon())
+                button.set_tile_pixmap(pixmap)
+                button.setToolTip(self._tile_attribute_tooltip(key, tile))
         self._update_brush_previews()
-        bank = TILESET_BANKS[key]
-        bank_offset = self.project.chr_codec.offset + bank * 0x400
-        self.tileset.setItemText(
-            self.tileset.currentIndex(),
-            f"[{bank:02X}]{bank:03d}: {bank_offset:06X}",
-        )
+        # Use one information format for the closed combo and every popup row.
+        # Previously only the selected item received its real CHR address.
+        for index in range(self.tileset.count()):
+            item_key = str(self.tileset.itemData(index))
+            item_bank = TILESET_BANKS[item_key]
+            item_offset = self.project.chr_codec.offset + item_bank * 0x400
+            self.tileset.setItemText(
+                index,
+                f"[{item_bank:02X}]{item_bank:03d}: {item_offset:06X}",
+            )
         automatic = (
             self.current_map_id is not None
             and campaign_tileset_key(self.current_map_id) == key
@@ -3480,8 +4121,16 @@ class MapPage(ProjectPage):
         viewport = self.map_scroll.viewport()
         available_width = max(1, viewport.width() - 3)
         available_height = max(1, viewport.height() - 3)
+        # The reference editor displays one logical 16x16 metatile at roughly
+        # 20 physical screen pixels.  Qt sizes are device-independent, so a
+        # fixed logical cap of 20 becomes 25 pixels at the user's 125% Windows
+        # scale and makes the same palette look much harsher.  Cap the physical
+        # size instead; any remaining preview area intentionally stays empty,
+        # as it does in the reference editor.
+        device_ratio = max(1.0, float(viewport.devicePixelRatioF()))
+        reference_cell_limit = max(8, int(20 / device_ratio))
         cell_size = min(
-            24,
+            reference_cell_limit,
             max(
                 8,
                 min(
@@ -3618,20 +4267,9 @@ class MapPage(ProjectPage):
         assert self.project is not None and self.current_map_id is not None
         codec = self.project.map_trigger_codec
         assert codec is not None
-        if self._trigger_payload_cache is None:
-            self._trigger_payload_cache = tuple(
-                codec.encode_entries(layout.entries)
-                for layout in codec.layouts(self.project.working)
-            )
-        payloads = list(self._trigger_payload_cache)
-        payloads[self.current_map_id] = codec.encode_entries(entries)
-        used = sum(len(payload) for payload in set(payloads))
-        if used > codec.pool_capacity:
-            raise ValueError(
-                f"地图触发器压缩后需要 {used} 字节，"
-                f"托管池只有 {codec.pool_capacity} 字节。"
-            )
-        return used
+        return codec.storage_used_after(
+            None, self.current_map_id, entries
+        )
 
     @property
     def has_pending_draft(self) -> bool:
@@ -3664,13 +4302,15 @@ class MapPage(ProjectPage):
             self.staged_height,
             tuple(self.staged_tiles),
         )
-        expanded = self.project.expansion_plan is not None
-        if (
-            not expanded
-            and len(encoded)
-            > self.project.map_codec.capacities[self.current_map_id]
-        ):
-            raise ValueError("地图RLE数据超出当前记录的固定容量。")
+        plan = self.project.expansion_plan
+        expanded = bool(plan is not None and plan.flags & FLAG_MAPS)
+        if not expanded:
+            self.project.map_resource_replacement_usage(
+                self.current_map_id,
+                self.staged_width,
+                self.staged_height,
+                tuple(self.staged_tiles),
+            )
 
         staged_layout = None
         staged_triggers = None
@@ -3682,12 +4322,14 @@ class MapPage(ProjectPage):
                 self.staged_height,
             )
             scenario_encoded = self.project.scenario_layout_codec.encode(staged_layout)
-            if (
-                not expanded
-                and len(scenario_encoded)
-                > self.project.scenario_layout_codec.capacities[self.current_map_id]
-            ):
-                raise ValueError("部署数据超出当前记录的固定容量。")
+            if not expanded:
+                scenario_used = self.project.scenario_layout_codec.storage_used_after(
+                    None,
+                    self.current_map_id,
+                    staged_layout,
+                )
+                if scenario_used > self.project.scenario_layout_codec.pool_capacity:
+                    raise ValueError("初始配置超出 32 关共享池容量。")
 
         if (
             self.project.map_trigger_codec is not None
@@ -3795,6 +4437,8 @@ class MapPage(ProjectPage):
                 else "选择地图后可编辑。"
             )
             self.apply_button.setEnabled(False)
+            self.pending_state.setVisible(False)
+            self.apply_button.setVisible(False)
             self.capacity_help_button.setEnabled(False)
             self._emit_draft_state_changed()
             return
@@ -3807,16 +4451,34 @@ class MapPage(ProjectPage):
                 self.staged_height,
                 tuple(self.staged_tiles),
             )
-            expanded = self.project.expansion_plan is not None
-            capacity = self.project.map_codec.capacities[self.current_map_id]
-            size_ok = expanded or len(encoded) <= capacity
-            details = (
-                f"地图RLE {len(encoded)} B"
-                if expanded
-                else f"地图RLE {len(encoded)} / {capacity} B"
+            plan = self.project.expansion_plan
+            expanded = bool(plan is not None and plan.flags & FLAG_MAPS)
+            used, terrain_capacity = self.project.map_resource_replacement_usage(
+                self.current_map_id,
+                self.staged_width,
+                self.staged_height,
+                tuple(self.staged_tiles),
             )
+            size_ok = used <= terrain_capacity
+            details = f"地图RLE {len(encoded)} B"
+            total_used = total_capacity = 0
+            if not expanded:
+                total_used, total_capacity = (
+                    self.project.legacy_map_terrain_total_usage(
+                        self.current_map_id,
+                        self.staged_width,
+                        self.staged_height,
+                        tuple(self.staged_tiles),
+                    )
+                )
+                details += (
+                    f" · 所在Bank {used} / {terrain_capacity} B"
+                    f" · 三Bank合计 {total_used} / {total_capacity} B"
+                )
             staged_layout = None
             staged_triggers = None
+            scenario_bytes = scenario_used = scenario_capacity = None
+            trigger_bytes = trigger_used = trigger_capacity = None
             current_map = self.project.get_map(self.current_map_id)
             changed = (
                 self.staged_width != current_map.width
@@ -3829,14 +4491,21 @@ class MapPage(ProjectPage):
                     staged_layout, self.staged_width, self.staged_height
                 )
                 scenario_encoded = self.project.scenario_layout_codec.encode(staged_layout)
-                scenario_capacity = self.project.scenario_layout_codec.capacities[
-                    self.current_map_id
-                ]
-                if expanded:
-                    details += f" · 部署 {len(scenario_encoded)} B"
-                else:
-                    size_ok = size_ok and len(scenario_encoded) <= scenario_capacity
-                    details += f" · 部署 {len(scenario_encoded)} / {scenario_capacity} B"
+                scenario_bytes = len(scenario_encoded)
+                if not expanded:
+                    scenario_used = (
+                        self.project.scenario_layout_codec.storage_used_after(
+                            None,
+                            self.current_map_id,
+                            staged_layout,
+                        )
+                    )
+                    scenario_capacity = self.project.scenario_layout_codec.pool_capacity
+                    size_ok = size_ok and scenario_used <= scenario_capacity
+                    details += (
+                        f" · 初始配置本关 {scenario_bytes} B"
+                        f" · 32关共享池 {scenario_used} / {scenario_capacity} B"
+                    )
                 current_layout = self.project.get_scenario_layout(self.current_map_id)
                 changed = changed or (
                     scenario_encoded
@@ -3850,14 +4519,16 @@ class MapPage(ProjectPage):
                 self.project.map_trigger_codec.validate_entries(
                     staged_triggers, self.staged_width, self.staged_height
                 )
-                if expanded:
-                    details += f" · 事件/商店 {len(staged_triggers)} 条"
-                else:
+                trigger_bytes = len(
+                    self.project.map_trigger_codec.encode_entries(staged_triggers)
+                )
+                if not expanded:
                     trigger_used = self._trigger_storage_used_after(staged_triggers)
                     trigger_capacity = self.project.map_trigger_codec.pool_capacity
+                    size_ok = size_ok and trigger_used <= trigger_capacity
                     details += (
-                        f" · 事件/商店 {len(staged_triggers)} 条 · "
-                        f"全局池 {trigger_used} / {trigger_capacity} B"
+                        f" · 事件/商店本关 {len(staged_triggers)} 条/{trigger_bytes} B"
+                        f" · 32关共享池 {trigger_used} / {trigger_capacity} B"
                     )
                 changed = changed or (
                     staged_triggers
@@ -3872,16 +4543,93 @@ class MapPage(ProjectPage):
                     staged_layout,
                     staged_triggers,
                 )
+                if staged_layout is not None and staged_triggers is not None:
+                    (
+                        _terrain_used,
+                        scenario_used,
+                        trigger_used,
+                        used,
+                        shared_capacity,
+                    ) = self.project.map_resource_usage_breakdown(
+                        self.current_map_id,
+                        self.staged_width,
+                        self.staged_height,
+                        tuple(self.staged_tiles),
+                        staged_layout,
+                        staged_triggers,
+                    )
+                    details += (
+                        f" · 初始配置本关 {scenario_bytes} B/部署合计 {scenario_used} B"
+                        f" · 事件商店本关 {len(staged_triggers)} 条/{trigger_bytes} B"
+                        f"/合计 {trigger_used} B"
+                    )
+                size_ok = size_ok and used <= shared_capacity
                 details += f" · 地图共享池 {used} / {shared_capacity} B"
             status = (
-                "可保存（自动重排）"
-                if expanded and size_ok
-                else ("可保存" if size_ok else "超出固定容量")
+                (
+                    "可保存（共享池自动重排）"
+                    if expanded
+                    else "可保存（必要时整图迁移）"
+                )
+                if size_ok
+                else (
+                    "共享池无法容纳"
+                    if expanded
+                    else "三级Bank无法容纳"
+                )
             )
-            self.size_label.setText(
+            full_details = (
                 f"地图 ${self.current_map_id:02X} · {dc_map_label(self.current_map_id)} · "
                 f"{details} · {status}"
             )
+            # Keep the permanent line readable at the reference window width.
+            # Exact byte accounting remains available on hover and in the
+            # capacity planner instead of being visibly clipped.
+            mode = self.editor_tabs.currentIndex()
+            if mode == 1:
+                if scenario_bytes is None:
+                    compact = f"初始配置 ${self.current_map_id:02X}｜无独立部署记录"
+                elif expanded:
+                    compact = (
+                        f"初始${self.current_map_id:02X}｜本关{scenario_bytes} B｜"
+                        f"部署共{scenario_used} B｜共享池{used}/{shared_capacity} B"
+                    )
+                else:
+                    compact = (
+                        f"初始${self.current_map_id:02X}｜本关{scenario_bytes} B｜"
+                        f"32关共享{scenario_used}/{scenario_capacity} B｜自动重排"
+                    )
+            elif mode == 2:
+                if trigger_bytes is None:
+                    compact = f"商店事件 ${self.current_map_id:02X}｜无独立触发记录"
+                elif expanded:
+                    compact = (
+                        f"商店事件${self.current_map_id:02X}｜本关{len(staged_triggers)}条/{trigger_bytes} B｜"
+                        f"触发共{trigger_used} B｜共享池{used}/{shared_capacity} B"
+                    )
+                else:
+                    compact = (
+                        f"商店事件${self.current_map_id:02X}｜本关{len(staged_triggers)}条/{trigger_bytes} B｜"
+                        f"32关共享{trigger_used}/{trigger_capacity} B｜自动重排"
+                    )
+            elif expanded:
+                compact_status = "共享池重排" if size_ok else status
+                compact = (
+                    f"地图 ${self.current_map_id:02X} · "
+                    f"共享池 {used} / {shared_capacity} B · {compact_status}"
+                )
+            else:
+                compact_status = "整图迁移" if size_ok else status
+                compact = (
+                    f"图${self.current_map_id:02X}｜"
+                    f"Bank {used}/{terrain_capacity}｜"
+                    f"三Bank {total_used}/{total_capacity} B｜{compact_status}"
+                )
+            self.size_label.setText(compact if size_ok else f"{compact}｜{status}")
+            # Native Windows tooltips do not wrap long plain text reliably.
+            # Split the detailed accounting into short semantic lines so the
+            # popup stays inside the editor instead of spanning the desktop.
+            self.size_label.setToolTip(full_details.replace(" · ", "\n"))
             # Keep the hidden compatibility apply action enabled for every
             # pending draft.  MainWindow uses this button as its save guard;
             # disabling it on invalid input would let that draft be ignored.
@@ -3892,11 +4640,15 @@ class MapPage(ProjectPage):
                 else "✓ 地图、部署与事件已应用到当前工程"
             )
             self.pending_state.setProperty("pending", changed)
+            self.pending_state.setVisible(changed)
+            self.apply_button.setVisible(changed)
         except (ValueError, TypeError) as error:
             self.size_label.setText(f"当前输入无法保存：{error}")
             self.pending_state.setText("● 请修正输入或容量问题")
             self.pending_state.setProperty("pending", True)
             self.apply_button.setEnabled(self.has_pending_draft)
+            self.pending_state.setVisible(True)
+            self.apply_button.setVisible(True)
         self.pending_state.style().unpolish(self.pending_state)
         self.pending_state.style().polish(self.pending_state)
         self._emit_draft_state_changed()

@@ -56,21 +56,62 @@ class LegacyValueCombo(QComboBox):
             self.setCurrentIndex(index)
 
 
-class NesColorField(NesColorButton):
-    """NES swatch with a QSpinBox-compatible value API."""
+class NesColorField(QWidget):
+    """Reference-style NES swatch plus an editable hexadecimal field."""
 
     valueChanged = Signal(int)
 
     def __init__(self, value: int = 0, parent=None) -> None:
-        super().__init__(value, parent)
-        self.value_changed.connect(self.valueChanged.emit)
-        self.setMinimumSize(72, 30)
+        super().__init__(parent)
+        row = QHBoxLayout(self)
+        row.setContentsMargins(0, 0, 0, 0)
+        row.setSpacing(3)
+        self.swatch = NesColorButton(value, self)
+        self.swatch.setMinimumSize(30, 30)
+        self.swatch.setFixedSize(30, 30)
+        self.swatch.setText("")
+        self.number = QSpinBox(self)
+        self.number.setRange(0, 0x3F)
+        self.number.setDisplayIntegerBase(16)
+        self.number.setFixedWidth(52)
+        self.number.setValue(value)
+        self.number.setToolTip("直接输入十六进制 NES 色号")
+        row.addWidget(self.swatch)
+        row.addWidget(self.number)
+        self.swatch.value_changed.connect(self._from_swatch)
+        self.number.valueChanged.connect(self._from_number)
+        self._refresh_tooltip(value)
+
+    def _refresh_tooltip(self, value: int) -> None:
+        tip = f"NES 色号 ${value:02X}；点击展开64色调色板，也可在右侧直接输入。"
+        self.setToolTip(tip)
+        self.swatch.setToolTip(tip)
+
+    def _from_swatch(self, value: int) -> None:
+        self.swatch.setText("")
+        self._refresh_tooltip(value)
+        if self.number.value() != value:
+            self.number.setValue(value)
+        else:
+            self.valueChanged.emit(value)
+
+    def _from_number(self, value: int) -> None:
+        if self.swatch.value != value:
+            blocked = self.swatch.blockSignals(True)
+            self.swatch.set_value(value)
+            self.swatch.blockSignals(blocked)
+        self.swatch.setText("")
+        self._refresh_tooltip(value)
+        self.valueChanged.emit(value)
 
     def value(self) -> int:
-        return self._value
+        return self.number.value()
 
     def setValue(self, value: int) -> None:
-        self.set_value(value)
+        self.number.setValue(value)
+
+    def text(self) -> str:
+        return f"${self.value():02X}"
 
 
 class SpiritCostDialog(QDialog):
@@ -658,6 +699,8 @@ class CharacterDialogueWidget(QGroupBox):
     REFERENCE_ATTACK_LABELS = (
         "一次攻击", "二次攻击", "可以反击", "无力反击", "攻击受阻"
     )
+    UI_DIRECT_TO_RECORD = (6, 7, 0, 1, 2, 3, 4, 5)
+    UI_RULE_TO_RECORD = (0, 2, 1)
 
     def __init__(self) -> None:
         super().__init__()
@@ -837,20 +880,30 @@ class CharacterDialogueWidget(QGroupBox):
 
         transform_group = QGroupBox("变形起飞对话")
         self.transform_group = transform_group
-        transform_row = QHBoxLayout(transform_group)
+        transform_row = QGridLayout(transform_group)
         transform_row.setContentsMargins(7, 9, 7, 7)
-        transform_row.setSpacing(5)
-        transform_row.addWidget(QLabel("变形对话："))
+        transform_row.setHorizontalSpacing(5)
+        transform_row.setVerticalSpacing(3)
+        transform_row.addWidget(QLabel("对话选择："), 0, 0)
+        self.transform_selector = QComboBox()
+        self.transform_selector.currentIndexChanged.connect(
+            self._transform_selection_changed
+        )
+        transform_row.addWidget(self.transform_selector, 0, 1)
+        self.transform_clear_button = QPushButton("清空")
+        self.transform_clear_button.clicked.connect(
+            self._remove_selected_transform
+        )
+        transform_row.addWidget(self.transform_clear_button, 0, 2)
+        transform_row.addWidget(QLabel("变形对话："), 1, 0)
         self.transform_button = QPushButton()
         self.transform_button.setMinimumWidth(0)
         self.transform_button.setSizePolicy(
             QSizePolicy.Policy.Ignored, QSizePolicy.Policy.Fixed
         )
-        self.transform_button.clicked.connect(self._manage_transform_bindings)
-        transform_row.addWidget(self.transform_button, 1)
-        self.transform_clear_button = QPushButton("清空")
-        self.transform_clear_button.clicked.connect(self._remove_transform)
-        transform_row.addWidget(self.transform_clear_button)
+        self.transform_button.clicked.connect(self._edit_selected_transform)
+        transform_row.addWidget(self.transform_button, 1, 1, 1, 2)
+        transform_row.setColumnStretch(1, 1)
 
         outer.addWidget(attack_group, 0, 0)
         outer.addWidget(defense_group, 1, 0)
@@ -934,24 +987,69 @@ class CharacterDialogueWidget(QGroupBox):
 
     def _refresh_transform_button(self) -> None:
         rows = self.transform_table.rowCount()
-        if rows == 0:
-            self.transform_button.setText("无")
-            self.transform_button.setToolTip("点击添加变形起飞台词绑定。")
-            self.transform_clear_button.setEnabled(False)
-            return
-        previews = []
+        previous = self.transform_selector.currentData()
+        self.transform_selector.blockSignals(True)
+        self.transform_selector.clear()
         for row in range(rows):
+            start = self._parse_hex(
+                self.transform_table.item(row, 0), "起始机体"
+            )
+            end = self._parse_hex(
+                self.transform_table.item(row, 1), "终止机体"
+            )
             dialogue = self._parse_hex(
                 self.transform_table.item(row, 2), "变形台词"
             )
-            previews.append(dialogue_preview(
+            preview = dialogue_preview(
                 self.project, 0x05, dialogue, self._text_codec
-            ))
-        self.transform_button.setText(
-            previews[0] + (f"（共 {rows} 条）" if rows > 1 else "")
+            )
+            self.transform_selector.addItem(
+                f"{row + 1:02d}: ${start:02X}—${end:02X} · {preview}", row
+            )
+        self.transform_selector.addItem("添加", -1)
+        selected = self.transform_selector.findData(previous)
+        if selected < 0:
+            selected = 0 if rows else self.transform_selector.count() - 1
+        self.transform_selector.setCurrentIndex(selected)
+        self.transform_selector.blockSignals(False)
+        self._transform_selection_changed()
+
+    def _transform_selection_changed(self, *_args) -> None:
+        selected = self.transform_selector.currentData()
+        row = int(selected) if selected is not None else -1
+        if row < 0 or row >= self.transform_table.rowCount():
+            self.transform_table.setCurrentCell(-1, -1)
+            self.transform_button.setText("无")
+            self.transform_button.setToolTip("点击后添加一条变形起飞台词绑定。")
+            self.transform_clear_button.setEnabled(False)
+            return
+        self.transform_table.setCurrentCell(row, 0)
+        dialogue = self._parse_hex(
+            self.transform_table.item(row, 2), "变形台词"
         )
-        self.transform_button.setToolTip("\n".join(previews))
+        preview = dialogue_preview(
+            self.project, 0x05, dialogue, self._text_codec
+        )
+        self.transform_button.setText(preview)
+        self.transform_button.setToolTip(f"点击编辑第 {row + 1} 条变形起飞绑定。")
         self.transform_clear_button.setEnabled(True)
+
+    def _edit_selected_transform(self) -> None:
+        selected = self.transform_selector.currentData()
+        row = int(selected) if selected is not None else -1
+        if row < 0:
+            self._add_transform()
+            return
+        self.transform_table.setCurrentCell(row, 0)
+        self._edit_transform()
+
+    def _remove_selected_transform(self) -> None:
+        selected = self.transform_selector.currentData()
+        row = int(selected) if selected is not None else -1
+        if row < 0:
+            return
+        self.transform_table.setCurrentCell(row, 0)
+        self._remove_transform()
 
     def _manage_rule_group(self, group: int) -> None:
         table = self.rule_tables[group]
@@ -962,12 +1060,14 @@ class CharacterDialogueWidget(QGroupBox):
                 for column in range(4)
             )
             rules.append(DialogueRule(*values))
+        record_group = self.UI_RULE_TO_RECORD[group]
         dialog = DialogueRuleGroupDialog(
-            self.project, group, rules, self, text_codec=self._text_codec
+            self.project, record_group, rules, self, text_codec=self._text_codec
         )
         if dialog.exec() != QDialog.DialogCode.Accepted:
             return
-        target_group, updated = dialog.result_values()
+        target_record_group, updated = dialog.result_values()
+        target_group = self.UI_RULE_TO_RECORD.index(target_record_group)
         self._loading = True
         table.setRowCount(0)
         target = self.rule_tables[target_group]
@@ -1067,12 +1167,14 @@ class CharacterDialogueWidget(QGroupBox):
 
     def _add_rule(self, group: int) -> None:
         picker = DialogueRuleDialog(
-            self.project, group, DialogueRule(0x00, 0x00, 0x00, 0x00), self,
+            self.project, self.UI_RULE_TO_RECORD[group],
+            DialogueRule(0x00, 0x00, 0x00, 0x00), self,
             text_codec=self._text_codec,
         )
         if picker.exec() != QDialog.DialogCode.Accepted:
             return
-        target_group, rule = picker.result_value()
+        target_record_group, rule = picker.result_value()
+        target_group = self.UI_RULE_TO_RECORD.index(target_record_group)
         table = self.rule_tables[target_group]
         row = table.rowCount()
         table.insertRow(row)
@@ -1130,12 +1232,13 @@ class CharacterDialogueWidget(QGroupBox):
             for column in range(4)
         )
         picker = DialogueRuleDialog(
-            self.project, group, DialogueRule(*values), self,
+            self.project, self.UI_RULE_TO_RECORD[group], DialogueRule(*values), self,
             text_codec=self._text_codec,
         )
         if picker.exec() != QDialog.DialogCode.Accepted:
             return
-        target_group, rule = picker.result_value()
+        target_record_group, rule = picker.result_value()
+        target_group = self.UI_RULE_TO_RECORD.index(target_record_group)
         if target_group != group:
             table.removeRow(row)
             table = self.rule_tables[target_group]
@@ -1217,6 +1320,9 @@ class CharacterDialogueWidget(QGroupBox):
             )
         self.transform_table.setCurrentCell(row, 0)
         self._changed()
+        selector = self.transform_selector.findData(row)
+        if selector >= 0:
+            self.transform_selector.setCurrentIndex(selector)
 
     def _edit_transform(self) -> None:
         if self.character_id is None:
@@ -1276,10 +1382,12 @@ class CharacterDialogueWidget(QGroupBox):
             codec = project.character_dialogue_codec
             self._text_codec = LegacyTextCodec(project.working)
             record = codec.read(character_id, project.working)
-            for (segment, dialogue), binding in zip(self.direct_controls, record.direct):
+            for ui_index, (segment, dialogue) in enumerate(self.direct_controls):
+                binding = record.direct[self.UI_DIRECT_TO_RECORD[ui_index]]
                 segment.setCurrentIndex(segment.findData(binding.segment))
                 dialogue.setValue(binding.dialogue)
-            for table, rules in zip(self.rule_tables, record.rules):
+            for ui_group, table in enumerate(self.rule_tables):
+                rules = record.rules[self.UI_RULE_TO_RECORD[ui_group]]
                 table.setRowCount(len(rules))
                 for row, rule in enumerate(rules):
                     for column, value in enumerate((
@@ -1329,12 +1437,14 @@ class CharacterDialogueWidget(QGroupBox):
             self._loading = False
 
     def record(self) -> CharacterDialogueRecord:
-        direct = tuple(
-            DialogueBinding(int(segment.currentData()), dialogue.value())
-            for segment, dialogue in self.direct_controls
-        )
-        groups: list[tuple[DialogueRule, ...]] = []
-        for table in self.rule_tables:
+        direct_by_record: list[DialogueBinding | None] = [None] * 8
+        for ui_index, (segment, dialogue) in enumerate(self.direct_controls):
+            direct_by_record[self.UI_DIRECT_TO_RECORD[ui_index]] = DialogueBinding(
+                int(segment.currentData()), dialogue.value()
+            )
+        direct = tuple(binding for binding in direct_by_record if binding is not None)
+        groups_by_record: list[tuple[DialogueRule, ...] | None] = [None] * 3
+        for ui_group, table in enumerate(self.rule_tables):
             rules = []
             for row in range(table.rowCount()):
                 values = tuple(
@@ -1345,8 +1455,9 @@ class CharacterDialogueWidget(QGroupBox):
                     for column in range(4)
                 )
                 rules.append(DialogueRule(*values))
-            groups.append(tuple(rules))
-        return CharacterDialogueRecord(direct, tuple(groups))
+            groups_by_record[self.UI_RULE_TO_RECORD[ui_group]] = tuple(rules)
+        groups = tuple(group for group in groups_by_record if group is not None)
+        return CharacterDialogueRecord(direct, groups)
 
     def transform_records(self) -> tuple[TransformDialogueBinding, ...]:
         if self.character_id is None:
@@ -1599,6 +1710,8 @@ class CharacterDetailsWidget(QWidget):
                 spin.setMaximumWidth(100)
             elif key.endswith("slot"):
                 spin.setMaximumWidth(78)
+            elif key.startswith("color"):
+                spin.setMaximumWidth(90)
             else:
                 spin.setMaximumWidth(84)
             spin.setObjectName(f"portrait_{key}")

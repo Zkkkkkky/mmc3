@@ -631,6 +631,9 @@ class ProjectDocument:
         )
         resource_allocator = BankAllocator(rom.profile, rom.data)
         changes = ChangeSet(rom.data)
+        maps_expanded = bool(
+            initial_plan is not None and initial_plan.flags & FLAG_MAPS
+        )
         for index, operation in enumerate(self.operations):
             if not isinstance(operation, dict):
                 raise ProjectFormatError(f"第 {index + 1} 条项目操作不是对象。")
@@ -811,26 +814,38 @@ class ProjectDocument:
                     tiles = tuple(int(tile) for tile in tiles_value)
                     expected_digest = str(operation["expectedOldDigest"]).upper()
                     current_data = changes.materialize()
-                    current = map_codec.decode(map_id, current_data)
+                    current_map_codec = (
+                        map_codec
+                        if maps_expanded
+                        else MapCodec(rom, current_data)
+                    )
+                    current = current_map_codec.decode(map_id, current_data)
                     actual_digest = map_codec.semantic_digest(current)
                     if actual_digest != expected_digest:
                         raise ProjectFormatError(
                             f"第 {index + 1} 条操作的地图原值摘要不匹配。"
                         )
-                    offset, before, after = map_codec.replacement_patch(
-                        current_data,
-                        map_id,
-                        width,
-                        height,
-                        tiles,
+                    patches = (
+                        (current_map_codec.replacement_patch(
+                            current_data, map_id, width, height, tiles
+                        ),)
+                        if maps_expanded
+                        else current_map_codec.repack_patches(
+                            current_data, map_id, width, height, tiles
+                        )
                     )
-                    changes.apply_patch(
-                        offset,
-                        after,
-                        source=f"map:{map_id:02X}",
-                        description=f"地图 {map_id:02X} · {width}×{height} 地形",
-                        expected=before,
-                    )
+                    for offset, before, after in patches:
+                        changes.apply_patch(
+                            offset,
+                            after,
+                            source=f"map:{map_id:02X}",
+                            description=(
+                                f"地图 {map_id:02X} · {width}×{height} 地形"
+                            ),
+                            expected=before,
+                        )
+                    if not maps_expanded:
+                        map_codec = MapCodec(rom, changes.materialize())
                 elif kind == "scenario.replace_layout":
                     map_id = int(operation["mapId"])
                     current_data = changes.materialize()
@@ -880,16 +895,25 @@ class ProjectDocument:
                     scenario_codec.validate_layout(
                         changed_layout, map_record.width, map_record.height
                     )
-                    offset, before, after = scenario_codec.replacement_patch(
-                        current_data, changed_layout
+                    patches = (
+                        (scenario_codec.replacement_patch(current_data, changed_layout),)
+                        if maps_expanded
+                        else scenario_codec.repack_patches(
+                            current_data, map_id, changed_layout
+                        )
                     )
-                    changes.apply_patch(
-                        offset,
-                        after,
-                        source=f"scenario:{map_id:02X}",
-                        description=f"场景 {map_id:02X} · 部署数据",
-                        expected=before,
-                    )
+                    for offset, before, after in patches:
+                        changes.apply_patch(
+                            offset,
+                            after,
+                            source=f"scenario:{map_id:02X}",
+                            description=f"场景 {map_id:02X} · 部署数据",
+                            expected=before,
+                        )
+                    if not maps_expanded:
+                        scenario_codec = ScenarioLayoutCodec(
+                            rom, changes.materialize()
+                        )
                 elif kind == "map_triggers.replace":
                     if map_trigger_codec is None:
                         raise ProjectFormatError(

@@ -465,7 +465,10 @@ class EventPage(ProjectPage):
         if not rows or self.project is None or self.project.chapter_event_codec is None:
             return None
         address = self.table.item(rows[0].row(), 0).data(Qt.ItemDataRole.UserRole)
-        return self.project.chapter_event_codec.instruction_at(address, bytes(self.project.working))
+        return next(
+            (item for item in self._instructions if item.address == address),
+            None,
+        )
 
     def _selection_changed(self) -> None:
         instruction = self._selected_instruction()

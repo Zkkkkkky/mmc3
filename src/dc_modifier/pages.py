@@ -109,10 +109,21 @@ class ProjectPage(QWidget):
     def __init__(self) -> None:
         super().__init__()
         self.project: RomProject | None = None
+        self._defer_project_refresh = False
 
     def set_project(self, project: RomProject | None) -> None:
         self.project = project
-        self.refresh()
+        if not self._defer_project_refresh:
+            self.refresh()
+
+    def set_project_deferred(self, project: RomProject | None) -> None:
+        """Bind a project now and populate this hidden page on first visit."""
+
+        self._defer_project_refresh = True
+        try:
+            self.set_project(project)
+        finally:
+            self._defer_project_refresh = False
 
     def refresh(self) -> None:
         pass

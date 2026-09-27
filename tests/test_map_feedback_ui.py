@@ -8,7 +8,7 @@ from unittest.mock import patch
 os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 
 from PySide6.QtCore import QPoint, Qt
-from PySide6.QtGui import QImage
+from PySide6.QtGui import QColor, QFontMetrics, QImage
 from PySide6.QtTest import QSignalSpy, QTest
 from PySide6.QtWidgets import QApplication, QDialogButtonBox
 
@@ -165,7 +165,7 @@ class MapFeedbackUiTests(QtTestCase):
             (0x34, 0x35, 0x36, 0x3A, 0x3C, 0x3E, 0x40, 0x44, 0x46, 0x47, 0x48),
         )
 
-    def test_hidden_icon_library_is_lazy_and_table_choices_share_models(self) -> None:
+    def test_icon_library_is_permanent_on_initial_tab_and_lazy_while_inactive(self) -> None:
         self.assertFalse(self.page.icon_preview_group.isVisible())
         with patch("dc_modifier.map_page.render_unit_icon_bank") as render_bank:
             self.page.map_list.setCurrentRow(4)
@@ -173,8 +173,13 @@ class MapFeedbackUiTests(QtTestCase):
         render_bank.assert_not_called()
 
         self.page.editor_tabs.setCurrentIndex(1)
-        self.page.map_list.setCurrentRow(3)
+        self.page.map_list.setCurrentRow(4)
         self.application.processEvents()
+        self.assertTrue(self.page.icon_preview_group.isVisible())
+        self.assertTrue(all(not label.toolTip() for label in self.page.icon_sheet_labels))
+        self.assertTrue(self.page.add_deployment_button.isVisible())
+        self.assertFalse(self.page.deployment_summary.isVisible())
+        self.assertFalse(self.page.deployment_objects.isVisible())
         if self.page.enemy_table.rowCount() >= 2:
             first = self.page.enemy_table.cellWidget(0, 2)
             second = self.page.enemy_table.cellWidget(1, 2)
@@ -183,6 +188,38 @@ class MapFeedbackUiTests(QtTestCase):
             rows = self.page.enemy_table.rows()
             self.page.enemy_table.set_rows(rows)
             self.assertIs(self.page.enemy_table.cellWidget(0, 2), first_widget)
+
+    def test_main_deployment_buttons_edit_add_and_copy_without_large_dialog(self) -> None:
+        self.project.configure_expansion(288, 64, 112)
+        self.page.map_list.setCurrentRow(4)
+        self.page.editor_tabs.setCurrentIndex(1)
+        self.application.processEvents()
+        self.assertFalse(hasattr(self.page, "deployment_dialog"))
+        self.assertTrue(self.page.add_deployment_button.isEnabled())
+
+        self.page.add_deployment_button.click()
+        self.application.processEvents()
+        self.assertTrue(self.page.deployment_cell_dialog.isVisible())
+        self.assertIsNone(self.page._deployment_edit_source)
+        self.page.deployment_cell_dialog.close()
+
+        self.page._select_object("敌", 0)
+        self.assertTrue(self.page.edit_deployment_button.isEnabled())
+        self.assertTrue(self.page.copy_deployment_button.isEnabled())
+        self.page.edit_deployment_button.click()
+        self.application.processEvents()
+        self.assertTrue(self.page.deployment_cell_dialog.isVisible())
+        self.assertEqual(self.page._deployment_edit_source, ("敌", 0))
+        self.page.deployment_cell_dialog.close()
+
+        before = self.page.enemy_table.rowCount()
+        self.page.copy_deployment_button.click()
+        self.application.processEvents()
+        self.assertEqual(self.page.enemy_table.rowCount(), before + 1)
+        self.assertEqual(self.page._deployment_edit_source, ("敌", 1))
+        self.assertTrue(self.page.deployment_cell_dialog.isVisible())
+        self.assertFalse(hasattr(self.page, "deployment_dialog"))
+        self.page.deployment_cell_dialog.close()
 
     def test_map_overlays_receive_the_selected_scenario_route(self) -> None:
         icon = QImage(16, 16, QImage.Format.Format_ARGB32)
@@ -208,36 +245,96 @@ class MapFeedbackUiTests(QtTestCase):
                 all(call.args[3] == (0x46, 0x47, 0x3C) for call in render.call_args_list)
             )
 
-    def test_event_party_slots_render_real_icons_and_empty_slots_do_not_fake_units(self) -> None:
-        self.page.map_list.setCurrentRow(8)
+    def test_player_slots_follow_reference_join_records_by_chapter(self) -> None:
+        self.page.map_list.setCurrentRow(4)
         self.page.editor_tabs.setCurrentIndex(1)
         self.application.processEvents()
         slots = self.page._player_slot_state()
-        self.assertEqual(slots[10], (10, 21))
-        self.assertNotIn(6, slots)
-        rows = self.page.player_table.rows()
-        slot_ten_row = next(row for row, values in enumerate(rows) if values[2] == 10)
-        empty_row = next(row for row, values in enumerate(rows) if values[2] == 6)
-        self.assertFalse(
-            self.page.canvas.overlay_images[("我", slot_ten_row)].isNull()
+        self.assertEqual(
+            slots,
+            {
+                0: (4, 9),
+                1: (5, 13),
+                2: (6, 15),
+                3: (7, 17),
+                4: (8, 19),
+                5: (9, 23),
+                10: (10, 21),
+                8: (15, 29),
+            },
         )
-        self.assertNotIn(("我", empty_row), self.page.canvas.overlay_images)
-        list_row = (
-            self.page.enemy_table.rowCount()
-            + self.page.guest_table.rowCount()
-            + empty_row
-        )
-        self.assertIn(
-            "空队伍槽 $06（当前ROM无机体）",
-            self.page.deployment_objects.item(list_row).text(),
+        self.assertEqual(
+            [self.page._deployment_player_slot_choice_label(index) for index in range(11)],
+            [
+                "编号00: 琉妮  西奥妮",
+                "编号01: 白河愁  古兰森",
+                "编号02: 夏亚  夏亚专用·扎古",
+                "编号03: 葵丝  亚古特·多加",
+                "编号04: 西罗克  帕拉斯",
+                "编号05: 萨拉  卡扎C",
+                "编号06:",
+                "编号07:",
+                "编号08: 罗莉莱  莱茵X1",
+                "编号09:",
+                "编号0A: 蕾柯亚  玛拉塞",
+            ],
         )
 
-    def test_all_chapters_visualize_every_rom_bound_player_unit(self) -> None:
+        # Later joins live in the other two physical event banks.  The old
+        # editor accumulates those $6F records but does not apply runtime leave
+        # or transfer opcodes to its configuration combo.
+        self.page.map_list.setCurrentRow(12)
+        self.application.processEvents()
+        self.assertEqual(
+            self.page._player_slot_state(),
+            {
+                0: (4, 9),
+                1: (5, 13),
+                2: (6, 15),
+                3: (7, 17),
+                4: (8, 19),
+                5: (9, 23),
+                6: (18, 33),
+                7: (19, 32),
+                8: (20, 37),
+                10: (10, 21),
+            },
+        )
+
+    def test_player_slot_preview_reacts_to_join_event_edits(self) -> None:
+        self.page.map_list.setCurrentRow(4)
+        self.application.processEvents()
+        self.assertEqual(self.page._player_slot_state()[8], (15, 29))
+        self.assertNotIn(6, self.page._player_slot_state())
+
+        instruction = next(
+            item
+            for item in self.project.chapter_event_instructions()
+            if item.address == 0xA9BB
+        )
+        self.assertEqual(instruction.raw, bytes((0x6F, 0x08, 0x0F, 0x1D, 0x30)))
+        self.project.set_chapter_event_instruction(
+            instruction.address,
+            bytes((instruction.raw_opcode, 0x06, 0x12, 0x21, 0x30)),
+        )
+
+        slots = self.page._player_slot_state()
+        self.assertEqual(slots[6], (0x12, 0x21))
+        self.assertNotIn(8, slots)
+        self.assertEqual(
+            self.page._deployment_player_slot_choice_label(6),
+            "编号06: 姬娜  龙飞",
+        )
+
+    def test_all_chapters_visualize_every_resolved_player_unit(self) -> None:
         self.page.editor_tabs.setCurrentIndex(1)
         for map_id in range(self.project.scenario_count):
             self.page.map_list.setCurrentRow(map_id)
             self.application.processEvents()
             slots = self.page._player_slot_state()
+            referenced_slots = {
+                values[2] for values in self.page.player_table.rows()
+            }
             for row, values in enumerate(self.page.player_table.rows()):
                 key = ("我", row)
                 slot = values[2]
@@ -264,6 +361,27 @@ class MapFeedbackUiTests(QtTestCase):
         self.assertLess(corner.red(), 30)
         self.assertLess(corner.green(), 30)
         self.assertLess(corner.blue(), 30)
+        canvas.close()
+        canvas.deleteLater()
+
+    def test_map_event_and_shop_use_reference_white_red_placards(self) -> None:
+        canvas = MapCanvas()
+        canvas.set_cell_size(24)
+        tile = QImage(16, 16, QImage.Format.Format_RGB32)
+        tile.fill(QColor("#008000"))
+        canvas.set_tile_images(tuple(tile for _ in range(16)))
+        for side in ("事", "店"):
+            canvas.set_content(1, 1, [0], [(side, 0, 0, side, 0)])
+            canvas.show()
+            self.application.processEvents()
+            image = canvas.grab().toImage()
+            colors = [
+                image.pixelColor(x, y)
+                for y in range(image.height())
+                for x in range(image.width())
+            ]
+            self.assertGreater(sum(c.red() > 180 and c.green() < 90 for c in colors), 8)
+            self.assertGreater(sum(c.red() > 240 and c.green() > 240 for c in colors), 40)
         canvas.close()
         canvas.deleteLater()
 
@@ -344,7 +462,7 @@ class MapFeedbackUiTests(QtTestCase):
         signature = self.page._draft_signature()
         self.page.editor_tabs.setCurrentIndex(1)
         self.application.processEvents()
-        self.assertTrue(self.page.deployment_objects.isVisible())
+        self.assertFalse(self.page.deployment_objects.isVisible())
         self.assertFalse(self.page.canvas.paint_enabled)
         side, x, y, _label, row = self.page.canvas.overlays[0]
         position = QPoint(x * self.page.canvas.cell_size + 3, y * self.page.canvas.cell_size + 3)
@@ -352,6 +470,10 @@ class MapFeedbackUiTests(QtTestCase):
         self.assertEqual(self.page.canvas.selected_overlay, (side, row))
         self.assertEqual(tuple(self.page.deployment_objects.currentItem().data(Qt.ItemDataRole.UserRole)),
                          (side, row))
+        self.assertTrue(self.page.deployment_selection_preview.isVisible())
+        preview = self.page.deployment_selection_preview.text()
+        self.assertIn("配置预览｜敌军 01｜坐标 (03,04)", preview)
+        self.assertIn("等级 5", preview)
         self.assertEqual(self.page._draft_signature(), signature)
         before = tuple(self.page.staged_tiles)
         self.page.canvas.selected_tile = 15
@@ -371,6 +493,23 @@ class MapFeedbackUiTests(QtTestCase):
         self.assertEqual(self.page.deployment_x_editor.value(), 3)
         self.assertEqual(self.page.deployment_action_combo.currentData(), 0)
         self.page.deployment_cell_dialog.close()
+
+    def test_player_selection_preview_names_roster_slot_and_player_control(self) -> None:
+        self.page.player_table.set_rows([(12, 17, 3, 0)])
+        self.page.editor_tabs.setCurrentIndex(1)
+        self.page._select_object("我", 0)
+        preview = self.page.deployment_selection_preview.text()
+        self.assertIn("配置预览｜我方出击位 01｜坐标 (12,17)", preview)
+        self.assertIn("等级：队伍槽 $03", preview)
+        self.assertIn("行动：玩家自控", preview)
+        self.assertNotIn("行动 不动", preview)
+        tooltip = self.page.deployment_selection_preview.toolTip()
+        self.assertIn("武器1：", tooltip)
+        self.assertIn("武器2：", tooltip)
+        self.assertIn("射程", tooltip)
+        self.assertIn("距离补正表", tooltip)
+        self.assertIn("行动：玩家自控", tooltip)
+        self.assertNotIn("行动：不动", tooltip)
 
     def test_initial_configuration_right_click_edits_and_adds_at_exact_cell(self) -> None:
         self.project.configure_expansion(288, 64, 112)
@@ -395,42 +534,149 @@ class MapFeedbackUiTests(QtTestCase):
             action.text(): action
             for action in self.page._deployment_context_menu.actions()
         }
-        self.assertIn("更改敌军初始配置", actions)
-        self.assertIn("在此格添加配置", actions)
-        self.assertIn("删除敌军初始配置", actions)
+        self.assertFalse(any("坐标" in label for label in actions))
+        self.assertEqual(
+            [action.text() for action in self.page._deployment_context_menu.actions()],
+            [
+                "添加配置",
+                "更改配置",
+                "更改属性",
+                "击杀经验计算器",
+                "加到属性计算器",
+                "复制",
+                "剪切",
+                "粘贴",
+                "删除配置",
+            ],
+        )
         self.assertIn("更改属性", actions)
-        self.assertIn("击落经验计算器", actions)
+        self.assertIn("击杀经验计算器", actions)
         self.assertIn("加到属性计算器", actions)
-        self.assertIn("复制配置", actions)
-        self.assertIn("剪切配置", actions)
-        self.assertIn("粘贴配置", actions)
-        self.assertFalse(actions["粘贴配置"].isEnabled())
+        self.assertFalse(actions["粘贴"].isEnabled())
         database_requests = QSignalSpy(self.page.database_record_requested)
         actions["更改属性"].trigger()
         self.assertEqual(database_requests.count(), 1)
         self.assertEqual(list(database_requests.at(0)), ["units", 1])
         experience_requests = QSignalSpy(self.page.defeat_experience_requested)
-        actions["击落经验计算器"].trigger()
+        actions["击杀经验计算器"].trigger()
         self.assertEqual(experience_requests.count(), 1)
         self.assertEqual(list(experience_requests.at(0)), [1, 5])
-        actions["更改敌军初始配置"].trigger()
+        actions["更改配置"].trigger()
         self.application.processEvents()
         self.assertTrue(self.page.deployment_cell_dialog.isVisible())
+        self.assertFalse(self.page.deployment_x_editor.isVisible())
+        self.assertFalse(self.page.deployment_y_editor.isVisible())
         self.assertEqual(self.page.deployment_side_combo.currentData(), "敌")
         self.assertEqual(self.page.enemy_table.currentRow(), 0)
         self.page.deployment_cell_dialog.close()
 
-        add_menu = actions["在此格添加配置"].menu()
-        guest_action = next(
-            action for action in add_menu.actions() if action.text() == "客军"
-        )
-        guest_action.trigger()
+        actions["添加配置"].trigger()
         self.application.processEvents()
         self.assertTrue(self.page.deployment_cell_dialog.isVisible())
         self.assertEqual(self.page.guest_table.rows(), [])
+        self.assertEqual(self.page.deployment_side_combo.currentData(), "敌")
+        self.page.deployment_side_combo.setCurrentIndex(
+            self.page.deployment_side_combo.findData("客")
+        )
         self.assertEqual(self.page.deployment_side_combo.currentData(), "客")
         self.page._save_deployment_cell_editor()
         self.assertEqual(self.page.guest_table.rows(), [(3, 4, 0, 1, 1, 0)])
+
+    def test_compact_editor_matches_reference_two_column_flow(self) -> None:
+        self.project.configure_expansion(288, 64, 112)
+        self.page._open_deployment_cell_editor("敌", 3, 4)
+        self.application.processEvents()
+        self.assertEqual(
+            self.page.deployment_cell_buttons.button(
+                QDialogButtonBox.StandardButton.Save
+            ).text(),
+            "确定",
+        )
+        self.assertTrue(self.page.deployment_details_group.isVisible())
+        self.assertTrue(self.page.deployment_details_group.isEnabled())
+        self.assertFalse(self.page.deployment_player_group.isEnabled())
+        self.assertFalse(self.page.deployment_editor_status.isVisible())
+        self.assertFalse(self.page.deployment_capacity_button.isVisible())
+        self.assertTrue(
+            self.page.deployment_character_combo.currentText().startswith("[00]000:")
+        )
+        self.assertTrue(
+            self.page.deployment_unit_combo.currentText().startswith("[01]001:")
+        )
+        self.assertEqual(self.page.deployment_level_editor.currentText(), "等级：01")
+        self.assertEqual(self.page.deployment_level_editor.count(), 99)
+        self.assertEqual(self.page.deployment_level_editor.itemData(98), 99)
+        self.assertTrue(
+            self.page.deployment_roster_combo.itemText(0).startswith("编号00:")
+        )
+
+        self.page.deployment_side_combo.setCurrentIndex(
+            self.page.deployment_side_combo.findData("我")
+        )
+        self.assertFalse(self.page.deployment_details_group.isEnabled())
+        self.assertTrue(self.page.deployment_player_group.isEnabled())
+        self.page.deployment_cell_dialog.close()
+
+    def test_empty_map_cell_context_menu_enables_add_and_available_paste(self) -> None:
+        self.page.enemy_table.set_rows([(3, 4, 1, 1, 5, 0)])
+        self.page.guest_table.set_rows([])
+        self.page.player_table.set_rows([])
+        self.page.editor_tabs.setCurrentIndex(1)
+        self.page._deployment_clipboard = (
+            "敌",
+            self.page.enemy_table.rows()[0],
+        )
+
+        with patch("dc_modifier.map_page.QMenu.popup"):
+            self.page._show_deployment_context_menu(8, 9, QPoint(0, 0))
+        actions = self.page._deployment_context_menu.actions()
+        self.assertEqual(
+            [action.text() for action in actions],
+            [
+                "添加配置",
+                "更改配置",
+                "更改属性",
+                "击杀经验计算器",
+                "加到属性计算器",
+                "复制",
+                "剪切",
+                "粘贴",
+                "删除配置",
+            ],
+        )
+        enabled = {action.text() for action in actions if action.isEnabled()}
+        self.assertEqual(enabled, {"添加配置", "粘贴"})
+
+        self.page._deployment_clipboard = None
+        with patch("dc_modifier.map_page.QMenu.popup"):
+            self.page._show_deployment_context_menu(8, 9, QPoint(0, 0))
+        enabled_without_clipboard = {
+            action.text()
+            for action in self.page._deployment_context_menu.actions()
+            if action.isEnabled()
+        }
+        self.assertEqual(enabled_without_clipboard, {"添加配置"})
+
+        self.page._deployment_clipboard = (
+            "敌",
+            self.page.enemy_table.rows()[0],
+        )
+        with patch("dc_modifier.map_page.QMenu.popup"):
+            self.page._show_deployment_context_menu(3, 4, QPoint(0, 0))
+        selected_actions = self.page._deployment_context_menu.actions()
+        self.assertTrue(all(action.isEnabled() for action in selected_actions))
+
+    def test_deployment_level_choices_follow_verified_rom_level_cap(self) -> None:
+        with patch.object(self.project, "get_verified_level_cap", return_value=60):
+            self.page._refresh_deployment_editor_choices()
+        self.assertEqual(self.page._deployment_level_cap, 60)
+        self.assertEqual(self.page.deployment_level_editor.count(), 60)
+        self.assertEqual(self.page.deployment_level_editor.itemData(59), 60)
+
+        self.page._refresh_deployment_editor_choices()
+        self.assertEqual(self.page._deployment_level_cap, 99)
+        self.assertEqual(self.page.deployment_level_editor.count(), 99)
+        self.assertEqual(self.page.deployment_level_editor.itemData(98), 99)
 
     def test_deployment_tooltip_and_table_show_verified_action_and_attributes(self) -> None:
         self.page.map_list.setCurrentRow(4)
@@ -444,6 +690,7 @@ class MapFeedbackUiTests(QtTestCase):
         self.assertIn("游戏成长属性", tooltip)
         self.assertIn("武器1", tooltip)
         self.assertIn("特技", tooltip)
+        self.assertIn("距离补正表", tooltip)
         self.assertIn("行动：", tooltip)
         self.assertIn("沙也加行动智商", tooltip)
         action_editor = self.page.enemy_table.cellWidget(1, 5)
@@ -458,6 +705,11 @@ class MapFeedbackUiTests(QtTestCase):
             "Lv.54 游戏成长属性：HP 1625 · 强度 280 · 防御 227 · 速度 317 · 移动 134",
             level_54,
         )
+        empty_weapons = self.page._deployment_description(
+            "敌", (3, 4, 1, 1, 5, 0)
+        )
+        self.assertIn("武器1：无", empty_weapons)
+        self.assertIn("武器2：无", empty_weapons)
 
     def test_map_hover_shows_the_rich_tooltip_immediately(self) -> None:
         self.page.map_list.setCurrentRow(4)
@@ -493,47 +745,106 @@ class MapFeedbackUiTests(QtTestCase):
         self.page._copy_deployment_record("客", 0, cut=True)
         self.assertEqual(self.page.guest_table.rows(), [(8, 9, *original[2:])])
 
-    def test_full_fixed_deployment_routes_addition_to_capacity_planning(self) -> None:
+    def test_deployment_growth_uses_the_32_chapter_shared_pool(self) -> None:
         self.page.map_list.setCurrentRow(4)
+        self.page.editor_tabs.setCurrentIndex(1)
         errors = []
         self.page.show_error = lambda error: errors.append(str(error))
         before = self.page.enemy_table.rows()
         self.page._open_deployment_cell_editor("敌", 0, 0)
         self.page._save_deployment_cell_editor()
-        self.assertEqual(self.page.enemy_table.rows(), before)
-        self.assertIn("容量规划", errors[-1])
-        self.assertIn("148", self.page.deployment_editor_status.text())
+        self.assertEqual(len(self.page.enemy_table.rows()), len(before) + 1)
+        self.assertEqual(errors, [])
+        self.assertIn("32关共享", self.page.size_label.text())
+        self.assertIn("/6891 B", self.page.size_label.text())
 
-    def test_fixed_slot_add_then_delete_restores_original_tail_bytes(self) -> None:
-        # Map 0C has 23 verified spare bytes in the recommended ROM, so this
-        # exercises a real fixed-slot structure edit without expansion.
+    def test_capacity_status_follows_map_initial_and_shop_event_tabs(self) -> None:
+        self.page.map_list.setCurrentRow(0)
+        self.page.editor_tabs.setCurrentIndex(0)
+        self.assertIn("三Bank", self.page.size_label.text())
+
+        self.page.editor_tabs.setCurrentIndex(1)
+        self.assertIn("本关4 B", self.page.size_label.text())
+        self.assertIn("32关共享1236/6891 B", self.page.size_label.text())
+        self.assertIn("初始配置本关 4 B", self.page.size_label.toolTip())
+
+        self.page.editor_tabs.setCurrentIndex(2)
+        self.assertIn("本关0条/1 B", self.page.size_label.text())
+        self.assertIn("32关共享10/310 B", self.page.size_label.text())
+        self.assertIn("事件/商店本关 0 条/1 B", self.page.size_label.toolTip())
+
+    def test_user_scenario_1258_to_1264_commits_without_capacity_error(self) -> None:
+        self.page.map_list.setCurrentRow(0)
+        self.page.editor_tabs.setCurrentIndex(1)
+        staged = [(index, 0, index + 1, index + 1, 1, 0) for index in range(3)]
+        self.page.enemy_table.set_rows(staged)
+        self.assertTrue(self.page.commit_pending_changes())
+        self.assertIn("32关共享1258/6891 B", self.page.size_label.text())
+
+        self.page.enemy_table.set_rows(staged + [(4, 0, 4, 4, 1, 0)])
+        self.assertIsNone(self.page.pending_draft_error)
+        self.assertTrue(self.page.commit_pending_changes())
+        self.assertIn("32关共享1264/6891 B", self.page.size_label.text())
+
+    def test_expanded_capacity_status_names_the_unified_map_pool(self) -> None:
+        self.project.configure_expansion(288, 64, 112)
+        self.page.refresh()
+        self.page.map_list.setCurrentRow(0)
+
+        self.page.editor_tabs.setCurrentIndex(1)
+        self.assertIn("部署共", self.page.size_label.text())
+        self.assertIn("共享池", self.page.size_label.text())
+        self.assertNotIn("/6891 B", self.page.size_label.text())
+
+        self.page.editor_tabs.setCurrentIndex(2)
+        self.assertIn("触发共", self.page.size_label.text())
+        self.assertIn("地图共享池", self.page.size_label.toolTip())
+        self.assertNotIn("/310 B", self.page.size_label.text())
+
+    def test_shared_pool_add_then_delete_restores_pointer_table_and_pool(self) -> None:
         self.page.map_list.setCurrentRow(12)
-        offset = self.project.scenario_layout_codec.record_offset(12)
-        capacity = self.project.scenario_layout_codec.capacities[12]
-        before = bytes(self.project.working[offset:offset + capacity])
+        codec = self.project.scenario_layout_codec
+        pointer_start = codec.pointer_table_offset
+        pointer_end = pointer_start + self.project.scenario_count * 2
+        pool_start = codec.pool_offset
+        pool_end = pool_start + codec.pool_capacity
+        before = (
+            bytes(self.project.working[pointer_start:pointer_end]),
+            bytes(self.project.working[pool_start:pool_end]),
+        )
         self.assertEqual(self.page.enemy_table.rowCount(), 0)
         self.page._open_deployment_cell_editor("敌", 0, 0)
         self.page._save_deployment_cell_editor()
         self.assertTrue(self.page.commit_pending_changes())
         self.assertNotEqual(
-            bytes(self.project.working[offset:offset + capacity]), before
+            (
+                bytes(self.project.working[pointer_start:pointer_end]),
+                bytes(self.project.working[pool_start:pool_end]),
+            ),
+            before,
         )
 
         self.page._remove_deployment_row("敌", 0)
         self.assertTrue(self.page.commit_pending_changes())
         self.assertEqual(
-            bytes(self.project.working[offset:offset + capacity]), before
+            (
+                bytes(self.project.working[pointer_start:pointer_end]),
+                bytes(self.project.working[pool_start:pool_end]),
+            ),
+            before,
         )
 
     def test_shop_list_add_drag_commit_and_undo_preserve_record_semantics(self) -> None:
         self.page.editor_tabs.setCurrentIndex(2)
         self.assertIn("没有", self.page.trigger_summary.text())
         self.assertEqual(self.page.trigger_character_combo.itemData(0), 0xFF)
-        self.assertIn("任何人物", self.page.trigger_character_combo.itemText(0))
+        self.assertIn("任意我方人物", self.page.trigger_character_combo.itemText(0))
         self.page.trigger_table.set_rows([(3, 4, 0xFF, 0xF2)])
         self.assertEqual(self.page.trigger_objects.count(), 1)
-        self.assertIn("商店 2", self.page.trigger_objects.item(0).text())
-        self.assertIn("任何人物", self.page.trigger_objects.item(0).text())
+        trigger_item = self.page.trigger_objects.item(0)
+        self.assertIn("商店 3", trigger_item.text())
+        self.assertIn("任意我方人物", trigger_item.text())
+        self.assertEqual(trigger_item.background().style(), Qt.BrushStyle.NoBrush)
         self.page._overlay_moved("店", 0, 4, 5)
         self.assertEqual(self.page.trigger_table.rows()[0], (4, 5, 0xFF, 0xF2))
         self.assertTrue(self.page.commit_pending_changes())
@@ -546,16 +857,17 @@ class MapFeedbackUiTests(QtTestCase):
         width = self.page.staged_width
         accepted = [
             (index % width, index // width, 0xFF, 0xF2)
-            for index in range(73)
+            for index in range(74)
         ]
         self.page.trigger_table.set_rows(accepted)
         self.assertTrue(self.page.commit_pending_changes())
-        self.assertIn("299 / 300 B", self.page.size_label.text())
+        self.assertIn("307 / 310 B", self.page.size_label.toolTip())
+        self.assertNotIn("全局池", self.page.size_label.text())
         before_overflow = bytes(self.project.working)
 
-        overflow = accepted + [(73 % width, 73 // width, 0xFF, 0xF2)]
+        overflow = accepted + [(74 % width, 74 // width, 0xFF, 0xF2)]
         self.page.trigger_table.set_rows(overflow)
-        self.assertIn("托管池只有 300 字节", self.page.pending_draft_error or "")
+        self.assertIn("分段共享池只有 310 字节", self.page.pending_draft_error or "")
         self.assertFalse(self.page.commit_pending_changes())
         self.assertEqual(bytes(self.project.working), before_overflow)
         self.assertEqual(self.page.trigger_table.rows(), overflow)
@@ -586,14 +898,20 @@ class MapFeedbackUiTests(QtTestCase):
             action.text(): action
             for action in self.page._trigger_context_menu.actions()
         }
+        self.assertFalse(any("坐标" in label for label in actions))
         self.assertIn("添加地图事件", actions)
+        self.assertIn("添加商店入口", actions)
         self.assertIn("删除地图事件", actions)
         self.assertFalse(actions["删除地图事件"].isEnabled())
         actions["添加地图事件"].trigger()
         self.application.processEvents()
         self.assertTrue(self.page.trigger_cell_dialog.isVisible())
+        self.assertFalse(self.page.trigger_x_editor.isVisible())
+        self.assertFalse(self.page.trigger_y_editor.isVisible())
         self.assertEqual(self.page.trigger_x_editor.value(), 3)
         self.assertEqual(self.page.trigger_y_editor.value(), 4)
+        self.assertTrue(self.page.trigger_character_combo.isEnabled())
+        self.assertIn("地图事件同样可以限定人物", self.page.trigger_character_combo.toolTip())
         self.page.trigger_event_combo.setCurrentIndex(
             self.page.trigger_event_combo.findData(7)
         )
@@ -616,10 +934,43 @@ class MapFeedbackUiTests(QtTestCase):
             action.text(): action
             for action in self.page._trigger_context_menu.actions()
         }
-        self.assertIn("编辑商店", actions)
-        self.assertIn("删除地图事件", actions)
-        actions["删除地图事件"].trigger()
+        self.assertIn("编辑商店入口", actions)
+        self.assertIn("删除商店入口", actions)
+        actions["删除商店入口"].trigger()
         self.assertEqual(self.page.trigger_table.rows(), [])
+
+    def test_trigger_choices_hide_invalid_shops_and_event_popup_starts_at_one(self) -> None:
+        self.assertEqual(self.page.trigger_shop_combo.count(), 5)
+        self.assertEqual(
+            [self.page.trigger_shop_combo.itemData(index) for index in range(5)],
+            list(range(0xF0, 0xF5)),
+        )
+        for shop_id in range(0xF5, 0x100):
+            self.assertEqual(self.page.trigger_shop_combo.findData(shop_id), -1)
+
+        combo = self.page.trigger_event_combo
+        self.assertEqual(combo.maxVisibleItems(), 10)
+        combo.setCurrentIndex(combo.findData(13))
+        combo.showPopup()
+        self.application.processEvents()
+        self.assertEqual(combo.view().verticalScrollBar().value(), 0)
+        self.assertFalse(combo.view().visualRect(combo.model().index(0, 0)).isEmpty())
+        row_height = combo.view().sizeHintForRow(0)
+        self.assertLessEqual(combo.view().height(), row_height * 10 + 8)
+        combo.hidePopup()
+
+        character_combo = self.page.trigger_character_combo
+        unknown_index = character_combo.findData(0x1D)
+        self.assertEqual(character_combo.itemText(unknown_index), "仅限 ？？？")
+        character_combo.setCurrentIndex(unknown_index)
+        character_combo.showPopup()
+        self.application.processEvents()
+        self.assertEqual(character_combo.view().verticalScrollBar().value(), 0)
+        character_row_height = character_combo.view().sizeHintForRow(0)
+        self.assertLessEqual(
+            character_combo.view().height(), character_row_height * 10 + 8
+        )
+        character_combo.hidePopup()
 
     def test_all_object_overlay_and_manual_zoom_are_accessible(self) -> None:
         self.page.trigger_table.set_rows([(3, 4, 0xFF, 0xF2)])
@@ -640,22 +991,101 @@ class MapFeedbackUiTests(QtTestCase):
         self.assertIn("18", errors[-1])
 
     def test_capacity_planner_preserves_oversized_draft_and_revalidates_after_linking(self) -> None:
-        self.page.height_editor.setValue(30)
+        self.assertIn("Bank 6709/6722", self.page.size_label.text())
+        self.assertIn("三Bank 14474/17730 B", self.page.size_label.text())
+        self.assertIn("整图迁移", self.page.size_label.text())
+        self.assertIn("所在Bank 6709 / 6722 B", self.page.size_label.toolTip())
+        self.assertIn("三Bank合计 14474 / 17730 B", self.page.size_label.toolTip())
+        self.assertIn("可保存（必要时整图迁移）", self.page.size_label.toolTip())
+        self.assertGreaterEqual(self.page.size_label.toolTip().count("\n"), 4)
+        self.assertLessEqual(
+            max(len(line) for line in self.page.size_label.toolTip().splitlines()),
+            36,
+        )
+        self.page.resize(850, 640)
+        self.application.processEvents()
+        self.assertLessEqual(
+            QFontMetrics(self.page.size_label.font()).horizontalAdvance(
+                self.page.size_label.text()
+            ),
+            self.page.size_label.width(),
+        )
+        _used, total = self.project.map_resource_replacement_usage(
+            self.page.current_map_id,
+            self.page.staged_width,
+            self.page.staged_height,
+            tuple(self.page.staged_tiles),
+        )
+        self.assertIn(f"/{total}", self.page.size_label.text())
+        total_used, total_capacity = self.project.legacy_map_terrain_total_usage(
+            self.page.current_map_id,
+            self.page.staged_width,
+            self.page.staged_height,
+            tuple(self.page.staged_tiles),
+        )
+        self.assertEqual((total_used, total_capacity), (14474, 17730))
+        self.assertIn("三Bank 14474/17730 B", self.page.size_label.text())
+        self.page.height_editor.setValue(32)
+        self.page.width_editor.setValue(32)
         self.page._resize_map()
+        self.page.staged_tiles = [
+            index % 2
+            for index in range(self.page.staged_width * self.page.staged_height)
+        ]
+        original_usage = self.project.map_resource_replacement_usage
+        self.project.map_resource_replacement_usage = lambda *_args, **_kwargs: (
+            (_ for _ in ()).throw(ValueError("测试用旧分区容量不足"))
+        )
+        self.page._update_size_label()
         draft = self.page._draft_signature()
         self.assertIsNotNone(self.page.pending_draft_error)
         requested = []
         def plan(key):
             requested.append(key)
+            self.project.map_resource_replacement_usage = original_usage
             self.project.configure_expansion(304, 48, 112)
         self.page.navigation_requested.connect(plan)
         self.page._open_capacity_planner()
         self.assertEqual(requested, ["resources"])
         self.assertEqual(self.page._draft_signature(), draft)
         self.assertIsNone(self.page.pending_draft_error)
-        self.assertIn("自动重排", self.page.size_label.text())
+        self.assertIn("共享池重排", self.page.size_label.text())
+        self.assertIn("地图共享池", self.page.size_label.toolTip())
         self.assertTrue(self.page.commit_pending_changes())
-        self.assertEqual(self.project.get_map(0).height, 30)
+        self.assertEqual(
+            (self.project.get_map(0).width, self.project.get_map(0).height),
+            (32, 32),
+        )
+
+    def test_two_byte_map_growth_uses_legacy_bank_tail_and_commits(self) -> None:
+        record = self.project.get_map(0)
+        self.assertEqual((record.tiles[3], len(record.raw)), (5, 324))
+        self.page.staged_tiles[3] = 0
+        self.page._update_size_label()
+
+        self.assertIsNone(self.page.pending_draft_error)
+        self.assertIn("Bank 6711/6722", self.page.size_label.text())
+        self.assertIn("三Bank 14476/17730 B", self.page.size_label.text())
+        self.assertTrue(self.page.commit_pending_changes())
+        self.assertEqual(self.project.get_map(0).tiles[3], 0)
+
+    def test_added_column_cascades_legacy_bank_boundaries_and_commits(self) -> None:
+        self.page.width_display.setValue(28)
+        self.application.processEvents()
+
+        self.assertIsNone(self.page.pending_draft_error)
+        self.assertIn("Bank 6453/6722", self.page.size_label.text())
+        self.assertIn("三Bank 14520/17730 B", self.page.size_label.text())
+        self.assertIn("整图迁移", self.page.size_label.text())
+        self.assertTrue(self.page.commit_pending_changes())
+        self.assertEqual(
+            (self.project.get_map(0).width, self.project.get_map(0).height),
+            (28, 26),
+        )
+        self.assertEqual(
+            (self.project.working[0x5BA3], self.project.working[0x5BB7]),
+            (0x21, 0x29),
+        )
 
 
 if __name__ == "__main__":
