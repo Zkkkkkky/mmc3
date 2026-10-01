@@ -1,0 +1,230 @@
+{
+  "schema_version": 1,
+  "validated": true,
+  "error": null,
+  "execution_record_count": 15,
+  "observations": [
+    {
+      "control_id": 110,
+      "action": "right_click",
+      "path": [
+        5
+      ],
+      "focused": null,
+      "descendants": []
+    },
+    {
+      "control_id": 110,
+      "action": "keyboard_activate",
+      "path": [
+        5
+      ],
+      "focused": true,
+      "descendants": []
+    },
+    {
+      "control_id": 110,
+      "action": "left_click",
+      "path": [
+        5
+      ],
+      "focused": null,
+      "descendants": []
+    },
+    {
+      "control_id": 120,
+      "action": "right_click",
+      "path": [
+        4
+      ],
+      "focused": null,
+      "descendants": []
+    },
+    {
+      "control_id": 120,
+      "action": "keyboard_activate",
+      "path": [
+        4
+      ],
+      "focused": true,
+      "descendants": [
+        {
+          "title": "帮助",
+          "class": "#32770"
+        }
+      ]
+    },
+    {
+      "control_id": 120,
+      "action": "left_click",
+      "path": [
+        4
+      ],
+      "focused": null,
+      "descendants": [
+        {
+          "title": "帮助",
+          "class": "#32770"
+        }
+      ]
+    },
+    {
+      "control_id": 140,
+      "action": "right_click",
+      "path": [
+        2
+      ],
+      "focused": null,
+      "descendants": []
+    },
+    {
+      "control_id": 140,
+      "action": "keyboard_activate",
+      "path": [
+        2
+      ],
+      "focused": true,
+      "descendants": []
+    },
+    {
+      "control_id": 140,
+      "action": "left_click",
+      "path": [
+        2
+      ],
+      "focused": null,
+      "descendants": []
+    },
+    {
+      "control_id": 150,
+      "action": "right_click",
+      "path": [
+        1
+      ],
+      "focused": null,
+      "descendants": []
+    },
+    {
+      "control_id": 150,
+      "action": "keyboard_activate",
+      "path": [
+        1
+      ],
+      "focused": true,
+      "descendants": []
+    },
+    {
+      "control_id": 150,
+      "action": "left_click",
+      "path": [
+        1
+      ],
+      "focused": null,
+      "descendants": []
+    },
+    {
+      "control_id": 160,
+      "action": "right_click",
+      "path": [
+        0
+      ],
+      "focused": null,
+      "descendants": []
+    },
+    {
+      "control_id": 160,
+      "action": "keyboard_activate",
+      "path": [
+        0
+      ],
+      "focused": true,
+      "descendants": []
+    },
+    {
+      "control_id": 160,
+      "action": "left_click",
+      "path": [
+        0
+      ],
+      "focused": null,
+      "descendants": []
+    }
+  ],
+  "execution_records": [
+    {
+      "action_id": "c01d62fbeff633d4b295",
+      "status": "passed",
+      "result": "焦点=None；新窗口=[]。"
+    },
+    {
+      "action_id": "32b6e908f8104717d853",
+      "status": "passed",
+      "result": "焦点=True；新窗口=[]。"
+    },
+    {
+      "action_id": "2d3fa29c7a826cc038b8",
+      "status": "passed",
+      "result": "焦点=None；新窗口=[]。"
+    },
+    {
+      "action_id": "19cc2d8d3327b8c31bc7",
+      "status": "passed",
+      "result": "焦点=None；新窗口=[]。"
+    },
+    {
+      "action_id": "11850958b0f1a30535ee",
+      "status": "passed",
+      "result": "焦点=True；新窗口=[{'title': '帮助', 'class': '#32770'}]。"
+    },
+    {
+      "action_id": "37adf4c56e0619061ebf",
+      "status": "passed",
+      "result": "焦点=None；新窗口=[{'title': '帮助', 'class': '#32770'}]。"
+    },
+    {
+      "action_id": "eb69acb23055bef4dd96",
+      "status": "passed",
+      "result": "焦点=None；新窗口=[]。"
+    },
+    {
+      "action_id": "7c881bcf8ca633f04f6e",
+      "status": "passed",
+      "result": "焦点=True；新窗口=[]。"
+    },
+    {
+      "action_id": "c228e619ef6c0cef7ae7",
+      "status": "passed",
+      "result": "焦点=None；新窗口=[]。"
+    },
+    {
+      "action_id": "c12b10c87ccf4c7718b8",
+      "status": "passed",
+      "result": "焦点=None；新窗口=[]。"
+    },
+    {
+      "action_id": "cc72776a5f46058be78a",
+      "status": "passed",
+      "result": "焦点=True；新窗口=[]。"
+    },
+    {
+      "action_id": "ab45529f33ba34782b16",
+      "status": "passed",
+      "result": "焦点=None；新窗口=[]。"
+    },
+    {
+      "action_id": "d258676c26b05128271e",
+      "status": "passed",
+      "result": "焦点=None；新窗口=[]。"
+    },
+    {
+      "action_id": "3509178e707156946dfd",
+      "status": "passed",
+      "result": "焦点=True；新窗口=[]。"
+    },
+    {
+      "action_id": "e8ed6c0270853cdfdcd2",
+      "status": "passed",
+      "result": "焦点=None；新窗口=[]。"
+    }
+  ]
+}

@@ -120,7 +120,9 @@ def _sha256(path: Path) -> str:
 
 
 def analyze() -> dict[str, object]:
-    expected_exe_hash = EXE_HASH.read_text(encoding="utf-8").split()[0].upper()
+    # PowerShell's historical checksum writer may leave a UTF-8 BOM.  Treat it
+    # as encoding metadata, not as part of the hexadecimal digest.
+    expected_exe_hash = EXE_HASH.read_text(encoding="utf-8-sig").split()[0].upper()
     actual_exe_hash = _sha256(EXE)
     actual_rom_hash = _sha256(ROM)
     current_build_evidence = json.loads(

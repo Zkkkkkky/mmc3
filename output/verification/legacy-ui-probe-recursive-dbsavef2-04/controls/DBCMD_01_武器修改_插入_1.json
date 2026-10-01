@@ -1,0 +1,249 @@
+{
+  "tag": "DBCMD_01_武器修改_插入_1",
+  "hwnd": 4000822,
+  "title": "武器指令",
+  "class": "WTWindow",
+  "rect": {
+    "left": 800,
+    "top": 266,
+    "right": 1116,
+    "bottom": 819,
+    "width": 316,
+    "height": 553
+  },
+  "pid": 3728,
+  "tree": {
+    "hwnd": 4000822,
+    "class": "WTWindow",
+    "text": "武器指令",
+    "ctrl_id": 0,
+    "rect": {
+      "left": 800,
+      "top": 266,
+      "right": 1116,
+      "bottom": 819,
+      "width": 316,
+      "height": 553
+    },
+    "visible": true,
+    "enabled": true,
+    "children": [
+      {
+        "hwnd": 4066306,
+        "class": "Button",
+        "text": "E1切换01区域的图库号",
+        "ctrl_id": 210,
+        "rect": {
+          "left": 813,
+          "top": 525,
+          "right": 1083,
+          "bottom": 555,
+          "width": 270,
+          "height": 30
+        },
+        "visible": true,
+        "enabled": true,
+        "button_check_state": 0,
+        "children": []
+      },
+      {
+        "hwnd": 1641488,
+        "class": "Button",
+        "text": "E0切换00区域的图库号",
+        "ctrl_id": 200,
+        "rect": {
+          "left": 813,
+          "top": 485,
+          "right": 1083,
+          "bottom": 515,
+          "width": 270,
+          "height": 30
+        },
+        "visible": true,
+        "enabled": true,
+        "button_check_state": 0,
+        "children": []
+      },
+      {
+        "hwnd": 1049054,
+        "class": "Button",
+        "text": "FF动画结束",
+        "ctrl_id": 190,
+        "rect": {
+          "left": 813,
+          "top": 765,
+          "right": 1083,
+          "bottom": 795,
+          "width": 270,
+          "height": 30
+        },
+        "visible": true,
+        "enabled": true,
+        "button_check_state": 0,
+        "children": []
+      },
+      {
+        "hwnd": 5245974,
+        "class": "Button",
+        "text": "等待(帧)",
+        "ctrl_id": 180,
+        "rect": {
+          "left": 813,
+          "top": 725,
+          "right": 1083,
+          "bottom": 755,
+          "width": 270,
+          "height": 30
+        },
+        "visible": true,
+        "enabled": true,
+        "button_check_state": 0,
+        "children": []
+      },
+      {
+        "hwnd": 2687338,
+        "class": "Button",
+        "text": "42/C2定义物体运行规律",
+        "ctrl_id": 170,
+        "rect": {
+          "left": 813,
+          "top": 685,
+          "right": 1083,
+          "bottom": 715,
+          "width": 270,
+          "height": 30
+        },
+        "visible": true,
+        "enabled": true,
+        "button_check_state": 0,
+        "children": []
+      },
+      {
+        "hwnd": 1835384,
+        "class": "Button",
+        "text": "F9创建物体",
+        "ctrl_id": 160,
+        "rect": {
+          "left": 813,
+          "top": 645,
+          "right": 1083,
+          "bottom": 675,
+          "width": 270,
+          "height": 30
+        },
+        "visible": true,
+        "enabled": true,
+        "button_check_state": 0,
+        "children": []
+      },
+      {
+        "hwnd": 1704204,
+        "class": "Button",
+        "text": "FE跳转重复",
+        "ctrl_id": 150,
+        "rect": {
+          "left": 813,
+          "top": 605,
+          "right": 1083,
+          "bottom": 635,
+          "width": 270,
+          "height": 30
+        },
+        "visible": true,
+        "enabled": true,
+        "button_check_state": 0,
+        "children": []
+      },
+      {
+        "hwnd": 2362394,
+        "class": "Button",
+        "text": "FD移动屏幕",
+        "ctrl_id": 140,
+        "rect": {
+          "left": 813,
+          "top": 565,
+          "right": 1083,
+          "bottom": 595,
+          "width": 270,
+          "height": 30
+        },
+        "visible": true,
+        "enabled": true,
+        "button_check_state": 0,
+        "children": []
+      },
+      {
+        "hwnd": 1769758,
+        "class": "Button",
+        "text": "F3定义光束规律",
+        "ctrl_id": 130,
+        "rect": {
+          "left": 813,
+          "top": 445,
+          "right": 1083,
+          "bottom": 475,
+          "width": 270,
+          "height": 30
+        },
+        "visible": true,
+        "enabled": true,
+        "button_check_state": 0,
+        "children": []
+      },
+      {
+        "hwnd": 1507586,
+        "class": "Button",
+        "text": "F2定义光束图库",
+        "ctrl_id": 120,
+        "rect": {
+          "left": 813,
+          "top": 405,
+          "right": 1083,
+          "bottom": 435,
+          "width": 270,
+          "height": 30
+        },
+        "visible": true,
+        "enabled": true,
+        "button_check_state": 0,
+        "children": []
+      },
+      {
+        "hwnd": 1114552,
+        "class": "Button",
+        "text": "F0定义颜色",
+        "ctrl_id": 110,
+        "rect": {
+          "left": 813,
+          "top": 365,
+          "right": 1083,
+          "bottom": 395,
+          "width": 270,
+          "height": 30
+        },
+        "visible": true,
+        "enabled": true,
+        "button_check_state": 0,
+        "children": []
+      },
+      {
+        "hwnd": 223743150,
+        "class": "Button",
+        "text": "F4定义声音",
+        "ctrl_id": 100,
+        "rect": {
+          "left": 813,
+          "top": 325,
+          "right": 1083,
+          "bottom": 355,
+          "width": 270,
+          "height": 30
+        },
+        "visible": true,
+        "enabled": true,
+        "button_check_state": 0,
+        "children": []
+      }
+    ]
+  }
+}

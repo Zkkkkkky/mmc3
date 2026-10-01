@@ -27,11 +27,15 @@ from ..expansion_unit import (
     CONFIGURATION_TABLE,
     SOURCE_CONFIGURATION_PAIR,
     SOURCE_CORE_PAIR,
+    STANDALONE_UNIT_ATTRIBUTE_RESOURCE_ID,
+    STANDALONE_UNIT_NAME_RESOURCE_ID,
     UNIT_ATTRIBUTE_SELECTOR,
     UNIT_BODY_SELECTOR,
     UNIT_CONFIGURATION_SELECTOR,
     UNIT_FRAGMENT_SELECTOR,
     UNIT_NAME_SELECTOR,
+    standalone_unit_attribute_bank,
+    standalone_unit_name_bank,
     validate_unit_expansion_payload,
 )
 from ..profiles import (
@@ -153,7 +157,10 @@ def validate_project(project: ProjectView) -> tuple[ValidationIssue, ...]:
                 "iNES 头被修改；当前修改器不允许改变 ROM 容量、Mapper 或镜像标志。",
             )
         )
-    if project.profile is DC_EXPANDED_MMC3_PROFILE:
+    # Character-roster growth derives a profile instance with relocated table
+    # counts via dataclasses.replace().  It is semantically the authenticated
+    # DC profile but no longer object-identical to the module singleton.
+    if project.profile.key == DC_EXPANDED_MMC3_PROFILE.key:
         try:
             protected_signature_valid = (
                 dc_expanded_mmc3_protected_signature_is_valid(project.working)
@@ -355,6 +362,58 @@ def validate_project(project: ProjectView) -> tuple[ValidationIssue, ...]:
                     )
                 )
 
+    standalone_name_bank = standalone_unit_name_bank(project.working)
+    if standalone_name_bank is not None:
+        offset = resource_descriptor_offset(UNIT_NAME_SELECTOR)
+        allowed_protected_offsets.update((offset, offset + 1))
+        allocation = next(
+            (
+                item
+                for item in project.expansion_allocations
+                if item.resource_id == STANDALONE_UNIT_NAME_RESOURCE_ID
+            ),
+            None,
+        )
+        expected_offset = bank_file_offset(standalone_name_bank)
+        if (
+            allocation is None
+            or allocation.offset != expected_offset
+            or allocation.size != 0x4000
+        ):
+            issues.append(
+                ValidationIssue(
+                    "error",
+                    "机体名称",
+                    "独立机体名称池的 Bank 登记与运行时选择器不一致。",
+                )
+            )
+
+    standalone_attribute_bank = standalone_unit_attribute_bank(project.working)
+    if standalone_attribute_bank is not None:
+        offset = resource_descriptor_offset(UNIT_ATTRIBUTE_SELECTOR)
+        allowed_protected_offsets.update((offset, offset + 1))
+        allocation = next(
+            (
+                item
+                for item in project.expansion_allocations
+                if item.resource_id == STANDALONE_UNIT_ATTRIBUTE_RESOURCE_ID
+            ),
+            None,
+        )
+        expected_offset = bank_file_offset(standalone_attribute_bank)
+        if (
+            allocation is None
+            or allocation.offset != expected_offset
+            or allocation.size != 0x4000
+        ):
+            issues.append(
+                ValidationIssue(
+                    "error",
+                    "机体属性",
+                    "独立机体属性池的 Bank 登记与运行时选择器不一致。",
+                )
+            )
+
     for unit_id in range(1, project.unit_count):
         if len(project.record_bytes(unit_id)) != 16:
             issues.append(
@@ -392,9 +451,8 @@ def validate_project(project: ProjectView) -> tuple[ValidationIssue, ...]:
                     )
 
     if project.weapon_name_codec is not None:
-        first_pointer = project.profile.weapon_name_first_pointer
-        end_pointer = project.profile.weapon_name_data_end_pointer
-        assert first_pointer is not None and end_pointer is not None
+        first_pointer = project.weapon_name_codec.data_first_pointer
+        end_pointer = project.weapon_name_codec.data_end_pointer
         for weapon_id in range(1, project.weapon_count):
             pointer = project.get_weapon_name_pointer(weapon_id)
             if not first_pointer <= pointer < end_pointer:

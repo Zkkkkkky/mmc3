@@ -9,6 +9,7 @@ from fc_editor.expansion_unit import (
     CONFIGURATION_TABLE,
     SOURCE_CONFIGURATION_PAIR,
     extract_unit_expansion_records,
+    source_configuration_table,
     validate_unit_expansion_payload,
 )
 
@@ -257,6 +258,31 @@ def read_unit_appearance(project, unit_id: int) -> UnitAppearance:
     if not 1 <= unit_id < project.unit_count:
         raise ValueError("请选择有效机体。")
     source = bytes(project.working)
+    records, pair = _read_unit_appearance_records(project, source)
+    return _unit_appearance_from_records(source, records, pair, unit_id)
+
+
+def read_all_unit_appearances(project) -> tuple[UnitAppearance, ...]:
+    """Read every appearance with one validated expansion-table scan.
+
+    Bulk views such as the ROM data browser used to call
+    :func:`read_unit_appearance` once per unit.  That repeated the same five
+    pointer-table validations 255 times.  Keeping the shared work local to a
+    single call also avoids a long-lived cache becoming stale inside a project
+    transaction.
+    """
+
+    if project.profile.key not in ("dc-kuorong-mmc3-v1", "dc-kuorong-mmc3-v2"):
+        raise ValueError("此 ROM 的战斗外观资源尚未验证，当前仅提供数值编辑。")
+    source = bytes(project.working)
+    records, pair = _read_unit_appearance_records(project, source)
+    return tuple(
+        _unit_appearance_from_records(source, records, pair, unit_id)
+        for unit_id in range(1, project.unit_count)
+    )
+
+
+def _read_unit_appearance_records(project, source: bytes):
     # Both sides load these exact palette and CHR fields. Keep this check
     # independent of table decoding so an altered runtime cannot silently
     # acquire the stock interpretation.
@@ -272,9 +298,26 @@ def read_unit_appearance(project, unit_id: int) -> UnitAppearance:
         records = validate_unit_expansion_payload(source, pairs)
         pair = plan.unit_banks[2]
     else:
-        records = extract_unit_expansion_records(source)
+        # The database can relocate the Bank $24 attribute/name composite
+        # without touching battle appearance data.  Appearance preview must
+        # therefore not reject a valid Bank $04/$05 configuration merely
+        # because the obsolete stock name directory is no longer active.
+        records = extract_unit_expansion_records(
+            source,
+            attributes_override=(bytes(16),) * (project.unit_count - 1),
+            names_override=(b"\xFF",) * (project.unit_count - 1),
+        )
+    return records, pair
+
+
+def _unit_appearance_from_records(source, records, pair: int, unit_id: int) -> UnitAppearance:
     pair_offset = 16 + pair * 0x2000
-    pointer_offset = pair_offset + CONFIGURATION_TABLE - 0x8000 + unit_id * 2
+    configuration_table = (
+        source_configuration_table(source)
+        if pair == SOURCE_CONFIGURATION_PAIR
+        else CONFIGURATION_TABLE
+    )
+    pointer_offset = pair_offset + configuration_table - 0x8000 + unit_id * 2
     pointer = int.from_bytes(source[pointer_offset:pointer_offset + 2], "little")
     return UnitAppearance(
         records.configurations[unit_id - 1],
@@ -389,6 +432,8 @@ def render_unit_battle_preview(
     show_body: bool = True,
     show_fragments: bool = True,
     display_palette: tuple[QColor, QColor, QColor, QColor] | None = None,
+    body_display_palette: tuple[QColor, QColor, QColor, QColor] | None = None,
+    fragment_display_palette: tuple[QColor, QColor, QColor, QColor] | None = None,
 ) -> QImage:
     """Render the body background and fragment sprites as the game layers them.
 
@@ -403,9 +448,11 @@ def render_unit_battle_preview(
     )
     fragments = decode_unit_fragment_script(appearance.fragment_script)
     image = QImage(128, 128, QImage.Format.Format_RGB32)
-    background = display_palette[0] if display_palette is not None else palette_color(0x0F)
+    body_override = body_display_palette or display_palette
+    fragment_override = fragment_display_palette or display_palette
+    background = body_override[0] if body_override is not None else palette_color(0x0F)
     image.fill(background)
-    body_palette = display_palette or (
+    body_palette = body_override or (
         background, *(palette_color(value) for value in appearance.first_palette),
     )
     # Bit $40 is the opposing-side layout.  Its scripts use negative X tile
@@ -424,7 +471,7 @@ def render_unit_battle_preview(
                 if color_index and 0 <= x0 + x < 128 and 0 <= y0 + y < 128:
                     image.setPixelColor(x0 + x, y0 + y, body_palette[color_index])
     fragment_bank = appearance.primary_bank & 0xFE
-    fragment_palette = display_palette or (
+    fragment_palette = fragment_override or (
         background, *(palette_color(value) for value in appearance.second_palette),
     )
     # Opposing-side sprites use the final 8-pixel column as their hardware

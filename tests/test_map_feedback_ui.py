@@ -364,6 +364,43 @@ class MapFeedbackUiTests(QtTestCase):
         canvas.close()
         canvas.deleteLater()
 
+    def test_map_overlay_visually_follows_pointer_until_release(self) -> None:
+        canvas = MapCanvas()
+        canvas.set_cell_size(24)
+        tile = QImage(16, 16, QImage.Format.Format_RGB32)
+        tile.fill(QColor("#008000"))
+        icon = QImage(16, 16, QImage.Format.Format_RGB32)
+        icon.fill(QColor("#ff0000"))
+        canvas.set_tile_images(tuple(tile for _ in range(16)))
+        canvas.set_overlay_images({("敌", 0): icon})
+        canvas.set_content(4, 3, [0] * 12, [("敌", 1, 1, "1", 0)])
+        canvas.overlay_move_enabled = True
+        moved = QSignalSpy(canvas.overlay_moved)
+        canvas.show()
+        self.application.processEvents()
+
+        QTest.mousePress(
+            canvas, Qt.MouseButton.LeftButton, pos=QPoint(30, 30)
+        )
+        QTest.mouseMove(canvas, QPoint(54, 42), delay=10)
+        self.application.processEvents()
+
+        self.assertEqual(canvas.dragged_overlay, ("敌", 0))
+        self.assertEqual(canvas.drag_position, QPoint(54, 42))
+        rendered = canvas.grab().toImage()
+        self.assertGreater(rendered.pixelColor(60, 45).red(), 220)
+        self.assertLess(rendered.pixelColor(30, 30).red(), 80)
+
+        QTest.mouseRelease(
+            canvas, Qt.MouseButton.LeftButton, pos=QPoint(54, 42)
+        )
+        self.assertEqual(moved.count(), 1)
+        self.assertEqual(list(moved.at(0)), ["敌", 0, 2, 1])
+        self.assertIsNone(canvas.dragged_overlay)
+        self.assertIsNone(canvas.drag_position)
+        canvas.close()
+        canvas.deleteLater()
+
     def test_map_event_and_shop_use_reference_white_red_placards(self) -> None:
         canvas = MapCanvas()
         canvas.set_cell_size(24)
@@ -553,6 +590,7 @@ class MapFeedbackUiTests(QtTestCase):
         self.assertIn("击杀经验计算器", actions)
         self.assertIn("加到属性计算器", actions)
         self.assertFalse(actions["粘贴"].isEnabled())
+        self.assertFalse(actions["添加配置"].isEnabled())
         database_requests = QSignalSpy(self.page.database_record_requested)
         actions["更改属性"].trigger()
         self.assertEqual(database_requests.count(), 1)
@@ -570,7 +608,14 @@ class MapFeedbackUiTests(QtTestCase):
         self.assertEqual(self.page.enemy_table.currentRow(), 0)
         self.page.deployment_cell_dialog.close()
 
-        actions["添加配置"].trigger()
+        with patch("dc_modifier.map_page.QMenu.popup"):
+            self.page._show_deployment_context_menu(8, 9, QPoint(0, 0))
+        empty_actions = {
+            action.text(): action
+            for action in self.page._deployment_context_menu.actions()
+        }
+        self.assertTrue(empty_actions["添加配置"].isEnabled())
+        empty_actions["添加配置"].trigger()
         self.application.processEvents()
         self.assertTrue(self.page.deployment_cell_dialog.isVisible())
         self.assertEqual(self.page.guest_table.rows(), [])
@@ -580,7 +625,7 @@ class MapFeedbackUiTests(QtTestCase):
         )
         self.assertEqual(self.page.deployment_side_combo.currentData(), "客")
         self.page._save_deployment_cell_editor()
-        self.assertEqual(self.page.guest_table.rows(), [(3, 4, 0, 1, 1, 0)])
+        self.assertEqual(self.page.guest_table.rows(), [(8, 9, 1, 1, 1, 0)])
 
     def test_compact_editor_matches_reference_two_column_flow(self) -> None:
         self.project.configure_expansion(288, 64, 112)
@@ -598,11 +643,17 @@ class MapFeedbackUiTests(QtTestCase):
         self.assertFalse(self.page.deployment_editor_status.isVisible())
         self.assertFalse(self.page.deployment_capacity_button.isVisible())
         self.assertTrue(
-            self.page.deployment_character_combo.currentText().startswith("[00]000:")
+            self.page.deployment_character_combo.currentText().startswith("[01]001:")
         )
         self.assertTrue(
             self.page.deployment_unit_combo.currentText().startswith("[01]001:")
         )
+        self.assertEqual(self.page.deployment_character_combo.count(), 255)
+        self.assertEqual(self.page.deployment_character_combo.itemData(0), 1)
+        self.assertEqual(self.page.deployment_character_combo.findData(0), -1)
+        self.assertEqual(self.page.deployment_unit_combo.count(), 255)
+        self.assertEqual(self.page.deployment_unit_combo.itemData(0), 1)
+        self.assertEqual(self.page.deployment_unit_combo.findData(0), -1)
         self.assertEqual(self.page.deployment_level_editor.currentText(), "等级：01")
         self.assertEqual(self.page.deployment_level_editor.count(), 99)
         self.assertEqual(self.page.deployment_level_editor.itemData(98), 99)
@@ -616,6 +667,26 @@ class MapFeedbackUiTests(QtTestCase):
         self.assertFalse(self.page.deployment_details_group.isEnabled())
         self.assertTrue(self.page.deployment_player_group.isEnabled())
         self.page.deployment_cell_dialog.close()
+
+    def test_invalid_zero_deployment_ids_must_be_reselected_before_save(self) -> None:
+        self.page.enemy_table.blockSignals(True)
+        self.page.enemy_table.set_rows([(3, 4, 0, 0, 5, 0)])
+        self.page.enemy_table.blockSignals(False)
+        self.page._open_deployment_cell_editor("敌", 3, 4, 0)
+        self.application.processEvents()
+        self.assertIsNone(self.page.deployment_character_combo.currentData())
+        self.assertIsNone(self.page.deployment_unit_combo.currentData())
+        self.assertTrue(self.page.deployment_editor_status.isVisible())
+        self.assertIn("不是有效部署编号", self.page.deployment_editor_status.text())
+
+        self.page._save_deployment_cell_editor()
+        self.assertTrue(self.page.deployment_cell_dialog.isVisible())
+        self.assertEqual(self.page.enemy_table.rows(), [(3, 4, 0, 0, 5, 0)])
+
+        self.page.deployment_character_combo.setCurrentIndex(0)
+        self.page.deployment_unit_combo.setCurrentIndex(0)
+        self.page._save_deployment_cell_editor()
+        self.assertEqual(self.page.enemy_table.rows(), [(3, 4, 1, 1, 5, 0)])
 
     def test_empty_map_cell_context_menu_enables_add_and_available_paste(self) -> None:
         self.page.enemy_table.set_rows([(3, 4, 1, 1, 5, 0)])
@@ -663,8 +734,81 @@ class MapFeedbackUiTests(QtTestCase):
         )
         with patch("dc_modifier.map_page.QMenu.popup"):
             self.page._show_deployment_context_menu(3, 4, QPoint(0, 0))
-        selected_actions = self.page._deployment_context_menu.actions()
-        self.assertTrue(all(action.isEnabled() for action in selected_actions))
+        selected_actions = {
+            action.text(): action
+            for action in self.page._deployment_context_menu.actions()
+        }
+        self.assertFalse(selected_actions["添加配置"].isEnabled())
+        self.assertFalse(selected_actions["粘贴"].isEnabled())
+        self.assertTrue(
+            all(
+                action.isEnabled()
+                for label, action in selected_actions.items()
+                if label not in {"添加配置", "粘贴"}
+            )
+        )
+
+    def test_deployment_editor_rejects_cross_side_coordinate_overlap(self) -> None:
+        self.page.enemy_table.set_rows([(3, 4, 1, 1, 5, 0)])
+        self.page.guest_table.set_rows([])
+        self.page.player_table.set_rows([])
+
+        self.page._open_deployment_cell_editor("客", 3, 4)
+        self.page._save_deployment_cell_editor()
+
+        self.assertEqual(self.page.guest_table.rows(), [])
+        self.assertTrue(self.page.deployment_cell_dialog.isVisible())
+        self.assertTrue(self.page.deployment_editor_status.isVisible())
+        self.assertIn("(03,04)", self.page.deployment_editor_status.text())
+        self.assertIn("敌军配置 01", self.page.deployment_editor_status.text())
+        self.assertIn("不能放置多个配置", self.page.deployment_editor_status.text())
+        self.page.deployment_cell_dialog.close()
+
+    def test_deployment_paste_and_drag_reject_occupied_coordinate(self) -> None:
+        enemy = (3, 4, 1, 1, 5, 0)
+        guest = (8, 9, 2, 2, 6, 1)
+        self.page.enemy_table.set_rows([enemy])
+        self.page.guest_table.set_rows([guest])
+        self.page.player_table.set_rows([])
+        errors = []
+        self.page.show_error = lambda error: errors.append(str(error))
+
+        self.page._deployment_clipboard = ("客", guest)
+        self.page._paste_deployment_at(3, 4)
+        self.assertEqual(self.page.guest_table.rows(), [guest])
+
+        self.page._overlay_moved("客", 0, 3, 4)
+        self.assertEqual(self.page.guest_table.rows(), [guest])
+        self.assertEqual(len(errors), 2)
+        self.assertTrue(all("敌军配置 01" in message for message in errors))
+
+    def test_trigger_move_to_map_cursor_remains_independent_of_deployment_occupancy(self) -> None:
+        self.page.enemy_table.set_rows([(3, 4, 1, 1, 5, 0)])
+        self.page.trigger_table.set_rows([(8, 9, 0xFF, 7)])
+        self.page.trigger_table.setCurrentCell(0, 0)
+        self.page.hovered_cell = (3, 4)
+
+        self.page._move_selected_to_hover(self.page.trigger_table)
+
+        self.assertEqual(self.page.trigger_table.rows(), [(3, 4, 0xFF, 7)])
+
+    def test_duplicate_uses_nearest_free_cell_and_final_validation_blocks_overlap(self) -> None:
+        original = (3, 4, 1, 1, 5, 0)
+        self.page.enemy_table.set_rows([original])
+        self.page.guest_table.set_rows([])
+        self.page.player_table.set_rows([])
+        self.page.enemy_table.setCurrentCell(0, 0)
+
+        self.page._duplicate_deployment(self.page.enemy_table)
+        duplicated = self.page.enemy_table.rows()[1]
+        self.assertEqual(duplicated[2:], original[2:])
+        self.assertNotEqual(duplicated[:2], original[:2])
+        self.assertEqual(len({row[:2] for row in self.page.enemy_table.rows()}), 2)
+
+        self.page.guest_table.set_rows([(3, 4, 2, 2, 6, 1)])
+        with self.assertRaisesRegex(ValueError, "同一格不能放置多个配置"):
+            self.page._validate_deployment_coordinate_uniqueness()
+        self.assertIn("同一格不能放置多个配置", self.page.pending_draft_error)
 
     def test_deployment_level_choices_follow_verified_rom_level_cap(self) -> None:
         with patch.object(self.project, "get_verified_level_cap", return_value=60):
@@ -755,8 +899,8 @@ class MapFeedbackUiTests(QtTestCase):
         self.page._save_deployment_cell_editor()
         self.assertEqual(len(self.page.enemy_table.rows()), len(before) + 1)
         self.assertEqual(errors, [])
-        self.assertIn("32关共享", self.page.size_label.text())
-        self.assertIn("/6891 B", self.page.size_label.text())
+        self.assertIn("部署正文", self.page.size_label.text())
+        self.assertIn("Bank$24八资源共享余量", self.page.size_label.text())
 
     def test_capacity_status_follows_map_initial_and_shop_event_tabs(self) -> None:
         self.page.map_list.setCurrentRow(0)
@@ -765,13 +909,20 @@ class MapFeedbackUiTests(QtTestCase):
 
         self.page.editor_tabs.setCurrentIndex(1)
         self.assertIn("本关4 B", self.page.size_label.text())
-        self.assertIn("32关共享1236/6891 B", self.page.size_label.text())
+        self.assertIn("部署正文1236 B", self.page.size_label.text())
+        self.assertIn("Bank$24八资源共享余量5655 B", self.page.size_label.text())
         self.assertIn("初始配置本关 4 B", self.page.size_label.toolTip())
+        self.assertIn("32关部署正文 1236 B", self.page.size_label.toolTip())
+        self.assertIn("Bank $24 八资源共享剩余 5655 B", self.page.size_label.toolTip())
+        self.assertIn("人物属性、机体属性、武器属性", self.page.size_label.toolTip())
+        self.assertIn("当前部署上限 6891 B（其他七项不变时）", self.page.size_label.toolTip())
+        self.assertNotIn("事件/商店本关", self.page.size_label.toolTip())
 
         self.page.editor_tabs.setCurrentIndex(2)
         self.assertIn("本关0条/1 B", self.page.size_label.text())
-        self.assertIn("32关共享10/310 B", self.page.size_label.text())
+        self.assertIn("32关事件/商店共享10/310 B", self.page.size_label.text())
         self.assertIn("事件/商店本关 0 条/1 B", self.page.size_label.toolTip())
+        self.assertIn("独立于地图RLE和初始配置", self.page.size_label.toolTip())
 
     def test_user_scenario_1258_to_1264_commits_without_capacity_error(self) -> None:
         self.page.map_list.setCurrentRow(0)
@@ -779,12 +930,14 @@ class MapFeedbackUiTests(QtTestCase):
         staged = [(index, 0, index + 1, index + 1, 1, 0) for index in range(3)]
         self.page.enemy_table.set_rows(staged)
         self.assertTrue(self.page.commit_pending_changes())
-        self.assertIn("32关共享1258/6891 B", self.page.size_label.text())
+        self.assertIn("部署正文1258 B", self.page.size_label.text())
+        self.assertIn("Bank$24八资源共享余量5633 B", self.page.size_label.text())
 
         self.page.enemy_table.set_rows(staged + [(4, 0, 4, 4, 1, 0)])
         self.assertIsNone(self.page.pending_draft_error)
         self.assertTrue(self.page.commit_pending_changes())
-        self.assertIn("32关共享1264/6891 B", self.page.size_label.text())
+        self.assertIn("部署正文1264 B", self.page.size_label.text())
+        self.assertIn("Bank$24八资源共享余量5627 B", self.page.size_label.text())
 
     def test_expanded_capacity_status_names_the_unified_map_pool(self) -> None:
         self.project.configure_expansion(288, 64, 112)
@@ -939,6 +1092,46 @@ class MapFeedbackUiTests(QtTestCase):
         actions["删除商店入口"].trigger()
         self.assertEqual(self.page.trigger_table.rows(), [])
 
+    def test_trigger_list_right_click_selects_edits_and_deletes_record(self) -> None:
+        self.page.editor_tabs.setCurrentIndex(2)
+        self.page.trigger_table.set_rows(
+            [(3, 4, 0xFF, 7), (5, 6, 0xFF, 0xF2)]
+        )
+        self.application.processEvents()
+
+        shop_item = self.page.trigger_objects.item(1)
+        position = self.page.trigger_objects.visualItemRect(shop_item).center()
+        with patch("dc_modifier.map_page.QMenu.popup") as show_menu:
+            self.page.trigger_objects.customContextMenuRequested.emit(position)
+        show_menu.assert_called_once()
+        self.assertIs(self.page.trigger_objects.currentItem(), shop_item)
+        self.assertEqual(self.page.canvas.selected_overlay, ("店", 1))
+        actions = {
+            action.text(): action
+            for action in self.page._trigger_list_context_menu.actions()
+        }
+        self.assertEqual(set(actions), {"编辑商店入口", "删除商店入口"})
+
+        actions["编辑商店入口"].trigger()
+        self.application.processEvents()
+        self.assertTrue(self.page.trigger_cell_dialog.isVisible())
+        self.assertEqual(self.page._trigger_edit_row, 1)
+        self.assertTrue(self.page.trigger_shop_radio.isChecked())
+        self.assertEqual(self.page.trigger_shop_combo.currentData(), 0xF2)
+        self.page.trigger_cell_dialog.reject()
+
+        event_item = self.page.trigger_objects.item(0)
+        position = self.page.trigger_objects.visualItemRect(event_item).center()
+        with patch("dc_modifier.map_page.QMenu.popup"):
+            self.page.trigger_objects.customContextMenuRequested.emit(position)
+        actions = {
+            action.text(): action
+            for action in self.page._trigger_list_context_menu.actions()
+        }
+        self.assertEqual(set(actions), {"编辑地图事件", "删除地图事件"})
+        actions["删除地图事件"].trigger()
+        self.assertEqual(self.page.trigger_table.rows(), [(5, 6, 0xFF, 0xF2)])
+
     def test_trigger_choices_hide_invalid_shops_and_event_popup_starts_at_one(self) -> None:
         self.assertEqual(self.page.trigger_shop_combo.count(), 5)
         self.assertEqual(
@@ -991,11 +1184,13 @@ class MapFeedbackUiTests(QtTestCase):
         self.assertIn("18", errors[-1])
 
     def test_capacity_planner_preserves_oversized_draft_and_revalidates_after_linking(self) -> None:
-        self.assertIn("Bank 6709/6722", self.page.size_label.text())
-        self.assertIn("三Bank 14474/17730 B", self.page.size_label.text())
-        self.assertIn("整图迁移", self.page.size_label.text())
+        self.assertIn("Bank共享6709/6722", self.page.size_label.text())
+        self.assertIn("三Bank独立14474/17730", self.page.size_label.text())
+        self.assertIn("可迁移", self.page.size_label.text())
         self.assertIn("所在Bank 6709 / 6722 B", self.page.size_label.toolTip())
         self.assertIn("三Bank合计 14474 / 17730 B", self.page.size_label.toolTip())
+        self.assertIn("共用对象：同一Bank内的地图RLE记录", self.page.size_label.toolTip())
+        self.assertIn("三个Bank彼此独立", self.page.size_label.toolTip())
         self.assertIn("可保存（必要时整图迁移）", self.page.size_label.toolTip())
         self.assertGreaterEqual(self.page.size_label.toolTip().count("\n"), 4)
         self.assertLessEqual(
@@ -1024,7 +1219,7 @@ class MapFeedbackUiTests(QtTestCase):
             tuple(self.page.staged_tiles),
         )
         self.assertEqual((total_used, total_capacity), (14474, 17730))
-        self.assertIn("三Bank 14474/17730 B", self.page.size_label.text())
+        self.assertIn("三Bank独立14474/17730", self.page.size_label.text())
         self.page.height_editor.setValue(32)
         self.page.width_editor.setValue(32)
         self.page._resize_map()
@@ -1064,8 +1259,8 @@ class MapFeedbackUiTests(QtTestCase):
         self.page._update_size_label()
 
         self.assertIsNone(self.page.pending_draft_error)
-        self.assertIn("Bank 6711/6722", self.page.size_label.text())
-        self.assertIn("三Bank 14476/17730 B", self.page.size_label.text())
+        self.assertIn("Bank共享6711/6722", self.page.size_label.text())
+        self.assertIn("三Bank独立14476/17730", self.page.size_label.text())
         self.assertTrue(self.page.commit_pending_changes())
         self.assertEqual(self.project.get_map(0).tiles[3], 0)
 
@@ -1074,9 +1269,9 @@ class MapFeedbackUiTests(QtTestCase):
         self.application.processEvents()
 
         self.assertIsNone(self.page.pending_draft_error)
-        self.assertIn("Bank 6453/6722", self.page.size_label.text())
-        self.assertIn("三Bank 14520/17730 B", self.page.size_label.text())
-        self.assertIn("整图迁移", self.page.size_label.text())
+        self.assertIn("Bank共享6453/6722", self.page.size_label.text())
+        self.assertIn("三Bank独立14520/17730", self.page.size_label.text())
+        self.assertIn("可迁移", self.page.size_label.text())
         self.assertTrue(self.page.commit_pending_changes())
         self.assertEqual(
             (self.project.get_map(0).width, self.project.get_map(0).height),

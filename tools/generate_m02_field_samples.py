@@ -32,7 +32,7 @@ def main() -> None:
     base = base_path.read_bytes()
     generated: list[dict[str, object]] = []
 
-    for key in "BCDEFG":
+    for key in "ABCDEFGH":
         current = MapTileAttributeCodec.decode(base, key)
         after_color = (current.colors[0] + 1) & 0x3F
         updated = replace(
@@ -65,7 +65,7 @@ def main() -> None:
             }
         )
 
-    manifest_path = output_dir / "generated-b-g.json"
+    manifest_path = output_dir / "generated-a-h.json"
     manifest_path.write_text(
         json.dumps(
             {
@@ -80,15 +80,14 @@ def main() -> None:
         + "\n",
         encoding="utf-8",
     )
-    sample_specs = (
-        ("A-color1.nes", "A", "color1", MapTileAttributeCodec.record_offset("A")),
-        ("A-defense.nes", "A", "tile0.defense", MapTileAttributeCodec.record_offset("A") + 20),
-        ("A-sea.nes", "A", "tile0.sea", MapTileAttributeCodec.record_offset("A") + 20),
-        ("A-air_move.nes", "A", "tile0.air_move", MapTileAttributeCodec.record_offset("A") + 36),
-        ("A-land_move.nes", "A", "tile0.land_move", MapTileAttributeCodec.record_offset("A") + 52),
-        ("A-sea_move.nes", "A", "tile0.sea_move", MapTileAttributeCodec.record_offset("A") + 68),
-        ("B-color1.nes", "B", "color1", MapTileAttributeCodec.record_offset("B")),
-        *((f"{key}-color1.nes", key, "color1", MapTileAttributeCodec.record_offset(key)) for key in "CDEFG"),
+    sample_specs = tuple(
+        (
+            f"{key}-color1.nes",
+            key,
+            "color1",
+            MapTileAttributeCodec.record_offset(key) + 80,
+        )
+        for key in "ABCDEFGH"
     )
     audited: list[dict[str, object]] = []
     for filename, gallery, field, expected_offset in sample_specs:
@@ -118,23 +117,6 @@ def main() -> None:
                 "sha256": sha256(sample_path),
             }
         )
-    ui_sample_path = output_dir / "B-color1-ui.nes"
-    ui_sample = ui_sample_path.read_bytes()
-    ui_differences = [
-        {
-            "offset": offset,
-            "before": f"{before:02X}",
-            "after": f"{after:02X}",
-        }
-        for offset, (before, after) in enumerate(zip(base, ui_sample, strict=True))
-        if before != after
-    ]
-    expected_ui_offsets = {
-        MapTileAttributeCodec.record_offset("B"),
-        MapTileAttributeCodec.record_offset("B") + 20 + 5,
-    }
-    if {item["offset"] for item in ui_differences} != expected_ui_offsets:
-        raise RuntimeError(f"B-color1-ui.nes 差分异常：{ui_differences}")
     audit_path = output_dir / "field-diff-manifest.json"
     audit_path.write_text(
         json.dumps(
@@ -142,17 +124,10 @@ def main() -> None:
                 "base": base_path.name,
                 "base_sha256": sha256(base_path),
                 "samples": audited,
-                "ui_observed_samples": [
-                    {
-                        "file": ui_sample_path.name,
-                        "gallery": "B",
-                        "requested_field": "color1",
-                        "automatic_repair": "tile5.sea",
-                        "changed_bytes": len(ui_differences),
-                        "differences": ui_differences,
-                        "sha256": sha256(ui_sample_path),
-                    }
-                ],
+                "rejected_legacy_sample": {
+                    "file": "B-color1-ui.nes",
+                    "reason": "旧产品按图形推断并旁写海属性，且记录分组错误；不再作为黄金样本。",
+                },
             },
             ensure_ascii=False,
             indent=2,

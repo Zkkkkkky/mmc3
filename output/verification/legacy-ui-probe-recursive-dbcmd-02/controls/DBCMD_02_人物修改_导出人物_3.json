@@ -1,0 +1,297 @@
+{
+  "tag": "DBCMD_02_人物修改_导出人物_3",
+  "hwnd": 18614056,
+  "title": "关闭 Windows",
+  "class": "#32770",
+  "rect": {
+    "left": 608,
+    "top": 217,
+    "right": 1312,
+    "bottom": 586,
+    "width": 704,
+    "height": 369
+  },
+  "pid": 9016,
+  "tree": {
+    "hwnd": 18614056,
+    "class": "#32770",
+    "text": "关闭 Windows",
+    "ctrl_id": 0,
+    "rect": {
+      "left": 608,
+      "top": 217,
+      "right": 1312,
+      "bottom": 586,
+      "width": 704,
+      "height": 369
+    },
+    "visible": true,
+    "enabled": true,
+    "children": [
+      {
+        "hwnd": 41682284,
+        "class": "Static",
+        "text": "",
+        "ctrl_id": 2027,
+        "rect": {
+          "left": 646,
+          "top": 363,
+          "right": 693,
+          "bottom": 413,
+          "width": 47,
+          "height": 50
+        },
+        "visible": true,
+        "enabled": true,
+        "children": []
+      },
+      {
+        "hwnd": 6098094,
+        "class": "Static",
+        "text": "希望计算机做什么(&W)?",
+        "ctrl_id": 2028,
+        "rect": {
+          "left": 716,
+          "top": 360,
+          "right": 1175,
+          "bottom": 385,
+          "width": 459,
+          "height": 25
+        },
+        "visible": true,
+        "enabled": true,
+        "children": []
+      },
+      {
+        "hwnd": 591872,
+        "class": "ComboBox",
+        "text": "关机",
+        "ctrl_id": 2001,
+        "rect": {
+          "left": 716,
+          "top": 395,
+          "right": 1191,
+          "bottom": 425,
+          "width": 475,
+          "height": 30
+        },
+        "visible": true,
+        "enabled": true,
+        "combo_count": 5,
+        "combo_selected": 3,
+        "children": []
+      },
+      {
+        "hwnd": 19072090,
+        "class": "Static",
+        "text": "关闭所有应用，然后关闭电脑。",
+        "ctrl_id": 2002,
+        "rect": {
+          "left": 716,
+          "top": 445,
+          "right": 1191,
+          "bottom": 520,
+          "width": 475,
+          "height": 75
+        },
+        "visible": true,
+        "enabled": true,
+        "children": []
+      },
+      {
+        "hwnd": 8587958,
+        "class": "Button",
+        "text": "计划内(&P)",
+        "ctrl_id": 2005,
+        "rect": {
+          "left": 1081,
+          "top": 605,
+          "right": 1203,
+          "bottom": 630,
+          "width": 122,
+          "height": 25
+        },
+        "visible": false,
+        "enabled": false,
+        "button_check_state": 0,
+        "children": []
+      },
+      {
+        "hwnd": 526000,
+        "class": "Static",
+        "text": "选项(&O):",
+        "ctrl_id": 2009,
+        "rect": {
+          "left": 716,
+          "top": 605,
+          "right": 948,
+          "bottom": 625,
+          "width": 232,
+          "height": 20
+        },
+        "visible": false,
+        "enabled": true,
+        "children": []
+      },
+      {
+        "hwnd": 591308,
+        "class": "ComboBox",
+        "text": "",
+        "ctrl_id": 2003,
+        "rect": {
+          "left": 716,
+          "top": 635,
+          "right": 1168,
+          "bottom": 665,
+          "width": 452,
+          "height": 30
+        },
+        "visible": false,
+        "enabled": false,
+        "combo_count": 0,
+        "combo_selected": -1,
+        "children": []
+      },
+      {
+        "hwnd": 4980964,
+        "class": "Static",
+        "text": "",
+        "ctrl_id": 2004,
+        "rect": {
+          "left": 716,
+          "top": 680,
+          "right": 1168,
+          "bottom": 743,
+          "width": 452,
+          "height": 63
+        },
+        "visible": false,
+        "enabled": true,
+        "children": []
+      },
+      {
+        "hwnd": 11011450,
+        "class": "Static",
+        "text": "注释(&E):",
+        "ctrl_id": 2008,
+        "rect": {
+          "left": 716,
+          "top": 750,
+          "right": 1168,
+          "bottom": 770,
+          "width": 452,
+          "height": 20
+        },
+        "visible": false,
+        "enabled": true,
+        "children": []
+      },
+      {
+        "hwnd": 21105120,
+        "class": "Edit",
+        "text": "",
+        "ctrl_id": 2006,
+        "rect": {
+          "left": 716,
+          "top": 778,
+          "right": 1168,
+          "bottom": 858,
+          "width": 452,
+          "height": 80
+        },
+        "visible": false,
+        "enabled": false,
+        "children": []
+      },
+      {
+        "hwnd": 854010,
+        "class": "Static",
+        "text": "请选择对你关闭计算机原因描述最为贴切的选项",
+        "ctrl_id": 2007,
+        "rect": {
+          "left": 716,
+          "top": 548,
+          "right": 1175,
+          "bottom": 591,
+          "width": 459,
+          "height": 43
+        },
+        "visible": false,
+        "enabled": true,
+        "children": []
+      },
+      {
+        "hwnd": 3147772,
+        "class": "Button",
+        "text": "关闭事件跟踪程序",
+        "ctrl_id": 2010,
+        "rect": {
+          "left": 635,
+          "top": 525,
+          "right": 1285,
+          "bottom": 878,
+          "width": 650,
+          "height": 353
+        },
+        "visible": false,
+        "enabled": true,
+        "button_check_state": 0,
+        "children": []
+      },
+      {
+        "hwnd": 6098106,
+        "class": "Button",
+        "text": "确定",
+        "ctrl_id": 1,
+        "rect": {
+          "left": 930,
+          "top": 520,
+          "right": 1043,
+          "bottom": 555,
+          "width": 113,
+          "height": 35
+        },
+        "visible": true,
+        "enabled": true,
+        "button_check_state": 0,
+        "children": []
+      },
+      {
+        "hwnd": 787878,
+        "class": "Button",
+        "text": "取消",
+        "ctrl_id": 2,
+        "rect": {
+          "left": 1051,
+          "top": 520,
+          "right": 1164,
+          "bottom": 555,
+          "width": 113,
+          "height": 35
+        },
+        "visible": true,
+        "enabled": true,
+        "button_check_state": 0,
+        "children": []
+      },
+      {
+        "hwnd": 526404,
+        "class": "Button",
+        "text": "帮助(&H)",
+        "ctrl_id": 9,
+        "rect": {
+          "left": 1173,
+          "top": 520,
+          "right": 1286,
+          "bottom": 555,
+          "width": 113,
+          "height": 35
+        },
+        "visible": true,
+        "enabled": true,
+        "button_check_state": 0,
+        "children": []
+      }
+    ]
+  }
+}

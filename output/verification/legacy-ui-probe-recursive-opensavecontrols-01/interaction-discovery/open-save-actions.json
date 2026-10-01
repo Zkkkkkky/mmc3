@@ -1,0 +1,176 @@
+{
+  "schema_version": 1,
+  "validated": true,
+  "error": null,
+  "execution_record_count": 27,
+  "diff_count": 0,
+  "observations": [
+    {
+      "control_id": 1,
+      "action": "right_click",
+      "closed": false
+    },
+    {
+      "control_id": 1,
+      "action": "keyboard_activate",
+      "closed": true
+    },
+    {
+      "control_id": 1,
+      "action": "left_click",
+      "closed": true
+    },
+    {
+      "control_id": 2,
+      "action": "right_click",
+      "closed": false
+    },
+    {
+      "control_id": 2,
+      "action": "keyboard_activate",
+      "closed": true
+    },
+    {
+      "control_id": 2,
+      "action": "left_click",
+      "closed": true
+    }
+  ],
+  "execution_records": [
+    {
+      "action_id": "35565963402fda36cc6b",
+      "status": "passed",
+      "result": "项数=1。"
+    },
+    {
+      "action_id": "91106a043b8058d87fb3",
+      "status": "passed",
+      "result": "逐项 1 并恢复。"
+    },
+    {
+      "action_id": "987bc4d176c0895bb907",
+      "status": "passed",
+      "result": "Home/Down 后恢复。"
+    },
+    {
+      "action_id": "62bbcd9e65705f9f82a8",
+      "status": "passed",
+      "result": "菜单=False。"
+    },
+    {
+      "action_id": "3575a74d9ee709df45b8",
+      "status": "passed",
+      "result": "项数=0。"
+    },
+    {
+      "action_id": "b70933cce159d6d3f22f",
+      "status": "passed",
+      "result": "逐项 0 并恢复。"
+    },
+    {
+      "action_id": "c8ac26aa1b9acc6e1917",
+      "status": "passed",
+      "result": "Home/Down 后恢复。"
+    },
+    {
+      "action_id": "6817e0b595ec385f2ab6",
+      "status": "passed",
+      "result": "菜单=False。"
+    },
+    {
+      "action_id": "0a29025839841c259a9d",
+      "status": "passed",
+      "result": "焦点=True。"
+    },
+    {
+      "action_id": "74bd218515125ea51697",
+      "status": "passed",
+      "result": "读回=''。"
+    },
+    {
+      "action_id": "533397d8c5c300ff29fd",
+      "status": "passed",
+      "result": "Ctrl+A/Ctrl+Z 后恢复。"
+    },
+    {
+      "action_id": "f7305a5bea2f8e360fa8",
+      "status": "passed",
+      "result": "菜单=True。"
+    },
+    {
+      "action_id": "3dc77ab16345d8d68dbd",
+      "status": "passed",
+      "result": "长度=[0, 0]。"
+    },
+    {
+      "action_id": "f3fc9e398bc4f88f1100",
+      "status": "passed",
+      "result": "展开时可见=True。"
+    },
+    {
+      "action_id": "06e2d82ecd4e1985835f",
+      "status": "passed",
+      "result": "行滚动。"
+    },
+    {
+      "action_id": "0755621e19ed6bc241be",
+      "status": "passed",
+      "result": "页滚动。"
+    },
+    {
+      "action_id": "9bcefdd97db823e950ba",
+      "status": "passed",
+      "result": "拖动滚动块。"
+    },
+    {
+      "action_id": "59adca9f9e0f9d80a1a8",
+      "status": "passed",
+      "result": "行滚动。"
+    },
+    {
+      "action_id": "63b96ba0daca928f9a60",
+      "status": "passed",
+      "result": "页滚动。"
+    },
+    {
+      "action_id": "f2dfd1108ffd40bf9f96",
+      "status": "passed",
+      "result": "拖动滚动块。"
+    },
+    {
+      "action_id": "c9123b67e381f59f1163",
+      "status": "passed",
+      "result": "文件列表状态已观测。"
+    },
+    {
+      "action_id": "3fb84d1e28cc3c8fa8e6",
+      "status": "passed",
+      "result": "对话框已关闭=False。"
+    },
+    {
+      "action_id": "f3f049956cedee7cd932",
+      "status": "passed",
+      "result": "对话框已关闭=True。"
+    },
+    {
+      "action_id": "44020e0e786c41673f4b",
+      "status": "passed",
+      "result": "对话框已关闭=True。"
+    },
+    {
+      "action_id": "2a018f604f74a3c45d16",
+      "status": "passed",
+      "result": "对话框已关闭=False。"
+    },
+    {
+      "action_id": "07c94bc7233ea1d4e968",
+      "status": "passed",
+      "result": "对话框已关闭=True。"
+    },
+    {
+      "action_id": "b33868c27b87209225b5",
+      "status": "passed",
+      "result": "对话框已关闭=True。"
+    }
+  ]
+}

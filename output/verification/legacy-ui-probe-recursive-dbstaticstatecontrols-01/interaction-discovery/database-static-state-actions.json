@@ -1,0 +1,1718 @@
+{
+  "schema_version": 1,
+  "validated": true,
+  "error": null,
+  "execution_record_count": 89,
+  "diff_count": 0,
+  "sha256_before": "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E",
+  "sha256_after": "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E",
+  "observations": [
+    {
+      "kind": "afx",
+      "class": "Afx:400000:b:10003:900015:0",
+      "control_id": 150,
+      "path": [
+        5,
+        25,
+        47
+      ],
+      "text": "",
+      "hidden_on_control_page": 630,
+      "restored_visible": true,
+      "restored_enabled": true
+    },
+    {
+      "kind": "afx",
+      "class": "Afx:400000:b:10003:900015:0",
+      "control_id": 820,
+      "path": [
+        5,
+        18,
+        7
+      ],
+      "text": "名称：",
+      "hidden_on_control_page": 120,
+      "restored_visible": true,
+      "restored_enabled": true
+    },
+    {
+      "kind": "afx",
+      "class": "Afx:400000:b:10003:900015:0",
+      "control_id": 870,
+      "path": [
+        5,
+        17,
+        21
+      ],
+      "text": "精神值：",
+      "hidden_on_control_page": 120,
+      "restored_visible": true,
+      "restored_enabled": true
+    },
+    {
+      "kind": "afx",
+      "class": "Afx:400000:b:10003:900015:0",
+      "control_id": 880,
+      "path": [
+        5,
+        17,
+        20
+      ],
+      "text": "速度补正：",
+      "hidden_on_control_page": 120,
+      "restored_visible": true,
+      "restored_enabled": true
+    },
+    {
+      "kind": "afx",
+      "class": "Afx:400000:b:10003:900015:0",
+      "control_id": 900,
+      "path": [
+        5,
+        17,
+        17
+      ],
+      "text": "精神成长：",
+      "hidden_on_control_page": 120,
+      "restored_visible": true,
+      "restored_enabled": true
+    },
+    {
+      "kind": "afx",
+      "class": "Afx:400000:b:10003:900015:0",
+      "control_id": 920,
+      "path": [
+        5,
+        17,
+        14
+      ],
+      "text": "防御补正：",
+      "hidden_on_control_page": 120,
+      "restored_visible": true,
+      "restored_enabled": true
+    },
+    {
+      "kind": "afx",
+      "class": "Afx:400000:b:10003:900015:0",
+      "control_id": 930,
+      "path": [
+        5,
+        17,
+        13
+      ],
+      "text": "强度补正：",
+      "hidden_on_control_page": 120,
+      "restored_visible": true,
+      "restored_enabled": true
+    },
+    {
+      "kind": "afx",
+      "class": "Afx:400000:b:10003:900015:0",
+      "control_id": 940,
+      "path": [
+        5,
+        17,
+        12
+      ],
+      "text": "HP补正：",
+      "hidden_on_control_page": 120,
+      "restored_visible": true,
+      "restored_enabled": true
+    },
+    {
+      "kind": "afx",
+      "class": "Afx:400000:b:10003:900015:0",
+      "control_id": 950,
+      "path": [
+        5,
+        17,
+        11
+      ],
+      "text": "机动补正：",
+      "hidden_on_control_page": 120,
+      "restored_visible": true,
+      "restored_enabled": true
+    },
+    {
+      "kind": "afx",
+      "class": "Afx:400000:b:10003:900015:0",
+      "control_id": 1010,
+      "path": [
+        5,
+        16,
+        4
+      ],
+      "text": "对话选择：",
+      "hidden_on_control_page": 120,
+      "restored_visible": true,
+      "restored_enabled": true
+    },
+    {
+      "kind": "afx",
+      "class": "Afx:400000:b:10003:900015:0",
+      "control_id": 1020,
+      "path": [
+        5,
+        16,
+        3
+      ],
+      "text": "变形对话：",
+      "hidden_on_control_page": 120,
+      "restored_visible": true,
+      "restored_enabled": true
+    },
+    {
+      "kind": "afx",
+      "class": "Afx:400000:b:10003:900015:0",
+      "control_id": 1040,
+      "path": [
+        5,
+        15,
+        9
+      ],
+      "text": "一次攻击：",
+      "hidden_on_control_page": 120,
+      "restored_visible": true,
+      "restored_enabled": true
+    },
+    {
+      "kind": "afx",
+      "class": "Afx:400000:b:10003:900015:0",
+      "control_id": 1050,
+      "path": [
+        5,
+        15,
+        8
+      ],
+      "text": "二次攻击：",
+      "hidden_on_control_page": 120,
+      "restored_visible": true,
+      "restored_enabled": true
+    },
+    {
+      "kind": "afx",
+      "class": "Afx:400000:b:10003:900015:0",
+      "control_id": 1060,
+      "path": [
+        5,
+        15,
+        7
+      ],
+      "text": "可以反击：",
+      "hidden_on_control_page": 120,
+      "restored_visible": true,
+      "restored_enabled": true
+    },
+    {
+      "kind": "afx",
+      "class": "Afx:400000:b:10003:900015:0",
+      "control_id": 1070,
+      "path": [
+        5,
+        15,
+        6
+      ],
+      "text": "无力反击：",
+      "hidden_on_control_page": 120,
+      "restored_visible": true,
+      "restored_enabled": true
+    },
+    {
+      "kind": "afx",
+      "class": "Afx:400000:b:10003:900015:0",
+      "control_id": 1080,
+      "path": [
+        5,
+        15,
+        5
+      ],
+      "text": "攻击受阻：",
+      "hidden_on_control_page": 120,
+      "restored_visible": true,
+      "restored_enabled": true
+    },
+    {
+      "kind": "afx",
+      "class": "Afx:400000:b:10003:900015:0",
+      "control_id": 1100,
+      "path": [
+        5,
+        14,
+        11
+      ],
+      "text": "防御成功：",
+      "hidden_on_control_page": 120,
+      "restored_visible": true,
+      "restored_enabled": true
+    },
+    {
+      "kind": "afx",
+      "class": "Afx:400000:b:10003:900015:0",
+      "control_id": 1110,
+      "path": [
+        5,
+        14,
+        10
+      ],
+      "text": "未受损伤：",
+      "hidden_on_control_page": 120,
+      "restored_visible": true,
+      "restored_enabled": true
+    },
+    {
+      "kind": "afx",
+      "class": "Afx:400000:b:10003:900015:0",
+      "control_id": 1120,
+      "path": [
+        5,
+        14,
+        9
+      ],
+      "text": "轻微损伤：",
+      "hidden_on_control_page": 120,
+      "restored_visible": true,
+      "restored_enabled": true
+    },
+    {
+      "kind": "afx",
+      "class": "Afx:400000:b:10003:900015:0",
+      "control_id": 1130,
+      "path": [
+        5,
+        14,
+        8
+      ],
+      "text": "中度损伤：",
+      "hidden_on_control_page": 120,
+      "restored_visible": true,
+      "restored_enabled": true
+    },
+    {
+      "kind": "afx",
+      "class": "Afx:400000:b:10003:900015:0",
+      "control_id": 1140,
+      "path": [
+        5,
+        14,
+        7
+      ],
+      "text": "重度损伤：",
+      "hidden_on_control_page": 120,
+      "restored_visible": true,
+      "restored_enabled": true
+    },
+    {
+      "kind": "afx",
+      "class": "Afx:400000:b:10003:900015:0",
+      "control_id": 1150,
+      "path": [
+        5,
+        14,
+        6
+      ],
+      "text": "  被击落：",
+      "hidden_on_control_page": 120,
+      "restored_visible": true,
+      "restored_enabled": true
+    },
+    {
+      "kind": "afx",
+      "class": "Afx:400000:b:10003:900015:0",
+      "control_id": 1590,
+      "path": [
+        5,
+        8,
+        4
+      ],
+      "text": "选择：",
+      "hidden_on_control_page": 120,
+      "restored_visible": true,
+      "restored_enabled": true
+    },
+    {
+      "kind": "afx",
+      "class": "Afx:400000:b:10003:900015:0",
+      "control_id": 1610,
+      "path": [
+        5,
+        9,
+        4
+      ],
+      "text": "总经验：",
+      "hidden_on_control_page": 120,
+      "restored_visible": true,
+      "restored_enabled": true
+    },
+    {
+      "kind": "afx",
+      "class": "Afx:400000:b:10003:900015:0",
+      "control_id": 1630,
+      "path": [
+        5,
+        8,
+        2
+      ],
+      "text": "命中修改：",
+      "hidden_on_control_page": 120,
+      "restored_visible": true,
+      "restored_enabled": true
+    },
+    {
+      "kind": "afx",
+      "class": "Afx:400000:b:10003:900015:0",
+      "control_id": 1660,
+      "path": [
+        5,
+        9,
+        1
+      ],
+      "text": "升级还需：",
+      "hidden_on_control_page": 120,
+      "restored_visible": true,
+      "restored_enabled": true
+    },
+    {
+      "kind": "afx",
+      "class": "Afx:400000:b:10003:900015:0",
+      "control_id": 1670,
+      "path": [
+        5,
+        8,
+        0
+      ],
+      "text": "%",
+      "hidden_on_control_page": 120,
+      "restored_visible": true,
+      "restored_enabled": true
+    },
+    {
+      "kind": "afx",
+      "class": "Afx:400000:b:10003:900015:0",
+      "control_id": 1700,
+      "path": [
+        5,
+        7,
+        5
+      ],
+      "text": "名称修改：",
+      "hidden_on_control_page": 120,
+      "restored_visible": true,
+      "restored_enabled": true
+    },
+    {
+      "kind": "afx",
+      "class": "Afx:400000:b:10003:900015:0",
+      "control_id": 1720,
+      "path": [
+        5,
+        7,
+        3
+      ],
+      "text": "价格修改：",
+      "hidden_on_control_page": 120,
+      "restored_visible": true,
+      "restored_enabled": true
+    },
+    {
+      "kind": "afx",
+      "class": "Afx:400000:b:10003:900015:0",
+      "control_id": 1790,
+      "path": [
+        5,
+        7,
+        0
+      ],
+      "text": "道具说明：",
+      "hidden_on_control_page": 120,
+      "restored_visible": true,
+      "restored_enabled": true
+    },
+    {
+      "kind": "afx",
+      "class": "Afx:400000:b:10003:900015:0",
+      "control_id": 1830,
+      "path": [
+        5,
+        5,
+        1,
+        11
+      ],
+      "text": "道具4：",
+      "hidden_on_control_page": 120,
+      "restored_visible": true,
+      "restored_enabled": true
+    },
+    {
+      "kind": "afx",
+      "class": "Afx:400000:b:10003:900015:0",
+      "control_id": 1840,
+      "path": [
+        5,
+        5,
+        1,
+        10
+      ],
+      "text": "道具3：",
+      "hidden_on_control_page": 120,
+      "restored_visible": true,
+      "restored_enabled": true
+    },
+    {
+      "kind": "afx",
+      "class": "Afx:400000:b:10003:900015:0",
+      "control_id": 1850,
+      "path": [
+        5,
+        5,
+        1,
+        9
+      ],
+      "text": "道具2：",
+      "hidden_on_control_page": 120,
+      "restored_visible": true,
+      "restored_enabled": true
+    },
+    {
+      "kind": "afx",
+      "class": "Afx:400000:b:10003:900015:0",
+      "control_id": 1860,
+      "path": [
+        5,
+        5,
+        1,
+        8
+      ],
+      "text": "道具1：",
+      "hidden_on_control_page": 120,
+      "restored_visible": true,
+      "restored_enabled": true
+    },
+    {
+      "kind": "afx",
+      "class": "Afx:400000:b:10003:900015:0",
+      "control_id": 1910,
+      "path": [
+        5,
+        5,
+        1,
+        3
+      ],
+      "text": "店员：",
+      "hidden_on_control_page": 120,
+      "restored_visible": true,
+      "restored_enabled": true
+    },
+    {
+      "kind": "afx",
+      "class": "Afx:400000:b:10003:900015:0",
+      "control_id": 1930,
+      "path": [
+        5,
+        5,
+        1,
+        1
+      ],
+      "text": "对话：",
+      "hidden_on_control_page": 120,
+      "restored_visible": true,
+      "restored_enabled": true
+    },
+    {
+      "kind": "afx",
+      "class": "Afx:400000:b:10003:900015:0",
+      "control_id": 1960,
+      "path": [
+        5,
+        5,
+        0,
+        14
+      ],
+      "text": "进入商店对话：",
+      "hidden_on_control_page": 120,
+      "restored_visible": true,
+      "restored_enabled": true
+    },
+    {
+      "kind": "afx",
+      "class": "Afx:400000:b:10003:900015:0",
+      "control_id": 1980,
+      "path": [
+        5,
+        5,
+        0,
+        12
+      ],
+      "text": "准备购买对话：",
+      "hidden_on_control_page": 120,
+      "restored_visible": true,
+      "restored_enabled": true
+    },
+    {
+      "kind": "afx",
+      "class": "Afx:400000:b:10003:900015:0",
+      "control_id": 2000,
+      "path": [
+        5,
+        5,
+        0,
+        10
+      ],
+      "text": "金钱不够对话：",
+      "hidden_on_control_page": 120,
+      "restored_visible": true,
+      "restored_enabled": true
+    },
+    {
+      "kind": "afx",
+      "class": "Afx:400000:b:10003:900015:0",
+      "control_id": 2030,
+      "path": [
+        5,
+        5,
+        0,
+        7
+      ],
+      "text": "购买之后对话：",
+      "hidden_on_control_page": 120,
+      "restored_visible": true,
+      "restored_enabled": true
+    },
+    {
+      "kind": "afx",
+      "class": "Afx:400000:b:10003:900015:0",
+      "control_id": 2050,
+      "path": [
+        5,
+        5,
+        0,
+        5
+      ],
+      "text": "是否购买对话：",
+      "hidden_on_control_page": 120,
+      "restored_visible": true,
+      "restored_enabled": true
+    },
+    {
+      "kind": "afx",
+      "class": "Afx:400000:b:10003:900015:0",
+      "control_id": 2070,
+      "path": [
+        5,
+        5,
+        0,
+        3
+      ],
+      "text": "数量超限对话：",
+      "hidden_on_control_page": 120,
+      "restored_visible": true,
+      "restored_enabled": true
+    },
+    {
+      "kind": "afx",
+      "class": "Afx:400000:b:10003:900015:0",
+      "control_id": 2080,
+      "path": [
+        5,
+        5,
+        0,
+        2
+      ],
+      "text": "离开商店对话：",
+      "hidden_on_control_page": 120,
+      "restored_visible": true,
+      "restored_enabled": true
+    },
+    {
+      "kind": "afx",
+      "class": "Afx:400000:b:10003:900015:0",
+      "control_id": 2100,
+      "path": [
+        5,
+        5,
+        0,
+        0
+      ],
+      "text": "注：店员对话为7个顺序\r\n\r\n对话段编号",
+      "hidden_on_control_page": 120,
+      "restored_visible": true,
+      "restored_enabled": true
+    },
+    {
+      "kind": "afx",
+      "class": "Afx:400000:b:10003:900015:0",
+      "control_id": 2110,
+      "path": [
+        5,
+        6,
+        1
+      ],
+      "text": "注：\"{\"加3字节16进制代码等于直接写入3字节16进制\r\n    \"[\"为直接写入2字节16进制， \"|\"为直接写入1字节16进制",
+      "hidden_on_control_page": 120,
+      "restored_visible": true,
+      "restored_enabled": true
+    },
+    {
+      "kind": "afx",
+      "class": "Afx:400000:b:10003:900015:0",
+      "control_id": 2190,
+      "path": [
+        5,
+        18,
+        3
+      ],
+      "text": "战斗名称：",
+      "hidden_on_control_page": 120,
+      "restored_visible": true,
+      "restored_enabled": true
+    },
+    {
+      "kind": "afx",
+      "class": "Afx:400000:b:10003:900015:0",
+      "control_id": 2210,
+      "path": [
+        5,
+        24,
+        2
+      ],
+      "text": "机体名称：",
+      "hidden_on_control_page": 630,
+      "restored_visible": true,
+      "restored_enabled": true
+    },
+    {
+      "kind": "afx",
+      "class": "Afx:400000:b:10003:900015:0",
+      "control_id": 2220,
+      "path": [
+        5,
+        24,
+        1
+      ],
+      "text": "适应地形：",
+      "hidden_on_control_page": 630,
+      "restored_visible": true,
+      "restored_enabled": true
+    },
+    {
+      "kind": "afx",
+      "class": "Afx:400000:b:10003:900015:0",
+      "control_id": 2230,
+      "path": [
+        5,
+        24,
+        0
+      ],
+      "text": "变形：",
+      "hidden_on_control_page": 630,
+      "restored_visible": true,
+      "restored_enabled": true
+    },
+    {
+      "kind": "afx",
+      "class": "Afx:400000:b:10003:900015:0",
+      "control_id": 2240,
+      "path": [
+        5,
+        23,
+        4
+      ],
+      "text": "机动：             基础经验：         强度成长：",
+      "hidden_on_control_page": 630,
+      "restored_visible": true,
+      "restored_enabled": true
+    },
+    {
+      "kind": "afx",
+      "class": "Afx:400000:b:10003:900015:0",
+      "control_id": 2250,
+      "path": [
+        5,
+        23,
+        3
+      ],
+      "text": "强度：             基础金钱：         防御成长：",
+      "hidden_on_control_page": 630,
+      "restored_visible": true,
+      "restored_enabled": true
+    },
+    {
+      "kind": "afx",
+      "class": "Afx:400000:b:10003:900015:0",
+      "control_id": 2260,
+      "path": [
+        5,
+        23,
+        2
+      ],
+      "text": "防御：             特殊技能：         速度成长：",
+      "hidden_on_control_page": 630,
+      "restored_visible": true,
+      "restored_enabled": true
+    },
+    {
+      "kind": "afx",
+      "class": "Afx:400000:b:10003:900015:0",
+      "control_id": 2270,
+      "path": [
+        5,
+        23,
+        1
+      ],
+      "text": "速度：             HP：               HP成长：",
+      "hidden_on_control_page": 630,
+      "restored_visible": true,
+      "restored_enabled": true
+    },
+    {
+      "kind": "afx",
+      "class": "Afx:400000:b:10003:900015:0",
+      "control_id": 2280,
+      "path": [
+        5,
+        22,
+        4
+      ],
+      "text": "武器2：",
+      "hidden_on_control_page": 630,
+      "restored_visible": true,
+      "restored_enabled": true
+    },
+    {
+      "kind": "afx",
+      "class": "Afx:400000:b:10003:900015:0",
+      "control_id": 2290,
+      "path": [
+        5,
+        22,
+        3
+      ],
+      "text": "武器1：",
+      "hidden_on_control_page": 630,
+      "restored_visible": true,
+      "restored_enabled": true
+    },
+    {
+      "kind": "afx",
+      "class": "Afx:400000:b:10003:900015:0",
+      "control_id": 2300,
+      "path": [
+        5,
+        25,
+        13
+      ],
+      "text": "导图偏移：",
+      "hidden_on_control_page": 630,
+      "restored_visible": true,
+      "restored_enabled": true
+    },
+    {
+      "kind": "afx",
+      "class": "Afx:400000:b:10003:900015:0",
+      "control_id": 2310,
+      "path": [
+        5,
+        25,
+        12
+      ],
+      "text": "导图偏移：",
+      "hidden_on_control_page": 630,
+      "restored_visible": true,
+      "restored_enabled": true
+    },
+    {
+      "kind": "afx",
+      "class": "Afx:400000:b:10003:900015:0",
+      "control_id": 2320,
+      "path": [
+        5,
+        25,
+        11
+      ],
+      "text": "机体图标：",
+      "hidden_on_control_page": 630,
+      "restored_visible": true,
+      "restored_enabled": true
+    },
+    {
+      "kind": "afx",
+      "class": "Afx:400000:b:10003:900015:0",
+      "control_id": 2330,
+      "path": [
+        5,
+        25,
+        10
+      ],
+      "text": "机体三色：",
+      "hidden_on_control_page": 630,
+      "restored_visible": true,
+      "restored_enabled": true
+    },
+    {
+      "kind": "afx",
+      "class": "Afx:400000:b:10003:900015:0",
+      "control_id": 2340,
+      "path": [
+        5,
+        25,
+        9
+      ],
+      "text": "碎片三色：",
+      "hidden_on_control_page": 630,
+      "restored_visible": true,
+      "restored_enabled": true
+    },
+    {
+      "kind": "afx",
+      "class": "Afx:400000:b:10003:900015:0",
+      "control_id": 2350,
+      "path": [
+        5,
+        25,
+        8
+      ],
+      "text": "机体类型：",
+      "hidden_on_control_page": 630,
+      "restored_visible": true,
+      "restored_enabled": true
+    },
+    {
+      "kind": "afx",
+      "class": "Afx:400000:b:10003:900015:0",
+      "control_id": 2360,
+      "path": [
+        5,
+        25,
+        7
+      ],
+      "text": "机体图片地址1：",
+      "hidden_on_control_page": 630,
+      "restored_visible": true,
+      "restored_enabled": true
+    },
+    {
+      "kind": "afx",
+      "class": "Afx:400000:b:10003:900015:0",
+      "control_id": 2370,
+      "path": [
+        5,
+        25,
+        6
+      ],
+      "text": "机体图片地址2：",
+      "hidden_on_control_page": 630,
+      "restored_visible": true,
+      "restored_enabled": true
+    },
+    {
+      "kind": "afx",
+      "class": "Afx:400000:b:10003:900015:0",
+      "control_id": 2380,
+      "path": [
+        5,
+        25,
+        5
+      ],
+      "text": "机体碎片地址：",
+      "hidden_on_control_page": 630,
+      "restored_visible": true,
+      "restored_enabled": true
+    },
+    {
+      "kind": "afx",
+      "class": "Afx:400000:b:10003:900015:0",
+      "control_id": 2390,
+      "path": [
+        5,
+        19,
+        4
+      ],
+      "text": "正面图库：",
+      "hidden_on_control_page": 120,
+      "restored_visible": true,
+      "restored_enabled": true
+    },
+    {
+      "kind": "afx",
+      "class": "Afx:400000:b:10003:900015:0",
+      "control_id": 2400,
+      "path": [
+        5,
+        19,
+        3
+      ],
+      "text": "背景图库：",
+      "hidden_on_control_page": 120,
+      "restored_visible": true,
+      "restored_enabled": true
+    },
+    {
+      "kind": "afx",
+      "class": "Afx:400000:b:10003:900015:0",
+      "control_id": 2410,
+      "path": [
+        5,
+        19,
+        2
+      ],
+      "text": "头像颜色1：",
+      "hidden_on_control_page": 120,
+      "restored_visible": true,
+      "restored_enabled": true
+    },
+    {
+      "kind": "afx",
+      "class": "Afx:400000:b:10003:900015:0",
+      "control_id": 2420,
+      "path": [
+        5,
+        19,
+        1
+      ],
+      "text": "头像颜色2：",
+      "hidden_on_control_page": 120,
+      "restored_visible": true,
+      "restored_enabled": true
+    },
+    {
+      "kind": "afx",
+      "class": "Afx:400000:b:10003:900015:0",
+      "control_id": 2430,
+      "path": [
+        5,
+        19,
+        0
+      ],
+      "text": "头像颜色3：",
+      "hidden_on_control_page": 120,
+      "restored_visible": true,
+      "restored_enabled": true
+    },
+    {
+      "kind": "afx",
+      "class": "Afx:400000:b:10003:900015:0",
+      "control_id": 2440,
+      "path": [
+        5,
+        18,
+        1
+      ],
+      "text": "我方战斗音乐：",
+      "hidden_on_control_page": 120,
+      "restored_visible": true,
+      "restored_enabled": true
+    },
+    {
+      "kind": "afx",
+      "class": "Afx:400000:b:10003:900015:0",
+      "control_id": 2450,
+      "path": [
+        5,
+        18,
+        0
+      ],
+      "text": "敌方战斗音乐：",
+      "hidden_on_control_page": 120,
+      "restored_visible": true,
+      "restored_enabled": true
+    },
+    {
+      "kind": "afx",
+      "class": "Afx:400000:b:10003:900015:0",
+      "control_id": 2460,
+      "path": [
+        5,
+        13,
+        3
+      ],
+      "text": "名称：",
+      "hidden_on_control_page": 120,
+      "restored_visible": true,
+      "restored_enabled": true
+    },
+    {
+      "kind": "afx",
+      "class": "Afx:400000:b:10003:900015:0",
+      "control_id": 2470,
+      "path": [
+        5,
+        13,
+        2
+      ],
+      "text": "武器特技：",
+      "hidden_on_control_page": 120,
+      "restored_visible": true,
+      "restored_enabled": true
+    },
+    {
+      "kind": "afx",
+      "class": "Afx:400000:b:10003:900015:0",
+      "control_id": 2480,
+      "path": [
+        5,
+        13,
+        1
+      ],
+      "text": "射程：         命中：        距离补正：",
+      "hidden_on_control_page": 120,
+      "restored_visible": true,
+      "restored_enabled": true
+    },
+    {
+      "kind": "afx",
+      "class": "Afx:400000:b:10003:900015:0",
+      "control_id": 2490,
+      "path": [
+        5,
+        13,
+        0
+      ],
+      "text": "对空攻击：     对陆攻击：     对海攻击：",
+      "hidden_on_control_page": 120,
+      "restored_visible": true,
+      "restored_enabled": true
+    },
+    {
+      "kind": "afx",
+      "class": "Afx:400000:b:10003:900015:0",
+      "control_id": 2500,
+      "path": [
+        5,
+        22,
+        2
+      ],
+      "text": "提示：\r\n如果我方机体选择敌方方向的武器，可能出现死机或者动画显示不正常！！！\r\n\r\n反之，敌方选择我方方向武器同理！！！",
+      "hidden_on_control_page": 630,
+      "restored_visible": true,
+      "restored_enabled": true
+    },
+    {
+      "kind": "afx",
+      "class": "Afx:400000:b:10003:900015:0",
+      "control_id": 2630,
+      "path": [
+        5,
+        1,
+        1
+      ],
+      "text": "选择：",
+      "hidden_on_control_page": 120,
+      "restored_visible": true,
+      "restored_enabled": true
+    },
+    {
+      "kind": "label",
+      "class": "_EL_Label",
+      "control_id": 260,
+      "path": [
+        5,
+        25,
+        36
+      ],
+      "text": "",
+      "hidden_on_control_page": 630,
+      "restored_visible": true,
+      "restored_enabled": true
+    },
+    {
+      "kind": "label",
+      "class": "_EL_Label",
+      "control_id": 270,
+      "path": [
+        5,
+        25,
+        35
+      ],
+      "text": "",
+      "hidden_on_control_page": 630,
+      "restored_visible": true,
+      "restored_enabled": true
+    },
+    {
+      "kind": "label",
+      "class": "_EL_Label",
+      "control_id": 280,
+      "path": [
+        5,
+        25,
+        34
+      ],
+      "text": "",
+      "hidden_on_control_page": 630,
+      "restored_visible": true,
+      "restored_enabled": true
+    },
+    {
+      "kind": "label",
+      "class": "_EL_Label",
+      "control_id": 320,
+      "path": [
+        5,
+        25,
+        30
+      ],
+      "text": "",
+      "hidden_on_control_page": 630,
+      "restored_visible": true,
+      "restored_enabled": true
+    },
+    {
+      "kind": "label",
+      "class": "_EL_Label",
+      "control_id": 330,
+      "path": [
+        5,
+        25,
+        29
+      ],
+      "text": "",
+      "hidden_on_control_page": 630,
+      "restored_visible": true,
+      "restored_enabled": true
+    },
+    {
+      "kind": "label",
+      "class": "_EL_Label",
+      "control_id": 340,
+      "path": [
+        5,
+        25,
+        28
+      ],
+      "text": "",
+      "hidden_on_control_page": 630,
+      "restored_visible": true,
+      "restored_enabled": true
+    },
+    {
+      "kind": "label",
+      "class": "_EL_Label",
+      "control_id": 760,
+      "path": [
+        5,
+        19,
+        10
+      ],
+      "text": "",
+      "hidden_on_control_page": 120,
+      "restored_visible": true,
+      "restored_enabled": true
+    },
+    {
+      "kind": "label",
+      "class": "_EL_Label",
+      "control_id": 770,
+      "path": [
+        5,
+        19,
+        9
+      ],
+      "text": "",
+      "hidden_on_control_page": 120,
+      "restored_visible": true,
+      "restored_enabled": true
+    },
+    {
+      "kind": "label",
+      "class": "_EL_Label",
+      "control_id": 780,
+      "path": [
+        5,
+        19,
+        8
+      ],
+      "text": "",
+      "hidden_on_control_page": 120,
+      "restored_visible": true,
+      "restored_enabled": true
+    },
+    {
+      "kind": "label",
+      "class": "_EL_Label",
+      "control_id": 1280,
+      "path": [
+        5,
+        25,
+        21
+      ],
+      "text": "",
+      "hidden_on_control_page": 630,
+      "restored_visible": true,
+      "restored_enabled": true
+    },
+    {
+      "kind": "label",
+      "class": "_EL_Label",
+      "control_id": 1320,
+      "path": [
+        5,
+        25,
+        17
+      ],
+      "text": "",
+      "hidden_on_control_page": 630,
+      "restored_visible": true,
+      "restored_enabled": true
+    },
+    {
+      "kind": "label",
+      "class": "_EL_Label",
+      "control_id": 1330,
+      "path": [
+        5,
+        25,
+        16
+      ],
+      "text": "",
+      "hidden_on_control_page": 630,
+      "restored_visible": true,
+      "restored_enabled": true
+    }
+  ],
+  "execution_records": [
+    {
+      "action_id": "0d4262f7c5df3b6e2453",
+      "status": "passed",
+      "result": "切换到目标控件 630 所在页后隐藏；返回后可见=True、启用=True。"
+    },
+    {
+      "action_id": "75932e538fafca3a2131",
+      "status": "passed",
+      "result": "切换到目标控件 120 所在页后隐藏；返回后可见=True、启用=True。"
+    },
+    {
+      "action_id": "4e26df21e209d991ed1d",
+      "status": "passed",
+      "result": "切换到目标控件 120 所在页后隐藏；返回后可见=True、启用=True。"
+    },
+    {
+      "action_id": "3a4084a526a92cf1b58e",
+      "status": "passed",
+      "result": "切换到目标控件 120 所在页后隐藏；返回后可见=True、启用=True。"
+    },
+    {
+      "action_id": "9af22f0290dbf70e69cd",
+      "status": "passed",
+      "result": "切换到目标控件 120 所在页后隐藏；返回后可见=True、启用=True。"
+    },
+    {
+      "action_id": "a5042b9ca619add21ab9",
+      "status": "passed",
+      "result": "切换到目标控件 120 所在页后隐藏；返回后可见=True、启用=True。"
+    },
+    {
+      "action_id": "cc90789862046b2b602f",
+      "status": "passed",
+      "result": "切换到目标控件 120 所在页后隐藏；返回后可见=True、启用=True。"
+    },
+    {
+      "action_id": "6052723935c386c63976",
+      "status": "passed",
+      "result": "切换到目标控件 120 所在页后隐藏；返回后可见=True、启用=True。"
+    },
+    {
+      "action_id": "f62ffa215b679baa58e5",
+      "status": "passed",
+      "result": "切换到目标控件 120 所在页后隐藏；返回后可见=True、启用=True。"
+    },
+    {
+      "action_id": "cadeb9c2049cbd819a1e",
+      "status": "passed",
+      "result": "切换到目标控件 120 所在页后隐藏；返回后可见=True、启用=True。"
+    },
+    {
+      "action_id": "6f68af6b337f8d8e3460",
+      "status": "passed",
+      "result": "切换到目标控件 120 所在页后隐藏；返回后可见=True、启用=True。"
+    },
+    {
+      "action_id": "9f0e3135fc91b44da17a",
+      "status": "passed",
+      "result": "切换到目标控件 120 所在页后隐藏；返回后可见=True、启用=True。"
+    },
+    {
+      "action_id": "54c71152b49fb1e2a148",
+      "status": "passed",
+      "result": "切换到目标控件 120 所在页后隐藏；返回后可见=True、启用=True。"
+    },
+    {
+      "action_id": "5983ae99acc8d3ff90b3",
+      "status": "passed",
+      "result": "切换到目标控件 120 所在页后隐藏；返回后可见=True、启用=True。"
+    },
+    {
+      "action_id": "af4f3429d29e3c28566c",
+      "status": "passed",
+      "result": "切换到目标控件 120 所在页后隐藏；返回后可见=True、启用=True。"
+    },
+    {
+      "action_id": "6b5323efbb78b8bfb161",
+      "status": "passed",
+      "result": "切换到目标控件 120 所在页后隐藏；返回后可见=True、启用=True。"
+    },
+    {
+      "action_id": "0fe7a8099ede9855a60c",
+      "status": "passed",
+      "result": "切换到目标控件 120 所在页后隐藏；返回后可见=True、启用=True。"
+    },
+    {
+      "action_id": "d10e3227655367a4e11f",
+      "status": "passed",
+      "result": "切换到目标控件 120 所在页后隐藏；返回后可见=True、启用=True。"
+    },
+    {
+      "action_id": "1c14f710418432d92470",
+      "status": "passed",
+      "result": "切换到目标控件 120 所在页后隐藏；返回后可见=True、启用=True。"
+    },
+    {
+      "action_id": "a952bd4e772357cae1f1",
+      "status": "passed",
+      "result": "切换到目标控件 120 所在页后隐藏；返回后可见=True、启用=True。"
+    },
+    {
+      "action_id": "075b123635b9d907530d",
+      "status": "passed",
+      "result": "切换到目标控件 120 所在页后隐藏；返回后可见=True、启用=True。"
+    },
+    {
+      "action_id": "a3bbad5f76600473513b",
+      "status": "passed",
+      "result": "切换到目标控件 120 所在页后隐藏；返回后可见=True、启用=True。"
+    },
+    {
+      "action_id": "8bc5ee70b70395837d02",
+      "status": "passed",
+      "result": "切换到目标控件 120 所在页后隐藏；返回后可见=True、启用=True。"
+    },
+    {
+      "action_id": "2f4f2cc20af4131fa4c7",
+      "status": "passed",
+      "result": "切换到目标控件 120 所在页后隐藏；返回后可见=True、启用=True。"
+    },
+    {
+      "action_id": "7105d30959c3e4b0ea92",
+      "status": "passed",
+      "result": "切换到目标控件 120 所在页后隐藏；返回后可见=True、启用=True。"
+    },
+    {
+      "action_id": "f3950bef331fa976777b",
+      "status": "passed",
+      "result": "切换到目标控件 120 所在页后隐藏；返回后可见=True、启用=True。"
+    },
+    {
+      "action_id": "3fdbf3f2cb0243d74424",
+      "status": "passed",
+      "result": "切换到目标控件 120 所在页后隐藏；返回后可见=True、启用=True。"
+    },
+    {
+      "action_id": "e808d22b1c7e2b04f38a",
+      "status": "passed",
+      "result": "切换到目标控件 120 所在页后隐藏；返回后可见=True、启用=True。"
+    },
+    {
+      "action_id": "5f916969a52719c3db2f",
+      "status": "passed",
+      "result": "切换到目标控件 120 所在页后隐藏；返回后可见=True、启用=True。"
+    },
+    {
+      "action_id": "eae9ed57cea0302c506a",
+      "status": "passed",
+      "result": "切换到目标控件 120 所在页后隐藏；返回后可见=True、启用=True。"
+    },
+    {
+      "action_id": "9780173224a66233ae7c",
+      "status": "passed",
+      "result": "切换到目标控件 120 所在页后隐藏；返回后可见=True、启用=True。"
+    },
+    {
+      "action_id": "195bca777823a757ae3d",
+      "status": "passed",
+      "result": "切换到目标控件 120 所在页后隐藏；返回后可见=True、启用=True。"
+    },
+    {
+      "action_id": "88cd91c71be94036c3ff",
+      "status": "passed",
+      "result": "切换到目标控件 120 所在页后隐藏；返回后可见=True、启用=True。"
+    },
+    {
+      "action_id": "db655a67871dd86d7041",
+      "status": "passed",
+      "result": "切换到目标控件 120 所在页后隐藏；返回后可见=True、启用=True。"
+    },
+    {
+      "action_id": "24b321a0ec64c24ec957",
+      "status": "passed",
+      "result": "切换到目标控件 120 所在页后隐藏；返回后可见=True、启用=True。"
+    },
+    {
+      "action_id": "b4b2b5e399bf99c10908",
+      "status": "passed",
+      "result": "切换到目标控件 120 所在页后隐藏；返回后可见=True、启用=True。"
+    },
+    {
+      "action_id": "286fc0b64e7b5db3e04f",
+      "status": "passed",
+      "result": "切换到目标控件 120 所在页后隐藏；返回后可见=True、启用=True。"
+    },
+    {
+      "action_id": "8e922674faad8f9ded75",
+      "status": "passed",
+      "result": "切换到目标控件 120 所在页后隐藏；返回后可见=True、启用=True。"
+    },
+    {
+      "action_id": "34ac60075147916ea870",
+      "status": "passed",
+      "result": "切换到目标控件 120 所在页后隐藏；返回后可见=True、启用=True。"
+    },
+    {
+      "action_id": "c27a43e6ae91ea3d8b88",
+      "status": "passed",
+      "result": "切换到目标控件 120 所在页后隐藏；返回后可见=True、启用=True。"
+    },
+    {
+      "action_id": "bd0244a8f57d2d58da63",
+      "status": "passed",
+      "result": "切换到目标控件 120 所在页后隐藏；返回后可见=True、启用=True。"
+    },
+    {
+      "action_id": "8271cb8ec68ffb64c59e",
+      "status": "passed",
+      "result": "切换到目标控件 120 所在页后隐藏；返回后可见=True、启用=True。"
+    },
+    {
+      "action_id": "4bf7bdd1bf4a04f1d02c",
+      "status": "passed",
+      "result": "切换到目标控件 120 所在页后隐藏；返回后可见=True、启用=True。"
+    },
+    {
+      "action_id": "4e59a410ff23e0c9157b",
+      "status": "passed",
+      "result": "切换到目标控件 120 所在页后隐藏；返回后可见=True、启用=True。"
+    },
+    {
+      "action_id": "5af21415faf6796ffb49",
+      "status": "passed",
+      "result": "切换到目标控件 120 所在页后隐藏；返回后可见=True、启用=True。"
+    },
+    {
+      "action_id": "55e1facc378fccdf424d",
+      "status": "passed",
+      "result": "切换到目标控件 120 所在页后隐藏；返回后可见=True、启用=True。"
+    },
+    {
+      "action_id": "9c35d2a785c06600d699",
+      "status": "passed",
+      "result": "切换到目标控件 630 所在页后隐藏；返回后可见=True、启用=True。"
+    },
+    {
+      "action_id": "1965fdeaa963d2f9e0a7",
+      "status": "passed",
+      "result": "切换到目标控件 630 所在页后隐藏；返回后可见=True、启用=True。"
+    },
+    {
+      "action_id": "9d971604b86e47d3059c",
+      "status": "passed",
+      "result": "切换到目标控件 630 所在页后隐藏；返回后可见=True、启用=True。"
+    },
+    {
+      "action_id": "d92a599363ac0654d6a5",
+      "status": "passed",
+      "result": "切换到目标控件 630 所在页后隐藏；返回后可见=True、启用=True。"
+    },
+    {
+      "action_id": "9c8dd889f075f1044d47",
+      "status": "passed",
+      "result": "切换到目标控件 630 所在页后隐藏；返回后可见=True、启用=True。"
+    },
+    {
+      "action_id": "9300b664364dbc11208e",
+      "status": "passed",
+      "result": "切换到目标控件 630 所在页后隐藏；返回后可见=True、启用=True。"
+    },
+    {
+      "action_id": "f9534e8ae8f9af7e24bc",
+      "status": "passed",
+      "result": "切换到目标控件 630 所在页后隐藏；返回后可见=True、启用=True。"
+    },
+    {
+      "action_id": "1ea6eaf593ba31f9c08c",
+      "status": "passed",
+      "result": "切换到目标控件 630 所在页后隐藏；返回后可见=True、启用=True。"
+    },
+    {
+      "action_id": "e6159d649b8ef7121ccc",
+      "status": "passed",
+      "result": "切换到目标控件 630 所在页后隐藏；返回后可见=True、启用=True。"
+    },
+    {
+      "action_id": "cb895abb02f2d270bea8",
+      "status": "passed",
+      "result": "切换到目标控件 630 所在页后隐藏；返回后可见=True、启用=True。"
+    },
+    {
+      "action_id": "b6682561e3d106021877",
+      "status": "passed",
+      "result": "切换到目标控件 630 所在页后隐藏；返回后可见=True、启用=True。"
+    },
+    {
+      "action_id": "c417dfaf651842e1adf0",
+      "status": "passed",
+      "result": "切换到目标控件 630 所在页后隐藏；返回后可见=True、启用=True。"
+    },
+    {
+      "action_id": "e1c46a4f70a4f2bd0a94",
+      "status": "passed",
+      "result": "切换到目标控件 630 所在页后隐藏；返回后可见=True、启用=True。"
+    },
+    {
+      "action_id": "a579d551d0a66a151dea",
+      "status": "passed",
+      "result": "切换到目标控件 630 所在页后隐藏；返回后可见=True、启用=True。"
+    },
+    {
+      "action_id": "332197f08a67dc28dea7",
+      "status": "passed",
+      "result": "切换到目标控件 630 所在页后隐藏；返回后可见=True、启用=True。"
+    },
+    {
+      "action_id": "c6a5196a5bb3deba8808",
+      "status": "passed",
+      "result": "切换到目标控件 630 所在页后隐藏；返回后可见=True、启用=True。"
+    },
+    {
+      "action_id": "70994f5bf90a369eaa2f",
+      "status": "passed",
+      "result": "切换到目标控件 630 所在页后隐藏；返回后可见=True、启用=True。"
+    },
+    {
+      "action_id": "122d9fdc78d707cebb7e",
+      "status": "passed",
+      "result": "切换到目标控件 630 所在页后隐藏；返回后可见=True、启用=True。"
+    },
+    {
+      "action_id": "8584543c0457481aba0e",
+      "status": "passed",
+      "result": "切换到目标控件 120 所在页后隐藏；返回后可见=True、启用=True。"
+    },
+    {
+      "action_id": "d13a90e3e576262ee9cc",
+      "status": "passed",
+      "result": "切换到目标控件 120 所在页后隐藏；返回后可见=True、启用=True。"
+    },
+    {
+      "action_id": "7e92c0d35d8e4689d3cd",
+      "status": "passed",
+      "result": "切换到目标控件 120 所在页后隐藏；返回后可见=True、启用=True。"
+    },
+    {
+      "action_id": "41d08f9b625a15ca4049",
+      "status": "passed",
+      "result": "切换到目标控件 120 所在页后隐藏；返回后可见=True、启用=True。"
+    },
+    {
+      "action_id": "b663fc4d3de613c27ebc",
+      "status": "passed",
+      "result": "切换到目标控件 120 所在页后隐藏；返回后可见=True、启用=True。"
+    },
+    {
+      "action_id": "a808dc6d2b120170d14b",
+      "status": "passed",
+      "result": "切换到目标控件 120 所在页后隐藏；返回后可见=True、启用=True。"
+    },
+    {
+      "action_id": "75ce62b5d90ac6ea71dc",
+      "status": "passed",
+      "result": "切换到目标控件 120 所在页后隐藏；返回后可见=True、启用=True。"
+    },
+    {
+      "action_id": "62ad55e862b63424440b",
+      "status": "passed",
+      "result": "切换到目标控件 120 所在页后隐藏；返回后可见=True、启用=True。"
+    },
+    {
+      "action_id": "fc1aa96c120fe53c18f4",
+      "status": "passed",
+      "result": "切换到目标控件 120 所在页后隐藏；返回后可见=True、启用=True。"
+    },
+    {
+      "action_id": "4afd641ae49f39b0f474",
+      "status": "passed",
+      "result": "切换到目标控件 120 所在页后隐藏；返回后可见=True、启用=True。"
+    },
+    {
+      "action_id": "a6fa345ed2005867e4f6",
+      "status": "passed",
+      "result": "切换到目标控件 120 所在页后隐藏；返回后可见=True、启用=True。"
+    },
+    {
+      "action_id": "81fd779295449f7e3702",
+      "status": "passed",
+      "result": "切换到目标控件 630 所在页后隐藏；返回后可见=True、启用=True。"
+    },
+    {
+      "action_id": "9da012be367a173e9330",
+      "status": "passed",
+      "result": "切换到目标控件 120 所在页后隐藏；返回后可见=True、启用=True。"
+    },
+    {
+      "action_id": "73def2207ff5198eb7fa",
+      "status": "passed",
+      "result": "切换到目标控件 630 所在页后隐藏；返回后可见=True、启用=True。"
+    },
+    {
+      "action_id": "6dcec64e02ed0a9c6bf1",
+      "status": "passed",
+      "result": "切换到目标控件 630 所在页后隐藏；返回后可见=True、启用=True。"
+    },
+    {
+      "action_id": "6be5d72fff79937f1412",
+      "status": "passed",
+      "result": "切换到目标控件 630 所在页后隐藏；返回后可见=True、启用=True。"
+    },
+    {
+      "action_id": "564567fd3da7f1e60de4",
+      "status": "passed",
+      "result": "切换到目标控件 630 所在页后隐藏；返回后可见=True、启用=True。"
+    },
+    {
+      "action_id": "f29ba3a4fb4d64c4ac34",
+      "status": "passed",
+      "result": "切换到目标控件 630 所在页后隐藏；返回后可见=True、启用=True。"
+    },
+    {
+      "action_id": "a3ee5847c2d310b6beeb",
+      "status": "passed",
+      "result": "切换到目标控件 630 所在页后隐藏；返回后可见=True、启用=True。"
+    },
+    {
+      "action_id": "b8d9697c2e50ed1a8ce6",
+      "status": "passed",
+      "result": "切换到目标控件 120 所在页后隐藏；返回后可见=True、启用=True。"
+    },
+    {
+      "action_id": "cabb802f3fdca1e1d54a",
+      "status": "passed",
+      "result": "切换到目标控件 120 所在页后隐藏；返回后可见=True、启用=True。"
+    },
+    {
+      "action_id": "95882c2a2bbe3ae49647",
+      "status": "passed",
+      "result": "切换到目标控件 120 所在页后隐藏；返回后可见=True、启用=True。"
+    },
+    {
+      "action_id": "1ba471b1298a918c4da8",
+      "status": "passed",
+      "result": "切换到目标控件 630 所在页后隐藏；返回后可见=True、启用=True。"
+    },
+    {
+      "action_id": "fda9b32473caf48c4bc2",
+      "status": "passed",
+      "result": "切换到目标控件 630 所在页后隐藏；返回后可见=True、启用=True。"
+    },
+    {
+      "action_id": "1bbfc00077e4ceb102d9",
+      "status": "passed",
+      "result": "切换到目标控件 630 所在页后隐藏；返回后可见=True、启用=True。"
+    }
+  ]
+}

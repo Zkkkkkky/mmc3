@@ -1,0 +1,860 @@
+{
+  "schema_version": 1,
+  "validated": true,
+  "error": null,
+  "execution_record_count": 52,
+  "diff_count": 0,
+  "sha256_before": "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E",
+  "sha256_after": "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E",
+  "observations": [
+    {
+      "control_id": 1550,
+      "text": "升级经验",
+      "path": [
+        5,
+        9
+      ],
+      "action": "right_click_and_state",
+      "right_click_menu": false,
+      "hidden_on_tab_x": 14,
+      "activators": []
+    },
+    {
+      "control_id": 1550,
+      "text": "升级经验",
+      "path": [
+        5,
+        9
+      ],
+      "action": "keyboard_activate",
+      "focused": true,
+      "database_alive": true,
+      "check_before": 0,
+      "check_after": 0,
+      "new_windows": [],
+      "activators": []
+    },
+    {
+      "control_id": 1550,
+      "text": "升级经验",
+      "path": [
+        5,
+        9
+      ],
+      "action": "left_click",
+      "focused": null,
+      "database_alive": true,
+      "check_before": 0,
+      "check_after": 0,
+      "new_windows": [],
+      "activators": []
+    },
+    {
+      "control_id": 1560,
+      "text": "武器距离命中补正",
+      "path": [
+        5,
+        8
+      ],
+      "action": "right_click_and_state",
+      "right_click_menu": false,
+      "hidden_on_tab_x": 14,
+      "activators": []
+    },
+    {
+      "control_id": 1560,
+      "text": "武器距离命中补正",
+      "path": [
+        5,
+        8
+      ],
+      "action": "keyboard_activate",
+      "focused": true,
+      "database_alive": true,
+      "check_before": 0,
+      "check_after": 0,
+      "new_windows": [],
+      "activators": []
+    },
+    {
+      "control_id": 1560,
+      "text": "武器距离命中补正",
+      "path": [
+        5,
+        8
+      ],
+      "action": "left_click",
+      "focused": null,
+      "database_alive": true,
+      "check_before": 0,
+      "check_after": 0,
+      "new_windows": [],
+      "activators": []
+    },
+    {
+      "control_id": 1680,
+      "text": "更改等级上限",
+      "path": [
+        5,
+        9,
+        0
+      ],
+      "action": "right_click_and_state",
+      "right_click_menu": false,
+      "hidden_on_tab_x": 14,
+      "activators": []
+    },
+    {
+      "control_id": 1680,
+      "text": "更改等级上限",
+      "path": [
+        5,
+        9,
+        0
+      ],
+      "action": "keyboard_activate",
+      "focused": true,
+      "database_alive": true,
+      "check_before": 0,
+      "check_after": 0,
+      "new_windows": [
+        {
+          "title": "最大值",
+          "class": "WTWindow"
+        }
+      ],
+      "activators": []
+    },
+    {
+      "control_id": 1680,
+      "text": "更改等级上限",
+      "path": [
+        5,
+        9,
+        0
+      ],
+      "action": "left_click",
+      "focused": null,
+      "database_alive": true,
+      "check_before": 0,
+      "check_after": 0,
+      "new_windows": [
+        {
+          "title": "最大值",
+          "class": "WTWindow"
+        }
+      ],
+      "activators": []
+    },
+    {
+      "control_id": 1740,
+      "text": "道具",
+      "path": [
+        5,
+        7
+      ],
+      "action": "right_click_and_state",
+      "right_click_menu": false,
+      "hidden_on_tab_x": 14,
+      "activators": []
+    },
+    {
+      "control_id": 1740,
+      "text": "道具",
+      "path": [
+        5,
+        7
+      ],
+      "action": "keyboard_activate",
+      "focused": true,
+      "database_alive": true,
+      "check_before": 0,
+      "check_after": 0,
+      "new_windows": [],
+      "activators": []
+    },
+    {
+      "control_id": 1740,
+      "text": "道具",
+      "path": [
+        5,
+        7
+      ],
+      "action": "left_click",
+      "focused": null,
+      "database_alive": true,
+      "check_before": 0,
+      "check_after": 0,
+      "new_windows": [],
+      "activators": []
+    },
+    {
+      "control_id": 1760,
+      "text": "系统文字（谨慎修改）",
+      "path": [
+        5,
+        6
+      ],
+      "action": "right_click_and_state",
+      "right_click_menu": false,
+      "hidden_on_tab_x": 14,
+      "activators": []
+    },
+    {
+      "control_id": 1760,
+      "text": "系统文字（谨慎修改）",
+      "path": [
+        5,
+        6
+      ],
+      "action": "keyboard_activate",
+      "focused": true,
+      "database_alive": true,
+      "check_before": 0,
+      "check_after": 0,
+      "new_windows": [],
+      "activators": []
+    },
+    {
+      "control_id": 1760,
+      "text": "系统文字（谨慎修改）",
+      "path": [
+        5,
+        6
+      ],
+      "action": "left_click",
+      "focused": null,
+      "database_alive": true,
+      "check_before": 0,
+      "check_after": 0,
+      "new_windows": [],
+      "activators": []
+    },
+    {
+      "control_id": 1800,
+      "text": "商店",
+      "path": [
+        5,
+        5
+      ],
+      "action": "right_click_and_state",
+      "right_click_menu": false,
+      "hidden_on_tab_x": 14,
+      "activators": []
+    },
+    {
+      "control_id": 1800,
+      "text": "商店",
+      "path": [
+        5,
+        5
+      ],
+      "action": "keyboard_activate",
+      "focused": true,
+      "database_alive": true,
+      "check_before": 0,
+      "check_after": 0,
+      "new_windows": [],
+      "activators": []
+    },
+    {
+      "control_id": 1800,
+      "text": "商店",
+      "path": [
+        5,
+        5
+      ],
+      "action": "left_click",
+      "focused": null,
+      "database_alive": true,
+      "check_before": 0,
+      "check_after": 0,
+      "new_windows": [],
+      "activators": []
+    },
+    {
+      "control_id": 1820,
+      "text": "商店设置",
+      "path": [
+        5,
+        5,
+        1
+      ],
+      "action": "right_click_and_state",
+      "right_click_menu": false,
+      "hidden_on_tab_x": 14,
+      "activators": []
+    },
+    {
+      "control_id": 1820,
+      "text": "商店设置",
+      "path": [
+        5,
+        5,
+        1
+      ],
+      "action": "keyboard_activate",
+      "focused": true,
+      "database_alive": true,
+      "check_before": 0,
+      "check_after": 0,
+      "new_windows": [],
+      "activators": []
+    },
+    {
+      "control_id": 1820,
+      "text": "商店设置",
+      "path": [
+        5,
+        5,
+        1
+      ],
+      "action": "left_click",
+      "focused": null,
+      "database_alive": true,
+      "check_before": 0,
+      "check_after": 0,
+      "new_windows": [],
+      "activators": []
+    },
+    {
+      "control_id": 1950,
+      "text": "店员对话",
+      "path": [
+        5,
+        5,
+        0
+      ],
+      "action": "right_click_and_state",
+      "right_click_menu": false,
+      "hidden_on_tab_x": 14,
+      "activators": []
+    },
+    {
+      "control_id": 1950,
+      "text": "店员对话",
+      "path": [
+        5,
+        5,
+        0
+      ],
+      "action": "keyboard_activate",
+      "focused": true,
+      "database_alive": true,
+      "check_before": 0,
+      "check_after": 0,
+      "new_windows": [],
+      "activators": []
+    },
+    {
+      "control_id": 1950,
+      "text": "店员对话",
+      "path": [
+        5,
+        5,
+        0
+      ],
+      "action": "left_click",
+      "focused": null,
+      "database_alive": true,
+      "check_before": 0,
+      "check_after": 0,
+      "new_windows": [],
+      "activators": []
+    },
+    {
+      "control_id": 2120,
+      "text": "添加",
+      "path": [
+        5,
+        20,
+        0
+      ],
+      "action": "right_click_and_state",
+      "right_click_menu": false,
+      "hidden_on_tab_x": 14,
+      "activators": []
+    },
+    {
+      "control_id": 2120,
+      "text": "添加",
+      "path": [
+        5,
+        20,
+        0
+      ],
+      "action": "keyboard_activate",
+      "focused": true,
+      "database_alive": true,
+      "check_before": 0,
+      "check_after": 0,
+      "new_windows": [],
+      "activators": []
+    },
+    {
+      "control_id": 2120,
+      "text": "添加",
+      "path": [
+        5,
+        20,
+        0
+      ],
+      "action": "left_click",
+      "focused": null,
+      "database_alive": true,
+      "check_before": 0,
+      "check_after": 0,
+      "new_windows": [],
+      "activators": []
+    },
+    {
+      "control_id": 2130,
+      "text": "添加",
+      "path": [
+        5,
+        21,
+        0
+      ],
+      "action": "right_click_and_state",
+      "right_click_menu": false,
+      "hidden_on_tab_x": 14,
+      "activators": []
+    },
+    {
+      "control_id": 2130,
+      "text": "添加",
+      "path": [
+        5,
+        21,
+        0
+      ],
+      "action": "keyboard_activate",
+      "focused": true,
+      "database_alive": true,
+      "check_before": 0,
+      "check_after": 0,
+      "new_windows": [],
+      "activators": []
+    },
+    {
+      "control_id": 2130,
+      "text": "添加",
+      "path": [
+        5,
+        21,
+        0
+      ],
+      "action": "left_click",
+      "focused": null,
+      "database_alive": true,
+      "check_before": 0,
+      "check_after": 0,
+      "new_windows": [],
+      "activators": []
+    },
+    {
+      "control_id": 2140,
+      "text": "添加",
+      "path": [
+        5,
+        6,
+        0
+      ],
+      "action": "right_click_and_state",
+      "right_click_menu": false,
+      "hidden_on_tab_x": 14,
+      "activators": []
+    },
+    {
+      "control_id": 2140,
+      "text": "添加",
+      "path": [
+        5,
+        6,
+        0
+      ],
+      "action": "keyboard_activate",
+      "focused": true,
+      "database_alive": true,
+      "check_before": 0,
+      "check_after": 0,
+      "new_windows": [],
+      "activators": []
+    },
+    {
+      "control_id": 2140,
+      "text": "添加",
+      "path": [
+        5,
+        6,
+        0
+      ],
+      "action": "left_click",
+      "focused": null,
+      "database_alive": true,
+      "check_before": 0,
+      "check_after": 0,
+      "new_windows": [],
+      "activators": []
+    },
+    {
+      "control_id": 2640,
+      "text": "成长方式",
+      "path": [
+        5,
+        1
+      ],
+      "action": "right_click_and_state",
+      "right_click_menu": false,
+      "hidden_on_tab_x": 14,
+      "activators": []
+    },
+    {
+      "control_id": 2640,
+      "text": "成长方式",
+      "path": [
+        5,
+        1
+      ],
+      "action": "keyboard_activate",
+      "focused": true,
+      "database_alive": true,
+      "check_before": 0,
+      "check_after": 0,
+      "new_windows": [],
+      "activators": []
+    },
+    {
+      "control_id": 2640,
+      "text": "成长方式",
+      "path": [
+        5,
+        1
+      ],
+      "action": "left_click",
+      "focused": null,
+      "database_alive": true,
+      "check_before": 0,
+      "check_after": 0,
+      "new_windows": [],
+      "activators": []
+    },
+    {
+      "control_id": 2650,
+      "text": "成长修改(16进制快捷修改)",
+      "path": [
+        5,
+        1,
+        0
+      ],
+      "action": "right_click_and_state",
+      "right_click_menu": false,
+      "hidden_on_tab_x": 14,
+      "activators": []
+    },
+    {
+      "control_id": 2650,
+      "text": "成长修改(16进制快捷修改)",
+      "path": [
+        5,
+        1,
+        0
+      ],
+      "action": "keyboard_activate",
+      "focused": true,
+      "database_alive": true,
+      "check_before": 0,
+      "check_after": 0,
+      "new_windows": [
+        {
+          "title": "成长属性",
+          "class": "WTWindow"
+        }
+      ],
+      "activators": []
+    },
+    {
+      "control_id": 2650,
+      "text": "成长修改(16进制快捷修改)",
+      "path": [
+        5,
+        1,
+        0
+      ],
+      "action": "left_click",
+      "focused": null,
+      "database_alive": true,
+      "check_before": 0,
+      "check_after": 0,
+      "new_windows": [
+        {
+          "title": "成长属性",
+          "class": "WTWindow"
+        }
+      ],
+      "activators": []
+    }
+  ],
+  "execution_records": [
+    {
+      "action_id": "ca5dd432a7eca2c08771",
+      "status": "passed",
+      "result": "执行右键路径；可见菜单=False；条件记录链=[]。"
+    },
+    {
+      "action_id": "fe09901ee8ec1d1a207c",
+      "status": "passed",
+      "result": "切换到页签坐标 14 后隐藏；返回后可见且启用=True。"
+    },
+    {
+      "action_id": "37a32d1a1fcd0b0fde33",
+      "status": "passed",
+      "result": "焦点=True；数据库仍存在=True；选中状态 0->0；新增窗口=[]；条件记录链=[]。"
+    },
+    {
+      "action_id": "8b35867179d111c545df",
+      "status": "passed",
+      "result": "焦点=None；数据库仍存在=True；选中状态 0->0；新增窗口=[]；条件记录链=[]。"
+    },
+    {
+      "action_id": "98810b7a3b5daf28426a",
+      "status": "passed",
+      "result": "执行右键路径；可见菜单=False；条件记录链=[]。"
+    },
+    {
+      "action_id": "00a2b90a9652113547d3",
+      "status": "passed",
+      "result": "切换到页签坐标 14 后隐藏；返回后可见且启用=True。"
+    },
+    {
+      "action_id": "c1886bccb33ce3c83612",
+      "status": "passed",
+      "result": "焦点=True；数据库仍存在=True；选中状态 0->0；新增窗口=[]；条件记录链=[]。"
+    },
+    {
+      "action_id": "ebb1ebdb40d0aa137f04",
+      "status": "passed",
+      "result": "焦点=None；数据库仍存在=True；选中状态 0->0；新增窗口=[]；条件记录链=[]。"
+    },
+    {
+      "action_id": "1ff2b8b2fe2ac3ff76b8",
+      "status": "passed",
+      "result": "执行右键路径；可见菜单=False；条件记录链=[]。"
+    },
+    {
+      "action_id": "685f46efae29b89a14c5",
+      "status": "passed",
+      "result": "切换到页签坐标 14 后隐藏；返回后可见且启用=True。"
+    },
+    {
+      "action_id": "447a74a922bd15638cf1",
+      "status": "passed",
+      "result": "焦点=True；数据库仍存在=True；选中状态 0->0；新增窗口=[{'title': '最大值', 'class': 'WTWindow'}]；条件记录链=[]。"
+    },
+    {
+      "action_id": "7b5fec73845284b22153",
+      "status": "passed",
+      "result": "焦点=None；数据库仍存在=True；选中状态 0->0；新增窗口=[{'title': '最大值', 'class': 'WTWindow'}]；条件记录链=[]。"
+    },
+    {
+      "action_id": "8d8952a87c8f06d1ee8b",
+      "status": "passed",
+      "result": "执行右键路径；可见菜单=False；条件记录链=[]。"
+    },
+    {
+      "action_id": "d38d08955ab5acd56239",
+      "status": "passed",
+      "result": "切换到页签坐标 14 后隐藏；返回后可见且启用=True。"
+    },
+    {
+      "action_id": "5f5d7f54745577106a4d",
+      "status": "passed",
+      "result": "焦点=True；数据库仍存在=True；选中状态 0->0；新增窗口=[]；条件记录链=[]。"
+    },
+    {
+      "action_id": "b3b404ff5579b4ce9710",
+      "status": "passed",
+      "result": "焦点=None；数据库仍存在=True；选中状态 0->0；新增窗口=[]；条件记录链=[]。"
+    },
+    {
+      "action_id": "d2c02cd7986750548002",
+      "status": "passed",
+      "result": "执行右键路径；可见菜单=False；条件记录链=[]。"
+    },
+    {
+      "action_id": "80fc452eb2ce6b5cadca",
+      "status": "passed",
+      "result": "切换到页签坐标 14 后隐藏；返回后可见且启用=True。"
+    },
+    {
+      "action_id": "5496f8bc99e2c1694f7c",
+      "status": "passed",
+      "result": "焦点=True；数据库仍存在=True；选中状态 0->0；新增窗口=[]；条件记录链=[]。"
+    },
+    {
+      "action_id": "ad077e6f4a1392f8e405",
+      "status": "passed",
+      "result": "焦点=None；数据库仍存在=True；选中状态 0->0；新增窗口=[]；条件记录链=[]。"
+    },
+    {
+      "action_id": "ff1a1dc52045399c2760",
+      "status": "passed",
+      "result": "执行右键路径；可见菜单=False；条件记录链=[]。"
+    },
+    {
+      "action_id": "5e0096d885247fcd41fe",
+      "status": "passed",
+      "result": "切换到页签坐标 14 后隐藏；返回后可见且启用=True。"
+    },
+    {
+      "action_id": "b88a5af86dc023a0f85d",
+      "status": "passed",
+      "result": "焦点=True；数据库仍存在=True；选中状态 0->0；新增窗口=[]；条件记录链=[]。"
+    },
+    {
+      "action_id": "581699302fad04cc0981",
+      "status": "passed",
+      "result": "焦点=None；数据库仍存在=True；选中状态 0->0；新增窗口=[]；条件记录链=[]。"
+    },
+    {
+      "action_id": "ef1b21b4ea982af0241e",
+      "status": "passed",
+      "result": "执行右键路径；可见菜单=False；条件记录链=[]。"
+    },
+    {
+      "action_id": "84eeec90cd98b405ff3c",
+      "status": "passed",
+      "result": "切换到页签坐标 14 后隐藏；返回后可见且启用=True。"
+    },
+    {
+      "action_id": "d26a70eec79a1d96de65",
+      "status": "passed",
+      "result": "焦点=True；数据库仍存在=True；选中状态 0->0；新增窗口=[]；条件记录链=[]。"
+    },
+    {
+      "action_id": "ce0961376e8507ad1b30",
+      "status": "passed",
+      "result": "焦点=None；数据库仍存在=True；选中状态 0->0；新增窗口=[]；条件记录链=[]。"
+    },
+    {
+      "action_id": "5c6ab05f3a19ff1c90bc",
+      "status": "passed",
+      "result": "执行右键路径；可见菜单=False；条件记录链=[]。"
+    },
+    {
+      "action_id": "2cb4e93e9210b1d5f880",
+      "status": "passed",
+      "result": "切换到页签坐标 14 后隐藏；返回后可见且启用=True。"
+    },
+    {
+      "action_id": "9db557388087704e9b5a",
+      "status": "passed",
+      "result": "焦点=True；数据库仍存在=True；选中状态 0->0；新增窗口=[]；条件记录链=[]。"
+    },
+    {
+      "action_id": "0205d9c11bb84ba68aa2",
+      "status": "passed",
+      "result": "焦点=None；数据库仍存在=True；选中状态 0->0；新增窗口=[]；条件记录链=[]。"
+    },
+    {
+      "action_id": "883f2c03d91c131f0d9a",
+      "status": "passed",
+      "result": "执行右键路径；可见菜单=False；条件记录链=[]。"
+    },
+    {
+      "action_id": "6b90ebc6c803d91e31f3",
+      "status": "passed",
+      "result": "切换到页签坐标 14 后隐藏；返回后可见且启用=True。"
+    },
+    {
+      "action_id": "e46fd40dbfb685a644f2",
+      "status": "passed",
+      "result": "焦点=True；数据库仍存在=True；选中状态 0->0；新增窗口=[]；条件记录链=[]。"
+    },
+    {
+      "action_id": "49905517d9f55a7ed751",
+      "status": "passed",
+      "result": "焦点=None；数据库仍存在=True；选中状态 0->0；新增窗口=[]；条件记录链=[]。"
+    },
+    {
+      "action_id": "ec22e4273ab61a2b7a0d",
+      "status": "passed",
+      "result": "执行右键路径；可见菜单=False；条件记录链=[]。"
+    },
+    {
+      "action_id": "9fb90bd4a3a9033aee9f",
+      "status": "passed",
+      "result": "切换到页签坐标 14 后隐藏；返回后可见且启用=True。"
+    },
+    {
+      "action_id": "6eacd950b6dab6d245f3",
+      "status": "passed",
+      "result": "焦点=True；数据库仍存在=True；选中状态 0->0；新增窗口=[]；条件记录链=[]。"
+    },
+    {
+      "action_id": "e432f1664342f992e50b",
+      "status": "passed",
+      "result": "焦点=None；数据库仍存在=True；选中状态 0->0；新增窗口=[]；条件记录链=[]。"
+    },
+    {
+      "action_id": "12c1c6de4e90a576e259",
+      "status": "passed",
+      "result": "执行右键路径；可见菜单=False；条件记录链=[]。"
+    },
+    {
+      "action_id": "9a826e8b9d885775b335",
+      "status": "passed",
+      "result": "切换到页签坐标 14 后隐藏；返回后可见且启用=True。"
+    },
+    {
+      "action_id": "226080f592e3d3363139",
+      "status": "passed",
+      "result": "焦点=True；数据库仍存在=True；选中状态 0->0；新增窗口=[]；条件记录链=[]。"
+    },
+    {
+      "action_id": "2f327b90cac6f503ad7b",
+      "status": "passed",
+      "result": "焦点=None；数据库仍存在=True；选中状态 0->0；新增窗口=[]；条件记录链=[]。"
+    },
+    {
+      "action_id": "a6dcb3b74fee5c2365a7",
+      "status": "passed",
+      "result": "执行右键路径；可见菜单=False；条件记录链=[]。"
+    },
+    {
+      "action_id": "19b44828d4d24fe52dc0",
+      "status": "passed",
+      "result": "切换到页签坐标 14 后隐藏；返回后可见且启用=True。"
+    },
+    {
+      "action_id": "4b51022738deefb3212b",
+      "status": "passed",
+      "result": "焦点=True；数据库仍存在=True；选中状态 0->0；新增窗口=[]；条件记录链=[]。"
+    },
+    {
+      "action_id": "977888766a8da83ff003",
+      "status": "passed",
+      "result": "焦点=None；数据库仍存在=True；选中状态 0->0；新增窗口=[]；条件记录链=[]。"
+    },
+    {
+      "action_id": "0980fddf6fce4e77dd89",
+      "status": "passed",
+      "result": "执行右键路径；可见菜单=False；条件记录链=[]。"
+    },
+    {
+      "action_id": "065dcdb7aea33e916536",
+      "status": "passed",
+      "result": "切换到页签坐标 14 后隐藏；返回后可见且启用=True。"
+    },
+    {
+      "action_id": "d5ba5e9ee25a87c7b9dd",
+      "status": "passed",
+      "result": "焦点=True；数据库仍存在=True；选中状态 0->0；新增窗口=[{'title': '成长属性', 'class': 'WTWindow'}]；条件记录链=[]。"
+    },
+    {
+      "action_id": "95d537196ee69ada8100",
+      "status": "passed",
+      "result": "焦点=None；数据库仍存在=True；选中状态 0->0；新增窗口=[{'title': '成长属性', 'class': 'WTWindow'}]；条件记录链=[]。"
+    }
+  ]
+}

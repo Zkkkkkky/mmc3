@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "validated": true,
+  "error": null,
+  "execution_record_count": 3,
+  "diff_count": 0,
+  "observations": [
+    {
+      "action": "right_click",
+      "process_alive": false
+    },
+    {
+      "action": "left_click",
+      "process_alive": false
+    },
+    {
+      "action": "keyboard_activate",
+      "process_alive": false
+    }
+  ],
+  "execution_records": [
+    {
+      "action_id": "a819299408df4b5ac58e",
+      "status": "passed",
+      "result": "动作后进程存活=False。"
+    },
+    {
+      "action_id": "42dbb5e761a8c010ec41",
+      "status": "passed",
+      "result": "动作后进程存活=False。"
+    },
+    {
+      "action_id": "def8c5f0ca1d86dbfe2f",
+      "status": "passed",
+      "result": "动作后进程存活=False。"
+    }
+  ]
+}

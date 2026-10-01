@@ -10,6 +10,9 @@ from __future__ import annotations
 import json
 import struct
 from collections.abc import Mapping
+from dataclasses import dataclass
+
+from ..text_table import TextTable
 
 GLYPH_PAGE_LEADS = (0xB8, 0xB9, 0xBA, 0xBB, 0xC8, 0xC9, 0xCA, 0xCB, 0xD8, 0xD9, 0xDA, 0xDB)
 GLYPH_SIZE = 18
@@ -19,6 +22,52 @@ FULL_FONT_MAGIC = b"DCFNTALL"
 FULL_FONT_VERSION = 1
 _FULL_FONT_HEADER = struct.Struct("<8sHII")
 SUPPORTED_PROFILES = frozenset(("dc-kuorong-mmc3-v1", "dc-kuorong-mmc3-v2"))
+
+# Page reachability differs by runtime renderer. Story and battle text may use
+# all twelve pages, while the verified name/system renderers use only C/D.
+# Allocation order is deterministic inside each renderer-compatible set.
+STORY_FONT_LEADS = GLYPH_PAGE_LEADS
+NAME_FONT_LEADS = (0xD8, 0xD9, 0xDA, 0xDB, 0xC8, 0xC9, 0xCA, 0xCB)
+FONT_CHANNEL_PAGE_ORDER = {
+    "story": (0xBA, 0xBB, 0xB8, 0xB9, 0xC8, 0xC9, 0xCA, 0xCB, 0xD8, 0xD9, 0xDA, 0xDB),
+    "battle": (0xBA, 0xBB, 0xB8, 0xB9, 0xC8, 0xC9, 0xCA, 0xCB, 0xD8, 0xD9, 0xDA, 0xDB),
+    "name": NAME_FONT_LEADS,
+    "unit": NAME_FONT_LEADS,
+    "character": NAME_FONT_LEADS,
+    "weapon": NAME_FONT_LEADS,
+    "item": NAME_FONT_LEADS,
+    "system": NAME_FONT_LEADS,
+}
+
+
+def channel_font_leads(channel: str) -> tuple[int, ...]:
+    """Return runtime-compatible glyph pages for one text renderer."""
+
+    return FONT_CHANNEL_PAGE_ORDER.get(channel, NAME_FONT_LEADS)
+
+
+def incompatible_channel_tokens(raw: bytes, channel: str) -> tuple[bytes, ...]:
+    """Return glyph tokens that the selected runtime text renderer cannot use."""
+
+    from .story_text import StoryTextCodec
+
+    allowed = set(channel_font_leads(channel))
+    return tuple(
+        token.raw
+        for token in StoryTextCodec.tokenize(raw)
+        if len(token.raw) == 2
+        and token.raw[0] in GLYPH_PAGE_LEADS
+        and token.raw[0] not in allowed
+    )
+
+
+@dataclass(frozen=True)
+class FontUsageAudit:
+    referenced_tokens: frozenset[bytes]
+    unused_builtin_tokens: tuple[bytes, ...]
+    unused_custom_tokens: tuple[bytes, ...]
+    unused_unmapped_glyphs: tuple[bytes, ...]
+    disabled_builtin_tokens: tuple[bytes, ...] = ()
 
 
 def glyph_file_offset(token: bytes, *, writable: bool = False) -> int:
@@ -63,6 +112,157 @@ def safe_unmapped_tokens(data: bytes, mapped_tokens: set[bytes]) -> tuple[bytes,
         if len(raw) == GLYPH_SIZE and len(set(raw)) == 1:
             result.append(token)
     return tuple(result)
+
+
+def safe_channel_tokens(
+    data: bytes,
+    mapped_tokens: set[bytes],
+    channel: str,
+    reclaimed_tokens: set[bytes] | frozenset[bytes] = frozenset(),
+    *,
+    reclaimed_data: bytes | None = None,
+) -> tuple[bytes, ...]:
+    """Return conservative empty slots ordered for one text family.
+
+    ``data`` should be the immutable base ROM so clearing glyph bitmaps cannot
+    make unrelated byte pairs look newly unused. Explicitly reclaimed slots
+    are validated against ``reclaimed_data`` (the mutable working ROM).
+    """
+
+    order = channel_font_leads(channel)
+    allowed = set(order)
+    candidates = {
+        token for token in safe_unmapped_tokens(data, mapped_tokens)
+        if token[0] in allowed
+    }
+    working = data if reclaimed_data is None else reclaimed_data
+    working_references = font_reference_counts(working)
+    # A base-ROM empty slot can later be referenced through raw-code editing or
+    # receive a hand-drawn glyph. Revalidate the mutable ROM immediately before
+    # offering it instead of trusting only the immutable baseline.
+    candidates = {
+        token for token in candidates
+        if not working_references.get(token, 0)
+        and len(set(working[
+            glyph_file_offset(token, writable=True):
+            glyph_file_offset(token, writable=True) + GLYPH_SIZE
+        ])) == 1
+    }
+    if reclaimed_tokens:
+        for token in reclaimed_tokens:
+            if (
+                token[0] not in allowed
+                or token in mapped_tokens
+                or working_references.get(token, 0)
+            ):
+                continue
+            offset = glyph_file_offset(token, writable=True)
+            raw = working[offset : offset + GLYPH_SIZE]
+            if len(raw) == GLYPH_SIZE and len(set(raw)) == 1:
+                candidates.add(token)
+    rank = {lead: index for index, lead in enumerate(order)}
+    return tuple(
+        sorted(candidates, key=lambda token: (rank.get(token[0], len(rank)), token))
+    )
+
+
+def missing_text_characters(table: TextTable, text: str) -> tuple[str, ...]:
+    """Return unencodable characters while respecting multi-character tokens."""
+
+    values = sorted(table.text_to_byte, key=len, reverse=True)
+    missing: list[str] = []
+    cursor = 0
+    while cursor < len(text):
+        if text[cursor] == "<":
+            close = text.find(">", cursor + 1)
+            if close >= 0:
+                compact = "".join(text[cursor + 1 : close].split())
+                if compact and len(compact) % 2 == 0:
+                    try:
+                        bytes.fromhex(compact)
+                        cursor = close + 1
+                        continue
+                    except ValueError:
+                        pass
+        match = next(
+            (value for value in values if text.startswith(value, cursor)),
+            None,
+        )
+        if match is not None:
+            cursor += len(match)
+            continue
+        character = text[cursor]
+        if character not in missing:
+            missing.append(character)
+        cursor += 1
+    return tuple(missing)
+
+
+def font_reference_counts(data: bytes) -> dict[bytes, int]:
+    """Count possible two-byte font references outside the font storage.
+
+    Glyph bitmap bytes frequently resemble text tokens by accident.  Exclude
+    all twelve page rows, including their four reserved bytes, then scan every
+    remaining byte boundary conservatively.  A hit may still be non-text data,
+    which is why zero is safe evidence while a positive count is only treated
+    as "possibly referenced".
+    """
+
+    excluded: list[tuple[int, int]] = []
+    for lead in GLYPH_PAGE_LEADS:
+        page_start = glyph_file_offset(bytes((lead, 0)), writable=True)
+        excluded.extend(
+            (page_start + row * 0x100, page_start + (row + 1) * 0x100)
+            for row in range(16)
+        )
+    excluded.sort()
+    counts: dict[bytes, int] = {}
+    range_index = 0
+    position = 0
+    while position + 1 < len(data):
+        while range_index < len(excluded) and position >= excluded[range_index][1]:
+            range_index += 1
+        if (
+            range_index < len(excluded)
+            and excluded[range_index][0] <= position < excluded[range_index][1]
+        ):
+            position = excluded[range_index][1]
+            continue
+        if data[position] in GLYPH_PAGE_LEADS:
+            token = bytes(data[position : position + 2])
+            counts[token] = counts.get(token, 0) + 1
+        position += 1
+    return counts
+
+
+def audit_font_usage(
+    data: bytes,
+    builtin_tokens: set[bytes],
+    custom_tokens: set[bytes],
+    disabled_builtin_tokens: set[bytes] | None = None,
+) -> FontUsageAudit:
+    disabled_builtin_tokens = disabled_builtin_tokens or set()
+    counts = font_reference_counts(data)
+    referenced = frozenset(token for token, count in counts.items() if count)
+    independent = set(font_tokens())
+    unused_builtin = tuple(
+        sorted((builtin_tokens & independent) - referenced - disabled_builtin_tokens)
+    )
+    unused_custom = tuple(sorted((custom_tokens & independent) - referenced))
+    mapped = builtin_tokens | custom_tokens
+    orphaned = []
+    for token in sorted(independent - mapped - referenced):
+        offset = glyph_file_offset(token, writable=True)
+        raw = bytes(data[offset : offset + GLYPH_SIZE])
+        if len(raw) == GLYPH_SIZE and len(set(raw)) > 1:
+            orphaned.append(token)
+    return FontUsageAudit(
+        referenced,
+        unused_builtin,
+        unused_custom,
+        tuple(orphaned),
+        tuple(sorted(disabled_builtin_tokens & independent)),
+    )
 
 
 def full_font_payload(data: bytes) -> bytes:
@@ -176,8 +376,6 @@ def decode_full_font_file(raw: bytes) -> tuple[dict[bytes, bytes], dict[bytes, s
         if len(character) != 1:
             raise ValueError("全字库文件的映射值必须是一枚 Unicode 字符。")
         mappings[token] = character
-    if len(set(mappings.values())) != len(mappings):
-        raise ValueError("全字库文件的自定义字符存在重复编码。")
     return glyphs_from_full_payload(raw[payload_start:payload_end]), mappings
 
 

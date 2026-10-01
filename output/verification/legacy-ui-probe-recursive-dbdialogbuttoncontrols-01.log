@@ -1,0 +1,40 @@
+[    0.0s] launched pid=13244
+[    0.0s] === stage A: launcher -> main window (no ROM) ===
+[    3.0s] top window: {'hwnd': 4982188, 'title': 'SRW2�޸���V1.5', 'class': 'WTWindow', 'rect': {'left': 571, 'top': 244, 'right': 1346, 'bottom': 843, 'width': 775, 'height': 599}, 'pid': 13244}
+[    4.0s] dump A01_������: title='SRW2�޸���V1.5' class='WTWindow' controls=8 shot=ok
+[   12.4s] main window hwnd=5835326 title='SRW2���ݰ��޸���V1.0'
+[   14.4s] dump A02_������_δ����ROM: title='SRW2���ݰ��޸���V1.0' class='WTWindow' controls=63 shot=ok
+[   22.4s] === stage LOAD: load ROM copy only ===
+[   23.3s] dump LOAD01_��ROM�Ի���: title='���ļ�' class='#32770' controls=49 shot=ok
+[   23.9s] open dialog confirmed gone=True
+[   30.9s] ROM loaded without main-window sweep, title='SRW2���ݰ��޸���V1.0��D:\\GIT\\mmc3\\output\\build\\legacy-ui-probe\\database-dialog-button-controls.nes'
+[   32.1s] dump LOAD02_������_�����: title='SRW2���ݰ��޸���V1.0��D:\\GIT\\mmc3\\output\\build\\legacy-ui-probe\\database-dialog-button-controls.nes' class='WTWindow' controls=63 shot=ok
+[   32.1s] === stage DBDIALOGBUTTONCONTROLS ===
+[   33.1s] ���ݿ�: hwnd=8652386 title='���ݿ�'
+[   42.5s] DBDIALOGBUTTONCONTROLS: cached database tab points [14, 86, 182, 266, 350, 434]
+[   70.0s] dump DBDIALOGBUTTONCONTROLS_1420_keyboard_activate_1: title='�����Ի�' class='WTWindow' controls=11 shot=ok
+[   73.3s] dump DBDIALOGBUTTONCONTROLS_1420_left_click_1: title='�����Ի�' class='WTWindow' controls=11 shot=ok
+[   78.0s] dump DBDIALOGBUTTONCONTROLS_1430_keyboard_activate_1: title='�����Ի�' class='WTWindow' controls=11 shot=ok
+[   81.1s] dump DBDIALOGBUTTONCONTROLS_1430_left_click_1: title='�����Ի�' class='WTWindow' controls=11 shot=ok
+[   86.4s] dump DBDIALOGBUTTONCONTROLS_1440_keyboard_activate_1: title='�����Ի�' class='WTWindow' controls=11 shot=ok
+[   89.6s] dump DBDIALOGBUTTONCONTROLS_1440_left_click_1: title='�����Ի�' class='WTWindow' controls=11 shot=ok
+[   94.6s] dump DBDIALOGBUTTONCONTROLS_1450_keyboard_activate_1: title='�����Ի�' class='WTWindow' controls=9 shot=ok
+[   97.7s] dump DBDIALOGBUTTONCONTROLS_1450_left_click_1: title='�����Ի�' class='WTWindow' controls=9 shot=ok
+[  103.4s] dump DBDIALOGBUTTONCONTROLS_1460_keyboard_activate_1: title='�����Ի�' class='WTWindow' controls=9 shot=ok
+[  106.2s] dump DBDIALOGBUTTONCONTROLS_1460_left_click_1: title='�����Ի�' class='WTWindow' controls=9 shot=ok
+[  111.2s] dump DBDIALOGBUTTONCONTROLS_1470_keyboard_activate_1: title='�����Ի�' class='WTWindow' controls=9 shot=ok
+[  114.1s] dump DBDIALOGBUTTONCONTROLS_1470_left_click_1: title='�����Ի�' class='WTWindow' controls=9 shot=ok
+[  119.5s] dump DBDIALOGBUTTONCONTROLS_1480_keyboard_activate_1: title='�����Ի�' class='WTWindow' controls=9 shot=ok
+[  122.6s] dump DBDIALOGBUTTONCONTROLS_1480_left_click_1: title='�����Ի�' class='WTWindow' controls=9 shot=ok
+[  128.3s] dump DBDIALOGBUTTONCONTROLS_1490_keyboard_activate_1: title='�����Ի�' class='WTWindow' controls=9 shot=ok
+[  131.4s] dump DBDIALOGBUTTONCONTROLS_1490_left_click_1: title='�����Ի�' class='WTWindow' controls=9 shot=ok
+[  136.0s] dump DBDIALOGBUTTONCONTROLS_1500_keyboard_activate_1: title='�����Ի�' class='WTWindow' controls=9 shot=ok
+[  139.1s] dump DBDIALOGBUTTONCONTROLS_1500_left_click_1: title='�����Ի�' class='WTWindow' controls=9 shot=ok
+[  144.3s] dump DBDIALOGBUTTONCONTROLS_1510_keyboard_activate_1: title='�����Ի�' class='WTWindow' controls=9 shot=ok
+[  147.5s] dump DBDIALOGBUTTONCONTROLS_1510_left_click_1: title='�����Ի�' class='WTWindow' controls=9 shot=ok
+[  153.2s] dump DBDIALOGBUTTONCONTROLS_1520_keyboard_activate_1: title='�����Ի�' class='WTWindow' controls=9 shot=ok
+[  156.4s] dump DBDIALOGBUTTONCONTROLS_1520_left_click_1: title='�����Ի�' class='WTWindow' controls=9 shot=ok
+[  161.4s] dump DBDIALOGBUTTONCONTROLS_1530_keyboard_activate_1: title='��ʾ' class='#32770' controls=3 shot=ok
+[  164.5s] dump DBDIALOGBUTTONCONTROLS_1530_left_click_1: title='��ʾ' class='#32770' controls=3 shot=ok
+[  166.0s] DBDIALOGBUTTONCONTROLS complete: 56/56 actions, zero ROM diff
+[  166.2s] terminated owned pid=13244

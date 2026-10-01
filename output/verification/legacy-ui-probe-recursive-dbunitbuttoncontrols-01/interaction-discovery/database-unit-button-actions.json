@@ -1,0 +1,342 @@
+{
+  "schema_version": 1,
+  "validated": true,
+  "error": null,
+  "execution_record_count": 20,
+  "diff_count": 0,
+  "sha256_before": "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E",
+  "sha256_after": "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E",
+  "observations": [
+    {
+      "control_id": 110,
+      "text": "机体选择",
+      "path": [
+        5,
+        26
+      ],
+      "action": "right_click_and_state",
+      "right_click_menu": false,
+      "hidden_on_tab_x": 86,
+      "activators": []
+    },
+    {
+      "control_id": 110,
+      "text": "机体选择",
+      "path": [
+        5,
+        26
+      ],
+      "action": "keyboard_activate",
+      "focused": true,
+      "database_alive": true,
+      "check_before": 0,
+      "check_after": 0,
+      "new_windows": [],
+      "activators": []
+    },
+    {
+      "control_id": 110,
+      "text": "机体选择",
+      "path": [
+        5,
+        26
+      ],
+      "action": "left_click",
+      "focused": null,
+      "database_alive": true,
+      "check_before": 0,
+      "check_after": 0,
+      "new_windows": [],
+      "activators": []
+    },
+    {
+      "control_id": 130,
+      "text": "添加",
+      "path": [
+        5,
+        26,
+        0
+      ],
+      "action": "right_click_and_state",
+      "right_click_menu": false,
+      "hidden_on_tab_x": 86,
+      "activators": []
+    },
+    {
+      "control_id": 130,
+      "text": "添加",
+      "path": [
+        5,
+        26,
+        0
+      ],
+      "action": "keyboard_activate",
+      "focused": true,
+      "database_alive": true,
+      "check_before": 0,
+      "check_after": 0,
+      "new_windows": [],
+      "activators": []
+    },
+    {
+      "control_id": 130,
+      "text": "添加",
+      "path": [
+        5,
+        26,
+        0
+      ],
+      "action": "left_click",
+      "focused": null,
+      "database_alive": true,
+      "check_before": 0,
+      "check_after": 0,
+      "new_windows": [],
+      "activators": []
+    },
+    {
+      "control_id": 140,
+      "text": "机体图片",
+      "path": [
+        5,
+        25
+      ],
+      "action": "right_click_and_state",
+      "right_click_menu": false,
+      "hidden_on_tab_x": 86,
+      "activators": []
+    },
+    {
+      "control_id": 140,
+      "text": "机体图片",
+      "path": [
+        5,
+        25
+      ],
+      "action": "keyboard_activate",
+      "focused": true,
+      "database_alive": true,
+      "check_before": 0,
+      "check_after": 0,
+      "new_windows": [],
+      "activators": []
+    },
+    {
+      "control_id": 140,
+      "text": "机体图片",
+      "path": [
+        5,
+        25
+      ],
+      "action": "left_click",
+      "focused": null,
+      "database_alive": true,
+      "check_before": 0,
+      "check_after": 0,
+      "new_windows": [],
+      "activators": []
+    },
+    {
+      "control_id": 160,
+      "text": "上传机体",
+      "path": [
+        5,
+        25,
+        46
+      ],
+      "action": "right_click_and_state",
+      "right_click_menu": false,
+      "hidden_on_tab_x": 86,
+      "activators": []
+    },
+    {
+      "control_id": 160,
+      "text": "上传机体",
+      "path": [
+        5,
+        25,
+        46
+      ],
+      "action": "keyboard_activate",
+      "focused": true,
+      "database_alive": true,
+      "check_before": 0,
+      "check_after": 0,
+      "new_windows": [
+        {
+          "title": "打开图片",
+          "class": "#32770"
+        }
+      ],
+      "activators": []
+    },
+    {
+      "control_id": 160,
+      "text": "上传机体",
+      "path": [
+        5,
+        25,
+        46
+      ],
+      "action": "left_click",
+      "focused": null,
+      "database_alive": true,
+      "check_before": 0,
+      "check_after": 0,
+      "new_windows": [
+        {
+          "title": "打开图片",
+          "class": "#32770"
+        }
+      ],
+      "activators": []
+    },
+    {
+      "control_id": 180,
+      "text": "压缩上传",
+      "path": [
+        5,
+        25,
+        44
+      ],
+      "action": "right_click_and_state",
+      "right_click_menu": false,
+      "hidden_on_tab_x": 86,
+      "activators": []
+    },
+    {
+      "control_id": 180,
+      "text": "压缩上传",
+      "path": [
+        5,
+        25,
+        44
+      ],
+      "action": "keyboard_activate",
+      "focused": true,
+      "database_alive": true,
+      "check_before": 0,
+      "check_after": 1,
+      "new_windows": [],
+      "activators": []
+    },
+    {
+      "control_id": 180,
+      "text": "压缩上传",
+      "path": [
+        5,
+        25,
+        44
+      ],
+      "action": "left_click",
+      "focused": null,
+      "database_alive": true,
+      "check_before": 1,
+      "check_after": 0,
+      "new_windows": [],
+      "activators": []
+    }
+  ],
+  "execution_records": [
+    {
+      "action_id": "a1c5593bb1ae244f94eb",
+      "status": "passed",
+      "result": "执行右键路径；可见菜单=False；条件记录链=[]。"
+    },
+    {
+      "action_id": "b051723b63ed8159bb77",
+      "status": "passed",
+      "result": "切换到页签坐标 86 后隐藏；返回后可见且启用=True。"
+    },
+    {
+      "action_id": "6d1290c531b3ffcaa467",
+      "status": "passed",
+      "result": "焦点=True；数据库仍存在=True；选中状态 0->0；新增窗口=[]；条件记录链=[]。"
+    },
+    {
+      "action_id": "2b9fcfbfe9a5f185187c",
+      "status": "passed",
+      "result": "焦点=None；数据库仍存在=True；选中状态 0->0；新增窗口=[]；条件记录链=[]。"
+    },
+    {
+      "action_id": "87eb432f94f607d1d38e",
+      "status": "passed",
+      "result": "执行右键路径；可见菜单=False；条件记录链=[]。"
+    },
+    {
+      "action_id": "15fb693592a2f251baa7",
+      "status": "passed",
+      "result": "切换到页签坐标 86 后隐藏；返回后可见且启用=True。"
+    },
+    {
+      "action_id": "dcd6e2865b42e09a18d3",
+      "status": "passed",
+      "result": "焦点=True；数据库仍存在=True；选中状态 0->0；新增窗口=[]；条件记录链=[]。"
+    },
+    {
+      "action_id": "89eb9da0cef16d744dcd",
+      "status": "passed",
+      "result": "焦点=None；数据库仍存在=True；选中状态 0->0；新增窗口=[]；条件记录链=[]。"
+    },
+    {
+      "action_id": "6235448f4cb4b677fa42",
+      "status": "passed",
+      "result": "执行右键路径；可见菜单=False；条件记录链=[]。"
+    },
+    {
+      "action_id": "c30e960ca98b5efc28a6",
+      "status": "passed",
+      "result": "切换到页签坐标 86 后隐藏；返回后可见且启用=True。"
+    },
+    {
+      "action_id": "3e74d358630f2e6b22ef",
+      "status": "passed",
+      "result": "焦点=True；数据库仍存在=True；选中状态 0->0；新增窗口=[]；条件记录链=[]。"
+    },
+    {
+      "action_id": "0b849db0f12278e5eea0",
+      "status": "passed",
+      "result": "焦点=None；数据库仍存在=True；选中状态 0->0；新增窗口=[]；条件记录链=[]。"
+    },
+    {
+      "action_id": "bff75987ba2dfe14912a",
+      "status": "passed",
+      "result": "执行右键路径；可见菜单=False；条件记录链=[]。"
+    },
+    {
+      "action_id": "1c68e711ea079ce82cc0",
+      "status": "passed",
+      "result": "切换到页签坐标 86 后隐藏；返回后可见且启用=True。"
+    },
+    {
+      "action_id": "dcce038ee12e38eb31c8",
+      "status": "passed",
+      "result": "焦点=True；数据库仍存在=True；选中状态 0->0；新增窗口=[{'title': '打开图片', 'class': '#32770'}]；条件记录链=[]。"
+    },
+    {
+      "action_id": "b0f495e9d47e08d86d69",
+      "status": "passed",
+      "result": "焦点=None；数据库仍存在=True；选中状态 0->0；新增窗口=[{'title': '打开图片', 'class': '#32770'}]；条件记录链=[]。"
+    },
+    {
+      "action_id": "4d7aa3858a7f441c4d04",
+      "status": "passed",
+      "result": "执行右键路径；可见菜单=False；条件记录链=[]。"
+    },
+    {
+      "action_id": "82690d56e0b26a4b8719",
+      "status": "passed",
+      "result": "切换到页签坐标 86 后隐藏；返回后可见且启用=True。"
+    },
+    {
+      "action_id": "40a8b4f6de3e1ec7e503",
+      "status": "passed",
+      "result": "焦点=True；数据库仍存在=True；选中状态 0->1；新增窗口=[]；条件记录链=[]。"
+    },
+    {
+      "action_id": "6143eb80269e7df1dd66",
+      "status": "passed",
+      "result": "焦点=None；数据库仍存在=True；选中状态 1->0；新增窗口=[]；条件记录链=[]。"
+    }
+  ]
+}

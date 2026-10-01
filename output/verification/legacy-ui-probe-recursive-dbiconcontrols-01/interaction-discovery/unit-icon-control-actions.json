@@ -1,0 +1,96 @@
+{
+  "schema_version": 1,
+  "validated": true,
+  "error": null,
+  "execution_record_count": 17,
+  "diff_count": 0,
+  "sha256_before": "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E",
+  "sha256_after": "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E",
+  "execution_records": [
+    {
+      "action_id": "1121dc9f1e92952b5517",
+      "status": "passed",
+      "result": "展开/收起，共 100 项。"
+    },
+    {
+      "action_id": "b2c74d85f33a6b5539b4",
+      "status": "passed",
+      "result": "逐项选择 100 项并恢复 0。"
+    },
+    {
+      "action_id": "e446f330bba4540e50ba",
+      "status": "passed",
+      "result": "键盘读回 0 并恢复。"
+    },
+    {
+      "action_id": "e72d76300a1dd9ae1d0f",
+      "status": "passed",
+      "result": "执行右键路径。"
+    },
+    {
+      "action_id": "40b3edde1df778955dd1",
+      "status": "passed",
+      "result": "展开/收起，共 48 项。"
+    },
+    {
+      "action_id": "0a857b138c043d4601a1",
+      "status": "passed",
+      "result": "逐项选择 48 项并恢复 0。"
+    },
+    {
+      "action_id": "0e74b7ebea4f319bf391",
+      "status": "passed",
+      "result": "键盘读回 0 并恢复。"
+    },
+    {
+      "action_id": "edb94c9618cfe73d3bf8",
+      "status": "passed",
+      "result": "执行右键路径。"
+    },
+    {
+      "action_id": "2d1824a56063269c81cd",
+      "status": "passed",
+      "result": "执行图标窗口按钮手势。"
+    },
+    {
+      "action_id": "92ecc1f4aacef869b996",
+      "status": "passed",
+      "result": "执行图标窗口按钮手势。"
+    },
+    {
+      "action_id": "13603b0db63c785555d2",
+      "status": "passed",
+      "result": "执行图标窗口按钮手势。"
+    },
+    {
+      "action_id": "b12ee37aa3e0dd00b983",
+      "status": "passed",
+      "result": "执行图标窗口按钮手势。"
+    },
+    {
+      "action_id": "620a23f0a64daa700245",
+      "status": "passed",
+      "result": "执行图标窗口按钮手势。"
+    },
+    {
+      "action_id": "49bf0f0965bbea08d298",
+      "status": "passed",
+      "result": "执行图标窗口按钮手势。"
+    },
+    {
+      "action_id": "82cbba9a39ed56ecb3ac",
+      "status": "passed",
+      "result": "执行图标窗口按钮手势。"
+    },
+    {
+      "action_id": "29fe3ff0a9af9c02a138",
+      "status": "passed",
+      "result": "执行图标窗口按钮手势。"
+    },
+    {
+      "action_id": "922e34324a8a6e72b48c",
+      "status": "passed",
+      "result": "执行图标窗口按钮手势。"
+    }
+  ]
+}

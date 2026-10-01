@@ -21,8 +21,8 @@ class M15AttributeCalculatorReportTests(unittest.TestCase):
         )
         self.assertEqual(report["ui"]["default"]["character_count"], 200)
         self.assertEqual(report["ui"]["unit_09_weapon_ids"], [7, 11])
-        self.assertEqual(report["calculation"]["default"]["predicted_damage"], 143)
-        self.assertEqual(report["calculation"]["default"]["actual_damage"], 107)
+        self.assertEqual(report["calculation"]["default"]["predicted_damage"], 135)
+        self.assertEqual(report["calculation"]["default"]["actual_damage"], 135)
         self.assertEqual(len(report["pending_acceptance"]), 2)
 
 

@@ -1,0 +1,112 @@
+{
+  "schema_version": 1,
+  "validated": true,
+  "error": null,
+  "execution_record_count": 15,
+  "diff_count": 0,
+  "sha256_before": "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E",
+  "sha256_after": "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E",
+  "observations": [
+    {
+      "control_id": 2160,
+      "action": "keyboard_activate",
+      "focused": true,
+      "new_windows": []
+    },
+    {
+      "control_id": 2160,
+      "action": "left_click",
+      "focused": null,
+      "new_windows": []
+    },
+    {
+      "control_id": 2170,
+      "action": "keyboard_activate",
+      "focused": true,
+      "new_windows": []
+    },
+    {
+      "control_id": 2170,
+      "action": "left_click",
+      "focused": null,
+      "new_windows": []
+    }
+  ],
+  "execution_records": [
+    {
+      "action_id": "628b35b09b3c2c9b9ba3",
+      "status": "passed",
+      "result": "执行右键路径；可见菜单=False。"
+    },
+    {
+      "action_id": "4973b39fcafdd0ccac73",
+      "status": "passed",
+      "result": "执行右键路径；可见菜单=False。"
+    },
+    {
+      "action_id": "a0ea534f0c1c76b01807",
+      "status": "passed",
+      "result": "执行右键路径；可见菜单=False。"
+    },
+    {
+      "action_id": "9b77d26d44b844720884",
+      "status": "passed",
+      "result": "执行右键路径；可见菜单=False。"
+    },
+    {
+      "action_id": "9099cb196b8b6877d997",
+      "status": "passed",
+      "result": "焦点=True；新增窗口=[]；数据库仍存在=True。"
+    },
+    {
+      "action_id": "c3b669619debdd47bebc",
+      "status": "passed",
+      "result": "焦点=None；新增窗口=[]；数据库仍存在=True。"
+    },
+    {
+      "action_id": "8bfc0681c957d8c021d2",
+      "status": "passed",
+      "result": "焦点=True；新增窗口=[]；数据库仍存在=True。"
+    },
+    {
+      "action_id": "f8912aebe525d1d59bf4",
+      "status": "passed",
+      "result": "焦点=None；新增窗口=[]；数据库仍存在=True。"
+    },
+    {
+      "action_id": "171bbc93ccedf2b9ac6b",
+      "status": "passed",
+      "result": "真实焦点=True；空格关闭数据库。"
+    },
+    {
+      "action_id": "e3e38bdcbd6ec6d71685",
+      "status": "passed",
+      "result": "取消按钮随数据库关闭而销毁，重新打开后恢复。"
+    },
+    {
+      "action_id": "56bccb4904dd081c6d22",
+      "status": "passed",
+      "result": "真实焦点=True；未改草稿时空格确定并关闭数据库。"
+    },
+    {
+      "action_id": "e15fd53314887578231f",
+      "status": "passed",
+      "result": "确定按钮随数据库确认关闭而销毁，重新打开后恢复。"
+    },
+    {
+      "action_id": "a6bb309355421e6c5d5f",
+      "status": "passed",
+      "result": "未改草稿时左键确定并关闭数据库。"
+    },
+    {
+      "action_id": "3b9d2c4fc5e0cc7da3a5",
+      "status": "passed",
+      "result": "该按钮跨顶层页持续可见；取消数据库后销毁，重开后路径=(1,)、启用=True。"
+    },
+    {
+      "action_id": "7889c8da84a81854f635",
+      "status": "passed",
+      "result": "该按钮跨顶层页持续可见；取消数据库后销毁，重开后路径=(0,)、启用=True。"
+    }
+  ]
+}

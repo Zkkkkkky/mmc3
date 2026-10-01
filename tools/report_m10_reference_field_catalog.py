@@ -73,7 +73,11 @@ def build(source: dict[str, object]) -> dict[str, object]:
                 "slot": slot,
                 "control_id": control_id,
                 "value": value,
-                "product_safe": shop_id <= 0xF4,
+                # Even invalid F5-FC/FE shop metadata selects the same seven
+                # ordinary M09 system-text records in the reference program.
+                # The product now keeps that safe text route while continuing
+                # to block writes into the overlapping map-event pointer area.
+                "product_safe": True,
             })
     safe = sum(bool(field["product_safe"]) for field in fields)
     families = Counter(str(field["family"]) for field in fields)
@@ -94,7 +98,7 @@ def build(source: dict[str, object]) -> dict[str, object]:
         "reference_shop_labels": [shop["label"] for shop in source["shops"]],
         "notes": [
             "The reference ListBox exposes F0-FC and FE; FD is absent.",
-            "F5-FC and FE remain visibly enabled in the reference but overlap map-event data in the supported product layout.",
+            "F5-FC and FE remain visible: metadata overlaps map-event data and stays blocked, while their seven system-text fields remain editable.",
             "F4 only has one supported item slot; its remaining three visible slots are treated as blocked candidates.",
             "Dialogue edits alias M09 system-text records by the selected base dialogue id.",
         ],
@@ -117,7 +121,7 @@ def markdown(report: dict[str, object]) -> str:
         "|---|---:|",
     ]
     lines.extend(f"| {family} | {count} |" for family, count in counts["families"].items())
-    lines.extend(("", "说明：F5-FC、FE 和 F4 的第 2-4 商品槽虽然在参考版可编辑，但在当前受支持布局中属于地图事件重叠区，保存实验只用于取证，结果不会并入安全链。", ""))
+    lines.extend(("", "说明：F5-FC、FE 的店员/商品/对话编号以及 F4 的第 2-4 商品槽会覆盖地图事件或越过真实记录，继续禁写；这些无效目录对应的七段系统文字已作为安全功能恢复。", ""))
     return "\n".join(lines)
 
 

@@ -1,0 +1,21 @@
+﻿[    0.0s] launched pid=3488
+[    0.0s] === stage A: launcher -> main window (no ROM) ===
+[    3.0s] top window: {'hwnd': 18548052, 'title': 'SRW2修改器V1.5', 'class': 'WTWindow', 'rect': {'left': 571, 'top': 244, 'right': 1346, 'bottom': 843, 'width': 775, 'height': 599}, 'pid': 3488}
+[    4.5s] dump A01_启动器: title='SRW2修改器V1.5' class='WTWindow' controls=8 shot=ok
+[    6.9s] main window hwnd=592800 title='SRW2扩容版修改器V1.0'
+[    8.4s] dump A02_主窗口_未载入ROM: title='SRW2扩容版修改器V1.0' class='WTWindow' controls=63 shot=ok
+[   13.8s] menu 文件(F): could not open menu via Alt+F
+[   18.4s] menu 帮助(H): could not open menu via Alt+H
+[   18.9s] === stage LOAD: load ROM copy only ===
+[   19.8s] dump LOAD01_打开ROM对话框: title='打开文件' class='#32770' controls=51 shot=ok
+[   20.3s] open dialog confirmed gone=True
+[   27.4s] ROM loaded without main-window sweep, title='SRW2扩容版修改器V1.0：D:\\GIT\\mmc3\\output\\build\\legacy-ui-probe\\probe.nes'
+[   28.3s] dump LOAD02_主窗口_载入后: title='SRW2扩容版修改器V1.0：D:\\GIT\\mmc3\\output\\build\\legacy-ui-probe\\probe.nes' class='WTWindow' controls=63 shot=ok
+[   28.3s] === stage DBCMD: database context-command descendants ===
+[   29.0s] 数据库: hwnd=1312000 title='数据库'
+[   40.2s] dump DBCMD_01_武器修改_插入_1: title='武器指令' class='WTWindow' controls=13 shot=ok
+[   51.1s] dump DBCMD_02_武器修改_编辑_1: title='定义颜色' class='WTWindow' controls=29 shot=ok
+[   54.9s] dump DBCMD_03_机体修改_导出机体_1: title='导出机体' class='#32770' controls=51 shot=ok
+[   62.8s] dump DBCMD_04_人物修改_导出人物_1: title='导出头像' class='#32770' controls=51 shot=ok
+[   63.8s] DBCMD complete: 4 commands
+[   64.0s] terminated owned pid=3488

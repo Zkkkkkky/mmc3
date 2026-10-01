@@ -140,7 +140,9 @@ def main() -> int:
         str(OUT / "01-existing-record-editor.png")
     )
     changed_level = 1 if before_row[4] == 0xFF else before_row[4] + 1
-    page.deployment_level_editor.setValue(changed_level)
+    page.deployment_level_editor.setCurrentIndex(
+        page.deployment_level_editor.findData(changed_level)
+    )
     page._save_deployment_cell_editor()
     checks["field_draft_changed_only_target"] = (
         page.enemy_table.rows()[0]

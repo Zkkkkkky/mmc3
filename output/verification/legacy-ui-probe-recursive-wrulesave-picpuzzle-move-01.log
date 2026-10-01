@@ -1,0 +1,20 @@
+﻿[    0.0s] launched pid=18568
+[    0.0s] === stage A: launcher -> main window (no ROM) ===
+[    3.0s] top window: {'hwnd': 7995848, 'title': 'SRW2修改器V1.5', 'class': 'WTWindow', 'rect': {'left': 571, 'top': 244, 'right': 1346, 'bottom': 843, 'width': 775, 'height': 599}, 'pid': 18568}
+[    4.0s] dump A01_启动器: title='SRW2修改器V1.5' class='WTWindow' controls=8 shot=ok
+[    6.8s] main window hwnd=8194960 title='SRW2扩容版修改器V1.0'
+[    8.5s] dump A02_主窗口_未载入ROM: title='SRW2扩容版修改器V1.0' class='WTWindow' controls=63 shot=ok
+[   13.1s] menu 文件(F): could not open menu via Alt+F
+[   17.8s] menu 帮助(H): could not open menu via Alt+H
+[   18.2s] === stage LOAD: load ROM copy only ===
+[   19.2s] dump LOAD01_打开ROM对话框: title='打开文件' class='#32770' controls=51 shot=ok
+[   19.7s] open dialog confirmed gone=True
+[   26.7s] ROM loaded without main-window sweep, title='SRW2扩容版修改器V1.0：D:\\GIT\\mmc3\\output\\build\\legacy-ui-probe\\weapon-rule-save-picture-puzzle-move.nes'
+[   27.6s] dump LOAD02_主窗口_载入后: title='SRW2扩容版修改器V1.0：D:\\GIT\\mmc3\\output\\build\\legacy-ui-probe\\weapon-rule-save-picture-puzzle-move.nes' class='WTWindow' controls=63 shot=ok
+[   27.6s] === stage DBWRULESAVE: picture-puzzle-move ===
+[   28.4s] 数据库: hwnd=5047374 title='数据库'
+[   56.5s] dump DBWRULESAVE_picture-puzzle-move_拼图动作前: title='物理拼图' class='WTWindow' controls=22 shot=ok
+[   58.9s] dump DBWRULESAVE_picture-puzzle-move_拼图动作后: title='物理拼图' class='WTWindow' controls=22 shot=ok
+[   60.0s] dump DBWRULESAVE_picture-puzzle-move_修改后: title='规律' class='WTWindow' controls=73 shot=ok
+[   65.6s] DBWRULESAVE complete: case=picture-puzzle-move diffs=11034
+[   65.8s] terminated owned pid=18568

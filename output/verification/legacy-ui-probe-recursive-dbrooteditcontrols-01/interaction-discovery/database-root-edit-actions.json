@@ -1,0 +1,56 @@
+{
+  "schema_version": 1,
+  "validated": true,
+  "error": null,
+  "execution_record_count": 6,
+  "diff_count": 0,
+  "sha256_before": "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E",
+  "sha256_after": "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E",
+  "observations": [
+    {
+      "control_id": 2150,
+      "path": [
+        2
+      ],
+      "original": "",
+      "replacement": "盖塔",
+      "boundary_readback_lengths": [
+        0,
+        256
+      ],
+      "right_click_menu": true
+    }
+  ],
+  "execution_records": [
+    {
+      "action_id": "514a16805cae0b209232",
+      "status": "passed",
+      "result": "真实键盘焦点=True。"
+    },
+    {
+      "action_id": "0399ee1bb7558a523b72",
+      "status": "passed",
+      "result": "输入中文名称读回='盖塔'，随后恢复原搜索条件。"
+    },
+    {
+      "action_id": "62a61d8aed71241f49e6",
+      "status": "passed",
+      "result": "真实焦点执行 Ctrl+A/Ctrl+Z，随后恢复原搜索条件。"
+    },
+    {
+      "action_id": "878e2649571d0a178d4e",
+      "status": "passed",
+      "result": "执行右键路径；可见标准编辑菜单=True。"
+    },
+    {
+      "action_id": "559604aea23864c2f1d2",
+      "status": "passed",
+      "result": "空值与 256 字符边界读回长度=[0, 256]，随后恢复。"
+    },
+    {
+      "action_id": "b04d3a8ae154f4ef3e5f",
+      "status": "passed",
+      "result": "数据库全局搜索框不随页签切换；点击数据库“取消”后随所属窗口一并销毁。重新打开数据库后同一 ID/路径恢复可见且启用。"
+    }
+  ]
+}

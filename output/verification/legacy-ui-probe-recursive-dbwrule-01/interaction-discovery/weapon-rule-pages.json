@@ -1,0 +1,5225 @@
+{
+  "schema_version": 1,
+  "validated": true,
+  "scope": "isolated reference executable; four weapon-rule pages; context menus only; no menu command selected and no save",
+  "expected_page_count": 4,
+  "tabs": [
+    {
+      "label": "光束组图规律",
+      "probe_window_x": 17,
+      "visible_control_count": 26,
+      "status": "discovered",
+      "phase2_signature_match": true
+    },
+    {
+      "label": "物理运行规律1",
+      "probe_window_x": 127,
+      "visible_control_count": 15,
+      "status": "discovered",
+      "phase2_signature_match": true
+    },
+    {
+      "label": "物理运行规律2",
+      "probe_window_x": 247,
+      "visible_control_count": 15,
+      "status": "discovered",
+      "phase2_signature_match": true
+    },
+    {
+      "label": "物理图片规律",
+      "probe_window_x": 367,
+      "visible_control_count": 25,
+      "status": "discovered",
+      "phase2_signature_match": true
+    }
+  ],
+  "records": [
+    {
+      "label": "光束组图规律",
+      "probe_window_x": 17,
+      "signature_match": true,
+      "visible_controls": [
+        {
+          "class": "WTWindow",
+          "control_id": 0,
+          "text": "规律",
+          "enabled": true
+        },
+        {
+          "class": "Button",
+          "control_id": 710,
+          "text": "运动规律模拟器",
+          "enabled": true
+        },
+        {
+          "class": "CPageControl",
+          "control_id": 120,
+          "text": "",
+          "enabled": true
+        },
+        {
+          "class": "Button",
+          "control_id": 270,
+          "text": "基本设置",
+          "enabled": true
+        },
+        {
+          "class": "Afx:400000:b:10003:900015:0",
+          "control_id": 260,
+          "text": "规律名称：",
+          "enabled": true
+        },
+        {
+          "class": "Edit",
+          "control_id": 250,
+          "text": "消除屏幕1",
+          "enabled": true
+        },
+        {
+          "class": "Button",
+          "control_id": 220,
+          "text": "规律选择",
+          "enabled": true
+        },
+        {
+          "class": "ListBox",
+          "control_id": 230,
+          "text": "",
+          "enabled": true
+        },
+        {
+          "class": "Button",
+          "control_id": 140,
+          "text": "光束组图规律",
+          "enabled": true
+        },
+        {
+          "class": "ComboBox",
+          "control_id": 600,
+          "text": "[00]000：80010",
+          "enabled": true
+        },
+        {
+          "class": "Afx:400000:b:10003:900015:0",
+          "control_id": 590,
+          "text": "预览图库：",
+          "enabled": true
+        },
+        {
+          "class": "Button",
+          "control_id": 570,
+          "text": "复制\r\n\r\n完整\r\n\r\n代码",
+          "enabled": true
+        },
+        {
+          "class": "Button",
+          "control_id": 420,
+          "text": "",
+          "enabled": true
+        },
+        {
+          "class": "msctls_updown32",
+          "control_id": 464,
+          "text": "",
+          "enabled": true
+        },
+        {
+          "class": "Edit",
+          "control_id": 460,
+          "text": "16",
+          "enabled": true
+        },
+        {
+          "class": "Afx:400000:b:10003:900015:0",
+          "control_id": 450,
+          "text": "X：",
+          "enabled": true
+        },
+        {
+          "class": "Afx:400000:b:10003:900015:0",
+          "control_id": 440,
+          "text": "Y：",
+          "enabled": true
+        },
+        {
+          "class": "msctls_updown32",
+          "control_id": 434,
+          "text": "",
+          "enabled": true
+        },
+        {
+          "class": "Edit",
+          "control_id": 430,
+          "text": "6",
+          "enabled": true
+        },
+        {
+          "class": "Button",
+          "control_id": 410,
+          "text": "设置下一张图片坐标",
+          "enabled": true
+        },
+        {
+          "class": "Button",
+          "control_id": 400,
+          "text": "设置初始坐标",
+          "enabled": true
+        },
+        {
+          "class": "Button",
+          "control_id": 380,
+          "text": "光束规律拼图",
+          "enabled": true
+        },
+        {
+          "class": "Edit",
+          "control_id": 240,
+          "text": "FD 20 20 F8 FF 00 FF ",
+          "enabled": true
+        },
+        {
+          "class": "Afx:400000:b:10003:900015:0",
+          "control_id": 130,
+          "text": "代码：",
+          "enabled": true
+        },
+        {
+          "class": "Button",
+          "control_id": 110,
+          "text": "取消",
+          "enabled": true
+        },
+        {
+          "class": "Button",
+          "control_id": 100,
+          "text": "确定",
+          "enabled": true
+        }
+      ],
+      "context_probes": [
+        {
+          "state": "武器规律/光束组图规律",
+          "control_index": 0,
+          "point_index": 0,
+          "class": "Button",
+          "control_id": 710,
+          "text": "运动规律模拟器",
+          "point": [
+            65,
+            15
+          ],
+          "used_real_input": true,
+          "popup_count": 0,
+          "menus": []
+        },
+        {
+          "state": "武器规律/光束组图规律",
+          "control_index": 1,
+          "point_index": 0,
+          "class": "CPageControl",
+          "control_id": 120,
+          "text": "",
+          "point": [
+            390,
+            245
+          ],
+          "used_real_input": true,
+          "popup_count": 0,
+          "menus": []
+        },
+        {
+          "state": "武器规律/光束组图规律",
+          "control_index": 2,
+          "point_index": 0,
+          "class": "Button",
+          "control_id": 270,
+          "text": "基本设置",
+          "point": [
+            195,
+            45
+          ],
+          "used_real_input": true,
+          "popup_count": 1,
+          "menus": [
+            [
+              {
+                "index": 0,
+                "text": "撤消(&U)",
+                "id": 772
+              },
+              {
+                "index": 1,
+                "text": "",
+                "id": 0
+              },
+              {
+                "index": 2,
+                "text": "剪切(&T)",
+                "id": 768
+              },
+              {
+                "index": 3,
+                "text": "复制(&C)",
+                "id": 769
+              },
+              {
+                "index": 4,
+                "text": "粘贴(&P)",
+                "id": 770
+              },
+              {
+                "index": 5,
+                "text": "删除(&D)",
+                "id": 771
+              },
+              {
+                "index": 6,
+                "text": "",
+                "id": 0
+              },
+              {
+                "index": 7,
+                "text": "全选(&A)",
+                "id": 177
+              },
+              {
+                "index": 8,
+                "text": "",
+                "id": 0
+              },
+              {
+                "index": 9,
+                "text": "从右到左的阅读顺序(&R)",
+                "id": 32768
+              },
+              {
+                "index": 10,
+                "text": "显示 Unicode 控制字符(&S)",
+                "id": 32769
+              },
+              {
+                "index": 11,
+                "text": "插入 Unicode 控制字符(&I)",
+                "id": null,
+                "items": [
+                  {
+                    "index": 0,
+                    "text": "LRM \t&Left-to-right mark",
+                    "id": 32772
+                  },
+                  {
+                    "index": 1,
+                    "text": "RLM \t&Right-to-left mark",
+                    "id": 32773
+                  },
+                  {
+                    "index": 2,
+                    "text": "ZWJ \tZero width &joiner",
+                    "id": 32770
+                  },
+                  {
+                    "index": 3,
+                    "text": "ZWNJ\tZero width &non-joiner",
+                    "id": 32771
+                  },
+                  {
+                    "index": 4,
+                    "text": "LRE \tStart of left-to-right &embedding",
+                    "id": 32774
+                  },
+                  {
+                    "index": 5,
+                    "text": "RLE \tStart of right-to-left e&mbedding",
+                    "id": 32775
+                  },
+                  {
+                    "index": 6,
+                    "text": "LRO \tStart of left-to-right &override",
+                    "id": 32776
+                  },
+                  {
+                    "index": 7,
+                    "text": "RLO \tStart of right-to-left o&verride",
+                    "id": 32777
+                  },
+                  {
+                    "index": 8,
+                    "text": "PDF \t&Pop directional formatting",
+                    "id": 32778
+                  },
+                  {
+                    "index": 9,
+                    "text": "NADS\tN&ational digit shapes substitution",
+                    "id": 32779
+                  },
+                  {
+                    "index": 10,
+                    "text": "NODS\tNominal (European) &digit shapes",
+                    "id": 32780
+                  },
+                  {
+                    "index": 11,
+                    "text": "ASS \tActivate &symmetric swapping",
+                    "id": 32781
+                  },
+                  {
+                    "index": 12,
+                    "text": "ISS \tInhibit s&ymmetric swapping",
+                    "id": 32782
+                  },
+                  {
+                    "index": 13,
+                    "text": "AAFS\tActivate Arabic &form shaping",
+                    "id": 32783
+                  },
+                  {
+                    "index": 14,
+                    "text": "IAFS\tInhibit Arabic form s&haping",
+                    "id": 32784
+                  },
+                  {
+                    "index": 15,
+                    "text": "RS  \tRecord Separator (&Block separator)",
+                    "id": 32785
+                  },
+                  {
+                    "index": 16,
+                    "text": "US  \tUnit Separator (&Segment separator)",
+                    "id": 32786
+                  }
+                ]
+              },
+              {
+                "index": 12,
+                "text": "",
+                "id": 0
+              },
+              {
+                "index": 13,
+                "text": "关闭输入法(&L)",
+                "id": 10001
+              },
+              {
+                "index": 14,
+                "text": "汉字重选(&R)",
+                "id": 10003
+              }
+            ]
+          ]
+        },
+        {
+          "state": "武器规律/光束组图规律",
+          "control_index": 3,
+          "point_index": 0,
+          "class": "Edit",
+          "control_id": 250,
+          "text": "消除屏幕1",
+          "point": [
+            145,
+            20
+          ],
+          "used_real_input": false,
+          "popup_count": 1,
+          "menus": [
+            [
+              {
+                "index": 0,
+                "text": "撤消(&U)",
+                "id": 772
+              },
+              {
+                "index": 1,
+                "text": "",
+                "id": 0
+              },
+              {
+                "index": 2,
+                "text": "剪切(&T)",
+                "id": 768
+              },
+              {
+                "index": 3,
+                "text": "复制(&C)",
+                "id": 769
+              },
+              {
+                "index": 4,
+                "text": "粘贴(&P)",
+                "id": 770
+              },
+              {
+                "index": 5,
+                "text": "删除(&D)",
+                "id": 771
+              },
+              {
+                "index": 6,
+                "text": "",
+                "id": 0
+              },
+              {
+                "index": 7,
+                "text": "全选(&A)",
+                "id": 177
+              },
+              {
+                "index": 8,
+                "text": "",
+                "id": 0
+              },
+              {
+                "index": 9,
+                "text": "从右到左的阅读顺序(&R)",
+                "id": 32768
+              },
+              {
+                "index": 10,
+                "text": "显示 Unicode 控制字符(&S)",
+                "id": 32769
+              },
+              {
+                "index": 11,
+                "text": "插入 Unicode 控制字符(&I)",
+                "id": null,
+                "items": [
+                  {
+                    "index": 0,
+                    "text": "LRM \t&Left-to-right mark",
+                    "id": 32772
+                  },
+                  {
+                    "index": 1,
+                    "text": "RLM \t&Right-to-left mark",
+                    "id": 32773
+                  },
+                  {
+                    "index": 2,
+                    "text": "ZWJ \tZero width &joiner",
+                    "id": 32770
+                  },
+                  {
+                    "index": 3,
+                    "text": "ZWNJ\tZero width &non-joiner",
+                    "id": 32771
+                  },
+                  {
+                    "index": 4,
+                    "text": "LRE \tStart of left-to-right &embedding",
+                    "id": 32774
+                  },
+                  {
+                    "index": 5,
+                    "text": "RLE \tStart of right-to-left e&mbedding",
+                    "id": 32775
+                  },
+                  {
+                    "index": 6,
+                    "text": "LRO \tStart of left-to-right &override",
+                    "id": 32776
+                  },
+                  {
+                    "index": 7,
+                    "text": "RLO \tStart of right-to-left o&verride",
+                    "id": 32777
+                  },
+                  {
+                    "index": 8,
+                    "text": "PDF \t&Pop directional formatting",
+                    "id": 32778
+                  },
+                  {
+                    "index": 9,
+                    "text": "NADS\tN&ational digit shapes substitution",
+                    "id": 32779
+                  },
+                  {
+                    "index": 10,
+                    "text": "NODS\tNominal (European) &digit shapes",
+                    "id": 32780
+                  },
+                  {
+                    "index": 11,
+                    "text": "ASS \tActivate &symmetric swapping",
+                    "id": 32781
+                  },
+                  {
+                    "index": 12,
+                    "text": "ISS \tInhibit s&ymmetric swapping",
+                    "id": 32782
+                  },
+                  {
+                    "index": 13,
+                    "text": "AAFS\tActivate Arabic &form shaping",
+                    "id": 32783
+                  },
+                  {
+                    "index": 14,
+                    "text": "IAFS\tInhibit Arabic form s&haping",
+                    "id": 32784
+                  },
+                  {
+                    "index": 15,
+                    "text": "RS  \tRecord Separator (&Block separator)",
+                    "id": 32785
+                  },
+                  {
+                    "index": 16,
+                    "text": "US  \tUnit Separator (&Segment separator)",
+                    "id": 32786
+                  }
+                ]
+              },
+              {
+                "index": 12,
+                "text": "",
+                "id": 0
+              },
+              {
+                "index": 13,
+                "text": "关闭输入法(&L)",
+                "id": 10001
+              },
+              {
+                "index": 14,
+                "text": "汉字重选(&R)",
+                "id": 10003
+              }
+            ]
+          ]
+        },
+        {
+          "state": "武器规律/光束组图规律",
+          "control_index": 4,
+          "point_index": 0,
+          "class": "Button",
+          "control_id": 220,
+          "text": "规律选择",
+          "point": [
+            180,
+            220
+          ],
+          "used_real_input": true,
+          "popup_count": 0,
+          "menus": []
+        },
+        {
+          "state": "武器规律/光束组图规律",
+          "control_index": 5,
+          "point_index": 0,
+          "class": "ListBox",
+          "control_id": 230,
+          "text": "",
+          "point": [
+            170,
+            200
+          ],
+          "used_real_input": true,
+          "popup_count": 0,
+          "menus": []
+        },
+        {
+          "state": "武器规律/光束组图规律",
+          "control_index": 5,
+          "point_index": 1,
+          "class": "ListBox",
+          "control_id": 230,
+          "text": "",
+          "point": [
+            56,
+            66
+          ],
+          "used_real_input": true,
+          "popup_count": 0,
+          "menus": []
+        },
+        {
+          "state": "武器规律/光束组图规律",
+          "control_index": 5,
+          "point_index": 2,
+          "class": "ListBox",
+          "control_id": 230,
+          "text": "",
+          "point": [
+            170,
+            66
+          ],
+          "used_real_input": true,
+          "popup_count": 0,
+          "menus": []
+        },
+        {
+          "state": "武器规律/光束组图规律",
+          "control_index": 5,
+          "point_index": 3,
+          "class": "ListBox",
+          "control_id": 230,
+          "text": "",
+          "point": [
+            283,
+            66
+          ],
+          "used_real_input": true,
+          "popup_count": 0,
+          "menus": []
+        },
+        {
+          "state": "武器规律/光束组图规律",
+          "control_index": 5,
+          "point_index": 4,
+          "class": "ListBox",
+          "control_id": 230,
+          "text": "",
+          "point": [
+            56,
+            200
+          ],
+          "used_real_input": true,
+          "popup_count": 0,
+          "menus": []
+        },
+        {
+          "state": "武器规律/光束组图规律",
+          "control_index": 5,
+          "point_index": 5,
+          "class": "ListBox",
+          "control_id": 230,
+          "text": "",
+          "point": [
+            283,
+            200
+          ],
+          "used_real_input": true,
+          "popup_count": 0,
+          "menus": []
+        },
+        {
+          "state": "武器规律/光束组图规律",
+          "control_index": 5,
+          "point_index": 6,
+          "class": "ListBox",
+          "control_id": 230,
+          "text": "",
+          "point": [
+            56,
+            333
+          ],
+          "used_real_input": true,
+          "popup_count": 0,
+          "menus": []
+        },
+        {
+          "state": "武器规律/光束组图规律",
+          "control_index": 5,
+          "point_index": 7,
+          "class": "ListBox",
+          "control_id": 230,
+          "text": "",
+          "point": [
+            170,
+            333
+          ],
+          "used_real_input": true,
+          "popup_count": 0,
+          "menus": []
+        },
+        {
+          "state": "武器规律/光束组图规律",
+          "control_index": 5,
+          "point_index": 8,
+          "class": "ListBox",
+          "control_id": 230,
+          "text": "",
+          "point": [
+            283,
+            333
+          ],
+          "used_real_input": true,
+          "popup_count": 0,
+          "menus": []
+        },
+        {
+          "state": "武器规律/光束组图规律",
+          "control_index": 6,
+          "point_index": 0,
+          "class": "Button",
+          "control_id": 140,
+          "text": "光束组图规律",
+          "point": [
+            195,
+            170
+          ],
+          "used_real_input": true,
+          "popup_count": 0,
+          "menus": []
+        },
+        {
+          "state": "武器规律/光束组图规律",
+          "control_index": 7,
+          "point_index": 0,
+          "class": "ComboBox",
+          "control_id": 600,
+          "text": "[00]000：80010",
+          "point": [
+            90,
+            15
+          ],
+          "used_real_input": true,
+          "popup_count": 0,
+          "menus": []
+        },
+        {
+          "state": "武器规律/光束组图规律",
+          "control_index": 8,
+          "point_index": 0,
+          "class": "Button",
+          "control_id": 570,
+          "text": "复制\r\n\r\n完整\r\n\r\n代码",
+          "point": [
+            20,
+            50
+          ],
+          "used_real_input": true,
+          "popup_count": 0,
+          "menus": []
+        },
+        {
+          "state": "武器规律/光束组图规律",
+          "control_index": 9,
+          "point_index": 0,
+          "class": "Button",
+          "control_id": 420,
+          "text": "",
+          "point": [
+            70,
+            50
+          ],
+          "used_real_input": true,
+          "popup_count": 0,
+          "menus": []
+        },
+        {
+          "state": "武器规律/光束组图规律",
+          "control_index": 10,
+          "point_index": 0,
+          "class": "Edit",
+          "control_id": 460,
+          "text": "16",
+          "point": [
+            35,
+            15
+          ],
+          "used_real_input": false,
+          "popup_count": 1,
+          "menus": [
+            [
+              {
+                "index": 0,
+                "text": "撤消(&U)",
+                "id": 772
+              },
+              {
+                "index": 1,
+                "text": "",
+                "id": 0
+              },
+              {
+                "index": 2,
+                "text": "剪切(&T)",
+                "id": 768
+              },
+              {
+                "index": 3,
+                "text": "复制(&C)",
+                "id": 769
+              },
+              {
+                "index": 4,
+                "text": "粘贴(&P)",
+                "id": 770
+              },
+              {
+                "index": 5,
+                "text": "删除(&D)",
+                "id": 771
+              },
+              {
+                "index": 6,
+                "text": "",
+                "id": 0
+              },
+              {
+                "index": 7,
+                "text": "全选(&A)",
+                "id": 177
+              },
+              {
+                "index": 8,
+                "text": "",
+                "id": 0
+              },
+              {
+                "index": 9,
+                "text": "从右到左的阅读顺序(&R)",
+                "id": 32768
+              },
+              {
+                "index": 10,
+                "text": "显示 Unicode 控制字符(&S)",
+                "id": 32769
+              },
+              {
+                "index": 11,
+                "text": "插入 Unicode 控制字符(&I)",
+                "id": null,
+                "items": [
+                  {
+                    "index": 0,
+                    "text": "LRM \t&Left-to-right mark",
+                    "id": 32772
+                  },
+                  {
+                    "index": 1,
+                    "text": "RLM \t&Right-to-left mark",
+                    "id": 32773
+                  },
+                  {
+                    "index": 2,
+                    "text": "ZWJ \tZero width &joiner",
+                    "id": 32770
+                  },
+                  {
+                    "index": 3,
+                    "text": "ZWNJ\tZero width &non-joiner",
+                    "id": 32771
+                  },
+                  {
+                    "index": 4,
+                    "text": "LRE \tStart of left-to-right &embedding",
+                    "id": 32774
+                  },
+                  {
+                    "index": 5,
+                    "text": "RLE \tStart of right-to-left e&mbedding",
+                    "id": 32775
+                  },
+                  {
+                    "index": 6,
+                    "text": "LRO \tStart of left-to-right &override",
+                    "id": 32776
+                  },
+                  {
+                    "index": 7,
+                    "text": "RLO \tStart of right-to-left o&verride",
+                    "id": 32777
+                  },
+                  {
+                    "index": 8,
+                    "text": "PDF \t&Pop directional formatting",
+                    "id": 32778
+                  },
+                  {
+                    "index": 9,
+                    "text": "NADS\tN&ational digit shapes substitution",
+                    "id": 32779
+                  },
+                  {
+                    "index": 10,
+                    "text": "NODS\tNominal (European) &digit shapes",
+                    "id": 32780
+                  },
+                  {
+                    "index": 11,
+                    "text": "ASS \tActivate &symmetric swapping",
+                    "id": 32781
+                  },
+                  {
+                    "index": 12,
+                    "text": "ISS \tInhibit s&ymmetric swapping",
+                    "id": 32782
+                  },
+                  {
+                    "index": 13,
+                    "text": "AAFS\tActivate Arabic &form shaping",
+                    "id": 32783
+                  },
+                  {
+                    "index": 14,
+                    "text": "IAFS\tInhibit Arabic form s&haping",
+                    "id": 32784
+                  },
+                  {
+                    "index": 15,
+                    "text": "RS  \tRecord Separator (&Block separator)",
+                    "id": 32785
+                  },
+                  {
+                    "index": 16,
+                    "text": "US  \tUnit Separator (&Segment separator)",
+                    "id": 32786
+                  }
+                ]
+              },
+              {
+                "index": 12,
+                "text": "",
+                "id": 0
+              },
+              {
+                "index": 13,
+                "text": "关闭输入法(&L)",
+                "id": 10001
+              },
+              {
+                "index": 14,
+                "text": "汉字重选(&R)",
+                "id": 10003
+              }
+            ]
+          ]
+        },
+        {
+          "state": "武器规律/光束组图规律",
+          "control_index": 11,
+          "point_index": 0,
+          "class": "Edit",
+          "control_id": 430,
+          "text": "6",
+          "point": [
+            35,
+            15
+          ],
+          "used_real_input": false,
+          "popup_count": 1,
+          "menus": [
+            [
+              {
+                "index": 0,
+                "text": "撤消(&U)",
+                "id": 772
+              },
+              {
+                "index": 1,
+                "text": "",
+                "id": 0
+              },
+              {
+                "index": 2,
+                "text": "剪切(&T)",
+                "id": 768
+              },
+              {
+                "index": 3,
+                "text": "复制(&C)",
+                "id": 769
+              },
+              {
+                "index": 4,
+                "text": "粘贴(&P)",
+                "id": 770
+              },
+              {
+                "index": 5,
+                "text": "删除(&D)",
+                "id": 771
+              },
+              {
+                "index": 6,
+                "text": "",
+                "id": 0
+              },
+              {
+                "index": 7,
+                "text": "全选(&A)",
+                "id": 177
+              },
+              {
+                "index": 8,
+                "text": "",
+                "id": 0
+              },
+              {
+                "index": 9,
+                "text": "从右到左的阅读顺序(&R)",
+                "id": 32768
+              },
+              {
+                "index": 10,
+                "text": "显示 Unicode 控制字符(&S)",
+                "id": 32769
+              },
+              {
+                "index": 11,
+                "text": "插入 Unicode 控制字符(&I)",
+                "id": null,
+                "items": [
+                  {
+                    "index": 0,
+                    "text": "LRM \t&Left-to-right mark",
+                    "id": 32772
+                  },
+                  {
+                    "index": 1,
+                    "text": "RLM \t&Right-to-left mark",
+                    "id": 32773
+                  },
+                  {
+                    "index": 2,
+                    "text": "ZWJ \tZero width &joiner",
+                    "id": 32770
+                  },
+                  {
+                    "index": 3,
+                    "text": "ZWNJ\tZero width &non-joiner",
+                    "id": 32771
+                  },
+                  {
+                    "index": 4,
+                    "text": "LRE \tStart of left-to-right &embedding",
+                    "id": 32774
+                  },
+                  {
+                    "index": 5,
+                    "text": "RLE \tStart of right-to-left e&mbedding",
+                    "id": 32775
+                  },
+                  {
+                    "index": 6,
+                    "text": "LRO \tStart of left-to-right &override",
+                    "id": 32776
+                  },
+                  {
+                    "index": 7,
+                    "text": "RLO \tStart of right-to-left o&verride",
+                    "id": 32777
+                  },
+                  {
+                    "index": 8,
+                    "text": "PDF \t&Pop directional formatting",
+                    "id": 32778
+                  },
+                  {
+                    "index": 9,
+                    "text": "NADS\tN&ational digit shapes substitution",
+                    "id": 32779
+                  },
+                  {
+                    "index": 10,
+                    "text": "NODS\tNominal (European) &digit shapes",
+                    "id": 32780
+                  },
+                  {
+                    "index": 11,
+                    "text": "ASS \tActivate &symmetric swapping",
+                    "id": 32781
+                  },
+                  {
+                    "index": 12,
+                    "text": "ISS \tInhibit s&ymmetric swapping",
+                    "id": 32782
+                  },
+                  {
+                    "index": 13,
+                    "text": "AAFS\tActivate Arabic &form shaping",
+                    "id": 32783
+                  },
+                  {
+                    "index": 14,
+                    "text": "IAFS\tInhibit Arabic form s&haping",
+                    "id": 32784
+                  },
+                  {
+                    "index": 15,
+                    "text": "RS  \tRecord Separator (&Block separator)",
+                    "id": 32785
+                  },
+                  {
+                    "index": 16,
+                    "text": "US  \tUnit Separator (&Segment separator)",
+                    "id": 32786
+                  }
+                ]
+              },
+              {
+                "index": 12,
+                "text": "",
+                "id": 0
+              },
+              {
+                "index": 13,
+                "text": "关闭输入法(&L)",
+                "id": 10001
+              },
+              {
+                "index": 14,
+                "text": "汉字重选(&R)",
+                "id": 10003
+              }
+            ]
+          ]
+        },
+        {
+          "state": "武器规律/光束组图规律",
+          "control_index": 12,
+          "point_index": 0,
+          "class": "Button",
+          "control_id": 410,
+          "text": "设置下一张图片坐标",
+          "point": [
+            85,
+            15
+          ],
+          "used_real_input": true,
+          "popup_count": 0,
+          "menus": []
+        },
+        {
+          "state": "武器规律/光束组图规律",
+          "control_index": 13,
+          "point_index": 0,
+          "class": "Button",
+          "control_id": 400,
+          "text": "设置初始坐标",
+          "point": [
+            65,
+            15
+          ],
+          "used_real_input": true,
+          "popup_count": 0,
+          "menus": []
+        },
+        {
+          "state": "武器规律/光束组图规律",
+          "control_index": 14,
+          "point_index": 0,
+          "class": "Button",
+          "control_id": 380,
+          "text": "光束规律拼图",
+          "point": [
+            50,
+            15
+          ],
+          "used_real_input": true,
+          "popup_count": 0,
+          "menus": []
+        },
+        {
+          "state": "武器规律/光束组图规律",
+          "control_index": 15,
+          "point_index": 0,
+          "class": "Edit",
+          "control_id": 240,
+          "text": "FD 20 20 F8 FF 00 FF ",
+          "point": [
+            160,
+            50
+          ],
+          "used_real_input": false,
+          "popup_count": 1,
+          "menus": [
+            [
+              {
+                "index": 0,
+                "text": "撤消(&U)",
+                "id": 772
+              },
+              {
+                "index": 1,
+                "text": "",
+                "id": 0
+              },
+              {
+                "index": 2,
+                "text": "剪切(&T)",
+                "id": 768
+              },
+              {
+                "index": 3,
+                "text": "复制(&C)",
+                "id": 769
+              },
+              {
+                "index": 4,
+                "text": "粘贴(&P)",
+                "id": 770
+              },
+              {
+                "index": 5,
+                "text": "删除(&D)",
+                "id": 771
+              },
+              {
+                "index": 6,
+                "text": "",
+                "id": 0
+              },
+              {
+                "index": 7,
+                "text": "全选(&A)",
+                "id": 177
+              },
+              {
+                "index": 8,
+                "text": "",
+                "id": 0
+              },
+              {
+                "index": 9,
+                "text": "从右到左的阅读顺序(&R)",
+                "id": 32768
+              },
+              {
+                "index": 10,
+                "text": "显示 Unicode 控制字符(&S)",
+                "id": 32769
+              },
+              {
+                "index": 11,
+                "text": "插入 Unicode 控制字符(&I)",
+                "id": null,
+                "items": [
+                  {
+                    "index": 0,
+                    "text": "LRM \t&Left-to-right mark",
+                    "id": 32772
+                  },
+                  {
+                    "index": 1,
+                    "text": "RLM \t&Right-to-left mark",
+                    "id": 32773
+                  },
+                  {
+                    "index": 2,
+                    "text": "ZWJ \tZero width &joiner",
+                    "id": 32770
+                  },
+                  {
+                    "index": 3,
+                    "text": "ZWNJ\tZero width &non-joiner",
+                    "id": 32771
+                  },
+                  {
+                    "index": 4,
+                    "text": "LRE \tStart of left-to-right &embedding",
+                    "id": 32774
+                  },
+                  {
+                    "index": 5,
+                    "text": "RLE \tStart of right-to-left e&mbedding",
+                    "id": 32775
+                  },
+                  {
+                    "index": 6,
+                    "text": "LRO \tStart of left-to-right &override",
+                    "id": 32776
+                  },
+                  {
+                    "index": 7,
+                    "text": "RLO \tStart of right-to-left o&verride",
+                    "id": 32777
+                  },
+                  {
+                    "index": 8,
+                    "text": "PDF \t&Pop directional formatting",
+                    "id": 32778
+                  },
+                  {
+                    "index": 9,
+                    "text": "NADS\tN&ational digit shapes substitution",
+                    "id": 32779
+                  },
+                  {
+                    "index": 10,
+                    "text": "NODS\tNominal (European) &digit shapes",
+                    "id": 32780
+                  },
+                  {
+                    "index": 11,
+                    "text": "ASS \tActivate &symmetric swapping",
+                    "id": 32781
+                  },
+                  {
+                    "index": 12,
+                    "text": "ISS \tInhibit s&ymmetric swapping",
+                    "id": 32782
+                  },
+                  {
+                    "index": 13,
+                    "text": "AAFS\tActivate Arabic &form shaping",
+                    "id": 32783
+                  },
+                  {
+                    "index": 14,
+                    "text": "IAFS\tInhibit Arabic form s&haping",
+                    "id": 32784
+                  },
+                  {
+                    "index": 15,
+                    "text": "RS  \tRecord Separator (&Block separator)",
+                    "id": 32785
+                  },
+                  {
+                    "index": 16,
+                    "text": "US  \tUnit Separator (&Segment separator)",
+                    "id": 32786
+                  }
+                ]
+              },
+              {
+                "index": 12,
+                "text": "",
+                "id": 0
+              },
+              {
+                "index": 13,
+                "text": "关闭输入法(&L)",
+                "id": 10001
+              },
+              {
+                "index": 14,
+                "text": "汉字重选(&R)",
+                "id": 10003
+              }
+            ]
+          ]
+        },
+        {
+          "state": "武器规律/光束组图规律",
+          "control_index": 16,
+          "point_index": 0,
+          "class": "Button",
+          "control_id": 110,
+          "text": "取消",
+          "point": [
+            45,
+            15
+          ],
+          "used_real_input": true,
+          "popup_count": 0,
+          "menus": []
+        },
+        {
+          "state": "武器规律/光束组图规律",
+          "control_index": 17,
+          "point_index": 0,
+          "class": "Button",
+          "control_id": 100,
+          "text": "确定",
+          "point": [
+            45,
+            15
+          ],
+          "used_real_input": true,
+          "popup_count": 0,
+          "menus": []
+        }
+      ]
+    },
+    {
+      "label": "物理运行规律1",
+      "probe_window_x": 127,
+      "signature_match": true,
+      "visible_controls": [
+        {
+          "class": "WTWindow",
+          "control_id": 0,
+          "text": "规律",
+          "enabled": true
+        },
+        {
+          "class": "Button",
+          "control_id": 710,
+          "text": "运动规律模拟器",
+          "enabled": true
+        },
+        {
+          "class": "CPageControl",
+          "control_id": 120,
+          "text": "",
+          "enabled": true
+        },
+        {
+          "class": "Button",
+          "control_id": 310,
+          "text": "基本设置",
+          "enabled": true
+        },
+        {
+          "class": "Edit",
+          "control_id": 320,
+          "text": "静止1E0H帧",
+          "enabled": true
+        },
+        {
+          "class": "Afx:400000:b:10003:900015:0",
+          "control_id": 300,
+          "text": "规律名称：",
+          "enabled": true
+        },
+        {
+          "class": "Button",
+          "control_id": 280,
+          "text": "规律选择",
+          "enabled": true
+        },
+        {
+          "class": "ListBox",
+          "control_id": 290,
+          "text": "",
+          "enabled": true
+        },
+        {
+          "class": "Button",
+          "control_id": 170,
+          "text": "物理运行规律",
+          "enabled": true
+        },
+        {
+          "class": "Edit",
+          "control_id": 730,
+          "text": "",
+          "enabled": true
+        },
+        {
+          "class": "Button",
+          "control_id": 720,
+          "text": "图块编号增加：",
+          "enabled": true
+        },
+        {
+          "class": "Afx:400000:b:10003:900015:0",
+          "control_id": 160,
+          "text": "代码：",
+          "enabled": true
+        },
+        {
+          "class": "Edit",
+          "control_id": 150,
+          "text": "00 83 F0 FC 00 83 F0 FC ",
+          "enabled": true
+        },
+        {
+          "class": "Button",
+          "control_id": 110,
+          "text": "取消",
+          "enabled": true
+        },
+        {
+          "class": "Button",
+          "control_id": 100,
+          "text": "确定",
+          "enabled": true
+        }
+      ],
+      "context_probes": [
+        {
+          "state": "武器规律/物理运行规律1",
+          "control_index": 0,
+          "point_index": 0,
+          "class": "Button",
+          "control_id": 710,
+          "text": "运动规律模拟器",
+          "point": [
+            65,
+            15
+          ],
+          "used_real_input": true,
+          "popup_count": 0,
+          "menus": []
+        },
+        {
+          "state": "武器规律/物理运行规律1",
+          "control_index": 1,
+          "point_index": 0,
+          "class": "CPageControl",
+          "control_id": 120,
+          "text": "",
+          "point": [
+            390,
+            245
+          ],
+          "used_real_input": true,
+          "popup_count": 0,
+          "menus": []
+        },
+        {
+          "state": "武器规律/物理运行规律1",
+          "control_index": 2,
+          "point_index": 0,
+          "class": "Button",
+          "control_id": 310,
+          "text": "基本设置",
+          "point": [
+            195,
+            45
+          ],
+          "used_real_input": true,
+          "popup_count": 1,
+          "menus": [
+            [
+              {
+                "index": 0,
+                "text": "撤消(&U)",
+                "id": 772
+              },
+              {
+                "index": 1,
+                "text": "",
+                "id": 0
+              },
+              {
+                "index": 2,
+                "text": "剪切(&T)",
+                "id": 768
+              },
+              {
+                "index": 3,
+                "text": "复制(&C)",
+                "id": 769
+              },
+              {
+                "index": 4,
+                "text": "粘贴(&P)",
+                "id": 770
+              },
+              {
+                "index": 5,
+                "text": "删除(&D)",
+                "id": 771
+              },
+              {
+                "index": 6,
+                "text": "",
+                "id": 0
+              },
+              {
+                "index": 7,
+                "text": "全选(&A)",
+                "id": 177
+              },
+              {
+                "index": 8,
+                "text": "",
+                "id": 0
+              },
+              {
+                "index": 9,
+                "text": "从右到左的阅读顺序(&R)",
+                "id": 32768
+              },
+              {
+                "index": 10,
+                "text": "显示 Unicode 控制字符(&S)",
+                "id": 32769
+              },
+              {
+                "index": 11,
+                "text": "插入 Unicode 控制字符(&I)",
+                "id": null,
+                "items": [
+                  {
+                    "index": 0,
+                    "text": "LRM \t&Left-to-right mark",
+                    "id": 32772
+                  },
+                  {
+                    "index": 1,
+                    "text": "RLM \t&Right-to-left mark",
+                    "id": 32773
+                  },
+                  {
+                    "index": 2,
+                    "text": "ZWJ \tZero width &joiner",
+                    "id": 32770
+                  },
+                  {
+                    "index": 3,
+                    "text": "ZWNJ\tZero width &non-joiner",
+                    "id": 32771
+                  },
+                  {
+                    "index": 4,
+                    "text": "LRE \tStart of left-to-right &embedding",
+                    "id": 32774
+                  },
+                  {
+                    "index": 5,
+                    "text": "RLE \tStart of right-to-left e&mbedding",
+                    "id": 32775
+                  },
+                  {
+                    "index": 6,
+                    "text": "LRO \tStart of left-to-right &override",
+                    "id": 32776
+                  },
+                  {
+                    "index": 7,
+                    "text": "RLO \tStart of right-to-left o&verride",
+                    "id": 32777
+                  },
+                  {
+                    "index": 8,
+                    "text": "PDF \t&Pop directional formatting",
+                    "id": 32778
+                  },
+                  {
+                    "index": 9,
+                    "text": "NADS\tN&ational digit shapes substitution",
+                    "id": 32779
+                  },
+                  {
+                    "index": 10,
+                    "text": "NODS\tNominal (European) &digit shapes",
+                    "id": 32780
+                  },
+                  {
+                    "index": 11,
+                    "text": "ASS \tActivate &symmetric swapping",
+                    "id": 32781
+                  },
+                  {
+                    "index": 12,
+                    "text": "ISS \tInhibit s&ymmetric swapping",
+                    "id": 32782
+                  },
+                  {
+                    "index": 13,
+                    "text": "AAFS\tActivate Arabic &form shaping",
+                    "id": 32783
+                  },
+                  {
+                    "index": 14,
+                    "text": "IAFS\tInhibit Arabic form s&haping",
+                    "id": 32784
+                  },
+                  {
+                    "index": 15,
+                    "text": "RS  \tRecord Separator (&Block separator)",
+                    "id": 32785
+                  },
+                  {
+                    "index": 16,
+                    "text": "US  \tUnit Separator (&Segment separator)",
+                    "id": 32786
+                  }
+                ]
+              },
+              {
+                "index": 12,
+                "text": "",
+                "id": 0
+              },
+              {
+                "index": 13,
+                "text": "关闭输入法(&L)",
+                "id": 10001
+              },
+              {
+                "index": 14,
+                "text": "汉字重选(&R)",
+                "id": 10003
+              }
+            ]
+          ]
+        },
+        {
+          "state": "武器规律/物理运行规律1",
+          "control_index": 3,
+          "point_index": 0,
+          "class": "Edit",
+          "control_id": 320,
+          "text": "静止1E0H帧",
+          "point": [
+            145,
+            20
+          ],
+          "used_real_input": false,
+          "popup_count": 1,
+          "menus": [
+            [
+              {
+                "index": 0,
+                "text": "撤消(&U)",
+                "id": 772
+              },
+              {
+                "index": 1,
+                "text": "",
+                "id": 0
+              },
+              {
+                "index": 2,
+                "text": "剪切(&T)",
+                "id": 768
+              },
+              {
+                "index": 3,
+                "text": "复制(&C)",
+                "id": 769
+              },
+              {
+                "index": 4,
+                "text": "粘贴(&P)",
+                "id": 770
+              },
+              {
+                "index": 5,
+                "text": "删除(&D)",
+                "id": 771
+              },
+              {
+                "index": 6,
+                "text": "",
+                "id": 0
+              },
+              {
+                "index": 7,
+                "text": "全选(&A)",
+                "id": 177
+              },
+              {
+                "index": 8,
+                "text": "",
+                "id": 0
+              },
+              {
+                "index": 9,
+                "text": "从右到左的阅读顺序(&R)",
+                "id": 32768
+              },
+              {
+                "index": 10,
+                "text": "显示 Unicode 控制字符(&S)",
+                "id": 32769
+              },
+              {
+                "index": 11,
+                "text": "插入 Unicode 控制字符(&I)",
+                "id": null,
+                "items": [
+                  {
+                    "index": 0,
+                    "text": "LRM \t&Left-to-right mark",
+                    "id": 32772
+                  },
+                  {
+                    "index": 1,
+                    "text": "RLM \t&Right-to-left mark",
+                    "id": 32773
+                  },
+                  {
+                    "index": 2,
+                    "text": "ZWJ \tZero width &joiner",
+                    "id": 32770
+                  },
+                  {
+                    "index": 3,
+                    "text": "ZWNJ\tZero width &non-joiner",
+                    "id": 32771
+                  },
+                  {
+                    "index": 4,
+                    "text": "LRE \tStart of left-to-right &embedding",
+                    "id": 32774
+                  },
+                  {
+                    "index": 5,
+                    "text": "RLE \tStart of right-to-left e&mbedding",
+                    "id": 32775
+                  },
+                  {
+                    "index": 6,
+                    "text": "LRO \tStart of left-to-right &override",
+                    "id": 32776
+                  },
+                  {
+                    "index": 7,
+                    "text": "RLO \tStart of right-to-left o&verride",
+                    "id": 32777
+                  },
+                  {
+                    "index": 8,
+                    "text": "PDF \t&Pop directional formatting",
+                    "id": 32778
+                  },
+                  {
+                    "index": 9,
+                    "text": "NADS\tN&ational digit shapes substitution",
+                    "id": 32779
+                  },
+                  {
+                    "index": 10,
+                    "text": "NODS\tNominal (European) &digit shapes",
+                    "id": 32780
+                  },
+                  {
+                    "index": 11,
+                    "text": "ASS \tActivate &symmetric swapping",
+                    "id": 32781
+                  },
+                  {
+                    "index": 12,
+                    "text": "ISS \tInhibit s&ymmetric swapping",
+                    "id": 32782
+                  },
+                  {
+                    "index": 13,
+                    "text": "AAFS\tActivate Arabic &form shaping",
+                    "id": 32783
+                  },
+                  {
+                    "index": 14,
+                    "text": "IAFS\tInhibit Arabic form s&haping",
+                    "id": 32784
+                  },
+                  {
+                    "index": 15,
+                    "text": "RS  \tRecord Separator (&Block separator)",
+                    "id": 32785
+                  },
+                  {
+                    "index": 16,
+                    "text": "US  \tUnit Separator (&Segment separator)",
+                    "id": 32786
+                  }
+                ]
+              },
+              {
+                "index": 12,
+                "text": "",
+                "id": 0
+              },
+              {
+                "index": 13,
+                "text": "关闭输入法(&L)",
+                "id": 10001
+              },
+              {
+                "index": 14,
+                "text": "汉字重选(&R)",
+                "id": 10003
+              }
+            ]
+          ]
+        },
+        {
+          "state": "武器规律/物理运行规律1",
+          "control_index": 4,
+          "point_index": 0,
+          "class": "Button",
+          "control_id": 280,
+          "text": "规律选择",
+          "point": [
+            180,
+            220
+          ],
+          "used_real_input": true,
+          "popup_count": 0,
+          "menus": []
+        },
+        {
+          "state": "武器规律/物理运行规律1",
+          "control_index": 5,
+          "point_index": 0,
+          "class": "ListBox",
+          "control_id": 290,
+          "text": "",
+          "point": [
+            170,
+            205
+          ],
+          "used_real_input": true,
+          "popup_count": 0,
+          "menus": []
+        },
+        {
+          "state": "武器规律/物理运行规律1",
+          "control_index": 5,
+          "point_index": 1,
+          "class": "ListBox",
+          "control_id": 290,
+          "text": "",
+          "point": [
+            56,
+            68
+          ],
+          "used_real_input": true,
+          "popup_count": 0,
+          "menus": []
+        },
+        {
+          "state": "武器规律/物理运行规律1",
+          "control_index": 5,
+          "point_index": 2,
+          "class": "ListBox",
+          "control_id": 290,
+          "text": "",
+          "point": [
+            170,
+            68
+          ],
+          "used_real_input": true,
+          "popup_count": 0,
+          "menus": []
+        },
+        {
+          "state": "武器规律/物理运行规律1",
+          "control_index": 5,
+          "point_index": 3,
+          "class": "ListBox",
+          "control_id": 290,
+          "text": "",
+          "point": [
+            283,
+            68
+          ],
+          "used_real_input": true,
+          "popup_count": 0,
+          "menus": []
+        },
+        {
+          "state": "武器规律/物理运行规律1",
+          "control_index": 5,
+          "point_index": 4,
+          "class": "ListBox",
+          "control_id": 290,
+          "text": "",
+          "point": [
+            56,
+            205
+          ],
+          "used_real_input": true,
+          "popup_count": 0,
+          "menus": []
+        },
+        {
+          "state": "武器规律/物理运行规律1",
+          "control_index": 5,
+          "point_index": 5,
+          "class": "ListBox",
+          "control_id": 290,
+          "text": "",
+          "point": [
+            283,
+            205
+          ],
+          "used_real_input": true,
+          "popup_count": 0,
+          "menus": []
+        },
+        {
+          "state": "武器规律/物理运行规律1",
+          "control_index": 5,
+          "point_index": 6,
+          "class": "ListBox",
+          "control_id": 290,
+          "text": "",
+          "point": [
+            56,
+            341
+          ],
+          "used_real_input": true,
+          "popup_count": 0,
+          "menus": []
+        },
+        {
+          "state": "武器规律/物理运行规律1",
+          "control_index": 5,
+          "point_index": 7,
+          "class": "ListBox",
+          "control_id": 290,
+          "text": "",
+          "point": [
+            170,
+            341
+          ],
+          "used_real_input": true,
+          "popup_count": 0,
+          "menus": []
+        },
+        {
+          "state": "武器规律/物理运行规律1",
+          "control_index": 5,
+          "point_index": 8,
+          "class": "ListBox",
+          "control_id": 290,
+          "text": "",
+          "point": [
+            283,
+            341
+          ],
+          "used_real_input": true,
+          "popup_count": 0,
+          "menus": []
+        },
+        {
+          "state": "武器规律/物理运行规律1",
+          "control_index": 6,
+          "point_index": 0,
+          "class": "Button",
+          "control_id": 170,
+          "text": "物理运行规律",
+          "point": [
+            195,
+            170
+          ],
+          "used_real_input": true,
+          "popup_count": 1,
+          "menus": [
+            [
+              {
+                "index": 0,
+                "text": "撤消(&U)",
+                "id": 772
+              },
+              {
+                "index": 1,
+                "text": "",
+                "id": 0
+              },
+              {
+                "index": 2,
+                "text": "剪切(&T)",
+                "id": 768
+              },
+              {
+                "index": 3,
+                "text": "复制(&C)",
+                "id": 769
+              },
+              {
+                "index": 4,
+                "text": "粘贴(&P)",
+                "id": 770
+              },
+              {
+                "index": 5,
+                "text": "删除(&D)",
+                "id": 771
+              },
+              {
+                "index": 6,
+                "text": "",
+                "id": 0
+              },
+              {
+                "index": 7,
+                "text": "全选(&A)",
+                "id": 177
+              },
+              {
+                "index": 8,
+                "text": "",
+                "id": 0
+              },
+              {
+                "index": 9,
+                "text": "从右到左的阅读顺序(&R)",
+                "id": 32768
+              },
+              {
+                "index": 10,
+                "text": "显示 Unicode 控制字符(&S)",
+                "id": 32769
+              },
+              {
+                "index": 11,
+                "text": "插入 Unicode 控制字符(&I)",
+                "id": null,
+                "items": [
+                  {
+                    "index": 0,
+                    "text": "LRM \t&Left-to-right mark",
+                    "id": 32772
+                  },
+                  {
+                    "index": 1,
+                    "text": "RLM \t&Right-to-left mark",
+                    "id": 32773
+                  },
+                  {
+                    "index": 2,
+                    "text": "ZWJ \tZero width &joiner",
+                    "id": 32770
+                  },
+                  {
+                    "index": 3,
+                    "text": "ZWNJ\tZero width &non-joiner",
+                    "id": 32771
+                  },
+                  {
+                    "index": 4,
+                    "text": "LRE \tStart of left-to-right &embedding",
+                    "id": 32774
+                  },
+                  {
+                    "index": 5,
+                    "text": "RLE \tStart of right-to-left e&mbedding",
+                    "id": 32775
+                  },
+                  {
+                    "index": 6,
+                    "text": "LRO \tStart of left-to-right &override",
+                    "id": 32776
+                  },
+                  {
+                    "index": 7,
+                    "text": "RLO \tStart of right-to-left o&verride",
+                    "id": 32777
+                  },
+                  {
+                    "index": 8,
+                    "text": "PDF \t&Pop directional formatting",
+                    "id": 32778
+                  },
+                  {
+                    "index": 9,
+                    "text": "NADS\tN&ational digit shapes substitution",
+                    "id": 32779
+                  },
+                  {
+                    "index": 10,
+                    "text": "NODS\tNominal (European) &digit shapes",
+                    "id": 32780
+                  },
+                  {
+                    "index": 11,
+                    "text": "ASS \tActivate &symmetric swapping",
+                    "id": 32781
+                  },
+                  {
+                    "index": 12,
+                    "text": "ISS \tInhibit s&ymmetric swapping",
+                    "id": 32782
+                  },
+                  {
+                    "index": 13,
+                    "text": "AAFS\tActivate Arabic &form shaping",
+                    "id": 32783
+                  },
+                  {
+                    "index": 14,
+                    "text": "IAFS\tInhibit Arabic form s&haping",
+                    "id": 32784
+                  },
+                  {
+                    "index": 15,
+                    "text": "RS  \tRecord Separator (&Block separator)",
+                    "id": 32785
+                  },
+                  {
+                    "index": 16,
+                    "text": "US  \tUnit Separator (&Segment separator)",
+                    "id": 32786
+                  }
+                ]
+              },
+              {
+                "index": 12,
+                "text": "",
+                "id": 0
+              },
+              {
+                "index": 13,
+                "text": "关闭输入法(&L)",
+                "id": 10001
+              },
+              {
+                "index": 14,
+                "text": "汉字重选(&R)",
+                "id": 10003
+              }
+            ]
+          ]
+        },
+        {
+          "state": "武器规律/物理运行规律1",
+          "control_index": 7,
+          "point_index": 0,
+          "class": "Edit",
+          "control_id": 730,
+          "text": "",
+          "point": [
+            60,
+            17
+          ],
+          "used_real_input": false,
+          "popup_count": 1,
+          "menus": [
+            [
+              {
+                "index": 0,
+                "text": "撤消(&U)",
+                "id": 772
+              },
+              {
+                "index": 1,
+                "text": "",
+                "id": 0
+              },
+              {
+                "index": 2,
+                "text": "剪切(&T)",
+                "id": 768
+              },
+              {
+                "index": 3,
+                "text": "复制(&C)",
+                "id": 769
+              },
+              {
+                "index": 4,
+                "text": "粘贴(&P)",
+                "id": 770
+              },
+              {
+                "index": 5,
+                "text": "删除(&D)",
+                "id": 771
+              },
+              {
+                "index": 6,
+                "text": "",
+                "id": 0
+              },
+              {
+                "index": 7,
+                "text": "全选(&A)",
+                "id": 177
+              },
+              {
+                "index": 8,
+                "text": "",
+                "id": 0
+              },
+              {
+                "index": 9,
+                "text": "从右到左的阅读顺序(&R)",
+                "id": 32768
+              },
+              {
+                "index": 10,
+                "text": "显示 Unicode 控制字符(&S)",
+                "id": 32769
+              },
+              {
+                "index": 11,
+                "text": "插入 Unicode 控制字符(&I)",
+                "id": null,
+                "items": [
+                  {
+                    "index": 0,
+                    "text": "LRM \t&Left-to-right mark",
+                    "id": 32772
+                  },
+                  {
+                    "index": 1,
+                    "text": "RLM \t&Right-to-left mark",
+                    "id": 32773
+                  },
+                  {
+                    "index": 2,
+                    "text": "ZWJ \tZero width &joiner",
+                    "id": 32770
+                  },
+                  {
+                    "index": 3,
+                    "text": "ZWNJ\tZero width &non-joiner",
+                    "id": 32771
+                  },
+                  {
+                    "index": 4,
+                    "text": "LRE \tStart of left-to-right &embedding",
+                    "id": 32774
+                  },
+                  {
+                    "index": 5,
+                    "text": "RLE \tStart of right-to-left e&mbedding",
+                    "id": 32775
+                  },
+                  {
+                    "index": 6,
+                    "text": "LRO \tStart of left-to-right &override",
+                    "id": 32776
+                  },
+                  {
+                    "index": 7,
+                    "text": "RLO \tStart of right-to-left o&verride",
+                    "id": 32777
+                  },
+                  {
+                    "index": 8,
+                    "text": "PDF \t&Pop directional formatting",
+                    "id": 32778
+                  },
+                  {
+                    "index": 9,
+                    "text": "NADS\tN&ational digit shapes substitution",
+                    "id": 32779
+                  },
+                  {
+                    "index": 10,
+                    "text": "NODS\tNominal (European) &digit shapes",
+                    "id": 32780
+                  },
+                  {
+                    "index": 11,
+                    "text": "ASS \tActivate &symmetric swapping",
+                    "id": 32781
+                  },
+                  {
+                    "index": 12,
+                    "text": "ISS \tInhibit s&ymmetric swapping",
+                    "id": 32782
+                  },
+                  {
+                    "index": 13,
+                    "text": "AAFS\tActivate Arabic &form shaping",
+                    "id": 32783
+                  },
+                  {
+                    "index": 14,
+                    "text": "IAFS\tInhibit Arabic form s&haping",
+                    "id": 32784
+                  },
+                  {
+                    "index": 15,
+                    "text": "RS  \tRecord Separator (&Block separator)",
+                    "id": 32785
+                  },
+                  {
+                    "index": 16,
+                    "text": "US  \tUnit Separator (&Segment separator)",
+                    "id": 32786
+                  }
+                ]
+              },
+              {
+                "index": 12,
+                "text": "",
+                "id": 0
+              },
+              {
+                "index": 13,
+                "text": "关闭输入法(&L)",
+                "id": 10001
+              },
+              {
+                "index": 14,
+                "text": "汉字重选(&R)",
+                "id": 10003
+              }
+            ]
+          ]
+        },
+        {
+          "state": "武器规律/物理运行规律1",
+          "control_index": 8,
+          "point_index": 0,
+          "class": "Button",
+          "control_id": 720,
+          "text": "图块编号增加：",
+          "point": [
+            60,
+            20
+          ],
+          "used_real_input": true,
+          "popup_count": 0,
+          "menus": []
+        },
+        {
+          "state": "武器规律/物理运行规律1",
+          "control_index": 9,
+          "point_index": 0,
+          "class": "Edit",
+          "control_id": 150,
+          "text": "00 83 F0 FC 00 83 F0 FC ",
+          "point": [
+            185,
+            50
+          ],
+          "used_real_input": false,
+          "popup_count": 1,
+          "menus": [
+            [
+              {
+                "index": 0,
+                "text": "撤消(&U)",
+                "id": 772
+              },
+              {
+                "index": 1,
+                "text": "",
+                "id": 0
+              },
+              {
+                "index": 2,
+                "text": "剪切(&T)",
+                "id": 768
+              },
+              {
+                "index": 3,
+                "text": "复制(&C)",
+                "id": 769
+              },
+              {
+                "index": 4,
+                "text": "粘贴(&P)",
+                "id": 770
+              },
+              {
+                "index": 5,
+                "text": "删除(&D)",
+                "id": 771
+              },
+              {
+                "index": 6,
+                "text": "",
+                "id": 0
+              },
+              {
+                "index": 7,
+                "text": "全选(&A)",
+                "id": 177
+              },
+              {
+                "index": 8,
+                "text": "",
+                "id": 0
+              },
+              {
+                "index": 9,
+                "text": "从右到左的阅读顺序(&R)",
+                "id": 32768
+              },
+              {
+                "index": 10,
+                "text": "显示 Unicode 控制字符(&S)",
+                "id": 32769
+              },
+              {
+                "index": 11,
+                "text": "插入 Unicode 控制字符(&I)",
+                "id": null,
+                "items": [
+                  {
+                    "index": 0,
+                    "text": "LRM \t&Left-to-right mark",
+                    "id": 32772
+                  },
+                  {
+                    "index": 1,
+                    "text": "RLM \t&Right-to-left mark",
+                    "id": 32773
+                  },
+                  {
+                    "index": 2,
+                    "text": "ZWJ \tZero width &joiner",
+                    "id": 32770
+                  },
+                  {
+                    "index": 3,
+                    "text": "ZWNJ\tZero width &non-joiner",
+                    "id": 32771
+                  },
+                  {
+                    "index": 4,
+                    "text": "LRE \tStart of left-to-right &embedding",
+                    "id": 32774
+                  },
+                  {
+                    "index": 5,
+                    "text": "RLE \tStart of right-to-left e&mbedding",
+                    "id": 32775
+                  },
+                  {
+                    "index": 6,
+                    "text": "LRO \tStart of left-to-right &override",
+                    "id": 32776
+                  },
+                  {
+                    "index": 7,
+                    "text": "RLO \tStart of right-to-left o&verride",
+                    "id": 32777
+                  },
+                  {
+                    "index": 8,
+                    "text": "PDF \t&Pop directional formatting",
+                    "id": 32778
+                  },
+                  {
+                    "index": 9,
+                    "text": "NADS\tN&ational digit shapes substitution",
+                    "id": 32779
+                  },
+                  {
+                    "index": 10,
+                    "text": "NODS\tNominal (European) &digit shapes",
+                    "id": 32780
+                  },
+                  {
+                    "index": 11,
+                    "text": "ASS \tActivate &symmetric swapping",
+                    "id": 32781
+                  },
+                  {
+                    "index": 12,
+                    "text": "ISS \tInhibit s&ymmetric swapping",
+                    "id": 32782
+                  },
+                  {
+                    "index": 13,
+                    "text": "AAFS\tActivate Arabic &form shaping",
+                    "id": 32783
+                  },
+                  {
+                    "index": 14,
+                    "text": "IAFS\tInhibit Arabic form s&haping",
+                    "id": 32784
+                  },
+                  {
+                    "index": 15,
+                    "text": "RS  \tRecord Separator (&Block separator)",
+                    "id": 32785
+                  },
+                  {
+                    "index": 16,
+                    "text": "US  \tUnit Separator (&Segment separator)",
+                    "id": 32786
+                  }
+                ]
+              },
+              {
+                "index": 12,
+                "text": "",
+                "id": 0
+              },
+              {
+                "index": 13,
+                "text": "关闭输入法(&L)",
+                "id": 10001
+              },
+              {
+                "index": 14,
+                "text": "汉字重选(&R)",
+                "id": 10003
+              }
+            ]
+          ]
+        },
+        {
+          "state": "武器规律/物理运行规律1",
+          "control_index": 10,
+          "point_index": 0,
+          "class": "Button",
+          "control_id": 110,
+          "text": "取消",
+          "point": [
+            45,
+            15
+          ],
+          "used_real_input": true,
+          "popup_count": 0,
+          "menus": []
+        },
+        {
+          "state": "武器规律/物理运行规律1",
+          "control_index": 11,
+          "point_index": 0,
+          "class": "Button",
+          "control_id": 100,
+          "text": "确定",
+          "point": [
+            45,
+            15
+          ],
+          "used_real_input": true,
+          "popup_count": 0,
+          "menus": []
+        }
+      ]
+    },
+    {
+      "label": "物理运行规律2",
+      "probe_window_x": 247,
+      "signature_match": true,
+      "visible_controls": [
+        {
+          "class": "WTWindow",
+          "control_id": 0,
+          "text": "规律",
+          "enabled": true
+        },
+        {
+          "class": "Button",
+          "control_id": 710,
+          "text": "运动规律模拟器",
+          "enabled": true
+        },
+        {
+          "class": "CPageControl",
+          "control_id": 120,
+          "text": "",
+          "enabled": true
+        },
+        {
+          "class": "Button",
+          "control_id": 700,
+          "text": "规律选择",
+          "enabled": true
+        },
+        {
+          "class": "ListBox",
+          "control_id": 690,
+          "text": "",
+          "enabled": true
+        },
+        {
+          "class": "Button",
+          "control_id": 680,
+          "text": "基本设置",
+          "enabled": true
+        },
+        {
+          "class": "Edit",
+          "control_id": 670,
+          "text": "静止1E0H帧",
+          "enabled": true
+        },
+        {
+          "class": "Afx:400000:b:10003:900015:0",
+          "control_id": 660,
+          "text": "规律名称：",
+          "enabled": true
+        },
+        {
+          "class": "Button",
+          "control_id": 650,
+          "text": "物理运行规律",
+          "enabled": true
+        },
+        {
+          "class": "Edit",
+          "control_id": 750,
+          "text": "",
+          "enabled": true
+        },
+        {
+          "class": "Button",
+          "control_id": 740,
+          "text": "图块编号增加：",
+          "enabled": true
+        },
+        {
+          "class": "Afx:400000:b:10003:900015:0",
+          "control_id": 640,
+          "text": "代码：",
+          "enabled": true
+        },
+        {
+          "class": "Edit",
+          "control_id": 630,
+          "text": "00 83 F0 FC 00 83 F0 FC ",
+          "enabled": true
+        },
+        {
+          "class": "Button",
+          "control_id": 110,
+          "text": "取消",
+          "enabled": true
+        },
+        {
+          "class": "Button",
+          "control_id": 100,
+          "text": "确定",
+          "enabled": true
+        }
+      ],
+      "context_probes": [
+        {
+          "state": "武器规律/物理运行规律2",
+          "control_index": 0,
+          "point_index": 0,
+          "class": "Button",
+          "control_id": 710,
+          "text": "运动规律模拟器",
+          "point": [
+            65,
+            15
+          ],
+          "used_real_input": true,
+          "popup_count": 0,
+          "menus": []
+        },
+        {
+          "state": "武器规律/物理运行规律2",
+          "control_index": 1,
+          "point_index": 0,
+          "class": "CPageControl",
+          "control_id": 120,
+          "text": "",
+          "point": [
+            390,
+            245
+          ],
+          "used_real_input": true,
+          "popup_count": 0,
+          "menus": []
+        },
+        {
+          "state": "武器规律/物理运行规律2",
+          "control_index": 2,
+          "point_index": 0,
+          "class": "Button",
+          "control_id": 700,
+          "text": "规律选择",
+          "point": [
+            180,
+            220
+          ],
+          "used_real_input": true,
+          "popup_count": 0,
+          "menus": []
+        },
+        {
+          "state": "武器规律/物理运行规律2",
+          "control_index": 3,
+          "point_index": 0,
+          "class": "ListBox",
+          "control_id": 690,
+          "text": "",
+          "point": [
+            170,
+            205
+          ],
+          "used_real_input": true,
+          "popup_count": 0,
+          "menus": []
+        },
+        {
+          "state": "武器规律/物理运行规律2",
+          "control_index": 3,
+          "point_index": 1,
+          "class": "ListBox",
+          "control_id": 690,
+          "text": "",
+          "point": [
+            56,
+            68
+          ],
+          "used_real_input": true,
+          "popup_count": 0,
+          "menus": []
+        },
+        {
+          "state": "武器规律/物理运行规律2",
+          "control_index": 3,
+          "point_index": 2,
+          "class": "ListBox",
+          "control_id": 690,
+          "text": "",
+          "point": [
+            170,
+            68
+          ],
+          "used_real_input": true,
+          "popup_count": 0,
+          "menus": []
+        },
+        {
+          "state": "武器规律/物理运行规律2",
+          "control_index": 3,
+          "point_index": 3,
+          "class": "ListBox",
+          "control_id": 690,
+          "text": "",
+          "point": [
+            283,
+            68
+          ],
+          "used_real_input": true,
+          "popup_count": 0,
+          "menus": []
+        },
+        {
+          "state": "武器规律/物理运行规律2",
+          "control_index": 3,
+          "point_index": 4,
+          "class": "ListBox",
+          "control_id": 690,
+          "text": "",
+          "point": [
+            56,
+            205
+          ],
+          "used_real_input": true,
+          "popup_count": 0,
+          "menus": []
+        },
+        {
+          "state": "武器规律/物理运行规律2",
+          "control_index": 3,
+          "point_index": 5,
+          "class": "ListBox",
+          "control_id": 690,
+          "text": "",
+          "point": [
+            283,
+            205
+          ],
+          "used_real_input": true,
+          "popup_count": 0,
+          "menus": []
+        },
+        {
+          "state": "武器规律/物理运行规律2",
+          "control_index": 3,
+          "point_index": 6,
+          "class": "ListBox",
+          "control_id": 690,
+          "text": "",
+          "point": [
+            56,
+            341
+          ],
+          "used_real_input": true,
+          "popup_count": 0,
+          "menus": []
+        },
+        {
+          "state": "武器规律/物理运行规律2",
+          "control_index": 3,
+          "point_index": 7,
+          "class": "ListBox",
+          "control_id": 690,
+          "text": "",
+          "point": [
+            170,
+            341
+          ],
+          "used_real_input": true,
+          "popup_count": 0,
+          "menus": []
+        },
+        {
+          "state": "武器规律/物理运行规律2",
+          "control_index": 3,
+          "point_index": 8,
+          "class": "ListBox",
+          "control_id": 690,
+          "text": "",
+          "point": [
+            283,
+            341
+          ],
+          "used_real_input": true,
+          "popup_count": 0,
+          "menus": []
+        },
+        {
+          "state": "武器规律/物理运行规律2",
+          "control_index": 4,
+          "point_index": 0,
+          "class": "Button",
+          "control_id": 680,
+          "text": "基本设置",
+          "point": [
+            195,
+            45
+          ],
+          "used_real_input": true,
+          "popup_count": 1,
+          "menus": [
+            [
+              {
+                "index": 0,
+                "text": "撤消(&U)",
+                "id": 772
+              },
+              {
+                "index": 1,
+                "text": "",
+                "id": 0
+              },
+              {
+                "index": 2,
+                "text": "剪切(&T)",
+                "id": 768
+              },
+              {
+                "index": 3,
+                "text": "复制(&C)",
+                "id": 769
+              },
+              {
+                "index": 4,
+                "text": "粘贴(&P)",
+                "id": 770
+              },
+              {
+                "index": 5,
+                "text": "删除(&D)",
+                "id": 771
+              },
+              {
+                "index": 6,
+                "text": "",
+                "id": 0
+              },
+              {
+                "index": 7,
+                "text": "全选(&A)",
+                "id": 177
+              },
+              {
+                "index": 8,
+                "text": "",
+                "id": 0
+              },
+              {
+                "index": 9,
+                "text": "从右到左的阅读顺序(&R)",
+                "id": 32768
+              },
+              {
+                "index": 10,
+                "text": "显示 Unicode 控制字符(&S)",
+                "id": 32769
+              },
+              {
+                "index": 11,
+                "text": "插入 Unicode 控制字符(&I)",
+                "id": null,
+                "items": [
+                  {
+                    "index": 0,
+                    "text": "LRM \t&Left-to-right mark",
+                    "id": 32772
+                  },
+                  {
+                    "index": 1,
+                    "text": "RLM \t&Right-to-left mark",
+                    "id": 32773
+                  },
+                  {
+                    "index": 2,
+                    "text": "ZWJ \tZero width &joiner",
+                    "id": 32770
+                  },
+                  {
+                    "index": 3,
+                    "text": "ZWNJ\tZero width &non-joiner",
+                    "id": 32771
+                  },
+                  {
+                    "index": 4,
+                    "text": "LRE \tStart of left-to-right &embedding",
+                    "id": 32774
+                  },
+                  {
+                    "index": 5,
+                    "text": "RLE \tStart of right-to-left e&mbedding",
+                    "id": 32775
+                  },
+                  {
+                    "index": 6,
+                    "text": "LRO \tStart of left-to-right &override",
+                    "id": 32776
+                  },
+                  {
+                    "index": 7,
+                    "text": "RLO \tStart of right-to-left o&verride",
+                    "id": 32777
+                  },
+                  {
+                    "index": 8,
+                    "text": "PDF \t&Pop directional formatting",
+                    "id": 32778
+                  },
+                  {
+                    "index": 9,
+                    "text": "NADS\tN&ational digit shapes substitution",
+                    "id": 32779
+                  },
+                  {
+                    "index": 10,
+                    "text": "NODS\tNominal (European) &digit shapes",
+                    "id": 32780
+                  },
+                  {
+                    "index": 11,
+                    "text": "ASS \tActivate &symmetric swapping",
+                    "id": 32781
+                  },
+                  {
+                    "index": 12,
+                    "text": "ISS \tInhibit s&ymmetric swapping",
+                    "id": 32782
+                  },
+                  {
+                    "index": 13,
+                    "text": "AAFS\tActivate Arabic &form shaping",
+                    "id": 32783
+                  },
+                  {
+                    "index": 14,
+                    "text": "IAFS\tInhibit Arabic form s&haping",
+                    "id": 32784
+                  },
+                  {
+                    "index": 15,
+                    "text": "RS  \tRecord Separator (&Block separator)",
+                    "id": 32785
+                  },
+                  {
+                    "index": 16,
+                    "text": "US  \tUnit Separator (&Segment separator)",
+                    "id": 32786
+                  }
+                ]
+              },
+              {
+                "index": 12,
+                "text": "",
+                "id": 0
+              },
+              {
+                "index": 13,
+                "text": "关闭输入法(&L)",
+                "id": 10001
+              },
+              {
+                "index": 14,
+                "text": "汉字重选(&R)",
+                "id": 10003
+              }
+            ]
+          ]
+        },
+        {
+          "state": "武器规律/物理运行规律2",
+          "control_index": 5,
+          "point_index": 0,
+          "class": "Edit",
+          "control_id": 670,
+          "text": "静止1E0H帧",
+          "point": [
+            145,
+            20
+          ],
+          "used_real_input": false,
+          "popup_count": 1,
+          "menus": [
+            [
+              {
+                "index": 0,
+                "text": "撤消(&U)",
+                "id": 772
+              },
+              {
+                "index": 1,
+                "text": "",
+                "id": 0
+              },
+              {
+                "index": 2,
+                "text": "剪切(&T)",
+                "id": 768
+              },
+              {
+                "index": 3,
+                "text": "复制(&C)",
+                "id": 769
+              },
+              {
+                "index": 4,
+                "text": "粘贴(&P)",
+                "id": 770
+              },
+              {
+                "index": 5,
+                "text": "删除(&D)",
+                "id": 771
+              },
+              {
+                "index": 6,
+                "text": "",
+                "id": 0
+              },
+              {
+                "index": 7,
+                "text": "全选(&A)",
+                "id": 177
+              },
+              {
+                "index": 8,
+                "text": "",
+                "id": 0
+              },
+              {
+                "index": 9,
+                "text": "从右到左的阅读顺序(&R)",
+                "id": 32768
+              },
+              {
+                "index": 10,
+                "text": "显示 Unicode 控制字符(&S)",
+                "id": 32769
+              },
+              {
+                "index": 11,
+                "text": "插入 Unicode 控制字符(&I)",
+                "id": null,
+                "items": [
+                  {
+                    "index": 0,
+                    "text": "LRM \t&Left-to-right mark",
+                    "id": 32772
+                  },
+                  {
+                    "index": 1,
+                    "text": "RLM \t&Right-to-left mark",
+                    "id": 32773
+                  },
+                  {
+                    "index": 2,
+                    "text": "ZWJ \tZero width &joiner",
+                    "id": 32770
+                  },
+                  {
+                    "index": 3,
+                    "text": "ZWNJ\tZero width &non-joiner",
+                    "id": 32771
+                  },
+                  {
+                    "index": 4,
+                    "text": "LRE \tStart of left-to-right &embedding",
+                    "id": 32774
+                  },
+                  {
+                    "index": 5,
+                    "text": "RLE \tStart of right-to-left e&mbedding",
+                    "id": 32775
+                  },
+                  {
+                    "index": 6,
+                    "text": "LRO \tStart of left-to-right &override",
+                    "id": 32776
+                  },
+                  {
+                    "index": 7,
+                    "text": "RLO \tStart of right-to-left o&verride",
+                    "id": 32777
+                  },
+                  {
+                    "index": 8,
+                    "text": "PDF \t&Pop directional formatting",
+                    "id": 32778
+                  },
+                  {
+                    "index": 9,
+                    "text": "NADS\tN&ational digit shapes substitution",
+                    "id": 32779
+                  },
+                  {
+                    "index": 10,
+                    "text": "NODS\tNominal (European) &digit shapes",
+                    "id": 32780
+                  },
+                  {
+                    "index": 11,
+                    "text": "ASS \tActivate &symmetric swapping",
+                    "id": 32781
+                  },
+                  {
+                    "index": 12,
+                    "text": "ISS \tInhibit s&ymmetric swapping",
+                    "id": 32782
+                  },
+                  {
+                    "index": 13,
+                    "text": "AAFS\tActivate Arabic &form shaping",
+                    "id": 32783
+                  },
+                  {
+                    "index": 14,
+                    "text": "IAFS\tInhibit Arabic form s&haping",
+                    "id": 32784
+                  },
+                  {
+                    "index": 15,
+                    "text": "RS  \tRecord Separator (&Block separator)",
+                    "id": 32785
+                  },
+                  {
+                    "index": 16,
+                    "text": "US  \tUnit Separator (&Segment separator)",
+                    "id": 32786
+                  }
+                ]
+              },
+              {
+                "index": 12,
+                "text": "",
+                "id": 0
+              },
+              {
+                "index": 13,
+                "text": "关闭输入法(&L)",
+                "id": 10001
+              },
+              {
+                "index": 14,
+                "text": "汉字重选(&R)",
+                "id": 10003
+              }
+            ]
+          ]
+        },
+        {
+          "state": "武器规律/物理运行规律2",
+          "control_index": 6,
+          "point_index": 0,
+          "class": "Button",
+          "control_id": 650,
+          "text": "物理运行规律",
+          "point": [
+            195,
+            170
+          ],
+          "used_real_input": true,
+          "popup_count": 1,
+          "menus": [
+            [
+              {
+                "index": 0,
+                "text": "撤消(&U)",
+                "id": 772
+              },
+              {
+                "index": 1,
+                "text": "",
+                "id": 0
+              },
+              {
+                "index": 2,
+                "text": "剪切(&T)",
+                "id": 768
+              },
+              {
+                "index": 3,
+                "text": "复制(&C)",
+                "id": 769
+              },
+              {
+                "index": 4,
+                "text": "粘贴(&P)",
+                "id": 770
+              },
+              {
+                "index": 5,
+                "text": "删除(&D)",
+                "id": 771
+              },
+              {
+                "index": 6,
+                "text": "",
+                "id": 0
+              },
+              {
+                "index": 7,
+                "text": "全选(&A)",
+                "id": 177
+              },
+              {
+                "index": 8,
+                "text": "",
+                "id": 0
+              },
+              {
+                "index": 9,
+                "text": "从右到左的阅读顺序(&R)",
+                "id": 32768
+              },
+              {
+                "index": 10,
+                "text": "显示 Unicode 控制字符(&S)",
+                "id": 32769
+              },
+              {
+                "index": 11,
+                "text": "插入 Unicode 控制字符(&I)",
+                "id": null,
+                "items": [
+                  {
+                    "index": 0,
+                    "text": "LRM \t&Left-to-right mark",
+                    "id": 32772
+                  },
+                  {
+                    "index": 1,
+                    "text": "RLM \t&Right-to-left mark",
+                    "id": 32773
+                  },
+                  {
+                    "index": 2,
+                    "text": "ZWJ \tZero width &joiner",
+                    "id": 32770
+                  },
+                  {
+                    "index": 3,
+                    "text": "ZWNJ\tZero width &non-joiner",
+                    "id": 32771
+                  },
+                  {
+                    "index": 4,
+                    "text": "LRE \tStart of left-to-right &embedding",
+                    "id": 32774
+                  },
+                  {
+                    "index": 5,
+                    "text": "RLE \tStart of right-to-left e&mbedding",
+                    "id": 32775
+                  },
+                  {
+                    "index": 6,
+                    "text": "LRO \tStart of left-to-right &override",
+                    "id": 32776
+                  },
+                  {
+                    "index": 7,
+                    "text": "RLO \tStart of right-to-left o&verride",
+                    "id": 32777
+                  },
+                  {
+                    "index": 8,
+                    "text": "PDF \t&Pop directional formatting",
+                    "id": 32778
+                  },
+                  {
+                    "index": 9,
+                    "text": "NADS\tN&ational digit shapes substitution",
+                    "id": 32779
+                  },
+                  {
+                    "index": 10,
+                    "text": "NODS\tNominal (European) &digit shapes",
+                    "id": 32780
+                  },
+                  {
+                    "index": 11,
+                    "text": "ASS \tActivate &symmetric swapping",
+                    "id": 32781
+                  },
+                  {
+                    "index": 12,
+                    "text": "ISS \tInhibit s&ymmetric swapping",
+                    "id": 32782
+                  },
+                  {
+                    "index": 13,
+                    "text": "AAFS\tActivate Arabic &form shaping",
+                    "id": 32783
+                  },
+                  {
+                    "index": 14,
+                    "text": "IAFS\tInhibit Arabic form s&haping",
+                    "id": 32784
+                  },
+                  {
+                    "index": 15,
+                    "text": "RS  \tRecord Separator (&Block separator)",
+                    "id": 32785
+                  },
+                  {
+                    "index": 16,
+                    "text": "US  \tUnit Separator (&Segment separator)",
+                    "id": 32786
+                  }
+                ]
+              },
+              {
+                "index": 12,
+                "text": "",
+                "id": 0
+              },
+              {
+                "index": 13,
+                "text": "关闭输入法(&L)",
+                "id": 10001
+              },
+              {
+                "index": 14,
+                "text": "汉字重选(&R)",
+                "id": 10003
+              }
+            ]
+          ]
+        },
+        {
+          "state": "武器规律/物理运行规律2",
+          "control_index": 7,
+          "point_index": 0,
+          "class": "Edit",
+          "control_id": 750,
+          "text": "",
+          "point": [
+            60,
+            17
+          ],
+          "used_real_input": false,
+          "popup_count": 1,
+          "menus": [
+            [
+              {
+                "index": 0,
+                "text": "撤消(&U)",
+                "id": 772
+              },
+              {
+                "index": 1,
+                "text": "",
+                "id": 0
+              },
+              {
+                "index": 2,
+                "text": "剪切(&T)",
+                "id": 768
+              },
+              {
+                "index": 3,
+                "text": "复制(&C)",
+                "id": 769
+              },
+              {
+                "index": 4,
+                "text": "粘贴(&P)",
+                "id": 770
+              },
+              {
+                "index": 5,
+                "text": "删除(&D)",
+                "id": 771
+              },
+              {
+                "index": 6,
+                "text": "",
+                "id": 0
+              },
+              {
+                "index": 7,
+                "text": "全选(&A)",
+                "id": 177
+              },
+              {
+                "index": 8,
+                "text": "",
+                "id": 0
+              },
+              {
+                "index": 9,
+                "text": "从右到左的阅读顺序(&R)",
+                "id": 32768
+              },
+              {
+                "index": 10,
+                "text": "显示 Unicode 控制字符(&S)",
+                "id": 32769
+              },
+              {
+                "index": 11,
+                "text": "插入 Unicode 控制字符(&I)",
+                "id": null,
+                "items": [
+                  {
+                    "index": 0,
+                    "text": "LRM \t&Left-to-right mark",
+                    "id": 32772
+                  },
+                  {
+                    "index": 1,
+                    "text": "RLM \t&Right-to-left mark",
+                    "id": 32773
+                  },
+                  {
+                    "index": 2,
+                    "text": "ZWJ \tZero width &joiner",
+                    "id": 32770
+                  },
+                  {
+                    "index": 3,
+                    "text": "ZWNJ\tZero width &non-joiner",
+                    "id": 32771
+                  },
+                  {
+                    "index": 4,
+                    "text": "LRE \tStart of left-to-right &embedding",
+                    "id": 32774
+                  },
+                  {
+                    "index": 5,
+                    "text": "RLE \tStart of right-to-left e&mbedding",
+                    "id": 32775
+                  },
+                  {
+                    "index": 6,
+                    "text": "LRO \tStart of left-to-right &override",
+                    "id": 32776
+                  },
+                  {
+                    "index": 7,
+                    "text": "RLO \tStart of right-to-left o&verride",
+                    "id": 32777
+                  },
+                  {
+                    "index": 8,
+                    "text": "PDF \t&Pop directional formatting",
+                    "id": 32778
+                  },
+                  {
+                    "index": 9,
+                    "text": "NADS\tN&ational digit shapes substitution",
+                    "id": 32779
+                  },
+                  {
+                    "index": 10,
+                    "text": "NODS\tNominal (European) &digit shapes",
+                    "id": 32780
+                  },
+                  {
+                    "index": 11,
+                    "text": "ASS \tActivate &symmetric swapping",
+                    "id": 32781
+                  },
+                  {
+                    "index": 12,
+                    "text": "ISS \tInhibit s&ymmetric swapping",
+                    "id": 32782
+                  },
+                  {
+                    "index": 13,
+                    "text": "AAFS\tActivate Arabic &form shaping",
+                    "id": 32783
+                  },
+                  {
+                    "index": 14,
+                    "text": "IAFS\tInhibit Arabic form s&haping",
+                    "id": 32784
+                  },
+                  {
+                    "index": 15,
+                    "text": "RS  \tRecord Separator (&Block separator)",
+                    "id": 32785
+                  },
+                  {
+                    "index": 16,
+                    "text": "US  \tUnit Separator (&Segment separator)",
+                    "id": 32786
+                  }
+                ]
+              },
+              {
+                "index": 12,
+                "text": "",
+                "id": 0
+              },
+              {
+                "index": 13,
+                "text": "关闭输入法(&L)",
+                "id": 10001
+              },
+              {
+                "index": 14,
+                "text": "汉字重选(&R)",
+                "id": 10003
+              }
+            ]
+          ]
+        },
+        {
+          "state": "武器规律/物理运行规律2",
+          "control_index": 8,
+          "point_index": 0,
+          "class": "Button",
+          "control_id": 740,
+          "text": "图块编号增加：",
+          "point": [
+            60,
+            20
+          ],
+          "used_real_input": true,
+          "popup_count": 0,
+          "menus": []
+        },
+        {
+          "state": "武器规律/物理运行规律2",
+          "control_index": 9,
+          "point_index": 0,
+          "class": "Edit",
+          "control_id": 630,
+          "text": "00 83 F0 FC 00 83 F0 FC ",
+          "point": [
+            185,
+            50
+          ],
+          "used_real_input": false,
+          "popup_count": 1,
+          "menus": [
+            [
+              {
+                "index": 0,
+                "text": "撤消(&U)",
+                "id": 772
+              },
+              {
+                "index": 1,
+                "text": "",
+                "id": 0
+              },
+              {
+                "index": 2,
+                "text": "剪切(&T)",
+                "id": 768
+              },
+              {
+                "index": 3,
+                "text": "复制(&C)",
+                "id": 769
+              },
+              {
+                "index": 4,
+                "text": "粘贴(&P)",
+                "id": 770
+              },
+              {
+                "index": 5,
+                "text": "删除(&D)",
+                "id": 771
+              },
+              {
+                "index": 6,
+                "text": "",
+                "id": 0
+              },
+              {
+                "index": 7,
+                "text": "全选(&A)",
+                "id": 177
+              },
+              {
+                "index": 8,
+                "text": "",
+                "id": 0
+              },
+              {
+                "index": 9,
+                "text": "从右到左的阅读顺序(&R)",
+                "id": 32768
+              },
+              {
+                "index": 10,
+                "text": "显示 Unicode 控制字符(&S)",
+                "id": 32769
+              },
+              {
+                "index": 11,
+                "text": "插入 Unicode 控制字符(&I)",
+                "id": null,
+                "items": [
+                  {
+                    "index": 0,
+                    "text": "LRM \t&Left-to-right mark",
+                    "id": 32772
+                  },
+                  {
+                    "index": 1,
+                    "text": "RLM \t&Right-to-left mark",
+                    "id": 32773
+                  },
+                  {
+                    "index": 2,
+                    "text": "ZWJ \tZero width &joiner",
+                    "id": 32770
+                  },
+                  {
+                    "index": 3,
+                    "text": "ZWNJ\tZero width &non-joiner",
+                    "id": 32771
+                  },
+                  {
+                    "index": 4,
+                    "text": "LRE \tStart of left-to-right &embedding",
+                    "id": 32774
+                  },
+                  {
+                    "index": 5,
+                    "text": "RLE \tStart of right-to-left e&mbedding",
+                    "id": 32775
+                  },
+                  {
+                    "index": 6,
+                    "text": "LRO \tStart of left-to-right &override",
+                    "id": 32776
+                  },
+                  {
+                    "index": 7,
+                    "text": "RLO \tStart of right-to-left o&verride",
+                    "id": 32777
+                  },
+                  {
+                    "index": 8,
+                    "text": "PDF \t&Pop directional formatting",
+                    "id": 32778
+                  },
+                  {
+                    "index": 9,
+                    "text": "NADS\tN&ational digit shapes substitution",
+                    "id": 32779
+                  },
+                  {
+                    "index": 10,
+                    "text": "NODS\tNominal (European) &digit shapes",
+                    "id": 32780
+                  },
+                  {
+                    "index": 11,
+                    "text": "ASS \tActivate &symmetric swapping",
+                    "id": 32781
+                  },
+                  {
+                    "index": 12,
+                    "text": "ISS \tInhibit s&ymmetric swapping",
+                    "id": 32782
+                  },
+                  {
+                    "index": 13,
+                    "text": "AAFS\tActivate Arabic &form shaping",
+                    "id": 32783
+                  },
+                  {
+                    "index": 14,
+                    "text": "IAFS\tInhibit Arabic form s&haping",
+                    "id": 32784
+                  },
+                  {
+                    "index": 15,
+                    "text": "RS  \tRecord Separator (&Block separator)",
+                    "id": 32785
+                  },
+                  {
+                    "index": 16,
+                    "text": "US  \tUnit Separator (&Segment separator)",
+                    "id": 32786
+                  }
+                ]
+              },
+              {
+                "index": 12,
+                "text": "",
+                "id": 0
+              },
+              {
+                "index": 13,
+                "text": "关闭输入法(&L)",
+                "id": 10001
+              },
+              {
+                "index": 14,
+                "text": "汉字重选(&R)",
+                "id": 10003
+              }
+            ]
+          ]
+        },
+        {
+          "state": "武器规律/物理运行规律2",
+          "control_index": 10,
+          "point_index": 0,
+          "class": "Button",
+          "control_id": 110,
+          "text": "取消",
+          "point": [
+            45,
+            15
+          ],
+          "used_real_input": true,
+          "popup_count": 0,
+          "menus": []
+        },
+        {
+          "state": "武器规律/物理运行规律2",
+          "control_index": 11,
+          "point_index": 0,
+          "class": "Button",
+          "control_id": 100,
+          "text": "确定",
+          "point": [
+            45,
+            15
+          ],
+          "used_real_input": true,
+          "popup_count": 0,
+          "menus": []
+        }
+      ]
+    },
+    {
+      "label": "物理图片规律",
+      "probe_window_x": 367,
+      "signature_match": true,
+      "visible_controls": [
+        {
+          "class": "WTWindow",
+          "control_id": 0,
+          "text": "规律",
+          "enabled": true
+        },
+        {
+          "class": "Button",
+          "control_id": 710,
+          "text": "运动规律模拟器",
+          "enabled": true
+        },
+        {
+          "class": "CPageControl",
+          "control_id": 120,
+          "text": "",
+          "enabled": true
+        },
+        {
+          "class": "Button",
+          "control_id": 360,
+          "text": "基本设置",
+          "enabled": true
+        },
+        {
+          "class": "Edit",
+          "control_id": 370,
+          "text": "新爆炸点拼图1（我方）",
+          "enabled": true
+        },
+        {
+          "class": "Afx:400000:b:10003:900015:0",
+          "control_id": 350,
+          "text": "规律名称：",
+          "enabled": true
+        },
+        {
+          "class": "Button",
+          "control_id": 330,
+          "text": "规律选择",
+          "enabled": true
+        },
+        {
+          "class": "ListBox",
+          "control_id": 340,
+          "text": "",
+          "enabled": true
+        },
+        {
+          "class": "Button",
+          "control_id": 210,
+          "text": "物体图片",
+          "enabled": true
+        },
+        {
+          "class": "ComboBox",
+          "control_id": 620,
+          "text": "[00]000：80010",
+          "enabled": true
+        },
+        {
+          "class": "Afx:400000:b:10003:900015:0",
+          "control_id": 610,
+          "text": "预览图库：",
+          "enabled": true
+        },
+        {
+          "class": "Button",
+          "control_id": 580,
+          "text": "复制\r\n\r\n完整\r\n\r\n代码",
+          "enabled": true
+        },
+        {
+          "class": "Button",
+          "control_id": 520,
+          "text": "",
+          "enabled": true
+        },
+        {
+          "class": "msctls_updown32",
+          "control_id": 564,
+          "text": "",
+          "enabled": true
+        },
+        {
+          "class": "Edit",
+          "control_id": 560,
+          "text": "0",
+          "enabled": true
+        },
+        {
+          "class": "Afx:400000:b:10003:900015:0",
+          "control_id": 550,
+          "text": "Y：",
+          "enabled": true
+        },
+        {
+          "class": "msctls_updown32",
+          "control_id": 544,
+          "text": "",
+          "enabled": true
+        },
+        {
+          "class": "Edit",
+          "control_id": 540,
+          "text": "0",
+          "enabled": true
+        },
+        {
+          "class": "Afx:400000:b:10003:900015:0",
+          "control_id": 530,
+          "text": "X：",
+          "enabled": true
+        },
+        {
+          "class": "Button",
+          "control_id": 390,
+          "text": "物理图片拼图",
+          "enabled": true
+        },
+        {
+          "class": "Button",
+          "control_id": 200,
+          "text": "拼图预览",
+          "enabled": true
+        },
+        {
+          "class": "Afx:400000:b:10003:900015:0",
+          "control_id": 190,
+          "text": "代码：",
+          "enabled": true
+        },
+        {
+          "class": "Edit",
+          "control_id": 180,
+          "text": "01 00 00 08 F0 00 00 00 28 04 E8 80 80 80 A8 01 E8 80 80 80 FF ",
+          "enabled": true
+        },
+        {
+          "class": "Button",
+          "control_id": 110,
+          "text": "取消",
+          "enabled": true
+        },
+        {
+          "class": "Button",
+          "control_id": 100,
+          "text": "确定",
+          "enabled": true
+        }
+      ],
+      "context_probes": [
+        {
+          "state": "武器规律/物理图片规律",
+          "control_index": 0,
+          "point_index": 0,
+          "class": "Button",
+          "control_id": 710,
+          "text": "运动规律模拟器",
+          "point": [
+            65,
+            15
+          ],
+          "used_real_input": true,
+          "popup_count": 0,
+          "menus": []
+        },
+        {
+          "state": "武器规律/物理图片规律",
+          "control_index": 1,
+          "point_index": 0,
+          "class": "CPageControl",
+          "control_id": 120,
+          "text": "",
+          "point": [
+            390,
+            245
+          ],
+          "used_real_input": true,
+          "popup_count": 0,
+          "menus": []
+        },
+        {
+          "state": "武器规律/物理图片规律",
+          "control_index": 2,
+          "point_index": 0,
+          "class": "Button",
+          "control_id": 360,
+          "text": "基本设置",
+          "point": [
+            195,
+            45
+          ],
+          "used_real_input": true,
+          "popup_count": 1,
+          "menus": [
+            [
+              {
+                "index": 0,
+                "text": "撤消(&U)",
+                "id": 772
+              },
+              {
+                "index": 1,
+                "text": "",
+                "id": 0
+              },
+              {
+                "index": 2,
+                "text": "剪切(&T)",
+                "id": 768
+              },
+              {
+                "index": 3,
+                "text": "复制(&C)",
+                "id": 769
+              },
+              {
+                "index": 4,
+                "text": "粘贴(&P)",
+                "id": 770
+              },
+              {
+                "index": 5,
+                "text": "删除(&D)",
+                "id": 771
+              },
+              {
+                "index": 6,
+                "text": "",
+                "id": 0
+              },
+              {
+                "index": 7,
+                "text": "全选(&A)",
+                "id": 177
+              },
+              {
+                "index": 8,
+                "text": "",
+                "id": 0
+              },
+              {
+                "index": 9,
+                "text": "从右到左的阅读顺序(&R)",
+                "id": 32768
+              },
+              {
+                "index": 10,
+                "text": "显示 Unicode 控制字符(&S)",
+                "id": 32769
+              },
+              {
+                "index": 11,
+                "text": "插入 Unicode 控制字符(&I)",
+                "id": null,
+                "items": [
+                  {
+                    "index": 0,
+                    "text": "LRM \t&Left-to-right mark",
+                    "id": 32772
+                  },
+                  {
+                    "index": 1,
+                    "text": "RLM \t&Right-to-left mark",
+                    "id": 32773
+                  },
+                  {
+                    "index": 2,
+                    "text": "ZWJ \tZero width &joiner",
+                    "id": 32770
+                  },
+                  {
+                    "index": 3,
+                    "text": "ZWNJ\tZero width &non-joiner",
+                    "id": 32771
+                  },
+                  {
+                    "index": 4,
+                    "text": "LRE \tStart of left-to-right &embedding",
+                    "id": 32774
+                  },
+                  {
+                    "index": 5,
+                    "text": "RLE \tStart of right-to-left e&mbedding",
+                    "id": 32775
+                  },
+                  {
+                    "index": 6,
+                    "text": "LRO \tStart of left-to-right &override",
+                    "id": 32776
+                  },
+                  {
+                    "index": 7,
+                    "text": "RLO \tStart of right-to-left o&verride",
+                    "id": 32777
+                  },
+                  {
+                    "index": 8,
+                    "text": "PDF \t&Pop directional formatting",
+                    "id": 32778
+                  },
+                  {
+                    "index": 9,
+                    "text": "NADS\tN&ational digit shapes substitution",
+                    "id": 32779
+                  },
+                  {
+                    "index": 10,
+                    "text": "NODS\tNominal (European) &digit shapes",
+                    "id": 32780
+                  },
+                  {
+                    "index": 11,
+                    "text": "ASS \tActivate &symmetric swapping",
+                    "id": 32781
+                  },
+                  {
+                    "index": 12,
+                    "text": "ISS \tInhibit s&ymmetric swapping",
+                    "id": 32782
+                  },
+                  {
+                    "index": 13,
+                    "text": "AAFS\tActivate Arabic &form shaping",
+                    "id": 32783
+                  },
+                  {
+                    "index": 14,
+                    "text": "IAFS\tInhibit Arabic form s&haping",
+                    "id": 32784
+                  },
+                  {
+                    "index": 15,
+                    "text": "RS  \tRecord Separator (&Block separator)",
+                    "id": 32785
+                  },
+                  {
+                    "index": 16,
+                    "text": "US  \tUnit Separator (&Segment separator)",
+                    "id": 32786
+                  }
+                ]
+              },
+              {
+                "index": 12,
+                "text": "",
+                "id": 0
+              },
+              {
+                "index": 13,
+                "text": "关闭输入法(&L)",
+                "id": 10001
+              },
+              {
+                "index": 14,
+                "text": "汉字重选(&R)",
+                "id": 10003
+              }
+            ]
+          ]
+        },
+        {
+          "state": "武器规律/物理图片规律",
+          "control_index": 3,
+          "point_index": 0,
+          "class": "Edit",
+          "control_id": 370,
+          "text": "新爆炸点拼图1（我方）",
+          "point": [
+            145,
+            20
+          ],
+          "used_real_input": false,
+          "popup_count": 1,
+          "menus": [
+            [
+              {
+                "index": 0,
+                "text": "撤消(&U)",
+                "id": 772
+              },
+              {
+                "index": 1,
+                "text": "",
+                "id": 0
+              },
+              {
+                "index": 2,
+                "text": "剪切(&T)",
+                "id": 768
+              },
+              {
+                "index": 3,
+                "text": "复制(&C)",
+                "id": 769
+              },
+              {
+                "index": 4,
+                "text": "粘贴(&P)",
+                "id": 770
+              },
+              {
+                "index": 5,
+                "text": "删除(&D)",
+                "id": 771
+              },
+              {
+                "index": 6,
+                "text": "",
+                "id": 0
+              },
+              {
+                "index": 7,
+                "text": "全选(&A)",
+                "id": 177
+              },
+              {
+                "index": 8,
+                "text": "",
+                "id": 0
+              },
+              {
+                "index": 9,
+                "text": "从右到左的阅读顺序(&R)",
+                "id": 32768
+              },
+              {
+                "index": 10,
+                "text": "显示 Unicode 控制字符(&S)",
+                "id": 32769
+              },
+              {
+                "index": 11,
+                "text": "插入 Unicode 控制字符(&I)",
+                "id": null,
+                "items": [
+                  {
+                    "index": 0,
+                    "text": "LRM \t&Left-to-right mark",
+                    "id": 32772
+                  },
+                  {
+                    "index": 1,
+                    "text": "RLM \t&Right-to-left mark",
+                    "id": 32773
+                  },
+                  {
+                    "index": 2,
+                    "text": "ZWJ \tZero width &joiner",
+                    "id": 32770
+                  },
+                  {
+                    "index": 3,
+                    "text": "ZWNJ\tZero width &non-joiner",
+                    "id": 32771
+                  },
+                  {
+                    "index": 4,
+                    "text": "LRE \tStart of left-to-right &embedding",
+                    "id": 32774
+                  },
+                  {
+                    "index": 5,
+                    "text": "RLE \tStart of right-to-left e&mbedding",
+                    "id": 32775
+                  },
+                  {
+                    "index": 6,
+                    "text": "LRO \tStart of left-to-right &override",
+                    "id": 32776
+                  },
+                  {
+                    "index": 7,
+                    "text": "RLO \tStart of right-to-left o&verride",
+                    "id": 32777
+                  },
+                  {
+                    "index": 8,
+                    "text": "PDF \t&Pop directional formatting",
+                    "id": 32778
+                  },
+                  {
+                    "index": 9,
+                    "text": "NADS\tN&ational digit shapes substitution",
+                    "id": 32779
+                  },
+                  {
+                    "index": 10,
+                    "text": "NODS\tNominal (European) &digit shapes",
+                    "id": 32780
+                  },
+                  {
+                    "index": 11,
+                    "text": "ASS \tActivate &symmetric swapping",
+                    "id": 32781
+                  },
+                  {
+                    "index": 12,
+                    "text": "ISS \tInhibit s&ymmetric swapping",
+                    "id": 32782
+                  },
+                  {
+                    "index": 13,
+                    "text": "AAFS\tActivate Arabic &form shaping",
+                    "id": 32783
+                  },
+                  {
+                    "index": 14,
+                    "text": "IAFS\tInhibit Arabic form s&haping",
+                    "id": 32784
+                  },
+                  {
+                    "index": 15,
+                    "text": "RS  \tRecord Separator (&Block separator)",
+                    "id": 32785
+                  },
+                  {
+                    "index": 16,
+                    "text": "US  \tUnit Separator (&Segment separator)",
+                    "id": 32786
+                  }
+                ]
+              },
+              {
+                "index": 12,
+                "text": "",
+                "id": 0
+              },
+              {
+                "index": 13,
+                "text": "关闭输入法(&L)",
+                "id": 10001
+              },
+              {
+                "index": 14,
+                "text": "汉字重选(&R)",
+                "id": 10003
+              }
+            ]
+          ]
+        },
+        {
+          "state": "武器规律/物理图片规律",
+          "control_index": 4,
+          "point_index": 0,
+          "class": "Button",
+          "control_id": 330,
+          "text": "规律选择",
+          "point": [
+            180,
+            220
+          ],
+          "used_real_input": true,
+          "popup_count": 0,
+          "menus": []
+        },
+        {
+          "state": "武器规律/物理图片规律",
+          "control_index": 5,
+          "point_index": 0,
+          "class": "ListBox",
+          "control_id": 340,
+          "text": "",
+          "point": [
+            170,
+            205
+          ],
+          "used_real_input": true,
+          "popup_count": 0,
+          "menus": []
+        },
+        {
+          "state": "武器规律/物理图片规律",
+          "control_index": 5,
+          "point_index": 1,
+          "class": "ListBox",
+          "control_id": 340,
+          "text": "",
+          "point": [
+            56,
+            68
+          ],
+          "used_real_input": true,
+          "popup_count": 0,
+          "menus": []
+        },
+        {
+          "state": "武器规律/物理图片规律",
+          "control_index": 5,
+          "point_index": 2,
+          "class": "ListBox",
+          "control_id": 340,
+          "text": "",
+          "point": [
+            170,
+            68
+          ],
+          "used_real_input": true,
+          "popup_count": 0,
+          "menus": []
+        },
+        {
+          "state": "武器规律/物理图片规律",
+          "control_index": 5,
+          "point_index": 3,
+          "class": "ListBox",
+          "control_id": 340,
+          "text": "",
+          "point": [
+            283,
+            68
+          ],
+          "used_real_input": true,
+          "popup_count": 0,
+          "menus": []
+        },
+        {
+          "state": "武器规律/物理图片规律",
+          "control_index": 5,
+          "point_index": 4,
+          "class": "ListBox",
+          "control_id": 340,
+          "text": "",
+          "point": [
+            56,
+            205
+          ],
+          "used_real_input": true,
+          "popup_count": 0,
+          "menus": []
+        },
+        {
+          "state": "武器规律/物理图片规律",
+          "control_index": 5,
+          "point_index": 5,
+          "class": "ListBox",
+          "control_id": 340,
+          "text": "",
+          "point": [
+            283,
+            205
+          ],
+          "used_real_input": true,
+          "popup_count": 0,
+          "menus": []
+        },
+        {
+          "state": "武器规律/物理图片规律",
+          "control_index": 5,
+          "point_index": 6,
+          "class": "ListBox",
+          "control_id": 340,
+          "text": "",
+          "point": [
+            56,
+            341
+          ],
+          "used_real_input": true,
+          "popup_count": 0,
+          "menus": []
+        },
+        {
+          "state": "武器规律/物理图片规律",
+          "control_index": 5,
+          "point_index": 7,
+          "class": "ListBox",
+          "control_id": 340,
+          "text": "",
+          "point": [
+            170,
+            341
+          ],
+          "used_real_input": true,
+          "popup_count": 0,
+          "menus": []
+        },
+        {
+          "state": "武器规律/物理图片规律",
+          "control_index": 5,
+          "point_index": 8,
+          "class": "ListBox",
+          "control_id": 340,
+          "text": "",
+          "point": [
+            283,
+            341
+          ],
+          "used_real_input": true,
+          "popup_count": 0,
+          "menus": []
+        },
+        {
+          "state": "武器规律/物理图片规律",
+          "control_index": 6,
+          "point_index": 0,
+          "class": "Button",
+          "control_id": 210,
+          "text": "物体图片",
+          "point": [
+            195,
+            170
+          ],
+          "used_real_input": true,
+          "popup_count": 0,
+          "menus": []
+        },
+        {
+          "state": "武器规律/物理图片规律",
+          "control_index": 7,
+          "point_index": 0,
+          "class": "ComboBox",
+          "control_id": 620,
+          "text": "[00]000：80010",
+          "point": [
+            90,
+            15
+          ],
+          "used_real_input": true,
+          "popup_count": 0,
+          "menus": []
+        },
+        {
+          "state": "武器规律/物理图片规律",
+          "control_index": 8,
+          "point_index": 0,
+          "class": "Button",
+          "control_id": 580,
+          "text": "复制\r\n\r\n完整\r\n\r\n代码",
+          "point": [
+            20,
+            50
+          ],
+          "used_real_input": true,
+          "popup_count": 0,
+          "menus": []
+        },
+        {
+          "state": "武器规律/物理图片规律",
+          "control_index": 9,
+          "point_index": 0,
+          "class": "Button",
+          "control_id": 520,
+          "text": "",
+          "point": [
+            95,
+            55
+          ],
+          "used_real_input": true,
+          "popup_count": 0,
+          "menus": []
+        },
+        {
+          "state": "武器规律/物理图片规律",
+          "control_index": 10,
+          "point_index": 0,
+          "class": "Edit",
+          "control_id": 560,
+          "text": "0",
+          "point": [
+            35,
+            15
+          ],
+          "used_real_input": false,
+          "popup_count": 1,
+          "menus": [
+            [
+              {
+                "index": 0,
+                "text": "撤消(&U)",
+                "id": 772
+              },
+              {
+                "index": 1,
+                "text": "",
+                "id": 0
+              },
+              {
+                "index": 2,
+                "text": "剪切(&T)",
+                "id": 768
+              },
+              {
+                "index": 3,
+                "text": "复制(&C)",
+                "id": 769
+              },
+              {
+                "index": 4,
+                "text": "粘贴(&P)",
+                "id": 770
+              },
+              {
+                "index": 5,
+                "text": "删除(&D)",
+                "id": 771
+              },
+              {
+                "index": 6,
+                "text": "",
+                "id": 0
+              },
+              {
+                "index": 7,
+                "text": "全选(&A)",
+                "id": 177
+              },
+              {
+                "index": 8,
+                "text": "",
+                "id": 0
+              },
+              {
+                "index": 9,
+                "text": "从右到左的阅读顺序(&R)",
+                "id": 32768
+              },
+              {
+                "index": 10,
+                "text": "显示 Unicode 控制字符(&S)",
+                "id": 32769
+              },
+              {
+                "index": 11,
+                "text": "插入 Unicode 控制字符(&I)",
+                "id": null,
+                "items": [
+                  {
+                    "index": 0,
+                    "text": "LRM \t&Left-to-right mark",
+                    "id": 32772
+                  },
+                  {
+                    "index": 1,
+                    "text": "RLM \t&Right-to-left mark",
+                    "id": 32773
+                  },
+                  {
+                    "index": 2,
+                    "text": "ZWJ \tZero width &joiner",
+                    "id": 32770
+                  },
+                  {
+                    "index": 3,
+                    "text": "ZWNJ\tZero width &non-joiner",
+                    "id": 32771
+                  },
+                  {
+                    "index": 4,
+                    "text": "LRE \tStart of left-to-right &embedding",
+                    "id": 32774
+                  },
+                  {
+                    "index": 5,
+                    "text": "RLE \tStart of right-to-left e&mbedding",
+                    "id": 32775
+                  },
+                  {
+                    "index": 6,
+                    "text": "LRO \tStart of left-to-right &override",
+                    "id": 32776
+                  },
+                  {
+                    "index": 7,
+                    "text": "RLO \tStart of right-to-left o&verride",
+                    "id": 32777
+                  },
+                  {
+                    "index": 8,
+                    "text": "PDF \t&Pop directional formatting",
+                    "id": 32778
+                  },
+                  {
+                    "index": 9,
+                    "text": "NADS\tN&ational digit shapes substitution",
+                    "id": 32779
+                  },
+                  {
+                    "index": 10,
+                    "text": "NODS\tNominal (European) &digit shapes",
+                    "id": 32780
+                  },
+                  {
+                    "index": 11,
+                    "text": "ASS \tActivate &symmetric swapping",
+                    "id": 32781
+                  },
+                  {
+                    "index": 12,
+                    "text": "ISS \tInhibit s&ymmetric swapping",
+                    "id": 32782
+                  },
+                  {
+                    "index": 13,
+                    "text": "AAFS\tActivate Arabic &form shaping",
+                    "id": 32783
+                  },
+                  {
+                    "index": 14,
+                    "text": "IAFS\tInhibit Arabic form s&haping",
+                    "id": 32784
+                  },
+                  {
+                    "index": 15,
+                    "text": "RS  \tRecord Separator (&Block separator)",
+                    "id": 32785
+                  },
+                  {
+                    "index": 16,
+                    "text": "US  \tUnit Separator (&Segment separator)",
+                    "id": 32786
+                  }
+                ]
+              },
+              {
+                "index": 12,
+                "text": "",
+                "id": 0
+              },
+              {
+                "index": 13,
+                "text": "关闭输入法(&L)",
+                "id": 10001
+              },
+              {
+                "index": 14,
+                "text": "汉字重选(&R)",
+                "id": 10003
+              }
+            ]
+          ]
+        },
+        {
+          "state": "武器规律/物理图片规律",
+          "control_index": 11,
+          "point_index": 0,
+          "class": "Edit",
+          "control_id": 540,
+          "text": "0",
+          "point": [
+            35,
+            15
+          ],
+          "used_real_input": false,
+          "popup_count": 1,
+          "menus": [
+            [
+              {
+                "index": 0,
+                "text": "撤消(&U)",
+                "id": 772
+              },
+              {
+                "index": 1,
+                "text": "",
+                "id": 0
+              },
+              {
+                "index": 2,
+                "text": "剪切(&T)",
+                "id": 768
+              },
+              {
+                "index": 3,
+                "text": "复制(&C)",
+                "id": 769
+              },
+              {
+                "index": 4,
+                "text": "粘贴(&P)",
+                "id": 770
+              },
+              {
+                "index": 5,
+                "text": "删除(&D)",
+                "id": 771
+              },
+              {
+                "index": 6,
+                "text": "",
+                "id": 0
+              },
+              {
+                "index": 7,
+                "text": "全选(&A)",
+                "id": 177
+              },
+              {
+                "index": 8,
+                "text": "",
+                "id": 0
+              },
+              {
+                "index": 9,
+                "text": "从右到左的阅读顺序(&R)",
+                "id": 32768
+              },
+              {
+                "index": 10,
+                "text": "显示 Unicode 控制字符(&S)",
+                "id": 32769
+              },
+              {
+                "index": 11,
+                "text": "插入 Unicode 控制字符(&I)",
+                "id": null,
+                "items": [
+                  {
+                    "index": 0,
+                    "text": "LRM \t&Left-to-right mark",
+                    "id": 32772
+                  },
+                  {
+                    "index": 1,
+                    "text": "RLM \t&Right-to-left mark",
+                    "id": 32773
+                  },
+                  {
+                    "index": 2,
+                    "text": "ZWJ \tZero width &joiner",
+                    "id": 32770
+                  },
+                  {
+                    "index": 3,
+                    "text": "ZWNJ\tZero width &non-joiner",
+                    "id": 32771
+                  },
+                  {
+                    "index": 4,
+                    "text": "LRE \tStart of left-to-right &embedding",
+                    "id": 32774
+                  },
+                  {
+                    "index": 5,
+                    "text": "RLE \tStart of right-to-left e&mbedding",
+                    "id": 32775
+                  },
+                  {
+                    "index": 6,
+                    "text": "LRO \tStart of left-to-right &override",
+                    "id": 32776
+                  },
+                  {
+                    "index": 7,
+                    "text": "RLO \tStart of right-to-left o&verride",
+                    "id": 32777
+                  },
+                  {
+                    "index": 8,
+                    "text": "PDF \t&Pop directional formatting",
+                    "id": 32778
+                  },
+                  {
+                    "index": 9,
+                    "text": "NADS\tN&ational digit shapes substitution",
+                    "id": 32779
+                  },
+                  {
+                    "index": 10,
+                    "text": "NODS\tNominal (European) &digit shapes",
+                    "id": 32780
+                  },
+                  {
+                    "index": 11,
+                    "text": "ASS \tActivate &symmetric swapping",
+                    "id": 32781
+                  },
+                  {
+                    "index": 12,
+                    "text": "ISS \tInhibit s&ymmetric swapping",
+                    "id": 32782
+                  },
+                  {
+                    "index": 13,
+                    "text": "AAFS\tActivate Arabic &form shaping",
+                    "id": 32783
+                  },
+                  {
+                    "index": 14,
+                    "text": "IAFS\tInhibit Arabic form s&haping",
+                    "id": 32784
+                  },
+                  {
+                    "index": 15,
+                    "text": "RS  \tRecord Separator (&Block separator)",
+                    "id": 32785
+                  },
+                  {
+                    "index": 16,
+                    "text": "US  \tUnit Separator (&Segment separator)",
+                    "id": 32786
+                  }
+                ]
+              },
+              {
+                "index": 12,
+                "text": "",
+                "id": 0
+              },
+              {
+                "index": 13,
+                "text": "关闭输入法(&L)",
+                "id": 10001
+              },
+              {
+                "index": 14,
+                "text": "汉字重选(&R)",
+                "id": 10003
+              }
+            ]
+          ]
+        },
+        {
+          "state": "武器规律/物理图片规律",
+          "control_index": 12,
+          "point_index": 0,
+          "class": "Button",
+          "control_id": 390,
+          "text": "物理图片拼图",
+          "point": [
+            50,
+            15
+          ],
+          "used_real_input": true,
+          "popup_count": 0,
+          "menus": []
+        },
+        {
+          "state": "武器规律/物理图片规律",
+          "control_index": 13,
+          "point_index": 0,
+          "class": "Button",
+          "control_id": 200,
+          "text": "拼图预览",
+          "point": [
+            55,
+            15
+          ],
+          "used_real_input": true,
+          "popup_count": 0,
+          "menus": []
+        },
+        {
+          "state": "武器规律/物理图片规律",
+          "control_index": 14,
+          "point_index": 0,
+          "class": "Edit",
+          "control_id": 180,
+          "text": "01 00 00 08 F0 00 00 00 28 04 E8 80 80 80 A8 01 E8 80 80 80 FF ",
+          "point": [
+            160,
+            50
+          ],
+          "used_real_input": false,
+          "popup_count": 1,
+          "menus": [
+            [
+              {
+                "index": 0,
+                "text": "撤消(&U)",
+                "id": 772
+              },
+              {
+                "index": 1,
+                "text": "",
+                "id": 0
+              },
+              {
+                "index": 2,
+                "text": "剪切(&T)",
+                "id": 768
+              },
+              {
+                "index": 3,
+                "text": "复制(&C)",
+                "id": 769
+              },
+              {
+                "index": 4,
+                "text": "粘贴(&P)",
+                "id": 770
+              },
+              {
+                "index": 5,
+                "text": "删除(&D)",
+                "id": 771
+              },
+              {
+                "index": 6,
+                "text": "",
+                "id": 0
+              },
+              {
+                "index": 7,
+                "text": "全选(&A)",
+                "id": 177
+              },
+              {
+                "index": 8,
+                "text": "",
+                "id": 0
+              },
+              {
+                "index": 9,
+                "text": "从右到左的阅读顺序(&R)",
+                "id": 32768
+              },
+              {
+                "index": 10,
+                "text": "显示 Unicode 控制字符(&S)",
+                "id": 32769
+              },
+              {
+                "index": 11,
+                "text": "插入 Unicode 控制字符(&I)",
+                "id": null,
+                "items": [
+                  {
+                    "index": 0,
+                    "text": "LRM \t&Left-to-right mark",
+                    "id": 32772
+                  },
+                  {
+                    "index": 1,
+                    "text": "RLM \t&Right-to-left mark",
+                    "id": 32773
+                  },
+                  {
+                    "index": 2,
+                    "text": "ZWJ \tZero width &joiner",
+                    "id": 32770
+                  },
+                  {
+                    "index": 3,
+                    "text": "ZWNJ\tZero width &non-joiner",
+                    "id": 32771
+                  },
+                  {
+                    "index": 4,
+                    "text": "LRE \tStart of left-to-right &embedding",
+                    "id": 32774
+                  },
+                  {
+                    "index": 5,
+                    "text": "RLE \tStart of right-to-left e&mbedding",
+                    "id": 32775
+                  },
+                  {
+                    "index": 6,
+                    "text": "LRO \tStart of left-to-right &override",
+                    "id": 32776
+                  },
+                  {
+                    "index": 7,
+                    "text": "RLO \tStart of right-to-left o&verride",
+                    "id": 32777
+                  },
+                  {
+                    "index": 8,
+                    "text": "PDF \t&Pop directional formatting",
+                    "id": 32778
+                  },
+                  {
+                    "index": 9,
+                    "text": "NADS\tN&ational digit shapes substitution",
+                    "id": 32779
+                  },
+                  {
+                    "index": 10,
+                    "text": "NODS\tNominal (European) &digit shapes",
+                    "id": 32780
+                  },
+                  {
+                    "index": 11,
+                    "text": "ASS \tActivate &symmetric swapping",
+                    "id": 32781
+                  },
+                  {
+                    "index": 12,
+                    "text": "ISS \tInhibit s&ymmetric swapping",
+                    "id": 32782
+                  },
+                  {
+                    "index": 13,
+                    "text": "AAFS\tActivate Arabic &form shaping",
+                    "id": 32783
+                  },
+                  {
+                    "index": 14,
+                    "text": "IAFS\tInhibit Arabic form s&haping",
+                    "id": 32784
+                  },
+                  {
+                    "index": 15,
+                    "text": "RS  \tRecord Separator (&Block separator)",
+                    "id": 32785
+                  },
+                  {
+                    "index": 16,
+                    "text": "US  \tUnit Separator (&Segment separator)",
+                    "id": 32786
+                  }
+                ]
+              },
+              {
+                "index": 12,
+                "text": "",
+                "id": 0
+              },
+              {
+                "index": 13,
+                "text": "关闭输入法(&L)",
+                "id": 10001
+              },
+              {
+                "index": 14,
+                "text": "汉字重选(&R)",
+                "id": 10003
+              }
+            ]
+          ]
+        },
+        {
+          "state": "武器规律/物理图片规律",
+          "control_index": 15,
+          "point_index": 0,
+          "class": "Button",
+          "control_id": 110,
+          "text": "取消",
+          "point": [
+            45,
+            15
+          ],
+          "used_real_input": true,
+          "popup_count": 0,
+          "menus": []
+        },
+        {
+          "state": "武器规律/物理图片规律",
+          "control_index": 16,
+          "point_index": 0,
+          "class": "Button",
+          "control_id": 100,
+          "text": "确定",
+          "point": [
+            45,
+            15
+          ],
+          "used_real_input": true,
+          "popup_count": 0,
+          "menus": []
+        }
+      ]
+    }
+  ]
+}

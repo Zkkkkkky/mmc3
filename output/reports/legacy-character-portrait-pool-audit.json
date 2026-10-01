@@ -1,0 +1,40 @@
+[
+  {
+    "path": "references\\rom\\baselines\\DC_kuorong.nes",
+    "sha256": "1DDD4F74B2D3ACEAA8A0BC4A6846BE8E6148C858C2D8EA5A1F6E0A04F0AD4A75",
+    "portrait_root": "$AA36",
+    "configuration_root": "$ADB9",
+    "used_end": "$B2C8",
+    "capacity": 2992,
+    "used": 2194,
+    "remaining": 798,
+    "unique_portraits": 71,
+    "unique_configurations": 85,
+    "configuration_record_lengths": {
+      "9": 67,
+      "10": 18
+    },
+    "exact_rebuild": true,
+    "mismatch_count": 0,
+    "first_mismatches": []
+  },
+  {
+    "path": "output\\build\\legacy-diff-audit\\m05-reference-baseline.nes",
+    "sha256": "C5D2C1DFBE0DC39AFC9EFFD314C082F121B98C9AD67C4825B1C9DD4B9E991954",
+    "portrait_root": "$A9AA",
+    "configuration_root": "$AE53",
+    "used_end": "$B526",
+    "capacity": 3132,
+    "used": 2940,
+    "remaining": 192,
+    "unique_portraits": 113,
+    "unique_configurations": 134,
+    "configuration_record_lengths": {
+      "9": 105,
+      "10": 29
+    },
+    "exact_rebuild": true,
+    "mismatch_count": 0,
+    "first_mismatches": []
+  }
+]

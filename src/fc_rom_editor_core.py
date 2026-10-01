@@ -10,7 +10,7 @@ from contextlib import contextmanager
 from dataclasses import dataclass, replace
 from datetime import datetime
 from pathlib import Path
-from collections.abc import Iterable, Iterator
+from collections.abc import Callable, Iterable, Iterator
 
 from fc_editor.codecs import (
     ActionEventCodec,
@@ -35,6 +35,8 @@ from fc_editor.codecs import (
     MapTriggerCodec,
     PersuasionRule,
     PersuasionRuleCodec,
+    ProductionCreditsCodec,
+    ProductionCreditsRecord,
     ScenarioLayoutCodec,
     StoryTextCodec,
     UnitCodec,
@@ -50,6 +52,13 @@ from fc_editor.constants import (
     UNIT_WEAPON_SLOT_COUNT,
     WEAPON_RECORD_SIZE,
 )
+from fc_editor.codecs.bank24_composite import file_offset as bank24_file_offset
+from fc_editor.codecs.bank24_composite import character_count as bank24_character_count
+from fc_editor.codecs.bank24_composite import parse as parse_bank24
+from fc_editor.codecs.bank24_composite import replacement_patches as bank24_replacement_patches
+from fc_editor.codecs.bank24_composite import roots as bank24_roots
+from fc_editor.codecs.bank24_composite import with_unit_attribute
+from fc_editor.codecs.character_roster import addition_patches as character_addition_patches
 from fc_editor.errors import ProjectFormatError, RomFormatError
 from fc_editor.dc_text import (
     concise_dc_text,
@@ -100,10 +109,19 @@ from fc_editor.expansion_unit import (
     NAME_TABLE,
     NAME_OLD_DATA_END,
     NAME_OLD_DATA_START,
+    PACKED_COMPOSITION_DATA_START,
     SINGLE_RESOURCE_TABLE,
     SINGLE_RESOURCE_DATA_START,
+    STANDALONE_UNIT_ATTRIBUTE_RESOURCE_ID,
+    STANDALONE_UNIT_NAME_CANONICAL_TABLE,
+    STANDALONE_UNIT_NAME_DATA_START,
+    STANDALONE_UNIT_NAME_RESOURCE_ID,
     SOURCE_CONFIGURATION_PAIR,
+    SOURCE_COMPOSITION_PAIR,
     SOURCE_CORE_PAIR,
+    read_stock_composition_layout,
+    repack_stock_composition,
+    source_configuration_table,
     UNIT_ATTRIBUTE_SELECTOR,
     UNIT_BODY_SELECTOR,
     UNIT_CONFIGURATION_SELECTOR,
@@ -112,7 +130,12 @@ from fc_editor.expansion_unit import (
     UNIT_ID_COUNT,
     UnitExpansionRecords,
     extract_unit_expansion_records,
+    pack_standalone_unit_attributes,
+    pack_standalone_unit_names,
     pack_unit_expansion,
+    standalone_unit_attribute_bank,
+    standalone_unit_name_bank,
+    standalone_unit_name_capacity,
     validate_unit_expansion_payload,
 )
 from fc_editor.models import (
@@ -153,6 +176,8 @@ class EditHistoryEntry:
     font_mappings_after: tuple[tuple[bytes, str], ...] = ()
     animation_labels_before: tuple[tuple[tuple[str, int], str], ...] = ()
     animation_labels_after: tuple[tuple[tuple[str, int], str], ...] = ()
+    disabled_builtins_before: tuple[bytes, ...] = ()
+    disabled_builtins_after: tuple[bytes, ...] = ()
 
 
 @dataclass(frozen=True)
@@ -161,6 +186,34 @@ class ProjectSnapshot:
     allocations: tuple[Allocation, ...]
     font_mappings: tuple[tuple[bytes, str], ...] = ()
     animation_labels: tuple[tuple[tuple[str, int], str], ...] = ()
+    disabled_builtins: tuple[bytes, ...] = ()
+
+
+@dataclass(frozen=True)
+class UnitCompositionPoolStatus:
+    """Validated runtime allocation for variable-length unit image scripts."""
+
+    shared: bool
+    body_used: int
+    fragment_used: int
+    body_capacity: int
+    fragment_capacity: int
+
+    @property
+    def total_used(self) -> int:
+        return self.body_used + self.fragment_used
+
+    @property
+    def total_capacity(self) -> int:
+        return (
+            self.body_capacity
+            if self.shared
+            else self.body_capacity + self.fragment_capacity
+        )
+
+    @property
+    def total_available(self) -> int:
+        return self.total_capacity - self.total_used
 
 
 @dataclass(frozen=True)
@@ -412,6 +465,64 @@ def unit_name_pool_spans(plan: ExpansionPlan | None) -> tuple[tuple[int, int], .
     )
 
 
+def native_unit_name_spill_span(
+    rom: RomImage,
+    data: bytes | bytearray,
+) -> tuple[int, int] | None:
+    """Detect a stock-bank name tail borrowed from unused deployment space."""
+
+    profile = rom.profile
+    if profile.key not in DC_UNIT_NAME_PROFILE_KEYS:
+        return None
+    plan = ExpansionPlan.from_bytes(data)
+    if plan is not None and plan.flags & FLAG_UNITS:
+        return None
+    if standalone_unit_name_bank(data) is not None:
+        return None
+    resource_roots = bank24_roots(data)
+    table_offset = bank24_file_offset(resource_roots[5])
+    native_name_start = resource_roots[5] + profile.unit_name_count * 2
+    native_name_end = resource_roots[6]
+    scenario_table = bank24_file_offset(resource_roots[7])
+    scenario_start = min(
+        int.from_bytes(data[scenario_table + index * 2 : scenario_table + index * 2 + 2], "little")
+        for index in range(profile.scenario_count)
+    )
+    scenario_end = profile.scenario_data_end_pointer
+    if table_offset is None or scenario_start is None or scenario_end is None:
+        return None
+    table_size = profile.unit_name_count * 2
+    raw = bytes(data[table_offset : table_offset + table_size])
+    if len(raw) != table_size:
+        return None
+    pointers = tuple(
+        int.from_bytes(raw[index : index + 2], "little")
+        for index in range(0, table_size, 2)
+    )
+    external = tuple(
+        pointer
+        for pointer in pointers[1:]
+        if not native_name_start <= pointer < native_name_end
+    )
+    if not external:
+        return None
+    if any(not scenario_start <= pointer < scenario_end for pointer in external):
+        raise RomFormatError("机体名称指针落在未登记的原生 Bank 区域。")
+    spill_start = min(external)
+    codec = UnitNameReferenceCodec(
+        rom,
+        data,
+        pointer_table_offset=table_offset,
+        pool_spans=(
+            (native_name_start, native_name_end),
+            (spill_start, scenario_end),
+        ),
+    )
+    for unit_id in range(1, profile.unit_count):
+        codec.record_bytes(unit_id, data)
+    return spill_start, scenario_end
+
+
 def mapper_number(header: bytes) -> int:
     return (header[6] >> 4) | (header[7] & 0xF0)
 
@@ -512,11 +623,50 @@ class RomProject:
     def __init__(self, path: Path, data: bytes) -> None:
         self.path = path
         self.rom_image = RomImage(data, path)
+        self._base_character_profile = self.rom_image.profile
         self.original = self.rom_image.data
         self.working = bytearray(self.original)
+        self._sync_character_profile()
         self.font_character_overrides: dict[bytes, str] = {}
+        self.font_disabled_builtin_tokens: set[bytes] = set()
+        self.font_glyph_renderer: Callable[[str], bytes] | None = None
+        # Text tables are immutable derived views.  UI record lists may ask
+        # for the same channel hundreds of times while opening one window;
+        # rebuilding and sorting the full table for every label dominated ROM
+        # opening and database tab construction.  Include the project-local
+        # font state in the key so direct project/document restoration cannot
+        # return a stale table.
+        self._dc_text_table_cache: dict[
+            tuple[bool, str | None, tuple[tuple[bytes, str], ...], frozenset[bytes]],
+            TextTable,
+        ] = {}
         self.animation_label_overrides: dict[tuple[str, int], str] = {}
         initial_plan = ExpansionPlan.from_bytes(self.working)
+        initial_native_roots = bank24_roots(self.original)
+        initial_native_unit_name_table = bank24_file_offset(initial_native_roots[5])
+        initial_native_unit_name_pointers = tuple(
+            int.from_bytes(
+                self.original[
+                    initial_native_unit_name_table + index * 2 :
+                    initial_native_unit_name_table + index * 2 + 2
+                ],
+                "little",
+            )
+            for index in range(self.profile.unit_name_count)
+        )
+        initial_native_unit_name_first = min(
+            pointer for pointer in initial_native_unit_name_pointers if pointer
+        )
+        initial_standalone_name_bank = (
+            None
+            if initial_plan is not None and initial_plan.flags & FLAG_UNITS
+            else standalone_unit_name_bank(self.working)
+        )
+        initial_standalone_attribute_bank = (
+            None
+            if initial_plan is not None and initial_plan.flags & FLAG_UNITS
+            else standalone_unit_attribute_bank(self.working)
+        )
         self._initial_expansion_plan = initial_plan
         self._unit_name_baseline_pointers: tuple[int, ...] | None = None
         if initial_plan is not None and initial_plan.flags & FLAG_UNITS:
@@ -550,12 +700,82 @@ class RomProject:
                 pair_first_bank=initial_name_bank,
                 pool_spans=unit_name_pool_spans(initial_plan),
             )
+        elif (
+            initial_standalone_name_bank is not None
+            or initial_standalone_attribute_bank is not None
+        ):
+            self.base_unit_codec = (
+                UnitCodec(
+                    self.rom_image,
+                    self.original,
+                    pointer_table_offset=(
+                        bank_file_offset(initial_standalone_attribute_bank)
+                        + ATTRIBUTE_TABLE
+                        - 0x8000
+                    ),
+                    pair_first_bank=initial_standalone_attribute_bank,
+                )
+                if initial_standalone_attribute_bank is not None
+                else UnitCodec(
+                    self.rom_image,
+                    self.original,
+                    pointer_table_offset=bank24_file_offset(initial_native_roots[1]),
+                    pair_first_bank=0x24,
+                )
+            )
+            if initial_standalone_name_bank is None:
+                initial_native_name_spill = native_unit_name_spill_span(
+                    self.rom_image, self.original
+                )
+                self.base_unit_name_codec = UnitNameReferenceCodec(
+                    self.rom_image,
+                    self.original,
+                    pointer_table_offset=initial_native_unit_name_table,
+                    pool_spans=(
+                        ((initial_native_unit_name_first, initial_native_roots[6]),)
+                        + ((initial_native_name_spill,)
+                           if initial_native_name_spill else ())
+                        if self.profile.key in DC_UNIT_NAME_PROFILE_KEYS
+                        else ()
+                    ),
+                )
+            else:
+                pair_offset = bank_file_offset(initial_standalone_name_bank)
+                self.base_unit_name_codec = UnitNameReferenceCodec(
+                    self.rom_image,
+                    self.original,
+                    pointer_table_offset=(
+                        pair_offset + SINGLE_RESOURCE_TABLE - 0x8000
+                    ),
+                    pair_first_bank=initial_standalone_name_bank,
+                    pool_spans=((
+                        STANDALONE_UNIT_NAME_DATA_START,
+                        STANDALONE_UNIT_NAME_DATA_START
+                        + (standalone_unit_name_capacity(
+                            self.working, initial_standalone_name_bank
+                        ) or 0),
+                    ),),
+                    canonical_pointer_table_offset=(
+                        pair_offset + STANDALONE_UNIT_NAME_CANONICAL_TABLE - 0x8000
+                    ),
+                )
         else:
-            self.base_unit_codec = UnitCodec(self.rom_image)
+            self.base_unit_codec = UnitCodec(
+                self.rom_image,
+                self.original,
+                pointer_table_offset=bank24_file_offset(initial_native_roots[1]),
+                pair_first_bank=0x24,
+            )
+            initial_native_name_spill = native_unit_name_spill_span(
+                self.rom_image, self.original
+            )
             self.base_unit_name_codec = UnitNameReferenceCodec(
                 self.rom_image,
+                self.original,
+                pointer_table_offset=initial_native_unit_name_table,
                 pool_spans=(
-                    unit_name_pool_spans(None)
+                    ((initial_native_unit_name_first, initial_native_roots[6]),)
+                    + ((initial_native_name_spill,) if initial_native_name_spill else ())
                     if self.profile.key in DC_UNIT_NAME_PROFILE_KEYS
                     else ()
                 ),
@@ -580,12 +800,30 @@ class RomProject:
             else None
         )
         self.unit_weapon_codec = self.base_unit_weapon_codec
-        self.weapon_codec = WeaponCodec(self.rom_image)
-        self.weapon_name_codec = (
-            WeaponNameReferenceCodec(self.rom_image)
+        self.base_weapon_codec = WeaponCodec(
+            self.rom_image,
+            self.original,
+            pointer_table_offset=bank24_file_offset(initial_native_roots[2]),
+            pair_first_bank=0x24,
+        )
+        self.weapon_codec = self.base_weapon_codec
+        initial_weapon_name_table = bank24_file_offset(initial_native_roots[6])
+        initial_weapon_name_first = int.from_bytes(
+            self.original[initial_weapon_name_table : initial_weapon_name_table + 2],
+            "little",
+        )
+        self.base_weapon_name_codec = (
+            WeaponNameReferenceCodec(
+                self.rom_image,
+                self.original,
+                pointer_table_offset=initial_weapon_name_table,
+                data_first_pointer=initial_weapon_name_first,
+                data_end_pointer=initial_native_roots[7],
+            )
             if self.rom_image.profile.weapon_name_pointer_table_offset is not None
             else None
         )
+        self.weapon_name_codec = self.base_weapon_name_codec
         self.character_name_codec = (
             CharacterNameCodec(self.rom_image)
             if self.rom_image.profile.character_name_pointer_table_offset is not None
@@ -627,7 +865,19 @@ class RomProject:
             )
         else:
             self.base_map_codec = MapCodec(self.rom_image)
-            self.base_scenario_layout_codec = ScenarioLayoutCodec(self.rom_image)
+            initial_native_name_spill = native_unit_name_spill_span(
+                self.rom_image, self.original
+            )
+            self.base_scenario_layout_codec = ScenarioLayoutCodec(
+                self.rom_image,
+                self.original,
+                pointer_table_offset=bank24_file_offset(initial_native_roots[7]),
+                data_end_pointer=(
+                    initial_native_name_spill[0]
+                    if initial_native_name_spill is not None
+                    else None
+                ),
+            )
             self.base_map_trigger_codec = (
                 MapTriggerCodec(self.rom_image)
                 if self.rom_image.profile.map_triggers is not None
@@ -658,6 +908,12 @@ class RomProject:
             else None
         )
         self.chapter_victory_codec = self.base_chapter_victory_codec
+        self.base_production_credits_codec = (
+            ProductionCreditsCodec(self.original)
+            if ProductionCreditsCodec.supports(self.original)
+            else None
+        )
+        self.production_credits_codec = self.base_production_credits_codec
         self.persuasion_rule_codec = (
             PersuasionRuleCodec(self.rom_image)
             if self.rom_image.profile.persuasion_rules is not None
@@ -693,10 +949,39 @@ class RomProject:
         if initial_plan is not None:
             self._reserve_plan_partitions(initial_plan)
             self._reserve_direct_reopen_guards(initial_plan)
+        else:
+            if initial_standalone_name_bank is not None:
+                self.resource_allocator.reserve(
+                    Allocation(
+                        STANDALONE_UNIT_NAME_RESOURCE_ID,
+                        "数据库机体名称扩展池",
+                        bank_file_offset(initial_standalone_name_bank),
+                        PRG_BANK_SIZE * 2,
+                        1,
+                    )
+                )
+            if initial_standalone_attribute_bank is not None:
+                self.resource_allocator.reserve(
+                    Allocation(
+                        STANDALONE_UNIT_ATTRIBUTE_RESOURCE_ID,
+                        "数据库机体属性独立记录池",
+                        bank_file_offset(initial_standalone_attribute_bank),
+                        PRG_BANK_SIZE * 2,
+                        1,
+                    )
+                )
         self.pointer_by_id = self.unit_codec.pointers
         self.ids_by_pointer = self.unit_codec.ids_by_pointer
         self._refresh_dynamic_codecs()
         self._revision = 0
+        self._display_name_cache_revision = 0
+        self._display_name_cache: dict[tuple[str, int], str] = {}
+        self._unit_name_sources_cache_revision = -1
+        self._unit_name_sources_cache: dict[int, tuple[int, ...]] = {}
+        self._chr_tile_cache_revision = 0
+        self._chr_tile_cache: dict[tuple[bool, int], tuple[int, ...]] = {}
+        self._story_text_cache_revision = 0
+        self._story_text_cache: dict[tuple[bool, int, int], StoryTextRecord] = {}
         self._undo_stack: list[EditHistoryEntry] = []
         self._redo_stack: list[EditHistoryEntry] = []
         self._transaction_depth = 0
@@ -733,6 +1018,16 @@ class RomProject:
         project.font_character_overrides = document.font_character_overrides(
             project.rom_image
         )
+        project.font_disabled_builtin_tokens = document.font_disabled_builtins(
+            project.rom_image
+        )
+        invalid_disabled = (
+            project.font_disabled_builtin_tokens
+            - set(default_dc_text_table().byte_to_text)
+        )
+        if invalid_disabled:
+            codes = "、".join(token.hex().upper() for token in sorted(invalid_disabled))
+            raise ProjectFormatError(f"工程停用了非内置字库代码：{codes}")
         project.animation_label_overrides = document.animation_label_overrides(
             project.rom_image
         )
@@ -748,6 +1043,10 @@ class RomProject:
         plan = project.expansion_plan
         if plan is None and any(
             allocation.resource_id.startswith(PARTITION_ALLOCATION_PREFIX)
+            and allocation.resource_id not in {
+                STANDALONE_UNIT_NAME_RESOURCE_ID,
+                STANDALONE_UNIT_ATTRIBUTE_RESOURCE_ID,
+            }
             for allocation in project.expansion_allocations
         ):
             raise ProjectFormatError("工程含自动分区，但 ROM 中没有容量规划表。")
@@ -769,15 +1068,35 @@ class RomProject:
         if len(before) != len(after):
             raise ValueError("撤销快照大小不一致。")
         patches: list[EditPatch] = []
-        position = 0
-        while position < len(before):
-            if before[position] == after[position]:
-                position += 1
+        # Most editor actions touch only a handful of bytes, but the old loop
+        # compared the complete multi-megabyte ROM one Python byte at a time.
+        # Let CPython compare unchanged blocks in native code and inspect bytes
+        # only inside blocks which really changed.  Adjacent runs are merged so
+        # undo/redo semantics stay byte-for-byte identical at block boundaries.
+        block_size = 4096
+        for block_start in range(0, len(before), block_size):
+            block_end = min(block_start + block_size, len(before))
+            if before[block_start:block_end] == after[block_start:block_end]:
                 continue
-            start = position
-            while position < len(before) and before[position] != after[position]:
-                position += 1
-            patches.append(EditPatch(start, before[start:position], after[start:position]))
+            position = block_start
+            while position < block_end:
+                if before[position] == after[position]:
+                    position += 1
+                    continue
+                start = position
+                while position < block_end and before[position] != after[position]:
+                    position += 1
+                if patches and patches[-1].offset + len(patches[-1].before) == start:
+                    previous = patches.pop()
+                    patches.append(EditPatch(
+                        previous.offset,
+                        previous.before + before[start:position],
+                        previous.after + after[start:position],
+                    ))
+                else:
+                    patches.append(EditPatch(
+                        start, before[start:position], after[start:position]
+                    ))
         return tuple(patches)
 
     def _mutation_snapshot(self) -> ProjectSnapshot | None:
@@ -788,6 +1107,7 @@ class RomProject:
             self.resource_allocator.allocations,
             tuple(sorted(self.font_character_overrides.items())),
             tuple(sorted(self.animation_label_overrides.items())),
+            tuple(sorted(self.font_disabled_builtin_tokens)),
         )
 
     def _finish_mutation(self, before: ProjectSnapshot | None, description: str) -> None:
@@ -796,12 +1116,14 @@ class RomProject:
         allocations_after = self.resource_allocator.allocations
         font_mappings_after = tuple(sorted(self.font_character_overrides.items()))
         animation_labels_after = tuple(sorted(self.animation_label_overrides.items()))
+        disabled_builtins_after = tuple(sorted(self.font_disabled_builtin_tokens))
         patches = self._diff_patches(before.data, bytes(self.working))
         if (
             not patches
             and before.allocations == allocations_after
             and before.font_mappings == font_mappings_after
             and before.animation_labels == animation_labels_after
+            and before.disabled_builtins == disabled_builtins_after
         ):
             return
         self._undo_stack.append(
@@ -814,6 +1136,8 @@ class RomProject:
                 font_mappings_after,
                 before.animation_labels,
                 animation_labels_after,
+                before.disabled_builtins,
+                disabled_builtins_after,
             )
         )
         self._redo_stack.clear()
@@ -828,6 +1152,7 @@ class RomProject:
                 self.resource_allocator.allocations,
                 tuple(sorted(self.font_character_overrides.items())),
                 tuple(sorted(self.animation_label_overrides.items())),
+                tuple(sorted(self.font_disabled_builtin_tokens)),
             )
             self._transaction_description = description
         self._transaction_depth += 1
@@ -846,6 +1171,9 @@ class RomProject:
                 )
                 self.animation_label_overrides = dict(
                     self._transaction_before.animation_labels
+                )
+                self.font_disabled_builtin_tokens = set(
+                    self._transaction_before.disabled_builtins
                 )
                 self._refresh_dynamic_codecs()
             raise
@@ -886,6 +1214,7 @@ class RomProject:
         )
         self.font_character_overrides = dict(entry.font_mappings_before)
         self.animation_label_overrides = dict(entry.animation_labels_before)
+        self.font_disabled_builtin_tokens = set(entry.disabled_builtins_before)
         self._refresh_dynamic_codecs()
         self._revision += 1
         self._redo_stack.append(entry)
@@ -902,6 +1231,7 @@ class RomProject:
         )
         self.font_character_overrides = dict(entry.font_mappings_after)
         self.animation_label_overrides = dict(entry.animation_labels_after)
+        self.font_disabled_builtin_tokens = set(entry.disabled_builtins_after)
         self._refresh_dynamic_codecs()
         self._revision += 1
         self._undo_stack.append(entry)
@@ -925,6 +1255,27 @@ class RomProject:
 
         return self._revision
 
+    def invalidate_derived_caches(self) -> None:
+        """Advance the generation after an external whole-project restore.
+
+        Transaction dialogs restore ``working`` and history snapshots directly
+        rather than through a normal edit/undo operation.  Advancing the
+        generation makes CHR, text and display-name readers discard values
+        cached from the cancelled state before any page is repainted.
+        """
+
+        self._revision += 1
+
+    def _cached_display_name(self, kind: str, record_id: int) -> str | None:
+        if self._display_name_cache_revision != self._revision:
+            self._display_name_cache.clear()
+            self._display_name_cache_revision = self._revision
+        return self._display_name_cache.get((kind, record_id))
+
+    def _store_display_name(self, kind: str, record_id: int, value: str) -> str:
+        self._display_name_cache[(kind, record_id)] = value
+        return value
+
     @property
     def expansion_plan(self) -> ExpansionPlan | None:
         return ExpansionPlan.from_bytes(self.working)
@@ -934,6 +1285,48 @@ class RomProject:
         return tuple(
             (banks[index], banks[index + 1])
             for index in range(0, len(banks), 2)
+        )
+
+    def unit_composition_pool_status(self) -> UnitCompositionPoolStatus:
+        """Return independently validated body/fragment script pool usage.
+
+        The 48 KiB unit layout shares one packed pool.  The 64/80 KiB layouts
+        give body and fragment scripts one runtime-visible bank pair each.
+        Calling the payload validator first ensures the displayed capacity is
+        derived from the same pointer directories the game resolves, rather
+        than from a UI-side estimate.
+        """
+
+        plan = self.expansion_plan
+        if plan is None or not plan.flags & FLAG_UNITS:
+            layout = read_stock_composition_layout(self.working)
+            return UnitCompositionPoolStatus(
+                shared=True,
+                body_used=layout.body_used,
+                fragment_used=layout.fragment_used,
+                body_capacity=layout.script_capacity,
+                fragment_capacity=layout.script_capacity,
+            )
+        pairs = self._unit_pairs(plan)
+        records = validate_unit_expansion_payload(self.working, pairs)
+        body_used = sum(map(len, records.body_scripts))
+        fragment_used = sum(map(len, records.fragment_scripts))
+        if len(pairs) == 3:
+            shared_capacity = 0xC000 - PACKED_COMPOSITION_DATA_START
+            return UnitCompositionPoolStatus(
+                shared=True,
+                body_used=body_used,
+                fragment_used=fragment_used,
+                body_capacity=shared_capacity,
+                fragment_capacity=shared_capacity,
+            )
+        capacity = 0xC000 - SINGLE_RESOURCE_DATA_START
+        return UnitCompositionPoolStatus(
+            shared=False,
+            body_used=body_used,
+            fragment_used=fragment_used,
+            body_capacity=capacity,
+            fragment_capacity=capacity,
         )
 
     def _expanded_unit_weapon_table_offset(self, plan: ExpansionPlan) -> int:
@@ -962,17 +1355,149 @@ class RomProject:
         )
         return packed.name_baseline_pointers
 
+    def _sync_character_profile(self) -> None:
+        """Derive the roster size and relocated tables exactly as old saves do."""
+
+        base = self._base_character_profile
+        count = bank24_character_count(self.working)
+        base_count = base.character_normal_name_count or base.character_dialogue_count
+        delta = count - base_count
+        if delta < 0 or count > 0xFF:
+            raise RomFormatError("人物表项数不在已验证的 C8—FF 范围内。")
+        music = base.battle_music
+        if music is not None:
+            music = replace(
+                music,
+                defender_table_offset=music.defender_table_offset + delta,
+                selector_count=count,
+            )
+        dialogue_offset = base.character_dialogue_pointer_table_offset
+        if dialogue_offset is not None:
+            dialogue_offset += delta * 2
+        self.rom_image.profile = replace(
+            base,
+            character_name_count=count,
+            character_normal_name_count=count,
+            character_dialogue_count=count,
+            character_dialogue_pointer_table_offset=dialogue_offset,
+            battle_music=music,
+        )
+
     def _refresh_dynamic_codecs(self) -> None:
         """Rebind decoders after linker metadata, pointers, or undo state changes."""
 
+        self._sync_character_profile()
+
+        native_roots = bank24_roots(self.working)
+        native_unit_table = bank24_file_offset(native_roots[1])
+        native_weapon_table = bank24_file_offset(native_roots[2])
+        native_unit_name_table = bank24_file_offset(native_roots[5])
+        native_unit_name_pointers = tuple(
+            int.from_bytes(
+                self.working[
+                    native_unit_name_table + index * 2 :
+                    native_unit_name_table + index * 2 + 2
+                ],
+                "little",
+            )
+            for index in range(self.profile.unit_name_count)
+        )
+        native_unit_name_first = min(
+            pointer for pointer in native_unit_name_pointers if pointer
+        )
+        self.character_name_codec = (
+            CharacterNameCodec(self.rom_image, self.working)
+            if self.profile.character_name_pointer_table_offset is not None
+            else None
+        )
+        self.character_dialogue_codec = (
+            CharacterDialogueCodec(self.rom_image, self.working)
+            if self.profile.character_dialogue_pointer_table_offset is not None
+            else None
+        )
+        self.battle_music_codec = (
+            BattleMusicCodec(self.rom_image)
+            if self.profile.battle_music is not None
+            else None
+        )
         plan = ExpansionPlan.from_bytes(self.working)
         if plan is None:
-            self.unit_codec = self.base_unit_codec
-            self.unit_name_codec = self.base_unit_name_codec
+            standalone_attribute_bank = standalone_unit_attribute_bank(
+                self.working
+            )
+            self.unit_codec = (
+                UnitCodec(
+                    self.rom_image,
+                    self.working,
+                    pointer_table_offset=(
+                        bank_file_offset(standalone_attribute_bank)
+                        + ATTRIBUTE_TABLE
+                        - 0x8000
+                    ),
+                    pair_first_bank=standalone_attribute_bank,
+                )
+                if standalone_attribute_bank is not None
+                else UnitCodec(
+                    self.rom_image,
+                    self.working,
+                    pointer_table_offset=native_unit_table,
+                    pair_first_bank=0x24,
+                )
+            )
+            standalone_name_bank = standalone_unit_name_bank(self.working)
+            if standalone_name_bank is None:
+                native_name_spill = native_unit_name_spill_span(
+                    self.rom_image, self.working
+                )
+                self.unit_name_codec = (
+                    UnitNameReferenceCodec(
+                        self.rom_image,
+                        self.working,
+                        pool_spans=unit_name_pool_spans(None) + (native_name_spill,),
+                    )
+                    if native_name_spill is not None
+                    else UnitNameReferenceCodec(
+                        self.rom_image,
+                        self.working,
+                        pointer_table_offset=native_unit_name_table,
+                        original_pointers=self.base_unit_name_codec.original_pointers,
+                        pool_spans=((native_unit_name_first, native_roots[6]),),
+                    )
+                )
+            else:
+                native_name_spill = None
+                pair_offset = bank_file_offset(standalone_name_bank)
+                self.unit_name_codec = UnitNameReferenceCodec(
+                    self.rom_image,
+                    self.working,
+                    pointer_table_offset=(
+                        pair_offset + SINGLE_RESOURCE_TABLE - 0x8000
+                    ),
+                    pair_first_bank=standalone_name_bank,
+                    pool_spans=((
+                        STANDALONE_UNIT_NAME_DATA_START,
+                        STANDALONE_UNIT_NAME_DATA_START
+                        + (standalone_unit_name_capacity(
+                            self.working, standalone_name_bank
+                        ) or 0),
+                    ),),
+                    canonical_pointer_table_offset=(
+                        pair_offset
+                        + STANDALONE_UNIT_NAME_CANONICAL_TABLE
+                        - 0x8000
+                    ),
+                )
             self.unit_weapon_codec = self.base_unit_weapon_codec
             self.map_codec = MapCodec(self.rom_image, self.working)
             self.scenario_layout_codec = ScenarioLayoutCodec(
-                self.rom_image, self.working
+                self.rom_image,
+                self.working,
+                pointer_table_offset=bank24_file_offset(native_roots[7]),
+                data_end_pointer=(
+                    native_name_spill[0]
+                    if native_name_spill is not None
+                    else None
+                ),
             )
             self.map_trigger_codec = (
                 MapTriggerCodec(self.rom_image, self.working)
@@ -1028,8 +1553,30 @@ class RomProject:
                 else:
                     self.unit_weapon_codec = None
             else:
-                self.unit_codec = self.base_unit_codec
-                self.unit_name_codec = self.base_unit_name_codec
+                self.unit_codec = UnitCodec(
+                    self.rom_image,
+                    self.working,
+                    pointer_table_offset=native_unit_table,
+                    pair_first_bank=0x24,
+                )
+                native_name_spill = native_unit_name_spill_span(
+                    self.rom_image, self.working
+                )
+                self.unit_name_codec = (
+                    UnitNameReferenceCodec(
+                        self.rom_image,
+                        self.working,
+                        pool_spans=unit_name_pool_spans(None) + (native_name_spill,),
+                    )
+                    if native_name_spill is not None
+                    else UnitNameReferenceCodec(
+                        self.rom_image,
+                        self.working,
+                        pointer_table_offset=native_unit_name_table,
+                        original_pointers=self.base_unit_name_codec.original_pointers,
+                        pool_spans=((native_unit_name_first, native_roots[6]),),
+                    )
+                )
                 self.unit_weapon_codec = self.base_unit_weapon_codec
             if plan.flags & FLAG_MAPS:
                 required_flags = FLAG_MAPS | FLAG_SCENARIOS | FLAG_MAP_TRIGGERS
@@ -1056,7 +1603,15 @@ class RomProject:
             else:
                 self.map_codec = MapCodec(self.rom_image, self.working)
                 self.scenario_layout_codec = ScenarioLayoutCodec(
-                    self.rom_image, self.working
+                    self.rom_image,
+                    self.working,
+                    pointer_table_offset=bank24_file_offset(native_roots[7]),
+                    data_end_pointer=(
+                        native_name_spill[0]
+                        if not (plan.flags & FLAG_UNITS)
+                        and native_name_spill is not None
+                        else None
+                    ),
                 )
                 self.map_trigger_codec = (
                     MapTriggerCodec(self.rom_image, self.working)
@@ -1073,6 +1628,24 @@ class RomProject:
                 self.working,
                 group_bank_overrides=overrides,
             )
+        if self.base_weapon_name_codec is not None:
+            weapon_name_table = bank24_file_offset(native_roots[6])
+            first_pointer = int.from_bytes(
+                self.working[weapon_name_table : weapon_name_table + 2], "little"
+            )
+            self.weapon_name_codec = WeaponNameReferenceCodec(
+                self.rom_image,
+                self.working,
+                pointer_table_offset=weapon_name_table,
+                data_first_pointer=first_pointer,
+                data_end_pointer=native_roots[7],
+            )
+        self.weapon_codec = WeaponCodec(
+            self.rom_image,
+            self.working,
+            pointer_table_offset=native_weapon_table,
+            pair_first_bank=0x24,
+        )
         self.pointer_by_id = self.unit_codec.pointers
         self.ids_by_pointer = self.unit_codec.ids_by_pointer
         if self.base_chapter_title_codec is not None:
@@ -1085,10 +1658,30 @@ class RomProject:
                 self.working,
                 baseline_records=self.base_chapter_victory_codec.records,
             )
+        if self.base_production_credits_codec is not None:
+            self.production_credits_codec = ProductionCreditsCodec(self.working)
 
     @property
     def unit_count(self) -> int:
         return self.profile.unit_count
+
+    @property
+    def character_count(self) -> int:
+        return self.profile.character_normal_name_count
+
+    def add_character(self) -> int:
+        """Append one complete logical character using the reference layout."""
+
+        new_id = self.character_count + 1
+        patches = character_addition_patches(self)
+        with self.transaction(f"新增人物 ${new_id:02X}"):
+            for offset, before, _after in patches:
+                if bytes(self.working[offset:offset + len(before)]) != before:
+                    raise RomFormatError("新增人物涉及的 ROM 区域已变化，请重新载入后再试。")
+            for offset, _before, after in patches:
+                self.working[offset:offset + len(after)] = after
+            self._refresh_dynamic_codecs()
+        return new_id
 
     @property
     def weapon_count(self) -> int:
@@ -1504,7 +2097,32 @@ class RomProject:
             raise ValueError("自动容量规划仅支持 464 KiB 扩容基准 ROM。")
         if self.expansion_plan is not None:
             raise ValueError("容量区已分配；请先使用撤销恢复到分配前。")
-        if self.expansion_allocations:
+        standalone_name_allocation = next(
+            (
+                allocation
+                for allocation in self.expansion_allocations
+                if allocation.resource_id == STANDALONE_UNIT_NAME_RESOURCE_ID
+            ),
+            None,
+        )
+        standalone_attribute_allocation = next(
+            (
+                allocation
+                for allocation in self.expansion_allocations
+                if allocation.resource_id
+                == STANDALONE_UNIT_ATTRIBUTE_RESOURCE_ID
+            ),
+            None,
+        )
+        other_allocations = tuple(
+            allocation
+            for allocation in self.expansion_allocations
+            if allocation.resource_id not in {
+                STANDALONE_UNIT_NAME_RESOURCE_ID,
+                STANDALONE_UNIT_ATTRIBUTE_RESOURCE_ID,
+            }
+        )
+        if other_allocations:
             raise ValueError("请先删除已手工导入的扩展二进制资源再分区。")
         plan = ExpansionPlan.from_kib(map_kib, unit_kib, story_kib)
         if len(plan.map_banks) < 2:
@@ -1514,8 +2132,27 @@ class RomProject:
         if len(plan.story_banks) < 2:
             raise ValueError("剧情文本配额至少需要 16 KiB。")
         source_before_link = bytes(self.working)
-        current_unit_records = extract_unit_expansion_records(source_before_link)
-        original_unit_records = extract_unit_expansion_records(self.original)
+        current_names = tuple(
+            self.unit_name_codec.record_bytes(unit_id, source_before_link)
+            for unit_id in range(1, self.unit_count)
+        )
+        current_attributes = tuple(
+            self.record_bytes(unit_id)
+            for unit_id in range(1, self.unit_count)
+        )
+        current_unit_records = extract_unit_expansion_records(
+            source_before_link,
+            name_spans=self.unit_name_codec.pool_spans,
+            # Native Bank $24 may already have been repacked by old-editor
+            # style copy-on-write edits, so consume the active codec records
+            # rather than assuming the stock attribute table stayed at $875F.
+            attributes_override=current_attributes,
+            # A standalone name resource owns both its pointer table and data
+            # in another bank pair.  The stock core pair therefore cannot be
+            # used to decode those names; pass the already verified codec
+            # records while still extracting every other resource in place.
+            names_override=current_names,
+        )
         name_source_ids: list[int] = []
         for unit_id in range(1, self.unit_count):
             pointer = self.unit_name_codec.pointer(unit_id, source_before_link)
@@ -1526,8 +2163,8 @@ class RomProject:
                 )
             name_source_ids.append(source_ids[0])
         unit_records = UnitExpansionRecords(
-            attributes=current_unit_records.attributes,
-            names=original_unit_records.names,
+            attributes=current_attributes,
+            names=current_names,
             configurations=current_unit_records.configurations,
             body_scripts=current_unit_records.body_scripts,
             fragment_scripts=current_unit_records.fragment_scripts,
@@ -1560,13 +2197,50 @@ class RomProject:
         # A directly reopened derived ROM may contain those repacked pools in
         # ``self.original`` too, so copying from the original would not help.
         link_source = bytearray(source_before_link)
-        scenario_pool_start = self.scenario_layout_codec.pool_offset
+        # Unit attributes are about to move into their permanent independent
+        # partition.  Put only the native attribute family back into its
+        # baseline compressed form first; this restores the stock downstream
+        # directory positions required by the map/deployment runtime hook,
+        # while the edited logical attributes remain preserved in
+        # ``unit_records`` above.
+        if (
+            standalone_unit_attribute_bank(link_source) is None
+            and bank24_roots(link_source) != bank24_roots(self.original)
+        ):
+            current_bank24 = parse_bank24(link_source)
+            original_bank24 = parse_bank24(self.original)
+            normalized_bank24 = replace(
+                current_bank24,
+                unit_attributes=original_bank24.unit_attributes,
+            )
+            for offset, expected, replacement in bank24_replacement_patches(
+                link_source, normalized_bank24
+            ):
+                if bytes(link_source[offset : offset + len(expected)]) != expected:
+                    raise ValueError("Bank $24 八资源区在容量规划前已变化。")
+                link_source[offset : offset + len(replacement)] = replacement
+        link_native_roots = bank24_roots(link_source)
+        link_scenario_codec = ScenarioLayoutCodec(
+            self.rom_image,
+            link_source,
+            pointer_table_offset=bank24_file_offset(link_native_roots[7]),
+        )
+        scenario_pool_start = link_scenario_codec.pool_offset
         scenario_pool_end = (
-            scenario_pool_start + self.scenario_layout_codec.pool_capacity
+            scenario_pool_start + link_scenario_codec.pool_capacity
         )
         link_source[scenario_pool_start:scenario_pool_end] = bytes(
-            self.scenario_layout_codec.pool_capacity
+            link_scenario_codec.pool_capacity
         )
+        native_name_spill = native_unit_name_spill_span(
+            self.rom_image, source_before_link
+        )
+        if native_name_spill is not None:
+            spill_start, spill_end = native_name_spill
+            spill_offset = self.unit_name_codec.pointer_to_file_offset(spill_start)
+            link_source[spill_offset : spill_offset + spill_end - spill_start] = bytes(
+                spill_end - spill_start
+            )
         if not self.map_trigger_codec.is_expanded:
             for _pointer, trigger_pool_start, capacity in (
                 self.map_trigger_codec.pool_segments
@@ -1575,6 +2249,17 @@ class RomProject:
                 link_source[trigger_pool_start:trigger_pool_end] = bytes(capacity)
         before = self._mutation_snapshot()
         try:
+            if standalone_name_allocation is not None:
+                # The names were captured before the planner started.  Release
+                # the temporary name-only reservation so the full unit plan can
+                # migrate them into its own partition in the same transaction.
+                self.resource_allocator.release(STANDALONE_UNIT_NAME_RESOURCE_ID)
+            if standalone_attribute_allocation is not None:
+                # Attribute records were captured above as 255 logical values;
+                # the full unit linker now owns their permanent partition.
+                self.resource_allocator.release(
+                    STANDALONE_UNIT_ATTRIBUTE_RESOURCE_ID
+                )
             self._reserve_plan_partitions(plan)
             self._write_expansion_plan(plan)
             plan = self._relink_map_resources(
@@ -1584,9 +2269,20 @@ class RomProject:
                 plan,
                 source_data=link_source,
             )
+            # The unit packer uses the stock core pair only as a loader/code
+            # template.  Native Bank $24 data may already have been legally
+            # repacked; all five current logical resource families were
+            # captured above, so restore just this template pair while keeping
+            # the live descriptor state from ``link_source``.
+            unit_link_source = bytearray(link_source)
+            core_pair_offset = bank_file_offset(SOURCE_CORE_PAIR)
+            core_pair_end = core_pair_offset + PRG_BANK_SIZE * 2
+            unit_link_source[core_pair_offset:core_pair_end] = self.original[
+                core_pair_offset:core_pair_end
+            ]
             plan = self._link_unit_resources(
                 plan,
-                source_data=link_source,
+                source_data=unit_link_source,
                 records=unit_records,
                 name_source_ids=tuple(name_source_ids),
             )
@@ -1594,7 +2290,13 @@ class RomProject:
             # canonical copy lets a directly reopened output reconstruct stable
             # reset/name identities without an external project file.
             old_name_table = self.profile.unit_name_pointer_table_offset
-            if old_name_table is not None:
+            active_native_name_table = bank24_file_offset(
+                bank24_roots(self.working)[5]
+            )
+            if (
+                old_name_table is not None
+                and active_native_name_table == old_name_table
+            ):
                 old_name_end = old_name_table + self.profile.unit_name_count * 2
                 self.working[old_name_table:old_name_end] = self.original[
                     old_name_table:old_name_end
@@ -1688,8 +2390,19 @@ class RomProject:
         *,
         original: bool = False,
     ) -> tuple[int, ...]:
-        source = self.original if original else bytes(self.working)
-        return self.chr_codec.decode_tile(tile_index, source)
+        if self._chr_tile_cache_revision != self._revision:
+            self._chr_tile_cache.clear()
+            self._chr_tile_cache_revision = self._revision
+        key = (original, tile_index)
+        cached = self._chr_tile_cache.get(key)
+        if cached is not None:
+            return cached
+        # ChrCodec only reads the supplied buffer.  Passing the bytearray
+        # directly avoids copying the complete ROM once per rendered tile.
+        source = self.original if original else self.working
+        pixels = self.chr_codec.decode_tile(tile_index, source)
+        self._chr_tile_cache[key] = pixels
+        return pixels
 
     def set_font_glyphs(self, glyphs: dict[bytes, bytes]) -> None:
         """Replace verified fixed glyph slots atomically, never row padding."""
@@ -1707,11 +2420,216 @@ class RomProject:
             for offset, raw in patches:
                 self.working[offset : offset + 18] = raw
 
-    def dc_text_table(self, *, reference: bool = False) -> TextTable:
-        return dc_text_table_with_overrides(
+    def ensure_font_characters(
+        self,
+        text: str,
+        *,
+        channel: str,
+    ) -> dict[str, bytes]:
+        """Allocate and render every Unicode character missing from this project."""
+
+        _prospective, allocated = self.prospective_font_text_table(
+            text, channel=channel
+        )
+        if not allocated:
+            return {}
+        if self.font_glyph_renderer is None:
+            joined = "、".join(f"“{character}”" for character in allocated)
+            raise ValueError(f"文字 {joined} 没有字库编码；当前环境未接入自动字模生成器。")
+        rendered: dict[bytes, bytes] = {}
+        for character, token in allocated.items():
+            raw = bytes(self.font_glyph_renderer(character))
+            if len(raw) != 18:
+                raise ValueError("自动字模生成器必须返回18字节点阵。")
+            rendered[token] = raw
+        with self.transaction(
+            "自动分配字库："
+            + "、".join(
+                f"{character}→{token.hex().upper()}"
+                for character, token in allocated.items()
+            )
+        ):
+            self.set_font_glyphs(rendered)
+            mappings = dict(self.font_character_overrides)
+            mappings.update(
+                {token: character for character, token in allocated.items()}
+            )
+            self.replace_font_character_overrides(mappings)
+        return allocated
+
+    def prospective_font_text_table(
+        self,
+        text: str,
+        *,
+        channel: str,
+        validate_renderer: bool = False,
+    ):
+        """Build a no-write table showing how missing characters will be routed."""
+
+        from fc_editor.codecs.dc_font import (
+            channel_font_leads,
+            incompatible_channel_tokens,
+            missing_text_characters,
+            safe_channel_tokens,
+        )
+
+        current = self.dc_text_table(channel=channel)
+        missing = missing_text_characters(current, text)
+        if not missing:
+            incompatible = incompatible_channel_tokens(current.encode(text), channel)
+            if incompatible:
+                codes = "、".join(token.hex().upper() for token in incompatible)
+                raise ValueError(f"当前文字包含本区域不能显示的字库代码：{codes}")
+            return current, {}
+        candidates = safe_channel_tokens(
+            bytes(self.original),
+            set(current.byte_to_text),
+            channel,
+            set(self.font_disabled_builtin_tokens),
+            reclaimed_data=bytes(self.working),
+        )
+        if len(candidates) < len(missing):
+            raise ValueError(
+                f"缺少 {len(missing)} 个新字符，但只剩 {len(candidates)} 个安全字模槽；"
+                "请先在文字库中检测并清理未使用的自定义字模。"
+            )
+        allocated = dict(zip(missing, candidates))
+        if validate_renderer and allocated:
+            if self.font_glyph_renderer is None:
+                joined = "、".join(f"“{character}”" for character in allocated)
+                raise ValueError(
+                    f"文字 {joined} 没有字库编码；当前环境未接入自动字模生成器。"
+                )
+            for character in allocated:
+                try:
+                    raw = bytes(self.font_glyph_renderer(character))
+                except ValueError as error:
+                    raise ValueError(
+                        f"文字“{character}”没有字库编码，且无法自动生成字模：{error}"
+                    ) from error
+                if len(raw) != 18:
+                    raise ValueError("自动字模生成器必须返回18字节点阵。")
+        mappings = dict(self.font_character_overrides)
+        mappings.update({token: character for character, token in allocated.items()})
+        prospective = dc_text_table_with_overrides(
+            mappings,
+            excluded_tokens=set(self.font_disabled_builtin_tokens),
+            allowed_glyph_leads=channel_font_leads(channel),
+        )
+        incompatible = incompatible_channel_tokens(prospective.encode(text), channel)
+        if incompatible:
+            codes = "、".join(token.hex().upper() for token in incompatible)
+            raise ValueError(f"当前文字包含本区域不能显示的字库代码：{codes}")
+        return prospective, allocated
+
+    def font_usage_audit(self):
+        from fc_editor.codecs.dc_font import audit_font_usage, font_tokens
+        from fc_editor.dc_text import reference_dc_text_table
+
+        independent = set(font_tokens())
+        builtin = {
+            token
+            for token in reference_dc_text_table().byte_to_text
+            if token in independent
+        }
+        return audit_font_usage(
+            bytes(self.working),
+            builtin,
+            set(self.font_character_overrides),
+            set(self.font_disabled_builtin_tokens),
+        )
+
+    def clear_unused_builtin_font_glyphs(self) -> tuple[bytes, ...]:
+        """Reclaim zero-reference built-ins as project-owned reusable slots."""
+
+        audit = self.font_usage_audit()
+        tokens = audit.unused_builtin_tokens
+        if not tokens:
+            return ()
+        with self.transaction(f"安全回收 {len(tokens)} 个未使用内置字模"):
+            # Recheck immediately before mutation so callers cannot act on a
+            # stale audit after another editor has inserted a reference.
+            current = self.font_usage_audit().unused_builtin_tokens
+            if current != tokens:
+                raise ValueError("字库引用状态已变化，请重新检测后再清理。")
+            self.set_font_glyphs({token: b"\xff" * 18 for token in tokens})
+            self.font_disabled_builtin_tokens.update(tokens)
+        return tokens
+
+    def restore_disabled_builtin_font_glyphs(self) -> tuple[bytes, ...]:
+        """Restore reclaimed built-ins that have not since been reassigned."""
+
+        from fc_editor.codecs.dc_font import glyph_file_offset
+
+        tokens = tuple(
+            sorted(
+                self.font_disabled_builtin_tokens
+                - set(self.font_character_overrides)
+            )
+        )
+        if not tokens:
+            return ()
+        glyphs = {
+            token: bytes(
+                self.original[
+                    glyph_file_offset(token, writable=True) :
+                    glyph_file_offset(token, writable=True) + 18
+                ]
+            )
+            for token in tokens
+        }
+        with self.transaction(f"恢复 {len(tokens)} 个已回收内置字模"):
+            self.set_font_glyphs(glyphs)
+            self.font_disabled_builtin_tokens.difference_update(tokens)
+        return tokens
+
+    def clear_unused_custom_font_glyphs(self) -> tuple[bytes, ...]:
+        audit = self.font_usage_audit()
+        tokens = audit.unused_custom_tokens
+        if not tokens:
+            return ()
+        mappings = {
+            token: character
+            for token, character in self.font_character_overrides.items()
+            if token not in tokens
+        }
+        with self.transaction(f"清理 {len(tokens)} 个未使用自定义字模"):
+            self.set_font_glyphs({token: b"\xff" * 18 for token in tokens})
+            self.replace_font_character_overrides(mappings)
+        return tokens
+
+    def dc_text_table(
+        self,
+        *,
+        reference: bool = False,
+        channel: str | None = None,
+    ) -> TextTable:
+        from fc_editor.codecs.dc_font import channel_font_leads
+
+        key = (
+            reference,
+            channel,
+            tuple(sorted(self.font_character_overrides.items())),
+            frozenset(self.font_disabled_builtin_tokens),
+        )
+        cached = self._dc_text_table_cache.get(key)
+        if cached is not None:
+            return cached
+        table = dc_text_table_with_overrides(
             self.font_character_overrides,
             reference=reference,
+            excluded_tokens=self.font_disabled_builtin_tokens,
+            allowed_glyph_leads=(
+                channel_font_leads(channel) if channel is not None else None
+            ),
         )
+        # A project normally uses five channels and one font state.  Clear
+        # historical generations after edits rather than retaining tables for
+        # every intermediate mapping during a long editing session.
+        if len(self._dc_text_table_cache) > 24:
+            self._dc_text_table_cache.clear()
+        self._dc_text_table_cache[key] = table
+        return table
 
     def replace_font_character_overrides(
         self,
@@ -1728,17 +2646,48 @@ class RomProject:
             glyph_file_offset(token, writable=True)
             if len(character) != 1:
                 raise ValueError("工程字库映射必须是一枚 Unicode 字符。")
-            if token in built_in:
+            if token in built_in and token not in self.font_disabled_builtin_tokens:
                 raise ValueError(
                     f"不能覆盖内置字库代码 {token.hex().upper()}。"
                 )
             checked[bytes(token)] = character
-        if len(set(checked.values())) != len(checked):
-            raise ValueError("工程字库映射不能把多个代码分配给同一字符。")
         before = self._mutation_snapshot()
         self.font_character_overrides = checked
         self.dc_text_table()
         self._finish_mutation(before, f"更新 {len(checked)} 条工程字库映射")
+
+    def replace_font_disabled_builtins(self, tokens: set[bytes]) -> None:
+        """Replace the project mask for safely reclaimed built-in glyphs."""
+
+        from fc_editor.codecs.dc_font import glyph_file_offset
+        from fc_editor.dc_text import reference_dc_text_table
+
+        built_in = set(reference_dc_text_table().byte_to_text)
+        checked: set[bytes] = set()
+        for token in tokens:
+            glyph_file_offset(token, writable=True)
+            if token not in built_in:
+                raise ValueError(f"{token.hex().upper()} 不是可回收的内置字模代码。")
+            checked.add(bytes(token))
+        newly_disabled = checked - self.font_disabled_builtin_tokens
+        eligible = set(self.font_usage_audit().unused_builtin_tokens)
+        if not newly_disabled <= eligible:
+            blocked = "、".join(
+                token.hex().upper() for token in sorted(newly_disabled - eligible)
+            )
+            raise ValueError(f"以下字模已有引用或状态已变化，不能清理：{blocked}")
+        restored_but_reassigned = (
+            self.font_disabled_builtin_tokens - checked
+        ) & set(self.font_character_overrides)
+        if restored_but_reassigned:
+            blocked = "、".join(
+                token.hex().upper() for token in sorted(restored_but_reassigned)
+            )
+            raise ValueError(f"以下已回收代码已分配给新文字，不能直接恢复：{blocked}")
+        before = self._mutation_snapshot()
+        self.font_disabled_builtin_tokens = checked
+        self.dc_text_table()
+        self._finish_mutation(before, f"更新 {len(checked)} 个内置字模停用标记")
 
     def replace_animation_label_overrides(
         self,
@@ -1798,22 +2747,68 @@ class RomProject:
         *,
         body_script: bytes | None = None,
         fragment_script: bytes | None = None,
+        sync_shared_previews: bool = False,
     ) -> None:
-        """Repack one unit's verified composition scripts in the active pool."""
+        """Repack composition scripts, with optional preview-group linkage."""
 
         if not 1 <= unit_id < self.unit_count:
             raise IndexError("请选择有效机体。")
         plan = self.expansion_plan
+        body_ids = (unit_id,)
+        fragment_ids = (unit_id,)
+        if sync_shared_previews and (plan is None or not plan.flags & FLAG_UNITS):
+            original_layout = read_stock_composition_layout(self.original)
+            if body_script is not None:
+                pointer = original_layout.body_pointers[unit_id]
+                body_ids = tuple(
+                    current_id
+                    for current_id in range(1, self.unit_count)
+                    if original_layout.body_pointers[current_id] == pointer
+                )
+            if fragment_script is not None:
+                pointer = original_layout.fragment_pointers[unit_id]
+                fragment_ids = tuple(
+                    current_id
+                    for current_id in range(1, self.unit_count)
+                    if original_layout.fragment_pointers[current_id] == pointer
+                )
         if plan is None or not plan.flags & FLAG_UNITS:
-            raise ValueError("拼图脚本写入需要先完成机体扩容绑定。")
+            before = self._mutation_snapshot()
+            try:
+                pair_image = repack_stock_composition(
+                    self.working,
+                    unit_id,
+                    body_script=body_script,
+                    fragment_script=fragment_script,
+                    body_unit_ids=body_ids,
+                    fragment_unit_ids=fragment_ids,
+                )
+                start = bank_file_offset(SOURCE_COMPOSITION_PAIR)
+                self.working[start:start + len(pair_image)] = pair_image
+                # The stock composition pair is decoded directly by the
+                # appearance helpers; it contains none of the pointer tables
+                # owned by the dynamic database codecs.  Rebuilding every
+                # name, dialogue, map and story decoder here made a simple
+                # body/fragment clear noticeably stall the whole database.
+            except Exception:
+                if before is not None:
+                    self.working[:] = before.data
+                    self.resource_allocator = BankAllocator(
+                        self.profile, self.original, before.allocations
+                    )
+                raise
+            self._finish_mutation(before, f"机体 ${unit_id:02X} · 原生拼图脚本")
+            return
         pairs = self._unit_pairs(plan)
         records = validate_unit_expansion_payload(self.working, pairs)
         body = list(records.body_scripts)
         fragments = list(records.fragment_scripts)
         if body_script is not None:
-            body[unit_id - 1] = bytes(body_script)
+            for target_id in body_ids:
+                body[target_id - 1] = bytes(body_script)
         if fragment_script is not None:
-            fragments[unit_id - 1] = bytes(fragment_script)
+            for target_id in fragment_ids:
+                fragments[target_id - 1] = bytes(fragment_script)
         updated = replace(
             records,
             body_scripts=tuple(body),
@@ -1902,8 +2897,12 @@ class RomProject:
         value = bytes(configuration)
         if len(value) != 10:
             raise ValueError("战斗外观记录必须是10字节。")
-        if value[0] not in (0x00, 0x40, 0x80, 0xC0):
-            raise ValueError("机体类型必须是我方/敌方的小型机或大型机。")
+        type_code = value[0] & 0xC0
+        captain = bool(value[0] & 0x20)
+        if value[0] & 0x1F or type_code not in (0x00, 0x40, 0x80, 0xC0):
+            raise ValueError("机体类型/舰长标志无效。")
+        if captain and not type_code & 0x80:
+            raise ValueError("舰长标志只适用于大型机。")
         if any(color > 0x3F for color in value[1:7]):
             raise ValueError("配色索引必须在 $00—$3F 之间。")
         bank_count = self.chr_tile_count // 64
@@ -1915,7 +2914,12 @@ class RomProject:
         expanded = plan is not None and bool(plan.flags & FLAG_UNITS)
         pair = plan.unit_banks[2] if expanded else SOURCE_CONFIGURATION_PAIR
         pair_offset = bank_file_offset(pair)
-        pointer_table_offset = pair_offset + CONFIGURATION_TABLE - 0x8000
+        configuration_table = (
+            CONFIGURATION_TABLE
+            if expanded
+            else source_configuration_table(self.working)
+        )
+        pointer_table_offset = pair_offset + configuration_table - 0x8000
         pointer_offset = pointer_table_offset + unit_id * 2
         pointer = int.from_bytes(
             self.working[pointer_offset:pointer_offset + 2], "little"
@@ -1926,12 +2930,10 @@ class RomProject:
         new_size = 10 if value[0] & 0x80 else 9
 
         with self.transaction(f"机体 ${unit_id:02X} · 类型与图片地址"):
-            if expanded or new_size <= old_size:
+            if expanded:
                 self.working[record_offset:record_offset + new_size] = value[:new_size]
                 return
 
-            # A stock 9-byte record has no writable tenth byte.  Find a clean,
-            # unclaimed 10-byte slot in the verified configuration cave.
             pointers = tuple(
                 int.from_bytes(
                     self.working[pointer_table_offset + index * 2:
@@ -1940,6 +2942,15 @@ class RomProject:
                 )
                 for index in range(0x100)
             )
+            shared = sum(current == pointer for current in pointers[1:]) > 1
+            if new_size <= old_size and not shared:
+                self.working[record_offset:record_offset + new_size] = value[:new_size]
+                return
+
+            # A growing nine-byte record, or any shared record that must become
+            # independent, is copied into a clean ten-byte cave slot.  Redirect
+            # only the requested logical ID; redirecting every alias made a
+            # paste into one empty slot silently overwrite many other units.
             occupied = {
                 position
                 for current in pointers[1:]
@@ -1963,10 +2974,7 @@ class RomProject:
             relocated_offset = pair_offset + relocated - 0x8000
             self.working[relocated_offset:relocated_offset + 10] = value
             encoded_pointer = relocated.to_bytes(2, "little")
-            for index, current in enumerate(pointers):
-                if index and current == pointer:
-                    start = pointer_table_offset + index * 2
-                    self.working[start:start + 2] = encoded_pointer
+            self.working[pointer_offset:pointer_offset + 2] = encoded_pointer
 
     def set_chr_range(self, first_tile: int, payload: bytes) -> int:
         if not payload or len(payload) % 16:
@@ -2061,6 +3069,107 @@ class RomProject:
         offset = self.record_file_offset(unit_id)
         return bytes(self.working[offset : offset + UNIT_RECORD_SIZE])
 
+    def _install_standalone_unit_attribute_pool(self) -> None:
+        """Give every logical unit its own fixed 16-byte attribute record."""
+
+        if standalone_unit_attribute_bank(self.working) is not None:
+            return
+        plan = self.expansion_plan
+        if plan is not None and plan.flags & FLAG_UNITS:
+            return
+        if self.profile.key != "dc-kuorong-mmc3-v2":
+            raise ValueError("机体属性自动拆分仅支持 464 KiB 扩容基准 ROM。")
+        records = tuple(
+            self.record_bytes(unit_id)
+            for unit_id in range(1, self.unit_count)
+        )
+        image, _pointers = pack_standalone_unit_attributes(
+            self.working, records
+        )
+        allocation: Allocation | None = None
+        last_error: Exception | None = None
+        for region in self.profile.free_prg_regions:
+            for bank in range(region.first_bank, region.end_bank - 1):
+                if bank + 1 >= region.end_bank:
+                    continue
+                candidate = Allocation(
+                    STANDALONE_UNIT_ATTRIBUTE_RESOURCE_ID,
+                    "数据库机体属性独立记录池",
+                    bank_file_offset(bank),
+                    PRG_BANK_SIZE * 2,
+                    1,
+                )
+                try:
+                    self.resource_allocator.reserve(candidate)
+                except ValueError as error:
+                    last_error = error
+                    continue
+                allocation = candidate
+                break
+            if allocation is not None:
+                break
+        if allocation is None:
+            detail = f"：{last_error}" if last_error is not None else ""
+            raise ValueError(f"没有连续的 16 KiB 扩展空间可拆分机体属性{detail}")
+        self.working[allocation.offset : allocation.end] = image
+        descriptor_offset = resource_descriptor_offset(UNIT_ATTRIBUTE_SELECTOR)
+        self.working[descriptor_offset : descriptor_offset + 2] = bytes(
+            (0xF2, allocation.first_bank)
+        )
+        self._refresh_dynamic_codecs()
+
+    def _ensure_unit_attribute_independent(self, unit_id: int) -> None:
+        record = self.unit_codec.decode_record(unit_id, bytes(self.working))
+        if len(record.ids) <= 1:
+            return
+        self._install_standalone_unit_attribute_pool()
+        record = self.unit_codec.decode_record(unit_id, bytes(self.working))
+        if record.ids != (unit_id,):
+            raise RomFormatError("机体属性拆分后仍存在非目标 ID 的共享引用。")
+
+    def _try_repack_native_unit_attribute(
+        self, unit_id: int, raw: bytes
+    ) -> bool:
+        """Copy-on-write one unit inside native Bank $24 when it still fits."""
+
+        if (
+            self.profile.key != "dc-kuorong-mmc3-v2"
+            or self.expansion_plan is not None
+            or standalone_unit_attribute_bank(self.working) is not None
+            or self.unit_codec.pair_first_bank != 0x24
+        ):
+            return False
+        logical = with_unit_attribute(parse_bank24(self.working), unit_id, raw)
+        try:
+            patches = bank24_replacement_patches(self.working, logical)
+        except ValueError as error:
+            if "原生总容量" in str(error):
+                return False
+            raise
+        for offset, expected, replacement in patches:
+            if bytes(self.working[offset : offset + len(expected)]) != expected:
+                raise ValueError("Bank $24 八资源区已变化，请重新载入后再试。")
+            self.working[offset : offset + len(replacement)] = replacement
+        self._refresh_dynamic_codecs()
+        return True
+
+    def _write_unit_attribute_record(self, unit_id: int, raw: bytes) -> None:
+        """Write one logical record, expanding only after native capacity is full."""
+
+        value = bytes(raw)
+        if len(value) != UNIT_RECORD_SIZE:
+            raise ValueError("机体属性记录必须正好为 16 字节。")
+        if self.record_bytes(unit_id) == value:
+            return
+        record = self.unit_codec.decode_record(unit_id, bytes(self.working))
+        if len(record.ids) > 1 and self._try_repack_native_unit_attribute(
+            unit_id, value
+        ):
+            return
+        self._ensure_unit_attribute_independent(unit_id)
+        offset = self.record_file_offset(unit_id)
+        self.working[offset : offset + UNIT_RECORD_SIZE] = value
+
     def get_value(self, unit_id: int, field_key: str, *, original: bool = False) -> int:
         field = self.unit_field(field_key)
         record = self.record_bytes(unit_id, original=original)
@@ -2072,14 +3181,12 @@ class RomProject:
             raise ValueError(
                 f"{field.label}必须在 {field.minimum}—{field.maximum} 之间。"
             )
-        before = self._mutation_snapshot()
-        offset = self.record_file_offset(unit_id) + field.record_offset
-        record = self.record_bytes(unit_id)
-        encoded = field.encode_into(record, value)
-        self.working[offset : offset + field.width] = encoded[
-            field.record_offset : field.record_offset + field.width
-        ]
-        self._finish_mutation(before, f"机体 {unit_id:02X} · {field.label}")
+        if self.get_value(unit_id, field_key) == value:
+            return
+        with self.transaction(f"机体 {unit_id:02X} · {field.label}"):
+            record = self.record_bytes(unit_id)
+            encoded = field.encode_into(record, value)
+            self._write_unit_attribute_record(unit_id, encoded)
 
     def set_record_hex(self, unit_id: int, text: str) -> None:
         compact = "".join(character for character in text if character not in " \t\r\n,-_")
@@ -2089,24 +3196,149 @@ class RomProject:
             record = bytes.fromhex(compact)
         except ValueError as error:
             raise ValueError("记录中含有无效的十六进制字符。") from error
-        before = self._mutation_snapshot()
-        offset = self.record_file_offset(unit_id)
-        self.working[offset : offset + UNIT_RECORD_SIZE] = record
-        self._finish_mutation(before, f"机体 {unit_id:02X} · 高级记录")
+        if self.record_bytes(unit_id) == record:
+            return
+        with self.transaction(f"机体 {unit_id:02X} · 高级记录"):
+            self._write_unit_attribute_record(unit_id, record)
 
     def reset_record(self, unit_id: int) -> None:
-        before = self._mutation_snapshot()
-        offset = self.record_file_offset(unit_id)
-        self.working[offset : offset + UNIT_RECORD_SIZE] = self.record_bytes(
-            unit_id, original=True
+        original = self.record_bytes(unit_id, original=True)
+        if self.record_bytes(unit_id) == original:
+            return
+        with self.transaction(f"机体 {unit_id:02X} · 还原记录"):
+            self._write_unit_attribute_record(unit_id, original)
+
+    def reset_unit_bundle(self, unit_id: int) -> None:
+        """Restore one unit's verified record, name reference and weapons."""
+
+        self._reset_unit_bundle_ids((unit_id,), f"机体 {unit_id:02X} · 清除修改")
+
+    def reset_all_unit_bundles(self) -> None:
+        """Restore every verified unit field in one atomic history entry."""
+
+        self._reset_unit_bundle_ids(
+            tuple(range(1, self.unit_count)), "全部机体 · 清空修改"
         )
-        self._finish_mutation(before, f"机体 {unit_id:02X} · 还原记录")
+
+    def clear_unit_bundle(self, unit_id: int) -> None:
+        """Empty one logical unit slot without touching its appearance assets."""
+
+        if not 1 <= unit_id < self.unit_count:
+            raise ValueError(
+                f"机体 ID 必须在 01—{self.unit_count - 1:02X} 之间。"
+            )
+        with self.transaction(f"机体 {unit_id:02X} · 清空"):
+            self._write_unit_attribute_record(unit_id, bytes(UNIT_RECORD_SIZE))
+            empty_name_id = next(
+                (
+                    candidate
+                    for candidate in range(1, self.unit_count)
+                    if not concise_dc_text(
+                        self.unit_name_record_bytes(candidate),
+                        text_table=self.dc_text_table(channel="unit"),
+                    ).strip("-_ ")
+                ),
+                None,
+            )
+            if empty_name_id is None:
+                self._install_standalone_unit_name_pool()
+                self.set_unit_name_text(unit_id, "")
+            elif empty_name_id != unit_id:
+                self.set_unit_name_reference(unit_id, empty_name_id)
+            if self.unit_weapon_codec is not None:
+                weapon_offset = self.unit_weapon_codec.record_offset(unit_id)
+                self.working[
+                    weapon_offset : weapon_offset + UNIT_WEAPON_SLOT_COUNT
+                ] = bytes(UNIT_WEAPON_SLOT_COUNT)
+
+    def clear_all_unit_bundles(self) -> None:
+        """Empty all logical unit slots in one undoable transaction."""
+
+        unit_ids = tuple(range(1, self.unit_count))
+        with self.transaction("全部机体 · 清空"):
+            # Every logical slot is a target, so aliased physical records may
+            # be cleared in place.  Keeping all tables and pointers stationary
+            # avoids moving the neighbouring Bank $24 scenario resource.
+            attribute_offsets = {
+                self.record_file_offset(unit_id) for unit_id in unit_ids
+            }
+            for offset in attribute_offsets:
+                self.working[offset : offset + UNIT_RECORD_SIZE] = bytes(
+                    UNIT_RECORD_SIZE
+                )
+            name_offsets = {
+                self.unit_name_codec.pointer_to_file_offset(
+                    self.unit_name_codec.pointer(unit_id, self.working)
+                )
+                for unit_id in unit_ids
+            }
+            for offset in name_offsets:
+                self.working[offset] = 0xFF
+
+            if self.unit_weapon_codec is not None:
+                for unit_id in unit_ids:
+                    weapon_offset = self.unit_weapon_codec.record_offset(unit_id)
+                    self.working[
+                        weapon_offset : weapon_offset + UNIT_WEAPON_SLOT_COUNT
+                    ] = bytes(UNIT_WEAPON_SLOT_COUNT)
+            self._refresh_dynamic_codecs()
+
+    def _reset_unit_bundle_ids(
+        self, unit_ids: tuple[int, ...], description: str
+    ) -> None:
+        for unit_id in unit_ids:
+            if not 1 <= unit_id < self.unit_count:
+                raise ValueError(
+                    f"机体 ID 必须在 01—{self.unit_count - 1:02X} 之间。"
+                )
+        before = self._mutation_snapshot()
+        try:
+            for unit_id in unit_ids:
+                original_record = self.record_bytes(unit_id, original=True)
+                if self.record_bytes(unit_id) != original_record:
+                    self._write_unit_attribute_record(unit_id, original_record)
+
+                original_pointer = self.base_unit_name_codec.pointer(
+                    unit_id, self.original
+                )
+                baseline_codec = (
+                    self.unit_name_codec
+                    if self._initial_expansion_plan is not None
+                    and self._initial_expansion_plan.flags & FLAG_UNITS
+                    else self.base_unit_name_codec
+                )
+                source_ids = baseline_codec.baseline_source_ids(original_pointer)
+                if not source_ids:
+                    raise RomFormatError(
+                        f"机体 ${unit_id:02X} 的原始名称引用无法恢复。"
+                    )
+                name_offset, _old, name_pointer = self.unit_name_codec.reference_patch(
+                    bytes(self.working), unit_id, source_ids[0]
+                )
+                self.working[name_offset : name_offset + 2] = name_pointer
+
+                if self.unit_weapon_codec is not None:
+                    weapon_offset = self.unit_weapon_codec.record_offset(unit_id)
+                    self.working[
+                        weapon_offset : weapon_offset + UNIT_WEAPON_SLOT_COUNT
+                    ] = bytes(self.get_unit_weapons(unit_id, original=True))
+            self._refresh_dynamic_codecs()
+        except Exception:
+            if before is not None:
+                self.working[:] = before.data
+                self.resource_allocator = BankAllocator(
+                    self.profile, self.original, before.allocations
+                )
+                self._refresh_dynamic_codecs()
+            raise
+        self._finish_mutation(before, description)
 
     def weapon_record_file_offset(self, weapon_id: int) -> int:
         return self.weapon_codec.record_offset(weapon_id)
 
     def weapon_record_bytes(self, weapon_id: int, *, original: bool = False) -> bytes:
-        offset = self.weapon_record_file_offset(weapon_id)
+        codec = self.base_weapon_codec if original else self.weapon_codec
+        offset = codec.record_offset(weapon_id)
         source = self.original if original else self.working
         return bytes(source[offset : offset + WEAPON_RECORD_SIZE])
 
@@ -2138,8 +3370,9 @@ class RomProject:
     def reset_weapon_record(self, weapon_id: int) -> None:
         before = self._mutation_snapshot()
         offset = self.weapon_record_file_offset(weapon_id)
+        original_offset = self.base_weapon_codec.record_offset(weapon_id)
         self.working[offset : offset + WEAPON_RECORD_SIZE] = self.original[
-            offset : offset + WEAPON_RECORD_SIZE
+            original_offset : original_offset + WEAPON_RECORD_SIZE
         ]
         self._finish_mutation(before, f"武器 {weapon_id:02X} · 还原记录")
 
@@ -2149,10 +3382,11 @@ class RomProject:
         *,
         original: bool = False,
     ) -> int:
-        if self.weapon_name_codec is None:
+        codec = self.base_weapon_name_codec if original else self.weapon_name_codec
+        if codec is None:
             raise ValueError("当前 ROM 的武器名称表尚未验证。")
         source = self.original if original else self.working
-        return self.weapon_name_codec.pointer(weapon_id, source)
+        return codec.pointer(weapon_id, source)
 
     def weapon_name_source_ids(
         self,
@@ -2160,10 +3394,11 @@ class RomProject:
         *,
         original: bool = False,
     ) -> tuple[int, ...]:
-        if self.weapon_name_codec is None:
+        codec = self.base_weapon_name_codec if original else self.weapon_name_codec
+        if codec is None:
             raise ValueError("当前 ROM 的武器名称表尚未验证。")
         source = self.original if original else self.working
-        return self.weapon_name_codec.source_ids(
+        return codec.source_ids(
             self.get_weapon_name_pointer(weapon_id, original=original),
             source,
         )
@@ -2174,10 +3409,11 @@ class RomProject:
         *,
         original: bool = False,
     ) -> bytes:
-        if self.weapon_name_codec is None:
+        codec = self.base_weapon_name_codec if original else self.weapon_name_codec
+        if codec is None:
             raise ValueError("当前 ROM 的武器名称表尚未验证。")
         source = self.original if original else self.working
-        return self.weapon_name_codec.record_bytes(weapon_id, source)
+        return codec.record_bytes(weapon_id, source)
 
     def _replace_terminated_name(
         self,
@@ -2191,7 +3427,7 @@ class RomProject:
         value = text.strip()
         if not value:
             raise ValueError("名称不能为空。")
-        encoded = default_dc_text_table().encode(value) + b"\xFF"
+        encoded = self.dc_text_table(channel="character").encode(value) + b"\xFF"
         if len(encoded) > capacity:
             raise ValueError(
                 f"名称编码需要 {len(encoded)} 字节，当前原槽只有 {capacity} 字节；"
@@ -2213,65 +3449,89 @@ class RomProject:
     def set_weapon_name_text(self, weapon_id: int, text: str) -> None:
         if self.weapon_name_codec is None:
             raise ValueError("当前 ROM 的武器名称表尚未验证。")
-        before = self._mutation_snapshot()
-        patches = self.weapon_name_codec.repack_name(
-            self.working, weapon_id, text
-        )
-        for offset, expected, replacement in patches:
-            if bytes(self.working[offset : offset + len(expected)]) != expected:
-                raise ValueError("武器名称池已变化，请重新载入后再试。")
-            self.working[offset : offset + len(replacement)] = replacement
-        self._finish_mutation(before, f"武器 {weapon_id:02X} · 名称池重排")
+        with self.transaction(f"武器 {weapon_id:02X} · 名称池重排"):
+            self.ensure_font_characters(text, channel="weapon")
+            patches = self.weapon_name_codec.repack_name(
+                self.working, weapon_id, text, self.dc_text_table(channel="weapon")
+            )
+            for offset, expected, replacement in patches:
+                if bytes(self.working[offset : offset + len(expected)]) != expected:
+                    raise ValueError("武器名称池已变化，请重新载入后再试。")
+                self.working[offset : offset + len(replacement)] = replacement
 
     def weapon_display_name(self, weapon_id: int) -> str:
+        cached = self._cached_display_name("weapon", weapon_id)
+        if cached is not None:
+            return cached
         if self.weapon_name_codec is None:
-            return f"武器记录 ${weapon_id:02X}"
-        label = concise_dc_text(self.weapon_name_record_bytes(weapon_id))
+            return self._store_display_name(
+                "weapon", weapon_id, f"武器记录 ${weapon_id:02X}"
+            )
+        label = concise_dc_text(
+            self.weapon_name_record_bytes(weapon_id),
+            text_table=self.dc_text_table(channel="weapon"),
+        )
         if not label or not label.strip("-_"):
-            return "空白/未分配武器槽"
-        return label
+            label = "空白/未分配武器槽"
+        return self._store_display_name("weapon", weapon_id, label)
 
     def character_display_name(self, character_id: int) -> str:
         """Return the verified in-battle name for a character byte ID."""
+        cached = self._cached_display_name("character", character_id)
+        if cached is not None:
+            return cached
         if character_id == 0:
-            return "无人物/特殊上下文"
+            return self._store_display_name(
+                "character", character_id, "无人物/特殊上下文"
+            )
         if (
             self.character_name_codec is None
             or not 0 <= character_id < self.profile.character_name_count
         ):
-            return "超出已验证人物表"
+            return self._store_display_name(
+                "character", character_id, "超出已验证人物表"
+            )
         label = concise_dc_text(
-            self.character_name_codec.record_bytes(character_id, self.working)
+            self.character_name_codec.record_bytes(character_id, self.working),
+            text_table=self.dc_text_table(channel="character"),
         )
         if not label or not label.strip("-_ "):
-            return "空白/未分配人物槽"
+            label = "空白/未分配人物槽"
         if label and all(character in "?？" for character in label):
             # “？？？” is an intentional, usable unknown-character identity in
             # the game, not an empty or unnamed database slot.
-            return label
-        return label
+            return self._store_display_name("character", character_id, label)
+        return self._store_display_name("character", character_id, label)
 
     def character_normal_display_name(self, character_id: int) -> str:
         """Return the database display name from the first shared name table."""
         if self.profile.character_normal_name_pointer_table_offset is None:
             return self.character_display_name(character_id)
+        cached = self._cached_display_name("character-normal", character_id)
+        if cached is not None:
+            return cached
         if character_id == 0:
-            return "无人物/特殊上下文"
+            return self._store_display_name(
+                "character-normal", character_id, "无人物/特殊上下文"
+            )
         if (
             self.character_name_codec is None
             or not 1
             <= character_id
             <= self.profile.character_normal_name_count
         ):
-            return "超出已验证人物表"
+            return self._store_display_name(
+                "character-normal", character_id, "超出已验证人物表"
+            )
         label = concise_dc_text(
             self.character_name_codec.normal_record_bytes(
                 character_id, self.working
-            )
+            ),
+            text_table=self.dc_text_table(channel="character"),
         )
         if not label or not label.strip("-_ "):
-            return "空白/未分配人物槽"
-        return label
+            label = "空白/未分配人物槽"
+        return self._store_display_name("character-normal", character_id, label)
 
     def get_character_name_pointer(
         self,
@@ -2348,6 +3608,24 @@ class RomProject:
     ) -> None:
         if self.character_name_codec is None:
             raise ValueError("当前 ROM 的人物名称表尚未验证。")
+        requested_text = "".join(
+            text for text in (normal_text, battle_text) if text is not None
+        )
+        with self.transaction(f"人物 {character_id:02X} · 名称与战斗名称"):
+            self.ensure_font_characters(requested_text, channel="character")
+            self._set_character_name_texts_encoded(
+                character_id,
+                normal_text=normal_text,
+                battle_text=battle_text,
+            )
+
+    def _set_character_name_texts_encoded(
+        self,
+        character_id: int,
+        *,
+        normal_text: str | None,
+        battle_text: str | None,
+    ) -> None:
         if self.profile.character_normal_name_pointer_table_offset is None:
             if (
                 normal_text is not None
@@ -2372,18 +3650,18 @@ class RomProject:
                 f"人物 {character_id:02X} · 修改名称",
             )
             return
-        before = self._mutation_snapshot()
         patches = self.character_name_codec.repack_names(
             self.working,
             character_id,
             normal_text=normal_text,
             battle_text=battle_text,
+            text_table=self.dc_text_table(channel="character"),
         )
         for offset, expected, replacement in patches:
             if bytes(self.working[offset : offset + len(expected)]) != expected:
-                raise ValueError("人物名称池已变化，请重新载入后再试。")
+                raise ValueError("Bank $24 八资源区已变化，请重新载入后再试。")
             self.working[offset : offset + len(replacement)] = replacement
-        self._finish_mutation(before, f"人物 {character_id:02X} · 名称与战斗名称")
+        self._refresh_dynamic_codecs()
 
     def set_character_name_text(self, character_id: int, text: str) -> None:
         self.set_character_name_texts(character_id, battle_text=text)
@@ -2443,7 +3721,7 @@ class RomProject:
                 f"人物 ID 必须在 01—{self.profile.character_name_count - 1:02X} 之间。"
             )
         before = self._mutation_snapshot()
-        offset = self.character_name_codec.pointer_offset(character_id)
+        offset = self.character_name_codec.pointer_offset(character_id, self.working)
         self.working[offset : offset + 2] = self.original[offset : offset + 2]
         self._finish_mutation(before, f"人物 {character_id:02X} · 还原名称")
 
@@ -2524,8 +3802,9 @@ class RomProject:
         if self.weapon_name_codec is None:
             raise ValueError("当前 ROM 的武器名称表尚未验证。")
         before = self._mutation_snapshot()
-        original_raw = self.weapon_name_codec._terminated_record(
-            self.weapon_name_codec.record_bytes(weapon_id, self.original)
+        assert self.base_weapon_name_codec is not None
+        original_raw = self.base_weapon_name_codec._terminated_record(
+            self.base_weapon_name_codec.record_bytes(weapon_id, self.original)
         )
         current = bytes(self.working)
         matching_pointer = next(
@@ -2586,7 +3865,48 @@ class RomProject:
     def get_unit_name_pointer(self, unit_id: int, *, original: bool = False) -> int:
         if original:
             return self.base_unit_name_codec.pointer(unit_id, self.original)
-        return self.unit_name_codec.pointer(unit_id, bytes(self.working))
+        return self.unit_name_codec.pointer(unit_id, self.working)
+
+    def _current_unit_name_sources(self) -> dict[int, tuple[int, ...]]:
+        if (
+            not self._transaction_depth
+            and self._unit_name_sources_cache_revision == self._revision
+        ):
+            return self._unit_name_sources_cache
+        codec = self.unit_name_codec
+        current_unique = sorted({
+            codec.pointer(unit_id, self.working)
+            for unit_id in range(1, self.unit_count)
+            if codec.pointer(unit_id, self.working)
+        })
+        baseline_unique = sorted(pointer for pointer in codec.ids_by_pointer if pointer)
+        if len(current_unique) == len(baseline_unique):
+            result = {
+                current: codec.baseline_source_ids(baseline)
+                for current, baseline in zip(current_unique, baseline_unique)
+            }
+        else:
+            result = {
+                pointer: codec.baseline_source_ids(pointer)
+                for pointer in current_unique
+            }
+        # A pointer referenced by exactly one live logical ID is, by
+        # definition, owned by that ID.  This also covers copy-on-write
+        # records inserted while the stock table temporarily has more unique
+        # pointers than its baseline; positional matching alone cannot assign
+        # those inserted records reliably.
+        live_users: dict[int, list[int]] = {}
+        for unit_id in range(1, self.unit_count):
+            pointer = codec.pointer(unit_id, self.working)
+            if pointer:
+                live_users.setdefault(pointer, []).append(unit_id)
+        for pointer, users in live_users.items():
+            if len(users) == 1:
+                result[pointer] = (users[0],)
+        if not self._transaction_depth:
+            self._unit_name_sources_cache = result
+            self._unit_name_sources_cache_revision = self._revision
+        return result
 
     def unit_name_source_ids(
         self,
@@ -2596,6 +3916,10 @@ class RomProject:
     ) -> tuple[int, ...]:
         codec = self.base_unit_name_codec if original else self.unit_name_codec
         source = self.original if original else self.working
+        if not original:
+            return self._current_unit_name_sources().get(
+                self.get_unit_name_pointer(unit_id), ()
+            )
         return codec.source_ids(
             self.get_unit_name_pointer(unit_id, original=original), source
         )
@@ -2608,7 +3932,7 @@ class RomProject:
         return {}
 
     def unit_name_pointer_display_name(self, pointer: int) -> str:
-        source_ids = self.unit_name_codec.source_ids(pointer, self.working)
+        source_ids = self._current_unit_name_sources().get(pointer, ())
         if not source_ids:
             return f"未知原生名称 ${pointer:04X}"
         aliases = self.unit_alias_table()
@@ -2642,19 +3966,253 @@ class RomProject:
         return codec.record_bytes(unit_id, source)
 
     def unit_display_name(self, unit_id: int) -> str:
-        label = concise_dc_text(self.unit_name_record_bytes(unit_id))
+        cached = self._cached_display_name("unit", unit_id)
+        if cached is not None:
+            return cached
+        label = concise_dc_text(
+            self.unit_name_record_bytes(unit_id),
+            text_table=self.dc_text_table(channel="unit"),
+        )
         if label and label.strip("-_ "):
-            return label
-        return "空白/未分配机体槽"
+            return self._store_display_name("unit", unit_id, label)
+        return self._store_display_name("unit", unit_id, "空白/未分配机体槽")
 
-    def set_unit_name_text(self, unit_id: int, text: str) -> None:
-        before = self._mutation_snapshot()
-        patches = self.unit_name_codec.repack_name(self.working, unit_id, text)
+    def _install_standalone_unit_name_pool(self) -> None:
+        """Move logical unit names to a dedicated pair with COW identities."""
+
+        if standalone_unit_name_bank(self.working) is not None:
+            return
+        plan = self.expansion_plan
+        if plan is not None and plan.flags & FLAG_UNITS:
+            return
+        if self.profile.key != "dc-kuorong-mmc3-v2":
+            raise ValueError("独立机体名称扩展池仅支持 464 KiB 扩容基准 ROM。")
+
+        records = tuple(
+            self.unit_name_codec.record_bytes(unit_id, self.working)
+            for unit_id in range(1, self.unit_count)
+        )
+        image, _pointers, _used_spans = pack_standalone_unit_names(records)
+        allocation: Allocation | None = None
+        last_error: Exception | None = None
+        for region in self.profile.free_prg_regions:
+            for bank in range(region.first_bank, region.end_bank - 1):
+                if bank + 1 >= region.end_bank:
+                    continue
+                candidate = Allocation(
+                    STANDALONE_UNIT_NAME_RESOURCE_ID,
+                    "数据库机体名称扩展池",
+                    bank_file_offset(bank),
+                    PRG_BANK_SIZE * 2,
+                    1,
+                )
+                try:
+                    self.resource_allocator.reserve(candidate)
+                except ValueError as error:
+                    last_error = error
+                    continue
+                allocation = candidate
+                break
+            if allocation is not None:
+                break
+        if allocation is None:
+            detail = f"：{last_error}" if last_error is not None else ""
+            raise ValueError(f"没有连续的 16 KiB 扩展空间可存放机体名称{detail}")
+
+        self.working[allocation.offset : allocation.end] = image
+        descriptor_offset = resource_descriptor_offset(UNIT_NAME_SELECTOR)
+        self.working[descriptor_offset : descriptor_offset + 2] = bytes(
+            (0xF6, allocation.first_bank)
+        )
+        self._refresh_dynamic_codecs()
+
+    def _native_unit_name_spill_floor(self) -> int:
+        """Lowest safe stock-bank address after all live deployments."""
+
+        scenario_start = self.profile.scenario_first_pointer
+        scenario_end = self.profile.scenario_data_end_pointer
+        if scenario_start is None or scenario_end is None:
+            raise ValueError("当前 ROM 没有可验证的原生部署共享池。")
+        plan = self.expansion_plan
+        if plan is not None and plan.flags & FLAG_SCENARIOS:
+            return scenario_start
+        codec = ScenarioLayoutCodec(self.rom_image, self.working)
+        physical_end = max(
+            (
+                codec.pointers[map_id]
+                + len(codec.encode(codec.decode(map_id, self.working)))
+                for map_id in range(self.scenario_count)
+            ),
+            default=scenario_start,
+        )
+        compact_end = scenario_start + codec.storage_used(self.working)
+        return min(scenario_end, max(physical_end, compact_end))
+
+    def _native_unit_name_repack_patches(
+        self,
+        unit_id: int,
+        text: str,
+    ) -> tuple[tuple[int, bytes, bytes], ...] | None:
+        """Grow names into the stock deployment tail before using expansion."""
+
+        if self.profile.key not in DC_UNIT_NAME_PROFILE_KEYS:
+            return None
+        plan = self.expansion_plan
+        if plan is not None and plan.flags & FLAG_UNITS:
+            return None
+        if standalone_unit_name_bank(self.working) is not None:
+            return None
+        scenario_end = self.profile.scenario_data_end_pointer
+        if scenario_end is None:
+            return None
+        existing = native_unit_name_spill_span(self.rom_image, self.working)
+        current_reserved = 0 if existing is None else scenario_end - existing[0]
+        floor = self._native_unit_name_spill_floor()
+        maximum_reserved = scenario_end - floor
+        if maximum_reserved < current_reserved:
+            return None
+        reserve_sizes = [current_reserved] if current_reserved else []
+        reserve_sizes.extend(
+            range(
+                ((current_reserved // 0x100) + 1) * 0x100,
+                maximum_reserved + 1,
+                0x100,
+            )
+        )
+        if not reserve_sizes or reserve_sizes[-1] != maximum_reserved:
+            reserve_sizes.append(maximum_reserved)
+        last_capacity_error: ValueError | None = None
+        for reserve_size in reserve_sizes:
+            spill_start = scenario_end - reserve_size
+            codec = UnitNameReferenceCodec(
+                self.rom_image,
+                self.working,
+                pool_spans=(
+                    (NAME_OLD_DATA_START, NAME_OLD_DATA_END),
+                    (spill_start, scenario_end),
+                ),
+            )
+            try:
+                patches = codec.repack_name(
+                    self.working,
+                    unit_id,
+                    text,
+                    self.dc_text_table(channel="unit"),
+                )
+                candidate = bytearray(self.working)
+                for offset, _expected, replacement in patches:
+                    candidate[offset : offset + len(replacement)] = replacement
+                if native_unit_name_spill_span(self.rom_image, candidate) is None:
+                    pointer = codec.pointer(unit_id, candidate)
+                    record = codec._record_for_pointer(candidate, pointer)
+                    if len(record) > reserve_size:
+                        continue
+                    table_offset = codec.pointer_offset(unit_id)
+                    candidate[table_offset : table_offset + 2] = spill_start.to_bytes(
+                        2, "little"
+                    )
+                    spill_offset = codec.pointer_to_file_offset(spill_start)
+                    candidate[spill_offset : spill_offset + len(record)] = record
+                    table_start = codec.pointer_table_offset
+                    table_size = self.profile.unit_name_count * 2
+                    patches = (
+                        (
+                            table_start,
+                            bytes(self.working[table_start : table_start + table_size]),
+                            bytes(candidate[table_start : table_start + table_size]),
+                        ),
+                        *tuple(
+                            (
+                                codec.pointer_to_file_offset(start),
+                                bytes(
+                                    self.working[
+                                        codec.pointer_to_file_offset(start) :
+                                        codec.pointer_to_file_offset(start) + end - start
+                                    ]
+                                ),
+                                bytes(
+                                    candidate[
+                                        codec.pointer_to_file_offset(start) :
+                                        codec.pointer_to_file_offset(start) + end - start
+                                    ]
+                                ),
+                            )
+                            for start, end in codec.pool_spans
+                        ),
+                    )
+                    patches = tuple(
+                        patch for patch in patches if patch[1] != patch[2]
+                    )
+                return patches
+            except ValueError as error:
+                if "容量不足" not in str(error):
+                    raise
+                last_capacity_error = error
+        if last_capacity_error is not None:
+            return None
+        return None
+
+    def _apply_unit_name_patches(
+        self,
+        patches: tuple[tuple[int, bytes, bytes], ...],
+    ) -> None:
         for offset, expected, replacement in patches:
             if bytes(self.working[offset : offset + len(expected)]) != expected:
                 raise ValueError("机体名称池已变化，请重新载入后再试。")
             self.working[offset : offset + len(replacement)] = replacement
-        self._finish_mutation(before, f"机体 {unit_id:02X} · 名称池重排")
+
+    def set_unit_name_text(self, unit_id: int, text: str) -> None:
+        with self.transaction(f"机体 {unit_id:02X} · 名称池重排"):
+            self.ensure_font_characters(text, channel="unit")
+            plan = self.expansion_plan
+            native_managed = (
+                self.profile.key in DC_UNIT_NAME_PROFILE_KEYS
+                and (plan is None or not plan.flags & FLAG_UNITS)
+                and standalone_unit_name_bank(self.working) is None
+            )
+            # The legacy editor rebuilds unit names inside a dedicated name
+            # resource; it does not consume deployment/initial-configuration
+            # bytes.  Keep the stock name pool isolated for the same reason.
+            # Images written by the short-lived native-spill implementation
+            # remain readable, but the next edit migrates them losslessly to
+            # the standalone name resource instead of extending that spill.
+            if native_managed and native_unit_name_spill_span(
+                self.rom_image, self.working
+            ) is not None:
+                self._install_standalone_unit_name_pool()
+                native_managed = False
+
+            patches = None
+            if native_managed:
+                try:
+                    patches = self.unit_name_codec.repack_name(
+                        self.working,
+                        unit_id,
+                        text,
+                        self.dc_text_table(channel="unit"),
+                    )
+                except ValueError as error:
+                    if "容量不足" not in str(error):
+                        raise
+            elif standalone_unit_name_bank(self.working) is not None or (
+                plan is not None and plan.flags & FLAG_UNITS
+            ):
+                patches = self.unit_name_codec.repack_name(
+                    self.working,
+                    unit_id,
+                    text,
+                    self.dc_text_table(channel="unit"),
+                )
+            if patches is None:
+                self._install_standalone_unit_name_pool()
+                patches = self.unit_name_codec.repack_name(
+                    self.working,
+                    unit_id,
+                    text,
+                    self.dc_text_table(channel="unit"),
+                )
+            self._apply_unit_name_patches(patches)
+            self._refresh_dynamic_codecs()
 
     def unit_name_reference_options(
         self,
@@ -2671,16 +4229,21 @@ class RomProject:
                     source_id,
                     pointer,
                     self.unit_name_pointer_display_name(pointer),
-                    self.unit_name_codec.source_ids(pointer, self.working),
+                    self._current_unit_name_sources().get(pointer, ()),
                 )
             )
         return tuple(options)
 
     def set_unit_name_reference(self, unit_id: int, source_name_id: int) -> None:
-        before_snapshot = self._mutation_snapshot()
         offset, _before, after = self.unit_name_codec.reference_patch(
             bytes(self.working), unit_id, source_name_id
         )
+        if bytes(self.working[offset : offset + len(after)]) == after:
+            return
+        before_snapshot = self._mutation_snapshot()
+        # A reference change is only a two-byte pointer edit and consumes no
+        # additional native capacity.  Keep the physical alias in Bank $24;
+        # a later text edit uses copy-on-write for the selected logical ID.
         self.working[offset : offset + len(after)] = after
         self._finish_mutation(
             before_snapshot,
@@ -2904,9 +4467,7 @@ class RomProject:
             bytes(self.working), layout.map_id, layout
         ):
             self.working[offset : offset + len(after)] = after
-        self.scenario_layout_codec = ScenarioLayoutCodec(
-            self.rom_image, self.working
-        )
+        self._refresh_dynamic_codecs()
         self._finish_mutation(before, f"场景 {layout.map_id:02X} · 部署")
 
     def reset_scenario_layout(self, map_id: int) -> None:
@@ -3287,6 +4848,46 @@ class RomProject:
         original = self.get_chapter_victory(scenario_id, original=True)
         self.set_chapter_victory_body(scenario_id, original.body)
 
+    @property
+    def supports_production_credits(self) -> bool:
+        return self.production_credits_codec is not None
+
+    def get_production_credits(
+        self, *, original: bool = False
+    ) -> tuple[ProductionCreditsRecord, ProductionCreditsRecord]:
+        codec = (
+            self.base_production_credits_codec
+            if original
+            else self.production_credits_codec
+        )
+        if codec is None:
+            raise ValueError("当前 ROM 没有已验证的制作信息文字块。")
+        source = self.original if original else self.working
+        return codec.records(source, text_table=self.dc_text_table(channel="story"))
+
+    def set_production_credits(self, production_text: str, cast_text: str) -> None:
+        if self.production_credits_codec is None:
+            raise ValueError("当前 ROM 没有已验证的制作信息文字块。")
+        with self.transaction("制作信息与出演名单"):
+            glyph_text = (production_text + cast_text).replace(" ", "").replace("\n", "").replace("\r", "")
+            self.ensure_font_characters(
+                glyph_text,
+                channel="story",
+            )
+            table = self.dc_text_table(channel="story")
+            patches = self.production_credits_codec.replacement_patches(
+                self.working,
+                production_text,
+                cast_text,
+                text_table=table,
+            )
+            self._apply_legacy_global_patches(patches, "制作信息与出演名单")
+        self.production_credits_codec = ProductionCreditsCodec(self.working)
+
+    def reset_production_credits(self) -> None:
+        production, cast = self.get_production_credits(original=True)
+        self.set_production_credits(production.text, cast.text)
+
     def get_story_text(
         self,
         selector: int,
@@ -3294,9 +4895,21 @@ class RomProject:
         *,
         original: bool = False,
     ) -> StoryTextRecord:
+        if self._story_text_cache_revision != self._revision:
+            self._story_text_cache.clear()
+            self._story_text_cache_revision = self._revision
+        key = (original, selector, index)
+        cached = self._story_text_cache.get(key)
+        if cached is not None:
+            return cached
         if original:
-            return self.base_story_text_codec.decode(selector, index, self.original)
-        return self.story_text_codec.decode(selector, index, bytes(self.working))
+            record = self.base_story_text_codec.decode(
+                selector, index, self.original
+            )
+        else:
+            record = self.story_text_codec.decode(selector, index, self.working)
+        self._story_text_cache[key] = record
+        return record
 
     def story_text_replacement_usage(
         self,
@@ -3887,6 +5500,8 @@ class RomProject:
 
     def to_project_document(self) -> ProjectDocument:
         document = ProjectDocument.create(self.rom_image)
+        for token in sorted(self.font_disabled_builtin_tokens):
+            document.add_font_disabled_builtin(token)
         for token, character in sorted(self.font_character_overrides.items()):
             document.add_font_character_mapping(token, character)
         for (kind, index), label in sorted(self.animation_label_overrides.items()):
@@ -3895,6 +5510,16 @@ class RomProject:
         plan = self.expansion_plan
         units_are_linked = bool(plan is not None and plan.flags & FLAG_UNITS)
         maps_are_linked = bool(plan is not None and plan.flags & FLAG_MAPS)
+        bank24_start = bank24_file_offset(0x8000)
+        bank24_end = bank24_file_offset(0xBF40)
+        bank24_changed = (
+            self.working[bank24_start:bank24_end]
+            != self.original[bank24_start:bank24_end]
+        )
+        standalone_unit_attributes = any(
+            allocation.resource_id == STANDALONE_UNIT_ATTRIBUTE_RESOURCE_ID
+            for allocation in self.expansion_allocations
+        )
         for allocation in self.expansion_allocations:
             if allocation.resource_id.startswith(REOPEN_GUARD_PREFIX):
                 continue
@@ -3903,7 +5528,15 @@ class RomProject:
                 bytes(self.working[allocation.offset : allocation.end]),
             )
             covered_offsets.update(range(allocation.offset, allocation.end))
-        for pointer, ids in (() if units_are_linked else self.ids_by_pointer.items()):
+        # A standalone attribute allocation is a complete snapshot of all 255
+        # logical records.  Serializing field operations as well would replay
+        # them through the stock shared-pointer table before the project has
+        # rebound its codecs, needlessly modifying the original table too.
+        for pointer, ids in (
+            ()
+            if units_are_linked or standalone_unit_attributes or bank24_changed
+            else self.ids_by_pointer.items()
+        ):
             unit_id = ids[0]
             record_offset = self.record_file_offset_from_pointer(pointer)
             for field in FIELDS:
@@ -3933,7 +5566,7 @@ class RomProject:
                 )
 
         seen_weapon_pointers = set()
-        for weapon_id in range(1, self.weapon_count):
+        for weapon_id in (() if bank24_changed else range(1, self.weapon_count)):
             pointer = self.weapon_codec.pointers[weapon_id]
             if pointer in seen_weapon_pointers:
                 continue
@@ -3962,7 +5595,7 @@ class RomProject:
                 )
                 covered_offsets.add(record_offset + field.record_offset)
 
-        if self.weapon_name_codec is not None:
+        if self.weapon_name_codec is not None and not bank24_changed:
             for weapon_id in range(1, self.weapon_count):
                 original_pointer = self.get_weapon_name_pointer(
                     weapon_id, original=True
@@ -4020,7 +5653,7 @@ class RomProject:
             )
         unit_name_reference_ids = (
             ()
-            if units_are_linked or unit_name_pool_repacked
+            if units_are_linked or unit_name_pool_repacked or bank24_changed
             else range(1, self.unit_count)
         )
         for unit_id in unit_name_reference_ids:
@@ -4064,7 +5697,11 @@ class RomProject:
                     or self.working[pool_start:pool_end]
                     != self.original[pool_start:pool_end]
                 )
-        if self.character_name_codec is not None and not character_name_pool_repacked:
+        if (
+            self.character_name_codec is not None
+            and not character_name_pool_repacked
+            and not bank24_changed
+        ):
             for character_id in range(1, self.profile.character_name_count):
                 original_pointer = self.get_character_name_pointer(
                     character_id, original=True
@@ -4147,7 +5784,9 @@ class RomProject:
             )
 
         scenarios_changed = False
-        for map_id in (() if maps_are_linked else range(self.scenario_count)):
+        for map_id in (
+            () if maps_are_linked or bank24_changed else range(self.scenario_count)
+        ):
             original_layout = self.get_scenario_layout(map_id, original=True)
             current_layout = self.get_scenario_layout(map_id)
             if (

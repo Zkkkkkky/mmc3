@@ -1,0 +1,251 @@
+{
+  "tag": "SAVEEDITOR_00_初始",
+  "hwnd": 15927940,
+  "title": "存档编辑器：",
+  "class": "WTWindow",
+  "rect": {
+    "left": 469,
+    "top": 195,
+    "right": 1448,
+    "bottom": 890,
+    "width": 979,
+    "height": 695
+  },
+  "pid": 16216,
+  "tree": {
+    "hwnd": 15927940,
+    "class": "WTWindow",
+    "text": "存档编辑器：",
+    "ctrl_id": 0,
+    "rect": {
+      "left": 469,
+      "top": 195,
+      "right": 1448,
+      "bottom": 890,
+      "width": 979,
+      "height": 695
+    },
+    "visible": true,
+    "enabled": true,
+    "children": [
+      {
+        "hwnd": 10029620,
+        "class": "Button",
+        "text": "读取存档",
+        "ctrl_id": 190,
+        "rect": {
+          "left": 1021,
+          "top": 254,
+          "right": 1121,
+          "bottom": 294,
+          "width": 100,
+          "height": 40
+        },
+        "visible": true,
+        "enabled": true,
+        "button_check_state": 0,
+        "children": []
+      },
+      {
+        "hwnd": 10160690,
+        "class": "Button",
+        "text": "保存存档文件",
+        "ctrl_id": 180,
+        "rect": {
+          "left": 1261,
+          "top": 254,
+          "right": 1361,
+          "bottom": 294,
+          "width": 100,
+          "height": 40
+        },
+        "visible": true,
+        "enabled": true,
+        "button_check_state": 0,
+        "children": []
+      },
+      {
+        "hwnd": 8456752,
+        "class": "Button",
+        "text": "写入存档",
+        "ctrl_id": 170,
+        "rect": {
+          "left": 1141,
+          "top": 254,
+          "right": 1241,
+          "bottom": 294,
+          "width": 100,
+          "height": 40
+        },
+        "visible": true,
+        "enabled": true,
+        "button_check_state": 0,
+        "children": []
+      },
+      {
+        "hwnd": 9177654,
+        "class": "Button",
+        "text": "打开存档文件",
+        "ctrl_id": 160,
+        "rect": {
+          "left": 901,
+          "top": 254,
+          "right": 1001,
+          "bottom": 294,
+          "width": 100,
+          "height": 40
+        },
+        "visible": true,
+        "enabled": true,
+        "button_check_state": 0,
+        "children": []
+      },
+      {
+        "hwnd": 16976444,
+        "class": "Afx:400000:b:10003:900015:0",
+        "text": "存档：",
+        "ctrl_id": 150,
+        "rect": {
+          "left": 481,
+          "top": 244,
+          "right": 581,
+          "bottom": 274,
+          "width": 100,
+          "height": 30
+        },
+        "visible": true,
+        "enabled": true,
+        "children": []
+      },
+      {
+        "hwnd": 9636416,
+        "class": "ComboBox",
+        "text": "1：没有数据",
+        "ctrl_id": 140,
+        "rect": {
+          "left": 481,
+          "top": 274,
+          "right": 701,
+          "bottom": 299,
+          "width": 220,
+          "height": 25
+        },
+        "visible": true,
+        "enabled": true,
+        "combo_count": 3,
+        "combo_selected": 0,
+        "children": []
+      },
+      {
+        "hwnd": 10881604,
+        "class": "Afx:400000:b:10003:900015:0",
+        "text": "关卡：",
+        "ctrl_id": 130,
+        "rect": {
+          "left": 771,
+          "top": 244,
+          "right": 871,
+          "bottom": 274,
+          "width": 100,
+          "height": 30
+        },
+        "visible": true,
+        "enabled": true,
+        "children": []
+      },
+      {
+        "hwnd": 15533802,
+        "class": "ComboBox",
+        "text": "01",
+        "ctrl_id": 120,
+        "rect": {
+          "left": 771,
+          "top": 274,
+          "right": 896,
+          "bottom": 299,
+          "width": 125,
+          "height": 25
+        },
+        "visible": true,
+        "enabled": true,
+        "combo_count": 32,
+        "combo_selected": 0,
+        "children": []
+      },
+      {
+        "hwnd": 12585612,
+        "class": "SysListView32",
+        "text": "",
+        "ctrl_id": 110,
+        "rect": {
+          "left": 481,
+          "top": 594,
+          "right": 1441,
+          "bottom": 864,
+          "width": 960,
+          "height": 270
+        },
+        "visible": true,
+        "enabled": true,
+        "list_items": 0,
+        "list_selected": 0,
+        "children": [
+          {
+            "hwnd": 16845472,
+            "class": "SysHeader32",
+            "text": "",
+            "ctrl_id": 0,
+            "rect": {
+              "left": 483,
+              "top": 595,
+              "right": 1443,
+              "bottom": 625,
+              "width": 960,
+              "height": 30
+            },
+            "visible": true,
+            "enabled": true,
+            "children": []
+          }
+        ]
+      },
+      {
+        "hwnd": 12585598,
+        "class": "SysListView32",
+        "text": "",
+        "ctrl_id": 100,
+        "rect": {
+          "left": 481,
+          "top": 314,
+          "right": 1441,
+          "bottom": 584,
+          "width": 960,
+          "height": 270
+        },
+        "visible": true,
+        "enabled": true,
+        "list_items": 0,
+        "list_selected": 0,
+        "children": [
+          {
+            "hwnd": 24380946,
+            "class": "SysHeader32",
+            "text": "",
+            "ctrl_id": 0,
+            "rect": {
+              "left": 483,
+              "top": 315,
+              "right": 1443,
+              "bottom": 345,
+              "width": 960,
+              "height": 30
+            },
+            "visible": true,
+            "enabled": true,
+            "children": []
+          }
+        ]
+      }
+    ]
+  }
+}

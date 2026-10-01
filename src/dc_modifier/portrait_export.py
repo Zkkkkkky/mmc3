@@ -1,7 +1,9 @@
 from __future__ import annotations
 
+from dataclasses import dataclass
 from pathlib import Path
 import re
+from typing import Callable
 
 from fc_editor.codecs.character_attributes import CharacterAttributesCodec
 from fc_editor.legacy_bitmap import RgbColor, encode_legacy_bmp24
@@ -23,6 +25,13 @@ _RESERVED_WINDOWS_NAMES = {
     *(f"COM{index}" for index in range(1, 10)),
     *(f"LPT{index}" for index in range(1, 10)),
 }
+
+
+@dataclass(frozen=True)
+class PortraitBatchExportResult:
+    root: Path
+    written_files: tuple[Path, ...]
+    failures: tuple[tuple[int, str], ...]
 
 
 def safe_portrait_directory_name(character_id: int, name: str) -> str:
@@ -129,3 +138,32 @@ def export_portrait_bitmaps(
         temporary.write_bytes(payload)
         temporary.replace(destination)
     return paths
+
+
+def export_all_portrait_bitmaps(
+    project,
+    root: str | Path,
+    *,
+    progress: Callable[[int, int], None] | None = None,
+) -> PortraitBatchExportResult:
+    """Export every selectable character with the single-portrait protocol."""
+
+    destination = Path(root)
+    total = (
+        project.profile.character_normal_name_count
+        or project.profile.character_name_count
+    )
+    written: list[Path] = []
+    failures: list[tuple[int, str]] = []
+    for character_id in range(1, total + 1):
+        try:
+            written.extend(export_portrait_bitmaps(project, character_id, destination))
+        except (OSError, TypeError, ValueError, IndexError) as error:
+            failures.append((character_id, str(error)))
+        if progress is not None:
+            progress(character_id, total)
+    return PortraitBatchExportResult(
+        destination,
+        tuple(written),
+        tuple(failures),
+    )

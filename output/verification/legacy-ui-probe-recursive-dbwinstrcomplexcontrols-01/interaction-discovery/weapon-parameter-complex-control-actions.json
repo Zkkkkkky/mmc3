@@ -1,0 +1,301 @@
+{
+  "schema_version": 1,
+  "validated": true,
+  "error": null,
+  "execution_record_count": 58,
+  "diff_count": 0,
+  "sha256_before": "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E",
+  "sha256_after": "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E",
+  "execution_records": [
+    {
+      "action_id": "3794bf54b54f855072f0",
+      "status": "passed",
+      "result": "真实焦点=True。"
+    },
+    {
+      "action_id": "e2147232e2442d84bb07",
+      "status": "passed",
+      "result": "读回='3F'，已恢复。"
+    },
+    {
+      "action_id": "28e115b974cab03898c1",
+      "status": "passed",
+      "result": "Ctrl+A/Ctrl+Z 后恢复。"
+    },
+    {
+      "action_id": "74ce9cd403dfe8c7050a",
+      "status": "passed",
+      "result": "执行右键路径。"
+    },
+    {
+      "action_id": "5ace22c89f1502ea870d",
+      "status": "passed",
+      "result": "NES 调色板边界读回=['00', '3F']，已恢复。"
+    },
+    {
+      "action_id": "0df74d833187ab80a9ec",
+      "status": "passed",
+      "result": "真实焦点=True。"
+    },
+    {
+      "action_id": "020b1cf55cdf89f7458f",
+      "status": "passed",
+      "result": "读回='3F'，已恢复。"
+    },
+    {
+      "action_id": "3c15aa42d7f494510512",
+      "status": "passed",
+      "result": "Ctrl+A/Ctrl+Z 后恢复。"
+    },
+    {
+      "action_id": "908ef5fefa41eb95f7ba",
+      "status": "passed",
+      "result": "执行右键路径。"
+    },
+    {
+      "action_id": "10efe14c5837388c6d24",
+      "status": "passed",
+      "result": "NES 调色板边界读回=['00', '3F']，已恢复。"
+    },
+    {
+      "action_id": "c12c738a6883a52a171f",
+      "status": "passed",
+      "result": "真实焦点=True。"
+    },
+    {
+      "action_id": "c896f4c07ae49b7f0eec",
+      "status": "passed",
+      "result": "读回='3F'，已恢复。"
+    },
+    {
+      "action_id": "f9a3e92ed98d969d785b",
+      "status": "passed",
+      "result": "Ctrl+A/Ctrl+Z 后恢复。"
+    },
+    {
+      "action_id": "45357c0bb48f9d548adf",
+      "status": "passed",
+      "result": "执行右键路径。"
+    },
+    {
+      "action_id": "f7a831d952030e0b5b74",
+      "status": "passed",
+      "result": "NES 调色板边界读回=['00', '3F']，已恢复。"
+    },
+    {
+      "action_id": "1d59c5b1dadf577877cd",
+      "status": "passed",
+      "result": "执行模式/参数按钮手势；状态变化=True。"
+    },
+    {
+      "action_id": "8e092b0472af3ea05346",
+      "status": "passed",
+      "result": "执行模式/参数按钮手势；状态变化=True。"
+    },
+    {
+      "action_id": "a1eccf46dcd9a7b6bf0a",
+      "status": "passed",
+      "result": "执行模式/参数按钮手势；状态变化=False。"
+    },
+    {
+      "action_id": "aca2d005f0047a4e7392",
+      "status": "passed",
+      "result": "执行模式/参数按钮手势；状态变化=True。"
+    },
+    {
+      "action_id": "74215ebbc4bb6658eb17",
+      "status": "passed",
+      "result": "执行模式/参数按钮手势；状态变化=True。"
+    },
+    {
+      "action_id": "7ccf7228daa916dbfd30",
+      "status": "passed",
+      "result": "执行模式/参数按钮手势；状态变化=False。"
+    },
+    {
+      "action_id": "69dc5541a4e5fe64b2ee",
+      "status": "passed",
+      "result": "执行模式/参数按钮手势；状态变化=False。"
+    },
+    {
+      "action_id": "e08f6172bd9c5d30b309",
+      "status": "passed",
+      "result": "执行模式/参数按钮手势；状态变化=False。"
+    },
+    {
+      "action_id": "b0244e0448186c73e79e",
+      "status": "passed",
+      "result": "执行模式/参数按钮手势；状态变化=False。"
+    },
+    {
+      "action_id": "9479965f0a17255b6b2a",
+      "status": "passed",
+      "result": "执行模式/参数按钮手势；状态变化=False。"
+    },
+    {
+      "action_id": "2e485f53132d37d39881",
+      "status": "passed",
+      "result": "执行模式/参数按钮手势；状态变化=False。"
+    },
+    {
+      "action_id": "b34e6860c116be016ea6",
+      "status": "passed",
+      "result": "执行模式/参数按钮手势；状态变化=False。"
+    },
+    {
+      "action_id": "d83de356591b0efedfde",
+      "status": "passed",
+      "result": "执行模式/参数按钮手势；状态变化=True。"
+    },
+    {
+      "action_id": "8b059f0b3de8d4d257eb",
+      "status": "passed",
+      "result": "执行模式/参数按钮手势；状态变化=True。"
+    },
+    {
+      "action_id": "9d2cb7cfa8d906e3aa90",
+      "status": "passed",
+      "result": "执行模式/参数按钮手势；状态变化=False。"
+    },
+    {
+      "action_id": "217cc227b9797f994d2e",
+      "status": "passed",
+      "result": "展开/收起，共 252 项。"
+    },
+    {
+      "action_id": "8b72707bf7756c444bf5",
+      "status": "passed",
+      "result": "逐项选择并读回 252/252 项，已恢复。"
+    },
+    {
+      "action_id": "4a24caf62353043be41d",
+      "status": "passed",
+      "result": "Home/Down 读回 0，已恢复。"
+    },
+    {
+      "action_id": "d5918110a559cb238d07",
+      "status": "passed",
+      "result": "执行右键路径。"
+    },
+    {
+      "action_id": "e36496336106991ed717",
+      "status": "passed",
+      "result": "展开/收起，共 252 项。"
+    },
+    {
+      "action_id": "484fb1c11b57cbd2afac",
+      "status": "passed",
+      "result": "逐项选择并读回 252/252 项，已恢复。"
+    },
+    {
+      "action_id": "af6d4934e6bec6939a35",
+      "status": "passed",
+      "result": "Home/Down 读回 0，已恢复。"
+    },
+    {
+      "action_id": "eec81e77463b92344b5d",
+      "status": "passed",
+      "result": "执行右键路径。"
+    },
+    {
+      "action_id": "11df0c9fe04a69fcbdf7",
+      "status": "passed",
+      "result": "展开/收起，共 252 项。"
+    },
+    {
+      "action_id": "546138772634b80ccbec",
+      "status": "passed",
+      "result": "逐项选择并读回 252/252 项，已恢复。"
+    },
+    {
+      "action_id": "1e5067742223ac665fb6",
+      "status": "passed",
+      "result": "Home/Down 读回 0，已恢复。"
+    },
+    {
+      "action_id": "be6abda6d0401f05cd7e",
+      "status": "passed",
+      "result": "执行右键路径。"
+    },
+    {
+      "action_id": "8118fb618b589d12d47e",
+      "status": "passed",
+      "result": "展开/收起，共 2 项。"
+    },
+    {
+      "action_id": "7f9ee76cec0d2bf80599",
+      "status": "passed",
+      "result": "逐项选择并读回 2/2 项，已恢复。"
+    },
+    {
+      "action_id": "63b8e59486bb6d761bc7",
+      "status": "passed",
+      "result": "Home/Down 读回 0，已恢复。"
+    },
+    {
+      "action_id": "aba2ef406b5050bff213",
+      "status": "passed",
+      "result": "执行右键路径。"
+    },
+    {
+      "action_id": "8c5e52b36ad166475000",
+      "status": "passed",
+      "result": "执行模式/参数按钮手势；状态变化=True。"
+    },
+    {
+      "action_id": "53bdef512ffecb48008f",
+      "status": "passed",
+      "result": "执行模式/参数按钮手势；状态变化=True。"
+    },
+    {
+      "action_id": "ce99e64d9bfe5a6d0ef2",
+      "status": "passed",
+      "result": "执行模式/参数按钮手势；状态变化=False。"
+    },
+    {
+      "action_id": "68757905892aca61a092",
+      "status": "passed",
+      "result": "执行模式/参数按钮手势；状态变化=True。"
+    },
+    {
+      "action_id": "69264b8718c694c9fcb0",
+      "status": "passed",
+      "result": "执行模式/参数按钮手势；状态变化=True。"
+    },
+    {
+      "action_id": "729a43c67996989df35b",
+      "status": "passed",
+      "result": "执行模式/参数按钮手势；状态变化=False。"
+    },
+    {
+      "action_id": "badb166af4351bb50d48",
+      "status": "passed",
+      "result": "执行模式/参数按钮手势；状态变化=False。"
+    },
+    {
+      "action_id": "7618251b5b0280dfa21a",
+      "status": "passed",
+      "result": "执行模式/参数按钮手势；状态变化=False。"
+    },
+    {
+      "action_id": "a93a2f8a52625986aab5",
+      "status": "passed",
+      "result": "执行模式/参数按钮手势；状态变化=False。"
+    },
+    {
+      "action_id": "a316788ba4136a527980",
+      "status": "passed",
+      "result": "执行模式/参数按钮手势；状态变化=True。"
+    },
+    {
+      "action_id": "bd55c1db93173bb6ece9",
+      "status": "passed",
+      "result": "执行模式/参数按钮手势；状态变化=True。"
+    },
+    {
+      "action_id": "d4e6eda92e0b685e621c",
+      "status": "passed",
+      "result": "执行模式/参数按钮手势；状态变化=False。"
+    }
+  ]
+}

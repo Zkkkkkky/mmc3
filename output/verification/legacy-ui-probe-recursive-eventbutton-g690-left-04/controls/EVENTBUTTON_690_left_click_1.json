@@ -1,0 +1,85 @@
+{
+  "tag": "EVENTBUTTON_690_left_click_1",
+  "hwnd": 14681596,
+  "title": "提示",
+  "class": "#32770",
+  "rect": {
+    "left": 699,
+    "top": 331,
+    "right": 1223,
+    "bottom": 689,
+    "width": 524,
+    "height": 358
+  },
+  "pid": 10972,
+  "tree": {
+    "hwnd": 14681596,
+    "class": "#32770",
+    "text": "提示",
+    "ctrl_id": 0,
+    "rect": {
+      "left": 699,
+      "top": 331,
+      "right": 1223,
+      "bottom": 689,
+      "width": 524,
+      "height": 358
+    },
+    "visible": true,
+    "enabled": true,
+    "children": [
+      {
+        "hwnd": 6818398,
+        "class": "Button",
+        "text": "确定",
+        "ctrl_id": 2,
+        "rect": {
+          "left": 1084,
+          "top": 635,
+          "right": 1194,
+          "bottom": 670,
+          "width": 110,
+          "height": 35
+        },
+        "visible": true,
+        "enabled": true,
+        "button_check_state": 0,
+        "children": []
+      },
+      {
+        "hwnd": 11209408,
+        "class": "Static",
+        "text": "",
+        "ctrl_id": 20,
+        "rect": {
+          "left": 733,
+          "top": 405,
+          "right": 773,
+          "bottom": 445,
+          "width": 40,
+          "height": 40
+        },
+        "visible": true,
+        "enabled": true,
+        "children": []
+      },
+      {
+        "hwnd": 7408146,
+        "class": "Static",
+        "text": "剧情对话段02 一共16384字节空间 当前空间还剩：12218字节！\r\n剧情对话段03 一共16384字节空间 当前空间还剩：2477字节！\r\n剧情对话段06 一共16384字节空间 当前空间还剩：4677字节！\r\n剧情对话段08 一共16384字节空间 当前空间还剩：5506字节！\r\n剧情对话段09 一共12544字节空间 当前空间还剩：10370字节！\r\n剧情对话段0A 一共16384字节空间 当前空间还剩：11350字节！\r\n剧情对话段0B 一共16384字节空间 当前空间还剩：11032字节！\r\n剧情对话段0C 一共16384字节空间 当前空间还剩：15857字节！\r\n剧情对话段0D 一共16384字节空间 当前空间还剩：15857字节！\r\n",
+        "ctrl_id": 65535,
+        "rect": {
+          "left": 783,
+          "top": 405,
+          "right": 1174,
+          "bottom": 588,
+          "width": 391,
+          "height": 183
+        },
+        "visible": true,
+        "enabled": true,
+        "children": []
+      }
+    ]
+  }
+}

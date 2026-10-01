@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "validated": true,
+  "error": null,
+  "execution_record_count": 4,
+  "diff_count": 0,
+  "sha256_before": "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E",
+  "sha256_after": "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E",
+  "execution_records": [
+    {
+      "action_id": "64181412aa52124e71eb",
+      "status": "passed",
+      "result": "列表/内容两页均真实命中：[2580, 2590]；点击位置=[12, 68]。"
+    },
+    {
+      "action_id": "f4566207d0304e62e589",
+      "status": "passed",
+      "result": "ListBox 2580 与 Edit 2590 两种可见状态均触发：[2580, 2590]。"
+    },
+    {
+      "action_id": "575b1f261912416fb7c0",
+      "status": "passed",
+      "result": "真实焦点执行 Ctrl+Tab，并重新枚举可见子页。"
+    },
+    {
+      "action_id": "7620e8d73c526817f166",
+      "status": "passed",
+      "result": "列表/内容页签标题逐项执行右键并清理弹出菜单。"
+    }
+  ]
+}

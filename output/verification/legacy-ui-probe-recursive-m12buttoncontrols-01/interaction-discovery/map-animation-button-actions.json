@@ -1,0 +1,749 @@
+{
+  "schema_version": 1,
+  "validated": true,
+  "error": null,
+  "execution_record_count": 66,
+  "diff_count": 0,
+  "sha256_before": "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E",
+  "sha256_after": "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E",
+  "observations": [
+    {
+      "control_id": 120,
+      "action": "keyboard_activate",
+      "path": [
+        2,
+        6,
+        2
+      ],
+      "focused": true,
+      "window_alive": true,
+      "descendants": []
+    },
+    {
+      "control_id": 120,
+      "action": "left_click",
+      "path": [
+        2,
+        6,
+        2
+      ],
+      "focused": null,
+      "window_alive": true,
+      "descendants": []
+    },
+    {
+      "control_id": 130,
+      "action": "keyboard_activate",
+      "path": [
+        2,
+        6
+      ],
+      "focused": true,
+      "window_alive": true,
+      "descendants": []
+    },
+    {
+      "control_id": 130,
+      "action": "left_click",
+      "path": [
+        2,
+        6
+      ],
+      "focused": null,
+      "window_alive": true,
+      "descendants": []
+    },
+    {
+      "control_id": 140,
+      "action": "keyboard_activate",
+      "path": [
+        2,
+        5
+      ],
+      "focused": true,
+      "window_alive": true,
+      "descendants": []
+    },
+    {
+      "control_id": 140,
+      "action": "left_click",
+      "path": [
+        2,
+        5
+      ],
+      "focused": null,
+      "window_alive": true,
+      "descendants": []
+    },
+    {
+      "control_id": 150,
+      "action": "keyboard_activate",
+      "path": [
+        2,
+        5,
+        1
+      ],
+      "focused": true,
+      "window_alive": true,
+      "descendants": [
+        {
+          "title": "请输入：",
+          "class": "#32770"
+        }
+      ]
+    },
+    {
+      "control_id": 150,
+      "action": "left_click",
+      "path": [
+        2,
+        5,
+        1
+      ],
+      "focused": null,
+      "window_alive": true,
+      "descendants": [
+        {
+          "title": "请输入：",
+          "class": "#32770"
+        }
+      ]
+    },
+    {
+      "control_id": 170,
+      "action": "keyboard_activate",
+      "path": [
+        2,
+        4
+      ],
+      "focused": true,
+      "window_alive": true,
+      "descendants": []
+    },
+    {
+      "control_id": 170,
+      "action": "left_click",
+      "path": [
+        2,
+        4
+      ],
+      "focused": null,
+      "window_alive": true,
+      "descendants": []
+    },
+    {
+      "control_id": 270,
+      "action": "keyboard_activate",
+      "path": [
+        2,
+        3
+      ],
+      "focused": true,
+      "window_alive": true,
+      "descendants": []
+    },
+    {
+      "control_id": 270,
+      "action": "left_click",
+      "path": [
+        2,
+        3
+      ],
+      "focused": null,
+      "window_alive": true,
+      "descendants": []
+    },
+    {
+      "control_id": 320,
+      "action": "keyboard_activate",
+      "path": [
+        2,
+        4,
+        0
+      ],
+      "focused": true,
+      "window_alive": true,
+      "descendants": []
+    },
+    {
+      "control_id": 320,
+      "action": "left_click",
+      "path": [
+        2,
+        4,
+        0
+      ],
+      "focused": null,
+      "window_alive": true,
+      "descendants": []
+    },
+    {
+      "control_id": 330,
+      "action": "keyboard_activate",
+      "path": [
+        2,
+        3,
+        4
+      ],
+      "focused": true,
+      "window_alive": true,
+      "descendants": []
+    },
+    {
+      "control_id": 330,
+      "action": "left_click",
+      "path": [
+        2,
+        3,
+        4
+      ],
+      "focused": null,
+      "window_alive": true,
+      "descendants": []
+    },
+    {
+      "control_id": 350,
+      "action": "keyboard_activate",
+      "path": [
+        2,
+        2
+      ],
+      "focused": true,
+      "window_alive": true,
+      "descendants": []
+    },
+    {
+      "control_id": 350,
+      "action": "left_click",
+      "path": [
+        2,
+        2
+      ],
+      "focused": null,
+      "window_alive": true,
+      "descendants": []
+    },
+    {
+      "control_id": 380,
+      "action": "keyboard_activate",
+      "path": [
+        2,
+        2,
+        0
+      ],
+      "focused": true,
+      "window_alive": true,
+      "descendants": []
+    },
+    {
+      "control_id": 380,
+      "action": "left_click",
+      "path": [
+        2,
+        2,
+        0
+      ],
+      "focused": null,
+      "window_alive": true,
+      "descendants": []
+    },
+    {
+      "control_id": 430,
+      "action": "keyboard_activate",
+      "path": [
+        2,
+        1,
+        0
+      ],
+      "focused": true,
+      "window_alive": true,
+      "descendants": []
+    },
+    {
+      "control_id": 430,
+      "action": "left_click",
+      "path": [
+        2,
+        1,
+        0
+      ],
+      "focused": null,
+      "window_alive": true,
+      "descendants": []
+    },
+    {
+      "control_id": 460,
+      "action": "keyboard_activate",
+      "path": [
+        2,
+        1
+      ],
+      "focused": true,
+      "window_alive": true,
+      "descendants": []
+    },
+    {
+      "control_id": 460,
+      "action": "left_click",
+      "path": [
+        2,
+        1
+      ],
+      "focused": null,
+      "window_alive": true,
+      "descendants": []
+    },
+    {
+      "control_id": 580,
+      "action": "keyboard_activate",
+      "path": [
+        2,
+        0
+      ],
+      "focused": true,
+      "window_alive": true,
+      "descendants": []
+    },
+    {
+      "control_id": 580,
+      "action": "left_click",
+      "path": [
+        2,
+        0
+      ],
+      "focused": null,
+      "window_alive": true,
+      "descendants": []
+    },
+    {
+      "control_id": 610,
+      "action": "keyboard_activate",
+      "path": [
+        2,
+        3,
+        1
+      ],
+      "focused": true,
+      "window_alive": true,
+      "descendants": [
+        {
+          "title": "物理拼图",
+          "class": "WTWindow"
+        }
+      ]
+    },
+    {
+      "control_id": 610,
+      "action": "left_click",
+      "path": [
+        2,
+        3,
+        1
+      ],
+      "focused": null,
+      "window_alive": true,
+      "descendants": [
+        {
+          "title": "物理拼图",
+          "class": "WTWindow"
+        }
+      ]
+    },
+    {
+      "control_id": 660,
+      "action": "keyboard_activate",
+      "path": [
+        2,
+        3,
+        0
+      ],
+      "focused": true,
+      "window_alive": true,
+      "descendants": []
+    },
+    {
+      "control_id": 660,
+      "action": "left_click",
+      "path": [
+        2,
+        3,
+        0
+      ],
+      "focused": null,
+      "window_alive": true,
+      "descendants": []
+    },
+    {
+      "control_id": 300,
+      "action": "keyboard_activate",
+      "path": [
+        1
+      ],
+      "focused": true,
+      "window_alive": false,
+      "descendants": []
+    },
+    {
+      "control_id": 300,
+      "action": "left_click",
+      "path": [
+        1
+      ],
+      "focused": null,
+      "window_alive": false,
+      "descendants": []
+    },
+    {
+      "control_id": 310,
+      "action": "keyboard_activate",
+      "path": [
+        0
+      ],
+      "focused": true,
+      "window_alive": false,
+      "descendants": []
+    },
+    {
+      "control_id": 310,
+      "action": "left_click",
+      "path": [
+        0
+      ],
+      "focused": null,
+      "window_alive": false,
+      "descendants": []
+    }
+  ],
+  "execution_records": [
+    {
+      "action_id": "c95dbc1b0639edcfd180",
+      "status": "passed",
+      "result": "真实右键；可见菜单=False。"
+    },
+    {
+      "action_id": "ef54db0b15de61292fa4",
+      "status": "passed",
+      "result": "切至代表控件 530 后隐藏；返回路径=(2, 6, 2)，启用=True。"
+    },
+    {
+      "action_id": "fd99e50c8cd4f9c78fea",
+      "status": "passed",
+      "result": "焦点=True；主窗仍存在=True；子窗=[]。"
+    },
+    {
+      "action_id": "ae173a1ee32690e549fa",
+      "status": "passed",
+      "result": "焦点=None；主窗仍存在=True；子窗=[]。"
+    },
+    {
+      "action_id": "50b34bd9c2b855b08075",
+      "status": "passed",
+      "result": "真实右键；可见菜单=False。"
+    },
+    {
+      "action_id": "5cf8a6fb67c82205cfd9",
+      "status": "passed",
+      "result": "切至代表控件 530 后隐藏；返回路径=(2, 6)，启用=True。"
+    },
+    {
+      "action_id": "0052f55bfa1e10a6ac6c",
+      "status": "passed",
+      "result": "焦点=True；主窗仍存在=True；子窗=[]。"
+    },
+    {
+      "action_id": "a9f89c63e97b2bbcf1f4",
+      "status": "passed",
+      "result": "焦点=None；主窗仍存在=True；子窗=[]。"
+    },
+    {
+      "action_id": "82e70ad769e3c2555126",
+      "status": "passed",
+      "result": "真实右键；可见菜单=False。"
+    },
+    {
+      "action_id": "11eb74677e318f1fb001",
+      "status": "passed",
+      "result": "切至代表控件 530 后隐藏；返回路径=(2, 5)，启用=True。"
+    },
+    {
+      "action_id": "325574ec39adf3bce980",
+      "status": "passed",
+      "result": "焦点=True；主窗仍存在=True；子窗=[]。"
+    },
+    {
+      "action_id": "403115c7ec3fd623e55f",
+      "status": "passed",
+      "result": "焦点=None；主窗仍存在=True；子窗=[]。"
+    },
+    {
+      "action_id": "8ef98c0661cd5eca9571",
+      "status": "passed",
+      "result": "真实右键；可见菜单=False。"
+    },
+    {
+      "action_id": "3ab77a7e3656dcb6f264",
+      "status": "passed",
+      "result": "切至代表控件 530 后隐藏；返回路径=(2, 5, 1)，启用=True。"
+    },
+    {
+      "action_id": "5993a117700267ac8953",
+      "status": "passed",
+      "result": "焦点=True；主窗仍存在=True；子窗=[{'title': '请输入：', 'class': '#32770'}]。"
+    },
+    {
+      "action_id": "fad0add6ea5a859b4374",
+      "status": "passed",
+      "result": "焦点=None；主窗仍存在=True；子窗=[{'title': '请输入：', 'class': '#32770'}]。"
+    },
+    {
+      "action_id": "22b3dc9a5622a7476a35",
+      "status": "passed",
+      "result": "真实右键；可见菜单=False。"
+    },
+    {
+      "action_id": "dd50145a3689d42ce881",
+      "status": "passed",
+      "result": "切至代表控件 110 后隐藏；返回路径=(2, 4)，启用=True。"
+    },
+    {
+      "action_id": "9f555fb6138ea9acba97",
+      "status": "passed",
+      "result": "焦点=True；主窗仍存在=True；子窗=[]。"
+    },
+    {
+      "action_id": "050cf4839fb141896cd5",
+      "status": "passed",
+      "result": "焦点=None；主窗仍存在=True；子窗=[]。"
+    },
+    {
+      "action_id": "a2203d2e31894a8fa3c8",
+      "status": "passed",
+      "result": "真实右键；可见菜单=False。"
+    },
+    {
+      "action_id": "0e69fa39bb838dcd1f45",
+      "status": "passed",
+      "result": "切至代表控件 110 后隐藏；返回路径=(2, 3)，启用=True。"
+    },
+    {
+      "action_id": "37bd9018488f210400ba",
+      "status": "passed",
+      "result": "焦点=True；主窗仍存在=True；子窗=[]。"
+    },
+    {
+      "action_id": "05aa0926014f4a57e573",
+      "status": "passed",
+      "result": "焦点=None；主窗仍存在=True；子窗=[]。"
+    },
+    {
+      "action_id": "cafd0c63fee2dc8581dd",
+      "status": "passed",
+      "result": "真实右键；可见菜单=False。"
+    },
+    {
+      "action_id": "1d214d5760f8b297d4d6",
+      "status": "passed",
+      "result": "切至代表控件 110 后隐藏；返回路径=(2, 4, 0)，启用=True。"
+    },
+    {
+      "action_id": "1b13262f0b1e26c6feca",
+      "status": "passed",
+      "result": "焦点=True；主窗仍存在=True；子窗=[]。"
+    },
+    {
+      "action_id": "a074735d7e83c87634b2",
+      "status": "passed",
+      "result": "焦点=None；主窗仍存在=True；子窗=[]。"
+    },
+    {
+      "action_id": "bc588b5ad676d5ccf4f5",
+      "status": "passed",
+      "result": "真实右键；可见菜单=False。"
+    },
+    {
+      "action_id": "51cc7a7629e0f6fae105",
+      "status": "passed",
+      "result": "切至代表控件 110 后隐藏；返回路径=(2, 3, 4)，启用=True。"
+    },
+    {
+      "action_id": "721d3e3f576553f49e95",
+      "status": "passed",
+      "result": "焦点=True；主窗仍存在=True；子窗=[]。"
+    },
+    {
+      "action_id": "d44fc97b5973a79e4f73",
+      "status": "passed",
+      "result": "焦点=None；主窗仍存在=True；子窗=[]。"
+    },
+    {
+      "action_id": "093452d393bfe8090d0d",
+      "status": "passed",
+      "result": "真实右键；可见菜单=False。"
+    },
+    {
+      "action_id": "ab9bace7ea47ca7743b7",
+      "status": "passed",
+      "result": "切至代表控件 110 后隐藏；返回路径=(2, 2)，启用=True。"
+    },
+    {
+      "action_id": "9ea9d81f2b4d77731647",
+      "status": "passed",
+      "result": "焦点=True；主窗仍存在=True；子窗=[]。"
+    },
+    {
+      "action_id": "3a17b10e1acd865c6d9e",
+      "status": "passed",
+      "result": "焦点=None；主窗仍存在=True；子窗=[]。"
+    },
+    {
+      "action_id": "27de5aa264b08ae5954e",
+      "status": "passed",
+      "result": "真实右键；可见菜单=False。"
+    },
+    {
+      "action_id": "e4d711df071df7de2789",
+      "status": "passed",
+      "result": "切至代表控件 110 后隐藏；返回路径=(2, 2, 0)，启用=True。"
+    },
+    {
+      "action_id": "b9710522b5f6809af7b1",
+      "status": "passed",
+      "result": "焦点=True；主窗仍存在=True；子窗=[]。"
+    },
+    {
+      "action_id": "4d24d650320e37edb47a",
+      "status": "passed",
+      "result": "焦点=None；主窗仍存在=True；子窗=[]。"
+    },
+    {
+      "action_id": "33fb72bf439c298525b9",
+      "status": "passed",
+      "result": "真实右键；可见菜单=False。"
+    },
+    {
+      "action_id": "97c0ef1721335e7e0416",
+      "status": "passed",
+      "result": "切至代表控件 110 后隐藏；返回路径=(2, 1, 0)，启用=True。"
+    },
+    {
+      "action_id": "2bf52589511385211db0",
+      "status": "passed",
+      "result": "焦点=True；主窗仍存在=True；子窗=[]。"
+    },
+    {
+      "action_id": "6091cdc924dbb32aedb6",
+      "status": "passed",
+      "result": "焦点=None；主窗仍存在=True；子窗=[]。"
+    },
+    {
+      "action_id": "34d0aa2fc00cd67677b7",
+      "status": "passed",
+      "result": "真实右键；可见菜单=False。"
+    },
+    {
+      "action_id": "e48e475726f1786a243a",
+      "status": "passed",
+      "result": "切至代表控件 110 后隐藏；返回路径=(2, 1)，启用=True。"
+    },
+    {
+      "action_id": "bdb3a668394e60c96c2e",
+      "status": "passed",
+      "result": "焦点=True；主窗仍存在=True；子窗=[]。"
+    },
+    {
+      "action_id": "524d2353535564ee0892",
+      "status": "passed",
+      "result": "焦点=None；主窗仍存在=True；子窗=[]。"
+    },
+    {
+      "action_id": "77418c20b58eee6070fb",
+      "status": "passed",
+      "result": "真实右键；可见菜单=False。"
+    },
+    {
+      "action_id": "b6701dfc14e0052a5aea",
+      "status": "passed",
+      "result": "切至代表控件 110 后隐藏；返回路径=(2, 0)，启用=True。"
+    },
+    {
+      "action_id": "9d45968ff921f4300ecb",
+      "status": "passed",
+      "result": "焦点=True；主窗仍存在=True；子窗=[]。"
+    },
+    {
+      "action_id": "fae677d2bcc139cc62f8",
+      "status": "passed",
+      "result": "焦点=None；主窗仍存在=True；子窗=[]。"
+    },
+    {
+      "action_id": "917b4b4a2d1d3ef65b5c",
+      "status": "passed",
+      "result": "真实右键；可见菜单=False。"
+    },
+    {
+      "action_id": "23bbd14b53fcb1e95784",
+      "status": "passed",
+      "result": "切至代表控件 110 后隐藏；返回路径=(2, 3, 1)，启用=True。"
+    },
+    {
+      "action_id": "1a98d1ea96b9ed79c639",
+      "status": "passed",
+      "result": "焦点=True；主窗仍存在=True；子窗=[{'title': '物理拼图', 'class': 'WTWindow'}]。"
+    },
+    {
+      "action_id": "b74ef81f12d973709142",
+      "status": "passed",
+      "result": "焦点=None；主窗仍存在=True；子窗=[{'title': '物理拼图', 'class': 'WTWindow'}]。"
+    },
+    {
+      "action_id": "7fdca127ab4d3885bd6f",
+      "status": "passed",
+      "result": "真实右键；可见菜单=False。"
+    },
+    {
+      "action_id": "35cce5f73de731ce064b",
+      "status": "passed",
+      "result": "切至代表控件 110 后隐藏；返回路径=(2, 3, 0)，启用=True。"
+    },
+    {
+      "action_id": "f4f7a5c48476dda3fc30",
+      "status": "passed",
+      "result": "焦点=True；主窗仍存在=True；子窗=[]。"
+    },
+    {
+      "action_id": "93e2c1efcc3eacc7f9f4",
+      "status": "passed",
+      "result": "焦点=None；主窗仍存在=True；子窗=[]。"
+    },
+    {
+      "action_id": "a478539b6826db3fe78c",
+      "status": "passed",
+      "result": "真实右键；可见菜单=False。"
+    },
+    {
+      "action_id": "bdea62f083be70579c2f",
+      "status": "passed",
+      "result": "焦点=True；主窗仍存在=False；子窗=[]。"
+    },
+    {
+      "action_id": "aafdc2b6676147171291",
+      "status": "passed",
+      "result": "焦点=None；主窗仍存在=False；子窗=[]。"
+    },
+    {
+      "action_id": "6b82407faf6bbb372525",
+      "status": "passed",
+      "result": "真实右键；可见菜单=False。"
+    },
+    {
+      "action_id": "e07a98b6cd6b2cd5975a",
+      "status": "passed",
+      "result": "焦点=True；主窗仍存在=False；子窗=[]。"
+    },
+    {
+      "action_id": "792c00fd194aa280a12a",
+      "status": "passed",
+      "result": "焦点=None；主窗仍存在=False；子窗=[]。"
+    }
+  ]
+}

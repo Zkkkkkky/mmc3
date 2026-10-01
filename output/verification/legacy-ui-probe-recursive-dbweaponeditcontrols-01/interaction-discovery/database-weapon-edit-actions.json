@@ -1,0 +1,363 @@
+{
+  "schema_version": 1,
+  "validated": true,
+  "error": null,
+  "execution_record_count": 42,
+  "diff_count": 0,
+  "sha256_before": "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E",
+  "sha256_after": "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E",
+  "observations": [
+    {
+      "control_id": 1180,
+      "path": [
+        5,
+        13,
+        17
+      ],
+      "kind": "text",
+      "original": "光束军刀",
+      "replacement": "光束军刀A",
+      "boundary_inputs": [
+        "",
+        "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+      ],
+      "boundary_readbacks": [
+        "",
+        "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+      ],
+      "right_click_menu": false
+    },
+    {
+      "control_id": 1200,
+      "path": [
+        5,
+        13,
+        15
+      ],
+      "kind": "decimal",
+      "original": "1",
+      "replacement": "2",
+      "boundary_inputs": [
+        "0",
+        "999999"
+      ],
+      "boundary_readbacks": [
+        "0",
+        "999999"
+      ],
+      "right_click_menu": true
+    },
+    {
+      "control_id": 1210,
+      "path": [
+        5,
+        13,
+        13
+      ],
+      "kind": "decimal",
+      "original": "110",
+      "replacement": "111",
+      "boundary_inputs": [
+        "0",
+        "999999"
+      ],
+      "boundary_readbacks": [
+        "0",
+        "999999"
+      ],
+      "right_click_menu": true
+    },
+    {
+      "control_id": 1220,
+      "path": [
+        5,
+        13,
+        11
+      ],
+      "kind": "decimal",
+      "original": "0",
+      "replacement": "1",
+      "boundary_inputs": [
+        "0",
+        "999999"
+      ],
+      "boundary_readbacks": [
+        "0",
+        "999999"
+      ],
+      "right_click_menu": true
+    },
+    {
+      "control_id": 1230,
+      "path": [
+        5,
+        13,
+        9
+      ],
+      "kind": "decimal",
+      "original": "5",
+      "replacement": "6",
+      "boundary_inputs": [
+        "0",
+        "999999"
+      ],
+      "boundary_readbacks": [
+        "0",
+        "999999"
+      ],
+      "right_click_menu": true
+    },
+    {
+      "control_id": 1240,
+      "path": [
+        5,
+        13,
+        7
+      ],
+      "kind": "decimal",
+      "original": "5",
+      "replacement": "6",
+      "boundary_inputs": [
+        "0",
+        "999999"
+      ],
+      "boundary_readbacks": [
+        "0",
+        "999999"
+      ],
+      "right_click_menu": true
+    },
+    {
+      "control_id": 1250,
+      "path": [
+        5,
+        13,
+        5
+      ],
+      "kind": "decimal",
+      "original": "2",
+      "replacement": "3",
+      "boundary_inputs": [
+        "0",
+        "999999"
+      ],
+      "boundary_readbacks": [
+        "0",
+        "999999"
+      ],
+      "right_click_menu": true
+    }
+  ],
+  "execution_records": [
+    {
+      "action_id": "bae591cc9be77798f3be",
+      "status": "passed",
+      "result": "真实键盘焦点=True。"
+    },
+    {
+      "action_id": "2f4671e668cad577627a",
+      "status": "passed",
+      "result": "text 等类替换读回='光束军刀A'，随后恢复。"
+    },
+    {
+      "action_id": "8ac606ba3007bde5d10b",
+      "status": "passed",
+      "result": "真实焦点执行 Ctrl+A/Ctrl+Z，随后恢复原草稿。"
+    },
+    {
+      "action_id": "ca8d1b885a702d2e878e",
+      "status": "passed",
+      "result": "执行右键路径；可见弹出菜单=False。"
+    },
+    {
+      "action_id": "e5b2922d75cf05b5a0a3",
+      "status": "passed",
+      "result": "text 边界 ['', 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'] 读回=['', 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA']，随后恢复。"
+    },
+    {
+      "action_id": "6758d6b47d98225dff78",
+      "status": "passed",
+      "result": "切换到目标控件 120 所在页后隐藏；返回后可见且启用=True；条件记录链=[]。"
+    },
+    {
+      "action_id": "ecb567a993dcea5b0a2f",
+      "status": "passed",
+      "result": "真实键盘焦点=True。"
+    },
+    {
+      "action_id": "a0e57c0a601339a95291",
+      "status": "passed",
+      "result": "decimal 等类替换读回='2'，随后恢复。"
+    },
+    {
+      "action_id": "33b58de5295c03ece9e6",
+      "status": "passed",
+      "result": "真实焦点执行 Ctrl+A/Ctrl+Z，随后恢复原草稿。"
+    },
+    {
+      "action_id": "beee7b966110c9fad4a9",
+      "status": "passed",
+      "result": "执行右键路径；可见弹出菜单=True。"
+    },
+    {
+      "action_id": "399a1cc5230a5ac6a04e",
+      "status": "passed",
+      "result": "decimal 边界 ['0', '999999'] 读回=['0', '999999']，随后恢复。"
+    },
+    {
+      "action_id": "1db09264ba9b815ebd78",
+      "status": "passed",
+      "result": "切换到目标控件 120 所在页后隐藏；返回后可见且启用=True；条件记录链=[]。"
+    },
+    {
+      "action_id": "9831748e17aced41fa97",
+      "status": "passed",
+      "result": "真实键盘焦点=True。"
+    },
+    {
+      "action_id": "8de3bda65bae9931f75b",
+      "status": "passed",
+      "result": "decimal 等类替换读回='111'，随后恢复。"
+    },
+    {
+      "action_id": "0bb2098b7ec2bcc7df1e",
+      "status": "passed",
+      "result": "真实焦点执行 Ctrl+A/Ctrl+Z，随后恢复原草稿。"
+    },
+    {
+      "action_id": "bdac2d503eb0b451d854",
+      "status": "passed",
+      "result": "执行右键路径；可见弹出菜单=True。"
+    },
+    {
+      "action_id": "4c014b4ed3a5a3bd074a",
+      "status": "passed",
+      "result": "decimal 边界 ['0', '999999'] 读回=['0', '999999']，随后恢复。"
+    },
+    {
+      "action_id": "fd73d3cf52fd7fd013e9",
+      "status": "passed",
+      "result": "切换到目标控件 120 所在页后隐藏；返回后可见且启用=True；条件记录链=[]。"
+    },
+    {
+      "action_id": "c6dae70f77d605e93a28",
+      "status": "passed",
+      "result": "真实键盘焦点=True。"
+    },
+    {
+      "action_id": "decc09617fb5e289b740",
+      "status": "passed",
+      "result": "decimal 等类替换读回='1'，随后恢复。"
+    },
+    {
+      "action_id": "0c77c2f1854f9bffb02c",
+      "status": "passed",
+      "result": "真实焦点执行 Ctrl+A/Ctrl+Z，随后恢复原草稿。"
+    },
+    {
+      "action_id": "17b1d866658e87f7ef14",
+      "status": "passed",
+      "result": "执行右键路径；可见弹出菜单=True。"
+    },
+    {
+      "action_id": "747fa3fc778a2eef3413",
+      "status": "passed",
+      "result": "decimal 边界 ['0', '999999'] 读回=['0', '999999']，随后恢复。"
+    },
+    {
+      "action_id": "70eb5f7fc389768d9b1d",
+      "status": "passed",
+      "result": "切换到目标控件 120 所在页后隐藏；返回后可见且启用=True；条件记录链=[]。"
+    },
+    {
+      "action_id": "a10d4918749b9d78aca3",
+      "status": "passed",
+      "result": "真实键盘焦点=True。"
+    },
+    {
+      "action_id": "a59672f5ce56e6bbaac6",
+      "status": "passed",
+      "result": "decimal 等类替换读回='6'，随后恢复。"
+    },
+    {
+      "action_id": "6fc4b5b79ce310fee71e",
+      "status": "passed",
+      "result": "真实焦点执行 Ctrl+A/Ctrl+Z，随后恢复原草稿。"
+    },
+    {
+      "action_id": "8e5fe8ca0fe5c9390dc6",
+      "status": "passed",
+      "result": "执行右键路径；可见弹出菜单=True。"
+    },
+    {
+      "action_id": "c5b1d37c3b2ef043ec34",
+      "status": "passed",
+      "result": "decimal 边界 ['0', '999999'] 读回=['0', '999999']，随后恢复。"
+    },
+    {
+      "action_id": "16bb4107fb03d26b2cd7",
+      "status": "passed",
+      "result": "切换到目标控件 120 所在页后隐藏；返回后可见且启用=True；条件记录链=[]。"
+    },
+    {
+      "action_id": "147cabe4b1650190fbf1",
+      "status": "passed",
+      "result": "真实键盘焦点=True。"
+    },
+    {
+      "action_id": "986029f5b163f7d9f954",
+      "status": "passed",
+      "result": "decimal 等类替换读回='6'，随后恢复。"
+    },
+    {
+      "action_id": "ecbb5e10e805b9f28730",
+      "status": "passed",
+      "result": "真实焦点执行 Ctrl+A/Ctrl+Z，随后恢复原草稿。"
+    },
+    {
+      "action_id": "904e0befa9f20ad90569",
+      "status": "passed",
+      "result": "执行右键路径；可见弹出菜单=True。"
+    },
+    {
+      "action_id": "61f04dcf03dc09e75340",
+      "status": "passed",
+      "result": "decimal 边界 ['0', '999999'] 读回=['0', '999999']，随后恢复。"
+    },
+    {
+      "action_id": "066c780bc502c16ae3d0",
+      "status": "passed",
+      "result": "切换到目标控件 120 所在页后隐藏；返回后可见且启用=True；条件记录链=[]。"
+    },
+    {
+      "action_id": "bed2af96a25fb63175ba",
+      "status": "passed",
+      "result": "真实键盘焦点=True。"
+    },
+    {
+      "action_id": "f0c556d83a56fc9ffe61",
+      "status": "passed",
+      "result": "decimal 等类替换读回='3'，随后恢复。"
+    },
+    {
+      "action_id": "45259d137a436cd816b3",
+      "status": "passed",
+      "result": "真实焦点执行 Ctrl+A/Ctrl+Z，随后恢复原草稿。"
+    },
+    {
+      "action_id": "ef9ef2fbebb9c0f703a0",
+      "status": "passed",
+      "result": "执行右键路径；可见弹出菜单=True。"
+    },
+    {
+      "action_id": "5d5c8be133da6422c733",
+      "status": "passed",
+      "result": "decimal 边界 ['0', '999999'] 读回=['0', '999999']，随后恢复。"
+    },
+    {
+      "action_id": "f1f6a91c7d19e2a5e96e",
+      "status": "passed",
+      "result": "切换到目标控件 120 所在页后隐藏；返回后可见且启用=True；条件记录链=[]。"
+    }
+  ]
+}

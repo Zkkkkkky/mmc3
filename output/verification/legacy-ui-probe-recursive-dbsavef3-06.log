@@ -1,0 +1,17 @@
+﻿[    0.1s] launched pid=11288
+[    0.1s] === stage A: launcher -> main window (no ROM) ===
+[    3.1s] top window: {'hwnd': 524764, 'title': 'SRW2修改器V1.5', 'class': 'WTWindow', 'rect': {'left': 571, 'top': 244, 'right': 1346, 'bottom': 843, 'width': 775, 'height': 599}, 'pid': 11288}
+[    4.1s] dump A01_启动器: title='SRW2修改器V1.5' class='WTWindow' controls=8 shot=ok
+[    6.9s] main window hwnd=1051594 title='SRW2扩容版修改器V1.0'
+[    8.4s] dump A02_主窗口_未载入ROM: title='SRW2扩容版修改器V1.0' class='WTWindow' controls=63 shot=ok
+[   12.9s] menu 文件(F): could not open menu via Alt+F
+[   17.5s] menu 帮助(H): could not open menu via Alt+H
+[   18.0s] === stage LOAD: load ROM copy only ===
+[   19.0s] dump LOAD01_打开ROM对话框: title='打开文件' class='#32770' controls=51 shot=ok
+[   19.5s] open dialog confirmed gone=True
+[   26.5s] ROM loaded without main-window sweep, title='SRW2扩容版修改器V1.0：D:\\GIT\\mmc3\\output\\build\\legacy-ui-probe\\f3-option-02-run6.nes'
+[   27.5s] dump LOAD02_主窗口_载入后: title='SRW2扩容版修改器V1.0：D:\\GIT\\mmc3\\output\\build\\legacy-ui-probe\\f3-option-02-run6.nes' class='WTWindow' controls=63 shot=ok
+[   27.5s] === stage DBSAVEF3: isolated F3 insertion/save golden ===
+[   28.8s] 数据库: hwnd=4653864 title='数据库'
+[   34.3s] stage DBSAVEF3 FAILED: RuntimeError('weapon instruction selector did not open')
+[   34.5s] terminated owned pid=11288

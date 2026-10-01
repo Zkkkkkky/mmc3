@@ -1,0 +1,33 @@
+[    0.1s] launched pid=10492
+[    0.1s] === stage LAUNCHERCONTROLS ===
+[    0.1s] launched pid=14344
+[    1.7s] terminated owned pid=14344
+[    1.7s] launched pid=9148
+[    3.1s] terminated owned pid=9148
+[    3.1s] launched pid=4528
+[    4.5s] terminated owned pid=4528
+[    4.6s] launched pid=15076
+[    6.0s] terminated owned pid=15076
+[    6.1s] launched pid=6244
+[    7.4s] terminated owned pid=6244
+[    7.5s] launched pid=10468
+[    8.9s] terminated owned pid=10468
+[    9.0s] launched pid=7900
+[   10.4s] terminated owned pid=7900
+[   10.5s] launched pid=15188
+[   11.9s] terminated owned pid=15188
+[   12.0s] launched pid=712
+[   13.4s] terminated owned pid=712
+[   13.5s] launched pid=8752
+[   15.2s] terminated owned pid=8752
+[   15.3s] launched pid=15548
+[   16.9s] terminated owned pid=15548
+[   17.0s] launched pid=16140
+[   18.5s] terminated owned pid=16140
+[   18.6s] launched pid=16064
+[   20.1s] terminated owned pid=16064
+[   20.2s] launched pid=16512
+[   21.8s] terminated owned pid=16512
+[   21.8s] launched pid=17100
+[   23.3s] terminated owned pid=17100
+[   23.3s] LAUNCHERCONTROLS complete: 15/15 actions

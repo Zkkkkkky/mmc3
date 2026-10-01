@@ -5,12 +5,21 @@ import struct
 from ..dc_text import default_dc_text_table
 from ..errors import RomFormatError
 from ..rom_image import RomImage
+from ..text_table import TextTable
 
 
 class WeaponNameReferenceCodec:
     """Safe weapon-name editing by reusing an existing localized record."""
 
-    def __init__(self, rom: RomImage) -> None:
+    def __init__(
+        self,
+        rom: RomImage,
+        data: bytes | bytearray | None = None,
+        *,
+        pointer_table_offset: int | None = None,
+        data_first_pointer: int | None = None,
+        data_end_pointer: int | None = None,
+    ) -> None:
         self.rom = rom
         profile = rom.profile
         if (
@@ -21,19 +30,35 @@ class WeaponNameReferenceCodec:
             or profile.weapon_name_pointer_count <= 0
         ):
             raise RomFormatError("当前 ROM 没有已验证的武器名称表。")
-        raw = rom.read(
-            profile.weapon_name_pointer_table_offset,
-            profile.weapon_name_pointer_count * 2,
+        self._source = rom.data if data is None else bytes(data)
+        self.pointer_table_offset = (
+            profile.weapon_name_pointer_table_offset
+            if pointer_table_offset is None
+            else pointer_table_offset
         )
+        self.data_first_pointer = (
+            profile.weapon_name_first_pointer
+            if data_first_pointer is None
+            else data_first_pointer
+        )
+        self.data_end_pointer = (
+            profile.weapon_name_data_end_pointer
+            if data_end_pointer is None
+            else data_end_pointer
+        )
+        raw = self._source[
+            self.pointer_table_offset :
+            self.pointer_table_offset + profile.weapon_name_pointer_count * 2
+        ]
         self.original_pointers = tuple(
             struct.unpack(f"<{profile.weapon_name_pointer_count}H", raw)
         )
-        if self.original_pointers[0] != profile.weapon_name_first_pointer:
+        if self.original_pointers[0] != self.data_first_pointer:
             raise RomFormatError("武器名称指针表起始标记不正确。")
         if any(
-            not profile.weapon_name_first_pointer
+            not self.data_first_pointer
             <= pointer
-            < profile.weapon_name_data_end_pointer
+            < self.data_end_pointer
             for pointer in self.original_pointers
         ):
             raise RomFormatError("武器名称指针超出已验证数据区。")
@@ -49,20 +74,35 @@ class WeaponNameReferenceCodec:
             pointer: (
                 unique_pointers[index + 1]
                 if index + 1 < len(unique_pointers)
-                else profile.weapon_name_data_end_pointer
+                else self.data_end_pointer
             )
             - pointer
             for index, pointer in enumerate(unique_pointers)
         }
         if any(capacity <= 0 for capacity in self.capacities.values()):
             raise RomFormatError("武器名称记录容量无效。")
+        self._pointer_order_signature: bytes | None = None
+        self._pointer_order: tuple[int, ...] = ()
+
+    def _sorted_pointers(self, source: bytes | bytearray) -> tuple[int, ...]:
+        """Return the pointer order without rescanning it for every label."""
+
+        profile = self.rom.profile
+        start = self.pointer_table_offset
+        end = start + profile.weapon_name_pointer_count * 2
+        signature = bytes(source[start:end])
+        if signature != self._pointer_order_signature:
+            self._pointer_order_signature = signature
+            self._pointer_order = tuple(
+                sorted(set(struct.unpack(f"<{profile.weapon_name_pointer_count}H", signature)))
+            )
+        return self._pointer_order
 
     def pointer_offset(self, weapon_id: int) -> int:
         profile = self.rom.profile
         if not 0 <= weapon_id < profile.weapon_name_pointer_count:
             raise IndexError("武器名称 ID 必须在 00—FF 之间。")
-        assert profile.weapon_name_pointer_table_offset is not None
-        return profile.weapon_name_pointer_table_offset + weapon_id * 2
+        return self.pointer_table_offset + weapon_id * 2
 
     def pointer(self, weapon_id: int, data: bytes | bytearray | None = None) -> int:
         source = self.rom.data if data is None else data
@@ -72,9 +112,7 @@ class WeaponNameReferenceCodec:
     def pointer_to_file_offset(self, pointer: int) -> int:
         profile = self.rom.profile
         assert profile.weapon_name_data_prg_bank is not None
-        assert profile.weapon_name_first_pointer is not None
-        assert profile.weapon_name_data_end_pointer is not None
-        if not profile.weapon_name_first_pointer <= pointer < profile.weapon_name_data_end_pointer:
+        if not self.data_first_pointer <= pointer < self.data_end_pointer:
             raise ValueError(f"武器名称 CPU 指针 ${pointer:04X} 无效。")
         return (
             16
@@ -89,17 +127,12 @@ class WeaponNameReferenceCodec:
         source = self.rom.data if data is None else data
         pointer = self.pointer(weapon_id, source)
         offset = self.pointer_to_file_offset(pointer)
-        pointers = sorted(
-            set(
-                self.pointer(index, source)
-                for index in range(self.rom.profile.weapon_name_pointer_count)
-            )
-        )
+        pointers = self._sorted_pointers(source)
         position = pointers.index(pointer)
         end = (
             pointers[position + 1]
             if position + 1 < len(pointers)
-            else self.rom.profile.weapon_name_data_end_pointer
+            else self.data_end_pointer
         )
         assert end is not None
         return bytes(source[offset : offset + end - pointer])
@@ -144,6 +177,7 @@ class WeaponNameReferenceCodec:
         data: bytes | bytearray,
         weapon_id: int,
         text: str,
+        text_table: TextTable | None = None,
     ) -> tuple[tuple[int, bytes, bytes], ...]:
         """Repack all weapon names and pointers inside the verified pool."""
 
@@ -158,7 +192,9 @@ class WeaponNameReferenceCodec:
         source = bytes(data)
         current = self._current_records(source)
         old = current[1][current[0][weapon_id]]
-        encoded = default_dc_text_table().encode_preserving_tokens(old, value)
+        encoded = (text_table or default_dc_text_table()).encode_preserving_tokens(
+            old, value
+        )
         replacement = encoded if encoded.endswith(b"\xFF") else encoded + b"\xFF"
         return self._repack_raw(source, weapon_id, replacement, current=current)
 
@@ -171,10 +207,10 @@ class WeaponNameReferenceCodec:
             for index in range(profile.weapon_name_pointer_count)
         )
         unique_pointers = sorted(set(pointers))
-        pool_offset = self.pointer_to_file_offset(profile.weapon_name_first_pointer)
+        pool_offset = self.pointer_to_file_offset(self.data_first_pointer)
         pool_file_end = pool_offset + (
-            profile.weapon_name_data_end_pointer
-            - profile.weapon_name_first_pointer
+            self.data_end_pointer
+            - self.data_first_pointer
         )
         records: dict[int, bytes] = {}
         for position, pointer in enumerate(unique_pointers):
@@ -214,36 +250,33 @@ class WeaponNameReferenceCodec:
         unique_pointers = sorted(records)
         records[pointers[weapon_id]] = bytes(replacement)
 
-        assert profile.weapon_name_first_pointer is not None
-        assert profile.weapon_name_data_end_pointer is not None
-        cursor = profile.weapon_name_first_pointer
+        cursor = self.data_first_pointer
         assigned_by_source: dict[int, int] = {}
         packed = bytearray()
         for pointer in unique_pointers:
             raw = records[pointer]
             assigned_by_source[pointer] = cursor
             cursor += len(raw)
-            if cursor > profile.weapon_name_data_end_pointer:
+            if cursor > self.data_end_pointer:
                 capacity = (
-                    profile.weapon_name_data_end_pointer
-                    - profile.weapon_name_first_pointer
+                    self.data_end_pointer
+                    - self.data_first_pointer
                 )
                 raise ValueError(
                     f"武器名称共享池容量不足：需要 "
-                    f"{cursor - profile.weapon_name_first_pointer} 字节，"
+                    f"{cursor - self.data_first_pointer} 字节，"
                     f"固定容量为 {capacity} 字节。请缩短其他武器名称。"
                 )
             packed.extend(raw)
 
         new_pointers = tuple(assigned_by_source[pointer] for pointer in pointers)
-        table_offset = profile.weapon_name_pointer_table_offset
-        assert table_offset is not None
+        table_offset = self.pointer_table_offset
         table_size = profile.weapon_name_pointer_count * 2
         pool_size = (
-            profile.weapon_name_data_end_pointer
-            - profile.weapon_name_first_pointer
+            self.data_end_pointer
+            - self.data_first_pointer
         )
-        pool_offset = self.pointer_to_file_offset(profile.weapon_name_first_pointer)
+        pool_offset = self.pointer_to_file_offset(self.data_first_pointer)
         after_pool = bytes(packed) + b"\xFF" * (pool_size - len(packed))
         patches = (
             (

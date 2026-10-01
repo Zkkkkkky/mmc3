@@ -1,0 +1,288 @@
+{
+  "schema_version": 1,
+  "validated": true,
+  "error": null,
+  "execution_record_count": 16,
+  "diff_count": 0,
+  "sha256_before": "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E",
+  "sha256_after": "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E",
+  "observations": [
+    {
+      "control_id": 2700,
+      "text": "舰长",
+      "path": [
+        5,
+        25,
+        0
+      ],
+      "action": "right_click_and_state",
+      "right_click_menu": false,
+      "hidden_on_tab_x": 86,
+      "activators": [
+        [
+          120,
+          0,
+          10
+        ]
+      ]
+    },
+    {
+      "control_id": 2700,
+      "text": "舰长",
+      "path": [
+        5,
+        25,
+        0
+      ],
+      "action": "keyboard_activate",
+      "focused": true,
+      "database_alive": true,
+      "check_before": 0,
+      "check_after": 1,
+      "new_windows": [],
+      "activators": [
+        [
+          120,
+          0,
+          10
+        ]
+      ]
+    },
+    {
+      "control_id": 2700,
+      "text": "舰长",
+      "path": [
+        5,
+        25,
+        0
+      ],
+      "action": "left_click",
+      "focused": null,
+      "database_alive": true,
+      "check_before": 1,
+      "check_after": 0,
+      "new_windows": [],
+      "activators": [
+        [
+          120,
+          0,
+          10
+        ]
+      ]
+    },
+    {
+      "control_id": 2710,
+      "text": "动画测试",
+      "path": [
+        5,
+        0
+      ],
+      "action": "right_click_and_state",
+      "right_click_menu": false,
+      "hidden_on_tab_x": 14,
+      "activators": []
+    },
+    {
+      "control_id": 2710,
+      "text": "动画测试",
+      "path": [
+        5,
+        0
+      ],
+      "action": "keyboard_activate",
+      "focused": true,
+      "database_alive": true,
+      "check_before": 0,
+      "check_after": 0,
+      "new_windows": [],
+      "activators": []
+    },
+    {
+      "control_id": 2710,
+      "text": "动画测试",
+      "path": [
+        5,
+        0
+      ],
+      "action": "left_click",
+      "focused": null,
+      "database_alive": true,
+      "check_before": 0,
+      "check_after": 0,
+      "new_windows": [],
+      "activators": []
+    },
+    {
+      "control_id": 2720,
+      "text": "转到武器1",
+      "path": [
+        5,
+        22,
+        1
+      ],
+      "action": "right_click_and_state",
+      "right_click_menu": false,
+      "hidden_on_tab_x": 86,
+      "activators": []
+    },
+    {
+      "control_id": 2720,
+      "text": "转到武器1",
+      "path": [
+        5,
+        22,
+        1
+      ],
+      "action": "keyboard_activate",
+      "focused": false,
+      "database_alive": true,
+      "check_before": 0,
+      "check_after": null,
+      "new_windows": [],
+      "activators": []
+    },
+    {
+      "control_id": 2720,
+      "text": "转到武器1",
+      "path": [
+        5,
+        22,
+        1
+      ],
+      "action": "left_click",
+      "focused": null,
+      "database_alive": true,
+      "check_before": 0,
+      "check_after": null,
+      "new_windows": [],
+      "activators": []
+    },
+    {
+      "control_id": 2730,
+      "text": "转到武器2",
+      "path": [
+        5,
+        22,
+        0
+      ],
+      "action": "right_click_and_state",
+      "right_click_menu": false,
+      "hidden_on_tab_x": 86,
+      "activators": []
+    },
+    {
+      "control_id": 2730,
+      "text": "转到武器2",
+      "path": [
+        5,
+        22,
+        0
+      ],
+      "action": "keyboard_activate",
+      "focused": false,
+      "database_alive": true,
+      "check_before": 0,
+      "check_after": null,
+      "new_windows": [],
+      "activators": []
+    },
+    {
+      "control_id": 2730,
+      "text": "转到武器2",
+      "path": [
+        5,
+        22,
+        0
+      ],
+      "action": "left_click",
+      "focused": null,
+      "database_alive": true,
+      "check_before": 0,
+      "check_after": null,
+      "new_windows": [],
+      "activators": []
+    }
+  ],
+  "execution_records": [
+    {
+      "action_id": "ec8fce0ccba2355e7a41",
+      "status": "passed",
+      "result": "执行右键路径；可见菜单=False；条件记录链=[(120, 0, 10)]。"
+    },
+    {
+      "action_id": "bfc0253fb1b59c875e97",
+      "status": "passed",
+      "result": "切换到页签坐标 86 后隐藏；返回后可见且启用=True。"
+    },
+    {
+      "action_id": "05e7b4c63151795d6a7b",
+      "status": "passed",
+      "result": "焦点=True；数据库仍存在=True；选中状态 0->1；新增窗口=[]；条件记录链=[(120, 0, 10)]。"
+    },
+    {
+      "action_id": "ed144bcf5c9aee9bbb1d",
+      "status": "passed",
+      "result": "焦点=None；数据库仍存在=True；选中状态 1->0；新增窗口=[]；条件记录链=[(120, 0, 10)]。"
+    },
+    {
+      "action_id": "d2ff662ca4c4d8c25751",
+      "status": "passed",
+      "result": "执行右键路径；可见菜单=False；条件记录链=[]。"
+    },
+    {
+      "action_id": "a0243cea54443d09848d",
+      "status": "passed",
+      "result": "切换到页签坐标 14 后隐藏；返回后可见且启用=True。"
+    },
+    {
+      "action_id": "26850e4693ee3e0041f9",
+      "status": "passed",
+      "result": "焦点=True；数据库仍存在=True；选中状态 0->0；新增窗口=[]；条件记录链=[]。"
+    },
+    {
+      "action_id": "3f9cee42b0adbd7d3d98",
+      "status": "passed",
+      "result": "焦点=None；数据库仍存在=True；选中状态 0->0；新增窗口=[]；条件记录链=[]。"
+    },
+    {
+      "action_id": "dc45609b4eb989147c85",
+      "status": "passed",
+      "result": "执行右键路径；可见菜单=False；条件记录链=[]。"
+    },
+    {
+      "action_id": "3f1847e6ac2c4ef6c0f5",
+      "status": "passed",
+      "result": "切换到页签坐标 86 后隐藏；返回后可见且启用=True。"
+    },
+    {
+      "action_id": "5c474fb5d49c04f4399c",
+      "status": "passed",
+      "result": "焦点=False；数据库仍存在=True；选中状态 0->None；新增窗口=[]；条件记录链=[]。"
+    },
+    {
+      "action_id": "a8f4461be1cb03729696",
+      "status": "passed",
+      "result": "焦点=None；数据库仍存在=True；选中状态 0->None；新增窗口=[]；条件记录链=[]。"
+    },
+    {
+      "action_id": "9ff511c91fb4a179ec47",
+      "status": "passed",
+      "result": "执行右键路径；可见菜单=False；条件记录链=[]。"
+    },
+    {
+      "action_id": "33e90c16fcfcf8dd4ad0",
+      "status": "passed",
+      "result": "切换到页签坐标 86 后隐藏；返回后可见且启用=True。"
+    },
+    {
+      "action_id": "77a3da09f724d38272cd",
+      "status": "passed",
+      "result": "焦点=False；数据库仍存在=True；选中状态 0->None；新增窗口=[]；条件记录链=[]。"
+    },
+    {
+      "action_id": "5e2c90837a84dddcaa72",
+      "status": "passed",
+      "result": "焦点=None；数据库仍存在=True；选中状态 0->None；新增窗口=[]；条件记录链=[]。"
+    }
+  ]
+}

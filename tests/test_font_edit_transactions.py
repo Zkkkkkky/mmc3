@@ -23,6 +23,7 @@ from fc_editor.codecs.dc_font import (
     font_tokens,
     glyph_file_offset,
     page_tokens,
+    safe_channel_tokens,
     safe_unmapped_tokens,
 )
 from fc_rom_editor_core import RomProject
@@ -241,7 +242,7 @@ class FontEditTransactionTests(QtTestCase):
             return_value=("龘", True),
         ), patch.object(dialog, "_render_character", return_value=glyph):
             dialog.allocate_new_character()
-        token = bytes.fromhex("BAE3")
+        token = bytes.fromhex("D8B7")
         self.assertEqual(dialog._font_mapping_drafts[token], "龘")
         self.assertEqual(dialog._glyph_drafts[token], glyph)
         self.assertEqual(bytes(self.project.working), before)
@@ -267,6 +268,251 @@ class FontEditTransactionTests(QtTestCase):
         self.assertEqual(reopened.dc_text_table(reference=True).encode("龘"), token)
         self.assertEqual(bytes(reopened.working[offset:offset + 18]), glyph)
 
+    def test_field_write_auto_allocates_by_channel_and_undoes_as_one_change(self) -> None:
+        glyph = bytes(range(18))
+        self.project.font_glyph_renderer = lambda character: glyph
+        before = bytes(self.project.working)
+        candidates = safe_channel_tokens(
+            before,
+            set(self.project.dc_text_table().byte_to_text),
+            "unit",
+        )
+        self.assertEqual(candidates[0], bytes.fromhex("D8B7"))
+
+        self.project.set_unit_name_text(9, "龘")
+
+        token = bytes.fromhex("D8B7")
+        self.assertEqual(self.project.font_character_overrides[token], "龘")
+        self.assertEqual(self.project.unit_name_record_bytes(9)[:2], token)
+        self.assertEqual(self.project.unit_display_name(9), "龘")
+        offset = glyph_file_offset(token, writable=True)
+        self.assertEqual(bytes(self.project.working[offset:offset + 18]), glyph)
+        self.project.undo()
+        self.assertEqual(bytes(self.project.working), before)
+        self.assertFalse(self.project.font_character_overrides)
+
+    def test_story_and_name_channels_prefer_different_safe_pages(self) -> None:
+        story_table, story_allocated = self.project.prospective_font_text_table(
+            "龘", channel="story"
+        )
+        name_table, name_allocated = self.project.prospective_font_text_table(
+            "龘", channel="name"
+        )
+        self.assertEqual(story_allocated["龘"], bytes.fromhex("BAE3"))
+        self.assertEqual(name_allocated["龘"], bytes.fromhex("D8B7"))
+        self.assertEqual(story_table.encode("龘"), bytes.fromhex("BAE3"))
+        self.assertEqual(name_table.encode("龘"), bytes.fromhex("D8B7"))
+
+    def test_name_channels_never_allocate_story_only_pages(self) -> None:
+        name_leads = {0xC8, 0xC9, 0xCA, 0xCB, 0xD8, 0xD9, 0xDA, 0xDB}
+        candidates = safe_channel_tokens(
+            bytes(self.project.original),
+            set(self.project.dc_text_table(channel="unit").byte_to_text),
+            "unit",
+            reclaimed_data=bytes(self.project.working),
+        )
+        self.assertEqual(len(candidates), 20)
+        self.assertTrue(candidates)
+        self.assertTrue(all(token[0] in name_leads for token in candidates))
+
+        self.project.clear_unused_builtin_font_glyphs()
+        reclaimed_candidates = safe_channel_tokens(
+            bytes(self.project.original),
+            set(self.project.dc_text_table(channel="unit").byte_to_text),
+            "unit",
+            set(self.project.font_disabled_builtin_tokens),
+            reclaimed_data=bytes(self.project.working),
+        )
+        self.assertEqual(len(reclaimed_candidates), 302)
+        self.assertTrue(all(token[0] in name_leads for token in reclaimed_candidates))
+
+    def test_cross_channel_character_gets_a_compatible_alias(self) -> None:
+        story_token = bytes.fromhex("BAE3")
+        glyph = bytes(range(18))
+        self.project.set_font_glyphs({story_token: glyph})
+        self.project.replace_font_character_overrides({story_token: "龘"})
+        self.project.font_glyph_renderer = lambda _character: glyph
+
+        allocated = self.project.ensure_font_characters("龘", channel="unit")
+        name_token = allocated["龘"]
+        self.assertEqual(name_token, bytes.fromhex("D8B7"))
+        self.assertEqual(self.project.font_character_overrides[story_token], "龘")
+        self.assertEqual(self.project.font_character_overrides[name_token], "龘")
+        self.assertEqual(
+            self.project.dc_text_table(channel="story").encode("龘"),
+            story_token,
+        )
+        self.assertEqual(
+            self.project.dc_text_table(channel="unit").encode("龘"),
+            name_token,
+        )
+
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "channel-alias.dcmod"
+            self.project.save_project(path)
+            reopened = RomProject.load_project(path, DEFAULT_ROM)
+        self.assertEqual(reopened.font_character_overrides[story_token], "龘")
+        self.assertEqual(reopened.font_character_overrides[name_token], "龘")
+        self.assertEqual(
+            reopened.dc_text_table(channel="unit").encode("龘"), name_token
+        )
+
+    def test_name_channel_rejects_raw_story_page_token(self) -> None:
+        with self.assertRaisesRegex(ValueError, "不能显示"):
+            self.project.prospective_font_text_table(
+                "<BAE3>", channel="unit", validate_renderer=True
+            )
+
+    def test_base_safe_slot_is_rechecked_against_current_rom(self) -> None:
+        token = bytes.fromhex("BAE3")
+        self.project.working[0x200:0x202] = token
+        candidates = safe_channel_tokens(
+            bytes(self.project.original),
+            set(self.project.dc_text_table(channel="story").byte_to_text),
+            "story",
+            reclaimed_data=bytes(self.project.working),
+        )
+        self.assertNotIn(token, candidates)
+        self.assertEqual(candidates[0], bytes.fromhex("BAE4"))
+
+    def test_unused_custom_detection_and_cleanup_never_clear_builtin_glyphs(self) -> None:
+        glyph = bytes(range(18))
+        self.project.font_glyph_renderer = lambda character: glyph
+        before = bytes(self.project.working)
+        allocated = self.project.ensure_font_characters("龘", channel="story")
+        token = allocated["龘"]
+        audit = self.project.font_usage_audit()
+        self.assertIn(token, audit.unused_custom_tokens)
+        self.assertNotIn(token, audit.unused_builtin_tokens)
+
+        cleared = self.project.clear_unused_custom_font_glyphs()
+        self.assertEqual(cleared, (token,))
+        self.assertNotIn(token, self.project.font_character_overrides)
+        offset = glyph_file_offset(token, writable=True)
+        self.assertEqual(bytes(self.project.working[offset:offset + 18]), b"\xff" * 18)
+        self.project.undo()
+        self.assertEqual(self.project.font_character_overrides[token], "龘")
+        self.project.undo()
+        self.assertEqual(bytes(self.project.working), before)
+
+    def test_dialog_cleanup_is_staged_until_confirmed(self) -> None:
+        self.project.font_glyph_renderer = lambda character: bytes(range(18))
+        token = self.project.ensure_font_characters("龘", channel="story")["龘"]
+        dialog = self.dialog()
+        before = bytes(self.project.working)
+        with patch(
+            "dc_modifier.font_edit.QMessageBox.question",
+            return_value=QMessageBox.StandardButton.Yes,
+        ):
+            dialog.clear_unused_custom_font_glyphs()
+        self.assertIn(token, self.project.font_character_overrides)
+        self.assertNotIn(token, dialog._font_mapping_drafts)
+        self.assertEqual(dialog._glyph_drafts[token], b"\xff" * 18)
+        self.assertEqual(bytes(self.project.working), before)
+        dialog.accept()
+        self.assertNotIn(token, self.project.font_character_overrides)
+        self.project.undo()
+        self.assertEqual(self.project.font_character_overrides[token], "龘")
+        self.assertEqual(bytes(self.project.working), before)
+
+    def test_unused_builtin_reclamation_is_reusable_persistent_and_reversible(self) -> None:
+        before = bytes(self.project.working)
+        audit = self.project.font_usage_audit()
+        self.assertEqual(len(audit.unused_builtin_tokens), 485)
+        token = audit.unused_builtin_tokens[0]
+        character = self.project.dc_text_table().byte_to_text[token]
+        offset = glyph_file_offset(token, writable=True)
+        original_glyph = before[offset:offset + 18]
+
+        cleared = self.project.clear_unused_builtin_font_glyphs()
+        self.assertIn(token, cleared)
+        self.assertIn(token, self.project.font_disabled_builtin_tokens)
+        self.assertNotIn(token, self.project.dc_text_table().byte_to_text)
+        self.assertEqual(bytes(self.project.working[offset:offset + 18]), b"\xff" * 18)
+        self.assertGreater(
+            len(
+                safe_unmapped_tokens(
+                    bytes(self.project.working),
+                    set(self.project.dc_text_table().byte_to_text),
+                )
+            ),
+            76,
+        )
+
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "reclaimed-font.dcmod"
+            self.project.save_project(path)
+            reopened = RomProject.load_project(path, DEFAULT_ROM)
+        self.assertIn(token, reopened.font_disabled_builtin_tokens)
+        self.assertNotIn(token, reopened.dc_text_table().byte_to_text)
+
+        restored = self.project.restore_disabled_builtin_font_glyphs()
+        self.assertIn(token, restored)
+        self.assertNotIn(token, self.project.font_disabled_builtin_tokens)
+        self.assertEqual(self.project.dc_text_table().byte_to_text[token], character)
+        self.assertEqual(bytes(self.project.working[offset:offset + 18]), original_glyph)
+        self.project.undo()
+        self.assertIn(token, self.project.font_disabled_builtin_tokens)
+        self.project.undo()
+        self.assertEqual(bytes(self.project.working), before)
+        self.assertFalse(self.project.font_disabled_builtin_tokens)
+
+    def test_dialog_builtin_reclamation_is_staged_and_can_be_cancelled(self) -> None:
+        dialog = self.dialog()
+        before = bytes(self.project.working)
+        with patch(
+            "dc_modifier.font_edit.QMessageBox.question",
+            return_value=QMessageBox.StandardButton.Yes,
+        ):
+            dialog.clear_unused_builtin_font_glyphs()
+        self.assertEqual(len(dialog._font_disabled_drafts), 485)
+        self.assertFalse(self.project.font_disabled_builtin_tokens)
+        self.assertEqual(bytes(self.project.working), before)
+
+    def test_reclaimed_builtin_slot_can_be_reassigned_and_reopened(self) -> None:
+        audit = self.project.font_usage_audit()
+        reclaimed = set(self.project.clear_unused_builtin_font_glyphs())
+        self.assertEqual(reclaimed, set(audit.unused_builtin_tokens))
+        glyph = bytes(range(18))
+        self.project.font_glyph_renderer = lambda _character: glyph
+
+        allocated = self.project.ensure_font_characters("龘", channel="name")
+        token = allocated["龘"]
+        self.assertIn(token, reclaimed)
+        self.assertIn(token, self.project.font_disabled_builtin_tokens)
+        self.assertEqual(self.project.dc_text_table().encode("龘"), token)
+
+        # Restoration must not overwrite a reclaimed slot that now belongs to
+        # a new character; it restores only still-unassigned built-ins.
+        restored = self.project.restore_disabled_builtin_font_glyphs()
+        self.assertNotIn(token, restored)
+        offset = glyph_file_offset(token, writable=True)
+        self.assertEqual(bytes(self.project.working[offset:offset + 18]), glyph)
+
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "reassigned-builtin.dcmod"
+            self.project.save_project(path)
+            reopened = RomProject.load_project(path, DEFAULT_ROM)
+        self.assertEqual(reopened.dc_text_table().encode("龘"), token)
+        self.assertEqual(bytes(reopened.working[offset:offset + 18]), glyph)
+
+    def test_dialog_builtin_reclamation_commits_as_one_undo(self) -> None:
+        dialog = self.dialog()
+        before = bytes(self.project.working)
+        with patch(
+            "dc_modifier.font_edit.QMessageBox.question",
+            return_value=QMessageBox.StandardButton.Yes,
+        ):
+            dialog.clear_unused_builtin_font_glyphs()
+        dialog.accept()
+        self.assertEqual(len(self.project.font_disabled_builtin_tokens), 485)
+        self.project.undo()
+        self.assertFalse(self.project.font_disabled_builtin_tokens)
+        self.assertEqual(bytes(self.project.working), before)
+        dialog.reject()
+        self.assertFalse(self.project.font_disabled_builtin_tokens)
+        self.assertEqual(bytes(self.project.working), before)
+
     def test_full_font_file_roundtrip_is_deterministic_and_strict(self) -> None:
         glyphs = {
             token: bytes(self.project.working[
@@ -287,6 +533,23 @@ class FontEditTransactionTests(QtTestCase):
         self.assertEqual(raw, encode_full_font_file(decoded_glyphs, decoded_mappings))
         with self.assertRaisesRegex(ValueError, "长度"):
             decode_full_font_file(raw + b"\x00")
+
+    def test_full_font_file_preserves_cross_channel_aliases(self) -> None:
+        glyphs = {
+            token: bytes(self.project.working[
+                glyph_file_offset(token, writable=True):
+                glyph_file_offset(token, writable=True) + 18
+            ])
+            for token in font_tokens()
+        }
+        mappings = {
+            bytes.fromhex("BAE3"): "龘",
+            bytes.fromhex("D8B7"): "龘",
+        }
+        _decoded_glyphs, decoded_mappings = decode_full_font_file(
+            encode_full_font_file(glyphs, mappings)
+        )
+        self.assertEqual(decoded_mappings, mappings)
 
     def test_full_font_import_is_one_atomic_undo_and_preserves_padding(self) -> None:
         dialog = self.dialog()

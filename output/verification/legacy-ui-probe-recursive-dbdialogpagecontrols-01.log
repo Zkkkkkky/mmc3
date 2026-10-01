@@ -1,0 +1,16 @@
+[    0.0s] launched pid=3248
+[    0.0s] === stage A: launcher -> main window (no ROM) ===
+[    3.0s] top window: {'hwnd': 1705458, 'title': 'SRW2�޸���V1.5', 'class': 'WTWindow', 'rect': {'left': 571, 'top': 244, 'right': 1346, 'bottom': 843, 'width': 775, 'height': 599}, 'pid': 3248}
+[    4.0s] dump A01_������: title='SRW2�޸���V1.5' class='WTWindow' controls=8 shot=ok
+[   12.4s] main window hwnd=1182094 title='SRW2���ݰ��޸���V1.0'
+[   13.9s] dump A02_������_δ����ROM: title='SRW2���ݰ��޸���V1.0' class='WTWindow' controls=63 shot=ok
+[   21.9s] === stage LOAD: load ROM copy only ===
+[   23.1s] dump LOAD01_��ROM�Ի���: title='���ļ�' class='#32770' controls=49 shot=ok
+[   23.6s] open dialog confirmed gone=True
+[   30.6s] ROM loaded without main-window sweep, title='SRW2���ݰ��޸���V1.0��D:\\GIT\\mmc3\\output\\build\\legacy-ui-probe\\database-battle-dialogue-page-controls.nes'
+[   31.6s] dump LOAD02_������_�����: title='SRW2���ݰ��޸���V1.0��D:\\GIT\\mmc3\\output\\build\\legacy-ui-probe\\database-battle-dialogue-page-controls.nes' class='WTWindow' controls=63 shot=ok
+[   31.6s] === stage DBDIALOGPAGECONTROLS ===
+[   32.7s] ���ݿ�: hwnd=4851176 title='���ݿ�'
+[   41.0s] battle-dialogue page attempt=0 path=[5, 11, 0]
+[   44.0s] DBDIALOGPAGECONTROLS complete: 4/4 canonical actions, zero ROM diff
+[   44.2s] terminated owned pid=3248

@@ -1,0 +1,50 @@
+{
+  "tag": "DBCMD_01_机体修改_导出机体_14",
+  "hwnd": 525602,
+  "title": "QQ",
+  "class": "Chrome_WidgetWin_1",
+  "rect": {
+    "left": -32000,
+    "top": -32000,
+    "right": -31801,
+    "bottom": -31966,
+    "width": 199,
+    "height": 34
+  },
+  "pid": 11988,
+  "tree": {
+    "hwnd": 525602,
+    "class": "Chrome_WidgetWin_1",
+    "text": "QQ",
+    "ctrl_id": 0,
+    "rect": {
+      "left": -32000,
+      "top": -32000,
+      "right": -31801,
+      "bottom": -31966,
+      "width": 199,
+      "height": 34
+    },
+    "visible": true,
+    "enabled": true,
+    "children": [
+      {
+        "hwnd": 1378514,
+        "class": "Intermediate D3D Window",
+        "text": "",
+        "ctrl_id": 0,
+        "rect": {
+          "left": -32000,
+          "top": -32000,
+          "right": -30796,
+          "bottom": -31221,
+          "width": 1204,
+          "height": 779
+        },
+        "visible": true,
+        "enabled": false,
+        "children": []
+      }
+    ]
+  }
+}

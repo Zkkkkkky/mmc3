@@ -8,6 +8,7 @@ import unittest
 import zipfile
 from dataclasses import replace
 from pathlib import Path
+from unittest.mock import patch
 
 from fc_editor.codecs.battle_music import BattleMusicCodec
 from fc_editor.codecs.character_name import CharacterNameCodec
@@ -433,6 +434,32 @@ class TextTableTests(unittest.TestCase):
 
 
 class EditorProjectTests(unittest.TestCase):
+    def test_render_caches_decode_once_per_project_revision(self) -> None:
+        project = RomProject.load(TARGET_ROM)
+        with patch.object(
+            project.unit_name_codec,
+            "record_bytes",
+            wraps=project.unit_name_codec.record_bytes,
+        ) as unit_decode:
+            first = project.unit_display_name(1)
+            self.assertEqual(project.unit_display_name(1), first)
+            self.assertEqual(unit_decode.call_count, 1)
+            project.set_hit_threshold(project.get_hit_threshold() + 1)
+            self.assertEqual(project.unit_display_name(1), first)
+            self.assertEqual(unit_decode.call_count, 2)
+
+        with patch.object(
+            project.chr_codec,
+            "decode_tile",
+            wraps=project.chr_codec.decode_tile,
+        ) as tile_decode:
+            pixels = project.chr_tile_pixels(0)
+            self.assertEqual(project.chr_tile_pixels(0), pixels)
+            self.assertEqual(tile_decode.call_count, 1)
+            project.set_hit_threshold(project.get_hit_threshold() - 1)
+            self.assertEqual(project.chr_tile_pixels(0), pixels)
+            self.assertEqual(tile_decode.call_count, 2)
+
     def test_public_writers_reject_configured_read_only_roots(self) -> None:
         project = RomProject.load(TARGET_ROM)
         with tempfile.TemporaryDirectory() as directory:
@@ -766,9 +793,12 @@ class EditorProjectTests(unittest.TestCase):
                 for character_id in range(project.profile.character_name_count)
             )
         )
-        self.assertFalse(
-            any("用途未确认" in track.label for track in project.profile.battle_music.tracks)
-        )
+        tracks = {track.command: track.label for track in project.profile.battle_music.tracks}
+        self.assertEqual(set(range(0x80, 0xA4)), set(tracks) - {0x00})
+        self.assertEqual(tracks[0x87], "地球我方音乐")
+        self.assertEqual(tracks[0x93], "通关音乐")
+        self.assertEqual(tracks[0x9D], "音乐9D（Ash to Ash）")
+        self.assertTrue(any("用途未确认" in label for label in tracks.values()))
 
     def test_unit_weapon_and_weapon_name_project_round_trip(self) -> None:
         project = RomProject.load(TARGET_ROM)
@@ -788,6 +818,40 @@ class EditorProjectTests(unittest.TestCase):
         project.reset_weapon_name(0x0B)
         self.assertEqual(project.get_unit_weapons(0x25), original_slots)
         self.assertEqual(project.get_weapon_name_pointer(0x0B), original_name)
+
+    def test_clear_unit_bundle_empties_instead_of_restoring_original(self) -> None:
+        project = RomProject.load(TARGET_ROM)
+        unit_id = 0x09
+        before = bytes(project.working)
+        self.assertNotEqual(project.record_bytes(unit_id), bytes(16))
+        self.assertNotEqual(project.unit_display_name(unit_id), "空白/未分配机体槽")
+        self.assertNotEqual(project.get_unit_weapons(unit_id), (0, 0))
+
+        project.clear_unit_bundle(unit_id)
+
+        self.assertEqual(project.record_bytes(unit_id), bytes(16))
+        self.assertEqual(project.unit_display_name(unit_id), "空白/未分配机体槽")
+        self.assertEqual(project.get_unit_weapons(unit_id), (0, 0))
+        self.assertEqual(len(project._undo_stack), 1)
+        project.undo()
+        self.assertEqual(bytes(project.working), before)
+
+    def test_clear_all_unit_bundles_empties_every_slot_atomically(self) -> None:
+        project = RomProject.load(TARGET_ROM)
+        before = bytes(project.working)
+
+        project.clear_all_unit_bundles()
+
+        for unit_id in (0x01, 0x09, 0x25, 0x80, 0xFF):
+            self.assertEqual(project.record_bytes(unit_id), bytes(16))
+            self.assertEqual(
+                project.unit_display_name(unit_id), "空白/未分配机体槽"
+            )
+            self.assertEqual(project.unit_name_record_bytes(unit_id), b"\xFF")
+            self.assertEqual(project.get_unit_weapons(unit_id), (0, 0))
+        self.assertEqual(len(project._undo_stack), 1)
+        project.undo()
+        self.assertEqual(bytes(project.working), before)
 
     def test_character_name_reference_project_round_trip(self) -> None:
         project = RomProject.load(TARGET_ROM)
@@ -854,18 +918,17 @@ class EditorProjectTests(unittest.TestCase):
         self.assertEqual(bytes(project.working), before)
         self.assertEqual(project.weapon_display_name(0x0B), first)
 
-    def test_unit_name_shared_pool_allows_balanced_growth(self) -> None:
+    def test_unit_name_extension_allows_independent_growth(self) -> None:
         project = RomProject.load(TARGET_ROM)
         first = project.unit_display_name(0x01)
         second = project.unit_display_name(0x02)
-        aliases = project.unit_name_source_ids(0x01)
         before = bytes(project.working)
 
         project.set_unit_name_text(0x01, "A")
         project.set_unit_name_text(0x02, second + "A")
         self.assertEqual(project.unit_display_name(0x01), "A")
         self.assertEqual(project.unit_display_name(0x02), second + "A")
-        self.assertEqual(project.unit_name_source_ids(0x01), aliases)
+        self.assertEqual(project.unit_name_source_ids(0x01), (0x01,))
         self.assertFalse(any(issue.severity == "error" for issue in project.validate()))
         expected_source_ids = project.unit_name_codec.baseline_source_ids(
             project.unit_name_codec.original_pointers[0x02]
@@ -885,7 +948,7 @@ class EditorProjectTests(unittest.TestCase):
         self.assertEqual(bytes(project.working), before)
         self.assertEqual(project.unit_display_name(0x01), first)
 
-    def test_unit_name_growth_rejects_when_canonical_record_is_unreferenced(self) -> None:
+    def test_unit_name_edit_restores_unreferenced_canonical_identity(self) -> None:
         project = RomProject.load(TARGET_ROM)
         unique_id = next(
             ids[0]
@@ -894,18 +957,18 @@ class EditorProjectTests(unittest.TestCase):
         )
         target_id = 0x02 if unique_id != 0x02 else 0x03
         project.set_unit_name_reference(unique_id, target_id)
-        before = bytes(project.working)
-        with self.assertRaisesRegex(ValueError, "未被引用的规范记录"):
-            project.set_unit_name_text(
-                target_id, project.unit_display_name(target_id) + "A"
-            )
-        self.assertEqual(bytes(project.working), before)
+        replacement = project.unit_display_name(target_id) + "A"
+        project.set_unit_name_text(target_id, replacement)
+        project.set_unit_name_text(unique_id, "B")
+        self.assertEqual(project.unit_display_name(target_id), replacement)
+        self.assertEqual(project.unit_display_name(unique_id), "B")
+        self.assertEqual(project.unit_name_source_ids(unique_id), (unique_id,))
 
     def test_direct_name_rejects_overflow_without_mutation(self) -> None:
         project = RomProject.load(TARGET_ROM)
         before = bytes(project.working)
-        with self.assertRaisesRegex(ValueError, "机体名称共享池容量不足"):
-            project.set_unit_name_text(0x01, "这是一个肯定放不下的超长机体名称")
+        with self.assertRaisesRegex(ValueError, "机体名称扩展池容量不足"):
+            project.set_unit_name_text(0x01, "A" * 16000)
         self.assertEqual(bytes(project.working), before)
 
     def test_dc_unit_names_match_verified_labels_and_deduplicate_shared_pointers(self) -> None:
@@ -1140,6 +1203,25 @@ class UnitPackageTests(unittest.TestCase):
     def test_shared_target_impact_is_reported(self) -> None:
         project = RomProject.load(TARGET_ROM)
         self.assertEqual(affected_unit_ids(project, 1), (1, 5, 72))
+
+    def test_package_import_detaches_shared_target_record(self) -> None:
+        project = RomProject.load(TARGET_ROM)
+        package = package_from_project(project, 2)
+        shared_ids = affected_unit_ids(project, 1)
+        self.assertGreater(len(shared_ids), 1)
+        untouched = {
+            unit_id: project.record_bytes(unit_id)
+            for unit_id in shared_ids if unit_id != 1
+        }
+
+        affected = apply_unit_package(project, package, 1)
+
+        self.assertEqual(affected, (1,))
+        self.assertEqual(project.record_bytes(1), package.unit_record)
+        self.assertTrue(all(
+            project.record_bytes(unit_id) == raw
+            for unit_id, raw in untouched.items()
+        ))
 
     def test_package_applies_chr_assets_and_undoes_everything_together(self) -> None:
         project = RomProject.load(TARGET_ROM)

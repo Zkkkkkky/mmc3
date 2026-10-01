@@ -1,0 +1,86 @@
+{
+  "tag": "DBSAVE_F2_条件确认",
+  "hwnd": 1835400,
+  "title": "信息：",
+  "class": "#32770",
+  "rect": {
+    "left": 811,
+    "top": 411,
+    "right": 1110,
+    "bottom": 609,
+    "width": 299,
+    "height": 198
+  },
+  "pid": 17576,
+  "tree": {
+    "hwnd": 1835400,
+    "class": "#32770",
+    "text": "信息：",
+    "ctrl_id": 0,
+    "rect": {
+      "left": 811,
+      "top": 411,
+      "right": 1110,
+      "bottom": 609,
+      "width": 299,
+      "height": 198
+    },
+    "visible": true,
+    "enabled": true,
+    "children": [
+      {
+        "hwnd": 2297254,
+        "class": "Button",
+        "text": "是(&Y)",
+        "ctrl_id": 6,
+        "rect": {
+          "left": 854,
+          "top": 555,
+          "right": 964,
+          "bottom": 590,
+          "width": 110,
+          "height": 35
+        },
+        "visible": true,
+        "enabled": true,
+        "button_check_state": 0,
+        "children": []
+      },
+      {
+        "hwnd": 9899472,
+        "class": "Button",
+        "text": "否(&N)",
+        "ctrl_id": 7,
+        "rect": {
+          "left": 974,
+          "top": 555,
+          "right": 1084,
+          "bottom": 590,
+          "width": 110,
+          "height": 35
+        },
+        "visible": true,
+        "enabled": true,
+        "button_check_state": 0,
+        "children": []
+      },
+      {
+        "hwnd": 6098272,
+        "class": "Static",
+        "text": "是否是大型机体专用光束武器？",
+        "ctrl_id": 65535,
+        "rect": {
+          "left": 829,
+          "top": 485,
+          "right": 1063,
+          "bottom": 508,
+          "width": 234,
+          "height": 23
+        },
+        "visible": true,
+        "enabled": true,
+        "children": []
+      }
+    ]
+  }
+}

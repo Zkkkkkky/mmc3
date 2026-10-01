@@ -1,0 +1,181 @@
+{
+  "schema_version": 1,
+  "validated": true,
+  "scope": "isolated reference executable; parameter dialogs cancelled; immediate draft actions not saved",
+  "expected_button_count": 12,
+  "records": [
+    {
+      "button_id": 100,
+      "caption": "F4定义声音",
+      "status": "captured",
+      "selector_closed_by_action": false,
+      "database_signature_changed": false,
+      "descendants": [
+        {
+          "title": "定义声音",
+          "class": "WTWindow",
+          "tag": "DBWINSTR_01_F4定义声音_1",
+          "visible_controls": 6
+        }
+      ]
+    },
+    {
+      "button_id": 110,
+      "caption": "F0定义颜色",
+      "status": "captured",
+      "selector_closed_by_action": false,
+      "database_signature_changed": false,
+      "descendants": [
+        {
+          "title": "定义颜色",
+          "class": "WTWindow",
+          "tag": "DBWINSTR_02_F0定义颜色_1",
+          "visible_controls": 12
+        }
+      ]
+    },
+    {
+      "button_id": 120,
+      "caption": "F2定义光束图库",
+      "status": "captured",
+      "selector_closed_by_action": false,
+      "database_signature_changed": false,
+      "descendants": [
+        {
+          "title": "定义光束规律图库",
+          "class": "WTWindow",
+          "tag": "DBWINSTR_03_F2定义光束图库_1",
+          "visible_controls": 5
+        }
+      ]
+    },
+    {
+      "button_id": 130,
+      "caption": "F3定义光束规律",
+      "status": "captured",
+      "selector_closed_by_action": false,
+      "database_signature_changed": false,
+      "descendants": [
+        {
+          "title": "定义光束规律",
+          "class": "WTWindow",
+          "tag": "DBWINSTR_04_F3定义光束规律_1",
+          "visible_controls": 5
+        }
+      ]
+    },
+    {
+      "button_id": 200,
+      "caption": "E0切换00区域的图库号",
+      "status": "captured",
+      "selector_closed_by_action": false,
+      "database_signature_changed": false,
+      "descendants": [
+        {
+          "title": "切换精灵图库0",
+          "class": "WTWindow",
+          "tag": "DBWINSTR_05_E0切换00区域的图库号_1",
+          "visible_controls": 5
+        }
+      ]
+    },
+    {
+      "button_id": 210,
+      "caption": "E1切换01区域的图库号",
+      "status": "captured",
+      "selector_closed_by_action": false,
+      "database_signature_changed": false,
+      "descendants": [
+        {
+          "title": "切换精灵图库1",
+          "class": "WTWindow",
+          "tag": "DBWINSTR_06_E1切换01区域的图库号_1",
+          "visible_controls": 5
+        }
+      ]
+    },
+    {
+      "button_id": 140,
+      "caption": "FD移动屏幕",
+      "status": "captured",
+      "selector_closed_by_action": false,
+      "database_signature_changed": false,
+      "descendants": [
+        {
+          "title": "移动屏幕",
+          "class": "WTWindow",
+          "tag": "DBWINSTR_07_FD移动屏幕_1",
+          "visible_controls": 7
+        }
+      ]
+    },
+    {
+      "button_id": 150,
+      "caption": "FE跳转重复",
+      "status": "captured",
+      "selector_closed_by_action": false,
+      "database_signature_changed": false,
+      "descendants": [
+        {
+          "title": "跳转重复",
+          "class": "WTWindow",
+          "tag": "DBWINSTR_08_FE跳转重复_1",
+          "visible_controls": 8
+        }
+      ]
+    },
+    {
+      "button_id": 160,
+      "caption": "F9创建物体",
+      "status": "captured",
+      "selector_closed_by_action": false,
+      "database_signature_changed": false,
+      "descendants": [
+        {
+          "title": "创建物体",
+          "class": "WTWindow",
+          "tag": "DBWINSTR_09_F9创建物体_1",
+          "visible_controls": 11
+        }
+      ]
+    },
+    {
+      "button_id": 170,
+      "caption": "42/C2定义物体运行规律",
+      "status": "captured",
+      "selector_closed_by_action": false,
+      "database_signature_changed": false,
+      "descendants": [
+        {
+          "title": "运行规律",
+          "class": "WTWindow",
+          "tag": "DBWINSTR_10_42_C2定义物体运行规律_1",
+          "visible_controls": 12
+        }
+      ]
+    },
+    {
+      "button_id": 180,
+      "caption": "等待(帧)",
+      "status": "captured",
+      "selector_closed_by_action": false,
+      "database_signature_changed": false,
+      "descendants": [
+        {
+          "title": "等待(帧)",
+          "class": "WTWindow",
+          "tag": "DBWINSTR_11_等待_帧__1",
+          "visible_controls": 6
+        }
+      ]
+    },
+    {
+      "button_id": 190,
+      "caption": "FF动画结束",
+      "status": "inline_or_immediate_action",
+      "selector_closed_by_action": true,
+      "database_signature_changed": false,
+      "descendants": []
+    }
+  ]
+}

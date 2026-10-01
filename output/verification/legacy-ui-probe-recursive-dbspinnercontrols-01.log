@@ -1,0 +1,15 @@
+[    0.1s] launched pid=2880
+[    0.1s] === stage A: launcher -> main window (no ROM) ===
+[    3.1s] top window: {'hwnd': 3343864, 'title': 'SRW2�޸���V1.5', 'class': 'WTWindow', 'rect': {'left': 571, 'top': 244, 'right': 1346, 'bottom': 843, 'width': 775, 'height': 599}, 'pid': 2880}
+[    4.4s] dump A01_������: title='SRW2�޸���V1.5' class='WTWindow' controls=8 shot=ok
+[   12.8s] main window hwnd=2230752 title='SRW2���ݰ��޸���V1.0'
+[   14.2s] dump A02_������_δ����ROM: title='SRW2���ݰ��޸���V1.0' class='WTWindow' controls=63 shot=ok
+[   22.2s] === stage LOAD: load ROM copy only ===
+[   23.5s] dump LOAD01_��ROM�Ի���: title='���ļ�' class='#32770' controls=49 shot=ok
+[   24.0s] open dialog confirmed gone=True
+[   31.1s] ROM loaded without main-window sweep, title='SRW2���ݰ��޸���V1.0��D:\\GIT\\mmc3\\output\\build\\legacy-ui-probe\\database-spinner-controls.nes'
+[   32.0s] dump LOAD02_������_�����: title='SRW2���ݰ��޸���V1.0��D:\\GIT\\mmc3\\output\\build\\legacy-ui-probe\\database-spinner-controls.nes' class='WTWindow' controls=63 shot=ok
+[   32.0s] === stage DBSPINNERCONTROLS ===
+[   32.8s] ���ݿ�: hwnd=7276180 title='���ݿ�'
+[  188.5s] DBSPINNERCONTROLS complete: 96/96 actions, zero ROM diff
+[  188.7s] terminated owned pid=2880

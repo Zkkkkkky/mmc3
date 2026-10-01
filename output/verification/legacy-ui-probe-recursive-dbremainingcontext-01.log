@@ -1,0 +1,69 @@
+[    0.1s] launched pid=12912
+[    0.1s] === stage A: launcher -> main window (no ROM) ===
+[    3.1s] top window: {'hwnd': 17762028, 'title': 'SRW2�޸���V1.5', 'class': 'WTWindow', 'rect': {'left': 571, 'top': 244, 'right': 1346, 'bottom': 843, 'width': 775, 'height': 599}, 'pid': 12912}
+[    4.1s] dump A01_������: title='SRW2�޸���V1.5' class='WTWindow' controls=8 shot=ok
+[   12.5s] main window hwnd=16976468 title='SRW2���ݰ��޸���V1.0'
+[   14.0s] dump A02_������_δ����ROM: title='SRW2���ݰ��޸���V1.0' class='WTWindow' controls=63 shot=ok
+[   22.0s] === stage LOAD: load ROM copy only ===
+[   23.0s] dump LOAD01_��ROM�Ի���: title='���ļ�' class='#32770' controls=49 shot=ok
+[   23.5s] open dialog confirmed gone=True
+[   31.2s] ROM loaded without main-window sweep, title='SRW2���ݰ��޸���V1.0��D:\\GIT\\mmc3\\output\\build\\legacy-ui-probe\\database-remaining-context-actions.nes'
+[   32.2s] dump LOAD02_������_�����: title='SRW2���ݰ��޸���V1.0��D:\\GIT\\mmc3\\output\\build\\legacy-ui-probe\\database-remaining-context-actions.nes' class='WTWindow' controls=63 shot=ok
+[   32.2s] === stage DATABASECONTEXTREMAINING ===
+[   33.5s] ���ݿ�: hwnd=23135756 title='���ݿ�'
+[   49.5s] dump DBCTXREMAIN_2540_20014: title='����ָ��' class='WTWindow' controls=13 shot=ok
+[   56.5s] dump DBCTXREMAIN_2540_20016: title='��������' class='WTWindow' controls=29 shot=ok
+[  104.1s] ���ݿ�: hwnd=23135756 title='���ݿ�'
+[  109.5s] dump DBCTXREMAIN_100_20014: title='����ָ��' class='WTWindow' controls=13 shot=ok
+[  111.4s] dump DBCTXREMAIN_100_20016: title='�ȴ�(֡)' class='WTWindow' controls=29 shot=ok
+[  125.6s] ���ݿ�: hwnd=23135756 title='���ݿ�'
+[  138.4s] ���ݿ�: window did not appear (cmd 20008)
+[  138.6s] terminated owned pid=12912
+[  138.6s] launched pid=13180
+[  138.6s] === stage A: launcher -> main window (no ROM) ===
+[  141.6s] top window: {'hwnd': 22545948, 'title': 'SRW2�޸���V1.5', 'class': 'WTWindow', 'rect': {'left': 571, 'top': 244, 'right': 1346, 'bottom': 843, 'width': 775, 'height': 599}, 'pid': 13180}
+[  142.5s] dump A01_������: title='SRW2�޸���V1.5' class='WTWindow' controls=8 shot=ok
+[  150.9s] main window hwnd=12388502 title='SRW2���ݰ��޸���V1.0'
+[  152.4s] dump A02_������_δ����ROM: title='SRW2���ݰ��޸���V1.0' class='WTWindow' controls=63 shot=ok
+[  160.4s] === stage LOAD: load ROM copy only ===
+[  161.3s] dump LOAD01_��ROM�Ի���: title='���ļ�' class='#32770' controls=49 shot=ok
+[  161.9s] open dialog confirmed gone=True
+[  168.9s] ROM loaded without main-window sweep, title='SRW2���ݰ��޸���V1.0��D:\\GIT\\mmc3\\output\\build\\legacy-ui-probe\\database-remaining-context-actions.nes'
+[  169.8s] dump LOAD02_������_�����: title='SRW2���ݰ��޸���V1.0��D:\\GIT\\mmc3\\output\\build\\legacy-ui-probe\\database-remaining-context-actions.nes' class='WTWindow' controls=63 shot=ok
+[  170.9s] ���ݿ�: hwnd=15992736 title='���ݿ�'
+[  176.2s] terminated owned pid=13180
+[  176.3s] launched pid=7612
+[  176.3s] === stage A: launcher -> main window (no ROM) ===
+[  179.3s] top window: {'hwnd': 23266828, 'title': 'SRW2�޸���V1.5', 'class': 'WTWindow', 'rect': {'left': 571, 'top': 244, 'right': 1346, 'bottom': 843, 'width': 775, 'height': 599}, 'pid': 7612}
+[  180.1s] dump A01_������: title='SRW2�޸���V1.5' class='WTWindow' controls=8 shot=ok
+[  188.6s] main window hwnd=20253286 title='SRW2���ݰ��޸���V1.0'
+[  190.1s] dump A02_������_δ����ROM: title='SRW2���ݰ��޸���V1.0' class='WTWindow' controls=63 shot=ok
+[  198.1s] === stage LOAD: load ROM copy only ===
+[  199.0s] dump LOAD01_��ROM�Ի���: title='���ļ�' class='#32770' controls=49 shot=ok
+[  199.5s] open dialog confirmed gone=True
+[  206.6s] ROM loaded without main-window sweep, title='SRW2���ݰ��޸���V1.0��D:\\GIT\\mmc3\\output\\build\\legacy-ui-probe\\database-remaining-context-actions.nes'
+[  207.5s] dump LOAD02_������_�����: title='SRW2���ݰ��޸���V1.0��D:\\GIT\\mmc3\\output\\build\\legacy-ui-probe\\database-remaining-context-actions.nes' class='WTWindow' controls=63 shot=ok
+[  208.5s] ���ݿ�: hwnd=28378624 title='���ݿ�'
+[  215.8s] dump DBCTXREMAIN_640_20009: title='����ͷ��' class='#32770' controls=46 shot=ok
+[  217.3s] ���ݿ�: hwnd=28378624 title='���ݿ�'
+[  223.4s] ���ݿ�: hwnd=28378624 title='���ݿ�'
+[  230.1s] ���ݿ�: hwnd=28378624 title='���ݿ�'
+[  236.2s] ���ݿ�: hwnd=28378624 title='���ݿ�'
+[  242.4s] ���ݿ�: hwnd=28378624 title='���ݿ�'
+[  247.7s] terminated owned pid=7612
+[  247.8s] launched pid=8852
+[  247.8s] === stage A: launcher -> main window (no ROM) ===
+[  250.8s] top window: {'hwnd': 26740174, 'title': 'SRW2�޸���V1.5', 'class': 'WTWindow', 'rect': {'left': 571, 'top': 244, 'right': 1346, 'bottom': 843, 'width': 775, 'height': 599}, 'pid': 8852}
+[  251.7s] dump A01_������: title='SRW2�޸���V1.5' class='WTWindow' controls=8 shot=ok
+[  260.1s] main window hwnd=25822888 title='SRW2���ݰ��޸���V1.0'
+[  261.6s] dump A02_������_δ����ROM: title='SRW2���ݰ��޸���V1.0' class='WTWindow' controls=63 shot=ok
+[  269.6s] === stage LOAD: load ROM copy only ===
+[  270.6s] dump LOAD01_��ROM�Ի���: title='���ļ�' class='#32770' controls=49 shot=ok
+[  271.1s] open dialog confirmed gone=True
+[  278.1s] ROM loaded without main-window sweep, title='SRW2���ݰ��޸���V1.0��D:\\GIT\\mmc3\\output\\build\\legacy-ui-probe\\database-remaining-context-actions.nes'
+[  279.1s] dump LOAD02_������_�����: title='SRW2���ݰ��޸���V1.0��D:\\GIT\\mmc3\\output\\build\\legacy-ui-probe\\database-remaining-context-actions.nes' class='WTWindow' controls=63 shot=ok
+[  280.1s] ���ݿ�: hwnd=23332536 title='���ݿ�'
+[  287.3s] dump DBCTXREMAIN_110_20003: title='��������' class='#32770' controls=46 shot=ok
+[  337.7s] ���ݿ�: hwnd=23332536 title='���ݿ�'
+[  392.1s] DATABASECONTEXTREMAINING complete: 44/44 actions, zero ROM diff
+[  392.3s] terminated owned pid=8852

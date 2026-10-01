@@ -1,0 +1,136 @@
+{
+  "schema_version": 1,
+  "validated": true,
+  "error": null,
+  "execution_record_count": 25,
+  "diff_count": 0,
+  "sha256_before": "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E",
+  "sha256_after": "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E",
+  "execution_records": [
+    {
+      "action_id": "08e34645d9ec8e23f4ef",
+      "status": "passed",
+      "result": "展开/收起，共 8 项。"
+    },
+    {
+      "action_id": "9025f4aa0da3fd21d7c3",
+      "status": "passed",
+      "result": "逐项选择 8 项并恢复 0。"
+    },
+    {
+      "action_id": "722d9c4783cf0b33fc2f",
+      "status": "passed",
+      "result": "键盘读回 0 并恢复。"
+    },
+    {
+      "action_id": "43fa8bab59d1fe9fbce6",
+      "status": "passed",
+      "result": "执行右键路径。"
+    },
+    {
+      "action_id": "e85bb64534286c9ee4ac",
+      "status": "passed",
+      "result": "执行特技窗口按钮手势。"
+    },
+    {
+      "action_id": "d549a91e0cc249d6fd92",
+      "status": "passed",
+      "result": "执行特技窗口按钮手势。"
+    },
+    {
+      "action_id": "a75dcf5cb1a95491792e",
+      "status": "passed",
+      "result": "执行特技窗口按钮手势。"
+    },
+    {
+      "action_id": "f518fea82fefe1859e87",
+      "status": "passed",
+      "result": "执行特技窗口按钮手势。"
+    },
+    {
+      "action_id": "4e49894d70faf4307a6d",
+      "status": "passed",
+      "result": "执行特技窗口按钮手势。"
+    },
+    {
+      "action_id": "12e8b3e7f29c4ae8324c",
+      "status": "passed",
+      "result": "执行特技窗口按钮手势。"
+    },
+    {
+      "action_id": "9d9d573d96662abbaa80",
+      "status": "passed",
+      "result": "执行特技窗口按钮手势。"
+    },
+    {
+      "action_id": "f88900f28dd183dfb43e",
+      "status": "passed",
+      "result": "执行特技窗口按钮手势。"
+    },
+    {
+      "action_id": "6be6609a4b3f3afaeccf",
+      "status": "passed",
+      "result": "执行特技窗口按钮手势。"
+    },
+    {
+      "action_id": "678ce664ffc342cca113",
+      "status": "passed",
+      "result": "执行特技窗口按钮手势。"
+    },
+    {
+      "action_id": "7c77c6b9753c2ac11995",
+      "status": "passed",
+      "result": "执行特技窗口按钮手势。"
+    },
+    {
+      "action_id": "bde3bcaf42c1009cce41",
+      "status": "passed",
+      "result": "执行特技窗口按钮手势。"
+    },
+    {
+      "action_id": "37bb52469c724c3d761e",
+      "status": "passed",
+      "result": "执行特技窗口按钮手势。"
+    },
+    {
+      "action_id": "cbf57b92287a5272be7c",
+      "status": "passed",
+      "result": "执行特技窗口按钮手势。"
+    },
+    {
+      "action_id": "4fe987a30e2c0696126f",
+      "status": "passed",
+      "result": "执行特技窗口按钮手势。"
+    },
+    {
+      "action_id": "e98d1db27a9eb6819978",
+      "status": "passed",
+      "result": "执行特技窗口按钮手势。"
+    },
+    {
+      "action_id": "fb1a1cf22c7c76caa162",
+      "status": "passed",
+      "result": "执行特技窗口按钮手势。"
+    },
+    {
+      "action_id": "4928a053fbdffc10dbf9",
+      "status": "passed",
+      "result": "执行特技窗口按钮手势。"
+    },
+    {
+      "action_id": "162da5bf30568692391d",
+      "status": "passed",
+      "result": "执行特技窗口按钮手势。"
+    },
+    {
+      "action_id": "4afa3acfc64e81a3d415",
+      "status": "passed",
+      "result": "执行特技窗口按钮手势。"
+    },
+    {
+      "action_id": "e7c01543fa53293a7c28",
+      "status": "passed",
+      "result": "执行特技窗口按钮手势。"
+    }
+  ]
+}

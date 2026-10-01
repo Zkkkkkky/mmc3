@@ -2,16 +2,23 @@ from __future__ import annotations
 
 import struct
 
+from .bank24_composite import file_offset as bank24_file_offset
+from .bank24_composite import parse as parse_bank24
+from .bank24_composite import replacement_patches as bank24_replacement_patches
+from .bank24_composite import roots as bank24_roots
+from .bank24_composite import with_character_names
 from ..dc_text import default_dc_text_table
 from ..errors import RomFormatError
 from ..rom_image import RomImage
+from ..text_table import TextTable
 
 
 class CharacterNameCodec:
     """Read and safely repoint the verified in-battle character-name table."""
 
-    def __init__(self, rom: RomImage) -> None:
+    def __init__(self, rom: RomImage, data: bytes | bytearray | None = None) -> None:
         self.rom = rom
+        source = rom.data if data is None else data
         profile = rom.profile
         if (
             profile.character_name_pointer_table_offset is None
@@ -21,24 +28,23 @@ class CharacterNameCodec:
             or profile.character_name_count <= 0
         ):
             raise RomFormatError("当前 ROM 没有已验证的人物名称表。")
-        raw = rom.read(
-            profile.character_name_pointer_table_offset,
-            profile.character_name_count * 2,
-        )
+        resource_roots = bank24_roots(source)
+        battle_table_offset = bank24_file_offset(resource_roots[4])
+        normal_table_offset = bank24_file_offset(resource_roots[3]) + 2
+        data_end_pointer = resource_roots[5]
+        raw = bytes(source[battle_table_offset:battle_table_offset + profile.character_name_count * 2])
         self.original_pointers = tuple(
             struct.unpack(f"<{profile.character_name_count}H", raw)
         )
         self.pointers = self.original_pointers
         if (
             self.original_pointers[0] != 0
-            or self.original_pointers[1] != profile.character_name_first_pointer
+            or not self.original_pointers[1]
         ):
             raise RomFormatError("人物名称指针表起始标记不正确。")
         if any(
             pointer
-            and not profile.character_name_first_pointer
-            <= pointer
-            < profile.character_name_data_end_pointer
+            and not resource_roots[3] <= pointer < data_end_pointer
             for pointer in self.original_pointers
         ):
             raise RomFormatError("人物名称指针超出已验证数据区。")
@@ -55,7 +61,7 @@ class CharacterNameCodec:
             pointer: (
                 unique_pointers[index + 1]
                 if index + 1 < len(unique_pointers)
-                else profile.character_name_data_end_pointer
+                else data_end_pointer
             )
             - pointer
             for index, pointer in enumerate(unique_pointers)
@@ -67,49 +73,64 @@ class CharacterNameCodec:
         if profile.character_normal_name_pointer_table_offset is not None:
             if profile.character_normal_name_count <= 0:
                 raise RomFormatError("人物显示名称数量无效。")
-            raw = rom.read(
-                profile.character_normal_name_pointer_table_offset,
-                profile.character_normal_name_count * 2,
-            )
+            raw = bytes(source[normal_table_offset:normal_table_offset + profile.character_normal_name_count * 2])
             self.normal_pointers = tuple(
                 struct.unpack(f"<{profile.character_normal_name_count}H", raw)
             )
             if any(
-                not profile.character_name_first_pointer
-                <= pointer
-                < profile.character_name_data_end_pointer
+                not resource_roots[3] <= pointer < data_end_pointer
                 for pointer in self.normal_pointers
             ):
                 raise RomFormatError("人物显示名称指针超出已验证数据区。")
 
-    def pointer_offset(self, character_id: int) -> int:
+    def _table_offset(self, source: bytes | bytearray, *, normal: bool) -> int:
+        offset = bank24_file_offset(bank24_roots(source)[3 if normal else 4])
+        # Directory 4 physically starts with the reserved ID $00 pointer, while
+        # the public normal-name API exposes IDs $01—$C8 only.
+        return offset + (2 if normal else 0)
+
+    def _data_end_pointer(self, source: bytes | bytearray) -> int:
+        return bank24_roots(source)[5]
+
+    def pointer_offset(
+        self,
+        character_id: int,
+        data: bytes | bytearray | None = None,
+    ) -> int:
         if not 0 <= character_id < len(self.original_pointers):
             raise IndexError(
                 f"人物 ID 必须在 00—{len(self.original_pointers) - 1:02X} 之间。"
             )
-        offset = self.rom.profile.character_name_pointer_table_offset
-        assert offset is not None
+        source = self.rom.data if data is None else data
+        offset = self._table_offset(source, normal=False)
         return offset + character_id * 2
 
     def pointer(self, character_id: int, data: bytes | bytearray | None = None) -> int:
         source = self.rom.data if data is None else data
-        offset = self.pointer_offset(character_id)
+        offset = self.pointer_offset(character_id, source)
         return int.from_bytes(source[offset : offset + 2], "little")
 
-    def normal_pointer_offset(self, character_id: int) -> int:
+    def normal_pointer_offset(
+        self,
+        character_id: int,
+        data: bytes | bytearray | None = None,
+    ) -> int:
         profile = self.rom.profile
-        offset = profile.character_normal_name_pointer_table_offset
-        if offset is None or not 1 <= character_id <= profile.character_normal_name_count:
+        if (
+            profile.character_normal_name_pointer_table_offset is None
+            or not 1 <= character_id <= profile.character_normal_name_count
+        ):
             raise IndexError(
                 f"人物显示名称 ID 必须在 01—{profile.character_normal_name_count:02X} 之间。"
             )
-        return offset + (character_id - 1) * 2
+        source = self.rom.data if data is None else data
+        return self._table_offset(source, normal=True) + (character_id - 1) * 2
 
     def normal_pointer(
         self, character_id: int, data: bytes | bytearray | None = None
     ) -> int:
         source = self.rom.data if data is None else data
-        offset = self.normal_pointer_offset(character_id)
+        offset = self.normal_pointer_offset(character_id, source)
         return int.from_bytes(source[offset : offset + 2], "little")
 
     def _current_pointers(self, data: bytes | bytearray) -> tuple[int, ...]:
@@ -126,8 +147,7 @@ class CharacterNameCodec:
         """Return the small mutable region that determines name capacities."""
 
         profile = self.rom.profile
-        battle_offset = profile.character_name_pointer_table_offset
-        assert battle_offset is not None
+        battle_offset = self._table_offset(data, normal=False)
         parts = [
             bytes(
                 data[
@@ -135,8 +155,8 @@ class CharacterNameCodec:
                 ]
             )
         ]
-        normal_offset = profile.character_normal_name_pointer_table_offset
-        if normal_offset is not None:
+        if profile.character_normal_name_pointer_table_offset is not None:
+            normal_offset = self._table_offset(data, normal=True)
             parts.append(
                 bytes(
                     data[
@@ -152,14 +172,13 @@ class CharacterNameCodec:
         cached = self._capacity_cache.get(signature)
         if cached is not None:
             return cached
-        profile = self.rom.profile
-        assert profile.character_name_data_end_pointer is not None
+        data_end_pointer = self._data_end_pointer(data)
         pointers = sorted(set(self._current_pointers(data)))
         capacities = {
             pointer: (
                 pointers[index + 1]
                 if index + 1 < len(pointers)
-                else profile.character_name_data_end_pointer
+                else data_end_pointer
             )
             - pointer
             for index, pointer in enumerate(pointers)
@@ -187,18 +206,9 @@ class CharacterNameCodec:
         return raw[: end + 1]
 
     def pointer_to_file_offset(self, pointer: int) -> int:
-        profile = self.rom.profile
-        assert profile.character_name_data_prg_bank is not None
-        assert profile.character_name_first_pointer is not None
-        assert profile.character_name_data_end_pointer is not None
-        if not profile.character_name_first_pointer <= pointer < profile.character_name_data_end_pointer:
+        if not 0x8000 <= pointer < 0xBF40:
             raise ValueError(f"人物名称 CPU 指针 ${pointer:04X} 无效。")
-        return (
-            16
-            + profile.character_name_data_prg_bank * 0x2000
-            + pointer
-            - profile.character_name_data_window_base
-        )
+        return bank24_file_offset(pointer)
 
     def record_bytes(
         self,
@@ -209,9 +219,7 @@ class CharacterNameCodec:
         pointer = self.pointer(character_id, source)
         if not pointer:
             return b""
-        offset = self.pointer_to_file_offset(pointer)
-        capacity = self._capacity(pointer, source)
-        return bytes(source[offset : offset + capacity])
+        return self._terminated_record(pointer, source)
 
     def normal_record_bytes(
         self,
@@ -220,9 +228,7 @@ class CharacterNameCodec:
     ) -> bytes:
         source = self.rom.data if data is None else data
         pointer = self.normal_pointer(character_id, source)
-        offset = self.pointer_to_file_offset(pointer)
-        capacity = self._capacity(pointer, source)
-        return bytes(source[offset : offset + capacity])
+        return self._terminated_record(pointer, source)
 
     def source_ids(
         self, pointer: int, data: bytes | bytearray | None = None
@@ -257,7 +263,7 @@ class CharacterNameCodec:
             raise ValueError(
                 f"人物 ID 或名称来源 ID 必须在 01—{count - 1:02X} 之间。"
             )
-        offset = self.pointer_offset(character_id)
+        offset = self.pointer_offset(character_id, data)
         before = bytes(data[offset : offset + 2])
         pointer = self.pointer(source_name_id, data)
         if not pointer:
@@ -271,6 +277,7 @@ class CharacterNameCodec:
         *,
         normal_text: str | None = None,
         battle_text: str | None = None,
+        text_table: TextTable | None = None,
     ) -> tuple[tuple[int, bytes, bytes], ...]:
         """Repack both verified name tables inside their shared fixed pool."""
 
@@ -285,90 +292,32 @@ class CharacterNameCodec:
                 f"人物 ID 必须在 01—{profile.character_normal_name_count:02X} 之间。"
             )
         source = bytes(data)
-        normal_records = [
-            self._terminated_record(self.normal_pointer(index, source), source)
-            for index in range(1, profile.character_normal_name_count + 1)
-        ]
-        battle_records: list[bytes] = [b""]
-        battle_records.extend(
-            self._terminated_record(self.pointer(index, source), source)
-            for index in range(1, profile.character_name_count)
-        )
-        table = default_dc_text_table()
+        logical = parse_bank24(source)
+        table = text_table or default_dc_text_table()
 
         def encode_name(old: bytes, text: str) -> bytes:
             encoded = table.encode_preserving_tokens(old, text)
             return encoded if encoded.endswith(b"\xFF") else encoded + b"\xFF"
 
         if normal_text is not None:
-            old = normal_records[character_id - 1]
-            normal_records[character_id - 1] = encode_name(old, normal_text)
+            old = logical.normal_names[character_id - 1]
+            normal_replacement = encode_name(old, normal_text)
+        else:
+            normal_replacement = None
         if battle_text is not None:
             if character_id >= profile.character_name_count:
                 raise ValueError(f"人物 ${character_id:02X} 没有战斗名称槽。")
-            old = battle_records[character_id]
-            battle_records[character_id] = encode_name(old, battle_text)
-        for raw in (*normal_records, *battle_records[1:]):
-            if not raw or raw[-1] != 0xFF:
-                raise ValueError("人物名称必须保留结束码。")
-
-        assert profile.character_name_first_pointer is not None
-        assert profile.character_name_data_end_pointer is not None
-        cursor = profile.character_name_first_pointer
-        packed = bytearray()
-        assigned: dict[bytes, int] = {}
-
-        def allocate(raw: bytes) -> int:
-            nonlocal cursor
-            if raw in assigned:
-                return assigned[raw]
-            pointer = cursor
-            cursor += len(raw)
-            if cursor > profile.character_name_data_end_pointer:
-                capacity = (
-                    profile.character_name_data_end_pointer
-                    - profile.character_name_first_pointer
-                )
-                raise ValueError(
-                    f"人物名称共享池容量不足：需要 {cursor - profile.character_name_first_pointer} "
-                    f"字节，固定容量为 {capacity} 字节。"
-                )
-            assigned[raw] = pointer
-            packed.extend(raw)
-            return pointer
-
-        normal_pointers = tuple(allocate(raw) for raw in normal_records)
-        battle_pointers = (0, *(allocate(raw) for raw in battle_records[1:]))
-        pool_offset = self.pointer_to_file_offset(profile.character_name_first_pointer)
-        pool_size = (
-            profile.character_name_data_end_pointer
-            - profile.character_name_first_pointer
+            old = logical.battle_names[character_id - 1]
+            battle_replacement = encode_name(old, battle_text)
+        else:
+            battle_replacement = None
+        updated = with_character_names(
+            logical,
+            character_id,
+            normal=normal_replacement,
+            battle=battle_replacement,
         )
-        after_pool = bytes(packed) + source[
-            pool_offset + len(packed) : pool_offset + pool_size
-        ]
-        assert profile.character_normal_name_pointer_table_offset is not None
-        normal_offset = profile.character_normal_name_pointer_table_offset
-        battle_offset = profile.character_name_pointer_table_offset
-        assert battle_offset is not None
-        patches = (
-            (
-                normal_offset,
-                source[normal_offset : normal_offset + len(normal_pointers) * 2],
-                struct.pack(f"<{len(normal_pointers)}H", *normal_pointers),
-            ),
-            (
-                pool_offset,
-                source[pool_offset : pool_offset + pool_size],
-                after_pool,
-            ),
-            (
-                battle_offset,
-                source[battle_offset : battle_offset + len(battle_pointers) * 2],
-                struct.pack(f"<{len(battle_pointers)}H", *battle_pointers),
-            ),
-        )
-        return tuple(patch for patch in patches if patch[1] != patch[2])
+        return bank24_replacement_patches(source, updated)
 
     def round_trip(
         self,

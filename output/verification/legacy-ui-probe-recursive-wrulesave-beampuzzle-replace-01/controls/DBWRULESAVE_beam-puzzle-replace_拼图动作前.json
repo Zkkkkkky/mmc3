@@ -1,0 +1,369 @@
+{
+  "tag": "DBWRULESAVE_beam-puzzle-replace_拼图动作前",
+  "hwnd": 9571630,
+  "title": "光束拼图",
+  "class": "WTWindow",
+  "rect": {
+    "left": 120,
+    "top": 80,
+    "right": 911,
+    "bottom": 718,
+    "width": 791,
+    "height": 638
+  },
+  "pid": 15628,
+  "tree": {
+    "hwnd": 9571630,
+    "class": "WTWindow",
+    "text": "光束拼图",
+    "ctrl_id": 0,
+    "rect": {
+      "left": 120,
+      "top": 80,
+      "right": 911,
+      "bottom": 718,
+      "width": 791,
+      "height": 638
+    },
+    "visible": true,
+    "enabled": true,
+    "children": [
+      {
+        "hwnd": 7340586,
+        "class": "Afx:400000:8:10003:900015:0",
+        "text": "",
+        "ctrl_id": 260,
+        "rect": {
+          "left": 163,
+          "top": 279,
+          "right": 404,
+          "bottom": 520,
+          "width": 241,
+          "height": 241
+        },
+        "visible": false,
+        "enabled": true,
+        "children": []
+      },
+      {
+        "hwnd": 8585698,
+        "class": "Afx:400000:8:10003:900015:0",
+        "text": "",
+        "ctrl_id": 230,
+        "rect": {
+          "left": 213,
+          "top": 359,
+          "right": 247,
+          "bottom": 393,
+          "width": 34,
+          "height": 34
+        },
+        "visible": false,
+        "enabled": true,
+        "children": []
+      },
+      {
+        "hwnd": 10289528,
+        "class": "Afx:400000:8:10003:900015:0",
+        "text": "",
+        "ctrl_id": 220,
+        "rect": {
+          "left": 593,
+          "top": 429,
+          "right": 623,
+          "bottom": 459,
+          "width": 30,
+          "height": 30
+        },
+        "visible": false,
+        "enabled": true,
+        "children": []
+      },
+      {
+        "hwnd": 8782264,
+        "class": "Button",
+        "text": "取消",
+        "ctrl_id": 200,
+        "rect": {
+          "left": 803,
+          "top": 649,
+          "right": 903,
+          "bottom": 679,
+          "width": 100,
+          "height": 30
+        },
+        "visible": true,
+        "enabled": true,
+        "button_check_state": 0,
+        "children": []
+      },
+      {
+        "hwnd": 6161476,
+        "class": "Button",
+        "text": "确定",
+        "ctrl_id": 190,
+        "rect": {
+          "left": 693,
+          "top": 649,
+          "right": 793,
+          "bottom": 679,
+          "width": 100,
+          "height": 30
+        },
+        "visible": true,
+        "enabled": true,
+        "button_check_state": 0,
+        "children": []
+      },
+      {
+        "hwnd": 8978784,
+        "class": "Afx:400000:8:10003:900015:0",
+        "text": "",
+        "ctrl_id": 180,
+        "rect": {
+          "left": 303,
+          "top": 389,
+          "right": 333,
+          "bottom": 419,
+          "width": 30,
+          "height": 30
+        },
+        "visible": false,
+        "enabled": true,
+        "children": []
+      },
+      {
+        "hwnd": 7211768,
+        "class": "Afx:400000:8:10003:900015:0",
+        "text": "",
+        "ctrl_id": 170,
+        "rect": {
+          "left": 423,
+          "top": 159,
+          "right": 904,
+          "bottom": 640,
+          "width": 481,
+          "height": 481
+        },
+        "visible": false,
+        "enabled": true,
+        "children": []
+      },
+      {
+        "hwnd": 7996062,
+        "class": "Button",
+        "text": "效果图片(提示：左键编辑图块 右键删除图块)",
+        "ctrl_id": 150,
+        "rect": {
+          "left": 403,
+          "top": 129,
+          "right": 903,
+          "bottom": 639,
+          "width": 500,
+          "height": 510
+        },
+        "visible": true,
+        "enabled": true,
+        "button_check_state": 0,
+        "children": [
+          {
+            "hwnd": 11338116,
+            "class": "Afx:400000:b:10003:900015:0",
+            "text": "",
+            "ctrl_id": 160,
+            "rect": {
+              "left": 413,
+              "top": 149,
+              "right": 894,
+              "bottom": 630,
+              "width": 481,
+              "height": 481
+            },
+            "visible": true,
+            "enabled": true,
+            "children": []
+          }
+        ]
+      },
+      {
+        "hwnd": 12583338,
+        "class": "Button",
+        "text": "图库（提示：左键选择图块）",
+        "ctrl_id": 130,
+        "rect": {
+          "left": 133,
+          "top": 199,
+          "right": 393,
+          "bottom": 639,
+          "width": 260,
+          "height": 440
+        },
+        "visible": true,
+        "enabled": true,
+        "button_check_state": 0,
+        "children": [
+          {
+            "hwnd": 9765246,
+            "class": "Button",
+            "text": "80开始",
+            "ctrl_id": 280,
+            "rect": {
+              "left": 143,
+              "top": 589,
+              "right": 243,
+              "bottom": 619,
+              "width": 100,
+              "height": 30
+            },
+            "visible": true,
+            "enabled": true,
+            "button_check_state": 0,
+            "children": []
+          },
+          {
+            "hwnd": 6750616,
+            "class": "Button",
+            "text": "40开始",
+            "ctrl_id": 270,
+            "rect": {
+              "left": 143,
+              "top": 549,
+              "right": 243,
+              "bottom": 579,
+              "width": 100,
+              "height": 30
+            },
+            "visible": true,
+            "enabled": true,
+            "button_check_state": 1,
+            "children": []
+          },
+          {
+            "hwnd": 10748282,
+            "class": "Afx:400000:b:10003:900015:0",
+            "text": "40",
+            "ctrl_id": 250,
+            "rect": {
+              "left": 293,
+              "top": 219,
+              "right": 363,
+              "bottom": 249,
+              "width": 70,
+              "height": 30
+            },
+            "visible": true,
+            "enabled": true,
+            "children": []
+          },
+          {
+            "hwnd": 12321210,
+            "class": "Afx:400000:b:10003:900015:0",
+            "text": "当前选择的图块编号：",
+            "ctrl_id": 240,
+            "rect": {
+              "left": 143,
+              "top": 219,
+              "right": 283,
+              "bottom": 249,
+              "width": 140,
+              "height": 30
+            },
+            "visible": true,
+            "enabled": true,
+            "children": []
+          },
+          {
+            "hwnd": 9896744,
+            "class": "Button",
+            "text": "显示图块编号",
+            "ctrl_id": 210,
+            "rect": {
+              "left": 143,
+              "top": 499,
+              "right": 263,
+              "bottom": 529,
+              "width": 120,
+              "height": 30
+            },
+            "visible": true,
+            "enabled": true,
+            "button_check_state": 0,
+            "children": []
+          },
+          {
+            "hwnd": 13893786,
+            "class": "Afx:400000:b:10003:900015:0",
+            "text": "",
+            "ctrl_id": 140,
+            "rect": {
+              "left": 143,
+              "top": 249,
+              "right": 384,
+              "bottom": 490,
+              "width": 241,
+              "height": 241
+            },
+            "visible": true,
+            "enabled": true,
+            "children": []
+          }
+        ]
+      },
+      {
+        "hwnd": 11010320,
+        "class": "Button",
+        "text": "参考设置",
+        "ctrl_id": 100,
+        "rect": {
+          "left": 133,
+          "top": 129,
+          "right": 393,
+          "bottom": 189,
+          "width": 260,
+          "height": 60
+        },
+        "visible": true,
+        "enabled": true,
+        "button_check_state": 0,
+        "children": [
+          {
+            "hwnd": 8979108,
+            "class": "ComboBox",
+            "text": "[00]000：80010",
+            "ctrl_id": 120,
+            "rect": {
+              "left": 223,
+              "top": 149,
+              "right": 383,
+              "bottom": 177,
+              "width": 160,
+              "height": 28
+            },
+            "visible": true,
+            "enabled": true,
+            "combo_count": 256,
+            "combo_selected": 0,
+            "children": []
+          },
+          {
+            "hwnd": 9372326,
+            "class": "Afx:400000:b:10003:900015:0",
+            "text": "图库地址：",
+            "ctrl_id": 110,
+            "rect": {
+              "left": 143,
+              "top": 149,
+              "right": 223,
+              "bottom": 179,
+              "width": 80,
+              "height": 30
+            },
+            "visible": true,
+            "enabled": true,
+            "children": []
+          }
+        ]
+      }
+    ]
+  }
+}

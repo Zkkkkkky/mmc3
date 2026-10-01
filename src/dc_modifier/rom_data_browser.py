@@ -2,7 +2,9 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from PySide6.QtCore import QAbstractTableModel, QModelIndex, QSortFilterProxyModel, Qt, Signal
+from PySide6.QtCore import (
+    QAbstractTableModel, QModelIndex, QSortFilterProxyModel, Qt, QTimer, Signal,
+)
 from PySide6.QtGui import QValidator
 from PySide6.QtWidgets import (
     QDialog,
@@ -28,7 +30,7 @@ from fc_editor.codecs.character_attributes import (
 from fc_editor.codecs.legacy_scenario import LegacyScenarioCodec
 from fc_editor.codecs.legacy_text import LegacyTextCodec
 from .action_event_page import ACTION_EVENT_NAMES
-from .database_graphics import read_unit_appearance
+from .database_graphics import read_all_unit_appearances
 
 
 @dataclass(frozen=True)
@@ -60,11 +62,19 @@ def build_unit_sheet(project) -> DataSheet:
     )
     rows = []
     offsets = []
+    appearances: tuple = ()
+    appearance_error: ValueError | None = None
+    try:
+        appearances = read_all_unit_appearances(project)
+    except ValueError as error:
+        appearance_error = error
     for unit_id in range(1, project.unit_count):
         raw = project.record_bytes(unit_id)
         offset = project.record_file_offset(unit_id)
         try:
-            appearance = read_unit_appearance(project, unit_id)
+            if appearance_error is not None:
+                raise appearance_error
+            appearance = appearances[unit_id - 1]
             appearance_offset = _address(appearance.file_offset)
             appearance_raw = _hex(appearance.configuration)
         except (ValueError, IndexError) as error:
@@ -381,8 +391,15 @@ class DataSheetPage(QWidget):
         self.proxy.setFilterCaseSensitivity(Qt.CaseSensitivity.CaseInsensitive)
         self.proxy.setFilterKeyColumn(-1)
         self.table.setModel(self.proxy)
-        self.table.setSortingEnabled(True)
-        self.table.sortByColumn(0, Qt.SortOrder.AscendingOrder)
+        # Large tables are already emitted in stable ID/address order.  Qt's
+        # proxy performs an eager full-table comparison sort when sorting is
+        # enabled, which used to freeze the text/event tabs on first visit.
+        # Defer that cost until the user explicitly clicks a column header.
+        self._sorting_deferred = True
+        self.table.setSortingEnabled(False)
+        self.table.horizontalHeader().sectionClicked.connect(
+            self._enable_requested_sort
+        )
         self.table.setAlternatingRowColors(True)
         self.table.setSelectionBehavior(QTableView.SelectionBehavior.SelectRows)
         self.table.setEditTriggers(QTableView.EditTrigger.NoEditTriggers)
@@ -390,6 +407,13 @@ class DataSheetPage(QWidget):
         self.table.doubleClicked.connect(self._open_offset)
         search.textChanged.connect(self.proxy.setFilterFixedString)
         layout.addWidget(self.table, 1)
+
+    def _enable_requested_sort(self, section: int) -> None:
+        if not self._sorting_deferred:
+            return
+        self._sorting_deferred = False
+        self.table.setSortingEnabled(True)
+        self.table.sortByColumn(section, Qt.SortOrder.AscendingOrder)
 
     def _open_offset(self, index: QModelIndex) -> None:
         source = self.proxy.mapToSource(index)
@@ -523,27 +547,71 @@ class RomDataBrowserDialog(QDialog):
         layout.addWidget(self.summary)
         self.tabs = QTabWidget()
         layout.addWidget(self.tabs, 1)
-        sheets = (
-            ("机体", build_unit_sheet(project)),
-            ("人物", build_character_sheet(project)),
-            ("武器", build_weapon_sheet(project)),
-            ("地图与部署", build_map_sheet(project)),
-            ("文字", build_text_sheet(project)),
-            ("动画", build_animation_sheet(project)),
-            ("关卡事件", build_event_sheet(project)),
+        self._sheet_definitions = (
+            ("机体", build_unit_sheet),
+            ("人物", build_character_sheet),
+            ("武器", build_weapon_sheet),
+            ("地图与部署", build_map_sheet),
+            ("文字", build_text_sheet),
+            ("动画", build_animation_sheet),
+            ("关卡事件", build_event_sheet),
         )
-        self.sheet_pages: list[DataSheetPage] = []
-        for label, sheet in sheets:
-            page = DataSheetPage(sheet)
-            page.offset_requested.connect(self.show_offset)
-            self.sheet_pages.append(page)
-            self.tabs.addTab(page, f"{label}（{len(sheet.rows)}）")
-        self.hex_page = RomHexPage(project)
-        self.tabs.addTab(self.hex_page, "完整 HEX")
+        self.sheet_pages: list[DataSheetPage | None] = [
+            None for _definition in self._sheet_definitions
+        ]
+        for label, _builder in self._sheet_definitions:
+            placeholder = QLabel("首次切换到本页时读取数据…")
+            placeholder.setAlignment(Qt.AlignmentFlag.AlignCenter)
+            self.tabs.addTab(placeholder, label)
+        self.hex_page: RomHexPage | None = None
+        hex_placeholder = QLabel("首次切换到本页时读取完整 ROM…")
+        hex_placeholder.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.tabs.addTab(hex_placeholder, "完整 HEX")
+        self._loading_tab = False
+        self.tabs.currentChanged.connect(self._ensure_tab_loaded)
         close_button = QPushButton("关闭")
         close_button.clicked.connect(self.accept)
         layout.addWidget(close_button, 0, Qt.AlignmentFlag.AlignRight)
 
+    def showEvent(self, event) -> None:  # noqa: N802 - Qt API
+        super().showEvent(event)
+        # Let the dialog frame and loading placeholder paint before decoding
+        # the first structured sheet.  Subsequent pages remain strictly
+        # on-demand and already-loaded pages are reused.
+        QTimer.singleShot(1, lambda: self._ensure_tab_loaded(self.tabs.currentIndex()))
+
+    def _replace_tab(self, index: int, page: QWidget, label: str) -> None:
+        previous = self.tabs.blockSignals(True)
+        old = self.tabs.widget(index)
+        self.tabs.removeTab(index)
+        self.tabs.insertTab(index, page, label)
+        self.tabs.setCurrentIndex(index)
+        self.tabs.blockSignals(previous)
+        old.deleteLater()
+
+    def _ensure_tab_loaded(self, index: int) -> None:
+        if self._loading_tab or not 0 <= index < self.tabs.count():
+            return
+        self._loading_tab = True
+        try:
+            if index < len(self._sheet_definitions):
+                if self.sheet_pages[index] is not None:
+                    return
+                label, builder = self._sheet_definitions[index]
+                sheet = builder(self.project)
+                page = DataSheetPage(sheet)
+                page.offset_requested.connect(self.show_offset)
+                self.sheet_pages[index] = page
+                self._replace_tab(index, page, f"{label}（{len(sheet.rows)}）")
+                return
+            if self.hex_page is None:
+                self.hex_page = RomHexPage(self.project)
+                self._replace_tab(index, self.hex_page, "完整 HEX")
+        finally:
+            self._loading_tab = False
+
     def show_offset(self, offset: int) -> None:
+        self._ensure_tab_loaded(len(self._sheet_definitions))
+        assert self.hex_page is not None
         self.tabs.setCurrentWidget(self.hex_page)
         self.hex_page.go_to(offset)

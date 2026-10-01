@@ -1,0 +1,14 @@
+[    0.1s] launched pid=16784
+[    0.1s] === stage A: launcher -> main window (no ROM) ===
+[    3.1s] top window: {'hwnd': 18876208, 'title': 'SRW2�޸���V1.5', 'class': 'WTWindow', 'rect': {'left': 571, 'top': 244, 'right': 1346, 'bottom': 843, 'width': 775, 'height': 599}, 'pid': 16784}
+[    4.0s] dump A01_������: title='SRW2�޸���V1.5' class='WTWindow' controls=8 shot=ok
+[   12.8s] main window hwnd=9439680 title='SRW2���ݰ��޸���V1.0'
+[   14.7s] dump A02_������_δ����ROM: title='SRW2���ݰ��޸���V1.0' class='WTWindow' controls=63 shot=ok
+[   22.7s] === stage LOAD: load ROM copy only ===
+[   23.6s] dump LOAD01_��ROM�Ի���: title='���ļ�' class='#32770' controls=49 shot=ok
+[   24.1s] open dialog confirmed gone=True
+[   31.6s] ROM loaded without main-window sweep, title='SRW2���ݰ��޸���V1.0��D:\\GIT\\mmc3\\output\\build\\legacy-ui-probe\\lifecycle-states.nes'
+[   32.5s] dump LOAD02_������_�����: title='SRW2���ݰ��޸���V1.0��D:\\GIT\\mmc3\\output\\build\\legacy-ui-probe\\lifecycle-states.nes' class='WTWindow' controls=63 shot=ok
+[   32.5s] === stage LIFECYCLESTATES ===
+[   39.4s] LIFECYCLESTATES complete: 2/2 actions, zero ROM diff
+[   39.5s] terminated owned pid=16784

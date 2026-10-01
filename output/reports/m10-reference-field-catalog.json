@@ -132,8 +132,8 @@
   },
   "counts": {
     "logical_fields": 254,
-    "product_safe_candidates": 134,
-    "product_blocked_candidates": 120,
+    "product_safe_candidates": 197,
+    "product_blocked_candidates": 57,
     "unique_initial_physical_ids": 184,
     "families": {
       "item_description": 24,
@@ -165,7 +165,7 @@
   ],
   "notes": [
     "The reference ListBox exposes F0-FC and FE; FD is absent.",
-    "F5-FC and FE remain visibly enabled in the reference but overlap map-event data in the supported product layout.",
+    "F5-FC and FE remain visible: metadata overlaps map-event data and stays blocked, while their seven system-text fields remain editable.",
     "F4 only has one supported item slot; its remaining three visible slots are treated as blocked candidates.",
     "Dialogue edits alias M09 system-text records by the selected base dialogue id."
   ],
@@ -1596,7 +1596,7 @@
       "slot": 0,
       "control_id": 1970,
       "value": "",
-      "product_safe": false
+      "product_safe": true
     },
     {
       "field_id": "M10/shop/F5/dialogue/2",
@@ -1607,7 +1607,7 @@
       "slot": 1,
       "control_id": 1990,
       "value": "",
-      "product_safe": false
+      "product_safe": true
     },
     {
       "field_id": "M10/shop/F5/dialogue/3",
@@ -1618,7 +1618,7 @@
       "slot": 2,
       "control_id": 2010,
       "value": "",
-      "product_safe": false
+      "product_safe": true
     },
     {
       "field_id": "M10/shop/F5/dialogue/4",
@@ -1629,7 +1629,7 @@
       "slot": 3,
       "control_id": 2020,
       "value": "",
-      "product_safe": false
+      "product_safe": true
     },
     {
       "field_id": "M10/shop/F5/dialogue/5",
@@ -1640,7 +1640,7 @@
       "slot": 4,
       "control_id": 2040,
       "value": "",
-      "product_safe": false
+      "product_safe": true
     },
     {
       "field_id": "M10/shop/F5/dialogue/6",
@@ -1651,7 +1651,7 @@
       "slot": 5,
       "control_id": 2060,
       "value": "",
-      "product_safe": false
+      "product_safe": true
     },
     {
       "field_id": "M10/shop/F5/dialogue/7",
@@ -1662,7 +1662,7 @@
       "slot": 6,
       "control_id": 2090,
       "value": "",
-      "product_safe": false
+      "product_safe": true
     },
     {
       "field_id": "M10/shop/F6/item/1",
@@ -1737,7 +1737,7 @@
       "slot": 0,
       "control_id": 1970,
       "value": "",
-      "product_safe": false
+      "product_safe": true
     },
     {
       "field_id": "M10/shop/F6/dialogue/2",
@@ -1748,7 +1748,7 @@
       "slot": 1,
       "control_id": 1990,
       "value": "",
-      "product_safe": false
+      "product_safe": true
     },
     {
       "field_id": "M10/shop/F6/dialogue/3",
@@ -1759,7 +1759,7 @@
       "slot": 2,
       "control_id": 2010,
       "value": "",
-      "product_safe": false
+      "product_safe": true
     },
     {
       "field_id": "M10/shop/F6/dialogue/4",
@@ -1770,7 +1770,7 @@
       "slot": 3,
       "control_id": 2020,
       "value": "",
-      "product_safe": false
+      "product_safe": true
     },
     {
       "field_id": "M10/shop/F6/dialogue/5",
@@ -1781,7 +1781,7 @@
       "slot": 4,
       "control_id": 2040,
       "value": "",
-      "product_safe": false
+      "product_safe": true
     },
     {
       "field_id": "M10/shop/F6/dialogue/6",
@@ -1792,7 +1792,7 @@
       "slot": 5,
       "control_id": 2060,
       "value": "",
-      "product_safe": false
+      "product_safe": true
     },
     {
       "field_id": "M10/shop/F6/dialogue/7",
@@ -1803,7 +1803,7 @@
       "slot": 6,
       "control_id": 2090,
       "value": "",
-      "product_safe": false
+      "product_safe": true
     },
     {
       "field_id": "M10/shop/F7/item/1",
@@ -1878,7 +1878,7 @@
       "slot": 0,
       "control_id": 1970,
       "value": "",
-      "product_safe": false
+      "product_safe": true
     },
     {
       "field_id": "M10/shop/F7/dialogue/2",
@@ -1889,7 +1889,7 @@
       "slot": 1,
       "control_id": 1990,
       "value": "",
-      "product_safe": false
+      "product_safe": true
     },
     {
       "field_id": "M10/shop/F7/dialogue/3",
@@ -1900,7 +1900,7 @@
       "slot": 2,
       "control_id": 2010,
       "value": "",
-      "product_safe": false
+      "product_safe": true
     },
     {
       "field_id": "M10/shop/F7/dialogue/4",
@@ -1911,7 +1911,7 @@
       "slot": 3,
       "control_id": 2020,
       "value": "",
-      "product_safe": false
+      "product_safe": true
     },
     {
       "field_id": "M10/shop/F7/dialogue/5",
@@ -1922,7 +1922,7 @@
       "slot": 4,
       "control_id": 2040,
       "value": "",
-      "product_safe": false
+      "product_safe": true
     },
     {
       "field_id": "M10/shop/F7/dialogue/6",
@@ -1933,7 +1933,7 @@
       "slot": 5,
       "control_id": 2060,
       "value": "",
-      "product_safe": false
+      "product_safe": true
     },
     {
       "field_id": "M10/shop/F7/dialogue/7",
@@ -1944,7 +1944,7 @@
       "slot": 6,
       "control_id": 2090,
       "value": "",
-      "product_safe": false
+      "product_safe": true
     },
     {
       "field_id": "M10/shop/F8/item/1",
@@ -2019,7 +2019,7 @@
       "slot": 0,
       "control_id": 1970,
       "value": "",
-      "product_safe": false
+      "product_safe": true
     },
     {
       "field_id": "M10/shop/F8/dialogue/2",
@@ -2030,7 +2030,7 @@
       "slot": 1,
       "control_id": 1990,
       "value": "",
-      "product_safe": false
+      "product_safe": true
     },
     {
       "field_id": "M10/shop/F8/dialogue/3",
@@ -2041,7 +2041,7 @@
       "slot": 2,
       "control_id": 2010,
       "value": "",
-      "product_safe": false
+      "product_safe": true
     },
     {
       "field_id": "M10/shop/F8/dialogue/4",
@@ -2052,7 +2052,7 @@
       "slot": 3,
       "control_id": 2020,
       "value": "",
-      "product_safe": false
+      "product_safe": true
     },
     {
       "field_id": "M10/shop/F8/dialogue/5",
@@ -2063,7 +2063,7 @@
       "slot": 4,
       "control_id": 2040,
       "value": "",
-      "product_safe": false
+      "product_safe": true
     },
     {
       "field_id": "M10/shop/F8/dialogue/6",
@@ -2074,7 +2074,7 @@
       "slot": 5,
       "control_id": 2060,
       "value": "",
-      "product_safe": false
+      "product_safe": true
     },
     {
       "field_id": "M10/shop/F8/dialogue/7",
@@ -2085,7 +2085,7 @@
       "slot": 6,
       "control_id": 2090,
       "value": "",
-      "product_safe": false
+      "product_safe": true
     },
     {
       "field_id": "M10/shop/F9/item/1",
@@ -2160,7 +2160,7 @@
       "slot": 0,
       "control_id": 1970,
       "value": "",
-      "product_safe": false
+      "product_safe": true
     },
     {
       "field_id": "M10/shop/F9/dialogue/2",
@@ -2171,7 +2171,7 @@
       "slot": 1,
       "control_id": 1990,
       "value": "",
-      "product_safe": false
+      "product_safe": true
     },
     {
       "field_id": "M10/shop/F9/dialogue/3",
@@ -2182,7 +2182,7 @@
       "slot": 2,
       "control_id": 2010,
       "value": "",
-      "product_safe": false
+      "product_safe": true
     },
     {
       "field_id": "M10/shop/F9/dialogue/4",
@@ -2193,7 +2193,7 @@
       "slot": 3,
       "control_id": 2020,
       "value": "",
-      "product_safe": false
+      "product_safe": true
     },
     {
       "field_id": "M10/shop/F9/dialogue/5",
@@ -2204,7 +2204,7 @@
       "slot": 4,
       "control_id": 2040,
       "value": "",
-      "product_safe": false
+      "product_safe": true
     },
     {
       "field_id": "M10/shop/F9/dialogue/6",
@@ -2215,7 +2215,7 @@
       "slot": 5,
       "control_id": 2060,
       "value": "",
-      "product_safe": false
+      "product_safe": true
     },
     {
       "field_id": "M10/shop/F9/dialogue/7",
@@ -2226,7 +2226,7 @@
       "slot": 6,
       "control_id": 2090,
       "value": "",
-      "product_safe": false
+      "product_safe": true
     },
     {
       "field_id": "M10/shop/FA/item/1",
@@ -2301,7 +2301,7 @@
       "slot": 0,
       "control_id": 1970,
       "value": "",
-      "product_safe": false
+      "product_safe": true
     },
     {
       "field_id": "M10/shop/FA/dialogue/2",
@@ -2312,7 +2312,7 @@
       "slot": 1,
       "control_id": 1990,
       "value": "",
-      "product_safe": false
+      "product_safe": true
     },
     {
       "field_id": "M10/shop/FA/dialogue/3",
@@ -2323,7 +2323,7 @@
       "slot": 2,
       "control_id": 2010,
       "value": "",
-      "product_safe": false
+      "product_safe": true
     },
     {
       "field_id": "M10/shop/FA/dialogue/4",
@@ -2334,7 +2334,7 @@
       "slot": 3,
       "control_id": 2020,
       "value": "",
-      "product_safe": false
+      "product_safe": true
     },
     {
       "field_id": "M10/shop/FA/dialogue/5",
@@ -2345,7 +2345,7 @@
       "slot": 4,
       "control_id": 2040,
       "value": "",
-      "product_safe": false
+      "product_safe": true
     },
     {
       "field_id": "M10/shop/FA/dialogue/6",
@@ -2356,7 +2356,7 @@
       "slot": 5,
       "control_id": 2060,
       "value": "",
-      "product_safe": false
+      "product_safe": true
     },
     {
       "field_id": "M10/shop/FA/dialogue/7",
@@ -2367,7 +2367,7 @@
       "slot": 6,
       "control_id": 2090,
       "value": "",
-      "product_safe": false
+      "product_safe": true
     },
     {
       "field_id": "M10/shop/FB/item/1",
@@ -2442,7 +2442,7 @@
       "slot": 0,
       "control_id": 1970,
       "value": "",
-      "product_safe": false
+      "product_safe": true
     },
     {
       "field_id": "M10/shop/FB/dialogue/2",
@@ -2453,7 +2453,7 @@
       "slot": 1,
       "control_id": 1990,
       "value": "",
-      "product_safe": false
+      "product_safe": true
     },
     {
       "field_id": "M10/shop/FB/dialogue/3",
@@ -2464,7 +2464,7 @@
       "slot": 2,
       "control_id": 2010,
       "value": "",
-      "product_safe": false
+      "product_safe": true
     },
     {
       "field_id": "M10/shop/FB/dialogue/4",
@@ -2475,7 +2475,7 @@
       "slot": 3,
       "control_id": 2020,
       "value": "",
-      "product_safe": false
+      "product_safe": true
     },
     {
       "field_id": "M10/shop/FB/dialogue/5",
@@ -2486,7 +2486,7 @@
       "slot": 4,
       "control_id": 2040,
       "value": "",
-      "product_safe": false
+      "product_safe": true
     },
     {
       "field_id": "M10/shop/FB/dialogue/6",
@@ -2497,7 +2497,7 @@
       "slot": 5,
       "control_id": 2060,
       "value": "",
-      "product_safe": false
+      "product_safe": true
     },
     {
       "field_id": "M10/shop/FB/dialogue/7",
@@ -2508,7 +2508,7 @@
       "slot": 6,
       "control_id": 2090,
       "value": "",
-      "product_safe": false
+      "product_safe": true
     },
     {
       "field_id": "M10/shop/FC/item/1",
@@ -2583,7 +2583,7 @@
       "slot": 0,
       "control_id": 1970,
       "value": "",
-      "product_safe": false
+      "product_safe": true
     },
     {
       "field_id": "M10/shop/FC/dialogue/2",
@@ -2594,7 +2594,7 @@
       "slot": 1,
       "control_id": 1990,
       "value": "",
-      "product_safe": false
+      "product_safe": true
     },
     {
       "field_id": "M10/shop/FC/dialogue/3",
@@ -2605,7 +2605,7 @@
       "slot": 2,
       "control_id": 2010,
       "value": "",
-      "product_safe": false
+      "product_safe": true
     },
     {
       "field_id": "M10/shop/FC/dialogue/4",
@@ -2616,7 +2616,7 @@
       "slot": 3,
       "control_id": 2020,
       "value": "",
-      "product_safe": false
+      "product_safe": true
     },
     {
       "field_id": "M10/shop/FC/dialogue/5",
@@ -2627,7 +2627,7 @@
       "slot": 4,
       "control_id": 2040,
       "value": "",
-      "product_safe": false
+      "product_safe": true
     },
     {
       "field_id": "M10/shop/FC/dialogue/6",
@@ -2638,7 +2638,7 @@
       "slot": 5,
       "control_id": 2060,
       "value": "",
-      "product_safe": false
+      "product_safe": true
     },
     {
       "field_id": "M10/shop/FC/dialogue/7",
@@ -2649,7 +2649,7 @@
       "slot": 6,
       "control_id": 2090,
       "value": "",
-      "product_safe": false
+      "product_safe": true
     },
     {
       "field_id": "M10/shop/FE/item/1",
@@ -2724,7 +2724,7 @@
       "slot": 0,
       "control_id": 1970,
       "value": "",
-      "product_safe": false
+      "product_safe": true
     },
     {
       "field_id": "M10/shop/FE/dialogue/2",
@@ -2735,7 +2735,7 @@
       "slot": 1,
       "control_id": 1990,
       "value": "",
-      "product_safe": false
+      "product_safe": true
     },
     {
       "field_id": "M10/shop/FE/dialogue/3",
@@ -2746,7 +2746,7 @@
       "slot": 2,
       "control_id": 2010,
       "value": "",
-      "product_safe": false
+      "product_safe": true
     },
     {
       "field_id": "M10/shop/FE/dialogue/4",
@@ -2757,7 +2757,7 @@
       "slot": 3,
       "control_id": 2020,
       "value": "",
-      "product_safe": false
+      "product_safe": true
     },
     {
       "field_id": "M10/shop/FE/dialogue/5",
@@ -2768,7 +2768,7 @@
       "slot": 4,
       "control_id": 2040,
       "value": "",
-      "product_safe": false
+      "product_safe": true
     },
     {
       "field_id": "M10/shop/FE/dialogue/6",
@@ -2779,7 +2779,7 @@
       "slot": 5,
       "control_id": 2060,
       "value": "",
-      "product_safe": false
+      "product_safe": true
     },
     {
       "field_id": "M10/shop/FE/dialogue/7",
@@ -2790,7 +2790,7 @@
       "slot": 6,
       "control_id": 2090,
       "value": "",
-      "product_safe": false
+      "product_safe": true
     }
   ]
 }

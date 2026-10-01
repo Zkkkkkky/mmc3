@@ -1,0 +1,32 @@
+{
+  "tag": "DBCMD_01_机体修改_导出机体_3",
+  "hwnd": 2099896,
+  "title": "ocam",
+  "class": "TApplication",
+  "rect": {
+    "left": -32000,
+    "top": -32000,
+    "right": -31801,
+    "bottom": -31966,
+    "width": 199,
+    "height": 34
+  },
+  "pid": 3816,
+  "tree": {
+    "hwnd": 2099896,
+    "class": "TApplication",
+    "text": "ocam",
+    "ctrl_id": 0,
+    "rect": {
+      "left": -32000,
+      "top": -32000,
+      "right": -31801,
+      "bottom": -31966,
+      "width": 199,
+      "height": 34
+    },
+    "visible": true,
+    "enabled": true,
+    "children": []
+  }
+}

@@ -1,0 +1,315 @@
+{
+  "schema_version": 1,
+  "validated": true,
+  "error": null,
+  "execution_record_count": 40,
+  "diff_count": 0,
+  "sha256_before": "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E",
+  "sha256_after": "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E",
+  "observations": [
+    {
+      "control_id": 1410,
+      "path": [
+        5,
+        10,
+        0
+      ],
+      "item_count": 5,
+      "original_index": 0,
+      "keyboard_index": 1,
+      "right_click_menu": false
+    },
+    {
+      "control_id": 1870,
+      "path": [
+        5,
+        5,
+        1,
+        7
+      ],
+      "item_count": 25,
+      "original_index": 13,
+      "keyboard_index": 1,
+      "right_click_menu": false
+    },
+    {
+      "control_id": 1880,
+      "path": [
+        5,
+        5,
+        1,
+        6
+      ],
+      "item_count": 25,
+      "original_index": 5,
+      "keyboard_index": 1,
+      "right_click_menu": false
+    },
+    {
+      "control_id": 1890,
+      "path": [
+        5,
+        5,
+        1,
+        5
+      ],
+      "item_count": 25,
+      "original_index": 15,
+      "keyboard_index": 1,
+      "right_click_menu": false
+    },
+    {
+      "control_id": 1900,
+      "path": [
+        5,
+        5,
+        1,
+        4
+      ],
+      "item_count": 25,
+      "original_index": 16,
+      "keyboard_index": 1,
+      "right_click_menu": false
+    },
+    {
+      "control_id": 1920,
+      "path": [
+        5,
+        5,
+        1,
+        2
+      ],
+      "item_count": 200,
+      "original_index": 1,
+      "keyboard_index": 1,
+      "right_click_menu": false
+    },
+    {
+      "control_id": 1940,
+      "path": [
+        5,
+        5,
+        1,
+        0
+      ],
+      "item_count": 221,
+      "original_index": 48,
+      "keyboard_index": 1,
+      "right_click_menu": false
+    },
+    {
+      "control_id": 2620,
+      "path": [
+        5,
+        1,
+        2
+      ],
+      "item_count": 53,
+      "original_index": 0,
+      "keyboard_index": 1,
+      "right_click_menu": false
+    }
+  ],
+  "execution_records": [
+    {
+      "action_id": "59b7b3f78f4c7c556165",
+      "status": "passed",
+      "result": "展开状态=True，收起；完整项目数=5。"
+    },
+    {
+      "action_id": "d3ae6da26da5c7c87833",
+      "status": "passed",
+      "result": "逐项选择并读回 5/5 项，随后恢复。"
+    },
+    {
+      "action_id": "14ec9765d46f2a7fa3d9",
+      "status": "passed",
+      "result": "真实焦点 Home/Down 读回 1，随后恢复。"
+    },
+    {
+      "action_id": "568a926800e7662efabb",
+      "status": "passed",
+      "result": "执行右键路径；可见弹出菜单=False。"
+    },
+    {
+      "action_id": "be3561997a73c8572372",
+      "status": "passed",
+      "result": "切换到目标控件 120 所在页后隐藏；返回后可见且启用=True；条件启用链=[]。"
+    },
+    {
+      "action_id": "4c192249cb47d426de0a",
+      "status": "passed",
+      "result": "展开状态=True，收起；完整项目数=25。"
+    },
+    {
+      "action_id": "b2c9c3583f07119bd022",
+      "status": "passed",
+      "result": "逐项选择并读回 25/25 项，随后恢复。"
+    },
+    {
+      "action_id": "c61d30291a728f3e502a",
+      "status": "passed",
+      "result": "真实焦点 Home/Down 读回 1，随后恢复。"
+    },
+    {
+      "action_id": "22673af736349e4526e3",
+      "status": "passed",
+      "result": "执行右键路径；可见弹出菜单=False。"
+    },
+    {
+      "action_id": "0e35eda951f1fac5f1f8",
+      "status": "passed",
+      "result": "切换到目标控件 120 所在页后隐藏；返回后可见且启用=True；条件启用链=[]。"
+    },
+    {
+      "action_id": "0c9263ac0e85770a23ce",
+      "status": "passed",
+      "result": "展开状态=True，收起；完整项目数=25。"
+    },
+    {
+      "action_id": "b13b0c742e7fee48019f",
+      "status": "passed",
+      "result": "逐项选择并读回 25/25 项，随后恢复。"
+    },
+    {
+      "action_id": "7021d52863ffa75dc15e",
+      "status": "passed",
+      "result": "真实焦点 Home/Down 读回 1，随后恢复。"
+    },
+    {
+      "action_id": "71ee5aca702991b8cec4",
+      "status": "passed",
+      "result": "执行右键路径；可见弹出菜单=False。"
+    },
+    {
+      "action_id": "eba54ec11ebf8852a274",
+      "status": "passed",
+      "result": "切换到目标控件 120 所在页后隐藏；返回后可见且启用=True；条件启用链=[]。"
+    },
+    {
+      "action_id": "27481d2b5f0d6ca307c4",
+      "status": "passed",
+      "result": "展开状态=True，收起；完整项目数=25。"
+    },
+    {
+      "action_id": "e09af9247899c0c7e7b3",
+      "status": "passed",
+      "result": "逐项选择并读回 25/25 项，随后恢复。"
+    },
+    {
+      "action_id": "8c114e93fbecae9b2bac",
+      "status": "passed",
+      "result": "真实焦点 Home/Down 读回 1，随后恢复。"
+    },
+    {
+      "action_id": "68c593635a54b5cb60ea",
+      "status": "passed",
+      "result": "执行右键路径；可见弹出菜单=False。"
+    },
+    {
+      "action_id": "f729b0f3031db86004c5",
+      "status": "passed",
+      "result": "切换到目标控件 120 所在页后隐藏；返回后可见且启用=True；条件启用链=[]。"
+    },
+    {
+      "action_id": "14c615c37cf00b76f51b",
+      "status": "passed",
+      "result": "展开状态=True，收起；完整项目数=25。"
+    },
+    {
+      "action_id": "69ee86daee6b0216d371",
+      "status": "passed",
+      "result": "逐项选择并读回 25/25 项，随后恢复。"
+    },
+    {
+      "action_id": "d8a3cc13b20068e26af7",
+      "status": "passed",
+      "result": "真实焦点 Home/Down 读回 1，随后恢复。"
+    },
+    {
+      "action_id": "344a1b697eac6174fbda",
+      "status": "passed",
+      "result": "执行右键路径；可见弹出菜单=False。"
+    },
+    {
+      "action_id": "8013e381642bea9eb986",
+      "status": "passed",
+      "result": "切换到目标控件 120 所在页后隐藏；返回后可见且启用=True；条件启用链=[]。"
+    },
+    {
+      "action_id": "73b60e61d79fe78fd500",
+      "status": "passed",
+      "result": "展开状态=True，收起；完整项目数=200。"
+    },
+    {
+      "action_id": "b348d8533499be44eeee",
+      "status": "passed",
+      "result": "逐项选择并读回 200/200 项，随后恢复。"
+    },
+    {
+      "action_id": "afa8518fe087896835f8",
+      "status": "passed",
+      "result": "真实焦点 Home/Down 读回 1，随后恢复。"
+    },
+    {
+      "action_id": "0a9057127efb0f6125b8",
+      "status": "passed",
+      "result": "执行右键路径；可见弹出菜单=False。"
+    },
+    {
+      "action_id": "80bbb43c723a0064277a",
+      "status": "passed",
+      "result": "切换到目标控件 120 所在页后隐藏；返回后可见且启用=True；条件启用链=[]。"
+    },
+    {
+      "action_id": "ca37bb5f98473f1fa44a",
+      "status": "passed",
+      "result": "展开状态=True，收起；完整项目数=221。"
+    },
+    {
+      "action_id": "f3b39eb8df12a88d8859",
+      "status": "passed",
+      "result": "逐项选择并读回 221/221 项，随后恢复。"
+    },
+    {
+      "action_id": "67eddeb3850c53c35c45",
+      "status": "passed",
+      "result": "真实焦点 Home/Down 读回 1，随后恢复。"
+    },
+    {
+      "action_id": "61b1df87c7ca13a1085e",
+      "status": "passed",
+      "result": "执行右键路径；可见弹出菜单=False。"
+    },
+    {
+      "action_id": "d3903cfd46c81360dd5f",
+      "status": "passed",
+      "result": "切换到目标控件 120 所在页后隐藏；返回后可见且启用=True；条件启用链=[]。"
+    },
+    {
+      "action_id": "ba7944c3ddaff36dd187",
+      "status": "passed",
+      "result": "展开状态=True，收起；完整项目数=53。"
+    },
+    {
+      "action_id": "ff5b0d32322e51a138d4",
+      "status": "passed",
+      "result": "逐项选择并读回 53/53 项，随后恢复。"
+    },
+    {
+      "action_id": "6827027c5ca7b3f62cea",
+      "status": "passed",
+      "result": "真实焦点 Home/Down 读回 1，随后恢复。"
+    },
+    {
+      "action_id": "7c22f68838628ee6d9db",
+      "status": "passed",
+      "result": "执行右键路径；可见弹出菜单=False。"
+    },
+    {
+      "action_id": "bb7fb27c803ff53af0bd",
+      "status": "passed",
+      "result": "切换到目标控件 120 所在页后隐藏；返回后可见且启用=True；条件启用链=[]。"
+    }
+  ]
+}

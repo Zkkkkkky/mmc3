@@ -1,0 +1,22 @@
+{
+  "schema_version": 2,
+  "validated": true,
+  "scope": "旧版运行规律模拟器五个数值编辑框边界实测；隔离副本、未保存、字段已恢复默认值",
+  "observations": {
+    "150": {"label": "物体宽度", "accepted": ["0", "101", "-1", "2147483648"]},
+    "170": {"label": "物体高度", "accepted": ["0", "101", "-1", "-2147483649"]},
+    "230": {"label": "Y轴", "accepted": ["128"]},
+    "240": {"label": "X轴", "accepted": ["-129"]},
+    "290": {"label": "每移动几次记录一次坐标", "accepted": ["0"]}
+  },
+  "sha256_before": "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E",
+  "sha256_after": "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E",
+  "diff_count": 0,
+  "execution_records": [
+    {"action_id": "ef6cab733de29f27955e", "status": "passed", "result": "物体宽度接受 0、101、-1 及超出有符号 32 位的十进制草稿。"},
+    {"action_id": "9541faa5d1065bed760d", "status": "passed", "result": "物体高度接受 0、101、-1 及超出有符号 32 位的十进制草稿。"},
+    {"action_id": "fdb9c341d6d10f41647d", "status": "passed", "result": "Y轴接受 128 等超出字节显示范围的十进制草稿。"},
+    {"action_id": "08c1aa9bab8b1f235c3b", "status": "passed", "result": "X轴接受 -129 等超出字节显示范围的十进制草稿。"},
+    {"action_id": "d949dd90d101048e3180", "status": "passed", "result": "采样间隔接受 0；输入阶段不进行业务范围拦截。"}
+  ]
+}

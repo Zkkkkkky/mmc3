@@ -1,0 +1,173 @@
+{
+  "generated_at": "2026-10-01T12:07:58+08:00",
+  "machine_gate_passed": false,
+  "implementation_complete": true,
+  "user_acceptance_complete": true,
+  "overall_delivery_complete": false,
+  "conclusion": "M08��M18 �� 11 ��ģ��Ļ����Ž��뵱ǰ����ʵ�ַ�Χ��ͨ����M12 ���òο���̬�ƽ����ͼ��ͼ�鿪�š�X/Y �ǳ־û���Ϊֻ���������ް�ȫЭ���˫֤�ݷ�Χ�����Ž���M08��M17 �����û���ȷ����ǰʵ�ַ�Χǩ�գ�M18 �����û��ֳ�ȷ��ͨ��������ֻ�������ںͲο����ɴ�߽����������",
+  "formal_executable": {
+    "path": "output/app/��DCƪ�����޸���.exe",
+    "sha256": "FE57D2943CA5D1A441BC12100059D0A9AA44B5F4731FA3313B33BEA2B9F43662",
+    "declared_sha256": "FE57D2943CA5D1A441BC12100059D0A9AA44B5F4731FA3313B33BEA2B9F43662",
+    "hash_matches": true
+  },
+  "current_build_verification": {
+    "path": "output/verification/m08-m18-current-build-verification-2026-09-19.json",
+    "sha256": "2A83050727C9002FF0330DEDC805510CF461141B77FCA726BD627932D4FAFE30",
+    "full_regression_passed": true,
+    "full_regression_tests": 1039,
+    "self_test_exit_code": 0,
+    "executable_sha256": "DD828C2C7F9D7FCBEF8FDEE609E9D0E1BD6A8AD4A68C6A239AA2D78F6BDF98B5",
+    "matches_current_executable": false,
+    "current_build_click_smoke_performed": true,
+    "mesen_runtime_passed": true,
+    "mesen_runtime_checks": 17
+  },
+  "agent_ui_smoke": {
+    "path": "output/verification/m08-m18-agent-ui-smoke-2026-09-19.json",
+    "sha256": "8D1B7E80C9CE5F5752AB716658B9F652093FCA27C6D5C198C9D17F73FE9F2AAC",
+    "passed": true,
+    "executable_sha256": "A0675C1A165590056DFB350C1F72B9D818BE28982D2AE8D796C3FC0BFCF8B1C0",
+    "matches_current_executable": false
+  },
+  "recommended_rom": {
+    "path": "output/rom/DC_kuorong_464K.nes",
+    "sha256": "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E",
+    "expected_sha256": "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E",
+    "hash_matches": true
+  },
+  "counts": {
+    "modules": 11,
+    "machine_gate_passed": 11,
+    "implementation_scope_complete": 11,
+    "user_accepted": 11
+  },
+  "modules": {
+    "M08": {
+      "status": "user_accepted_current_scope",
+      "implementation_scope_complete": true,
+      "machine_gate_passed": true,
+      "evidence": "output/verification/m08-battle-text-compatibility.json",
+      "evidence_sha256": "E3732707B8C7B41146C6AF3B2DD6D63BE9845682629DBA42FDD01828AB05D1D2",
+      "checklist": "docs/M08�����嵥.md",
+      "checklist_exists": true,
+      "checklist_declares_current_executable": true,
+      "user_acceptance": "accepted"
+    },
+    "M09": {
+      "status": "user_accepted_current_scope",
+      "implementation_scope_complete": true,
+      "machine_gate_passed": true,
+      "evidence": "output/verification/m09-other1-compatibility.json",
+      "evidence_sha256": "CC25141908B44B4F99C7A8A6101E0EEB2EB368240F7E5D9F08945A0D6BB2E923",
+      "checklist": "docs/M09�����嵥.md",
+      "checklist_exists": true,
+      "checklist_declares_current_executable": true,
+      "user_acceptance": "accepted"
+    },
+    "M10": {
+      "status": "user_accepted_current_scope",
+      "implementation_scope_complete": true,
+      "machine_gate_passed": true,
+      "evidence": "output/verification/m10-other2-compatibility.json",
+      "evidence_sha256": "A30CEF3781697BCA1FF87B59677027EA59C35C91A0EB50CD924C3CA7FFBC0AF3",
+      "checklist": "docs/M10�����嵥.md",
+      "checklist_exists": true,
+      "checklist_declares_current_executable": true,
+      "user_acceptance": "accepted"
+    },
+    "M11": {
+      "status": "user_accepted_current_scope",
+      "implementation_scope_complete": true,
+      "machine_gate_passed": true,
+      "evidence": "output/verification/m11-font-compatibility.json",
+      "evidence_sha256": "8E9473431A38B3583DFFB16C6D0DD60FB22083BD16DB4E5F803DC5E0EC7D764F",
+      "checklist": "docs/M11�����嵥.md",
+      "checklist_exists": true,
+      "checklist_declares_current_executable": true,
+      "user_acceptance": "accepted"
+    },
+    "M12": {
+      "status": "user_accepted_guarded_scope",
+      "implementation_scope_complete": true,
+      "machine_gate_passed": true,
+      "evidence": "output/verification/m12-animation-compatibility.json",
+      "evidence_sha256": "ACE212AFEEB0463D050DC3B5B8BF26A62696877B97B5166ECD53CD525F311797",
+      "checklist": "docs/M12�����嵥.md",
+      "checklist_exists": true,
+      "checklist_declares_current_executable": true,
+      "user_acceptance": "accepted"
+    },
+    "M13": {
+      "status": "user_accepted_current_scope",
+      "implementation_scope_complete": true,
+      "machine_gate_passed": true,
+      "evidence": "output/verification/m13-text-conversion.json",
+      "evidence_sha256": "F16BFAE1CF89AB2BB686E05113CF396B4748EF98124C031DED0102B517834A98",
+      "checklist": "docs/M13�����嵥.md",
+      "checklist_exists": true,
+      "checklist_declares_current_executable": true,
+      "user_acceptance": "accepted"
+    },
+    "M14": {
+      "status": "user_accepted_current_scope",
+      "implementation_scope_complete": true,
+      "machine_gate_passed": true,
+      "evidence": "output/verification/m14-scenario-compatibility.json",
+      "evidence_sha256": "6AFDBF9B85CA76D1A2F8DDF9BC75D8646D1E33D82DF20234A29AF0BDB0453902",
+      "checklist": "docs/M14�����嵥.md",
+      "checklist_exists": true,
+      "checklist_declares_current_executable": true,
+      "user_acceptance": "accepted"
+    },
+    "M15": {
+      "status": "user_accepted_current_scope",
+      "implementation_scope_complete": true,
+      "machine_gate_passed": true,
+      "evidence": "output/verification/m15-attribute-calculator.json",
+      "evidence_sha256": "1A481D6EF3AE791262B46EF10CFE486DC751B74997F5EADD57B02A305B759C10",
+      "checklist": "docs/M15�����嵥.md",
+      "checklist_exists": true,
+      "checklist_declares_current_executable": true,
+      "user_acceptance": "accepted"
+    },
+    "M16": {
+      "status": "user_accepted_guarded_scope",
+      "implementation_scope_complete": true,
+      "machine_gate_passed": true,
+      "evidence": "output/verification/m16-save-compatibility.json",
+      "evidence_sha256": "15AA255765FAD14826D3F32517FBE25A6D8456E3E247EDCB3F8BCE768AE036C4",
+      "checklist": "docs/M16�����嵥.md",
+      "checklist_exists": true,
+      "checklist_declares_current_executable": true,
+      "user_acceptance": "accepted"
+    },
+    "M17": {
+      "status": "user_accepted_current_scope",
+      "implementation_scope_complete": true,
+      "machine_gate_passed": true,
+      "evidence": "output/verification/m17-global-compatibility.json",
+      "evidence_sha256": "6AA93E41B67729D73AF77A657ADA7005810C83F6D30ECA6651D39E0E6BFF68BC",
+      "checklist": "docs/������/M17_��������.md",
+      "checklist_exists": true,
+      "checklist_declares_current_executable": true,
+      "user_acceptance": "accepted"
+    },
+    "M18": {
+      "status": "user_accepted",
+      "implementation_scope_complete": true,
+      "machine_gate_passed": true,
+      "evidence": "output/verification/m18-unit-export-verification.json",
+      "evidence_sha256": "E8606A3266C3B676740A130B49A75D05DFC22B67563B3BC4BD6652318ACA67CB",
+      "checklist": "docs/M18�����嵥.md",
+      "checklist_exists": true,
+      "checklist_declares_current_executable": true,
+      "user_acceptance": "accepted"
+    }
+  },
+  "blocking_reasons": [
+    "M12 �� 6 ���ް�ȫ������31 ����̬/��������������������ͨ�ð��ƺ� 8 ����������Ƶ�֤�ݳ�ͻ/����ĵ��þ������󱣳�ֻ�����������̬��ȫ�Ž������Ǵ���д���ܡ�",
+    "��ǰ��ʽ������ͨ�� 1039/1039 ȫ���ع�������Լ죻Mesen 17/17 ���Ƽ� ROM ����ʱ���ߡ���ǰ EXE ����� Windows �ɼ������ͷ����ͼ������ F7 ������顣",
+    "2026-09-21 �û���ȷȷ�� M03��M17 ����ǰʵ�ַ�Χͨ����������ݴ˼�¼ M08��M17 �û�ǩ�գ��������κ�ģ�������ʵ�ַ�Χ��"
+  ]
+}

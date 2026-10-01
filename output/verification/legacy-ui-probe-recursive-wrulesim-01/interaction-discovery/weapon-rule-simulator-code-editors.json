@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "validated": true,
+  "scope": "旧版运行规律模拟器 X/Y 多行代码编辑框；隔离副本、未预览、未保存、两框最终恢复为空",
+  "observed_drafts": ["", "AA BB", "GG\n12 345"],
+  "validation_timing": "输入阶段保留任意多行草稿；十六进制格式校验属于预览/使用阶段，不在键入时阻止。",
+  "native_editing": "两个编辑框均支持焦点、直接替换、Ctrl+A 后 Backspace 清空，以及包含撤销/剪切/复制/粘贴/删除/全选的原生右键菜单。",
+  "sha256_before": "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E",
+  "sha256_after": "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E",
+  "diff_count": 0,
+  "execution_records": [
+    {"action_id":"95763abe0b6dd3f88d3a","status":"passed","result":"X代码输入阶段接受空、合法十六进制及非十六进制多行草稿。"},
+    {"action_id":"627bb0830530e1ee2e98","status":"passed","result":"X代码编辑框可通过真实鼠标获得焦点。"},
+    {"action_id":"b6eb5b6ed21d13fd2ca8","status":"passed","result":"X代码实测 Ctrl+A 后 Backspace 一次清空全部内容。"},
+    {"action_id":"a30a384d35faac0bf698","status":"passed","result":"X代码可直接替换并原样保留多行自由文本草稿。"},
+    {"action_id":"a997616dd7b867199623","status":"passed","result":"X代码显示标准原生编辑右键菜单。"},
+    {"action_id":"9d729e4ef255b1644115","status":"passed","result":"Y代码输入阶段接受空、合法十六进制及非十六进制多行草稿。"},
+    {"action_id":"dd2f6a5960aac38c817f","status":"passed","result":"Y代码编辑框可通过真实鼠标获得焦点。"},
+    {"action_id":"dca7052085d2775cd50f","status":"passed","result":"Y代码实测 Ctrl+A 后 Backspace 一次清空全部内容。"},
+    {"action_id":"15990cb4b02b39091ed4","status":"passed","result":"Y代码可直接替换并原样保留多行自由文本草稿。"},
+    {"action_id":"bac012043515e73d25a8","status":"passed","result":"Y代码显示标准原生编辑右键菜单。"}
+  ]
+}

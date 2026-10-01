@@ -1,0 +1,32 @@
+{
+  "tag": "DBCMD_01_机体修改_导出机体_8",
+  "hwnd": 65998,
+  "title": "",
+  "class": "EdgeUiInputTopWndClass",
+  "rect": {
+    "left": 19,
+    "top": 0,
+    "right": 1920,
+    "bottom": 4,
+    "width": 1901,
+    "height": 4
+  },
+  "pid": 9016,
+  "tree": {
+    "hwnd": 65998,
+    "class": "EdgeUiInputTopWndClass",
+    "text": "",
+    "ctrl_id": 0,
+    "rect": {
+      "left": 19,
+      "top": 0,
+      "right": 1920,
+      "bottom": 4,
+      "width": 1901,
+      "height": 4
+    },
+    "visible": true,
+    "enabled": true,
+    "children": []
+  }
+}

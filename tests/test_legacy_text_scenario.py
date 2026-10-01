@@ -394,6 +394,11 @@ class LegacyTextScenarioCodecTests(unittest.TestCase):
         for shop_id in range(0xF5, 0xFF):
             with self.assertRaisesRegex(ValueError, "地图事件"):
                 codec.record(shop_id)
+        self.assertEqual(codec.REFERENCE_SHOP_IDS, (*range(0xF0, 0xFD), 0xFE))
+        self.assertEqual(codec.reference_dialogue_id(0xF0), 48)
+        self.assertEqual(codec.reference_dialogue_id(0xF5), 195)
+        with self.assertRaisesRegex(ValueError, "F0—FC、FE"):
+            codec.reference_dialogue_id(0xFD)
 
     def test_all_m10_text_and_shop_records_roundtrip_without_hidden_changes(self) -> None:
         text_codec = LegacyTextCodec(self.data)
@@ -598,7 +603,29 @@ class LegacyTextScenarioUiTests(QtTestCase):
         self.assertIn("感谢光临", LegacyTextCodec(self.project.working).record("system", 48).text)
         shop.shop_combo.setCurrentIndex(5)
         self.assertFalse(shop.fields.isEnabled())
-        self.assertIn("地图事件", shop.status_label.text())
+        self.assertTrue(shop.dialogue_tabs.isEnabled())
+        self.assertEqual(shop.dialogue_spin.value(), 195)
+        self.assertIn("地图事件指针表共用", shop.status_label.text())
+        self.assertNotIn("FD", [shop.shop_list.item(row).text() for row in range(shop.shop_list.count())])
+        map_event_pointers = bytes(self.project.working[0x1588E:0x158CE])
+        shop_directory = bytes(self.project.working[0x15753:0x15771])
+        shop.dialogue_edits[0].setPlainText("好⟦结束⟧")
+        self.assertTrue(shop.has_pending_draft)
+        self.assertIn(("legacy_text_pool", "system"), shop.pending_draft_keys)
+        self.assertTrue(shop.commit_pending_changes())
+        self.assertEqual(bytes(self.project.working[0x1588E:0x158CE]), map_event_pointers)
+        self.assertEqual(bytes(self.project.working[0x15753:0x15771]), shop_directory)
+        self.assertEqual(
+            LegacyTextCodec(self.project.working).record("system", 195).text,
+            "好⟦结束⟧",
+        )
+
+        shop.shop_combo.setCurrentIndex(4)
+        self.assertTrue(shop.fields.isEnabled())
+        self.assertEqual(
+            [combo.isEnabled() for combo in shop.item_combos],
+            [True, False, False, False],
+        )
 
     def test_shop_dialogue_can_restore_original_capacity_after_shortening(self) -> None:
         page = LegacyShopPage()

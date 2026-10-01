@@ -78,6 +78,8 @@ def analyze(rom_path: Path) -> dict[str, object]:
         default_side = dialog.enemy
         default_ui = {
             "window_title": dialog.windowTitle(),
+            "window_size": [dialog.width(), dialog.height()],
+            "minimum_size": [dialog.minimumWidth(), dialog.minimumHeight()],
             "character_count": default_side.character.count(),
             "unit_count": default_side.unit.count(),
             "level_count": default_side.level.count(),
@@ -95,6 +97,7 @@ def analyze(rom_path: Path) -> dict[str, object]:
             "power_land": default_side.power_land.value(),
             "power_sea": default_side.power_sea.value(),
             "special": default_side.skill.value(),
+            "weapon_minimum_width": default_side.weapon.minimumWidth(),
         }
 
         unit_two = default_side.unit.findData(2)
@@ -121,6 +124,26 @@ def analyze(rom_path: Path) -> dict[str, object]:
             dialog.results.item(row).text() for row in range(dialog.results.count())
         ]
         calculation_preserved_rom = bytes(project.working) == initial_working
+
+        damage_special_index = dialog.ally.skill_summary.findData(0x07)
+        dialog.ally.skill_summary.setCurrentIndex(damage_special_index)
+        application.processEvents()
+        damage_special_text = dialog.ally.skill_summary.currentText()
+        damage_special_value = dialog.ally.skill.value()
+        damage_special_damage = dialog.last_results["敌方"].actual_damage
+        dialog.ally.skill.setValue(0x10)
+        application.processEvents()
+
+        enemy_weapon_11 = dialog.enemy.weapon.findData(11)
+        dialog.enemy.weapon.setCurrentIndex(enemy_weapon_11)
+        application.processEvents()
+        live_linked_damage = dialog.last_results["敌方"].predicted_damage
+        live_linked_header = dialog.results.item(
+            dialog._result_header_rows["敌方"]
+        ).text()
+        live_linked_focus = dialog.focused_result_side
+        dialog.enemy.weapon.setCurrentIndex(dialog.enemy.weapon.findData(7))
+        application.processEvents()
 
         dialog.enemy.multiplier_edit.setText("2/1")
         dialog.calculate()
@@ -177,7 +200,7 @@ def analyze(rom_path: Path) -> dict[str, object]:
             power_land=0,
             power_sea=0,
             terrain=2,
-            special=6,
+            special=7,
         )
         composed_result = calculate_battle_attack(
             boundary_attacker, boundary_defender, BattleFormulaParameters.from_project(None)
@@ -196,6 +219,9 @@ def analyze(rom_path: Path) -> dict[str, object]:
         checks = {
             "reference_window_structure": (
                 default_ui["window_title"] == "战斗属性计算器"
+                and default_ui["window_size"] == [1000, 650]
+                and default_ui["minimum_size"] == [940, 600]
+                and default_ui["weapon_minimum_width"] == 145
                 and default_ui["character_count"] == 200
                 and default_ui["unit_count"] == 255
                 and default_ui["level_count"] == 60
@@ -207,6 +233,8 @@ def analyze(rom_path: Path) -> dict[str, object]:
             "default_record_values": default_ui
             == {
                 "window_title": "战斗属性计算器",
+                "window_size": [1000, 650],
+                "minimum_size": [940, 600],
                 "character_count": 200,
                 "unit_count": 255,
                 "level_count": 60,
@@ -220,10 +248,11 @@ def analyze(rom_path: Path) -> dict[str, object]:
                 "hp": 140,
                 "weapon_hit": 110,
                 "weapon_range": 1,
-                "power_air": 58,
-                "power_land": 58,
-                "power_sea": 58,
-                "special": 2,
+                "power_air": 177,
+                "power_land": 177,
+                "power_sea": 177,
+                "special": 16,
+                "weapon_minimum_width": 145,
             },
             "level_growth_is_bounded": (
                 len(level_values) == 3
@@ -244,27 +273,34 @@ def analyze(rom_path: Path) -> dict[str, object]:
                 "can_double": False,
                 "minimum_double_speed": 140,
                 "terrain_name": "空",
-                "firepower": 58,
-                "predicted_damage": 143,
-                "actual_damage": 107,
-                "remaining_hp": 33,
+                "firepower": 177,
+                "predicted_damage": 135,
+                "actual_damage": 135,
+                "remaining_hp": 5,
                 "hits_to_defeat": 2,
-                "defensive_effect": "相对转移装甲",
+                "defensive_effect": None,
                 "distance_percent": 100,
             },
             "result_list_is_two_way": (
-                len(result_lines) == 18
-                and result_lines[0].startswith("--------我方计算")
-                and any(line.startswith("--------敌方计算") for line in result_lines)
+                len(result_lines) in (16, 18)
+                and result_lines[0].startswith("我方「")
+                and "使用「" in result_lines[0]
+                and any(line.startswith("敌方「") for line in result_lines)
             ),
             "calculator_never_writes_rom": (
                 calculation_preserved_rom and calculation_preserved_changed_rom
             ),
             "damage_multiplier_and_invalid_input": (
-                doubled_damage == 286 and invalid_multiplier_fallback == "2/1"
+                doubled_damage == 270 and invalid_multiplier_fallback == "2/1"
             ),
             "m17_live_parameter_link_and_undo": (
-                live_firepower == raw_land_power * changed_formula[1] + 8
+                live_firepower
+                == (
+                    dialog.enemy.strength.value()
+                    * changed_formula[0]
+                    // changed_formula[2]
+                    + raw_land_power * changed_formula[1]
+                )
                 and undo_description == "伤害公式"
                 and undo_restored
             ),
@@ -273,10 +309,17 @@ def analyze(rom_path: Path) -> dict[str, object]:
                 and multiplier_editor_values == (3, 2)
                 and bytes(project.working) == initial_working
             ),
-            "archived_firepower_examples": (
-                reference_firepower(36, 10) == 368
-                and reference_firepower(33, 10) == 338
-                and reference_firepower(30, 10) == 308
+            "selection_changes_live_recalculate_and_focus": (
+                enemy_weapon_11 >= 0
+                and live_linked_damage == 185
+                and "交叉粉碎炮" in live_linked_header
+                and live_linked_focus == "敌方"
+            ),
+            "reference_final_firepower_examples": (
+                reference_firepower(98, 5, formula) == 177
+                and reference_firepower(145, 18, formula) == 368
+                and reference_firepower(145, 15, formula) == 338
+                and reference_firepower(145, 12, formula) == 308
             ),
             "distance_terrain_damage_and_defense_compose": _result_payload(composed_result)
             == {
@@ -288,11 +331,11 @@ def analyze(rom_path: Path) -> dict[str, object]:
                 "minimum_double_speed": 108,
                 "terrain_name": "海",
                 "firepower": 200,
-                "predicted_damage": 500,
-                "actual_damage": 250,
-                "remaining_hp": 750,
-                "hits_to_defeat": 4,
-                "defensive_effect": "盾防",
+                "predicted_damage": 240,
+                "actual_damage": 120,
+                "remaining_hp": 880,
+                "hits_to_defeat": 9,
+                "defensive_effect": "用盾防御",
                 "distance_percent": 90,
             },
             "double_hit_is_strictly_greater": (
@@ -300,11 +343,24 @@ def analyze(rom_path: Path) -> dict[str, object]:
                 and not strict_boundary.can_double
                 and strict_passing.can_double
             ),
-            "expanded_special_codes_are_conservative": (
-                normalized_special_code(16) == 2
-                and defensive_effect(16) is not None
-                and normalized_special_code(135) == 135
-                and defensive_effect(135) is None
+            "combined_special_byte_uses_low_three_defense_bits": (
+                normalized_special_code(16) == 0
+                and defensive_effect(16) is None
+                and normalized_special_code(135) == 7
+                and defensive_effect(135) is not None
+            ),
+            "damage_specials_are_filtered_selectable_and_transient": (
+                dialog.ally.skill_summary.count() == 6
+                and tuple(
+                    dialog.ally.skill_summary.itemData(index)
+                    for index in range(dialog.ally.skill_summary.count())
+                )
+                == (0, 1, 2, 3, 4, 7)
+                and damage_special_index >= 0
+                and damage_special_value == 0x07
+                and "用盾防御" in damage_special_text
+                and damage_special_damage == 67
+                and bytes(project.working) == initial_working
             ),
         }
 
@@ -345,6 +401,11 @@ def analyze(rom_path: Path) -> dict[str, object]:
                 "invalid_multiplier_fallback": invalid_multiplier_fallback,
                 "live_weapon_multiplier": changed_formula[1],
                 "live_land_firepower": live_firepower,
+                "damage_special_selection": {
+                    "value": damage_special_value,
+                    "text": damage_special_text,
+                    "actual_damage": damage_special_damage,
+                },
             },
             "checks": checks,
             "pending_acceptance": [

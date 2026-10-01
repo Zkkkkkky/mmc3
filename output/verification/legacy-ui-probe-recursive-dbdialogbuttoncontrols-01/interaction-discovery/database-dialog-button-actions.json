@@ -1,0 +1,1037 @@
+{
+  "schema_version": 1,
+  "validated": true,
+  "error": null,
+  "execution_record_count": 56,
+  "diff_count": 0,
+  "sha256_before": "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E",
+  "sha256_after": "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E",
+  "observations": [
+    {
+      "control_id": 1380,
+      "text": "文字编辑",
+      "path": [
+        5,
+        11
+      ],
+      "action": "right_click_and_state",
+      "right_click_menu": false,
+      "hidden_on_tab_x": 14,
+      "activators": []
+    },
+    {
+      "control_id": 1380,
+      "text": "文字编辑",
+      "path": [
+        5,
+        11
+      ],
+      "action": "keyboard_activate",
+      "focused": true,
+      "database_alive": true,
+      "check_before": 0,
+      "check_after": 0,
+      "new_windows": [],
+      "activators": []
+    },
+    {
+      "control_id": 1380,
+      "text": "文字编辑",
+      "path": [
+        5,
+        11
+      ],
+      "action": "left_click",
+      "focused": null,
+      "database_alive": true,
+      "check_before": 0,
+      "check_after": 0,
+      "new_windows": [],
+      "activators": []
+    },
+    {
+      "control_id": 1400,
+      "text": "对话段选择",
+      "path": [
+        5,
+        10
+      ],
+      "action": "right_click_and_state",
+      "right_click_menu": false,
+      "hidden_on_tab_x": 14,
+      "activators": []
+    },
+    {
+      "control_id": 1400,
+      "text": "对话段选择",
+      "path": [
+        5,
+        10
+      ],
+      "action": "keyboard_activate",
+      "focused": true,
+      "database_alive": true,
+      "check_before": 0,
+      "check_after": 0,
+      "new_windows": [],
+      "activators": []
+    },
+    {
+      "control_id": 1400,
+      "text": "对话段选择",
+      "path": [
+        5,
+        10
+      ],
+      "action": "left_click",
+      "focused": null,
+      "database_alive": true,
+      "check_before": 0,
+      "check_after": 0,
+      "new_windows": [],
+      "activators": []
+    },
+    {
+      "control_id": 1420,
+      "text": "-",
+      "path": [
+        5,
+        15,
+        4
+      ],
+      "action": "right_click_and_state",
+      "right_click_menu": false,
+      "hidden_on_tab_x": 14,
+      "activators": []
+    },
+    {
+      "control_id": 1420,
+      "text": "-",
+      "path": [
+        5,
+        15,
+        4
+      ],
+      "action": "keyboard_activate",
+      "focused": true,
+      "database_alive": true,
+      "check_before": 0,
+      "check_after": 0,
+      "new_windows": [
+        {
+          "title": "攻击对话",
+          "class": "WTWindow"
+        }
+      ],
+      "activators": []
+    },
+    {
+      "control_id": 1420,
+      "text": "-",
+      "path": [
+        5,
+        15,
+        4
+      ],
+      "action": "left_click",
+      "focused": null,
+      "database_alive": true,
+      "check_before": 0,
+      "check_after": 0,
+      "new_windows": [
+        {
+          "title": "攻击对话",
+          "class": "WTWindow"
+        }
+      ],
+      "activators": []
+    },
+    {
+      "control_id": 1430,
+      "text": "-",
+      "path": [
+        5,
+        15,
+        3
+      ],
+      "action": "right_click_and_state",
+      "right_click_menu": false,
+      "hidden_on_tab_x": 14,
+      "activators": []
+    },
+    {
+      "control_id": 1430,
+      "text": "-",
+      "path": [
+        5,
+        15,
+        3
+      ],
+      "action": "keyboard_activate",
+      "focused": true,
+      "database_alive": true,
+      "check_before": 0,
+      "check_after": 0,
+      "new_windows": [
+        {
+          "title": "攻击对话",
+          "class": "WTWindow"
+        }
+      ],
+      "activators": []
+    },
+    {
+      "control_id": 1430,
+      "text": "-",
+      "path": [
+        5,
+        15,
+        3
+      ],
+      "action": "left_click",
+      "focused": null,
+      "database_alive": true,
+      "check_before": 0,
+      "check_after": 0,
+      "new_windows": [
+        {
+          "title": "攻击对话",
+          "class": "WTWindow"
+        }
+      ],
+      "activators": []
+    },
+    {
+      "control_id": 1440,
+      "text": "-",
+      "path": [
+        5,
+        15,
+        2
+      ],
+      "action": "right_click_and_state",
+      "right_click_menu": false,
+      "hidden_on_tab_x": 14,
+      "activators": []
+    },
+    {
+      "control_id": 1440,
+      "text": "-",
+      "path": [
+        5,
+        15,
+        2
+      ],
+      "action": "keyboard_activate",
+      "focused": true,
+      "database_alive": true,
+      "check_before": 0,
+      "check_after": 0,
+      "new_windows": [
+        {
+          "title": "攻击对话",
+          "class": "WTWindow"
+        }
+      ],
+      "activators": []
+    },
+    {
+      "control_id": 1440,
+      "text": "-",
+      "path": [
+        5,
+        15,
+        2
+      ],
+      "action": "left_click",
+      "focused": null,
+      "database_alive": true,
+      "check_before": 0,
+      "check_after": 0,
+      "new_windows": [
+        {
+          "title": "攻击对话",
+          "class": "WTWindow"
+        }
+      ],
+      "activators": []
+    },
+    {
+      "control_id": 1450,
+      "text": "-",
+      "path": [
+        5,
+        15,
+        1
+      ],
+      "action": "right_click_and_state",
+      "right_click_menu": false,
+      "hidden_on_tab_x": 14,
+      "activators": []
+    },
+    {
+      "control_id": 1450,
+      "text": "-",
+      "path": [
+        5,
+        15,
+        1
+      ],
+      "action": "keyboard_activate",
+      "focused": true,
+      "database_alive": true,
+      "check_before": 0,
+      "check_after": 0,
+      "new_windows": [
+        {
+          "title": "防御对话",
+          "class": "WTWindow"
+        }
+      ],
+      "activators": []
+    },
+    {
+      "control_id": 1450,
+      "text": "-",
+      "path": [
+        5,
+        15,
+        1
+      ],
+      "action": "left_click",
+      "focused": null,
+      "database_alive": true,
+      "check_before": 0,
+      "check_after": 0,
+      "new_windows": [
+        {
+          "title": "防御对话",
+          "class": "WTWindow"
+        }
+      ],
+      "activators": []
+    },
+    {
+      "control_id": 1460,
+      "text": "-",
+      "path": [
+        5,
+        15,
+        0
+      ],
+      "action": "right_click_and_state",
+      "right_click_menu": false,
+      "hidden_on_tab_x": 14,
+      "activators": []
+    },
+    {
+      "control_id": 1460,
+      "text": "-",
+      "path": [
+        5,
+        15,
+        0
+      ],
+      "action": "keyboard_activate",
+      "focused": true,
+      "database_alive": true,
+      "check_before": 0,
+      "check_after": 0,
+      "new_windows": [
+        {
+          "title": "防御对话",
+          "class": "WTWindow"
+        }
+      ],
+      "activators": []
+    },
+    {
+      "control_id": 1460,
+      "text": "-",
+      "path": [
+        5,
+        15,
+        0
+      ],
+      "action": "left_click",
+      "focused": null,
+      "database_alive": true,
+      "check_before": 0,
+      "check_after": 0,
+      "new_windows": [
+        {
+          "title": "防御对话",
+          "class": "WTWindow"
+        }
+      ],
+      "activators": []
+    },
+    {
+      "control_id": 1470,
+      "text": "-",
+      "path": [
+        5,
+        14,
+        5
+      ],
+      "action": "right_click_and_state",
+      "right_click_menu": false,
+      "hidden_on_tab_x": 14,
+      "activators": []
+    },
+    {
+      "control_id": 1470,
+      "text": "-",
+      "path": [
+        5,
+        14,
+        5
+      ],
+      "action": "keyboard_activate",
+      "focused": true,
+      "database_alive": true,
+      "check_before": 0,
+      "check_after": 0,
+      "new_windows": [
+        {
+          "title": "防御对话",
+          "class": "WTWindow"
+        }
+      ],
+      "activators": []
+    },
+    {
+      "control_id": 1470,
+      "text": "-",
+      "path": [
+        5,
+        14,
+        5
+      ],
+      "action": "left_click",
+      "focused": null,
+      "database_alive": true,
+      "check_before": 0,
+      "check_after": 0,
+      "new_windows": [
+        {
+          "title": "防御对话",
+          "class": "WTWindow"
+        }
+      ],
+      "activators": []
+    },
+    {
+      "control_id": 1480,
+      "text": "-",
+      "path": [
+        5,
+        14,
+        4
+      ],
+      "action": "right_click_and_state",
+      "right_click_menu": false,
+      "hidden_on_tab_x": 14,
+      "activators": []
+    },
+    {
+      "control_id": 1480,
+      "text": "-",
+      "path": [
+        5,
+        14,
+        4
+      ],
+      "action": "keyboard_activate",
+      "focused": true,
+      "database_alive": true,
+      "check_before": 0,
+      "check_after": 0,
+      "new_windows": [
+        {
+          "title": "防御对话",
+          "class": "WTWindow"
+        }
+      ],
+      "activators": []
+    },
+    {
+      "control_id": 1480,
+      "text": "-",
+      "path": [
+        5,
+        14,
+        4
+      ],
+      "action": "left_click",
+      "focused": null,
+      "database_alive": true,
+      "check_before": 0,
+      "check_after": 0,
+      "new_windows": [
+        {
+          "title": "防御对话",
+          "class": "WTWindow"
+        }
+      ],
+      "activators": []
+    },
+    {
+      "control_id": 1490,
+      "text": "-",
+      "path": [
+        5,
+        14,
+        3
+      ],
+      "action": "right_click_and_state",
+      "right_click_menu": false,
+      "hidden_on_tab_x": 14,
+      "activators": []
+    },
+    {
+      "control_id": 1490,
+      "text": "-",
+      "path": [
+        5,
+        14,
+        3
+      ],
+      "action": "keyboard_activate",
+      "focused": true,
+      "database_alive": true,
+      "check_before": 0,
+      "check_after": 0,
+      "new_windows": [
+        {
+          "title": "防御对话",
+          "class": "WTWindow"
+        }
+      ],
+      "activators": []
+    },
+    {
+      "control_id": 1490,
+      "text": "-",
+      "path": [
+        5,
+        14,
+        3
+      ],
+      "action": "left_click",
+      "focused": null,
+      "database_alive": true,
+      "check_before": 0,
+      "check_after": 0,
+      "new_windows": [
+        {
+          "title": "防御对话",
+          "class": "WTWindow"
+        }
+      ],
+      "activators": []
+    },
+    {
+      "control_id": 1500,
+      "text": "-",
+      "path": [
+        5,
+        14,
+        2
+      ],
+      "action": "right_click_and_state",
+      "right_click_menu": false,
+      "hidden_on_tab_x": 14,
+      "activators": []
+    },
+    {
+      "control_id": 1500,
+      "text": "-",
+      "path": [
+        5,
+        14,
+        2
+      ],
+      "action": "keyboard_activate",
+      "focused": true,
+      "database_alive": true,
+      "check_before": 0,
+      "check_after": 0,
+      "new_windows": [
+        {
+          "title": "防御对话",
+          "class": "WTWindow"
+        }
+      ],
+      "activators": []
+    },
+    {
+      "control_id": 1500,
+      "text": "-",
+      "path": [
+        5,
+        14,
+        2
+      ],
+      "action": "left_click",
+      "focused": null,
+      "database_alive": true,
+      "check_before": 0,
+      "check_after": 0,
+      "new_windows": [
+        {
+          "title": "防御对话",
+          "class": "WTWindow"
+        }
+      ],
+      "activators": []
+    },
+    {
+      "control_id": 1510,
+      "text": "-",
+      "path": [
+        5,
+        14,
+        1
+      ],
+      "action": "right_click_and_state",
+      "right_click_menu": false,
+      "hidden_on_tab_x": 14,
+      "activators": []
+    },
+    {
+      "control_id": 1510,
+      "text": "-",
+      "path": [
+        5,
+        14,
+        1
+      ],
+      "action": "keyboard_activate",
+      "focused": true,
+      "database_alive": true,
+      "check_before": 0,
+      "check_after": 0,
+      "new_windows": [
+        {
+          "title": "防御对话",
+          "class": "WTWindow"
+        }
+      ],
+      "activators": []
+    },
+    {
+      "control_id": 1510,
+      "text": "-",
+      "path": [
+        5,
+        14,
+        1
+      ],
+      "action": "left_click",
+      "focused": null,
+      "database_alive": true,
+      "check_before": 0,
+      "check_after": 0,
+      "new_windows": [
+        {
+          "title": "防御对话",
+          "class": "WTWindow"
+        }
+      ],
+      "activators": []
+    },
+    {
+      "control_id": 1520,
+      "text": "-",
+      "path": [
+        5,
+        14,
+        0
+      ],
+      "action": "right_click_and_state",
+      "right_click_menu": false,
+      "hidden_on_tab_x": 14,
+      "activators": []
+    },
+    {
+      "control_id": 1520,
+      "text": "-",
+      "path": [
+        5,
+        14,
+        0
+      ],
+      "action": "keyboard_activate",
+      "focused": true,
+      "database_alive": true,
+      "check_before": 0,
+      "check_after": 0,
+      "new_windows": [
+        {
+          "title": "防御对话",
+          "class": "WTWindow"
+        }
+      ],
+      "activators": []
+    },
+    {
+      "control_id": 1520,
+      "text": "-",
+      "path": [
+        5,
+        14,
+        0
+      ],
+      "action": "left_click",
+      "focused": null,
+      "database_alive": true,
+      "check_before": 0,
+      "check_after": 0,
+      "new_windows": [
+        {
+          "title": "防御对话",
+          "class": "WTWindow"
+        }
+      ],
+      "activators": []
+    },
+    {
+      "control_id": 1530,
+      "text": "无",
+      "path": [
+        5,
+        16,
+        2
+      ],
+      "action": "right_click_and_state",
+      "right_click_menu": false,
+      "hidden_on_tab_x": 14,
+      "activators": []
+    },
+    {
+      "control_id": 1530,
+      "text": "无",
+      "path": [
+        5,
+        16,
+        2
+      ],
+      "action": "keyboard_activate",
+      "focused": true,
+      "database_alive": true,
+      "check_before": 0,
+      "check_after": 0,
+      "new_windows": [
+        {
+          "title": "提示",
+          "class": "#32770"
+        }
+      ],
+      "activators": []
+    },
+    {
+      "control_id": 1530,
+      "text": "无",
+      "path": [
+        5,
+        16,
+        2
+      ],
+      "action": "left_click",
+      "focused": null,
+      "database_alive": true,
+      "check_before": 0,
+      "check_after": 0,
+      "new_windows": [
+        {
+          "title": "提示",
+          "class": "#32770"
+        }
+      ],
+      "activators": []
+    }
+  ],
+  "execution_records": [
+    {
+      "action_id": "b04595e2fc9e0210cd13",
+      "status": "passed",
+      "result": "执行右键路径；可见菜单=False；条件记录链=[]。"
+    },
+    {
+      "action_id": "7b0fa4d59302243c78d5",
+      "status": "passed",
+      "result": "切换到页签坐标 14 后隐藏；返回后可见且启用=True。"
+    },
+    {
+      "action_id": "c5170cadd0a4c219d33c",
+      "status": "passed",
+      "result": "焦点=True；数据库仍存在=True；选中状态 0->0；新增窗口=[]；条件记录链=[]。"
+    },
+    {
+      "action_id": "6728fcc1dfddfb34966d",
+      "status": "passed",
+      "result": "焦点=None；数据库仍存在=True；选中状态 0->0；新增窗口=[]；条件记录链=[]。"
+    },
+    {
+      "action_id": "4f2de5b71ce3b9a1d981",
+      "status": "passed",
+      "result": "执行右键路径；可见菜单=False；条件记录链=[]。"
+    },
+    {
+      "action_id": "7c5ed7e8bf0385f1d1a1",
+      "status": "passed",
+      "result": "切换到页签坐标 14 后隐藏；返回后可见且启用=True。"
+    },
+    {
+      "action_id": "82d04906b2a3b31986a3",
+      "status": "passed",
+      "result": "焦点=True；数据库仍存在=True；选中状态 0->0；新增窗口=[]；条件记录链=[]。"
+    },
+    {
+      "action_id": "025cb5f4121a2e43773f",
+      "status": "passed",
+      "result": "焦点=None；数据库仍存在=True；选中状态 0->0；新增窗口=[]；条件记录链=[]。"
+    },
+    {
+      "action_id": "49a2f7619ff8a9ed9cdf",
+      "status": "passed",
+      "result": "执行右键路径；可见菜单=False；条件记录链=[]。"
+    },
+    {
+      "action_id": "fe5b36b9987a7d6f12b8",
+      "status": "passed",
+      "result": "切换到页签坐标 14 后隐藏；返回后可见且启用=True。"
+    },
+    {
+      "action_id": "8796a7c786a4475e5f9c",
+      "status": "passed",
+      "result": "焦点=True；数据库仍存在=True；选中状态 0->0；新增窗口=[{'title': '攻击对话', 'class': 'WTWindow'}]；条件记录链=[]。"
+    },
+    {
+      "action_id": "3a795f92f4d9b002f3e1",
+      "status": "passed",
+      "result": "焦点=None；数据库仍存在=True；选中状态 0->0；新增窗口=[{'title': '攻击对话', 'class': 'WTWindow'}]；条件记录链=[]。"
+    },
+    {
+      "action_id": "07403921d9e9482f9d77",
+      "status": "passed",
+      "result": "执行右键路径；可见菜单=False；条件记录链=[]。"
+    },
+    {
+      "action_id": "98281eeb398d4f4543a5",
+      "status": "passed",
+      "result": "切换到页签坐标 14 后隐藏；返回后可见且启用=True。"
+    },
+    {
+      "action_id": "a217e22e1911f4064fb7",
+      "status": "passed",
+      "result": "焦点=True；数据库仍存在=True；选中状态 0->0；新增窗口=[{'title': '攻击对话', 'class': 'WTWindow'}]；条件记录链=[]。"
+    },
+    {
+      "action_id": "2e7685a6dab42f5390c1",
+      "status": "passed",
+      "result": "焦点=None；数据库仍存在=True；选中状态 0->0；新增窗口=[{'title': '攻击对话', 'class': 'WTWindow'}]；条件记录链=[]。"
+    },
+    {
+      "action_id": "b3e0ec8a113c914ad02c",
+      "status": "passed",
+      "result": "执行右键路径；可见菜单=False；条件记录链=[]。"
+    },
+    {
+      "action_id": "5a1e0dd081cf0f41f5f9",
+      "status": "passed",
+      "result": "切换到页签坐标 14 后隐藏；返回后可见且启用=True。"
+    },
+    {
+      "action_id": "3977fe937c7a8270fee5",
+      "status": "passed",
+      "result": "焦点=True；数据库仍存在=True；选中状态 0->0；新增窗口=[{'title': '攻击对话', 'class': 'WTWindow'}]；条件记录链=[]。"
+    },
+    {
+      "action_id": "7d8ac2b23c706f259604",
+      "status": "passed",
+      "result": "焦点=None；数据库仍存在=True；选中状态 0->0；新增窗口=[{'title': '攻击对话', 'class': 'WTWindow'}]；条件记录链=[]。"
+    },
+    {
+      "action_id": "dd3481f326ad1e08b698",
+      "status": "passed",
+      "result": "执行右键路径；可见菜单=False；条件记录链=[]。"
+    },
+    {
+      "action_id": "01f20dc26c36ffb39372",
+      "status": "passed",
+      "result": "切换到页签坐标 14 后隐藏；返回后可见且启用=True。"
+    },
+    {
+      "action_id": "6110c9e0959171e1792f",
+      "status": "passed",
+      "result": "焦点=True；数据库仍存在=True；选中状态 0->0；新增窗口=[{'title': '防御对话', 'class': 'WTWindow'}]；条件记录链=[]。"
+    },
+    {
+      "action_id": "c021fafd54de56e06a3b",
+      "status": "passed",
+      "result": "焦点=None；数据库仍存在=True；选中状态 0->0；新增窗口=[{'title': '防御对话', 'class': 'WTWindow'}]；条件记录链=[]。"
+    },
+    {
+      "action_id": "a30bd7fc2201c0c0a8a6",
+      "status": "passed",
+      "result": "执行右键路径；可见菜单=False；条件记录链=[]。"
+    },
+    {
+      "action_id": "b256b0d92cdf9e74e8f4",
+      "status": "passed",
+      "result": "切换到页签坐标 14 后隐藏；返回后可见且启用=True。"
+    },
+    {
+      "action_id": "d2ab2f14bc8fa2b40621",
+      "status": "passed",
+      "result": "焦点=True；数据库仍存在=True；选中状态 0->0；新增窗口=[{'title': '防御对话', 'class': 'WTWindow'}]；条件记录链=[]。"
+    },
+    {
+      "action_id": "12fa37fad89db9a7b846",
+      "status": "passed",
+      "result": "焦点=None；数据库仍存在=True；选中状态 0->0；新增窗口=[{'title': '防御对话', 'class': 'WTWindow'}]；条件记录链=[]。"
+    },
+    {
+      "action_id": "58025c5d2d5c10814355",
+      "status": "passed",
+      "result": "执行右键路径；可见菜单=False；条件记录链=[]。"
+    },
+    {
+      "action_id": "4a663a8152753e0c1070",
+      "status": "passed",
+      "result": "切换到页签坐标 14 后隐藏；返回后可见且启用=True。"
+    },
+    {
+      "action_id": "78b4b85be89783ed546a",
+      "status": "passed",
+      "result": "焦点=True；数据库仍存在=True；选中状态 0->0；新增窗口=[{'title': '防御对话', 'class': 'WTWindow'}]；条件记录链=[]。"
+    },
+    {
+      "action_id": "e69a98d825a3e9c267e6",
+      "status": "passed",
+      "result": "焦点=None；数据库仍存在=True；选中状态 0->0；新增窗口=[{'title': '防御对话', 'class': 'WTWindow'}]；条件记录链=[]。"
+    },
+    {
+      "action_id": "023167dc56c758e227a9",
+      "status": "passed",
+      "result": "执行右键路径；可见菜单=False；条件记录链=[]。"
+    },
+    {
+      "action_id": "4625af22e5173cc3930d",
+      "status": "passed",
+      "result": "切换到页签坐标 14 后隐藏；返回后可见且启用=True。"
+    },
+    {
+      "action_id": "e70354e8e210802a162c",
+      "status": "passed",
+      "result": "焦点=True；数据库仍存在=True；选中状态 0->0；新增窗口=[{'title': '防御对话', 'class': 'WTWindow'}]；条件记录链=[]。"
+    },
+    {
+      "action_id": "2738adf7249d89380fe6",
+      "status": "passed",
+      "result": "焦点=None；数据库仍存在=True；选中状态 0->0；新增窗口=[{'title': '防御对话', 'class': 'WTWindow'}]；条件记录链=[]。"
+    },
+    {
+      "action_id": "1ffdd15061d056306f51",
+      "status": "passed",
+      "result": "执行右键路径；可见菜单=False；条件记录链=[]。"
+    },
+    {
+      "action_id": "b90268bee97742545e61",
+      "status": "passed",
+      "result": "切换到页签坐标 14 后隐藏；返回后可见且启用=True。"
+    },
+    {
+      "action_id": "0988975845053073e8a9",
+      "status": "passed",
+      "result": "焦点=True；数据库仍存在=True；选中状态 0->0；新增窗口=[{'title': '防御对话', 'class': 'WTWindow'}]；条件记录链=[]。"
+    },
+    {
+      "action_id": "01ceb3428aa83e5fbed5",
+      "status": "passed",
+      "result": "焦点=None；数据库仍存在=True；选中状态 0->0；新增窗口=[{'title': '防御对话', 'class': 'WTWindow'}]；条件记录链=[]。"
+    },
+    {
+      "action_id": "e2c89ef5b9b91e216f39",
+      "status": "passed",
+      "result": "执行右键路径；可见菜单=False；条件记录链=[]。"
+    },
+    {
+      "action_id": "0c8da3508731be69bafe",
+      "status": "passed",
+      "result": "切换到页签坐标 14 后隐藏；返回后可见且启用=True。"
+    },
+    {
+      "action_id": "b1e06cdb517a1c73c4f3",
+      "status": "passed",
+      "result": "焦点=True；数据库仍存在=True；选中状态 0->0；新增窗口=[{'title': '防御对话', 'class': 'WTWindow'}]；条件记录链=[]。"
+    },
+    {
+      "action_id": "ec447e007b3c3dce00be",
+      "status": "passed",
+      "result": "焦点=None；数据库仍存在=True；选中状态 0->0；新增窗口=[{'title': '防御对话', 'class': 'WTWindow'}]；条件记录链=[]。"
+    },
+    {
+      "action_id": "ce43a2c97195b7fa5c9f",
+      "status": "passed",
+      "result": "执行右键路径；可见菜单=False；条件记录链=[]。"
+    },
+    {
+      "action_id": "101c28894917e00c362d",
+      "status": "passed",
+      "result": "切换到页签坐标 14 后隐藏；返回后可见且启用=True。"
+    },
+    {
+      "action_id": "793213f0f91ae119dc6d",
+      "status": "passed",
+      "result": "焦点=True；数据库仍存在=True；选中状态 0->0；新增窗口=[{'title': '防御对话', 'class': 'WTWindow'}]；条件记录链=[]。"
+    },
+    {
+      "action_id": "c35b4878d0690167d9e3",
+      "status": "passed",
+      "result": "焦点=None；数据库仍存在=True；选中状态 0->0；新增窗口=[{'title': '防御对话', 'class': 'WTWindow'}]；条件记录链=[]。"
+    },
+    {
+      "action_id": "eab98db1ccf3d29abe0c",
+      "status": "passed",
+      "result": "执行右键路径；可见菜单=False；条件记录链=[]。"
+    },
+    {
+      "action_id": "f111422193f15f167982",
+      "status": "passed",
+      "result": "切换到页签坐标 14 后隐藏；返回后可见且启用=True。"
+    },
+    {
+      "action_id": "9b19b21fcd2c82945b91",
+      "status": "passed",
+      "result": "焦点=True；数据库仍存在=True；选中状态 0->0；新增窗口=[{'title': '防御对话', 'class': 'WTWindow'}]；条件记录链=[]。"
+    },
+    {
+      "action_id": "2559734e48eef9fc9d08",
+      "status": "passed",
+      "result": "焦点=None；数据库仍存在=True；选中状态 0->0；新增窗口=[{'title': '防御对话', 'class': 'WTWindow'}]；条件记录链=[]。"
+    },
+    {
+      "action_id": "ac0c69771e8251d7d4fb",
+      "status": "passed",
+      "result": "执行右键路径；可见菜单=False；条件记录链=[]。"
+    },
+    {
+      "action_id": "553e6186f91a94596c6a",
+      "status": "passed",
+      "result": "切换到页签坐标 14 后隐藏；返回后可见且启用=True。"
+    },
+    {
+      "action_id": "ddde174863a597747e11",
+      "status": "passed",
+      "result": "焦点=True；数据库仍存在=True；选中状态 0->0；新增窗口=[{'title': '提示', 'class': '#32770'}]；条件记录链=[]。"
+    },
+    {
+      "action_id": "b440e79744c752783416",
+      "status": "passed",
+      "result": "焦点=None；数据库仍存在=True；选中状态 0->0；新增窗口=[{'title': '提示', 'class': '#32770'}]；条件记录链=[]。"
+    }
+  ]
+}

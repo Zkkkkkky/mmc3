@@ -1,0 +1,35 @@
+[    0.0s] launched pid=8520
+[    0.0s] === stage A: launcher -> main window (no ROM) ===
+[    3.1s] top window: {'hwnd': 18417148, 'title': 'SRW2�޸���V1.5', 'class': 'WTWindow', 'rect': {'left': 571, 'top': 244, 'right': 1346, 'bottom': 843, 'width': 775, 'height': 599}, 'pid': 8520}
+[    4.1s] dump A01_������: title='SRW2�޸���V1.5' class='WTWindow' controls=8 shot=ok
+[   12.5s] main window hwnd=9767260 title='SRW2���ݰ��޸���V1.0'
+[   14.0s] dump A02_������_δ����ROM: title='SRW2���ݰ��޸���V1.0' class='WTWindow' controls=63 shot=ok
+[   22.0s] === stage LOAD: load ROM copy only ===
+[   23.0s] dump LOAD01_��ROM�Ի���: title='���ļ�' class='#32770' controls=49 shot=ok
+[   23.5s] open dialog confirmed gone=True
+[   30.5s] ROM loaded without main-window sweep, title='SRW2���ݰ��޸���V1.0��D:\\GIT\\mmc3\\output\\build\\legacy-ui-probe\\menu-controls.nes'
+[   31.5s] dump LOAD02_������_�����: title='SRW2���ݰ��޸���V1.0��D:\\GIT\\mmc3\\output\\build\\legacy-ui-probe\\menu-controls.nes' class='WTWindow' controls=63 shot=ok
+[   31.5s] === stage MENUCONTROLS ===
+[   32.7s] dump MENU_20001: title='���ļ�' class='#32770' controls=49 shot=ok
+[   34.0s] dump MENU_20004: title='����' class='#32770' controls=4 shot=ok
+[   34.3s] launched pid=9560
+[   34.3s] === stage A: launcher -> main window (no ROM) ===
+[   37.3s] top window: {'hwnd': 15338136, 'title': 'SRW2�޸���V1.5', 'class': 'WTWindow', 'rect': {'left': 571, 'top': 244, 'right': 1346, 'bottom': 843, 'width': 775, 'height': 599}, 'pid': 9560}
+[   38.1s] dump A01_������: title='SRW2�޸���V1.5' class='WTWindow' controls=8 shot=ok
+[   47.0s] main window hwnd=9832706 title='SRW2���ݰ��޸���V1.0'
+[   48.5s] dump A02_������_δ����ROM: title='SRW2���ݰ��޸���V1.0' class='WTWindow' controls=63 shot=ok
+[   56.5s] === stage LOAD: load ROM copy only ===
+[   57.4s] dump LOAD01_��ROM�Ի���: title='���ļ�' class='#32770' controls=49 shot=ok
+[   58.0s] open dialog confirmed gone=True
+[   65.0s] ROM loaded without main-window sweep, title='SRW2���ݰ��޸���V1.0��D:\\GIT\\mmc3\\output\\build\\legacy-ui-probe\\menu-controls.nes'
+[   65.9s] dump LOAD02_������_�����: title='SRW2���ݰ��޸���V1.0��D:\\GIT\\mmc3\\output\\build\\legacy-ui-probe\\menu-controls.nes' class='WTWindow' controls=63 shot=ok
+[   67.9s] dump MENU_20008: title='���ݿ�' class='WTWindow' controls=300 shot=ok
+[   69.4s] dump MENU_20009: title='�ֿ�༭' class='WTWindow' controls=23 shot=ok
+[   71.3s] dump MENU_20011: title='��ͼ����' class='WTWindow' controls=62 shot=ok
+[   72.6s] dump MENU_20013: title='����ת��' class='WTWindow' controls=7 shot=ok
+[   76.3s] dump MENU_20017: title='�¼��༭' class='WTWindow' controls=72 shot=ok
+[   79.2s] dump MENU_20020: title='ս�����Լ�����' class='WTWindow' controls=68 shot=ok
+[   80.6s] dump MENU_20021: title='�浵�༭����' class='WTWindow' controls=13 shot=ok
+[   83.3s] dump MENU_20025: title='����' class='WTWindow' controls=96 shot=ok
+[   84.9s] MENUCONTROLS complete: 14/14 actions, zero ROM diff
+[   85.1s] terminated owned pid=9560

@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "scope": "isolated reference executable; no menu command selected; no save",
+  "tabs": [
+    {
+      "label": "机体修改",
+      "status": "header_not_found"
+    },
+    {
+      "label": "人物修改",
+      "status": "header_not_found"
+    },
+    {
+      "label": "武器修改",
+      "status": "header_not_found"
+    },
+    {
+      "label": "战斗对话",
+      "status": "header_not_found"
+    },
+    {
+      "label": "其他修改1",
+      "status": "header_not_found"
+    },
+    {
+      "label": "其他修改2",
+      "status": "header_not_found"
+    }
+  ],
+  "records": []
+}

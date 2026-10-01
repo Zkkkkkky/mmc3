@@ -1,0 +1,825 @@
+{
+  "tag": "B01_打开ROM对话框",
+  "hwnd": 11471984,
+  "title": "打开文件",
+  "class": "#32770",
+  "rect": {
+    "left": 33,
+    "top": 0,
+    "right": 814,
+    "bottom": 1020,
+    "width": 781,
+    "height": 1020
+  },
+  "pid": 14772,
+  "tree": {
+    "hwnd": 11471984,
+    "class": "#32770",
+    "text": "打开文件",
+    "ctrl_id": 0,
+    "rect": {
+      "left": 33,
+      "top": 0,
+      "right": 814,
+      "bottom": 1020,
+      "width": 781,
+      "height": 1020
+    },
+    "visible": true,
+    "enabled": true,
+    "children": [
+      {
+        "hwnd": 9832940,
+        "class": "DUIViewWndClassName",
+        "text": "",
+        "ctrl_id": 0,
+        "rect": {
+          "left": 35,
+          "top": 109,
+          "right": 811,
+          "bottom": 917,
+          "width": 776,
+          "height": 808
+        },
+        "visible": true,
+        "enabled": true,
+        "children": [
+          {
+            "hwnd": 9568840,
+            "class": "DirectUIHWND",
+            "text": "",
+            "ctrl_id": 0,
+            "rect": {
+              "left": 35,
+              "top": 109,
+              "right": 811,
+              "bottom": 917,
+              "width": 776,
+              "height": 808
+            },
+            "visible": true,
+            "enabled": true,
+            "children": [
+              {
+                "hwnd": 13830850,
+                "class": "CtrlNotifySink",
+                "text": "",
+                "ctrl_id": 0,
+                "rect": {
+                  "left": 38,
+                  "top": 149,
+                  "right": 231,
+                  "bottom": 917,
+                  "width": 193,
+                  "height": 768
+                },
+                "visible": true,
+                "enabled": true,
+                "children": [
+                  {
+                    "hwnd": 8981194,
+                    "class": "NamespaceTreeControl",
+                    "text": "命名空间树状控制项",
+                    "ctrl_id": 0,
+                    "rect": {
+                      "left": 38,
+                      "top": 149,
+                      "right": 231,
+                      "bottom": 917,
+                      "width": 193,
+                      "height": 768
+                    },
+                    "visible": true,
+                    "enabled": true,
+                    "children": [
+                      {
+                        "hwnd": 8850532,
+                        "class": "Static",
+                        "text": "命名空间树状控制项",
+                        "ctrl_id": 0,
+                        "rect": {
+                          "left": 38,
+                          "top": 149,
+                          "right": 38,
+                          "bottom": 149,
+                          "width": 0,
+                          "height": 0
+                        },
+                        "visible": false,
+                        "enabled": true,
+                        "children": []
+                      },
+                      {
+                        "hwnd": 6294650,
+                        "class": "SysTreeView32",
+                        "text": "导航窗格",
+                        "ctrl_id": 100,
+                        "rect": {
+                          "left": 38,
+                          "top": 149,
+                          "right": 231,
+                          "bottom": 917,
+                          "width": 193,
+                          "height": 768
+                        },
+                        "visible": true,
+                        "enabled": true,
+                        "children": []
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "hwnd": 9701578,
+                "class": "CtrlNotifySink",
+                "text": "",
+                "ctrl_id": 0,
+                "rect": {
+                  "left": 35,
+                  "top": 109,
+                  "right": 35,
+                  "bottom": 109,
+                  "width": 0,
+                  "height": 0
+                },
+                "visible": false,
+                "enabled": true,
+                "children": [
+                  {
+                    "hwnd": 18549884,
+                    "class": "Shell Preview Extension Host",
+                    "text": "Shell Preview Extension Host",
+                    "ctrl_id": 0,
+                    "rect": {
+                      "left": 35,
+                      "top": 109,
+                      "right": 35,
+                      "bottom": 109,
+                      "width": 0,
+                      "height": 0
+                    },
+                    "visible": false,
+                    "enabled": true,
+                    "children": []
+                  }
+                ]
+              },
+              {
+                "hwnd": 12782070,
+                "class": "CtrlNotifySink",
+                "text": "",
+                "ctrl_id": 0,
+                "rect": {
+                  "left": 235,
+                  "top": 149,
+                  "right": 811,
+                  "bottom": 917,
+                  "width": 576,
+                  "height": 768
+                },
+                "visible": true,
+                "enabled": true,
+                "children": [
+                  {
+                    "hwnd": 13765886,
+                    "class": "SHELLDLL_DefView",
+                    "text": "ShellView",
+                    "ctrl_id": 1121,
+                    "rect": {
+                      "left": 235,
+                      "top": 149,
+                      "right": 811,
+                      "bottom": 917,
+                      "width": 576,
+                      "height": 768
+                    },
+                    "visible": true,
+                    "enabled": true,
+                    "children": [
+                      {
+                        "hwnd": 13502638,
+                        "class": "DirectUIHWND",
+                        "text": "",
+                        "ctrl_id": 0,
+                        "rect": {
+                          "left": 235,
+                          "top": 149,
+                          "right": 811,
+                          "bottom": 917,
+                          "width": 576,
+                          "height": 768
+                        },
+                        "visible": true,
+                        "enabled": true,
+                        "children": [
+                          {
+                            "hwnd": 13240662,
+                            "class": "CtrlNotifySink",
+                            "text": "",
+                            "ctrl_id": 0,
+                            "rect": {
+                              "left": 235,
+                              "top": 149,
+                              "right": 235,
+                              "bottom": 149,
+                              "width": 0,
+                              "height": 0
+                            },
+                            "visible": false,
+                            "enabled": true,
+                            "children": [
+                              {
+                                "hwnd": 9308432,
+                                "class": "ScrollBar",
+                                "text": "",
+                                "ctrl_id": 0,
+                                "rect": {
+                                  "left": 235,
+                                  "top": 149,
+                                  "right": 235,
+                                  "bottom": 149,
+                                  "width": 0,
+                                  "height": 0
+                                },
+                                "visible": false,
+                                "enabled": true,
+                                "children": []
+                              }
+                            ]
+                          },
+                          {
+                            "hwnd": 10620060,
+                            "class": "CtrlNotifySink",
+                            "text": "",
+                            "ctrl_id": 0,
+                            "rect": {
+                              "left": 235,
+                              "top": 149,
+                              "right": 235,
+                              "bottom": 149,
+                              "width": 0,
+                              "height": 0
+                            },
+                            "visible": false,
+                            "enabled": true,
+                            "children": [
+                              {
+                                "hwnd": 5704236,
+                                "class": "ScrollBar",
+                                "text": "",
+                                "ctrl_id": 0,
+                                "rect": {
+                                  "left": 235,
+                                  "top": 149,
+                                  "right": 235,
+                                  "bottom": 149,
+                                  "width": 0,
+                                  "height": 0
+                                },
+                                "visible": false,
+                                "enabled": true,
+                                "children": []
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "hwnd": 15862172,
+        "class": "Static",
+        "text": "文件名(&N):",
+        "ctrl_id": 1090,
+        "rect": {
+          "left": 198,
+          "top": 935,
+          "right": 269,
+          "bottom": 956,
+          "width": 71,
+          "height": 21
+        },
+        "visible": true,
+        "enabled": true,
+        "children": []
+      },
+      {
+        "hwnd": 7080202,
+        "class": "ComboBoxEx32",
+        "text": "",
+        "ctrl_id": 1148,
+        "rect": {
+          "left": 275,
+          "top": 930,
+          "right": 540,
+          "bottom": 963,
+          "width": 265,
+          "height": 33
+        },
+        "visible": true,
+        "enabled": true,
+        "children": [
+          {
+            "hwnd": 8522988,
+            "class": "ComboBox",
+            "text": "",
+            "ctrl_id": 1148,
+            "rect": {
+              "left": 275,
+              "top": 930,
+              "right": 540,
+              "bottom": 963,
+              "width": 265,
+              "height": 33
+            },
+            "visible": true,
+            "enabled": true,
+            "combo_count": 0,
+            "combo_selected": 4294967295,
+            "children": [
+              {
+                "hwnd": 12257604,
+                "class": "Edit",
+                "text": "",
+                "ctrl_id": 1148,
+                "rect": {
+                  "left": 280,
+                  "top": 936,
+                  "right": 515,
+                  "bottom": 957,
+                  "width": 235,
+                  "height": 21
+                },
+                "visible": true,
+                "enabled": true,
+                "children": []
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "hwnd": 6753398,
+        "class": "Static",
+        "text": "文件类型(&T):",
+        "ctrl_id": 1089,
+        "rect": {
+          "left": 35,
+          "top": 39,
+          "right": 35,
+          "bottom": 39,
+          "width": 0,
+          "height": 0
+        },
+        "visible": true,
+        "enabled": true,
+        "children": []
+      },
+      {
+        "hwnd": 16779428,
+        "class": "ComboBox",
+        "text": "nes文件(*.nes)",
+        "ctrl_id": 1136,
+        "rect": {
+          "left": 555,
+          "top": 930,
+          "right": 790,
+          "bottom": 961,
+          "width": 235,
+          "height": 31
+        },
+        "visible": true,
+        "enabled": true,
+        "combo_count": 1,
+        "combo_selected": 0,
+        "children": []
+      },
+      {
+        "hwnd": 5835972,
+        "class": "Button",
+        "text": "打开(&O)",
+        "ctrl_id": 1,
+        "rect": {
+          "left": 555,
+          "top": 969,
+          "right": 665,
+          "bottom": 1002,
+          "width": 110,
+          "height": 33
+        },
+        "visible": true,
+        "enabled": true,
+        "button_check_state": 0,
+        "children": []
+      },
+      {
+        "hwnd": 14486096,
+        "class": "Button",
+        "text": "取消",
+        "ctrl_id": 2,
+        "rect": {
+          "left": 680,
+          "top": 969,
+          "right": 790,
+          "bottom": 1002,
+          "width": 110,
+          "height": 33
+        },
+        "visible": true,
+        "enabled": true,
+        "button_check_state": 0,
+        "children": []
+      },
+      {
+        "hwnd": 19663348,
+        "class": "ScrollBar",
+        "text": "",
+        "ctrl_id": -1,
+        "rect": {
+          "left": 790,
+          "top": 995,
+          "right": 811,
+          "bottom": 1016,
+          "width": 21,
+          "height": 21
+        },
+        "visible": true,
+        "enabled": true,
+        "children": []
+      },
+      {
+        "hwnd": 15862196,
+        "class": "Static",
+        "text": "",
+        "ctrl_id": 1092,
+        "rect": {
+          "left": 181,
+          "top": 53,
+          "right": 826,
+          "bottom": 77,
+          "width": 645,
+          "height": 24
+        },
+        "visible": false,
+        "enabled": true,
+        "children": []
+      },
+      {
+        "hwnd": 12059972,
+        "class": "Static",
+        "text": "",
+        "ctrl_id": 1091,
+        "rect": {
+          "left": 46,
+          "top": 58,
+          "right": 145,
+          "bottom": 101,
+          "width": 99,
+          "height": 43
+        },
+        "visible": false,
+        "enabled": true,
+        "children": []
+      },
+      {
+        "hwnd": 10486488,
+        "class": "Static",
+        "text": "",
+        "ctrl_id": 1093,
+        "rect": {
+          "left": 181,
+          "top": 84,
+          "right": 829,
+          "bottom": 117,
+          "width": 648,
+          "height": 33
+        },
+        "visible": false,
+        "enabled": true,
+        "children": []
+      },
+      {
+        "hwnd": 14421220,
+        "class": "ListBox",
+        "text": "",
+        "ctrl_id": 1120,
+        "rect": {
+          "left": 35,
+          "top": 109,
+          "right": 834,
+          "bottom": 637,
+          "width": 799,
+          "height": 528
+        },
+        "visible": false,
+        "enabled": true,
+        "children": []
+      },
+      {
+        "hwnd": 18416730,
+        "class": "Static",
+        "text": "",
+        "ctrl_id": 1095,
+        "rect": {
+          "left": 198,
+          "top": 39,
+          "right": 791,
+          "bottom": 39,
+          "width": 593,
+          "height": 0
+        },
+        "visible": false,
+        "enabled": true,
+        "children": []
+      },
+      {
+        "hwnd": 11209030,
+        "class": "Button",
+        "text": "帮助(&H)",
+        "ctrl_id": 1038,
+        "rect": {
+          "left": 610,
+          "top": 653,
+          "right": 720,
+          "bottom": 691,
+          "width": 110,
+          "height": 38
+        },
+        "visible": false,
+        "enabled": false,
+        "button_check_state": 0,
+        "children": []
+      },
+      {
+        "hwnd": 5115104,
+        "class": "WorkerW",
+        "text": "",
+        "ctrl_id": 0,
+        "rect": {
+          "left": 35,
+          "top": 39,
+          "right": 811,
+          "bottom": 109,
+          "width": 776,
+          "height": 70
+        },
+        "visible": true,
+        "enabled": true,
+        "children": [
+          {
+            "hwnd": 14092508,
+            "class": "ReBarWindow32",
+            "text": "",
+            "ctrl_id": 40965,
+            "rect": {
+              "left": 35,
+              "top": 39,
+              "right": 811,
+              "bottom": 109,
+              "width": 776,
+              "height": 70
+            },
+            "visible": true,
+            "enabled": true,
+            "children": [
+              {
+                "hwnd": 40568172,
+                "class": "TravelBand",
+                "text": "",
+                "ctrl_id": 0,
+                "rect": {
+                  "left": 35,
+                  "top": 50,
+                  "right": 160,
+                  "bottom": 93,
+                  "width": 125,
+                  "height": 43
+                },
+                "visible": true,
+                "enabled": true,
+                "children": [
+                  {
+                    "hwnd": 8195174,
+                    "class": "ToolbarWindow32",
+                    "text": "导航按钮",
+                    "ctrl_id": 0,
+                    "rect": {
+                      "left": 40,
+                      "top": 53,
+                      "right": 160,
+                      "bottom": 93,
+                      "width": 120,
+                      "height": 40
+                    },
+                    "visible": true,
+                    "enabled": true,
+                    "children": []
+                  }
+                ]
+              },
+              {
+                "hwnd": 14551302,
+                "class": "UpBand",
+                "text": "",
+                "ctrl_id": 0,
+                "rect": {
+                  "left": 160,
+                  "top": 49,
+                  "right": 205,
+                  "bottom": 94,
+                  "width": 45,
+                  "height": 45
+                },
+                "visible": true,
+                "enabled": true,
+                "children": [
+                  {
+                    "hwnd": 20056412,
+                    "class": "ToolbarWindow32",
+                    "text": "上区段",
+                    "ctrl_id": 0,
+                    "rect": {
+                      "left": 160,
+                      "top": 53,
+                      "right": 205,
+                      "bottom": 98,
+                      "width": 45,
+                      "height": 45
+                    },
+                    "visible": true,
+                    "enabled": true,
+                    "children": []
+                  }
+                ]
+              },
+              {
+                "hwnd": 23005426,
+                "class": "Address Band Root",
+                "text": "",
+                "ctrl_id": 41477,
+                "rect": {
+                  "left": 205,
+                  "top": 39,
+                  "right": 530,
+                  "bottom": 105,
+                  "width": 325,
+                  "height": 66
+                },
+                "visible": true,
+                "enabled": true,
+                "children": [
+                  {
+                    "hwnd": 8719456,
+                    "class": "msctls_progress32",
+                    "text": "",
+                    "ctrl_id": 0,
+                    "rect": {
+                      "left": 208,
+                      "top": 51,
+                      "right": 528,
+                      "bottom": 95,
+                      "width": 320,
+                      "height": 44
+                    },
+                    "visible": true,
+                    "enabled": true,
+                    "children": [
+                      {
+                        "hwnd": 12649780,
+                        "class": "Breadcrumb Parent",
+                        "text": "",
+                        "ctrl_id": 0,
+                        "rect": {
+                          "left": 208,
+                          "top": 51,
+                          "right": 433,
+                          "bottom": 95,
+                          "width": 225,
+                          "height": 44
+                        },
+                        "visible": true,
+                        "enabled": true,
+                        "children": [
+                          {
+                            "hwnd": 11733708,
+                            "class": "ToolbarWindow32",
+                            "text": "地址: C:\\Users\\hu\\Desktop\\009：西奥妮",
+                            "ctrl_id": 1001,
+                            "rect": {
+                              "left": 215,
+                              "top": 51,
+                              "right": 433,
+                              "bottom": 95,
+                              "width": 218,
+                              "height": 44
+                            },
+                            "visible": true,
+                            "enabled": true,
+                            "children": []
+                          }
+                        ]
+                      },
+                      {
+                        "hwnd": 3802474,
+                        "class": "ToolbarWindow32",
+                        "text": "地址区段工具栏",
+                        "ctrl_id": 0,
+                        "rect": {
+                          "left": 433,
+                          "top": 51,
+                          "right": 528,
+                          "bottom": 95,
+                          "width": 95,
+                          "height": 44
+                        },
+                        "visible": true,
+                        "enabled": true,
+                        "children": []
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "hwnd": 4393670,
+                "class": "SeparatorBand",
+                "text": "",
+                "ctrl_id": 0,
+                "rect": {
+                  "left": 535,
+                  "top": 71,
+                  "right": 543,
+                  "bottom": 72,
+                  "width": 8,
+                  "height": 1
+                },
+                "visible": true,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 11732294,
+                "class": "UniversalSearchBand",
+                "text": "",
+                "ctrl_id": 0,
+                "rect": {
+                  "left": 543,
+                  "top": 46,
+                  "right": 798,
+                  "bottom": 97,
+                  "width": 255,
+                  "height": 51
+                },
+                "visible": true,
+                "enabled": true,
+                "children": [
+                  {
+                    "hwnd": 3607672,
+                    "class": "ModernSearchBox",
+                    "text": "SearchEditBox",
+                    "ctrl_id": 0,
+                    "rect": {
+                      "left": 543,
+                      "top": 50,
+                      "right": 798,
+                      "bottom": 96,
+                      "width": 255,
+                      "height": 46
+                    },
+                    "visible": true,
+                    "enabled": true,
+                    "children": []
+                  }
+                ]
+              },
+              {
+                "hwnd": 10226230,
+                "class": "SeparatorBand",
+                "text": "",
+                "ctrl_id": 0,
+                "rect": {
+                  "left": 803,
+                  "top": 71,
+                  "right": 812,
+                  "bottom": 72,
+                  "width": 9,
+                  "height": 1
+                },
+                "visible": true,
+                "enabled": true,
+                "children": []
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

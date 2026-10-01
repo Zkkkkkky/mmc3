@@ -1,0 +1,68 @@
+{
+  "tag": "DBDIALOGBUTTONCONTROLS_1530_left_click_1",
+  "hwnd": 6096670,
+  "title": "提示",
+  "class": "#32770",
+  "rect": {
+    "left": 865,
+    "top": 411,
+    "right": 1056,
+    "bottom": 609,
+    "width": 191,
+    "height": 198
+  },
+  "pid": 13244,
+  "tree": {
+    "hwnd": 6096670,
+    "class": "#32770",
+    "text": "提示",
+    "ctrl_id": 0,
+    "rect": {
+      "left": 865,
+      "top": 411,
+      "right": 1056,
+      "bottom": 609,
+      "width": 191,
+      "height": 198
+    },
+    "visible": true,
+    "enabled": true,
+    "children": [
+      {
+        "hwnd": 4000438,
+        "class": "Button",
+        "text": "确定",
+        "ctrl_id": 2,
+        "rect": {
+          "left": 920,
+          "top": 555,
+          "right": 1030,
+          "bottom": 590,
+          "width": 110,
+          "height": 35
+        },
+        "visible": true,
+        "enabled": true,
+        "button_check_state": 0,
+        "children": []
+      },
+      {
+        "hwnd": 5245620,
+        "class": "Static",
+        "text": "没有任何变形对话！",
+        "ctrl_id": 65535,
+        "rect": {
+          "left": 883,
+          "top": 485,
+          "right": 1011,
+          "bottom": 508,
+          "width": 128,
+          "height": 23
+        },
+        "visible": true,
+        "enabled": true,
+        "children": []
+      }
+    ]
+  }
+}

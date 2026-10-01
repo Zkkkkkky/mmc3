@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "validated": true,
+  "error": null,
+  "execution_record_count": 3,
+  "diff_count": 0,
+  "observations": [
+    {
+      "action": "right_click",
+      "closed": true
+    },
+    {
+      "action": "left_click",
+      "closed": true
+    },
+    {
+      "action": "keyboard_activate",
+      "closed": true
+    }
+  ],
+  "execution_records": [
+    {
+      "action_id": "dd9bdf4711b1637d2b41",
+      "status": "passed",
+      "result": "信息框关闭=True。"
+    },
+    {
+      "action_id": "a474a9f3375b0311fca1",
+      "status": "passed",
+      "result": "信息框关闭=True。"
+    },
+    {
+      "action_id": "5aefb68af7cb62ece9c9",
+      "status": "passed",
+      "result": "信息框关闭=True。"
+    }
+  ]
+}

@@ -1,16 +1,19 @@
 from __future__ import annotations
 
+import importlib
 import sys
+import threading
 from ctypes import wintypes
 from pathlib import Path
 
 from PySide6.QtCore import QEvent, QObject, QPoint, QRect, Qt, QTimer, Signal
 from PySide6.QtGui import (
     QAction, QCloseEvent, QColor, QDragEnterEvent, QDropEvent, QFont,
-    QKeySequence, QPolygon,
+    QKeySequence, QPainter, QPen, QPolygon,
 )
 from PySide6.QtWidgets import (
     QApplication,
+    QAbstractButton,
     QAbstractSpinBox,
     QComboBox,
     QDialog,
@@ -66,6 +69,43 @@ APP_TITLE = "新DC篇完整修改器"
 LEGACY_WINDOW_TITLE = "SRW2扩容版修改器V1.0"
 LAUNCHER_TITLE = "SRW2修改器V1.5"
 _ACTIVE_EDITOR_WINDOW: MainWindow | None = None
+_RUNTIME_WARMUP_THREAD: threading.Thread | None = None
+_RUNTIME_WARMUP_ERRORS: list[str] = []
+
+
+def _warm_runtime_modules() -> None:
+    """Load heavyweight dialog modules while the user chooses a ROM.
+
+    PyInstaller's single-file archive makes the first dynamic import much
+    slower than the same constructor in a source-process profiler.  These
+    modules only define codecs and Qt widget classes; no widgets are created
+    off the GUI thread.  If the user opens a tool before warm-up finishes,
+    Python's import lock safely waits for the same import instead of loading a
+    duplicate module.
+    """
+
+    for module_name in (
+        "dc_modifier.legacy_windows",
+        "dc_modifier.legacy_tools",
+        "dc_modifier.rom_data_browser",
+        "dc_modifier.production_credits_editor",
+    ):
+        try:
+            importlib.import_module(module_name)
+        except Exception as error:  # pragma: no cover - diagnostic fallback
+            _RUNTIME_WARMUP_ERRORS.append(f"{module_name}: {error}")
+
+
+def _start_runtime_warmup() -> None:
+    global _RUNTIME_WARMUP_THREAD
+    if _RUNTIME_WARMUP_THREAD is not None:
+        return
+    _RUNTIME_WARMUP_THREAD = threading.Thread(
+        target=_warm_runtime_modules,
+        name="dc-dialog-warmup",
+        daemon=True,
+    )
+    _RUNTIME_WARMUP_THREAD.start()
 
 
 def startup_rom_from_arguments(arguments: list[str]) -> Path | None:
@@ -81,27 +121,86 @@ def _forget_active_editor() -> None:
     _ACTIVE_EDITOR_WINDOW = None
 
 
-class _PageRegistry(list[ProjectPage]):
+class _PageRegistry(list[ProjectPage | None]):
     """List-compatible page registry with transparent first-use population."""
 
-    def __init__(self, initializer) -> None:
+    def __init__(self, initializer, materializer) -> None:
         super().__init__()
         self._initializer = initializer
+        self._materializer = materializer
 
     def __getitem__(self, index):
         value = super().__getitem__(index)
         if isinstance(index, slice):
-            for page in value:
-                self._initializer(page)
+            start, stop, step = index.indices(len(self))
+            value = [self[position] for position in range(start, stop, step)]
         else:
+            if value is None:
+                value = self._materializer(index)
             self._initializer(value)
         return value
 
+    def __iter__(self):
+        # External integrations historically see a concrete 12-page list.
+        # Iteration remains compatible, while product internals use
+        # ``materialized`` so ordinary ROM opening does not instantiate every
+        # hidden editor merely to update its stale flag.
+        for index in range(len(self)):
+            yield self[index]
+
+    def materialized(self) -> tuple[ProjectPage, ...]:
+        return tuple(
+            page for page in list.__iter__(self) if page is not None
+        )
+
 
 class VisibleArrowStyle(QProxyStyle):
-    """Draw high-contrast arrows for every numeric spin control."""
+    """Draw controls whose native Windows marks disappear under QSS.
+
+    Qt's stylesheet proxy can leave a checkbox with only a bare tick on some
+    Windows scaling/theme combinations.  Drawing the indicator here gives the
+    complete editor one stable unchecked square and one unmistakable checked
+    square, while retaining normal keyboard/focus behaviour.
+    """
 
     def drawPrimitive(self, element, option, painter, widget=None) -> None:  # noqa: N802
+        if element == QStyle.PrimitiveElement.PE_IndicatorCheckBox:
+            rect = option.rect.adjusted(1, 1, -1, -1)
+            enabled = bool(option.state & QStyle.StateFlag.State_Enabled)
+            checked = bool(option.state & QStyle.StateFlag.State_On)
+            partial = bool(option.state & QStyle.StateFlag.State_NoChange)
+            hovered = bool(option.state & QStyle.StateFlag.State_MouseOver)
+            border = QColor("#467985" if hovered else "#73949D")
+            fill = QColor("#3F8797") if enabled else QColor("#AAB8BE")
+            painter.save()
+            painter.setRenderHint(QPainter.RenderHint.Antialiasing, True)
+            painter.setPen(QPen(border if enabled else QColor("#AEBBC1"), 1))
+            painter.setBrush(fill if checked or partial else QColor(
+                "#FFFFFF" if enabled else "#EDF1F2"
+            ))
+            painter.drawRoundedRect(rect, 2, 2)
+            if checked:
+                pen = QPen(QColor("#FFFFFF"), 2)
+                pen.setCapStyle(Qt.PenCapStyle.RoundCap)
+                pen.setJoinStyle(Qt.PenJoinStyle.RoundJoin)
+                painter.setPen(pen)
+                left = rect.left() + max(2, rect.width() // 5)
+                middle_x = rect.left() + rect.width() * 2 // 5
+                middle_y = rect.top() + rect.height() * 3 // 5
+                painter.drawLine(left, rect.center().y(), middle_x, middle_y)
+                painter.drawLine(
+                    middle_x,
+                    middle_y,
+                    rect.right() - max(2, rect.width() // 6),
+                    rect.top() + max(2, rect.height() // 4),
+                )
+            elif partial:
+                painter.setPen(QPen(QColor("#FFFFFF"), 2))
+                painter.drawLine(
+                    rect.left() + 3, rect.center().y(), rect.right() - 3, rect.center().y()
+                )
+            painter.restore()
+            return
         arrows = (
             QStyle.PrimitiveElement.PE_IndicatorArrowUp,
             QStyle.PrimitiveElement.PE_IndicatorArrowDown,
@@ -174,11 +273,126 @@ class ControlWheelGuard(QObject):
         return super().eventFilter(watched, event)
 
 
+class ComboPopupGuard(QObject):
+    """Bound every combo popup and reject press-drag-release misselection."""
+
+    MAX_VISIBLE_ROWS = 10
+
+    def __init__(self, parent: QObject | None = None) -> None:
+        super().__init__(parent)
+        self._opening_combo: QComboBox | None = None
+
+    def eventFilter(self, watched, event) -> bool:  # noqa: N802
+        event_type = event.type()
+        if event_type == QEvent.Type.Show and isinstance(watched, QComboBox):
+            watched.setMaxVisibleItems(
+                min(watched.maxVisibleItems(), self.MAX_VISIBLE_ROWS)
+            )
+        elif (
+            event_type == QEvent.Type.MouseButtonPress
+            and isinstance(watched, QComboBox)
+            and event.button() == Qt.MouseButton.LeftButton
+            and not watched.view().isVisible()
+        ):
+            self._opening_combo = watched
+        elif (
+            event_type == QEvent.Type.MouseButtonRelease
+            and self._opening_combo is not None
+        ):
+            combo = self._opening_combo
+            self._opening_combo = None
+            view = combo.view()
+            if view.isVisible() and (
+                watched is view
+                or watched is view.viewport()
+                or view.isAncestorOf(watched)
+            ):
+                # A combo opens on the original mouse press.  Windows then
+                # treats releasing that same press over any hovered row as an
+                # activation.  Swallow only this opening release; the popup
+                # stays open and a subsequent deliberate click still works.
+                event.accept()
+                return True
+        return super().eventFilter(watched, event)
+
+
+class ApplicationUiPolisher(QObject):
+    """Apply consistent semantic button roles to every lazily-created dialog."""
+
+    _PRIMARY_BUTTONS = {
+        QDialogButtonBox.StandardButton.Ok,
+        QDialogButtonBox.StandardButton.Save,
+        QDialogButtonBox.StandardButton.Apply,
+        QDialogButtonBox.StandardButton.Yes,
+    }
+    _DEFAULT_BUTTON_LABELS = {
+        "ok": "确定",
+        "cancel": "取消",
+        "close": "关闭",
+        "save": "保存",
+        "apply": "应用",
+        "yes": "是",
+        "no": "否",
+        "open": "打开",
+        "reset": "重置",
+        "retry": "重试",
+        "abort": "中止",
+        "ignore": "忽略",
+        "discard": "放弃修改",
+        "restore defaults": "恢复默认",
+        "help": "帮助",
+    }
+
+    def eventFilter(self, watched, event) -> bool:  # noqa: N802
+        if event.type() == QEvent.Type.Show and isinstance(watched, QDialog):
+            self.polish_dialog(watched)
+        return super().eventFilter(watched, event)
+
+    @classmethod
+    def polish_dialog(cls, dialog: QDialog) -> None:
+        if dialog.property("uiPolished"):
+            return
+        dialog.setProperty("uiPolished", True)
+        for button_box in dialog.findChildren(QDialogButtonBox):
+            if button_box.layout() is not None:
+                button_box.layout().setSpacing(8)
+            for button in button_box.findChildren(QAbstractButton):
+                role = button_box.buttonRole(button)
+                standard = button_box.standardButton(button)
+                # Qt's native button captions depend on the host locale.  The
+                # legacy modifier and the rest of this editor use Chinese
+                # action labels, so translate only untouched framework
+                # defaults while preserving deliberate labels such as
+                # “应用到草稿” and “确认输入”.
+                default_label = button.text().replace("&", "").strip().lower()
+                translated = cls._DEFAULT_BUTTON_LABELS.get(default_label)
+                if translated is not None:
+                    button.setText(translated)
+                if role == QDialogButtonBox.ButtonRole.DestructiveRole:
+                    button.setObjectName("destructiveButton")
+                elif standard in cls._PRIMARY_BUTTONS and not button.objectName():
+                    button.setObjectName("primaryButton")
+                button.style().unpolish(button)
+                button.style().polish(button)
+
+
 STYLE_SHEET = """
-QMainWindow, QDialog, QWidget {
-    background: #f4f6f7;
+QMainWindow, QDialog {
+    background: #eef2f4;
     color: #26343d;
 }
+QWidget {
+    background: transparent;
+    color: #26343d;
+}
+QDialog { background: #f2f5f6; }
+QStackedWidget, QScrollArea, QScrollArea > QWidget > QWidget {
+    background: transparent;
+}
+QStackedWidget#mainWorkspace {
+    background: #eef2f4;
+}
+QComboBox { combobox-popup: 0; }
 QMenuBar, QMenu, QStatusBar { background: #ffffff; }
 QMenuBar {
     border-bottom: 1px solid #d8e0e5;
@@ -216,15 +430,15 @@ QMenu::separator {
     margin: 4px 8px;
 }
 QTabWidget::pane {
-    background: #ffffff;
-    border: 1px solid #aebdc5;
+    background: #f9fbfc;
+    border: 1px solid #a9bac3;
     border-radius: 6px;
     top: -1px;
 }
 QTabBar::tab {
-    background: #edf1f3;
+    background: #e7edef;
     color: #586873;
-    border: 1px solid #b2c0c8;
+    border: 1px solid #adbdc5;
     border-bottom: none;
     border-top-left-radius: 5px;
     border-top-right-radius: 5px;
@@ -232,7 +446,7 @@ QTabBar::tab {
     margin-right: 2px;
 }
 QTabBar::tab:selected {
-    background: #ffffff;
+    background: #f9fbfc;
     color: #2c6879;
     border-top: 2px solid #4b8290;
     padding-top: 6px;
@@ -243,6 +457,13 @@ QTabBar::tab:hover:!selected {
 }
 QLabel#pageTitle, QLabel#pageSubtitle { max-height: 0px; min-height: 0px; }
 QLabel#hintText { color: #65747d; }
+QLabel#infoPanel {
+    background: #eef5f7;
+    border: 1px solid #c2d7dd;
+    border-radius: 6px;
+    color: #49636e;
+    padding: 8px 10px;
+}
 QLabel#deploymentSelectionPreview {
     background: #f1f7f8;
     border: 1px solid #c3d9df;
@@ -270,8 +491,8 @@ QLabel#editState[pending="true"] {
     color: #745c24;
 }
 QFrame#metricCard, QGroupBox {
-    background: #ffffff;
-    border: 1px solid #aebdc5;
+    background: #fbfcfd;
+    border: 1px solid #a9bbc4;
     border-radius: 7px;
 }
 QGroupBox {
@@ -282,10 +503,25 @@ QGroupBox {
 QGroupBox::title {
     subcontrol-origin: margin;
     left: 12px;
-    background: #edf4f6;
+    background: #e7f0f3;
     color: #2f6170;
     border-radius: 3px;
     padding: 1px 6px;
+}
+QGroupBox QGroupBox {
+    background: #f3f7f8;
+    border-color: #bdccd3;
+}
+QGroupBox QGroupBox::title {
+    background: #e6eff1;
+    color: #3d6671;
+}
+QGroupBox QGroupBox QGroupBox {
+    background: #f8fafb;
+    border-color: #cad5da;
+}
+QFrame[frameShape="4"], QFrame[frameShape="5"] {
+    color: #cbd6db;
 }
 QLabel#metricLabel { color: #65747d; font-size: 12px; }
 QLabel#metricValue { font-size: 15px; font-weight: 600; }
@@ -297,21 +533,41 @@ QLabel#emptyState {
     padding: 18px;
 }
 QPushButton, QToolButton {
-    background: #f8fafb;
+    background: #f7fafb;
     color: #31444f;
     border: 1px solid #a6b6bf;
     border-radius: 5px;
     padding: 5px 10px;
 }
 QPushButton:hover, QToolButton:hover {
-    background: #edf4f6;
+    background: #e8f1f3;
     border-color: #7fa8b4;
 }
 QPushButton:pressed, QToolButton:pressed { background: #dcebed; }
+QPushButton:checked, QToolButton:checked {
+    background: #deecef;
+    border-color: #6f9da8;
+    color: #285b68;
+}
 QPushButton:disabled, QToolButton:disabled {
     background: #f0f2f3;
     border-color: #d8dee2;
     color: #9aa5ab;
+}
+/* Compact reference-style tool buttons use explicit small geometries.  Give
+   them matching padding instead of inheriting the general 5x10 px padding,
+   which made otherwise complete captions look squeezed or disabled. */
+QPushButton#databaseModuleMemoryDetails {
+    padding: 2px 8px;
+}
+QPushButton#unitUploadButton,
+QPushButton#unitClearButton,
+QPushButton#unitNavigateButton,
+QPushButton#puzzleClearButton,
+QPushButton#puzzleTemplateButton,
+QPushButton#puzzlePreviewButton,
+QPushButton#puzzleDirectionButton {
+    padding: 2px 6px;
 }
 QPushButton#primaryButton {
     background: #3f7f8f;
@@ -321,6 +577,16 @@ QPushButton#primaryButton {
 }
 QPushButton#primaryButton:hover { background: #356f7e; }
 QPushButton#primaryButton:pressed { background: #2e6370; }
+QPushButton#destructiveButton {
+    background: #fff7f6;
+    border-color: #d8aaa5;
+    color: #9a3f36;
+}
+QPushButton#destructiveButton:hover {
+    background: #fcecea;
+    border-color: #c77d75;
+}
+QDialogButtonBox QPushButton { min-width: 72px; padding: 6px 12px; }
 QPushButton#terrainButton {
     min-width: 32px; max-width: 32px;
     min-height: 32px; max-height: 32px;
@@ -333,26 +599,58 @@ QPushButton#terrainButton:focus { border: none; background: transparent; }
 QPushButton#terrainButton:checked {
     border: 1px solid #164a9a; background: transparent;
 }
-QLineEdit, QSpinBox, QDoubleSpinBox, QComboBox, QPlainTextEdit, QTableWidget, QListWidget {
-    background: #ffffff;
+QLineEdit, QSpinBox, QDoubleSpinBox, QComboBox, QPlainTextEdit, QTextEdit,
+QTableWidget, QTableView, QListWidget, QListView, QTreeWidget, QTreeView {
+    background: #fcfefe;
     border: 1px solid #aebdc5;
     border-radius: 4px;
     padding: 3px 5px;
     selection-background-color: #4c8594;
     selection-color: #ffffff;
 }
-QLineEdit:focus, QSpinBox:focus, QDoubleSpinBox:focus, QComboBox:focus, QPlainTextEdit:focus,
-QTableWidget:focus, QListWidget:focus { border: 1px solid #5f94a2; }
+QLineEdit:hover, QSpinBox:hover, QDoubleSpinBox:hover, QComboBox:hover,
+QPlainTextEdit:hover, QTextEdit:hover {
+    background: #ffffff;
+    border-color: #89aab3;
+}
+QLineEdit:focus, QSpinBox:focus, QDoubleSpinBox:focus, QComboBox:focus,
+QPlainTextEdit:focus, QTextEdit:focus, QTableWidget:focus, QTableView:focus,
+QListWidget:focus, QListView:focus, QTreeWidget:focus, QTreeView:focus {
+    border: 1px solid #5f94a2;
+}
+QLineEdit:disabled, QSpinBox:disabled, QDoubleSpinBox:disabled,
+QComboBox:disabled, QPlainTextEdit:disabled, QTextEdit:disabled {
+    background: #e9eef0;
+    border-color: #cbd4d9;
+    color: #849199;
+}
+QLineEdit[readOnly="true"], QPlainTextEdit[readOnly="true"],
+QTextEdit[readOnly="true"] {
+    background: #f2f6f7;
+    border-color: #c4d0d5;
+    color: #526670;
+}
+QCheckBox, QRadioButton { spacing: 6px; padding: 2px 0; }
+QCheckBox::indicator { width: 16px; height: 16px; }
+QCheckBox:disabled, QRadioButton:disabled, QLabel:disabled { color: #8d989f; }
+QAbstractItemView {
+    background: #fcfefe;
+    alternate-background-color: #f1f5f6;
+    outline: 0;
+}
 QListWidget::item, QTableWidget::item { padding: 3px; }
-QListWidget::item:alternate, QTableWidget::item:alternate { background: #f5f7f8; }
-QListWidget::item:hover, QTableWidget::item:hover { background: #edf3f5; }
+QListWidget::item:alternate, QTableWidget::item:alternate { background: #f1f5f6; }
+QListWidget::item:hover, QTableWidget::item:hover,
+QTreeView::item:hover, QListView::item:hover { background: #e7f0f2; }
 QListWidget::item:selected, QTableWidget::item:selected,
-QListWidget::item:selected:!active, QTableWidget::item:selected:!active {
+QTreeView::item:selected, QListView::item:selected,
+QListWidget::item:selected:!active, QTableWidget::item:selected:!active,
+QTreeView::item:selected:!active, QListView::item:selected:!active {
     background: #3f7f8f;
     color: #ffffff;
 }
 QHeaderView::section {
-    background: #edf2f4;
+    background: #e8f0f2;
     color: #41545f;
     border: none;
     border-right: 1px solid #d6dfe4;
@@ -384,10 +682,48 @@ QScrollBar::handle:horizontal {
 }
 QScrollBar::handle:horizontal:hover { background: #9eafb7; }
 QScrollBar::add-line:horizontal, QScrollBar::sub-line:horizontal { width: 0; }
+QSplitter::handle { background: #d8e1e5; }
+QSplitter::handle:hover { background: #adc2ca; }
+QProgressBar {
+    background: #e5ecef;
+    border: 1px solid #bdcbd1;
+    border-radius: 5px;
+    color: #314852;
+    text-align: center;
+}
+QProgressBar::chunk {
+    background: #5f96a3;
+    border-radius: 4px;
+}
+QSlider::groove:horizontal {
+    background: #d8e3e7;
+    height: 5px;
+    border-radius: 2px;
+}
+QSlider::handle:horizontal {
+    background: #4c8594;
+    border: 1px solid #356d7a;
+    width: 14px;
+    margin: -5px 0;
+    border-radius: 7px;
+}
+QSlider::handle:horizontal:hover { background: #3f7886; }
+QToolTip {
+    background: #26343d;
+    color: #ffffff;
+    border: 1px solid #526873;
+    border-radius: 4px;
+    padding: 5px 7px;
+}
+QWidget#transparentHost { background: transparent; }
 QStatusBar {
     color: #5f6f78;
     border-top: 1px solid #d8e0e5;
 }
+QMessageBox {
+    background: #f4f7f8;
+}
+QMessageBox QLabel { background: transparent; }
 """
 
 
@@ -398,29 +734,38 @@ class LauncherWindow(QDialog):
         super().__init__()
         self.main_window: MainWindow | None = None
         self.setWindowTitle(LAUNCHER_TITLE)
-        self.resize(520, 360)
-        self.setMinimumSize(400, 240)
+        # The launcher deliberately exposes only the two controls used by the
+        # reference program.  Keep them in one compact visual group instead of
+        # stretching the author label to fill the whole window, which used to
+        # strand the ROM button at the bottom of a large empty panel.
+        self.resize(460, 260)
+        self.setMinimumSize(400, 230)
         self.setWindowFlag(Qt.WindowType.WindowMaximizeButtonHint, False)
         self.setAttribute(Qt.WidgetAttribute.WA_DeleteOnClose, True)
         self.setAcceptDrops(True)
 
         layout = QVBoxLayout(self)
-        layout.setContentsMargins(15, 20, 15, 20)
+        layout.setContentsMargins(22, 20, 22, 22)
+        layout.setSpacing(0)
         introduction = QLabel("作者 断月残心")
         introduction.setObjectName("launcherAuthor")
         introduction.setStyleSheet("color: #ef4e4e; font-family: SimSun; font-size: 20px;")
-        introduction.setAlignment(Qt.AlignmentFlag.AlignTop | Qt.AlignmentFlag.AlignLeft)
-        layout.addWidget(introduction, 1)
+        introduction.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        layout.addStretch(1)
+        layout.addWidget(introduction)
+        layout.addSpacing(28)
 
         open_rom = QPushButton("打开ROM")
         open_rom.setObjectName("launcherOpenRomButton")
-        open_rom.setMinimumSize(160, 58)
+        open_rom.setFixedSize(176, 54)
+        open_rom.setToolTip("选择一个 .nes ROM；也可以把 ROM 文件拖到此窗口")
         open_rom.clicked.connect(self.choose_rom)
         open_row = QHBoxLayout()
         open_row.addStretch()
         open_row.addWidget(open_rom)
         open_row.addStretch()
         layout.addLayout(open_row)
+        layout.addStretch(2)
 
     @staticmethod
     def _rom_path_from_urls(urls: list[object]) -> Path | None:
@@ -435,6 +780,9 @@ class LauncherWindow(QDialog):
         return path
 
     def choose_rom(self) -> MainWindow | None:
+        # Native file dialogs keep processing the Qt event loop.  Prepare the
+        # heavy main-window widget tree behind that already-visible dialog so
+        # selecting a ROM does not then pay construction and layout costs.
         filename, _ = QFileDialog.getOpenFileName(
             self,
             "打开ROM",
@@ -505,6 +853,9 @@ class MainWindow(QMainWindow):
         self._changed_byte_count = 0
         self._database_dialog: QDialog | None = None
         self._database_dialog_snapshot: bytes | None = None
+        self._dialog_cache: dict[
+            str, tuple[RomProject, bytes, QDialog]
+        ] = {}
         self.setAcceptDrops(True)
 
         # Keep a non-visual registry for automated functional checks. Only the
@@ -512,12 +863,15 @@ class MainWindow(QMainWindow):
         # are constructed afresh in independent transaction dialogs.
         self.navigation = QListWidget(self)
         self.navigation.hide()
-        self.pages: list[ProjectPage] = _PageRegistry(
-            self._ensure_page_initialized
+        self.pages: _PageRegistry = _PageRegistry(
+            self._ensure_page_initialized,
+            self._materialize_page,
         )
+        self._lazy_page_factories: dict[int, tuple[str, object, QWidget]] = {}
         self.page_index: dict[str, int] = {}
         self.page_stack_index: dict[str, int] = {}
         self.workspace = QStackedWidget()
+        self.workspace.setObjectName("mainWorkspace")
         self.blank_page = QWidget()
         self.workspace.addWidget(self.blank_page)
         self._build_pages()
@@ -568,26 +922,59 @@ class MainWindow(QMainWindow):
     def _add_page(self, key: str, label: str, page: ProjectPage) -> None:
         self.page_index[key] = len(self.pages)
         self.pages.append(page)
-        page.project_changed.connect(self._after_edit)
-        page.navigation_requested.connect(self._open_extension_page)
+        self._connect_page(page)
         item = QListWidgetItem(label)
         item.setToolTip(label)
         self.navigation.addItem(item)
         self.page_stack_index[key] = self.workspace.addWidget(page)
 
+    def _add_lazy_page(self, key: str, label: str, factory) -> None:
+        index = len(self.pages)
+        self.page_index[key] = index
+        self.pages.append(None)
+        placeholder = QWidget()
+        self._lazy_page_factories[index] = (key, factory, placeholder)
+        item = QListWidgetItem(label)
+        item.setToolTip(label)
+        self.navigation.addItem(item)
+        self.page_stack_index[key] = self.workspace.addWidget(placeholder)
+
+    def _connect_page(self, page: ProjectPage) -> None:
+        page.project_changed.connect(self._after_edit)
+        page.navigation_requested.connect(self._open_extension_page)
+
+    def _materialize_page(self, index: int) -> ProjectPage:
+        existing = list.__getitem__(self.pages, index)
+        if existing is not None:
+            return existing
+        key, factory, placeholder = self._lazy_page_factories.pop(index)
+        page = factory()
+        self._connect_page(page)
+        stack_index = self.workspace.indexOf(placeholder)
+        self.workspace.removeWidget(placeholder)
+        self.workspace.insertWidget(stack_index, page)
+        self.page_stack_index[key] = stack_index
+        list.__setitem__(self.pages, index, page)
+        placeholder.deleteLater()
+        if self.project is not None:
+            page.set_project_deferred(self.project)
+            self._stale_pages.add(page)
+            self._uninitialized_pages.add(page)
+        return page
+
     def _build_pages(self) -> None:
         self._add_page("maps", "战场地图", MapPage())
-        self._add_page("units", "机体", UnitPage())
-        self._add_page("characters", "人物", CharacterPage())
-        self._add_page("weapons", "武器", WeaponPage())
-        self._add_page("unit_import", "机体导入与图像", UnitImportPage())
-        self._add_page("story", "剧情文本", StoryPage())
-        self._add_page("events", "战场事件", EventPage())
-        self._add_page("persuasion", "劝降条件", PersuasionPage())
-        self._add_page("music", "背景音乐", MusicPage())
-        self._add_page("overview", "工程概览", OverviewPage())
-        self._add_page("resources", "容量规划", ResourcePage())
-        self._add_page("changes", "变更与验证", ChangesPage())
+        self._add_lazy_page("units", "机体", UnitPage)
+        self._add_lazy_page("characters", "人物", CharacterPage)
+        self._add_lazy_page("weapons", "武器", WeaponPage)
+        self._add_lazy_page("unit_import", "机体导入与图像", UnitImportPage)
+        self._add_lazy_page("story", "剧情文本", StoryPage)
+        self._add_lazy_page("events", "战场事件", EventPage)
+        self._add_lazy_page("persuasion", "劝降条件", PersuasionPage)
+        self._add_lazy_page("music", "背景音乐", MusicPage)
+        self._add_lazy_page("overview", "工程概览", OverviewPage)
+        self._add_lazy_page("resources", "容量规划", ResourcePage)
+        self._add_lazy_page("changes", "变更与验证", ChangesPage)
 
     def show_page(self, key: str) -> None:
         """Select a registered page for tests/capture; menus use dialogs."""
@@ -646,10 +1033,9 @@ class MainWindow(QMainWindow):
         self.text_converter_action = self._action("文字转换(&Z)", self.open_text_converter, "Ctrl+Z")
         self.scenario_action = self._action("剧情事件(&J)", self.open_scenario, "Ctrl+J")
         self.export_unit_action = self._action("导出机体(&P)", self.export_unit, "Ctrl+F")
-        self.export_avatar_action = self._action("导出头像(&L)", lambda: None, "Ctrl+L")
-        self.export_avatar_action.setEnabled(False)
+        self.export_avatar_action = self._action("导出头像(&L)", self.export_avatar, "Ctrl+L")
         self.export_avatar_action.setStatusTip(
-            "参考版此入口不可触发；请在“数据库 → 人物 → 头像设置与上传”中导出。"
+            "批量导出全部人物的背面、正面与效果头像；规则与人物页单个导出一致。"
         )
         self.export_avatar_action.setToolTip(self.export_avatar_action.statusTip())
         self.attribute_calculator_action = self._action("属性计算器", self.open_attribute_calculator)
@@ -762,17 +1148,51 @@ class MainWindow(QMainWindow):
         self.x_status.setText(f"X坐标：{x}")
         self.y_status.setText(f"Y坐标：{y}")
 
-    def _run_project_dialog(self, dialog: QDialog, success_message: str) -> int:
+    def _remember_dialog(self, key: str, dialog: QDialog) -> None:
+        if self.project is not None:
+            self._dialog_cache[key] = (
+                self.project,
+                bytes(self.project.working),
+                dialog,
+            )
+
+    def _cached_dialog(self, key: str, factory) -> QDialog:
+        assert self.project is not None
+        current = bytes(self.project.working)
+        cached = self._dialog_cache.get(key)
+        if cached is not None:
+            cached_project, snapshot, dialog = cached
+            if cached_project is self.project and snapshot == current:
+                return dialog
+            dialog.deleteLater()
+        dialog = factory()
+        self._dialog_cache[key] = (self.project, current, dialog)
+        return dialog
+
+    def _run_project_dialog(
+        self,
+        dialog: QDialog,
+        success_message: str,
+        *,
+        cache_key: str | None = None,
+    ) -> int:
         from .window_layout import fit_dialog_to_screen
         fit_dialog_to_screen(dialog)
-        if hasattr(dialog, "project_changed"):
+        if (
+            hasattr(dialog, "project_changed")
+            and not dialog.property("mainWindowNoticeConnected")
+        ):
             dialog.project_changed.connect(self._dialog_edit_notice)
+            dialog.setProperty("mainWindowNoticeConnected", True)
         result = dialog.exec()
         self._refresh_registered_pages(preserve_map_draft=True)
         self._update_window_state()
         if result == QDialog.DialogCode.Accepted:
             self.status.showMessage(success_message, 4000)
-        dialog.deleteLater()
+        if cache_key is None:
+            dialog.deleteLater()
+        else:
+            self._remember_dialog(cache_key, dialog)
         return result
 
     def _dialog_edit_notice(self, message: str) -> None:
@@ -792,7 +1212,7 @@ class MainWindow(QMainWindow):
         dialog = self._database_dialog
         current_snapshot = bytes(self.project.working)
         if not isinstance(dialog, DatabaseDialog):
-            dialog = DatabaseDialog(self.project, self)
+            dialog = DatabaseDialog(self.project, self, lazy=True)
             dialog.project_changed.connect(self._dialog_edit_notice)
             self._database_dialog = dialog
         elif (
@@ -834,14 +1254,25 @@ class MainWindow(QMainWindow):
             return
         from .rom_data_browser import RomDataBrowserDialog
 
-        self._run_tool_dialog(RomDataBrowserDialog(self.project, self))
+        dialog = self._cached_dialog(
+            "rom_data", lambda: RomDataBrowserDialog(self.project, self)
+        )
+        from .window_layout import fit_dialog_to_screen
+        fit_dialog_to_screen(dialog)
+        dialog.exec()
+        self._remember_dialog("rom_data", dialog)
 
     def open_scenario(self) -> None:
         if self.project is None:
             return
         from .legacy_windows import ScenarioDialog
 
-        self._run_project_dialog(ScenarioDialog(self.project, self), "剧情事件修改已确认")
+        dialog = self._cached_dialog(
+            "scenario", lambda: ScenarioDialog(self.project, self, lazy=True)
+        )
+        self._run_project_dialog(
+            dialog, "剧情事件修改已确认", cache_key="scenario"
+        )
 
     def _run_tool_dialog(self, dialog: QDialog) -> None:
         from .window_layout import fit_dialog_to_screen
@@ -964,32 +1395,46 @@ class MainWindow(QMainWindow):
             self.activateWindow()
             return
         if key in {"units", "characters", "weapons"}:
-            from .legacy_windows import DatabaseDialog
-
-            dialog = DatabaseDialog(self.project, self)
+            dialog = self._prepare_database_dialog()
+            if dialog is None:
+                return
             dialog.tabs.setCurrentIndex(
                 {"units": 0, "characters": 1, "weapons": 2}[key]
             )
-            self._run_project_dialog(dialog, "数据库修改已确认")
+            self._execute_database_dialog(dialog)
             return
         if key in {"story", "events", "persuasion"}:
             from .legacy_windows import ScenarioDialog
 
-            dialog = ScenarioDialog(self.project, self)
+            dialog = self._cached_dialog(
+                "scenario", lambda: ScenarioDialog(self.project, self, lazy=True)
+            )
             dialog.tabs.setCurrentIndex(
                 {"events": 1, "persuasion": 2, "story": 4}[key]
             )
-            self._run_project_dialog(dialog, "剧情事件修改已确认")
+            self._run_project_dialog(
+                dialog, "剧情事件修改已确认", cache_key="scenario"
+            )
             return
-        dialog = self._create_extension_dialog(key)
-        requested: list[str] = []
+        cache_key = f"extension:{key}"
+        dialog = self._cached_dialog(
+            cache_key, lambda: self._create_extension_dialog(key)
+        )
+        requested = getattr(dialog, "_navigation_requests", None)
+        if requested is None:
+            requested = []
+            dialog._navigation_requests = requested
 
-        def finish_before_navigation(page_key: str) -> None:
-            requested.append(page_key)
-            dialog.accept()
+            def finish_before_navigation(page_key: str) -> None:
+                dialog._navigation_requests.append(page_key)
+                dialog.accept()
 
-        dialog.navigation_requested.connect(finish_before_navigation)
-        self._run_project_dialog(dialog, f"{dialog.windowTitle()}已确认")
+            dialog.navigation_requested.connect(finish_before_navigation)
+        else:
+            requested.clear()
+        self._run_project_dialog(
+            dialog, f"{dialog.windowTitle()}已确认", cache_key=cache_key
+        )
         if requested:
             self._open_extension_page(requested[-1])
 
@@ -1062,6 +1507,77 @@ class MainWindow(QMainWindow):
         except Exception as error:
             QMessageBox.critical(self, "导出机体失败", str(error))
 
+    def export_avatar(self) -> None:
+        if self.project is None:
+            return
+        from .portrait_export import export_all_portrait_bitmaps, portrait_export_paths
+
+        directory = QFileDialog.getExistingDirectory(
+            self,
+            "导出全部头像 · 选择根目录",
+            str(_default_export_path("导出的头像").parent),
+        )
+        if not directory:
+            return
+        try:
+            root = writable_output_path(directory)
+            character_count = (
+                self.project.profile.character_normal_name_count
+                or self.project.profile.character_name_count
+            )
+            existing = 0
+            for character_id in range(1, character_count + 1):
+                existing += sum(
+                    path.exists()
+                    for path in portrait_export_paths(self.project, character_id, root)
+                )
+            if existing:
+                answer = QMessageBox.question(
+                    self,
+                    "覆盖头像文件",
+                    f"所选目录中已有 {existing} 个同名头像文件。是否覆盖？\n"
+                    "其他文件不会被删除。",
+                    QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
+                    QMessageBox.StandardButton.No,
+                )
+                if answer != QMessageBox.StandardButton.Yes:
+                    return
+
+            before = bytes(self.project.working)
+
+            def show_progress(done: int, total: int) -> None:
+                self.status.showMessage(f"正在导出头像：{done}/{total}")
+                QApplication.processEvents()
+
+            result = export_all_portrait_bitmaps(
+                self.project,
+                root,
+                progress=show_progress,
+            )
+            if bytes(self.project.working) != before:
+                raise RuntimeError("头像导出意外改动了当前 ROM，结果已标记为失败。")
+            if result.failures:
+                details = "\n".join(
+                    f"{character_id}：{message}"
+                    for character_id, message in result.failures[:12]
+                )
+                QMessageBox.warning(
+                    self,
+                    "头像导出部分失败",
+                    f"已写入 {len(result.written_files)} 个文件，"
+                    f"{len(result.failures)} 个人物失败：\n{details}",
+                )
+                self.status.showMessage(
+                    f"头像导出完成但有 {len(result.failures)} 项失败", 8000
+                )
+                return
+            self.status.showMessage(
+                f"头像已导出：{result.root}（{len(result.written_files)} 个 BMP）",
+                8000,
+            )
+        except Exception as error:
+            QMessageBox.critical(self, "导出头像失败", str(error))
+
     @property
     def has_unsaved_changes(self) -> bool:
         return (
@@ -1095,14 +1611,18 @@ class MainWindow(QMainWindow):
         saved_snapshot: bytes | None = None,
     ) -> None:
         self.project = project
+        from .font_edit import render_character_glyph
+
+        project.font_glyph_renderer = render_character_glyph
         project.set_read_only_output_roots((ROOT / "references",))
         self.project_path = project_path
         self._saved_snapshot = bytes(project.working) if saved_snapshot is None else saved_snapshot
         self._saved_allocations = project.resource_allocator.allocations
         self._count_snapshot = None
-        self._stale_pages = set(self.pages)
-        self._uninitialized_pages = set(self.pages)
-        for page in self.pages:
+        materialized_pages = self.pages.materialized()
+        self._stale_pages = set(materialized_pages)
+        self._uninitialized_pages = set(materialized_pages)
+        for page in materialized_pages:
             if page is self.map_page:
                 page.set_project(project)
                 self._stale_pages.discard(page)
@@ -1391,7 +1911,7 @@ class MainWindow(QMainWindow):
 
     def _after_edit(self, message: str) -> None:
         source = self.sender()
-        self._stale_pages.update(self.pages)
+        self._stale_pages.update(self.pages.materialized())
         if isinstance(source, ProjectPage):
             source.refresh()
             self._stale_pages.discard(source)
@@ -1399,8 +1919,9 @@ class MainWindow(QMainWindow):
         self.status.showMessage(message, 4000)
 
     def _refresh_registered_pages(self, *, preserve_map_draft: bool) -> None:
-        self._stale_pages.update(self.pages)
-        for page in self.pages:
+        materialized_pages = self.pages.materialized()
+        self._stale_pages.update(materialized_pages)
+        for page in materialized_pages:
             if (
                 preserve_map_draft
                 and page is self.map_page
@@ -1430,6 +1951,7 @@ class MainWindow(QMainWindow):
             self.text_converter_action,
             self.scenario_action,
             self.export_unit_action,
+            self.export_avatar_action,
             self.attribute_calculator_action,
             self.other_settings_action,
         ):
@@ -1440,9 +1962,6 @@ class MainWindow(QMainWindow):
         self.save_editor_action.setEnabled(True)
         for key, action in self.page_actions.items():
             action.setEnabled(loaded)
-        # D2: preserve the reference command and Ctrl+L binding, but never
-        # route it to the extension exporter because the stock entry is inert.
-        self.export_avatar_action.setEnabled(False)
         self.undo_action.setEnabled(
             loaded
             and bool(
@@ -1530,6 +2049,7 @@ class MainWindow(QMainWindow):
             "font": self.open_font_library,
             "animation": self.open_map_animation,
             "converter": self.open_text_converter,
+            "credits": self.open_map_animation,
             "calculator": self.open_attribute_calculator,
             "music": lambda: self._open_extension_page("music"),
             "unit_import": lambda: self._open_extension_page("unit_import"),
@@ -1600,6 +2120,10 @@ def run() -> int:
     application.setStyleSheet(STYLE_SHEET)
     wheel_guard = ControlWheelGuard(application)
     application.installEventFilter(wheel_guard)
+    combo_popup_guard = ComboPopupGuard(application)
+    application.installEventFilter(combo_popup_guard)
+    ui_polisher = ApplicationUiPolisher(application)
+    application.installEventFilter(ui_polisher)
     if self_test:
         window = MainWindow(open_default=True)
         window.show()
@@ -1635,4 +2159,5 @@ def run() -> int:
         return 0 if valid else 92
     if startup_rom is not None:
         QTimer.singleShot(0, lambda: launcher.open_rom(startup_rom))
+    QTimer.singleShot(0, _start_runtime_warmup)
     return application.exec()

@@ -7,6 +7,7 @@ import struct
 
 from ..dc_text import default_dc_text_table
 from ..errors import RomFormatError
+from ..text_table import TextTable
 from .story_text import StoryTextCodec
 
 
@@ -117,6 +118,8 @@ class LegacyTextCodec:
         self.groups = TEXT_GROUPS
         self.group_by_key = {group.key: group for group in self.groups}
         self._variants: dict[str, tuple[tuple[int, ...], ...]] = {}
+        self._record_cache: dict[tuple[str, int, int], LegacyTextRecord] = {}
+        self._aliases: dict[str, dict[int, tuple[tuple[int, int], ...]]] = {}
         self._capacity_codec = LegacyTextCodec(capacity_data) if capacity_data is not None else None
         self._boundaries: dict[int, set[int]] = {}
         for group in self.groups:
@@ -148,6 +151,13 @@ class LegacyTextCodec:
                     rows.append((pointer,))
             self._variants[group.key] = tuple(rows)
         for group in self.groups:
+            aliases: dict[int, list[tuple[int, int]]] = {}
+            for row, variants in enumerate(self._variants[group.key]):
+                for sub, pointer in enumerate(variants):
+                    aliases.setdefault(pointer, []).append((row, sub))
+            self._aliases[group.key] = {
+                pointer: tuple(values) for pointer, values in aliases.items()
+            }
             for index in range(group.count):
                 for variant in range(self.variant_count(group.key, index)):
                     self.record(group.key, index, variant)
@@ -189,15 +199,23 @@ class LegacyTextCodec:
         raise RomFormatError(f"{group.label}文字记录缺少结束码。")
 
     def record(self, key: str, index: int, variant: int = 0) -> LegacyTextRecord:
+        cache_key = (key, index, variant)
+        cached = self._record_cache.get(cache_key)
+        if cached is not None:
+            return cached
         group = self.group_by_key[key]
         pointer = self._variants[key][index][variant]
-        aliases = tuple(
-            (row, sub)
-            for row, variants in enumerate(self._variants[key])
-            for sub, candidate in enumerate(variants)
-            if candidate == pointer
+        record = LegacyTextRecord(
+            key,
+            index,
+            variant,
+            self.offset(group.bank, pointer),
+            pointer,
+            self._raw_at(group, pointer),
+            self._aliases[key][pointer],
         )
-        return LegacyTextRecord(key, index, variant, self.offset(group.bank, pointer), pointer, self._raw_at(group, pointer), aliases)
+        self._record_cache[cache_key] = record
+        return record
 
     @staticmethod
     def protected_tokens(raw: bytes) -> tuple[bytes, ...]:
@@ -215,7 +233,14 @@ class LegacyTextCodec:
             cursor += size
         return tuple(result)
 
-    def replacement_patch(self, key: str, index: int, variant: int, text: str) -> tuple[int, bytes, bytes]:
+    def replacement_patch(
+        self,
+        key: str,
+        index: int,
+        variant: int,
+        text: str,
+        text_table: TextTable | None = None,
+    ) -> tuple[int, bytes, bytes]:
         record = self.record(key, index, variant)
         capacity = len(record.raw)
         if self._capacity_codec is not None:
@@ -223,7 +248,9 @@ class LegacyTextCodec:
             if baseline.file_offset != record.file_offset:
                 raise ValueError("文字指针与原容量基线不同，不能沿用原记录空间。")
             capacity = len(baseline.raw)
-        encoded = default_dc_text_table().encode_preserving_tokens(record.raw, text)
+        encoded = (text_table or default_dc_text_table()).encode_preserving_tokens(
+            record.raw, text
+        )
         if self.protected_tokens(encoded) != self.protected_tokens(record.raw):
             raise ValueError("请保留全部控制码、参数和结束码，只修改正文文字。")
         if len(encoded) > capacity:
@@ -240,8 +267,11 @@ class LegacyTextCodec:
         self,
         key: str,
         replacements: Mapping[tuple[str, int, int], str] | None = None,
+        text_table: TextTable | None = None,
     ) -> LegacySimpleTextUsage:
-        _pointers, records = self._encode_simple_group(key, replacements or {})
+        _pointers, records = self._encode_simple_group(
+            key, replacements or {}, text_table
+        )
         group = self.group_by_key[key]
         used = sum(len(raw) for raw in records.values())
         return LegacySimpleTextUsage(
@@ -255,6 +285,7 @@ class LegacyTextCodec:
         self,
         key: str,
         replacements: Mapping[tuple[str, int, int], str],
+        text_table: TextTable | None = None,
     ) -> tuple[tuple[int, ...], dict[int, bytes]]:
         if key.startswith("battle_"):
             raise ValueError("战斗文字必须使用带随机目录的专用重排器。")
@@ -276,7 +307,7 @@ class LegacyTextCodec:
             if variant != 0:
                 raise ValueError(f"{group.label}没有随机分支。")
             record = self.record(key, index, variant)
-            encoded = default_dc_text_table().encode_preserving_tokens(
+            encoded = (text_table or default_dc_text_table()).encode_preserving_tokens(
                 record.raw, text
             )
             if self.protected_tokens(encoded) != self.protected_tokens(record.raw):
@@ -293,8 +324,11 @@ class LegacyTextCodec:
         self,
         key: str,
         replacements: Mapping[tuple[str, int, int], str],
+        text_table: TextTable | None = None,
     ) -> tuple[tuple[int, bytes, bytes], ...]:
-        pointers, records = self._encode_simple_group(key, replacements)
+        pointers, records = self._encode_simple_group(
+            key, replacements, text_table
+        )
         group = self.group_by_key[key]
         capacity = group.pool_end - group.pool_start
         used = sum(len(raw) for raw in records.values())
@@ -440,6 +474,7 @@ class LegacyTextCodec:
         self,
         bank: int,
         replacements: Mapping[tuple[str, int, int], str],
+        text_table: TextTable | None = None,
     ) -> tuple[dict[str, object], dict[int, bytes]]:
         graph = self._battle_graph(bank)
         encoded_by_pointer: dict[int, bytes] = dict(graph["texts"])
@@ -451,7 +486,7 @@ class LegacyTextCodec:
             if self._battle_bank(key) != bank:
                 continue
             record = self.record(key, index, variant)
-            encoded = default_dc_text_table().encode_preserving_tokens(
+            encoded = (text_table or default_dc_text_table()).encode_preserving_tokens(
                 record.raw, text
             )
             if self.protected_tokens(encoded) != self.protected_tokens(record.raw):
@@ -472,9 +507,10 @@ class LegacyTextCodec:
         self,
         bank: int,
         replacements: Mapping[tuple[str, int, int], str] | None = None,
+        text_table: TextTable | None = None,
     ) -> LegacyBattleTextUsage:
         graph, texts = self._encode_battle_replacements(
-            bank, replacements or {}
+            bank, replacements or {}, text_table
         )
         headers = graph["headers"]
         used = sum(len(raw) for raw in texts.values()) + sum(
@@ -692,6 +728,7 @@ class LegacyTextCodec:
     def battle_repack_patches(
         self,
         replacements: Mapping[tuple[str, int, int], str],
+        text_table: TextTable | None = None,
     ) -> tuple[tuple[int, bytes, bytes], ...]:
         """Repack edited battle text inside the verified fixed-bank arenas.
 
@@ -711,7 +748,9 @@ class LegacyTextCodec:
             for key in (group.key,)
         }
         for bank in banks:
-            graph, texts = self._encode_battle_replacements(bank, replacements)
+            graph, texts = self._encode_battle_replacements(
+                bank, replacements, text_table
+            )
             original_texts: dict[int, bytes] = graph["texts"]
             changed = {
                 pointer: raw
@@ -720,7 +759,7 @@ class LegacyTextCodec:
             }
             if not changed:
                 continue
-            usage = self.battle_usage(bank, replacements)
+            usage = self.battle_usage(bank, replacements, text_table)
             if usage.used > usage.capacity:
                 excess = usage.used - usage.capacity
                 raise ValueError(

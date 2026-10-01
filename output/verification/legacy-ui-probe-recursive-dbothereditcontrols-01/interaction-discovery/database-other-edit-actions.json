@@ -1,0 +1,770 @@
+{
+  "schema_version": 1,
+  "validated": true,
+  "error": null,
+  "execution_record_count": 90,
+  "diff_count": 0,
+  "sha256_before": "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E",
+  "sha256_after": "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E",
+  "observations": [
+    {
+      "control_id": 1370,
+      "path": [
+        5,
+        11,
+        1
+      ],
+      "kind": "text",
+      "original": "嘿嘿！小毛贼！往哪\\\r\n跑呢？看招吧！",
+      "replacement": "嘿嘿！小毛贼！往哪\\\r\n跑呢？看招吧！A",
+      "boundary_inputs": [
+        "",
+        "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+      ],
+      "boundary_readbacks": [
+        "",
+        "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+      ],
+      "right_click_menu": false
+    },
+    {
+      "control_id": 1620,
+      "path": [
+        5,
+        9,
+        3
+      ],
+      "kind": "decimal",
+      "original": "0",
+      "replacement": "1",
+      "boundary_inputs": [
+        "0",
+        "999999"
+      ],
+      "boundary_readbacks": [
+        "0",
+        "999999"
+      ],
+      "right_click_menu": true
+    },
+    {
+      "control_id": 1640,
+      "path": [
+        5,
+        8,
+        1
+      ],
+      "kind": "decimal",
+      "original": "100",
+      "replacement": "100",
+      "boundary_inputs": [
+        "0",
+        "999999"
+      ],
+      "boundary_readbacks": [
+        "0",
+        "999999"
+      ],
+      "right_click_menu": false
+    },
+    {
+      "control_id": 1650,
+      "path": [
+        5,
+        9,
+        2
+      ],
+      "kind": "decimal",
+      "original": "20",
+      "replacement": "21",
+      "boundary_inputs": [
+        "0",
+        "999999"
+      ],
+      "boundary_readbacks": [
+        "0",
+        "999999"
+      ],
+      "right_click_menu": false
+    },
+    {
+      "control_id": 1710,
+      "path": [
+        5,
+        7,
+        4
+      ],
+      "kind": "text",
+      "original": "碳合金",
+      "replacement": "碳合金A",
+      "boundary_inputs": [
+        "",
+        "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+      ],
+      "boundary_readbacks": [
+        "",
+        "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+      ],
+      "right_click_menu": false
+    },
+    {
+      "control_id": 1730,
+      "path": [
+        5,
+        7,
+        2
+      ],
+      "kind": "decimal",
+      "original": "4000",
+      "replacement": "4001",
+      "boundary_inputs": [
+        "0",
+        "9999999"
+      ],
+      "boundary_readbacks": [
+        "0",
+        "9999999"
+      ],
+      "right_click_menu": false
+    },
+    {
+      "control_id": 1770,
+      "path": [
+        5,
+        6,
+        2
+      ],
+      "kind": "text",
+      "original": "[F000：_{FCFFFF_】\r\n",
+      "replacement": "[F000：_{FCFFFF_】\r\nA",
+      "boundary_inputs": [
+        "",
+        "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+      ],
+      "boundary_readbacks": [
+        "",
+        "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+      ],
+      "right_click_menu": false
+    },
+    {
+      "control_id": 1780,
+      "path": [
+        5,
+        7,
+        1
+      ],
+      "kind": "text",
+      "original": "__使用它，防御力增加1点。",
+      "replacement": "__使用它，防御力增加1点。A",
+      "boundary_inputs": [
+        "",
+        "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+      ],
+      "boundary_readbacks": [
+        "",
+        "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+      ],
+      "right_click_menu": false
+    },
+    {
+      "control_id": 1970,
+      "path": [
+        5,
+        5,
+        0,
+        13
+      ],
+      "kind": "text",
+      "original": "[EE14哈罗：欢迎光临道具商店！】\r\n",
+      "replacement": "[EE14哈罗：欢迎光临道具商店！】\r\nA",
+      "boundary_inputs": [
+        "",
+        "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+      ],
+      "boundary_readbacks": [
+        "",
+        "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+      ],
+      "right_click_menu": false
+    },
+    {
+      "control_id": 1990,
+      "path": [
+        5,
+        5,
+        0,
+        11
+      ],
+      "kind": "text",
+      "original": "[EE14哈罗：需要什么？",
+      "replacement": "[EE14哈罗：需要什么？A",
+      "boundary_inputs": [
+        "",
+        "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+      ],
+      "boundary_readbacks": [
+        "",
+        "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+      ],
+      "right_click_menu": false
+    },
+    {
+      "control_id": 2010,
+      "path": [
+        5,
+        5,
+        0,
+        9
+      ],
+      "kind": "text",
+      "original": "[EE14哈罗：钱不够啊！】\r\n",
+      "replacement": "[EE14哈罗：钱不够啊！】\r\nA",
+      "boundary_inputs": [
+        "",
+        "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+      ],
+      "boundary_readbacks": [
+        "",
+        "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+      ],
+      "right_click_menu": false
+    },
+    {
+      "control_id": 2020,
+      "path": [
+        5,
+        5,
+        0,
+        8
+      ],
+      "kind": "text",
+      "original": "[EE14哈罗：还要什么吗？",
+      "replacement": "[EE14哈罗：还要什么吗？A",
+      "boundary_inputs": [
+        "",
+        "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+      ],
+      "boundary_readbacks": [
+        "",
+        "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+      ],
+      "right_click_menu": false
+    },
+    {
+      "control_id": 2040,
+      "path": [
+        5,
+        5,
+        0,
+        6
+      ],
+      "kind": "text",
+      "original": "[EE14哈罗：要买吗？",
+      "replacement": "[EE14哈罗：要买吗？A",
+      "boundary_inputs": [
+        "",
+        "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+      ],
+      "boundary_readbacks": [
+        "",
+        "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+      ],
+      "right_click_menu": false
+    },
+    {
+      "control_id": 2060,
+      "path": [
+        5,
+        5,
+        0,
+        4
+      ],
+      "kind": "text",
+      "original": "[EE14哈罗：只能带那么些。】\r\n",
+      "replacement": "[EE14哈罗：只能带那么些。】\r\nA",
+      "boundary_inputs": [
+        "",
+        "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+      ],
+      "boundary_readbacks": [
+        "",
+        "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+      ],
+      "right_click_menu": false
+    },
+    {
+      "control_id": 2090,
+      "path": [
+        5,
+        5,
+        0,
+        1
+      ],
+      "kind": "text",
+      "original": "[EE14哈罗：谢谢。请再来！】\r\n",
+      "replacement": "[EE14哈罗：谢谢。请再来！】\r\nA",
+      "boundary_inputs": [
+        "",
+        "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+      ],
+      "boundary_readbacks": [
+        "",
+        "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+      ],
+      "right_click_menu": false
+    }
+  ],
+  "execution_records": [
+    {
+      "action_id": "f7bd0f4525044a1dd311",
+      "status": "passed",
+      "result": "真实键盘焦点=True。"
+    },
+    {
+      "action_id": "e08d83f097f064ccda7f",
+      "status": "passed",
+      "result": "text 等类替换读回='嘿嘿！小毛贼！往哪\\\\\\r\\n跑呢？看招吧！A'，随后恢复。"
+    },
+    {
+      "action_id": "72144ca903e211cd0eb7",
+      "status": "passed",
+      "result": "真实焦点执行 Ctrl+A/Ctrl+Z，随后恢复原草稿。"
+    },
+    {
+      "action_id": "5f7ad63055b9e62158ff",
+      "status": "passed",
+      "result": "执行右键路径；可见弹出菜单=False。"
+    },
+    {
+      "action_id": "01ca42c1eaede4ceb21e",
+      "status": "passed",
+      "result": "text 边界 ['', 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'] 读回=['', 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA']，随后恢复。"
+    },
+    {
+      "action_id": "387a93126478a811de22",
+      "status": "passed",
+      "result": "切换到目标控件 120 所在页后隐藏；返回后可见且启用=True；条件记录链=[]。"
+    },
+    {
+      "action_id": "b6586d0ddadfb8706453",
+      "status": "passed",
+      "result": "真实键盘焦点=True。"
+    },
+    {
+      "action_id": "0530db5b63576b7813a9",
+      "status": "passed",
+      "result": "decimal 等类替换读回='1'，随后恢复。"
+    },
+    {
+      "action_id": "6412f5e6ccf47860c634",
+      "status": "passed",
+      "result": "真实焦点执行 Ctrl+A/Ctrl+Z，随后恢复原草稿。"
+    },
+    {
+      "action_id": "0f26f316fcb38b9ed7e4",
+      "status": "passed",
+      "result": "执行右键路径；可见弹出菜单=True。"
+    },
+    {
+      "action_id": "5bfc601ddd75494359b3",
+      "status": "passed",
+      "result": "decimal 边界 ['0', '999999'] 读回=['0', '999999']，随后恢复。"
+    },
+    {
+      "action_id": "d26c14795f825bd36ead",
+      "status": "passed",
+      "result": "切换到目标控件 120 所在页后隐藏；返回后可见且启用=True；条件记录链=[]。"
+    },
+    {
+      "action_id": "d05b364c3cf93fb316ba",
+      "status": "passed",
+      "result": "真实键盘焦点=True。"
+    },
+    {
+      "action_id": "b5f622fac08955f142a3",
+      "status": "passed",
+      "result": "decimal 等类替换读回='100'，随后恢复。"
+    },
+    {
+      "action_id": "f3a0698d8cd9078bedd8",
+      "status": "passed",
+      "result": "真实焦点执行 Ctrl+A/Ctrl+Z，随后恢复原草稿。"
+    },
+    {
+      "action_id": "d3b2085d617c10c12fb7",
+      "status": "passed",
+      "result": "执行右键路径；可见弹出菜单=False。"
+    },
+    {
+      "action_id": "ec856306db136cb874d1",
+      "status": "passed",
+      "result": "decimal 边界 ['0', '999999'] 读回=['0', '999999']，随后恢复。"
+    },
+    {
+      "action_id": "14b7b9a068463642762f",
+      "status": "passed",
+      "result": "切换到目标控件 120 所在页后隐藏；返回后可见且启用=True；条件记录链=[]。"
+    },
+    {
+      "action_id": "2058b4f7bcf276efc099",
+      "status": "passed",
+      "result": "真实键盘焦点=True。"
+    },
+    {
+      "action_id": "ffa7091d2439b2b37d5c",
+      "status": "passed",
+      "result": "decimal 等类替换读回='21'，随后恢复。"
+    },
+    {
+      "action_id": "b73e58a3fe1af9d05e95",
+      "status": "passed",
+      "result": "真实焦点执行 Ctrl+A/Ctrl+Z，随后恢复原草稿。"
+    },
+    {
+      "action_id": "ea471489a134ee2bf8dd",
+      "status": "passed",
+      "result": "执行右键路径；可见弹出菜单=False。"
+    },
+    {
+      "action_id": "0ab042b7ed512c503513",
+      "status": "passed",
+      "result": "decimal 边界 ['0', '999999'] 读回=['0', '999999']，随后恢复。"
+    },
+    {
+      "action_id": "d86aafa130b3d8a2c975",
+      "status": "passed",
+      "result": "切换到目标控件 120 所在页后隐藏；返回后可见且启用=True；条件记录链=[]。"
+    },
+    {
+      "action_id": "fe560675fde82b51e3d5",
+      "status": "passed",
+      "result": "真实键盘焦点=True。"
+    },
+    {
+      "action_id": "aa195528b99d50b2d19a",
+      "status": "passed",
+      "result": "text 等类替换读回='碳合金A'，随后恢复。"
+    },
+    {
+      "action_id": "05fbb96614930cb6d7b7",
+      "status": "passed",
+      "result": "真实焦点执行 Ctrl+A/Ctrl+Z，随后恢复原草稿。"
+    },
+    {
+      "action_id": "701c51efd3a184c5b2a7",
+      "status": "passed",
+      "result": "执行右键路径；可见弹出菜单=False。"
+    },
+    {
+      "action_id": "02b7cfefc3c0d0dfa2da",
+      "status": "passed",
+      "result": "text 边界 ['', 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'] 读回=['', 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA']，随后恢复。"
+    },
+    {
+      "action_id": "c3114a0670e891c78f19",
+      "status": "passed",
+      "result": "切换到目标控件 120 所在页后隐藏；返回后可见且启用=True；条件记录链=[]。"
+    },
+    {
+      "action_id": "f2b682092d9afb9ce924",
+      "status": "passed",
+      "result": "真实键盘焦点=True。"
+    },
+    {
+      "action_id": "03cb6487653073e65a16",
+      "status": "passed",
+      "result": "decimal 等类替换读回='4001'，随后恢复。"
+    },
+    {
+      "action_id": "6515706db933bde48e50",
+      "status": "passed",
+      "result": "真实焦点执行 Ctrl+A/Ctrl+Z，随后恢复原草稿。"
+    },
+    {
+      "action_id": "7d9435225afbac1f6d40",
+      "status": "passed",
+      "result": "执行右键路径；可见弹出菜单=False。"
+    },
+    {
+      "action_id": "5bb72b18bd50f3fbddb7",
+      "status": "passed",
+      "result": "decimal 边界 ['0', '9999999'] 读回=['0', '9999999']，随后恢复。"
+    },
+    {
+      "action_id": "dfa2cd9c48388073e374",
+      "status": "passed",
+      "result": "切换到目标控件 120 所在页后隐藏；返回后可见且启用=True；条件记录链=[]。"
+    },
+    {
+      "action_id": "2c38653c7852fea729d8",
+      "status": "passed",
+      "result": "真实键盘焦点=True。"
+    },
+    {
+      "action_id": "2d2c8109d85f6f50ac9c",
+      "status": "passed",
+      "result": "text 等类替换读回='[F000：_{FCFFFF_】\\r\\nA'，随后恢复。"
+    },
+    {
+      "action_id": "ec132b420dc430498573",
+      "status": "passed",
+      "result": "真实焦点执行 Ctrl+A/Ctrl+Z，随后恢复原草稿。"
+    },
+    {
+      "action_id": "faa2003b05907afa02d8",
+      "status": "passed",
+      "result": "执行右键路径；可见弹出菜单=False。"
+    },
+    {
+      "action_id": "fe717e30bff0ac083d7e",
+      "status": "passed",
+      "result": "text 边界 ['', 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'] 读回=['', 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA']，随后恢复。"
+    },
+    {
+      "action_id": "e15bf43832c4bb27db84",
+      "status": "passed",
+      "result": "切换到目标控件 120 所在页后隐藏；返回后可见且启用=True；条件记录链=[]。"
+    },
+    {
+      "action_id": "a52441c0f80e184026ac",
+      "status": "passed",
+      "result": "真实键盘焦点=True。"
+    },
+    {
+      "action_id": "b332d2ef81cfeb0efd96",
+      "status": "passed",
+      "result": "text 等类替换读回='__使用它，防御力增加1点。A'，随后恢复。"
+    },
+    {
+      "action_id": "45a512545a53b56b8948",
+      "status": "passed",
+      "result": "真实焦点执行 Ctrl+A/Ctrl+Z，随后恢复原草稿。"
+    },
+    {
+      "action_id": "d058edad18b1999256a7",
+      "status": "passed",
+      "result": "执行右键路径；可见弹出菜单=False。"
+    },
+    {
+      "action_id": "3e34a17ba45dbf6afb0f",
+      "status": "passed",
+      "result": "text 边界 ['', 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'] 读回=['', 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA']，随后恢复。"
+    },
+    {
+      "action_id": "dd1c93bf7e5b80157cb8",
+      "status": "passed",
+      "result": "切换到目标控件 120 所在页后隐藏；返回后可见且启用=True；条件记录链=[]。"
+    },
+    {
+      "action_id": "e5b9465f84a244c584f0",
+      "status": "passed",
+      "result": "真实键盘焦点=True。"
+    },
+    {
+      "action_id": "eaa0ce40336b00cab78b",
+      "status": "passed",
+      "result": "text 等类替换读回='[EE14哈罗：欢迎光临道具商店！】\\r\\nA'，随后恢复。"
+    },
+    {
+      "action_id": "dbb042e57e4da2ecc9e7",
+      "status": "passed",
+      "result": "真实焦点执行 Ctrl+A/Ctrl+Z，随后恢复原草稿。"
+    },
+    {
+      "action_id": "057cc71914f4446655bf",
+      "status": "passed",
+      "result": "执行右键路径；可见弹出菜单=False。"
+    },
+    {
+      "action_id": "7d165ceda3f3761d97f5",
+      "status": "passed",
+      "result": "text 边界 ['', 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'] 读回=['', 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA']，随后恢复。"
+    },
+    {
+      "action_id": "ae61d22ee16b4cbc919b",
+      "status": "passed",
+      "result": "切换到目标控件 120 所在页后隐藏；返回后可见且启用=True；条件记录链=[]。"
+    },
+    {
+      "action_id": "974e2af30b0b7678f2e0",
+      "status": "passed",
+      "result": "真实键盘焦点=True。"
+    },
+    {
+      "action_id": "e3d5f0c3771ce8143099",
+      "status": "passed",
+      "result": "text 等类替换读回='[EE14哈罗：需要什么？A'，随后恢复。"
+    },
+    {
+      "action_id": "f32147ff379b59e3984b",
+      "status": "passed",
+      "result": "真实焦点执行 Ctrl+A/Ctrl+Z，随后恢复原草稿。"
+    },
+    {
+      "action_id": "75aa950542fbceb16008",
+      "status": "passed",
+      "result": "执行右键路径；可见弹出菜单=False。"
+    },
+    {
+      "action_id": "ef792102881195cb2c5e",
+      "status": "passed",
+      "result": "text 边界 ['', 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'] 读回=['', 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA']，随后恢复。"
+    },
+    {
+      "action_id": "c0791b2e821271dda9c8",
+      "status": "passed",
+      "result": "切换到目标控件 120 所在页后隐藏；返回后可见且启用=True；条件记录链=[]。"
+    },
+    {
+      "action_id": "1b8be53b5f6d868dc9b7",
+      "status": "passed",
+      "result": "真实键盘焦点=True。"
+    },
+    {
+      "action_id": "dac6e077d87fda9d0359",
+      "status": "passed",
+      "result": "text 等类替换读回='[EE14哈罗：钱不够啊！】\\r\\nA'，随后恢复。"
+    },
+    {
+      "action_id": "8ab011c7ee31b9f0b5b1",
+      "status": "passed",
+      "result": "真实焦点执行 Ctrl+A/Ctrl+Z，随后恢复原草稿。"
+    },
+    {
+      "action_id": "e9b2cb1bc3cb46620f53",
+      "status": "passed",
+      "result": "执行右键路径；可见弹出菜单=False。"
+    },
+    {
+      "action_id": "5232ff270f6a928d0b47",
+      "status": "passed",
+      "result": "text 边界 ['', 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'] 读回=['', 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA']，随后恢复。"
+    },
+    {
+      "action_id": "c043aa3d0eb6e175c97e",
+      "status": "passed",
+      "result": "切换到目标控件 120 所在页后隐藏；返回后可见且启用=True；条件记录链=[]。"
+    },
+    {
+      "action_id": "6408358a348ee0e80f42",
+      "status": "passed",
+      "result": "真实键盘焦点=True。"
+    },
+    {
+      "action_id": "095e7d54005bac389109",
+      "status": "passed",
+      "result": "text 等类替换读回='[EE14哈罗：还要什么吗？A'，随后恢复。"
+    },
+    {
+      "action_id": "1ab1e259a42c31bca57d",
+      "status": "passed",
+      "result": "真实焦点执行 Ctrl+A/Ctrl+Z，随后恢复原草稿。"
+    },
+    {
+      "action_id": "e840c086b8fe067a5941",
+      "status": "passed",
+      "result": "执行右键路径；可见弹出菜单=False。"
+    },
+    {
+      "action_id": "5f436a715e61c292e4b0",
+      "status": "passed",
+      "result": "text 边界 ['', 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'] 读回=['', 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA']，随后恢复。"
+    },
+    {
+      "action_id": "1aa9d2cdf2e934137819",
+      "status": "passed",
+      "result": "切换到目标控件 120 所在页后隐藏；返回后可见且启用=True；条件记录链=[]。"
+    },
+    {
+      "action_id": "4ec6b80dd052e0ef84e1",
+      "status": "passed",
+      "result": "真实键盘焦点=True。"
+    },
+    {
+      "action_id": "b3e1328ff09e97e80a39",
+      "status": "passed",
+      "result": "text 等类替换读回='[EE14哈罗：要买吗？A'，随后恢复。"
+    },
+    {
+      "action_id": "a18bbd0c6387676907c2",
+      "status": "passed",
+      "result": "真实焦点执行 Ctrl+A/Ctrl+Z，随后恢复原草稿。"
+    },
+    {
+      "action_id": "7fc362ca48d501758128",
+      "status": "passed",
+      "result": "执行右键路径；可见弹出菜单=False。"
+    },
+    {
+      "action_id": "2cb126e14e76c18bc4e0",
+      "status": "passed",
+      "result": "text 边界 ['', 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'] 读回=['', 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA']，随后恢复。"
+    },
+    {
+      "action_id": "aa505f49e1943129eaae",
+      "status": "passed",
+      "result": "切换到目标控件 120 所在页后隐藏；返回后可见且启用=True；条件记录链=[]。"
+    },
+    {
+      "action_id": "d568d8ce42a050007f9d",
+      "status": "passed",
+      "result": "真实键盘焦点=True。"
+    },
+    {
+      "action_id": "6be1407ba1c85fb946b1",
+      "status": "passed",
+      "result": "text 等类替换读回='[EE14哈罗：只能带那么些。】\\r\\nA'，随后恢复。"
+    },
+    {
+      "action_id": "0d2042f98c6515ee623b",
+      "status": "passed",
+      "result": "真实焦点执行 Ctrl+A/Ctrl+Z，随后恢复原草稿。"
+    },
+    {
+      "action_id": "bcee45694fdc2e52ff4e",
+      "status": "passed",
+      "result": "执行右键路径；可见弹出菜单=False。"
+    },
+    {
+      "action_id": "f2091eb1311365b4ffe5",
+      "status": "passed",
+      "result": "text 边界 ['', 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'] 读回=['', 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA']，随后恢复。"
+    },
+    {
+      "action_id": "2e24ff76c514cad758fa",
+      "status": "passed",
+      "result": "切换到目标控件 120 所在页后隐藏；返回后可见且启用=True；条件记录链=[]。"
+    },
+    {
+      "action_id": "349640f196f457ca564e",
+      "status": "passed",
+      "result": "真实键盘焦点=True。"
+    },
+    {
+      "action_id": "ab6c9bef06e8379a8b68",
+      "status": "passed",
+      "result": "text 等类替换读回='[EE14哈罗：谢谢。请再来！】\\r\\nA'，随后恢复。"
+    },
+    {
+      "action_id": "78a5f4f7a98a8afa1de9",
+      "status": "passed",
+      "result": "真实焦点执行 Ctrl+A/Ctrl+Z，随后恢复原草稿。"
+    },
+    {
+      "action_id": "2cebc70108c59efb1d7a",
+      "status": "passed",
+      "result": "执行右键路径；可见弹出菜单=False。"
+    },
+    {
+      "action_id": "5ba7ebdddac8bac806d1",
+      "status": "passed",
+      "result": "text 边界 ['', 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'] 读回=['', 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA']，随后恢复。"
+    },
+    {
+      "action_id": "746f91f0956f3fd7f751",
+      "status": "passed",
+      "result": "切换到目标控件 120 所在页后隐藏；返回后可见且启用=True；条件记录链=[]。"
+    }
+  ]
+}

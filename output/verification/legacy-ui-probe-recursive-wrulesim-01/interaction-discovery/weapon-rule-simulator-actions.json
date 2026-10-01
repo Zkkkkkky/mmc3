@@ -1,0 +1,271 @@
+{
+  "schema_version": 1,
+  "validated": true,
+  "scope": "isolated reference executable; movement-rule simulator fields, move, mouse recording, start and stop; outer dialogs cancelled",
+  "actions": [
+    {
+      "action": "move",
+      "before": {
+        "110": "",
+        "150": "8",
+        "170": "8",
+        "190": "",
+        "230": "0",
+        "240": "0",
+        "290": "1"
+      },
+      "after_set": {
+        "110": "",
+        "150": "8",
+        "170": "8",
+        "190": "",
+        "230": "0",
+        "240": "0",
+        "290": "1"
+      },
+      "after": {
+        "110": "",
+        "150": "8",
+        "170": "8",
+        "190": "",
+        "230": "0",
+        "240": "0",
+        "290": "1"
+      },
+      "final": {
+        "110": "00 ",
+        "190": "00 ",
+        "230": "0",
+        "240": "0"
+      }
+    },
+    {
+      "action": "mouse_recording",
+      "points": [
+        [
+          413,
+          389
+        ],
+        [
+          453,
+          429
+        ],
+        [
+          493,
+          469
+        ]
+      ],
+      "check_after_on": 1,
+      "check_after_off": 0,
+      "after": {
+        "110": "",
+        "190": "",
+        "230": "0",
+        "240": "0"
+      }
+    },
+    {
+      "action": "start_stop",
+      "during": {
+        "230": "0",
+        "240": "0"
+      },
+      "after": {
+        "110": "",
+        "190": "",
+        "230": "0",
+        "240": "0"
+      }
+    },
+    {
+      "action": "canvas_gestures",
+      "single_left_created_object": true,
+      "idle_before": {
+        "110": "",
+        "190": "",
+        "230": "0",
+        "240": "0"
+      },
+      "idle_after": {
+        "110": "",
+        "190": "",
+        "230": "0",
+        "240": "0"
+      },
+      "new_windows": []
+    },
+    {
+      "action": "button_right_clicks",
+      "records": [
+        {
+          "control_id": 140,
+          "label": "移动",
+          "new_windows": [],
+          "check_before": 0,
+          "check_after": 0
+        },
+        {
+          "control_id": 250,
+          "label": "鼠标模拟运动",
+          "new_windows": [],
+          "check_before": 0,
+          "check_after": 0
+        },
+        {
+          "control_id": 260,
+          "label": "开始",
+          "new_windows": [],
+          "check_before": 0,
+          "check_after": 0
+        },
+        {
+          "control_id": 270,
+          "label": "结束",
+          "new_windows": [],
+          "check_before": 0,
+          "check_after": 0
+        }
+      ]
+    },
+    {
+      "action": "button_keyboard_activation",
+      "records": [
+        {
+          "control_id": 260,
+          "label": "开始",
+          "new_windows": [],
+          "check_before": 0,
+          "check_after": 0
+        },
+        {
+          "control_id": 140,
+          "label": "移动",
+          "new_windows": [],
+          "check_before": 0,
+          "check_after": 0
+        },
+        {
+          "control_id": 250,
+          "label": "鼠标模拟运动（开）",
+          "new_windows": [],
+          "check_before": 0,
+          "check_after": 1
+        },
+        {
+          "control_id": 250,
+          "label": "鼠标模拟运动（关）",
+          "new_windows": [],
+          "check_before": 1,
+          "check_after": 0
+        },
+        {
+          "control_id": 270,
+          "label": "结束",
+          "new_windows": [],
+          "check_before": 0,
+          "check_after": 0
+        }
+      ]
+    }
+  ],
+  "create_prompt": "信息：",
+  "keyboard_output_tokens": {
+    "x": 1,
+    "y": 1
+  },
+  "simulator_codes_after_close": {
+    "x": "",
+    "y": ""
+  },
+  "sha256_before": "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E",
+  "sha256_after": "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E",
+  "diff_count": 0,
+  "move_codes_match_requested_coordinates": true,
+  "mouse_toggle_observed": true,
+  "interaction_effect_observed": true,
+  "button_right_click_noop_observed": true,
+  "button_keyboard_activation_observed": true,
+  "canvas_gestures_observed": true,
+  "execution_records": [
+    {
+      "action_id": "018ce615ae869b8a9604",
+      "status": "passed",
+      "result": "旧版“开始”实跑：首次进入创建模式，第二次进入记录模式。"
+    },
+    {
+      "action_id": "599ba515f51854a3637d",
+      "status": "passed",
+      "result": "旧版“开始”：真实焦点空格键执行正确状态动作。"
+    },
+    {
+      "action_id": "70992196a9bca11f0190",
+      "status": "passed",
+      "result": "旧版“开始”：真实右键不打开窗口且不改变按钮状态。"
+    },
+    {
+      "action_id": "565e212b138e8af21730",
+      "status": "passed",
+      "result": "旧版“移动”实跑：按当前 X/Y 生成对应十六进制运动字节。"
+    },
+    {
+      "action_id": "ee623ec905e2b8cb45a6",
+      "status": "passed",
+      "result": "旧版“移动”：真实焦点空格键执行正确状态动作。"
+    },
+    {
+      "action_id": "e71790aba21232894a79",
+      "status": "passed",
+      "result": "旧版“移动”：真实右键不打开窗口且不改变按钮状态。"
+    },
+    {
+      "action_id": "21938841a61b69d02e6a",
+      "status": "passed",
+      "result": "旧版“鼠标模拟运动”实跑：勾选和取消均改变检查状态。"
+    },
+    {
+      "action_id": "cd32ea978c2aac48fba8",
+      "status": "passed",
+      "result": "旧版“鼠标模拟运动”：真实焦点空格键执行正确状态动作。"
+    },
+    {
+      "action_id": "68ed97ffff0443795338",
+      "status": "passed",
+      "result": "旧版“鼠标模拟运动”：真实右键不打开窗口且不改变按钮状态。"
+    },
+    {
+      "action_id": "b4e34ee7a1feb05ec900",
+      "status": "passed",
+      "result": "旧版“结束”实跑：结束当前记录状态。"
+    },
+    {
+      "action_id": "91c3594e052aed2da91f",
+      "status": "passed",
+      "result": "旧版“结束”：真实焦点空格键执行正确状态动作。"
+    },
+    {
+      "action_id": "47f9a63ae8c8f7e89760",
+      "status": "passed",
+      "result": "旧版“结束”：真实右键不打开窗口且不改变按钮状态。"
+    },
+    {
+      "action_id": "c1affde13f4c796bb671",
+      "status": "passed",
+      "result": "旧版画布实跑：首次开始确认后，左键在画布创建物体并进入可记录状态。"
+    },
+    {
+      "action_id": "e719c6ca1ecd9a674374",
+      "status": "passed",
+      "result": "旧版画布实跑：空闲状态双击不改变坐标/代码且不打开新窗口。"
+    },
+    {
+      "action_id": "cc75b4024c1886a0c988",
+      "status": "passed",
+      "result": "旧版画布实跑：空闲状态右键不改变坐标/代码且不打开新窗口。"
+    },
+    {
+      "action_id": "a9a0ffe5b0a400f4a64b",
+      "status": "passed",
+      "result": "旧版画布实跑：空闲状态拖拽不改变坐标/代码且不打开新窗口。"
+    }
+  ]
+}

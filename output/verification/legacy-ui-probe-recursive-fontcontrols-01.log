@@ -1,0 +1,53 @@
+[    0.1s] launched pid=16548
+[    0.1s] === stage A: launcher -> main window (no ROM) ===
+[    3.1s] top window: {'hwnd': 3802326, 'title': 'SRW2�޸���V1.5', 'class': 'WTWindow', 'rect': {'left': 571, 'top': 244, 'right': 1346, 'bottom': 843, 'width': 775, 'height': 599}, 'pid': 16548}
+[    4.2s] dump A01_������: title='SRW2�޸���V1.5' class='WTWindow' controls=8 shot=ok
+[   13.8s] main window hwnd=28051358 title='SRW2���ݰ��޸���V1.0'
+[   15.4s] dump A02_������_δ����ROM: title='SRW2���ݰ��޸���V1.0' class='WTWindow' controls=63 shot=ok
+[   23.4s] === stage LOAD: load ROM copy only ===
+[   25.1s] dump LOAD01_��ROM�Ի���: title='���ļ�' class='#32770' controls=49 shot=ok
+[   25.6s] open dialog confirmed gone=True
+[   33.2s] ROM loaded without main-window sweep, title='SRW2���ݰ��޸���V1.0��D:\\GIT\\mmc3\\output\\build\\legacy-ui-probe\\font-controls.nes'
+[   34.2s] dump LOAD02_������_�����: title='SRW2���ݰ��޸���V1.0��D:\\GIT\\mmc3\\output\\build\\legacy-ui-probe\\font-controls.nes' class='WTWindow' controls=63 shot=ok
+[   34.2s] === stage FONTCONTROLS: font editor + nested font dialog ===
+[   40.6s] FONTCONTROLS parent button 100 action=keyboard_activate
+[   43.8s] FONTCONTROLS parent button 100 action=left_click
+[   47.0s] FONTCONTROLS parent button 100 action=right_click
+[   50.2s] FONTCONTROLS parent button 120 action=keyboard_activate
+[   53.5s] FONTCONTROLS parent button 120 action=left_click
+[   56.7s] FONTCONTROLS parent button 120 action=right_click
+[   59.8s] FONTCONTROLS parent button 170 action=keyboard_activate
+[   62.7s] FONTCONTROLS parent button 170 action=left_click
+[   65.6s] FONTCONTROLS parent button 170 action=right_click
+[   68.7s] FONTCONTROLS parent button 240 action=keyboard_activate
+[   72.0s] FONTCONTROLS parent button 240 action=left_click
+[   75.4s] FONTCONTROLS parent button 240 action=right_click
+[  116.5s] FONTCONTROLS nested button 1 action=keyboard_activate
+[  119.5s] FONTCONTROLS nested button 1 action=left_click
+[  122.3s] FONTCONTROLS nested button 1 action=right_click
+[  125.2s] FONTCONTROLS nested button 2 action=keyboard_activate
+[  128.0s] FONTCONTROLS nested button 2 action=left_click
+[  130.9s] FONTCONTROLS nested button 2 action=right_click
+[  133.8s] FONTCONTROLS nested button 1040 action=keyboard_activate
+[  136.9s] FONTCONTROLS nested button 1040 action=left_click
+[  140.0s] FONTCONTROLS nested button 1040 action=right_click
+[  143.8s] FONTCONTROLS nested button 1041 action=keyboard_activate
+[  146.9s] FONTCONTROLS nested button 1041 action=left_click
+[  149.9s] FONTCONTROLS nested button 1041 action=right_click
+[  152.8s] FONTCONTROLS nested button 1072 action=keyboard_activate
+[  155.9s] FONTCONTROLS nested button 1072 action=left_click
+[  158.9s] FONTCONTROLS nested button 1072 action=right_click
+[  161.7s] FONTCONTROLS nested button 1073 action=keyboard_activate
+[  164.6s] FONTCONTROLS nested button 1073 action=left_click
+[  167.5s] FONTCONTROLS nested button 1073 action=right_click
+[  172.5s] FONTCONTROLS destructive parent button 250 action=keyboard_activate
+[  173.1s] FONTCONTROLS destructive parent button 250 action=left_click
+[  173.7s] FONTCONTROLS destructive parent button 250 action=right_click
+[  174.5s] FONTCONTROLS destructive parent button 260 action=keyboard_activate
+[  175.1s] FONTCONTROLS destructive parent button 260 action=left_click
+[  175.8s] FONTCONTROLS destructive parent button 260 action=right_click
+[  176.6s] FONTCONTROLS destructive parent button 310 action=keyboard_activate
+[  177.2s] FONTCONTROLS destructive parent button 310 action=left_click
+[  178.2s] FONTCONTROLS destructive parent button 310 action=right_click
+[  180.0s] FONTCONTROLS complete: 98/98 actions, zero ROM diff
+[  180.2s] terminated owned pid=16548

@@ -1,0 +1,383 @@
+{
+  "tag": "DBCMD_02_人物修改_导出人物_1",
+  "hwnd": 65804,
+  "title": "",
+  "class": "Shell_TrayWnd",
+  "rect": {
+    "left": 0,
+    "top": 1020,
+    "right": 1920,
+    "bottom": 1080,
+    "width": 1920,
+    "height": 60
+  },
+  "pid": 9016,
+  "tree": {
+    "hwnd": 65804,
+    "class": "Shell_TrayWnd",
+    "text": "",
+    "ctrl_id": 0,
+    "rect": {
+      "left": 0,
+      "top": 1020,
+      "right": 1920,
+      "bottom": 1080,
+      "width": 1920,
+      "height": 60
+    },
+    "visible": true,
+    "enabled": true,
+    "children": [
+      {
+        "hwnd": 66222,
+        "class": "Windows.UI.Core.CoreWindow",
+        "text": "DesktopWindowXamlSource",
+        "ctrl_id": 0,
+        "rect": {
+          "left": 0,
+          "top": 1020,
+          "right": 1,
+          "bottom": 1021,
+          "width": 1,
+          "height": 1
+        },
+        "visible": false,
+        "enabled": true,
+        "children": []
+      },
+      {
+        "hwnd": 65808,
+        "class": "Start",
+        "text": "开始",
+        "ctrl_id": 0,
+        "rect": {
+          "left": 571,
+          "top": 1020,
+          "right": 628,
+          "bottom": 1080,
+          "width": 57,
+          "height": 60
+        },
+        "visible": false,
+        "enabled": true,
+        "children": []
+      },
+      {
+        "hwnd": 65810,
+        "class": "TrayDummySearchControl",
+        "text": "",
+        "ctrl_id": 4100,
+        "rect": {
+          "left": 0,
+          "top": 1020,
+          "right": 0,
+          "bottom": 1020,
+          "width": 0,
+          "height": 0
+        },
+        "visible": true,
+        "enabled": true,
+        "children": []
+      },
+      {
+        "hwnd": 65812,
+        "class": "TrayNotifyWnd",
+        "text": "",
+        "ctrl_id": 303,
+        "rect": {
+          "left": 1637,
+          "top": 1020,
+          "right": 1920,
+          "bottom": 1080,
+          "width": 283,
+          "height": 60
+        },
+        "visible": true,
+        "enabled": true,
+        "children": [
+          {
+            "hwnd": 65814,
+            "class": "Button",
+            "text": "",
+            "ctrl_id": 1502,
+            "rect": {
+              "left": 1637,
+              "top": 1020,
+              "right": 1677,
+              "bottom": 1080,
+              "width": 40,
+              "height": 60
+            },
+            "visible": true,
+            "enabled": true,
+            "button_check_state": 0,
+            "children": [
+              {
+                "hwnd": 65816,
+                "class": "Button",
+                "text": "",
+                "ctrl_id": 0,
+                "rect": {
+                  "left": 1637,
+                  "top": 1020,
+                  "right": 1637,
+                  "bottom": 1020,
+                  "width": 0,
+                  "height": 0
+                },
+                "visible": false,
+                "enabled": true,
+                "button_check_state": 0,
+                "children": []
+              }
+            ]
+          },
+          {
+            "hwnd": 65828,
+            "class": "ToolbarWindow32",
+            "text": "系统升级的通知区域",
+            "ctrl_id": 1504,
+            "rect": {
+              "left": 1677,
+              "top": 1020,
+              "right": 1677,
+              "bottom": 1020,
+              "width": 0,
+              "height": 0
+            },
+            "visible": true,
+            "enabled": true,
+            "children": []
+          },
+          {
+            "hwnd": 65832,
+            "class": "SysPager",
+            "text": "",
+            "ctrl_id": 0,
+            "rect": {
+              "left": 1677,
+              "top": 1020,
+              "right": 1677,
+              "bottom": 1020,
+              "width": 0,
+              "height": 0
+            },
+            "visible": true,
+            "enabled": true,
+            "children": [
+              {
+                "hwnd": 65834,
+                "class": "ToolbarWindow32",
+                "text": "用户提示通知区域",
+                "ctrl_id": 1504,
+                "rect": {
+                  "left": 1677,
+                  "top": 1020,
+                  "right": 1677,
+                  "bottom": 1020,
+                  "width": 0,
+                  "height": 0
+                },
+                "visible": true,
+                "enabled": true,
+                "children": []
+              }
+            ]
+          },
+          {
+            "hwnd": 65838,
+            "class": "TrayInputIndicatorWClass",
+            "text": "任务栏输入指示",
+            "ctrl_id": 308,
+            "rect": {
+              "left": 1677,
+              "top": 1020,
+              "right": 1677,
+              "bottom": 1080,
+              "width": 0,
+              "height": 60
+            },
+            "visible": false,
+            "enabled": true,
+            "children": [
+              {
+                "hwnd": 65840,
+                "class": "IMEModeButton",
+                "text": "",
+                "ctrl_id": 0,
+                "rect": {
+                  "left": 1677,
+                  "top": 1020,
+                  "right": 1677,
+                  "bottom": 1080,
+                  "width": 0,
+                  "height": 60
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              },
+              {
+                "hwnd": 65844,
+                "class": "InputIndicatorButton",
+                "text": "",
+                "ctrl_id": 0,
+                "rect": {
+                  "left": 1677,
+                  "top": 1020,
+                  "right": 1722,
+                  "bottom": 1080,
+                  "width": 45,
+                  "height": 60
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              }
+            ]
+          },
+          {
+            "hwnd": 65848,
+            "class": "TrayShowDesktopButtonWClass",
+            "text": "",
+            "ctrl_id": 307,
+            "rect": {
+              "left": 1677,
+              "top": 1020,
+              "right": 1677,
+              "bottom": 1080,
+              "width": 0,
+              "height": 60
+            },
+            "visible": true,
+            "enabled": true,
+            "children": []
+          },
+          {
+            "hwnd": 66236,
+            "class": "Windows.UI.Composition.DesktopWindowContentBridge",
+            "text": "DesktopWindowXamlSource",
+            "ctrl_id": 0,
+            "rect": {
+              "left": 1637,
+              "top": 1020,
+              "right": 1920,
+              "bottom": 1080,
+              "width": 283,
+              "height": 60
+            },
+            "visible": true,
+            "enabled": true,
+            "children": [
+              {
+                "hwnd": 66238,
+                "class": "Windows.UI.Input.InputSite.WindowClass",
+                "text": "",
+                "ctrl_id": 0,
+                "rect": {
+                  "left": 1637,
+                  "top": 1020,
+                  "right": 1637,
+                  "bottom": 1020,
+                  "width": 0,
+                  "height": 0
+                },
+                "visible": true,
+                "enabled": true,
+                "children": []
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "hwnd": 65850,
+        "class": "ReBarWindow32",
+        "text": "",
+        "ctrl_id": 40965,
+        "rect": {
+          "left": 0,
+          "top": 1020,
+          "right": 1637,
+          "bottom": 1080,
+          "width": 1637,
+          "height": 60
+        },
+        "visible": true,
+        "enabled": true,
+        "children": [
+          {
+            "hwnd": 65854,
+            "class": "MSTaskSwWClass",
+            "text": "运行中的应用程序",
+            "ctrl_id": 0,
+            "rect": {
+              "left": 2,
+              "top": 1020,
+              "right": 1637,
+              "bottom": 1070,
+              "width": 1635,
+              "height": 50
+            },
+            "visible": true,
+            "enabled": true,
+            "children": [
+              {
+                "hwnd": 65858,
+                "class": "MSTaskListWClass",
+                "text": "运行中的应用程序",
+                "ctrl_id": 0,
+                "rect": {
+                  "left": 2,
+                  "top": 1020,
+                  "right": 1637,
+                  "bottom": 1070,
+                  "width": 1635,
+                  "height": 50
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "hwnd": 66232,
+        "class": "Windows.UI.Composition.DesktopWindowContentBridge",
+        "text": "DesktopWindowXamlSource",
+        "ctrl_id": 0,
+        "rect": {
+          "left": 0,
+          "top": 1020,
+          "right": 1920,
+          "bottom": 1080,
+          "width": 1920,
+          "height": 60
+        },
+        "visible": true,
+        "enabled": true,
+        "children": [
+          {
+            "hwnd": 66234,
+            "class": "Windows.UI.Input.InputSite.WindowClass",
+            "text": "",
+            "ctrl_id": 0,
+            "rect": {
+              "left": 0,
+              "top": 1020,
+              "right": 0,
+              "bottom": 1020,
+              "width": 0,
+              "height": 0
+            },
+            "visible": true,
+            "enabled": true,
+            "children": []
+          }
+        ]
+      }
+    ]
+  }
+}

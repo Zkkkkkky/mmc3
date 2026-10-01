@@ -1,0 +1,120 @@
+{
+  "schema_version": 1,
+  "validated": true,
+  "error": null,
+  "execution_record_count": 17,
+  "diff_count": 0,
+  "sha256_before": "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E",
+  "sha256_after": "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E",
+  "observations": [
+    {
+      "class": "ComboBox",
+      "control_id": 120,
+      "path": [
+        1,
+        1
+      ],
+      "item_count": 5,
+      "original_index": 0,
+      "keyboard_index": 0
+    },
+    {
+      "class": "ComboBox",
+      "control_id": 130,
+      "path": [
+        1,
+        0
+      ],
+      "item_count": 16,
+      "original_index": 15,
+      "keyboard_index": 15
+    }
+  ],
+  "execution_records": [
+    {
+      "action_id": "d7836005e4bb090efcb2",
+      "status": "passed",
+      "result": "展开并收起，共 5 项。"
+    },
+    {
+      "action_id": "eea323ecfb5f3f95b4e4",
+      "status": "passed",
+      "result": "逐项选择并读回 5/5 项，恢复索引 0。"
+    },
+    {
+      "action_id": "38f652e2316bc9cd14e1",
+      "status": "passed",
+      "result": "Home/Down 后索引=0，随后恢复。"
+    },
+    {
+      "action_id": "bf3174f007b3fdf34548",
+      "status": "passed",
+      "result": "执行右键路径；可见菜单=False。"
+    },
+    {
+      "action_id": "fab66f5236c8627b8b82",
+      "status": "passed",
+      "result": "展开并收起，共 16 项。"
+    },
+    {
+      "action_id": "d64b784aa37d712b531f",
+      "status": "passed",
+      "result": "逐项选择并读回 16/16 项，恢复索引 15。"
+    },
+    {
+      "action_id": "6a4e37e5380cf8a016e5",
+      "status": "passed",
+      "result": "Home/Down 后索引=15，随后恢复。"
+    },
+    {
+      "action_id": "b4a392735f2b8bdad493",
+      "status": "passed",
+      "result": "执行右键路径；可见菜单=False。"
+    },
+    {
+      "action_id": "77510e2de8063925cd28",
+      "status": "passed",
+      "result": "焦点=True；编辑窗仍存在=False；新增窗口=[]。"
+    },
+    {
+      "action_id": "d73dcfbe194688e9cba9",
+      "status": "passed",
+      "result": "焦点=None；编辑窗仍存在=False；新增窗口=[]。"
+    },
+    {
+      "action_id": "7afa7972324f4b163341",
+      "status": "passed",
+      "result": "焦点=None；编辑窗仍存在=True；新增窗口=[]。"
+    },
+    {
+      "action_id": "93c91fe9bf27855b14d2",
+      "status": "passed",
+      "result": "焦点=True；编辑窗仍存在=False；新增窗口=[]。"
+    },
+    {
+      "action_id": "97648e58daa7cdf83bf4",
+      "status": "passed",
+      "result": "焦点=None；编辑窗仍存在=False；新增窗口=[]。"
+    },
+    {
+      "action_id": "11476a452a04dc1366dc",
+      "status": "passed",
+      "result": "焦点=None；编辑窗仍存在=True；新增窗口=[]。"
+    },
+    {
+      "action_id": "0972e52ce33ccea55874",
+      "status": "passed",
+      "result": "焦点=True；编辑窗仍存在=True；新增窗口=[]。"
+    },
+    {
+      "action_id": "bec64edc0e2f798bb233",
+      "status": "passed",
+      "result": "焦点=None；编辑窗仍存在=True；新增窗口=[]。"
+    },
+    {
+      "action_id": "8789c9d7fd9dc09cd799",
+      "status": "passed",
+      "result": "焦点=None；编辑窗仍存在=True；新增窗口=[]。"
+    }
+  ]
+}

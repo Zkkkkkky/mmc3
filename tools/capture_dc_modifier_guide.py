@@ -33,7 +33,12 @@ from dc_modifier.unit_appearance_dialog import UnitAppearanceDialog
 from dc_modifier.unit_import_page import UnitImportPage
 
 
-OUTPUT_DIRECTORY = ROOT / "docs" / "images" / "dc_modifier"
+OUTPUT_DIRECTORY = Path(
+    os.environ.get(
+        "DC_MODIFIER_CAPTURE_DIR",
+        str(ROOT / "docs" / "images" / "dc_modifier"),
+    )
+)
 
 
 def process_layout(application: QApplication) -> None:

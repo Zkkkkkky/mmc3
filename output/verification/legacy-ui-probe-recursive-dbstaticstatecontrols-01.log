@@ -1,0 +1,15 @@
+[    0.0s] launched pid=4136
+[    0.0s] === stage A: launcher -> main window (no ROM) ===
+[    3.0s] top window: {'hwnd': 5375396, 'title': 'SRW2�޸���V1.5', 'class': 'WTWindow', 'rect': {'left': 571, 'top': 244, 'right': 1346, 'bottom': 843, 'width': 775, 'height': 599}, 'pid': 4136}
+[    4.0s] dump A01_������: title='SRW2�޸���V1.5' class='WTWindow' controls=8 shot=ok
+[   12.5s] main window hwnd=9373304 title='SRW2���ݰ��޸���V1.0'
+[   14.6s] dump A02_������_δ����ROM: title='SRW2���ݰ��޸���V1.0' class='WTWindow' controls=63 shot=ok
+[   22.6s] === stage LOAD: load ROM copy only ===
+[   24.0s] dump LOAD01_��ROM�Ի���: title='���ļ�' class='#32770' controls=49 shot=ok
+[   24.5s] open dialog confirmed gone=True
+[   32.0s] ROM loaded without main-window sweep, title='SRW2���ݰ��޸���V1.0��D:\\GIT\\mmc3\\output\\build\\legacy-ui-probe\\database-static-state-controls.nes'
+[   32.9s] dump LOAD02_������_�����: title='SRW2���ݰ��޸���V1.0��D:\\GIT\\mmc3\\output\\build\\legacy-ui-probe\\database-static-state-controls.nes' class='WTWindow' controls=63 shot=ok
+[   32.9s] === stage DBSTATICSTATECONTROLS ===
+[   33.9s] ���ݿ�: hwnd=3999436 title='���ݿ�'
+[  909.2s] DBSTATICSTATECONTROLS complete: 89/89 actions, zero ROM diff
+[  909.4s] terminated owned pid=4136

@@ -42,6 +42,7 @@ from fc_editor.expansion import AUTO_ALLOCATION_PREFIX, REOPEN_GUARD_PREFIX
 from fc_editor.resources import ResourceGraph
 from fc_rom_editor_core import RomProject, compact_ids
 
+from .database_graphics import read_unit_appearance
 from .music_import import assemble_famistudio_music_source, load_music_bank
 from .beginner_ui import collapsible_details, task_hint
 from .workspace import default_export_path, writable_output_path
@@ -565,13 +566,22 @@ class SearchableRecordPage(ProjectPage):
         pass
 
 
+UNASSIGNED_UNIT_NAME = "空白/未分配机体槽"
+
+
+def unit_name_for_ui(name: str, *, empty: str = "-") -> str:
+    """Keep the internal empty-slot marker out of user-facing unit labels."""
+
+    return empty if name == UNASSIGNED_UNIT_NAME else name
+
+
 class UnitPage(SearchableRecordPage):
     def __init__(self) -> None:
         super().__init__()
         outer = QVBoxLayout(self)
         title, subtitle = page_title(
             "机体编辑",
-            "编辑已确认的能力字段；共享记录会同时影响所有引用该记录的机体ID。",
+            "编辑已确认的能力字段；当前ROM的重复属性指针会自动拆分，只修改所选机体。",
         )
         outer.addWidget(title)
         outer.addWidget(subtitle)
@@ -608,7 +618,7 @@ class UnitPage(SearchableRecordPage):
         self.name_reference.currentIndexChanged.connect(self._update_pending_state)
         identity_form.addRow("名称引用", self.name_reference)
         self.name_text = QLineEdit()
-        self.name_text.setPlaceholderText("在机体名称共享池总容量内修改，可先缩短再增长")
+        self.name_text.setPlaceholderText("直接修改当前ID；首次改名会自动建立独立名称空间")
         self.name_text.textChanged.connect(self._update_pending_state)
         identity_form.addRow("直接修改名称", self.name_text)
         self.weapon_slots = (QComboBox(), QComboBox())
@@ -715,16 +725,17 @@ class UnitPage(SearchableRecordPage):
 
     def record_text(self, record_id: int) -> str:
         assert self.project is not None
-        return f"${record_id:02X}  {self.project.unit_display_name(record_id)}"
+        name = unit_name_for_ui(self.project.unit_display_name(record_id))
+        return f"${record_id:02X}  {name}"
 
     def refresh(self) -> None:
         self.name_reference.blockSignals(True)
         self.name_reference.clear()
         if self.project is not None:
-            for source_id, pointer, label, source_ids in self.project.unit_name_reference_options():
-                shared = compact_ids(source_ids)
+            for source_id, pointer, label, _source_ids in self.project.unit_name_reference_options():
+                label = unit_name_for_ui(label)
                 self.name_reference.addItem(
-                    f"{label} · 来源 ${source_id:02X} · 指针 ${pointer:04X} · 共享ID {shared}",
+                    f"{label} · 来源 ${source_id:02X} · 物理指针 ${pointer:04X} · 逻辑ID独立",
                     source_id,
                 )
         self.name_reference.blockSignals(False)
@@ -732,10 +743,10 @@ class UnitPage(SearchableRecordPage):
             editor.blockSignals(True)
             editor.clear()
             if self.project is not None and self.project.supports_unit_weapons:
-                editor.addItem("$00 · 无武器", 0)
+                editor.addItem("000 · 无武器", 0)
                 for weapon_id in range(1, self.project.weapon_count):
                     editor.addItem(
-                        f"${weapon_id:02X} · {self.project.weapon_display_name(weapon_id)}",
+                        f"{weapon_id:03d} · {self.project.weapon_display_name(weapon_id)}",
                         weapon_id,
                     )
                 editor.setEnabled(True)
@@ -753,14 +764,14 @@ class UnitPage(SearchableRecordPage):
             self.pending_state.setText("请选择机体")
             return
         record = self.project.unit_codec.decode_record(record_id, bytes(self.project.working))
-        self.record_heading.setText(f"机体 ${record_id:02X} · {self.project.unit_display_name(record_id)}")
-        shared = compact_ids(record.ids)
+        display_name = self.project.unit_display_name(record_id)
+        self.record_heading.setText(
+            f"机体 ${record_id:02X} · {unit_name_for_ui(display_name)}"
+        )
         name_pointer = self.project.get_unit_name_pointer(record_id)
-        name_ids = self.project.unit_name_source_ids(record_id)
         self.record_meta.setText(
             f"记录指针 ${record.pointer:04X} · 文件偏移 0x{self.project.record_file_offset(record_id):06X}"
-            f" · 属性共享ID：{shared} · 名称指针 ${name_pointer:04X}"
-            f" · 名称共享ID：{compact_ids(name_ids)}"
+            f" · 逻辑 ID 独立保存 · 名称指针 ${name_pointer:04X}"
         )
         for field in UNIT_FIELDS:
             spec = self.project.unit_field(field.key)
@@ -782,7 +793,11 @@ class UnitPage(SearchableRecordPage):
         if source_ids:
             index = self.name_reference.findData(source_ids[0])
             self.name_reference.setCurrentIndex(index)
-        self.name_text.setText(self.project.unit_display_name(record_id))
+        self.name_text.setText(unit_name_for_ui(display_name, empty=""))
+        self.name_text.setPlaceholderText(
+            "-" if display_name == UNASSIGNED_UNIT_NAME
+            else "直接修改当前ID；首次改名会自动建立独立名称空间"
+        )
         if self.project.supports_unit_weapons:
             for editor, weapon_id in zip(
                 self.weapon_slots, self.project.get_unit_weapons(record_id)
@@ -804,9 +819,10 @@ class UnitPage(SearchableRecordPage):
         source_ids = self.project.unit_name_source_ids(self.current_id)
         if source_ids and self.name_reference.currentData() is not None:
             pending = pending or int(self.name_reference.currentData()) != source_ids[0]
-        pending = pending or self.name_text.text().strip() != self.project.unit_display_name(
-            self.current_id
+        current_name = unit_name_for_ui(
+            self.project.unit_display_name(self.current_id), empty=""
         )
+        pending = pending or self.name_text.text().strip() != current_name
         if self.project.supports_unit_weapons:
             pending = pending or tuple(
                 int(editor.currentData()) for editor in self.weapon_slots
@@ -823,14 +839,14 @@ class UnitPage(SearchableRecordPage):
         if self.project is None or self.current_id is None:
             return
         options = [
-            f"${unit_id:02X} · {self.project.unit_display_name(unit_id)}"
+            f"${unit_id:02X} · {unit_name_for_ui(self.project.unit_display_name(unit_id))}"
             for unit_id in range(1, self.project.unit_count)
             if unit_id != self.current_id
         ]
         selected, accepted = QInputDialog.getItem(
             self,
             "复制机体",
-            f"将 ${self.current_id:02X} 的数值、名称和武器复制到：",
+            f"将 ${self.current_id:02X} 的属性、名称、武器和完整战斗外观复制到：",
             options,
             0,
             False,
@@ -844,22 +860,8 @@ class UnitPage(SearchableRecordPage):
         if self.project is None or source_id == target_id:
             return False
         try:
-            affected = self.project.unit_codec.decode_record(
-                target_id, bytes(self.project.working)
-            ).ids
-            if len(affected) > 1:
-                answer = QMessageBox.question(
-                    self,
-                    "共享机体记录确认",
-                    f"目标 ${target_id:02X} 的16字节属性记录由 "
-                    f"{compact_ids(affected)} 共用。\n"
-                    "复制后这些ID的属性都会改变；名称和武器仅修改目标ID。是否继续？",
-                    QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.Cancel,
-                    QMessageBox.StandardButton.Cancel,
-                )
-                if answer != QMessageBox.StandardButton.Yes:
-                    return False
             name_ids = self.project.unit_name_source_ids(source_id)
+            appearance = read_unit_appearance(self.project, source_id)
             with self.project.transaction(
                 f"复制机体 ${source_id:02X} 到 ${target_id:02X}"
             ):
@@ -873,8 +875,16 @@ class UnitPage(SearchableRecordPage):
                         self.project.get_unit_weapons(source_id)
                     ):
                         self.project.set_unit_weapon(target_id, slot, weapon_id)
+                self.project.set_unit_appearance_configuration(
+                    target_id, appearance.configuration
+                )
+                self.project.set_unit_appearance_scripts(
+                    target_id,
+                    body_script=appearance.body_script,
+                    fragment_script=appearance.fragment_script,
+                )
             self.project_changed.emit(
-                f"已复制机体 ${source_id:02X} 到 ${target_id:02X}"
+                f"已完整复制机体 ${source_id:02X} 到 ${target_id:02X}"
             )
             return True
         except Exception as error:
@@ -885,35 +895,11 @@ class UnitPage(SearchableRecordPage):
         if self.project is None or self.current_id is None:
             return
         try:
-            current_name = self.project.unit_display_name(self.current_id)
+            current_name = unit_name_for_ui(
+                self.project.unit_display_name(self.current_id), empty=""
+            )
             edited_name = self.name_text.text().strip()
             name_changed = edited_name != current_name
-            changed_fields = tuple(
-                field.label
-                for field in UNIT_FIELDS
-                if self.fields[field.key].value()
-                != self.project.get_value(self.current_id, field.key)
-                * self.project.unit_field(field.key).display_scale
-            )
-            shared_ids = self.project.unit_codec.decode_record(
-                self.current_id, bytes(self.project.working)
-            ).ids
-            if changed_fields and len(shared_ids) > 1:
-                answer = QMessageBox.question(
-                    self,
-                    "共享机体属性确认",
-                    f"属性记录由 {compact_ids(shared_ids)} 共用。\n"
-                    f"修改 {'、'.join(changed_fields)} 会同时影响这些机体；"
-                    "名称和武器仅按当前 ID 修改。是否继续？",
-                    QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.Cancel,
-                    QMessageBox.StandardButton.Cancel,
-                )
-                if answer != QMessageBox.StandardButton.Yes:
-                    return
-            if name_changed and not self.confirm_shared_name_edit(
-                "机体", self.project.unit_name_source_ids(self.current_id)
-            ):
-                return
             with self.project.transaction(f"机体 ${self.current_id:02X} · 批量属性"):
                 for field in UNIT_FIELDS:
                     spec = self.project.unit_field(field.key)
@@ -943,19 +929,10 @@ class UnitPage(SearchableRecordPage):
     def apply_raw_record(self) -> None:
         if self.project is None or self.current_id is None:
             return
-        shared_ids = self.project.unit_codec.decode_record(
-            self.current_id, bytes(self.project.working)
-        ).ids
-        shared_note = (
-            f"\n\n该属性记录由 {compact_ids(shared_ids)} 共用，写入会同时影响这些机体。"
-            if len(shared_ids) > 1
-            else ""
-        )
         answer = QMessageBox.question(
             self,
             "确认高级修改",
-            "原始记录包含尚未确认的标志位。确定写入这16字节吗？"
-            + shared_note,
+            "原始记录包含尚未确认的标志位。确定仅写入当前机体的这16字节吗？",
             QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.Cancel,
             QMessageBox.StandardButton.Cancel,
         )
@@ -1136,7 +1113,8 @@ class CharacterPage(SearchableRecordPage):
         name = self.project.character_normal_display_name(record_id)
         self.normal_name_text.setText(
             concise_dc_text(
-                self.project.character_normal_name_record_bytes(record_id)
+                self.project.character_normal_name_record_bytes(record_id),
+                text_table=self.project.dc_text_table(),
             )
         )
         battle_supported = record_id < self.project.profile.character_name_count
@@ -1166,7 +1144,10 @@ class CharacterPage(SearchableRecordPage):
                 self.project.character_name_record_bytes(record_id).hex(" ").upper()
             )
             self.name_text.setText(
-                concise_dc_text(self.project.character_name_record_bytes(record_id))
+                concise_dc_text(
+                    self.project.character_name_record_bytes(record_id),
+                    text_table=self.project.dc_text_table(),
+                )
             )
         else:
             self.name_tokens.clear()
@@ -1230,7 +1211,8 @@ class CharacterPage(SearchableRecordPage):
             and int(self.name_reference.currentData()) != source_ids[0]
         )
         text_pending = self.name_text.text().strip() != concise_dc_text(
-            self.project.character_name_record_bytes(self.current_id)
+            self.project.character_name_record_bytes(self.current_id),
+            text_table=self.project.dc_text_table(),
         )
         music_pending = False
         if self.ally_music.isEnabled() and self.ally_music.currentData() is not None:
@@ -1245,7 +1227,8 @@ class CharacterPage(SearchableRecordPage):
         if self.project is None or self.current_id is None:
             return False
         return self.normal_name_text.text().strip() != concise_dc_text(
-            self.project.character_normal_name_record_bytes(self.current_id)
+            self.project.character_normal_name_record_bytes(self.current_id),
+            text_table=self.project.dc_text_table(),
         )
 
     def _update_pending_state(self) -> None:
@@ -1334,11 +1317,13 @@ class CharacterPage(SearchableRecordPage):
                 self.project.set_character_name_texts(
                     target_id,
                     normal_text=concise_dc_text(
-                        self.project.character_normal_name_record_bytes(source_id)
+                        self.project.character_normal_name_record_bytes(source_id),
+                        text_table=self.project.dc_text_table(),
                     ),
                     battle_text=(
                         concise_dc_text(
-                            self.project.character_name_record_bytes(source_id)
+                            self.project.character_name_record_bytes(source_id),
+                            text_table=self.project.dc_text_table(),
                         )
                         if source_id < self.project.profile.character_name_count
                         and target_id < self.project.profile.character_name_count
@@ -1518,7 +1503,10 @@ class WeaponPage(SearchableRecordPage):
                 self.project.weapon_name_record_bytes(record_id).hex(" ").upper()
             )
             self.name_text.setText(
-                concise_dc_text(self.project.weapon_name_record_bytes(record_id))
+                concise_dc_text(
+                    self.project.weapon_name_record_bytes(record_id),
+                    text_table=self.project.dc_text_table(),
+                )
             )
         else:
             metadata += " · 此ROM配置未验证名称表"
@@ -1552,7 +1540,8 @@ class WeaponPage(SearchableRecordPage):
             if source_ids and self.name_reference.currentData() is not None:
                 pending = pending or int(self.name_reference.currentData()) != source_ids[0]
             pending = pending or self.name_text.text().strip() != concise_dc_text(
-                self.project.weapon_name_record_bytes(self.current_id)
+                self.project.weapon_name_record_bytes(self.current_id),
+                text_table=self.project.dc_text_table(),
             )
         self.apply_button.setEnabled(pending)
         self.pending_state.setText(
@@ -1630,7 +1619,10 @@ class WeaponPage(SearchableRecordPage):
             text_pending = bool(
                 self.project.supports_weapon_names
                 and self.name_text.text().strip()
-                != concise_dc_text(self.project.weapon_name_record_bytes(self.current_id))
+                != concise_dc_text(
+                    self.project.weapon_name_record_bytes(self.current_id),
+                    text_table=self.project.dc_text_table(),
+                )
             )
             if reference_pending and text_pending:
                 raise ValueError("名称引用和名称文字不能同时修改；请先应用其中一项。")

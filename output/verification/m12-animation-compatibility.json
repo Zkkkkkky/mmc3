@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-24T23:29:03+08:00",
+  "generated_at": "2026-09-29T15:59:23+08:00",
   "passed": true,
   "delivery_status": "implementation_complete_guarded_scope",
   "conclusion": "M12 当前安全交付范围已实现：六表读取、主动画结构编辑与 FE 目标重定位、运行编辑、组图首图块动态黄金、78/86 个已核对调用点与 F-069 拼图播放通过门禁；背景 106 槽已全量分类并开放 69 条解释器已验证参数，三类预留槽复制和工程名称写回已开放。旧版 X/Y 非持久化及其余未证范围均保持只读。",
@@ -38,6 +38,26 @@
         "live_records": 255,
         "complete_records": 255,
         "shared_slots": 206
+      }
+    },
+    "script_pool_usage": {
+      "map": {
+        "capacity": 7890,
+        "used": 5584,
+        "free": 2306,
+        "unique_records": 60
+      },
+      "ally": {
+        "capacity": 15840,
+        "used": 2418,
+        "free": 13422,
+        "unique_records": 21
+      },
+      "enemy": {
+        "capacity": 15840,
+        "used": 5774,
+        "free": 10066,
+        "unique_records": 67
       }
     },
     "safe_patches": {
@@ -1788,6 +1808,7 @@
     "sprite_code_patch_is_golden_first_tile_only": true,
     "sprite_anchor_write_is_rejected": true,
     "map_patch_is_one_verified_operand": true,
+    "map_pool_repack_accepts_variable_length": true,
     "movement_patch_is_one_verified_operand": true,
     "call_patch_is_one_verified_operand": true,
     "background_patch_is_one_verified_body_byte": true,

@@ -1,0 +1,137 @@
+{
+  "tag": "DBWEAPONBUTTONCONTROLS_2560_left_click_1",
+  "hwnd": 7277100,
+  "title": "请输入：",
+  "class": "#32770",
+  "rect": {
+    "left": 720,
+    "top": 405,
+    "right": 1198,
+    "bottom": 620,
+    "width": 478,
+    "height": 215
+  },
+  "pid": 9144,
+  "tree": {
+    "hwnd": 7277100,
+    "class": "#32770",
+    "text": "请输入：",
+    "ctrl_id": 0,
+    "rect": {
+      "left": 720,
+      "top": 405,
+      "right": 1198,
+      "bottom": 620,
+      "width": 478,
+      "height": 215
+    },
+    "visible": true,
+    "enabled": true,
+    "children": [
+      {
+        "hwnd": 5375720,
+        "class": "Static",
+        "text": "",
+        "ctrl_id": 65535,
+        "rect": {
+          "left": 736,
+          "top": 458,
+          "right": 1182,
+          "bottom": 524,
+          "width": 446,
+          "height": 66
+        },
+        "visible": true,
+        "enabled": true,
+        "children": []
+      },
+      {
+        "hwnd": 7276284,
+        "class": "Static",
+        "text": "请输入武器动画指针",
+        "ctrl_id": 1128,
+        "rect": {
+          "left": 745,
+          "top": 465,
+          "right": 1175,
+          "bottom": 516,
+          "width": 430,
+          "height": 51
+        },
+        "visible": true,
+        "enabled": true,
+        "children": []
+      },
+      {
+        "hwnd": 11142698,
+        "class": "Edit",
+        "text": "0080",
+        "ctrl_id": 1001,
+        "rect": {
+          "left": 736,
+          "top": 529,
+          "right": 1182,
+          "bottom": 552,
+          "width": 446,
+          "height": 23
+        },
+        "visible": true,
+        "enabled": true,
+        "children": []
+      },
+      {
+        "hwnd": 8849866,
+        "class": "Edit",
+        "text": "",
+        "ctrl_id": 1002,
+        "rect": {
+          "left": 736,
+          "top": 529,
+          "right": 1182,
+          "bottom": 552,
+          "width": 446,
+          "height": 23
+        },
+        "visible": false,
+        "enabled": true,
+        "children": []
+      },
+      {
+        "hwnd": 3541690,
+        "class": "Button",
+        "text": "确认输入(&O)",
+        "ctrl_id": 1,
+        "rect": {
+          "left": 841,
+          "top": 568,
+          "right": 945,
+          "bottom": 604,
+          "width": 104,
+          "height": 36
+        },
+        "visible": true,
+        "enabled": true,
+        "button_check_state": 0,
+        "children": []
+      },
+      {
+        "hwnd": 2951174,
+        "class": "Button",
+        "text": "取消(&C)",
+        "ctrl_id": 2,
+        "rect": {
+          "left": 974,
+          "top": 568,
+          "right": 1078,
+          "bottom": 604,
+          "width": 104,
+          "height": 36
+        },
+        "visible": true,
+        "enabled": true,
+        "button_check_state": 0,
+        "children": []
+      }
+    ]
+  }
+}

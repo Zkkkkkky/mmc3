@@ -1,0 +1,111 @@
+{
+  "schema_version": 1,
+  "validated": true,
+  "error": null,
+  "execution_record_count": 20,
+  "diff_count": 0,
+  "sha256_before": "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E",
+  "sha256_after": "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E",
+  "execution_records": [
+    {
+      "action_id": "789327c64f64e4034de0",
+      "status": "passed",
+      "result": "真实键盘逐项到达 99/99 项；最终选择数=0。"
+    },
+    {
+      "action_id": "e0b3ffc7103102351636",
+      "status": "passed",
+      "result": "逐项真实双击 99 项；捕获并取消新增子窗 0 次。"
+    },
+    {
+      "action_id": "7612ecb13d44430b4852",
+      "status": "passed",
+      "result": "逐项真实右键 99 项；实际菜单 0 次。"
+    },
+    {
+      "action_id": "821c56cfc4524df626b2",
+      "status": "passed",
+      "result": "真实焦点执行 Home/Down；最终选择数=0。"
+    },
+    {
+      "action_id": "05500e8ebe3d60ba946e",
+      "status": "passed",
+      "result": "切离所在页后隐藏，返回后恢复可见。"
+    },
+    {
+      "action_id": "4c8ce2da59033d7b0ccf",
+      "status": "passed",
+      "result": "真实键盘逐项到达 16/16 项；最终选择数=0。"
+    },
+    {
+      "action_id": "4ba4f4ecad8b512ac82d",
+      "status": "passed",
+      "result": "逐项真实双击 16 项；捕获并取消新增子窗 0 次。"
+    },
+    {
+      "action_id": "e568dc3bfc351e305042",
+      "status": "passed",
+      "result": "逐项真实右键 16 项；实际菜单 0 次。"
+    },
+    {
+      "action_id": "552bc5d99601380326ff",
+      "status": "passed",
+      "result": "真实焦点执行 Home/Down；最终选择数=0。"
+    },
+    {
+      "action_id": "a4ad4636f325d2e5a3e7",
+      "status": "passed",
+      "result": "切离所在页后隐藏，返回后恢复可见。"
+    },
+    {
+      "action_id": "eac79fada588a0753ce1",
+      "status": "passed",
+      "result": "真实键盘逐项到达 24/24 项；最终选择数=0。"
+    },
+    {
+      "action_id": "ac836c55ec713aa0e94e",
+      "status": "passed",
+      "result": "逐项真实双击 24 项；捕获并取消新增子窗 0 次。"
+    },
+    {
+      "action_id": "445e1ee2630710ef12f5",
+      "status": "passed",
+      "result": "逐项真实右键 24 项；实际菜单 0 次。"
+    },
+    {
+      "action_id": "88017b1053595478149c",
+      "status": "passed",
+      "result": "真实焦点执行 Home/Down；最终选择数=0。"
+    },
+    {
+      "action_id": "45a90b05ff37d2a17f40",
+      "status": "passed",
+      "result": "切离所在页后隐藏，返回后恢复可见。"
+    },
+    {
+      "action_id": "9a31509b820eb52cf6e9",
+      "status": "passed",
+      "result": "真实键盘逐项到达 99/99 项；最终选择数=0。"
+    },
+    {
+      "action_id": "6d4ef62901b70885a919",
+      "status": "passed",
+      "result": "逐项真实双击 99 项；捕获并取消新增子窗 0 次。"
+    },
+    {
+      "action_id": "3efc86256c1783da60ae",
+      "status": "passed",
+      "result": "逐项真实右键 99 项；实际菜单 0 次。"
+    },
+    {
+      "action_id": "7fd70a63ee6acb61c98e",
+      "status": "passed",
+      "result": "真实焦点执行 Home/Down；最终选择数=0。"
+    },
+    {
+      "action_id": "a685c8c7dc378b1f21b7",
+      "status": "passed",
+      "result": "切离所在页后隐藏，返回后恢复可见。"
+    }
+  ]
+}

@@ -1,0 +1,307 @@
+{
+  "schema_version": 1,
+  "validated": true,
+  "error": null,
+  "execution_record_count": 16,
+  "diff_count": 0,
+  "sha256_before": "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E",
+  "sha256_after": "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E",
+  "observations": [
+    {
+      "control_id": 2510,
+      "text": "上传图标",
+      "path": [
+        5,
+        25,
+        4
+      ],
+      "action": "right_click_and_state",
+      "right_click_menu": false,
+      "hidden_on_tab_x": 86,
+      "activators": []
+    },
+    {
+      "control_id": 2510,
+      "text": "上传图标",
+      "path": [
+        5,
+        25,
+        4
+      ],
+      "action": "keyboard_activate",
+      "focused": true,
+      "database_alive": true,
+      "check_before": 0,
+      "check_after": 0,
+      "new_windows": [
+        {
+          "title": "打开图片",
+          "class": "#32770"
+        }
+      ],
+      "activators": []
+    },
+    {
+      "control_id": 2510,
+      "text": "上传图标",
+      "path": [
+        5,
+        25,
+        4
+      ],
+      "action": "left_click",
+      "focused": null,
+      "database_alive": true,
+      "check_before": 0,
+      "check_after": 0,
+      "new_windows": [
+        {
+          "title": "打开图片",
+          "class": "#32770"
+        }
+      ],
+      "activators": []
+    },
+    {
+      "control_id": 2550,
+      "text": "规律",
+      "path": [
+        5,
+        3
+      ],
+      "action": "right_click_and_state",
+      "right_click_menu": false,
+      "hidden_on_tab_x": 14,
+      "activators": []
+    },
+    {
+      "control_id": 2550,
+      "text": "规律",
+      "path": [
+        5,
+        3
+      ],
+      "action": "keyboard_activate",
+      "focused": true,
+      "database_alive": true,
+      "check_before": 0,
+      "check_after": 0,
+      "new_windows": [
+        {
+          "title": "规律",
+          "class": "WTWindow"
+        }
+      ],
+      "activators": []
+    },
+    {
+      "control_id": 2550,
+      "text": "规律",
+      "path": [
+        5,
+        3
+      ],
+      "action": "left_click",
+      "focused": null,
+      "database_alive": true,
+      "check_before": 0,
+      "check_after": 0,
+      "new_windows": [
+        {
+          "title": "规律",
+          "class": "WTWindow"
+        }
+      ],
+      "activators": []
+    },
+    {
+      "control_id": 2560,
+      "text": "代码编辑",
+      "path": [
+        5,
+        2
+      ],
+      "action": "right_click_and_state",
+      "right_click_menu": false,
+      "hidden_on_tab_x": 14,
+      "activators": []
+    },
+    {
+      "control_id": 2560,
+      "text": "代码编辑",
+      "path": [
+        5,
+        2
+      ],
+      "action": "keyboard_activate",
+      "focused": true,
+      "database_alive": true,
+      "check_before": 0,
+      "check_after": 0,
+      "new_windows": [
+        {
+          "title": "请输入：",
+          "class": "#32770"
+        }
+      ],
+      "activators": []
+    },
+    {
+      "control_id": 2560,
+      "text": "代码编辑",
+      "path": [
+        5,
+        2
+      ],
+      "action": "left_click",
+      "focused": null,
+      "database_alive": true,
+      "check_before": 0,
+      "check_after": 0,
+      "new_windows": [
+        {
+          "title": "请输入：",
+          "class": "#32770"
+        }
+      ],
+      "activators": []
+    },
+    {
+      "control_id": 2600,
+      "text": "0",
+      "path": [
+        5,
+        23,
+        0
+      ],
+      "action": "right_click_and_state",
+      "right_click_menu": false,
+      "hidden_on_tab_x": 86,
+      "activators": []
+    },
+    {
+      "control_id": 2600,
+      "text": "0",
+      "path": [
+        5,
+        23,
+        0
+      ],
+      "action": "keyboard_activate",
+      "focused": true,
+      "database_alive": true,
+      "check_before": 0,
+      "check_after": 0,
+      "new_windows": [
+        {
+          "title": "机体特技",
+          "class": "WTWindow"
+        }
+      ],
+      "activators": []
+    },
+    {
+      "control_id": 2600,
+      "text": "0",
+      "path": [
+        5,
+        23,
+        0
+      ],
+      "action": "left_click",
+      "focused": null,
+      "database_alive": true,
+      "check_before": 0,
+      "check_after": 0,
+      "new_windows": [
+        {
+          "title": "机体特技",
+          "class": "WTWindow"
+        }
+      ],
+      "activators": []
+    }
+  ],
+  "execution_records": [
+    {
+      "action_id": "5b3615a8385d43678ca2",
+      "status": "passed",
+      "result": "执行右键路径；可见菜单=False；条件记录链=[]。"
+    },
+    {
+      "action_id": "7d68261d26eed1ab624e",
+      "status": "passed",
+      "result": "切换到页签坐标 86 后隐藏；返回后可见且启用=True。"
+    },
+    {
+      "action_id": "5910085af378e34277a1",
+      "status": "passed",
+      "result": "焦点=True；数据库仍存在=True；选中状态 0->0；新增窗口=[{'title': '打开图片', 'class': '#32770'}]；条件记录链=[]。"
+    },
+    {
+      "action_id": "64958b1ae1a6eae8d39a",
+      "status": "passed",
+      "result": "焦点=None；数据库仍存在=True；选中状态 0->0；新增窗口=[{'title': '打开图片', 'class': '#32770'}]；条件记录链=[]。"
+    },
+    {
+      "action_id": "14181b69233b58226cf7",
+      "status": "passed",
+      "result": "执行右键路径；可见菜单=False；条件记录链=[]。"
+    },
+    {
+      "action_id": "fe41705678ee492eccdc",
+      "status": "passed",
+      "result": "切换到页签坐标 14 后隐藏；返回后可见且启用=True。"
+    },
+    {
+      "action_id": "d8921a69f66a147aa68d",
+      "status": "passed",
+      "result": "焦点=True；数据库仍存在=True；选中状态 0->0；新增窗口=[{'title': '规律', 'class': 'WTWindow'}]；条件记录链=[]。"
+    },
+    {
+      "action_id": "1ca3670a1f974824f7aa",
+      "status": "passed",
+      "result": "焦点=None；数据库仍存在=True；选中状态 0->0；新增窗口=[{'title': '规律', 'class': 'WTWindow'}]；条件记录链=[]。"
+    },
+    {
+      "action_id": "57ab666cd2f1212f0130",
+      "status": "passed",
+      "result": "执行右键路径；可见菜单=False；条件记录链=[]。"
+    },
+    {
+      "action_id": "adb98d7afef8758a3abb",
+      "status": "passed",
+      "result": "切换到页签坐标 14 后隐藏；返回后可见且启用=True。"
+    },
+    {
+      "action_id": "1f5eada633c4cc0a0707",
+      "status": "passed",
+      "result": "焦点=True；数据库仍存在=True；选中状态 0->0；新增窗口=[{'title': '请输入：', 'class': '#32770'}]；条件记录链=[]。"
+    },
+    {
+      "action_id": "ba3e2dba7678d3e4f9bf",
+      "status": "passed",
+      "result": "焦点=None；数据库仍存在=True；选中状态 0->0；新增窗口=[{'title': '请输入：', 'class': '#32770'}]；条件记录链=[]。"
+    },
+    {
+      "action_id": "eff85d8513146873d358",
+      "status": "passed",
+      "result": "执行右键路径；可见菜单=False；条件记录链=[]。"
+    },
+    {
+      "action_id": "72a0e3d5fe33ae09add6",
+      "status": "passed",
+      "result": "切换到页签坐标 86 后隐藏；返回后可见且启用=True。"
+    },
+    {
+      "action_id": "84248559e59775b72cdc",
+      "status": "passed",
+      "result": "焦点=True；数据库仍存在=True；选中状态 0->0；新增窗口=[{'title': '机体特技', 'class': 'WTWindow'}]；条件记录链=[]。"
+    },
+    {
+      "action_id": "4d464513dc08b6d354f8",
+      "status": "passed",
+      "result": "焦点=None；数据库仍存在=True；选中状态 0->0；新增窗口=[{'title': '机体特技', 'class': 'WTWindow'}]；条件记录链=[]。"
+    }
+  ]
+}

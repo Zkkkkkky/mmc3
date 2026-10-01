@@ -24,7 +24,7 @@ from fc_editor.unit_package import UnitPackage
 from .pages import ProjectPage, page_title
 from .beginner_ui import collapsible_details, task_hint
 from .chr_widget import ChrGraphicsWidget
-from .unit_packages import affected_unit_ids, apply_unit_package, package_from_project
+from .unit_packages import apply_unit_package, package_from_project
 from .workspace import default_export_path, writable_output_path
 
 
@@ -36,7 +36,7 @@ class UnitImportPage(ProjectPage):
         layout = QVBoxLayout(self)
         title, subtitle = page_title(
             "机体导入与复制",
-            "用 .dcunit 文件交换完整的机体数值记录和名称引用；写入前会显示共享记录影响范围。",
+            "用 .dcunit 文件交换完整的机体数值记录和名称引用；重复属性指针会自动拆分。",
         )
         layout.addWidget(title)
         layout.addWidget(subtitle)
@@ -197,17 +197,10 @@ class UnitImportPage(ProjectPage):
             self.impact.setText("尚未载入ROM。")
             return
         target_id = self._selected_id(self.target_unit)
-        affected = affected_unit_ids(self.project, target_id)
-        ids = "、".join(f"${unit_id:02X}" for unit_id in affected)
-        if len(affected) > 1:
-            self.impact.setText(
-                f"警告：目标 ${target_id:02X} 的16字节记录由 {ids} 共用；"
-                "覆盖数值会同时影响这些ID。名称引用只修改目标ID。"
-            )
-        else:
-            self.impact.setText(
-                f"目标 ${target_id:02X} 使用独立记录；名称与数值均只影响该ID。"
-            )
+        self.impact.setText(
+            f"目标 ${target_id:02X}：名称与16字节数值均只修改该ID；"
+            "若当前ROM使用重复属性指针，写入时自动拆分。"
+        )
 
     def use_selected_unit(self) -> None:
         if self.project is None:
@@ -342,11 +335,9 @@ class UnitImportPage(ProjectPage):
         try:
             pending_draft = self.graphics.pending_draft_tile_bytes()
             target_id = self._selected_id(self.target_unit)
-            affected = affected_unit_ids(self.project, target_id)
-            ids = "、".join(f"${unit_id:02X}" for unit_id in affected)
             question = (
                 f"将“{self.loaded_package.label}”覆盖到机体 ${target_id:02X}。\n\n"
-                f"数值记录影响：{ids}\n名称引用影响：${target_id:02X}\n\n"
+                f"数值记录与名称引用均只影响：${target_id:02X}\n\n"
                 f"附加资源：{len(self.loaded_package.assets)} 项\n\n"
                 "所有内容会作为一个事务写入并可一次撤销。是否继续？"
             )
@@ -362,7 +353,7 @@ class UnitImportPage(ProjectPage):
                     self.project.set_chr_range(draft_tile, draft_bytes)
             self.graphics.refresh()
             self.project_changed.emit(
-                f"已将机体包覆盖到 ${target_id:02X}（影响 {ids}）"
+                f"已将机体包覆盖到 ${target_id:02X}"
             )
         except Exception as error:
             self.show_error(error)

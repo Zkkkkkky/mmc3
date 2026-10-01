@@ -1,0 +1,39 @@
+[    0.1s] launched pid=1700
+[    0.1s] === stage A: launcher -> main window (no ROM) ===
+[    3.1s] top window: {'hwnd': 18483898, 'title': 'SRW2�޸���V1.5', 'class': 'WTWindow', 'rect': {'left': 571, 'top': 244, 'right': 1346, 'bottom': 843, 'width': 775, 'height': 599}, 'pid': 1700}
+[    4.0s] dump A01_������: title='SRW2�޸���V1.5' class='WTWindow' controls=8 shot=ok
+[   13.3s] main window hwnd=10553592 title='SRW2���ݰ��޸���V1.0'
+[   14.8s] dump A02_������_δ����ROM: title='SRW2���ݰ��޸���V1.0' class='WTWindow' controls=63 shot=ok
+[   22.8s] === stage LOAD: load ROM copy only ===
+[   23.7s] dump LOAD01_��ROM�Ի���: title='���ļ�' class='#32770' controls=49 shot=ok
+[   24.2s] open dialog confirmed gone=True
+[   31.7s] ROM loaded without main-window sweep, title='SRW2���ݰ��޸���V1.0��D:\\GIT\\mmc3\\output\\build\\legacy-ui-probe\\error-message-controls.nes'
+[   33.0s] dump LOAD02_������_�����: title='SRW2���ݰ��޸���V1.0��D:\\GIT\\mmc3\\output\\build\\legacy-ui-probe\\error-message-controls.nes' class='WTWindow' controls=63 shot=ok
+[   33.0s] === stage ERRORMESSAGECONTROLS ===
+[   33.3s] �浵�༭����: hwnd=16059072 title='�浵�༭����'
+[   33.9s] launched pid=10404
+[   33.9s] === stage A: launcher -> main window (no ROM) ===
+[   36.9s] top window: {'hwnd': 18746006, 'title': 'SRW2�޸���V1.5', 'class': 'WTWindow', 'rect': {'left': 571, 'top': 244, 'right': 1346, 'bottom': 843, 'width': 775, 'height': 599}, 'pid': 10404}
+[   38.2s] dump A01_������: title='SRW2�޸���V1.5' class='WTWindow' controls=8 shot=ok
+[   47.8s] main window hwnd=10226152 title='SRW2���ݰ��޸���V1.0'
+[   49.3s] dump A02_������_δ����ROM: title='SRW2���ݰ��޸���V1.0' class='WTWindow' controls=63 shot=ok
+[   57.3s] === stage LOAD: load ROM copy only ===
+[   58.5s] dump LOAD01_��ROM�Ի���: title='���ļ�' class='#32770' controls=49 shot=ok
+[   59.0s] open dialog confirmed gone=True
+[   66.5s] ROM loaded without main-window sweep, title='SRW2���ݰ��޸���V1.0��D:\\GIT\\mmc3\\output\\build\\legacy-ui-probe\\error-message-controls.nes'
+[   67.4s] dump LOAD02_������_�����: title='SRW2���ݰ��޸���V1.0��D:\\GIT\\mmc3\\output\\build\\legacy-ui-probe\\error-message-controls.nes' class='WTWindow' controls=63 shot=ok
+[   67.7s] �浵�༭����: hwnd=12716602 title='�浵�༭����'
+[   68.2s] launched pid=7552
+[   68.2s] === stage A: launcher -> main window (no ROM) ===
+[   71.2s] top window: {'hwnd': 16321154, 'title': 'SRW2�޸���V1.5', 'class': 'WTWindow', 'rect': {'left': 571, 'top': 244, 'right': 1346, 'bottom': 843, 'width': 775, 'height': 599}, 'pid': 7552}
+[   72.2s] dump A01_������: title='SRW2�޸���V1.5' class='WTWindow' controls=8 shot=ok
+[   80.6s] main window hwnd=10094948 title='SRW2���ݰ��޸���V1.0'
+[   82.5s] dump A02_������_δ����ROM: title='SRW2���ݰ��޸���V1.0' class='WTWindow' controls=63 shot=ok
+[   90.5s] === stage LOAD: load ROM copy only ===
+[   91.7s] dump LOAD01_��ROM�Ի���: title='���ļ�' class='#32770' controls=49 shot=ok
+[   92.2s] open dialog confirmed gone=True
+[   99.2s] ROM loaded without main-window sweep, title='SRW2���ݰ��޸���V1.0��D:\\GIT\\mmc3\\output\\build\\legacy-ui-probe\\error-message-controls.nes'
+[  100.4s] dump LOAD02_������_�����: title='SRW2���ݰ��޸���V1.0��D:\\GIT\\mmc3\\output\\build\\legacy-ui-probe\\error-message-controls.nes' class='WTWindow' controls=63 shot=ok
+[  100.7s] �浵�༭����: hwnd=17042108 title='�浵�༭����'
+[  101.3s] ERRORMESSAGECONTROLS complete: 3/3 actions, zero ROM diff
+[  101.5s] terminated owned pid=7552

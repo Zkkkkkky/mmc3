@@ -23,7 +23,12 @@ from PySide6.QtGui import QImage
 from PySide6.QtWidgets import QApplication, QDialog, QMessageBox
 
 from dc_modifier.app import DEFAULT_ROM
-from dc_modifier.database_graphics import read_unit_appearance, render_unit_battle_preview
+from dc_modifier.database_graphics import (
+    decode_unit_body_script,
+    decode_unit_fragment_script,
+    read_unit_appearance,
+    render_unit_battle_preview,
+)
 from dc_modifier.legacy_windows import DatabaseDialog
 from dc_modifier.unit_appearance_dialog import UnitAppearanceDialog, WORK_PALETTE
 from dc_modifier.unit_icon_dialog import UnitIconBindingDialog
@@ -86,15 +91,17 @@ def main() -> int:
 
     # F-026 is a byte-ID capacity boundary: every $01-$FF slot is already listed.
     before_add = bytes(project.working)
-    page.add_button.click()
-    require(checks, "新增机体按钮保持禁用", not page.add_button.isEnabled())
+    with patch("dc_modifier.legacy_windows.QMessageBox.information") as information:
+        page.add_button.click()
+    require(checks, "新增机体容量诊断入口可点击", page.add_button.isEnabled())
+    require(checks, "新增机体容量诊断已显示", information.call_count == 1)
     require(
         checks,
         "新增机体提示说明255槽容量边界",
         "$01—$FF" in page.add_button.toolTip()
         and "第 256 个 ID" in page.add_button.toolTip(),
     )
-    require(checks, "点击禁用按钮不写ROM", bytes(project.working) == before_add)
+    require(checks, "点击容量诊断不写ROM", bytes(project.working) == before_add)
 
     # F-023: exercise the actual jump button and ensure the outer transaction
     # keeps the staged unit form while switching to the weapon page.
@@ -215,35 +222,67 @@ def main() -> int:
     require(checks, "上传结果另存重开后碎片一致", reopened.chr_tile_pixels(reopened_fragment_bank * 64 + 2) == (2,) * 64)
     require(checks, "图标绑定另存重开一致", reopened.record_bytes(UNIT_ID)[2] == 0xBC)
 
-    # Drive both real clear buttons.  The inner dialogs commit to the outer
-    # database session, which is still reversible by the database Cancel.
-    def accept_clear(appearance: UnitAppearanceDialog) -> int:
-        kind = "body" if appearance.preview_tabs.currentIndex() == 0 else "fragment"
-        appearance._clear_library(kind)
-        appearance.accept()
-        return appearance.result()
-
+    # Drive both real main-page clear buttons.  They clear only the current
+    # scripts' referenced tiles and remain reversible by Database Cancel.
+    before_clear = read_unit_appearance(project, UNIT_ID)
+    body_references = {
+        placement.tile_index
+        for placement in decode_unit_body_script(
+            before_clear.body_script, len(before_clear.secondary_banks) * 64
+        )
+    }
+    fragment_references = {
+        placement.tile_index
+        for placement in decode_unit_fragment_script(before_clear.fragment_script)
+    }
+    body_before = {
+        local: project.chr_tile_pixels(
+            before_clear.secondary_banks[local // 64] * 64 + local % 64
+        )
+        for local in range(len(before_clear.secondary_banks) * 64)
+    }
+    fragment_first = before_clear.primary_bank & 0xFE
+    fragment_before = {
+        local: project.chr_tile_pixels(fragment_first * 64 + local)
+        for local in range(128)
+    }
     with (
-        patch.object(UnitAppearanceDialog, "exec", accept_clear),
         patch(
-            "dc_modifier.unit_appearance_dialog.QMessageBox.question",
+            "dc_modifier.legacy_windows.QMessageBox.question",
             return_value=QMessageBox.StandardButton.Yes,
         ),
         patch(
-            "dc_modifier.legacy_windows.QTimer.singleShot",
-            return_value=None,
+            "dc_modifier.unit_appearance_dialog.QMessageBox.warning",
+            side_effect=lambda _parent, _title, message: warnings.append(message),
         ),
+        patch.object(UnitAppearanceDialog, "exec") as puzzle_exec,
     ):
         page.body_clear_button.click()
         page.fragment_clear_button.click()
+    require(checks, "主页清除不打开拼图窗口", not puzzle_exec.called)
     cleared_appearance = read_unit_appearance(project, UNIT_ID)
     cleared_body_bank = cleared_appearance.configuration[8]
     cleared_fragment_bank = cleared_appearance.configuration[7] & 0xFE
-    require(checks, "清除机体按钮清零当前主体图库", all(project.chr_tile_pixels(cleared_body_bank * 64 + index) == (0,) * 64 for index in range(64)))
-    require(checks, "清除碎片按钮清零两个碎片图库", all(project.chr_tile_pixels(cleared_fragment_bank * 64 + index) == (0,) * 64 for index in range(128)))
+    require(checks, "清除机体按钮只清脚本引用图块", all(
+        project.chr_tile_pixels(
+            cleared_appearance.secondary_banks[local // 64] * 64 + local % 64
+        ) == ((0,) * 64 if local in body_references else original)
+        for local, original in body_before.items()
+    ))
+    require(checks, "清除碎片按钮只清脚本引用图块", all(
+        project.chr_tile_pixels(cleared_fragment_bank * 64 + local)
+        == ((0,) * 64 if local in fragment_references else original)
+        for local, original in fragment_before.items()
+    ))
+    require(checks, "清除机体按钮同步置空主体拼图脚本", cleared_appearance.body_script == b"\xFF")
+    require(checks, "清除碎片按钮同步置空碎片拼图脚本", cleared_appearance.fragment_script == bytes.fromhex("00 F0 00 00 FF"))
     project.save_as(CLEARED, make_backup=False)
     cleared_reopened = RomProject.load(CLEARED)
-    require(checks, "清除结果另存重开一致", all(cleared_reopened.chr_tile_pixels(cleared_fragment_bank * 64 + index) == (0,) * 64 for index in range(128)))
+    require(checks, "清除结果另存重开一致", all(
+        cleared_reopened.chr_tile_pixels(cleared_fragment_bank * 64 + local)
+        == ((0,) * 64 if local in fragment_references else original)
+        for local, original in fragment_before.items()
+    ))
 
     dialog.reject()
     require(checks, "数据库取消逐字节回滚全部动作", bytes(project.working) == expanded_baseline)

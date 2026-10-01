@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "scope": "isolated reference executable; descendant dialogs cancelled; no save",
+  "records": [
+    {
+      "state": "武器修改",
+      "control_id": 2530,
+      "command": "插入",
+      "status": "menu_not_found",
+      "tab_x": 185
+    },
+    {
+      "state": "武器修改",
+      "control_id": 2530,
+      "command": "编辑",
+      "status": "menu_not_found",
+      "tab_x": 185
+    },
+    {
+      "state": "机体修改",
+      "control_id": 120,
+      "command": "导出机体",
+      "status": "menu_not_found",
+      "tab_x": 17
+    },
+    {
+      "state": "人物修改",
+      "control_id": 630,
+      "command": "导出人物",
+      "status": "menu_not_found",
+      "tab_x": 101
+    }
+  ]
+}

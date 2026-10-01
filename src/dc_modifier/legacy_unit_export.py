@@ -53,7 +53,10 @@ class LegacyUnitExportResult:
 def legacy_unit_export_name(project, unit_id: int) -> str:
     """Return the raw legacy name, preserving empty slots 246--255."""
 
-    text = concise_dc_text(project.unit_name_record_bytes(unit_id))
+    text = concise_dc_text(
+        project.unit_name_record_bytes(unit_id),
+        text_table=project.dc_text_table(),
+    )
     return "".join("_" if character in _INVALID_FILENAME_CHARACTERS else character for character in text)
 
 
@@ -217,6 +220,24 @@ def legacy_unit_export_bitmaps(project, unit_id: int) -> dict[str, bytes]:
         "图标2": _legacy_icon_image(project, unit_id, icon_material_colors),
     }
     return {kind: _image_to_bmp(images[kind]) for kind in LEGACY_UNIT_EXPORT_SUFFIXES}
+
+
+def export_legacy_unit_bitmaps_for_id(
+    project,
+    destination: Path,
+    unit_id: int,
+) -> tuple[Path, ...]:
+    """Export one selected unit using the reference editor's five-BMP layout."""
+
+    name = legacy_unit_export_name(project, unit_id)
+    directory = Path(destination) / f"{unit_id:03d}：{name}"
+    directory.mkdir(parents=True, exist_ok=True)
+    written: list[Path] = []
+    for kind, payload in legacy_unit_export_bitmaps(project, unit_id).items():
+        path = directory / f"{name}[{kind}].bmp"
+        path.write_bytes(payload)
+        written.append(path)
+    return tuple(written)
 
 
 def export_legacy_unit_bitmaps(

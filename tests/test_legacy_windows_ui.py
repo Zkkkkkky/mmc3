@@ -11,7 +11,10 @@ os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import (
+    QAbstractSpinBox,
     QApplication,
+    QCheckBox,
+    QComboBox,
     QLineEdit,
     QListWidget,
     QMessageBox,
@@ -20,6 +23,11 @@ from PySide6.QtWidgets import (
 )
 
 from dc_modifier.app import DEFAULT_ROM
+from dc_modifier.database_graphics import (
+    decode_unit_body_script,
+    read_all_unit_appearances,
+    read_unit_appearance,
+)
 from dc_modifier.legacy_windows import DatabaseDialog, ScenarioDialog
 from dc_modifier.legacy_text_pages import LegacyScenarioEventsPage
 from fc_rom_editor_core import RomProject
@@ -76,6 +84,43 @@ class LegacyWindowTests(QtTestCase):
         )
         self.assertEqual(dialog.ok_button.text(), "确定")
         self.assertEqual(dialog.cancel_button.text(), "取消")
+        self.assertFalse(hasattr(dialog, "memory_button"))
+        self.assertEqual(len(dialog._database_memory_panels), 6)
+        self.assertEqual(
+            {panel.module for panel in dialog._database_memory_panels.values()},
+            set(DatabaseDialog.TAB_LABELS),
+        )
+
+    def test_database_memory_is_split_into_each_lazy_module(self) -> None:
+        dialog = self._show(DatabaseDialog(self.project, lazy=True))
+        self.assertEqual(set(dialog._database_memory_panels), {0})
+        dialog.tabs.setCurrentIndex(1)
+        self.application.processEvents()
+        self.assertEqual(set(dialog._database_memory_panels), {0, 1})
+        self.assertEqual(dialog._database_memory_panels[1].module, "人物修改")
+        self.assertIn("人物", dialog._database_memory_panels[1].summary.toolTip())
+        self.assertEqual(len(dialog.pages), 2)
+
+    def test_lazy_database_populates_each_tab_on_first_visit(self) -> None:
+        dialog = self._show(DatabaseDialog(self.project, lazy=True))
+        self.assertEqual(len(dialog.pages), 1)
+        self.assertEqual(len(dialog._lazy_tab_placeholders), 5)
+        self.assertNotIn(dialog.character_page, dialog._loaded_pages)
+        self.assertEqual(len(dialog.pages), 2)
+        self.assertEqual(dialog.character_page.records.count(), 0)
+        dialog.tabs.setCurrentIndex(1)
+        self.application.processEvents()
+        self.assertIn(dialog.character_page, dialog._loaded_pages)
+        self.assertGreater(dialog.character_page.records.count(), 0)
+        self.assertEqual(len(dialog._lazy_tab_placeholders), 4)
+
+    def test_lazy_scenario_populates_hidden_editor_on_first_visit(self) -> None:
+        dialog = self._show(ScenarioDialog(self.project, lazy=True))
+        self.assertNotIn(dialog.story_page, dialog._loaded_pages)
+        dialog.tabs.setCurrentIndex(4)
+        self.application.processEvents()
+        self.assertIn(dialog.story_page, dialog._loaded_pages)
+        self.assertGreater(dialog.story_overview_list.count(), 0)
 
     def test_database_record_lists_support_right_click_copy_and_paste(self) -> None:
         dialog = self._show(DatabaseDialog(self.project))
@@ -106,6 +151,51 @@ class LegacyWindowTests(QtTestCase):
         self.assertEqual(self.project.get_unit_weapons(2), source_weapons)
         self.assertEqual(page.current_id, 2)
 
+    def test_unit_copy_pastes_complete_appearance_and_survives_attribute_edit(self) -> None:
+        dialog = self._show(DatabaseDialog(self.project))
+        page = dialog.unit_page.controller
+        source_id = 0x25
+        target_id = 0x26
+        appearances_before = read_all_unit_appearances(self.project)
+        source = appearances_before[source_id - 1]
+
+        self.assertTrue(page.select_record_id(source_id))
+        page.copy_selected_record()
+        self.assertTrue(page.select_record_id(target_id))
+        page.paste_copied_record()
+
+        target = read_unit_appearance(self.project, target_id)
+        self.assertEqual(target.configuration, source.configuration)
+        self.assertEqual(target.body_script, source.body_script)
+        self.assertEqual(target.fragment_script, source.fragment_script)
+        appearances_after = read_all_unit_appearances(self.project)
+        self.assertEqual(
+            [
+                unit_id
+                for unit_id, (before, after) in enumerate(
+                    zip(appearances_before, appearances_after), start=1
+                )
+                if (
+                    before.configuration != after.configuration
+                    or before.body_script != after.body_script
+                    or before.fragment_script != after.fragment_script
+                )
+            ],
+            [target_id],
+        )
+
+        strength = page.fields["strength"]
+        strength.setValue(strength.value() + 1)
+        page.apply_record()
+        dialog.unit_page._refresh_visuals()
+        after_attribute = read_unit_appearance(self.project, target_id)
+        self.assertEqual(after_attribute.configuration, source.configuration)
+        self.assertEqual(after_attribute.body_script, source.body_script)
+        self.assertEqual(after_attribute.fragment_script, source.fragment_script)
+        self.assertTrue(dialog.unit_page.appearance_type.isEnabled())
+        self.assertIsNotNone(dialog.unit_page.body_preview.pixmap())
+        self.assertFalse(dialog.unit_page.body_preview.pixmap().isNull())
+
     def test_database_names_can_be_edited_directly_with_shared_warning(self) -> None:
         dialog = self._show(DatabaseDialog(self.project))
         cases = (
@@ -129,9 +219,45 @@ class LegacyWindowTests(QtTestCase):
         dialog = self._show(DatabaseDialog(self.project))
         unit = dialog.unit_page.controller
         character = dialog.character_page
+        weapon = dialog.weapon_page
         self.assertTrue(unit.supports_record_export())
         self.assertTrue(character.supports_record_export())
-        self.assertFalse(dialog.weapon_page.supports_record_export())
+        self.assertFalse(weapon.supports_record_export())
+        character_menu, character_actions = dialog._build_reference_record_menu(
+            character,
+            copy_label="复制人物",
+            paste_label="粘贴人物",
+            export_label="导出人物",
+        )
+        self.addCleanup(character_menu.deleteLater)
+        self.assertEqual(
+            [action.text() for action in character_menu.actions()],
+            ["复制人物", "粘贴人物", "导出人物"],
+        )
+        self.assertFalse(character_actions["paste"].isEnabled())
+        character.copy_selected_record()
+        character.select_record_id(2)
+        copied_character_menu, copied_character_actions = (
+            dialog._build_reference_record_menu(
+                character,
+                copy_label="复制人物",
+                paste_label="粘贴人物",
+                export_label="导出人物",
+            )
+        )
+        self.addCleanup(copied_character_menu.deleteLater)
+        self.assertTrue(copied_character_actions["paste"].isEnabled())
+        weapon_menu, weapon_actions = dialog._build_reference_record_menu(
+            weapon,
+            copy_label="复制武器",
+            paste_label="粘贴武器",
+        )
+        self.addCleanup(weapon_menu.deleteLater)
+        self.assertEqual(
+            [action.text() for action in weapon_menu.actions()],
+            ["复制武器", "粘贴武器"],
+        )
+        self.assertNotIn("export", weapon_actions)
         with tempfile.TemporaryDirectory() as directory:
             unit_path = Path(directory) / "current.dcunit"
             with patch(
@@ -342,6 +468,14 @@ class LegacyWindowTests(QtTestCase):
         dialog = self._show(DatabaseDialog(self.project))
         page = dialog.unit_page
         self.assertTrue(page.records.item(0).text().startswith("[01]001: "))
+        self.assertEqual(page.records.item(0x26 - 1).text(), "[26]038:")
+        self.assertNotIn("未分配机体槽", page.records.item(0x26 - 1).text())
+        page.controller.select_record_id(0x26)
+        self.application.processEvents()
+        self.assertEqual(page.name_text.text(), "")
+        self.assertEqual(page.name_text.placeholderText(), "-")
+        self.assertNotIn("未分配", page.name_text.text())
+        self.assertFalse(page.controller.apply_button.isEnabled())
         self.assertIn("background: #000000", page.body_preview.styleSheet())
         self.assertTrue(page.name_text.isVisible())
         self.assertTrue(page.body_layout_button.isEnabled())
@@ -357,6 +491,21 @@ class LegacyWindowTests(QtTestCase):
         )
         self.assertTrue(page.body_compress_upload.isChecked())
         self.assertTrue(page.fragment_compress_upload.isChecked())
+        self.assertTrue(page.body_auto_align_check.isChecked())
+        self.assertTrue(page.body_auto_align_check.isVisible())
+        self.assertEqual(
+            (page.body_auto_align_pixels.minimum(),
+             page.body_auto_align_pixels.maximum(),
+             page.body_auto_align_pixels.value()),
+            (1, 7, 3),
+        )
+        self.assertTrue(page.body_auto_align_pixels.isEnabled())
+        self.assertTrue(page.sync_shared_previews_check.isChecked())
+        self.assertTrue(page.sync_shared_previews_check.isVisible())
+        self.assertNotIn(
+            "调换图库",
+            {check.text() for check in page.findChildren(QCheckBox)},
+        )
         preview_right = page.body_preview.mapTo(
             page.graphics_group, page.body_preview.rect().topRight()
         ).x()
@@ -372,6 +521,28 @@ class LegacyWindowTests(QtTestCase):
             page.body_layout_button.geometry().y(),
             page.fragment_layout_button.geometry().y(),
         )
+        self.assertEqual(
+            page.body_compress_upload.geometry().y(),
+            page.fragment_compress_upload.geometry().y(),
+        )
+        self.assertEqual(
+            page.show_body_check.geometry().y(),
+            page.show_fragment_check.geometry().y(),
+        )
+        show_bottom = page.show_body_check.mapTo(
+            page.graphics_group, page.show_body_check.rect().bottomLeft()
+        ).y()
+        auto_top = page.body_auto_align_check.mapTo(
+            page.graphics_group, page.body_auto_align_check.rect().topLeft()
+        ).y()
+        auto_bottom = page.body_auto_align_check.mapTo(
+            page.graphics_group, page.body_auto_align_check.rect().bottomLeft()
+        ).y()
+        sync_top = page.sync_shared_previews_check.mapTo(
+            page.graphics_group, page.sync_shared_previews_check.rect().topLeft()
+        ).y()
+        self.assertLess(show_bottom, auto_top)
+        self.assertLess(auto_bottom, sync_top)
         self.assertTrue(page.icon_group.isVisible())
         self.assertFalse(page.appearance_summary.isVisible())
         self.assertTrue(page.appearance_type.isVisible())
@@ -385,7 +556,7 @@ class LegacyWindowTests(QtTestCase):
             page.appearance_bank_editors[1].currentText(),
             r"^\[[0-9A-F]{2}\]\d{3}: [0-9A-F]{6}$",
         )
-        self.assertGreaterEqual(page.icon_group.height(), 55)
+        self.assertEqual(page.icon_group.height(), 42)
         self.assertFalse(page.icon_bank.isVisible())
         self.assertFalse(page.icon_index.isVisible())
         self.assertFalse(page.icon_address.isVisible())
@@ -397,10 +568,22 @@ class LegacyWindowTests(QtTestCase):
             [page.icon_bank.itemData(index) for index in range(page.icon_bank.count())],
             [0x34, 0x35, 0x36, 0x3A, 0x3C, 0x3E, 0x40, 0x44, 0x46, 0x47, 0x48],
         )
-        self.assertTrue(page.copy_record_button.isVisible())
-        self.assertTrue(page.paste_record_button.isVisible())
-        self.assertTrue(page.export_record_button.isVisible())
-        self.assertTrue(page.import_record_button.isVisible())
+        self.assertFalse(hasattr(page, "copy_record_button"))
+        self.assertFalse(hasattr(page, "paste_record_button"))
+        self.assertFalse(hasattr(page, "export_record_button"))
+        self.assertFalse(hasattr(page, "import_record_button"))
+        context_menu, actions = page._create_unit_context_menu()
+        self.addCleanup(context_menu.deleteLater)
+        self.assertEqual(
+            [action.text() for action in context_menu.actions()],
+            ["复制机体", "粘贴机体", "导出机体", "清除机体", "清空全部"],
+        )
+        self.assertFalse(actions["paste"].isEnabled())
+        page.controller.copy_selected_record()
+        page.controller.select_record_id(2)
+        copied_menu, copied_actions = page._create_unit_context_menu()
+        self.addCleanup(copied_menu.deleteLater)
+        self.assertTrue(copied_actions["paste"].isEnabled())
         self.assertTrue(page.add_button.isEnabled())
         self.assertIn("$01—$FF", page.add_button.toolTip())
         self.assertIn("第 256 个 ID", page.add_button.toolTip())
@@ -416,14 +599,151 @@ class LegacyWindowTests(QtTestCase):
         self.assertNotIn("调整配色与图库…", button_texts)
         self.assertNotIn("原始图库、脚本与技术详情", button_texts)
         self.assertNotIn("名称引用与原始记录", button_texts)
-        self.assertIn("更改图标", button_texts)
-        self.assertIn("上传图标", button_texts)
-        self.assertEqual(page.icon_group.width(), 310)
-        self.assertEqual(page.icon_preview.width(), 48)
-        self.assertEqual(page.icon_preview.height(), 48)
-        self.assertEqual(page.edit_icon_button.width(), 92)
-        self.assertEqual(page.edit_icon_button.height(), 28)
+        self.assertIn("更改", button_texts)
+        self.assertIn("上传", button_texts)
+        self.assertEqual(page.icon_group.width(), 188)
+        self.assertEqual(page.icon_preview.width(), 30)
+        self.assertEqual(page.icon_preview.height(), 30)
+        self.assertEqual(page.edit_icon_button.width(), 46)
+        self.assertEqual(page.edit_icon_button.height(), 24)
+        self.assertIsNone(page.findChild(QComboBox, "unitPreviewMode"))
+        self.assertIn("#D5EBEF", page.styleSheet())
+        self.assertIn("#DEE7F2", page.styleSheet())
+        self.assertIn("#F8E2DD", page.styleSheet())
+        self.assertIn("QGroupBox#unitAttributesPanel QSpinBox", page.styleSheet())
+        self.assertIn("border:1px solid #86A7B1", page.styleSheet())
+        self.assertIn("border-radius:4px; font-weight:500", page.styleSheet())
+        self.assertIn(
+            "QToolButton#unitSpecialExpandButton { background:#F2F7F8",
+            page.styleSheet(),
+        )
+
+        palette_panel = page.findChild(QWidget, "unitPalettePanel")
+        appearance_panel = page.findChild(QWidget, "unitAppearancePanel")
+        visual_settings = page.findChild(QWidget, "unitVisualSettingsPanel")
+        self.assertIsNotNone(palette_panel)
+        self.assertIsNotNone(appearance_panel)
+        self.assertIsNotNone(visual_settings)
+        assert (
+            palette_panel is not None
+            and appearance_panel is not None
+            and visual_settings is not None
+        )
+        self.assertEqual(visual_settings.width(), 292)
+        self.assertEqual(palette_panel.width(), 94)
+        self.assertEqual(appearance_panel.width(), 175)
+        self.assertIs(palette_panel.parentWidget(), visual_settings)
+        self.assertIs(appearance_panel.parentWidget(), visual_settings)
         self.assertGreater(
+            appearance_panel.geometry().left(), palette_panel.geometry().right()
+        )
+        self.assertLessEqual(
+            appearance_panel.geometry().right(), visual_settings.contentsRect().right()
+        )
+        color_tops = [
+            button.mapTo(visual_settings, button.rect().topLeft()).y()
+            for button in page.appearance_color_buttons
+        ]
+        self.assertEqual(color_tops, sorted(color_tops))
+        self.assertTrue(all(
+            lower - upper >= 40
+            for upper, lower in zip(color_tops, color_tops[1:])
+        ))
+        self.assertGreaterEqual(
+            color_tops[-1] + page.appearance_color_buttons[-1].height(),
+            visual_settings.contentsRect().bottom() - 4,
+        )
+        appearance_controls = [
+            page.appearance_type,
+            page.appearance_bank_editors[1],
+            page.appearance_bank_editors[2],
+            page.appearance_bank_editors[0],
+        ]
+        appearance_tops = [
+            editor.mapTo(visual_settings, editor.rect().topLeft()).y()
+            for editor in appearance_controls
+        ]
+        self.assertTrue(all(
+            65 <= lower - upper <= 75
+            for upper, lower in zip(appearance_tops, appearance_tops[1:])
+        ))
+        self.assertGreaterEqual(
+            appearance_tops[-1] + appearance_controls[-1].height(),
+            visual_settings.contentsRect().bottom() - 4,
+        )
+        self.assertIn("#9CB7C1", page.styleSheet())
+        self.assertTrue(all(
+            button.size().toTuple() == (82, 25)
+            for button in (
+                page.body_upload_button,
+                page.fragment_upload_button,
+                page.body_clear_button,
+                page.fragment_clear_button,
+                page.body_layout_button,
+                page.fragment_layout_button,
+            )
+        ))
+        self.assertEqual(
+            page.body_import_offset.buttonSymbols(),
+            QAbstractSpinBox.ButtonSymbols.NoButtons,
+        )
+        self.assertEqual(
+            page.fragment_import_offset.buttonSymbols(),
+            QAbstractSpinBox.ButtonSymbols.NoButtons,
+        )
+        self.assertTrue(all(
+            button.size().toTuple() == (80, 22)
+            for button in page.weapon_jump_buttons
+        ))
+        self.assertEqual(page.body_upload_button.objectName(), "unitUploadButton")
+        self.assertEqual(page.body_clear_button.objectName(), "unitClearButton")
+        self.assertEqual(page.body_layout_button.objectName(), "unitNavigateButton")
+        import_panel = page.findChild(QWidget, "unitImportColumns")
+        import_outer = page.findChild(QWidget, "unitImportPanel")
+        self.assertIsNotNone(import_panel)
+        self.assertIsNotNone(import_outer)
+        assert (
+            import_panel is not None
+            and import_panel.layout() is not None
+            and import_outer is not None
+        )
+        self.assertIs(import_panel.parentWidget(), import_outer)
+        self.assertIs(page.icon_group.parentWidget(), import_outer)
+        self.assertEqual(import_outer.width(), 190)
+        self.assertEqual(import_panel.layout().verticalSpacing(), 5)
+        self.assertEqual(import_panel.layout().contentsMargins().top(), 2)
+        self.assertEqual(import_panel.layout().contentsMargins().bottom(), 2)
+        self.assertTrue(all(
+            import_panel.layout().rowStretch(row) == 1 for row in range(9)
+        ))
+        self.assertEqual(page.graphics_group.height(), 300)
+        with (
+            patch.object(page, "_clear_appearance_from_main") as direct_clear,
+            patch("dc_modifier.legacy_windows.UnitAppearanceDialog.exec") as puzzle_exec,
+        ):
+            page.body_clear_button.click()
+        direct_clear.assert_called_once_with("body")
+        puzzle_exec.assert_not_called()
+        self.assertEqual(
+            page.special_skill_expand_button.objectName(),
+            "unitSpecialExpandButton",
+        )
+        self.assertEqual(page.special_skill_button.width(), 50)
+        self.assertEqual(page.special_skill_expand_button.width(), 22)
+        self.assertEqual(
+            page.special_skill_control.size(),
+            page.fields["upgrade"].size(),
+        )
+        self.assertEqual(
+            page.weapon_slots[0].itemText(page.weapon_slots[0].findData(0x07)),
+            "007 · 双子光剑",
+        )
+        self.assertEqual(
+            page.weapon_slots[1].itemText(page.weapon_slots[1].findData(0x0B)),
+            "011 · 交叉粉碎炮",
+        )
+        self.assertEqual(page.weapon_slots[0].itemText(0), "000 · 无武器")
+        self.assertEqual(
             page.bind_icon_button.geometry().top(),
             page.edit_icon_button.geometry().top(),
         )
@@ -440,6 +760,118 @@ class LegacyWindowTests(QtTestCase):
             self.assertEqual(positions[page.basic_group][:2], (0, 0))
             self.assertEqual(positions[page.attributes_group][:2], (0, 1))
             self.assertEqual(positions[page.weapons_group][:2], (1, 0))
+        self.assertEqual(page.graphics_group.objectName(), "unitGraphicsPanel")
+        self.assertEqual(page.basic_group.objectName(), "unitBasicPanel")
+        self.assertEqual(page.attributes_group.objectName(), "unitAttributesPanel")
+        self.assertEqual(page.weapons_group.objectName(), "unitWeaponsPanel")
+        self.assertIn("共同组成机体类型字段", page.basic_note.text())
+        self.assertFalse(page.basic_note.isVisible())
+        self.assertLessEqual(page.basic_group.maximumHeight(), 258)
+        self.assertIn("background:#F5FAF8", page.styleSheet())
+        panel_bottom = max(
+            group.mapTo(page, group.rect().bottomLeft()).y()
+            for group in (page.basic_group, page.attributes_group, page.weapons_group)
+        )
+        action_top = page.apply_button.mapTo(page, page.apply_button.rect().topLeft()).y()
+        self.assertLessEqual(action_top - panel_bottom, 18)
+
+    def test_unit_context_clear_really_empties_including_appearance(self) -> None:
+        dialog = self._show(DatabaseDialog(self.project))
+        page = dialog.unit_page
+        unit_id = 0x09
+        page.controller.select_record_id(unit_id)
+        appearance_before = read_unit_appearance(self.project, unit_id)
+        body_placements_before = decode_unit_body_script(
+            appearance_before.body_script,
+            len(appearance_before.secondary_banks) * 64,
+        )
+
+        with patch("dc_modifier.legacy_windows.QMessageBox.question") as question:
+            page._clear_current_unit()
+
+        question.assert_not_called()
+        self.assertEqual(self.project.record_bytes(unit_id), bytes(16))
+        self.assertEqual(
+            self.project.unit_display_name(unit_id), "空白/未分配机体槽"
+        )
+        self.assertEqual(self.project.get_unit_weapons(unit_id), (0, 0))
+        appearance_after = read_unit_appearance(self.project, unit_id)
+        self.assertEqual(appearance_after.configuration, appearance_before.configuration)
+        self.assertEqual(appearance_after.body_script, b"\xFF")
+        self.assertEqual(
+            appearance_after.fragment_script,
+            bytes.fromhex("00 F0 00 00 FF"),
+        )
+        self.assertTrue(all(
+            self.project.chr_tile_pixels(
+                appearance_before.secondary_banks[item.tile_index // 64] * 64
+                + item.tile_index % 64
+            ) == (0,) * 64
+            for item in body_placements_before
+        ))
+        self.assertEqual(
+            self.project.undo_description,
+            f"机体 ${unit_id:02X} · 清除全部数据",
+        )
+        self.assertEqual(page.records.item(unit_id - 1).text(), "[09]009:")
+
+    def test_unit_context_clear_all_runs_without_confirmation(self) -> None:
+        dialog = self._show(DatabaseDialog(self.project))
+        page = dialog.unit_page
+
+        with patch("dc_modifier.legacy_windows.QMessageBox.question") as question:
+            page._clear_all_units()
+
+        question.assert_not_called()
+        for unit_id in (0x01, 0x09, 0x25, 0x80, 0xFF):
+            self.assertEqual(self.project.record_bytes(unit_id), bytes(16))
+            self.assertEqual(
+                self.project.unit_display_name(unit_id), "空白/未分配机体槽"
+            )
+            self.assertEqual(self.project.get_unit_weapons(unit_id), (0, 0))
+
+    def test_unit_main_clear_works_on_stock_rom_without_expansion(self) -> None:
+        self.assertIsNone(self.project.expansion_plan)
+        dialog = self._show(DatabaseDialog(self.project))
+        page = dialog.unit_page
+        assert page.current_id is not None
+        appearance = read_unit_appearance(self.project, page.current_id)
+        referenced = {
+            placement.tile_index
+            for placement in decode_unit_body_script(
+                appearance.body_script, len(appearance.secondary_banks) * 64
+            )
+        }
+        original_tiles = {
+            local_index: self.project.chr_tile_pixels(
+                appearance.secondary_banks[local_index // 64] * 64
+                + local_index % 64
+            )
+            for local_index in range(len(appearance.secondary_banks) * 64)
+        }
+        with (
+            patch("dc_modifier.legacy_windows.QMessageBox.question") as question,
+            patch("dc_modifier.unit_appearance_dialog.QMessageBox.warning") as warning,
+            patch("dc_modifier.legacy_windows.UnitAppearanceDialog") as puzzle_dialog,
+        ):
+            page._clear_appearance_from_main("body")
+
+        question.assert_not_called()
+        warning.assert_not_called()
+        puzzle_dialog.assert_not_called()
+        for local_index, original_pixels in original_tiles.items():
+            actual = self.project.chr_tile_pixels(
+                appearance.secondary_banks[local_index // 64] * 64
+                + local_index % 64
+            )
+            self.assertEqual(
+                actual,
+                (0,) * 64 if local_index in referenced else original_pixels,
+            )
+        self.assertEqual(
+            read_unit_appearance(self.project, page.current_id).body_script,
+            b"\xFF",
+        )
 
     def test_scenario_has_six_tabs_and_three_nested_event_tabs(self) -> None:
         dialog = self._show(ScenarioDialog(self.project))

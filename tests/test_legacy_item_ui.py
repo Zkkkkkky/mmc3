@@ -90,9 +90,10 @@ class LegacyItemUiTests(QtTestCase):
         self.application.processEvents()
         shop = self.dialog.shop_page
 
-        self.assertEqual(shop.shop_list.count(), 15)
+        # Match the reference list exactly: F0-FC and FE; FD is absent.
+        self.assertEqual(shop.shop_list.count(), 14)
         self.assertEqual(shop.shop_list.item(0).text(), "F0")
-        self.assertEqual(shop.shop_list.item(14).text(), "FE")
+        self.assertEqual(shop.shop_list.item(13).text(), "FE")
         self.assertEqual(len(shop.dialogue_edits), 7)
         self.assertTrue(
             all(edit.isVisibleTo(self.dialog) for edit in shop.dialogue_edits)
@@ -101,8 +102,9 @@ class LegacyItemUiTests(QtTestCase):
         self.application.processEvents()
         self.assertEqual(shop.shop_combo.currentIndex(), 5)
         self.assertFalse(shop.fields.isEnabled())
-        self.assertFalse(shop.dialogue_group.isEnabled())
-        self.assertIn("地图事件", shop.status_label.text())
+        self.assertTrue(shop.dialogue_group.isEnabled())
+        self.assertEqual(shop.dialogue_spin.value(), 195)
+        self.assertIn("地图事件指针表共用", shop.status_label.text())
         shop.shop_list.setCurrentRow(0)
         self.application.processEvents()
         self.assertTrue(shop.fields.isEnabled())

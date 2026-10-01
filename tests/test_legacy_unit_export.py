@@ -180,15 +180,15 @@ class LegacyUnitExportUiTests(QtTestCase):
         export.assert_not_called()
         self.assertEqual(bytes(window.project.working), before)
 
-    def test_d2_keeps_reference_avatar_entry_disabled_without_extension_duplicate(self) -> None:
+    def test_avatar_entry_is_enabled_without_extension_duplicate(self) -> None:
         window = MainWindow(open_default=True)
         self.addCleanup(window.close)
 
         self.assertEqual(window.export_avatar_action.text(), "导出头像(&L)")
         self.assertEqual(window.export_avatar_action.shortcut().toString(), "Ctrl+L")
-        self.assertFalse(window.export_avatar_action.isEnabled())
-        self.assertIn("参考版此入口不可触发", window.export_avatar_action.statusTip())
-        self.assertIn("数据库", window.export_avatar_action.statusTip())
+        self.assertTrue(window.export_avatar_action.isEnabled())
+        self.assertIn("批量导出全部人物", window.export_avatar_action.statusTip())
+        self.assertIn("单个导出一致", window.export_avatar_action.statusTip())
         self.assertFalse(hasattr(window, "export_avatar_extended_action"))
         self.assertNotIn(
             "导出头像 BMP（增强）",

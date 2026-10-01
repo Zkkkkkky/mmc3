@@ -1,0 +1,723 @@
+{
+  "schema_version": 1,
+  "validated": true,
+  "scope": "all 28 beam-puzzle and 38 physical-puzzle frontier actions; fresh child draft for every button gesture; outer windows cancelled; isolated ROM zero-diff gate",
+  "error": null,
+  "database_cancel_closed": false,
+  "sha256_before": "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E",
+  "sha256_after": "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E",
+  "diff_count": 0,
+  "execution_record_count": 66,
+  "observations": [
+    {
+      "window": "光束拼图",
+      "control_id": 100,
+      "gesture": "left_click",
+      "descendants": [],
+      "owner_still_open": true
+    },
+    {
+      "window": "光束拼图",
+      "control_id": 100,
+      "gesture": "right_click",
+      "descendants": [],
+      "owner_still_open": true
+    },
+    {
+      "window": "光束拼图",
+      "control_id": 100,
+      "gesture": "keyboard_activate",
+      "descendants": [],
+      "owner_still_open": true
+    },
+    {
+      "window": "光束拼图",
+      "control_id": 130,
+      "gesture": "left_click",
+      "descendants": [],
+      "owner_still_open": true
+    },
+    {
+      "window": "光束拼图",
+      "control_id": 130,
+      "gesture": "right_click",
+      "descendants": [],
+      "owner_still_open": true
+    },
+    {
+      "window": "光束拼图",
+      "control_id": 130,
+      "gesture": "keyboard_activate",
+      "descendants": [],
+      "owner_still_open": true
+    },
+    {
+      "window": "光束拼图",
+      "control_id": 150,
+      "gesture": "left_click",
+      "descendants": [],
+      "owner_still_open": true
+    },
+    {
+      "window": "光束拼图",
+      "control_id": 150,
+      "gesture": "right_click",
+      "descendants": [],
+      "owner_still_open": true
+    },
+    {
+      "window": "光束拼图",
+      "control_id": 150,
+      "gesture": "keyboard_activate",
+      "descendants": [],
+      "owner_still_open": true
+    },
+    {
+      "window": "光束拼图",
+      "control_id": 190,
+      "gesture": "left_click",
+      "descendants": [],
+      "owner_still_open": false
+    },
+    {
+      "window": "光束拼图",
+      "control_id": 190,
+      "gesture": "right_click",
+      "descendants": [],
+      "owner_still_open": true
+    },
+    {
+      "window": "光束拼图",
+      "control_id": 190,
+      "gesture": "keyboard_activate",
+      "descendants": [],
+      "owner_still_open": false
+    },
+    {
+      "window": "光束拼图",
+      "control_id": 200,
+      "gesture": "left_click",
+      "descendants": [],
+      "owner_still_open": false
+    },
+    {
+      "window": "光束拼图",
+      "control_id": 200,
+      "gesture": "right_click",
+      "descendants": [],
+      "owner_still_open": true
+    },
+    {
+      "window": "光束拼图",
+      "control_id": 200,
+      "gesture": "keyboard_activate",
+      "descendants": [],
+      "owner_still_open": false
+    },
+    {
+      "window": "光束拼图",
+      "control_id": 210,
+      "gesture": "left_click",
+      "descendants": [],
+      "owner_still_open": true
+    },
+    {
+      "window": "光束拼图",
+      "control_id": 210,
+      "gesture": "right_click",
+      "descendants": [],
+      "owner_still_open": true
+    },
+    {
+      "window": "光束拼图",
+      "control_id": 210,
+      "gesture": "keyboard_activate",
+      "descendants": [],
+      "owner_still_open": true
+    },
+    {
+      "window": "光束拼图",
+      "control_id": 270,
+      "gesture": "left_click",
+      "descendants": [],
+      "owner_still_open": true
+    },
+    {
+      "window": "光束拼图",
+      "control_id": 270,
+      "gesture": "right_click",
+      "descendants": [],
+      "owner_still_open": true
+    },
+    {
+      "window": "光束拼图",
+      "control_id": 270,
+      "gesture": "keyboard_activate",
+      "descendants": [],
+      "owner_still_open": true
+    },
+    {
+      "window": "光束拼图",
+      "control_id": 280,
+      "gesture": "left_click",
+      "descendants": [],
+      "owner_still_open": true
+    },
+    {
+      "window": "光束拼图",
+      "control_id": 280,
+      "gesture": "right_click",
+      "descendants": [],
+      "owner_still_open": true
+    },
+    {
+      "window": "光束拼图",
+      "control_id": 280,
+      "gesture": "keyboard_activate",
+      "descendants": [],
+      "owner_still_open": true
+    },
+    {
+      "window": "物理拼图",
+      "control_id": 100,
+      "gesture": "left_click",
+      "descendants": [],
+      "owner_still_open": true
+    },
+    {
+      "window": "物理拼图",
+      "control_id": 100,
+      "gesture": "right_click",
+      "descendants": [],
+      "owner_still_open": true
+    },
+    {
+      "window": "物理拼图",
+      "control_id": 100,
+      "gesture": "keyboard_activate",
+      "descendants": [],
+      "owner_still_open": true
+    },
+    {
+      "window": "物理拼图",
+      "control_id": 110,
+      "gesture": "left_click",
+      "descendants": [],
+      "owner_still_open": true
+    },
+    {
+      "window": "物理拼图",
+      "control_id": 110,
+      "gesture": "right_click",
+      "descendants": [],
+      "owner_still_open": true
+    },
+    {
+      "window": "物理拼图",
+      "control_id": 110,
+      "gesture": "keyboard_activate",
+      "descendants": [],
+      "owner_still_open": true
+    },
+    {
+      "window": "物理拼图",
+      "control_id": 140,
+      "gesture": "left_click",
+      "descendants": [],
+      "owner_still_open": true
+    },
+    {
+      "window": "物理拼图",
+      "control_id": 140,
+      "gesture": "right_click",
+      "descendants": [],
+      "owner_still_open": true
+    },
+    {
+      "window": "物理拼图",
+      "control_id": 140,
+      "gesture": "keyboard_activate",
+      "descendants": [],
+      "owner_still_open": true
+    },
+    {
+      "window": "物理拼图",
+      "control_id": 180,
+      "gesture": "left_click",
+      "descendants": [],
+      "owner_still_open": false
+    },
+    {
+      "window": "物理拼图",
+      "control_id": 180,
+      "gesture": "right_click",
+      "descendants": [],
+      "owner_still_open": true
+    },
+    {
+      "window": "物理拼图",
+      "control_id": 180,
+      "gesture": "keyboard_activate",
+      "descendants": [],
+      "owner_still_open": false
+    },
+    {
+      "window": "物理拼图",
+      "control_id": 190,
+      "gesture": "left_click",
+      "descendants": [],
+      "owner_still_open": false
+    },
+    {
+      "window": "物理拼图",
+      "control_id": 190,
+      "gesture": "right_click",
+      "descendants": [],
+      "owner_still_open": true
+    },
+    {
+      "window": "物理拼图",
+      "control_id": 190,
+      "gesture": "keyboard_activate",
+      "descendants": [],
+      "owner_still_open": false
+    },
+    {
+      "window": "物理拼图",
+      "control_id": 250,
+      "gesture": "left_click",
+      "descendants": [],
+      "owner_still_open": true
+    },
+    {
+      "window": "物理拼图",
+      "control_id": 250,
+      "gesture": "right_click",
+      "descendants": [],
+      "owner_still_open": true
+    },
+    {
+      "window": "物理拼图",
+      "control_id": 250,
+      "gesture": "keyboard_activate",
+      "descendants": [],
+      "owner_still_open": true
+    },
+    {
+      "window": "物理拼图",
+      "control_id": 260,
+      "gesture": "left_click",
+      "descendants": [],
+      "owner_still_open": true
+    },
+    {
+      "window": "物理拼图",
+      "control_id": 260,
+      "gesture": "right_click",
+      "descendants": [],
+      "owner_still_open": true
+    },
+    {
+      "window": "物理拼图",
+      "control_id": 260,
+      "gesture": "keyboard_activate",
+      "descendants": [],
+      "owner_still_open": true
+    },
+    {
+      "window": "物理拼图",
+      "control_id": 270,
+      "gesture": "left_click",
+      "descendants": [],
+      "owner_still_open": true
+    },
+    {
+      "window": "物理拼图",
+      "control_id": 270,
+      "gesture": "right_click",
+      "descendants": [],
+      "owner_still_open": true
+    },
+    {
+      "window": "物理拼图",
+      "control_id": 270,
+      "gesture": "keyboard_activate",
+      "descendants": [],
+      "owner_still_open": true
+    },
+    {
+      "window": "物理拼图",
+      "control_id": 290,
+      "gesture": "left_click",
+      "descendants": [],
+      "owner_still_open": true
+    },
+    {
+      "window": "物理拼图",
+      "control_id": 290,
+      "gesture": "right_click",
+      "descendants": [],
+      "owner_still_open": true
+    },
+    {
+      "window": "物理拼图",
+      "control_id": 290,
+      "gesture": "keyboard_activate",
+      "descendants": [],
+      "owner_still_open": true
+    },
+    {
+      "window": "物理拼图",
+      "control_id": 300,
+      "gesture": "left_click",
+      "descendants": [],
+      "owner_still_open": true
+    },
+    {
+      "window": "物理拼图",
+      "control_id": 300,
+      "gesture": "right_click",
+      "descendants": [],
+      "owner_still_open": true
+    },
+    {
+      "window": "物理拼图",
+      "control_id": 300,
+      "gesture": "keyboard_activate",
+      "descendants": [],
+      "owner_still_open": true
+    }
+  ],
+  "execution_records": [
+    {
+      "action_id": "bf2d56baf6c4f0314131",
+      "status": "passed",
+      "result": "旧版真实left_click；子窗口=[]；拼图窗口仍打开=True。"
+    },
+    {
+      "action_id": "0c0497c9d4f42cc1bda3",
+      "status": "passed",
+      "result": "旧版真实right_click；子窗口=[]；拼图窗口仍打开=True。"
+    },
+    {
+      "action_id": "363b31f6593f2d548728",
+      "status": "passed",
+      "result": "旧版真实keyboard_activate；子窗口=[]；拼图窗口仍打开=True。"
+    },
+    {
+      "action_id": "c128a736b4cc0aab79e7",
+      "status": "passed",
+      "result": "旧版真实left_click；子窗口=[]；拼图窗口仍打开=True。"
+    },
+    {
+      "action_id": "24712141655f1270b705",
+      "status": "passed",
+      "result": "旧版真实right_click；子窗口=[]；拼图窗口仍打开=True。"
+    },
+    {
+      "action_id": "61308ddcb40d35250b5c",
+      "status": "passed",
+      "result": "旧版真实keyboard_activate；子窗口=[]；拼图窗口仍打开=True。"
+    },
+    {
+      "action_id": "a26554bf43e1bc56047a",
+      "status": "passed",
+      "result": "旧版真实left_click；子窗口=[]；拼图窗口仍打开=True。"
+    },
+    {
+      "action_id": "508a3c21103ed6c0b922",
+      "status": "passed",
+      "result": "旧版真实right_click；子窗口=[]；拼图窗口仍打开=True。"
+    },
+    {
+      "action_id": "1e31b94203f4da30bb37",
+      "status": "passed",
+      "result": "旧版真实keyboard_activate；子窗口=[]；拼图窗口仍打开=True。"
+    },
+    {
+      "action_id": "73c801f9badb78cd04e3",
+      "status": "passed",
+      "result": "旧版真实left_click；子窗口=[]；拼图窗口仍打开=False。"
+    },
+    {
+      "action_id": "f90c04e1ab100e06cd4d",
+      "status": "passed",
+      "result": "旧版真实right_click；子窗口=[]；拼图窗口仍打开=True。"
+    },
+    {
+      "action_id": "bd692c498f4f0ec3c6c6",
+      "status": "passed",
+      "result": "旧版真实keyboard_activate；子窗口=[]；拼图窗口仍打开=False。"
+    },
+    {
+      "action_id": "a0e0792f20ccab43d48c",
+      "status": "passed",
+      "result": "旧版真实left_click；子窗口=[]；拼图窗口仍打开=False。"
+    },
+    {
+      "action_id": "2851ddb946f80574eec5",
+      "status": "passed",
+      "result": "旧版真实right_click；子窗口=[]；拼图窗口仍打开=True。"
+    },
+    {
+      "action_id": "dbb38986893fbb2b7790",
+      "status": "passed",
+      "result": "旧版真实keyboard_activate；子窗口=[]；拼图窗口仍打开=False。"
+    },
+    {
+      "action_id": "f5adfd9c9d573bed0bf0",
+      "status": "passed",
+      "result": "旧版真实left_click；子窗口=[]；拼图窗口仍打开=True。"
+    },
+    {
+      "action_id": "9806ec6a02068dabf02f",
+      "status": "passed",
+      "result": "旧版真实right_click；子窗口=[]；拼图窗口仍打开=True。"
+    },
+    {
+      "action_id": "5f229f3707ed65f80d39",
+      "status": "passed",
+      "result": "旧版真实keyboard_activate；子窗口=[]；拼图窗口仍打开=True。"
+    },
+    {
+      "action_id": "281cba90ea445e454ed0",
+      "status": "passed",
+      "result": "旧版真实left_click；子窗口=[]；拼图窗口仍打开=True。"
+    },
+    {
+      "action_id": "73dfcdd34b6601ecd1cc",
+      "status": "passed",
+      "result": "旧版真实right_click；子窗口=[]；拼图窗口仍打开=True。"
+    },
+    {
+      "action_id": "2b9b73db4fecfc0b0105",
+      "status": "passed",
+      "result": "旧版真实keyboard_activate；子窗口=[]；拼图窗口仍打开=True。"
+    },
+    {
+      "action_id": "9113a9869b034127d884",
+      "status": "passed",
+      "result": "旧版真实left_click；子窗口=[]；拼图窗口仍打开=True。"
+    },
+    {
+      "action_id": "634d348613ad59b31451",
+      "status": "passed",
+      "result": "旧版真实right_click；子窗口=[]；拼图窗口仍打开=True。"
+    },
+    {
+      "action_id": "fd5afd2d9f326a598112",
+      "status": "passed",
+      "result": "旧版真实keyboard_activate；子窗口=[]；拼图窗口仍打开=True。"
+    },
+    {
+      "action_id": "7ada72870ab079b5e7f5",
+      "status": "passed",
+      "result": "展开并收起，共 256 项。"
+    },
+    {
+      "action_id": "eb18e9a250f4ac3983a1",
+      "status": "passed",
+      "result": "逐项选择并读回 256/256 项，随后恢复。"
+    },
+    {
+      "action_id": "57b11037c3fbc7efa832",
+      "status": "passed",
+      "result": "Home/Down 读回索引 0，随后恢复。"
+    },
+    {
+      "action_id": "5d49144e56b92cd83a6a",
+      "status": "passed",
+      "result": "执行下拉框右键路径并关闭。"
+    },
+    {
+      "action_id": "db96e66cc889433af227",
+      "status": "passed",
+      "result": "旧版真实left_click；子窗口=[]；拼图窗口仍打开=True。"
+    },
+    {
+      "action_id": "293b87c895483e2a4820",
+      "status": "passed",
+      "result": "旧版真实right_click；子窗口=[]；拼图窗口仍打开=True。"
+    },
+    {
+      "action_id": "bf7ff255557e98652869",
+      "status": "passed",
+      "result": "旧版真实keyboard_activate；子窗口=[]；拼图窗口仍打开=True。"
+    },
+    {
+      "action_id": "9c46aab776df5a9497f2",
+      "status": "passed",
+      "result": "旧版真实left_click；子窗口=[]；拼图窗口仍打开=True。"
+    },
+    {
+      "action_id": "9b5c9d1bcab0bca4cc4b",
+      "status": "passed",
+      "result": "旧版真实right_click；子窗口=[]；拼图窗口仍打开=True。"
+    },
+    {
+      "action_id": "6c2fb280136d9231e6b9",
+      "status": "passed",
+      "result": "旧版真实keyboard_activate；子窗口=[]；拼图窗口仍打开=True。"
+    },
+    {
+      "action_id": "121b04d9704a9c1f763e",
+      "status": "passed",
+      "result": "旧版真实left_click；子窗口=[]；拼图窗口仍打开=True。"
+    },
+    {
+      "action_id": "36aba20a75f36ae5b3a4",
+      "status": "passed",
+      "result": "旧版真实right_click；子窗口=[]；拼图窗口仍打开=True。"
+    },
+    {
+      "action_id": "0ede1be12f526a32d28b",
+      "status": "passed",
+      "result": "旧版真实keyboard_activate；子窗口=[]；拼图窗口仍打开=True。"
+    },
+    {
+      "action_id": "9ca8892c1d8b6456764f",
+      "status": "passed",
+      "result": "旧版真实left_click；子窗口=[]；拼图窗口仍打开=False。"
+    },
+    {
+      "action_id": "79cd1f15ebadf02fb853",
+      "status": "passed",
+      "result": "旧版真实right_click；子窗口=[]；拼图窗口仍打开=True。"
+    },
+    {
+      "action_id": "ae759902dd7ae97523df",
+      "status": "passed",
+      "result": "旧版真实keyboard_activate；子窗口=[]；拼图窗口仍打开=False。"
+    },
+    {
+      "action_id": "09095ef59c0ecdebe42a",
+      "status": "passed",
+      "result": "旧版真实left_click；子窗口=[]；拼图窗口仍打开=False。"
+    },
+    {
+      "action_id": "c571fc569e24fff8be2c",
+      "status": "passed",
+      "result": "旧版真实right_click；子窗口=[]；拼图窗口仍打开=True。"
+    },
+    {
+      "action_id": "55682f81969f08a1309d",
+      "status": "passed",
+      "result": "旧版真实keyboard_activate；子窗口=[]；拼图窗口仍打开=False。"
+    },
+    {
+      "action_id": "fe155facfbb3de2f038c",
+      "status": "passed",
+      "result": "旧版真实left_click；子窗口=[]；拼图窗口仍打开=True。"
+    },
+    {
+      "action_id": "c1683c06f46f439cbb69",
+      "status": "passed",
+      "result": "旧版真实right_click；子窗口=[]；拼图窗口仍打开=True。"
+    },
+    {
+      "action_id": "4e8ea5a9a3028bad5dcc",
+      "status": "passed",
+      "result": "旧版真实keyboard_activate；子窗口=[]；拼图窗口仍打开=True。"
+    },
+    {
+      "action_id": "5e78570eb7caf19937ab",
+      "status": "passed",
+      "result": "旧版真实left_click；子窗口=[]；拼图窗口仍打开=True。"
+    },
+    {
+      "action_id": "b7a9e5f16ede1014e6bf",
+      "status": "passed",
+      "result": "旧版真实right_click；子窗口=[]；拼图窗口仍打开=True。"
+    },
+    {
+      "action_id": "14d7224445338d763482",
+      "status": "passed",
+      "result": "旧版真实keyboard_activate；子窗口=[]；拼图窗口仍打开=True。"
+    },
+    {
+      "action_id": "ae0eda0b8a69ce84866f",
+      "status": "passed",
+      "result": "旧版真实left_click；子窗口=[]；拼图窗口仍打开=True。"
+    },
+    {
+      "action_id": "661c3ca3e7ca6b34dd90",
+      "status": "passed",
+      "result": "旧版真实right_click；子窗口=[]；拼图窗口仍打开=True。"
+    },
+    {
+      "action_id": "a7807046a3b9610f57f0",
+      "status": "passed",
+      "result": "旧版真实keyboard_activate；子窗口=[]；拼图窗口仍打开=True。"
+    },
+    {
+      "action_id": "acc28c105ffefa3f93ad",
+      "status": "passed",
+      "result": "旧版真实left_click；子窗口=[]；拼图窗口仍打开=True。"
+    },
+    {
+      "action_id": "a602c6af3cf5df2190f2",
+      "status": "passed",
+      "result": "旧版真实right_click；子窗口=[]；拼图窗口仍打开=True。"
+    },
+    {
+      "action_id": "76f592ed662f15c02b90",
+      "status": "passed",
+      "result": "旧版真实keyboard_activate；子窗口=[]；拼图窗口仍打开=True。"
+    },
+    {
+      "action_id": "bb20dd4c8dd6051d6daf",
+      "status": "passed",
+      "result": "旧版真实left_click；子窗口=[]；拼图窗口仍打开=True。"
+    },
+    {
+      "action_id": "7b5997ad65c17cad062c",
+      "status": "passed",
+      "result": "旧版真实right_click；子窗口=[]；拼图窗口仍打开=True。"
+    },
+    {
+      "action_id": "2bee12e4aa7d88e13f98",
+      "status": "passed",
+      "result": "旧版真实keyboard_activate；子窗口=[]；拼图窗口仍打开=True。"
+    },
+    {
+      "action_id": "bb1c617eb00f31e559f0",
+      "status": "passed",
+      "result": "逐项选择 15 项。"
+    },
+    {
+      "action_id": "1f08fd4464788d6759f3",
+      "status": "passed",
+      "result": "逐项双击通知 15 次。"
+    },
+    {
+      "action_id": "958d328798a76c382e98",
+      "status": "passed",
+      "result": "逐项右键 15 次。"
+    },
+    {
+      "action_id": "ad6d7da53256919b9cf1",
+      "status": "passed",
+      "result": "真实焦点执行 Home/Down。"
+    },
+    {
+      "action_id": "c51355f9192e16060d25",
+      "status": "passed",
+      "result": "展开并收起，共 256 项。"
+    },
+    {
+      "action_id": "a1a77cd24883f685427a",
+      "status": "passed",
+      "result": "逐项选择并读回 256/256 项，随后恢复。"
+    },
+    {
+      "action_id": "6102ddbf2a2d3ed89980",
+      "status": "passed",
+      "result": "Home/Down 读回索引 0，随后恢复。"
+    },
+    {
+      "action_id": "50b46a6f5d87e6ff8a85",
+      "status": "passed",
+      "result": "执行下拉框右键路径并关闭。"
+    }
+  ]
+}

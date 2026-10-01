@@ -1,0 +1,50 @@
+{
+  "tag": "DBCMD_01_机体修改_导出机体_16",
+  "hwnd": 66446,
+  "title": "",
+  "class": "WorkerW",
+  "rect": {
+    "left": 0,
+    "top": 0,
+    "right": 1920,
+    "bottom": 1080,
+    "width": 1920,
+    "height": 1080
+  },
+  "pid": 9016,
+  "tree": {
+    "hwnd": 66446,
+    "class": "WorkerW",
+    "text": "",
+    "ctrl_id": 0,
+    "rect": {
+      "left": 0,
+      "top": 0,
+      "right": 1920,
+      "bottom": 1080,
+      "width": 1920,
+      "height": 1080
+    },
+    "visible": true,
+    "enabled": false,
+    "children": [
+      {
+        "hwnd": 12717360,
+        "class": "WPEVideoWallpaper",
+        "text": "WPEVideoWallpaper",
+        "ctrl_id": 0,
+        "rect": {
+          "left": 0,
+          "top": 0,
+          "right": 1920,
+          "bottom": 1080,
+          "width": 1920,
+          "height": 1080
+        },
+        "visible": true,
+        "enabled": true,
+        "children": []
+      }
+    ]
+  }
+}

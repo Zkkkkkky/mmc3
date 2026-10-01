@@ -1,0 +1,97 @@
+{
+  "schema_version": 1,
+  "validated": true,
+  "rom": "D:\\GIT\\mmc3\\output\\build\\legacy-ui-probe\\weapon-context-action-matrix.nes",
+  "records": [
+    {
+      "command": "编辑",
+      "status": "parameter_opened",
+      "title": "定义声音"
+    },
+    {
+      "command": "复制",
+      "status": "clipboard_ready",
+      "visual_unchanged": true
+    },
+    {
+      "command": "粘贴",
+      "status": "list_changed",
+      "before": "F499B62B5067FA324085D4843AC978348C5B2C2A64192EA6CF6E338B28F10A07",
+      "after": "9BC802179465C1F5F4380A66CE7AA8A7049E46209E907D48D4110AFFA9EA99B9"
+    },
+    {
+      "command": "剪切",
+      "status": "list_changed",
+      "before": "9BC802179465C1F5F4380A66CE7AA8A7049E46209E907D48D4110AFFA9EA99B9",
+      "after": "0420BFFB77F1B2C27E6E80C9361E89C9A4ED4857A699A2432F65C98115BC83A0"
+    },
+    {
+      "command": "复制全部",
+      "status": "clipboard_ready",
+      "source": "0420BFFB77F1B2C27E6E80C9361E89C9A4ED4857A699A2432F65C98115BC83A0"
+    },
+    {
+      "command": "粘贴全部",
+      "status": "replaced",
+      "before": "6FD39643F5B6A74567E2F709D9BAFF43D63BBEB3513783AFE7312FA6447BF27A",
+      "after": "E42D10872F45F3DE42D9736720FE23AF86837016FAEAC2000CAFB2073CC34724"
+    },
+    {
+      "command": "删除",
+      "status": "list_changed",
+      "before": "E42D10872F45F3DE42D9736720FE23AF86837016FAEAC2000CAFB2073CC34724",
+      "after": "507CABB85338FE63D7747FF8CFFE93ED95B6C501883B9C8CF61B8B159B349997"
+    },
+    {
+      "command": "清空",
+      "status": "list_changed",
+      "before": "507CABB85338FE63D7747FF8CFFE93ED95B6C501883B9C8CF61B8B159B349997",
+      "after": "20E800039DEAAAF510B88BDF69638DF850680A648A413451C15E858411D5BE2E"
+    }
+  ],
+  "execution_records": [
+    {
+      "action_id": "e3d6122f163a3f8c4113",
+      "status": "passed",
+      "result": "旧版编辑打开“定义声音”并可取消返回。"
+    },
+    {
+      "action_id": "267eaf2867a2df27c267",
+      "status": "passed",
+      "result": "旧版复制保留当前列表并为粘贴建立剪贴板。"
+    },
+    {
+      "action_id": "9dc038d8e3705b3b0cce",
+      "status": "passed",
+      "result": "旧版粘贴使用复制剪贴板并改变所选位置的列表内容。"
+    },
+    {
+      "action_id": "490fbaf024388693f80b",
+      "status": "passed",
+      "result": "旧版剪切后动画列表可见内容改变并更新剪贴板。"
+    },
+    {
+      "action_id": "bdabc7c2ad4b0ce3d2c1",
+      "status": "passed",
+      "result": "旧版复制全部保存当前完整动画到内部剪贴板。"
+    },
+    {
+      "action_id": "28e05854bd7489013bb0",
+      "status": "passed",
+      "result": "旧版粘贴全部用源动画替换目标完整动画。"
+    },
+    {
+      "action_id": "1b9b0ff8449426908ed7",
+      "status": "passed",
+      "result": "旧版删除后动画列表可见内容改变。"
+    },
+    {
+      "action_id": "63cd1ea3d18f9af3d1dd",
+      "status": "passed",
+      "result": "旧版清空后动画列表可见内容改变。"
+    }
+  ],
+  "sha256_before": "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E",
+  "sha256_after": "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E",
+  "diff_count": 0
+}

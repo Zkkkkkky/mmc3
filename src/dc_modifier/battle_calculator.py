@@ -3,7 +3,6 @@ from __future__ import annotations
 from dataclasses import dataclass
 
 
-REFERENCE_FIREPOWER_BONUS = 8
 DEFAULT_DISTANCE_HIT_CORRECTIONS = (
     (100,) * 16,
     tuple(range(100, 68, -2)),
@@ -97,24 +96,73 @@ class BattleAttackResult:
     distance_percent: int
 
 
+UNIT_SPECIAL_FLAGS: tuple[tuple[int, str], ...] = (
+    (0x08, "积层装甲反射系统（反伤）"),
+    (0x10, "先制攻击"),
+    (0x20, "一击脱离（仅限我方）"),
+    (0x40, "异次元连接系统"),
+    (0x80, "扭曲力场（间无）"),
+)
+UNIT_SPECIAL_LOW_BITS: tuple[str, ...] = (
+    "无",
+    "T防御系统",
+    "相对转移装甲",
+    "VPS防御系统",
+    "重力波罩",
+    "海市蜃楼隐形系统",
+    "重力漩涡",
+    "用盾防御",
+)
+
+
 DEFENSIVE_EFFECTS = {
     1: DefensiveEffect("T防御系统", 3, 4),
     2: DefensiveEffect("相对转移装甲", 3, 4),
-    4: DefensiveEffect("VPS防御系统", 2, 3),
-    5: DefensiveEffect("能量偏移装置", 2, 3),
-    6: DefensiveEffect("盾防", 1, 2),
+    3: DefensiveEffect("VPS防御系统", 2, 3),
+    4: DefensiveEffect("重力波罩", 2, 3),
+    7: DefensiveEffect("用盾防御", 1, 2),
 }
 
 
-def reference_firepower(raw_power: int, weapon_multiplier: int) -> int:
-    """Return the value shown by the reference calculator.
+def unit_special_names(value: int) -> list[str]:
+    """Decode the verified low-three-bit ability plus independent flag bits."""
 
-    The archived C08 capture shows raw 36/33/30 as 368/338/308 when the
-    project weapon multiplier is 10.  The fixed +8 is the reference tool's
-    prediction value; the runtime game still uses its own battle state.
+    normalized = value & 0xFF
+    names = (
+        []
+        if not normalized & 0x07
+        else [UNIT_SPECIAL_LOW_BITS[normalized & 0x07]]
+    )
+    names.extend(
+        label for mask, label in UNIT_SPECIAL_FLAGS if normalized & mask
+    )
+    return names
+
+
+def unit_special_summary(value: int) -> str:
+    normalized = value & 0xFF
+    names = unit_special_names(normalized)
+    return f"${normalized:02X} · " + ("、".join(names) if names else "无")
+
+
+def reference_firepower(
+    strength: int,
+    raw_power: int,
+    parameters: BattleFormulaParameters,
+) -> int:
+    """Return the game's final terrain firepower shown by the reference tool.
+
+    The reference fields already include both the strength contribution and
+    the selected weapon's terrain contribution.  Defense is applied later.
     """
 
-    return max(0, raw_power) * max(0, weapon_multiplier) + REFERENCE_FIREPOWER_BONUS
+    strength_component = (
+        max(0, strength)
+        * parameters.strength_multiplier
+        // parameters.strength_divisor
+    )
+    weapon_component = max(0, raw_power) * parameters.weapon_multiplier
+    return strength_component + weapon_component
 
 
 def _ceil_div(numerator: int, denominator: int) -> int:
@@ -149,18 +197,9 @@ def _terrain_firepower(state: BattleSideState, target_terrain: int) -> tuple[str
 
 
 def normalized_special_code(raw_special: int) -> int:
-    """Normalize the two encodings found in DC-family unit tables.
+    """Return the defensive low-three-bit code from the combined ability byte."""
 
-    Most records store the reference calculator's small code directly.  Some
-    expanded records store that code in units of eight.  Preserve combined or
-    otherwise unknown bit patterns instead of inventing an effect for them.
-    """
-
-    if raw_special >= 8 and raw_special % 8 == 0:
-        shifted = raw_special // 8
-        if shifted in DEFENSIVE_EFFECTS:
-            return shifted
-    return raw_special
+    return raw_special & 0x07
 
 
 def defensive_effect(raw_special: int) -> DefensiveEffect | None:
@@ -198,10 +237,6 @@ def calculate_battle_attack(
     )
 
     terrain_name, firepower = _terrain_firepower(attacker, defender.terrain)
-    strength_component = (
-        attacker.strength * parameters.strength_multiplier
-        // parameters.strength_divisor
-    )
     defense_component = (
         defender.defense * parameters.defense_multiplier
         // parameters.defense_divisor
@@ -209,7 +244,7 @@ def calculate_battle_attack(
     damage_denominator = max(1, attacker.damage_denominator)
     predicted_damage = max(
         0,
-        (strength_component + firepower - defense_component)
+        (firepower - defense_component)
         * max(0, attacker.damage_numerator)
         // damage_denominator,
     )

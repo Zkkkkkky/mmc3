@@ -1,0 +1,16 @@
+[    0.1s] launched pid=9096
+[    0.1s] === stage A: launcher -> main window (no ROM) ===
+[    3.1s] top window: {'hwnd': 6621742, 'title': 'SRW2�޸���V1.5', 'class': 'WTWindow', 'rect': {'left': 571, 'top': 244, 'right': 1346, 'bottom': 843, 'width': 775, 'height': 599}, 'pid': 9096}
+[    4.1s] dump A01_������: title='SRW2�޸���V1.5' class='WTWindow' controls=8 shot=ok
+[   12.9s] main window hwnd=7735538 title='SRW2���ݰ��޸���V1.0'
+[   14.4s] dump A02_������_δ����ROM: title='SRW2���ݰ��޸���V1.0' class='WTWindow' controls=63 shot=ok
+[   22.4s] === stage LOAD: load ROM copy only ===
+[   23.4s] dump LOAD01_��ROM�Ի���: title='���ļ�' class='#32770' controls=49 shot=ok
+[   23.9s] open dialog confirmed gone=True
+[   31.0s] ROM loaded without main-window sweep, title='SRW2���ݰ��޸���V1.0��D:\\GIT\\mmc3\\output\\build\\legacy-ui-probe\\title-puzzle-controls.nes'
+[   31.9s] dump LOAD02_������_�����: title='SRW2���ݰ��޸���V1.0��D:\\GIT\\mmc3\\output\\build\\legacy-ui-probe\\title-puzzle-controls.nes' class='WTWindow' controls=63 shot=ok
+[   31.9s] === stage TITLEPUZZLECONTROLS ===
+[   50.4s] dump TITLEPUZZLE_360_keyboard_activate: title='ƴͼ����' class='WTWindow' controls=4 shot=ok
+[   52.6s] dump TITLEPUZZLE_360_left_click: title='ƴͼ����' class='WTWindow' controls=4 shot=ok
+[   57.8s] TITLEPUZZLECONTROLS complete: 55/55 actions, zero ROM diff
+[   58.1s] terminated owned pid=9096

@@ -1,0 +1,856 @@
+{
+  "schema_version": 1,
+  "validated": true,
+  "error": null,
+  "execution_record_count": 155,
+  "diff_count": 0,
+  "sha256_before": "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E",
+  "sha256_after": "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E",
+  "observations": [
+    {
+      "class": "ListBox",
+      "control_id": 100,
+      "item_count": 100,
+      "path": [
+        13,
+        0
+      ]
+    },
+    {
+      "class": "ListBox",
+      "control_id": 550,
+      "item_count": 0,
+      "path": [
+        12,
+        0
+      ]
+    },
+    {
+      "class": "ComboBox",
+      "control_id": 140,
+      "item_count": 256,
+      "path": [
+        12,
+        9,
+        8
+      ]
+    },
+    {
+      "class": "ComboBox",
+      "control_id": 160,
+      "item_count": 256,
+      "path": [
+        12,
+        9,
+        6
+      ]
+    },
+    {
+      "class": "ComboBox",
+      "control_id": 180,
+      "item_count": 256,
+      "path": [
+        12,
+        9,
+        4
+      ]
+    },
+    {
+      "class": "ComboBox",
+      "control_id": 210,
+      "item_count": 8,
+      "path": [
+        12,
+        8,
+        24
+      ]
+    },
+    {
+      "class": "ComboBox",
+      "control_id": 680,
+      "item_count": 256,
+      "path": [
+        12,
+        8,
+        0
+      ]
+    }
+  ],
+  "execution_records": [
+    {
+      "action_id": "61713053c678b86b6302",
+      "status": "passed",
+      "result": "逐页命中 [220, 140, 550]。"
+    },
+    {
+      "action_id": "a1fe256f16d6f0d8f9f9",
+      "status": "passed",
+      "result": "真实焦点 Ctrl+Tab。"
+    },
+    {
+      "action_id": "99196faa52ea4ab51fcd",
+      "status": "passed",
+      "result": "页签右键菜单=False。"
+    },
+    {
+      "action_id": "465b5ce2086587aa78d3",
+      "status": "passed",
+      "result": "逐项选择 100 项并恢复 0。"
+    },
+    {
+      "action_id": "3b9642bec9e3046772a6",
+      "status": "passed",
+      "result": "Home/Down 后恢复。"
+    },
+    {
+      "action_id": "bcd82bd0f95067f94d7f",
+      "status": "passed",
+      "result": "逐项双击 100 项；子窗=[]。"
+    },
+    {
+      "action_id": "3aa5c3b234a9920161cc",
+      "status": "passed",
+      "result": "逐项右键 100 项；菜单命中 0。"
+    },
+    {
+      "action_id": "99c60317b080a4fe81f6",
+      "status": "passed",
+      "result": "逐项选择 0 项并恢复 -1。"
+    },
+    {
+      "action_id": "5ee18804408e3d312374",
+      "status": "passed",
+      "result": "Home/Down 后恢复。"
+    },
+    {
+      "action_id": "153689117bc495e6735c",
+      "status": "passed",
+      "result": "逐项双击 0 项；子窗=[]。"
+    },
+    {
+      "action_id": "091bded36e8c4805ef97",
+      "status": "passed",
+      "result": "逐项右键 0 项；菜单命中 0。"
+    },
+    {
+      "action_id": "e8e00091e168148f104a",
+      "status": "passed",
+      "result": "切至 220 后隐藏；返回路径=(12, 0)，启用=True。"
+    },
+    {
+      "action_id": "23dc248c7cabf6ac1b84",
+      "status": "passed",
+      "result": "展开/收起，共 256 项。"
+    },
+    {
+      "action_id": "ad89c9b55cb027b42796",
+      "status": "passed",
+      "result": "逐项选择 256 项并恢复 70。"
+    },
+    {
+      "action_id": "a0f40bbc0708aab4cf09",
+      "status": "passed",
+      "result": "Home/Down 读回 70，已恢复。"
+    },
+    {
+      "action_id": "22ddb029819edfac0394",
+      "status": "passed",
+      "result": "右键菜单=False。"
+    },
+    {
+      "action_id": "397eb15870bcfd2b8ad3",
+      "status": "passed",
+      "result": "切至 220 后隐藏；返回路径=(12, 9, 8)，启用=True。"
+    },
+    {
+      "action_id": "9960724d5cf8e10cdcdf",
+      "status": "passed",
+      "result": "展开/收起，共 256 项。"
+    },
+    {
+      "action_id": "1cfeb43b95041bcb1f16",
+      "status": "passed",
+      "result": "逐项选择 256 项并恢复 71。"
+    },
+    {
+      "action_id": "9392cdf022a40ed7d936",
+      "status": "passed",
+      "result": "Home/Down 读回 71，已恢复。"
+    },
+    {
+      "action_id": "44e2ba2c29a73aae8e64",
+      "status": "passed",
+      "result": "右键菜单=False。"
+    },
+    {
+      "action_id": "282500ee7fa060cac1cc",
+      "status": "passed",
+      "result": "切至 220 后隐藏；返回路径=(12, 9, 6)，启用=True。"
+    },
+    {
+      "action_id": "7ac4dc924157017847cd",
+      "status": "passed",
+      "result": "展开/收起，共 256 项。"
+    },
+    {
+      "action_id": "cef2c76e5dd1e49d5357",
+      "status": "passed",
+      "result": "逐项选择 256 项并恢复 54。"
+    },
+    {
+      "action_id": "0ecdba0868d201410ea6",
+      "status": "passed",
+      "result": "Home/Down 读回 54，已恢复。"
+    },
+    {
+      "action_id": "4f16ec3ebbd304990ea1",
+      "status": "passed",
+      "result": "右键菜单=False。"
+    },
+    {
+      "action_id": "b0bf7a7a53002d96aeb5",
+      "status": "passed",
+      "result": "切至 220 后隐藏；返回路径=(12, 9, 4)，启用=True。"
+    },
+    {
+      "action_id": "7cd022e586dfab74b77e",
+      "status": "passed",
+      "result": "展开/收起，共 8 项。"
+    },
+    {
+      "action_id": "6f7d72adefab85b0cc44",
+      "status": "passed",
+      "result": "逐项选择 8 项并恢复 1。"
+    },
+    {
+      "action_id": "f54a50b789bc5078fdc4",
+      "status": "passed",
+      "result": "Home/Down 读回 1，已恢复。"
+    },
+    {
+      "action_id": "c915290fdcf4d266d4f7",
+      "status": "passed",
+      "result": "右键菜单=False。"
+    },
+    {
+      "action_id": "7635ba7e953a3512fd3c",
+      "status": "passed",
+      "result": "切至 140 后隐藏；返回路径=(12, 8, 24)，启用=True。"
+    },
+    {
+      "action_id": "6ee125edb1d2644fa81b",
+      "status": "passed",
+      "result": "展开/收起，共 256 项。"
+    },
+    {
+      "action_id": "fe0c1ff643f5b2581beb",
+      "status": "passed",
+      "result": "逐项选择 256 项并恢复 5。"
+    },
+    {
+      "action_id": "1fe67c47958c5500da94",
+      "status": "passed",
+      "result": "Home/Down 读回 5，已恢复。"
+    },
+    {
+      "action_id": "fad1db384a9c81f4ca3b",
+      "status": "passed",
+      "result": "右键菜单=False。"
+    },
+    {
+      "action_id": "2f4ee0d746764cf833eb",
+      "status": "passed",
+      "result": "切至 140 后隐藏；返回路径=(12, 8, 0)，启用=True。"
+    },
+    {
+      "action_id": "fa0b1243709c63108840",
+      "status": "passed",
+      "result": "左键；子窗=[]。"
+    },
+    {
+      "action_id": "8760c6dadd8b645f658b",
+      "status": "passed",
+      "result": "双击；子窗=[]。"
+    },
+    {
+      "action_id": "1327d47b33e7bd7948dc",
+      "status": "passed",
+      "result": "右键菜单=False。"
+    },
+    {
+      "action_id": "d751bd4d10edb1eb081b",
+      "status": "passed",
+      "result": "短距离拖拽。"
+    },
+    {
+      "action_id": "bd3cd9ffc9d91dbfe4d0",
+      "status": "passed",
+      "result": "切至 140 后隐藏；返回路径=(12, 8, 23)，启用=True。"
+    },
+    {
+      "action_id": "e9d8b9ad7a1d89bf36ed",
+      "status": "passed",
+      "result": "左键；子窗=[]。"
+    },
+    {
+      "action_id": "8ed745c778d80b166e9d",
+      "status": "passed",
+      "result": "双击；子窗=[]。"
+    },
+    {
+      "action_id": "75296ed22919b94f9238",
+      "status": "passed",
+      "result": "右键菜单=False。"
+    },
+    {
+      "action_id": "74b5527106b5a27e320a",
+      "status": "passed",
+      "result": "短距离拖拽。"
+    },
+    {
+      "action_id": "7acb8c28bfd3d1f45adf",
+      "status": "passed",
+      "result": "切至 140 后隐藏；返回路径=(12, 8, 22)，启用=True。"
+    },
+    {
+      "action_id": "c6a81b39794cfca71e51",
+      "status": "passed",
+      "result": "左键；子窗=[]。"
+    },
+    {
+      "action_id": "00f5eda9ee6ea819a90b",
+      "status": "passed",
+      "result": "双击；子窗=[]。"
+    },
+    {
+      "action_id": "59f07bebd8b9149d3992",
+      "status": "passed",
+      "result": "右键菜单=False。"
+    },
+    {
+      "action_id": "bdaf03ba45553990a58f",
+      "status": "passed",
+      "result": "短距离拖拽。"
+    },
+    {
+      "action_id": "5b46855a93816a224de8",
+      "status": "passed",
+      "result": "切至 140 后隐藏；返回路径=(12, 8, 21)，启用=True。"
+    },
+    {
+      "action_id": "e2b8550e41012819e578",
+      "status": "passed",
+      "result": "左键；子窗=[]。"
+    },
+    {
+      "action_id": "72c5bdff75ef8b458a3e",
+      "status": "passed",
+      "result": "双击；子窗=[]。"
+    },
+    {
+      "action_id": "6b60a2b07edef4ed54c7",
+      "status": "passed",
+      "result": "右键菜单=False。"
+    },
+    {
+      "action_id": "3d7fe44e4998d1430506",
+      "status": "passed",
+      "result": "短距离拖拽。"
+    },
+    {
+      "action_id": "19a83fabed09d6191bc2",
+      "status": "passed",
+      "result": "切至 140 后隐藏；返回路径=(12, 8, 20)，启用=True。"
+    },
+    {
+      "action_id": "40174fe6ec6db3329b9f",
+      "status": "passed",
+      "result": "左键；子窗=[]。"
+    },
+    {
+      "action_id": "8ffaf09a5663fd48ca5c",
+      "status": "passed",
+      "result": "双击；子窗=[]。"
+    },
+    {
+      "action_id": "bde925b2711548c80cf3",
+      "status": "passed",
+      "result": "右键菜单=False。"
+    },
+    {
+      "action_id": "5191d4dab2e4b36ab59d",
+      "status": "passed",
+      "result": "短距离拖拽。"
+    },
+    {
+      "action_id": "fbe5bdf6fe83a63b1ae0",
+      "status": "passed",
+      "result": "切至 140 后隐藏；返回路径=(12, 8, 19)，启用=True。"
+    },
+    {
+      "action_id": "81bc295ed2895ac2bc10",
+      "status": "passed",
+      "result": "左键；子窗=[]。"
+    },
+    {
+      "action_id": "c7af200c010454e55c8e",
+      "status": "passed",
+      "result": "双击；子窗=[]。"
+    },
+    {
+      "action_id": "774ab4e0104701671d9d",
+      "status": "passed",
+      "result": "右键菜单=False。"
+    },
+    {
+      "action_id": "71792365ea95247ddad4",
+      "status": "passed",
+      "result": "短距离拖拽。"
+    },
+    {
+      "action_id": "091c084ed0aec9acddd6",
+      "status": "passed",
+      "result": "切至 140 后隐藏；返回路径=(12, 8, 18)，启用=True。"
+    },
+    {
+      "action_id": "dd1267e7950b3d4679b7",
+      "status": "passed",
+      "result": "左键；子窗=[]。"
+    },
+    {
+      "action_id": "99a08e7b5bfc0449414c",
+      "status": "passed",
+      "result": "双击；子窗=[]。"
+    },
+    {
+      "action_id": "f9fd0f8b4ff2f57d55fd",
+      "status": "passed",
+      "result": "右键菜单=False。"
+    },
+    {
+      "action_id": "fb009764bba33be89c96",
+      "status": "passed",
+      "result": "短距离拖拽。"
+    },
+    {
+      "action_id": "0712725aaf668598318e",
+      "status": "passed",
+      "result": "切至 140 后隐藏；返回路径=(12, 8, 17)，启用=True。"
+    },
+    {
+      "action_id": "dd65e96b8859275ed61a",
+      "status": "passed",
+      "result": "左键；子窗=[]。"
+    },
+    {
+      "action_id": "873bc9ac29972efdbae4",
+      "status": "passed",
+      "result": "双击；子窗=[]。"
+    },
+    {
+      "action_id": "e84ce61be5ac23bcd7e8",
+      "status": "passed",
+      "result": "右键菜单=False。"
+    },
+    {
+      "action_id": "666a34c3c90e0e7dbba0",
+      "status": "passed",
+      "result": "短距离拖拽。"
+    },
+    {
+      "action_id": "163da477a2cd61116ed4",
+      "status": "passed",
+      "result": "切至 140 后隐藏；返回路径=(12, 8, 16)，启用=True。"
+    },
+    {
+      "action_id": "9450fa128702f6f3b9ac",
+      "status": "passed",
+      "result": "左键；子窗=[]。"
+    },
+    {
+      "action_id": "742f843febe8068b50e0",
+      "status": "passed",
+      "result": "双击；子窗=[]。"
+    },
+    {
+      "action_id": "0b3ea6b575f5d42f12d9",
+      "status": "passed",
+      "result": "右键菜单=False。"
+    },
+    {
+      "action_id": "288c198c6c4166c5073f",
+      "status": "passed",
+      "result": "短距离拖拽。"
+    },
+    {
+      "action_id": "a01a56bc88cd7765f13c",
+      "status": "passed",
+      "result": "切至 140 后隐藏；返回路径=(12, 8, 15)，启用=True。"
+    },
+    {
+      "action_id": "bc2dc3a879daf76cfd01",
+      "status": "passed",
+      "result": "左键；子窗=[]。"
+    },
+    {
+      "action_id": "17b89ecc1bedff6df382",
+      "status": "passed",
+      "result": "双击；子窗=[]。"
+    },
+    {
+      "action_id": "d1bcb1ac9eb9b18a7dad",
+      "status": "passed",
+      "result": "右键菜单=False。"
+    },
+    {
+      "action_id": "66bb61e3684841429430",
+      "status": "passed",
+      "result": "短距离拖拽。"
+    },
+    {
+      "action_id": "e49bdf86924d1e75972a",
+      "status": "passed",
+      "result": "切至 140 后隐藏；返回路径=(12, 8, 14)，启用=True。"
+    },
+    {
+      "action_id": "34b4a27dc2fbf7a5347d",
+      "status": "passed",
+      "result": "左键；子窗=[]。"
+    },
+    {
+      "action_id": "8b9fe995beec2999140c",
+      "status": "passed",
+      "result": "双击；子窗=[]。"
+    },
+    {
+      "action_id": "8eb376a7fed6d6a09c51",
+      "status": "passed",
+      "result": "右键菜单=False。"
+    },
+    {
+      "action_id": "90401905d26963b91274",
+      "status": "passed",
+      "result": "短距离拖拽。"
+    },
+    {
+      "action_id": "48ecb06483036c269fb8",
+      "status": "passed",
+      "result": "切至 140 后隐藏；返回路径=(12, 8, 13)，启用=True。"
+    },
+    {
+      "action_id": "302e87764187daf49174",
+      "status": "passed",
+      "result": "左键；子窗=[]。"
+    },
+    {
+      "action_id": "632839dec11fc179bb8f",
+      "status": "passed",
+      "result": "双击；子窗=[]。"
+    },
+    {
+      "action_id": "b49b8c4bd594a19d56eb",
+      "status": "passed",
+      "result": "右键菜单=False。"
+    },
+    {
+      "action_id": "da70fe8486af2fc3f732",
+      "status": "passed",
+      "result": "短距离拖拽。"
+    },
+    {
+      "action_id": "fa349022711c654f623f",
+      "status": "passed",
+      "result": "切至 140 后隐藏；返回路径=(12, 8, 12)，启用=True。"
+    },
+    {
+      "action_id": "9c7ce19b15c7f0709d1f",
+      "status": "passed",
+      "result": "左键；子窗=[]。"
+    },
+    {
+      "action_id": "842933f6b53f07ad9ff2",
+      "status": "passed",
+      "result": "双击；子窗=[]。"
+    },
+    {
+      "action_id": "e249f3da4e046984b8c0",
+      "status": "passed",
+      "result": "右键菜单=False。"
+    },
+    {
+      "action_id": "e0ce3311507d8ecd00dd",
+      "status": "passed",
+      "result": "短距离拖拽。"
+    },
+    {
+      "action_id": "94226f66aed4423fb617",
+      "status": "passed",
+      "result": "切至 140 后隐藏；返回路径=(12, 8, 11)，启用=True。"
+    },
+    {
+      "action_id": "63016d3858ef8f3f36d1",
+      "status": "passed",
+      "result": "左键；子窗=[]。"
+    },
+    {
+      "action_id": "f952a08c5c5ba35fd6ef",
+      "status": "passed",
+      "result": "双击；子窗=[]。"
+    },
+    {
+      "action_id": "5bbf72b6c843febb7e51",
+      "status": "passed",
+      "result": "右键菜单=False。"
+    },
+    {
+      "action_id": "24cc1479e6b9567458cc",
+      "status": "passed",
+      "result": "短距离拖拽。"
+    },
+    {
+      "action_id": "3688329d198c3ee64de3",
+      "status": "passed",
+      "result": "切至 140 后隐藏；返回路径=(12, 8, 10)，启用=True。"
+    },
+    {
+      "action_id": "7ea9d2091b3657ae249d",
+      "status": "passed",
+      "result": "左键；子窗=[]。"
+    },
+    {
+      "action_id": "130e3f47b61f04069fa4",
+      "status": "passed",
+      "result": "双击；子窗=[]。"
+    },
+    {
+      "action_id": "4d36437afdd6d9fe08d2",
+      "status": "passed",
+      "result": "右键菜单=False。"
+    },
+    {
+      "action_id": "c1aee50417e5a614e295",
+      "status": "passed",
+      "result": "短距离拖拽。"
+    },
+    {
+      "action_id": "da88d51766aebe14ad2e",
+      "status": "passed",
+      "result": "切至 140 后隐藏；返回路径=(12, 8, 9)，启用=True。"
+    },
+    {
+      "action_id": "a5539140784b79ba1e23",
+      "status": "passed",
+      "result": "左键；子窗=[]。"
+    },
+    {
+      "action_id": "f2f49d4f482834978c71",
+      "status": "passed",
+      "result": "双击；子窗=[]。"
+    },
+    {
+      "action_id": "c20e481053092395decd",
+      "status": "passed",
+      "result": "右键菜单=False。"
+    },
+    {
+      "action_id": "30430f1b857840c6e390",
+      "status": "passed",
+      "result": "短距离拖拽。"
+    },
+    {
+      "action_id": "eb1ef9816d8b9b644e0b",
+      "status": "passed",
+      "result": "切至 140 后隐藏；返回路径=(12, 8, 8)，启用=True。"
+    },
+    {
+      "action_id": "39c945dd163b5078089b",
+      "status": "passed",
+      "result": "左键；子窗=[]。"
+    },
+    {
+      "action_id": "7c346a333f418e243a91",
+      "status": "passed",
+      "result": "双击；子窗=[]。"
+    },
+    {
+      "action_id": "33098911d43a0c1bb029",
+      "status": "passed",
+      "result": "右键菜单=False。"
+    },
+    {
+      "action_id": "f4a035d5838942091945",
+      "status": "passed",
+      "result": "短距离拖拽。"
+    },
+    {
+      "action_id": "9c2d4c48d01829abf08e",
+      "status": "passed",
+      "result": "切至 140 后隐藏；返回路径=(12, 8, 7)，启用=True。"
+    },
+    {
+      "action_id": "d0c2a0329ea18e395ed6",
+      "status": "passed",
+      "result": "左键；子窗=[]。"
+    },
+    {
+      "action_id": "2178d110b224741d073e",
+      "status": "passed",
+      "result": "双击；子窗=[]。"
+    },
+    {
+      "action_id": "9791b88f117ea92d58a7",
+      "status": "passed",
+      "result": "右键菜单=False。"
+    },
+    {
+      "action_id": "2d150938203d0e21fe28",
+      "status": "passed",
+      "result": "短距离拖拽。"
+    },
+    {
+      "action_id": "d7c1d3e3e1360b743eae",
+      "status": "passed",
+      "result": "切至 140 后隐藏；返回路径=(12, 8, 6)，启用=True。"
+    },
+    {
+      "action_id": "10ddf59ebaedf2a0e814",
+      "status": "passed",
+      "result": "左键；子窗=[]。"
+    },
+    {
+      "action_id": "68f2bc63e1f30fdaa2f4",
+      "status": "passed",
+      "result": "双击；子窗=[]。"
+    },
+    {
+      "action_id": "ccfd21c5f28a667c5ba1",
+      "status": "passed",
+      "result": "右键菜单=False。"
+    },
+    {
+      "action_id": "7f43003766531e979bb4",
+      "status": "passed",
+      "result": "短距离拖拽。"
+    },
+    {
+      "action_id": "9a905c0601690182fb5b",
+      "status": "passed",
+      "result": "切至 140 后隐藏；返回路径=(12, 1)，启用=True。"
+    },
+    {
+      "action_id": "2e66d1240a700b0cf885",
+      "status": "passed",
+      "result": "切至 220 后隐藏；返回路径=(12, 9, 9)，启用=True。"
+    },
+    {
+      "action_id": "16fd8931472b74790aaa",
+      "status": "passed",
+      "result": "切至 220 后隐藏；返回路径=(12, 9, 7)，启用=True。"
+    },
+    {
+      "action_id": "6fcb8c8870458ae07906",
+      "status": "passed",
+      "result": "切至 220 后隐藏；返回路径=(12, 9, 5)，启用=True。"
+    },
+    {
+      "action_id": "b6c233527897e8e89cd9",
+      "status": "passed",
+      "result": "切至 140 后隐藏；返回路径=(12, 8, 5)，启用=True。"
+    },
+    {
+      "action_id": "b01e970406e5165c003e",
+      "status": "passed",
+      "result": "切至 140 后隐藏；返回路径=(12, 8, 4)，启用=True。"
+    },
+    {
+      "action_id": "b1ac760968038e241bb9",
+      "status": "passed",
+      "result": "切至 140 后隐藏；返回路径=(12, 8, 3)，启用=True。"
+    },
+    {
+      "action_id": "10a06d4e2eca11f3fefd",
+      "status": "passed",
+      "result": "切至 140 后隐藏；返回路径=(12, 6)，启用=True。"
+    },
+    {
+      "action_id": "cad755d9bd2e3a89dab4",
+      "status": "passed",
+      "result": "切至 140 后隐藏；返回路径=(12, 4)，启用=True。"
+    },
+    {
+      "action_id": "e07f7e6fe45ee1847536",
+      "status": "passed",
+      "result": "切至 220 后隐藏；返回路径=(12, 9, 2)，启用=True。"
+    },
+    {
+      "action_id": "5cee1fbcae4a6fd172f2",
+      "status": "passed",
+      "result": "切至 220 后隐藏；返回路径=(12, 9, 1)，启用=True。"
+    },
+    {
+      "action_id": "53b6c362b5fa10dfd758",
+      "status": "passed",
+      "result": "切至 220 后隐藏；返回路径=(12, 9, 0)，启用=True。"
+    },
+    {
+      "action_id": "829df67e817ef589ee81",
+      "status": "passed",
+      "result": "切至 140 后隐藏；返回路径=(12, 8, 1)，启用=True。"
+    },
+    {
+      "action_id": "ba822dd63ef63ad93905",
+      "status": "passed",
+      "result": "切至 140 后隐藏；返回路径=(12, 7)，启用=False。"
+    },
+    {
+      "action_id": "d6a23ffdb13c69b1e63f",
+      "status": "passed",
+      "result": "切至 140 后隐藏；返回路径=(12, 5)，启用=False。"
+    },
+    {
+      "action_id": "5cb17d371d11412cde82",
+      "status": "passed",
+      "result": "伙伴 ''->''。"
+    },
+    {
+      "action_id": "add8dc4879b95d8f521e",
+      "status": "passed",
+      "result": "伙伴 ''->''。"
+    },
+    {
+      "action_id": "5c39aef24c1bdac3ea5b",
+      "status": "passed",
+      "result": "伙伴边界=['', '']，已恢复。"
+    },
+    {
+      "action_id": "f2f5069411da4176b981",
+      "status": "passed",
+      "result": "切至 140 后隐藏；返回路径=(12, 3)，启用=True。"
+    },
+    {
+      "action_id": "ef157b8d3d9e0ec1b475",
+      "status": "passed",
+      "result": "伙伴 ''->''。"
+    },
+    {
+      "action_id": "c61f7f98b713354a47cf",
+      "status": "passed",
+      "result": "伙伴 ''->''。"
+    },
+    {
+      "action_id": "cd1f7f107a196461f76b",
+      "status": "passed",
+      "result": "伙伴边界=['', '']，已恢复。"
+    },
+    {
+      "action_id": "90aa14ede7f6500ad107",
+      "status": "passed",
+      "result": "切至 140 后隐藏；返回路径=(12, 2)，启用=True。"
+    },
+    {
+      "action_id": "ac1139d7770b8540d4cf",
+      "status": "passed",
+      "result": "已载入页=True；未载入页=False；重载页=True。"
+    }
+  ]
+}

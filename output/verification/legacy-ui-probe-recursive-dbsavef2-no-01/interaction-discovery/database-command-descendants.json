@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "validated": false,
+  "scope": "isolated reference executable; descendant dialogs cancelled; no save",
+  "records": [
+    {
+      "state": "武器修改",
+      "control_id": 2530,
+      "command": "插入",
+      "status": "target_not_found"
+    },
+    {
+      "state": "武器修改",
+      "control_id": 2530,
+      "command": "编辑",
+      "status": "target_not_found"
+    },
+    {
+      "state": "机体修改",
+      "control_id": 120,
+      "command": "导出机体",
+      "status": "target_not_found"
+    },
+    {
+      "state": "人物修改",
+      "control_id": 630,
+      "command": "导出人物",
+      "status": "target_not_found"
+    }
+  ]
+}

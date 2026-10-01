@@ -1,0 +1,20 @@
+[    0.1s] launched pid=2512
+[    0.1s] === stage A: launcher -> main window (no ROM) ===
+[    3.1s] top window: {'hwnd': 8717922, 'title': 'SRW2�޸���V1.5', 'class': 'WTWindow', 'rect': {'left': 571, 'top': 244, 'right': 1346, 'bottom': 843, 'width': 775, 'height': 599}, 'pid': 2512}
+[    4.0s] dump A01_������: title='SRW2�޸���V1.5' class='WTWindow' controls=8 shot=ok
+[   12.4s] main window hwnd=3999682 title='SRW2���ݰ��޸���V1.0'
+[   14.2s] dump A02_������_δ����ROM: title='SRW2���ݰ��޸���V1.0' class='WTWindow' controls=63 shot=ok
+[   22.2s] === stage LOAD: load ROM copy only ===
+[   23.4s] dump LOAD01_��ROM�Ի���: title='���ļ�' class='#32770' controls=49 shot=ok
+[   23.9s] open dialog confirmed gone=True
+[   31.4s] ROM loaded without main-window sweep, title='SRW2���ݰ��޸���V1.0��D:\\GIT\\mmc3\\output\\build\\legacy-ui-probe\\database-other-button-controls.nes'
+[   32.3s] dump LOAD02_������_�����: title='SRW2���ݰ��޸���V1.0��D:\\GIT\\mmc3\\output\\build\\legacy-ui-probe\\database-other-button-controls.nes' class='WTWindow' controls=63 shot=ok
+[   32.3s] === stage DBOTHERBUTTONCONTROLS ===
+[   33.3s] ���ݿ�: hwnd=4196250 title='���ݿ�'
+[   42.8s] DBOTHERBUTTONCONTROLS: cached database tab points [14, 86, 182, 266, 350, 434]
+[   76.3s] dump DBOTHERBUTTONCONTROLS_1680_keyboard_activate_1: title='���ֵ' class='WTWindow' controls=5 shot=ok
+[   81.1s] dump DBOTHERBUTTONCONTROLS_1680_left_click_1: title='���ֵ' class='WTWindow' controls=5 shot=ok
+[  208.0s] dump DBOTHERBUTTONCONTROLS_2650_keyboard_activate_1: title='�ɳ�����' class='WTWindow' controls=5 shot=ok
+[  212.4s] dump DBOTHERBUTTONCONTROLS_2650_left_click_1: title='�ɳ�����' class='WTWindow' controls=5 shot=ok
+[  214.0s] DBOTHERBUTTONCONTROLS complete: 52/52 actions, zero ROM diff
+[  214.1s] terminated owned pid=2512

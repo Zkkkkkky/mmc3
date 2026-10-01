@@ -152,6 +152,17 @@ def analyze(rom_path: Path) -> dict[str, object]:
             record = text_codec.record("system", text_id)
             patch = text_codec.replacement_patch("system", text_id, 0, record.text)
             dialogue_roundtrips.append(patch[1] == patch[2])
+    invalid_reference_dialogue_roundtrips = []
+    for shop_id in shop_codec.REFERENCE_SHOP_IDS:
+        if shop_id < 0xF5:
+            continue
+        base = shop_codec.reference_dialogue_id(shop_id)
+        for dialogue_index in range(7):
+            record = text_codec.record("system", base + dialogue_index)
+            patch = text_codec.replacement_patch(
+                "system", base + dialogue_index, 0, record.text
+            )
+            invalid_reference_dialogue_roundtrips.append(patch[1] == patch[2])
     first_dialogue = text_codec.record("system", shops[0].dialogue_id)
     dialogue_patch = text_codec.replacement_patch(
         "system",
@@ -202,6 +213,16 @@ def analyze(rom_path: Path) -> dict[str, object]:
             and all("地图事件" in reason for reason in invalid_shop_rejections.values())
             and "须保持 1 件商品" in f4_capacity_rejection
         ),
+        "invalid_reference_rows_preserve_safe_dialogue_route": (
+            shop_codec.REFERENCE_SHOP_IDS == (*range(0xF0, 0xFD), 0xFE)
+            and len(invalid_reference_dialogue_roundtrips) == 63
+            and all(invalid_reference_dialogue_roundtrips)
+            and all(
+                shop_codec.reference_dialogue_id(shop_id) == 195
+                for shop_id in shop_codec.REFERENCE_SHOP_IDS
+                if shop_id >= 0xF5
+            )
+        ),
         "seven_dialogues_roundtrip_and_edit_is_confined": (
             len(dialogue_roundtrips) == 35
             and all(dialogue_roundtrips)
@@ -224,7 +245,9 @@ def analyze(rom_path: Path) -> dict[str, object]:
         "passed": all(checks.values()),
         "delivery_status": "reference_field_scope_complete_user_pending",
         "conclusion": (
-            "M10 参考版 254 个逻辑入口已逐字段保存并完成全新进程回读；134 个安全字段进入最终分母，风险入口维持产品禁写，仅待用户签收。"
+            "M10 参考版 254 个逻辑入口已逐字段保存并完成全新进程回读；"
+            "产品保留 134 个原安全字段，并恢复 F5—FC、FE 共 63 个七段系统文字入口；"
+            "会覆盖地图事件指针的商店元数据继续禁写。"
         ),
         "rom": {
             "path": rom_path.resolve().relative_to(ROOT).as_posix(),
@@ -273,6 +296,7 @@ def analyze(rom_path: Path) -> dict[str, object]:
             "shop_dialogues": {
                 "labels": list(LegacyShopCodec.LABELS),
                 "no_op_roundtrips": sum(dialogue_roundtrips),
+                "invalid_reference_row_safe_roundtrips": sum(invalid_reference_dialogue_roundtrips),
                 "sample_patch_offset": f"0x{dialogue_patch[0]:06X}",
                 "sample_changed_indices": dialogue_diff,
             },

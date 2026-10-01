@@ -34,7 +34,7 @@
   "details": {
     "source_rom": "D:\\GIT\\mmc3\\output\\rom\\DC_kuorong_464K.nes",
     "source_sha256": "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E",
-    "edited_rom_sha256": "7D33BACF0A20D226BA28C15F52F6757AAE52A499C1659829B07212A7938EF911",
+    "edited_rom_sha256": "EC187FA0A77744CE94EF3BE6BC0004B386AB1575A9D78B988D4FCFF90EE28818",
     "weapon_id": 1,
     "record_offset": "0x0490CF",
     "record_before": "00 6E 00 05 05 02",

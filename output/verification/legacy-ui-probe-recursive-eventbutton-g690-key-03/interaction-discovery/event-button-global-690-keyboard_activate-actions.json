@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "validated": true,
+  "error": null,
+  "execution_record_count": 1,
+  "diff_count": 0,
+  "sha256_before": "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E",
+  "sha256_after": "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E",
+  "observations": [
+    {
+      "control_id": 690,
+      "action": "keyboard_activate",
+      "path": [
+        0
+      ],
+      "focused": true,
+      "window_visible": true,
+      "descendants": [
+        {
+          "title": "提示",
+          "class": "#32770"
+        }
+      ]
+    }
+  ],
+  "execution_records": [
+    {
+      "action_id": "76ee1b91ea560faae952",
+      "status": "passed",
+      "result": "焦点=True；主窗可见=True；子窗=[{'title': '提示', 'class': '#32770'}]。"
+    }
+  ]
+}

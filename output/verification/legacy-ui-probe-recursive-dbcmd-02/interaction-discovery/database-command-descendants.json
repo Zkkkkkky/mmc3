@@ -1,0 +1,208 @@
+{
+  "schema_version": 1,
+  "scope": "isolated reference executable; descendant dialogs cancelled; no save",
+  "records": [
+    {
+      "state": "机体修改",
+      "control_id": 120,
+      "command": "导出机体",
+      "status": "captured",
+      "tab_x": 17,
+      "menu": [
+        {
+          "index": 0,
+          "text": "复制机体",
+          "id": 20001
+        },
+        {
+          "index": 1,
+          "text": "粘贴机体",
+          "id": 20002
+        },
+        {
+          "index": 2,
+          "text": "导出机体",
+          "id": 20003
+        },
+        {
+          "index": 3,
+          "text": "清除机体",
+          "id": 20004
+        },
+        {
+          "index": 4,
+          "text": "清空全部",
+          "id": 20005
+        }
+      ],
+      "descendants": [
+        {
+          "title": "",
+          "class": "Shell_TrayWnd",
+          "tag": "DBCMD_01_机体修改_导出机体_1",
+          "visible_controls": 14
+        },
+        {
+          "title": "ChatGPT",
+          "class": "Chrome_WidgetWin_1",
+          "tag": "DBCMD_01_机体修改_导出机体_2",
+          "visible_controls": 3
+        },
+        {
+          "title": "ocam",
+          "class": "TApplication",
+          "tag": "DBCMD_01_机体修改_导出机体_3",
+          "visible_controls": 1
+        },
+        {
+          "title": "电影和电视",
+          "class": "Windows.UI.Core.CoreWindow",
+          "tag": "DBCMD_01_机体修改_导出机体_4",
+          "visible_controls": 1
+        },
+        {
+          "title": "电影和电视",
+          "class": "ApplicationFrameWindow",
+          "tag": "DBCMD_01_机体修改_导出机体_5",
+          "visible_controls": 3
+        },
+        {
+          "title": "Windows 输入体验",
+          "class": "Windows.UI.Core.CoreWindow",
+          "tag": "DBCMD_01_机体修改_导出机体_6",
+          "visible_controls": 1
+        },
+        {
+          "title": "",
+          "class": "DummyDWMListenerWindow",
+          "tag": "DBCMD_01_机体修改_导出机体_7",
+          "visible_controls": 1
+        },
+        {
+          "title": "",
+          "class": "EdgeUiInputTopWndClass",
+          "tag": "DBCMD_01_机体修改_导出机体_8",
+          "visible_controls": 1
+        },
+        {
+          "title": "",
+          "class": "WorkerW",
+          "tag": "DBCMD_01_机体修改_导出机体_9",
+          "visible_controls": 1
+        },
+        {
+          "title": "",
+          "class": "DummyDWMListenerWindow",
+          "tag": "DBCMD_01_机体修改_导出机体_10",
+          "visible_controls": 1
+        },
+        {
+          "title": "",
+          "class": "DummyDWMListenerWindow",
+          "tag": "DBCMD_01_机体修改_导出机体_11",
+          "visible_controls": 1
+        },
+        {
+          "title": "",
+          "class": "DummyDWMListenerWindow",
+          "tag": "DBCMD_01_机体修改_导出机体_12",
+          "visible_controls": 1
+        },
+        {
+          "title": "",
+          "class": "DummyDWMListenerWindow",
+          "tag": "DBCMD_01_机体修改_导出机体_13",
+          "visible_controls": 1
+        },
+        {
+          "title": "QQ",
+          "class": "Chrome_WidgetWin_1",
+          "tag": "DBCMD_01_机体修改_导出机体_14",
+          "visible_controls": 2
+        },
+        {
+          "title": "",
+          "class": "WorkerW",
+          "tag": "DBCMD_01_机体修改_导出机体_15",
+          "visible_controls": 3
+        },
+        {
+          "title": "",
+          "class": "WorkerW",
+          "tag": "DBCMD_01_机体修改_导出机体_16",
+          "visible_controls": 2
+        },
+        {
+          "title": "Program Manager",
+          "class": "Progman",
+          "tag": "DBCMD_01_机体修改_导出机体_17",
+          "visible_controls": 1
+        }
+      ]
+    },
+    {
+      "state": "人物修改",
+      "control_id": 630,
+      "command": "导出人物",
+      "status": "captured",
+      "tab_x": 101,
+      "menu": [
+        {
+          "index": 0,
+          "text": "复制人物",
+          "id": 20007
+        },
+        {
+          "index": 1,
+          "text": "粘贴人物",
+          "id": 20008
+        },
+        {
+          "index": 2,
+          "text": "导出人物",
+          "id": 20009
+        }
+      ],
+      "descendants": [
+        {
+          "title": "",
+          "class": "Shell_TrayWnd",
+          "tag": "DBCMD_02_人物修改_导出人物_1",
+          "visible_controls": 14
+        },
+        {
+          "title": "Windows 输入体验",
+          "class": "Windows.UI.Core.CoreWindow",
+          "tag": "DBCMD_02_人物修改_导出人物_2",
+          "visible_controls": 1
+        },
+        {
+          "title": "关闭 Windows",
+          "class": "#32770",
+          "tag": "DBCMD_02_人物修改_导出人物_3",
+          "visible_controls": 8
+        },
+        {
+          "title": "Program Manager",
+          "class": "Progman",
+          "tag": "DBCMD_02_人物修改_导出人物_4",
+          "visible_controls": 1
+        }
+      ]
+    },
+    {
+      "state": "武器修改",
+      "control_id": 2530,
+      "command": "插入",
+      "status": "menu_not_found",
+      "tab_x": 185
+    },
+    {
+      "state": "武器修改",
+      "control_id": 2530,
+      "command": "编辑",
+      "status": "menu_not_found",
+      "tab_x": 185
+    }
+  ]
+}

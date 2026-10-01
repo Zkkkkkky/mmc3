@@ -57,7 +57,19 @@ class RomDataBrowserTests(QtTestCase):
     def test_browser_exposes_structured_pages_and_every_rom_byte(self) -> None:
         dialog = RomDataBrowserDialog(self.project)
         self.assertEqual(dialog.tabs.count(), 8)
+        self.assertTrue(all(page is None for page in dialog.sheet_pages))
+        dialog._ensure_tab_loaded(0)
+        self.assertIsNotNone(dialog.sheet_pages[0])
+        self.assertTrue(all(page is None for page in dialog.sheet_pages[1:]))
         self.assertIn(f"{len(self.project.working):,}", dialog.summary.text())
+        dialog.tabs.setCurrentIndex(6)
+        self.application.processEvents()
+        event_page = dialog.sheet_pages[6]
+        self.assertIsNotNone(event_page)
+        self.assertEqual(event_page.model.rowCount(), 8359)
+        dialog.tabs.setCurrentIndex(0)
+        dialog.tabs.setCurrentIndex(6)
+        self.assertIs(dialog.sheet_pages[6], event_page)
         offset = self.project.record_file_offset(2) + 4
         dialog.show_offset(offset)
         self.assertIs(dialog.tabs.currentWidget(), dialog.hex_page)
@@ -69,6 +81,19 @@ class RomDataBrowserTests(QtTestCase):
         )
         self.assertIn(f"0x{offset:06X}", dialog.hex_page.detail.text())
         dialog.reject()
+
+    def test_text_tables_are_reused_until_project_font_state_changes(self) -> None:
+        first = self.project.dc_text_table(channel="unit")
+        second = self.project.dc_text_table(channel="unit")
+        self.assertIs(first, second)
+        original = set(self.project.font_disabled_builtin_tokens)
+        try:
+            self.project.font_disabled_builtin_tokens.add(next(iter(first.byte_to_text)))
+            changed = self.project.dc_text_table(channel="unit")
+            self.assertIsNot(changed, first)
+            self.assertIs(changed, self.project.dc_text_table(channel="unit"))
+        finally:
+            self.project.font_disabled_builtin_tokens = original
 
     def test_database_opens_on_populated_records_and_keeps_raw_zero_records_available(self) -> None:
         dialog = DatabaseDialog(self.project)
@@ -89,7 +114,10 @@ class RomDataBrowserTests(QtTestCase):
             self.assertEqual(side.unit.currentData(), 9)
             self.assertEqual(side.weapon.currentData(), 7)
             self.assertEqual(side.strength.value(), 98)
-            self.assertEqual(side.skill.value(), 2)
+            self.assertEqual(side.skill.value(), 16)
+            self.assertEqual(side.skill_summary.currentData(), 0)
+            self.assertIn("$10", side.skill_summary.toolTip())
+            self.assertIn("先制攻击", side.skill_summary.toolTip())
             self.assertIn("21 C9 A0 00 08 00", side.character_summary.text())
             self.assertIn("武器特技", side.weapon_summary.text())
         dialog.reject()

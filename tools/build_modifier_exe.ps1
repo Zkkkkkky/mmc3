@@ -1,11 +1,24 @@
-﻿$ErrorActionPreference = "Stop"
+param(
+    [string]$DistDirectory = "output\app",
+    [string]$WorkDirectory = "output\build\pyinstaller-work"
+)
+
+$ErrorActionPreference = "Stop"
 
 $root = (Resolve-Path -LiteralPath (Join-Path $PSScriptRoot "..")).Path
 $python = Join-Path $root ".venv\Scripts\python.exe"
 $asm6 = Join-Path $root "tools\vendor\famistudio-4.5.3\Tools\asm6_fixed.exe"
 $specFile = Join-Path $PSScriptRoot "dc_modifier.spec"
-$dist = Join-Path $root "output\app"
-$work = Join-Path $root "output\build\pyinstaller-work"
+$dist = if ([System.IO.Path]::IsPathRooted($DistDirectory)) {
+    [System.IO.Path]::GetFullPath($DistDirectory)
+} else {
+    [System.IO.Path]::GetFullPath((Join-Path $root $DistDirectory))
+}
+$work = if ([System.IO.Path]::IsPathRooted($WorkDirectory)) {
+    [System.IO.Path]::GetFullPath($WorkDirectory)
+} else {
+    [System.IO.Path]::GetFullPath((Join-Path $root $WorkDirectory))
+}
 
 if (-not (Test-Path -LiteralPath $python -PathType Leaf)) {
     throw "未找到虚拟环境 Python：$python"

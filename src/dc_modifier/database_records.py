@@ -104,15 +104,19 @@ class ReadableCharacterPage(CharacterPage):
         character_splitter = self.findChild(QSplitter)
         assert character_splitter is not None
         list_panel = character_splitter.widget(0)
-        list_panel.setMinimumWidth(255)
-        list_panel.setMaximumWidth(320)
-        self.records.setMinimumWidth(250)
-        self.records.setMaximumWidth(315)
+        # The reference editor gives the record list roughly one quarter of
+        # the 1050 logical-pixel window.  Keeping the former 310 px minimum
+        # forced the whole detail pane into a horizontal scroll area at the
+        # normal Windows 125% display scale.
+        list_panel.setMinimumWidth(205)
+        list_panel.setMaximumWidth(255)
+        self.records.setMinimumWidth(200)
+        self.records.setMaximumWidth(250)
         self.character_list_heading = QLabel("人物选择")
         list_layout = list_panel.layout()
         if isinstance(list_layout, QVBoxLayout):
             list_layout.insertWidget(0, self.character_list_heading)
-        character_splitter.setSizes([310, 1010])
+        character_splitter.setSizes([240, 805])
         self.record_heading.hide()
         self.pending_state.hide()
         self.apply_button.hide()
@@ -121,7 +125,7 @@ class ReadableCharacterPage(CharacterPage):
                 button.hide()
         self.capability_status = QLabel(
             "可编辑：名称、战斗名称/引用、双方音乐、精神/成长、五项修正、精神与消耗、头像引用/颜色、击落不消失。\n"
-            "战斗台词的 8 个直接绑定、3 组特殊攻击规则和变形起飞绑定可编辑；新增人物因三固定池已满而安全拒绝。"
+            "战斗台词的 8 个直接绑定、3 组特殊攻击规则和变形起飞绑定可编辑；添加人物会按旧版规则同步扩容全部关联表。"
         )
         self.capability_status.setObjectName("hintText")
         self.capability_status.setWordWrap(True)
@@ -162,7 +166,7 @@ class ReadableCharacterPage(CharacterPage):
         self.name_reference.setEnabled(False)
 
         self.basic_group = QGroupBox("基本设置")
-        self.basic_group.setMinimumWidth(205)
+        self.basic_group.setMinimumWidth(180)
         basic_form = QFormLayout(self.basic_group)
         basic_form.setContentsMargins(7, 9, 7, 7)
         basic_form.setHorizontalSpacing(5)
@@ -174,9 +178,14 @@ class ReadableCharacterPage(CharacterPage):
         for editor in (
             self.normal_name_text, self.name_text, self.ally_music, self.enemy_music
         ):
-            editor.setMinimumWidth(100)
+            editor.setMinimumWidth(90)
             editor.setSizePolicy(
                 QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed
+            )
+        for combo in (self.ally_music, self.enemy_music):
+            combo.setMinimumContentsLength(10)
+            combo.setSizeAdjustPolicy(
+                QComboBox.SizeAdjustPolicy.AdjustToMinimumContentsLengthWithIcon
             )
         self.character_details = CharacterDetailsWidget()
         self.character_details.changed.connect(self._update_pending_state)
@@ -210,26 +219,44 @@ class ReadableCharacterPage(CharacterPage):
         reference_grid.addWidget(
             self.character_details.spirits_group, 1, 0, 1, 2
         )
-        reference_grid.setColumnStretch(0, 1)
-        reference_grid.setColumnStretch(1, 1)
+        # Match the legacy lower row: a compact basic column, a wider
+        # two-column attribute card, and a narrower dialogue rail.  Equal
+        # columns squeezed labels/spin boxes while the dialogue rail consumed
+        # almost half the available width.
+        reference_grid.setColumnStretch(0, 42)
+        reference_grid.setColumnStretch(1, 58)
         reference_grid.setRowStretch(2, 1)
-        self.character_details.attributes_group.setMinimumWidth(245)
-        self.character_details.spirits_group.setMinimumWidth(500)
+        self.character_details.attributes_group.setMinimumWidth(275)
+        self.character_details.spirits_group.setMinimumWidth(385)
 
-        workspace_layout.addWidget(reference_left, 5)
-        workspace_layout.addWidget(self.character_dialogue, 4)
-        self.character_dialogue.setMinimumWidth(410)
+        workspace_layout.addWidget(reference_left, 7)
+        workspace_layout.addWidget(self.character_dialogue, 3)
+        self.character_dialogue.setMinimumWidth(205)
         workspace_layout.setAlignment(
             self.character_dialogue, Qt.AlignmentFlag.AlignTop
         )
         detail.insertWidget(position + 1, workspace)
 
+    def add_character_record(self) -> None:
+        if self.project is None or not self.commit_pending_changes():
+            return
+        try:
+            character_id = self.project.add_character()
+        except (ValueError, RuntimeError) as error:
+            QMessageBox.warning(self, "无法新增人物", str(error))
+            return
+        self.populate_records()
+        self.select_record_id(character_id)
+        self.project_changed.emit(
+            f"已按旧版结构新增人物 ${character_id:02X}；名称、属性、头像、音乐和台词已同步扩容"
+        )
+
     def record_text(self, record_id: int) -> str:
         assert self.project is not None
-        return (
-            f"[{record_id:02X}]{record_id:03d}："
-            f"{self.project.character_normal_display_name(record_id)}"
-        )
+        name = self.project.character_normal_display_name(record_id)
+        if name == "空白/未分配人物槽":
+            name = ""
+        return f"[{record_id:02X}]{record_id:03d}：{name}"
 
     def showEvent(self, event) -> None:  # noqa: N802 - Qt override
         super().showEvent(event)
@@ -306,16 +333,19 @@ class ReadableCharacterPage(CharacterPage):
                     value = combo.itemData(index)
                     if value is None:
                         continue
-                    original = combo.itemText(index)
-                    if original.startswith("音乐"):
-                        original = str(
-                            combo.itemData(index, Qt.ItemDataRole.ToolTipRole)
-                            or original
-                        )
+                    command = int(value)
+                    track = self.project.profile.battle_music.track(command)
+                    note = track.label if track is not None else f"音乐{command:02X}（用途未确认）"
                     combo.setItemData(
-                        index, original, Qt.ItemDataRole.ToolTipRole
+                        index,
+                        f"命令 ${command:02X} · {note}",
+                        Qt.ItemDataRole.ToolTipRole,
                     )
-                    combo.setItemText(index, f"音乐{int(value):02X}")
+                    # The reference row shows the compact command label and
+                    # keeps the descriptive track title in the tooltip.  The
+                    # full bilingual title cannot fit beside the legacy form
+                    # labels without truncation.
+                    combo.setItemText(index, note.split("（", 1)[0])
             self.character_details.set_record(self.project, record_id)
             self.character_dialogue.set_record(self.project, record_id)
         finally:
@@ -446,11 +476,13 @@ class ReadableCharacterPage(CharacterPage):
                 self.project.set_character_name_texts(
                     target_id,
                     normal_text=concise_dc_text(
-                        self.project.character_normal_name_record_bytes(source_id)
+                        self.project.character_normal_name_record_bytes(source_id),
+                        text_table=self.project.dc_text_table(),
                     ),
                     battle_text=(
                         concise_dc_text(
-                            self.project.character_name_record_bytes(source_id)
+                            self.project.character_name_record_bytes(source_id),
+                            text_table=self.project.dc_text_table(),
                         )
                         if source_id < self.project.profile.character_name_count
                         and target_id < self.project.profile.character_name_count
@@ -477,6 +509,7 @@ class ReadableWeaponPage(WeaponPage):
     def __init__(self) -> None:
         self._loading_details = False
         self._extras_enabled = False
+        self._usage_cache_key: tuple[int, int, int] | None = None
         super().__init__()
         detail = _prepare_readable_page(self)
         self.task_hint = QLabel(
@@ -549,7 +582,12 @@ class ReadableWeaponPage(WeaponPage):
         parameter_layout.addWidget(extras, 1)
         detail.insertWidget(position, parameter_row)
         self.weapon_animation = WeaponAnimationWidget()
-        self.weapon_animation.setMaximumHeight(350)
+        self.weapon_animation.setMinimumHeight(285)
+        self.weapon_animation.setMaximumHeight(305)
+        for editor in self.weapon_animation.editors:
+            editor.instruction_table.setMinimumHeight(145)
+            editor.code_button.hide()
+            editor.guidance.hide()
         self.weapon_animation.changed.connect(self._update_pending_state)
         animation_tools = QHBoxLayout()
         self.animation_code_button = QPushButton("代码编辑")
@@ -736,7 +774,10 @@ class ReadableWeaponPage(WeaponPage):
             )
             text_pending = (
                 self.name_text.text().strip()
-                != concise_dc_text(self.project.weapon_name_record_bytes(self.current_id))
+                != concise_dc_text(
+                    self.project.weapon_name_record_bytes(self.current_id),
+                    text_table=self.project.dc_text_table(),
+                )
             )
             if reference_pending and text_pending:
                 raise ValueError("名称引用和名称文字不能同时修改；请先应用其中一项。")
@@ -861,6 +902,9 @@ class ReadableWeaponPage(WeaponPage):
             self._set_usage_entries([])
             self.usage_status.setText("当前 ROM 的机体武器关联表尚未验证。")
             return
+        cache_key = (id(self.project), self.project.revision, self.current_id)
+        if self._usage_cache_key == cache_key:
+            return
         entries: list[tuple[int, str]] = []
         for unit_id in range(1, self.project.unit_count):
             slots = tuple(index + 1 for index, weapon_id in enumerate(
@@ -874,6 +918,7 @@ class ReadableWeaponPage(WeaponPage):
             )
             entries.append((unit_id, text))
         self._set_usage_entries(entries)
+        self._usage_cache_key = cache_key
         count = len(entries)
         self.usage_status.setText(
             f"当前工程有 {count} 个机体装备此武器。"

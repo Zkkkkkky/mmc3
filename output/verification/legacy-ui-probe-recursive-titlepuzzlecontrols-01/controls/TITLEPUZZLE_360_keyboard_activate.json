@@ -1,0 +1,86 @@
+{
+  "tag": "TITLEPUZZLE_360_keyboard_activate",
+  "hwnd": 461554,
+  "title": "拼图代码",
+  "class": "WTWindow",
+  "rect": {
+    "left": 688,
+    "top": 419,
+    "right": 1229,
+    "bottom": 668,
+    "width": 541,
+    "height": 249
+  },
+  "pid": 9096,
+  "tree": {
+    "hwnd": 461554,
+    "class": "WTWindow",
+    "text": "拼图代码",
+    "ctrl_id": 0,
+    "rect": {
+      "left": 688,
+      "top": 419,
+      "right": 1229,
+      "bottom": 668,
+      "width": 541,
+      "height": 249
+    },
+    "visible": true,
+    "enabled": true,
+    "children": [
+      {
+        "hwnd": 68344,
+        "class": "Button",
+        "text": "取消",
+        "ctrl_id": 120,
+        "rect": {
+          "left": 1120,
+          "top": 618,
+          "right": 1220,
+          "bottom": 658,
+          "width": 100,
+          "height": 40
+        },
+        "visible": true,
+        "enabled": true,
+        "button_check_state": 0,
+        "children": []
+      },
+      {
+        "hwnd": 68342,
+        "class": "Button",
+        "text": "确定",
+        "ctrl_id": 110,
+        "rect": {
+          "left": 1010,
+          "top": 618,
+          "right": 1110,
+          "bottom": 658,
+          "width": 100,
+          "height": 40
+        },
+        "visible": true,
+        "enabled": true,
+        "button_check_state": 0,
+        "children": []
+      },
+      {
+        "hwnd": 264948,
+        "class": "Edit",
+        "text": "40 41 42 43 44 45 46 47 48 49 4A 4B 4C 4D 4E 4F ",
+        "ctrl_id": 100,
+        "rect": {
+          "left": 700,
+          "top": 468,
+          "right": 1220,
+          "bottom": 608,
+          "width": 520,
+          "height": 140
+        },
+        "visible": true,
+        "enabled": true,
+        "children": []
+      }
+    ]
+  }
+}

@@ -1,0 +1,85 @@
+{
+  "tag": "DBCMD_01_武器修改_插入_1",
+  "hwnd": 3344098,
+  "title": "错误",
+  "class": "#32770",
+  "rect": {
+    "left": 759,
+    "top": 351,
+    "right": 1163,
+    "bottom": 669,
+    "width": 404,
+    "height": 318
+  },
+  "pid": 18976,
+  "tree": {
+    "hwnd": 3344098,
+    "class": "#32770",
+    "text": "错误",
+    "ctrl_id": 0,
+    "rect": {
+      "left": 759,
+      "top": 351,
+      "right": 1163,
+      "bottom": 669,
+      "width": 404,
+      "height": 318
+    },
+    "visible": true,
+    "enabled": true,
+    "children": [
+      {
+        "hwnd": 3147808,
+        "class": "Button",
+        "text": "确定",
+        "ctrl_id": 2,
+        "rect": {
+          "left": 1026,
+          "top": 615,
+          "right": 1136,
+          "bottom": 650,
+          "width": 110,
+          "height": 35
+        },
+        "visible": true,
+        "enabled": true,
+        "button_check_state": 0,
+        "children": []
+      },
+      {
+        "hwnd": 15272504,
+        "class": "Static",
+        "text": "",
+        "ctrl_id": 20,
+        "rect": {
+          "left": 793,
+          "top": 425,
+          "right": 833,
+          "bottom": 465,
+          "width": 40,
+          "height": 40
+        },
+        "visible": true,
+        "enabled": true,
+        "children": []
+      },
+      {
+        "hwnd": 657018,
+        "class": "Static",
+        "text": "运行时出错!\r\n\r\n错误代码：4\r\n\r\n错误信息：数组成员引用下标必须大于等于1\r\n\r\n67541411, 139\r\n",
+        "ctrl_id": 65535,
+        "rect": {
+          "left": 843,
+          "top": 425,
+          "right": 1114,
+          "bottom": 568,
+          "width": 271,
+          "height": 143
+        },
+        "visible": true,
+        "enabled": true,
+        "children": []
+      }
+    ]
+  }
+}

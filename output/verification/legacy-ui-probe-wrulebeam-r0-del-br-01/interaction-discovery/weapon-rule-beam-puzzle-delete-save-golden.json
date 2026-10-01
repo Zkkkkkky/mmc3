@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "validated": false,
+  "case": "beam-puzzle-delete",
+  "rom": "D:\\GIT\\mmc3\\output\\build\\legacy-ui-probe\\weapon-rule-save-wrulebeam-r0-del-br-01.nes",
+  "requested_value": 18,
+  "requested_value2": 7,
+  "requested_code": "01 83 F0 FC 00 83 F0 FC",
+  "requested_record": 0,
+  "puzzle_action": {
+    "kind": "光束拼图",
+    "action": "delete",
+    "library_click": false,
+    "effect_button": "right",
+    "start": 80,
+    "library_percent": [
+      50,
+      50
+    ],
+    "effect_percent": [
+      90,
+      90
+    ]
+  },
+  "control_values_before": {},
+  "observed_before": null,
+  "observed_after": null,
+  "expected_diff": "nonzero",
+  "sha256_before": "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E",
+  "sha256_after": "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E",
+  "diff_count": 0,
+  "diffs": []
+}

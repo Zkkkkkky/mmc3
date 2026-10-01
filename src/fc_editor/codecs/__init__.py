@@ -33,6 +33,7 @@ from .map import MapCodec
 from .map_tile_attribute import MapTileAttribute, MapTileAttributeCodec, MapTilesetAttributes
 from .map_trigger import MapTrigger, MapTriggerCodec, MapTriggerLayout
 from .persuasion import PersuasionRule, PersuasionRuleCodec
+from .production_credits import ProductionCreditsCodec, ProductionCreditsRecord
 from .scenario_layout import ScenarioLayoutCodec
 from .story_text import StoryTextCodec
 from .unit import UnitCodec
@@ -72,6 +73,8 @@ __all__ = [
     "MapTriggerLayout",
     "PersuasionRule",
     "PersuasionRuleCodec",
+    "ProductionCreditsCodec",
+    "ProductionCreditsRecord",
     "EventScriptCodec",
     "LegacyGlobalDataCodec",
     "LegacyBattleEntry",

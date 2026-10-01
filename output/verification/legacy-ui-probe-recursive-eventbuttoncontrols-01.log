@@ -1,0 +1,38 @@
+[    0.1s] launched pid=1676
+[    0.1s] === stage A: launcher -> main window (no ROM) ===
+[    3.1s] top window: {'hwnd': 12518868, 'title': 'SRW2�޸���V1.5', 'class': 'WTWindow', 'rect': {'left': 571, 'top': 244, 'right': 1346, 'bottom': 843, 'width': 775, 'height': 599}, 'pid': 1676}
+[    4.1s] dump A01_������: title='SRW2�޸���V1.5' class='WTWindow' controls=8 shot=ok
+[   12.5s] main window hwnd=7997846 title='SRW2���ݰ��޸���V1.0'
+[   14.0s] dump A02_������_δ����ROM: title='SRW2���ݰ��޸���V1.0' class='WTWindow' controls=63 shot=ok
+[   22.0s] === stage LOAD: load ROM copy only ===
+[   23.0s] dump LOAD01_��ROM�Ի���: title='���ļ�' class='#32770' controls=49 shot=ok
+[   23.5s] open dialog confirmed gone=True
+[   30.5s] ROM loaded without main-window sweep, title='SRW2���ݰ��޸���V1.0��D:\\GIT\\mmc3\\output\\build\\legacy-ui-probe\\event-button-controls.nes'
+[   31.4s] dump LOAD02_������_�����: title='SRW2���ݰ��޸���V1.0��D:\\GIT\\mmc3\\output\\build\\legacy-ui-probe\\event-button-controls.nes' class='WTWindow' controls=63 shot=ok
+[   31.4s] === stage EVENTBUTTONCONTROLS ===
+[   38.4s] EVENTBUTTONCONTROLS page button 170 complete
+[   42.4s] EVENTBUTTONCONTROLS page button 180 complete
+[   46.5s] EVENTBUTTONCONTROLS page button 200 complete
+[   50.5s] EVENTBUTTONCONTROLS page button 210 complete
+[   55.6s] EVENTBUTTONCONTROLS page button 250 complete
+[   59.6s] EVENTBUTTONCONTROLS page button 270 complete
+[   66.9s] EVENTBUTTONCONTROLS page button 300 complete
+[   72.0s] EVENTBUTTONCONTROLS page button 320 complete
+[   81.3s] EVENTBUTTONCONTROLS page button 350 complete
+[   87.4s] EVENTBUTTONCONTROLS page button 370 complete
+[   92.4s] EVENTBUTTONCONTROLS page button 400 complete
+[   99.7s] EVENTBUTTONCONTROLS page button 410 complete
+[  109.0s] EVENTBUTTONCONTROLS page button 500 complete
+[  120.2s] EVENTBUTTONCONTROLS page button 530 complete
+[  127.3s] EVENTBUTTONCONTROLS page button 550 complete
+[  134.5s] EVENTBUTTONCONTROLS page button 580 complete
+[  137.2s] dump EVENTBUTTON_610_keyboard_activate_1: title='����ƴͼ' class='WTWindow' controls=32 shot=ok
+[  138.8s] dump EVENTBUTTON_610_left_click_1: title='����ƴͼ' class='WTWindow' controls=32 shot=ok
+[  139.0s] EVENTBUTTONCONTROLS page button 610 complete
+[  152.4s] EVENTBUTTONCONTROLS page button 640 complete
+[  160.7s] EVENTBUTTONCONTROLS page button 660 complete
+[  168.8s] EVENTBUTTONCONTROLS page button 680 complete
+[  180.0s] EVENTBUTTONCONTROLS page button 700 complete
+[  209.0s] EVENTBUTTONCONTROLS inner failure: RuntimeError('event editor did not appear')
+[  209.0s] stage EVENTBUTTONCONTROLS FAILED: RuntimeError("event buttons did not validate: 85/93 RuntimeError('event editor did not appear')")
+[  209.3s] terminated owned pid=1676

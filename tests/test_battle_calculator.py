@@ -17,10 +17,10 @@ class BattleCalculatorFormulaTests(unittest.TestCase):
     def setUp(self) -> None:
         self.parameters = BattleFormulaParameters.from_project(None)
 
-    def test_reference_firepower_matches_archived_c08_values(self) -> None:
-        self.assertEqual(reference_firepower(36, 10), 368)
-        self.assertEqual(reference_firepower(33, 10), 338)
-        self.assertEqual(reference_firepower(30, 10), 308)
+    def test_reference_firepower_is_strength_plus_weapon_contribution(self) -> None:
+        self.assertEqual(reference_firepower(98, 5, self.parameters), 177)
+        self.assertEqual(reference_firepower(98, 10, self.parameters), 227)
+        self.assertEqual(reference_firepower(255, 255, self.parameters), 2881)
 
     def test_hit_distance_terrain_damage_and_defense_effect_are_composed(self) -> None:
         attacker = BattleSideState(
@@ -48,7 +48,7 @@ class BattleCalculatorFormulaTests(unittest.TestCase):
             power_land=0,
             power_sea=0,
             terrain=2,
-            special=6,
+            special=7,
         )
 
         result = calculate_battle_attack(attacker, defender, self.parameters)
@@ -58,11 +58,11 @@ class BattleCalculatorFormulaTests(unittest.TestCase):
         self.assertTrue(result.can_hit)
         self.assertEqual(result.minimum_hit_speed, 98)
         self.assertEqual((result.terrain_name, result.firepower), ("海", 200))
-        self.assertEqual(result.predicted_damage, 500)
-        self.assertEqual(result.actual_damage, 250)
-        self.assertEqual(result.remaining_hp, 750)
-        self.assertEqual(result.hits_to_defeat, 4)
-        self.assertEqual(result.defensive_effect.name, "盾防")
+        self.assertEqual(result.predicted_damage, 240)
+        self.assertEqual(result.actual_damage, 120)
+        self.assertEqual(result.remaining_hp, 880)
+        self.assertEqual(result.hits_to_defeat, 9)
+        self.assertEqual(result.defensive_effect.name, "用盾防御")
 
     def test_double_hit_uses_strict_greater_than_and_exact_flooring(self) -> None:
         defender = BattleSideState(0, 0, 100, 1, 0, 1, 0, 0, 0)
@@ -89,11 +89,11 @@ class BattleCalculatorFormulaTests(unittest.TestCase):
         self.assertFalse(result.can_hit)
         self.assertEqual(result.minimum_hit_speed, 99999)
 
-    def test_expanded_special_codes_are_normalized_without_guessing_combinations(self) -> None:
-        self.assertEqual(normalized_special_code(16), 2)
-        self.assertEqual(defensive_effect(16).name, "相对转移装甲")
-        self.assertEqual(normalized_special_code(135), 135)
-        self.assertIsNone(defensive_effect(135))
+    def test_combined_special_byte_uses_only_verified_low_three_defense_bits(self) -> None:
+        self.assertEqual(normalized_special_code(16), 0)
+        self.assertIsNone(defensive_effect(16))
+        self.assertEqual(normalized_special_code(135), 7)
+        self.assertEqual(defensive_effect(135).name, "用盾防御")
 
 
 if __name__ == "__main__":

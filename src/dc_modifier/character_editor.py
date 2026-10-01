@@ -3,7 +3,7 @@ from __future__ import annotations
 from PySide6.QtCore import Qt, Signal
 from PySide6.QtGui import QImage, QPixmap
 from PySide6.QtWidgets import (
-    QCheckBox, QFileDialog, QFormLayout, QGridLayout, QGroupBox, QHBoxLayout,
+    QAbstractSpinBox, QCheckBox, QFileDialog, QFormLayout, QGridLayout, QGroupBox, QHBoxLayout,
     QComboBox, QDialog, QDialogButtonBox, QHeaderView, QLabel, QLineEdit,
     QListWidget, QMenu, QMessageBox, QPushButton, QSpinBox, QSizePolicy, QTableWidget,
     QTableWidgetItem, QTabWidget, QVBoxLayout, QWidget,
@@ -67,13 +67,15 @@ class NesColorField(QWidget):
         row.setContentsMargins(0, 0, 0, 0)
         row.setSpacing(3)
         self.swatch = NesColorButton(value, self)
-        self.swatch.setMinimumSize(30, 30)
-        self.swatch.setFixedSize(30, 30)
+        self.swatch.setMinimumSize(28, 28)
+        self.swatch.setFixedSize(28, 28)
         self.swatch.setText("")
         self.number = QSpinBox(self)
         self.number.setRange(0, 0x3F)
         self.number.setDisplayIntegerBase(16)
-        self.number.setFixedWidth(52)
+        self.number.setButtonSymbols(QAbstractSpinBox.ButtonSymbols.NoButtons)
+        self.number.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.number.setFixedWidth(46)
         self.number.setValue(value)
         self.number.setToolTip("直接输入十六进制 NES 色号")
         row.addWidget(self.swatch)
@@ -112,6 +114,29 @@ class NesColorField(QWidget):
 
     def text(self) -> str:
         return f"${self.value():02X}"
+
+
+class ElidedPreviewButton(QPushButton):
+    """Keep a complete preview in the tooltip without clipping its caption."""
+
+    def __init__(self, parent: QWidget | None = None) -> None:
+        super().__init__(parent)
+        self._full_text = ""
+
+    def setText(self, text: str) -> None:  # noqa: N802 - Qt override
+        self._full_text = text
+        self._refresh_elision()
+
+    def resizeEvent(self, event) -> None:  # noqa: N802 - Qt override
+        super().resizeEvent(event)
+        self._refresh_elision()
+
+    def _refresh_elision(self) -> None:
+        available = max(0, self.width() - 16)
+        visible = self.fontMetrics().elidedText(
+            self._full_text, Qt.TextElideMode.ElideRight, available
+        )
+        super().setText(visible)
 
 
 class SpiritCostDialog(QDialog):
@@ -285,6 +310,8 @@ class RuleConditionDialog(QDialog):
             QDialogButtonBox.StandardButton.Ok
             | QDialogButtonBox.StandardButton.Cancel
         )
+        buttons.button(QDialogButtonBox.StandardButton.Ok).setText("确定")
+        buttons.button(QDialogButtonBox.StandardButton.Cancel).setText("取消")
         buttons.accepted.connect(self.accept)
         buttons.rejected.connect(self.reject)
         form.addRow(buttons)
@@ -729,16 +756,16 @@ class CharacterDialogueWidget(QGroupBox):
         attack_group = QGroupBox("攻击对话")
         self.attack_group = attack_group
         attack_grid = QGridLayout(attack_group)
-        attack_grid.setContentsMargins(7, 9, 7, 7)
-        attack_grid.setHorizontalSpacing(5)
-        attack_grid.setVerticalSpacing(3)
+        attack_grid.setContentsMargins(6, 8, 6, 5)
+        attack_grid.setHorizontalSpacing(4)
+        attack_grid.setVerticalSpacing(2)
 
         defense_group = QGroupBox("防御对话")
         self.defense_group = defense_group
         defense_grid = QGridLayout(defense_group)
-        defense_grid.setContentsMargins(7, 9, 7, 7)
-        defense_grid.setHorizontalSpacing(5)
-        defense_grid.setVerticalSpacing(3)
+        defense_grid.setContentsMargins(6, 8, 6, 5)
+        defense_grid.setHorizontalSpacing(4)
+        defense_grid.setVerticalSpacing(2)
 
         direct_page = QWidget()
         grid = QGridLayout(direct_page)
@@ -763,7 +790,7 @@ class CharacterDialogueWidget(QGroupBox):
             dialogue.valueChanged.connect(self._changed)
             segment.hide()
             dialogue.hide()
-            choose = QPushButton()
+            choose = ElidedPreviewButton()
             choose.setMinimumWidth(0)
             choose.setSizePolicy(
                 QSizePolicy.Policy.Ignored, QSizePolicy.Policy.Fixed
@@ -804,7 +831,7 @@ class CharacterDialogueWidget(QGroupBox):
                 lambda _row, _column, group=group_index: self._edit_rule(group)
             )
             self.rule_tables.append(table)
-            rule_button = QPushButton()
+            rule_button = ElidedPreviewButton()
             rule_button.setMinimumWidth(0)
             rule_button.setSizePolicy(
                 QSizePolicy.Policy.Ignored, QSizePolicy.Policy.Fixed
@@ -881,9 +908,9 @@ class CharacterDialogueWidget(QGroupBox):
         transform_group = QGroupBox("变形起飞对话")
         self.transform_group = transform_group
         transform_row = QGridLayout(transform_group)
-        transform_row.setContentsMargins(7, 9, 7, 7)
-        transform_row.setHorizontalSpacing(5)
-        transform_row.setVerticalSpacing(3)
+        transform_row.setContentsMargins(6, 8, 6, 5)
+        transform_row.setHorizontalSpacing(4)
+        transform_row.setVerticalSpacing(2)
         transform_row.addWidget(QLabel("对话选择："), 0, 0)
         self.transform_selector = QComboBox()
         self.transform_selector.currentIndexChanged.connect(
@@ -1305,19 +1332,23 @@ class CharacterDialogueWidget(QGroupBox):
             return
         binding = picker.binding()
         row = self.transform_table.rowCount()
-        self.transform_table.insertRow(row)
-        values = (binding.unit_start, binding.unit_end, binding.dialogue)
-        details = (
-            self.project.unit_display_name(binding.unit_start),
-            self.project.unit_display_name(binding.unit_end),
-            dialogue_preview(
-                self.project, 0x05, binding.dialogue, self._text_codec
-            ),
-        )
-        for column, (value, detail) in enumerate(zip(values, details)):
-            self.transform_table.setItem(
-                row, column, self._hex_item(value, detail)
+        self.transform_table.blockSignals(True)
+        try:
+            self.transform_table.insertRow(row)
+            values = (binding.unit_start, binding.unit_end, binding.dialogue)
+            details = (
+                self.project.unit_display_name(binding.unit_start),
+                self.project.unit_display_name(binding.unit_end),
+                dialogue_preview(
+                    self.project, 0x05, binding.dialogue, self._text_codec
+                ),
             )
+            for column, (value, detail) in enumerate(zip(values, details)):
+                self.transform_table.setItem(
+                    row, column, self._hex_item(value, detail)
+                )
+        finally:
+            self.transform_table.blockSignals(False)
         self.transform_table.setCurrentCell(row, 0)
         self._changed()
         selector = self.transform_selector.findData(row)
@@ -1421,8 +1452,12 @@ class CharacterDialogueWidget(QGroupBox):
             aliases = codec.shared_ids(character_id, project.working)
             self.status.setText(
                 "直接台词可按正文预览选择；特殊规则可新增、删除或修改，"
-                "保存时会在已验证共享池容量内安全重排。"
-                f" 共用此台词记录：{'、'.join(f'{item:03d}' for item in aliases)}。"
+                "保存时按人物 ID 自动拆分并在原生容量内安全重排。"
+                + (
+                    f" 当前 ROM 中相同记录还被这些人物复用："
+                    f"{'、'.join(f'{item:03d}' for item in aliases)}；修改不会联动。"
+                    if len(aliases) > 1 else ""
+                )
             )
             self._refresh_direct_buttons()
             self._refresh_rule_buttons()
@@ -1488,7 +1523,8 @@ class CharacterDialogueWidget(QGroupBox):
             return ()
         record = self.record()
         before = self.codec.raw_record(self.character_id, self.project.working)
-        if len(record.encode()) == len(before):
+        aliases = self.codec.shared_ids(self.character_id, self.project.working)
+        if len(record.encode()) == len(before) and len(aliases) == 1:
             dialogue_patches = tuple(filter(None, (
                 self.codec.patch(self.project.working, self.character_id, record),
             )))
@@ -1504,32 +1540,19 @@ class CharacterDialogueWidget(QGroupBox):
         )
 
     def shared_change_impacts(self):
-        if (
-            self.codec is None
-            or self._baseline is None
-            or self._dialogue_state() == self._baseline[0]
-        ):
-            return ()
-        aliases = self.codec.shared_ids(self.character_id, self.project.working)
-        return (("人物战斗台词记录", aliases),) if len(aliases) > 1 else ()
+        return ()
 
     def reset_change_impacts(self):
-        if self.codec is None or self.character_id is None:
-            return ()
-        if self.codec.read(
-            self.character_id, self.project.working
-        ) == self.codec.read(self.character_id, self.project.original):
-            return ()
-        aliases = self.codec.shared_ids(self.character_id, self.project.working)
-        return (("人物战斗台词记录", aliases),) if len(aliases) > 1 else ()
+        return ()
 
     def reset_to_original(self) -> None:
         if self.codec is None or self.character_id is None:
             return
         original_record = self.codec.read(self.character_id, self.project.original)
+        aliases = self.codec.shared_ids(self.character_id, self.project.working)
         if len(original_record.encode()) == len(
             self.codec.raw_record(self.character_id, self.project.working)
-        ):
+        ) and len(aliases) == 1:
             patch = self.codec.patch(
                 self.project.working, self.character_id, original_record
             )
@@ -1621,7 +1644,7 @@ class CharacterDetailsWidget(QWidget):
         self.attribute_sharing.hide()
         attributes_row.addWidget(attributes, 1)
 
-        spirits = QGroupBox("精神列表与消耗")
+        spirits = QGroupBox("精神列表（双击可修改精神消耗）")
         self.spirits_group = spirits
         grid = QGridLayout(spirits)
         grid.setContentsMargins(5, 7, 5, 5)
@@ -1659,14 +1682,21 @@ class CharacterDetailsWidget(QWidget):
 
         portrait = QGroupBox("头像设置")
         self.portrait_group = portrait
-        portrait_layout = QGridLayout(portrait)
-        portrait_layout.setContentsMargins(6, 8, 6, 6)
-        portrait_layout.setHorizontalSpacing(4)
-        portrait_layout.setVerticalSpacing(3)
+        portrait.setObjectName("portraitSettingsGroup")
+        portrait_layout = QHBoxLayout(portrait)
+        portrait_layout.setContentsMargins(5, 9, 5, 6)
+        portrait_layout.setSpacing(6)
         self.portrait_preview = QLabel()
         self.portrait_preview.setFixedSize(64, 64)
-        portrait_layout.addWidget(self.portrait_preview, 0, 0, 2, 1)
-        visibility = QVBoxLayout()
+        portrait_layout.addWidget(
+            self.portrait_preview, 0, Qt.AlignmentFlag.AlignTop
+        )
+
+        visibility_host = QWidget()
+        visibility_host.setObjectName("portraitVisibilitySection")
+        visibility_host.setFixedWidth(74)
+        visibility = QVBoxLayout(visibility_host)
+        visibility.setContentsMargins(0, 3, 0, 0)
         visibility.setSpacing(2)
         self.show_front = QCheckBox("显示正面")
         self.show_back = QCheckBox("显示背景")
@@ -1677,17 +1707,28 @@ class CharacterDetailsWidget(QWidget):
         visibility.addWidget(self.show_front)
         visibility.addWidget(self.show_back)
         visibility.addStretch()
-        portrait_layout.addLayout(visibility, 0, 1, 2, 1)
+        portrait_layout.addWidget(
+            visibility_host, 0, Qt.AlignmentFlag.AlignTop
+        )
 
-        upload_actions = QVBoxLayout()
+        upload_host = QWidget()
+        upload_host.setObjectName("portraitUploadSection")
+        upload_host.setFixedWidth(74)
+        upload_actions = QVBoxLayout(upload_host)
+        upload_actions.setContentsMargins(0, 0, 0, 0)
         upload_actions.setSpacing(2)
         for kind, text in (("front", "正面上传"), ("back", "背景上传")):
             button = QPushButton(text)
+            button.setObjectName("portraitUploadButton")
+            button.setFixedWidth(74)
             button.clicked.connect(
                 lambda _checked=False, kind=kind: self._upload_image(kind)
             )
             upload_actions.addWidget(button)
-        portrait_layout.addLayout(upload_actions, 0, 2, 2, 1)
+        upload_actions.addStretch()
+        portrait_layout.addWidget(
+            upload_host, 0, Qt.AlignmentFlag.AlignTop
+        )
 
         self.portrait_fields = {}
         for key, _label, minimum, maximum in (
@@ -1707,48 +1748,64 @@ class CharacterDetailsWidget(QWidget):
                     minimum, maximum, lambda value: f"头像{value}"
                 )
             if key.endswith("bank"):
-                spin.setMaximumWidth(100)
+                spin.setFixedWidth(96)
             elif key.endswith("slot"):
-                spin.setMaximumWidth(78)
+                spin.setFixedWidth(96)
             elif key.startswith("color"):
-                spin.setMaximumWidth(90)
+                spin.setFixedWidth(77)
             else:
                 spin.setMaximumWidth(84)
             spin.setObjectName(f"portrait_{key}")
             spin.valueChanged.connect(self._changed)
             self.portrait_fields[key] = spin
 
+        self.portrait_selector_sections = []
         selector_specs = (
             ("正面图库：", "front_bank", "front_slot"),
             ("背景图库：", "back_bank", "back_slot"),
         )
-        for column, (label, bank_key, slot_key) in enumerate(selector_specs, 3):
-            portrait_layout.addWidget(QLabel(label), 0, column)
+        for label, bank_key, slot_key in selector_specs:
             selector = QWidget()
-            selector_row = QHBoxLayout(selector)
-            selector_row.setContentsMargins(0, 0, 0, 0)
-            selector_row.setSpacing(3)
-            selector_row.addWidget(self.portrait_fields[bank_key])
-            selector_row.addWidget(self.portrait_fields[slot_key])
-            portrait_layout.addWidget(selector, 1, column)
+            selector.setObjectName("portraitSelectorSection")
+            selector.setFixedWidth(96)
+            selector_column = QVBoxLayout(selector)
+            selector_column.setContentsMargins(0, 0, 0, 0)
+            selector_column.setSpacing(2)
+            section_label = QLabel(label)
+            section_label.setObjectName("portraitSectionLabel")
+            selector_column.addWidget(section_label)
+            selector_column.addWidget(self.portrait_fields[bank_key])
+            selector_column.addWidget(self.portrait_fields[slot_key])
+            selector_column.addStretch()
+            self.portrait_selector_sections.append(selector)
+            portrait_layout.addWidget(
+                selector, 0, Qt.AlignmentFlag.AlignTop
+            )
 
-        for column, (label, key) in enumerate((
+        self.portrait_color_sections = []
+        for label, key in (
             ("头像颜色1：", "color0"),
             ("头像颜色2：", "color1"),
             ("头像颜色3：", "color2"),
-        ), 5):
-            portrait_layout.addWidget(QLabel(label), 0, column)
-            portrait_layout.addWidget(self.portrait_fields[key], 1, column)
+        ):
+            color_section = QWidget()
+            color_section.setObjectName("portraitColorSection")
+            color_section.setFixedWidth(80)
+            color_column = QVBoxLayout(color_section)
+            color_column.setContentsMargins(0, 0, 0, 0)
+            color_column.setSpacing(2)
+            section_label = QLabel(label)
+            section_label.setObjectName("portraitSectionLabel")
+            color_column.addWidget(section_label)
+            color_column.addWidget(self.portrait_fields[key])
+            color_column.addStretch()
+            self.portrait_color_sections.append(color_section)
+            portrait_layout.addWidget(
+                color_section, 0, Qt.AlignmentFlag.AlignTop
+            )
 
         utility_actions = QVBoxLayout()
         utility_actions.setSpacing(2)
-        self.shared_portrait = QCheckBox("同时修改共用头像记录")
-        self.shared_portrait.toggled.connect(self._changed)
-        self.shared_portrait.hide()
-        self.portrait_sharing = QLabel()
-        self.portrait_sharing.setWordWrap(True)
-        self.portrait_sharing.setMaximumWidth(210)
-        self.portrait_sharing.hide()
         self.portrait_export_button = QPushButton("导出当前头像…")
         self.portrait_export_button.setObjectName("portrait_export_button")
         self.portrait_export_button.setToolTip(
@@ -1761,19 +1818,28 @@ class CharacterDetailsWidget(QWidget):
         self.portrait_advanced_button = QPushButton("高级…")
         self.portrait_advanced_button.setCheckable(True)
         self.portrait_advanced_button.setToolTip(
-            "仅在多个人物共用同一属性或头像记录、且需要一起修改时使用。"
-        )
-        self.portrait_advanced_button.toggled.connect(
-            self.shared_portrait.setVisible
+            "仅用于查看人物属性记录的高级联动选项；头像配置始终按人物ID独立修改。"
         )
         self.portrait_advanced_button.toggled.connect(
             self.shared_attributes.setVisible
         )
         utility_actions.addWidget(self.portrait_advanced_button)
-        portrait_layout.addLayout(utility_actions, 0, 8, 2, 1)
-        portrait_layout.setColumnStretch(8, 1)
+        # These are modern convenience actions, not part of the reference
+        # portrait row.  Keep the objects/API for shortcuts and tests, but do
+        # not let them displace the third colour field or create a scrollbar.
+        self.portrait_export_button.hide()
+        self.portrait_advanced_button.hide()
         portrait.setToolTip(
             "选择正面、背景和三种颜色；上传图片后点数据库窗口的“确定”保存。"
+        )
+        portrait.setStyleSheet(
+            "QGroupBox#portraitSettingsGroup QLabel#portraitSectionLabel {"
+            " color:#234B5A; }"
+            "QGroupBox#portraitSettingsGroup QPushButton#portraitUploadButton {"
+            " background:#E8F4F7; color:#14566B;"
+            " border:1px solid #9DBDC6; border-radius:3px; padding:3px 5px; }"
+            "QGroupBox#portraitSettingsGroup QPushButton#portraitUploadButton:hover {"
+            " background:#D9EDF2; border-color:#4F91A2; }"
         )
 
         outer.addWidget(portrait)
@@ -1818,13 +1884,6 @@ class CharacterDetailsWidget(QWidget):
             ids = self.codec.shared_ids(self.character_id)
             if len(ids) > 1:
                 impacts.append(("人物属性记录", ids))
-        if (
-            self.shared_portrait.isChecked()
-            and self.portrait_record() != self.codec.read_portrait(self.character_id)
-        ):
-            ids = self.codec.shared_ids(self.character_id, portrait=True)
-            if len(ids) > 1:
-                impacts.append(("头像记录", ids))
         for kind, (first_tile, _payload) in self._image_drafts.items():
             ids = self._portrait_tile_users(first_tile)
             if len(ids) > 1:
@@ -1898,14 +1957,18 @@ class CharacterDetailsWidget(QWidget):
                 )
                 spin.setValue(value)
             self.shared_attributes.setChecked(False)
-            self.shared_portrait.setChecked(False)
-            for label, is_portrait in ((self.attribute_sharing, False), (self.portrait_sharing, True)):
-                ids = codec.shared_ids(character_id, portrait=is_portrait)
-                names = "、".join(f"{item:03d}" for item in ids[:16])
-                label.setText(f"共用此记录：{names}{'…' if len(ids) > 16 else ''}（{len(ids)} 个）。独立修改需要原数据池有空间。")
-                label.setToolTip("、".join(f"{item:03d} {project.character_display_name(item)}" for item in ids if item < project.profile.character_name_count))
-                toggle = self.shared_portrait if is_portrait else self.shared_attributes
-                toggle.setToolTip(label.text() + "\n" + label.toolTip())
+            ids = codec.shared_ids(character_id)
+            names = "、".join(f"{item:03d}" for item in ids[:16])
+            self.attribute_sharing.setText(
+                f"共用此属性记录：{names}{'…' if len(ids) > 16 else ''}（{len(ids)} 个）。"
+            )
+            self.attribute_sharing.setToolTip("、".join(
+                f"{item:03d} {project.character_display_name(item)}"
+                for item in ids if item < project.profile.character_name_count
+            ))
+            self.shared_attributes.setToolTip(
+                self.attribute_sharing.text() + "\n" + self.attribute_sharing.toolTip()
+            )
             self.codec = codec
             self._baseline = self._state()
             self.status.setText("修改将随数据库窗口“确定”保存；“取消”会还原本次窗口内的改动。")
@@ -1941,7 +2004,7 @@ class CharacterDetailsWidget(QWidget):
         if self.codec is None or self.character_id is None:
             return ()
         patches = (self.codec.patches(self.character_id, self.attribute_record(), shared=self.shared_attributes.isChecked())
-                   + self.codec.portrait_patches(self.character_id, self.portrait_record(), shared=self.shared_portrait.isChecked())
+                   + self.codec.portrait_patches(self.character_id, self.portrait_record())
                    + (self.codec.cost_patch(tuple(cost.value() for cost in self.costs)),))
         portrait = self.portrait_record()
         targets = {"front": portrait.front_bank * 64 + portrait.front_slot * 16,
@@ -1968,8 +2031,10 @@ class CharacterDetailsWidget(QWidget):
             return
         patches = (self.codec.patches(self.character_id, self.codec.read(self.character_id, original=True),
                                       shared=self.shared_attributes.isChecked())
-                   + self.codec.portrait_patches(self.character_id, self.codec.read_portrait(self.character_id, original=True),
-                                                shared=self.shared_portrait.isChecked()))
+                   + self.codec.portrait_patches(
+                       self.character_id,
+                       self.codec.read_portrait(self.character_id, original=True),
+                   ))
         apply_verified_patches(self.project, patches, "还原人物属性与头像")
 
     def _render_previews(self) -> None:

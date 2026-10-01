@@ -1,0 +1,32 @@
+{
+  "tag": "DBCMD_01_机体修改_导出机体_4",
+  "hwnd": 2690198,
+  "title": "电影和电视",
+  "class": "Windows.UI.Core.CoreWindow",
+  "rect": {
+    "left": 0,
+    "top": 1,
+    "right": 1280,
+    "bottom": 1001,
+    "width": 1280,
+    "height": 1000
+  },
+  "pid": 2748,
+  "tree": {
+    "hwnd": 2690198,
+    "class": "Windows.UI.Core.CoreWindow",
+    "text": "电影和电视",
+    "ctrl_id": 0,
+    "rect": {
+      "left": 0,
+      "top": 1,
+      "right": 1280,
+      "bottom": 1001,
+      "width": 1280,
+      "height": 1000
+    },
+    "visible": true,
+    "enabled": true,
+    "children": []
+  }
+}

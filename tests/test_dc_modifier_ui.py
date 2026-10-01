@@ -13,16 +13,20 @@ os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 
 from PySide6.QtCore import QPoint, QPointF, QRect, Qt, QUrl
 from PySide6.QtGui import QAction, QImage, QPainter, QWheelEvent
+from PySide6.QtTest import QTest
 from PySide6.QtWidgets import (
     QApplication,
+    QCheckBox,
     QComboBox,
     QDialog,
+    QDialogButtonBox,
     QFileDialog,
     QLabel,
     QMessageBox,
     QPushButton,
     QSpinBox,
     QStyle,
+    QStyleOptionButton,
     QStyleOptionSpinBox,
     QToolBar,
 )
@@ -30,7 +34,7 @@ from shiboken6 import isValid
 
 import dc_modifier.workspace as workspace_module
 from dc_modifier.app import (
-    ControlWheelGuard,
+    ApplicationUiPolisher, ComboPopupGuard, ControlWheelGuard,
     LEGACY_ROM, LEGACY_WINDOW_TITLE, LauncherWindow, MainWindow,
     STYLE_SHEET, VisibleArrowStyle, startup_rom_from_arguments,
 )
@@ -75,14 +79,99 @@ class DesktopEditorSmokeTests(QtTestCase):
     def test_section_boundaries_keep_a_calm_visible_accent(self) -> None:
         self.assertIn("border-top: 2px solid #4b8290", STYLE_SHEET)
         self.assertIn("QGroupBox::title", STYLE_SHEET)
-        self.assertIn("background: #edf4f6", STYLE_SHEET)
+        self.assertIn("background: #e7f0f3", STYLE_SHEET)
         self.assertIn("color: #2f6170", STYLE_SHEET)
+
+    def test_global_theme_uses_distinct_nested_surfaces_and_control_states(self) -> None:
+        for selector in (
+            "QGroupBox QGroupBox",
+            "QGroupBox QGroupBox QGroupBox",
+            'QLineEdit[readOnly="true"]',
+            "QPushButton:checked",
+            "QTreeView::item:selected:!active",
+            "QProgressBar::chunk",
+            "QSlider::handle:horizontal",
+            "QMessageBox QLabel",
+            "QStackedWidget#mainWorkspace",
+        ):
+            self.assertIn(selector, STYLE_SHEET)
+        self.assertIn("background: #f3f7f8", STYLE_SHEET)
+        self.assertIn("alternate-background-color: #f1f5f6", STYLE_SHEET)
+        self.assertNotIn("QMainWindow, QDialog, QWidget {", STYLE_SHEET)
+
+    def test_global_checkbox_has_square_and_internal_check_mark(self) -> None:
+        checkbox = QCheckBox("显示机体")
+        style = VisibleArrowStyle("Fusion")
+        checkbox.setStyle(style)
+        checkbox.setStyleSheet(STYLE_SHEET)
+        checkbox.resize(120, 28)
+        checkbox.show()
+        self.application.processEvents()
+        option = QStyleOptionButton()
+        checkbox.initStyleOption(option)
+        indicator = style.subElementRect(
+            QStyle.SubElement.SE_CheckBoxIndicator, option, checkbox
+        )
+        unchecked = checkbox.grab().toImage()
+        checkbox.setChecked(True)
+        self.application.processEvents()
+        checked = checkbox.grab().toImage()
+        self.addCleanup(checkbox.close)
+
+        self.assertFalse(indicator.isEmpty())
+        self.assertNotEqual(unchecked, checked)
+        center = indicator.center()
+        self.assertGreater(unchecked.pixelColor(center).lightness(), 220)
+        filled = indicator.topLeft() + QPoint(3, 3)
+        self.assertLess(checked.pixelColor(filled).lightness(), 190)
+        checked_region = {
+            checked.pixelColor(x, y).name()
+            for y in range(indicator.top(), indicator.bottom() + 1)
+            for x in range(indicator.left(), indicator.right() + 1)
+        }
+        self.assertIn("#ffffff", checked_region)
+
+    def test_main_workspace_has_an_opaque_calm_surface(self) -> None:
+        self.assertEqual(self.window.workspace.objectName(), "mainWorkspace")
+        self.assertIn("background: #eef2f4", STYLE_SHEET)
 
     def test_native_combo_arrows_and_selected_rows_remain_visible(self) -> None:
         self.assertNotIn("QComboBox::drop-down", STYLE_SHEET)
+        self.assertIn("QComboBox { combobox-popup: 0; }", STYLE_SHEET)
         self.assertIn("QListWidget::item:selected:!active", STYLE_SHEET)
         self.assertIn("background: #3f7f8f", STYLE_SHEET)
         self.assertIn("color: #ffffff", STYLE_SHEET)
+
+    def test_global_theme_covers_embedded_views_and_secondary_windows(self) -> None:
+        for selector in (
+            "QAbstractItemView", "QTreeWidget", "QToolTip",
+            "QDialogButtonBox QPushButton", "QSplitter::handle",
+            "QLabel#infoPanel", "QPushButton#destructiveButton",
+        ):
+            self.assertIn(selector, STYLE_SHEET)
+
+    def test_dialog_polisher_assigns_primary_and_destructive_roles(self) -> None:
+        dialog = QDialog()
+        buttons = QDialogButtonBox(
+            QDialogButtonBox.StandardButton.Ok
+            | QDialogButtonBox.StandardButton.Cancel,
+            dialog,
+        )
+        delete = buttons.addButton(
+            "删除", QDialogButtonBox.ButtonRole.DestructiveRole
+        )
+        ApplicationUiPolisher.polish_dialog(dialog)
+        self.assertEqual(
+            buttons.button(QDialogButtonBox.StandardButton.Ok).objectName(),
+            "primaryButton",
+        )
+        self.assertEqual(
+            buttons.button(QDialogButtonBox.StandardButton.Ok).text(), "确定"
+        )
+        self.assertEqual(
+            buttons.button(QDialogButtonBox.StandardButton.Cancel).text(), "取消"
+        )
+        self.assertEqual(delete.objectName(), "destructiveButton")
 
     def test_plain_wheel_cannot_accidentally_change_field_values(self) -> None:
         guard = ControlWheelGuard(self.application)
@@ -116,6 +205,47 @@ class DesktopEditorSmokeTests(QtTestCase):
                 self.assertNotEqual(value(), before)
                 editor.close()
         finally:
+            self.application.removeEventFilter(guard)
+
+    def test_combo_popups_are_short_and_ignore_opening_press_drag_release(self) -> None:
+        guard = ComboPopupGuard(self.application)
+        self.application.installEventFilter(guard)
+        previous_style = self.application.styleSheet()
+        self.application.setStyleSheet(STYLE_SHEET)
+        combo = QComboBox()
+        combo.addItems([f"选项 {index:03d}" for index in range(100)])
+        combo.setMaxVisibleItems(24)
+        combo.resize(180, 28)
+        combo.show()
+        self.application.processEvents()
+        try:
+            self.assertEqual(combo.maxVisibleItems(), 10)
+            QTest.mousePress(
+                combo,
+                Qt.MouseButton.LeftButton,
+                pos=combo.rect().center(),
+            )
+            self.application.processEvents()
+            self.assertTrue(combo.view().isVisible())
+            row_height = combo.view().sizeHintForRow(0)
+            self.assertLessEqual(combo.view().height(), row_height * 10 + 8)
+            target = combo.view().visualRect(combo.model().index(5, 0)).center()
+            QTest.mouseMove(combo.view().viewport(), target)
+            QTest.mouseRelease(
+                combo.view().viewport(), Qt.MouseButton.LeftButton, pos=target
+            )
+            self.application.processEvents()
+            self.assertEqual(combo.currentIndex(), 0)
+            self.assertTrue(combo.view().isVisible())
+
+            QTest.mouseClick(
+                combo.view().viewport(), Qt.MouseButton.LeftButton, pos=target
+            )
+            self.application.processEvents()
+            self.assertEqual(combo.currentIndex(), 5)
+        finally:
+            combo.close()
+            self.application.setStyleSheet(previous_style)
             self.application.removeEventFilter(guard)
 
     def test_main_window_opens_at_reference_scale_without_locking_resize(self) -> None:
@@ -230,6 +360,9 @@ class DesktopEditorSmokeTests(QtTestCase):
             # unsaved-changes confirmation cannot make an offscreen run hang.
             self.window.map_page.refresh()
             self.window._saved_snapshot = bytes(self.window.project.working)
+            self.window._saved_allocations = (
+                self.window.project.resource_allocator.allocations
+            )
         self.window.close()
 
     def test_default_exports_use_output_directory(self) -> None:
@@ -723,7 +856,8 @@ class DesktopEditorSmokeTests(QtTestCase):
         )
         self.assertEqual(self.window.extension_menu.actions()[0], self.window.rom_data_action)
         self.assertTrue(self.window.extension_menu.actions()[1].isSeparator())
-        self.assertFalse(self.window.export_avatar_action.isEnabled())
+        self.assertFalse(hasattr(self.window, "production_credits_action"))
+        self.assertTrue(self.window.export_avatar_action.isEnabled())
         self.assertFalse(hasattr(self.window, "export_avatar_extended_action"))
         self.assertEqual(self.window.about_action.text(), "关于")
         project_actions = [
@@ -1000,7 +1134,7 @@ class DesktopEditorSmokeTests(QtTestCase):
         with self.assertRaisesRegex(ValueError, "超出范围"):
             parse_id_expression("$21", 0x20)
 
-    def test_unit_import_page_builds_package_and_previews_shared_ids(self) -> None:
+    def test_unit_import_page_builds_package_and_previews_target_only(self) -> None:
         page = self.window.pages[self.window.page_index["unit_import"]]
         self.assertIsInstance(page, UnitImportPage)
         assert isinstance(page, UnitImportPage)
@@ -1015,8 +1149,10 @@ class DesktopEditorSmokeTests(QtTestCase):
         self.assertEqual(len(page.loaded_package.assets), 1)
         self.assertIn("$01", page.package_summary.text())
         self.assertIn("CHR $0020", page.package_summary.text())
-        self.assertIn("$05", page.impact.text())
-        self.assertIn("$48", page.impact.text())
+        self.assertIn("只修改该ID", page.impact.text())
+        self.assertIn("自动拆分", page.impact.text())
+        self.assertNotIn("$05", page.impact.text())
+        self.assertNotIn("$48", page.impact.text())
 
     def test_chr_canvas_edit_and_undo(self) -> None:
         assert self.window.project is not None
@@ -1068,7 +1204,7 @@ class DesktopEditorSmokeTests(QtTestCase):
         self.window.undo()
         self.assertEqual(self.window.project.get_value(unit_id, "movement"), old_value)
 
-    def test_shared_unit_stat_edit_requires_confirmation_before_writing(self) -> None:
+    def test_shared_unit_stat_edit_detaches_without_confirmation(self) -> None:
         assert self.window.project is not None
         page = self.window.pages[self.window.page_index["units"]]
         assert isinstance(page, UnitPage)
@@ -1081,27 +1217,25 @@ class DesktopEditorSmokeTests(QtTestCase):
         self.assertGreater(len(shared_ids), 1)
         old_value = self.window.project.get_value(unit_id, "movement")
         page.fields["movement"].setValue(old_value + 1)
-        before = bytes(self.window.project.working)
         with patch(
             "dc_modifier.pages.QMessageBox.question",
             return_value=QMessageBox.StandardButton.Cancel,
-        ) as prompt:
+        ) as prompt, patch(
+            "dc_modifier.pages.QMessageBox.critical",
+            return_value=QMessageBox.StandardButton.Ok,
+        ) as error_prompt:
             page.apply_record()
-        prompt.assert_called_once()
-        self.assertIn("移动力", prompt.call_args.args[2])
-        self.assertEqual(bytes(self.window.project.working), before)
-        self.assertTrue(page.apply_button.isEnabled())
-        with patch(
-            "dc_modifier.pages.QMessageBox.question",
-            return_value=QMessageBox.StandardButton.Yes,
-        ):
-            page.apply_record()
+        prompt.assert_not_called()
+        error_prompt.assert_not_called()
+        self.assertEqual(
+            self.window.project.get_value(unit_id, "movement"), old_value + 1
+        )
         self.assertTrue(all(
-            self.window.project.get_value(shared_id, "movement") == old_value + 1
-            for shared_id in shared_ids
+            self.window.project.get_value(shared_id, "movement") == old_value
+            for shared_id in shared_ids if shared_id != unit_id
         ))
 
-    def test_shared_unit_raw_edit_names_all_affected_ids(self) -> None:
+    def test_shared_unit_raw_edit_only_confirms_advanced_bytes(self) -> None:
         assert self.window.project is not None
         page = self.window.pages[self.window.page_index["units"]]
         assert isinstance(page, UnitPage)
@@ -1112,15 +1246,26 @@ class DesktopEditorSmokeTests(QtTestCase):
             unit_id, bytes(self.window.project.working)
         ).ids
         self.assertGreater(len(shared_ids), 1)
-        before = bytes(self.window.project.working)
+        original = self.window.project.record_bytes(unit_id)
+        movement = self.window.project.unit_field("movement")
+        changed = movement.encode_into(
+            original,
+            (movement.decode(original) + 1) & 0xFF,
+        )
+        page.raw_record.setText(changed.hex(" "))
         with patch(
             "dc_modifier.pages.QMessageBox.question",
-            return_value=QMessageBox.StandardButton.Cancel,
+            return_value=QMessageBox.StandardButton.Yes,
         ) as prompt:
             page.apply_raw_record()
         prompt.assert_called_once()
-        self.assertIn(compact_ids(shared_ids), prompt.call_args.args[2])
-        self.assertEqual(bytes(self.window.project.working), before)
+        self.assertIn("仅写入当前机体", prompt.call_args.args[2])
+        self.assertNotIn(compact_ids(shared_ids), prompt.call_args.args[2])
+        self.assertEqual(self.window.project.record_bytes(unit_id), changed)
+        self.assertTrue(all(
+            self.window.project.record_bytes(shared_id) == original
+            for shared_id in shared_ids if shared_id != unit_id
+        ))
 
     def test_music_binding_and_validation_page(self) -> None:
         assert self.window.project is not None

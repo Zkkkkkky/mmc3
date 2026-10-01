@@ -1,0 +1,88 @@
+{
+  "tag": "DBCMD_01_机体修改_导出机体_15",
+  "hwnd": 66444,
+  "title": "",
+  "class": "WorkerW",
+  "rect": {
+    "left": 0,
+    "top": 0,
+    "right": 1920,
+    "bottom": 1080,
+    "width": 1920,
+    "height": 1080
+  },
+  "pid": 9016,
+  "tree": {
+    "hwnd": 66444,
+    "class": "WorkerW",
+    "text": "",
+    "ctrl_id": 0,
+    "rect": {
+      "left": 0,
+      "top": 0,
+      "right": 1920,
+      "bottom": 1080,
+      "width": 1920,
+      "height": 1080
+    },
+    "visible": true,
+    "enabled": true,
+    "children": [
+      {
+        "hwnd": 65912,
+        "class": "SHELLDLL_DefView",
+        "text": "",
+        "ctrl_id": 0,
+        "rect": {
+          "left": 0,
+          "top": 0,
+          "right": 1920,
+          "bottom": 1080,
+          "width": 1920,
+          "height": 1080
+        },
+        "visible": true,
+        "enabled": true,
+        "children": [
+          {
+            "hwnd": 65916,
+            "class": "SysListView32",
+            "text": "FolderView",
+            "ctrl_id": 1,
+            "rect": {
+              "left": 0,
+              "top": 0,
+              "right": 1920,
+              "bottom": 1080,
+              "width": 1920,
+              "height": 1080
+            },
+            "visible": true,
+            "enabled": true,
+            "list_items": 73,
+            "list_selected": 0,
+            "children": [
+              {
+                "hwnd": 65920,
+                "class": "SysHeader32",
+                "text": "",
+                "ctrl_id": 0,
+                "rect": {
+                  "left": 0,
+                  "top": 0,
+                  "right": 0,
+                  "bottom": 0,
+                  "width": 0,
+                  "height": 0
+                },
+                "visible": false,
+                "enabled": true,
+                "children": []
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

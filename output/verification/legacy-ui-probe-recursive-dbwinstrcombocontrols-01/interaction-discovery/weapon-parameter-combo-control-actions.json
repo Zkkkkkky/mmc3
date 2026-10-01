@@ -1,0 +1,211 @@
+{
+  "schema_version": 1,
+  "validated": true,
+  "error": null,
+  "execution_record_count": 40,
+  "diff_count": 0,
+  "sha256_before": "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E",
+  "sha256_after": "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E",
+  "execution_records": [
+    {
+      "action_id": "4a8d0bf4f335c48868b0",
+      "status": "passed",
+      "result": "展开/收起，共 256 项。"
+    },
+    {
+      "action_id": "c3f2f910abc1058b1eff",
+      "status": "passed",
+      "result": "逐项选择并读回 256/256 项，已恢复。"
+    },
+    {
+      "action_id": "17c0d149ca7e721624ae",
+      "status": "passed",
+      "result": "Home/Down 读回 0，已恢复。"
+    },
+    {
+      "action_id": "ac632707c13f4f317710",
+      "status": "passed",
+      "result": "执行右键路径。"
+    },
+    {
+      "action_id": "14c087072c806b504d17",
+      "status": "passed",
+      "result": "执行参数窗口按钮手势。"
+    },
+    {
+      "action_id": "9bc07d5f2beb8db4cca4",
+      "status": "passed",
+      "result": "执行参数窗口按钮手势。"
+    },
+    {
+      "action_id": "de5f4ef3df5d536ffecd",
+      "status": "passed",
+      "result": "执行参数窗口按钮手势。"
+    },
+    {
+      "action_id": "b1f92786df5777fc8ace",
+      "status": "passed",
+      "result": "执行参数窗口按钮手势。"
+    },
+    {
+      "action_id": "280858042bb486e2ee80",
+      "status": "passed",
+      "result": "执行参数窗口按钮手势。"
+    },
+    {
+      "action_id": "cfeeb9163b19656a3a1b",
+      "status": "passed",
+      "result": "执行参数窗口按钮手势。"
+    },
+    {
+      "action_id": "e01d76c283aafadba55e",
+      "status": "passed",
+      "result": "展开/收起，共 255 项。"
+    },
+    {
+      "action_id": "00d9a51655dfdc13b69b",
+      "status": "passed",
+      "result": "逐项选择并读回 255/255 项，已恢复。"
+    },
+    {
+      "action_id": "097b3827e85ec1c6adc8",
+      "status": "passed",
+      "result": "Home/Down 读回 0，已恢复。"
+    },
+    {
+      "action_id": "981a977762748f12afed",
+      "status": "passed",
+      "result": "执行右键路径。"
+    },
+    {
+      "action_id": "f47b3d6a263851b1f747",
+      "status": "passed",
+      "result": "执行参数窗口按钮手势。"
+    },
+    {
+      "action_id": "4585eeaf36f3453b54e7",
+      "status": "passed",
+      "result": "执行参数窗口按钮手势。"
+    },
+    {
+      "action_id": "3c32d9c1c40a87637e24",
+      "status": "passed",
+      "result": "执行参数窗口按钮手势。"
+    },
+    {
+      "action_id": "c9b556c305c4e192ad31",
+      "status": "passed",
+      "result": "执行参数窗口按钮手势。"
+    },
+    {
+      "action_id": "d8ea6a5221c957f557a4",
+      "status": "passed",
+      "result": "执行参数窗口按钮手势。"
+    },
+    {
+      "action_id": "7f01a114e2dc7965435a",
+      "status": "passed",
+      "result": "执行参数窗口按钮手势。"
+    },
+    {
+      "action_id": "852889fba76840a98cd2",
+      "status": "passed",
+      "result": "展开/收起，共 256 项。"
+    },
+    {
+      "action_id": "e820e98e5b92d5064d28",
+      "status": "passed",
+      "result": "逐项选择并读回 256/256 项，已恢复。"
+    },
+    {
+      "action_id": "bafa34a7279086e9c4e2",
+      "status": "passed",
+      "result": "Home/Down 读回 0，已恢复。"
+    },
+    {
+      "action_id": "4f34060bcfeef4ff1c39",
+      "status": "passed",
+      "result": "执行右键路径。"
+    },
+    {
+      "action_id": "b6f826ca855bfd4551dc",
+      "status": "passed",
+      "result": "执行参数窗口按钮手势。"
+    },
+    {
+      "action_id": "6e58c6f9f51c8fd49067",
+      "status": "passed",
+      "result": "执行参数窗口按钮手势。"
+    },
+    {
+      "action_id": "f0b5b27793e986131c5b",
+      "status": "passed",
+      "result": "执行参数窗口按钮手势。"
+    },
+    {
+      "action_id": "acd866c804085efe3ebf",
+      "status": "passed",
+      "result": "执行参数窗口按钮手势。"
+    },
+    {
+      "action_id": "5714c7fdad6d1907de2f",
+      "status": "passed",
+      "result": "执行参数窗口按钮手势。"
+    },
+    {
+      "action_id": "f958daaafc9126dead1e",
+      "status": "passed",
+      "result": "执行参数窗口按钮手势。"
+    },
+    {
+      "action_id": "048544224abf5209ca02",
+      "status": "passed",
+      "result": "展开/收起，共 256 项。"
+    },
+    {
+      "action_id": "8ca8a021595bdfdc596d",
+      "status": "passed",
+      "result": "逐项选择并读回 256/256 项，已恢复。"
+    },
+    {
+      "action_id": "7ca3b3fa5347b8021440",
+      "status": "passed",
+      "result": "Home/Down 读回 0，已恢复。"
+    },
+    {
+      "action_id": "0c552e34790f5b18ed40",
+      "status": "passed",
+      "result": "执行右键路径。"
+    },
+    {
+      "action_id": "37c7e479916b4e4338f1",
+      "status": "passed",
+      "result": "执行参数窗口按钮手势。"
+    },
+    {
+      "action_id": "5c0879d12408d62c5a23",
+      "status": "passed",
+      "result": "执行参数窗口按钮手势。"
+    },
+    {
+      "action_id": "2e63b695d4d1617bd93f",
+      "status": "passed",
+      "result": "执行参数窗口按钮手势。"
+    },
+    {
+      "action_id": "663a1bb994ddaaf8e7db",
+      "status": "passed",
+      "result": "执行参数窗口按钮手势。"
+    },
+    {
+      "action_id": "87d0a31b94f40d6998a8",
+      "status": "passed",
+      "result": "执行参数窗口按钮手势。"
+    },
+    {
+      "action_id": "60d102b38c795a272e35",
+      "status": "passed",
+      "result": "执行参数窗口按钮手势。"
+    }
+  ]
+}

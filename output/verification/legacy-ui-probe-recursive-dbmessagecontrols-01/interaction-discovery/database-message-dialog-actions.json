@@ -1,0 +1,49 @@
+{
+  "schema_version": 1,
+  "validated": false,
+  "error": "RuntimeError(\"opener 790 expected '信息：', got None\")",
+  "execution_record_count": 3,
+  "diff_count": 0,
+  "sha256_before": "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E",
+  "sha256_after": "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E",
+  "observations": [
+    {
+      "opener_id": 790,
+      "title": "信息：",
+      "button_id": 7,
+      "action": "keyboard_activate",
+      "focused": true,
+      "remained": false,
+      "followups": [
+        {
+          "title": "打开图片",
+          "class": "#32770"
+        }
+      ]
+    },
+    {
+      "opener_id": 790,
+      "title": "信息：",
+      "button_id": 7,
+      "action": "left_click",
+      "focused": null,
+      "remained": true,
+      "followups": [
+        {
+          "title": "打开图片",
+          "class": "#32770"
+        }
+      ]
+    },
+    {
+      "opener_id": 790,
+      "title": "信息：",
+      "button_id": 7,
+      "action": "right_click",
+      "focused": null,
+      "remained": true,
+      "followups": []
+    }
+  ],
+  "execution_records": []
+}

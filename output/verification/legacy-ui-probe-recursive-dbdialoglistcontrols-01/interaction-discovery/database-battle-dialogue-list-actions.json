@@ -1,0 +1,61 @@
+{
+  "schema_version": 1,
+  "validated": true,
+  "error": null,
+  "execution_record_count": 10,
+  "diff_count": 0,
+  "sha256_before": "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E",
+  "sha256_after": "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E",
+  "execution_records": [
+    {
+      "action_id": "6247432df35dfbb0c27f",
+      "status": "passed",
+      "result": "逐项选择并通知 256 项，随后恢复索引 0。"
+    },
+    {
+      "action_id": "0e254876adaf1c7f6539",
+      "status": "passed",
+      "result": "逐项执行双击通知 256 次；捕获并取消新增子窗 0 次。"
+    },
+    {
+      "action_id": "918f5adf58bf4147bc3d",
+      "status": "passed",
+      "result": "逐项执行右键路径 256 次；可见菜单 0 次。"
+    },
+    {
+      "action_id": "42a532a6b217c85c1fa3",
+      "status": "passed",
+      "result": "真实焦点执行 Home/Down，读回索引 255 后恢复。"
+    },
+    {
+      "action_id": "d5768f3a1133ae106c79",
+      "status": "passed",
+      "result": "逐项选择并通知 1 项，随后恢复索引 0。"
+    },
+    {
+      "action_id": "e2c60b596bf57a575836",
+      "status": "passed",
+      "result": "逐项执行双击通知 1 次；捕获并取消新增子窗 0 次。"
+    },
+    {
+      "action_id": "f75f5fec088da798011c",
+      "status": "passed",
+      "result": "逐项执行右键路径 1 次；可见菜单 0 次。"
+    },
+    {
+      "action_id": "854c40d1e21c0e1c5602",
+      "status": "passed",
+      "result": "真实焦点执行 Home/Down，读回索引 0 后恢复。"
+    },
+    {
+      "action_id": "c5909d19a0544e24230e",
+      "status": "passed",
+      "result": "切离页面后隐藏、返回战斗对话后恢复可见。"
+    },
+    {
+      "action_id": "50ee58dcc304966f7c04",
+      "status": "passed",
+      "result": "切离页面后隐藏、返回列表子页后恢复可见。"
+    }
+  ]
+}

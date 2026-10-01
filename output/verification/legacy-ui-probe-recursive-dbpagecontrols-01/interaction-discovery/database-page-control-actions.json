@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "validated": true,
+  "error": null,
+  "execution_record_count": 8,
+  "diff_count": 0,
+  "sha256_before": "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E",
+  "sha256_after": "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E",
+  "execution_records": [
+    {
+      "action_id": "7054629d8ce82c7eb7ca",
+      "status": "passed",
+      "result": "逐页命中稳定控件 [120, 630, 2530, 1390, 1810, 1750]。"
+    },
+    {
+      "action_id": "16088a3462200ec19145",
+      "status": "passed",
+      "result": "六页状态签名均可触发：[120, 630, 2530, 1390, 1810, 1750]。"
+    },
+    {
+      "action_id": "b324b6d49b63b72b09db",
+      "status": "passed",
+      "result": "真实焦点执行 Ctrl+Tab。"
+    },
+    {
+      "action_id": "89a0ecc268434b870366",
+      "status": "passed",
+      "result": "六个页签标题逐项执行右键并清理菜单。"
+    },
+    {
+      "action_id": "a7cb9cbc6235801a7897",
+      "status": "passed",
+      "result": "我方/敌方页均命中：[2530, 2520]。"
+    },
+    {
+      "action_id": "6de2e98444ae0296f881",
+      "status": "passed",
+      "result": "两种动画列表状态均触发：[2530, 2520]。"
+    },
+    {
+      "action_id": "828e0f4e4e2712b8adc0",
+      "status": "passed",
+      "result": "真实焦点执行 Ctrl+Tab。"
+    },
+    {
+      "action_id": "51d0a53dd0ed1f9fb47a",
+      "status": "passed",
+      "result": "我方/敌方页签逐项执行右键。"
+    }
+  ]
+}

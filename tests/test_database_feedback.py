@@ -12,12 +12,14 @@ os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QColor, QImage
 from PySide6.QtWidgets import (
+    QAbstractSpinBox,
     QApplication,
     QDialogButtonBox,
     QGroupBox,
     QLabel,
     QListWidgetItem,
     QMessageBox,
+    QPushButton,
     QScrollArea,
     QWidget,
 )
@@ -179,6 +181,35 @@ class DatabaseFeedbackTests(QtTestCase):
         self.dialog.reject()
         self.assertEqual(bytes(self.project.working), before)
 
+    def test_large_unit_captain_checkbox_writes_flag_and_cancel_rolls_back(self) -> None:
+        self.dialog._select_unit(0x0B)
+        page = self.dialog.unit_page
+        before = bytes(self.project.working)
+        original = read_unit_appearance(self.project, 0x0B)
+        self.assertTrue(original.configuration[0] & 0x80)
+        self.assertFalse(page.captain_check.isHidden())
+        self.assertTrue(page.captain_check.isEnabled())
+        self.assertEqual(
+            page.captain_check.isChecked(),
+            bool(original.configuration[0] & 0x20),
+        )
+
+        page.captain_check.setChecked(not page.captain_check.isChecked())
+        changed = read_unit_appearance(self.project, 0x0B)
+        self.assertEqual(changed.configuration[0] & 0xC0, original.configuration[0] & 0xC0)
+        self.assertEqual(
+            bool(changed.configuration[0] & 0x20),
+            not bool(original.configuration[0] & 0x20),
+        )
+        self.assertEqual(changed.configuration[1:], original.configuration[1:])
+
+        self.dialog._select_unit(0x09)
+        self.assertTrue(page.captain_check.isHidden())
+        self.assertFalse(page.captain_check.isEnabled())
+
+        self.dialog.reject()
+        self.assertEqual(bytes(self.project.working), before)
+
     def test_database_rejects_unsafe_stock_large_to_small_type_change(self) -> None:
         self.dialog._select_unit(11)
         page = self.dialog.unit_page
@@ -235,11 +266,14 @@ class DatabaseFeedbackTests(QtTestCase):
         self.addCleanup(dialog.close)
         dialog.show()
         self.app.processEvents()
-        self.assertEqual((dialog.width(), dialog.height()), (530, 388))
+        self.assertEqual((dialog.width(), dialog.height()), (530, 356))
+        self.assertEqual(dialog.selector_box.height(), 88)
         self.assertEqual(len(dialog.icon_buttons), 48)
         self.assertTrue(all(button.autoRaise() for button in dialog.icon_buttons))
         self.assertLessEqual(dialog.minimumWidth(), 700)
         self.assertLessEqual(dialog.icon_grid.height(), 170)
+        self.assertEqual(dialog.scenario.width(), 210)
+        self.assertEqual(dialog.icon_number.width(), 210)
         button_box = dialog.findChild(QDialogButtonBox)
         self.assertIsNotNone(button_box)
         self.assertEqual(
@@ -273,9 +307,17 @@ class DatabaseFeedbackTests(QtTestCase):
         )
         self.assertEqual(dialog.canvas.size().toTuple(), (273, 273))
         self.assertTrue(all(
-            button.size().toTuple() == (110, 42)
+            button.width() == 120 and button.height() >= 44
             for button in dialog.palette_buttons
         ))
+        button_box = dialog.findChild(QDialogButtonBox)
+        self.assertIsNotNone(button_box)
+        self.assertEqual(
+            button_box.button(QDialogButtonBox.StandardButton.Ok).text(), "确定"
+        )
+        self.assertEqual(
+            button_box.button(QDialogButtonBox.StandardButton.Cancel).text(), "取消"
+        )
         dialog.canvas.pixels = [index % 4 for index in range(256)]
         encoded = dialog._bitmap_bytes()
         self.assertEqual(len(encoded), 822)
@@ -297,6 +339,32 @@ class DatabaseFeedbackTests(QtTestCase):
             dialog._pixels_from_image(material),
             [(x + y) % 4 for y in range(16) for x in range(16)],
         )
+
+    def test_unit_icon_horizontal_flip_updates_draft_and_round_trips(self) -> None:
+        dialog = UnitIconDialog(
+            self.project, 0x36, 2, (0x0F, 0x37, 0x27, 0x16)
+        )
+        self.addCleanup(dialog.close)
+        self.assertEqual(dialog.flip_button.text(), "水平翻转图标")
+        source = [(x + y * 2) % 4 for y in range(16) for x in range(16)]
+        expected = [
+            source[y * 16 + (15 - x)]
+            for y in range(16)
+            for x in range(16)
+        ]
+        dialog.canvas.set_pixels(source)
+        dialog.flip_button.click()
+        self.assertEqual(dialog.canvas.pixels, expected)
+        dialog.accept()
+        self.assertTrue(dialog.changed)
+
+        reopened = UnitIconDialog(
+            self.project, 0x36, 2, (0x0F, 0x37, 0x27, 0x16)
+        )
+        self.addCleanup(reopened.close)
+        self.assertEqual(reopened.canvas.pixels, expected)
+        reopened.flip_button.click()
+        self.assertEqual(reopened.canvas.pixels, source)
 
     def test_unit_icon_import_rejects_non_16_by_16_bitmap(self) -> None:
         dialog = UnitIconDialog(
@@ -386,6 +454,21 @@ class DatabaseFeedbackTests(QtTestCase):
         self.assertEqual(before, bytes(self.project.working))
         self.assertTrue(page.has_pending_draft)
 
+    def test_context_export_writes_current_unit_five_bitmap_layout(self) -> None:
+        page = self.dialog.unit_page
+        unit_id = page.current_id
+        with tempfile.TemporaryDirectory() as directory, patch(
+            "dc_modifier.legacy_windows.QFileDialog.getExistingDirectory",
+            return_value=directory,
+        ):
+            page._export_current_legacy_bitmaps()
+            exported = list(Path(directory).glob(f"{unit_id:03d}：*/*.bmp"))
+        self.assertEqual(len(exported), 5)
+        self.assertEqual(
+            {path.stem.rsplit("[", 1)[-1].rstrip("]") for path in exported},
+            {"效果", "机体", "碎片", "图标1", "图标2"},
+        )
+
     def test_inline_import_preserves_equipment_and_outer_cancel_restores_all(self) -> None:
         page = self.dialog.unit_page
         unit_id = page.current_id
@@ -417,17 +500,21 @@ class DatabaseFeedbackTests(QtTestCase):
         self.assertEqual(page._compact_data_layout, "wide")
         self.assertEqual(page.detail_scroll.horizontalScrollBar().maximum(), 0)
         self.assertEqual(page.detail_scroll.verticalScrollBar().maximum(), 0)
-        self.assertLessEqual(page.appearance_type.width(), 180)
-        self.assertGreaterEqual(page.appearance_type.width(), 95)
+        self.assertFalse(page.record_heading.isVisible())
+        self.assertFalse(page.pending_state.isVisible())
+        self.assertFalse(page.graphics_status.isVisible())
+        self.assertEqual(page.body_preview.size().width(), 256)
+        self.assertEqual(page.body_preview.size().height(), 256)
+        self.assertEqual(self.dialog._database_memory_panels[0].height(), 28)
+        self.assertLessEqual(self.dialog.database_search.width(), 360)
+        self.assertLessEqual(page.appearance_type.width(), 190)
+        self.assertGreaterEqual(page.appearance_type.width(), 170)
         self.assertTrue(all(
-            170 <= editor.width() <= 210 for editor in page.appearance_bank_editors
+            170 <= editor.width() <= 190 for editor in page.appearance_bank_editors
         ), [editor.width() for editor in page.appearance_bank_editors])
-        self.assertTrue(all(
-            editor.fontMetrics().horizontalAdvance(editor.currentText())
-            <= editor.width() - 20
-            for editor in page.appearance_bank_editors[:2]
-        ))
-        self.assertTrue(all(button.width() == 88 for button in page.weapon_jump_buttons))
+        self.assertTrue(all(editor.minimumContentsLength() == 16
+                            for editor in page.appearance_bank_editors))
+        self.assertTrue(all(button.width() == 80 for button in page.weapon_jump_buttons))
         self.assertTrue(all(
             button.geometry().right() <= page.weapons_group.contentsRect().right()
             for button in page.weapon_jump_buttons
@@ -451,8 +538,34 @@ class DatabaseFeedbackTests(QtTestCase):
         self.assertEqual(page.detail_scroll.verticalScrollBar().maximum(), 0)
         self.assertEqual(page.weapons_group.geometry().top(), page.basic_group.geometry().top())
 
+    def test_default_database_uses_legacy_scaled_footprint(self) -> None:
+        page = self.dialog.unit_page
+        self.assertEqual(self.dialog.size().toTuple(), (1050, 700))
+        self.assertEqual(page._compact_data_layout, "wide")
+        self.assertEqual(page.detail_scroll.horizontalScrollBar().maximum(), 0)
+        self.assertEqual(page.detail_scroll.verticalScrollBar().maximum(), 0)
+        self.assertEqual(
+            {editor.geometry().left() for editor in page.appearance_bank_editors},
+            {page.appearance_type.geometry().left()},
+        )
+        self.assertLess(
+            page.appearance_type.geometry().top(),
+            page.appearance_bank_editors[1].geometry().top(),
+        )
+        self.assertLess(
+            page.appearance_bank_editors[1].geometry().top(),
+            page.appearance_bank_editors[2].geometry().top(),
+        )
+        self.assertLess(
+            page.appearance_bank_editors[2].geometry().top(),
+            page.appearance_bank_editors[0].geometry().top(),
+        )
+        self.assertFalse(page.apply_button.isVisible())
+
     def test_character_page_uses_reference_compact_first_screen_layout(self) -> None:
-        self.dialog.resize(1380, 840)
+        # DatabaseDialog actually opens at 1050x670 logical pixels.  Testing
+        # a much wider canvas hid the horizontal overflow seen at 125% DPI.
+        self.dialog.resize(1050, 670)
         self.dialog.tabs.setCurrentIndex(1)
         self.dialog.character_page.select_record_id(4)
         self.app.processEvents()
@@ -463,28 +576,86 @@ class DatabaseFeedbackTests(QtTestCase):
         self.assertIsNotNone(scroll)
         self.assertIsNotNone(workspace)
         self.assertTrue(page.character_details.portrait_group.isVisible())
-        self.assertGreaterEqual(page.records.width(), 250)
-        self.assertLessEqual(page.records.width(), 315)
+        self.assertGreaterEqual(page.records.width(), 200)
+        self.assertLessEqual(page.records.width(), 250)
         self.assertEqual(page.records.currentItem().text(), "[04]004：琉妮")
+        self.assertEqual(page.records.item(0).text(), "[01]001：")
+        self.assertEqual(page.records.item(0x0B - 1).text(), "[0B]011：")
+        self.assertNotIn("未分配人物槽", page.records.item(0).text())
         self.assertEqual(page.character_list_heading.text(), "人物选择")
         self.assertFalse(page.record_heading.isVisible())
         self.assertFalse(page.pending_state.isVisible())
         self.assertFalse(page.apply_button.isVisible())
         portrait = page.character_details.portrait_group
         self.assertEqual(portrait.title(), "头像设置")
+        selector_sections = page.character_details.portrait_selector_sections
+        color_sections = page.character_details.portrait_color_sections
+        self.assertEqual([section.width() for section in selector_sections], [96, 96])
+        self.assertEqual([section.width() for section in color_sections], [80, 80, 80])
+        ordered_sections = (*selector_sections, *color_sections)
+        self.assertTrue(all(
+            left.geometry().right() < right.geometry().left()
+            for left, right in zip(ordered_sections, ordered_sections[1:])
+        ))
+        visibility_section = portrait.findChild(QWidget, "portraitVisibilitySection")
+        upload_section = portrait.findChild(QWidget, "portraitUploadSection")
+        self.assertIsNotNone(visibility_section)
+        self.assertIsNotNone(upload_section)
+        assert visibility_section is not None and upload_section is not None
+        portrait_columns = (
+            page.character_details.portrait_preview,
+            visibility_section,
+            upload_section,
+            *ordered_sections,
+        )
+        column_gaps = [
+            right.geometry().left() - left.geometry().right() - 1
+            for left, right in zip(portrait_columns, portrait_columns[1:])
+        ]
+        self.assertLessEqual(max(column_gaps) - min(column_gaps), 1)
+        self.assertGreaterEqual(min(column_gaps), 10)
+        self.assertEqual(
+            {section.geometry().top() for section in ordered_sections},
+            {selector_sections[0].geometry().top()},
+        )
+        first_control_tops = {
+            page.character_details.portrait_fields[key].mapTo(
+                portrait,
+                page.character_details.portrait_fields[key].rect().topLeft(),
+            ).y()
+            for key in ("front_bank", "back_bank", "color0", "color1", "color2")
+        }
+        self.assertEqual(len(first_control_tops), 1)
+        self.assertTrue(all(
+            page.character_details.portrait_fields[key].width() == 77
+            for key in ("color0", "color1", "color2")
+        ))
+        for bank_key, slot_key in (
+            ("front_bank", "front_slot"),
+            ("back_bank", "back_slot"),
+        ):
+            bank = page.character_details.portrait_fields[bank_key]
+            slot = page.character_details.portrait_fields[slot_key]
+            self.assertEqual(bank.width(), 96)
+            self.assertEqual(slot.width(), 96)
+            self.assertEqual(bank.geometry().left(), slot.geometry().left())
+            self.assertLess(bank.geometry().bottom(), slot.geometry().top())
+        self.assertTrue(all(
+            page.character_details.portrait_fields[key].number.buttonSymbols()
+            == QAbstractSpinBox.ButtonSymbols.NoButtons
+            for key in ("color0", "color1", "color2")
+        ))
         portrait_labels = {label.text() for label in portrait.findChildren(QLabel)}
         self.assertNotIn("正面位置", portrait_labels)
         self.assertNotIn("背景位置", portrait_labels)
-        self.assertFalse(page.character_details.shared_portrait.isVisible())
+        self.assertFalse(hasattr(page.character_details, "shared_portrait"))
         self.assertFalse(page.character_details.shared_attributes.isVisible())
         self.assertFalse(page.advanced_details_host.isVisible())
         self.assertFalse(page.capability_status.isVisible())
         self.assertFalse(page.original_name.isVisible())
         self.assertFalse(page.original_music.isVisible())
-        page.character_details.portrait_advanced_button.click()
-        self.app.processEvents()
-        self.assertTrue(page.character_details.shared_portrait.isVisible())
-        self.assertTrue(page.character_details.shared_attributes.isVisible())
+        self.assertFalse(page.character_details.portrait_export_button.isVisible())
+        self.assertFalse(page.character_details.portrait_advanced_button.isVisible())
         self.assertLess(
             page.character_details.portrait_group.geometry().top(),
             workspace.geometry().top(),
@@ -497,8 +668,17 @@ class DatabaseFeedbackTests(QtTestCase):
         self.assertEqual(scroll.verticalScrollBar().maximum(), 0)
         self.assertEqual(page.basic_group.title(), "基本设置")
         self.assertFalse(page.name_reference.isVisible())
-        self.assertTrue(page.ally_music.currentText().startswith("音乐"))
-        self.assertTrue(page.enemy_music.currentText().startswith("音乐"))
+        self.assertEqual(page.ally_music.currentText(), f"音乐{int(page.ally_music.currentData()):02X}")
+        self.assertIn(
+            f"命令 ${int(page.ally_music.currentData()):02X}",
+            page.ally_music.currentData(Qt.ItemDataRole.ToolTipRole),
+        )
+        earth_index = page.ally_music.findData(0x87)
+        unknown_index = page.ally_music.findData(0x94)
+        extension_index = page.ally_music.findData(0x9D)
+        self.assertEqual(page.ally_music.itemText(earth_index), "地球我方音乐")
+        self.assertEqual(page.ally_music.itemText(unknown_index), "音乐94")
+        self.assertEqual(page.ally_music.itemText(extension_index), "音乐9D")
         attributes = page.character_details.attributes_group
         spirits = page.character_details.spirits_group
         self.assertEqual(page.basic_group.geometry().top(), attributes.geometry().top())
@@ -517,6 +697,21 @@ class DatabaseFeedbackTests(QtTestCase):
         self.assertEqual(attack_tops, sorted(attack_tops))
         self.assertEqual(defense_tops, sorted(defense_tops))
         self.assertEqual(len(set(defense_tops)), 6)
+
+    def test_database_visible_button_captions_fit_at_default_size(self) -> None:
+        self.dialog.resize(1050, 670)
+        for tab in range(self.dialog.tabs.count()):
+            self.dialog.tabs.setCurrentIndex(tab)
+            self.app.processEvents()
+            overflows = []
+            for button in self.dialog.tabs.currentWidget().findChildren(QPushButton):
+                if not button.isVisible() or not button.text():
+                    continue
+                longest_line = max(button.text().splitlines(), key=len)
+                needed = button.fontMetrics().horizontalAdvance(longest_line) + 4
+                if needed > button.width():
+                    overflows.append((button.text(), button.width(), needed))
+            self.assertEqual(overflows, [], self.dialog.tabs.tabText(tab))
 
     def test_weapon_page_keeps_core_fields_and_animation_on_first_screen(self) -> None:
         self.dialog.resize(1220, 787)

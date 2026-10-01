@@ -1,0 +1,111 @@
+{
+  "schema_version": 1,
+  "validated": true,
+  "error": null,
+  "execution_record_count": 20,
+  "diff_count": 0,
+  "sha256_before": "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E",
+  "sha256_after": "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E",
+  "execution_records": [
+    {
+      "action_id": "505a61ae81aa7240e192",
+      "status": "passed",
+      "result": "逐项选择并通知 255 项，恢复索引 0。"
+    },
+    {
+      "action_id": "d9ddb0648ba8a6c56a54",
+      "status": "passed",
+      "result": "逐项双击 255 项；捕获并取消新增子窗 0 次。"
+    },
+    {
+      "action_id": "798113f801e91bc9ceb4",
+      "status": "passed",
+      "result": "逐项右键 255 项；实际弹出菜单 0 次。"
+    },
+    {
+      "action_id": "ec3951d9f531ba0417e4",
+      "status": "passed",
+      "result": "真实焦点 Home/Down 到达 254，随后恢复。"
+    },
+    {
+      "action_id": "5bc7cdd8bda57be786f7",
+      "status": "passed",
+      "result": "切离所在页后隐藏，重新进入后恢复可见。"
+    },
+    {
+      "action_id": "49292a58ccd0b4c7b996",
+      "status": "passed",
+      "result": "逐项选择并通知 24 项，恢复索引 0。"
+    },
+    {
+      "action_id": "85209c828b010214a41f",
+      "status": "passed",
+      "result": "逐项双击 24 项；捕获并取消新增子窗 24 次。"
+    },
+    {
+      "action_id": "5fabbbc2d7e6409fac08",
+      "status": "passed",
+      "result": "逐项右键 24 项；实际弹出菜单 0 次。"
+    },
+    {
+      "action_id": "fe4e807d37dfc9de9159",
+      "status": "passed",
+      "result": "真实焦点 Home/Down 到达 23，随后恢复。"
+    },
+    {
+      "action_id": "d20abaf4029410374a6d",
+      "status": "passed",
+      "result": "切离所在页后隐藏，重新进入后恢复可见。"
+    },
+    {
+      "action_id": "eed1dbd943b33b71b048",
+      "status": "passed",
+      "result": "逐项选择并通知 221 项，恢复索引 0。"
+    },
+    {
+      "action_id": "7a2bdeb1b999e8115d60",
+      "status": "passed",
+      "result": "逐项双击 221 项；捕获并取消新增子窗 0 次。"
+    },
+    {
+      "action_id": "799f900af8ae2ec87000",
+      "status": "passed",
+      "result": "逐项右键 221 项；实际弹出菜单 0 次。"
+    },
+    {
+      "action_id": "c1a3260f443d2dd849a6",
+      "status": "passed",
+      "result": "真实焦点 Home/Down 到达 220，随后恢复。"
+    },
+    {
+      "action_id": "efebe8a5e7a31eaa91ca",
+      "status": "passed",
+      "result": "切离所在页后隐藏，重新进入后恢复可见。"
+    },
+    {
+      "action_id": "fbd9834fba7952ef0b3f",
+      "status": "passed",
+      "result": "逐项选择并通知 14 项，恢复索引 0。"
+    },
+    {
+      "action_id": "beda0cff8411beddb66f",
+      "status": "passed",
+      "result": "逐项双击 14 项；捕获并取消新增子窗 0 次。"
+    },
+    {
+      "action_id": "42eee8cc0a319dfc8315",
+      "status": "passed",
+      "result": "逐项右键 14 项；实际弹出菜单 0 次。"
+    },
+    {
+      "action_id": "08fca1c96b3afd163e2c",
+      "status": "passed",
+      "result": "真实焦点 Home/Down 到达 13，随后恢复。"
+    },
+    {
+      "action_id": "6ca5a340f547a9e0f1f6",
+      "status": "passed",
+      "result": "切离所在页后隐藏，重新进入后恢复可见。"
+    }
+  ]
+}

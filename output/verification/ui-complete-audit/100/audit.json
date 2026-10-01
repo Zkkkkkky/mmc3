@@ -1,0 +1,349 @@
+{
+  "scale": "1",
+  "audited_states": 39,
+  "errors": [
+    {
+      "state": "02-database-00-机体修改",
+      "kind": "text-clipped",
+      "widget": "QPushButton#unitUploadButton",
+      "text": "上传图标",
+      "required": 72,
+      "available": 68,
+      "severity": "error"
+    },
+    {
+      "state": "02-database-00-机体修改",
+      "kind": "text-clipped",
+      "widget": "QPushButton#unitNavigateButton",
+      "text": "更改图标",
+      "required": 72,
+      "available": 68,
+      "severity": "error"
+    },
+    {
+      "state": "02-database-00-机体修改",
+      "kind": "horizontal-scrollbar",
+      "widget": "QScrollArea#-",
+      "maximum": 10,
+      "severity": "error"
+    },
+    {
+      "state": "02-database-01-人物修改",
+      "kind": "text-clipped",
+      "widget": "QCheckBox#-",
+      "text": "显示正面",
+      "required": 78,
+      "available": 74,
+      "severity": "error"
+    },
+    {
+      "state": "02-database-01-人物修改",
+      "kind": "text-clipped",
+      "widget": "QCheckBox#-",
+      "text": "显示背景",
+      "required": 78,
+      "available": 74,
+      "severity": "error"
+    },
+    {
+      "state": "02-database-01-人物修改",
+      "kind": "text-clipped",
+      "widget": "QCheckBox#-",
+      "text": "击落不消失",
+      "required": 91,
+      "available": 87,
+      "severity": "error"
+    },
+    {
+      "state": "11-unit-composition-00-战斗合成",
+      "kind": "text-clipped",
+      "widget": "QPushButton#puzzleTemplateButton",
+      "text": "10×6",
+      "required": 54,
+      "available": 48,
+      "severity": "error"
+    },
+    {
+      "state": "11-unit-composition-00-战斗合成",
+      "kind": "text-clipped",
+      "widget": "QPushButton#puzzlePreviewButton",
+      "text": "查看效果",
+      "required": 72,
+      "available": 68,
+      "severity": "error"
+    },
+    {
+      "state": "11-unit-composition-00-战斗合成",
+      "kind": "text-clipped",
+      "widget": "QCheckBox#-",
+      "text": "显示图块编号",
+      "required": 104,
+      "available": 89,
+      "severity": "error"
+    },
+    {
+      "state": "11-unit-composition-00-战斗合成",
+      "kind": "text-clipped",
+      "widget": "QCheckBox#-",
+      "text": "调换图库拼图",
+      "required": 104,
+      "available": 89,
+      "severity": "error"
+    },
+    {
+      "state": "11-unit-composition-00-战斗合成",
+      "kind": "text-clipped",
+      "widget": "QPushButton#puzzleDirectionButton",
+      "text": "向\n左\n移\n动",
+      "required": 72,
+      "available": 24,
+      "severity": "error"
+    },
+    {
+      "state": "11-unit-composition-00-战斗合成",
+      "kind": "text-clipped",
+      "widget": "QPushButton#puzzleDirectionButton",
+      "text": "向\n右\n移\n动",
+      "required": 72,
+      "available": 24,
+      "severity": "error"
+    },
+    {
+      "state": "11-unit-composition-01-碎片原始图库",
+      "kind": "text-clipped",
+      "widget": "QPushButton#-",
+      "text": "向\n左\n移\n动",
+      "required": 72,
+      "available": 24,
+      "severity": "error"
+    },
+    {
+      "state": "11-unit-composition-01-碎片原始图库",
+      "kind": "text-clipped",
+      "widget": "QPushButton#-",
+      "text": "向\n右\n移\n动",
+      "required": 72,
+      "available": 24,
+      "severity": "error"
+    },
+    {
+      "state": "11-unit-composition-02-拼图脚本原码",
+      "kind": "text-clipped",
+      "widget": "QPushButton#puzzleTemplateButton",
+      "text": "10×6",
+      "required": 54,
+      "available": 48,
+      "severity": "error"
+    },
+    {
+      "state": "11-unit-composition-02-拼图脚本原码",
+      "kind": "text-clipped",
+      "widget": "QPushButton#puzzlePreviewButton",
+      "text": "查看效果",
+      "required": 72,
+      "available": 68,
+      "severity": "error"
+    },
+    {
+      "state": "13-weapon-rules-00-光束组图规律",
+      "kind": "text-clipped",
+      "widget": "QCheckBox#-",
+      "text": "显示完整记录（含前置字节）",
+      "required": 195,
+      "available": 191,
+      "severity": "error"
+    },
+    {
+      "state": "13-weapon-rules-01-物理运行规律1",
+      "kind": "text-clipped",
+      "widget": "QCheckBox#-",
+      "text": "显示完整记录（含前置字节）",
+      "required": 195,
+      "available": 191,
+      "severity": "error"
+    },
+    {
+      "state": "13-weapon-rules-02-物理运行规律2",
+      "kind": "text-clipped",
+      "widget": "QCheckBox#-",
+      "text": "显示完整记录（含前置字节）",
+      "required": 195,
+      "available": 191,
+      "severity": "error"
+    },
+    {
+      "state": "13-weapon-rules-03-物理图片",
+      "kind": "text-clipped",
+      "widget": "QCheckBox#-",
+      "text": "显示完整记录（含前置字节）",
+      "required": 195,
+      "available": 191,
+      "severity": "error"
+    }
+  ],
+  "warnings": [
+    {
+      "state": "02-database-00-机体修改",
+      "kind": "text-clipped",
+      "widget": "QLabel#databaseModuleMemorySummary",
+      "text": "机体名称：1,456/8,157 B，净增 6,701 B；主体＋碎片拼图脚本：7,148/15,344 B，净增 8,196 B ｜ 固定结构 2,912 B（可改值，不可增长）",
+      "required": 828,
+      "available": 825,
+      "severity": "warning"
+    },
+    {
+      "state": "02-database-01-人物修改",
+      "kind": "text-clipped",
+      "widget": "QLabel#-",
+      "text": "我方战斗音乐：",
+      "required": 93,
+      "available": 65,
+      "severity": "warning"
+    },
+    {
+      "state": "02-database-01-人物修改",
+      "kind": "text-clipped",
+      "widget": "QComboBox#-",
+      "text": "音乐9D（Ash to Ash）",
+      "required": 167,
+      "available": 103,
+      "severity": "warning"
+    },
+    {
+      "state": "02-database-01-人物修改",
+      "kind": "text-clipped",
+      "widget": "QLabel#-",
+      "text": "敌方战斗音乐：",
+      "required": 93,
+      "available": 65,
+      "severity": "warning"
+    },
+    {
+      "state": "02-database-01-人物修改",
+      "kind": "text-clipped",
+      "widget": "QComboBox#-",
+      "text": "音乐9D（Ash to Ash）",
+      "required": 167,
+      "available": 103,
+      "severity": "warning"
+    },
+    {
+      "state": "02-database-01-人物修改",
+      "kind": "text-clipped",
+      "widget": "QLabel#-",
+      "text": "精神成长",
+      "required": 54,
+      "available": 41,
+      "severity": "warning"
+    },
+    {
+      "state": "02-database-01-人物修改",
+      "kind": "text-clipped",
+      "widget": "QLabel#-",
+      "text": "强度补正",
+      "required": 54,
+      "available": 41,
+      "severity": "warning"
+    },
+    {
+      "state": "02-database-01-人物修改",
+      "kind": "text-clipped",
+      "widget": "QLabel#-",
+      "text": "机动补正",
+      "required": 54,
+      "available": 41,
+      "severity": "warning"
+    },
+    {
+      "state": "02-database-01-人物修改",
+      "kind": "text-clipped",
+      "widget": "QLabel#-",
+      "text": "防御补正",
+      "required": 54,
+      "available": 41,
+      "severity": "warning"
+    },
+    {
+      "state": "02-database-01-人物修改",
+      "kind": "text-clipped",
+      "widget": "QLabel#-",
+      "text": "HP补正",
+      "required": 46,
+      "available": 41,
+      "severity": "warning"
+    },
+    {
+      "state": "02-database-01-人物修改",
+      "kind": "text-clipped",
+      "widget": "QLabel#-",
+      "text": "速度补正",
+      "required": 54,
+      "available": 41,
+      "severity": "warning"
+    },
+    {
+      "state": "02-database-01-人物修改",
+      "kind": "text-clipped",
+      "widget": "QLabel#databaseModuleMemorySummary",
+      "text": "Bank $24 八资源共享：9,529/15,184 B，共享余量 5,655 B（人物名称与属性已接通） ｜ 其他可增长池见明细 ｜ 固定结构 2,028 B（可改值，不可增长）",
+      "required": 902,
+      "available": 825,
+      "severity": "warning"
+    },
+    {
+      "state": "02-database-04-其他修改1",
+      "kind": "text-clipped",
+      "widget": "QGroupBox#-",
+      "text": "武器距离命中补正",
+      "required": 126,
+      "available": 108,
+      "severity": "warning"
+    },
+    {
+      "state": "02-database-04-其他修改1",
+      "kind": "text-clipped",
+      "widget": "QLabel#legacySystemTextNote",
+      "text": "注：\"{\"加3字节16进制代码等于直接写入3字节16进制",
+      "required": 313,
+      "available": 157,
+      "severity": "warning"
+    },
+    {
+      "state": "11-unit-composition-00-战斗合成",
+      "kind": "text-clipped",
+      "widget": "ChrBankComboBox#-",
+      "text": "[4A]074: 112810",
+      "required": 134,
+      "available": 128,
+      "severity": "warning"
+    },
+    {
+      "state": "11-unit-composition-00-战斗合成",
+      "kind": "text-clipped",
+      "widget": "ChrBankComboBox#-",
+      "text": "[4B]075: 112C10",
+      "required": 134,
+      "available": 128,
+      "severity": "warning"
+    },
+    {
+      "state": "11-unit-composition-02-拼图脚本原码",
+      "kind": "text-clipped",
+      "widget": "ChrBankComboBox#-",
+      "text": "[4A]074: 112810",
+      "required": 134,
+      "available": 128,
+      "severity": "warning"
+    },
+    {
+      "state": "11-unit-composition-02-拼图脚本原码",
+      "kind": "text-clipped",
+      "widget": "ChrBankComboBox#-",
+      "text": "[4B]075: 112C10",
+      "required": 134,
+      "available": 128,
+      "severity": "warning"
+    }
+  ],
+  "passed": false
+}

@@ -1,0 +1,113 @@
+{
+  "schema_version": 1,
+  "validated": true,
+  "scope": "isolated reference executable; beam/physical puzzle controls, library and effect-canvas left/right actions; every nested and outer window cancelled",
+  "records": [
+    {
+      "kind": "beam",
+      "title": "光束拼图",
+      "actions": [
+        {
+          "action": "button",
+          "control_id": 210,
+          "text": "显示图块编号",
+          "visual_changed": true
+        },
+        {
+          "action": "button",
+          "control_id": 270,
+          "text": "40开始",
+          "visual_changed": true
+        },
+        {
+          "action": "button",
+          "control_id": 280,
+          "text": "80开始",
+          "visual_changed": true
+        },
+        {
+          "action": "library_left",
+          "control_id": 140,
+          "clicked": true,
+          "descendants": [],
+          "visual_changed": true
+        },
+        {
+          "action": "effect_left",
+          "control_id": 160,
+          "clicked": true,
+          "descendants": [],
+          "visual_changed": true
+        },
+        {
+          "action": "effect_right",
+          "control_id": 160,
+          "clicked": true,
+          "descendants": [],
+          "visual_changed": true
+        }
+      ]
+    },
+    {
+      "kind": "physical",
+      "title": "物理拼图",
+      "actions": [
+        {
+          "action": "button",
+          "control_id": 270,
+          "text": "显示图块编号",
+          "visual_changed": true
+        },
+        {
+          "action": "button",
+          "control_id": 260,
+          "text": "00开始",
+          "visual_changed": true
+        },
+        {
+          "action": "button",
+          "control_id": 250,
+          "text": "80开始",
+          "visual_changed": true
+        },
+        {
+          "action": "button",
+          "control_id": 290,
+          "text": "图片水平翻转",
+          "visual_changed": true
+        },
+        {
+          "action": "button",
+          "control_id": 300,
+          "text": "图片垂直翻转",
+          "visual_changed": true
+        },
+        {
+          "action": "library_left",
+          "control_id": 120,
+          "clicked": true,
+          "descendants": [],
+          "visual_changed": true
+        },
+        {
+          "action": "effect_left",
+          "control_id": 150,
+          "clicked": true,
+          "descendants": [],
+          "visual_changed": true
+        },
+        {
+          "action": "effect_right",
+          "control_id": 150,
+          "clicked": true,
+          "descendants": [],
+          "visual_changed": true
+        }
+      ]
+    }
+  ],
+  "sha256_before": "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E",
+  "sha256_after": "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E",
+  "diff_count": 0,
+  "interaction_effect_observed": true
+}

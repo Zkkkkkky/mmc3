@@ -1,0 +1,19 @@
+[    0.0s] launched pid=2512
+[    0.0s] === stage A: launcher -> main window (no ROM) ===
+[    3.0s] top window: {'hwnd': 6621578, 'title': 'SRW2�޸���V1.5', 'class': 'WTWindow', 'rect': {'left': 571, 'top': 244, 'right': 1346, 'bottom': 843, 'width': 775, 'height': 599}, 'pid': 2512}
+[    4.0s] dump A01_������: title='SRW2�޸���V1.5' class='WTWindow' controls=8 shot=ok
+[   12.4s] main window hwnd=3410382 title='SRW2���ݰ��޸���V1.0'
+[   13.9s] dump A02_������_δ����ROM: title='SRW2���ݰ��޸���V1.0' class='WTWindow' controls=63 shot=ok
+[   21.9s] === stage LOAD: load ROM copy only ===
+[   23.1s] dump LOAD01_��ROM�Ի���: title='���ļ�' class='#32770' controls=49 shot=ok
+[   23.6s] open dialog confirmed gone=True
+[   30.7s] ROM loaded without main-window sweep, title='SRW2���ݰ��޸���V1.0��D:\\GIT\\mmc3\\output\\build\\legacy-ui-probe\\database-global-button-controls.nes'
+[   31.6s] dump LOAD02_������_�����: title='SRW2���ݰ��޸���V1.0��D:\\GIT\\mmc3\\output\\build\\legacy-ui-probe\\database-global-button-controls.nes' class='WTWindow' controls=63 shot=ok
+[   31.6s] === stage DBGLOBALBUTTONCONTROLS ===
+[   32.4s] ���ݿ�: hwnd=10094016 title='���ݿ�'
+[   42.9s] ���ݿ�: hwnd=10094016 title='���ݿ�'
+[   45.1s] ���ݿ�: hwnd=10094016 title='���ݿ�'
+[   47.2s] ���ݿ�: hwnd=10094016 title='���ݿ�'
+[   49.8s] ���ݿ�: hwnd=10094016 title='���ݿ�'
+[   51.4s] DBGLOBALBUTTONCONTROLS complete: 15/15 actions, zero ROM diff
+[   51.6s] terminated owned pid=2512

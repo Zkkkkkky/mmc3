@@ -1,0 +1,1686 @@
+{
+  "schema_version": 1,
+  "validated": true,
+  "scope": "all 101 live non-button actions plus 62 dynamic-state triggers on the four legacy weapon-rule pages; database cancelled; isolated ROM zero-diff gate",
+  "error": null,
+  "database_cancel_closed": false,
+  "sha256_before": "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E",
+  "sha256_after": "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E",
+  "diff_count": 0,
+  "processed_control_count": 22,
+  "state_control_count": 73,
+  "execution_record_count": 163,
+  "observations": [
+    {
+      "class": "Edit",
+      "control_id": 250,
+      "path": [
+        1,
+        7,
+        1
+      ],
+      "original": "",
+      "replacement_readback": "",
+      "boundary_readback_lengths": [
+        0,
+        0
+      ]
+    },
+    {
+      "class": "ComboBox",
+      "control_id": 600,
+      "path": [
+        1,
+        11,
+        0
+      ],
+      "item_count": 256,
+      "original_index": 0,
+      "selected_readbacks": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41,
+        42,
+        43,
+        44,
+        45,
+        46,
+        47,
+        48,
+        49,
+        50,
+        51,
+        52,
+        53,
+        54,
+        55,
+        56,
+        57,
+        58,
+        59,
+        60,
+        61,
+        62,
+        63,
+        64,
+        65,
+        66,
+        67,
+        68,
+        69,
+        70,
+        71,
+        72,
+        73,
+        74,
+        75,
+        76,
+        77,
+        78,
+        79,
+        80,
+        81,
+        82,
+        83,
+        84,
+        85,
+        86,
+        87,
+        88,
+        89,
+        90,
+        91,
+        92,
+        93,
+        94,
+        95,
+        96,
+        97,
+        98,
+        99,
+        100,
+        101,
+        102,
+        103,
+        104,
+        105,
+        106,
+        107,
+        108,
+        109,
+        110,
+        111,
+        112,
+        113,
+        114,
+        115,
+        116,
+        117,
+        118,
+        119,
+        120,
+        121,
+        122,
+        123,
+        124,
+        125,
+        126,
+        127,
+        128,
+        129,
+        130,
+        131,
+        132,
+        133,
+        134,
+        135,
+        136,
+        137,
+        138,
+        139,
+        140,
+        141,
+        142,
+        143,
+        144,
+        145,
+        146,
+        147,
+        148,
+        149,
+        150,
+        151,
+        152,
+        153,
+        154,
+        155,
+        156,
+        157,
+        158,
+        159,
+        160,
+        161,
+        162,
+        163,
+        164,
+        165,
+        166,
+        167,
+        168,
+        169,
+        170,
+        171,
+        172,
+        173,
+        174,
+        175,
+        176,
+        177,
+        178,
+        179,
+        180,
+        181,
+        182,
+        183,
+        184,
+        185,
+        186,
+        187,
+        188,
+        189,
+        190,
+        191,
+        192,
+        193,
+        194,
+        195,
+        196,
+        197,
+        198,
+        199,
+        200,
+        201,
+        202,
+        203,
+        204,
+        205,
+        206,
+        207,
+        208,
+        209,
+        210,
+        211,
+        212,
+        213,
+        214,
+        215,
+        216,
+        217,
+        218,
+        219,
+        220,
+        221,
+        222,
+        223,
+        224,
+        225,
+        226,
+        227,
+        228,
+        229,
+        230,
+        231,
+        232,
+        233,
+        234,
+        235,
+        236,
+        237,
+        238,
+        239,
+        240,
+        241,
+        242,
+        243,
+        244,
+        245,
+        246,
+        247,
+        248,
+        249,
+        250,
+        251,
+        252,
+        253,
+        254,
+        255
+      ],
+      "keyboard_index": 0
+    },
+    {
+      "class": "msctls_updown32",
+      "control_id": 464,
+      "path": [
+        1,
+        11,
+        4,
+        0
+      ],
+      "original": "",
+      "increment_readback": "",
+      "decrement_readback": "",
+      "boundary_readbacks": [
+        "",
+        ""
+      ]
+    },
+    {
+      "class": "Edit",
+      "control_id": 460,
+      "path": [
+        1,
+        11,
+        4,
+        1
+      ],
+      "original": "",
+      "replacement_readback": "",
+      "boundary_readback_lengths": [
+        0,
+        0
+      ]
+    },
+    {
+      "class": "msctls_updown32",
+      "control_id": 434,
+      "path": [
+        1,
+        11,
+        4,
+        4
+      ],
+      "original": "",
+      "increment_readback": "",
+      "decrement_readback": "",
+      "boundary_readbacks": [
+        "",
+        ""
+      ]
+    },
+    {
+      "class": "Edit",
+      "control_id": 430,
+      "path": [
+        1,
+        11,
+        4,
+        5
+      ],
+      "original": "",
+      "replacement_readback": "",
+      "boundary_readback_lengths": [
+        0,
+        0
+      ]
+    },
+    {
+      "class": "Edit",
+      "control_id": 240,
+      "path": [
+        1,
+        11,
+        8
+      ],
+      "original": "",
+      "replacement_readback": "",
+      "boundary_readback_lengths": [
+        0,
+        0
+      ]
+    },
+    {
+      "class": "Edit",
+      "control_id": 510,
+      "path": [
+        1,
+        11,
+        3,
+        0
+      ],
+      "original": "",
+      "replacement_readback": "",
+      "boundary_readback_lengths": [
+        0,
+        0
+      ]
+    },
+    {
+      "class": "Edit",
+      "control_id": 480,
+      "path": [
+        1,
+        11,
+        3,
+        3
+      ],
+      "original": "",
+      "replacement_readback": "",
+      "boundary_readback_lengths": [
+        0,
+        0
+      ]
+    },
+    {
+      "class": "Edit",
+      "control_id": 320,
+      "path": [
+        1,
+        5,
+        0
+      ],
+      "original": "",
+      "replacement_readback": "",
+      "boundary_readback_lengths": [
+        0,
+        0
+      ]
+    },
+    {
+      "class": "Edit",
+      "control_id": 730,
+      "path": [
+        1,
+        10,
+        0
+      ],
+      "original": "",
+      "replacement_readback": "",
+      "boundary_readback_lengths": [
+        0,
+        0
+      ]
+    },
+    {
+      "class": "Edit",
+      "control_id": 150,
+      "path": [
+        1,
+        10,
+        3
+      ],
+      "original": "",
+      "replacement_readback": "",
+      "boundary_readback_lengths": [
+        0,
+        0
+      ]
+    },
+    {
+      "class": "Edit",
+      "control_id": 670,
+      "path": [
+        1,
+        1,
+        0
+      ],
+      "original": "",
+      "replacement_readback": "",
+      "boundary_readback_lengths": [
+        0,
+        0
+      ]
+    },
+    {
+      "class": "Edit",
+      "control_id": 750,
+      "path": [
+        1,
+        2,
+        0
+      ],
+      "original": "",
+      "replacement_readback": "",
+      "boundary_readback_lengths": [
+        0,
+        0
+      ]
+    },
+    {
+      "class": "Edit",
+      "control_id": 630,
+      "path": [
+        1,
+        2,
+        3
+      ],
+      "original": "",
+      "replacement_readback": "",
+      "boundary_readback_lengths": [
+        0,
+        0
+      ]
+    },
+    {
+      "class": "Edit",
+      "control_id": 370,
+      "path": [
+        1,
+        3,
+        0
+      ],
+      "original": "",
+      "replacement_readback": "",
+      "boundary_readback_lengths": [
+        0,
+        0
+      ]
+    },
+    {
+      "class": "ComboBox",
+      "control_id": 620,
+      "path": [
+        1,
+        9,
+        0
+      ],
+      "item_count": 256,
+      "original_index": 0,
+      "selected_readbacks": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41,
+        42,
+        43,
+        44,
+        45,
+        46,
+        47,
+        48,
+        49,
+        50,
+        51,
+        52,
+        53,
+        54,
+        55,
+        56,
+        57,
+        58,
+        59,
+        60,
+        61,
+        62,
+        63,
+        64,
+        65,
+        66,
+        67,
+        68,
+        69,
+        70,
+        71,
+        72,
+        73,
+        74,
+        75,
+        76,
+        77,
+        78,
+        79,
+        80,
+        81,
+        82,
+        83,
+        84,
+        85,
+        86,
+        87,
+        88,
+        89,
+        90,
+        91,
+        92,
+        93,
+        94,
+        95,
+        96,
+        97,
+        98,
+        99,
+        100,
+        101,
+        102,
+        103,
+        104,
+        105,
+        106,
+        107,
+        108,
+        109,
+        110,
+        111,
+        112,
+        113,
+        114,
+        115,
+        116,
+        117,
+        118,
+        119,
+        120,
+        121,
+        122,
+        123,
+        124,
+        125,
+        126,
+        127,
+        128,
+        129,
+        130,
+        131,
+        132,
+        133,
+        134,
+        135,
+        136,
+        137,
+        138,
+        139,
+        140,
+        141,
+        142,
+        143,
+        144,
+        145,
+        146,
+        147,
+        148,
+        149,
+        150,
+        151,
+        152,
+        153,
+        154,
+        155,
+        156,
+        157,
+        158,
+        159,
+        160,
+        161,
+        162,
+        163,
+        164,
+        165,
+        166,
+        167,
+        168,
+        169,
+        170,
+        171,
+        172,
+        173,
+        174,
+        175,
+        176,
+        177,
+        178,
+        179,
+        180,
+        181,
+        182,
+        183,
+        184,
+        185,
+        186,
+        187,
+        188,
+        189,
+        190,
+        191,
+        192,
+        193,
+        194,
+        195,
+        196,
+        197,
+        198,
+        199,
+        200,
+        201,
+        202,
+        203,
+        204,
+        205,
+        206,
+        207,
+        208,
+        209,
+        210,
+        211,
+        212,
+        213,
+        214,
+        215,
+        216,
+        217,
+        218,
+        219,
+        220,
+        221,
+        222,
+        223,
+        224,
+        225,
+        226,
+        227,
+        228,
+        229,
+        230,
+        231,
+        232,
+        233,
+        234,
+        235,
+        236,
+        237,
+        238,
+        239,
+        240,
+        241,
+        242,
+        243,
+        244,
+        245,
+        246,
+        247,
+        248,
+        249,
+        250,
+        251,
+        252,
+        253,
+        254,
+        255
+      ],
+      "keyboard_index": 0
+    },
+    {
+      "class": "msctls_updown32",
+      "control_id": 564,
+      "path": [
+        1,
+        9,
+        3,
+        0
+      ],
+      "original": "",
+      "increment_readback": "",
+      "decrement_readback": "",
+      "boundary_readbacks": [
+        "",
+        ""
+      ]
+    },
+    {
+      "class": "Edit",
+      "control_id": 560,
+      "path": [
+        1,
+        9,
+        3,
+        1
+      ],
+      "original": "",
+      "replacement_readback": "",
+      "boundary_readback_lengths": [
+        0,
+        0
+      ]
+    },
+    {
+      "class": "msctls_updown32",
+      "control_id": 544,
+      "path": [
+        1,
+        9,
+        3,
+        3
+      ],
+      "original": "",
+      "increment_readback": "",
+      "decrement_readback": "",
+      "boundary_readbacks": [
+        "",
+        ""
+      ]
+    },
+    {
+      "class": "Edit",
+      "control_id": 540,
+      "path": [
+        1,
+        9,
+        3,
+        4
+      ],
+      "original": "",
+      "replacement_readback": "",
+      "boundary_readback_lengths": [
+        0,
+        0
+      ]
+    },
+    {
+      "class": "Edit",
+      "control_id": 180,
+      "path": [
+        1,
+        9,
+        7
+      ],
+      "original": "",
+      "replacement_readback": "",
+      "boundary_readback_lengths": [
+        0,
+        0
+      ]
+    }
+  ],
+  "execution_records": [
+    {
+      "action_id": "285420cd54d18a5e9b23",
+      "status": "passed",
+      "result": "真实焦点执行 Ctrl+Tab，并恢复到首个规律页。"
+    },
+    {
+      "action_id": "b6363687ccb602e88733",
+      "status": "passed",
+      "result": "旧版输入框获得真实键盘焦点=True。"
+    },
+    {
+      "action_id": "3423001123c18ce25cc5",
+      "status": "passed",
+      "result": "草稿替换读回=''，随后恢复原值。"
+    },
+    {
+      "action_id": "47909077910bc1037e16",
+      "status": "passed",
+      "result": "真实焦点执行 Ctrl+A、Ctrl+Z，随后恢复原草稿。"
+    },
+    {
+      "action_id": "cce3578ba6fa1807d47e",
+      "status": "passed",
+      "result": "在输入框内执行右键/上下文菜单路径并关闭菜单。"
+    },
+    {
+      "action_id": "f03e7837f5cf5996e298",
+      "status": "passed",
+      "result": "空值/256 字符边界读回长度=[0, 0]，随后恢复。"
+    },
+    {
+      "action_id": "5221ce0a57b1a9037ffc",
+      "status": "passed",
+      "result": "展开并收起旧版下拉框，共 256 项。"
+    },
+    {
+      "action_id": "740f390e1b41dfe4c4cc",
+      "status": "passed",
+      "result": "逐项选择并读回 256/256 项，恢复索引 0。"
+    },
+    {
+      "action_id": "cc1b9defbad1e53e391e",
+      "status": "passed",
+      "result": "Home/Down 键盘循环读回索引 0，随后恢复。"
+    },
+    {
+      "action_id": "34bb3c8d9ed4f95e1e13",
+      "status": "passed",
+      "result": "执行下拉框右键路径并关闭可能出现的菜单。"
+    },
+    {
+      "action_id": "70ddf64424c9dbd9afb2",
+      "status": "passed",
+      "result": "点击上半区，伙伴输入框由 '' 变为 ''。"
+    },
+    {
+      "action_id": "4995392adb3ad078c0ca",
+      "status": "passed",
+      "result": "点击下半区，伙伴输入框由 '' 变为 ''。"
+    },
+    {
+      "action_id": "50c92a57b1491380a47b",
+      "status": "passed",
+      "result": "伙伴输入框边界读回=['', '']，随后恢复。"
+    },
+    {
+      "action_id": "065431ea87a1d764474e",
+      "status": "passed",
+      "result": "旧版输入框获得真实键盘焦点=True。"
+    },
+    {
+      "action_id": "577526a456946eaced03",
+      "status": "passed",
+      "result": "草稿替换读回=''，随后恢复原值。"
+    },
+    {
+      "action_id": "adf86b87e7780c756e6c",
+      "status": "passed",
+      "result": "真实焦点执行 Ctrl+A、Ctrl+Z，随后恢复原草稿。"
+    },
+    {
+      "action_id": "ff861aefefc384cd348a",
+      "status": "passed",
+      "result": "在输入框内执行右键/上下文菜单路径并关闭菜单。"
+    },
+    {
+      "action_id": "0a081714a7c88204faa5",
+      "status": "passed",
+      "result": "空值/256 字符边界读回长度=[0, 0]，随后恢复。"
+    },
+    {
+      "action_id": "6f47c2b92b3e8f8c84c0",
+      "status": "passed",
+      "result": "点击上半区，伙伴输入框由 '' 变为 ''。"
+    },
+    {
+      "action_id": "b3b3b9f49d8dc29705a6",
+      "status": "passed",
+      "result": "点击下半区，伙伴输入框由 '' 变为 ''。"
+    },
+    {
+      "action_id": "4f9dc9c083e17b495618",
+      "status": "passed",
+      "result": "伙伴输入框边界读回=['', '']，随后恢复。"
+    },
+    {
+      "action_id": "b72329ee6d5465dc74a3",
+      "status": "passed",
+      "result": "旧版输入框获得真实键盘焦点=True。"
+    },
+    {
+      "action_id": "a3dbda460c922065a467",
+      "status": "passed",
+      "result": "草稿替换读回=''，随后恢复原值。"
+    },
+    {
+      "action_id": "09619cf15c6b5b0977fb",
+      "status": "passed",
+      "result": "真实焦点执行 Ctrl+A、Ctrl+Z，随后恢复原草稿。"
+    },
+    {
+      "action_id": "0a4c25e550fa802c3595",
+      "status": "passed",
+      "result": "在输入框内执行右键/上下文菜单路径并关闭菜单。"
+    },
+    {
+      "action_id": "21317e5af70559b14977",
+      "status": "passed",
+      "result": "空值/256 字符边界读回长度=[0, 0]，随后恢复。"
+    },
+    {
+      "action_id": "0e4c43d14f9ce74514c4",
+      "status": "passed",
+      "result": "旧版输入框获得真实键盘焦点=True。"
+    },
+    {
+      "action_id": "26542486055340678bb0",
+      "status": "passed",
+      "result": "草稿替换读回=''，随后恢复原值。"
+    },
+    {
+      "action_id": "84136893077762e439da",
+      "status": "passed",
+      "result": "真实焦点执行 Ctrl+A、Ctrl+Z，随后恢复原草稿。"
+    },
+    {
+      "action_id": "0a41fc9397011b4e7fa7",
+      "status": "passed",
+      "result": "在输入框内执行右键/上下文菜单路径并关闭菜单。"
+    },
+    {
+      "action_id": "8d17597ea01baa04a3bd",
+      "status": "passed",
+      "result": "空值/256 字符边界读回长度=[0, 0]，随后恢复。"
+    },
+    {
+      "action_id": "4b12f4686994fccb74f4",
+      "status": "passed",
+      "result": "旧版输入框获得真实键盘焦点=True。"
+    },
+    {
+      "action_id": "e36057e6e0979d10aa9d",
+      "status": "passed",
+      "result": "草稿替换读回=''，随后恢复原值。"
+    },
+    {
+      "action_id": "651598ce88eb92f23185",
+      "status": "passed",
+      "result": "真实焦点执行 Ctrl+A、Ctrl+Z，随后恢复原草稿。"
+    },
+    {
+      "action_id": "8bf5bf32972760b455d3",
+      "status": "passed",
+      "result": "在输入框内执行右键/上下文菜单路径并关闭菜单。"
+    },
+    {
+      "action_id": "b561a6a02e0c600c86e5",
+      "status": "passed",
+      "result": "空值/256 字符边界读回长度=[0, 0]，随后恢复。"
+    },
+    {
+      "action_id": "441a0705a357348944f3",
+      "status": "passed",
+      "result": "旧版输入框获得真实键盘焦点=True。"
+    },
+    {
+      "action_id": "b9e493b7eb0d5b53cda8",
+      "status": "passed",
+      "result": "草稿替换读回=''，随后恢复原值。"
+    },
+    {
+      "action_id": "5d0fcb23fd4462d44062",
+      "status": "passed",
+      "result": "真实焦点执行 Ctrl+A、Ctrl+Z，随后恢复原草稿。"
+    },
+    {
+      "action_id": "5245ff4ebc79e6ca652f",
+      "status": "passed",
+      "result": "在输入框内执行右键/上下文菜单路径并关闭菜单。"
+    },
+    {
+      "action_id": "fa7fdfde4abd11de77ae",
+      "status": "passed",
+      "result": "空值/256 字符边界读回长度=[0, 0]，随后恢复。"
+    },
+    {
+      "action_id": "80df034be186ce03f5a3",
+      "status": "passed",
+      "result": "旧版输入框获得真实键盘焦点=True。"
+    },
+    {
+      "action_id": "5a6f497d5f425e0cb549",
+      "status": "passed",
+      "result": "草稿替换读回=''，随后恢复原值。"
+    },
+    {
+      "action_id": "1fb7e91d10ff70512a8d",
+      "status": "passed",
+      "result": "真实焦点执行 Ctrl+A、Ctrl+Z，随后恢复原草稿。"
+    },
+    {
+      "action_id": "f3bb0645ed4784aabb9e",
+      "status": "passed",
+      "result": "在输入框内执行右键/上下文菜单路径并关闭菜单。"
+    },
+    {
+      "action_id": "eb3c2d4a17b69297bd06",
+      "status": "passed",
+      "result": "空值/256 字符边界读回长度=[0, 0]，随后恢复。"
+    },
+    {
+      "action_id": "d7b74675be03e804016d",
+      "status": "passed",
+      "result": "旧版输入框获得真实键盘焦点=True。"
+    },
+    {
+      "action_id": "71d193a8268debd99df3",
+      "status": "passed",
+      "result": "草稿替换读回=''，随后恢复原值。"
+    },
+    {
+      "action_id": "bb5818410de36f6f983e",
+      "status": "passed",
+      "result": "真实焦点执行 Ctrl+A、Ctrl+Z，随后恢复原草稿。"
+    },
+    {
+      "action_id": "80a648611391e2e0253f",
+      "status": "passed",
+      "result": "在输入框内执行右键/上下文菜单路径并关闭菜单。"
+    },
+    {
+      "action_id": "d00eb57edcac59d333d4",
+      "status": "passed",
+      "result": "空值/256 字符边界读回长度=[0, 0]，随后恢复。"
+    },
+    {
+      "action_id": "52381dd99b04e922e677",
+      "status": "passed",
+      "result": "旧版输入框获得真实键盘焦点=True。"
+    },
+    {
+      "action_id": "277d1ee4cdfd4248af83",
+      "status": "passed",
+      "result": "草稿替换读回=''，随后恢复原值。"
+    },
+    {
+      "action_id": "afb41d03fcc7ac0072b1",
+      "status": "passed",
+      "result": "真实焦点执行 Ctrl+A、Ctrl+Z，随后恢复原草稿。"
+    },
+    {
+      "action_id": "f3168d49eceee6152568",
+      "status": "passed",
+      "result": "在输入框内执行右键/上下文菜单路径并关闭菜单。"
+    },
+    {
+      "action_id": "0bee35b32ae49cc78019",
+      "status": "passed",
+      "result": "空值/256 字符边界读回长度=[0, 0]，随后恢复。"
+    },
+    {
+      "action_id": "e50eac77b01be3708144",
+      "status": "passed",
+      "result": "旧版输入框获得真实键盘焦点=True。"
+    },
+    {
+      "action_id": "90af1e61bba481ec9d35",
+      "status": "passed",
+      "result": "草稿替换读回=''，随后恢复原值。"
+    },
+    {
+      "action_id": "dccbf7f16f952bf5276e",
+      "status": "passed",
+      "result": "真实焦点执行 Ctrl+A、Ctrl+Z，随后恢复原草稿。"
+    },
+    {
+      "action_id": "b88fd758f6eb5799cd43",
+      "status": "passed",
+      "result": "在输入框内执行右键/上下文菜单路径并关闭菜单。"
+    },
+    {
+      "action_id": "1da3ae9c7ac45dd8847e",
+      "status": "passed",
+      "result": "空值/256 字符边界读回长度=[0, 0]，随后恢复。"
+    },
+    {
+      "action_id": "6f56936fbf00d62f666a",
+      "status": "passed",
+      "result": "旧版输入框获得真实键盘焦点=True。"
+    },
+    {
+      "action_id": "c1429de19e2896417e5d",
+      "status": "passed",
+      "result": "草稿替换读回=''，随后恢复原值。"
+    },
+    {
+      "action_id": "a2d0889d9f6241bec036",
+      "status": "passed",
+      "result": "真实焦点执行 Ctrl+A、Ctrl+Z，随后恢复原草稿。"
+    },
+    {
+      "action_id": "7a030a6ab2e189b915a5",
+      "status": "passed",
+      "result": "在输入框内执行右键/上下文菜单路径并关闭菜单。"
+    },
+    {
+      "action_id": "23312bab651a11316460",
+      "status": "passed",
+      "result": "空值/256 字符边界读回长度=[0, 0]，随后恢复。"
+    },
+    {
+      "action_id": "47aeb1f15151c0bac986",
+      "status": "passed",
+      "result": "旧版输入框获得真实键盘焦点=True。"
+    },
+    {
+      "action_id": "c0b808aaec6c079e76a7",
+      "status": "passed",
+      "result": "草稿替换读回=''，随后恢复原值。"
+    },
+    {
+      "action_id": "255bda26f5203b89f21f",
+      "status": "passed",
+      "result": "真实焦点执行 Ctrl+A、Ctrl+Z，随后恢复原草稿。"
+    },
+    {
+      "action_id": "d347e94c7f68c262d4ba",
+      "status": "passed",
+      "result": "在输入框内执行右键/上下文菜单路径并关闭菜单。"
+    },
+    {
+      "action_id": "f7c368ff3799af85a0bd",
+      "status": "passed",
+      "result": "空值/256 字符边界读回长度=[0, 0]，随后恢复。"
+    },
+    {
+      "action_id": "8e05d4b5d658f8fc2b62",
+      "status": "passed",
+      "result": "旧版输入框获得真实键盘焦点=True。"
+    },
+    {
+      "action_id": "e60b4ddf2ef7e49123be",
+      "status": "passed",
+      "result": "草稿替换读回=''，随后恢复原值。"
+    },
+    {
+      "action_id": "da5b88934cf143dddcc0",
+      "status": "passed",
+      "result": "真实焦点执行 Ctrl+A、Ctrl+Z，随后恢复原草稿。"
+    },
+    {
+      "action_id": "37356820d55d745f2892",
+      "status": "passed",
+      "result": "在输入框内执行右键/上下文菜单路径并关闭菜单。"
+    },
+    {
+      "action_id": "a7628f458bc2956ef035",
+      "status": "passed",
+      "result": "空值/256 字符边界读回长度=[0, 0]，随后恢复。"
+    },
+    {
+      "action_id": "4f6d02c1bf21432c2a4a",
+      "status": "passed",
+      "result": "展开并收起旧版下拉框，共 256 项。"
+    },
+    {
+      "action_id": "ba936c0641fba102f17d",
+      "status": "passed",
+      "result": "逐项选择并读回 256/256 项，恢复索引 0。"
+    },
+    {
+      "action_id": "fc7f7daf39adbfca42ac",
+      "status": "passed",
+      "result": "Home/Down 键盘循环读回索引 0，随后恢复。"
+    },
+    {
+      "action_id": "4bbd045ddde8be2dbed2",
+      "status": "passed",
+      "result": "执行下拉框右键路径并关闭可能出现的菜单。"
+    },
+    {
+      "action_id": "6733d3e24abb1b4c4249",
+      "status": "passed",
+      "result": "点击上半区，伙伴输入框由 '' 变为 ''。"
+    },
+    {
+      "action_id": "7e22b102beea97ba4d3d",
+      "status": "passed",
+      "result": "点击下半区，伙伴输入框由 '' 变为 ''。"
+    },
+    {
+      "action_id": "4dfba56599b019f25562",
+      "status": "passed",
+      "result": "伙伴输入框边界读回=['', '']，随后恢复。"
+    },
+    {
+      "action_id": "8cacf83b2595eb350582",
+      "status": "passed",
+      "result": "旧版输入框获得真实键盘焦点=True。"
+    },
+    {
+      "action_id": "bba3c64ecdb872f9f1fd",
+      "status": "passed",
+      "result": "草稿替换读回=''，随后恢复原值。"
+    },
+    {
+      "action_id": "63690c89768d4fdbd0dd",
+      "status": "passed",
+      "result": "真实焦点执行 Ctrl+A、Ctrl+Z，随后恢复原草稿。"
+    },
+    {
+      "action_id": "132718275832d8802602",
+      "status": "passed",
+      "result": "在输入框内执行右键/上下文菜单路径并关闭菜单。"
+    },
+    {
+      "action_id": "1c5040702d196dddcbce",
+      "status": "passed",
+      "result": "空值/256 字符边界读回长度=[0, 0]，随后恢复。"
+    },
+    {
+      "action_id": "4eedcc870f8a60eb19c1",
+      "status": "passed",
+      "result": "点击上半区，伙伴输入框由 '' 变为 ''。"
+    },
+    {
+      "action_id": "106bda4693ecbfabc737",
+      "status": "passed",
+      "result": "点击下半区，伙伴输入框由 '' 变为 ''。"
+    },
+    {
+      "action_id": "d2971a601561e2909e9a",
+      "status": "passed",
+      "result": "伙伴输入框边界读回=['', '']，随后恢复。"
+    },
+    {
+      "action_id": "bbac870d5191fb8e8f1c",
+      "status": "passed",
+      "result": "旧版输入框获得真实键盘焦点=True。"
+    },
+    {
+      "action_id": "18b6c816d7648f78e3a5",
+      "status": "passed",
+      "result": "草稿替换读回=''，随后恢复原值。"
+    },
+    {
+      "action_id": "af00c51c70061746d57b",
+      "status": "passed",
+      "result": "真实焦点执行 Ctrl+A、Ctrl+Z，随后恢复原草稿。"
+    },
+    {
+      "action_id": "d887d54e2bf057c439e5",
+      "status": "passed",
+      "result": "在输入框内执行右键/上下文菜单路径并关闭菜单。"
+    },
+    {
+      "action_id": "0ca8a1aff077a909b4c3",
+      "status": "passed",
+      "result": "空值/256 字符边界读回长度=[0, 0]，随后恢复。"
+    },
+    {
+      "action_id": "149ada0a94247b9f062d",
+      "status": "passed",
+      "result": "旧版输入框获得真实键盘焦点=True。"
+    },
+    {
+      "action_id": "1c48f5f28fdfead7bb8e",
+      "status": "passed",
+      "result": "草稿替换读回=''，随后恢复原值。"
+    },
+    {
+      "action_id": "be2257da170abb824df9",
+      "status": "passed",
+      "result": "真实焦点执行 Ctrl+A、Ctrl+Z，随后恢复原草稿。"
+    },
+    {
+      "action_id": "5c238ab334a225022a10",
+      "status": "passed",
+      "result": "在输入框内执行右键/上下文菜单路径并关闭菜单。"
+    },
+    {
+      "action_id": "75d94b369fc372b2e068",
+      "status": "passed",
+      "result": "空值/256 字符边界读回长度=[0, 0]，随后恢复。"
+    },
+    {
+      "action_id": "1a315ae295537ef89e02",
+      "status": "passed",
+      "result": "页签/记录状态实跑：visible=[False, True]，enabled=[True]，状态=['光束', '光束-记录10', '物理图片', '物理运行1', '物理运行2']。"
+    },
+    {
+      "action_id": "68372b1d1cd0546e9685",
+      "status": "passed",
+      "result": "页签/记录状态实跑：visible=[False, True]，enabled=[True]，状态=['光束', '光束-记录10', '物理图片', '物理运行1', '物理运行2']。"
+    },
+    {
+      "action_id": "fa50d11a13a0db2ea0d8",
+      "status": "passed",
+      "result": "页签/记录状态实跑：visible=[False, True]，enabled=[True]，状态=['光束', '光束-记录10', '物理图片', '物理运行1', '物理运行2']。"
+    },
+    {
+      "action_id": "a6f6fd5fb3f840f7ffc3",
+      "status": "passed",
+      "result": "页签/记录状态实跑：visible=[False, True]，enabled=[True]，状态=['光束', '光束-记录10', '物理图片', '物理运行1', '物理运行2']。"
+    },
+    {
+      "action_id": "b8d469022cfce8950674",
+      "status": "passed",
+      "result": "页签/记录状态实跑：visible=[False, True]，enabled=[True]，状态=['光束', '光束-记录10', '物理图片', '物理运行1', '物理运行2']。"
+    },
+    {
+      "action_id": "6d3f8a339655578ada5e",
+      "status": "passed",
+      "result": "页签/记录状态实跑：visible=[False, True]，enabled=[True]，状态=['光束', '光束-记录10', '物理图片', '物理运行1', '物理运行2']。"
+    },
+    {
+      "action_id": "25773c4e9bcf9b5e2245",
+      "status": "passed",
+      "result": "页签/记录状态实跑：visible=[False, True]，enabled=[True]，状态=['光束', '光束-记录10', '物理图片', '物理运行1', '物理运行2']。"
+    },
+    {
+      "action_id": "0f8caca871d6e3f2c46a",
+      "status": "passed",
+      "result": "页签/记录状态实跑：visible=[False, True]，enabled=[True]，状态=['光束', '光束-记录10', '物理图片', '物理运行1', '物理运行2']。"
+    },
+    {
+      "action_id": "7f1cc6d8f573a41b0c16",
+      "status": "passed",
+      "result": "页签/记录状态实跑：visible=[False, True]，enabled=[True]，状态=['光束', '光束-记录10', '物理图片', '物理运行1', '物理运行2']。"
+    },
+    {
+      "action_id": "6352050e4797f6c9c9bb",
+      "status": "passed",
+      "result": "页签/记录状态实跑：visible=[False, True]，enabled=[True]，状态=['光束', '光束-记录10', '物理图片', '物理运行1', '物理运行2']。"
+    },
+    {
+      "action_id": "92120a5f7828d3eea6b7",
+      "status": "passed",
+      "result": "页签/记录状态实跑：visible=[False, True]，enabled=[True]，状态=['光束', '光束-记录10', '物理图片', '物理运行1', '物理运行2']。"
+    },
+    {
+      "action_id": "6d6cb4639c3b90dcea54",
+      "status": "passed",
+      "result": "页签/记录状态实跑：visible=[False, True]，enabled=[True]，状态=['光束', '光束-记录10', '物理图片', '物理运行1', '物理运行2']。"
+    },
+    {
+      "action_id": "d06c104f3bb45a1445f7",
+      "status": "passed",
+      "result": "页签/记录状态实跑：visible=[False, True]，enabled=[True]，状态=['光束', '光束-记录10', '物理图片', '物理运行1', '物理运行2']。"
+    },
+    {
+      "action_id": "0fbe7d776f0dfea47a5f",
+      "status": "passed",
+      "result": "页签/记录状态实跑：visible=[False, True]，enabled=[True]，状态=['光束', '光束-记录10', '物理图片', '物理运行1', '物理运行2']。"
+    },
+    {
+      "action_id": "f16149d3e0511ff8d29a",
+      "status": "passed",
+      "result": "页签/记录状态实跑：visible=[False, True]，enabled=[True]，状态=['光束', '光束-记录10', '物理图片', '物理运行1', '物理运行2']。"
+    },
+    {
+      "action_id": "a999933f119bbd40ecd9",
+      "status": "passed",
+      "result": "页签/记录状态实跑：visible=[False, True]，enabled=[True]，状态=['光束', '光束-记录10', '物理图片', '物理运行1', '物理运行2']。"
+    },
+    {
+      "action_id": "446fee456f3dcd3ca6e3",
+      "status": "passed",
+      "result": "页签/记录状态实跑：visible=[False, True]，enabled=[True]，状态=['光束', '光束-记录10', '物理图片', '物理运行1', '物理运行2']。"
+    },
+    {
+      "action_id": "273b45493706816153e3",
+      "status": "passed",
+      "result": "页签/记录状态实跑：visible=[False, True]，enabled=[True]，状态=['光束', '光束-记录10', '物理图片', '物理运行1', '物理运行2']。"
+    },
+    {
+      "action_id": "5702d3d84ad8515e5510",
+      "status": "passed",
+      "result": "页签/记录状态实跑：visible=[False, True]，enabled=[True]，状态=['光束', '光束-记录10', '物理图片', '物理运行1', '物理运行2']。"
+    },
+    {
+      "action_id": "de2c0e74d384d76ac6d7",
+      "status": "passed",
+      "result": "页签/记录状态实跑：visible=[False, True]，enabled=[True]，状态=['光束', '光束-记录10', '物理图片', '物理运行1', '物理运行2']。"
+    },
+    {
+      "action_id": "9f7e17e9affa1866fc53",
+      "status": "passed",
+      "result": "页签/记录状态实跑：visible=[False, True]，enabled=[True]，状态=['光束', '光束-记录10', '物理图片', '物理运行1', '物理运行2']。"
+    },
+    {
+      "action_id": "ddd75e8586a62653666e",
+      "status": "passed",
+      "result": "页签/记录状态实跑：visible=[False, True]，enabled=[True]，状态=['光束', '光束-记录10', '物理图片', '物理运行1', '物理运行2']。"
+    },
+    {
+      "action_id": "a68d2f2f512cad5e1602",
+      "status": "passed",
+      "result": "页签/记录状态实跑：visible=[False, True]，enabled=[True]，状态=['光束', '光束-记录10', '物理图片', '物理运行1', '物理运行2']。"
+    },
+    {
+      "action_id": "3045214164040abe551c",
+      "status": "passed",
+      "result": "页签/记录状态实跑：visible=[False, True]，enabled=[True]，状态=['光束', '光束-记录10', '物理图片', '物理运行1', '物理运行2']。"
+    },
+    {
+      "action_id": "8143fe9f7252b04dc063",
+      "status": "passed",
+      "result": "页签/记录状态实跑：visible=[False, True]，enabled=[True]，状态=['光束', '光束-记录10', '物理图片', '物理运行1', '物理运行2']。"
+    },
+    {
+      "action_id": "d6efed5a7372332b0ba3",
+      "status": "passed",
+      "result": "页签/记录状态实跑：visible=[False, True]，enabled=[True]，状态=['光束', '光束-记录10', '物理图片', '物理运行1', '物理运行2']。"
+    },
+    {
+      "action_id": "e00432f445cb20b8731f",
+      "status": "passed",
+      "result": "页签/记录状态实跑：visible=[False, True]，enabled=[True]，状态=['光束', '光束-记录10', '物理图片', '物理运行1', '物理运行2']。"
+    },
+    {
+      "action_id": "1c95c7c1a237e03cb908",
+      "status": "passed",
+      "result": "页签/记录状态实跑：visible=[False, True]，enabled=[True]，状态=['光束', '光束-记录10', '物理图片', '物理运行1', '物理运行2']。"
+    },
+    {
+      "action_id": "0270c9b854d0db714446",
+      "status": "passed",
+      "result": "页签/记录状态实跑：visible=[False, True]，enabled=[True]，状态=['光束', '光束-记录10', '物理图片', '物理运行1', '物理运行2']。"
+    },
+    {
+      "action_id": "0914b260e9b708be37c4",
+      "status": "passed",
+      "result": "页签/记录状态实跑：visible=[False, True]，enabled=[True]，状态=['光束', '光束-记录10', '物理图片', '物理运行1', '物理运行2']。"
+    },
+    {
+      "action_id": "afc66fe1fd4ff6e09936",
+      "status": "passed",
+      "result": "页签/记录状态实跑：visible=[False, True]，enabled=[True]，状态=['光束', '光束-记录10', '物理图片', '物理运行1', '物理运行2']。"
+    },
+    {
+      "action_id": "0695a6dc16e16ecfefe8",
+      "status": "passed",
+      "result": "页签/记录状态实跑：visible=[False, True]，enabled=[True]，状态=['光束', '光束-记录10', '物理图片', '物理运行1', '物理运行2']。"
+    },
+    {
+      "action_id": "c9e0ffb9817f02a474f7",
+      "status": "passed",
+      "result": "页签/记录状态实跑：visible=[False, True]，enabled=[True]，状态=['光束', '光束-记录10', '物理图片', '物理运行1', '物理运行2']。"
+    },
+    {
+      "action_id": "808e0a6d095ef9ec7c8e",
+      "status": "passed",
+      "result": "页签/记录状态实跑：visible=[False, True]，enabled=[True]，状态=['光束', '光束-记录10', '物理图片', '物理运行1', '物理运行2']。"
+    },
+    {
+      "action_id": "a89c44993eb539cc1776",
+      "status": "passed",
+      "result": "页签/记录状态实跑：visible=[False, True]，enabled=[True]，状态=['光束', '光束-记录10', '物理图片', '物理运行1', '物理运行2']。"
+    },
+    {
+      "action_id": "00852c556bca67184529",
+      "status": "passed",
+      "result": "页签/记录状态实跑：visible=[False, True]，enabled=[True]，状态=['光束', '光束-记录10', '物理图片', '物理运行1', '物理运行2']。"
+    },
+    {
+      "action_id": "8394c4565ba7a71c7b7a",
+      "status": "passed",
+      "result": "页签/记录状态实跑：visible=[False, True]，enabled=[True]，状态=['光束', '光束-记录10', '物理图片', '物理运行1', '物理运行2']。"
+    },
+    {
+      "action_id": "9427eaec4be8bc245107",
+      "status": "passed",
+      "result": "页签/记录状态实跑：visible=[False, True]，enabled=[True]，状态=['光束', '光束-记录10', '物理图片', '物理运行1', '物理运行2']。"
+    },
+    {
+      "action_id": "2189abf65c66c7dc28fe",
+      "status": "passed",
+      "result": "页签/记录状态实跑：visible=[False, True]，enabled=[True]，状态=['光束', '光束-记录10', '物理图片', '物理运行1', '物理运行2']。"
+    },
+    {
+      "action_id": "efa93c0e6facb35e7b05",
+      "status": "passed",
+      "result": "页签/记录状态实跑：visible=[False, True]，enabled=[True]，状态=['光束', '光束-记录10', '物理图片', '物理运行1', '物理运行2']。"
+    },
+    {
+      "action_id": "8e76f23b5b0f5898c3b8",
+      "status": "passed",
+      "result": "页签/记录状态实跑：visible=[False, True]，enabled=[True]，状态=['光束', '光束-记录10', '物理图片', '物理运行1', '物理运行2']。"
+    },
+    {
+      "action_id": "1623dff1a2421e431e62",
+      "status": "passed",
+      "result": "页签/记录状态实跑：visible=[False, True]，enabled=[True]，状态=['光束', '光束-记录10', '物理图片', '物理运行1', '物理运行2']。"
+    },
+    {
+      "action_id": "e1a36cbd861aeb02652f",
+      "status": "passed",
+      "result": "页签/记录状态实跑：visible=[False, True]，enabled=[True]，状态=['光束', '光束-记录10', '物理图片', '物理运行1', '物理运行2']。"
+    },
+    {
+      "action_id": "bec8bac566cb0e974a96",
+      "status": "passed",
+      "result": "页签/记录状态实跑：visible=[False, True]，enabled=[True]，状态=['光束', '光束-记录10', '物理图片', '物理运行1', '物理运行2']。"
+    },
+    {
+      "action_id": "42b764392a42152c71c7",
+      "status": "passed",
+      "result": "页签/记录状态实跑：visible=[False, True]，enabled=[True]，状态=['光束', '光束-记录10', '物理图片', '物理运行1', '物理运行2']。"
+    },
+    {
+      "action_id": "e3c3f9ab325579860f9b",
+      "status": "passed",
+      "result": "页签/记录状态实跑：visible=[False, True]，enabled=[True]，状态=['光束', '光束-记录10', '物理图片', '物理运行1', '物理运行2']。"
+    },
+    {
+      "action_id": "6401be6f6010f553b2cf",
+      "status": "passed",
+      "result": "页签/记录状态实跑：visible=[False, True]，enabled=[True]，状态=['光束', '光束-记录10', '物理图片', '物理运行1', '物理运行2']。"
+    },
+    {
+      "action_id": "a552b4937a274f758dfa",
+      "status": "passed",
+      "result": "页签/记录状态实跑：visible=[False, True]，enabled=[True]，状态=['光束', '光束-记录10', '物理图片', '物理运行1', '物理运行2']。"
+    },
+    {
+      "action_id": "aa508b552bbb931fdff0",
+      "status": "passed",
+      "result": "页签/记录状态实跑：visible=[False, True]，enabled=[True]，状态=['光束', '光束-记录10', '物理图片', '物理运行1', '物理运行2']。"
+    },
+    {
+      "action_id": "1e80f6ee2b9071e6ae2b",
+      "status": "passed",
+      "result": "页签/记录状态实跑：visible=[False, True]，enabled=[True]，状态=['光束', '光束-记录10', '物理图片', '物理运行1', '物理运行2']。"
+    },
+    {
+      "action_id": "fc8380b7055f887986c3",
+      "status": "passed",
+      "result": "页签/记录状态实跑：visible=[False, True]，enabled=[True]，状态=['光束', '光束-记录10', '物理图片', '物理运行1', '物理运行2']。"
+    },
+    {
+      "action_id": "41531ec86902c8527d8f",
+      "status": "passed",
+      "result": "页签/记录状态实跑：visible=[False, True]，enabled=[True]，状态=['光束', '光束-记录10', '物理图片', '物理运行1', '物理运行2']。"
+    },
+    {
+      "action_id": "70b3debf4981a6f743c3",
+      "status": "passed",
+      "result": "页签/记录状态实跑：visible=[False, True]，enabled=[True]，状态=['光束', '光束-记录10', '物理图片', '物理运行1', '物理运行2']。"
+    },
+    {
+      "action_id": "5cc805613b428bbfb0fe",
+      "status": "passed",
+      "result": "页签/记录状态实跑：visible=[False, True]，enabled=[True]，状态=['光束', '光束-记录10', '物理图片', '物理运行1', '物理运行2']。"
+    },
+    {
+      "action_id": "bbfb5f817656178f7500",
+      "status": "passed",
+      "result": "页签/记录状态实跑：visible=[False, True]，enabled=[True]，状态=['光束', '光束-记录10', '物理图片', '物理运行1', '物理运行2']。"
+    },
+    {
+      "action_id": "c2cb79e21d8c0ea43983",
+      "status": "passed",
+      "result": "页签/记录状态实跑：visible=[False, True]，enabled=[True]，状态=['光束', '光束-记录10', '物理图片', '物理运行1', '物理运行2']。"
+    },
+    {
+      "action_id": "d3bba354aa86efa2057a",
+      "status": "passed",
+      "result": "页签/记录状态实跑：visible=[False, True]，enabled=[True]，状态=['光束', '光束-记录10', '物理图片', '物理运行1', '物理运行2']。"
+    },
+    {
+      "action_id": "0cbef4340b1449900539",
+      "status": "passed",
+      "result": "页签/记录状态实跑：visible=[False, True]，enabled=[True]，状态=['光束', '光束-记录10', '物理图片', '物理运行1', '物理运行2']。"
+    },
+    {
+      "action_id": "0f1e2e85245d857bc077",
+      "status": "passed",
+      "result": "页签/记录状态实跑：visible=[False, True]，enabled=[True]，状态=['光束', '光束-记录10', '物理图片', '物理运行1', '物理运行2']。"
+    },
+    {
+      "action_id": "52835a80a436f20244a7",
+      "status": "passed",
+      "result": "页签/记录状态实跑：visible=[False, True]，enabled=[True]，状态=['光束', '光束-记录10', '物理图片', '物理运行1', '物理运行2']。"
+    },
+    {
+      "action_id": "1abf39a38c7b92e51dea",
+      "status": "passed",
+      "result": "页签/记录状态实跑：visible=[False, True]，enabled=[True]，状态=['光束', '光束-记录10', '物理图片', '物理运行1', '物理运行2']。"
+    },
+    {
+      "action_id": "689c472b9070af95d679",
+      "status": "passed",
+      "result": "页签/记录状态实跑：visible=[False, True]，enabled=[True]，状态=['光束', '光束-记录10', '物理图片', '物理运行1', '物理运行2']。"
+    }
+  ]
+}

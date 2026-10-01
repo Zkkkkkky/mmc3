@@ -1,0 +1,55 @@
+{
+  "schema_version": 1,
+  "validated": true,
+  "error": null,
+  "execution_record_count": 3,
+  "diff_count": 0,
+  "sha256_before": "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E",
+  "sha256_after": "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E",
+  "observations": [
+    {
+      "opener_id": 1530,
+      "title": "提示",
+      "button_id": 2,
+      "action": "keyboard_activate",
+      "focused": true,
+      "remained": false,
+      "followups": []
+    },
+    {
+      "opener_id": 1530,
+      "title": "提示",
+      "button_id": 2,
+      "action": "left_click",
+      "focused": null,
+      "remained": true,
+      "followups": []
+    },
+    {
+      "opener_id": 1530,
+      "title": "提示",
+      "button_id": 2,
+      "action": "right_click",
+      "focused": null,
+      "remained": true,
+      "followups": []
+    }
+  ],
+  "execution_records": [
+    {
+      "action_id": "de0abcfa72bed5db837e",
+      "status": "passed",
+      "result": "焦点=True；操作后弹窗仍存在=False；后续窗口=[]。"
+    },
+    {
+      "action_id": "b066e61fbb95f141f2fe",
+      "status": "passed",
+      "result": "焦点=None；操作后弹窗仍存在=True；后续窗口=[]。"
+    },
+    {
+      "action_id": "6c4ce6d09c32f566d66e",
+      "status": "passed",
+      "result": "焦点=None；操作后弹窗仍存在=True；后续窗口=[]。"
+    }
+  ]
+}

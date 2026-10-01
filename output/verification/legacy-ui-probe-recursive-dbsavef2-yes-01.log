@@ -1,0 +1,20 @@
+﻿[    0.1s] launched pid=17576
+[    0.1s] === stage A: launcher -> main window (no ROM) ===
+[    3.1s] top window: {'hwnd': 7864572, 'title': 'SRW2修改器V1.5', 'class': 'WTWindow', 'rect': {'left': 571, 'top': 244, 'right': 1346, 'bottom': 843, 'width': 775, 'height': 599}, 'pid': 17576}
+[    4.1s] dump A01_启动器: title='SRW2修改器V1.5' class='WTWindow' controls=8 shot=ok
+[    6.9s] main window hwnd=1903386 title='SRW2扩容版修改器V1.0'
+[    8.5s] dump A02_主窗口_未载入ROM: title='SRW2扩容版修改器V1.0' class='WTWindow' controls=63 shot=ok
+[   13.0s] menu 文件(F): could not open menu via Alt+F
+[   17.6s] menu 帮助(H): could not open menu via Alt+H
+[   18.1s] === stage LOAD: load ROM copy only ===
+[   19.1s] dump LOAD01_打开ROM对话框: title='打开文件' class='#32770' controls=51 shot=ok
+[   19.6s] open dialog confirmed gone=True
+[   26.6s] ROM loaded without main-window sweep, title='SRW2扩容版修改器V1.0：D:\\GIT\\mmc3\\output\\build\\legacy-ui-probe\\f2-option-01-yes.nes'
+[   27.6s] dump LOAD02_主窗口_载入后: title='SRW2扩容版修改器V1.0：D:\\GIT\\mmc3\\output\\build\\legacy-ui-probe\\f2-option-01-yes.nes' class='WTWindow' controls=63 shot=ok
+[   27.6s] === stage DBSAVEF3: isolated F3 insertion/save golden ===
+[   28.9s] 数据库: hwnd=1507606 title='数据库'
+[   37.8s] weapon selector activation: wm_command_after_validated_popup
+[   39.4s] dump DBSAVE_F2_参数_修改前: title='定义光束规律图库' class='WTWindow' controls=29 shot=ok
+[   40.3s] dump DBSAVE_F2_条件确认: title='信息：' class='#32770' controls=4 shot=ok
+[   46.2s] DBSAVEF3 complete: command=F2 option=1 diffs=2670
+[   46.5s] terminated owned pid=17576

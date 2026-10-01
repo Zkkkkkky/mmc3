@@ -45,50 +45,74 @@ class UnitIconBindingDialog(QDialog):
         self.selected_bank = 0
         self.selected_icon_index = 0
         self.setWindowTitle("机体图标设置")
-        self.setFixedSize(530, 388)
+        # Keep the same compact vertical rhythm as the reference editor.  The
+        # previous flexible selector group absorbed all spare height and made
+        # two ordinary combo boxes look like a large empty panel.
+        self.setFixedSize(530, 356)
 
         root = QVBoxLayout(self)
+        root.setContentsMargins(11, 9, 11, 9)
+        root.setSpacing(9)
         hint = QLabel(
             "机体图标图库会随关卡动态切换。先选择机体出现关卡，再从该关卡实际加载的48个图标中选择。"
         )
         hint.setWordWrap(True)
         hint.hide()
 
-        selector_box = QGroupBox("图标选择")
-        selectors = QGridLayout(selector_box)
-        selectors.setContentsMargins(8, 7, 8, 7)
-        selectors.setHorizontalSpacing(18)
-        selectors.setVerticalSpacing(4)
-        selectors.addWidget(QLabel("机体出现关卡"), 0, 0)
+        self.selector_box = QGroupBox("图标选择")
+        self.selector_box.setObjectName("unitIconSelectorBox")
+        self.selector_box.setFixedHeight(88)
+        selectors = QGridLayout(self.selector_box)
+        selectors.setContentsMargins(10, 13, 10, 9)
+        selectors.setHorizontalSpacing(24)
+        selectors.setVerticalSpacing(5)
+        scenario_label = QLabel("机体出现关卡")
+        scenario_label.setObjectName("unitIconSelectorLabel")
+        selectors.addWidget(
+            scenario_label, 0, 0, Qt.AlignmentFlag.AlignLeft
+        )
         self.scenario = QComboBox()
+        self.scenario.setFixedWidth(210)
+        self.scenario.setMinimumHeight(28)
         for map_id in range(32):
             self.scenario.addItem(f"{map_id + 1:03d}：{dc_map_label(map_id)}", map_id)
         self.scenario.currentIndexChanged.connect(self._refresh_route)
-        selectors.addWidget(self.scenario, 1, 0)
-        selectors.addWidget(QLabel("图标编号"), 0, 1)
+        selectors.addWidget(
+            self.scenario, 1, 0, Qt.AlignmentFlag.AlignLeft
+        )
+        icon_label = QLabel("图标编号")
+        icon_label.setObjectName("unitIconSelectorLabel")
+        selectors.addWidget(
+            icon_label, 0, 1, Qt.AlignmentFlag.AlignRight
+        )
         self.icon_number = QComboBox()
+        self.icon_number.setFixedWidth(210)
+        self.icon_number.setMinimumHeight(28)
         for position in range(48):
             self.icon_number.addItem(f"图标：{position + 1:02d}", position)
         self.icon_number.currentIndexChanged.connect(self._select_number)
-        selectors.addWidget(self.icon_number, 1, 1)
+        selectors.addWidget(
+            self.icon_number, 1, 1, Qt.AlignmentFlag.AlignRight
+        )
         selectors.setColumnStretch(0, 1)
         selectors.setColumnStretch(1, 1)
-        root.addWidget(selector_box)
+        root.addWidget(self.selector_box)
 
         # Match the legacy editor: three continuous black icon strips with the
         # 01-48 labels above them, rather than oversized boxed buttons.
         self.icon_grid = QWidget()
         self.icon_grid.setObjectName("unitIconRouteGrid")
         grid = QGridLayout(self.icon_grid)
-        grid.setContentsMargins(0, 2, 0, 2)
+        grid.setContentsMargins(0, 3, 0, 3)
         grid.setHorizontalSpacing(1)
-        grid.setVerticalSpacing(1)
+        grid.setVerticalSpacing(3)
         self.icon_buttons: list[QToolButton] = []
         for position in range(48):
             row, column = divmod(position, 16)
             number = QLabel(f"{position + 1:02d}")
+            number.setObjectName("unitIconNumberLabel")
             number.setAlignment(Qt.AlignmentFlag.AlignCenter)
-            number.setFixedSize(32, 18)
+            number.setFixedSize(32, 17)
             grid.addWidget(number, row * 2, column)
             button = QToolButton()
             button.setCheckable(True)
@@ -106,7 +130,7 @@ class UnitIconBindingDialog(QDialog):
             )
             grid.addWidget(button, row * 2 + 1, column)
             self.icon_buttons.append(button)
-        self.icon_grid.setFixedHeight(154)
+        self.icon_grid.setFixedHeight(162)
         root.addWidget(self.icon_grid)
 
         self.route_status = QLabel()
@@ -119,7 +143,25 @@ class UnitIconBindingDialog(QDialog):
         buttons.rejected.connect(self.reject)
         buttons.button(QDialogButtonBox.StandardButton.Ok).setText("确定")
         buttons.button(QDialogButtonBox.StandardButton.Cancel).setText("取消")
+        buttons.button(QDialogButtonBox.StandardButton.Ok).setFixedSize(78, 30)
+        buttons.button(QDialogButtonBox.StandardButton.Cancel).setFixedSize(78, 30)
         root.addWidget(buttons)
+
+        self.setStyleSheet(
+            "QGroupBox#unitIconSelectorBox {"
+            " background:#F7FBFC; border:1px solid #A9C4CC;"
+            " border-radius:5px; margin-top:9px; }"
+            "QGroupBox#unitIconSelectorBox::title {"
+            " subcontrol-origin:margin; left:10px; padding:0 6px;"
+            " color:#15566B; background:#E7F2F5; font-weight:600; }"
+            "QLabel#unitIconSelectorLabel { color:#173F4E; }"
+            "QLabel#unitIconNumberLabel { color:#173F4E; }"
+            "QGroupBox#unitIconSelectorBox QComboBox {"
+            " background:#FFFFFF; border:1px solid #9BBBC5;"
+            " border-radius:3px; padding:2px 7px; }"
+            "QGroupBox#unitIconSelectorBox QComboBox:hover {"
+            " border-color:#4C8FA1; }"
+        )
 
         position = min(47, self.raw_icon_value // 4)
         self.icon_number.setCurrentIndex(position)
@@ -252,28 +294,35 @@ class UnitIconDialog(QDialog):
         self.setWindowTitle(
             f"编辑机体图标 · 图库 ${bank:02X} · 图标 {icon_index:X}"
         )
+        self.setFixedSize(520, 466)
 
         root = QVBoxLayout(self)
+        root.setContentsMargins(14, 12, 14, 12)
+        root.setSpacing(10)
         hint = QLabel(
             "直接编辑游戏使用的四块CHR图块。左键绘制，右键吸色；"
             "颜色按钮代表当前阵营的游戏内色表。"
         )
+        hint.setObjectName("unitIconEditorHint")
         hint.setWordWrap(True)
         root.addWidget(hint)
         editor_row = QHBoxLayout()
         editor_row.setSpacing(12)
+        editor_row.addStretch(1)
         self.canvas = UnitIconCanvas(palette_values)
         self.canvas.set_pixels(self.original_pixels)
-        editor_row.addWidget(
-            self.canvas,
-            0,
-            Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignTop,
-        )
+        self.canvas_box = QGroupBox("像素画布")
+        self.canvas_box.setObjectName("unitIconCanvasBox")
+        canvas_layout = QVBoxLayout(self.canvas_box)
+        canvas_layout.setContentsMargins(8, 9, 8, 8)
+        canvas_layout.addWidget(self.canvas)
+        editor_row.addWidget(self.canvas_box, 0, Qt.AlignmentFlag.AlignTop)
 
         self.palette_box = QGroupBox("画笔")
-        self.palette_box.setFixedWidth(126)
+        self.palette_box.setObjectName("unitIconPaletteBox")
+        self.palette_box.setFixedSize(136, 303)
         palette_column = QVBoxLayout(self.palette_box)
-        palette_column.setContentsMargins(7, 8, 7, 8)
+        palette_column.setContentsMargins(7, 9, 7, 8)
         palette_column.setSpacing(6)
         self.palette_buttons: list[QPushButton] = []
         self.palette_button_group = QButtonGroup(self)
@@ -281,7 +330,8 @@ class UnitIconDialog(QDialog):
         for index, value in enumerate(palette_values):
             button = QPushButton(f"{index}  ·  ${value:02X}")
             button.setCheckable(True)
-            button.setFixedSize(110, 42)
+            button.setFixedWidth(120)
+            button.setMinimumHeight(44)
             color = palette_color(value)
             foreground = "#000000" if color.lightness() >= 128 else "#FFFFFF"
             button.setStyleSheet(
@@ -294,30 +344,30 @@ class UnitIconDialog(QDialog):
             )
             self.palette_button_group.addButton(button, index)
             self.palette_buttons.append(button)
-            palette_column.addWidget(button)
+            palette_column.addWidget(button, 1)
         self.palette_buttons[self.canvas.ink].setChecked(True)
-        palette_column.addStretch(1)
         editor_row.addWidget(
             self.palette_box,
             0,
-            Qt.AlignmentFlag.AlignRight | Qt.AlignmentFlag.AlignTop,
+            Qt.AlignmentFlag.AlignTop,
         )
+        editor_row.addStretch(1)
         root.addLayout(editor_row)
 
-        actions = QHBoxLayout()
-        self.import_button = QPushButton("导入BMP…")
+        footer = QHBoxLayout()
+        footer.setSpacing(8)
+        self.import_button = QPushButton("导入图片…")
         self.import_button.clicked.connect(self._import_bitmap)
-        export_button = QPushButton("导出BMP…")
+        export_button = QPushButton("导出图片…")
         export_button.clicked.connect(self._export_bitmap)
-        reset_button = QPushButton("还原打开时")
-        reset_button.clicked.connect(
-            lambda: self.canvas.set_pixels(self.original_pixels)
-        )
-        actions.addWidget(self.import_button)
-        actions.addWidget(export_button)
-        actions.addWidget(reset_button)
-        actions.addStretch(1)
-        root.addLayout(actions)
+        self.flip_button = QPushButton("水平翻转图标")
+        self.flip_button.clicked.connect(self._flip_horizontal)
+        for action in (self.import_button, export_button, self.flip_button):
+            action.setMinimumHeight(30)
+        footer.addWidget(self.import_button)
+        footer.addWidget(export_button)
+        footer.addWidget(self.flip_button)
+        footer.addStretch(1)
 
         buttons = QDialogButtonBox(
             QDialogButtonBox.StandardButton.Ok
@@ -325,7 +375,22 @@ class UnitIconDialog(QDialog):
         )
         buttons.accepted.connect(self.accept)
         buttons.rejected.connect(self.reject)
-        root.addWidget(buttons)
+        buttons.button(QDialogButtonBox.StandardButton.Ok).setText("确定")
+        buttons.button(QDialogButtonBox.StandardButton.Cancel).setText("取消")
+        buttons.button(QDialogButtonBox.StandardButton.Ok).setFixedSize(78, 30)
+        buttons.button(QDialogButtonBox.StandardButton.Cancel).setFixedSize(78, 30)
+        footer.addWidget(buttons)
+        root.addLayout(footer)
+
+        self.setStyleSheet(
+            "QLabel#unitIconEditorHint { color:#425A64; }"
+            "QGroupBox#unitIconCanvasBox, QGroupBox#unitIconPaletteBox {"
+            " background:#F7FBFC; border:1px solid #A9C4CC;"
+            " border-radius:5px; margin-top:9px; }"
+            "QGroupBox#unitIconCanvasBox::title, QGroupBox#unitIconPaletteBox::title {"
+            " subcontrol-origin:margin; left:10px; padding:0 6px;"
+            " color:#15566B; background:#E7F2F5; font-weight:600; }"
+        )
 
     def _read_pixels(self) -> list[int]:
         result = [0] * 256
@@ -340,6 +405,16 @@ class UnitIconDialog(QDialog):
 
     def _set_ink(self, ink: int) -> None:
         self.canvas.ink = ink
+
+    def _flip_horizontal(self) -> None:
+        """Mirror the complete 16×16 draft without writing to the ROM."""
+
+        pixels = self.canvas.pixels
+        self.canvas.set_pixels([
+            pixels[y * 16 + (15 - x)]
+            for y in range(16)
+            for x in range(16)
+        ])
 
     def _image(self) -> QImage:
         image = QImage(16, 16, QImage.Format.Format_ARGB32)

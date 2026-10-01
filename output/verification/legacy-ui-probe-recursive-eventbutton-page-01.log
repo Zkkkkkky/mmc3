@@ -1,0 +1,37 @@
+[    0.1s] launched pid=6548
+[    0.1s] === stage A: launcher -> main window (no ROM) ===
+[    3.1s] top window: {'hwnd': 9635248, 'title': 'SRW2�޸���V1.5', 'class': 'WTWindow', 'rect': {'left': 571, 'top': 244, 'right': 1346, 'bottom': 843, 'width': 775, 'height': 599}, 'pid': 6548}
+[    4.1s] dump A01_������: title='SRW2�޸���V1.5' class='WTWindow' controls=8 shot=ok
+[   12.5s] main window hwnd=8456608 title='SRW2���ݰ��޸���V1.0'
+[   14.0s] dump A02_������_δ����ROM: title='SRW2���ݰ��޸���V1.0' class='WTWindow' controls=63 shot=ok
+[   22.0s] === stage LOAD: load ROM copy only ===
+[   23.0s] dump LOAD01_��ROM�Ի���: title='���ļ�' class='#32770' controls=49 shot=ok
+[   23.5s] open dialog confirmed gone=True
+[   30.5s] ROM loaded without main-window sweep, title='SRW2���ݰ��޸���V1.0��D:\\GIT\\mmc3\\output\\build\\legacy-ui-probe\\event-button-controls.1.nes'
+[   31.5s] dump LOAD02_������_�����: title='SRW2���ݰ��޸���V1.0��D:\\GIT\\mmc3\\output\\build\\legacy-ui-probe\\event-button-controls.1.nes' class='WTWindow' controls=63 shot=ok
+[   31.5s] === stage EVENTBUTTONCONTROLS ===
+[   38.4s] EVENTBUTTONCONTROLS page button 170 complete
+[   42.5s] EVENTBUTTONCONTROLS page button 180 complete
+[   46.5s] EVENTBUTTONCONTROLS page button 200 complete
+[   50.6s] EVENTBUTTONCONTROLS page button 210 complete
+[   55.6s] EVENTBUTTONCONTROLS page button 250 complete
+[   59.7s] EVENTBUTTONCONTROLS page button 270 complete
+[   66.9s] EVENTBUTTONCONTROLS page button 300 complete
+[   72.1s] EVENTBUTTONCONTROLS page button 320 complete
+[   81.4s] EVENTBUTTONCONTROLS page button 350 complete
+[   87.5s] EVENTBUTTONCONTROLS page button 370 complete
+[   92.5s] EVENTBUTTONCONTROLS page button 400 complete
+[   99.8s] EVENTBUTTONCONTROLS page button 410 complete
+[  109.0s] EVENTBUTTONCONTROLS page button 500 complete
+[  120.2s] EVENTBUTTONCONTROLS page button 530 complete
+[  127.5s] EVENTBUTTONCONTROLS page button 550 complete
+[  134.6s] EVENTBUTTONCONTROLS page button 580 complete
+[  137.4s] dump EVENTBUTTON_610_keyboard_activate_1: title='����ƴͼ' class='WTWindow' controls=32 shot=ok
+[  138.9s] dump EVENTBUTTON_610_left_click_1: title='����ƴͼ' class='WTWindow' controls=32 shot=ok
+[  139.2s] EVENTBUTTONCONTROLS page button 610 complete
+[  152.5s] EVENTBUTTONCONTROLS page button 640 complete
+[  160.8s] EVENTBUTTONCONTROLS page button 660 complete
+[  169.0s] EVENTBUTTONCONTROLS page button 680 complete
+[  180.2s] EVENTBUTTONCONTROLS page button 700 complete
+[  180.5s] EVENTBUTTONCONTROLS page complete: 84/84 actions, zero ROM diff
+[  180.9s] terminated owned pid=6548

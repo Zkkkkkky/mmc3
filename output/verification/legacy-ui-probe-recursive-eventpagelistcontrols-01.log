@@ -1,0 +1,30 @@
+[    0.1s] launched pid=6436
+[    0.1s] === stage A: launcher -> main window (no ROM) ===
+[    3.1s] top window: {'hwnd': 14943672, 'title': 'SRW2�޸���V1.5', 'class': 'WTWindow', 'rect': {'left': 571, 'top': 244, 'right': 1346, 'bottom': 843, 'width': 775, 'height': 599}, 'pid': 6436}
+[    4.1s] dump A01_������: title='SRW2�޸���V1.5' class='WTWindow' controls=8 shot=ok
+[   12.5s] main window hwnd=7211164 title='SRW2���ݰ��޸���V1.0'
+[   14.0s] dump A02_������_δ����ROM: title='SRW2���ݰ��޸���V1.0' class='WTWindow' controls=63 shot=ok
+[   22.0s] === stage LOAD: load ROM copy only ===
+[   23.0s] dump LOAD01_��ROM�Ի���: title='���ļ�' class='#32770' controls=49 shot=ok
+[   23.5s] open dialog confirmed gone=True
+[   30.5s] ROM loaded without main-window sweep, title='SRW2���ݰ��޸���V1.0��D:\\GIT\\mmc3\\output\\build\\legacy-ui-probe\\event-page-list-controls.nes'
+[   31.5s] dump LOAD02_������_�����: title='SRW2���ݰ��޸���V1.0��D:\\GIT\\mmc3\\output\\build\\legacy-ui-probe\\event-page-list-controls.nes' class='WTWindow' controls=63 shot=ok
+[   31.5s] === stage EVENTPAGELISTCONTROLS ===
+[   34.5s] EVENTPAGELISTCONTROLS reached outer representative 160
+[   35.6s] EVENTPAGELISTCONTROLS reached outer representative 240
+[   37.7s] EVENTPAGELISTCONTROLS reached outer representative 290
+[   40.8s] EVENTPAGELISTCONTROLS reached outer representative 340
+[   44.9s] EVENTPAGELISTCONTROLS reached outer representative 560
+[   50.1s] EVENTPAGELISTCONTROLS reached outer representative 630
+[   97.1s] EVENTPAGELISTCONTROLS list 160: 1000 items
+[  130.9s] EVENTPAGELISTCONTROLS list 220: 32 items
+[  169.4s] EVENTPAGELISTCONTROLS list 240: 1000 items
+[  253.5s] EVENTPAGELISTCONTROLS list 260: 256 items
+[  294.3s] EVENTPAGELISTCONTROLS list 290: 1000 items
+[  308.5s] EVENTPAGELISTCONTROLS list 310: 32 items
+[  351.3s] EVENTPAGELISTCONTROLS list 340: 1000 items
+[  440.9s] EVENTPAGELISTCONTROLS list 360: 255 items
+[  461.6s] EVENTPAGELISTCONTROLS list 560: 255 items
+[  483.4s] EVENTPAGELISTCONTROLS list 630: 251 items
+[  483.7s] EVENTPAGELISTCONTROLS complete: 69/69 actions, zero ROM diff
+[  483.9s] terminated owned pid=6436

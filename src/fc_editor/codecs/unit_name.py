@@ -5,6 +5,7 @@ from typing import Sequence
 from ..dc_text import default_dc_text_table
 from ..errors import RomFormatError
 from ..rom_image import RomImage
+from ..text_table import TextTable
 
 
 class UnitNameReferenceCodec:
@@ -19,6 +20,7 @@ class UnitNameReferenceCodec:
         pair_first_bank: int | None = None,
         original_pointers: Sequence[int] | None = None,
         pool_spans: Sequence[tuple[int, int]] | None = None,
+        canonical_pointer_table_offset: int | None = None,
     ) -> None:
         self.rom = rom
         profile = rom.profile
@@ -30,6 +32,7 @@ class UnitNameReferenceCodec:
         )
         self.pair_first_bank = pair_first_bank
         self.pool_spans = tuple(pool_spans or ())
+        self.canonical_pointer_table_offset = canonical_pointer_table_offset
         raw = self._source[
             self.pointer_table_offset : self.pointer_table_offset
             + profile.unit_name_count * 2
@@ -37,8 +40,20 @@ class UnitNameReferenceCodec:
         if len(raw) != profile.unit_name_count * 2:
             raise RomFormatError("机体名称指针表不完整。")
         current_pointers = tuple(struct.unpack(f"<{profile.unit_name_count}H", raw))
+        if canonical_pointer_table_offset is not None:
+            canonical_raw = self._source[
+                canonical_pointer_table_offset :
+                canonical_pointer_table_offset + profile.unit_name_count * 2
+            ]
+            if len(canonical_raw) != profile.unit_name_count * 2:
+                raise RomFormatError("机体名称规范指针表不完整。")
+            canonical_pointers = tuple(
+                struct.unpack(f"<{profile.unit_name_count}H", canonical_raw)
+            )
+        else:
+            canonical_pointers = current_pointers
         self.original_pointers = (
-            current_pointers
+            canonical_pointers
             if original_pointers is None
             else tuple(int(pointer) for pointer in original_pointers)
         )
@@ -96,7 +111,7 @@ class UnitNameReferenceCodec:
         source_name_id: int,
         data: bytes | bytearray | None = None,
     ) -> int:
-        """Resolve an immutable source identity after deterministic pool repacks."""
+        """Resolve the name currently owned by one logical source ID."""
 
         source = self._source if data is None else data
         baseline = self.original_pointers[source_name_id]
@@ -125,9 +140,7 @@ class UnitNameReferenceCodec:
                 if self.pointer(unit_id, source)
             }
         )
-        baseline_unique = sorted(
-            pointer for pointer in self.ids_by_pointer if pointer
-        )
+        baseline_unique = sorted(pointer for pointer in self.ids_by_pointer if pointer)
         if len(current_unique) == len(baseline_unique) and pointer in current_unique:
             baseline = baseline_unique[current_unique.index(pointer)]
             return self.baseline_source_ids(baseline)
@@ -170,11 +183,15 @@ class UnitNameReferenceCodec:
                 return raw[:cursor]
         raise RomFormatError("机体名称没有独立的 $FF 结束码。")
 
-    def _record_for_pointer(self, source: bytes, pointer: int) -> bytes:
+    def _record_for_pointer(
+        self, source: bytes | bytearray, pointer: int
+    ) -> bytes:
         for start, end in self.pool_spans:
             if start <= pointer < end:
                 offset = self.pointer_to_file_offset(pointer)
-                return self._terminated_record(source[offset : offset + end - pointer])
+                # Copy only the small candidate record, never the complete ROM.
+                raw = bytes(source[offset : offset + end - pointer])
+                return self._terminated_record(raw)
         raise ValueError(f"机体名称 CPU 指针 ${pointer:04X} 超出已验证名称池。")
 
     def record_bytes(
@@ -182,7 +199,9 @@ class UnitNameReferenceCodec:
         unit_id: int,
         data: bytes | bytearray | None = None,
     ) -> bytes:
-        source = bytes(self._source if data is None else data)
+        # Keep the live ROM buffer as a view.  Turning a bytearray into bytes
+        # here copied the complete ROM once for every label shown by a page.
+        source = self._source if data is None else data
         pointer = self.pointer(unit_id, source)
         if not pointer:
             return b""
@@ -193,6 +212,7 @@ class UnitNameReferenceCodec:
         data: bytes | bytearray,
         unit_id: int,
         text: str,
+        text_table: TextTable | None = None,
     ) -> tuple[tuple[int, bytes, bytes], ...]:
         """Repack the aliased unit-name graph inside verified fixed spans."""
 
@@ -201,35 +221,134 @@ class UnitNameReferenceCodec:
         if not 1 <= unit_id < self.rom.profile.unit_count:
             raise ValueError("机体 ID 超出当前 ROM 范围。")
         value = text.strip()
-        if not value:
-            raise ValueError("名称不能为空。")
         source = bytes(data)
         pointers = tuple(
             self.pointer(index, source)
             for index in range(self.rom.profile.unit_name_count)
         )
+
+        if self.canonical_pointer_table_offset is not None:
+            return self._repack_copy_on_write(
+                source, pointers, unit_id, value, text_table
+            )
+
         unique = sorted({pointer for pointer in pointers if pointer})
-        records = {
+        records: dict[object, bytes] = {
             pointer: self._record_for_pointer(source, pointer) for pointer in unique
         }
         target_pointer = pointers[unit_id]
         if not target_pointer:
             raise ValueError("当前机体名称为空指针，不能直接编辑。")
         old = records[target_pointer]
-        encoded = default_dc_text_table().encode_preserving_tokens(old, value)
-        records[target_pointer] = (
+        encoded = (
+            b""
+            if not value
+            else (text_table or default_dc_text_table()).encode_preserving_tokens(
+                old, value
+            )
+        )
+        replacement = encoded if encoded.endswith(b"\xFF") else encoded + b"\xFF"
+        target_users = tuple(
+            index for index, pointer in enumerate(pointers) if pointer == target_pointer
+        )
+        target_key: object = target_pointer
+        if len(target_users) > 1:
+            # The stock ROM deliberately aliases several logical IDs.  A direct
+            # text edit must detach only the selected ID, just like the legacy
+            # editor's rebuilding pass, while a reference edit may still share.
+            target_key = ("detached", unit_id)
+            records[target_key] = replacement
+        else:
+            records[target_pointer] = replacement
+
+        ordered_keys: list[object] = []
+        for pointer in unique:
+            ordered_keys.append(pointer)
+            if pointer == target_pointer and target_key != target_pointer:
+                ordered_keys.append(target_key)
+
+        assigned: dict[object, int] = {}
+        span_payloads = [
+            bytearray(b"\xFF" * (end - start)) for start, end in self.pool_spans
+        ]
+        span_index = 0
+        cursor = self.pool_spans[0][0]
+        for record_key in ordered_keys:
+            raw = records[record_key]
+            while (
+                span_index < len(self.pool_spans)
+                and cursor + len(raw) > self.pool_spans[span_index][1]
+            ):
+                span_index += 1
+                if span_index < len(self.pool_spans):
+                    cursor = self.pool_spans[span_index][0]
+            if span_index >= len(self.pool_spans):
+                required = sum(len(records[key]) for key in ordered_keys)
+                capacity = sum(end - start for start, end in self.pool_spans)
+                raise ValueError(
+                    f"机体名称共享池容量不足：记录共需 {required} 字节，"
+                    f"固定容量为 {capacity} 字节；请先缩短其他机体名称。"
+                )
+            start, _end = self.pool_spans[span_index]
+            assigned[record_key] = cursor
+            relative = cursor - start
+            span_payloads[span_index][relative : relative + len(raw)] = raw
+            cursor += len(raw)
+
+        new_pointers = tuple(
+            0
+            if pointer == 0
+            else assigned[target_key]
+            if index == unit_id
+            else assigned[pointer]
+            for index, pointer in enumerate(pointers)
+        )
+        table_size = len(new_pointers) * 2
+        patches: list[tuple[int, bytes, bytes]] = [
+            (
+                self.pointer_table_offset,
+                source[self.pointer_table_offset : self.pointer_table_offset + table_size],
+                struct.pack(f"<{len(new_pointers)}H", *new_pointers),
+            )
+        ]
+        for (start, end), payload in zip(self.pool_spans, span_payloads):
+            offset = self.pointer_to_file_offset(start)
+            patches.append((offset, source[offset : offset + end - start], bytes(payload)))
+        return tuple(patch for patch in patches if patch[1] != patch[2])
+
+    def _repack_copy_on_write(
+        self,
+        source: bytes,
+        pointers: tuple[int, ...],
+        unit_id: int,
+        value: str,
+        text_table: TextTable | None,
+    ) -> tuple[tuple[int, bytes, bytes], ...]:
+        """Detach one logical ID while retaining every canonical name record."""
+
+        canonical = tuple(self.original_pointers)
+        if canonical[0] != 0 or any(not pointer for pointer in canonical[1:]):
+            raise RomFormatError("机体名称规范指针表含空指针。")
+        if len(set(canonical[1:])) != len(canonical) - 1:
+            raise RomFormatError("机体名称规范指针表必须每个 ID 独立。")
+        records = {
+            pointer: self._record_for_pointer(source, pointer)
+            for pointer in canonical[1:]
+        }
+        current_pointer = pointers[unit_id]
+        if not current_pointer:
+            raise ValueError("当前机体名称为空指针，不能直接编辑。")
+        current_raw = self._record_for_pointer(source, current_pointer)
+        encoded = (
+            b""
+            if not value
+            else (text_table or default_dc_text_table()).encode_preserving_tokens(
+                current_raw, value
+            )
+        )
+        records[canonical[unit_id]] = (
             encoded if encoded.endswith(b"\xFF") else encoded + b"\xFF"
         )
-        baseline_unique = {pointer for pointer in self.ids_by_pointer if pointer}
-        if len(unique) != len(baseline_unique):
-            replacement = records[target_pointer]
-            if len(replacement) != len(old):
-                raise ValueError(
-                    "机体名称存在已重定向、当前未被引用的规范记录；"
-                    "请先恢复名称引用，或保持本次名称编码长度不变。"
-                )
-            offset = self.pointer_to_file_offset(target_pointer)
-            return ((offset, source[offset : offset + len(old)], replacement),)
 
         assigned: dict[int, int] = {}
         span_payloads = [
@@ -237,7 +356,7 @@ class UnitNameReferenceCodec:
         ]
         span_index = 0
         cursor = self.pool_spans[0][0]
-        for old_pointer in unique:
+        for old_pointer in canonical[1:]:
             raw = records[old_pointer]
             while (
                 span_index < len(self.pool_spans)
@@ -250,8 +369,8 @@ class UnitNameReferenceCodec:
                 required = sum(len(record) for record in records.values())
                 capacity = sum(end - start for start, end in self.pool_spans)
                 raise ValueError(
-                    f"机体名称共享池容量不足：记录共需 {required} 字节，"
-                    f"固定容量为 {capacity} 字节；请先缩短其他机体名称。"
+                    f"机体名称扩展池容量不足：记录共需 {required} 字节，"
+                    f"容量为 {capacity} 字节。"
                 )
             start, _end = self.pool_spans[span_index]
             assigned[old_pointer] = cursor
@@ -259,16 +378,30 @@ class UnitNameReferenceCodec:
             span_payloads[span_index][relative : relative + len(raw)] = raw
             cursor += len(raw)
 
-        new_pointers = tuple(
-            0 if pointer == 0 else assigned[pointer] for pointer in pointers
+        canonical_after = (0, *(assigned[pointer] for pointer in canonical[1:]))
+        current_after = tuple(
+            0
+            if index == 0
+            else canonical_after[unit_id]
+            if index == unit_id
+            else assigned[pointer]
+            for index, pointer in enumerate(pointers)
         )
-        table_size = len(new_pointers) * 2
+        table_size = len(current_after) * 2
         patches: list[tuple[int, bytes, bytes]] = [
             (
                 self.pointer_table_offset,
                 source[self.pointer_table_offset : self.pointer_table_offset + table_size],
-                struct.pack(f"<{len(new_pointers)}H", *new_pointers),
-            )
+                struct.pack(f"<{len(current_after)}H", *current_after),
+            ),
+            (
+                self.canonical_pointer_table_offset,
+                source[
+                    self.canonical_pointer_table_offset :
+                    self.canonical_pointer_table_offset + table_size
+                ],
+                struct.pack(f"<{len(canonical_after)}H", *canonical_after),
+            ),
         ]
         for (start, end), payload in zip(self.pool_spans, span_payloads):
             offset = self.pointer_to_file_offset(start)

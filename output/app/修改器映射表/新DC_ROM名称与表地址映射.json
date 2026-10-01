@@ -43806,117 +43806,182 @@
     {
       "command": 128,
       "hexCommand": "$80",
-      "label": "大卫主题曲"
+      "label": "大卫音乐"
     },
     {
       "command": 129,
       "hexCommand": "$81",
-      "label": "盖塔主题曲"
+      "label": "盖塔音乐"
     },
     {
       "command": 130,
       "hexCommand": "$82",
-      "label": "加代主题曲"
+      "label": "加代音乐"
     },
     {
       "command": 131,
       "hexCommand": "$83",
-      "label": "古莲主题曲"
+      "label": "古莲音乐"
     },
     {
       "command": 132,
       "hexCommand": "$84",
-      "label": "吉尔变身曲"
+      "label": "吉尔变身音乐"
     },
     {
       "command": 133,
       "hexCommand": "$85",
-      "label": "安东主题曲"
+      "label": "安东音乐"
     },
     {
       "command": 134,
       "hexCommand": "$86",
-      "label": "第8关阶段三剧情曲"
+      "label": "未知音乐2（第8关第三阶段剧情）"
     },
     {
       "command": 135,
       "hexCommand": "$87",
-      "label": "地球·我方战斗曲"
+      "label": "地球我方音乐"
     },
     {
       "command": 136,
       "hexCommand": "$88",
-      "label": "地球·敌方战斗曲"
+      "label": "地球敌方音乐"
     },
     {
       "command": 137,
       "hexCommand": "$89",
-      "label": "存档曲"
+      "label": "存档音乐"
     },
     {
       "command": 138,
       "hexCommand": "$8A",
-      "label": "敌方增援曲 2"
+      "label": "敌方增援音乐2"
     },
     {
       "command": 139,
       "hexCommand": "$8B",
-      "label": "游戏结束曲"
+      "label": "游戏结束音乐"
     },
     {
       "command": 140,
       "hexCommand": "$8C",
-      "label": "宇宙·我方战斗曲"
+      "label": "宇宙我方音乐"
     },
     {
       "command": 141,
       "hexCommand": "$8D",
-      "label": "敌方增援曲 1"
+      "label": "敌方增援音乐1"
     },
     {
       "command": 142,
       "hexCommand": "$8E",
-      "label": "升级曲"
+      "label": "升级音乐"
     },
     {
       "command": 143,
       "hexCommand": "$8F",
-      "label": "吉尔主题曲"
+      "label": "吉尔音乐"
     },
     {
       "command": 144,
       "hexCommand": "$90",
-      "label": "瓦尔主题曲"
+      "label": "瓦尔音乐"
     },
     {
       "command": 145,
       "hexCommand": "$91",
-      "label": "宇宙·敌方战斗曲"
+      "label": "宇宙敌方音乐"
     },
     {
       "command": 146,
       "hexCommand": "$92",
-      "label": "原版保留曲19（当前剧情/战斗表未引用）"
+      "label": "未知音乐1（原版保留曲19）"
     },
     {
       "command": 147,
       "hexCommand": "$93",
-      "label": "通关曲"
+      "label": "通关音乐"
+    },
+    {
+      "command": 148,
+      "hexCommand": "$94",
+      "label": "音乐94（用途未确认）"
+    },
+    {
+      "command": 149,
+      "hexCommand": "$95",
+      "label": "音乐95（用途未确认）"
+    },
+    {
+      "command": 150,
+      "hexCommand": "$96",
+      "label": "音乐96（用途未确认）"
+    },
+    {
+      "command": 151,
+      "hexCommand": "$97",
+      "label": "音乐97（用途未确认）"
+    },
+    {
+      "command": 152,
+      "hexCommand": "$98",
+      "label": "音乐98（用途未确认）"
+    },
+    {
+      "command": 153,
+      "hexCommand": "$99",
+      "label": "音乐99（用途未确认）"
+    },
+    {
+      "command": 154,
+      "hexCommand": "$9A",
+      "label": "音乐9A（用途未确认）"
+    },
+    {
+      "command": 155,
+      "hexCommand": "$9B",
+      "label": "音乐9B（用途未确认）"
+    },
+    {
+      "command": 156,
+      "hexCommand": "$9C",
+      "label": "音乐9C（用途未确认）"
     },
     {
       "command": 157,
       "hexCommand": "$9D",
-      "label": "Ash to Ash"
+      "label": "音乐9D（Ash to Ash）"
     },
     {
       "command": 158,
       "hexCommand": "$9E",
-      "label": "Dark Knight"
+      "label": "音乐9E（Dark Knight）"
     },
     {
       "command": 159,
       "hexCommand": "$9F",
-      "label": "Dark Prison"
+      "label": "音乐9F（Dark Prison）"
+    },
+    {
+      "command": 160,
+      "hexCommand": "$A0",
+      "label": "音乐A0（用途未确认）"
+    },
+    {
+      "command": 161,
+      "hexCommand": "$A1",
+      "label": "音乐A1（用途未确认）"
+    },
+    {
+      "command": 162,
+      "hexCommand": "$A2",
+      "label": "音乐A2（用途未确认）"
+    },
+    {
+      "command": 163,
+      "hexCommand": "$A3",
+      "label": "音乐A3（用途未确认）"
     }
   ],
   "battleMusicSelectors": [
@@ -43961,18 +44026,18 @@
       "hexId": "$04",
       "label": "琉妮",
       "attackerCommand": "$9D",
-      "attackerTrack": "$9D · Ash to Ash",
+      "attackerTrack": "$9D · 音乐9D（Ash to Ash）",
       "defenderCommand": "$9D",
-      "defenderTrack": "$9D · Ash to Ash"
+      "defenderTrack": "$9D · 音乐9D（Ash to Ash）"
     },
     {
       "id": 5,
       "hexId": "$05",
       "label": "白河愁",
       "attackerCommand": "$9F",
-      "attackerTrack": "$9F · Dark Prison",
+      "attackerTrack": "$9F · 音乐9F（Dark Prison）",
       "defenderCommand": "$9F",
-      "defenderTrack": "$9F · Dark Prison"
+      "defenderTrack": "$9F · 音乐9F（Dark Prison）"
     },
     {
       "id": 6,
@@ -43981,7 +44046,7 @@
       "attackerCommand": "$00",
       "attackerTrack": "$00 · 无专属曲（按游戏规则回退）",
       "defenderCommand": "$80",
-      "defenderTrack": "$80 · 大卫主题曲"
+      "defenderTrack": "$80 · 大卫音乐"
     },
     {
       "id": 7,
@@ -43990,7 +44055,7 @@
       "attackerCommand": "$00",
       "attackerTrack": "$00 · 无专属曲（按游戏规则回退）",
       "defenderCommand": "$80",
-      "defenderTrack": "$80 · 大卫主题曲"
+      "defenderTrack": "$80 · 大卫音乐"
     },
     {
       "id": 8,
@@ -43999,7 +44064,7 @@
       "attackerCommand": "$00",
       "attackerTrack": "$00 · 无专属曲（按游戏规则回退）",
       "defenderCommand": "$80",
-      "defenderTrack": "$80 · 大卫主题曲"
+      "defenderTrack": "$80 · 大卫音乐"
     },
     {
       "id": 9,
@@ -44008,7 +44073,7 @@
       "attackerCommand": "$00",
       "attackerTrack": "$00 · 无专属曲（按游戏规则回退）",
       "defenderCommand": "$80",
-      "defenderTrack": "$80 · 大卫主题曲"
+      "defenderTrack": "$80 · 大卫音乐"
     },
     {
       "id": 10,
@@ -44017,7 +44082,7 @@
       "attackerCommand": "$00",
       "attackerTrack": "$00 · 无专属曲（按游戏规则回退）",
       "defenderCommand": "$80",
-      "defenderTrack": "$80 · 大卫主题曲"
+      "defenderTrack": "$80 · 大卫音乐"
     },
     {
       "id": 11,
@@ -44044,7 +44109,7 @@
       "attackerCommand": "$00",
       "attackerTrack": "$00 · 无专属曲（按游戏规则回退）",
       "defenderCommand": "$80",
-      "defenderTrack": "$80 · 大卫主题曲"
+      "defenderTrack": "$80 · 大卫音乐"
     },
     {
       "id": 14,
@@ -44053,7 +44118,7 @@
       "attackerCommand": "$00",
       "attackerTrack": "$00 · 无专属曲（按游戏规则回退）",
       "defenderCommand": "$80",
-      "defenderTrack": "$80 · 大卫主题曲"
+      "defenderTrack": "$80 · 大卫音乐"
     },
     {
       "id": 15,
@@ -44062,7 +44127,7 @@
       "attackerCommand": "$00",
       "attackerTrack": "$00 · 无专属曲（按游戏规则回退）",
       "defenderCommand": "$82",
-      "defenderTrack": "$82 · 加代主题曲"
+      "defenderTrack": "$82 · 加代音乐"
     },
     {
       "id": 16,
@@ -44071,7 +44136,7 @@
       "attackerCommand": "$00",
       "attackerTrack": "$00 · 无专属曲（按游戏规则回退）",
       "defenderCommand": "$80",
-      "defenderTrack": "$80 · 大卫主题曲"
+      "defenderTrack": "$80 · 大卫音乐"
     },
     {
       "id": 17,
@@ -44080,7 +44145,7 @@
       "attackerCommand": "$00",
       "attackerTrack": "$00 · 无专属曲（按游戏规则回退）",
       "defenderCommand": "$80",
-      "defenderTrack": "$80 · 大卫主题曲"
+      "defenderTrack": "$80 · 大卫音乐"
     },
     {
       "id": 18,
@@ -44089,7 +44154,7 @@
       "attackerCommand": "$00",
       "attackerTrack": "$00 · 无专属曲（按游戏规则回退）",
       "defenderCommand": "$80",
-      "defenderTrack": "$80 · 大卫主题曲"
+      "defenderTrack": "$80 · 大卫音乐"
     },
     {
       "id": 19,
@@ -44098,7 +44163,7 @@
       "attackerCommand": "$00",
       "attackerTrack": "$00 · 无专属曲（按游戏规则回退）",
       "defenderCommand": "$80",
-      "defenderTrack": "$80 · 大卫主题曲"
+      "defenderTrack": "$80 · 大卫音乐"
     },
     {
       "id": 20,
@@ -44107,7 +44172,7 @@
       "attackerCommand": "$00",
       "attackerTrack": "$00 · 无专属曲（按游戏规则回退）",
       "defenderCommand": "$8F",
-      "defenderTrack": "$8F · 吉尔主题曲"
+      "defenderTrack": "$8F · 吉尔音乐"
     },
     {
       "id": 21,
@@ -44116,7 +44181,7 @@
       "attackerCommand": "$00",
       "attackerTrack": "$00 · 无专属曲（按游戏规则回退）",
       "defenderCommand": "$80",
-      "defenderTrack": "$80 · 大卫主题曲"
+      "defenderTrack": "$80 · 大卫音乐"
     },
     {
       "id": 22,
@@ -44186,16 +44251,16 @@
       "hexId": "$1D",
       "label": "？？？",
       "attackerCommand": "$90",
-      "attackerTrack": "$90 · 瓦尔主题曲",
+      "attackerTrack": "$90 · 瓦尔音乐",
       "defenderCommand": "$8F",
-      "defenderTrack": "$8F · 吉尔主题曲"
+      "defenderTrack": "$8F · 吉尔音乐"
     },
     {
       "id": 30,
       "hexId": "$1E",
       "label": "？？？",
       "attackerCommand": "$90",
-      "attackerTrack": "$90 · 瓦尔主题曲",
+      "attackerTrack": "$90 · 瓦尔音乐",
       "defenderCommand": "$00",
       "defenderTrack": "$00 · 无专属曲（按游戏规则回退）"
     },
@@ -44222,7 +44287,7 @@
       "hexId": "$21",
       "label": "阿姆罗",
       "attackerCommand": "$80",
-      "attackerTrack": "$80 · 大卫主题曲",
+      "attackerTrack": "$80 · 大卫音乐",
       "defenderCommand": "$00",
       "defenderTrack": "$00 · 无专属曲（按游戏规则回退）"
     },
@@ -44231,7 +44296,7 @@
       "hexId": "$22",
       "label": "卡缪",
       "attackerCommand": "$80",
-      "attackerTrack": "$80 · 大卫主题曲",
+      "attackerTrack": "$80 · 大卫音乐",
       "defenderCommand": "$00",
       "defenderTrack": "$00 · 无专属曲（按游戏规则回退）"
     },
@@ -44303,7 +44368,7 @@
       "hexId": "$2A",
       "label": "龙马",
       "attackerCommand": "$81",
-      "attackerTrack": "$81 · 盖塔主题曲",
+      "attackerTrack": "$81 · 盖塔音乐",
       "defenderCommand": "$00",
       "defenderTrack": "$00 · 无专属曲（按游戏规则回退）"
     },
@@ -44312,7 +44377,7 @@
       "hexId": "$2B",
       "label": "隼人",
       "attackerCommand": "$81",
-      "attackerTrack": "$81 · 盖塔主题曲",
+      "attackerTrack": "$81 · 盖塔音乐",
       "defenderCommand": "$00",
       "defenderTrack": "$00 · 无专属曲（按游戏规则回退）"
     },
@@ -44321,7 +44386,7 @@
       "hexId": "$2C",
       "label": "武臧",
       "attackerCommand": "$81",
-      "attackerTrack": "$81 · 盖塔主题曲",
+      "attackerTrack": "$81 · 盖塔音乐",
       "defenderCommand": "$00",
       "defenderTrack": "$00 · 无专属曲（按游戏规则回退）"
     },
@@ -44330,7 +44395,7 @@
       "hexId": "$2D",
       "label": "甲儿",
       "attackerCommand": "$82",
-      "attackerTrack": "$82 · 加代主题曲",
+      "attackerTrack": "$82 · 加代音乐",
       "defenderCommand": "$00",
       "defenderTrack": "$00 · 无专属曲（按游戏规则回退）"
     },
@@ -44368,7 +44433,7 @@
       "attackerCommand": "$00",
       "attackerTrack": "$00 · 无专属曲（按游戏规则回退）",
       "defenderCommand": "$80",
-      "defenderTrack": "$80 · 大卫主题曲"
+      "defenderTrack": "$80 · 大卫音乐"
     },
     {
       "id": 50,
@@ -44438,7 +44503,7 @@
       "hexId": "$39",
       "label": "杜克",
       "attackerCommand": "$83",
-      "attackerTrack": "$83 · 古莲主题曲",
+      "attackerTrack": "$83 · 古莲音乐",
       "defenderCommand": "$00",
       "defenderTrack": "$00 · 无专属曲（按游戏规则回退）"
     },
@@ -44447,7 +44512,7 @@
       "hexId": "$3A",
       "label": "安藤正树",
       "attackerCommand": "$85",
-      "attackerTrack": "$85 · 安东主题曲",
+      "attackerTrack": "$85 · 安东音乐",
       "defenderCommand": "$00",
       "defenderTrack": "$00 · 无专属曲（按游戏规则回退）"
     },
@@ -44557,7 +44622,7 @@
       "attackerCommand": "$00",
       "attackerTrack": "$00 · 无专属曲（按游戏规则回退）",
       "defenderCommand": "$93",
-      "defenderTrack": "$93 · 通关曲"
+      "defenderTrack": "$93 · 通关音乐"
     },
     {
       "id": 71,
@@ -44744,7 +44809,7 @@
       "hexId": "$5B",
       "label": "比安",
       "attackerCommand": "$90",
-      "attackerTrack": "$90 · 瓦尔主题曲",
+      "attackerTrack": "$90 · 瓦尔音乐",
       "defenderCommand": "$00",
       "defenderTrack": "$00 · 无专属曲（按游戏规则回退）"
     },

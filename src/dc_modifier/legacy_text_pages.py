@@ -86,6 +86,7 @@ class LegacyTextPage(ProjectPage):
         )
         self.system_note.setObjectName("legacySystemTextNote")
         self.system_note.setStyleSheet("color: #b00020;")
+        self.system_note.setWordWrap(True)
         self.system_note.setVisible(group_keys == ("system",))
         self.add_button = QPushButton("添加")
         self.add_button.setVisible(group_keys == ("system",))
@@ -272,26 +273,42 @@ class LegacyTextPage(ProjectPage):
     def set_transaction_conflict_checker(self, checker) -> None:
         self._transaction_conflict_checker = checker
 
+    def _prospective_text_table(self):
+        if self.project is None:
+            return None
+        text = "".join(self._drafts.values())
+        channel = (
+            "battle"
+            if self._drafts
+            and all(key.startswith("battle_") for key, _index, _variant in self._drafts)
+            else "system"
+        )
+        table, _allocated = self.project.prospective_font_text_table(
+            text, channel=channel, validate_renderer=True
+        )
+        return table
+
     def _patches(self):
         if self.project is None:
             return ()
         codec = LegacyTextCodec(self.project.working, capacity_data=self.project.original)
+        text_table = self._prospective_text_table()
         for identity, text in self._drafts.items():
             if self.codec is not None and codec.record(*identity).raw != self.codec.record(*identity).raw:
                 raise ValueError("当前文字已在其他页面修改，请先还原本页草稿再重新编辑。")
         if self._drafts and all(key.startswith("battle_") for key, _index, _variant in self._drafts):
-            return codec.battle_repack_patches(self._drafts)
+            return codec.battle_repack_patches(self._drafts, text_table)
         simple_keys = {
             key for key, _index, _variant in self._drafts
             if not key.startswith("battle_")
         }
         if self._drafts and len(simple_keys) == 1:
             return codec.simple_group_repack_patches(
-                next(iter(simple_keys)), self._drafts
+                next(iter(simple_keys)), self._drafts, text_table
             )
         by_offset = {}
         for identity, text in self._drafts.items():
-            patch = codec.replacement_patch(*identity, text)
+            patch = codec.replacement_patch(*identity, text, text_table)
             if patch[0] in by_offset and by_offset[patch[0]] != patch:
                 raise ValueError("共用同一文字的两个编号存在不同草稿，请保留一份修改。")
             by_offset[patch[0]] = patch
@@ -322,7 +339,9 @@ class LegacyTextPage(ProjectPage):
             key, _index, _variant = self._selected
             if key.startswith("battle_"):
                 group = self.codec.group_by_key[key]
-                usage = self.codec.battle_usage(group.bank, self._drafts)
+                usage = self.codec.battle_usage(
+                    group.bank, self._drafts, self._prospective_text_table()
+                )
                 self.status_label.setText(
                     f"当前记录 {len(record.raw)} 字节；Bank ${group.bank:02X} "
                     f"安全文字段 {usage.used}/{usage.capacity} 字节，剩余 {usage.free} 字节。"
@@ -330,7 +349,9 @@ class LegacyTextPage(ProjectPage):
                     f"共用此正文的条目：{len(record.shared_by)}。"
                 )
             else:
-                usage = self.codec.simple_group_usage(key, self._drafts)
+                usage = self.codec.simple_group_usage(
+                    key, self._drafts, self._prospective_text_table()
+                )
                 self.status_label.setText(
                     f"当前记录 {len(record.raw)} 字节；共享池 "
                     f"{usage.used}/{usage.capacity} 字节，剩余 {usage.free} 字节。"
@@ -344,9 +365,19 @@ class LegacyTextPage(ProjectPage):
         try:
             if self.pending_draft_error:
                 raise ValueError(self.pending_draft_error)
-            patches = self._patches()
-            if patches:
-                self.project._apply_legacy_global_patches(patches, "文字修改")
+            channel = (
+                "battle"
+                if self._drafts
+                and all(key.startswith("battle_") for key, _index, _variant in self._drafts)
+                else "system"
+            )
+            with self.project.transaction("文字修改"):
+                self.project.ensure_font_characters(
+                    "".join(self._drafts.values()), channel=channel
+                )
+                patches = self._patches()
+                if patches:
+                    self.project._apply_legacy_global_patches(patches, "文字修改")
         except (ValueError, IndexError) as error:
             QMessageBox.warning(self, "文字未暂存", str(error))
             return False
@@ -825,6 +856,7 @@ class LegacyGrowthPage(ProjectPage):
 
 class LegacyShopPage(ProjectPage):
     transaction_sync_group = "rom_text"
+    SHOP_IDS = LegacyShopCodec.REFERENCE_SHOP_IDS
 
     def __init__(self) -> None:
         super().__init__()
@@ -836,11 +868,11 @@ class LegacyShopPage(ProjectPage):
         self._transaction_conflict_checker = None
         layout = QVBoxLayout(self)
         self.shop_combo = QComboBox()
-        self.shop_combo.addItems([f"商店 {value:02X}" for value in range(0xF0, 0xFF)])
+        self.shop_combo.addItems([f"商店 {value:02X}" for value in self.SHOP_IDS])
         self.shop_combo.hide()
         self.shop_list = QListWidget()
         self.shop_list.setObjectName("legacyShopList")
-        self.shop_list.addItems([f"{value:02X}" for value in range(0xF0, 0xFF)])
+        self.shop_list.addItems([f"{value:02X}" for value in self.SHOP_IDS])
         self.shop_list.setMaximumWidth(130)
         self.shop_list.setAlternatingRowColors(True)
         self.fields = QWidget()
@@ -935,7 +967,7 @@ class LegacyShopPage(ProjectPage):
         if self._loading or self.codec is None:
             return
         self._loading = True
-        shop_id = 0xF0 + self.shop_combo.currentIndex()
+        shop_id = self.SHOP_IDS[self.shop_combo.currentIndex()]
         try:
             record = self.codec.record(shop_id)
             clerk, dialogue, items = self._drafts.get(shop_id, (record.clerk_id, record.dialogue_id, record.items))
@@ -949,12 +981,22 @@ class LegacyShopPage(ProjectPage):
             self.status_label.setText(f"商店 {shop_id:02X} · {len(items)} 件商品；七段对话与系统文字共用，按原容量保存。")
         except ValueError as error:
             self.fields.setEnabled(False)
-            self.dialogue_tabs.setEnabled(False)
-            self.status_label.setText(str(error))
-            for edit in self.dialogue_edits:
-                edit.clear()
+            try:
+                dialogue = self.codec.reference_dialogue_id(shop_id)
+            except ValueError:
+                self.dialogue_tabs.setEnabled(False)
+                self.status_label.setText(str(error))
+                for edit in self.dialogue_edits:
+                    edit.clear()
+            else:
+                self.dialogue_spin.setValue(dialogue)
+                self.dialogue_tabs.setEnabled(True)
+                self.status_label.setText(
+                    f"目录 {shop_id:02X} 与地图事件指针表共用：旧版可见，但写入店员、商品或起始编号会破坏地图事件；"
+                    "这里只保留旧版七段对话的安全编辑。"
+                )
         self._loading = False
-        if self.fields.isEnabled():
+        if self.dialogue_tabs.isEnabled():
             self._load_dialogues()
         self.apply_button.setEnabled(self.has_pending_draft and self.pending_draft_error is None)
 
@@ -971,7 +1013,7 @@ class LegacyShopPage(ProjectPage):
     def _metadata_changed(self, *_args) -> None:
         if self._loading or self.codec is None or not self.fields.isEnabled():
             return
-        shop_id = 0xF0 + self.shop_combo.currentIndex()
+        shop_id = self.SHOP_IDS[self.shop_combo.currentIndex()]
         record = self.codec.record(shop_id)
         values = (self.clerk_combo.currentIndex(), self.dialogue_spin.value(), tuple(combo.currentData() for combo in self.item_combos[:len(record.items)]))
         if values == (record.clerk_id, record.dialogue_id, record.items):
@@ -1033,8 +1075,15 @@ class LegacyShopPage(ProjectPage):
             if text_codec.record("system", text_id).raw != self.text_codec.record("system", text_id).raw:
                 raise ValueError("对话已在其他页面变化，请还原草稿后重新编辑。")
             system_drafts[("system", text_id, 0)] = text
+        text_table = None
+        if system_drafts:
+            text_table, _allocated = self.project.prospective_font_text_table(
+                "".join(system_drafts.values()),
+                channel="system",
+                validate_renderer=True,
+            )
         for patch in text_codec.simple_group_repack_patches(
-            "system", system_drafts
+            "system", system_drafts, text_table=text_table
         ) if system_drafts else ():
             if patch[0] in patches and patch != patches[patch[0]]:
                 raise ValueError("系统文字池与商店记录发生意外重叠。")
@@ -1061,8 +1110,12 @@ class LegacyShopPage(ProjectPage):
         try:
             if self.pending_draft_error:
                 raise ValueError(self.pending_draft_error)
-            patches = self._patches()
-            self.project._apply_legacy_global_patches(patches, "商店与对话")
+            with self.project.transaction("商店与对话"):
+                self.project.ensure_font_characters(
+                    "".join(self._text_drafts.values()), channel="system"
+                )
+                patches = self._patches()
+                self.project._apply_legacy_global_patches(patches, "商店与对话")
         except ValueError as error:
             QMessageBox.warning(self, "商店未暂存", str(error))
             return False

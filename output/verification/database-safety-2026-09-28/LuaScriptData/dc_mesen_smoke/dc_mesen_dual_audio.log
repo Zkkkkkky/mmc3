@@ -1,0 +1,7 @@
+PASS booted-with-expanded-fixed-banks fixed=1 stock=293 bridge=293
+PASS original-song-stays-stock active=00 stock_delta=8 current=05
+PASS ash-to-ash active=9D current=1D play_delta=1 update_delta=8 bank_hits=9 apu_delta=83
+PASS ash-keeps-updating active=9D update_delta=3608
+PASS dark-knight active=9E current=1E play_delta=1 update_delta=8 bank_hits=9 apu_delta=81
+PASS dark-knight-keeps-updating active=9E update_delta=3600 apu_delta=33666
+PASS dark-prison active=9F current=1F play_delta=1 update_delta=8 bank_hits=9 apu_delta=81

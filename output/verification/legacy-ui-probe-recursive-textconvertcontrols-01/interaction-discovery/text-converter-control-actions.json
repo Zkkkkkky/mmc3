@@ -1,0 +1,91 @@
+{
+  "schema_version": 1,
+  "validated": true,
+  "error": null,
+  "execution_record_count": 16,
+  "diff_count": 0,
+  "sha256_before": "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E",
+  "sha256_after": "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E",
+  "execution_records": [
+    {
+      "action_id": "445f40ab8bb271a61b95",
+      "status": "passed",
+      "result": "真实焦点=True。"
+    },
+    {
+      "action_id": "b5896823c8a2598dd688",
+      "status": "passed",
+      "result": "读回='A'，已恢复。"
+    },
+    {
+      "action_id": "e250f6b6083687a6f8f5",
+      "status": "passed",
+      "result": "Ctrl+A/Ctrl+Z 后恢复。"
+    },
+    {
+      "action_id": "57421229e532e89bc69b",
+      "status": "passed",
+      "result": "执行右键并关闭菜单。"
+    },
+    {
+      "action_id": "9da326029fd330c20322",
+      "status": "passed",
+      "result": "边界长度=[0, 256]，已恢复。"
+    },
+    {
+      "action_id": "9ed34716ae49a65b5229",
+      "status": "passed",
+      "result": "真实焦点=True。"
+    },
+    {
+      "action_id": "71348a98204ff935c859",
+      "status": "passed",
+      "result": "读回='A'，已恢复。"
+    },
+    {
+      "action_id": "71ed54ead08988fd2cbc",
+      "status": "passed",
+      "result": "Ctrl+A/Ctrl+Z 后恢复。"
+    },
+    {
+      "action_id": "a83bf50184793bd3e1af",
+      "status": "passed",
+      "result": "执行右键并关闭菜单。"
+    },
+    {
+      "action_id": "cb3f30c6d9cf8ffec6af",
+      "status": "passed",
+      "result": "边界长度=[0, 256]，已恢复。"
+    },
+    {
+      "action_id": "669899028f6e21d24aea",
+      "status": "passed",
+      "result": "执行转换按钮手势。"
+    },
+    {
+      "action_id": "7ba18c7f26308fd3b4bb",
+      "status": "passed",
+      "result": "执行转换按钮手势。"
+    },
+    {
+      "action_id": "d9c96c3a0236c7b9fe86",
+      "status": "passed",
+      "result": "执行转换按钮手势。"
+    },
+    {
+      "action_id": "34f1effab89e539e8dfd",
+      "status": "passed",
+      "result": "执行转换按钮手势。"
+    },
+    {
+      "action_id": "a8a776b0bc9804e878f6",
+      "status": "passed",
+      "result": "执行转换按钮手势。"
+    },
+    {
+      "action_id": "8abd7dabdbcfa927219e",
+      "status": "passed",
+      "result": "执行转换按钮手势。"
+    }
+  ]
+}

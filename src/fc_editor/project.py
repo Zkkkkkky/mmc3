@@ -255,6 +255,15 @@ class ProjectDocument:
             }
         )
 
+    def add_font_disabled_builtin(self, token: bytes) -> None:
+        glyph_file_offset(token, writable=True)
+        self.operations.append(
+            {
+                "kind": "font.disable_builtin",
+                "token": token.hex().upper(),
+            }
+        )
+
     def add_animation_label(self, kind: str, index: int, label: str) -> None:
         """Persist a project-local animation/rule label without changing ROM bytes."""
 
@@ -297,8 +306,24 @@ class ProjectDocument:
                 raise ProjectFormatError(
                     f"第 {index + 1} 条工程字库映射无效：{error}"
                 ) from error
-        if len(set(result.values())) != len(result):
-            raise ProjectFormatError("工程字库映射含重复字符。")
+        return result
+
+    def font_disabled_builtins(self, rom: RomImage) -> set[bytes]:
+        """Read built-in glyph codes deliberately reclaimed by this project."""
+
+        self._validate_base(rom)
+        result: set[bytes] = set()
+        for index, operation in enumerate(self.operations):
+            if not isinstance(operation, dict) or operation.get("kind") != "font.disable_builtin":
+                continue
+            try:
+                token = bytes.fromhex(str(operation["token"]))
+                glyph_file_offset(token, writable=True)
+                result.add(token)
+            except (KeyError, TypeError, ValueError) as error:
+                raise ProjectFormatError(
+                    f"第 {index + 1} 条内置字模停用记录无效：{error}"
+                ) from error
         return result
 
     def animation_label_overrides(self, rom: RomImage) -> dict[tuple[str, int], str]:
@@ -1043,6 +1068,9 @@ class ProjectDocument:
                         raise ProjectFormatError(
                             "工程字库映射值必须是一枚 Unicode 字符。"
                         )
+                elif kind == "font.disable_builtin":
+                    token = bytes.fromhex(str(operation["token"]))
+                    glyph_file_offset(token, writable=True)
                 elif kind == "animation.set_label":
                     animation_kind = str(operation["animationKind"])
                     entry_index = int(operation["index"])

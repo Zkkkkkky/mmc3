@@ -1,0 +1,498 @@
+{
+  "schema_version": 1,
+  "validated": false,
+  "error": "RuntimeError('event editor did not appear')",
+  "execution_record_count": 85,
+  "diff_count": 0,
+  "sha256_before": "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E",
+  "sha256_after": "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E",
+  "observations": [
+    {
+      "control_id": 170,
+      "action": "keyboard_activate",
+      "path": [
+        1,
+        18
+      ],
+      "focused": true,
+      "window_visible": true,
+      "descendants": []
+    },
+    {
+      "control_id": 170,
+      "action": "left_click",
+      "path": [
+        1,
+        18
+      ],
+      "focused": null,
+      "window_visible": true,
+      "descendants": []
+    },
+    {
+      "control_id": 180,
+      "action": "keyboard_activate",
+      "path": [
+        1,
+        17
+      ],
+      "focused": true,
+      "window_visible": true,
+      "descendants": []
+    },
+    {
+      "control_id": 180,
+      "action": "left_click",
+      "path": [
+        1,
+        17
+      ],
+      "focused": null,
+      "window_visible": true,
+      "descendants": []
+    },
+    {
+      "control_id": 200,
+      "action": "keyboard_activate",
+      "path": [
+        1,
+        16
+      ],
+      "focused": true,
+      "window_visible": true,
+      "descendants": []
+    },
+    {
+      "control_id": 200,
+      "action": "left_click",
+      "path": [
+        1,
+        16
+      ],
+      "focused": null,
+      "window_visible": true,
+      "descendants": []
+    },
+    {
+      "control_id": 210,
+      "action": "keyboard_activate",
+      "path": [
+        1,
+        15
+      ],
+      "focused": true,
+      "window_visible": true,
+      "descendants": []
+    },
+    {
+      "control_id": 210,
+      "action": "left_click",
+      "path": [
+        1,
+        15
+      ],
+      "focused": null,
+      "window_visible": true,
+      "descendants": []
+    },
+    {
+      "control_id": 250,
+      "action": "keyboard_activate",
+      "path": [
+        1,
+        14
+      ],
+      "focused": true,
+      "window_visible": true,
+      "descendants": []
+    },
+    {
+      "control_id": 250,
+      "action": "left_click",
+      "path": [
+        1,
+        14
+      ],
+      "focused": null,
+      "window_visible": true,
+      "descendants": []
+    },
+    {
+      "control_id": 270,
+      "action": "keyboard_activate",
+      "path": [
+        1,
+        13
+      ],
+      "focused": true,
+      "window_visible": true,
+      "descendants": []
+    },
+    {
+      "control_id": 270,
+      "action": "left_click",
+      "path": [
+        1,
+        13
+      ],
+      "focused": null,
+      "window_visible": true,
+      "descendants": []
+    },
+    {
+      "control_id": 300,
+      "action": "keyboard_activate",
+      "path": [
+        1,
+        12
+      ],
+      "focused": true,
+      "window_visible": true,
+      "descendants": []
+    },
+    {
+      "control_id": 300,
+      "action": "left_click",
+      "path": [
+        1,
+        12
+      ],
+      "focused": null,
+      "window_visible": true,
+      "descendants": []
+    },
+    {
+      "control_id": 320,
+      "action": "keyboard_activate",
+      "path": [
+        1,
+        11
+      ],
+      "focused": true,
+      "window_visible": true,
+      "descendants": []
+    },
+    {
+      "control_id": 320,
+      "action": "left_click",
+      "path": [
+        1,
+        11
+      ],
+      "focused": null,
+      "window_visible": true,
+      "descendants": []
+    },
+    {
+      "control_id": 350,
+      "action": "keyboard_activate",
+      "path": [
+        1,
+        10
+      ],
+      "focused": true,
+      "window_visible": true,
+      "descendants": []
+    },
+    {
+      "control_id": 350,
+      "action": "left_click",
+      "path": [
+        1,
+        10
+      ],
+      "focused": null,
+      "window_visible": true,
+      "descendants": []
+    },
+    {
+      "control_id": 370,
+      "action": "keyboard_activate",
+      "path": [
+        1,
+        9
+      ],
+      "focused": true,
+      "window_visible": true,
+      "descendants": []
+    },
+    {
+      "control_id": 370,
+      "action": "left_click",
+      "path": [
+        1,
+        9
+      ],
+      "focused": null,
+      "window_visible": true,
+      "descendants": []
+    },
+    {
+      "control_id": 400,
+      "action": "keyboard_activate",
+      "path": [
+        1,
+        8
+      ],
+      "focused": true,
+      "window_visible": true,
+      "descendants": []
+    },
+    {
+      "control_id": 400,
+      "action": "left_click",
+      "path": [
+        1,
+        8
+      ],
+      "focused": null,
+      "window_visible": true,
+      "descendants": []
+    },
+    {
+      "control_id": 410,
+      "action": "keyboard_activate",
+      "path": [
+        1,
+        7
+      ],
+      "focused": true,
+      "window_visible": true,
+      "descendants": []
+    },
+    {
+      "control_id": 410,
+      "action": "left_click",
+      "path": [
+        1,
+        7
+      ],
+      "focused": null,
+      "window_visible": true,
+      "descendants": []
+    },
+    {
+      "control_id": 500,
+      "action": "keyboard_activate",
+      "path": [
+        1,
+        6
+      ],
+      "focused": true,
+      "window_visible": true,
+      "descendants": []
+    },
+    {
+      "control_id": 500,
+      "action": "left_click",
+      "path": [
+        1,
+        6
+      ],
+      "focused": null,
+      "window_visible": true,
+      "descendants": []
+    },
+    {
+      "control_id": 530,
+      "action": "keyboard_activate",
+      "path": [
+        1,
+        5
+      ],
+      "focused": true,
+      "window_visible": true,
+      "descendants": []
+    },
+    {
+      "control_id": 530,
+      "action": "left_click",
+      "path": [
+        1,
+        5
+      ],
+      "focused": null,
+      "window_visible": true,
+      "descendants": []
+    },
+    {
+      "control_id": 550,
+      "action": "keyboard_activate",
+      "path": [
+        1,
+        4
+      ],
+      "focused": true,
+      "window_visible": true,
+      "descendants": []
+    },
+    {
+      "control_id": 550,
+      "action": "left_click",
+      "path": [
+        1,
+        4
+      ],
+      "focused": null,
+      "window_visible": true,
+      "descendants": []
+    },
+    {
+      "control_id": 580,
+      "action": "keyboard_activate",
+      "path": [
+        1,
+        3
+      ],
+      "focused": true,
+      "window_visible": true,
+      "descendants": []
+    },
+    {
+      "control_id": 580,
+      "action": "left_click",
+      "path": [
+        1,
+        3
+      ],
+      "focused": null,
+      "window_visible": true,
+      "descendants": []
+    },
+    {
+      "control_id": 610,
+      "action": "keyboard_activate",
+      "path": [
+        1,
+        17,
+        1
+      ],
+      "focused": true,
+      "window_visible": true,
+      "descendants": [
+        {
+          "title": "标题拼图",
+          "class": "WTWindow"
+        }
+      ]
+    },
+    {
+      "control_id": 610,
+      "action": "left_click",
+      "path": [
+        1,
+        17,
+        1
+      ],
+      "focused": null,
+      "window_visible": true,
+      "descendants": [
+        {
+          "title": "标题拼图",
+          "class": "WTWindow"
+        }
+      ]
+    },
+    {
+      "control_id": 640,
+      "action": "keyboard_activate",
+      "path": [
+        1,
+        2
+      ],
+      "focused": true,
+      "window_visible": true,
+      "descendants": []
+    },
+    {
+      "control_id": 640,
+      "action": "left_click",
+      "path": [
+        1,
+        2
+      ],
+      "focused": null,
+      "window_visible": true,
+      "descendants": []
+    },
+    {
+      "control_id": 660,
+      "action": "keyboard_activate",
+      "path": [
+        1,
+        1
+      ],
+      "focused": true,
+      "window_visible": true,
+      "descendants": []
+    },
+    {
+      "control_id": 660,
+      "action": "left_click",
+      "path": [
+        1,
+        1
+      ],
+      "focused": null,
+      "window_visible": true,
+      "descendants": []
+    },
+    {
+      "control_id": 680,
+      "action": "keyboard_activate",
+      "path": [
+        1,
+        0
+      ],
+      "focused": true,
+      "window_visible": true,
+      "descendants": []
+    },
+    {
+      "control_id": 680,
+      "action": "left_click",
+      "path": [
+        1,
+        0
+      ],
+      "focused": null,
+      "window_visible": true,
+      "descendants": []
+    },
+    {
+      "control_id": 700,
+      "action": "keyboard_activate",
+      "path": [
+        1,
+        3,
+        0
+      ],
+      "focused": true,
+      "window_visible": true,
+      "descendants": []
+    },
+    {
+      "control_id": 700,
+      "action": "left_click",
+      "path": [
+        1,
+        3,
+        0
+      ],
+      "focused": null,
+      "window_visible": true,
+      "descendants": []
+    },
+    {
+      "control_id": 690,
+      "action": "right_click",
+      "path": [
+        0
+      ],
+      "focused": null,
+      "window_visible": true,
+      "descendants": []
+    }
+  ],
+  "execution_records": []
+}

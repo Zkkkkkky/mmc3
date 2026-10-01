@@ -25,17 +25,45 @@ from fc_editor.codecs.dc_font import (
     font_tokens,
     glyph_file_offset,
     page_tokens,
-    safe_unmapped_tokens,
+    safe_channel_tokens,
 )
 from fc_editor.dc_text import dc_text_table_with_overrides
 
 
+def render_character_glyph(character: str, font: QFont | None = None) -> bytes:
+    """Render one Unicode character into the game's deterministic 12×12 format."""
+
+    if len(character) != 1:
+        raise ValueError("自动字模必须恰好是一枚 Unicode 字符。")
+    selected = QFont(font) if font is not None else QFont("SimSun")
+    selected.setPixelSize(12)
+    selected.setStyleStrategy(QFont.StyleStrategy.NoAntialias)
+    if not QFontMetrics(selected).inFontUcs4(ord(character)):
+        raise ValueError(f"系统字体不包含字符“{character}”；请先在文字库选择其他字体。")
+    image = QImage(12, 12, QImage.Format.Format_RGB32)
+    image.fill(Qt.GlobalColor.black)
+    painter = QPainter(image)
+    painter.setRenderHint(QPainter.RenderHint.TextAntialiasing, False)
+    painter.setFont(selected)
+    painter.setPen(Qt.GlobalColor.white)
+    painter.drawText(QRect(0, 0, 12, 12), Qt.AlignmentFlag.AlignCenter, character)
+    painter.end()
+    return encode_glyph(
+        [
+            [int(image.pixelColor(x, y).lightness() >= 128) for x in range(12)]
+            for y in range(12)
+        ]
+    )
+
+
 class GlyphCanvas(QWidget):
     changed = Signal()
+    CELL_SIZE = 12
+    SIDE = CELL_SIZE * 12
 
     def __init__(self) -> None:
         super().__init__()
-        self.setFixedSize(168, 168)
+        self.setFixedSize(self.SIDE, self.SIDE)
         self.pixels = [[0] * 12 for _ in range(12)]
         self._ink = 1
         self.setToolTip("左键画点，右键擦除；可按住拖动。写入文字后暂存，确定后提交。")
@@ -51,15 +79,17 @@ class GlyphCanvas(QWidget):
         painter = QPainter(self)
         for y in range(12):
             for x in range(12):
-                painter.fillRect(x * 14, y * 14, 14, 14,
+                painter.fillRect(x * self.CELL_SIZE, y * self.CELL_SIZE,
+                                 self.CELL_SIZE, self.CELL_SIZE,
                                  QColor("#f5f5f5" if self.pixels[y][x] else "#080808"))
         painter.setPen(QColor("#63717a"))
         for index in range(13):
-            painter.drawLine(index * 14, 0, index * 14, 168)
-            painter.drawLine(0, index * 14, 168, index * 14)
+            painter.drawLine(index * self.CELL_SIZE, 0, index * self.CELL_SIZE, self.SIDE)
+            painter.drawLine(0, index * self.CELL_SIZE, self.SIDE, index * self.CELL_SIZE)
 
     def _draw(self, event) -> None:
-        x, y = int(event.position().x()) // 14, int(event.position().y()) // 14
+        x = int(event.position().x()) // self.CELL_SIZE
+        y = int(event.position().y()) // self.CELL_SIZE
         if self.isEnabled() and 0 <= x < 12 and 0 <= y < 12:
             if self.pixels[y][x] != self._ink:
                 self.pixels[y][x] = self._ink
@@ -78,7 +108,7 @@ class GlyphCanvas(QWidget):
 
 
 class FontEditingMixin:
-    def initialize_font_editing(self, edit_layout, button_row) -> None:
+    def initialize_font_editing(self, edit_layout, button_row, *, canvas_index: int = 5) -> None:
         self._glyph_drafts: dict[bytes, bytes] = {}
         self._glyph_expected: dict[bytes, bytes] = {}
         self._font_loading = False
@@ -88,6 +118,12 @@ class FontEditingMixin:
             else {}
         )
         self._font_mapping_drafts = dict(self._font_mapping_expected)
+        self._font_disabled_expected = set(
+            getattr(self.project, "font_disabled_builtin_tokens", set())
+            if self.project is not None
+            else set()
+        )
+        self._font_disabled_drafts = set(self._font_disabled_expected)
         self._font = QFont("SimSun")
         self._font.setPixelSize(12)
         self._font.setStyleStrategy(QFont.StyleStrategy.NoAntialias)
@@ -109,7 +145,12 @@ class FontEditingMixin:
                 if not self._font_writable:
                     break
         self.glyph_canvas = GlyphCanvas()
-        edit_layout.insertWidget(5, self.glyph_canvas, 0, Qt.AlignmentFlag.AlignHCenter)
+        edit_layout.insertWidget(
+            canvas_index,
+            self.glyph_canvas,
+            0,
+            Qt.AlignmentFlag.AlignHCenter,
+        )
         self.glyph_canvas.changed.connect(self._font_pixels_changed)
         self.write_button.clicked.connect(self.stage_current_glyph)
         self.write_button.setToolTip(
@@ -155,7 +196,7 @@ class FontEditingMixin:
         self.glyph_table.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
         self.glyph_table.customContextMenuRequested.connect(self._show_font_page_menu)
         self.status.setMaximumHeight(16777215)
-        self.status.setStyleSheet("color:#735100;")
+        self.status.setStyleSheet("")
 
     def _show_font_page_menu(self, position) -> None:
         menu = QMenu(self.glyph_table)
@@ -165,20 +206,167 @@ class FontEditingMixin:
         allocate_action = menu.addAction("自动分配新字符…")
         import_full_action = menu.addAction("导入全字库…")
         export_full_action = menu.addAction("导出全字库…")
+        menu.addSeparator()
+        audit_action = menu.addAction("检测未使用文字…")
+        cleanup_action = menu.addAction("清除未使用的自定义字模…")
+        cleanup_builtin_action = menu.addAction("安全回收未使用内置文字…")
+        restore_builtin_action = menu.addAction("恢复已回收的内置文字…")
         import_action.setEnabled(self.import_page_button.isEnabled())
         export_action.setEnabled(self.export_page_button.isEnabled())
         allocate_action.setEnabled(self.allocate_character_button.isEnabled())
         import_full_action.setEnabled(self.import_full_font_button.isEnabled())
         export_full_action.setEnabled(self.export_full_font_button.isEnabled())
+        audit_action.setEnabled(self._font_writable and self.project is not None)
+        cleanup_action.setEnabled(self._font_writable and self.project is not None)
+        cleanup_builtin_action.setEnabled(self._font_writable and self.project is not None)
+        restore_builtin_action.setEnabled(
+            self._font_writable and bool(self._font_disabled_drafts)
+        )
         import_action.triggered.connect(self.import_font_page)
         export_action.triggered.connect(self.export_font_page)
         allocate_action.triggered.connect(self.allocate_new_character)
         import_full_action.triggered.connect(self.import_full_font)
         export_full_action.triggered.connect(self.export_full_font)
+        audit_action.triggered.connect(self.show_font_usage_audit)
+        cleanup_action.triggered.connect(self.clear_unused_custom_font_glyphs)
+        cleanup_builtin_action.triggered.connect(self.clear_unused_builtin_font_glyphs)
+        restore_builtin_action.triggered.connect(self.restore_disabled_builtin_font_glyphs)
         menu.exec(self.glyph_table.viewport().mapToGlobal(position))
 
+    @staticmethod
+    def _token_summary(tokens: tuple[bytes, ...], *, limit: int = 18) -> str:
+        codes = [token.hex().upper() for token in tokens[:limit]]
+        if len(tokens) > limit:
+            codes.append(f"…另 {len(tokens) - limit} 个")
+        return "、".join(codes) if codes else "无"
+
+    def show_font_usage_audit(self) -> None:
+        """Report conservative whole-ROM references without changing drafts."""
+
+        if not self._font_writable or self.project is None:
+            return
+        audit = self.project.font_usage_audit()
+        QMessageBox.information(
+            self,
+            "未使用文字检测",
+            "已扫描除字模存储区外的完整 ROM。只把确实出现的双字节代码视为引用。\n\n"
+            f"已引用独立字模：{len(audit.referenced_tokens)} 个\n"
+            f"可安全回收内置文字：{len(audit.unused_builtin_tokens)} 个\n"
+            f"未引用自定义文字：{len(audit.unused_custom_tokens)} 个（可安全回收）\n"
+            f"已回收内置文字：{len(audit.disabled_builtin_tokens)} 个\n"
+            f"无映射但有图形的字模：{len(audit.unused_unmapped_glyphs)} 个（仅报告）\n\n"
+            "可回收自定义代码："
+            f"{self._token_summary(audit.unused_custom_tokens)}\n"
+            "回收内置文字时会在提交前复检引用，并可撤销或恢复；无映射旧字模仍只报告。",
+        )
+
+    def clear_unused_custom_font_glyphs(self) -> None:
+        """Stage reclamation of zero-reference project-owned glyphs."""
+
+        if not self._font_writable or self.project is None:
+            return
+        audit = self.project.font_usage_audit()
+        tokens = audit.unused_custom_tokens
+        if not tokens:
+            QMessageBox.information(self, "无需清理", "没有零引用的自定义文字。")
+            return
+        characters = [
+            self._font_mapping_drafts.get(token, "?") for token in tokens
+        ]
+        if QMessageBox.question(
+            self,
+            "清除未使用的自定义字模",
+            f"将暂存清理 {len(tokens)} 个零引用自定义文字："
+            f"{'、'.join(characters[:18])}"
+            + (f"…另 {len(tokens) - 18} 个" if len(tokens) > 18 else "")
+            + "\n\n对应字模会恢复为空白，工程码表映射会移除；"
+            "只有点击“确定”才会一起提交。是否继续？",
+            QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
+            QMessageBox.StandardButton.No,
+        ) != QMessageBox.StandardButton.Yes:
+            return
+        if self.write_button.isEnabled():
+            self.stage_current_glyph()
+        mappings = {
+            token: character
+            for token, character in self._font_mapping_drafts.items()
+            if token not in tokens
+        }
+        self._set_mapping_drafts(mappings)
+        self._stage_glyphs({token: b"\xff" * 18 for token in tokens})
+        self.status.setText(
+            f"已暂存清理 {len(tokens)} 个零引用自定义文字；确定后统一提交。"
+        )
+
+    def clear_unused_builtin_font_glyphs(self) -> None:
+        """Stage safe reuse of every currently zero-reference built-in token."""
+
+        if not self._font_writable or self.project is None:
+            return
+        audit = self.project.font_usage_audit()
+        tokens = audit.unused_builtin_tokens
+        if not tokens:
+            QMessageBox.information(self, "无需回收", "没有新的零引用内置文字可回收。")
+            return
+        preview = [self.text_table.byte_to_text.get(token, "?") for token in tokens[:24]]
+        if QMessageBox.question(
+            self,
+            "安全回收未使用内置文字",
+            f"检测到 {len(tokens)} 个全 ROM 零引用的内置文字，例如："
+            f"{'、'.join(preview)}\n\n"
+            "将清空对应字模并在工程码表中停用，使这些代码成为可重新分配的安全空槽。"
+            "提交前会再次检查引用；可撤销，也可恢复尚未重新分配的字模。\n\n"
+            "是否暂存全部回收？",
+            QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
+            QMessageBox.StandardButton.No,
+        ) != QMessageBox.StandardButton.Yes:
+            return
+        if self.write_button.isEnabled():
+            self.stage_current_glyph()
+        self._font_disabled_drafts.update(tokens)
+        self._set_mapping_drafts(self._font_mapping_drafts)
+        self._stage_glyphs({token: b"\xff" * 18 for token in tokens})
+        self.status.setText(
+            f"已暂存安全回收 {len(tokens)} 个零引用内置文字；确定前工程不变。"
+        )
+
+    def restore_disabled_builtin_font_glyphs(self) -> None:
+        """Stage restoration from the immutable base ROM."""
+
+        if not self._font_writable or self.project is None:
+            return
+        tokens = tuple(
+            sorted(self._font_disabled_drafts - set(self._font_mapping_drafts))
+        )
+        if not tokens:
+            QMessageBox.information(
+                self,
+                "无法恢复",
+                "没有尚未重新分配的已回收内置文字。已用于新文字的代码需先移除自定义映射。",
+            )
+            return
+        if QMessageBox.question(
+            self,
+            "恢复已回收的内置文字",
+            f"将从基准 ROM 恢复 {len(tokens)} 个内置字模及其码表映射。是否继续？",
+            QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
+            QMessageBox.StandardButton.No,
+        ) != QMessageBox.StandardButton.Yes:
+            return
+        glyphs = {}
+        for token in tokens:
+            offset = glyph_file_offset(token, writable=True)
+            glyphs[token] = bytes(self.project.original[offset:offset + 18])
+        self._font_disabled_drafts.difference_update(tokens)
+        self._set_mapping_drafts(self._font_mapping_drafts)
+        self._stage_glyphs(glyphs)
+        self.status.setText(f"已暂存恢复 {len(tokens)} 个内置文字；确定后提交。")
+
     def _set_mapping_drafts(self, mappings: dict[bytes, str]) -> None:
-        self.text_table = dc_text_table_with_overrides(mappings)
+        self.text_table = dc_text_table_with_overrides(
+            mappings,
+            excluded_tokens=self._font_disabled_drafts,
+        )
         self._font_mapping_drafts = dict(mappings)
 
     def allocate_new_character(self) -> None:
@@ -203,9 +391,12 @@ class FontEditingMixin:
                 raise ValueError(
                     f"字符“{character}”已有代码 {existing.hex().upper()}，无需重复分配。"
                 )
-            candidates = safe_unmapped_tokens(
-                bytes(self.project.working),
+            candidates = safe_channel_tokens(
+                bytes(self.project.original),
                 set(self.text_table.byte_to_text),
+                "name",
+                set(self._font_disabled_drafts),
+                reclaimed_data=bytes(self.project.working),
             )
             if not candidates:
                 raise ValueError("没有同时满足未映射、全 ROM 未引用和统一填充的安全字模槽。")
@@ -245,18 +436,7 @@ class FontEditingMixin:
                                      self.glyph_canvas.raw() != self._raw_glyph(self.current_token))
 
     def _render_character(self, text: str) -> bytes:
-        if len(text) != 1 or not QFontMetrics(self._font).inFontUcs4(ord(text)):
-            raise ValueError("所选字体不包含该字符；请换字体或直接编辑点阵。")
-        image = QImage(12, 12, QImage.Format.Format_RGB32)
-        image.fill(Qt.GlobalColor.black)
-        painter = QPainter(image)
-        painter.setRenderHint(QPainter.RenderHint.TextAntialiasing, False)
-        painter.setFont(self._font)
-        painter.setPen(Qt.GlobalColor.white)
-        painter.drawText(QRect(0, 0, 12, 12), Qt.AlignmentFlag.AlignCenter, text)
-        painter.end()
-        return encode_glyph([[int(image.pixelColor(x, y).lightness() >= 128)
-                              for x in range(12)] for y in range(12)])
+        return render_character_glyph(text, self._font)
 
     def preview_font_character(self, text: str) -> None:
         if self._font_loading or not text or not hasattr(self, "glyph_canvas"):
@@ -440,9 +620,16 @@ class FontEditingMixin:
                 != self._font_mapping_expected
             ):
                 raise ValueError("工程码表已被其他编辑修改，请取消后重开，避免覆盖新数据。")
+            if (
+                self.project is not None
+                and self.project.font_disabled_builtin_tokens
+                != self._font_disabled_expected
+            ):
+                raise ValueError("内置字模回收状态已被其他编辑修改，请取消后重开。")
             if self.project is not None and (
                 self._glyph_drafts
                 or self._font_mapping_drafts != self._font_mapping_expected
+                or self._font_disabled_drafts != self._font_disabled_expected
             ):
                 with self.project.transaction(
                     f"更新字库：{len(self._glyph_drafts)} 个字模，"
@@ -450,6 +637,9 @@ class FontEditingMixin:
                 ):
                     if self._glyph_drafts:
                         self.project.set_font_glyphs(self._glyph_drafts)
+                    self.project.replace_font_disabled_builtins(
+                        self._font_disabled_drafts
+                    )
                     self.project.replace_font_character_overrides(
                         self._font_mapping_drafts
                     )
@@ -461,6 +651,7 @@ class FontEditingMixin:
     def reject(self) -> None:
         self._glyph_drafts.clear()
         self._font_mapping_drafts = dict(self._font_mapping_expected)
+        self._font_disabled_drafts = set(self._font_disabled_expected)
         self.write_button.setEnabled(False)
         # Reload the selected canvas as well, so reusing this dialog instance
         # cannot resurrect pixels that the user explicitly discarded.

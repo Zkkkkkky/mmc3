@@ -1,0 +1,24 @@
+[    0.1s] launched pid=16500
+[    0.1s] === stage A: launcher -> main window (no ROM) ===
+[    3.1s] top window: {'hwnd': 14026496, 'title': 'SRW2�޸���V1.5', 'class': 'WTWindow', 'rect': {'left': 571, 'top': 244, 'right': 1346, 'bottom': 843, 'width': 775, 'height': 599}, 'pid': 16500}
+[    4.1s] dump A01_������: title='SRW2�޸���V1.5' class='WTWindow' controls=8 shot=ok
+[   13.7s] main window hwnd=13699536 title='SRW2���ݰ��޸���V1.0'
+[   15.2s] dump A02_������_δ����ROM: title='SRW2���ݰ��޸���V1.0' class='WTWindow' controls=63 shot=ok
+[   23.2s] === stage OPENFILECONTROLS ===
+[   24.7s] dump OPENFILE_00_��ʼ: title='���ļ�' class='#32770' controls=49 shot=ok
+[   28.6s] terminated owned pid=16500
+[   28.7s] launched pid=16136
+[   28.7s] === stage A: launcher -> main window (no ROM) ===
+[   31.7s] top window: {'hwnd': 10947164, 'title': 'SRW2�޸���V1.5', 'class': 'WTWindow', 'rect': {'left': 571, 'top': 244, 'right': 1346, 'bottom': 843, 'width': 775, 'height': 599}, 'pid': 16136}
+[   32.5s] dump A01_������: title='SRW2�޸���V1.5' class='WTWindow' controls=8 shot=ok
+[   41.0s] main window hwnd=9636308 title='SRW2���ݰ��޸���V1.0'
+[   42.5s] dump A02_������_δ����ROM: title='SRW2���ݰ��޸���V1.0' class='WTWindow' controls=63 shot=ok
+[   52.2s] terminated owned pid=16136
+[   52.2s] launched pid=15544
+[   52.2s] === stage A: launcher -> main window (no ROM) ===
+[   55.2s] top window: {'hwnd': 10881658, 'title': 'SRW2�޸���V1.5', 'class': 'WTWindow', 'rect': {'left': 571, 'top': 244, 'right': 1346, 'bottom': 843, 'width': 775, 'height': 599}, 'pid': 15544}
+[   56.1s] dump A01_������: title='SRW2�޸���V1.5' class='WTWindow' controls=8 shot=ok
+[   64.5s] main window hwnd=10619356 title='SRW2���ݰ��޸���V1.0'
+[   66.0s] dump A02_������_δ����ROM: title='SRW2���ݰ��޸���V1.0' class='WTWindow' controls=63 shot=ok
+[   76.8s] OPENFILECONTROLS complete: 32/32 actions, zero ROM diff
+[   76.9s] terminated owned pid=15544

@@ -1,0 +1,20 @@
+﻿[    0.1s] launched pid=18708
+[    0.1s] === stage A: launcher -> main window (no ROM) ===
+[    3.1s] top window: {'hwnd': 18088104, 'title': 'SRW2修改器V1.5', 'class': 'WTWindow', 'rect': {'left': 571, 'top': 244, 'right': 1346, 'bottom': 843, 'width': 775, 'height': 599}, 'pid': 18708}
+[    4.1s] dump A01_启动器: title='SRW2修改器V1.5' class='WTWindow' controls=8 shot=ok
+[   10.0s] main window hwnd=10289946 title='SRW2扩容版修改器V1.0'
+[   11.5s] dump A02_主窗口_未载入ROM: title='SRW2扩容版修改器V1.0' class='WTWindow' controls=63 shot=ok
+[   16.0s] menu 文件(F): could not open menu via Alt+F
+[   20.6s] menu 帮助(H): could not open menu via Alt+H
+[   21.1s] === stage LOAD: load ROM copy only ===
+[   22.0s] dump LOAD01_打开ROM对话框: title='打开文件' class='#32770' controls=51 shot=ok
+[   22.5s] open dialog confirmed gone=True
+[   29.6s] ROM loaded without main-window sweep, title='SRW2扩容版修改器V1.0：D:\\GIT\\mmc3\\output\\build\\legacy-ui-probe\\weapon-command-ff-ally-w1-r0.nes'
+[   30.5s] dump LOAD02_主窗口_载入后: title='SRW2扩容版修改器V1.0：D:\\GIT\\mmc3\\output\\build\\legacy-ui-probe\\weapon-command-ff-ally-w1-r0.nes' class='WTWindow' controls=63 shot=ok
+[   30.5s] === stage DBSAVEFF: isolated direct FF insertion/save golden ===
+[   31.2s] 数据库: hwnd=13763048 title='数据库'
+[   40.3s] weapon instruction row requested=0 selected=0 top=0 target_y=11
+[   40.4s] weapon selector activation: wm_command_after_validated_popup
+[   42.2s] dump DBSAVE_FF_直接插入后: title='数据库' class='WTWindow' controls=300 shot=ok
+[   47.5s] DBSAVEFF complete: diffs=2648
+[   47.7s] terminated owned pid=18708

@@ -1,0 +1,236 @@
+{
+  "schema_version": 1,
+  "validated": true,
+  "error": null,
+  "execution_record_count": 39,
+  "diff_count": 0,
+  "observations": [
+    {
+      "control_id": 1,
+      "action": "right_click",
+      "closed": false
+    },
+    {
+      "control_id": 1,
+      "action": "keyboard_activate",
+      "closed": true
+    },
+    {
+      "control_id": 1,
+      "action": "left_click",
+      "closed": true
+    },
+    {
+      "control_id": 2,
+      "action": "right_click",
+      "closed": false
+    },
+    {
+      "control_id": 2,
+      "action": "keyboard_activate",
+      "closed": true
+    },
+    {
+      "control_id": 2,
+      "action": "left_click",
+      "closed": true
+    }
+  ],
+  "execution_records": [
+    {
+      "action_id": "2b143ac922296cfaf740",
+      "status": "passed",
+      "result": "从记录列表右键真实打开 导出机体。"
+    },
+    {
+      "action_id": "cdc092f1be37627982fb",
+      "status": "passed",
+      "result": "行滚动。"
+    },
+    {
+      "action_id": "b307a6b80c39774e87a3",
+      "status": "passed",
+      "result": "页滚动。"
+    },
+    {
+      "action_id": "d413ccf54c298e994f90",
+      "status": "passed",
+      "result": "拖动滚动块。"
+    },
+    {
+      "action_id": "90e2b90d7fcde0983f29",
+      "status": "passed",
+      "result": "行滚动。"
+    },
+    {
+      "action_id": "96ba171586402762c843",
+      "status": "passed",
+      "result": "页滚动。"
+    },
+    {
+      "action_id": "c96cc1cf61f9f7948e17",
+      "status": "passed",
+      "result": "拖动滚动块。"
+    },
+    {
+      "action_id": "385579e7eee47da7897d",
+      "status": "passed",
+      "result": "文件列表状态已观测。"
+    },
+    {
+      "action_id": "4ebe0d28f5c0143a9e50",
+      "status": "passed",
+      "result": "行滚动。"
+    },
+    {
+      "action_id": "04ff48ab0f63ce9950b4",
+      "status": "passed",
+      "result": "页滚动。"
+    },
+    {
+      "action_id": "b3593dc99c2f83fc9b6a",
+      "status": "passed",
+      "result": "拖动滚动块。"
+    },
+    {
+      "action_id": "29351346571bec4d560b",
+      "status": "passed",
+      "result": "文件列表状态已观测。"
+    },
+    {
+      "action_id": "93dc150282caa53d4d17",
+      "status": "passed",
+      "result": "展开时可见=False。"
+    },
+    {
+      "action_id": "b8126e4ac7510a29d6fe",
+      "status": "passed",
+      "result": "展开时可见=False。"
+    },
+    {
+      "action_id": "1fd6ab3463e8a0ac7b0a",
+      "status": "passed",
+      "result": "项数=0。"
+    },
+    {
+      "action_id": "6a2452a8f927dd5b0579",
+      "status": "passed",
+      "result": "逐项 0 并恢复。"
+    },
+    {
+      "action_id": "67027ed1c9838d3b2152",
+      "status": "passed",
+      "result": "Home/Down 后恢复。"
+    },
+    {
+      "action_id": "389fd994fe604ca3b3be",
+      "status": "passed",
+      "result": "菜单=False。"
+    },
+    {
+      "action_id": "75191f2947d04b25c02e",
+      "status": "passed",
+      "result": "项数=0。"
+    },
+    {
+      "action_id": "2fe96a9c081ce020fc8a",
+      "status": "passed",
+      "result": "逐项 0 并恢复。"
+    },
+    {
+      "action_id": "1700993e0f3bec941e8b",
+      "status": "passed",
+      "result": "Home/Down 后恢复。"
+    },
+    {
+      "action_id": "cc4ecc122a614cfa9295",
+      "status": "passed",
+      "result": "菜单=False。"
+    },
+    {
+      "action_id": "325f9c7ab0246bba874e",
+      "status": "passed",
+      "result": "焦点=True。"
+    },
+    {
+      "action_id": "631bddac51d97dc1cc86",
+      "status": "passed",
+      "result": "读回=''。"
+    },
+    {
+      "action_id": "bbab8b21d5a9a6d4953e",
+      "status": "passed",
+      "result": "Ctrl+A/Ctrl+Z 后恢复。"
+    },
+    {
+      "action_id": "aedda5f2f8d9dfd6c268",
+      "status": "passed",
+      "result": "菜单=False。"
+    },
+    {
+      "action_id": "d1ca27f94459bea09276",
+      "status": "passed",
+      "result": "长度=[0, 0]。"
+    },
+    {
+      "action_id": "3a0fdd0c629e14ebc505",
+      "status": "passed",
+      "result": "随 导出机体 对话框创建；文件夹下拉状态已实际切换；初始可见=False、启用=True。"
+    },
+    {
+      "action_id": "7d38bc2e774ec79d3026",
+      "status": "passed",
+      "result": "随 导出机体 对话框创建；文件夹下拉状态已实际切换；初始可见=False、启用=True。"
+    },
+    {
+      "action_id": "0fae2b9f28d5a0c71fa2",
+      "status": "passed",
+      "result": "随 导出机体 对话框创建；文件夹下拉状态已实际切换；初始可见=False、启用=True。"
+    },
+    {
+      "action_id": "bafe07f19e28d2ed4c7b",
+      "status": "passed",
+      "result": "随 导出机体 对话框创建；文件夹下拉状态已实际切换；初始可见=False、启用=True。"
+    },
+    {
+      "action_id": "581e2fec4340fa6e5dfd",
+      "status": "passed",
+      "result": "随 导出机体 对话框创建；文件夹下拉状态已实际切换；初始可见=False、启用=True。"
+    },
+    {
+      "action_id": "aead587f9bb44326ed51",
+      "status": "passed",
+      "result": "随 导出机体 对话框创建；文件夹下拉状态已实际切换；初始可见=False、启用=True。"
+    },
+    {
+      "action_id": "68eb52d9737772a98353",
+      "status": "passed",
+      "result": "对话框已关闭=False。"
+    },
+    {
+      "action_id": "03b50c18df103a8c7b8f",
+      "status": "passed",
+      "result": "对话框已关闭=True。"
+    },
+    {
+      "action_id": "a9f13121a1ab8db38d59",
+      "status": "passed",
+      "result": "对话框已关闭=True。"
+    },
+    {
+      "action_id": "8097d8dfbc5cf8e47405",
+      "status": "passed",
+      "result": "对话框已关闭=False。"
+    },
+    {
+      "action_id": "e1aa26b7674177a630e1",
+      "status": "passed",
+      "result": "对话框已关闭=True。"
+    },
+    {
+      "action_id": "3a6bca4da78fd75794d4",
+      "status": "passed",
+      "result": "对话框已关闭=True。"
+    }
+  ]
+}

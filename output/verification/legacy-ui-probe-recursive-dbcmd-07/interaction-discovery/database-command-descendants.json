@@ -1,0 +1,274 @@
+{
+  "schema_version": 1,
+  "scope": "isolated reference executable; descendant dialogs cancelled; no save",
+  "records": [
+    {
+      "state": "武器修改",
+      "control_id": 2530,
+      "command": "插入",
+      "command_id": 20014,
+      "activation": "wm_command_from_validated_menu_id",
+      "status": "captured",
+      "tab_x": 185,
+      "menu": [
+        {
+          "index": 0,
+          "text": "插入",
+          "id": 20014
+        },
+        {
+          "index": 1,
+          "text": "",
+          "id": 20015
+        },
+        {
+          "index": 2,
+          "text": "编辑",
+          "id": 20016
+        },
+        {
+          "index": 3,
+          "text": "",
+          "id": 20017
+        },
+        {
+          "index": 4,
+          "text": "剪切",
+          "id": 20018
+        },
+        {
+          "index": 5,
+          "text": "复制",
+          "id": 20019
+        },
+        {
+          "index": 6,
+          "text": "复制全部",
+          "id": 20020
+        },
+        {
+          "index": 7,
+          "text": "粘贴",
+          "id": 20021
+        },
+        {
+          "index": 8,
+          "text": "粘贴全部",
+          "id": 20022
+        },
+        {
+          "index": 9,
+          "text": "",
+          "id": 20023
+        },
+        {
+          "index": 10,
+          "text": "删除",
+          "id": 20026
+        },
+        {
+          "index": 11,
+          "text": "清空",
+          "id": 20027
+        }
+      ],
+      "database_signature_changed": false,
+      "descendants": [
+        {
+          "title": "武器指令",
+          "class": "WTWindow",
+          "tag": "DBCMD_01_武器修改_插入_1",
+          "visible_controls": 13
+        }
+      ],
+      "foreground_after_command": {
+        "hwnd": 7276446,
+        "title": "武器指令",
+        "class": "WTWindow",
+        "pid": 12892,
+        "owned_by_reference": true
+      }
+    },
+    {
+      "state": "武器修改",
+      "control_id": 2530,
+      "command": "编辑",
+      "command_id": 20016,
+      "activation": "wm_command_from_validated_menu_id",
+      "status": "captured",
+      "tab_x": 185,
+      "menu": [
+        {
+          "index": 0,
+          "text": "插入",
+          "id": 20014
+        },
+        {
+          "index": 1,
+          "text": "",
+          "id": 20015
+        },
+        {
+          "index": 2,
+          "text": "编辑",
+          "id": 20016
+        },
+        {
+          "index": 3,
+          "text": "",
+          "id": 20017
+        },
+        {
+          "index": 4,
+          "text": "剪切",
+          "id": 20018
+        },
+        {
+          "index": 5,
+          "text": "复制",
+          "id": 20019
+        },
+        {
+          "index": 6,
+          "text": "复制全部",
+          "id": 20020
+        },
+        {
+          "index": 7,
+          "text": "粘贴",
+          "id": 20021
+        },
+        {
+          "index": 8,
+          "text": "粘贴全部",
+          "id": 20022
+        },
+        {
+          "index": 9,
+          "text": "",
+          "id": 20023
+        },
+        {
+          "index": 10,
+          "text": "删除",
+          "id": 20026
+        },
+        {
+          "index": 11,
+          "text": "清空",
+          "id": 20027
+        }
+      ],
+      "database_signature_changed": false,
+      "descendants": [
+        {
+          "title": "定义颜色",
+          "class": "WTWindow",
+          "tag": "DBCMD_02_武器修改_编辑_1",
+          "visible_controls": 12
+        }
+      ],
+      "foreground_after_command": {
+        "hwnd": 9766814,
+        "title": "定义颜色",
+        "class": "WTWindow",
+        "pid": 12892,
+        "owned_by_reference": true
+      }
+    },
+    {
+      "state": "机体修改",
+      "control_id": 120,
+      "command": "导出机体",
+      "command_id": 20003,
+      "activation": "wm_command_from_validated_menu_id",
+      "status": "captured",
+      "tab_x": 17,
+      "menu": [
+        {
+          "index": 0,
+          "text": "复制机体",
+          "id": 20001
+        },
+        {
+          "index": 1,
+          "text": "粘贴机体",
+          "id": 20002
+        },
+        {
+          "index": 2,
+          "text": "导出机体",
+          "id": 20003
+        },
+        {
+          "index": 3,
+          "text": "清除机体",
+          "id": 20004
+        },
+        {
+          "index": 4,
+          "text": "清空全部",
+          "id": 20005
+        }
+      ],
+      "database_signature_changed": false,
+      "descendants": [
+        {
+          "title": "导出机体",
+          "class": "#32770",
+          "tag": "DBCMD_03_机体修改_导出机体_1",
+          "visible_controls": 37
+        }
+      ],
+      "foreground_after_command": {
+        "hwnd": 3672596,
+        "title": "导出机体",
+        "class": "#32770",
+        "pid": 12892,
+        "owned_by_reference": true
+      }
+    },
+    {
+      "state": "人物修改",
+      "control_id": 630,
+      "command": "导出人物",
+      "command_id": 20009,
+      "activation": "wm_command_from_validated_menu_id",
+      "status": "captured",
+      "tab_x": 101,
+      "menu": [
+        {
+          "index": 0,
+          "text": "复制人物",
+          "id": 20007
+        },
+        {
+          "index": 1,
+          "text": "粘贴人物",
+          "id": 20008
+        },
+        {
+          "index": 2,
+          "text": "导出人物",
+          "id": 20009
+        }
+      ],
+      "database_signature_changed": false,
+      "descendants": [
+        {
+          "title": "导出头像",
+          "class": "#32770",
+          "tag": "DBCMD_04_人物修改_导出人物_1",
+          "visible_controls": 37
+        }
+      ],
+      "foreground_after_command": {
+        "hwnd": 1772108,
+        "title": "导出头像",
+        "class": "#32770",
+        "pid": 12892,
+        "owned_by_reference": true
+      }
+    }
+  ]
+}

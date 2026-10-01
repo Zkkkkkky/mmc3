@@ -1,0 +1,207 @@
+{
+  "schema_version": 1,
+  "validated": true,
+  "rom": "D:\\GIT\\mmc3\\output\\build\\legacy-ui-probe\\weapon-command-cancel-all.nes",
+  "sha256_before": "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E",
+  "sha256_after": "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E",
+  "parameter_windows": 11,
+  "database_cancel_closed": true,
+  "diff_count": 0,
+  "changed_offsets": [],
+  "records": [
+    {
+      "command": "F4",
+      "status": "cancelled",
+      "parameter_closed": true,
+      "selector_returned": true,
+      "action_id": "0142ecb60077283cdeb5"
+    },
+    {
+      "command": "F0",
+      "status": "cancelled",
+      "parameter_closed": true,
+      "selector_returned": true,
+      "action_id": "74215ebbc4bb6658eb17"
+    },
+    {
+      "command": "F2",
+      "status": "cancelled",
+      "parameter_closed": true,
+      "selector_returned": true,
+      "action_id": "280858042bb486e2ee80"
+    },
+    {
+      "command": "F3",
+      "status": "cancelled",
+      "parameter_closed": true,
+      "selector_returned": true,
+      "action_id": "d8ea6a5221c957f557a4"
+    },
+    {
+      "command": "E0",
+      "status": "cancelled",
+      "parameter_closed": true,
+      "selector_returned": true,
+      "action_id": "5714c7fdad6d1907de2f"
+    },
+    {
+      "command": "E1",
+      "status": "cancelled",
+      "parameter_closed": true,
+      "selector_returned": true,
+      "action_id": "87d0a31b94f40d6998a8"
+    },
+    {
+      "command": "FD",
+      "status": "cancelled",
+      "parameter_closed": true,
+      "selector_returned": true,
+      "action_id": "c9248fbde0d956774ed9"
+    },
+    {
+      "command": "FE",
+      "status": "cancelled",
+      "parameter_closed": true,
+      "selector_returned": true,
+      "action_id": "ae3e2838e625e268c728"
+    },
+    {
+      "command": "F9",
+      "status": "cancelled",
+      "parameter_closed": true,
+      "selector_returned": true,
+      "action_id": "e5fa68c7629cd3ce36f9"
+    },
+    {
+      "command": "42C2",
+      "status": "cancelled",
+      "parameter_closed": true,
+      "selector_returned": true,
+      "action_id": "69264b8718c694c9fcb0"
+    },
+    {
+      "command": "WAIT",
+      "status": "cancelled",
+      "parameter_closed": true,
+      "selector_returned": true,
+      "action_id": "f9b36ef1409d98787260"
+    }
+  ],
+  "execution_records": [
+    {
+      "action_id": "a80b6c010ba8ec53ab61",
+      "status": "passed",
+      "result": "旧版 F4 左键打开“定义声音”。"
+    },
+    {
+      "action_id": "0142ecb60077283cdeb5",
+      "status": "passed",
+      "result": "F4 参数窗口取消关闭并返回指令选择器"
+    },
+    {
+      "action_id": "72e2b018619aef84316e",
+      "status": "passed",
+      "result": "旧版 F0 左键打开“定义颜色”。"
+    },
+    {
+      "action_id": "74215ebbc4bb6658eb17",
+      "status": "passed",
+      "result": "F0 参数窗口取消关闭并返回指令选择器"
+    },
+    {
+      "action_id": "22ea0693b9a7b88d854e",
+      "status": "passed",
+      "result": "旧版 F2 左键打开“定义光束规律图库”。"
+    },
+    {
+      "action_id": "280858042bb486e2ee80",
+      "status": "passed",
+      "result": "F2 参数窗口取消关闭并返回指令选择器"
+    },
+    {
+      "action_id": "c7f9955f51c9d395ea8a",
+      "status": "passed",
+      "result": "旧版 F3 左键打开“定义光束规律”。"
+    },
+    {
+      "action_id": "d8ea6a5221c957f557a4",
+      "status": "passed",
+      "result": "F3 参数窗口取消关闭并返回指令选择器"
+    },
+    {
+      "action_id": "eac5065aa03a8af77222",
+      "status": "passed",
+      "result": "旧版 E0 左键打开“切换精灵图库0”。"
+    },
+    {
+      "action_id": "5714c7fdad6d1907de2f",
+      "status": "passed",
+      "result": "E0 参数窗口取消关闭并返回指令选择器"
+    },
+    {
+      "action_id": "855a1bbd8ca08a1ebe7a",
+      "status": "passed",
+      "result": "旧版 E1 左键打开“切换精灵图库1”。"
+    },
+    {
+      "action_id": "87d0a31b94f40d6998a8",
+      "status": "passed",
+      "result": "E1 参数窗口取消关闭并返回指令选择器"
+    },
+    {
+      "action_id": "1ab69619300d527fa0bc",
+      "status": "passed",
+      "result": "旧版 FD 左键打开“移动屏幕”。"
+    },
+    {
+      "action_id": "c9248fbde0d956774ed9",
+      "status": "passed",
+      "result": "FD 参数窗口取消关闭并返回指令选择器"
+    },
+    {
+      "action_id": "753278f4f4e241b7e9f2",
+      "status": "passed",
+      "result": "旧版 FE 左键打开“跳转重复”。"
+    },
+    {
+      "action_id": "ae3e2838e625e268c728",
+      "status": "passed",
+      "result": "FE 参数窗口取消关闭并返回指令选择器"
+    },
+    {
+      "action_id": "d54d0ae44b446a828cf9",
+      "status": "passed",
+      "result": "旧版 F9 左键打开“创建物体”。"
+    },
+    {
+      "action_id": "e5fa68c7629cd3ce36f9",
+      "status": "passed",
+      "result": "F9 参数窗口取消关闭并返回指令选择器"
+    },
+    {
+      "action_id": "2483982742afff25895d",
+      "status": "passed",
+      "result": "旧版 42C2 左键打开“运行规律”。"
+    },
+    {
+      "action_id": "69264b8718c694c9fcb0",
+      "status": "passed",
+      "result": "42C2 参数窗口取消关闭并返回指令选择器"
+    },
+    {
+      "action_id": "dc7eb0173a638827bd3a",
+      "status": "passed",
+      "result": "旧版 WAIT 左键打开“等待”。"
+    },
+    {
+      "action_id": "f9b36ef1409d98787260",
+      "status": "passed",
+      "result": "WAIT 参数窗口取消关闭并返回指令选择器"
+    },
+    {
+      "action_id": "adb876e26ff5baae113e",
+      "status": "passed",
+      "result": "数据库取消后主窗口保存零差分"
+    }
+  ]
+}

@@ -10,8 +10,11 @@ os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 
 from PySide6.QtCore import QPoint
 from PySide6.QtGui import QFont, QFontDatabase
-from PySide6.QtWidgets import QApplication, QGroupBox, QPushButton, QWidget
+from PySide6.QtWidgets import (
+    QApplication, QGroupBox, QLabel, QPushButton, QScrollArea, QSpinBox, QWidget,
+)
 
+from dc_modifier.battle_calculator import BattleFormulaParameters, reference_firepower
 from dc_modifier.legacy_tools import (
     AttributeCalculatorDialog,
     DamageMultiplierDialog,
@@ -21,6 +24,7 @@ from dc_modifier.legacy_tools import (
     SaveEditorDialog,
     TextConverterDialog,
     _glyph_file_offset,
+    _is_unused_glyph,
     _glyph_pixmap,
 )
 from fc_editor.dc_text import reference_dc_text_table
@@ -66,6 +70,22 @@ class LegacyToolDialogTests(QtTestCase):
         self.assertEqual(dialog.page_selector.currentData(), 0xC8)
         self.assertEqual(dialog.code_value.text(), "C800")
         self.assertEqual(dialog.address_value.text(), "070010")
+        self.assertEqual(dialog.objectName(), "fontLibraryDialog")
+        self.assertEqual(dialog.glyph_table.objectName(), "glyphTable")
+        self.assertEqual(dialog.glyph_table.alternatingRowColors(), False)
+        self.assertEqual(dialog.original_glyph.objectName(), "glyphPreview")
+        self.assertEqual(dialog.replacement_glyph.objectName(), "glyphPreview")
+        self.assertEqual(dialog.status.objectName(), "fontStatus")
+        self.assertEqual(dialog.write_button.objectName(), "primaryButton")
+        self.assertEqual(dialog.clear_page_button.objectName(), "destructiveButton")
+        self.assertEqual(dialog.accept_button.objectName(), "primaryButton")
+        edit_scroll = dialog.findChild(QScrollArea, "fontEditScroll")
+        self.assertLessEqual(edit_scroll.maximumWidth(), 260)
+        self._show(dialog)
+        self.assertEqual(edit_scroll.verticalScrollBar().maximum(), 0)
+        self.assertFalse(edit_scroll.verticalScrollBar().isVisible())
+        self.assertIn("background:#11191d", dialog.styleSheet())
+        self.assertIn("border:2px solid #d7aa4a", dialog.styleSheet())
         self.assertFalse(dialog.write_button.isEnabled())
         self.assertIn("点阵变化后即可写入", dialog.write_button.toolTip())
         self.assertEqual(dialog.replace_all_button.isEnabled(), self.project is not None)
@@ -105,6 +125,26 @@ class LegacyToolDialogTests(QtTestCase):
         self.assertEqual(marked.pixelColor(0, 0).name(), "#f5f5f5")
         self.assertEqual(marked.pixelColor(2, 0).name(), "#080808")
 
+    def test_font_library_renders_uniform_unmapped_slots_as_quiet_empty_cells(self) -> None:
+        self.assertTrue(_is_unused_glyph(b"\x00" * 18, ""))
+        self.assertTrue(_is_unused_glyph(b"\xff" * 18, ""))
+        self.assertFalse(_is_unused_glyph(b"\x00" * 18, "空"))
+        self.assertFalse(_is_unused_glyph(b"\x00" * 17 + b"\x01", ""))
+        if self.project is None:
+            self.skipTest("测试 ROM 不存在")
+
+        dialog = FontLibraryDialog(project=self.project)
+        dialog.page_selector.setCurrentIndex(dialog.page_selector.findData(0xBB))
+        self.application.processEvents()
+        item = dialog.glyph_table.item(0, 0)
+        self.assertIn("未使用字形槽", item.toolTip())
+        self.assertFalse(item.icon().isNull())
+        icon_image = item.icon().pixmap(26, 26).toImage()
+        self.assertEqual(icon_image.pixelColor(13, 13).alpha(), 0)
+        self.assertEqual(dialog.original_caption.text(), "未使用")
+        self.assertIn("安全空槽", dialog.original_glyph.toolTip())
+        dialog.close()
+
     def test_map_animation_has_three_legacy_tabs_and_real_rom_instructions(self) -> None:
         if self.project is None:
             self.skipTest("测试 ROM 不存在")
@@ -116,26 +156,26 @@ class LegacyToolDialogTests(QtTestCase):
         self.assertEqual(dialog.animation_list.count(), 153)
         # The command editor keeps spare rows visible so a beginner can see
         # where structural insertion would occur.  The selected ROM record
-        # itself still contains the verified 11 decoded commands.
+        # itself still contains the verified 12 decoded commands; F9 object
+        # creation and its following 40/42/C0/C2 rule are separate, as in the
+        # reference editor.
         record = dialog.codec.record("map", 1)
-        self.assertEqual(len(record.instructions), 11)
+        self.assertEqual(len(record.instructions), 12)
         self.assertGreaterEqual(dialog.instruction_table.rowCount(), len(record.instructions))
-        self.assertIn("切换 00 区域图库", dialog.instruction_table.item(0, 0).text())
-        self.assertEqual(dialog.instruction_table.item(0, 1).text(), "E0 0A")
+        self.assertIn("切换00区域的图库号", dialog.instruction_table.item(0, 0).text())
+        self.assertEqual(dialog.instruction_table.columnCount(), 1)
+        self.assertNotIn("$", dialog.instruction_table.item(0, 0).text())
         self.assertTrue(dialog.add_button.isEnabled())
         self.assertIn("预留槽", dialog.add_button.toolTip())
         self.assertTrue(dialog.code_button.isEnabled())
         self.assertIn("当前 ROM", dialog.read_only_status.text())
         self.assertEqual(dialog.rule_lists["movement"].count(), 157)
-        self.assertEqual(dialog.rule_category_tabs.count(), 3)
         self.assertEqual(
-            [
-                dialog.rule_category_tabs.tabText(index)
-                for index in range(dialog.rule_category_tabs.count())
-            ],
-            ["背景规律", "运行规律", "组图规律"],
+            set(dialog.rule_groups),
+            {"background", "movement", "sprite"},
         )
         self.assertGreater(dialog.call_table.rowCount(), 50)
+        self.assertFalse(dialog.call_table.item(0, 0).text().startswith("$"))
         self._show(dialog)
         self.assertLess(self._top(dialog.animation_list, dialog), self._top(dialog.add_button, dialog))
         self.assertLess(self._top(dialog.add_button, dialog), self._top(dialog.animation_name, dialog))
@@ -168,8 +208,14 @@ class LegacyToolDialogTests(QtTestCase):
         )
         self.assertEqual(dialog.text_edit.placeholderText(), "")
         self.assertEqual(dialog.code_edit.placeholderText(), "")
-        self.assertEqual(dialog.encode_button.size().toTuple(), (80, 32))
-        self.assertEqual(dialog.decode_button.size().toTuple(), (80, 32))
+        self.assertEqual(dialog.encode_button.size().toTuple(), (106, 34))
+        self.assertEqual(dialog.decode_button.size().toTuple(), (106, 34))
+        self.assertEqual(dialog.encode_button.text(), "文字 → 代码")
+        self.assertEqual(dialog.decode_button.text(), "代码 → 文字")
+        self.assertEqual(dialog.text_label.text(), "文字内容")
+        self.assertEqual(dialog.code_label.text(), "十六进制代码")
+        self.assertEqual(dialog.encode_button.objectName(), "encodeButton")
+        self.assertEqual(dialog.decode_button.objectName(), "decodeButton")
         self.assertLess(self._top(dialog.text_edit, dialog), self._top(dialog.encode_button, dialog))
         self.assertLess(dialog.encode_button.mapTo(dialog, QPoint(0, 0)).x(), dialog.decode_button.mapTo(dialog, QPoint(0, 0)).x())
         self.assertLess(self._top(dialog.decode_button, dialog), self._top(dialog.code_edit, dialog))
@@ -224,13 +270,23 @@ class LegacyToolDialogTests(QtTestCase):
         dialog.calculate_button.click()
         self.assertEqual(dialog.last_results["敌方"].hit_score, 75)
         self.assertEqual(dialog.last_results["敌方"].minimum_hit_speed, 20)
-        self.assertEqual(dialog.last_results["敌方"].predicted_damage, 66)
-        self.assertEqual(dialog.last_results["敌方"].remaining_hp, 34)
+        self.assertEqual(dialog.last_results["敌方"].predicted_damage, 7)
+        self.assertEqual(dialog.last_results["敌方"].remaining_hp, 93)
         result_lines = [
             dialog.results.item(row).text() for row in range(dialog.results.count())
         ]
-        self.assertIn("预计伤害计算：敌方 对 我方 造成预计伤害 66（对陆火力 20）", result_lines)
-        self.assertTrue(any("计算结果： 可以命中" in line for line in result_lines))
+        self.assertTrue(any(
+            "敌方「" in line and "使用「" in line and "→ 我方「" in line
+            for line in result_lines
+        ))
+        self.assertTrue(any(
+            "预计伤害：敌方「" in line and "造成 7（对陆火力 20）" in line
+            for line in result_lines
+        ))
+        self.assertTrue(any(
+            "命中结论：敌方「" in line and "可以命中 我方「" in line
+            for line in result_lines
+        ))
         dialog.close()
 
     def test_attribute_calculator_opens_with_empty_lower_result_area(self) -> None:
@@ -259,12 +315,24 @@ class LegacyToolDialogTests(QtTestCase):
         )
         self.assertEqual(dialog.enemy.strength.value(), unit.get("strength"))
         self.assertEqual(dialog.enemy.hp.value(), unit.get("hp"))
+        self.assertEqual(dialog.enemy.skill.value(), unit.get("special"))
+        self.assertEqual(dialog.enemy.skill_summary.count(), 6)
+        self.assertEqual(dialog.enemy.skill_summary.maxVisibleItems(), 10)
+        self.assertEqual(dialog.enemy.skill_summary.currentData(), 0)
+        self.assertIn(f"${unit.get('special'):02X}", dialog.enemy.skill_summary.toolTip())
+        self.assertIn("先制攻击", dialog.enemy.skill_summary.toolTip())
         weapon = self.project.weapon_codec.decode_record(
             int(dialog.enemy.weapon.currentData()), bytes(self.project.working)
         )
         self.assertEqual(
             dialog.enemy.power_land.value(),
-            weapon.get("power_land") * self.project.get_damage_formula_values()[1] + 8,
+            (
+                dialog.enemy.strength.value()
+                * self.project.get_damage_formula_values()[0]
+                // self.project.get_damage_formula_values()[2]
+                + weapon.get("power_land")
+                * self.project.get_damage_formula_values()[1]
+            ),
         )
         self.assertIn("人物属性", dialog.enemy.character_summary.text())
         dialog.close()
@@ -292,6 +360,56 @@ class LegacyToolDialogTests(QtTestCase):
             self.assertEqual(side.level.count(), 60)
         dialog.close()
 
+    def test_attribute_calculator_damage_special_combo_is_filtered_and_transient(self) -> None:
+        if self.project is None:
+            self.skipTest("测试ROM不存在")
+        dialog = AttributeCalculatorDialog(project=self.project)
+        before = bytes(self.project.working)
+        dialog.calculate()
+        shield = dialog.ally.skill_summary.findData(0x07)
+        self.assertGreaterEqual(shield, 0)
+        self.assertEqual(
+            tuple(
+                dialog.ally.skill_summary.itemData(index)
+                for index in range(dialog.ally.skill_summary.count())
+            ),
+            (0, 1, 2, 3, 4, 7),
+        )
+
+        dialog.ally.skill_summary.setCurrentIndex(shield)
+        self.application.processEvents()
+
+        self.assertEqual(dialog.ally.skill.value(), 0x07)
+        self.assertIn("用盾防御", dialog.ally.skill_summary.currentText())
+        self.assertEqual(dialog.last_results["敌方"].predicted_damage, 135)
+        self.assertEqual(dialog.last_results["敌方"].actual_damage, 67)
+        self.assertEqual(bytes(self.project.working), before)
+        dialog.close()
+
+    def test_attribute_calculator_live_updates_and_focuses_changed_side(self) -> None:
+        if self.project is None:
+            self.skipTest("测试ROM不存在")
+        dialog = AttributeCalculatorDialog(project=self.project)
+        dialog.calculate()
+        previous_damage = dialog.last_results["敌方"].predicted_damage
+        enemy = dialog.enemy
+        second_weapon = enemy.weapon.findData(11)
+        self.assertGreaterEqual(second_weapon, 0)
+        enemy.weapon.setCurrentIndex(second_weapon)
+        self.application.processEvents()
+
+        self.assertEqual(enemy.weapon.currentData(), 11)
+        self.assertNotEqual(
+            dialog.last_results["敌方"].predicted_damage, previous_damage
+        )
+        enemy_header = dialog.results.item(
+            dialog._result_header_rows["敌方"]
+        ).text()
+        self.assertIn("敌方「", enemy_header)
+        self.assertIn("交叉粉碎炮", enemy_header)
+        self.assertEqual(dialog.focused_result_side, "敌方")
+        dialog.close()
+
     def test_damage_multiplier_dialog_clamps_and_returns_values(self) -> None:
         dialog = DamageMultiplierDialog(0, 120)
         self.assertEqual(dialog.values, (1, 99))
@@ -315,10 +433,31 @@ class LegacyToolDialogTests(QtTestCase):
         dialog.calculate()
 
         self.assertEqual(
-            dialog.enemy.power_land.value(), raw_power * changed[1] + 8
+            dialog.enemy.power_land.value(),
+            (
+                dialog.enemy.strength.value() * changed[0] // changed[2]
+                + raw_power * changed[1]
+            ),
         )
         self.assertEqual(bytes(project.working), after_parameter_change)
         self.assertNotEqual(before_calculation, after_parameter_change)
+        dialog.close()
+
+    def test_attribute_calculator_strength_change_refreshes_final_firepower(self) -> None:
+        if self.project is None:
+            self.skipTest("测试ROM不存在")
+        dialog = AttributeCalculatorDialog(project=self.project)
+        side = dialog.enemy
+        raw_power = side._raw_weapon_powers[1]
+        parameters = BattleFormulaParameters.from_project(self.project)
+
+        side.strength.setValue(100)
+
+        self.assertEqual(
+            side.power_land.value(),
+            reference_firepower(100, raw_power, parameters),
+        )
+        self.assertEqual(side.power_land.maximum(), 9999)
         dialog.close()
 
     def test_save_editor_keeps_reference_buttons_and_independent_title(self) -> None:
@@ -460,6 +599,55 @@ class LegacyToolDialogTests(QtTestCase):
         self.assertEqual(len(dialog.hit_values), 1)
         self.assertEqual(len(dialog.item_values), 11)
         self.assertEqual(len(dialog.initial_units), 12)
+        self.assertTrue(
+            all(combo.maxVisibleItems() == 10 for combo in dialog.initial_units)
+        )
+        visible_labels = {
+            label.text() for label in dialog.findChildren(QLabel)
+        }
+        for expected in (
+            "如果攻击方速度的", "% ＞ 被攻击方速度的", "，则双击",
+            "强度 ×", "＋ 武器火力 ×", "－ 防御 ×", "命中临界值：",
+            "磁性涂料速度增加：", "超合金Z防御增加：", "医治恢复精神量：",
+            "人物1：", "机体1：", "人物6：", "机体6：",
+        ):
+            self.assertIn(expected, visible_labels)
+        item_labels = {
+            label.text(): label
+            for label in dialog.findChildren(QLabel)
+            if label.text().endswith("增加：") or label.text().endswith("精神量：")
+        }
+        expected_rows = (
+            ("超合金Z防御增加：", "磁性涂料速度增加：", "传感器强度增加："),
+            ("C装甲血量增加：", "超合金W防御增加：", "助推器机动增加："),
+            ("传感器2强度增加：", "M合金速度增加：", "电子盾血量增加："),
+            ("正义恢复精神量：", "医治恢复精神量："),
+        )
+        for row in expected_rows:
+            tops = [item_labels[text].mapTo(dialog, QPoint()).y() for text in row]
+            self.assertLessEqual(max(tops) - min(tops), 1)
+        item_value_by_label = {}
+        for card in dialog.findChildren(QWidget, "fieldCard"):
+            label = card.findChild(QLabel, "fieldLabel")
+            spin = card.findChild(QSpinBox)
+            if label is not None and spin is not None:
+                item_value_by_label[label.text()] = spin.value()
+        self.assertEqual(
+            item_value_by_label,
+            {
+                "超合金Z防御增加：": 1,
+                "磁性涂料速度增加：": 1,
+                "传感器强度增加：": 1,
+                "C装甲血量增加：": 5,
+                "超合金W防御增加：": 3,
+                "助推器机动增加：": 1,
+                "传感器2强度增加：": 3,
+                "M合金速度增加：": 3,
+                "电子盾血量增加：": 25,
+                "正义恢复精神量：": 25,
+                "医治恢复精神量：": 50,
+            },
+        )
         self.assertTrue(dialog.accept_button.isEnabled())
         self.assertEqual(
             tuple(editor.value() for editor in dialog.double_hit_values),
@@ -570,11 +758,11 @@ class LegacyToolDialogTests(QtTestCase):
     def test_tool_geometry_and_offscreen_screenshots_render(self) -> None:
         flexible_dialogs = (
             ("converter", TextConverterDialog(), (473, 483)),
-            ("calculator", AttributeCalculatorDialog(), (920, 650)),
+            ("calculator", AttributeCalculatorDialog(), (1000, 650)),
         )
         additional_flexible_dialogs = (
             ("save", SaveEditorDialog(), (950, 650)),
-            ("other", OtherSettingsDialog(), (820, 620)),
+            ("other", OtherSettingsDialog(), (780, 540)),
         )
         font_dialog = FontLibraryDialog(project=self.project)
         self.assertLess(font_dialog.minimumWidth(), font_dialog.maximumWidth())
@@ -620,6 +808,22 @@ class LegacyToolDialogTests(QtTestCase):
                     self.assertGreater(len(sample_colors), 1)
                     dialog.close()
 
+    def test_attribute_calculator_weapon_selector_has_room_for_full_name(self) -> None:
+        if self.project is None:
+            self.skipTest("测试ROM不存在")
+        dialog = AttributeCalculatorDialog(project=self.project)
+        self._show(dialog)
+        for side in (dialog.enemy, dialog.ally):
+            required = side.weapon.fontMetrics().horizontalAdvance(
+                side.weapon.currentText()
+            ) + 36
+            self.assertGreaterEqual(side.weapon.width(), 145)
+            self.assertGreaterEqual(side.weapon.width(), required)
+        self.assertEqual(dialog.enemy.findChild(QGroupBox).objectName(), "enemyBattlePanel")
+        self.assertEqual(dialog.ally.findChild(QGroupBox).objectName(), "allyBattlePanel")
+        self.assertEqual(dialog.calculate_button.objectName(), "primaryButton")
+        dialog.close()
+
     def test_calculator_reports_minimum_hit_speed_from_visible_formula(self) -> None:
         dialog = AttributeCalculatorDialog()
         dialog.enemy.weapon_hit.setValue(70)
@@ -633,8 +837,8 @@ class LegacyToolDialogTests(QtTestCase):
         dialog.calculate()
         self.assertTrue(
             any(
-                "命中最低速度计算：速度至少大于 99 才能命中"
-                in dialog.results.item(row).text()
+                "最低命中速度：敌方「" in dialog.results.item(row).text()
+                and "速度至少为 100" in dialog.results.item(row).text()
                 for row in range(dialog.results.count())
             )
         )

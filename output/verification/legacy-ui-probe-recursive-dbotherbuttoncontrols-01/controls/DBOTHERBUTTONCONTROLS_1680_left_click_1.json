@@ -1,0 +1,103 @@
+{
+  "tag": "DBOTHERBUTTONCONTROLS_1680_left_click_1",
+  "hwnd": 11994548,
+  "title": "最大值",
+  "class": "WTWindow",
+  "rect": {
+    "left": 794,
+    "top": 466,
+    "right": 1124,
+    "bottom": 619,
+    "width": 330,
+    "height": 153
+  },
+  "pid": 2512,
+  "tree": {
+    "hwnd": 11994548,
+    "class": "WTWindow",
+    "text": "最大值",
+    "ctrl_id": 0,
+    "rect": {
+      "left": 794,
+      "top": 466,
+      "right": 1124,
+      "bottom": 619,
+      "width": 330,
+      "height": 153
+    },
+    "visible": true,
+    "enabled": true,
+    "children": [
+      {
+        "hwnd": 8914530,
+        "class": "msctls_updown32",
+        "text": "",
+        "ctrl_id": 124,
+        "rect": {
+          "left": 956,
+          "top": 545,
+          "right": 979,
+          "bottom": 575,
+          "width": 23,
+          "height": 30
+        },
+        "visible": true,
+        "enabled": true,
+        "children": []
+      },
+      {
+        "hwnd": 8717752,
+        "class": "Edit",
+        "text": "99",
+        "ctrl_id": 120,
+        "rect": {
+          "left": 816,
+          "top": 545,
+          "right": 956,
+          "bottom": 575,
+          "width": 140,
+          "height": 30
+        },
+        "visible": true,
+        "enabled": true,
+        "children": []
+      },
+      {
+        "hwnd": 789078,
+        "class": "Button",
+        "text": "取消",
+        "ctrl_id": 110,
+        "rect": {
+          "left": 1016,
+          "top": 565,
+          "right": 1116,
+          "bottom": 595,
+          "width": 100,
+          "height": 30
+        },
+        "visible": true,
+        "enabled": true,
+        "button_check_state": 0,
+        "children": []
+      },
+      {
+        "hwnd": 8324620,
+        "class": "Button",
+        "text": "确定",
+        "ctrl_id": 100,
+        "rect": {
+          "left": 1016,
+          "top": 525,
+          "right": 1116,
+          "bottom": 555,
+          "width": 100,
+          "height": 30
+        },
+        "visible": true,
+        "enabled": true,
+        "button_check_state": 0,
+        "children": []
+      }
+    ]
+  }
+}

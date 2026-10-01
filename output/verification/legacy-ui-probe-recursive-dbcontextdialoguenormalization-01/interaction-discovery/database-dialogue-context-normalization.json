@@ -1,0 +1,98 @@
+{
+  "schema_version": 1,
+  "validated": true,
+  "normalization": "volatile dialogue text excluded from control identity",
+  "source_evidence": "output/verification/legacy-ui-probe-recursive-dbremainingcontext-01/interaction-discovery/database-remaining-context-actions.json",
+  "source_evidence_sha256": "5FE63C76789847AF47E529150A62E9069D7A66A88F6B586B2F444C0420F4C395",
+  "source_discovery": "output/verification/legacy-ui-probe-recursive-dbctx-06/interaction-discovery/database-context-menus.json",
+  "source_discovery_sha256": "D4788BA72F1352BA2265749B8EAA2E6742124D36D4364C4DC5774FDB5C043A83",
+  "execution_record_count": 6,
+  "mappings": [
+    {
+      "control_id": 1420,
+      "control_index": 20,
+      "command_id": 20029,
+      "caption": "复制对话",
+      "discovery_text": "记住了，我可是萨菲\\\r\n妮·瓦尔库鲁斯！",
+      "executed_descendants": [],
+      "action_id": "5ec91a965016201c5b25"
+    },
+    {
+      "control_id": 1420,
+      "control_index": 20,
+      "command_id": 20030,
+      "caption": "粘贴对话",
+      "discovery_text": "记住了，我可是萨菲\\\r\n妮·瓦尔库鲁斯！",
+      "executed_descendants": [],
+      "action_id": "f656ce09d89f87b5b5d8"
+    },
+    {
+      "control_id": 1430,
+      "control_index": 19,
+      "command_id": 20029,
+      "caption": "复制对话",
+      "discovery_text": "记住了，我可是萨菲\\\r\n妮·瓦尔库鲁斯！",
+      "executed_descendants": [],
+      "action_id": "dc439ca8ec99aba6c670"
+    },
+    {
+      "control_id": 1430,
+      "control_index": 19,
+      "command_id": 20030,
+      "caption": "粘贴对话",
+      "discovery_text": "记住了，我可是萨菲\\\r\n妮·瓦尔库鲁斯！",
+      "executed_descendants": [],
+      "action_id": "6b3570f98aefdfa717d6"
+    },
+    {
+      "control_id": 1440,
+      "control_index": 18,
+      "command_id": 20029,
+      "caption": "复制对话",
+      "discovery_text": "记住了，我可是萨菲\\\r\n妮·瓦尔库鲁斯！",
+      "executed_descendants": [],
+      "action_id": "ee0c7a7de564ba256eb7"
+    },
+    {
+      "control_id": 1440,
+      "control_index": 18,
+      "command_id": 20030,
+      "caption": "粘贴对话",
+      "discovery_text": "记住了，我可是萨菲\\\r\n妮·瓦尔库鲁斯！",
+      "executed_descendants": [],
+      "action_id": "5c80c2967867142bdbae"
+    }
+  ],
+  "execution_records": [
+    {
+      "action_id": "5ec91a965016201c5b25",
+      "status": "passed",
+      "result": "已由 44 项真实执行批次验证；仅把随 ROM 记录变化的对话正文归一化为发现快照中的同一 Button class/id/index 身份。"
+    },
+    {
+      "action_id": "f656ce09d89f87b5b5d8",
+      "status": "passed",
+      "result": "已由 44 项真实执行批次验证；仅把随 ROM 记录变化的对话正文归一化为发现快照中的同一 Button class/id/index 身份。"
+    },
+    {
+      "action_id": "dc439ca8ec99aba6c670",
+      "status": "passed",
+      "result": "已由 44 项真实执行批次验证；仅把随 ROM 记录变化的对话正文归一化为发现快照中的同一 Button class/id/index 身份。"
+    },
+    {
+      "action_id": "6b3570f98aefdfa717d6",
+      "status": "passed",
+      "result": "已由 44 项真实执行批次验证；仅把随 ROM 记录变化的对话正文归一化为发现快照中的同一 Button class/id/index 身份。"
+    },
+    {
+      "action_id": "ee0c7a7de564ba256eb7",
+      "status": "passed",
+      "result": "已由 44 项真实执行批次验证；仅把随 ROM 记录变化的对话正文归一化为发现快照中的同一 Button class/id/index 身份。"
+    },
+    {
+      "action_id": "5c80c2967867142bdbae",
+      "status": "passed",
+      "result": "已由 44 项真实执行批次验证；仅把随 ROM 记录变化的对话正文归一化为发现快照中的同一 Button class/id/index 身份。"
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+[    0.1s] launched pid=10304
+[    0.1s] === stage A: launcher -> main window (no ROM) ===
+[    3.1s] top window: {'hwnd': 10095204, 'title': 'SRW2�޸���V1.5', 'class': 'WTWindow', 'rect': {'left': 571, 'top': 244, 'right': 1346, 'bottom': 843, 'width': 775, 'height': 599}, 'pid': 10304}
+[    4.1s] dump A01_������: title='SRW2�޸���V1.5' class='WTWindow' controls=8 shot=ok
+[   12.9s] main window hwnd=10160624 title='SRW2���ݰ��޸���V1.0'
+[   14.4s] dump A02_������_δ����ROM: title='SRW2���ݰ��޸���V1.0' class='WTWindow' controls=63 shot=ok
+[   22.4s] === stage LOAD: load ROM copy only ===
+[   23.4s] dump LOAD01_��ROM�Ի���: title='���ļ�' class='#32770' controls=49 shot=ok
+[   23.9s] open dialog confirmed gone=True
+[   30.9s] ROM loaded without main-window sweep, title='SRW2���ݰ��޸���V1.0��D:\\GIT\\mmc3\\output\\build\\legacy-ui-probe\\other-field-controls.nes'
+[   31.8s] dump LOAD02_������_�����: title='SRW2���ݰ��޸���V1.0��D:\\GIT\\mmc3\\output\\build\\legacy-ui-probe\\other-field-controls.nes' class='WTWindow' controls=63 shot=ok
+[   31.8s] === stage OTHERFIELDCONTROLS ===
+[   33.4s] ����: hwnd=10553996 title='����'
+[   51.5s] OTHERFIELDCONTROLS complete: 208/208 actions, zero ROM diff
+[   51.7s] terminated owned pid=10304

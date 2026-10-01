@@ -85,7 +85,6 @@ def apply_unit_package(
         project.chr_codec.range_bytes(first_tile, tile_count, bytes(project.working))
         chr_assets.append((first_tile, asset.data))
 
-    affected = affected_unit_ids(project, target_unit_id)
     with project.transaction(
         f"导入机体 {package.label} → ${target_unit_id:02X}"
     ):
@@ -94,4 +93,4 @@ def apply_unit_package(
             project.set_unit_name_reference(target_unit_id, package.name_source_id)
         for first_tile, payload in chr_assets:
             project.set_chr_range(first_tile, payload)
-    return affected
+    return (target_unit_id,)

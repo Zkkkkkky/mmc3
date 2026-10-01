@@ -1,0 +1,88 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-01T09:20:00+08:00",
+  "formalExecutable": {
+    "path": "output/app/新DC篇完整修改器.exe",
+    "sha256": "DD828C2C7F9D7FCBEF8FDEE609E9D0E1BD6A8AD4A68C6A239AA2D78F6BDF98B5",
+    "selfTestExitCode": 0
+  },
+  "referenceInventory": {
+    "windowTitles": 24,
+    "visibleUniqueInteractiveSignatures": 621,
+    "allUniqueInteractiveSignatures": 1040,
+    "source": "output/reports/legacy-control-inventory.json"
+  },
+  "recursiveActionInventory": {
+    "actions": 3376,
+    "passed": 3376,
+    "pending": 0,
+    "closed": true,
+    "source": "output/reports/legacy-interaction-frontier.json",
+    "databaseRemainingContextActions": "44/44, zero ROM diff",
+    "exportUnitDialogActions": "39/39, zero ROM diff",
+    "exportPortraitDialogActions": "39/39, zero ROM diff",
+    "dialogueContextIdentityNormalization": "6/6, source-hash constrained"
+  },
+  "focusedRegression": {
+    "testsRun": 420,
+    "failures": 0,
+    "errors": 0,
+    "durationSeconds": 351.398,
+    "passed": true,
+    "modules": [
+      "tests.test_dc_modifier_ui",
+      "tests.test_legacy_map_ui",
+      "tests.test_map_feedback_ui",
+      "tests.test_database_feedback",
+      "tests.test_legacy_windows_ui",
+      "tests.test_screenshot_unit_feedback",
+      "tests.test_action_event",
+      "tests.test_animation_feedback",
+      "tests.test_event_instruction_dialog",
+      "tests.test_font_edit_transactions",
+      "tests.test_legacy_tools_ui",
+      "tests.test_rom_data_browser"
+    ]
+  },
+  "interactionFamilies": {
+    "leftClick": true,
+    "rightClick": true,
+    "doubleClick": true,
+    "contextMenus": true,
+    "nestedDialogs": true,
+    "copyPaste": true,
+    "importExport": true,
+    "insertDeleteClear": true,
+    "acceptCancelOuterRollback": true,
+    "undoRedoSaveReopen": true
+  },
+  "sameSourceCandidateVisibleProbe": {
+    "performed": true,
+    "romSaved": false,
+    "steps": [
+      "launcher-open-rom",
+      "main-data-menu",
+      "database-six-tabs-visible",
+      "unit-list-right-click-five-actions",
+      "body-puzzle-open",
+      "puzzle-library-left-selection",
+      "puzzle-library-right-click-seven-actions",
+      "puzzle-cancel",
+      "database-cancel",
+      "main-status-no-unsaved-changes"
+    ],
+    "passed": true
+  },
+  "finalExecutableVisibleProbe": {
+    "performed": true,
+    "scope": "launcher, native ROM chooser, main data menu, database, unit context menu, module memory display, map animation, preview entrances, cancel rollback and clean exit",
+    "fullCoordinateClickSmoke": true,
+    "romSaved": false,
+    "finalStatus": "已载入 · 无未保存修改"
+  },
+  "explicitConflictsSkipped": [
+    "M10: 28 legacy metadata writes overlap the retained map-event pointer table",
+    "M05: retain user-defined minimum-tile fragment import enhancement"
+  ],
+  "passed": true
+}

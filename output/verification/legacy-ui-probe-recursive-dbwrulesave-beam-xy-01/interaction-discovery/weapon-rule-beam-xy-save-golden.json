@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "validated": true,
+  "case": "beam-xy",
+  "rom": "D:\\GIT\\mmc3\\output\\build\\legacy-ui-probe\\weapon-rule-save-beam-xy.nes",
+  "requested_value": 18,
+  "requested_value2": 7,
+  "requested_code": "01 83 F0 FC 00 83 F0 FC",
+  "control_values_before": {
+    "460": "",
+    "430": ""
+  },
+  "observed_before": null,
+  "observed_after": null,
+  "sha256_before": "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E",
+  "sha256_after": "DF7E778781EE2822BE7D545F4A76FD3E4412A870C0252471497A59ACF98AAA37",
+  "diff_count": 2,
+  "diffs": [
+    {
+      "offset": 70424,
+      "before": 6,
+      "after": 7
+    },
+    {
+      "offset": 70425,
+      "before": 16,
+      "after": 18
+    }
+  ]
+}

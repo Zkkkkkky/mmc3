@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-24T19:09:00+08:00",
+  "generated_at": "2026-09-29T15:59:23+08:00",
   "passed": true,
   "rom": {
     "path": "output/rom/DC_kuorong_464K.nes",
@@ -91,7 +91,26 @@
       "D8F6",
       "D8F9",
       "D8FD"
-    ]
+    ],
+    "story_first_safe_token": "BAE3",
+    "name_first_safe_token": "D8B7",
+    "unused_builtin_count": 485,
+    "safe_slots_after_builtin_reclaim": 561,
+    "name_safe_slots": 20,
+    "name_safe_slots_after_builtin_reclaim": 302,
+    "unmapped_nonempty_count": 29,
+    "name_record_counts": {
+      "unit": 255,
+      "character": 199,
+      "weapon": 255,
+      "item": 24
+    },
+    "name_page_violations": {
+      "unit": [],
+      "character": [],
+      "weapon": [],
+      "item": []
+    }
   },
   "full_font_file": {
     "extension": ".dcfontset",
@@ -144,16 +163,22 @@
     "all_2688_independent_glyphs_extracted": true,
     "full_font_archive_roundtrip": true,
     "safe_slot_count_and_first_token": true,
+    "field_channel_routing": true,
     "safe_slots_are_unmapped_uniform_and_unreferenced": true,
     "single_glyph_probe_changes_only_target": true,
     "all_row_padding_preserved": true,
     "glyph_and_mapping_are_one_undo_transaction": true,
     "project_reopen_preserves_mapping_and_glyph": true,
+    "unused_custom_detection_and_cleanup": true,
+    "unused_builtin_reclaim_reuse_and_restore": true,
+    "existing_name_records_use_runtime_compatible_pages": true,
     "reference_all_2688_fields_classified": true
   },
   "limitations": [
-    "自动分配只使用内置码表未占用、全 ROM 中 Token 零出现、且字模为统一填充值的槽位；不自动回收任何已分配槽。",
-    "自定义字符到 Token 的关系是编辑工程元数据，游戏 ROM 只保存字模和正文 Token；单独打开 ROM 时需同时打开 .dcmod 或导入 .dcfontset 才能恢复 Unicode 名称。",
+    "自动分配同时复核基准与当前工作 ROM 的 Token 引用及统一填充字模；剧情/战斗允许 B/C/D 十二页（初始 76、回收后 561），名称/资料仅允许 C/D 八页（初始 20、回收后 302）。",
+    "同一 Unicode 字符跨通道复用时可保留剧情 B 页 Token 并补建名称 C/D 页别名；名称编码表过滤 B 页，原始不兼容 Token 会被拒绝。",
+    "零引用独立内置文字可经提交复核后停用并回收；整批可撤销，未重新分配项可从不可变基准 ROM 恢复。无映射旧字模因身份不明仍只报告。",
+    "停用内置代码及自定义字符到 Token 的关系是编辑工程元数据，游戏 ROM 只保存字模和正文 Token；续改必须打开对应 .dcmod。",
     ".dcfontset 是新修改器的版本化超集协议；参考程序可见窗口没有自动分配或字体文件控件，不能宣称与未知参考文件协议字节级一致。",
     "参考版仅 B8/B9/C8 三页清页表现为目标区隔离保存；其余页或单字模动作存在 no-effect/非目标写入。产品的 18 字节定长隔离写入是安全增强，不冒充参考版逐字模字节一致。"
   ]

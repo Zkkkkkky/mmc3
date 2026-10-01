@@ -1,0 +1,12 @@
+﻿[    0.0s] attached pid=17156
+[    0.0s] attached pid=17156
+[    0.0s] === stage DBCTX: recursive database context-menu discovery ===
+[    1.3s] 数据库: hwnd=14747956 title='数据库'
+[    1.5s] DBCTX tab '机体修改': header not found
+[    1.6s] DBCTX tab '人物修改': header not found
+[    1.6s] DBCTX tab '武器修改': header not found
+[    1.7s] DBCTX tab '战斗对话': header not found
+[    1.7s] DBCTX tab '其他修改1': header not found
+[    1.7s] DBCTX tab '其他修改2': header not found
+[    2.0s] DBCTX complete: 0 right-click probes
+[    2.0s] keep-open: pid=17156 main_hwnd=263636

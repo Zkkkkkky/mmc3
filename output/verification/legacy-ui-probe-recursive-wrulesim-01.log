@@ -1,0 +1,22 @@
+﻿[    0.1s] launched pid=17888
+[    0.1s] === stage A: launcher -> main window (no ROM) ===
+[    3.1s] top window: {'hwnd': 21037510, 'title': 'SRW2修改器V1.5', 'class': 'WTWindow', 'rect': {'left': 571, 'top': 244, 'right': 1346, 'bottom': 843, 'width': 775, 'height': 599}, 'pid': 17888}
+[    4.1s] dump A01_启动器: title='SRW2修改器V1.5' class='WTWindow' controls=8 shot=ok
+[    9.3s] main window hwnd=23462340 title='SRW2扩容版修改器V1.0'
+[   10.8s] dump A02_主窗口_未载入ROM: title='SRW2扩容版修改器V1.0' class='WTWindow' controls=63 shot=ok
+[   15.4s] menu 文件(F): could not open menu via Alt+F
+[   20.0s] menu 帮助(H): could not open menu via Alt+H
+[   20.5s] === stage LOAD: load ROM copy only ===
+[   21.7s] dump LOAD01_打开ROM对话框: title='打开文件' class='#32770' controls=49 shot=ok
+[   22.2s] open dialog confirmed gone=True
+[   30.4s] ROM loaded without main-window sweep, title='SRW2扩容版修改器V1.0：D:\\GIT\\mmc3\\output\\build\\legacy-ui-probe\\weapon-rule-simulator.nes'
+[   31.3s] dump LOAD02_主窗口_载入后: title='SRW2扩容版修改器V1.0：D:\\GIT\\mmc3\\output\\build\\legacy-ui-probe\\weapon-rule-simulator.nes' class='WTWindow' controls=63 shot=ok
+[   31.3s] === stage DBWRULESIM: nested movement simulator ===
+[   32.6s] 数据库: hwnd=24510910 title='数据库'
+[   55.7s] dump DBWRULESIM_01_初始: title='运行规律模拟' class='WTWindow' controls=27 shot=ok
+[   55.7s] DBWRULESIM desktop pause ready: D:\GIT\mmc3\output\build\legacy-ui-probe\pause-simulator.ready.json
+[ 1024.1s] DBWRULESIM desktop pause released
+[ 1025.3s] dump DBWRULESIM_创建物体提示: title='信息：' class='#32770' controls=3 shot=ok
+[ 1034.1s] dump DBWRULESIM_02_操作后: title='运行规律模拟' class='WTWindow' controls=27 shot=ok
+[ 1038.9s] DBWRULESIM complete: nested actions captured with zero ROM diff
+[ 1039.2s] terminated owned pid=17888

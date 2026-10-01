@@ -1,0 +1,26 @@
+[    0.1s] launched pid=2796
+[    0.1s] === stage A: launcher -> main window (no ROM) ===
+[    3.1s] top window: {'hwnd': 22611598, 'title': 'SRW2�޸���V1.5', 'class': 'WTWindow', 'rect': {'left': 571, 'top': 244, 'right': 1346, 'bottom': 843, 'width': 775, 'height': 599}, 'pid': 2796}
+[    4.1s] dump A01_������: title='SRW2�޸���V1.5' class='WTWindow' controls=8 shot=ok
+[   14.1s] main window hwnd=9636244 title='SRW2���ݰ��޸���V1.0'
+[   15.6s] dump A02_������_δ����ROM: title='SRW2���ݰ��޸���V1.0' class='WTWindow' controls=63 shot=ok
+[   23.6s] === stage LOAD: load ROM copy only ===
+[   24.6s] dump LOAD01_��ROM�Ի���: title='���ļ�' class='#32770' controls=49 shot=ok
+[   25.1s] open dialog confirmed gone=True
+[   32.2s] ROM loaded without main-window sweep, title='SRW2���ݰ��޸���V1.0��D:\\GIT\\mmc3\\output\\build\\legacy-ui-probe\\main-field-controls.nes'
+[   33.1s] dump LOAD02_������_�����: title='SRW2���ݰ��޸���V1.0��D:\\GIT\\mmc3\\output\\build\\legacy-ui-probe\\main-field-controls.nes' class='WTWindow' controls=63 shot=ok
+[   33.1s] === stage MAINFIELDCONTROLS ===
+[  167.3s] terminated owned pid=2796
+[  167.4s] launched pid=7740
+[  167.4s] === stage A: launcher -> main window (no ROM) ===
+[  170.4s] top window: {'hwnd': 15467948, 'title': 'SRW2�޸���V1.5', 'class': 'WTWindow', 'rect': {'left': 571, 'top': 244, 'right': 1346, 'bottom': 843, 'width': 775, 'height': 599}, 'pid': 7740}
+[  171.2s] dump A01_������: title='SRW2�޸���V1.5' class='WTWindow' controls=8 shot=ok
+[  179.7s] main window hwnd=10226098 title='SRW2���ݰ��޸���V1.0'
+[  181.2s] dump A02_������_δ����ROM: title='SRW2���ݰ��޸���V1.0' class='WTWindow' controls=63 shot=ok
+[  189.2s] === stage LOAD: load ROM copy only ===
+[  190.2s] dump LOAD01_��ROM�Ի���: title='���ļ�' class='#32770' controls=49 shot=ok
+[  190.7s] open dialog confirmed gone=True
+[  197.8s] ROM loaded without main-window sweep, title='SRW2���ݰ��޸���V1.0��D:\\GIT\\mmc3\\output\\build\\legacy-ui-probe\\main-field-controls.nes'
+[  198.7s] dump LOAD02_������_�����: title='SRW2���ݰ��޸���V1.0��D:\\GIT\\mmc3\\output\\build\\legacy-ui-probe\\main-field-controls.nes' class='WTWindow' controls=63 shot=ok
+[  198.8s] MAINFIELDCONTROLS complete: 155/155 actions, zero ROM diff
+[  199.0s] terminated owned pid=7740

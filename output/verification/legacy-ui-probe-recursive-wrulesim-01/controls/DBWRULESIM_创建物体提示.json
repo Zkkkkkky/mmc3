@@ -1,0 +1,68 @@
+{
+  "tag": "DBWRULESIM_创建物体提示",
+  "hwnd": 590512,
+  "title": "信息：",
+  "class": "#32770",
+  "rect": {
+    "left": 824,
+    "top": 411,
+    "right": 1098,
+    "bottom": 609,
+    "width": 274,
+    "height": 198
+  },
+  "pid": 17888,
+  "tree": {
+    "hwnd": 590512,
+    "class": "#32770",
+    "text": "信息：",
+    "ctrl_id": 0,
+    "rect": {
+      "left": 824,
+      "top": 411,
+      "right": 1098,
+      "bottom": 609,
+      "width": 274,
+      "height": 198
+    },
+    "visible": true,
+    "enabled": true,
+    "children": [
+      {
+        "hwnd": 20185546,
+        "class": "Button",
+        "text": "确定",
+        "ctrl_id": 2,
+        "rect": {
+          "left": 963,
+          "top": 555,
+          "right": 1073,
+          "bottom": 590,
+          "width": 110,
+          "height": 35
+        },
+        "visible": true,
+        "enabled": true,
+        "button_check_state": 0,
+        "children": []
+      },
+      {
+        "hwnd": 6160692,
+        "class": "Static",
+        "text": "请使用鼠标左键点击屏幕创建物体",
+        "ctrl_id": 65535,
+        "rect": {
+          "left": 841,
+          "top": 485,
+          "right": 1049,
+          "bottom": 508,
+          "width": 208,
+          "height": 23
+        },
+        "visible": true,
+        "enabled": true,
+        "children": []
+      }
+    ]
+  }
+}

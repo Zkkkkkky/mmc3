@@ -4,6 +4,14 @@ from dataclasses import dataclass
 import struct
 
 from ..errors import RomFormatError
+from .bank24_composite import (
+    character_count as bank24_character_count,
+    file_offset as bank24_file_offset,
+    parse as parse_bank24,
+    replacement_patches as bank24_replacement_patches,
+    roots as bank24_roots,
+    with_character_attribute,
+)
 
 
 SPIRIT_NAMES = (
@@ -92,6 +100,10 @@ class CharacterAttributesCodec:
     PORTRAIT_TABLE = 0xAA46
     PORTRAIT_POOL_START = 0xABD8
     PORTRAIT_POOL_END = 0xADC9
+    PORTRAIT_PAIR_FILE_BASE = 16 + 0x04 * 0x2000
+    PORTRAIT_ROOT_DIRECTORY_OFFSET = PORTRAIT_PAIR_FILE_BASE + 2 * 2
+    CONFIGURATION_ROOT_DIRECTORY_OFFSET = PORTRAIT_PAIR_FILE_BASE + 6 * 2
+    PORTRAIT_TAIL_END_CPU = 0xB5E6
     COSTS = 0x39B48
     CONTEXTS = (
         (0x48030, "a96f8518ade0048519200bc1a000b1188de304c8b118850fc8b11899e204c8c005d0f6b118850ea200a900060e9003c8b1189de704e8e005d0ef4c9081"),
@@ -112,27 +124,46 @@ class CharacterAttributesCodec:
                 raise RomFormatError(f"人物数据加载代码 0x{offset:X} 与已验证格式不同。")
         if data[0x48012:0x48014] != bytes.fromhex("f083") or data[0x8014:0x8016] != bytes.fromhex("36aa"):
             raise RomFormatError("人物属性/头像的表入口发生变化。")
-        if data[self.TABLE:self.TABLE + 2] != b"\x00\x00" or data[self.PORTRAIT_TABLE:self.PORTRAIT_TABLE + 2] != b"\x00\x00":
+        attribute_table = bank24_file_offset(bank24_roots(data)[0])
+        if data[attribute_table:attribute_table + 2] != b"\x00\x00" or data[self.PORTRAIT_TABLE:self.PORTRAIT_TABLE + 2] != b"\x00\x00":
             raise RomFormatError("人物属性/头像指针表起始标记无效。")
 
     def _source(self, original: bool) -> bytes | bytearray:
         return self.project.original if original else self.project.working
 
+    def _count(self, source: bytes | bytearray | None = None) -> int:
+        return bank24_character_count(self.project.working if source is None else source)
+
+    def _portrait_pool_end(self, source: bytes | bytearray) -> int:
+        pointer = int.from_bytes(
+            source[
+                self.CONFIGURATION_ROOT_DIRECTORY_OFFSET:
+                self.CONFIGURATION_ROOT_DIRECTORY_OFFSET + 2
+            ],
+            "little",
+        )
+        if not 0x8000 <= pointer < self.PORTRAIT_TAIL_END_CPU:
+            raise RomFormatError("头像后的机体战斗外观目录无效。")
+        return self.PORTRAIT_PAIR_FILE_BASE + pointer - 0x8000
+
     def _offset(self, character_id: int, *, portrait: bool = False, original: bool = False) -> int:
-        if type(character_id) is not int or not 1 <= character_id < self.COUNT:
-            raise ValueError("人物 ID 必须在 01—C8 之间。")
         source = self._source(original)
-        table = self.PORTRAIT_TABLE if portrait else self.TABLE
+        count = self._count(source)
+        if type(character_id) is not int or not 1 <= character_id <= count:
+            raise ValueError(f"人物 ID 必须在 01—{count:02X} 之间。")
+        roots = bank24_roots(source) if not portrait else ()
+        table = self.PORTRAIT_TABLE if portrait else bank24_file_offset(roots[0])
         pointer = int.from_bytes(source[table + character_id * 2:table + character_id * 2 + 2], "little")
-        offset = pointer + (16 if portrait else self.POINTER_BIAS)
-        start, end = (self.PORTRAIT_POOL_START, self.PORTRAIT_POOL_END) if portrait else (self.POOL_START, self.POOL_END)
+        offset = pointer + 16 if portrait else bank24_file_offset(pointer)
+        start, end = ((table + (count + 1) * 2, self._portrait_pool_end(source))
+                      if portrait else (table + (count + 1) * 2, bank24_file_offset(roots[1])))
         if not start <= offset < end:
             raise RomFormatError(f"人物 ${character_id:02X} 的记录指针超出已验证数据池。")
         return offset
 
     def shared_ids(self, character_id: int, *, portrait: bool = False) -> tuple[int, ...]:
         offset = self._offset(character_id, portrait=portrait)
-        return tuple(index for index in range(1, self.COUNT)
+        return tuple(index for index in range(1, self._count() + 1)
                      if self._offset(index, portrait=portrait) == offset)
 
     def record_offset(
@@ -165,7 +196,7 @@ class CharacterAttributesCodec:
         offset = self._offset(character_id, original=original)
         flags = source[offset + 5]
         end = offset + 6 + (flags & 0xF8).bit_count()
-        if end > self.POOL_END:
+        if end > bank24_file_offset(bank24_roots(source)[1]):
             raise RomFormatError("人物修正记录越过属性数据池。")
         cursor = offset + 6
         corrections = []
@@ -181,7 +212,7 @@ class CharacterAttributesCodec:
         source = self._source(original)
         offset = self._offset(character_id, portrait=True, original=original)
         raw = bytes(source[offset:offset + 7])
-        if offset + 7 > self.PORTRAIT_POOL_END or raw[5] not in (0xC0, 0xD0, 0xE0, 0xF0) or raw[6] not in range(0x80, 0x100, 0x10):
+        if offset + 7 > self._portrait_pool_end(source) or raw[5] not in (0xC0, 0xD0, 0xE0, 0xF0) or raw[6] not in range(0x80, 0x100, 0x10):
             raise RomFormatError("头像记录的位置编码不在已验证范围内。")
         front_physical_slot = (raw[6] - 0x80) // 16
         if front_physical_slot // 4 != (raw[4] & 1):
@@ -210,9 +241,9 @@ class CharacterAttributesCodec:
         after = record.encode()
         return self._record_patches(character_id, after, portrait=False, shared=shared)
 
-    def portrait_patches(self, character_id: int, record: PortraitRecord, *, shared: bool = False) -> tuple[BytePatch, ...]:
+    def portrait_patches(self, character_id: int, record: PortraitRecord) -> tuple[BytePatch, ...]:
         self.validate(self.project.working)
-        return self._record_patches(character_id, record.encode(), portrait=True, shared=shared)
+        return self._record_patches(character_id, record.encode(), portrait=True, shared=False)
 
     def _record_patches(self, character_id: int, after: bytes, *, portrait: bool, shared: bool) -> tuple[BytePatch, ...]:
         source = self.project.working
@@ -220,35 +251,119 @@ class CharacterAttributesCodec:
         size = 7 if portrait else 6 + (source[offset + 5] & 0xF8).bit_count()
         if bytes(source[offset:offset + size]) == after:
             return ()
+        if portrait:
+            return self._portrait_tail_patches(character_id, after)
         ids = self.shared_ids(character_id, portrait=portrait)
         if len(after) == size and (shared or len(ids) == 1):
             return ((offset, bytes(source[offset:offset + size]), after),)
-        # Repack only the bounded original pool, deduplicating identical records.
-        # No code gap, CHR bank, or unrelated resource is treated as free space.
-        table = self.PORTRAIT_TABLE if portrait else self.TABLE
-        start, end = (self.PORTRAIT_POOL_START, self.PORTRAIT_POOL_END) if portrait else (self.POOL_START, self.POOL_END)
-        bias = 16 if portrait else self.POINTER_BIAS
-        pool = bytearray()
-        pointers = bytearray(b"\x00\x00")
-        destinations: dict[bytes, int] = {}
-        for index in range(1, self.COUNT):
-            current_offset = self._offset(index, portrait=portrait)
-            current_size = 7 if portrait else 6 + (source[current_offset + 5] & 0xF8).bit_count()
-            if current_offset + current_size > end:
-                raise RomFormatError("人物记录越过数据池。")
-            raw = bytes(source[current_offset:current_offset + current_size])
-            if index == character_id or (shared and index in ids):
-                raw = after
-            if raw not in destinations:
-                destinations[raw] = start + len(pool) - bias
-                pool.extend(raw)
-            pointers.extend(struct.pack("<H", destinations[raw]))
-        if len(pool) > end - start:
-            raise ValueError(f"{'头像' if portrait else '人物属性'}数据池容量不足：需要 {len(pool)} 字节，容量 {end - start} 字节。"
-                             "可选择已有记录、先减少修正字段，或勾选“同时修改共用记录”。")
-        # Leave unused tail bytes untouched, so no unrelated historical data is erased.
-        return ((table, bytes(source[table:table + len(pointers)]), bytes(pointers)),
-                (start, bytes(source[start:start + len(pool)]), bytes(pool)))
+        logical = parse_bank24(source)
+        changed = with_character_attribute(
+            logical,
+            character_id,
+            after,
+            shared_ids=ids if shared else (),
+        )
+        return bank24_replacement_patches(source, changed)
+
+    def _portrait_tail_patches(
+        self, character_id: int, after: bytes
+    ) -> tuple[BytePatch, ...]:
+        """Detach one portrait while preserving the following unit records."""
+
+        source = self.project.working
+        pair_base = self.PORTRAIT_PAIR_FILE_BASE
+        portrait_root = int.from_bytes(
+            source[
+                self.PORTRAIT_ROOT_DIRECTORY_OFFSET:
+                self.PORTRAIT_ROOT_DIRECTORY_OFFSET + 2
+            ],
+            "little",
+        )
+        configuration_root = int.from_bytes(
+            source[
+                self.CONFIGURATION_ROOT_DIRECTORY_OFFSET:
+                self.CONFIGURATION_ROOT_DIRECTORY_OFFSET + 2
+            ],
+            "little",
+        )
+        if pair_base + portrait_root - 0x8000 != self.PORTRAIT_TABLE:
+            raise RomFormatError("头像目录入口与已验证格式不同。")
+
+        portrait_table = pair_base + portrait_root - 0x8000
+        count = self._count(source)
+        portrait_pointers = struct.unpack_from(f"<{count + 1}H", source, portrait_table)
+        portraits = [
+            bytes(source[pair_base + pointer - 0x8000:
+                         pair_base + pointer - 0x8000 + 7])
+            for pointer in portrait_pointers[1:]
+        ]
+        portraits[character_id - 1] = after
+
+        configuration_table = pair_base + configuration_root - 0x8000
+        configuration_pointers = struct.unpack_from(
+            "<256H", source, configuration_table
+        )
+        if portrait_pointers[0] or configuration_pointers[0]:
+            raise RomFormatError("头像或机体战斗外观的 ID $00 不是空指针。")
+        configurations: list[bytes] = []
+        old_used_end = configuration_root + 0x200
+        for pointer in configuration_pointers[1:]:
+            file_offset = pair_base + pointer - 0x8000
+            size = 10 if source[file_offset] & 0x80 else 9
+            if pointer + size > self.PORTRAIT_TAIL_END_CPU:
+                raise RomFormatError("机体战斗外观记录越过已验证尾界。")
+            configurations.append(bytes(source[file_offset:file_offset + size]))
+            old_used_end = max(old_used_end, pointer + size)
+
+        capacity = self.PORTRAIT_TAIL_END_CPU - portrait_root
+        image = bytearray(capacity)
+        cursor = portrait_root
+
+        def write(pointer: int, raw: bytes) -> None:
+            start = pointer - portrait_root
+            image[start:start + len(raw)] = raw
+
+        def pack(records: list[bytes], count: int) -> int:
+            nonlocal cursor
+            table = cursor
+            cursor += count * 2
+            destinations: dict[bytes, int] = {}
+            pointers = [0]
+            for raw in records:
+                pointer = destinations.get(raw)
+                if pointer is None:
+                    pointer = cursor
+                    destinations[raw] = pointer
+                    write(pointer, raw)
+                    cursor += len(raw)
+                pointers.append(pointer)
+            write(table, struct.pack(f"<{count}H", *pointers))
+            return table
+
+        pack(portraits, count + 1)
+        new_configuration_root = pack(configurations, 256)
+        if cursor > self.PORTRAIT_TAIL_END_CPU:
+            raise ValueError(
+                "头像与机体战斗外观共享尾区容量不足："
+                f"需要 {cursor - portrait_root} 字节，容量 {capacity} 字节。"
+            )
+
+        span_end = max(old_used_end, cursor)
+        tail_offset = pair_base + portrait_root - 0x8000
+        old_tail = bytes(source[tail_offset:tail_offset + span_end - portrait_root])
+        new_tail = bytearray(old_tail)
+        new_tail[:cursor - portrait_root] = image[:cursor - portrait_root]
+        return (
+            (
+                self.CONFIGURATION_ROOT_DIRECTORY_OFFSET,
+                bytes(source[
+                    self.CONFIGURATION_ROOT_DIRECTORY_OFFSET:
+                    self.CONFIGURATION_ROOT_DIRECTORY_OFFSET + 2
+                ]),
+                struct.pack("<H", new_configuration_root),
+            ),
+            (tail_offset, old_tail, bytes(new_tail)),
+        )
 
 
 def weapon_extra_values(project, weapon_id: int) -> tuple[int, int]:
@@ -274,4 +389,12 @@ def weapon_extra_patches(project, weapon_id: int, skill: int, distance: int) -> 
 
 
 def apply_verified_patches(project, patches: tuple[BytePatch, ...], description: str) -> None:
+    bank24_start = bank24_file_offset(0x8000)
+    bank24_end = bank24_file_offset(0xBF40)
+    refresh_bank24 = any(
+        offset < bank24_end and offset + len(after) > bank24_start
+        for offset, _before, after in patches
+    )
     project._apply_legacy_global_patches(patches, description)
+    if refresh_bank24:
+        project._refresh_dynamic_codecs()

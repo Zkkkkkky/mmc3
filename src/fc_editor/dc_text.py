@@ -414,6 +414,8 @@ def dc_text_table_with_overrides(
     overrides: dict[bytes, str],
     *,
     reference: bool = False,
+    excluded_tokens: set[bytes] | frozenset[bytes] = frozenset(),
+    allowed_glyph_leads: tuple[int, ...] | None = None,
 ) -> TextTable:
     """Return the shared DC table plus project-local character assignments."""
 
@@ -422,14 +424,37 @@ def dc_text_table_with_overrides(
         if reference
         else default_dc_text_table().byte_to_text
     )
+    for token in excluded_tokens:
+        mapping.pop(token, None)
     for token, character in overrides.items():
         if len(token) != 2 or len(character) != 1:
             raise ValueError("工程字库映射必须是双字节代码和一枚 Unicode 字符。")
         if token in mapping:
             raise ValueError(f"工程字库映射不能覆盖内置代码 {token.hex().upper()}。")
         mapping[token] = character
-    if len(set(overrides.values())) != len(overrides):
-        raise ValueError("工程字库映射不能把多个代码分配给同一字符。")
+    if allowed_glyph_leads is not None:
+        glyph_leads = {0xB8, 0xB9, 0xBA, 0xBB, 0xC8, 0xC9, 0xCA, 0xCB,
+                       0xD8, 0xD9, 0xDA, 0xDB}
+        allowed = set(allowed_glyph_leads)
+        mapping = {
+            token: value
+            for token, value in mapping.items()
+            if not (
+                len(token) == 2
+                and token[0] in glyph_leads
+                and token[0] not in allowed
+            )
+        }
+        rank = {lead: index for index, lead in enumerate(allowed_glyph_leads)}
+        mapping = dict(sorted(
+            mapping.items(),
+            key=lambda item: (
+                rank.get(item[0][0], len(rank))
+                if len(item[0]) == 2 and item[0][0] in glyph_leads
+                else -1,
+                item[0],
+            ),
+        ))
     return TextTable(mapping)
 
 
@@ -437,7 +462,13 @@ def decode_dc_text(raw: bytes) -> str:
     return default_dc_text_table().decode(raw)
 
 
-def concise_dc_text(raw: bytes, limit: int = 36) -> str:
-    text = decode_dc_text(raw).replace("\n", " ↵ ").replace("⟦结束⟧", "")
+def concise_dc_text(
+    raw: bytes,
+    limit: int = 36,
+    *,
+    text_table: TextTable | None = None,
+) -> str:
+    text = (text_table or default_dc_text_table()).decode(raw)
+    text = text.replace("\n", " ↵ ").replace("⟦结束⟧", "")
     text = " ".join(text.split())
     return text if len(text) <= limit else text[: limit - 1] + "…"

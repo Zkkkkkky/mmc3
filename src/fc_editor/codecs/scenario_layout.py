@@ -50,7 +50,7 @@ class ScenarioLayoutCodec:
             if data_end_pointer is None
             else data_end_pointer
         )
-        self._relocated = pointer_table_offset is not None
+        self._relocated = False
         if record_locations is not None:
             locations = tuple(record_locations)
             if len(locations) != rom.profile.scenario_count:
@@ -88,8 +88,6 @@ class ScenarioLayoutCodec:
                 + profile.scenario_count * 2
             ],
         )
-        if not self._relocated and pointers[0] != profile.scenario_first_pointer:
-            raise RomFormatError("场景部署指针表起始标记不正确。")
         if any(
             not self.data_window_base
             <= pointer
@@ -122,7 +120,7 @@ class ScenarioLayoutCodec:
 
         if self._relocated:
             raise ValueError("扩展部署记录属于统一地图共享池。")
-        return self.rom.profile.scenario_first_pointer
+        return min(self.pointers)
 
     @property
     def pool_offset(self) -> int:

@@ -1,0 +1,103 @@
+{
+  "tag": "DBOTHERBUTTONCONTROLS_2650_left_click_1",
+  "hwnd": 10357196,
+  "title": "成长属性",
+  "class": "WTWindow",
+  "rect": {
+    "left": 723,
+    "top": 443,
+    "right": 1196,
+    "bottom": 644,
+    "width": 473,
+    "height": 201
+  },
+  "pid": 2512,
+  "tree": {
+    "hwnd": 10357196,
+    "class": "WTWindow",
+    "text": "成长属性",
+    "ctrl_id": 0,
+    "rect": {
+      "left": 723,
+      "top": 443,
+      "right": 1196,
+      "bottom": 644,
+      "width": 473,
+      "height": 201
+    },
+    "visible": true,
+    "enabled": true,
+    "children": [
+      {
+        "hwnd": 5572002,
+        "class": "Afx:400000:b:10003:900015:0",
+        "text": "长度：99",
+        "ctrl_id": 130,
+        "rect": {
+          "left": 735,
+          "top": 581,
+          "right": 945,
+          "bottom": 631,
+          "width": 210,
+          "height": 50
+        },
+        "visible": true,
+        "enabled": true,
+        "children": []
+      },
+      {
+        "hwnd": 11273732,
+        "class": "Button",
+        "text": "取消",
+        "ctrl_id": 120,
+        "rect": {
+          "left": 1085,
+          "top": 601,
+          "right": 1185,
+          "bottom": 631,
+          "width": 100,
+          "height": 30
+        },
+        "visible": true,
+        "enabled": true,
+        "button_check_state": 0,
+        "children": []
+      },
+      {
+        "hwnd": 6620592,
+        "class": "Button",
+        "text": "确定",
+        "ctrl_id": 110,
+        "rect": {
+          "left": 975,
+          "top": 601,
+          "right": 1075,
+          "bottom": 631,
+          "width": 100,
+          "height": 30
+        },
+        "visible": true,
+        "enabled": true,
+        "button_check_state": 0,
+        "children": []
+      },
+      {
+        "hwnd": 4261728,
+        "class": "Edit",
+        "text": "121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212120",
+        "ctrl_id": 100,
+        "rect": {
+          "left": 735,
+          "top": 491,
+          "right": 1185,
+          "bottom": 581,
+          "width": 450,
+          "height": 90
+        },
+        "visible": true,
+        "enabled": true,
+        "children": []
+      }
+    ]
+  }
+}

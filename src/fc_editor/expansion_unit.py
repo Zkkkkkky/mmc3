@@ -61,6 +61,32 @@ PACKED_COMPOSITION_DATA_START = 0x8410
 SINGLE_RESOURCE_TABLE = 0x8010
 SINGLE_RESOURCE_DATA_START = 0x8210
 
+# A unit-name-only relocation uses the already verified selector $13 without
+# forcing the map/body/fragment capacity planner to run.  The game reads only
+# directory slot 6 and the active table at $8010.  The second table is editor
+# metadata: it retains one canonical pointer per logical unit so changing one
+# member of a shared-name group can use copy-on-write semantics after reopen.
+STANDALONE_UNIT_NAME_MAGIC_V1 = b"DCUNAME1"
+STANDALONE_UNIT_NAME_MAGIC = b"DCUNAME2"
+STANDALONE_UNIT_NAME_RESOURCE_ID = "auto.partition.unit-names"
+STANDALONE_UNIT_NAME_CANONICAL_TABLE = 0x8210
+STANDALONE_UNIT_NAME_DATA_START = 0x8410
+# With the other legacy resources unchanged, the reference editor could grow
+# unit names from the observed end $A483 to its hard stop $BEB0.
+LEGACY_UNIT_NAME_GROWTH_BUDGET = 0xBEB0 - 0xA483
+STANDALONE_UNIT_NAME_CAPACITY_OFFSET = 8
+
+# A unit-attribute-only relocation mirrors the original $24/$25 pair so the
+# selector-$71 loader can return through the same code, but gives every
+# logical unit its own fixed 16-byte record.  The mirror's $25 scenario bytes
+# are not runtime-visible while selector $71 is active, so the same cave proven
+# by the full unit linker can safely hold the independent records without
+# consuming or changing the live initial-configuration pool.
+STANDALONE_UNIT_ATTRIBUTE_MAGIC = b"DCUATTR1"
+STANDALONE_UNIT_ATTRIBUTE_RESOURCE_ID = "auto.partition.unit-attributes"
+STANDALONE_UNIT_ATTRIBUTE_MAGIC_OFFSET = CORE_CAVE_START
+STANDALONE_UNIT_ATTRIBUTE_DATA_START = 0xA940
+
 SUPPORTED_PAIR_COUNTS = (3, 4, 5)
 SUPPORTED_UNIT_KIB = tuple(count * 16 for count in SUPPORTED_PAIR_COUNTS)
 
@@ -161,6 +187,31 @@ class UnitExpansionRecords:
         ):
             if any(not record or record[-1] != 0xFF for record in records):
                 raise ValueError(f"{label}记录必须以 $FF 结束。")
+
+
+@dataclass(frozen=True)
+class StockCompositionLayout:
+    """Runtime-visible stock Bank $28/$29 composition directory."""
+
+    body_table: int
+    fragment_table: int
+    data_end: int
+    body_pointers: tuple[int, ...]
+    fragment_pointers: tuple[int, ...]
+    body_scripts: tuple[bytes, ...]
+    fragment_scripts: tuple[bytes, ...]
+
+    @property
+    def body_used(self) -> int:
+        return self.fragment_table - (self.body_table + 0x200)
+
+    @property
+    def fragment_used(self) -> int:
+        return self.data_end - (self.fragment_table + 0x200)
+
+    @property
+    def script_capacity(self) -> int:
+        return 0xC000 - (self.body_table + 0x400)
 
 
 @dataclass(frozen=True)
@@ -265,6 +316,16 @@ def _read_pointers(image: bytes, table_address: int) -> tuple[int, ...]:
     return pointers
 
 
+def source_configuration_table(rom_data: bytes | bytearray) -> int:
+    """Return the stock Bank $04 battle-appearance directory root."""
+
+    image = _pair_slice(bytes(rom_data), SOURCE_CONFIGURATION_PAIR)
+    pointer = struct.unpack_from("<H", image, 6 * 2)[0]
+    if not 0x8000 <= pointer <= CONFIGURATION_CAVE_START - 0x200:
+        raise ValueError("原 Bank $04/$05 的战斗外观目录无效。")
+    return pointer
+
+
 def _read_fixed_records(
     image: bytes,
     pointers: tuple[int, ...],
@@ -310,20 +371,77 @@ def _read_fixed_records_from_spans(
 def _read_terminated_names(
     image: bytes,
     pointers: tuple[int, ...],
+    *,
+    spans: tuple[tuple[int, int], ...] = ((NAME_OLD_DATA_START, NAME_OLD_DATA_END),),
 ) -> tuple[bytes, ...]:
-    records: list[bytes] = []
-    pool_end = _cpu_offset(NAME_OLD_DATA_END)
-    for record_id, pointer in enumerate(pointers[1:], 1):
-        if not NAME_OLD_DATA_START <= pointer < NAME_OLD_DATA_END:
+    active = pointers[1:]
+    pointer_spans: dict[int, tuple[int, int]] = {}
+    for record_id, pointer in enumerate(active, 1):
+        span = next(
+            ((lower, upper) for lower, upper in spans if lower <= pointer < upper),
+            None,
+        )
+        if span is None:
             raise ValueError(
                 f"机体名称 ${record_id:02X} 指针 ${pointer:04X} 超出已验证数据池。"
             )
-        start = _cpu_offset(pointer)
-        terminator = image.find(b"\xFF", start, pool_end)
-        if terminator < 0:
-            raise ValueError(f"机体名称 ${record_id:02X} 没有 $FF 结束码。")
-        records.append(bytes(image[start : terminator + 1]))
-    return tuple(records)
+        pointer_spans[pointer] = span
+
+    # Aliases are legal: several unit IDs may share one name record.  The
+    # next distinct pointer in the same verified span is the authoritative
+    # end of a packed record.  Searching for any later $FF is insufficient:
+    # a damaged terminator would otherwise silently consume the next name.
+    records_by_pointer: dict[int, bytes] = {}
+    for span in spans:
+        lower, upper = span
+        packed = sorted(
+            pointer for pointer in set(active) if pointer_spans[pointer] == span
+        )
+        for index, pointer in enumerate(packed):
+            start = _cpu_offset(pointer)
+            if index + 1 < len(packed):
+                end = _cpu_offset(packed[index + 1])
+            else:
+                end = _cpu_offset(upper)
+                # Relocated pairs are zero-filled after the last packed name.
+                # The stock span also ends with padding, so trimming only that
+                # padding recovers the final record boundary without assuming
+                # a canonical (and no longer fixed) encoded length.
+                while end > start and image[end - 1] == 0:
+                    end -= 1
+            value = bytes(image[start:end])
+            if not value or value[-1] != 0xFF:
+                raise ValueError(
+                    f"机体名称记录 ${pointer:04X} 边界未以 $FF 结束。"
+                )
+            records_by_pointer[pointer] = value
+
+    return tuple(records_by_pointer[pointer] for pointer in active)
+
+
+def _standalone_name_record(raw: bytes) -> bytes:
+    """Trim one decoded name view to its first complete record.
+
+    Stock aliases can leave more than one terminated name between two distinct
+    pointers.  The expansion format gives every logical source ID its own
+    canonical record, so only the first complete name belongs to that ID.
+    """
+
+    glyph_leads = frozenset(
+        (*range(0xB8, 0xBC), *range(0xC8, 0xCC), *range(0xD8, 0xDC))
+    )
+    cursor = 0
+    while cursor < len(raw):
+        lead = raw[cursor]
+        if lead in glyph_leads:
+            if cursor + 1 >= len(raw):
+                raise ValueError("机体名称以不完整的双字节字形码结尾。")
+            cursor += 2
+            continue
+        cursor += 1
+        if lead == 0xFF:
+            return raw[:cursor]
+    raise ValueError("机体名称没有独立的 $FF 结束码。")
 
 
 def _read_pointer_bounded_scripts(
@@ -352,8 +470,154 @@ def _read_pointer_bounded_scripts(
     return tuple(by_pointer[pointer] for pointer in pointers[1:])
 
 
+def read_stock_composition_layout(
+    rom_data: bytes | bytearray,
+) -> StockCompositionLayout:
+    """Read the movable stock Bank $28/$29 composition directory."""
+
+    image = _pair_slice(bytes(rom_data), SOURCE_COMPOSITION_PAIR)
+    body_table, fragment_table, data_end = struct.unpack_from("<3H", image, 0)
+    if body_table != SOURCE_BODY_TABLE:
+        raise ValueError("原生机体拼图目录起点与已验证格式不同。")
+    if not (
+        body_table + 0x200 < fragment_table
+        and fragment_table + 0x200 < data_end <= 0xC000
+    ):
+        raise ValueError("原生机体拼图动态目录边界无效。")
+    body_pointers = _read_pointers(image, body_table)
+    fragment_pointers = _read_pointers(image, fragment_table)
+    return StockCompositionLayout(
+        body_table=body_table,
+        fragment_table=fragment_table,
+        data_end=data_end,
+        body_pointers=body_pointers,
+        fragment_pointers=fragment_pointers,
+        body_scripts=_read_pointer_bounded_scripts(
+            image,
+            body_pointers,
+            data_start=body_table + 0x200,
+            data_end=fragment_table,
+            label="主体拼图",
+        ),
+        fragment_scripts=_read_pointer_bounded_scripts(
+            image,
+            fragment_pointers,
+            data_start=fragment_table + 0x200,
+            data_end=data_end,
+            label="碎片拼图",
+        ),
+    )
+
+
+def repack_stock_composition(
+    rom_data: bytes | bytearray,
+    unit_id: int,
+    *,
+    body_script: bytes | None = None,
+    fragment_script: bytes | None = None,
+    body_unit_ids: Sequence[int] | None = None,
+    fragment_unit_ids: Sequence[int] | None = None,
+) -> bytes:
+    """Repack native scripts, optionally preserving an edited alias group."""
+
+    if not 1 <= unit_id <= UNIT_ID_COUNT:
+        raise IndexError("请选择有效机体。")
+    source = bytes(rom_data)
+    layout = read_stock_composition_layout(source)
+    body_targets = tuple(dict.fromkeys(body_unit_ids or (unit_id,)))
+    fragment_targets = tuple(dict.fromkeys(fragment_unit_ids or (unit_id,)))
+    for target in (*body_targets, *fragment_targets):
+        if not 1 <= target <= UNIT_ID_COUNT:
+            raise IndexError("请选择有效机体。")
+    body_records = list(layout.body_scripts)
+    fragment_records = list(layout.fragment_scripts)
+    if body_script is not None:
+        for target in body_targets:
+            body_records[target - 1] = bytes(body_script)
+    if fragment_script is not None:
+        for target in fragment_targets:
+            fragment_records[target - 1] = bytes(fragment_script)
+    for label, records in (("主体拼图", body_records), ("碎片拼图", fragment_records)):
+        if any(not record or record[-1] != 0xFF for record in records):
+            raise ValueError(f"{label}记录必须以 $FF 结束。")
+
+    image = bytearray(_pair_slice(source, SOURCE_COMPOSITION_PAIR))
+
+    def pack_family(
+        records: list[bytes],
+        old_pointers: tuple[int, ...],
+        changed: bool,
+        changed_ids: tuple[int, ...],
+        table: int,
+        cursor: int,
+    ) -> int:
+        pointers = [0] * 0x100
+        packed_by_key: dict[tuple[str, int], int] = {}
+        changed_id_set = set(changed_ids)
+        changed_key = min(changed_ids)
+        for record_id, record in enumerate(records, 1):
+            key = (
+                ("changed", changed_key)
+                if changed and record_id in changed_id_set
+                else ("source", old_pointers[record_id])
+            )
+            pointer = packed_by_key.get(key)
+            if pointer is None:
+                pointer = cursor
+                packed_by_key[key] = pointer
+                end = cursor + len(record)
+                if end > 0xC000:
+                    raise ValueError(
+                        "原生机体拼图池容量不足；请缩短主体或碎片指令。"
+                    )
+                image[_cpu_offset(cursor):_cpu_offset(end)] = record
+                cursor = end
+            pointers[record_id] = pointer
+        struct.pack_into("<256H", image, _cpu_offset(table), *pointers)
+        return cursor
+
+    body_changed = body_script is not None and any(
+        body_script != layout.body_scripts[target - 1] for target in body_targets
+    )
+    fragment_changed = (
+        fragment_script is not None
+        and any(
+            fragment_script != layout.fragment_scripts[target - 1]
+            for target in fragment_targets
+        )
+    )
+    cursor = pack_family(
+        body_records,
+        layout.body_pointers,
+        body_changed,
+        body_targets,
+        layout.body_table,
+        layout.body_table + 0x200,
+    )
+    fragment_table = cursor
+    fragment_data = fragment_table + 0x200
+    if fragment_data > 0xC000:
+        raise ValueError("原生机体拼图池没有空间容纳碎片指针表。")
+    cursor = pack_family(
+        fragment_records,
+        layout.fragment_pointers,
+        fragment_changed,
+        fragment_targets,
+        fragment_table,
+        fragment_data,
+    )
+    struct.pack_into("<3H", image, 0, layout.body_table, fragment_table, cursor)
+    return bytes(image)
+
+
 def extract_unit_expansion_records(
     rom_data: bytes | bytearray,
+    *,
+    name_spans: tuple[tuple[int, int], ...] = (
+        (NAME_OLD_DATA_START, NAME_OLD_DATA_END),
+    ),
+    attributes_override: tuple[bytes, ...] | None = None,
+    names_override: tuple[bytes, ...] | None = None,
 ) -> UnitExpansionRecords:
     """Extract all five unit resource families from the verified stock pairs."""
 
@@ -361,24 +625,34 @@ def extract_unit_expansion_records(
     _validate_rom(source)
     core = _pair_slice(source, SOURCE_CORE_PAIR)
     configuration = _pair_slice(source, SOURCE_CONFIGURATION_PAIR)
-    composition = _pair_slice(source, SOURCE_COMPOSITION_PAIR)
-
-    attribute_pointers = _read_pointers(core, ATTRIBUTE_TABLE)
-    name_pointers = _read_pointers(core, NAME_TABLE)
-    configuration_pointers = _read_pointers(configuration, CONFIGURATION_TABLE)
-    body_pointers = _read_pointers(composition, SOURCE_BODY_TABLE)
-    fragment_pointers = _read_pointers(composition, SOURCE_FRAGMENT_TABLE)
+    attribute_pointers = (
+        _read_pointers(core, ATTRIBUTE_TABLE)
+        if attributes_override is None
+        else ()
+    )
+    name_pointers = _read_pointers(core, NAME_TABLE) if names_override is None else ()
+    configuration_table = source_configuration_table(source)
+    configuration_pointers = _read_pointers(configuration, configuration_table)
+    composition_layout = read_stock_composition_layout(source)
 
     return UnitExpansionRecords(
-        attributes=_read_fixed_records(
-            core,
-            attribute_pointers,
-            UNIT_RECORD_SIZE,
-            lower=ATTRIBUTE_OLD_DATA_START,
-            upper=ATTRIBUTE_OLD_DATA_END,
-            label="机体属性",
+        attributes=(
+            _read_fixed_records(
+                core,
+                attribute_pointers,
+                UNIT_RECORD_SIZE,
+                lower=ATTRIBUTE_OLD_DATA_START,
+                upper=ATTRIBUTE_OLD_DATA_END,
+                label="机体属性",
+            )
+            if attributes_override is None
+            else attributes_override
         ),
-        names=_read_terminated_names(core, name_pointers),
+        names=(
+            _read_terminated_names(core, name_pointers, spans=name_spans)
+            if names_override is None
+            else names_override
+        ),
         # Several small-unit records are physically nine bytes, but verified
         # callers read offsets 1..9 unconditionally.  Capture ten observable
         # bytes per ID so relocation cannot change that trailing read.
@@ -387,25 +661,13 @@ def extract_unit_expansion_records(
             configuration_pointers,
             CONFIGURATION_RECORD_SIZE,
             spans=(
-                (CONFIGURATION_OLD_DATA_START, CONFIGURATION_OLD_DATA_END),
+                (configuration_table + 0x200, CONFIGURATION_CAVE_START),
                 (CONFIGURATION_CAVE_START, CONFIGURATION_CAVE_END),
             ),
             label="战斗外观",
         ),
-        body_scripts=_read_pointer_bounded_scripts(
-            composition,
-            body_pointers,
-            data_start=SOURCE_BODY_DATA_START,
-            data_end=SOURCE_BODY_DATA_END,
-            label="主体拼图",
-        ),
-        fragment_scripts=_read_pointer_bounded_scripts(
-            composition,
-            fragment_pointers,
-            data_start=SOURCE_FRAGMENT_DATA_START,
-            data_end=SOURCE_FRAGMENT_DATA_END,
-            label="碎片拼图",
-        ),
+        body_scripts=composition_layout.body_scripts,
+        fragment_scripts=composition_layout.fragment_scripts,
     )
 
 
@@ -561,6 +823,180 @@ def _pack_single_resource_pair(
     return bytes(image), pointers, used_spans
 
 
+def pack_standalone_unit_names(
+    records: Sequence[bytes],
+) -> tuple[bytes, tuple[int, ...], tuple[tuple[int, int], ...]]:
+    """Pack 255 names with the reference editor's verified growth budget."""
+
+    if len(records) != UNIT_ID_COUNT:
+        raise ValueError("独立机体名称池必须包含 255 条逻辑名称。")
+    image = bytearray(PAIR_SIZE)
+    image[: len(STANDALONE_UNIT_NAME_MAGIC)] = STANDALONE_UNIT_NAME_MAGIC
+    required = sum(len(record) for record in records)
+    capacity = required + LEGACY_UNIT_NAME_GROWTH_BUDGET
+    maximum = 0xC000 - STANDALONE_UNIT_NAME_DATA_START
+    if capacity > maximum:
+        raise ValueError(
+            f"机体名称基线共需 {required} 字节，无法再保留旧修改器的 "
+            f"{LEGACY_UNIT_NAME_GROWTH_BUDGET} 字节增长余量。"
+        )
+    struct.pack_into("<H", image, STANDALONE_UNIT_NAME_CAPACITY_OFFSET, capacity)
+    struct.pack_into("<H", image, 6 * 2, SINGLE_RESOURCE_TABLE)
+    pointers, used_spans = _pack_records_in_spans(
+        image,
+        records,
+        ((
+            STANDALONE_UNIT_NAME_DATA_START,
+            STANDALONE_UNIT_NAME_DATA_START + capacity,
+        ),),
+        label="机体名称",
+    )
+    _write_pointer_table(image, SINGLE_RESOURCE_TABLE, pointers)
+    _write_pointer_table(
+        image, STANDALONE_UNIT_NAME_CANONICAL_TABLE, pointers
+    )
+    return bytes(image), pointers, used_spans
+
+
+def standalone_unit_name_bank(rom_data: bytes | bytearray) -> int | None:
+    """Return the verified standalone-name Bank pair start, if installed."""
+
+    source = bytes(rom_data)
+    descriptor = source[
+        RESOURCE_DESCRIPTOR_TABLE_OFFSET + UNIT_NAME_SELECTOR * 2 :
+        RESOURCE_DESCRIPTOR_TABLE_OFFSET + UNIT_NAME_SELECTOR * 2 + 2
+    ]
+    if len(descriptor) != 2 or descriptor[0] != 0xF6:
+        return None
+    bank = descriptor[1]
+    if bank not in MANAGED_EXPANSION_BANKS or bank + 1 not in MANAGED_EXPANSION_BANKS:
+        return None
+    start = INES_HEADER_SIZE + bank * PRG_BANK_SIZE
+    image = source[start : start + PAIR_SIZE]
+    if len(image) != PAIR_SIZE:
+        return None
+    magic = image[: len(STANDALONE_UNIT_NAME_MAGIC)]
+    if magic not in (
+        STANDALONE_UNIT_NAME_MAGIC,
+        STANDALONE_UNIT_NAME_MAGIC_V1,
+    ):
+        return None
+    if magic == STANDALONE_UNIT_NAME_MAGIC:
+        capacity = struct.unpack_from(
+            "<H", image, STANDALONE_UNIT_NAME_CAPACITY_OFFSET
+        )[0]
+        if not 1 <= capacity <= 0xC000 - STANDALONE_UNIT_NAME_DATA_START:
+            return None
+    if struct.unpack_from("<H", image, 6 * 2)[0] != SINGLE_RESOURCE_TABLE:
+        return None
+    return bank
+
+
+def standalone_unit_name_capacity(
+    rom_data: bytes | bytearray,
+    bank: int | None = None,
+) -> int | None:
+    """Return the stored name-body capacity; V1 images keep their full span."""
+
+    source = bytes(rom_data)
+    resolved = standalone_unit_name_bank(source) if bank is None else bank
+    if resolved is None:
+        return None
+    start = INES_HEADER_SIZE + resolved * PRG_BANK_SIZE
+    image = source[start : start + PAIR_SIZE]
+    magic = image[: len(STANDALONE_UNIT_NAME_MAGIC)]
+    if magic == STANDALONE_UNIT_NAME_MAGIC_V1:
+        return 0xC000 - STANDALONE_UNIT_NAME_DATA_START
+    if magic != STANDALONE_UNIT_NAME_MAGIC:
+        return None
+    capacity = struct.unpack_from(
+        "<H", image, STANDALONE_UNIT_NAME_CAPACITY_OFFSET
+    )[0]
+    maximum = 0xC000 - STANDALONE_UNIT_NAME_DATA_START
+    if not 1 <= capacity <= maximum:
+        return None
+    return capacity
+
+
+def pack_standalone_unit_attributes(
+    rom_data: bytes | bytearray,
+    records: Sequence[bytes],
+) -> tuple[bytes, tuple[int, ...]]:
+    """Mirror the core pair with one independent 16-byte record per ID."""
+
+    if len(records) != UNIT_ID_COUNT:
+        raise ValueError("独立机体属性池必须包含 255 条逻辑记录。")
+    if any(len(record) != UNIT_RECORD_SIZE for record in records):
+        raise ValueError("每条机体属性必须正好是 16 字节。")
+    source = bytes(rom_data)
+    _validate_rom(source)
+    image = bytearray(_pair_slice(source, SOURCE_CORE_PAIR))
+    if struct.unpack_from("<H", image, 2 * 2)[0] != ATTRIBUTE_TABLE:
+        raise ValueError("原 Bank $24/$25 的属性目录已变化。")
+    data_end = (
+        STANDALONE_UNIT_ATTRIBUTE_DATA_START
+        + UNIT_ID_COUNT * UNIT_RECORD_SIZE
+    )
+    if data_end > CORE_CAVE_END:
+        raise ValueError("独立机体属性记录无法放入已验证镜像空间。")
+    image[
+        _cpu_offset(CORE_CAVE_START) : _cpu_offset(CORE_CAVE_END)
+    ] = bytes(CORE_CAVE_END - CORE_CAVE_START)
+    magic_offset = _cpu_offset(STANDALONE_UNIT_ATTRIBUTE_MAGIC_OFFSET)
+    image[
+        magic_offset : magic_offset + len(STANDALONE_UNIT_ATTRIBUTE_MAGIC)
+    ] = STANDALONE_UNIT_ATTRIBUTE_MAGIC
+    pointers = (0,) + tuple(
+        STANDALONE_UNIT_ATTRIBUTE_DATA_START + index * UNIT_RECORD_SIZE
+        for index in range(UNIT_ID_COUNT)
+    )
+    data_offset = _cpu_offset(STANDALONE_UNIT_ATTRIBUTE_DATA_START)
+    image[data_offset : data_offset + UNIT_ID_COUNT * UNIT_RECORD_SIZE] = b"".join(
+        records
+    )
+    _write_pointer_table(image, ATTRIBUTE_TABLE, pointers)
+    return bytes(image), pointers
+
+
+def standalone_unit_attribute_bank(
+    rom_data: bytes | bytearray,
+) -> int | None:
+    """Return the verified attribute-only mirror pair start, if installed."""
+
+    source = bytes(rom_data)
+    descriptor = source[
+        RESOURCE_DESCRIPTOR_TABLE_OFFSET + UNIT_ATTRIBUTE_SELECTOR * 2 :
+        RESOURCE_DESCRIPTOR_TABLE_OFFSET + UNIT_ATTRIBUTE_SELECTOR * 2 + 2
+    ]
+    if len(descriptor) != 2 or descriptor[0] != 0xF2:
+        return None
+    bank = descriptor[1]
+    if bank not in MANAGED_EXPANSION_BANKS or bank + 1 not in MANAGED_EXPANSION_BANKS:
+        return None
+    start = INES_HEADER_SIZE + bank * PRG_BANK_SIZE
+    image = source[start : start + PAIR_SIZE]
+    if len(image) != PAIR_SIZE:
+        return None
+    magic_offset = _cpu_offset(STANDALONE_UNIT_ATTRIBUTE_MAGIC_OFFSET)
+    if image[
+        magic_offset : magic_offset + len(STANDALONE_UNIT_ATTRIBUTE_MAGIC)
+    ] != STANDALONE_UNIT_ATTRIBUTE_MAGIC:
+        return None
+    if struct.unpack_from("<H", image, 2 * 2)[0] != ATTRIBUTE_TABLE:
+        return None
+    expected = tuple(
+        STANDALONE_UNIT_ATTRIBUTE_DATA_START + index * UNIT_RECORD_SIZE
+        for index in range(UNIT_ID_COUNT)
+    )
+    raw = image[_cpu_offset(ATTRIBUTE_TABLE) : _cpu_offset(ATTRIBUTE_TABLE) + 0x200]
+    if len(raw) != 0x200:
+        return None
+    pointers = struct.unpack("<256H", raw)
+    if pointers[0] != 0 or pointers[1:] != expected:
+        return None
+    return bank
+
+
 def pack_unit_expansion(
     rom_data: bytes | bytearray,
     bank_pairs: Sequence[tuple[int, int]],
@@ -634,29 +1070,40 @@ def pack_unit_expansion(
         (ATTRIBUTE_OLD_DATA_START, ATTRIBUTE_OLD_DATA_END),
         (NAME_OLD_DATA_START, NAME_OLD_DATA_END),
     )
+    # Retain one canonical pointer for every logical source ID.  Stock aliases
+    # sometimes expose a pointer-bounded view containing later terminated
+    # names as well; trim each view to its own first complete record before
+    # packing.  This preserves old-editor source-ID semantics without wasting
+    # capacity on duplicated tail records.
+    canonical_name_records = tuple(
+        _standalone_name_record(record) for record in values.names
+    )
     name_pointer_table = NAME_TABLE
     name_directory_index = 6
     if external_name_bank is None:
-        canonical_name_pointers, name_used_spans = _pack_records_in_spans(
+        packed_name_pointers, name_used_spans = _pack_records_in_spans(
             core,
-            values.names,
+            canonical_name_records,
             name_pool_spans,
             label="机体名称",
         )
         name_capacity = sum(end - start for start, end in name_pool_spans)
         name_image = None
     else:
-        name_image, canonical_name_pointers, name_used_spans = _pack_single_resource_pair(
-            values.names,
+        name_image, packed_name_pointers, name_used_spans = _pack_single_resource_pair(
+            canonical_name_records,
             directory_index=name_directory_index,
             label="机体名称",
         )
         name_pointer_table = SINGLE_RESOURCE_TABLE
         name_capacity = 0xC000 - SINGLE_RESOURCE_DATA_START
+    canonical_name_pointers = packed_name_pointers
     name_pointers = (0,) + tuple(
         canonical_name_pointers[source_id] for source_id in name_sources
     )
-    active_name_records = tuple(values.names[source_id - 1] for source_id in name_sources)
+    active_name_records = tuple(
+        canonical_name_records[source_id - 1] for source_id in name_sources
+    )
     if name_image is None:
         _write_pointer_table(core, name_pointer_table, name_pointers)
     else:
@@ -665,14 +1112,13 @@ def pack_unit_expansion(
         name_image = bytes(mutable_name_image)
 
     configuration = bytearray(_pair_slice(source, SOURCE_CONFIGURATION_PAIR))
-    if struct.unpack_from("<H", configuration, 6 * 2)[0] != CONFIGURATION_TABLE:
-        raise ValueError("原 Bank $04/$05 的战斗外观目录已变化。")
+    source_configuration_table_address = source_configuration_table(source)
     # The editor may safely relocate a stock record here when changing a
     # small unit into a large unit (nine observable bytes become ten).  Accept
     # only bytes covered by active configuration pointers; unrelated cave
     # content remains a hard stop.
     source_configuration_pointers = _read_pointers(
-        configuration, CONFIGURATION_TABLE
+        configuration, source_configuration_table_address
     )
     claimed_cave_offsets: set[int] = set()
     for pointer in source_configuration_pointers[1:]:
@@ -1023,7 +1469,6 @@ def validate_unit_expansion_payload(
     source = bytes(rom_data)
     _validate_rom(source)
     pairs = _validate_pairs(bank_pairs)
-    retained = extract_unit_expansion_records(source)
 
     core_bank = pairs[0][0]
     configuration_bank = pairs[1][0]
@@ -1070,20 +1515,10 @@ def validate_unit_expansion_payload(
         name_spans = ((SINGLE_RESOURCE_DATA_START, 0xC000),)
         _require_directory_pointer(name, 6, name_table, label="机体名称")
     name_pointers = _read_pointers(name, name_table)
-    scratch = bytearray(PAIR_SIZE)
-    canonical_name_pointers, _name_spans = _pack_records_in_spans(
-        scratch,
-        retained.names,
-        name_spans,
-        label="机体名称",
-    )
-    names = _read_packed_names(
-        name,
-        name_pointers,
-        canonical_name_pointers,
-        tuple(len(record) for record in retained.names),
-        spans=name_spans,
-    )
+    # Names can be edited to a different encoded length after relocation.
+    # Validate every runtime-visible pointer and its terminator directly;
+    # stock record lengths are not a valid boundary oracle for such outputs.
+    names = _read_terminated_names(name, name_pointers, spans=name_spans)
 
     configuration_pointers = _read_pointers(configuration, CONFIGURATION_TABLE)
     configurations = _read_packed_fixed_records(

@@ -19,6 +19,8 @@ class LegacyShopCodec:
     POINTER_TABLE = 0x15753
     EXPECTED_POINTERS = (0x9763, 0x976B, 0x9773, 0x977B, 0x9783) + (0x987E,) * 10
     LABELS = ("进入商店", "准备购买", "金钱不够", "数量超限", "是否购买", "购买之后", "离开商店")
+    REFERENCE_SHOP_IDS = (*range(0xF0, 0xFD), 0xFE)
+    REFERENCE_INVALID_DIALOGUE_ID = 195
 
     def __init__(self, data: bytes | bytearray) -> None:
         self.data = bytes(data)
@@ -42,6 +44,26 @@ class LegacyShopCodec:
         if len(raw) != 4 + count or any(value >= 24 for value in raw[4:]):
             raise RomFormatError("商店商品编号超出道具表。")
         return LegacyShopRecord(shop_id, offset, clerk, dialogue, tuple(value + 1 for value in raw[4:]), raw)
+
+    def reference_dialogue_id(self, shop_id: int) -> int:
+        """Return the dialogue selector shown by the reference editor.
+
+        F5-FC and FE alias the map-event pointer area rather than real shop
+        records.  Their metadata must never be written as shop data, but the
+        reference editor still exposes the seven system-text records selected
+        by the third byte.  Reading that selector lets the product preserve
+        the safe text-editing part without corrupting the map-event table.
+        """
+        if shop_id not in self.REFERENCE_SHOP_IDS:
+            raise ValueError("参考修改器仅显示商店 F0—FC、FE。")
+        if shop_id < 0xF5:
+            return self.record(shop_id).dialogue_id
+        # The reference program leaves the last valid selector value (C3)
+        # visible when these invalid rows are selected.  Its save path can
+        # still write the seven text boxes, although its metadata controls
+        # would overwrite the event-pointer words.  Preserve only that
+        # observed, safe text route.
+        return self.REFERENCE_INVALID_DIALOGUE_ID
 
     def replacement_patch(self, shop_id: int, clerk_id: int, dialogue_id: int, items) -> tuple[int, bytes, bytes]:
         record = self.record(shop_id)

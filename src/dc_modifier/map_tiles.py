@@ -24,7 +24,7 @@ TILESET_BANKS = {
 
 # Verified from the battlefield palette template at file offset $3B2C0 and
 # runtime palette RAM $0490-$049F. Palette 1's last three values are supplied
-# by the active A-G tileset record, so only the fixed palettes live here.
+# by the active A-H tileset record, so only the fixed palettes live here.
 VERIFIED_BATTLEFIELD_PALETTES = {
     0: (0x0F, 0x30, 0x10, 0x00),
     2: (0x0F, 0x30, 0x21, 0x02),
@@ -32,8 +32,7 @@ VERIFIED_BATTLEFIELD_PALETTES = {
 }
 
 # Palette 1 is the only terrain palette whose three visible colors vary by
-# tileset. A-G come from their verified 84-byte records; H uses the matching
-# late-game purple set because no writable H attribute record has been found.
+# tileset. A-H come from their runtime-verified 84-byte logical records.
 TILESET_PALETTE_ONE_VALUES = {
     "A": (0x0F, 0x27, 0x2A, 0x1A),
     "B": (0x0F, 0x27, 0x2A, 0x1A),
@@ -62,22 +61,22 @@ TILESET_PALETTE_ROUTES = {
         0, 1, 1, 3, 2, 2, 1, 2, 3, 0, 0, 0, 0, 0, 0, 0,
     ),
     "C": _palette_route(
-        0, 1, 1, 3, 0, 0, 1, 3, 3, 0, 3, 2, 3, 3, 0, 0,
+        0, 2, 2, 1, 1, 0, 1, 1, 1, 0, 3, 2, 1, 1, 0, 0,
     ),
     "D": _palette_route(
         0, 1, 0, 0, 3, 2, 1, 1, 3, 0, 0, 0, 0, 0, 0, 0,
     ),
     "E": _palette_route(
-        0, 1, 1, 3, 3, 0, 2, 2, 2, 0, 3, 2, 2, 2, 2, 2,
+        0, 2, 2, 1, 1, 2, 2, 2, 2, 0, 3, 2, 2, 2, 2, 2,
     ),
     "F": _palette_route(
-        0, 1, 1, 1, 3, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 1, 1, 1, 3, 3, 3, 3, 0, 0, 0, 0, 2, 0, 0, 0,
     ),
     "G": _palette_route(
-        0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0,
+        0, 1, 1, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0,
     ),
     "H": _palette_route(
-        0, 1, 1, 1, 3, 3, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0,
+        0, 1, 1, 1, 3, 3, 3, 3, 1, 0, 0, 1, 2, 1, 1, 0,
     ),
 }
 
@@ -89,7 +88,7 @@ def battlefield_palette_values(
     key = tileset_key.upper()
     if palette_index != 1:
         return VERIFIED_BATTLEFIELD_PALETTES[palette_index]
-    if key in "ABCDEFG" and project.supports_map_tile_attributes:
+    if key in "ABCDEFGH" and project.supports_map_tile_attributes:
         active_attributes = (
             project.get_map_tileset_attributes(key)
             if attributes is None
@@ -119,10 +118,15 @@ def render_map_tile(
         raise ValueError(f"未知地图位图：{tileset_key}")
     if not 0 <= logical_tile <= 0x0F:
         raise ValueError("逻辑地图图块必须在 $0—$F 之间。")
-    # The legacy 00/55/AA/FF property field is editable, but reference-editor
-    # and emulator screenshots prove that it is not a whole-metatile preview
-    # palette selector. All visual surfaces use the in-game terrain route.
-    palette_index = TILESET_PALETTE_ROUTES[key][logical_tile]
+    if project.supports_map_tile_attributes and key in "ABCDEFGH":
+        active_attributes = (
+            project.get_map_tileset_attributes(key)
+            if attributes is None
+            else attributes
+        )
+        palette_index = active_attributes.tiles[logical_tile].palette
+    else:
+        palette_index = TILESET_PALETTE_ROUTES[key][logical_tile]
     palette = tuple(
         palette_color(value)
         for value in battlefield_palette_values(

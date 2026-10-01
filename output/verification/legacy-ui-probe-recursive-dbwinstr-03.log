@@ -1,0 +1,28 @@
+﻿[    0.0s] launched pid=18360
+[    0.0s] === stage A: launcher -> main window (no ROM) ===
+[    3.0s] top window: {'hwnd': 788422, 'title': 'SRW2修改器V1.5', 'class': 'WTWindow', 'rect': {'left': 571, 'top': 244, 'right': 1346, 'bottom': 843, 'width': 775, 'height': 599}, 'pid': 18360}
+[    4.0s] dump A01_启动器: title='SRW2修改器V1.5' class='WTWindow' controls=8 shot=ok
+[    6.4s] main window hwnd=3409628 title='SRW2扩容版修改器V1.0'
+[    7.9s] dump A02_主窗口_未载入ROM: title='SRW2扩容版修改器V1.0' class='WTWindow' controls=63 shot=ok
+[   12.4s] menu 文件(F): could not open menu via Alt+F
+[   17.0s] menu 帮助(H): could not open menu via Alt+H
+[   17.5s] === stage LOAD: load ROM copy only ===
+[   18.5s] dump LOAD01_打开ROM对话框: title='打开文件' class='#32770' controls=51 shot=ok
+[   19.0s] open dialog confirmed gone=True
+[   26.0s] ROM loaded without main-window sweep, title='SRW2扩容版修改器V1.0：D:\\GIT\\mmc3\\output\\build\\legacy-ui-probe\\probe.nes'
+[   26.9s] dump LOAD02_主窗口_载入后: title='SRW2扩容版修改器V1.0：D:\\GIT\\mmc3\\output\\build\\legacy-ui-probe\\probe.nes' class='WTWindow' controls=63 shot=ok
+[   26.9s] === stage DBWINSTR: weapon instruction descendants ===
+[   27.9s] 数据库: hwnd=1181534 title='数据库'
+[   38.8s] dump DBWINSTR_01_F4定义声音_1: title='定义声音' class='WTWindow' controls=29 shot=ok
+[   49.4s] dump DBWINSTR_02_F0定义颜色_1: title='定义颜色' class='WTWindow' controls=29 shot=ok
+[   60.4s] dump DBWINSTR_03_F2定义光束图库_1: title='定义光束规律图库' class='WTWindow' controls=29 shot=ok
+[   71.2s] dump DBWINSTR_04_F3定义光束规律_1: title='定义光束规律' class='WTWindow' controls=29 shot=ok
+[   81.8s] dump DBWINSTR_05_E0切换00区域的图库号_1: title='切换精灵图库0' class='WTWindow' controls=29 shot=ok
+[   93.0s] dump DBWINSTR_06_E1切换01区域的图库号_1: title='切换精灵图库1' class='WTWindow' controls=29 shot=ok
+[  104.2s] dump DBWINSTR_07_FD移动屏幕_1: title='移动屏幕' class='WTWindow' controls=27 shot=ok
+[  115.0s] dump DBWINSTR_08_FE跳转重复_1: title='跳转重复' class='WTWindow' controls=29 shot=ok
+[  126.0s] dump DBWINSTR_09_F9创建物体_1: title='创建物体' class='WTWindow' controls=29 shot=ok
+[  137.1s] dump DBWINSTR_10_42_C2定义物体运行规律_1: title='运行规律' class='WTWindow' controls=29 shot=ok
+[  148.1s] dump DBWINSTR_11_等待_帧__1: title='等待(帧)' class='WTWindow' controls=29 shot=ok
+[  158.2s] DBWINSTR complete: 12/12 buttons
+[  158.4s] terminated owned pid=18360

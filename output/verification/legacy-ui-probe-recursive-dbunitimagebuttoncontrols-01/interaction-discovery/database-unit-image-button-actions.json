@@ -1,0 +1,293 @@
+{
+  "schema_version": 1,
+  "validated": true,
+  "error": null,
+  "execution_record_count": 16,
+  "diff_count": 0,
+  "sha256_before": "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E",
+  "sha256_after": "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E",
+  "observations": [
+    {
+      "control_id": 190,
+      "text": "机体拼图",
+      "path": [
+        5,
+        25,
+        43
+      ],
+      "action": "right_click_and_state",
+      "right_click_menu": false,
+      "hidden_on_tab_x": 86,
+      "activators": []
+    },
+    {
+      "control_id": 190,
+      "text": "机体拼图",
+      "path": [
+        5,
+        25,
+        43
+      ],
+      "action": "keyboard_activate",
+      "focused": true,
+      "database_alive": true,
+      "check_before": 0,
+      "check_after": 0,
+      "new_windows": [
+        {
+          "title": "机体拼图",
+          "class": "WTWindow"
+        }
+      ],
+      "activators": []
+    },
+    {
+      "control_id": 190,
+      "text": "机体拼图",
+      "path": [
+        5,
+        25,
+        43
+      ],
+      "action": "left_click",
+      "focused": null,
+      "database_alive": true,
+      "check_before": 0,
+      "check_after": 0,
+      "new_windows": [
+        {
+          "title": "机体拼图",
+          "class": "WTWindow"
+        }
+      ],
+      "activators": []
+    },
+    {
+      "control_id": 200,
+      "text": "显示机体",
+      "path": [
+        5,
+        25,
+        42
+      ],
+      "action": "right_click_and_state",
+      "right_click_menu": false,
+      "hidden_on_tab_x": 86,
+      "activators": []
+    },
+    {
+      "control_id": 200,
+      "text": "显示机体",
+      "path": [
+        5,
+        25,
+        42
+      ],
+      "action": "keyboard_activate",
+      "focused": true,
+      "database_alive": true,
+      "check_before": 1,
+      "check_after": 0,
+      "new_windows": [],
+      "activators": []
+    },
+    {
+      "control_id": 200,
+      "text": "显示机体",
+      "path": [
+        5,
+        25,
+        42
+      ],
+      "action": "left_click",
+      "focused": null,
+      "database_alive": true,
+      "check_before": 0,
+      "check_after": 1,
+      "new_windows": [],
+      "activators": []
+    },
+    {
+      "control_id": 210,
+      "text": "显示碎片",
+      "path": [
+        5,
+        25,
+        41
+      ],
+      "action": "right_click_and_state",
+      "right_click_menu": false,
+      "hidden_on_tab_x": 86,
+      "activators": []
+    },
+    {
+      "control_id": 210,
+      "text": "显示碎片",
+      "path": [
+        5,
+        25,
+        41
+      ],
+      "action": "keyboard_activate",
+      "focused": true,
+      "database_alive": true,
+      "check_before": 1,
+      "check_after": 0,
+      "new_windows": [],
+      "activators": []
+    },
+    {
+      "control_id": 210,
+      "text": "显示碎片",
+      "path": [
+        5,
+        25,
+        41
+      ],
+      "action": "left_click",
+      "focused": null,
+      "database_alive": true,
+      "check_before": 0,
+      "check_after": 1,
+      "new_windows": [],
+      "activators": []
+    },
+    {
+      "control_id": 220,
+      "text": "碎片拼图",
+      "path": [
+        5,
+        25,
+        40
+      ],
+      "action": "right_click_and_state",
+      "right_click_menu": false,
+      "hidden_on_tab_x": 86,
+      "activators": []
+    },
+    {
+      "control_id": 220,
+      "text": "碎片拼图",
+      "path": [
+        5,
+        25,
+        40
+      ],
+      "action": "keyboard_activate",
+      "focused": true,
+      "database_alive": true,
+      "check_before": 0,
+      "check_after": 0,
+      "new_windows": [
+        {
+          "title": "碎片拼图",
+          "class": "WTWindow"
+        }
+      ],
+      "activators": []
+    },
+    {
+      "control_id": 220,
+      "text": "碎片拼图",
+      "path": [
+        5,
+        25,
+        40
+      ],
+      "action": "left_click",
+      "focused": null,
+      "database_alive": true,
+      "check_before": 0,
+      "check_after": 0,
+      "new_windows": [
+        {
+          "title": "碎片拼图",
+          "class": "WTWindow"
+        }
+      ],
+      "activators": []
+    }
+  ],
+  "execution_records": [
+    {
+      "action_id": "8298ba5459bf7159681d",
+      "status": "passed",
+      "result": "执行右键路径；可见菜单=False；条件记录链=[]。"
+    },
+    {
+      "action_id": "5118d1c102abe5e6fe08",
+      "status": "passed",
+      "result": "切换到页签坐标 86 后隐藏；返回后可见且启用=True。"
+    },
+    {
+      "action_id": "3b7b07a6f6f44d1b7852",
+      "status": "passed",
+      "result": "焦点=True；数据库仍存在=True；选中状态 0->0；新增窗口=[{'title': '机体拼图', 'class': 'WTWindow'}]；条件记录链=[]。"
+    },
+    {
+      "action_id": "be7a3a52d2aa32b75a19",
+      "status": "passed",
+      "result": "焦点=None；数据库仍存在=True；选中状态 0->0；新增窗口=[{'title': '机体拼图', 'class': 'WTWindow'}]；条件记录链=[]。"
+    },
+    {
+      "action_id": "14a296c0d6a8323e4f54",
+      "status": "passed",
+      "result": "执行右键路径；可见菜单=False；条件记录链=[]。"
+    },
+    {
+      "action_id": "42ffadb58f84edcd6f8a",
+      "status": "passed",
+      "result": "切换到页签坐标 86 后隐藏；返回后可见且启用=True。"
+    },
+    {
+      "action_id": "0ecca09621b7d0dade3e",
+      "status": "passed",
+      "result": "焦点=True；数据库仍存在=True；选中状态 1->0；新增窗口=[]；条件记录链=[]。"
+    },
+    {
+      "action_id": "8d3b1cd087bf25adf6b5",
+      "status": "passed",
+      "result": "焦点=None；数据库仍存在=True；选中状态 0->1；新增窗口=[]；条件记录链=[]。"
+    },
+    {
+      "action_id": "688431f6dc20a748b0e4",
+      "status": "passed",
+      "result": "执行右键路径；可见菜单=False；条件记录链=[]。"
+    },
+    {
+      "action_id": "fc3c98c8fa2d14181db1",
+      "status": "passed",
+      "result": "切换到页签坐标 86 后隐藏；返回后可见且启用=True。"
+    },
+    {
+      "action_id": "fec925a7775eec69bc6a",
+      "status": "passed",
+      "result": "焦点=True；数据库仍存在=True；选中状态 1->0；新增窗口=[]；条件记录链=[]。"
+    },
+    {
+      "action_id": "a24532818e42f57ac46e",
+      "status": "passed",
+      "result": "焦点=None；数据库仍存在=True；选中状态 0->1；新增窗口=[]；条件记录链=[]。"
+    },
+    {
+      "action_id": "34ee5768be923ea7546a",
+      "status": "passed",
+      "result": "执行右键路径；可见菜单=False；条件记录链=[]。"
+    },
+    {
+      "action_id": "439b5c10b8c95c226f6e",
+      "status": "passed",
+      "result": "切换到页签坐标 86 后隐藏；返回后可见且启用=True。"
+    },
+    {
+      "action_id": "7d6af744e36e399d82e9",
+      "status": "passed",
+      "result": "焦点=True；数据库仍存在=True；选中状态 0->0；新增窗口=[{'title': '碎片拼图', 'class': 'WTWindow'}]；条件记录链=[]。"
+    },
+    {
+      "action_id": "64c675d946da1fcb30e6",
+      "status": "passed",
+      "result": "焦点=None；数据库仍存在=True；选中状态 0->0；新增窗口=[{'title': '碎片拼图', 'class': 'WTWindow'}]；条件记录链=[]。"
+    }
+  ]
+}

@@ -1,0 +1,1613 @@
+{
+  "schema_version": 1,
+  "validated": true,
+  "error": null,
+  "execution_record_count": 208,
+  "diff_count": 0,
+  "sha256_before": "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E",
+  "sha256_after": "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E",
+  "observations": [
+    {
+      "class": "Edit",
+      "control_id": 120,
+      "path": [
+        5,
+        31
+      ],
+      "original": "",
+      "boundary": [
+        "",
+        ""
+      ]
+    },
+    {
+      "class": "Edit",
+      "control_id": 160,
+      "path": [
+        5,
+        27
+      ],
+      "original": "",
+      "boundary": [
+        "",
+        ""
+      ]
+    },
+    {
+      "class": "Edit",
+      "control_id": 180,
+      "path": [
+        5,
+        24
+      ],
+      "original": "",
+      "boundary": [
+        "",
+        ""
+      ]
+    },
+    {
+      "class": "Edit",
+      "control_id": 200,
+      "path": [
+        5,
+        21
+      ],
+      "original": "",
+      "boundary": [
+        "",
+        ""
+      ]
+    },
+    {
+      "class": "Edit",
+      "control_id": 220,
+      "path": [
+        5,
+        18
+      ],
+      "original": "",
+      "boundary": [
+        "",
+        ""
+      ]
+    },
+    {
+      "class": "Edit",
+      "control_id": 250,
+      "path": [
+        5,
+        14
+      ],
+      "original": "",
+      "boundary": [
+        "",
+        ""
+      ]
+    },
+    {
+      "class": "Edit",
+      "control_id": 260,
+      "path": [
+        5,
+        12
+      ],
+      "original": "",
+      "boundary": [
+        "",
+        ""
+      ]
+    },
+    {
+      "class": "Edit",
+      "control_id": 280,
+      "path": [
+        5,
+        9
+      ],
+      "original": "",
+      "boundary": [
+        "",
+        ""
+      ]
+    },
+    {
+      "class": "Edit",
+      "control_id": 310,
+      "path": [
+        5,
+        5
+      ],
+      "original": "",
+      "boundary": [
+        "",
+        ""
+      ]
+    },
+    {
+      "class": "Edit",
+      "control_id": 340,
+      "path": [
+        6,
+        10
+      ],
+      "original": "",
+      "boundary": [
+        "",
+        ""
+      ]
+    },
+    {
+      "class": "Edit",
+      "control_id": 350,
+      "path": [
+        5,
+        3
+      ],
+      "original": "",
+      "boundary": [
+        "",
+        ""
+      ]
+    },
+    {
+      "class": "Edit",
+      "control_id": 360,
+      "path": [
+        5,
+        1
+      ],
+      "original": "",
+      "boundary": [
+        "",
+        ""
+      ]
+    },
+    {
+      "class": "Edit",
+      "control_id": 650,
+      "path": [
+        6,
+        5
+      ],
+      "original": "",
+      "boundary": [
+        "",
+        ""
+      ]
+    },
+    {
+      "class": "Edit",
+      "control_id": 670,
+      "path": [
+        6,
+        2
+      ],
+      "original": "",
+      "boundary": [
+        "",
+        ""
+      ]
+    },
+    {
+      "class": "Edit",
+      "control_id": 690,
+      "path": [
+        1,
+        15
+      ],
+      "original": "",
+      "boundary": [
+        "",
+        ""
+      ]
+    },
+    {
+      "class": "Edit",
+      "control_id": 720,
+      "path": [
+        1,
+        11
+      ],
+      "original": "",
+      "boundary": [
+        "",
+        ""
+      ]
+    },
+    {
+      "class": "Edit",
+      "control_id": 730,
+      "path": [
+        1,
+        9
+      ],
+      "original": "",
+      "boundary": [
+        "",
+        ""
+      ]
+    },
+    {
+      "class": "Edit",
+      "control_id": 770,
+      "path": [
+        1,
+        5
+      ],
+      "original": "",
+      "boundary": [
+        "",
+        ""
+      ]
+    },
+    {
+      "class": "Edit",
+      "control_id": 800,
+      "path": [
+        1,
+        1
+      ],
+      "original": "",
+      "boundary": [
+        "",
+        ""
+      ]
+    },
+    {
+      "class": "Edit",
+      "control_id": 830,
+      "path": [
+        0,
+        2
+      ],
+      "original": "",
+      "boundary": [
+        "",
+        ""
+      ]
+    },
+    {
+      "class": "ComboBox",
+      "control_id": 380,
+      "path": [
+        2,
+        23
+      ],
+      "item_count": 200,
+      "original_index": 3
+    },
+    {
+      "class": "ComboBox",
+      "control_id": 400,
+      "path": [
+        2,
+        21
+      ],
+      "item_count": 200,
+      "original_index": 4
+    },
+    {
+      "class": "ComboBox",
+      "control_id": 420,
+      "path": [
+        2,
+        19
+      ],
+      "item_count": 200,
+      "original_index": 5
+    },
+    {
+      "class": "ComboBox",
+      "control_id": 440,
+      "path": [
+        2,
+        17
+      ],
+      "item_count": 200,
+      "original_index": 6
+    },
+    {
+      "class": "ComboBox",
+      "control_id": 460,
+      "path": [
+        2,
+        15
+      ],
+      "item_count": 200,
+      "original_index": 7
+    },
+    {
+      "class": "ComboBox",
+      "control_id": 480,
+      "path": [
+        2,
+        13
+      ],
+      "item_count": 200,
+      "original_index": 8
+    },
+    {
+      "class": "ComboBox",
+      "control_id": 500,
+      "path": [
+        2,
+        11
+      ],
+      "item_count": 255,
+      "original_index": 8
+    },
+    {
+      "class": "ComboBox",
+      "control_id": 520,
+      "path": [
+        2,
+        9
+      ],
+      "item_count": 255,
+      "original_index": 12
+    },
+    {
+      "class": "ComboBox",
+      "control_id": 540,
+      "path": [
+        2,
+        7
+      ],
+      "item_count": 255,
+      "original_index": 14
+    },
+    {
+      "class": "ComboBox",
+      "control_id": 560,
+      "path": [
+        2,
+        5
+      ],
+      "item_count": 255,
+      "original_index": 16
+    },
+    {
+      "class": "ComboBox",
+      "control_id": 580,
+      "path": [
+        2,
+        3
+      ],
+      "item_count": 255,
+      "original_index": 18
+    },
+    {
+      "class": "ComboBox",
+      "control_id": 600,
+      "path": [
+        2,
+        1
+      ],
+      "item_count": 255,
+      "original_index": 22
+    },
+    {
+      "class": "msctls_updown32",
+      "control_id": 124,
+      "partner_id": 120,
+      "path": [
+        5,
+        30
+      ]
+    },
+    {
+      "class": "msctls_updown32",
+      "control_id": 164,
+      "partner_id": 160,
+      "path": [
+        5,
+        26
+      ]
+    },
+    {
+      "class": "msctls_updown32",
+      "control_id": 184,
+      "partner_id": 180,
+      "path": [
+        5,
+        23
+      ]
+    },
+    {
+      "class": "msctls_updown32",
+      "control_id": 204,
+      "partner_id": 200,
+      "path": [
+        5,
+        20
+      ]
+    },
+    {
+      "class": "msctls_updown32",
+      "control_id": 224,
+      "partner_id": 220,
+      "path": [
+        5,
+        17
+      ]
+    },
+    {
+      "class": "msctls_updown32",
+      "control_id": 254,
+      "partner_id": 250,
+      "path": [
+        5,
+        13
+      ]
+    },
+    {
+      "class": "msctls_updown32",
+      "control_id": 264,
+      "partner_id": 260,
+      "path": [
+        5,
+        11
+      ]
+    },
+    {
+      "class": "msctls_updown32",
+      "control_id": 284,
+      "partner_id": 280,
+      "path": [
+        5,
+        8
+      ]
+    },
+    {
+      "class": "msctls_updown32",
+      "control_id": 314,
+      "partner_id": 310,
+      "path": [
+        5,
+        4
+      ]
+    },
+    {
+      "class": "msctls_updown32",
+      "control_id": 344,
+      "partner_id": 340,
+      "path": [
+        6,
+        9
+      ]
+    },
+    {
+      "class": "msctls_updown32",
+      "control_id": 354,
+      "partner_id": 350,
+      "path": [
+        5,
+        2
+      ]
+    },
+    {
+      "class": "msctls_updown32",
+      "control_id": 364,
+      "partner_id": 360,
+      "path": [
+        5,
+        0
+      ]
+    },
+    {
+      "class": "msctls_updown32",
+      "control_id": 654,
+      "partner_id": 650,
+      "path": [
+        6,
+        4
+      ]
+    },
+    {
+      "class": "msctls_updown32",
+      "control_id": 674,
+      "partner_id": 670,
+      "path": [
+        6,
+        1
+      ]
+    },
+    {
+      "class": "msctls_updown32",
+      "control_id": 694,
+      "partner_id": 690,
+      "path": [
+        1,
+        14
+      ]
+    },
+    {
+      "class": "msctls_updown32",
+      "control_id": 724,
+      "partner_id": 720,
+      "path": [
+        1,
+        10
+      ]
+    },
+    {
+      "class": "msctls_updown32",
+      "control_id": 734,
+      "partner_id": 730,
+      "path": [
+        1,
+        8
+      ]
+    },
+    {
+      "class": "msctls_updown32",
+      "control_id": 774,
+      "partner_id": 770,
+      "path": [
+        1,
+        4
+      ]
+    },
+    {
+      "class": "msctls_updown32",
+      "control_id": 804,
+      "partner_id": 800,
+      "path": [
+        1,
+        0
+      ]
+    },
+    {
+      "class": "msctls_updown32",
+      "control_id": 834,
+      "partner_id": 830,
+      "path": [
+        0,
+        1
+      ]
+    }
+  ],
+  "execution_records": [
+    {
+      "action_id": "c9053f3045bfdb89c252",
+      "status": "passed",
+      "result": "真实焦点=True。"
+    },
+    {
+      "action_id": "b25e2af99ae4866b3fe6",
+      "status": "passed",
+      "result": "替换读回=''，已恢复。"
+    },
+    {
+      "action_id": "bbd22639cf504910a551",
+      "status": "passed",
+      "result": "Ctrl+A/Ctrl+Z 后恢复。"
+    },
+    {
+      "action_id": "f1ed952bffc9f2461b8a",
+      "status": "passed",
+      "result": "右键菜单=False。"
+    },
+    {
+      "action_id": "a062af036d307826e9dd",
+      "status": "passed",
+      "result": "边界读回=['', '']，已恢复。"
+    },
+    {
+      "action_id": "ee5880b395bd2668c7b0",
+      "status": "passed",
+      "result": "真实焦点=True。"
+    },
+    {
+      "action_id": "35daf794e744c3114083",
+      "status": "passed",
+      "result": "替换读回=''，已恢复。"
+    },
+    {
+      "action_id": "ffc3cd6c85a2e033aa45",
+      "status": "passed",
+      "result": "Ctrl+A/Ctrl+Z 后恢复。"
+    },
+    {
+      "action_id": "7ad8d105e86535731e3b",
+      "status": "passed",
+      "result": "右键菜单=True。"
+    },
+    {
+      "action_id": "e88e6d1385a54f70e3fc",
+      "status": "passed",
+      "result": "边界读回=['', '']，已恢复。"
+    },
+    {
+      "action_id": "5a6dd2cae857edbbe0be",
+      "status": "passed",
+      "result": "真实焦点=True。"
+    },
+    {
+      "action_id": "32667055b25de8766505",
+      "status": "passed",
+      "result": "替换读回=''，已恢复。"
+    },
+    {
+      "action_id": "fdef26b2a860215bb878",
+      "status": "passed",
+      "result": "Ctrl+A/Ctrl+Z 后恢复。"
+    },
+    {
+      "action_id": "cfb21ff68cd00f76d73c",
+      "status": "passed",
+      "result": "右键菜单=False。"
+    },
+    {
+      "action_id": "335ede8ba551a658e245",
+      "status": "passed",
+      "result": "边界读回=['', '']，已恢复。"
+    },
+    {
+      "action_id": "65dc3291fb475b97d630",
+      "status": "passed",
+      "result": "真实焦点=True。"
+    },
+    {
+      "action_id": "7d621430542fbb4c3665",
+      "status": "passed",
+      "result": "替换读回=''，已恢复。"
+    },
+    {
+      "action_id": "7e798ca21f76f9aa235e",
+      "status": "passed",
+      "result": "Ctrl+A/Ctrl+Z 后恢复。"
+    },
+    {
+      "action_id": "cc9523d79d2056798daf",
+      "status": "passed",
+      "result": "右键菜单=False。"
+    },
+    {
+      "action_id": "01c6a81574891e27d3b7",
+      "status": "passed",
+      "result": "边界读回=['', '']，已恢复。"
+    },
+    {
+      "action_id": "6a8e172d80fd690d32a4",
+      "status": "passed",
+      "result": "真实焦点=True。"
+    },
+    {
+      "action_id": "fda4e0c5ac16ef4ccd83",
+      "status": "passed",
+      "result": "替换读回=''，已恢复。"
+    },
+    {
+      "action_id": "5be03c07f2c45b159e6d",
+      "status": "passed",
+      "result": "Ctrl+A/Ctrl+Z 后恢复。"
+    },
+    {
+      "action_id": "042c0a6215e8ce747f37",
+      "status": "passed",
+      "result": "右键菜单=True。"
+    },
+    {
+      "action_id": "21c1c19e96fd8141857e",
+      "status": "passed",
+      "result": "边界读回=['', '']，已恢复。"
+    },
+    {
+      "action_id": "273eea019ca1c1ea4cdd",
+      "status": "passed",
+      "result": "真实焦点=True。"
+    },
+    {
+      "action_id": "83fe7425d5d53e1b3e70",
+      "status": "passed",
+      "result": "替换读回=''，已恢复。"
+    },
+    {
+      "action_id": "73f64efabafef48a4feb",
+      "status": "passed",
+      "result": "Ctrl+A/Ctrl+Z 后恢复。"
+    },
+    {
+      "action_id": "38cda602e1ee940eb37a",
+      "status": "passed",
+      "result": "右键菜单=False。"
+    },
+    {
+      "action_id": "9790766c3ddb5a8498e5",
+      "status": "passed",
+      "result": "边界读回=['', '']，已恢复。"
+    },
+    {
+      "action_id": "dfe2508a9421b77c13bf",
+      "status": "passed",
+      "result": "真实焦点=True。"
+    },
+    {
+      "action_id": "19afaaab58dc8f26d66f",
+      "status": "passed",
+      "result": "替换读回=''，已恢复。"
+    },
+    {
+      "action_id": "47e5cfc05a2d47023ae6",
+      "status": "passed",
+      "result": "Ctrl+A/Ctrl+Z 后恢复。"
+    },
+    {
+      "action_id": "8425fbed3f7989a3a752",
+      "status": "passed",
+      "result": "右键菜单=False。"
+    },
+    {
+      "action_id": "fed61a34a124e2a5f436",
+      "status": "passed",
+      "result": "边界读回=['', '']，已恢复。"
+    },
+    {
+      "action_id": "dedab1e0150330178ebf",
+      "status": "passed",
+      "result": "真实焦点=True。"
+    },
+    {
+      "action_id": "7a7a77f24e6cd66ed9b2",
+      "status": "passed",
+      "result": "替换读回=''，已恢复。"
+    },
+    {
+      "action_id": "1a51317e92127d4722ae",
+      "status": "passed",
+      "result": "Ctrl+A/Ctrl+Z 后恢复。"
+    },
+    {
+      "action_id": "e0bcf95baf993b9b0f91",
+      "status": "passed",
+      "result": "右键菜单=True。"
+    },
+    {
+      "action_id": "8a1eb844d24fd0b15db6",
+      "status": "passed",
+      "result": "边界读回=['', '']，已恢复。"
+    },
+    {
+      "action_id": "55270c9fe5c972a3bef6",
+      "status": "passed",
+      "result": "真实焦点=True。"
+    },
+    {
+      "action_id": "71c0e5dde9eaceed66ab",
+      "status": "passed",
+      "result": "替换读回=''，已恢复。"
+    },
+    {
+      "action_id": "0084480a83ff684a85de",
+      "status": "passed",
+      "result": "Ctrl+A/Ctrl+Z 后恢复。"
+    },
+    {
+      "action_id": "b8ecca3b0e35169a8c0e",
+      "status": "passed",
+      "result": "右键菜单=False。"
+    },
+    {
+      "action_id": "1b90d2dc2cae1807de4c",
+      "status": "passed",
+      "result": "边界读回=['', '']，已恢复。"
+    },
+    {
+      "action_id": "c719e8f5fd86b579100c",
+      "status": "passed",
+      "result": "真实焦点=True。"
+    },
+    {
+      "action_id": "0e185ce9178304fe5c10",
+      "status": "passed",
+      "result": "替换读回=''，已恢复。"
+    },
+    {
+      "action_id": "70e4048bf55f1a65a9fb",
+      "status": "passed",
+      "result": "Ctrl+A/Ctrl+Z 后恢复。"
+    },
+    {
+      "action_id": "69efaf3e46f65b5992be",
+      "status": "passed",
+      "result": "右键菜单=False。"
+    },
+    {
+      "action_id": "83d06de4deac98641646",
+      "status": "passed",
+      "result": "边界读回=['', '']，已恢复。"
+    },
+    {
+      "action_id": "03eda26224676fb87cdc",
+      "status": "passed",
+      "result": "真实焦点=True。"
+    },
+    {
+      "action_id": "e7a6e2b2c66bea9f3084",
+      "status": "passed",
+      "result": "替换读回=''，已恢复。"
+    },
+    {
+      "action_id": "4b7f5d245183bed80e8f",
+      "status": "passed",
+      "result": "Ctrl+A/Ctrl+Z 后恢复。"
+    },
+    {
+      "action_id": "6e399f7437fbbd65523b",
+      "status": "passed",
+      "result": "右键菜单=False。"
+    },
+    {
+      "action_id": "97095569ba31a5e30650",
+      "status": "passed",
+      "result": "边界读回=['', '']，已恢复。"
+    },
+    {
+      "action_id": "a6ac2918e1eca6714749",
+      "status": "passed",
+      "result": "真实焦点=True。"
+    },
+    {
+      "action_id": "7b6d09e75035627bcad5",
+      "status": "passed",
+      "result": "替换读回=''，已恢复。"
+    },
+    {
+      "action_id": "642607583f76a2945c4a",
+      "status": "passed",
+      "result": "Ctrl+A/Ctrl+Z 后恢复。"
+    },
+    {
+      "action_id": "804ec77cb3085cc45d20",
+      "status": "passed",
+      "result": "右键菜单=False。"
+    },
+    {
+      "action_id": "a024aee5dba5493817e3",
+      "status": "passed",
+      "result": "边界读回=['', '']，已恢复。"
+    },
+    {
+      "action_id": "ca42b558ecfa80ce5d23",
+      "status": "passed",
+      "result": "真实焦点=True。"
+    },
+    {
+      "action_id": "e3f359f74d39de8304b6",
+      "status": "passed",
+      "result": "替换读回=''，已恢复。"
+    },
+    {
+      "action_id": "cbacb96bfeb9b526279b",
+      "status": "passed",
+      "result": "Ctrl+A/Ctrl+Z 后恢复。"
+    },
+    {
+      "action_id": "f8df6419d0f128ab688a",
+      "status": "passed",
+      "result": "右键菜单=False。"
+    },
+    {
+      "action_id": "ca9aab0056786dceed21",
+      "status": "passed",
+      "result": "边界读回=['', '']，已恢复。"
+    },
+    {
+      "action_id": "165fc8eaeb3b18cf61cb",
+      "status": "passed",
+      "result": "真实焦点=True。"
+    },
+    {
+      "action_id": "2d2edc9122015b50753f",
+      "status": "passed",
+      "result": "替换读回=''，已恢复。"
+    },
+    {
+      "action_id": "d15c314f56127f0a644b",
+      "status": "passed",
+      "result": "Ctrl+A/Ctrl+Z 后恢复。"
+    },
+    {
+      "action_id": "c2725077419c31a61016",
+      "status": "passed",
+      "result": "右键菜单=False。"
+    },
+    {
+      "action_id": "0097253a0fad9caccae2",
+      "status": "passed",
+      "result": "边界读回=['', '']，已恢复。"
+    },
+    {
+      "action_id": "0aba4686b398158dfb90",
+      "status": "passed",
+      "result": "真实焦点=True。"
+    },
+    {
+      "action_id": "432d7fd4b2e2ff27c829",
+      "status": "passed",
+      "result": "替换读回=''，已恢复。"
+    },
+    {
+      "action_id": "b4f9f7df34f5d32a6d25",
+      "status": "passed",
+      "result": "Ctrl+A/Ctrl+Z 后恢复。"
+    },
+    {
+      "action_id": "1815bbc5fa787de277cc",
+      "status": "passed",
+      "result": "右键菜单=False。"
+    },
+    {
+      "action_id": "a8c0a9d2f7fc712b3ee6",
+      "status": "passed",
+      "result": "边界读回=['', '']，已恢复。"
+    },
+    {
+      "action_id": "06b7f8c6e648a2613b79",
+      "status": "passed",
+      "result": "真实焦点=True。"
+    },
+    {
+      "action_id": "761e5fd0ef29a4be9710",
+      "status": "passed",
+      "result": "替换读回=''，已恢复。"
+    },
+    {
+      "action_id": "2bfafa53689da9bc9ab2",
+      "status": "passed",
+      "result": "Ctrl+A/Ctrl+Z 后恢复。"
+    },
+    {
+      "action_id": "52b24c947bdffe5f6fab",
+      "status": "passed",
+      "result": "右键菜单=False。"
+    },
+    {
+      "action_id": "b7d9690313e752f1092d",
+      "status": "passed",
+      "result": "边界读回=['', '']，已恢复。"
+    },
+    {
+      "action_id": "1b3dc07abc6a5eb91a3d",
+      "status": "passed",
+      "result": "真实焦点=True。"
+    },
+    {
+      "action_id": "6006f4e7dd719a1295d3",
+      "status": "passed",
+      "result": "替换读回=''，已恢复。"
+    },
+    {
+      "action_id": "7c7bd7cef2fcc022962c",
+      "status": "passed",
+      "result": "Ctrl+A/Ctrl+Z 后恢复。"
+    },
+    {
+      "action_id": "d0d4d64843e028805c45",
+      "status": "passed",
+      "result": "右键菜单=False。"
+    },
+    {
+      "action_id": "b61fbab377d69a49a5f9",
+      "status": "passed",
+      "result": "边界读回=['', '']，已恢复。"
+    },
+    {
+      "action_id": "8ec82ad261d51a3e5cf9",
+      "status": "passed",
+      "result": "真实焦点=True。"
+    },
+    {
+      "action_id": "4c5c2cc215f06bdfc56e",
+      "status": "passed",
+      "result": "替换读回=''，已恢复。"
+    },
+    {
+      "action_id": "ccb978b6633e6828f45b",
+      "status": "passed",
+      "result": "Ctrl+A/Ctrl+Z 后恢复。"
+    },
+    {
+      "action_id": "3faf967c9e53153f4b81",
+      "status": "passed",
+      "result": "右键菜单=True。"
+    },
+    {
+      "action_id": "b00eb21ac4a2caea43e6",
+      "status": "passed",
+      "result": "边界读回=['', '']，已恢复。"
+    },
+    {
+      "action_id": "4fffcffd3eba3fdb55bb",
+      "status": "passed",
+      "result": "真实焦点=True。"
+    },
+    {
+      "action_id": "ce36fe575b99de92da51",
+      "status": "passed",
+      "result": "替换读回=''，已恢复。"
+    },
+    {
+      "action_id": "52c38d679b7dac1f7dac",
+      "status": "passed",
+      "result": "Ctrl+A/Ctrl+Z 后恢复。"
+    },
+    {
+      "action_id": "3a9e7398ffe9aa73f4d8",
+      "status": "passed",
+      "result": "右键菜单=False。"
+    },
+    {
+      "action_id": "eb6731368fc89ce1f950",
+      "status": "passed",
+      "result": "边界读回=['', '']，已恢复。"
+    },
+    {
+      "action_id": "1311f7bb38ef82dcddb4",
+      "status": "passed",
+      "result": "真实焦点=True。"
+    },
+    {
+      "action_id": "7a5864c997e7f9bcb4d3",
+      "status": "passed",
+      "result": "替换读回=''，已恢复。"
+    },
+    {
+      "action_id": "6280a091f1d6fd60b377",
+      "status": "passed",
+      "result": "Ctrl+A/Ctrl+Z 后恢复。"
+    },
+    {
+      "action_id": "e40ce6048920ddb634df",
+      "status": "passed",
+      "result": "右键菜单=False。"
+    },
+    {
+      "action_id": "3129d5ca47e7901b5adf",
+      "status": "passed",
+      "result": "边界读回=['', '']，已恢复。"
+    },
+    {
+      "action_id": "329134731ec61df7d5e6",
+      "status": "passed",
+      "result": "展开/收起，共 200 项。"
+    },
+    {
+      "action_id": "723a8174c0add1565c38",
+      "status": "passed",
+      "result": "逐项选择并读回 200/200 项，已恢复。"
+    },
+    {
+      "action_id": "b5c454f040541cfd6d41",
+      "status": "passed",
+      "result": "Home/Down 读回 3，已恢复。"
+    },
+    {
+      "action_id": "24e45dc189559f46c56c",
+      "status": "passed",
+      "result": "右键菜单=False。"
+    },
+    {
+      "action_id": "e3ccf96afcd4755bd9c9",
+      "status": "passed",
+      "result": "展开/收起，共 200 项。"
+    },
+    {
+      "action_id": "fb80f76cc200c09ed580",
+      "status": "passed",
+      "result": "逐项选择并读回 200/200 项，已恢复。"
+    },
+    {
+      "action_id": "0e7726591223b219ffe2",
+      "status": "passed",
+      "result": "Home/Down 读回 4，已恢复。"
+    },
+    {
+      "action_id": "fc1b00db38eb03587c1f",
+      "status": "passed",
+      "result": "右键菜单=False。"
+    },
+    {
+      "action_id": "fb5fe223c9e5c7a9a7c9",
+      "status": "passed",
+      "result": "展开/收起，共 200 项。"
+    },
+    {
+      "action_id": "854e2f1c1fedb8095fe2",
+      "status": "passed",
+      "result": "逐项选择并读回 200/200 项，已恢复。"
+    },
+    {
+      "action_id": "7a6509554df7be7f8179",
+      "status": "passed",
+      "result": "Home/Down 读回 5，已恢复。"
+    },
+    {
+      "action_id": "b56805e161c7fffb1cb2",
+      "status": "passed",
+      "result": "右键菜单=False。"
+    },
+    {
+      "action_id": "bba1e8bc3422d07f99a2",
+      "status": "passed",
+      "result": "展开/收起，共 200 项。"
+    },
+    {
+      "action_id": "a4abeab845c62b73d2c0",
+      "status": "passed",
+      "result": "逐项选择并读回 200/200 项，已恢复。"
+    },
+    {
+      "action_id": "3af1088e06bad4e66fe6",
+      "status": "passed",
+      "result": "Home/Down 读回 6，已恢复。"
+    },
+    {
+      "action_id": "eaec8514cddd72d26d46",
+      "status": "passed",
+      "result": "右键菜单=False。"
+    },
+    {
+      "action_id": "96e5fe4eb2d70074a24f",
+      "status": "passed",
+      "result": "展开/收起，共 200 项。"
+    },
+    {
+      "action_id": "8c465c7dc518c1eddbd7",
+      "status": "passed",
+      "result": "逐项选择并读回 200/200 项，已恢复。"
+    },
+    {
+      "action_id": "897f54d981bb74c31d3d",
+      "status": "passed",
+      "result": "Home/Down 读回 7，已恢复。"
+    },
+    {
+      "action_id": "d81446a78fc6b4045011",
+      "status": "passed",
+      "result": "右键菜单=False。"
+    },
+    {
+      "action_id": "7cd37a3df4cc4078926a",
+      "status": "passed",
+      "result": "展开/收起，共 200 项。"
+    },
+    {
+      "action_id": "9654310d8d7947e24168",
+      "status": "passed",
+      "result": "逐项选择并读回 200/200 项，已恢复。"
+    },
+    {
+      "action_id": "c2403ff65634d133cefb",
+      "status": "passed",
+      "result": "Home/Down 读回 8，已恢复。"
+    },
+    {
+      "action_id": "92275a17e225193126cb",
+      "status": "passed",
+      "result": "右键菜单=False。"
+    },
+    {
+      "action_id": "1b479a43efa00de0040d",
+      "status": "passed",
+      "result": "展开/收起，共 255 项。"
+    },
+    {
+      "action_id": "12a5da4883bb66013c4d",
+      "status": "passed",
+      "result": "逐项选择并读回 255/255 项，已恢复。"
+    },
+    {
+      "action_id": "5a09ed5d90dfa77fa389",
+      "status": "passed",
+      "result": "Home/Down 读回 8，已恢复。"
+    },
+    {
+      "action_id": "a4ca1c48d3ee6434808a",
+      "status": "passed",
+      "result": "右键菜单=False。"
+    },
+    {
+      "action_id": "0a4d7ca2040cef94a31a",
+      "status": "passed",
+      "result": "展开/收起，共 255 项。"
+    },
+    {
+      "action_id": "8f0688d84b8789bd46e3",
+      "status": "passed",
+      "result": "逐项选择并读回 255/255 项，已恢复。"
+    },
+    {
+      "action_id": "bb96925f4b6eb59ed8bb",
+      "status": "passed",
+      "result": "Home/Down 读回 12，已恢复。"
+    },
+    {
+      "action_id": "3dce2086cfa74fb42254",
+      "status": "passed",
+      "result": "右键菜单=False。"
+    },
+    {
+      "action_id": "be25ec98bdcf412acea7",
+      "status": "passed",
+      "result": "展开/收起，共 255 项。"
+    },
+    {
+      "action_id": "fc7d3f9ed3792d434b80",
+      "status": "passed",
+      "result": "逐项选择并读回 255/255 项，已恢复。"
+    },
+    {
+      "action_id": "907cc3fd671cf614cc82",
+      "status": "passed",
+      "result": "Home/Down 读回 14，已恢复。"
+    },
+    {
+      "action_id": "804297a86b684045ff1f",
+      "status": "passed",
+      "result": "右键菜单=False。"
+    },
+    {
+      "action_id": "6033fd7b6837898cb1c8",
+      "status": "passed",
+      "result": "展开/收起，共 255 项。"
+    },
+    {
+      "action_id": "9c05302d83bb107c63ee",
+      "status": "passed",
+      "result": "逐项选择并读回 255/255 项，已恢复。"
+    },
+    {
+      "action_id": "cd896adcc25838b01ccf",
+      "status": "passed",
+      "result": "Home/Down 读回 16，已恢复。"
+    },
+    {
+      "action_id": "1f1547a3888bb03b6153",
+      "status": "passed",
+      "result": "右键菜单=False。"
+    },
+    {
+      "action_id": "b8d51aba28f3f2636964",
+      "status": "passed",
+      "result": "展开/收起，共 255 项。"
+    },
+    {
+      "action_id": "628c4974719b60fce00f",
+      "status": "passed",
+      "result": "逐项选择并读回 255/255 项，已恢复。"
+    },
+    {
+      "action_id": "13f268398cde6cafa4d8",
+      "status": "passed",
+      "result": "Home/Down 读回 18，已恢复。"
+    },
+    {
+      "action_id": "cdc02bce263b0155e70e",
+      "status": "passed",
+      "result": "右键菜单=False。"
+    },
+    {
+      "action_id": "070d07815f4bdff6f23a",
+      "status": "passed",
+      "result": "展开/收起，共 255 项。"
+    },
+    {
+      "action_id": "94a02dbec58c42c88226",
+      "status": "passed",
+      "result": "逐项选择并读回 255/255 项，已恢复。"
+    },
+    {
+      "action_id": "e92d0a71083354956d2b",
+      "status": "passed",
+      "result": "Home/Down 读回 22，已恢复。"
+    },
+    {
+      "action_id": "87a8b438afd59b13092e",
+      "status": "passed",
+      "result": "右键菜单=False。"
+    },
+    {
+      "action_id": "1810f9c1b203477cdfbe",
+      "status": "passed",
+      "result": "伙伴 ''->''。"
+    },
+    {
+      "action_id": "d72f64af5994ce5724a6",
+      "status": "passed",
+      "result": "伙伴 ''->''。"
+    },
+    {
+      "action_id": "b564b31b6554a8473393",
+      "status": "passed",
+      "result": "伙伴边界=['', '']，已恢复。"
+    },
+    {
+      "action_id": "08425452c0117e218a95",
+      "status": "passed",
+      "result": "伙伴 ''->''。"
+    },
+    {
+      "action_id": "ea48fee565c3fd819af3",
+      "status": "passed",
+      "result": "伙伴 ''->''。"
+    },
+    {
+      "action_id": "018ac14773622dea4e5b",
+      "status": "passed",
+      "result": "伙伴边界=['', '']，已恢复。"
+    },
+    {
+      "action_id": "d3b73af650d880c6a732",
+      "status": "passed",
+      "result": "伙伴 ''->''。"
+    },
+    {
+      "action_id": "faec122b70a64fd73492",
+      "status": "passed",
+      "result": "伙伴 ''->''。"
+    },
+    {
+      "action_id": "cec3b13c737207dc69a1",
+      "status": "passed",
+      "result": "伙伴边界=['', '']，已恢复。"
+    },
+    {
+      "action_id": "da62567c86f76338b405",
+      "status": "passed",
+      "result": "伙伴 ''->''。"
+    },
+    {
+      "action_id": "fa1e840498a71ec7f47b",
+      "status": "passed",
+      "result": "伙伴 ''->''。"
+    },
+    {
+      "action_id": "7049e13303900abff667",
+      "status": "passed",
+      "result": "伙伴边界=['', '']，已恢复。"
+    },
+    {
+      "action_id": "1ca75f83d8c817d79692",
+      "status": "passed",
+      "result": "伙伴 ''->''。"
+    },
+    {
+      "action_id": "9bd93f66efb1d98d7e53",
+      "status": "passed",
+      "result": "伙伴 ''->''。"
+    },
+    {
+      "action_id": "51f269830ba734c6f4bc",
+      "status": "passed",
+      "result": "伙伴边界=['', '']，已恢复。"
+    },
+    {
+      "action_id": "12b1aec6ac1f96c71603",
+      "status": "passed",
+      "result": "伙伴 ''->''。"
+    },
+    {
+      "action_id": "50cb444e7c5158fb76af",
+      "status": "passed",
+      "result": "伙伴 ''->''。"
+    },
+    {
+      "action_id": "f498ad99cb3d97b5c80a",
+      "status": "passed",
+      "result": "伙伴边界=['', '']，已恢复。"
+    },
+    {
+      "action_id": "b799c45a293b2f1e9f8a",
+      "status": "passed",
+      "result": "伙伴 ''->''。"
+    },
+    {
+      "action_id": "a66482bd010ae2956811",
+      "status": "passed",
+      "result": "伙伴 ''->''。"
+    },
+    {
+      "action_id": "26adab1b9d2790ded088",
+      "status": "passed",
+      "result": "伙伴边界=['', '']，已恢复。"
+    },
+    {
+      "action_id": "770d0b5eb96926a9b89d",
+      "status": "passed",
+      "result": "伙伴 ''->''。"
+    },
+    {
+      "action_id": "362de8aa89a2221b6c22",
+      "status": "passed",
+      "result": "伙伴 ''->''。"
+    },
+    {
+      "action_id": "8e8dee928b0c04fff67f",
+      "status": "passed",
+      "result": "伙伴边界=['', '']，已恢复。"
+    },
+    {
+      "action_id": "4bcbd133831752c52cfa",
+      "status": "passed",
+      "result": "伙伴 ''->''。"
+    },
+    {
+      "action_id": "11a21ae81dd56ed52042",
+      "status": "passed",
+      "result": "伙伴 ''->''。"
+    },
+    {
+      "action_id": "7e5dc056e87c440cbd5b",
+      "status": "passed",
+      "result": "伙伴边界=['', '']，已恢复。"
+    },
+    {
+      "action_id": "8524543655ea476a100b",
+      "status": "passed",
+      "result": "伙伴 ''->''。"
+    },
+    {
+      "action_id": "549a3456b50f15e8bee3",
+      "status": "passed",
+      "result": "伙伴 ''->''。"
+    },
+    {
+      "action_id": "9e21469760ca32e1c6b0",
+      "status": "passed",
+      "result": "伙伴边界=['', '']，已恢复。"
+    },
+    {
+      "action_id": "0492a142b424cf554f08",
+      "status": "passed",
+      "result": "伙伴 ''->''。"
+    },
+    {
+      "action_id": "cc47abf3fd5562f81ae5",
+      "status": "passed",
+      "result": "伙伴 ''->''。"
+    },
+    {
+      "action_id": "bb574576cad0f898dd2b",
+      "status": "passed",
+      "result": "伙伴边界=['', '']，已恢复。"
+    },
+    {
+      "action_id": "785450a6946879b01129",
+      "status": "passed",
+      "result": "伙伴 ''->''。"
+    },
+    {
+      "action_id": "3553dd7ff201692a5c96",
+      "status": "passed",
+      "result": "伙伴 ''->''。"
+    },
+    {
+      "action_id": "915099d1ec5ebd28d34f",
+      "status": "passed",
+      "result": "伙伴边界=['', '']，已恢复。"
+    },
+    {
+      "action_id": "804546d879feebdddd5b",
+      "status": "passed",
+      "result": "伙伴 ''->''。"
+    },
+    {
+      "action_id": "60239cc6e1cd195e5273",
+      "status": "passed",
+      "result": "伙伴 ''->''。"
+    },
+    {
+      "action_id": "19bf46692f9d9461c551",
+      "status": "passed",
+      "result": "伙伴边界=['', '']，已恢复。"
+    },
+    {
+      "action_id": "22039ca97e1091267719",
+      "status": "passed",
+      "result": "伙伴 ''->''。"
+    },
+    {
+      "action_id": "54b5c33ada64bac0c627",
+      "status": "passed",
+      "result": "伙伴 ''->''。"
+    },
+    {
+      "action_id": "8e398f1c89c9889fe19d",
+      "status": "passed",
+      "result": "伙伴边界=['', '']，已恢复。"
+    },
+    {
+      "action_id": "3494553ad7b29f7f3707",
+      "status": "passed",
+      "result": "伙伴 ''->''。"
+    },
+    {
+      "action_id": "4e829a81e40f36ec78ca",
+      "status": "passed",
+      "result": "伙伴 ''->''。"
+    },
+    {
+      "action_id": "8daacc72aa5fabb97ac6",
+      "status": "passed",
+      "result": "伙伴边界=['', '']，已恢复。"
+    },
+    {
+      "action_id": "f0651b9df594f6c7ea79",
+      "status": "passed",
+      "result": "伙伴 ''->''。"
+    },
+    {
+      "action_id": "6a49390504e6e747db78",
+      "status": "passed",
+      "result": "伙伴 ''->''。"
+    },
+    {
+      "action_id": "5d8ce651d89da1ca69aa",
+      "status": "passed",
+      "result": "伙伴边界=['', '']，已恢复。"
+    },
+    {
+      "action_id": "1ab8b4b34e3cb09bef40",
+      "status": "passed",
+      "result": "伙伴 ''->''。"
+    },
+    {
+      "action_id": "3dc09e1ec0d1fdb3169c",
+      "status": "passed",
+      "result": "伙伴 ''->''。"
+    },
+    {
+      "action_id": "04a810e70737b6c4c961",
+      "status": "passed",
+      "result": "伙伴边界=['', '']，已恢复。"
+    },
+    {
+      "action_id": "3e42450bb9d9ffbb0a27",
+      "status": "passed",
+      "result": "伙伴 ''->''。"
+    },
+    {
+      "action_id": "8bb9d55a10379523212e",
+      "status": "passed",
+      "result": "伙伴 ''->''。"
+    },
+    {
+      "action_id": "2232c9f8e78c17fd4bd7",
+      "status": "passed",
+      "result": "伙伴边界=['', '']，已恢复。"
+    },
+    {
+      "action_id": "f8197fc976b9fb42211c",
+      "status": "passed",
+      "result": "伙伴 ''->''。"
+    },
+    {
+      "action_id": "5d0629008c1fa1161621",
+      "status": "passed",
+      "result": "伙伴 ''->''。"
+    },
+    {
+      "action_id": "a687d0fa74226b7f6800",
+      "status": "passed",
+      "result": "伙伴边界=['', '']，已恢复。"
+    },
+    {
+      "action_id": "773821050d25e3115824",
+      "status": "passed",
+      "result": "伙伴 ''->''。"
+    },
+    {
+      "action_id": "dc4b8d78449a682c4aad",
+      "status": "passed",
+      "result": "伙伴 ''->''。"
+    },
+    {
+      "action_id": "9dd0aa137d90d25739d6",
+      "status": "passed",
+      "result": "伙伴边界=['', '']，已恢复。"
+    }
+  ]
+}

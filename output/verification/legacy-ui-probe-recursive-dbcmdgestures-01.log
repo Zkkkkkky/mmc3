@@ -1,0 +1,21 @@
+﻿[    0.0s] launched pid=11236
+[    0.0s] === stage A: launcher -> main window (no ROM) ===
+[    3.0s] top window: {'hwnd': 13042060, 'title': 'SRW2修改器V1.5', 'class': 'WTWindow', 'rect': {'left': 571, 'top': 244, 'right': 1346, 'bottom': 843, 'width': 775, 'height': 599}, 'pid': 11236}
+[    4.0s] dump A01_启动器: title='SRW2修改器V1.5' class='WTWindow' controls=8 shot=ok
+[    6.0s] main window hwnd=9374582 title='SRW2扩容版修改器V1.0'
+[    7.5s] dump A02_主窗口_未载入ROM: title='SRW2扩容版修改器V1.0' class='WTWindow' controls=63 shot=ok
+[   12.1s] menu 文件(F): could not open menu via Alt+F
+[   16.7s] menu 帮助(H): could not open menu via Alt+H
+[   17.2s] === stage LOAD: load ROM copy only ===
+[   18.2s] dump LOAD01_打开ROM对话框: title='打开文件' class='#32770' controls=51 shot=ok
+[   18.7s] open dialog confirmed gone=True
+[   25.7s] ROM loaded without main-window sweep, title='SRW2扩容版修改器V1.0：D:\\GIT\\mmc3\\output\\build\\legacy-ui-probe\\weapon-command-gesture-matrix.nes'
+[   26.6s] dump LOAD02_主窗口_载入后: title='SRW2扩容版修改器V1.0：D:\\GIT\\mmc3\\output\\build\\legacy-ui-probe\\weapon-command-gesture-matrix.nes' class='WTWindow' controls=63 shot=ok
+[   26.6s] === stage DBCMDGESTURES: command keyboard/right-click matrix ===
+[   27.4s] 数据库: hwnd=10879746 title='数据库'
+[   36.6s] weapon instruction row requested=0 selected=0 top=0 target_y=11
+[   36.7s] weapon selector activation: wm_command_after_validated_popup
+[   54.7s] weapon instruction row requested=0 selected=0 top=0 target_y=11
+[   54.8s] weapon selector activation: wm_command_after_validated_popup
+[   65.9s] DBCMDGESTURES complete: 12 keyboard + 12 right-click, diff_count=0
+[   66.1s] terminated owned pid=11236

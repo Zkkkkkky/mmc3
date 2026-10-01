@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-23T19:02:51+08:00",
+  "generated_at": "2026-09-29T15:59:40+08:00",
   "passed": true,
   "delivery_status": "implementation_complete_reference_and_user_pending",
   "conclusion": "M15 机体/人物/武器/等级联动、完整命中/双击/伤害公式、M17 实时参数和不写 ROM 的临时倍率编辑均通过实现侧门禁；参考 EXE 逐行动态黄金与用户签收仍待完成。",
@@ -26,6 +26,14 @@
   "ui": {
     "default": {
       "window_title": "战斗属性计算器",
+      "window_size": [
+        1000,
+        650
+      ],
+      "minimum_size": [
+        940,
+        600
+      ],
       "character_count": 200,
       "unit_count": 255,
       "level_count": 60,
@@ -42,10 +50,11 @@
       "hp": 140,
       "weapon_hit": 110,
       "weapon_range": 1,
-      "power_air": 58,
-      "power_land": 58,
-      "power_sea": 58,
-      "special": 2
+      "power_air": 177,
+      "power_land": 177,
+      "power_sea": 177,
+      "special": 16,
+      "weapon_minimum_width": 145
     },
     "unit_02_weapon_ids": [
       0
@@ -89,38 +98,41 @@
       "can_double": false,
       "minimum_double_speed": 140,
       "terrain_name": "空",
-      "firepower": 58,
-      "predicted_damage": 143,
-      "actual_damage": 107,
-      "remaining_hp": 33,
+      "firepower": 177,
+      "predicted_damage": 135,
+      "actual_damage": 135,
+      "remaining_hp": 5,
       "hits_to_defeat": 2,
-      "defensive_effect": "相对转移装甲",
+      "defensive_effect": null,
       "distance_percent": 100
     },
     "result_lines": [
-      "--------我方计算----------------",
-      "命中最低速度计算：速度至少大于 45 才能命中",
-      "计算结果： 可以命中（命中值 110，临界 70，距离补正 100%）",
-      "双击最低速度计算：速度至少大于 139 才能双击",
-      "计算结果： 无法双击",
-      "预计伤害计算：我方 对 敌方 造成预计伤害 143（对空火力 58）",
-      "敌方 拥有相对转移装甲",
-      "实际伤害计算：我方 对 敌方 造成实际伤害 107，命中后 HP 33",
-      "2次 可以击落 敌方",
-      "--------敌方计算----------------",
-      "命中最低速度计算：速度至少大于 45 才能命中",
-      "计算结果： 可以命中（命中值 110，临界 70，距离补正 100%）",
-      "双击最低速度计算：速度至少大于 139 才能双击",
-      "计算结果： 无法双击",
-      "预计伤害计算：敌方 对 我方 造成预计伤害 143（对空火力 58）",
-      "我方 拥有相对转移装甲",
-      "实际伤害计算：敌方 对 我方 造成实际伤害 107，命中后 HP 33",
-      "2次 可以击落 我方"
+      "我方「琉妮／西奥妮」 使用「双子光剑」 → 敌方「琉妮／西奥妮」",
+      "最低命中速度：我方「琉妮／西奥妮」 的速度至少为 46；目标速度 86，武器命中 110，临界 70，距离补正 100%",
+      "命中结论：我方「琉妮／西奥妮」 可以命中 敌方「琉妮／西奥妮」（当前命中值 110 ≥ 临界 70）",
+      "最低双击速度：我方「琉妮／西奥妮」 的速度至少为 140",
+      "双击结论：我方「琉妮／西奥妮」 无法双击 敌方「琉妮／西奥妮」",
+      "预计伤害：我方「琉妮／西奥妮」 对 敌方「琉妮／西奥妮」 造成 135（对空火力 177）",
+      "实际伤害：我方「琉妮／西奥妮」 对 敌方「琉妮／西奥妮」 造成 135，命中后 HP 5",
+      "击落结论：我方「琉妮／西奥妮」 需要 2 次命中才能击落 敌方「琉妮／西奥妮」",
+      "敌方「琉妮／西奥妮」 使用「双子光剑」 → 我方「琉妮／西奥妮」",
+      "最低命中速度：敌方「琉妮／西奥妮」 的速度至少为 46；目标速度 86，武器命中 110，临界 70，距离补正 100%",
+      "命中结论：敌方「琉妮／西奥妮」 可以命中 我方「琉妮／西奥妮」（当前命中值 110 ≥ 临界 70）",
+      "最低双击速度：敌方「琉妮／西奥妮」 的速度至少为 140",
+      "双击结论：敌方「琉妮／西奥妮」 无法双击 我方「琉妮／西奥妮」",
+      "预计伤害：敌方「琉妮／西奥妮」 对 我方「琉妮／西奥妮」 造成 135（对空火力 177）",
+      "实际伤害：敌方「琉妮／西奥妮」 对 我方「琉妮／西奥妮」 造成 135，命中后 HP 5",
+      "击落结论：敌方「琉妮／西奥妮」 需要 2 次命中才能击落 我方「琉妮／西奥妮」"
     ],
-    "doubled_damage": 286,
+    "doubled_damage": 270,
     "invalid_multiplier_fallback": "2/1",
     "live_weapon_multiplier": 11,
-    "live_land_firepower": 63
+    "live_land_firepower": 182,
+    "damage_special_selection": {
+      "value": 7,
+      "text": "$07 · 用盾防御",
+      "actual_damage": 67
+    }
   },
   "checks": {
     "reference_window_structure": true,
@@ -133,10 +145,12 @@
     "damage_multiplier_and_invalid_input": true,
     "m17_live_parameter_link_and_undo": true,
     "transient_multiplier_buttons_are_safe": true,
-    "archived_firepower_examples": true,
+    "selection_changes_live_recalculate_and_focus": true,
+    "reference_final_firepower_examples": true,
     "distance_terrain_damage_and_defense_compose": true,
     "double_hit_is_strictly_greater": true,
-    "expanded_special_codes_are_conservative": true
+    "combined_special_byte_uses_low_three_defense_bits": true,
+    "damage_specials_are_filtered_selectable_and_transient": true
   },
   "pending_acceptance": [
     "在可与提权参考 EXE 同完整性交互的 Windows 会话中补采结果列表逐行动态黄金。",

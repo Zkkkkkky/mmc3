@@ -1,0 +1,33 @@
+﻿[    0.0s] launched pid=18424
+[    0.0s] === stage A: launcher -> main window (no ROM) ===
+[    3.0s] top window: {'hwnd': 10027368, 'title': 'SRW2修改器V1.5', 'class': 'WTWindow', 'rect': {'left': 571, 'top': 244, 'right': 1346, 'bottom': 843, 'width': 775, 'height': 599}, 'pid': 18424}
+[    4.0s] dump A01_启动器: title='SRW2修改器V1.5' class='WTWindow' controls=8 shot=ok
+[    6.4s] main window hwnd=6359930 title='SRW2扩容版修改器V1.0'
+[    8.1s] dump A02_主窗口_未载入ROM: title='SRW2扩容版修改器V1.0' class='WTWindow' controls=63 shot=ok
+[   13.4s] menu 文件(F): could not open menu via Alt+F
+[   18.0s] menu 帮助(H): could not open menu via Alt+H
+[   18.5s] === stage LOAD: load ROM copy only ===
+[   19.5s] dump LOAD01_打开ROM对话框: title='打开文件' class='#32770' controls=51 shot=ok
+[   20.0s] open dialog confirmed gone=True
+[   27.0s] ROM loaded without main-window sweep, title='SRW2扩容版修改器V1.0：D:\\GIT\\mmc3\\output\\build\\legacy-ui-probe\\weapon-rule-puzzles.nes'
+[   28.0s] dump LOAD02_主窗口_载入后: title='SRW2扩容版修改器V1.0：D:\\GIT\\mmc3\\output\\build\\legacy-ui-probe\\weapon-rule-puzzles.nes' class='WTWindow' controls=63 shot=ok
+[   28.0s] === stage DBWRULEPUZZLE: beam and physical puzzle actions ===
+[   29.0s] 数据库: hwnd=9569064 title='数据库'
+[   55.9s] dump DBWRULEPUZZLE_01_00_beam_initial: title='光束拼图' class='WTWindow' controls=20 shot=ok
+[   56.2s] dump DBWRULEPUZZLE_01_01_button_210: title='光束拼图' class='WTWindow' controls=20 shot=ok
+[   56.5s] dump DBWRULEPUZZLE_01_02_button_270: title='光束拼图' class='WTWindow' controls=20 shot=ok
+[   56.9s] dump DBWRULEPUZZLE_01_03_button_280: title='光束拼图' class='WTWindow' controls=20 shot=ok
+[   57.9s] dump DBWRULEPUZZLE_01_library_left_after: title='光束拼图' class='WTWindow' controls=20 shot=ok
+[   59.0s] dump DBWRULEPUZZLE_01_effect_left_after: title='光束拼图' class='WTWindow' controls=20 shot=ok
+[   60.0s] dump DBWRULEPUZZLE_01_effect_right_after: title='光束拼图' class='WTWindow' controls=20 shot=ok
+[   61.9s] dump DBWRULEPUZZLE_02_00_physical_initial: title='物理拼图' class='WTWindow' controls=22 shot=ok
+[   62.2s] dump DBWRULEPUZZLE_02_01_button_270: title='物理拼图' class='WTWindow' controls=22 shot=ok
+[   62.5s] dump DBWRULEPUZZLE_02_02_button_260: title='物理拼图' class='WTWindow' controls=22 shot=ok
+[   62.9s] dump DBWRULEPUZZLE_02_03_button_250: title='物理拼图' class='WTWindow' controls=22 shot=ok
+[   63.2s] dump DBWRULEPUZZLE_02_04_button_290: title='物理拼图' class='WTWindow' controls=22 shot=ok
+[   63.6s] dump DBWRULEPUZZLE_02_05_button_300: title='物理拼图' class='WTWindow' controls=22 shot=ok
+[   64.6s] dump DBWRULEPUZZLE_02_library_left_after: title='物理拼图' class='WTWindow' controls=22 shot=ok
+[   65.7s] dump DBWRULEPUZZLE_02_effect_left_after: title='物理拼图' class='WTWindow' controls=22 shot=ok
+[   66.8s] dump DBWRULEPUZZLE_02_effect_right_after: title='物理拼图' class='WTWindow' controls=22 shot=ok
+[   71.5s] DBWRULEPUZZLE complete: both puzzles exercised with zero ROM diff
+[   71.7s] terminated owned pid=18424

@@ -1,0 +1,273 @@
+{
+  "schema_version": 1,
+  "validated": true,
+  "error": null,
+  "execution_record_count": 14,
+  "diff_count": 0,
+  "sha256_before": "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E",
+  "sha256_after": "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E",
+  "observations": [
+    {
+      "command_id": 20001,
+      "trail": [
+        "文件&(F)",
+        "打开&(O)\tCtrl+O"
+      ],
+      "text": "打开&(O)\tCtrl+O",
+      "descendants": [
+        {
+          "title": "打开文件",
+          "class": "#32770"
+        }
+      ],
+      "process_alive": true
+    },
+    {
+      "command_id": 20004,
+      "trail": [
+        "文件&(F)",
+        "保存&(S)\tCtrl+S"
+      ],
+      "text": "保存&(S)\tCtrl+S",
+      "descendants": [
+        {
+          "title": "错误",
+          "class": "#32770"
+        }
+      ],
+      "process_alive": false
+    },
+    {
+      "command_id": 20008,
+      "trail": [
+        "数据&(A)",
+        "数据库&(D)\tCtrl+D"
+      ],
+      "text": "数据库&(D)\tCtrl+D",
+      "descendants": [
+        {
+          "title": "数据库",
+          "class": "WTWindow"
+        }
+      ],
+      "process_alive": true
+    },
+    {
+      "command_id": 20009,
+      "trail": [
+        "数据&(A)",
+        "文字库&(W)\tCtrl+W"
+      ],
+      "text": "文字库&(W)\tCtrl+W",
+      "descendants": [
+        {
+          "title": "字库编辑",
+          "class": "WTWindow"
+        }
+      ],
+      "process_alive": true
+    },
+    {
+      "command_id": 20011,
+      "trail": [
+        "数据&(A)",
+        "地图动画&(M)\tCtrl+M"
+      ],
+      "text": "地图动画&(M)\tCtrl+M",
+      "descendants": [
+        {
+          "title": "地图动画",
+          "class": "WTWindow"
+        }
+      ],
+      "process_alive": true
+    },
+    {
+      "command_id": 20013,
+      "trail": [
+        "数据&(A)",
+        "文字转换&(Z)\tCtrl+Z"
+      ],
+      "text": "文字转换&(Z)\tCtrl+Z",
+      "descendants": [
+        {
+          "title": "文字转换",
+          "class": "WTWindow"
+        }
+      ],
+      "process_alive": true
+    },
+    {
+      "command_id": 20015,
+      "trail": [
+        "数据&(A)",
+        "剧情事件&(J)\tCtrl+J"
+      ],
+      "text": "剧情事件&(J)\tCtrl+J",
+      "descendants": [],
+      "process_alive": true
+    },
+    {
+      "command_id": 20017,
+      "trail": [
+        "数据&(A)",
+        "导出机体&(P)\tCtrl+F"
+      ],
+      "text": "导出机体&(P)\tCtrl+F",
+      "descendants": [
+        {
+          "title": "事件编辑",
+          "class": "WTWindow"
+        }
+      ],
+      "process_alive": true
+    },
+    {
+      "command_id": 20018,
+      "trail": [
+        "数据&(A)",
+        "导出头像&(L)\tCtrl+L"
+      ],
+      "text": "导出头像&(L)\tCtrl+L",
+      "descendants": [],
+      "process_alive": true
+    },
+    {
+      "command_id": 20020,
+      "trail": [
+        "数据&(A)",
+        "属性计算器"
+      ],
+      "text": "属性计算器",
+      "descendants": [
+        {
+          "title": "战斗属性计算器",
+          "class": "WTWindow"
+        }
+      ],
+      "process_alive": true
+    },
+    {
+      "command_id": 20021,
+      "trail": [
+        "数据&(A)",
+        "存档修改器"
+      ],
+      "text": "存档修改器",
+      "descendants": [
+        {
+          "title": "存档编辑器：",
+          "class": "WTWindow"
+        }
+      ],
+      "process_alive": true
+    },
+    {
+      "command_id": 20023,
+      "trail": [
+        "数据&(A)",
+        "其他&(T)\tCtrl+T"
+      ],
+      "text": "其他&(T)\tCtrl+T",
+      "descendants": [],
+      "process_alive": true
+    },
+    {
+      "command_id": 20025,
+      "trail": [
+        "帮助&(H)",
+        "关于"
+      ],
+      "text": "关于",
+      "descendants": [
+        {
+          "title": "其他",
+          "class": "WTWindow"
+        }
+      ],
+      "process_alive": true
+    },
+    {
+      "command_id": 20006,
+      "trail": [
+        "文件&(F)",
+        "退出&(X)\tCtrl+X"
+      ],
+      "text": "退出&(X)\tCtrl+X",
+      "descendants": [],
+      "process_alive": false
+    }
+  ],
+  "execution_records": [
+    {
+      "action_id": "4605ad404ec4fd63d54f",
+      "status": "passed",
+      "result": "命令 20001；子窗=[{'title': '打开文件', 'class': '#32770'}]；进程存活=True。"
+    },
+    {
+      "action_id": "a2756b7cec63bad6f94d",
+      "status": "passed",
+      "result": "命令 20004；子窗=[{'title': '错误', 'class': '#32770'}]；进程存活=False。"
+    },
+    {
+      "action_id": "df6162447fc4aa5c8847",
+      "status": "passed",
+      "result": "命令 20008；子窗=[{'title': '数据库', 'class': 'WTWindow'}]；进程存活=True。"
+    },
+    {
+      "action_id": "4eb42e9e1fa2a6c37ba1",
+      "status": "passed",
+      "result": "命令 20009；子窗=[{'title': '字库编辑', 'class': 'WTWindow'}]；进程存活=True。"
+    },
+    {
+      "action_id": "d577fd4af9530d6cf274",
+      "status": "passed",
+      "result": "命令 20011；子窗=[{'title': '地图动画', 'class': 'WTWindow'}]；进程存活=True。"
+    },
+    {
+      "action_id": "6012b1393b446b24c3fe",
+      "status": "passed",
+      "result": "命令 20013；子窗=[{'title': '文字转换', 'class': 'WTWindow'}]；进程存活=True。"
+    },
+    {
+      "action_id": "4bf65d65d018b9629b23",
+      "status": "passed",
+      "result": "命令 20015；子窗=[]；进程存活=True。"
+    },
+    {
+      "action_id": "deebf9d008515c345f4a",
+      "status": "passed",
+      "result": "命令 20017；子窗=[{'title': '事件编辑', 'class': 'WTWindow'}]；进程存活=True。"
+    },
+    {
+      "action_id": "b5bc945999459094d8ef",
+      "status": "passed",
+      "result": "命令 20018；子窗=[]；进程存活=True。"
+    },
+    {
+      "action_id": "818036306dbd3dc185a8",
+      "status": "passed",
+      "result": "命令 20020；子窗=[{'title': '战斗属性计算器', 'class': 'WTWindow'}]；进程存活=True。"
+    },
+    {
+      "action_id": "7c7f54dbf8b58894c9eb",
+      "status": "passed",
+      "result": "命令 20021；子窗=[{'title': '存档编辑器：', 'class': 'WTWindow'}]；进程存活=True。"
+    },
+    {
+      "action_id": "9a8961035064c5c200d6",
+      "status": "passed",
+      "result": "命令 20023；子窗=[]；进程存活=True。"
+    },
+    {
+      "action_id": "8bf79e79acc0fe280902",
+      "status": "passed",
+      "result": "命令 20025；子窗=[{'title': '其他', 'class': 'WTWindow'}]；进程存活=True。"
+    },
+    {
+      "action_id": "e8f223d10baa77764860",
+      "status": "passed",
+      "result": "命令 20006；子窗=[]；进程存活=False。"
+    }
+  ]
+}

@@ -1,0 +1,209 @@
+{
+  "schema_version": 1,
+  "validated": true,
+  "error": null,
+  "execution_record_count": 32,
+  "diff_count": 0,
+  "sha256_before": "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E",
+  "sha256_after": "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E",
+  "observations": [
+    {
+      "control_id": 1,
+      "action": "right_click",
+      "closed": false,
+      "descendants": []
+    },
+    {
+      "control_id": 1,
+      "action": "keyboard_activate",
+      "closed": true,
+      "descendants": []
+    },
+    {
+      "control_id": 1,
+      "action": "left_click",
+      "closed": true,
+      "descendants": []
+    },
+    {
+      "control_id": 2,
+      "action": "right_click",
+      "closed": false,
+      "descendants": []
+    },
+    {
+      "control_id": 2,
+      "action": "keyboard_activate",
+      "closed": true,
+      "descendants": []
+    },
+    {
+      "control_id": 2,
+      "action": "left_click",
+      "closed": true,
+      "descendants": []
+    }
+  ],
+  "execution_records": [
+    {
+      "action_id": "895bee52efeefcefd0c0",
+      "status": "passed",
+      "result": "展开/收起，项数=1。"
+    },
+    {
+      "action_id": "74948f57388bca03191a",
+      "status": "passed",
+      "result": "逐项选择 1 项并恢复 0。"
+    },
+    {
+      "action_id": "9f6bd1fa78e04737cea1",
+      "status": "passed",
+      "result": "Home/Down 后恢复。"
+    },
+    {
+      "action_id": "e7618a50364cec869efd",
+      "status": "passed",
+      "result": "右键菜单=False。"
+    },
+    {
+      "action_id": "6ca13efe42b5633c9b78",
+      "status": "passed",
+      "result": "展开/收起，项数=0。"
+    },
+    {
+      "action_id": "0307416ed3ec8f4a579b",
+      "status": "passed",
+      "result": "逐项选择 0 项并恢复 4294967295。"
+    },
+    {
+      "action_id": "bef5c682dbd921825301",
+      "status": "passed",
+      "result": "Home/Down 后恢复。"
+    },
+    {
+      "action_id": "4c31c4891b0548c6c90d",
+      "status": "passed",
+      "result": "右键菜单=False。"
+    },
+    {
+      "action_id": "45d316def61f02306ffd",
+      "status": "passed",
+      "result": "真实焦点=True。"
+    },
+    {
+      "action_id": "18eee5b58614a162ba47",
+      "status": "passed",
+      "result": "读回=''。"
+    },
+    {
+      "action_id": "400ebd5b77a55d4950ea",
+      "status": "passed",
+      "result": "Ctrl+A/Ctrl+Z 后恢复。"
+    },
+    {
+      "action_id": "12759353764b0d984ce1",
+      "status": "passed",
+      "result": "右键菜单=True。"
+    },
+    {
+      "action_id": "2c3e7e8387c9422863a2",
+      "status": "passed",
+      "result": "空值/长值读回长度=[0, 0]。"
+    },
+    {
+      "action_id": "6d90e2ca8a242b174d26",
+      "status": "passed",
+      "result": "下拉前=(True, True)，展开时=(True, True)。"
+    },
+    {
+      "action_id": "da0c694375f2e4a02e71",
+      "status": "passed",
+      "result": "下拉前=(True, True)，展开时=(True, True)。"
+    },
+    {
+      "action_id": "32b5ca4c61c78360fc6e",
+      "status": "passed",
+      "result": "点击箭头行滚动区。"
+    },
+    {
+      "action_id": "e76f2e36872f0adf938b",
+      "status": "passed",
+      "result": "点击轨道翻页区。"
+    },
+    {
+      "action_id": "014e14e711f6a52615ab",
+      "status": "passed",
+      "result": "拖动滚动块区。"
+    },
+    {
+      "action_id": "7148206e8d90c4da591b",
+      "status": "passed",
+      "result": "点击箭头行滚动区。"
+    },
+    {
+      "action_id": "d6d4571494c6590e0506",
+      "status": "passed",
+      "result": "点击轨道翻页区。"
+    },
+    {
+      "action_id": "9b8ad4c6e2bce66f0d89",
+      "status": "passed",
+      "result": "拖动滚动块区。"
+    },
+    {
+      "action_id": "7577330e64de7036f96c",
+      "status": "passed",
+      "result": "文件列表/路径下拉状态中已观测。"
+    },
+    {
+      "action_id": "3110dcdb00c29c8bce26",
+      "status": "passed",
+      "result": "点击箭头行滚动区。"
+    },
+    {
+      "action_id": "ea7c40a20e840a446972",
+      "status": "passed",
+      "result": "点击轨道翻页区。"
+    },
+    {
+      "action_id": "3b3c76ea60f49523b147",
+      "status": "passed",
+      "result": "拖动滚动块区。"
+    },
+    {
+      "action_id": "02aa40ee2314cabe933c",
+      "status": "passed",
+      "result": "文件列表/路径下拉状态中已观测。"
+    },
+    {
+      "action_id": "bc481576f625c38a7708",
+      "status": "passed",
+      "result": "对话框已关闭=False；后继=[]。"
+    },
+    {
+      "action_id": "03fc1218e02154bb789a",
+      "status": "passed",
+      "result": "对话框已关闭=True；后继=[]。"
+    },
+    {
+      "action_id": "b9e71312f90e39a20836",
+      "status": "passed",
+      "result": "对话框已关闭=True；后继=[]。"
+    },
+    {
+      "action_id": "ebeaaeef541f1b904c64",
+      "status": "passed",
+      "result": "对话框已关闭=False；后继=[]。"
+    },
+    {
+      "action_id": "f3daa3a83f2581bc6de6",
+      "status": "passed",
+      "result": "对话框已关闭=True；后继=[]。"
+    },
+    {
+      "action_id": "cd1e1027f77ab2472912",
+      "status": "passed",
+      "result": "对话框已关闭=True；后继=[]。"
+    }
+  ]
+}

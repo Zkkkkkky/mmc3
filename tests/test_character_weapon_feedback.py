@@ -26,11 +26,17 @@ from dc_modifier.weapon_animation_test import (
 )
 from fc_editor.dc_text import concise_dc_text
 from fc_editor.codecs import LegacySaveCodec
+from fc_editor.codecs.bank24_composite import parse as parse_bank24
+from fc_editor.codecs.bank24_composite import roots as bank24_roots
 from fc_editor.codecs.character_attributes import (
     CharacterAttributesCodec, PortraitRecord, apply_verified_patches,
     weapon_extra_patches, weapon_extra_values,
 )
 from fc_editor.codecs.character_dialogue import DialogueRule, TransformDialogueBinding
+from fc_editor.expansion_unit import (
+    extract_unit_expansion_records,
+    source_configuration_table,
+)
 from fc_rom_editor_core import RomProject
 from tests.qt_test_case import QtTestCase
 
@@ -102,17 +108,32 @@ class CharacterCodecFeedbackTests(unittest.TestCase):
         self.project.redo()
         self.assertEqual(self.codec.read(4).spirit, 44)
 
-    def test_shared_edit_is_explicit_and_capacity_failure_does_not_mutate(self) -> None:
+    def test_shared_attribute_edit_detaches_with_full_bank24_repack(self) -> None:
         before = bytes(self.project.working)
+        logical_before = parse_bank24(before)
+        roots_before = bank24_roots(before)
         record = replace(self.codec.read(1), spirit=1)
-        with self.assertRaisesRegex(ValueError, "容量不足"):
-            self.codec.patches(1, record)
-        self.assertEqual(bytes(self.project.working), before)
         aliases = self.codec.shared_ids(1)
-        apply_verified_patches(self.project, self.codec.patches(1, record, shared=True), "共享属性")
+        self.assertGreater(len(aliases), 1)
+        apply_verified_patches(self.project, self.codec.patches(1, record), "独立属性")
+        self.assertEqual(self.codec.read(1).spirit, 1)
         for index in aliases:
-            self.assertEqual(self.codec.read(index).spirit, 1)
+            if index != 1:
+                self.assertEqual(
+                    self.codec.read(index).encode(),
+                    logical_before.character_attributes[index - 1],
+                )
         self.assertEqual(self.codec.read(4).spirit, 33)
+        logical_after = parse_bank24(self.project.working)
+        roots_after = bank24_roots(self.project.working)
+        self.assertEqual(logical_after.unit_attributes, logical_before.unit_attributes)
+        self.assertEqual(logical_after.weapon_attributes, logical_before.weapon_attributes)
+        self.assertTrue(all(new > old for old, new in zip(roots_before[1:], roots_after[1:])))
+        self.assertEqual(self.project.unit_display_name(0x09), "西奥妮")
+        self.assertEqual(self.project.weapon_display_name(0x07), "双子光剑")
+        self.assertFalse(any(issue.severity == "error" for issue in self.project.validate()))
+        self.project.undo()
+        self.assertEqual(bytes(self.project.working), before)
 
     def test_copy_reuses_existing_record_and_preserves_other_ids(self) -> None:
         before = {index: self.codec.read(index) for index in range(1, 201)}
@@ -220,7 +241,7 @@ class CharacterCodecFeedbackTests(unittest.TestCase):
             for index, (old, new) in enumerate(zip(before, self.project.working))
             if old != new
         }
-        allowed = set(range(0x4945B, 0x49906))
+        allowed = set(range(0x48010, 0x48022)) | set(range(0x48400, 0x4BF50))
         self.assertTrue(changed)
         self.assertTrue(changed <= allowed)
         with tempfile.TemporaryDirectory() as folder:
@@ -256,10 +277,45 @@ class CharacterCodecFeedbackTests(unittest.TestCase):
             codec.record_bytes(1, changed)
             self.assertEqual(scan.call_count, 2)
 
-    def test_character_name_pool_overflow_is_atomic(self) -> None:
+    def test_character_name_growth_reflows_all_bank24_resources_atomically(self) -> None:
         before = bytes(self.project.working)
-        with self.assertRaisesRegex(ValueError, "容量不足"):
-            self.project.set_character_normal_name_text(1, "<01>")
+        logical_before = parse_bank24(before)
+        roots_before = bank24_roots(before)
+        self.project.set_character_normal_name_text(
+            1, "<01><02><03><04><05><06><07>"
+        )
+        after = bytes(self.project.working)
+        logical_after = parse_bank24(after)
+        roots_after = bank24_roots(after)
+
+        self.assertNotEqual(logical_after.normal_names[0], logical_before.normal_names[0])
+        self.assertEqual(logical_after.normal_names[1:], logical_before.normal_names[1:])
+        self.assertEqual(logical_after.battle_names, logical_before.battle_names)
+        self.assertEqual(logical_after.character_attributes, logical_before.character_attributes)
+        self.assertEqual(logical_after.unit_attributes, logical_before.unit_attributes)
+        self.assertEqual(logical_after.weapon_attributes, logical_before.weapon_attributes)
+        self.assertEqual(logical_after.unit_names, logical_before.unit_names)
+        self.assertEqual(logical_after.weapon_names, logical_before.weapon_names)
+        self.assertEqual(logical_after.scenarios, logical_before.scenarios)
+        self.assertEqual(roots_after[:4], roots_before[:4])
+        self.assertTrue(all(new > old for old, new in zip(roots_before[4:], roots_after[4:])))
+        self.assertEqual(self.project.unit_display_name(0x09), "西奥妮")
+        self.assertEqual(self.project.weapon_display_name(0x07), "双子光剑")
+        self.assertFalse(any(issue.severity == "error" for issue in self.project.validate()))
+
+        with tempfile.TemporaryDirectory() as folder:
+            destination = Path(folder) / "bank24-name-growth.nes"
+            self.project.save_as(destination)
+            reopened = RomProject.load(destination)
+            self.assertEqual(bytes(reopened.working), after)
+            self.assertEqual(parse_bank24(reopened.working), logical_after)
+            project_path = self.project.save_project(
+                Path(folder) / "bank24-name-growth.dcproj"
+            )
+            replayed = RomProject.load_project(project_path, DEFAULT_ROM)
+            self.assertEqual(bytes(replayed.working), after)
+
+        self.project.undo()
         self.assertEqual(bytes(self.project.working), before)
 
     def test_weapon_ff_is_a_real_editable_record(self) -> None:
@@ -275,7 +331,7 @@ class CharacterCodecFeedbackTests(unittest.TestCase):
         self.project.undo()
         self.assertEqual(self.project.get_weapon_value(0xFF, "hit"), old_hit)
 
-    def test_all_character_dialogue_records_round_trip_and_direct_edit_is_exact(self) -> None:
+    def test_all_character_dialogue_records_round_trip_and_direct_edit_detaches_target(self) -> None:
         codec = self.project.character_dialogue_codec
         self.assertIsNotNone(codec)
         assert codec is not None
@@ -284,25 +340,35 @@ class CharacterCodecFeedbackTests(unittest.TestCase):
                 codec.read(character_id, self.project.working).encode(),
                 codec.raw_record(character_id, self.project.working),
             )
-        character_id = 3
+        character_id = next(
+            item for item in range(1, 0xC9)
+            if len(codec.shared_ids(item, self.project.working)) > 1
+        )
         record = codec.read(character_id, self.project.working)
         direct = list(record.direct)
         direct[0] = replace(
             direct[0], dialogue=(direct[0].dialogue + 1) & 0xFF
         )
         changed = replace(record, direct=tuple(direct))
-        patch = codec.patch(self.project.working, character_id, changed)
-        self.assertIsNotNone(patch)
-        assert patch is not None
-        offset, before, after = patch
-        self.assertEqual(offset, codec.pointer_to_file_offset(codec.pointer(character_id)))
-        self.assertEqual(
-            [index for index, pair in enumerate(zip(before, after)) if pair[0] != pair[1]],
-            [1],
-        )
+        before_records = {
+            item: codec.read(item, self.project.working)
+            for item in range(1, 0xC9)
+        }
         aliases = codec.shared_ids(character_id, self.project.working)
-        apply_verified_patches(self.project, (patch,), "人物台词")
-        self.assertTrue(all(codec.read(item, self.project.working) == changed for item in aliases))
+        with self.assertRaisesRegex(ValueError, "自动拆分"):
+            codec.patch(self.project.working, character_id, changed)
+        patches = codec.repack_patches(
+            self.project.working, character_id, changed
+        )
+        apply_verified_patches(self.project, patches, "人物台词")
+        for item in range(1, 0xC9):
+            expected = changed if item == character_id else before_records[item]
+            self.assertEqual(codec.read(item, self.project.working), expected)
+        if len(aliases) > 1:
+            self.assertEqual(
+                codec.shared_ids(character_id, self.project.working),
+                (character_id,),
+            )
         with tempfile.TemporaryDirectory() as folder:
             path = self.project.save_project(Path(folder) / "character-dialogue.dcproj")
             reopened = RomProject.load_project(path, DEFAULT_ROM)
@@ -310,7 +376,7 @@ class CharacterCodecFeedbackTests(unittest.TestCase):
         self.project.undo()
         self.assertEqual(codec.read(character_id, self.project.working), record)
 
-    def test_character_dialogue_rule_resize_repacks_pool_and_preserves_aliases(self) -> None:
+    def test_character_dialogue_rule_resize_repacks_pool_and_detaches_target(self) -> None:
         codec = self.project.character_dialogue_codec
         assert codec is not None
         character_id = next(
@@ -334,7 +400,7 @@ class CharacterCodecFeedbackTests(unittest.TestCase):
         self.assertTrue(patches)
         apply_verified_patches(self.project, patches, "人物特殊台词规则删除")
         for item in range(1, 0xC9):
-            expected = replacement if item in aliases else before[item]
+            expected = replacement if item == character_id else before[item]
             self.assertEqual(codec.read(item, self.project.working), expected)
         restore = codec.repack_patches(
             self.project.working, character_id, before[character_id]
@@ -577,35 +643,33 @@ class CharacterWeaponUiFeedbackTests(QtTestCase):
         start = (index & 0x3F) * 3
         return tuple(FCEUX_RGB[start:start + 3])
 
-    def test_capacity_error_preserves_form_and_all_other_pending_changes(self) -> None:
+    def test_attribute_detach_and_other_pending_changes_save_together(self) -> None:
         self.page.records.setCurrentRow(0)
         self.widget.fields["spirit"].setValue(1)
         self.widget.costs[0].setValue(12)
         with patch.object(self.page, "show_error") as error:
             self.page.apply_record()
-        self.assertIn("容量不足", str(error.call_args.args[0]))
-        self.assertTrue(self.page.has_pending_draft)
-        self.assertEqual(bytes(self.project.working), self.before)
-        self.widget.shared_attributes.setChecked(True)
-        with patch(
-            "dc_modifier.database_records.QMessageBox.question",
-            return_value=QMessageBox.StandardButton.Yes,
-        ):
-            self.page.apply_record()
+        error.assert_not_called()
+        self.assertFalse(self.page.has_pending_draft)
+        self.assertNotEqual(bytes(self.project.working), self.before)
         self.assertEqual(CharacterAttributesCodec(self.project).read(1).spirit, 1)
+        self.assertEqual(CharacterAttributesCodec(self.project).costs()[0], 12)
 
-    def test_add_character_entry_explains_full_pools_without_writing(self) -> None:
+    def test_add_character_entry_rebuilds_all_linked_pools(self) -> None:
         self.dialog.tabs.setCurrentIndex(1)
         self.app.processEvents()
         button = self.page.add_record_button
         self.assertTrue(button.isVisible())
         self.assertTrue(button.isEnabled())
-        self.assertIn("$01—$C8", button.toolTip())
-        self.assertIn("固定名称、属性和头像池均无剩余容量", button.toolTip())
-        with patch("dc_modifier.legacy_windows.QMessageBox.information") as info:
-            button.click()
-        self.assertIn("不会修改 ROM", info.call_args.args[2])
-        self.assertEqual(bytes(self.project.working), self.before)
+        self.assertIn("旧修改器规则", button.toolTip())
+        self.assertIn("容量不足时整笔取消", button.toolTip())
+        button.click()
+        self.assertEqual(self.project.character_count, 201)
+        self.assertNotEqual(bytes(self.project.working), self.before)
+        self.assertEqual(self.page.current_id, 201)
+        self.assertEqual(self.page.records.count(), 201)
+        self.assertEqual(self.project.undo(), "新增人物 $C9")
+        self.assertEqual(self.project.character_count, 200)
 
     def test_shared_character_edit_lists_affected_ids_and_defaults_to_cancel(self) -> None:
         self.page.records.setCurrentRow(0)
@@ -626,7 +690,7 @@ class CharacterWeaponUiFeedbackTests(QtTestCase):
         self.assertEqual(bytes(self.project.working), self.before)
         self.assertTrue(self.page.has_pending_draft)
 
-    def test_shared_portrait_edit_lists_affected_ids_and_defaults_to_cancel(self) -> None:
+    def test_shared_portrait_storage_auto_detaches_target_without_confirmation(self) -> None:
         codec = CharacterAttributesCodec(self.project)
         character_id = next(
             candidate
@@ -635,21 +699,61 @@ class CharacterWeaponUiFeedbackTests(QtTestCase):
         )
         self.page.select_record_id(character_id)
         aliases = codec.shared_ids(character_id, portrait=True)
-        self.widget.shared_portrait.setChecked(True)
+        before_records = {
+            item: codec.read_portrait(item) for item in aliases
+        }
+        before_configurations = extract_unit_expansion_records(
+            self.project.working
+        ).configurations
+        before_configuration_root = source_configuration_table(
+            self.project.working
+        )
+        occupied = {
+            codec.read_portrait(item).encode()
+            for item in range(1, codec.COUNT)
+        }
+        original = before_records[character_id]
+        replacement_color = next(
+            value for value in range(64)
+            if replace(
+                original,
+                colors=(value, original.colors[1], original.colors[2]),
+            ).encode() not in occupied
+        )
         color = self.widget.portrait_fields["color0"]
-        color.setValue((color.value() + 1) & 0x3F)
+        color.setValue(replacement_color)
         with patch(
             "dc_modifier.database_records.QMessageBox.question",
             return_value=QMessageBox.StandardButton.Cancel,
         ) as prompt:
             self.page.apply_record()
-        prompt.assert_called_once()
-        self.assertIn("头像记录", prompt.call_args.args[2])
-        self.assertIn(f"{aliases[0]:02X}", prompt.call_args.args[2])
-        self.assertEqual(bytes(self.project.working), self.before)
-        self.assertTrue(self.page.has_pending_draft)
+        prompt.assert_not_called()
+        reopened = CharacterAttributesCodec(self.project)
+        self.assertNotEqual(reopened.read_portrait(character_id), before_records[character_id])
+        for other_id in aliases:
+            if other_id != character_id:
+                self.assertEqual(reopened.read_portrait(other_id), before_records[other_id])
+        self.assertEqual(
+            source_configuration_table(self.project.working),
+            before_configuration_root + 7,
+        )
+        self.assertEqual(
+            extract_unit_expansion_records(self.project.working).configurations,
+            before_configurations,
+        )
+        reopened_project = RomProject(
+            self.project.path, bytes(self.project.working)
+        )
+        self.assertEqual(
+            extract_unit_expansion_records(reopened_project.working).configurations,
+            before_configurations,
+        )
+        self.assertFalse(
+            [issue for issue in reopened_project.validate() if issue.severity == "error"]
+        )
+        self.assertFalse(self.page.has_pending_draft)
 
-    def test_shared_dialogue_edit_lists_ids_and_defaults_to_cancel(self) -> None:
+    def test_shared_dialogue_edit_auto_detaches_without_confirmation(self) -> None:
         codec = self.project.character_dialogue_codec
         assert codec is not None
         character_id = next(
@@ -660,17 +764,20 @@ class CharacterWeaponUiFeedbackTests(QtTestCase):
         dialogue = self.page.character_dialogue
         spin = dialogue.direct_controls[0][1]
         spin.setValue((spin.value() + 1) & 0xFF)
-        with patch(
-            "dc_modifier.database_records.QMessageBox.question",
-            return_value=QMessageBox.StandardButton.Cancel,
-        ) as prompt:
+        before_records = {
+            item: codec.read(item, self.project.working)
+            for item in range(1, 0xC9)
+        }
+        with patch("dc_modifier.database_records.QMessageBox.question") as prompt:
             self.page.apply_record()
-        prompt.assert_called_once()
-        self.assertIn("人物战斗台词记录", prompt.call_args.args[2])
-        self.assertEqual(bytes(self.project.working), self.before)
-        self.assertTrue(self.page.has_pending_draft)
+        prompt.assert_not_called()
+        self.assertNotEqual(bytes(self.project.working), self.before)
+        self.assertEqual(codec.shared_ids(character_id, self.project.working), (character_id,))
+        for item in range(1, 0xC9):
+            if item != character_id:
+                self.assertEqual(codec.read(item, self.project.working), before_records[item])
 
-    def test_shared_dialogue_reset_also_requires_confirmation(self) -> None:
+    def test_shared_dialogue_reset_auto_detaches_without_confirmation(self) -> None:
         codec = self.project.character_dialogue_codec
         assert codec is not None
         character_id = next(
@@ -682,28 +789,18 @@ class CharacterWeaponUiFeedbackTests(QtTestCase):
         direct[0] = replace(
             direct[0], dialogue=(direct[0].dialogue + 1) & 0xFF
         )
-        dialogue_patch = codec.patch(
+        dialogue_patches = codec.repack_patches(
             self.project.working,
             character_id,
             replace(record, direct=tuple(direct)),
         )
-        assert dialogue_patch is not None
-        apply_verified_patches(self.project, (dialogue_patch,), "共享人物台词")
+        apply_verified_patches(self.project, dialogue_patches, "人物台词自动拆分")
         modified = bytes(self.project.working)
         self.page.select_record_id(character_id)
-        with patch(
-            "dc_modifier.database_records.QMessageBox.question",
-            return_value=QMessageBox.StandardButton.Cancel,
-        ) as prompt:
+        with patch("dc_modifier.database_records.QMessageBox.question") as prompt:
             self.page.reset_record()
-        prompt.assert_called_once()
-        self.assertIn("人物战斗台词记录", prompt.call_args.args[2])
-        self.assertEqual(bytes(self.project.working), modified)
-        with patch(
-            "dc_modifier.database_records.QMessageBox.question",
-            return_value=QMessageBox.StandardButton.Yes,
-        ):
-            self.page.reset_record()
+        prompt.assert_not_called()
+        self.assertNotEqual(bytes(self.project.working), modified)
         self.assertEqual(
             codec.read(character_id, self.project.working),
             codec.read(character_id, self.project.original),

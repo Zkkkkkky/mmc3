@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "validated": true,
+  "error": null,
+  "execution_record_count": 2,
+  "diff_count": 0,
+  "observations": [
+    {
+      "event_destroyed": true,
+      "event_reopened": true
+    },
+    {
+      "ime_before": 0,
+      "ime_during": 0,
+      "ime_after": 0
+    }
+  ],
+  "execution_records": [
+    {
+      "action_id": "2d8f31e957c1ab1b74a0",
+      "status": "passed",
+      "result": "关闭销毁=True；重开 HWND=6228702。"
+    },
+    {
+      "action_id": "849e1685ccb3ef674961",
+      "status": "passed",
+      "result": "IME 状态窗数：前=0，焦点中=0，关闭后=0。"
+    }
+  ]
+}

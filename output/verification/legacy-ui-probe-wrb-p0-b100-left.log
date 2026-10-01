@@ -1,0 +1,15 @@
+[    0.1s] launched pid=13244
+[    0.1s] === stage A: launcher -> main window (no ROM) ===
+[    3.1s] top window: {'hwnd': 1966502, 'title': 'SRW2�޸���V1.5', 'class': 'WTWindow', 'rect': {'left': 571, 'top': 244, 'right': 1346, 'bottom': 843, 'width': 775, 'height': 599}, 'pid': 13244}
+[    4.2s] dump A01_������: title='SRW2�޸���V1.5' class='WTWindow' controls=8 shot=ok
+[    8.2s] main window hwnd=78842738 title='SRW2���ݰ��޸���V1.0'
+[    9.7s] dump A02_������_δ����ROM: title='SRW2���ݰ��޸���V1.0' class='WTWindow' controls=63 shot=ok
+[   17.7s] === stage LOAD: load ROM copy only ===
+[   19.2s] dump LOAD01_��ROM�Ի���: title='���ļ�' class='#32770' controls=49 shot=ok
+[   19.7s] open dialog confirmed gone=True
+[   27.4s] ROM loaded without main-window sweep, title='SRW2���ݰ��޸���V1.0��D:\\GIT\\mmc3\\output\\build\\legacy-ui-probe\\weapon-rule-button-case.nes'
+[   28.4s] dump LOAD02_������_�����: title='SRW2���ݰ��޸���V1.0��D:\\GIT\\mmc3\\output\\build\\legacy-ui-probe\\weapon-rule-button-case.nes' class='WTWindow' controls=63 shot=ok
+[   28.4s] === stage DBWRULEBUTTONCASE: ������ͼ���� button=100 gesture=left ===
+[   30.8s] ���ݿ�: hwnd=21234824 title='���ݿ�'
+[   49.8s] DBWRULEBUTTONCASE complete: page=0 button=100 gesture=left, zero ROM diff
+[   50.1s] terminated owned pid=13244

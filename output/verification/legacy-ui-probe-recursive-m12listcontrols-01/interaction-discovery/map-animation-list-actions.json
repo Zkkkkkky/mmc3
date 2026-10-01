@@ -1,0 +1,280 @@
+{
+  "schema_version": 1,
+  "validated": true,
+  "error": null,
+  "execution_record_count": 38,
+  "diff_count": 0,
+  "sha256_before": "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E",
+  "sha256_after": "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E",
+  "observations": [
+    {
+      "control_id": 110,
+      "path": [
+        2,
+        6,
+        3
+      ],
+      "item_count": 152,
+      "original_index": 0,
+      "hidden_on": 530
+    },
+    {
+      "control_id": 160,
+      "path": [
+        2,
+        4,
+        5
+      ],
+      "item_count": 156,
+      "original_index": 0,
+      "hidden_on": 110
+    },
+    {
+      "control_id": 220,
+      "path": [
+        2,
+        3,
+        9
+      ],
+      "item_count": 249,
+      "original_index": 0,
+      "hidden_on": 110
+    },
+    {
+      "control_id": 340,
+      "path": [
+        2,
+        5,
+        0
+      ],
+      "item_count": 500,
+      "original_index": 0,
+      "hidden_on": 530
+    },
+    {
+      "control_id": 360,
+      "path": [
+        2,
+        2,
+        2
+      ],
+      "item_count": 24,
+      "original_index": 0,
+      "hidden_on": 110
+    },
+    {
+      "control_id": 410,
+      "path": [
+        2,
+        1,
+        2
+      ],
+      "item_count": 13,
+      "original_index": 0,
+      "hidden_on": 110
+    },
+    {
+      "control_id": 530,
+      "path": [
+        2,
+        0,
+        4
+      ],
+      "item_count": 32,
+      "original_index": 0,
+      "hidden_on": 110
+    }
+  ],
+  "execution_records": [
+    {
+      "action_id": "2857e61ade418cd6d295",
+      "status": "passed",
+      "result": "逐页命中稳定控件 [110, 340, 530]。"
+    },
+    {
+      "action_id": "00d07801986997da0c50",
+      "status": "passed",
+      "result": "真实焦点 Ctrl+Tab。"
+    },
+    {
+      "action_id": "6148393878c630c7e3b7",
+      "status": "passed",
+      "result": "页签区域右键；可见菜单=False。"
+    },
+    {
+      "action_id": "9eb1ecac8649284205b7",
+      "status": "passed",
+      "result": "逐项选择 152 项并恢复索引 0。"
+    },
+    {
+      "action_id": "24c1a9daba1b615316da",
+      "status": "passed",
+      "result": "真实焦点 Home/Down 后恢复原索引。"
+    },
+    {
+      "action_id": "f403979e55fc98c79685",
+      "status": "passed",
+      "result": "逐项双击 152 项；子窗=[]。"
+    },
+    {
+      "action_id": "c79914a86a81caef883f",
+      "status": "passed",
+      "result": "逐项右键 152 项；可见菜单命中 0 次。"
+    },
+    {
+      "action_id": "f3d80fe39a1d42a67b8f",
+      "status": "passed",
+      "result": "切至代表控件 530 后隐藏；返回路径=(2, 6, 3)，启用=True。"
+    },
+    {
+      "action_id": "dbc2df4e994da25af45e",
+      "status": "passed",
+      "result": "逐项选择 156 项并恢复索引 0。"
+    },
+    {
+      "action_id": "a95bbe160e1be6aed43b",
+      "status": "passed",
+      "result": "真实焦点 Home/Down 后恢复原索引。"
+    },
+    {
+      "action_id": "5bbdd22f5327615bbd5a",
+      "status": "passed",
+      "result": "逐项双击 156 项；子窗=[]。"
+    },
+    {
+      "action_id": "e63554561593c0cb5f31",
+      "status": "passed",
+      "result": "逐项右键 156 项；可见菜单命中 0 次。"
+    },
+    {
+      "action_id": "c3656969e617d6aacdb7",
+      "status": "passed",
+      "result": "切至代表控件 110 后隐藏；返回路径=(2, 4, 5)，启用=True。"
+    },
+    {
+      "action_id": "36211e820fdee44c97a8",
+      "status": "passed",
+      "result": "逐项选择 249 项并恢复索引 0。"
+    },
+    {
+      "action_id": "37ea33233be274a2f7c0",
+      "status": "passed",
+      "result": "真实焦点 Home/Down 后恢复原索引。"
+    },
+    {
+      "action_id": "dd593f34181374c7edf6",
+      "status": "passed",
+      "result": "逐项双击 249 项；子窗=[]。"
+    },
+    {
+      "action_id": "dd70aeb9635a1e2eafaa",
+      "status": "passed",
+      "result": "逐项右键 249 项；可见菜单命中 0 次。"
+    },
+    {
+      "action_id": "b629e8f8d02983a732ef",
+      "status": "passed",
+      "result": "切至代表控件 110 后隐藏；返回路径=(2, 3, 9)，启用=True。"
+    },
+    {
+      "action_id": "5a2f55eb48c27cf0e443",
+      "status": "passed",
+      "result": "逐项选择 500 项并恢复索引 0。"
+    },
+    {
+      "action_id": "e94cb89e63698f76379e",
+      "status": "passed",
+      "result": "真实焦点 Home/Down 后恢复原索引。"
+    },
+    {
+      "action_id": "a076c55e837f1a2af387",
+      "status": "passed",
+      "result": "逐项双击 500 项；子窗=[]。"
+    },
+    {
+      "action_id": "04b0dad00065bf2051e8",
+      "status": "passed",
+      "result": "逐项右键 500 项；可见菜单命中 0 次。"
+    },
+    {
+      "action_id": "558f78ab1f86d9868f13",
+      "status": "passed",
+      "result": "切至代表控件 530 后隐藏；返回路径=(2, 5, 0)，启用=True。"
+    },
+    {
+      "action_id": "1b45f3af6148247a8189",
+      "status": "passed",
+      "result": "逐项选择 24 项并恢复索引 0。"
+    },
+    {
+      "action_id": "668ad202ed94265ca233",
+      "status": "passed",
+      "result": "真实焦点 Home/Down 后恢复原索引。"
+    },
+    {
+      "action_id": "20fbd05e5d8bff3b020b",
+      "status": "passed",
+      "result": "逐项双击 24 项；子窗=[]。"
+    },
+    {
+      "action_id": "111d9865cbec475d0559",
+      "status": "passed",
+      "result": "逐项右键 24 项；可见菜单命中 0 次。"
+    },
+    {
+      "action_id": "f363d0b364da13e36ee0",
+      "status": "passed",
+      "result": "切至代表控件 110 后隐藏；返回路径=(2, 2, 2)，启用=True。"
+    },
+    {
+      "action_id": "f8109815117490b1cd5a",
+      "status": "passed",
+      "result": "逐项选择 13 项并恢复索引 0。"
+    },
+    {
+      "action_id": "228d9767443aa5a40d32",
+      "status": "passed",
+      "result": "真实焦点 Home/Down 后恢复原索引。"
+    },
+    {
+      "action_id": "1c1f0391a1d872d1509c",
+      "status": "passed",
+      "result": "逐项双击 13 项；子窗=[]。"
+    },
+    {
+      "action_id": "76b55cf4108ceb4c8b97",
+      "status": "passed",
+      "result": "逐项右键 13 项；可见菜单命中 0 次。"
+    },
+    {
+      "action_id": "ce8c4ef0aacc2ea62cac",
+      "status": "passed",
+      "result": "切至代表控件 110 后隐藏；返回路径=(2, 1, 2)，启用=True。"
+    },
+    {
+      "action_id": "58fb4a44945c79d70dfe",
+      "status": "passed",
+      "result": "逐项选择 32 项并恢复索引 0。"
+    },
+    {
+      "action_id": "d179699d07ecb9315a30",
+      "status": "passed",
+      "result": "真实焦点 Home/Down 后恢复原索引。"
+    },
+    {
+      "action_id": "300932de7597fb3924c1",
+      "status": "passed",
+      "result": "逐项双击 32 项；子窗=[]。"
+    },
+    {
+      "action_id": "583670098a2c87a1d973",
+      "status": "passed",
+      "result": "逐项右键 32 项；可见菜单命中 0 次。"
+    },
+    {
+      "action_id": "04b68e9051341e39f3d3",
+      "status": "passed",
+      "result": "切至代表控件 110 后隐藏；返回路径=(2, 0, 4)，启用=True。"
+    }
+  ]
+}

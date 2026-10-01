@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import replace
+from hashlib import sha256
 from pathlib import Path
 import tempfile
 from types import SimpleNamespace
@@ -34,10 +35,10 @@ class MapTileAttributeCodecTests(unittest.TestCase):
 
     def test_all_verified_records_decode_with_expected_offsets_and_selectors(self) -> None:
         self.assertTrue(self.project.supports_map_tile_attributes)
-        for index, key in enumerate("ABCDEFG"):
+        for index, key in enumerate("ABCDEFGH"):
             value = self.project.get_map_tileset_attributes(key)
             self.assertEqual(
-                MapTileAttributeCodec.record_offset(key), 0x6060 + index * 0x54
+                MapTileAttributeCodec.record_offset(key), 0x6010 + index * 0x54
             )
             self.assertEqual(
                 value.graphic_selector,
@@ -45,27 +46,54 @@ class MapTileAttributeCodecTests(unittest.TestCase):
             )
             self.assertEqual(len(value.tiles), 16)
 
-    def test_water_tile_sea_property_is_read_and_repairs_omitted_rom_flags(self) -> None:
-        self.assertTrue(self.project.get_map_tileset_attributes("A").tiles[5].sea)
+    def test_verified_record_snapshot_and_reference_d5_values(self) -> None:
+        start = MapTileAttributeCodec.RECORD_START
+        size = len(MapTileAttributeCodec.KEYS) * MapTileAttributeCodec.RECORD_SIZE
+        self.assertEqual(
+            sha256(self.project.working[start : start + size]).hexdigest().upper(),
+            "1AEC616564157FEE076B295A51AD4ACB895C9905B3CED4ECDB232AF8BF1FF931",
+        )
+        tile = self.project.get_map_tileset_attributes("D").tiles[5]
+        self.assertEqual(
+            (tile.palette, tile.defense, tile.sea),
+            (2, 85, False),
+        )
+        self.assertEqual(
+            (tile.air_move, tile.land_move, tile.sea_move),
+            (1, 3, 1),
+        )
+
+    def test_sea_property_is_read_exactly_without_visual_inference(self) -> None:
+        self.assertEqual(
+            {
+                key: [
+                    index
+                    for index, tile in enumerate(
+                        self.project.get_map_tileset_attributes(key).tiles
+                    )
+                    if tile.sea
+                ]
+                for key in "ABCDEFGH"
+            },
+            {
+                "A": [5], "B": [5], "C": [], "D": [],
+                "E": [], "F": [], "G": [], "H": [],
+            },
+        )
         current = self.project.get_map_tileset_attributes("D")
         self.assertFalse(current.tiles[5].sea)
-        for key in "ABCD":
-            self.assertTrue(MapTileAttributeCodec.is_visual_sea(key, 5))
         base = MapTileAttributeCodec.record_offset("D")
-        repaired = replace(
+        changed = replace(
             current,
-            tiles=current.tiles[:5]
-            + (replace(current.tiles[5], sea=True),)
-            + current.tiles[6:],
+            tiles=current.tiles[:1]
+            + (replace(current.tiles[1], defense=current.tiles[1].defense - 1),)
+            + current.tiles[2:],
         )
         patches = MapTileAttributeCodec.patches(
-            self.project.working, "D", repaired
+            self.project.working, "D", changed
         )
-        sea_patch = next(
-            patch for patch in patches if patch[0] == base + 20 + 5
-        )
-        self.assertEqual(sea_patch[1][0] & 0x80, 0)
-        self.assertEqual(sea_patch[2][0] & 0x80, 0x80)
+        self.assertEqual([patch[0] for patch in patches], [base + 16 + 1])
+        self.assertEqual(self.project.working[base + 16 + 5] & 0x80, 0)
 
     def test_heal_tile_and_ratio_follow_verified_runtime_operands(self) -> None:
         original = self.project.get_map_tileset_attributes("D")
@@ -108,7 +136,7 @@ class MapTileAttributeCodecTests(unittest.TestCase):
         )
 
         self.project.set_map_tileset_attributes("D", changed)
-        for key in "ABCDEFG":
+        for key in "ABCDEFGH":
             decoded = self.project.get_map_tileset_attributes(key)
             self.assertEqual(decoded.heal_ratio, 45)
             self.assertTrue(decoded.tiles[2].heal)
@@ -120,9 +148,7 @@ class MapTileAttributeCodecTests(unittest.TestCase):
             self.assertEqual(
                 reopened.get_map_tileset_attributes("A").heal_ratio, 45
             )
-            self.assertTrue(
-                reopened.get_map_tileset_attributes("G").tiles[2].heal
-            )
+            self.assertTrue(reopened.get_map_tileset_attributes("H").tiles[2].heal)
         self.project.undo()
         self.assertEqual(self.project.get_map_tileset_attributes("D"), original)
 
@@ -152,7 +178,7 @@ class MapTileAttributeCodecTests(unittest.TestCase):
             bytes.fromhex("0F 30 10 00 80 81 82 30 21 02 37 27 16 30 23 0F"),
         )
 
-    def test_map_rendering_uses_game_effect_route_not_property_field(self) -> None:
+    def test_map_rendering_uses_runtime_verified_property_palette(self) -> None:
         attributes = SimpleNamespace(
             colors=(0x27, 0x2A, 0x1A),
             tiles=tuple(SimpleNamespace(palette=2) for _ in range(16)),
@@ -163,13 +189,17 @@ class MapTileAttributeCodecTests(unittest.TestCase):
         )
         self.assertEqual(
             render_map_tile(project, "D", 0, attributes=attributes).pixelColor(0, 0),
-            palette_color(0x10),
+            palette_color(0x21),
         )
 
     def test_every_tileset_tile_uses_the_game_effect_palette_route(self) -> None:
-        for key in "ABCDEFG":
+        for key in "ABCDEFGH":
             attributes = self.project.get_map_tileset_attributes(key)
-            for tile_index, palette_index in enumerate(TILESET_PALETTE_ROUTES[key]):
+            self.assertEqual(
+                tuple(tile.palette for tile in attributes.tiles),
+                TILESET_PALETTE_ROUTES[key],
+            )
+            for tile_index, tile in enumerate(attributes.tiles):
                 with self.subTest(tileset=key, tile=tile_index):
                     image = render_map_tile(
                         self.project, key, tile_index, attributes=attributes
@@ -179,8 +209,8 @@ class MapTileAttributeCodecTests(unittest.TestCase):
                     )
                     expected_palette = (
                         (0x0F, *attributes.colors)
-                        if palette_index == 1
-                        else VERIFIED_BATTLEFIELD_PALETTES[palette_index]
+                        if tile.palette == 1
+                        else VERIFIED_BATTLEFIELD_PALETTES[tile.palette]
                     )
                     self.assertEqual(
                         image.pixelColor(0, 0),
@@ -206,7 +236,7 @@ class MapTileAttributeCodecTests(unittest.TestCase):
         self.assertEqual(actual, expected)
 
     def test_tileset_palette_one_values_match_verified_records(self) -> None:
-        for key in "ABCDEFG":
+        for key in "ABCDEFGH":
             attributes = self.project.get_map_tileset_attributes(key)
             self.assertEqual(
                 TILESET_PALETTE_ONE_VALUES[key], (0x0F, *attributes.colors)
@@ -216,13 +246,13 @@ class MapTileAttributeCodecTests(unittest.TestCase):
         original = self.project.get_map_tileset_attributes("D")
         tile_index = 1
         cases = (
-            (replace(original, colors=((original.colors[0] + 1) & 0x3F,) + original.colors[1:]), 0),
-            (replace(original, tiles=original.tiles[:tile_index] + (replace(original.tiles[tile_index], palette=(original.tiles[tile_index].palette + 1) % 4),) + original.tiles[tile_index + 1:]), 4 + tile_index),
-            (replace(original, tiles=original.tiles[:tile_index] + (replace(original.tiles[tile_index], defense=(original.tiles[tile_index].defense + 1) & 0x7F),) + original.tiles[tile_index + 1:]), 20 + tile_index),
-            (replace(original, tiles=original.tiles[:tile_index] + (replace(original.tiles[tile_index], sea=not original.tiles[tile_index].sea),) + original.tiles[tile_index + 1:]), 20 + tile_index),
-            (replace(original, tiles=original.tiles[:tile_index] + (replace(original.tiles[tile_index], air_move=(original.tiles[tile_index].air_move + 1) % 17),) + original.tiles[tile_index + 1:]), 36 + tile_index),
-            (replace(original, tiles=original.tiles[:tile_index] + (replace(original.tiles[tile_index], land_move=(original.tiles[tile_index].land_move + 1) % 17),) + original.tiles[tile_index + 1:]), 52 + tile_index),
-            (replace(original, tiles=original.tiles[:tile_index] + (replace(original.tiles[tile_index], sea_move=(original.tiles[tile_index].sea_move + 1) % 17),) + original.tiles[tile_index + 1:]), 68 + tile_index),
+            (replace(original, colors=((original.colors[0] + 1) & 0x3F,) + original.colors[1:]), 80),
+            (replace(original, tiles=original.tiles[:tile_index] + (replace(original.tiles[tile_index], palette=(original.tiles[tile_index].palette + 1) % 4),) + original.tiles[tile_index + 1:]), tile_index),
+            (replace(original, tiles=original.tiles[:tile_index] + (replace(original.tiles[tile_index], defense=(original.tiles[tile_index].defense + 1) & 0x7F),) + original.tiles[tile_index + 1:]), 16 + tile_index),
+            (replace(original, tiles=original.tiles[:tile_index] + (replace(original.tiles[tile_index], sea=not original.tiles[tile_index].sea),) + original.tiles[tile_index + 1:]), 16 + tile_index),
+            (replace(original, tiles=original.tiles[:tile_index] + (replace(original.tiles[tile_index], air_move=1 - original.tiles[tile_index].air_move),) + original.tiles[tile_index + 1:]), 32 + tile_index),
+            (replace(original, tiles=original.tiles[:tile_index] + (replace(original.tiles[tile_index], land_move=(original.tiles[tile_index].land_move + 1) % 17),) + original.tiles[tile_index + 1:]), 48 + tile_index),
+            (replace(original, tiles=original.tiles[:tile_index] + (replace(original.tiles[tile_index], sea_move=(original.tiles[tile_index].sea_move + 1) % 17),) + original.tiles[tile_index + 1:]), 64 + tile_index),
         )
         base = MapTileAttributeCodec.record_offset("D")
         for value, relative_offset in cases:
@@ -230,15 +260,19 @@ class MapTileAttributeCodecTests(unittest.TestCase):
                 patches = MapTileAttributeCodec.patches(self.project.working, "D", value)
                 self.assertEqual(len(patches), 1)
                 self.assertEqual(patches[0][0], base + relative_offset)
-                self.assertNotEqual(patches[0][0], base + 3)
+                self.assertNotEqual(patches[0][0], base + 83)
 
     def test_invalid_encoding_fails_closed(self) -> None:
         data = bytearray(self.project.working)
-        data[MapTileAttributeCodec.record_offset("D") + 4] = 0x01
+        data[MapTileAttributeCodec.record_offset("D")] = 0x01
+        with self.assertRaises(RomFormatError):
+            MapTileAttributeCodec.decode(data, "D")
+        data = bytearray(self.project.working)
+        data[MapTileAttributeCodec.record_offset("D") + 32] = 0x02
         with self.assertRaises(RomFormatError):
             MapTileAttributeCodec.decode(data, "D")
         with self.assertRaises(ValueError):
-            self.project.get_map_tileset_attributes("H")
+            self.project.get_map_tileset_attributes("I")
 
     def test_apply_undo_reset_and_reopen(self) -> None:
         original = self.project.get_map_tileset_attributes("D")

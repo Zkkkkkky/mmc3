@@ -11,12 +11,14 @@ os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 
 from PySide6.QtWidgets import QApplication
 
-from dc_modifier.app import DEFAULT_ROM
+from dc_modifier.app import DEFAULT_ROM, MainWindow
 from dc_modifier.character_editor import CharacterDetailsWidget, legacy_portrait_selectors
 from dc_modifier.legacy_windows import DatabaseDialog
 from dc_modifier.portrait_export import (
     PORTRAIT_BACKGROUND_PALETTE_NES,
     PORTRAIT_FILENAMES,
+    PortraitBatchExportResult,
+    export_all_portrait_bitmaps,
     export_portrait_bitmaps,
     portrait_bitmap_bytes,
     portrait_export_paths,
@@ -144,6 +146,29 @@ class PortraitExportTests(unittest.TestCase):
         )
         self.assertEqual(legacy_portrait_selectors(record), (25, 1, 27, 2))
 
+    def test_batch_export_reuses_single_portrait_rule_for_all_200_characters(self) -> None:
+        progress: list[tuple[int, int]] = []
+        with tempfile.TemporaryDirectory() as directory, patch(
+            "dc_modifier.portrait_export.export_portrait_bitmaps",
+            side_effect=lambda _project, character_id, root: tuple(
+                Path(root) / f"{character_id}：人物" / filename
+                for filename in PORTRAIT_FILENAMES.values()
+            ),
+        ) as export_one:
+            result = export_all_portrait_bitmaps(
+                self.project,
+                directory,
+                progress=lambda done, total: progress.append((done, total)),
+            )
+
+        self.assertEqual(export_one.call_count, 200)
+        self.assertEqual(export_one.call_args_list[0].args[1], 1)
+        self.assertEqual(export_one.call_args_list[-1].args[1], 200)
+        self.assertEqual(len(result.written_files), 600)
+        self.assertEqual(result.failures, ())
+        self.assertEqual(progress[0], (1, 200))
+        self.assertEqual(progress[-1], (200, 200))
+
 
 class PortraitExportUiTests(QtTestCase):
     @classmethod
@@ -170,6 +195,37 @@ class PortraitExportUiTests(QtTestCase):
             self.assertTrue(front.is_file())
             self.assertTrue(effect.is_file())
         self.assertEqual(bytes(project.working), before)
+
+    def test_data_menu_exports_all_portraits_with_single_portrait_protocol(self) -> None:
+        window = MainWindow(open_default=True)
+        self.addCleanup(window.close)
+        assert window.project is not None
+        before = bytes(window.project.working)
+        with tempfile.TemporaryDirectory() as directory:
+            written = tuple(Path(directory) / f"{index}.bmp" for index in range(600))
+            result = PortraitBatchExportResult(Path(directory), written, ())
+            with patch(
+                "dc_modifier.app.QFileDialog.getExistingDirectory",
+                return_value=directory,
+            ) as choose_directory, patch(
+                "dc_modifier.portrait_export.portrait_export_paths",
+                side_effect=lambda _project, character_id, root: tuple(
+                    Path(root) / f"{character_id}：人物" / filename
+                    for filename in PORTRAIT_FILENAMES.values()
+                ),
+            ), patch(
+                "dc_modifier.portrait_export.export_all_portrait_bitmaps",
+                return_value=result,
+            ) as export_all:
+                self.assertTrue(window.export_avatar_action.isEnabled())
+                window.export_avatar_action.trigger()
+
+            choose_directory.assert_called_once()
+            export_all.assert_called_once()
+            self.assertIs(export_all.call_args.args[0], window.project)
+            self.assertEqual(export_all.call_args.args[1], Path(directory))
+            self.assertIn("600 个 BMP", window.status.currentMessage())
+        self.assertEqual(bytes(window.project.working), before)
 
     def test_character_widget_legacy_selector_round_trip_preserves_raw_portrait(self) -> None:
         project = RomProject.load(DEFAULT_ROM)

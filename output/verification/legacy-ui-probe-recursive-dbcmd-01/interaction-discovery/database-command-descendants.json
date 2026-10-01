@@ -1,0 +1,80 @@
+{
+  "schema_version": 1,
+  "scope": "isolated reference executable; descendant dialogs cancelled; no save",
+  "records": [
+    {
+      "state": "机体修改",
+      "control_id": 120,
+      "command": "导出机体",
+      "status": "no_descendant_window",
+      "tab_x": 17,
+      "menu": [
+        {
+          "index": 0,
+          "text": "复制机体",
+          "id": 20001
+        },
+        {
+          "index": 1,
+          "text": "粘贴机体",
+          "id": 20002
+        },
+        {
+          "index": 2,
+          "text": "导出机体",
+          "id": 20003
+        },
+        {
+          "index": 3,
+          "text": "清除机体",
+          "id": 20004
+        },
+        {
+          "index": 4,
+          "text": "清空全部",
+          "id": 20005
+        }
+      ],
+      "descendants": []
+    },
+    {
+      "state": "人物修改",
+      "control_id": 630,
+      "command": "导出人物",
+      "status": "no_descendant_window",
+      "tab_x": 101,
+      "menu": [
+        {
+          "index": 0,
+          "text": "复制人物",
+          "id": 20007
+        },
+        {
+          "index": 1,
+          "text": "粘贴人物",
+          "id": 20008
+        },
+        {
+          "index": 2,
+          "text": "导出人物",
+          "id": 20009
+        }
+      ],
+      "descendants": []
+    },
+    {
+      "state": "武器修改",
+      "control_id": 2530,
+      "command": "插入",
+      "status": "menu_not_found",
+      "tab_x": 185
+    },
+    {
+      "state": "武器修改",
+      "control_id": 2530,
+      "command": "编辑",
+      "status": "menu_not_found",
+      "tab_x": 185
+    }
+  ]
+}

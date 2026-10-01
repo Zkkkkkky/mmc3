@@ -1,0 +1,19 @@
+﻿[    0.1s] launched pid=13368
+[    0.1s] === stage A: launcher -> main window (no ROM) ===
+[    3.1s] top window: {'hwnd': 3670404, 'title': 'SRW2修改器V1.5', 'class': 'WTWindow', 'rect': {'left': 571, 'top': 244, 'right': 1346, 'bottom': 843, 'width': 775, 'height': 599}, 'pid': 13368}
+[    4.1s] dump A01_启动器: title='SRW2修改器V1.5' class='WTWindow' controls=8 shot=ok
+[    6.9s] main window hwnd=2296666 title='SRW2扩容版修改器V1.0'
+[    8.4s] dump A02_主窗口_未载入ROM: title='SRW2扩容版修改器V1.0' class='WTWindow' controls=63 shot=ok
+[   12.9s] menu 文件(F): could not open menu via Alt+F
+[   17.5s] menu 帮助(H): could not open menu via Alt+H
+[   18.1s] === stage LOAD: load ROM copy only ===
+[   19.0s] dump LOAD01_打开ROM对话框: title='打开文件' class='#32770' controls=51 shot=ok
+[   19.5s] open dialog confirmed gone=True
+[   26.6s] ROM loaded without main-window sweep, title='SRW2扩容版修改器V1.0：D:\\GIT\\mmc3\\output\\build\\legacy-ui-probe\\rule-c2-v2-01-02-03.nes'
+[   27.5s] dump LOAD02_主窗口_载入后: title='SRW2扩容版修改器V1.0：D:\\GIT\\mmc3\\output\\build\\legacy-ui-probe\\rule-c2-v2-01-02-03.nes' class='WTWindow' controls=63 shot=ok
+[   27.5s] === stage DBSAVEF3: isolated F3 insertion/save golden ===
+[   28.8s] 数据库: hwnd=2228792 title='数据库'
+[   37.8s] weapon selector activation: wm_command_after_validated_popup
+[   39.4s] dump DBSAVE_42C2_参数_修改前: title='运行规律' class='WTWindow' controls=29 shot=ok
+[   49.6s] DBSAVEF3 complete: command=42C2 option=1 diffs=2630
+[   49.9s] terminated owned pid=13368

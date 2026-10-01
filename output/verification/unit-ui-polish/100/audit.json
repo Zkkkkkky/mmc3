@@ -1,0 +1,17 @@
+{
+  "scale": "1",
+  "audited_states": 58,
+  "errors": [],
+  "warnings": [
+    {
+      "state": "02-database-00-机体修改",
+      "kind": "text-clipped",
+      "widget": "QLabel#-",
+      "text": "机体图标",
+      "required": 54,
+      "available": 49,
+      "severity": "warning"
+    }
+  ],
+  "passed": true
+}

@@ -1,0 +1,613 @@
+{
+  "schema_version": 1,
+  "validated": true,
+  "error": null,
+  "execution_record_count": 44,
+  "diff_count": 0,
+  "observations": [
+    {
+      "state": "武器修改",
+      "class": "CPageControl",
+      "control_id": 2540,
+      "command_id": 20014,
+      "caption": "插入",
+      "descendants": [
+        {
+          "title": "武器指令",
+          "class": "WTWindow"
+        }
+      ]
+    },
+    {
+      "state": "武器修改",
+      "class": "CPageControl",
+      "control_id": 2540,
+      "command_id": 20016,
+      "caption": "编辑",
+      "descendants": [
+        {
+          "title": "创建物体",
+          "class": "WTWindow"
+        }
+      ]
+    },
+    {
+      "state": "武器修改",
+      "class": "CPageControl",
+      "control_id": 2540,
+      "command_id": 20018,
+      "caption": "剪切",
+      "descendants": []
+    },
+    {
+      "state": "武器修改",
+      "class": "CPageControl",
+      "control_id": 2540,
+      "command_id": 20019,
+      "caption": "复制",
+      "descendants": []
+    },
+    {
+      "state": "武器修改",
+      "class": "CPageControl",
+      "control_id": 2540,
+      "command_id": 20020,
+      "caption": "复制全部",
+      "descendants": []
+    },
+    {
+      "state": "武器修改",
+      "class": "CPageControl",
+      "control_id": 2540,
+      "command_id": 20021,
+      "caption": "粘贴",
+      "descendants": []
+    },
+    {
+      "state": "武器修改",
+      "class": "CPageControl",
+      "control_id": 2540,
+      "command_id": 20022,
+      "caption": "粘贴全部",
+      "descendants": []
+    },
+    {
+      "state": "武器修改",
+      "class": "CPageControl",
+      "control_id": 2540,
+      "command_id": 20026,
+      "caption": "删除",
+      "descendants": []
+    },
+    {
+      "state": "武器修改",
+      "class": "CPageControl",
+      "control_id": 2540,
+      "command_id": 20027,
+      "caption": "清空",
+      "descendants": []
+    },
+    {
+      "state": "武器修改",
+      "class": "CPageControl",
+      "control_id": 100,
+      "command_id": 20014,
+      "caption": "插入",
+      "descendants": [
+        {
+          "title": "武器指令",
+          "class": "WTWindow"
+        }
+      ]
+    },
+    {
+      "state": "武器修改",
+      "class": "CPageControl",
+      "control_id": 100,
+      "command_id": 20016,
+      "caption": "编辑",
+      "descendants": [
+        {
+          "title": "等待(帧)",
+          "class": "WTWindow"
+        }
+      ]
+    },
+    {
+      "state": "武器修改",
+      "class": "CPageControl",
+      "control_id": 100,
+      "command_id": 20018,
+      "caption": "剪切",
+      "descendants": []
+    },
+    {
+      "state": "武器修改",
+      "class": "CPageControl",
+      "control_id": 100,
+      "command_id": 20019,
+      "caption": "复制",
+      "descendants": []
+    },
+    {
+      "state": "武器修改",
+      "class": "CPageControl",
+      "control_id": 100,
+      "command_id": 20020,
+      "caption": "复制全部",
+      "descendants": []
+    },
+    {
+      "state": "武器修改",
+      "class": "CPageControl",
+      "control_id": 100,
+      "command_id": 20021,
+      "caption": "粘贴",
+      "descendants": []
+    },
+    {
+      "state": "武器修改",
+      "class": "CPageControl",
+      "control_id": 100,
+      "command_id": 20022,
+      "caption": "粘贴全部",
+      "descendants": []
+    },
+    {
+      "state": "武器修改",
+      "class": "CPageControl",
+      "control_id": 100,
+      "command_id": 20026,
+      "caption": "删除",
+      "descendants": []
+    },
+    {
+      "state": "武器修改",
+      "class": "CPageControl",
+      "control_id": 100,
+      "command_id": 20027,
+      "caption": "清空",
+      "descendants": []
+    },
+    {
+      "state": "武器修改",
+      "class": "Button",
+      "control_id": 620,
+      "command_id": 20011,
+      "caption": "复制武器",
+      "descendants": []
+    },
+    {
+      "state": "武器修改",
+      "class": "Button",
+      "control_id": 620,
+      "command_id": 20012,
+      "caption": "粘贴武器",
+      "descendants": []
+    },
+    {
+      "state": "武器修改",
+      "class": "ListBox",
+      "control_id": 610,
+      "command_id": 20011,
+      "caption": "复制武器",
+      "descendants": []
+    },
+    {
+      "state": "武器修改",
+      "class": "ListBox",
+      "control_id": 610,
+      "command_id": 20012,
+      "caption": "粘贴武器",
+      "descendants": []
+    },
+    {
+      "state": "人物修改",
+      "class": "Button",
+      "control_id": 640,
+      "command_id": 20007,
+      "caption": "复制人物",
+      "descendants": []
+    },
+    {
+      "state": "人物修改",
+      "class": "Button",
+      "control_id": 640,
+      "command_id": 20008,
+      "caption": "粘贴人物",
+      "descendants": []
+    },
+    {
+      "state": "人物修改",
+      "class": "Button",
+      "control_id": 640,
+      "command_id": 20009,
+      "caption": "导出人物",
+      "descendants": [
+        {
+          "title": "导出头像",
+          "class": "#32770"
+        }
+      ]
+    },
+    {
+      "state": "人物修改",
+      "class": "ListBox",
+      "control_id": 630,
+      "command_id": 20007,
+      "caption": "复制人物",
+      "descendants": []
+    },
+    {
+      "state": "人物修改",
+      "class": "ListBox",
+      "control_id": 630,
+      "command_id": 20008,
+      "caption": "粘贴人物",
+      "descendants": []
+    },
+    {
+      "state": "人物修改",
+      "class": "Button",
+      "control_id": 1090,
+      "command_id": 20029,
+      "caption": "复制对话",
+      "descendants": []
+    },
+    {
+      "state": "人物修改",
+      "class": "Button",
+      "control_id": 1090,
+      "command_id": 20030,
+      "caption": "粘贴对话",
+      "descendants": []
+    },
+    {
+      "state": "人物修改",
+      "class": "Button",
+      "control_id": 1420,
+      "command_id": 20029,
+      "caption": "复制对话",
+      "descendants": []
+    },
+    {
+      "state": "人物修改",
+      "class": "Button",
+      "control_id": 1420,
+      "command_id": 20030,
+      "caption": "粘贴对话",
+      "descendants": []
+    },
+    {
+      "state": "人物修改",
+      "class": "Button",
+      "control_id": 1430,
+      "command_id": 20029,
+      "caption": "复制对话",
+      "descendants": []
+    },
+    {
+      "state": "人物修改",
+      "class": "Button",
+      "control_id": 1430,
+      "command_id": 20030,
+      "caption": "粘贴对话",
+      "descendants": []
+    },
+    {
+      "state": "人物修改",
+      "class": "Button",
+      "control_id": 1440,
+      "command_id": 20029,
+      "caption": "复制对话",
+      "descendants": []
+    },
+    {
+      "state": "人物修改",
+      "class": "Button",
+      "control_id": 1440,
+      "command_id": 20030,
+      "caption": "粘贴对话",
+      "descendants": []
+    },
+    {
+      "state": "机体修改",
+      "class": "Button",
+      "control_id": 110,
+      "command_id": 20001,
+      "caption": "复制机体",
+      "descendants": []
+    },
+    {
+      "state": "机体修改",
+      "class": "Button",
+      "control_id": 110,
+      "command_id": 20002,
+      "caption": "粘贴机体",
+      "descendants": []
+    },
+    {
+      "state": "机体修改",
+      "class": "Button",
+      "control_id": 110,
+      "command_id": 20003,
+      "caption": "导出机体",
+      "descendants": [
+        {
+          "title": "导出机体",
+          "class": "#32770"
+        }
+      ]
+    },
+    {
+      "state": "机体修改",
+      "class": "Button",
+      "control_id": 110,
+      "command_id": 20004,
+      "caption": "清除机体",
+      "descendants": []
+    },
+    {
+      "state": "机体修改",
+      "class": "Button",
+      "control_id": 110,
+      "command_id": 20005,
+      "caption": "清空全部",
+      "descendants": []
+    },
+    {
+      "state": "机体修改",
+      "class": "ListBox",
+      "control_id": 120,
+      "command_id": 20001,
+      "caption": "复制机体",
+      "descendants": []
+    },
+    {
+      "state": "机体修改",
+      "class": "ListBox",
+      "control_id": 120,
+      "command_id": 20002,
+      "caption": "粘贴机体",
+      "descendants": []
+    },
+    {
+      "state": "机体修改",
+      "class": "ListBox",
+      "control_id": 120,
+      "command_id": 20004,
+      "caption": "清除机体",
+      "descendants": []
+    },
+    {
+      "state": "机体修改",
+      "class": "ListBox",
+      "control_id": 120,
+      "command_id": 20005,
+      "caption": "清空全部",
+      "descendants": []
+    }
+  ],
+  "execution_records": [
+    {
+      "action_id": "b04877fa657dca7be22b",
+      "status": "passed",
+      "result": "来源 CPageControl#2540；子窗=[{'title': '武器指令', 'class': 'WTWindow'}]。"
+    },
+    {
+      "action_id": "47fc6d52b203109c81ee",
+      "status": "passed",
+      "result": "来源 CPageControl#2540；子窗=[{'title': '创建物体', 'class': 'WTWindow'}]。"
+    },
+    {
+      "action_id": "bbda884b4979a6165377",
+      "status": "passed",
+      "result": "来源 CPageControl#2540；子窗=[]。"
+    },
+    {
+      "action_id": "6bd0addc2266be02abf2",
+      "status": "passed",
+      "result": "来源 CPageControl#2540；子窗=[]。"
+    },
+    {
+      "action_id": "ef085abcabbead710ebd",
+      "status": "passed",
+      "result": "来源 CPageControl#2540；子窗=[]。"
+    },
+    {
+      "action_id": "2bc56dd8cd09dd31f70c",
+      "status": "passed",
+      "result": "来源 CPageControl#2540；子窗=[]。"
+    },
+    {
+      "action_id": "1ae001b38e3072452b62",
+      "status": "passed",
+      "result": "来源 CPageControl#2540；子窗=[]。"
+    },
+    {
+      "action_id": "ffcc62705cea77209ac7",
+      "status": "passed",
+      "result": "来源 CPageControl#2540；子窗=[]。"
+    },
+    {
+      "action_id": "9eabb2c41471edb17125",
+      "status": "passed",
+      "result": "来源 CPageControl#2540；子窗=[]。"
+    },
+    {
+      "action_id": "be74125fab29fd6ae8c4",
+      "status": "passed",
+      "result": "来源 CPageControl#100；子窗=[{'title': '武器指令', 'class': 'WTWindow'}]。"
+    },
+    {
+      "action_id": "f1e9a9c41336161efd82",
+      "status": "passed",
+      "result": "来源 CPageControl#100；子窗=[{'title': '等待(帧)', 'class': 'WTWindow'}]。"
+    },
+    {
+      "action_id": "038466f714de06697f9c",
+      "status": "passed",
+      "result": "来源 CPageControl#100；子窗=[]。"
+    },
+    {
+      "action_id": "423baa63053ca1ae6017",
+      "status": "passed",
+      "result": "来源 CPageControl#100；子窗=[]。"
+    },
+    {
+      "action_id": "393d88975381518f9cc1",
+      "status": "passed",
+      "result": "来源 CPageControl#100；子窗=[]。"
+    },
+    {
+      "action_id": "3e514d0aa0b630ca9445",
+      "status": "passed",
+      "result": "来源 CPageControl#100；子窗=[]。"
+    },
+    {
+      "action_id": "2fda24029a7adec7068d",
+      "status": "passed",
+      "result": "来源 CPageControl#100；子窗=[]。"
+    },
+    {
+      "action_id": "7485393fbe5273fb3bb3",
+      "status": "passed",
+      "result": "来源 CPageControl#100；子窗=[]。"
+    },
+    {
+      "action_id": "96b1d2f3007f2749e744",
+      "status": "passed",
+      "result": "来源 CPageControl#100；子窗=[]。"
+    },
+    {
+      "action_id": "bbb77f0e7dc5184fbb48",
+      "status": "passed",
+      "result": "来源 Button#620；子窗=[]。"
+    },
+    {
+      "action_id": "ea6b50ef9909f5b34ced",
+      "status": "passed",
+      "result": "来源 Button#620；子窗=[]。"
+    },
+    {
+      "action_id": "9fb1e8cbccf1c396edb6",
+      "status": "passed",
+      "result": "来源 ListBox#610；子窗=[]。"
+    },
+    {
+      "action_id": "c8df12f5b50d307cdbf8",
+      "status": "passed",
+      "result": "来源 ListBox#610；子窗=[]。"
+    },
+    {
+      "action_id": "dc86254148e977f99119",
+      "status": "passed",
+      "result": "来源 Button#640；子窗=[]。"
+    },
+    {
+      "action_id": "e79bde2f477f8e6a91a7",
+      "status": "passed",
+      "result": "来源 Button#640；子窗=[]。"
+    },
+    {
+      "action_id": "c4030b804f1b54f8c563",
+      "status": "passed",
+      "result": "来源 Button#640；子窗=[{'title': '导出头像', 'class': '#32770'}]。"
+    },
+    {
+      "action_id": "f09794863bd4f9af4798",
+      "status": "passed",
+      "result": "来源 ListBox#630；子窗=[]。"
+    },
+    {
+      "action_id": "b09d0618b73892574525",
+      "status": "passed",
+      "result": "来源 ListBox#630；子窗=[]。"
+    },
+    {
+      "action_id": "194a4543e7d8e34834c9",
+      "status": "passed",
+      "result": "来源 Button#1090；子窗=[]。"
+    },
+    {
+      "action_id": "35d2a446be88e21908bb",
+      "status": "passed",
+      "result": "来源 Button#1090；子窗=[]。"
+    },
+    {
+      "action_id": "a4c2f0423ba6d2aad1ca",
+      "status": "passed",
+      "result": "来源 Button#1420；子窗=[]。"
+    },
+    {
+      "action_id": "f3b2514147457e72a995",
+      "status": "passed",
+      "result": "来源 Button#1420；子窗=[]。"
+    },
+    {
+      "action_id": "431b461e204dde5a9e69",
+      "status": "passed",
+      "result": "来源 Button#1430；子窗=[]。"
+    },
+    {
+      "action_id": "8ce582148f0d012207d1",
+      "status": "passed",
+      "result": "来源 Button#1430；子窗=[]。"
+    },
+    {
+      "action_id": "871c48a6642bb1f7f5a3",
+      "status": "passed",
+      "result": "来源 Button#1440；子窗=[]。"
+    },
+    {
+      "action_id": "9c4f0a496a577d7a254d",
+      "status": "passed",
+      "result": "来源 Button#1440；子窗=[]。"
+    },
+    {
+      "action_id": "9cd9d6e89234079e71aa",
+      "status": "passed",
+      "result": "来源 Button#110；子窗=[]。"
+    },
+    {
+      "action_id": "b1810a3fab8832aef296",
+      "status": "passed",
+      "result": "来源 Button#110；子窗=[]。"
+    },
+    {
+      "action_id": "28d73a6b4c31dfe85d68",
+      "status": "passed",
+      "result": "来源 Button#110；子窗=[{'title': '导出机体', 'class': '#32770'}]。"
+    },
+    {
+      "action_id": "fd204789e2f73081dea9",
+      "status": "passed",
+      "result": "来源 Button#110；子窗=[]。"
+    },
+    {
+      "action_id": "df4d97f3e3430f33cd8a",
+      "status": "passed",
+      "result": "来源 Button#110；子窗=[]。"
+    },
+    {
+      "action_id": "460ee07116f5408c7c2c",
+      "status": "passed",
+      "result": "来源 ListBox#120；子窗=[]。"
+    },
+    {
+      "action_id": "570361e7b152cbb69956",
+      "status": "passed",
+      "result": "来源 ListBox#120；子窗=[]。"
+    },
+    {
+      "action_id": "cbdf01e297d9ca01ef7c",
+      "status": "passed",
+      "result": "来源 ListBox#120；子窗=[]。"
+    },
+    {
+      "action_id": "ef8134cfe539714c39a4",
+      "status": "passed",
+      "result": "来源 ListBox#120；子窗=[]。"
+    }
+  ]
+}

@@ -1,0 +1,137 @@
+{
+  "tag": "MENU_20013",
+  "hwnd": 14486162,
+  "title": "文字转换",
+  "class": "WTWindow",
+  "rect": {
+    "left": 663,
+    "top": 241,
+    "right": 1256,
+    "bottom": 845,
+    "width": 593,
+    "height": 604
+  },
+  "pid": 9560,
+  "tree": {
+    "hwnd": 14486162,
+    "class": "WTWindow",
+    "text": "文字转换",
+    "ctrl_id": 0,
+    "rect": {
+      "left": 663,
+      "top": 241,
+      "right": 1256,
+      "bottom": 845,
+      "width": 593,
+      "height": 604
+    },
+    "visible": true,
+    "enabled": true,
+    "children": [
+      {
+        "hwnd": 10422820,
+        "class": "Button",
+        "text": "代码转文字",
+        "ctrl_id": 150,
+        "rect": {
+          "left": 945,
+          "top": 550,
+          "right": 1045,
+          "bottom": 590,
+          "width": 100,
+          "height": 40
+        },
+        "visible": true,
+        "enabled": true,
+        "button_check_state": 0,
+        "children": []
+      },
+      {
+        "hwnd": 10881504,
+        "class": "Button",
+        "text": "文字转代码",
+        "ctrl_id": 140,
+        "rect": {
+          "left": 825,
+          "top": 550,
+          "right": 925,
+          "bottom": 590,
+          "width": 100,
+          "height": 40
+        },
+        "visible": true,
+        "enabled": true,
+        "button_check_state": 0,
+        "children": []
+      },
+      {
+        "hwnd": 19925698,
+        "class": "Edit",
+        "text": "",
+        "ctrl_id": 130,
+        "rect": {
+          "left": 675,
+          "top": 620,
+          "right": 1245,
+          "bottom": 830,
+          "width": 570,
+          "height": 210
+        },
+        "visible": true,
+        "enabled": true,
+        "children": []
+      },
+      {
+        "hwnd": 12847690,
+        "class": "Afx:400000:b:10003:900015:0",
+        "text": "代码：",
+        "ctrl_id": 120,
+        "rect": {
+          "left": 675,
+          "top": 580,
+          "right": 745,
+          "bottom": 630,
+          "width": 70,
+          "height": 50
+        },
+        "visible": true,
+        "enabled": true,
+        "children": []
+      },
+      {
+        "hwnd": 23004622,
+        "class": "Afx:400000:b:10003:900015:0",
+        "text": "文字：",
+        "ctrl_id": 110,
+        "rect": {
+          "left": 675,
+          "top": 290,
+          "right": 745,
+          "bottom": 340,
+          "width": 70,
+          "height": 50
+        },
+        "visible": true,
+        "enabled": true,
+        "children": []
+      },
+      {
+        "hwnd": 26478162,
+        "class": "Edit",
+        "text": "",
+        "ctrl_id": 100,
+        "rect": {
+          "left": 675,
+          "top": 330,
+          "right": 1245,
+          "bottom": 540,
+          "width": 570,
+          "height": 210
+        },
+        "visible": true,
+        "enabled": true,
+        "children": []
+      }
+    ]
+  }
+}

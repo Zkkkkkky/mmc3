@@ -1,0 +1,38 @@
+﻿[    0.0s] launched pid=17452
+[    0.0s] === stage A: launcher -> main window (no ROM) ===
+[    3.0s] top window: {'hwnd': 41420140, 'title': 'SRW2修改器V1.5', 'class': 'WTWindow', 'rect': {'left': 571, 'top': 244, 'right': 1346, 'bottom': 843, 'width': 775, 'height': 599}, 'pid': 17452}
+[    4.0s] dump A01_启动器: title='SRW2修改器V1.5' class='WTWindow' controls=8 shot=ok
+[    6.5s] main window hwnd=460588 title='SRW2扩容版修改器V1.0'
+[    7.9s] dump A02_主窗口_未载入ROM: title='SRW2扩容版修改器V1.0' class='WTWindow' controls=63 shot=ok
+[   12.5s] menu 文件(F): could not open menu via Alt+F
+[   17.1s] menu 帮助(H): could not open menu via Alt+H
+[   17.6s] === stage LOAD: load ROM copy only ===
+[   18.5s] dump LOAD01_打开ROM对话框: title='打开文件' class='#32770' controls=51 shot=ok
+[   19.0s] open dialog confirmed gone=True
+[   26.0s] ROM loaded without main-window sweep, title='SRW2扩容版修改器V1.0：D:\\GIT\\mmc3\\output\\build\\legacy-ui-probe\\probe.nes'
+[   27.0s] dump LOAD02_主窗口_载入后: title='SRW2扩容版修改器V1.0：D:\\GIT\\mmc3\\output\\build\\legacy-ui-probe\\probe.nes' class='WTWindow' controls=63 shot=ok
+[   27.0s] === stage DBCMD: database context-command descendants ===
+[   28.0s] 数据库: hwnd=395302 title='数据库'
+[   30.6s] dump DBCMD_01_机体修改_导出机体_1: title='' class='Shell_TrayWnd' controls=21 shot=ok
+[   36.5s] dump DBCMD_01_机体修改_导出机体_2: title='ChatGPT' class='Chrome_WidgetWin_1' controls=3 shot=ok
+[   37.5s] dump DBCMD_01_机体修改_导出机体_3: title='ocam' class='TApplication' controls=1 shot=ok
+[   38.6s] dump DBCMD_01_机体修改_导出机体_4: title='电影和电视' class='Windows.UI.Core.CoreWindow' controls=1 shot=ok
+[   44.5s] dump DBCMD_01_机体修改_导出机体_5: title='电影和电视' class='ApplicationFrameWindow' controls=4 shot=ok
+[   45.6s] dump DBCMD_01_机体修改_导出机体_6: title='Windows 输入体验' class='Windows.UI.Core.CoreWindow' controls=1 shot=ok
+[   46.6s] dump DBCMD_01_机体修改_导出机体_7: title='' class='DummyDWMListenerWindow' controls=1 shot=ok
+[   47.7s] dump DBCMD_01_机体修改_导出机体_8: title='' class='EdgeUiInputTopWndClass' controls=1 shot=ok
+[   48.7s] dump DBCMD_01_机体修改_导出机体_9: title='' class='WorkerW' controls=1 shot=ok
+[   49.7s] dump DBCMD_01_机体修改_导出机体_10: title='' class='DummyDWMListenerWindow' controls=1 shot=ok
+[   50.7s] dump DBCMD_01_机体修改_导出机体_11: title='' class='DummyDWMListenerWindow' controls=1 shot=ok
+[   51.7s] dump DBCMD_01_机体修改_导出机体_12: title='' class='DummyDWMListenerWindow' controls=1 shot=ok
+[   52.7s] dump DBCMD_01_机体修改_导出机体_13: title='' class='DummyDWMListenerWindow' controls=1 shot=ok
+[   53.7s] dump DBCMD_01_机体修改_导出机体_14: title='QQ' class='Chrome_WidgetWin_1' controls=2 shot=ok
+[   54.9s] dump DBCMD_01_机体修改_导出机体_15: title='' class='WorkerW' controls=4 shot=ok
+[   56.6s] dump DBCMD_01_机体修改_导出机体_16: title='' class='WorkerW' controls=2 shot=ok
+[   58.3s] dump DBCMD_01_机体修改_导出机体_17: title='Program Manager' class='Progman' controls=1 shot=ok
+[   69.4s] dump DBCMD_02_人物修改_导出人物_1: title='' class='Shell_TrayWnd' controls=21 shot=ok
+[   75.3s] dump DBCMD_02_人物修改_导出人物_2: title='Windows 输入体验' class='Windows.UI.Core.CoreWindow' controls=1 shot=ok
+[   76.4s] dump DBCMD_02_人物修改_导出人物_3: title='关闭 Windows' class='#32770' controls=16 shot=ok
+[   80.3s] dump DBCMD_02_人物修改_导出人物_4: title='Program Manager' class='Progman' controls=1 shot=ok
+[  111.0s] DBCMD complete: 4 commands
+[  111.2s] terminated owned pid=17452

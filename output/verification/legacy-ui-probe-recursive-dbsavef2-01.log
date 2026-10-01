@@ -1,0 +1,19 @@
+﻿[    0.0s] launched pid=1540
+[    0.0s] === stage A: launcher -> main window (no ROM) ===
+[    3.0s] top window: {'hwnd': 7867856, 'title': 'SRW2修改器V1.5', 'class': 'WTWindow', 'rect': {'left': 571, 'top': 244, 'right': 1346, 'bottom': 843, 'width': 775, 'height': 599}, 'pid': 1540}
+[    4.0s] dump A01_启动器: title='SRW2修改器V1.5' class='WTWindow' controls=8 shot=ok
+[    6.8s] main window hwnd=2100156 title='SRW2扩容版修改器V1.0'
+[    8.3s] dump A02_主窗口_未载入ROM: title='SRW2扩容版修改器V1.0' class='WTWindow' controls=63 shot=ok
+[   12.8s] menu 文件(F): could not open menu via Alt+F
+[   17.4s] menu 帮助(H): could not open menu via Alt+H
+[   17.9s] === stage LOAD: load ROM copy only ===
+[   18.9s] dump LOAD01_打开ROM对话框: title='打开文件' class='#32770' controls=51 shot=ok
+[   19.4s] open dialog confirmed gone=True
+[   26.4s] ROM loaded without main-window sweep, title='SRW2扩容版修改器V1.0：D:\\GIT\\mmc3\\output\\build\\legacy-ui-probe\\f2-option-01.nes'
+[   27.4s] dump LOAD02_主窗口_载入后: title='SRW2扩容版修改器V1.0：D:\\GIT\\mmc3\\output\\build\\legacy-ui-probe\\f2-option-01.nes' class='WTWindow' controls=63 shot=ok
+[   27.4s] === stage DBCMD: database context-command descendants ===
+[   28.7s] 数据库: hwnd=721378 title='数据库'
+[   32.5s] DBCMD complete: 4 commands
+[   32.5s] === stage DBSAVEF3: isolated F3 insertion/save golden ===
+[   32.5s] stage DBSAVEF3 FAILED: RuntimeError('main window not alive')
+[   33.0s] terminated owned pid=1540

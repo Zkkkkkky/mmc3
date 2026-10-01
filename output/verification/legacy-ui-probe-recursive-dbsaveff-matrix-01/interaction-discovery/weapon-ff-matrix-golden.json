@@ -1,0 +1,92 @@
+{
+  "schema_version": 1,
+  "validated": true,
+  "matrix": "weapon-animation-insert-ff",
+  "cases": [
+    {
+      "session": "legacy-ui-probe-recursive-dbsaveff-01",
+      "label": "我方共享脚本/首条",
+      "sha256_after": "C6D9BBCC148D40BB74D4D8F982FFCB14013D4F8C5CB54CA0AAF77B8BEC45A186",
+      "diff_count": 2648,
+      "source": "output/verification/legacy-ui-probe-recursive-dbsaveff-01/interaction-discovery/weapon-ff-save-golden.json"
+    },
+    {
+      "session": "legacy-ui-probe-recursive-dbsaveff-row1-01",
+      "label": "我方共享脚本/中间",
+      "sha256_after": "6E577B780D06D45277F5154D159E87E1EB57A10A7F165F1E251054B3045C46D4",
+      "diff_count": 2646,
+      "source": "output/verification/legacy-ui-probe-recursive-dbsaveff-row1-01/interaction-discovery/weapon-ff-save-golden.json"
+    },
+    {
+      "session": "legacy-ui-probe-recursive-dbsaveff-w20-r0-01",
+      "label": "我方独立脚本/首条",
+      "sha256_after": "464F06D1EAD5449C9FA470C1A84AFE68A542E3B90F79F4F6EAD71DA51801B4BC",
+      "diff_count": 1629,
+      "source": "output/verification/legacy-ui-probe-recursive-dbsaveff-w20-r0-01/interaction-discovery/weapon-ff-save-golden.json"
+    },
+    {
+      "session": "legacy-ui-probe-recursive-dbsaveff-enemy-w1-r0-01",
+      "label": "敌方共享脚本/首条",
+      "sha256_after": "2118F30B806BA3ECF957807B65BEB65B2F0D96F0491CB8E5130C9E6F627AA056",
+      "diff_count": 5944,
+      "source": "output/verification/legacy-ui-probe-recursive-dbsaveff-enemy-w1-r0-01/interaction-discovery/weapon-ff-save-golden.json"
+    },
+    {
+      "session": "legacy-ui-probe-recursive-dbsaveff-enemy-w29-r25-01",
+      "label": "敌方独立脚本/末条有效指令",
+      "sha256_after": "3274B03300847E97CF3582D1C191D52481E95FDA0ABAD4D2D4071C810C4D1354",
+      "diff_count": 5527,
+      "source": "output/verification/legacy-ui-probe-recursive-dbsaveff-enemy-w29-r25-01/interaction-discovery/weapon-ff-save-golden.json"
+    },
+    {
+      "session": "legacy-ui-probe-recursive-dbsaveff-enemy-w29-r27-noop-01",
+      "label": "已有结束符/无操作边界",
+      "sha256_after": "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E",
+      "diff_count": 0,
+      "source": "output/verification/legacy-ui-probe-recursive-dbsaveff-enemy-w29-r27-noop-01/interaction-discovery/weapon-ff-save-golden.json"
+    },
+    {
+      "session": "legacy-ui-probe-recursive-dbsaveff-keyboard-01",
+      "label": "FF 按钮键盘激活（真实聚焦后按空格）",
+      "action_mode": "keyboard",
+      "sha256_after": "C6D9BBCC148D40BB74D4D8F982FFCB14013D4F8C5CB54CA0AAF77B8BEC45A186",
+      "diff_count": 2648,
+      "selector_closed_by_action": true,
+      "keyboard_focus_acquired": true,
+      "source": "output/verification/legacy-ui-probe-recursive-dbsaveff-keyboard-01/interaction-discovery/weapon-ff-save-golden.json"
+    },
+    {
+      "session": "legacy-ui-probe-recursive-dbsaveff-right-01",
+      "label": "FF 按钮右键无操作",
+      "action_mode": "right",
+      "sha256_after": "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E",
+      "diff_count": 0,
+      "selector_closed_by_action": false,
+      "right_click_noop": true,
+      "source": "output/verification/legacy-ui-probe-recursive-dbsaveff-right-01/interaction-discovery/weapon-ff-save-golden.json"
+    }
+  ],
+  "records": [],
+  "execution_records": [
+    {
+      "action_id": "7c55ee2e3f13c7355865",
+      "status": "passed",
+      "result": "6 个旧修改器实跑样本：敌我双方、共享/独立脚本、首/中/末位置，并含已有 FF 的零写入边界；全部整 ROM 哈希与差异数吻合。"
+    },
+    {
+      "action_id": "f45a637a79105745476a",
+      "status": "passed",
+      "result": "6 个旧修改器实跑样本：敌我双方、共享/独立脚本、首/中/末位置，并含已有 FF 的零写入边界；全部整 ROM 哈希与差异数吻合。"
+    },
+    {
+      "action_id": "03332892ac4d32bb4893",
+      "status": "passed",
+      "result": "旧版真实聚焦 FF 按钮后按空格，结果与左键黄金整 ROM 一致。"
+    },
+    {
+      "action_id": "d613b17e86d4de39b350",
+      "status": "passed",
+      "result": "旧版 FF 按钮右键保持选择器打开；取消数据库后真实保存零差分。"
+    }
+  ]
+}

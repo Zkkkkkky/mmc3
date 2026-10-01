@@ -10,7 +10,7 @@ import tempfile
 from pathlib import Path
 from typing import Any
 
-from PySide6.QtCore import QPoint, QSize, Qt
+from PySide6.QtCore import QPoint, QSize, Qt, QTimer
 from PySide6.QtGui import QColor, QCloseEvent, QIcon, QPainter, QPixmap
 from PySide6.QtWidgets import (
     QCheckBox,
@@ -26,6 +26,7 @@ from PySide6.QtWidgets import (
     QLabel,
     QLineEdit,
     QListWidget,
+    QListWidgetItem,
     QMessageBox,
     QPlainTextEdit,
     QPushButton,
@@ -62,8 +63,8 @@ from .battle_calculator import (
     BattleFormulaParameters,
     BattleSideState,
     calculate_battle_attack,
-    normalized_special_code,
     reference_firepower,
+    unit_special_summary,
 )
 from .font_edit import FontEditingMixin
 
@@ -131,6 +132,23 @@ def _glyph_pixmap(raw: bytes, *, character: str = "", scale: int = 2) -> QPixmap
     return pixmap
 
 
+def _is_unused_glyph(raw: bytes | None, character: str) -> bool:
+    """Return whether an unmapped glyph is one of the ROM's fill-only slots."""
+    return (
+        not character
+        and raw is not None
+        and len(raw) == 18
+        and len(set(raw)) == 1
+    )
+
+
+def _unused_glyph_pixmap(*, scale: int = 2) -> QPixmap:
+    """Return a transparent, non-null icon for a visually quiet unused slot."""
+    pixmap = QPixmap(12 * scale, 12 * scale)
+    pixmap.fill(Qt.GlobalColor.transparent)
+    return pixmap
+
+
 class FontLibraryDialog(FontEditingMixin, QDialog):
     """Legacy 16x16 font browser backed by the verified DC token map.
 
@@ -148,18 +166,55 @@ class FontLibraryDialog(FontEditingMixin, QDialog):
             else default_dc_text_table()
         )
         self.current_token = bytes((0xC8, 0x00))
+        self.setObjectName("fontLibraryDialog")
         self.setWindowTitle("字库编辑")
         self.resize(940, 700)
         self.setMinimumSize(800, 580)
         self.setSizeGripEnabled(True)
         self.setModal(True)
+        self.setStyleSheet(
+            "QDialog#fontLibraryDialog { background:#eef2f4; }"
+            "QDialog#fontLibraryDialog QGroupBox#fontPreviewGroup, "
+            "QDialog#fontLibraryDialog QGroupBox#fontEditGroup {"
+            " background:#f8fafb; border:1px solid #a9bbc4; border-radius:7px; }"
+            "QDialog#fontLibraryDialog QFrame#fontSectionCard {"
+            " background:#f1f6f7; border:1px solid #c2d0d6; border-radius:6px; }"
+            "QDialog#fontLibraryDialog QLabel#fontSectionLabel {"
+            " color:#315f6c; font-weight:600; background:transparent; }"
+            "QDialog#fontLibraryDialog QLabel#glyphCaption {"
+            " color:#61747d; font-size:11px; background:transparent; }"
+            "QDialog#fontLibraryDialog QLabel#glyphPreview {"
+            " background:#0d1316; color:#f7fafb; border:1px solid #547683;"
+            " border-radius:4px; font-size:24px; }"
+            "QDialog#fontLibraryDialog QLabel#fontStatus {"
+            " background:#fbf5e8; border:1px solid #dfc78f; border-radius:5px;"
+            " color:#765b20; padding:5px 7px; font-size:10px; }"
+            "QTableWidget#glyphTable {"
+            " background:#11191d; alternate-background-color:#11191d;"
+            " color:#f2f5f6; border:1px solid #52717d; border-radius:4px;"
+            " gridline-color:#344850; padding:0; selection-background-color:#2f7484; }"
+            "QTableWidget#glyphTable::item {"
+            " background:#11191d; color:#f2f5f6; padding:0; }"
+            "QTableWidget#glyphTable::item:hover { background:#20333a; }"
+            "QTableWidget#glyphTable::item:selected {"
+            " background:#2f7484; color:white; border:2px solid #d7aa4a; }"
+            "QTableWidget#glyphTable QHeaderView::section {"
+            " background:#e5eef1; color:#315565; border:none;"
+            " border-right:1px solid #c1cfd5; border-bottom:1px solid #b4c5cc;"
+            " padding:3px; font-weight:600; }"
+        )
 
         root = QVBoxLayout(self)
+        root.setContentsMargins(12, 10, 12, 10)
+        root.setSpacing(8)
         content = QHBoxLayout()
+        content.setSpacing(10)
         root.addLayout(content, 1)
 
         preview_group = QGroupBox("字库预览")
+        preview_group.setObjectName("fontPreviewGroup")
         preview_layout = QVBoxLayout(preview_group)
+        preview_layout.setContentsMargins(10, 16, 10, 10)
         self.glyph_table = QTableWidget(16, 16)
         self.glyph_table.setObjectName("glyphTable")
         self.glyph_table.setHorizontalHeaderLabels([f"{value:02X}" for value in range(16)])
@@ -170,7 +225,9 @@ class FontLibraryDialog(FontEditingMixin, QDialog):
         self.glyph_table.verticalHeader().setMinimumSectionSize(25)
         self.glyph_table.horizontalHeader().setDefaultSectionSize(40)
         self.glyph_table.verticalHeader().setDefaultSectionSize(40)
-        self.glyph_table.setIconSize(QSize(24, 24))
+        self.glyph_table.setIconSize(QSize(26, 26))
+        self.glyph_table.setShowGrid(True)
+        self.glyph_table.setAlternatingRowColors(False)
         self.glyph_table.setSelectionMode(QTableWidget.SelectionMode.SingleSelection)
         self.glyph_table.setSelectionBehavior(QTableWidget.SelectionBehavior.SelectItems)
         self.glyph_table.currentCellChanged.connect(
@@ -180,51 +237,98 @@ class FontLibraryDialog(FontEditingMixin, QDialog):
         content.addWidget(preview_group, 1)
 
         edit_group = QGroupBox("文字库修改")
-        edit_group.setFixedWidth(270)
+        edit_group.setObjectName("fontEditGroup")
+        edit_group.setFixedWidth(230)
         edit_layout = QVBoxLayout(edit_group)
-        edit_layout.addWidget(QLabel("字段选择:"))
+        edit_layout.setContentsMargins(8, 12, 8, 6)
+        edit_layout.setSpacing(5)
+
+        page_card = QFrame()
+        page_card.setObjectName("fontSectionCard")
+        page_layout = QVBoxLayout(page_card)
+        page_layout.setContentsMargins(8, 7, 8, 8)
+        page_layout.setSpacing(5)
+        page_title = QLabel("字库页")
+        page_title.setObjectName("fontSectionLabel")
+        page_layout.addWidget(page_title)
         self.page_selector = QComboBox()
         for lead in GLYPH_PAGE_LEADS:
             self.page_selector.addItem(f"{lead:02X}", lead)
         self.page_selector.setCurrentIndex(GLYPH_PAGE_LEADS.index(0xC8))
         self.page_selector.currentIndexChanged.connect(self.refresh_page)
-        edit_layout.addWidget(self.page_selector)
-        edit_layout.addSpacing(22)
-        edit_layout.addWidget(QLabel("字形修改:"))
+        page_layout.addWidget(self.page_selector)
+        edit_layout.addWidget(page_card)
 
-        glyph_row = QHBoxLayout()
+        glyph_card = QFrame()
+        glyph_card.setObjectName("fontSectionCard")
+        glyph_layout = QVBoxLayout(glyph_card)
+        glyph_layout.setContentsMargins(8, 7, 8, 8)
+        glyph_layout.setSpacing(5)
+        glyph_title = QLabel("当前字形")
+        glyph_title.setObjectName("fontSectionLabel")
+        glyph_layout.addWidget(glyph_title)
+
+        glyph_previews = QGridLayout()
+        glyph_previews.setHorizontalSpacing(8)
+        self.original_caption = QLabel("原字形")
+        replacement_caption = QLabel("替换预览")
+        for caption in (self.original_caption, replacement_caption):
+            caption.setObjectName("glyphCaption")
+            caption.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.original_glyph = QLabel()
         self.replacement_glyph = QLabel()
         for label in (self.original_glyph, self.replacement_glyph):
-            label.setFixedSize(64, 64)
+            label.setObjectName("glyphPreview")
+            label.setFixedSize(58, 58)
             label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-            label.setStyleSheet(
-                "background:#080808; color:white; border:1px solid #6fa9cd; font-size:24px;"
-            )
-            glyph_row.addWidget(label)
-        edit_layout.addLayout(glyph_row)
+        glyph_previews.addWidget(self.original_caption, 0, 0)
+        glyph_previews.addWidget(replacement_caption, 0, 1)
+        glyph_previews.addWidget(self.original_glyph, 1, 0, Qt.AlignmentFlag.AlignCenter)
+        glyph_previews.addWidget(self.replacement_glyph, 1, 1, Qt.AlignmentFlag.AlignCenter)
+        glyph_layout.addLayout(glyph_previews)
         self.replacement_text = QLineEdit()
         self.replacement_text.setMaxLength(1)
-        self.replacement_text.setPlaceholderText("替换字符")
+        self.replacement_text.setPlaceholderText("输入替换字符")
         self.replacement_text.textChanged.connect(self._update_replacement_preview)
-        edit_layout.addWidget(self.replacement_text)
+        glyph_layout.addWidget(self.replacement_text)
 
         self.write_button = QPushButton("写入文字")
+        self.write_button.setObjectName("primaryButton")
+        glyph_layout.addWidget(self.write_button)
+        edit_layout.addWidget(glyph_card)
+
+        action_card = QFrame()
+        action_card.setObjectName("fontSectionCard")
+        action_layout = QGridLayout(action_card)
+        action_layout.setContentsMargins(8, 7, 8, 8)
+        action_layout.setHorizontalSpacing(6)
+        action_layout.setVerticalSpacing(5)
+        action_title = QLabel("批量操作")
+        action_title.setObjectName("fontSectionLabel")
+        action_layout.addWidget(action_title, 0, 0, 1, 2)
         self.choose_font_button = QPushButton("选择字体")
         self.replace_all_button = QPushButton("替换全部字体")
         self.clear_page_button = QPushButton("清空本页")
-        for button in (
-            self.write_button,
-            self.choose_font_button,
-            self.replace_all_button,
-            self.clear_page_button,
-        ):
+        self.clear_page_button.setObjectName("destructiveButton")
+        for button in (self.write_button, self.choose_font_button, self.replace_all_button, self.clear_page_button):
             button.setEnabled(False)
             button.setToolTip(READ_ONLY_NOTICE)
-            edit_layout.addWidget(button)
+        action_layout.addWidget(self.choose_font_button, 1, 0)
+        action_layout.addWidget(self.clear_page_button, 1, 1)
+        action_layout.addWidget(self.replace_all_button, 2, 0, 1, 2)
+        edit_layout.addWidget(action_card)
 
-        edit_layout.addStretch()
+        info_card = QFrame()
+        info_card.setObjectName("fontSectionCard")
+        info_layout = QVBoxLayout(info_card)
+        info_layout.setContentsMargins(8, 7, 8, 8)
+        info_layout.setSpacing(5)
+        info_title = QLabel("字形信息")
+        info_title.setObjectName("fontSectionLabel")
+        info_layout.addWidget(info_title)
         form = QFormLayout()
+        form.setContentsMargins(0, 0, 0, 0)
+        form.setVerticalSpacing(5)
         self.code_value = QLineEdit()
         self.address_value = QLineEdit()
         self.character_value = QLineEdit()
@@ -233,26 +337,30 @@ class FontLibraryDialog(FontEditingMixin, QDialog):
         form.addRow("文字:", self.character_value)
         form.addRow("文字代码:", self.code_value)
         form.addRow("文字地址:", self.address_value)
-        edit_layout.addLayout(form)
+        info_layout.addLayout(form)
+        edit_layout.addWidget(info_card)
         self.status = QLabel("只读：字模写入尚未完成差分验证。")
+        self.status.setObjectName("fontStatus")
         self.status.setWordWrap(True)
-        self.status.setMaximumHeight(34)
-        self.status.setStyleSheet("color:#9a5b00; font-size:9px;")
-        edit_layout.addWidget(self.status)
+        edit_layout.addStretch()
         edit_scroll = QScrollArea()
+        edit_scroll.setObjectName("fontEditScroll")
+        edit_scroll.setFrameShape(QFrame.Shape.NoFrame)
         edit_scroll.setWidgetResizable(True)
         edit_scroll.setWidget(edit_group)
-        edit_scroll.setMinimumWidth(294)
-        edit_scroll.setMaximumWidth(310)
+        edit_scroll.setMinimumWidth(248)
+        edit_scroll.setMaximumWidth(260)
         content.addWidget(edit_scroll)
 
         only_ok = QHBoxLayout()
-        only_ok.addStretch()
+        only_ok.setSpacing(8)
+        only_ok.addWidget(self.status, 1)
         self.accept_button = QPushButton("确定")
+        self.accept_button.setObjectName("primaryButton")
         self.accept_button.clicked.connect(self.accept)
         only_ok.addWidget(self.accept_button)
         root.addLayout(only_ok)
-        self.initialize_font_editing(edit_layout, only_ok)
+        self.initialize_font_editing(glyph_layout, only_ok, canvas_index=2)
         self.refresh_page()
 
     def _token_at(self, row: int, column: int) -> bytes:
@@ -281,10 +389,17 @@ class FontLibraryDialog(FontEditingMixin, QDialog):
                 item.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
                 raw = self._raw_glyph(token)
                 if raw is not None:
-                    item.setIcon(QIcon(_glyph_pixmap(raw, character=character)))
+                    if _is_unused_glyph(raw, character):
+                        item.setIcon(QIcon(_unused_glyph_pixmap()))
+                    else:
+                        item.setIcon(QIcon(_glyph_pixmap(raw, character=character)))
                 else:
                     item.setText(character[:1])
-                item.setToolTip(f"{token.hex().upper()} · {character or '未映射'}")
+                if _is_unused_glyph(raw, character):
+                    description = "未使用字形槽（ROM 统一填充）"
+                else:
+                    description = character or "未映射字形"
+                item.setToolTip(f"{token.hex().upper()} · {description}")
                 item.setFlags(item.flags() & ~Qt.ItemFlag.ItemIsEditable)
                 self.glyph_table.setItem(row, column, item)
         self.glyph_table.setCurrentCell(0, 0)
@@ -303,13 +418,21 @@ class FontLibraryDialog(FontEditingMixin, QDialog):
         self.code_value.setText(self.current_token.hex().upper())
         self.address_value.setText(f"{offset:06X}" if offset is not None else "未定位")
         raw = self._raw_glyph(self.current_token)
-        if raw is not None:
+        if _is_unused_glyph(raw, character):
+            self.original_caption.setText("未使用")
+            self.original_glyph.clear()
+            self.original_glyph.setToolTip("未映射且 ROM 字模为统一填充的安全空槽")
+        elif raw is not None:
+            self.original_caption.setText("原字形")
+            self.original_glyph.setToolTip("")
             self.original_glyph.setPixmap(
                 _glyph_pixmap(raw, character=character, scale=4).scaled(
                     56, 56, Qt.AspectRatioMode.KeepAspectRatio, Qt.TransformationMode.FastTransformation
                 )
             )
         else:
+            self.original_caption.setText("原字形")
+            self.original_glyph.setToolTip("")
             self.original_glyph.setText(character[:1])
         self._font_loading = True
         self.replacement_text.setText(character[:1])
@@ -348,29 +471,70 @@ class TextConverterDialog(QDialog):
             else reference_dc_text_table()
         )
         self.setWindowTitle("文字转换")
+        self.setObjectName("textConverterDialog")
         self.resize(473, 483)
         self.setMinimumSize(400, 400)
         self.setModal(True)
+        self.setStyleSheet(
+            "QDialog#textConverterDialog { background: #f3f7f9; }"
+            "QDialog#textConverterDialog QLabel#sectionLabel {"
+            " color: #24586a; font-weight: 600; padding: 2px 1px; }"
+            "QDialog#textConverterDialog QPlainTextEdit {"
+            " background: #ffffff; color: #20343d;"
+            " border: 1px solid #a9c1cc; border-radius: 7px; padding: 8px;"
+            " selection-background-color: #7fc4d3; }"
+            "QDialog#textConverterDialog QPlainTextEdit:focus {"
+            " border: 2px solid #328ba2; padding: 7px; }"
+            "QDialog#textConverterDialog QPushButton {"
+            " border-radius: 5px; padding: 0 12px; font-weight: 600; }"
+            "QDialog#textConverterDialog QPushButton#encodeButton {"
+            " background: #287f96; color: #ffffff; border: 1px solid #216b7d; }"
+            "QDialog#textConverterDialog QPushButton#encodeButton:hover {"
+            " background: #3297af; }"
+            "QDialog#textConverterDialog QPushButton#decodeButton {"
+            " background: #edf6f8; color: #245c6d; border: 1px solid #8fb4c0; }"
+            "QDialog#textConverterDialog QPushButton#decodeButton:hover {"
+            " background: #dceff3; border-color: #5796a8; }"
+        )
         root = QVBoxLayout(self)
-        root.addWidget(QLabel("文字："))
+        root.setContentsMargins(14, 12, 14, 14)
+        root.setSpacing(7)
+        self.text_label = QLabel("文字内容")
+        self.text_label.setObjectName("sectionLabel")
+        root.addWidget(self.text_label)
         self.text_edit = QPlainTextEdit()
+        self.text_edit.setObjectName("textEditor")
+        self.text_edit.setToolTip("输入或粘贴需要转换的游戏文字")
         root.addWidget(self.text_edit, 1)
 
         buttons = QHBoxLayout()
+        buttons.setContentsMargins(0, 2, 0, 2)
+        buttons.setSpacing(9)
         buttons.addStretch()
-        self.encode_button = QPushButton("文字转代码")
-        self.decode_button = QPushButton("代码转文字")
+        self.encode_button = QPushButton("文字 → 代码")
+        self.decode_button = QPushButton("代码 → 文字")
+        self.encode_button.setObjectName("encodeButton")
+        self.decode_button.setObjectName("decodeButton")
+        self.encode_button.setToolTip("把上方文字转换为下方十六进制代码")
+        self.decode_button.setToolTip("把下方十六进制代码还原为上方文字")
         self.encode_button.clicked.connect(self.encode_text)
         self.decode_button.clicked.connect(self.decode_code)
-        self.encode_button.setFixedSize(80, 32)
-        self.decode_button.setFixedSize(80, 32)
+        self.encode_button.setFixedSize(106, 34)
+        self.decode_button.setFixedSize(106, 34)
         buttons.addWidget(self.encode_button)
         buttons.addWidget(self.decode_button)
         buttons.addStretch()
         root.addLayout(buttons)
 
-        root.addWidget(QLabel("代码："))
+        self.code_label = QLabel("十六进制代码")
+        self.code_label.setObjectName("sectionLabel")
+        root.addWidget(self.code_label)
         self.code_edit = QPlainTextEdit()
+        self.code_edit.setObjectName("codeEditor")
+        self.code_edit.setToolTip("支持空格、逗号、$ 或 0x 前缀的十六进制字节")
+        self.code_edit.setStyleSheet(
+            "QPlainTextEdit#codeEditor { font-family: Consolas, monospace; }"
+        )
         root.addWidget(self.code_edit, 1)
         # The reference window has exactly six visible children: two labels,
         # two edit controls, and two buttons.  Keep diagnostic state off the
@@ -478,6 +642,9 @@ class _BattleSide(QWidget):
         self.raw_special = 0
         self.distance_table = 0
         group = QGroupBox(title)
+        group.setObjectName(
+            "enemyBattlePanel" if title == "敌方" else "allyBattlePanel"
+        )
         outer = QVBoxLayout(self)
         outer.setContentsMargins(0, 0, 0, 0)
         outer.addWidget(group)
@@ -491,6 +658,7 @@ class _BattleSide(QWidget):
             selector.setSizePolicy(
                 QSizePolicy.Policy.Ignored, QSizePolicy.Policy.Fixed
             )
+        self.weapon.setMinimumWidth(145)
         self.level = QComboBox()
         self.level.addItems([str(value) for value in range(1, 61)])
         self.strength = self._spin(0, 999)
@@ -500,9 +668,14 @@ class _BattleSide(QWidget):
         self.weapon_hit = self._spin(0, 999)
         self.weapon_range = self._spin(0, 16)
         self.skill = self._spin(0, 255)
-        self.power_air = self._spin(0, 999)
-        self.power_land = self._spin(0, 999)
-        self.power_sea = self._spin(0, 999)
+        self.skill.hide()
+        self.skill_summary = QComboBox()
+        self.skill_summary.setMaxVisibleItems(10)
+        for value in (0x00, 0x01, 0x02, 0x03, 0x04, 0x07):
+            self.skill_summary.addItem(unit_special_summary(value), value)
+        self.power_air = self._spin(0, 9999)
+        self.power_land = self._spin(0, 9999)
+        self.power_sea = self._spin(0, 9999)
         self.multiplier_numerator = self._spin(1, 99)
         self.multiplier_denominator = self._spin(1, 99)
         self.multiplier_numerator.hide()
@@ -523,18 +696,24 @@ class _BattleSide(QWidget):
             (("人物：", self.character), ("强度：", self.strength), ("伤害倍数：", self._multiplier_widget()), ("", None)),
             (("机体：", self.unit), ("防御：", self.defense), ("武器命中：", self.weapon_hit), ("火力：空", self.power_air)),
             (("武器：", self.weapon), ("速度：", self.speed), ("武器射程：", self.weapon_range), ("火力：陆", self.power_land)),
-            (("等级：", self.level), ("HP：", self.hp), ("机体特技：", self.skill), ("火力：海", self.power_sea)),
+            (("等级：", self.level), ("HP：", self.hp), ("机体特技：", self.skill_summary), ("火力：海", self.power_sea)),
         )
         for logical_row, fields in enumerate(controls):
             for column, (label, widget) in enumerate(fields):
                 if widget is None:
                     continue
-                grid.addWidget(QLabel(label), logical_row * 2, column)
+                field_label = QLabel(label)
+                field_label.setObjectName("battleFieldLabel")
+                grid.addWidget(field_label, logical_row * 2, column)
                 grid.addWidget(widget, logical_row * 2 + 1, column)
         grid.setColumnStretch(0, 3)
         grid.setColumnStretch(1, 2)
         grid.setColumnStretch(2, 2)
         grid.setColumnStretch(3, 2)
+        grid.setColumnMinimumWidth(0, 145)
+        grid.setColumnMinimumWidth(1, 88)
+        grid.setColumnMinimumWidth(2, 104)
+        grid.setColumnMinimumWidth(3, 88)
 
         self._populate_records()
         self.character.currentIndexChanged.connect(self._load_character)
@@ -544,6 +723,9 @@ class _BattleSide(QWidget):
         self.multiplier_edit.editingFinished.connect(self._parse_multiplier)
         self.multiplier_numerator.valueChanged.connect(self._sync_multiplier_from_parts)
         self.multiplier_denominator.valueChanged.connect(self._sync_multiplier_from_parts)
+        self.skill.valueChanged.connect(self._refresh_skill_summary)
+        self.skill_summary.currentIndexChanged.connect(self._select_skill_summary)
+        self.strength.valueChanged.connect(self._refresh_auto_power)
         for editor in (self.power_air, self.power_land, self.power_sea):
             editor.valueChanged.connect(self._mark_power_override)
         self._loading = False
@@ -653,11 +835,8 @@ class _BattleSide(QWidget):
         record = self.project.unit_codec.decode_record(unit_id, bytes(self.project.working))
         self.terrain_value = record.get("terrain")
         self.raw_special = record.get("special")
-        shown_special = normalized_special_code(self.raw_special)
-        self.skill.setValue(shown_special)
-        self.skill.setToolTip(
-            f"ROM 机体特技原码 ${self.raw_special:02X}；计算器显示值 {shown_special}。"
-        )
+        self.skill.setValue(self.raw_special)
+        self._refresh_skill_summary(self.raw_special)
         self._rebuild_weapons()
         self._power_is_auto = True
         self._refresh_stats()
@@ -746,13 +925,52 @@ class _BattleSide(QWidget):
         )
         self.weapon.setToolTip(self.weapon_summary.text())
         self.skill.setToolTip(
-            f"当前机体特技原码为 ${self.raw_special:02X}；"
+            f"当前机体特技原码为 {unit_special_summary(self.raw_special)}；"
             f"所选武器特技为 {weapon_skill}。"
         )
+        self.skill_summary.setToolTip(self.skill.toolTip())
+
+    def _refresh_skill_summary(self, value: int) -> None:
+        self.raw_special = value & 0xFF
+        summary = unit_special_summary(value)
+        defensive_value = value & 0x07
+        index = self.skill_summary.findData(
+            defensive_value if defensive_value in (0, 1, 2, 3, 4, 7) else 0
+        )
+        if index >= 0 and self.skill_summary.currentIndex() != index:
+            self.skill_summary.blockSignals(True)
+            self.skill_summary.setCurrentIndex(index)
+            self.skill_summary.blockSignals(False)
+        self.skill_summary.setToolTip(
+            f"机体原始组合值为 {summary}。下拉框只列出当前伤害计算实际处理的"
+            "防御特技；选择只影响本次属性计算，不写入 ROM。"
+        )
+
+    def _select_skill_summary(self, index: int) -> None:
+        value = self.skill_summary.itemData(index)
+        if value is not None:
+            self.skill.setValue(int(value))
+
+    @staticmethod
+    def _short_combo_name(combo: QComboBox) -> str:
+        text = combo.currentText().strip()
+        return text.split("：", 1)[-1].strip() if "：" in text else text
+
+    def subject(self, side_name: str) -> str:
+        character = self._short_combo_name(self.character) or "未选人物"
+        unit = self._short_combo_name(self.unit) or "未选机体"
+        return f"{side_name}「{character}／{unit}」"
+
+    def weapon_name(self) -> str:
+        return self._short_combo_name(self.weapon) or "无武器"
 
     def _mark_power_override(self, _value: int) -> None:
         if not self._loading:
             self._power_is_auto = False
+
+    def _refresh_auto_power(self, _value: int | None = None) -> None:
+        if self.project is not None and self._power_is_auto:
+            self.sync_formula_parameters(BattleFormulaParameters.from_project(self.project))
 
     def sync_formula_parameters(self, parameters: BattleFormulaParameters) -> None:
         if not self._power_is_auto:
@@ -762,7 +980,9 @@ class _BattleSide(QWidget):
             (self.power_air, self.power_land, self.power_sea),
             self._raw_weapon_powers,
         ):
-            editor.setValue(reference_firepower(raw_power, parameters.weapon_multiplier))
+            editor.setValue(
+                reference_firepower(self.strength.value(), raw_power, parameters)
+            )
         self._loading = False
 
     def _parse_multiplier(self) -> None:
@@ -908,11 +1128,57 @@ class AttributeCalculatorDialog(QDialog):
         super().__init__(parent)
         self.project = project
         self.setWindowTitle("战斗属性计算器")
-        self.resize(920, 650)
-        self.setMinimumSize(850, 600)
+        self.resize(1000, 650)
+        self.setMinimumSize(940, 600)
         self.setSizeGripEnabled(True)
+        self.setStyleSheet(
+            """
+            QGroupBox#enemyBattlePanel {
+                background: #fbf7f5;
+                border-color: #cdbab3;
+            }
+            QGroupBox#enemyBattlePanel::title {
+                background: #f3e7e2;
+                color: #754b42;
+            }
+            QGroupBox#allyBattlePanel {
+                background: #f3f8f9;
+                border-color: #abc5cb;
+            }
+            QGroupBox#allyBattlePanel::title,
+            QGroupBox#calculationPanel::title {
+                background: #e4eff2;
+                color: #2d6471;
+            }
+            QLabel#battleFieldLabel {
+                background: transparent;
+                color: #465861;
+                padding: 0 2px;
+                font-weight: 500;
+            }
+            QGroupBox#calculationPanel {
+                background: #f8fafb;
+                border-color: #b8c8cf;
+            }
+            QListWidget#battleResults {
+                background: #ffffff;
+                alternate-background-color: #f2f6f7;
+                border-color: #afc2ca;
+            }
+            QLabel#calculatorNotice {
+                background: #eef4f5;
+                border: 1px solid #cfdee2;
+                border-radius: 4px;
+                color: #5a6d76;
+                padding: 5px 8px;
+            }
+            """
+        )
         root = QVBoxLayout(self)
+        root.setContentsMargins(12, 10, 12, 10)
+        root.setSpacing(8)
         sides = QHBoxLayout()
+        sides.setSpacing(10)
         self.enemy = _BattleSide("敌方", project)
         self.ally = _BattleSide("我方", project)
         sides.addWidget(self.enemy)
@@ -920,25 +1186,77 @@ class AttributeCalculatorDialog(QDialog):
         root.addLayout(sides)
 
         result_group = QGroupBox("属性计算")
+        result_group.setObjectName("calculationPanel")
         result_layout = QVBoxLayout(result_group)
         self.results = QListWidget()
+        self.results.setObjectName("battleResults")
         self.results.setAlternatingRowColors(True)
+        self.results.setSelectionMode(QListWidget.SelectionMode.NoSelection)
         result_layout.addWidget(self.results, 1)
         formula_notice = QLabel(
             "只读模拟：强度/武器/防御、双击和命中临界值每次计算都从当前工程的“其他”公式参数读取；"
-            "武器按目标空/陆/海类型取火力，并使用所选武器距离补正表的最大射程列。本窗口不写 ROM。"
+            "最低命中速度按实际命中公式和最大射程距离补正反推，因此不会沿用旧修改器可能出现负数的估算值。"
+            "武器按目标空/陆/海类型取火力。本窗口不写 ROM。"
         )
-        formula_notice.setObjectName("hintText")
+        formula_notice.setObjectName("calculatorNotice")
         formula_notice.setWordWrap(True)
         result_layout.addWidget(formula_notice)
         root.addWidget(result_group, 1)
         self.calculate_button = QPushButton("开始计算")
+        self.calculate_button.setObjectName("primaryButton")
         self.calculate_button.setToolTip(
             "按当前 M17 公式参数计算双向命中、双击、预计伤害、特技减伤和击落次数。"
         )
         self.calculate_button.clicked.connect(self.calculate)
         root.addWidget(self.calculate_button, 0, Qt.AlignmentFlag.AlignHCenter)
         self.last_results: dict[str, BattleAttackResult] = {}
+        self._result_header_rows: dict[str, int] = {}
+        self._pending_focus_side: str | None = None
+        self.focused_result_side: str | None = None
+        self._live_refresh_scheduled = False
+        self._connect_live_updates(self.enemy, "敌方")
+        self._connect_live_updates(self.ally, "我方")
+
+    def _connect_live_updates(self, side: _BattleSide, side_name: str) -> None:
+        for selector in (side.character, side.unit, side.weapon, side.level):
+            selector.currentIndexChanged.connect(
+                lambda _value, name=side_name: self._input_changed(name)
+            )
+        for editor in (
+            side.strength,
+            side.defense,
+            side.speed,
+            side.hp,
+            side.weapon_hit,
+            side.weapon_range,
+            side.skill,
+            side.power_air,
+            side.power_land,
+            side.power_sea,
+            side.multiplier_numerator,
+            side.multiplier_denominator,
+        ):
+            editor.valueChanged.connect(
+                lambda _value, name=side_name: self._input_changed(name)
+            )
+        side.multiplier_edit.editingFinished.connect(
+            lambda name=side_name: self._input_changed(name)
+        )
+
+    def _input_changed(self, side_name: str) -> None:
+        if not self.last_results:
+            return
+        self._pending_focus_side = side_name
+        if self._live_refresh_scheduled:
+            return
+        self._live_refresh_scheduled = True
+        QTimer.singleShot(0, self._refresh_live_results)
+
+    def _refresh_live_results(self) -> None:
+        self._live_refresh_scheduled = False
+        side_name = self._pending_focus_side
+        self._pending_focus_side = None
+        self.calculate(focus_side=side_name)
 
     def calculate_attack(
         self,
@@ -955,46 +1273,69 @@ class AttributeCalculatorDialog(QDialog):
 
     def _append_result(
         self,
-        attacker_name: str,
-        defender_name: str,
+        attacker_side: str,
+        attacker: _BattleSide,
+        defender_side: str,
+        defender: _BattleSide,
         result: BattleAttackResult,
-    ) -> None:
-        self.results.addItem(f"--------{attacker_name}计算----------------")
-        hit_boundary = result.minimum_hit_speed - 1
+    ) -> int:
+        header_row = self.results.count()
+        attacker_name = attacker.subject(attacker_side)
+        defender_name = defender.subject(defender_side)
+        weapon_name = attacker.weapon_name()
+        header = QListWidgetItem(
+            f"{attacker_name} 使用「{weapon_name}」 → {defender_name}"
+        )
+        header.setBackground(QColor("#e4f0f3"))
+        header.setForeground(QColor("#255a69"))
+        header_font = header.font()
+        header_font.setBold(True)
+        header.setFont(header_font)
+        self.results.addItem(header)
         if result.minimum_hit_speed >= 99999:
-            self.results.addItem("命中最低速度计算：当前距离补正为 0，无法命中")
+            self.results.addItem(
+                f"最低命中速度：{attacker_name} 当前距离补正为 0，无法命中 {defender_name}"
+            )
         else:
             self.results.addItem(
-                f"命中最低速度计算：速度至少大于 {hit_boundary} 才能命中"
+                f"最低命中速度：{attacker_name} 的速度至少为 {result.minimum_hit_speed}；"
+                f"目标速度 {defender.speed.value()}，武器命中 {attacker.weapon_hit.value()}，"
+                f"临界 {result.hit_threshold}，距离补正 {result.distance_percent}%"
             )
         self.results.addItem(
-            f"计算结果：{' 可以命中' if result.can_hit else ' 无法命中'}"
-            f"（命中值 {result.hit_score}，临界 {result.hit_threshold}，"
-            f"距离补正 {result.distance_percent}%）"
+            f"命中结论：{attacker_name} {'可以' if result.can_hit else '无法'}命中 {defender_name}"
+            f"（当前命中值 {result.hit_score} {'≥' if result.can_hit else '<'} "
+            f"临界 {result.hit_threshold}）"
         )
         self.results.addItem(
-            f"双击最低速度计算：速度至少大于 {result.minimum_double_speed - 1} 才能双击"
+            f"最低双击速度：{attacker_name} 的速度至少为 {result.minimum_double_speed}"
         )
         self.results.addItem(
-            f"计算结果：{' 可以双击' if result.can_double else ' 无法双击'}"
+            f"双击结论：{attacker_name} {'可以' if result.can_double else '无法'}双击 {defender_name}"
         )
         self.results.addItem(
-            f"预计伤害计算：{attacker_name} 对 {defender_name} 造成预计伤害 "
+            f"预计伤害：{attacker_name} 对 {defender_name} 造成 "
             f"{result.predicted_damage}（对{result.terrain_name}火力 {result.firepower}）"
         )
         if result.defensive_effect is not None:
             self.results.addItem(
-                f"{defender_name} 拥有{result.defensive_effect.name}"
+                f"防御特技：{defender_name} 的「{result.defensive_effect.name}」生效"
             )
         self.results.addItem(
-            f"实际伤害计算：{attacker_name} 对 {defender_name} 造成实际伤害 "
+            f"实际伤害：{attacker_name} 对 {defender_name} 造成 "
             f"{result.actual_damage}，命中后 HP {result.remaining_hp}"
         )
         self.results.addItem(
-            f"{result.hits_to_defeat}次 可以击落 {defender_name}"
+            f"击落结论：{attacker_name} 需要 {result.hits_to_defeat} 次命中才能击落 {defender_name}"
         )
+        return header_row
 
-    def calculate(self) -> None:
+    def calculate(
+        self,
+        _checked: bool = False,
+        *,
+        focus_side: str | None = None,
+    ) -> None:
         parameters = BattleFormulaParameters.from_project(self.project)
         self.enemy.sync_formula_parameters(parameters)
         self.ally.sync_formula_parameters(parameters)
@@ -1002,8 +1343,22 @@ class AttributeCalculatorDialog(QDialog):
         enemy_result = self.calculate_attack(self.enemy, self.ally, parameters)
         self.last_results = {"我方": ally_result, "敌方": enemy_result}
         self.results.clear()
-        self._append_result("我方", "敌方", ally_result)
-        self._append_result("敌方", "我方", enemy_result)
+        self._result_header_rows = {
+            "我方": self._append_result(
+                "我方", self.ally, "敌方", self.enemy, ally_result
+            ),
+            "敌方": self._append_result(
+                "敌方", self.enemy, "我方", self.ally, enemy_result
+            ),
+        }
+        if focus_side in self._result_header_rows:
+            self.focused_result_side = focus_side
+            header = self.results.item(self._result_header_rows[focus_side])
+            self.results.scrollToItem(
+                header, QListWidget.ScrollHint.PositionAtTop
+            )
+        elif focus_side is None:
+            self.focused_result_side = None
 
 
 class SaveEditorDialog(QDialog):
@@ -1741,41 +2096,80 @@ class OtherSettingsDialog(QDialog):
     def __init__(self, parent: QWidget | None = None, project: Any | None = None) -> None:
         super().__init__(parent)
         self.project = project
+        self.setObjectName("otherSettingsDialog")
         self.setWindowTitle("其他")
-        self.resize(820, 620)
-        self.setMinimumSize(760, 560)
+        self.resize(780, 540)
+        self.setMinimumSize(740, 520)
         self.setSizeGripEnabled(True)
         self.setModal(True)
-        root = QVBoxLayout(self)
-        self.double_hit_values = self._number_group(
-            root, "双击公式", (70, 90, 20), 3, fixed_height=105, field_width=72
+        self.setStyleSheet(
+            "QDialog#otherSettingsDialog { background:#f3f6f7; }"
+            "QDialog#otherSettingsDialog QGroupBox {"
+            " background:#ffffff; border:1px solid #b5c5cc; border-radius:7px;"
+            " margin-top:13px; padding:7px 6px 6px 6px; }"
+            "QDialog#otherSettingsDialog QGroupBox::title {"
+            " subcontrol-origin:margin; subcontrol-position:top left; left:12px;"
+            " top:0; background:#f3f6f7; border:none; border-radius:0;"
+            " padding:0 6px; color:#2f6170; font-weight:600; }"
+            "QDialog#otherSettingsDialog QLabel#formulaText {"
+            " color:#263f49; background:transparent; font-size:13px; padding:0; }"
+            "QDialog#otherSettingsDialog QLabel#fieldLabel {"
+            " color:#36515d; background:transparent; font-size:11px;"
+            " font-weight:500; padding:0; }"
+            "QDialog#otherSettingsDialog QWidget#fieldCard {"
+            " background:transparent; border:none; }"
+            "QDialog#otherSettingsDialog QLabel#statusText {"
+            " background:transparent; border:none; padding:0 2px;"
+            " color:#2e6f4c; font-size:9px; }"
         )
-        self.damage_values = self._number_group(
-            root, "伤害计算公式", (13, 10, 10, 1, 1), 5,
-            fixed_height=110, field_width=72
+        root = QVBoxLayout(self)
+        root.setContentsMargins(10, 8, 10, 8)
+        root.setSpacing(6)
+        self.double_hit_values = self._formula_group(
+            root,
+            "双击公式",
+            (70, 90, 20),
+            ("如果攻击方速度的", "% ＞ 被攻击方速度的", "% ＋", "，则双击"),
+            fixed_height=68,
+        )
+        self.damage_values = self._formula_group(
+            root,
+            "伤害计算公式",
+            (13, 10, 10, 1, 1),
+            ("强度 ×", "÷", "＋ 武器火力 ×", "－ 防御 ×", "÷", ""),
+            fixed_height=70,
         )
 
         lower = QHBoxLayout()
         left = QVBoxLayout()
-        self.hit_values = self._number_group(
-            left, "命中计算公式", (70,), 1,
-            fixed_height=110, field_width=72
+        self.hit_values = self._formula_group(
+            left,
+            "命中计算公式",
+            (70,),
+            ("命中临界值：", ""),
+            fixed_height=66,
         )
         self.item_values = self._number_group(
             left,
-            "道具相关修改 · 超合金Z防御增加",
+            "道具相关修改",
             (1, 1, 1, 5, 3, 1, 3, 3, 25, 25, 50),
             3,
-            field_width=110,
+            labels=(
+                "超合金Z防御增加：", "磁性涂料速度增加：", "传感器强度增加：",
+                "C装甲血量增加：", "超合金W防御增加：", "助推器机动增加：",
+                "传感器2强度增加：", "M合金速度增加：", "电子盾血量增加：",
+                "正义恢复精神量：", "医治恢复精神量：",
+            ),
+            field_width=84,
             stretch=1,
         )
         lower.addLayout(left, 1)
         lower.addWidget(self._initial_units_group(), 1)
         root.addLayout(lower, 1)
         self.status = QLabel(READ_ONLY_NOTICE + " 数值及初始机体均按原界面展示，不会写入ROM。")
+        self.status.setObjectName("statusText")
         self.status.setWordWrap(True)
-        self.status.setMaximumHeight(22)
-        self.status.setStyleSheet("color:#9a5b00; font-size:9px;")
+        self.status.setMaximumHeight(18)
         root.addWidget(self.status)
         root.addLayout(_dialog_buttons(self, writable=True))
         self._load_project_values()
@@ -1836,16 +2230,16 @@ class OtherSettingsDialog(QDialog):
                 self.item_values,
                 (
                     "超合金Z：防御增加",
-                    "磁性涂层：速度增加",
+                    "磁性涂料：速度增加",
                     "传感器：强度增加",
-                    "超合金C：HP增加",
+                    "C装甲：血量增加",
                     "超合金W：防御增加",
-                    "推进器：机动增加",
+                    "助推器：机动增加",
                     "传感器2：强度增加",
                     "M合金：速度增加",
-                    "电子护盾：HP增加",
-                    "正义：SP消耗",
-                    "治疗：SP消耗",
+                    "电子盾：血量增加",
+                    "正义：恢复精神量",
+                    "医治：恢复精神量",
                 ),
             ),
         )
@@ -1871,7 +2265,41 @@ class OtherSettingsDialog(QDialog):
             "已读取ROM中的公式立即数、11项道具效果和6组初始人物/机体；"
             "按“确定”作为一个事务写入，按“取消”不修改ROM。"
         )
-        self.status.setStyleSheet("color:#2e7d4f; font-size:9px;")
+
+    @staticmethod
+    def _formula_group(
+        parent_layout: QVBoxLayout,
+        title: str,
+        values: tuple[int, ...],
+        fragments: tuple[str, ...],
+        *,
+        fixed_height: int,
+        field_width: int = 64,
+    ) -> list[QSpinBox]:
+        if len(fragments) != len(values) + 1:
+            raise ValueError("公式文本段数量必须比数值数量多 1")
+        group = QGroupBox(title)
+        group.setFixedHeight(fixed_height)
+        row = QHBoxLayout(group)
+        row.setContentsMargins(14, 7, 14, 5)
+        row.setSpacing(5)
+        spins: list[QSpinBox] = []
+        for index, value in enumerate(values):
+            label = QLabel(fragments[index])
+            label.setObjectName("formulaText")
+            row.addWidget(label)
+            spin = _readonly_spin(value, 9999)
+            spin.setFixedWidth(field_width)
+            spin.setToolTip(READ_ONLY_NOTICE)
+            row.addWidget(spin)
+            spins.append(spin)
+        if fragments[-1]:
+            label = QLabel(fragments[-1])
+            label.setObjectName("formulaText")
+            row.addWidget(label)
+        row.addStretch(1)
+        parent_layout.addWidget(group)
+        return spins
 
     @staticmethod
     def _number_group(
@@ -1882,23 +2310,41 @@ class OtherSettingsDialog(QDialog):
         *,
         fixed_height: int | None = None,
         field_width: int = 90,
+        labels: tuple[str, ...] | None = None,
         stretch: int = 0,
     ) -> list[QSpinBox]:
+        if labels is not None and len(labels) != len(values):
+            raise ValueError("字段标签数量必须与数值数量一致")
         group = QGroupBox(title)
         if fixed_height is not None:
             group.setFixedHeight(fixed_height)
         grid = QGridLayout(group)
+        grid.setContentsMargins(8, 8, 8, 6)
+        grid.setHorizontalSpacing(6)
+        grid.setVerticalSpacing(2)
         spins: list[QSpinBox] = []
         for index, value in enumerate(values):
             spin = _readonly_spin(value, 9999)
             spin.setFixedWidth(field_width)
             spin.setToolTip(READ_ONLY_NOTICE)
-            grid.addWidget(
-                spin,
-                index // columns,
-                index % columns,
-                Qt.AlignmentFlag.AlignCenter,
-            )
+            if labels is None:
+                grid.addWidget(
+                    spin,
+                    index // columns,
+                    index % columns,
+                    Qt.AlignmentFlag.AlignCenter,
+                )
+            else:
+                cell = QWidget()
+                cell.setObjectName("fieldCard")
+                cell_layout = QVBoxLayout(cell)
+                cell_layout.setContentsMargins(2, 0, 2, 1)
+                cell_layout.setSpacing(1)
+                label = QLabel(labels[index])
+                label.setObjectName("fieldLabel")
+                cell_layout.addWidget(label)
+                cell_layout.addWidget(spin, 0, Qt.AlignmentFlag.AlignLeft)
+                grid.addWidget(cell, index // columns, index % columns)
             spins.append(spin)
         parent_layout.addWidget(group, stretch)
         return spins
@@ -1906,10 +2352,14 @@ class OtherSettingsDialog(QDialog):
     def _initial_units_group(self) -> QGroupBox:
         group = QGroupBox("初始机体")
         grid = QGridLayout(group)
+        grid.setContentsMargins(8, 8, 8, 6)
+        grid.setHorizontalSpacing(8)
+        grid.setVerticalSpacing(2)
         defaults = (4, 9, 5, 13, 6, 15, 7, 17, 8, 19, 9, 23)
         self.initial_units: list[QComboBox] = []
         for index, unit_id in enumerate(defaults):
             combo = QComboBox()
+            combo.setMaxVisibleItems(10)
             combo.setMinimumWidth(0)
             combo.setSizePolicy(
                 QSizePolicy.Policy.Ignored, QSizePolicy.Policy.Fixed
@@ -1937,7 +2387,18 @@ class OtherSettingsDialog(QDialog):
                     combo.setCurrentIndex(found)
             combo.setEnabled(False)
             combo.setToolTip(READ_ONLY_NOTICE)
-            grid.addWidget(combo, index // 2, index % 2)
+            roster_row = index // 2
+            kind = "人物" if index % 2 == 0 else "机体"
+            label = QLabel(f"{kind}{roster_row + 1}：")
+            label.setObjectName("fieldLabel")
+            card = QWidget()
+            card.setObjectName("fieldCard")
+            card_layout = QVBoxLayout(card)
+            card_layout.setContentsMargins(2, 0, 2, 1)
+            card_layout.setSpacing(1)
+            card_layout.addWidget(label)
+            card_layout.addWidget(combo)
+            grid.addWidget(card, roster_row, index % 2)
             self.initial_units.append(combo)
         return group
 

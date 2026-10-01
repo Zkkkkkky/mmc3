@@ -1,0 +1,208 @@
+{
+  "schema_version": 1,
+  "validated": true,
+  "error": null,
+  "execution_record_count": 15,
+  "diff_count": 0,
+  "sha256_before": "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E",
+  "sha256_after": "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E",
+  "observations": [
+    {
+      "control_id": 110,
+      "action": "right_click",
+      "path": [
+        13
+      ],
+      "focused": null,
+      "descendants": []
+    },
+    {
+      "control_id": 110,
+      "action": "keyboard_activate",
+      "path": [
+        13
+      ],
+      "focused": true,
+      "descendants": []
+    },
+    {
+      "control_id": 110,
+      "action": "left_click",
+      "path": [
+        13
+      ],
+      "focused": null,
+      "descendants": []
+    },
+    {
+      "control_id": 200,
+      "action": "right_click",
+      "path": [
+        12,
+        9
+      ],
+      "focused": null,
+      "descendants": []
+    },
+    {
+      "control_id": 200,
+      "action": "keyboard_activate",
+      "path": [
+        12,
+        9
+      ],
+      "focused": true,
+      "descendants": []
+    },
+    {
+      "control_id": 200,
+      "action": "left_click",
+      "path": [
+        12,
+        9
+      ],
+      "focused": null,
+      "descendants": []
+    },
+    {
+      "control_id": 430,
+      "action": "right_click",
+      "path": [
+        12,
+        8
+      ],
+      "focused": null,
+      "descendants": []
+    },
+    {
+      "control_id": 430,
+      "action": "keyboard_activate",
+      "path": [
+        12,
+        8
+      ],
+      "focused": true,
+      "descendants": []
+    },
+    {
+      "control_id": 430,
+      "action": "left_click",
+      "path": [
+        12,
+        8
+      ],
+      "focused": null,
+      "descendants": []
+    },
+    {
+      "control_id": 660,
+      "action": "right_click",
+      "path": [
+        12,
+        8,
+        2
+      ],
+      "focused": null,
+      "descendants": []
+    },
+    {
+      "control_id": 660,
+      "action": "keyboard_activate",
+      "path": [
+        12,
+        8,
+        2
+      ],
+      "focused": true,
+      "descendants": []
+    },
+    {
+      "control_id": 660,
+      "action": "left_click",
+      "path": [
+        12,
+        8,
+        2
+      ],
+      "focused": null,
+      "descendants": []
+    }
+  ],
+  "execution_records": [
+    {
+      "action_id": "67ca2bb52082205d4590",
+      "status": "passed",
+      "result": "焦点=None；子窗=[]。"
+    },
+    {
+      "action_id": "9dac26e39887c7a48305",
+      "status": "passed",
+      "result": "焦点=True；子窗=[]。"
+    },
+    {
+      "action_id": "72106bc764b5097cdd18",
+      "status": "passed",
+      "result": "焦点=None；子窗=[]。"
+    },
+    {
+      "action_id": "7c63073724b440e8b224",
+      "status": "passed",
+      "result": "切至 220 后隐藏；返回后启用=True。"
+    },
+    {
+      "action_id": "4ba222aa8467d913372a",
+      "status": "passed",
+      "result": "焦点=None；子窗=[]。"
+    },
+    {
+      "action_id": "34735c44688e9b9d30a1",
+      "status": "passed",
+      "result": "焦点=True；子窗=[]。"
+    },
+    {
+      "action_id": "daf8e32ecf5a554c8415",
+      "status": "passed",
+      "result": "焦点=None；子窗=[]。"
+    },
+    {
+      "action_id": "905871f2fb2286127c7e",
+      "status": "passed",
+      "result": "切至 140 后隐藏；返回后启用=True。"
+    },
+    {
+      "action_id": "e2bc4afc9268ba784bf0",
+      "status": "passed",
+      "result": "焦点=None；子窗=[]。"
+    },
+    {
+      "action_id": "5cc83b2aa56d63707039",
+      "status": "passed",
+      "result": "焦点=True；子窗=[]。"
+    },
+    {
+      "action_id": "e1f262f283d12cdc7a9b",
+      "status": "passed",
+      "result": "焦点=None；子窗=[]。"
+    },
+    {
+      "action_id": "e5276199363269ede7c7",
+      "status": "passed",
+      "result": "切至 140 后隐藏；返回后启用=True。"
+    },
+    {
+      "action_id": "c9d65df0137648348374",
+      "status": "passed",
+      "result": "焦点=None；子窗=[]。"
+    },
+    {
+      "action_id": "64d88e477d309cb8f223",
+      "status": "passed",
+      "result": "焦点=True；子窗=[]。"
+    },
+    {
+      "action_id": "b2a12aa49195f9bbd50f",
+      "status": "passed",
+      "result": "焦点=None；子窗=[]。"
+    }
+  ]
+}

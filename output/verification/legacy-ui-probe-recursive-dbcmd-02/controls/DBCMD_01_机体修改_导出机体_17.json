@@ -1,0 +1,32 @@
+{
+  "tag": "DBCMD_01_机体修改_导出机体_17",
+  "hwnd": 65900,
+  "title": "Program Manager",
+  "class": "Progman",
+  "rect": {
+    "left": 0,
+    "top": 0,
+    "right": 1920,
+    "bottom": 1080,
+    "width": 1920,
+    "height": 1080
+  },
+  "pid": 9016,
+  "tree": {
+    "hwnd": 65900,
+    "class": "Progman",
+    "text": "Program Manager",
+    "ctrl_id": 0,
+    "rect": {
+      "left": 0,
+      "top": 0,
+      "right": 1920,
+      "bottom": 1080,
+      "width": 1920,
+      "height": 1080
+    },
+    "visible": true,
+    "enabled": true,
+    "children": []
+  }
+}

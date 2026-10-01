@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "validated": true,
+  "case": "picture-puzzle-flip",
+  "rom": "D:\\GIT\\mmc3\\output\\build\\legacy-ui-probe\\weapon-rule-save-picture-puzzle-flip.nes",
+  "requested_value": 18,
+  "requested_value2": 7,
+  "requested_code": "01 83 F0 FC 00 83 F0 FC",
+  "requested_record": 0,
+  "puzzle_action": {
+    "kind": "物理拼图",
+    "action": "flip",
+    "library_click": false,
+    "effect_button": "right"
+  },
+  "control_values_before": {},
+  "observed_before": null,
+  "observed_after": null,
+  "sha256_before": "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E",
+  "sha256_after": "D7866D7C17BF15B8184D2F92EA691D8E7FA8F3725CDE22B0A2079CFFE6CA5501",
+  "diff_count": 1,
+  "diffs": [
+    {
+      "offset": 66099,
+      "before": 0,
+      "after": 64
+    }
+  ]
+}

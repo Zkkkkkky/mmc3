@@ -1,0 +1,32 @@
+{
+  "tag": "DBCMD_01_机体修改_导出机体_6",
+  "hwnd": 196810,
+  "title": "Windows 输入体验",
+  "class": "Windows.UI.Core.CoreWindow",
+  "rect": {
+    "left": 0,
+    "top": 0,
+    "right": 1920,
+    "bottom": 1080,
+    "width": 1920,
+    "height": 1080
+  },
+  "pid": 7884,
+  "tree": {
+    "hwnd": 196810,
+    "class": "Windows.UI.Core.CoreWindow",
+    "text": "Windows 输入体验",
+    "ctrl_id": 0,
+    "rect": {
+      "left": 0,
+      "top": 0,
+      "right": 1920,
+      "bottom": 1080,
+      "width": 1920,
+      "height": 1080
+    },
+    "visible": true,
+    "enabled": true,
+    "children": []
+  }
+}

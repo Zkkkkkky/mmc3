@@ -1,0 +1,18 @@
+﻿[    0.0s] launched pid=4484
+[    0.0s] === stage A: launcher -> main window (no ROM) ===
+[    3.0s] top window: {'hwnd': 8585642, 'title': 'SRW2修改器V1.5', 'class': 'WTWindow', 'rect': {'left': 571, 'top': 244, 'right': 1346, 'bottom': 843, 'width': 775, 'height': 599}, 'pid': 4484}
+[    4.0s] dump A01_启动器: title='SRW2修改器V1.5' class='WTWindow' controls=8 shot=ok
+[    6.5s] main window hwnd=27396338 title='SRW2扩容版修改器V1.0'
+[    7.9s] dump A02_主窗口_未载入ROM: title='SRW2扩容版修改器V1.0' class='WTWindow' controls=63 shot=ok
+[   12.5s] menu 文件(F): could not open menu via Alt+F
+[   17.1s] menu 帮助(H): could not open menu via Alt+H
+[   17.6s] === stage LOAD: load ROM copy only ===
+[   18.5s] dump LOAD01_打开ROM对话框: title='打开文件' class='#32770' controls=51 shot=ok
+[   19.0s] open dialog confirmed gone=True
+[   26.0s] ROM loaded without main-window sweep, title='SRW2扩容版修改器V1.0：D:\\GIT\\mmc3\\output\\build\\legacy-ui-probe\\weapon-rule-save-movement1-increment.nes'
+[   27.0s] dump LOAD02_主窗口_载入后: title='SRW2扩容版修改器V1.0：D:\\GIT\\mmc3\\output\\build\\legacy-ui-probe\\weapon-rule-save-movement1-increment.nes' class='WTWindow' controls=63 shot=ok
+[   27.0s] === stage DBWRULESAVE: movement1-increment ===
+[   28.0s] 数据库: hwnd=3083056 title='数据库'
+[   55.7s] dump DBWRULESAVE_movement1-increment_修改后: title='规律' class='WTWindow' controls=73 shot=ok
+[   61.2s] DBWRULESAVE complete: case=movement1-increment diffs=1
+[   61.5s] terminated owned pid=4484

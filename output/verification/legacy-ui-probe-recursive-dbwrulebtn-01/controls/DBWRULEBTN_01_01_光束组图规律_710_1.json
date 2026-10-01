@@ -1,0 +1,479 @@
+{
+  "tag": "DBWRULEBTN_01_01_光束组图规律_710_1",
+  "hwnd": 17370070,
+  "title": "运行规律模拟",
+  "class": "WTWindow",
+  "rect": {
+    "left": 370,
+    "top": 186,
+    "right": 1548,
+    "bottom": 899,
+    "width": 1178,
+    "height": 713
+  },
+  "pid": 9816,
+  "tree": {
+    "hwnd": 17370070,
+    "class": "WTWindow",
+    "text": "运行规律模拟",
+    "ctrl_id": 0,
+    "rect": {
+      "left": 370,
+      "top": 186,
+      "right": 1548,
+      "bottom": 899,
+      "width": 1178,
+      "height": 713
+    },
+    "visible": true,
+    "enabled": true,
+    "children": [
+      {
+        "hwnd": 23923866,
+        "class": "Afx:400000:b:10003:900015:0",
+        "text": "每移动几次记录一次坐标",
+        "ctrl_id": 300,
+        "rect": {
+          "left": 1253,
+          "top": 325,
+          "right": 1523,
+          "bottom": 355,
+          "width": 270,
+          "height": 30
+        },
+        "visible": true,
+        "enabled": true,
+        "children": []
+      },
+      {
+        "hwnd": 27462876,
+        "class": "msctls_updown32",
+        "text": "",
+        "ctrl_id": 294,
+        "rect": {
+          "left": 1313,
+          "top": 355,
+          "right": 1336,
+          "bottom": 385,
+          "width": 23,
+          "height": 30
+        },
+        "visible": true,
+        "enabled": true,
+        "children": []
+      },
+      {
+        "hwnd": 22151628,
+        "class": "Edit",
+        "text": "1",
+        "ctrl_id": 290,
+        "rect": {
+          "left": 1253,
+          "top": 355,
+          "right": 1313,
+          "bottom": 385,
+          "width": 60,
+          "height": 30
+        },
+        "visible": true,
+        "enabled": true,
+        "children": []
+      },
+      {
+        "hwnd": 31787918,
+        "class": "_EL_DrawPanel",
+        "text": "",
+        "ctrl_id": 280,
+        "rect": {
+          "left": 1373,
+          "top": 475,
+          "right": 1463,
+          "bottom": 535,
+          "width": 90,
+          "height": 60
+        },
+        "visible": false,
+        "enabled": true,
+        "children": []
+      },
+      {
+        "hwnd": 31654060,
+        "class": "Button",
+        "text": "结束",
+        "ctrl_id": 270,
+        "rect": {
+          "left": 1043,
+          "top": 505,
+          "right": 1133,
+          "bottom": 535,
+          "width": 90,
+          "height": 30
+        },
+        "visible": true,
+        "enabled": true,
+        "button_check_state": 0,
+        "children": []
+      },
+      {
+        "hwnd": 15076224,
+        "class": "Button",
+        "text": "开始",
+        "ctrl_id": 260,
+        "rect": {
+          "left": 1043,
+          "top": 465,
+          "right": 1133,
+          "bottom": 495,
+          "width": 90,
+          "height": 30
+        },
+        "visible": true,
+        "enabled": true,
+        "button_check_state": 0,
+        "children": []
+      },
+      {
+        "hwnd": 180617596,
+        "class": "Button",
+        "text": "鼠标模拟运动",
+        "ctrl_id": 250,
+        "rect": {
+          "left": 1253,
+          "top": 275,
+          "right": 1443,
+          "bottom": 325,
+          "width": 190,
+          "height": 50
+        },
+        "visible": true,
+        "enabled": true,
+        "button_check_state": 0,
+        "children": []
+      },
+      {
+        "hwnd": 34406658,
+        "class": "msctls_updown32",
+        "text": "",
+        "ctrl_id": 244,
+        "rect": {
+          "left": 1103,
+          "top": 355,
+          "right": 1126,
+          "bottom": 385,
+          "width": 23,
+          "height": 30
+        },
+        "visible": true,
+        "enabled": true,
+        "children": []
+      },
+      {
+        "hwnd": 35586522,
+        "class": "Edit",
+        "text": "0",
+        "ctrl_id": 240,
+        "rect": {
+          "left": 1043,
+          "top": 355,
+          "right": 1103,
+          "bottom": 385,
+          "width": 60,
+          "height": 30
+        },
+        "visible": true,
+        "enabled": true,
+        "children": []
+      },
+      {
+        "hwnd": 21105598,
+        "class": "msctls_updown32",
+        "text": "",
+        "ctrl_id": 234,
+        "rect": {
+          "left": 1203,
+          "top": 355,
+          "right": 1226,
+          "bottom": 385,
+          "width": 23,
+          "height": 30
+        },
+        "visible": true,
+        "enabled": true,
+        "children": []
+      },
+      {
+        "hwnd": 16845776,
+        "class": "Edit",
+        "text": "0",
+        "ctrl_id": 230,
+        "rect": {
+          "left": 1143,
+          "top": 355,
+          "right": 1203,
+          "bottom": 385,
+          "width": 60,
+          "height": 30
+        },
+        "visible": true,
+        "enabled": true,
+        "children": []
+      },
+      {
+        "hwnd": 13306708,
+        "class": "Afx:400000:b:10003:900015:0",
+        "text": "y轴：",
+        "ctrl_id": 220,
+        "rect": {
+          "left": 1143,
+          "top": 325,
+          "right": 1243,
+          "bottom": 355,
+          "width": 100,
+          "height": 30
+        },
+        "visible": true,
+        "enabled": true,
+        "children": []
+      },
+      {
+        "hwnd": 23134760,
+        "class": "Afx:400000:b:10003:900015:0",
+        "text": "X轴：",
+        "ctrl_id": 210,
+        "rect": {
+          "left": 1043,
+          "top": 325,
+          "right": 1143,
+          "bottom": 355,
+          "width": 100,
+          "height": 30
+        },
+        "visible": true,
+        "enabled": true,
+        "children": []
+      },
+      {
+        "hwnd": 26676170,
+        "class": "Afx:400000:b:10003:900015:0",
+        "text": "Y运行规律：",
+        "ctrl_id": 200,
+        "rect": {
+          "left": 1043,
+          "top": 695,
+          "right": 1183,
+          "bottom": 725,
+          "width": 140,
+          "height": 30
+        },
+        "visible": true,
+        "enabled": true,
+        "children": []
+      },
+      {
+        "hwnd": 19532738,
+        "class": "Edit",
+        "text": "",
+        "ctrl_id": 190,
+        "rect": {
+          "left": 1043,
+          "top": 725,
+          "right": 1533,
+          "bottom": 835,
+          "width": 490,
+          "height": 110
+        },
+        "visible": true,
+        "enabled": true,
+        "children": []
+      },
+      {
+        "hwnd": 15010776,
+        "class": "Afx:400000:b:10003:900015:0",
+        "text": "物体宽度：",
+        "ctrl_id": 180,
+        "rect": {
+          "left": 1143,
+          "top": 245,
+          "right": 1243,
+          "bottom": 275,
+          "width": 100,
+          "height": 30
+        },
+        "visible": true,
+        "enabled": true,
+        "children": []
+      },
+      {
+        "hwnd": 24644750,
+        "class": "msctls_updown32",
+        "text": "",
+        "ctrl_id": 174,
+        "rect": {
+          "left": 1103,
+          "top": 275,
+          "right": 1126,
+          "bottom": 305,
+          "width": 23,
+          "height": 30
+        },
+        "visible": true,
+        "enabled": true,
+        "children": []
+      },
+      {
+        "hwnd": 17763478,
+        "class": "Edit",
+        "text": "8",
+        "ctrl_id": 170,
+        "rect": {
+          "left": 1043,
+          "top": 275,
+          "right": 1103,
+          "bottom": 305,
+          "width": 60,
+          "height": 30
+        },
+        "visible": true,
+        "enabled": true,
+        "children": []
+      },
+      {
+        "hwnd": 156175550,
+        "class": "Afx:400000:b:10003:900015:0",
+        "text": "物体高度：",
+        "ctrl_id": 160,
+        "rect": {
+          "left": 1043,
+          "top": 245,
+          "right": 1133,
+          "bottom": 275,
+          "width": 90,
+          "height": 30
+        },
+        "visible": true,
+        "enabled": true,
+        "children": []
+      },
+      {
+        "hwnd": 29166764,
+        "class": "msctls_updown32",
+        "text": "",
+        "ctrl_id": 154,
+        "rect": {
+          "left": 1203,
+          "top": 275,
+          "right": 1226,
+          "bottom": 305,
+          "width": 23,
+          "height": 30
+        },
+        "visible": true,
+        "enabled": true,
+        "children": []
+      },
+      {
+        "hwnd": 20057246,
+        "class": "Edit",
+        "text": "8",
+        "ctrl_id": 150,
+        "rect": {
+          "left": 1143,
+          "top": 275,
+          "right": 1203,
+          "bottom": 305,
+          "width": 60,
+          "height": 30
+        },
+        "visible": true,
+        "enabled": true,
+        "children": []
+      },
+      {
+        "hwnd": 18153954,
+        "class": "Button",
+        "text": "移动",
+        "ctrl_id": 140,
+        "rect": {
+          "left": 1043,
+          "top": 405,
+          "right": 1123,
+          "bottom": 435,
+          "width": 80,
+          "height": 30
+        },
+        "visible": true,
+        "enabled": true,
+        "button_check_state": 0,
+        "children": []
+      },
+      {
+        "hwnd": 17304464,
+        "class": "Afx:400000:8:10003:900015:0",
+        "text": "",
+        "ctrl_id": 130,
+        "rect": {
+          "left": 883,
+          "top": 295,
+          "right": 916,
+          "bottom": 328,
+          "width": 33,
+          "height": 33
+        },
+        "visible": false,
+        "enabled": true,
+        "children": []
+      },
+      {
+        "hwnd": 241568942,
+        "class": "Afx:400000:b:10003:900015:0",
+        "text": "X运行规律：",
+        "ctrl_id": 120,
+        "rect": {
+          "left": 1043,
+          "top": 545,
+          "right": 1183,
+          "bottom": 575,
+          "width": 140,
+          "height": 30
+        },
+        "visible": true,
+        "enabled": true,
+        "children": []
+      },
+      {
+        "hwnd": 26673420,
+        "class": "Edit",
+        "text": "",
+        "ctrl_id": 110,
+        "rect": {
+          "left": 1043,
+          "top": 575,
+          "right": 1533,
+          "bottom": 685,
+          "width": 490,
+          "height": 110
+        },
+        "visible": true,
+        "enabled": true,
+        "children": []
+      },
+      {
+        "hwnd": 24707640,
+        "class": "Afx:400000:b:10003:900015:0",
+        "text": "",
+        "ctrl_id": 100,
+        "rect": {
+          "left": 383,
+          "top": 235,
+          "right": 1023,
+          "bottom": 835,
+          "width": 640,
+          "height": 600
+        },
+        "visible": true,
+        "enabled": true,
+        "children": []
+      }
+    ]
+  }
+}

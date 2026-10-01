@@ -85,6 +85,14 @@ class AnimationTable:
 
 
 @dataclass(frozen=True)
+class AnimationPoolUsage:
+    capacity: int
+    used: int
+    free: int
+    unique_records: int
+
+
+@dataclass(frozen=True)
 class SpriteTilePlacement:
     """One OAM tile emitted by the verified physical-puzzle interpreter."""
 
@@ -119,6 +127,29 @@ class SpriteComposition:
 
 
 @dataclass(frozen=True)
+class BeamComposition:
+    """Decoded weapon-beam grid stream.
+
+    Beam puzzle records are not physical/OAM compositions.  Their ``FE Y X``
+    header selects a grid origin, literal bytes draw tiles, ``F3 DY DX`` moves
+    the cursor, ``FD 20 width`` sets a row width, ``F8 count tile`` repeats a
+    tile, and ``F9 count first`` draws consecutive tiles.  These command
+    families are independently documented and covered by reference-editor
+    save goldens; they must never be rewritten through the unrelated physical
+    puzzle encoder.
+    """
+
+    anchor_x: int
+    anchor_y: int
+    placements: tuple[SpriteTilePlacement, ...]
+    complete: bool
+    editable: bool
+    consumed: int
+    error: str = ""
+    unsupported_commands: tuple[int, ...] = ()
+
+
+@dataclass(frozen=True)
 class SpriteTimeline:
     frames: tuple[int, ...]
     loop_start: int | None
@@ -129,6 +160,306 @@ class SpriteTimeline:
 
 def _signed_byte(value: int) -> int:
     return value - 0x100 if value & 0x80 else value
+
+
+def decode_legacy_beam_composition(
+    raw: bytes,
+    start: int = 0,
+) -> BeamComposition:
+    """Decode the verified legacy beam-puzzle command language.
+
+    The full record is required, including ``FE Y X``.  Literal tile bytes,
+    relative cursor command ``F3 DY DX``, row-width command ``FD 20 width``,
+    repeat command ``F8 count tile`` and consecutive command
+    ``F9 count first`` are established by the legacy documentation and
+    controlled reference-editor saves.
+    """
+
+    if len(raw) < 4 or raw[0] != 0xFE:
+        return BeamComposition(
+            0, 0, (), False, False, min(len(raw), 1),
+            "光束拼图缺少 FE/Y/X 前置字节。",
+        )
+    anchor_y = raw[1]
+    anchor_x = raw[2]
+    x = anchor_x
+    y = anchor_y
+    cursor = 3
+    placements: list[SpriteTilePlacement] = []
+    row_width: int | None = None
+    row_origin_x = x
+    row_progress = 0
+
+    def emit(tile: int, command_offset: int) -> None:
+        nonlocal x, y, row_progress
+        placements.append(
+            SpriteTilePlacement(
+                command_offset=start + command_offset,
+                x=x,
+                y=y,
+                tile_index=tile,
+                tile_token=tile,
+                attributes=0,
+            )
+        )
+        x += 1
+        if row_width is not None:
+            row_progress += 1
+            if row_progress >= row_width:
+                x = row_origin_x
+                y += 1
+                row_progress = 0
+    while cursor < len(raw):
+        command_offset = cursor
+        command = raw[cursor]
+        cursor += 1
+        if command == 0xFF:
+            return BeamComposition(
+                anchor_x,
+                anchor_y,
+                tuple(placements),
+                True,
+                True,
+                cursor,
+                "",
+                (),
+            )
+        if command <= 0xEF:
+            emit(command, command_offset)
+            continue
+        if command == 0xF3:
+            if cursor + 2 > len(raw):
+                return BeamComposition(
+                    anchor_x, anchor_y, tuple(placements), False, False,
+                    cursor, "光束拼图的 F3 位移参数被截断。", (),
+                )
+            dy = _signed_byte(raw[cursor])
+            dx = _signed_byte(raw[cursor + 1])
+            cursor += 2
+            y += dy
+            x += dx
+            row_origin_x = x
+            row_progress = 0
+            continue
+        if command == 0xFE:
+            if cursor + 2 > len(raw):
+                return BeamComposition(
+                    anchor_x, anchor_y, tuple(placements), False, False,
+                    cursor, "光束拼图的 FE 坐标参数被截断。", (),
+                )
+            y = raw[cursor]
+            x = raw[cursor + 1]
+            cursor += 2
+            row_origin_x = x
+            row_progress = 0
+            continue
+        if command == 0xFD:
+            if cursor + 2 > len(raw):
+                return BeamComposition(
+                    anchor_x, anchor_y, tuple(placements), False, False,
+                    cursor, f"光束拼图的 ${command:02X} 参数被截断。",
+                    (),
+                )
+            subtype = raw[cursor]
+            width = raw[cursor + 1]
+            cursor += 2
+            if subtype != 0x20 or width == 0:
+                return BeamComposition(
+                    anchor_x, anchor_y, tuple(placements), False, False,
+                    cursor,
+                    f"光束拼图含未验证的 FD ${subtype:02X} ${width:02X}。",
+                    (),
+                )
+            row_width = width
+            row_origin_x = x
+            row_progress = 0
+            continue
+        if command in (0xF8, 0xF9):
+            if cursor + 2 > len(raw):
+                return BeamComposition(
+                    anchor_x, anchor_y, tuple(placements), False, False,
+                    cursor, f"光束拼图的 ${command:02X} 参数被截断。",
+                    (),
+                )
+            count = raw[cursor]
+            tile = raw[cursor + 1]
+            cursor += 2
+            for index in range(count):
+                emit(
+                    tile if command == 0xF8 else (tile + index) & 0xFF,
+                    command_offset,
+                )
+            continue
+        return BeamComposition(
+            anchor_x, anchor_y, tuple(placements), False, False, cursor,
+            f"光束拼图含未识别指令 ${command:02X}。", (),
+        )
+    return BeamComposition(
+        anchor_x, anchor_y, tuple(placements), False, False, cursor,
+        "光束拼图缺少 $FF 结束码。", (),
+    )
+
+
+def _beam_run_length(
+    items: tuple[SpriteTilePlacement, ...],
+    start: int,
+    width: int | None,
+) -> int:
+    """Return the number of placements following one row-major cursor."""
+
+    x = items[start].x
+    y = items[start].y
+    origin_x = x
+    progress = 0
+    count = 0
+    for item in items[start:]:
+        if (item.x, item.y) != (x, y):
+            break
+        count += 1
+        x += 1
+        if width is not None:
+            progress += 1
+            if progress == width:
+                x = origin_x
+                y += 1
+                progress = 0
+    return count
+
+
+def _beam_best_width(
+    items: tuple[SpriteTilePlacement, ...], start: int
+) -> tuple[int | None, int]:
+    """Find a proven row width, preferring the longest then smallest form."""
+
+    linear = _beam_run_length(items, start, None)
+    best_width: int | None = None
+    best_length = linear
+    for width in range(1, 0x21):
+        length = _beam_run_length(items, start, width)
+        # A width is only observable after at least one wrap.  Without this
+        # guard an arbitrary width could silently change later coordinates.
+        if length <= width:
+            continue
+        if length > best_length or (
+            length == best_length
+            and best_width is not None
+            and width < best_width
+        ):
+            best_width = width
+            best_length = length
+    return best_width, best_length
+
+
+def _append_beam_tiles(result: bytearray, tokens: list[int]) -> bool:
+    """Append literals/F8/F9 using the shortest verified local runs."""
+
+    used_compression = False
+    index = 0
+    while index < len(tokens):
+        repeat = 1
+        while (
+            index + repeat < len(tokens)
+            and tokens[index + repeat] == tokens[index]
+            and repeat < 0xFF
+        ):
+            repeat += 1
+        sequential = 1
+        while (
+            index + sequential < len(tokens)
+            and tokens[index + sequential]
+            == (tokens[index] + sequential) & 0xFF
+            and sequential < 0xFF
+            and tokens[index + sequential] <= 0xEF
+        ):
+            sequential += 1
+        if repeat >= 3:
+            result.extend((0xF8, repeat, tokens[index]))
+            index += repeat
+            used_compression = True
+        elif sequential >= 3:
+            result.extend((0xF9, sequential, tokens[index]))
+            index += sequential
+            used_compression = True
+        else:
+            result.append(tokens[index])
+            index += 1
+    return used_compression
+
+
+def encode_legacy_beam_composition(
+    placements: tuple[SpriteTilePlacement, ...] | list[SpriteTilePlacement],
+    *,
+    anchor_x: int | None = None,
+    anchor_y: int | None = None,
+) -> bytes:
+    """Encode placements with the verified legacy beam command language.
+
+    Dense row-major regions use ``FD/F8/F9`` so editing a compressed record
+    does not expand it into hundreds of literal bytes.  Sparse records retain
+    the reference editor's literal/F3 form and neutral trailing move.
+    """
+
+    items = tuple(placements)
+    if items:
+        anchor_x = items[0].x if anchor_x is None else anchor_x
+        anchor_y = items[0].y if anchor_y is None else anchor_y
+    else:
+        anchor_x = 0 if anchor_x is None else anchor_x
+        anchor_y = 0 if anchor_y is None else anchor_y
+    if not 0 <= anchor_x <= 0xFF or not 0 <= anchor_y <= 0xFF:
+        raise ValueError("光束拼图初始坐标必须在 $00—$FF 之间。")
+    result = bytearray((0xFE, anchor_y, anchor_x))
+    current_x = anchor_x
+    current_y = anchor_y
+    used_compact = False
+    active_width: int | None = None
+    index = 0
+    while index < len(items):
+        item = items[index]
+        if not 0 <= item.tile_token <= 0xEF:
+            raise ValueError("光束拼图的直接图块编号必须在 $00—$EF 之间。")
+        if (item.x, item.y) != (current_x, current_y):
+            dx = item.x - current_x
+            dy = item.y - current_y
+            if not -128 <= dx <= 127 or not -128 <= dy <= 127:
+                raise ValueError("相邻光束图块坐标差必须在 -128—127 之间。")
+            result.extend((0xF3, dy & 0xFF, dx & 0xFF))
+            current_x, current_y = item.x, item.y
+
+        width, length = _beam_best_width(items, index)
+        if width is not None:
+            result.extend((0xFD, 0x20, width))
+            used_compact = True
+            active_width = width
+        else:
+            # No wrap was observed, so consume only the proven horizontal
+            # stretch.  A later discontinuity is represented by F3.  FD has
+            # no disable opcode, so after an earlier width command reset to a
+            # 32-cell row and cap this segment before it could wrap.
+            length = max(1, _beam_run_length(items, index, None))
+            if active_width is not None:
+                active_width = 0x20
+                result.extend((0xFD, 0x20, active_width))
+                used_compact = True
+                length = min(length, active_width)
+        tokens = [entry.tile_token for entry in items[index:index + length]]
+        if any(not 0 <= token <= 0xEF for token in tokens):
+            raise ValueError("光束拼图的直接图块编号必须在 $00—$EF 之间。")
+        used_compact = _append_beam_tiles(result, tokens) or used_compact
+
+        if width is None:
+            current_x = items[index + length - 1].x + 1
+            current_y = items[index + length - 1].y
+        else:
+            progress = length % width
+            rows = length // width
+            current_x = item.x + progress
+            current_y = item.y + rows
+        index += length
+    if not used_compact:
+        result.extend((0xF3, 0x00, 0x00))
+    result.append(0xFF)
+    return bytes(result)
 
 
 def decode_sprite_composition(
@@ -234,6 +565,130 @@ def decode_sprite_composition(
         cursor,
         "组图规律缺少 $FF 结束码。",
     )
+
+
+def encode_sprite_composition(
+    placements: tuple[SpriteTilePlacement, ...] | list[SpriteTilePlacement],
+    *,
+    anchor_x: int | None = None,
+    anchor_y: int | None = None,
+) -> bytes:
+    """Encode an editable sprite placement list as a canonical safe stream.
+
+    The legacy interpreter allows many equivalent compact encodings.  Editing
+    needs one deterministic form, so every transition explicitly stores the
+    following tile and signed X/Y delta.  This preserves placement order,
+    coordinates, flip bits and palette bits without depending on implicit
+    increment state.
+    """
+
+    items = tuple(placements)
+    if items:
+        if anchor_x is None:
+            anchor_x = items[0].x
+        if anchor_y is None:
+            anchor_y = items[0].y
+    else:
+        anchor_x = 0 if anchor_x is None else anchor_x
+        anchor_y = 0 if anchor_y is None else anchor_y
+    if not -128 <= anchor_x <= 127 or not -128 <= anchor_y <= 127:
+        raise ValueError("拼图锚点必须在 -128—127 之间。")
+    if not items:
+        return bytes((anchor_x & 0xFF, anchor_y & 0xFF, 0x00, 0xFF))
+    if (items[0].x, items[0].y) != (anchor_x, anchor_y):
+        raise ValueError("首个图块坐标必须与拼图锚点一致。")
+
+    result = bytearray((anchor_x & 0xFF, anchor_y & 0xFF, items[0].tile_token))
+    for index, item in enumerate(items):
+        if not 0 <= item.tile_token <= 0xFF:
+            raise ValueError("图块编号必须在 $00—$FF 之间。")
+        attributes = item.attributes & 0xC3
+        if index + 1 == len(items):
+            result.append(attributes | 0x10)
+            continue
+        following = items[index + 1]
+        dx = following.x - item.x
+        dy = following.y - item.y
+        if not -128 <= dx <= 127 or not -128 <= dy <= 127:
+            raise ValueError("相邻图块坐标差必须在 -128—127 之间。")
+        result.extend(
+            (
+                attributes | 0x2C,
+                following.tile_token,
+                dx & 0xFF,
+                dy & 0xFF,
+            )
+        )
+    result.append(0xFF)
+    return bytes(result)
+
+
+def encode_legacy_sprite_composition(
+    placements: tuple[SpriteTilePlacement, ...] | list[SpriteTilePlacement],
+    *,
+    anchor_x: int | None = None,
+    anchor_y: int | None = None,
+) -> bytes:
+    """Encode the compact stream emitted by the reference puzzle editor.
+
+    Unlike :func:`encode_sprite_composition`, the reference editor keeps the
+    shortest available transition: implicit tile increment, tile hold or an
+    explicit tile byte, combined with the shortest matching X/Y movement.
+    This is byte-for-byte stable for untouched legacy records and for the
+    reference editor's whole-image flip output.
+    """
+
+    items = tuple(placements)
+    if items:
+        if anchor_x is None:
+            anchor_x = items[0].x
+        if anchor_y is None:
+            anchor_y = items[0].y
+    else:
+        anchor_x = 0 if anchor_x is None else anchor_x
+        anchor_y = 0 if anchor_y is None else anchor_y
+    if not -128 <= anchor_x <= 127 or not -128 <= anchor_y <= 127:
+        raise ValueError("拼图锚点必须在 -128—127 之间。")
+    if not items:
+        return bytes((anchor_x & 0xFF, anchor_y & 0xFF, 0x00, 0xFF))
+    if (items[0].x, items[0].y) != (anchor_x, anchor_y):
+        raise ValueError("首个图块坐标必须与拼图锚点一致。")
+
+    result = bytearray((anchor_x & 0xFF, anchor_y & 0xFF, items[0].tile_token))
+    for index, item in enumerate(items):
+        if not 0 <= item.tile_token <= 0xFF:
+            raise ValueError("图块编号必须在 $00—$FF 之间。")
+        command = item.attributes & 0xC3
+        parameters: list[int] = []
+        if index + 1 < len(items):
+            following = items[index + 1]
+            if following.tile_token == ((item.tile_token + 1) & 0xFF):
+                pass
+            elif following.tile_token == item.tile_token:
+                command |= 0x10
+            else:
+                command |= 0x20
+                parameters.append(following.tile_token)
+
+            dx = following.x - item.x
+            dy = following.y - item.y
+            if not -128 <= dx <= 127 or not -128 <= dy <= 127:
+                raise ValueError("相邻图块坐标差必须在 -128—127 之间。")
+            if dx == 8 and dy == 0:
+                pass
+            elif dy == 0:
+                command |= 0x04
+                parameters.append(dx & 0xFF)
+            elif dy == 8:
+                command |= 0x08
+                parameters.append(dx & 0xFF)
+            else:
+                command |= 0x0C
+                parameters.extend((dx & 0xFF, dy & 0xFF))
+        result.append(command)
+        result.extend(parameters)
+    result.append(0xFF)
+    return bytes(result)
 
 
 def decode_sprite_timeline(
@@ -400,69 +855,102 @@ def decode_script(raw: bytes, start: int) -> tuple[tuple[AnimationInstruction, .
         editable: list[tuple[int, int, int]] = []
         text = ""
         tail = raw[cursor:]
-        if op in (0x42, 0xC2):
+        if op in (0x40, 0x42, 0xC0, 0xC2):
             size = 5
             if len(tail) >= size:
                 text = (
-                    f"调用物体运行规律{'1' if op == 0x42 else '2'}："
-                    f"标志 ${tail[1]:02X}，组图 ${tail[2]:02X}，"
-                    f"X 规律 ${tail[3]:02X}，Y 规律 ${tail[4]:02X}"
+                    f"调取物体运行规律({op:02X} {tail[1]:02X}：地图动画专用)："
+                    f"取图规律号:[{tail[2]:02X}]{tail[2]:03d} "
+                    f"X轴运行规律号[{tail[3]:02X}]{tail[3]:03d} "
+                    f"Y轴运行规律号[{tail[4]:02X}]{tail[4]:03d}"
                 )
                 editable = [(i, 0, 255) for i in range(1, size)]
         elif op < 0xE0:
-            text = f"等待：{op:03d} 帧" if op else "等待：256 帧（00）"
+            text = f"等待：{op:03d}帧" if op else "等待：256帧"
             editable = [(0, 1, 0xDF)]
         elif op in (0xE0, 0xE1):
             size = 2
             if len(tail) >= size:
-                text = f"切换 {op - 0xE0:02X} 区域图库：${tail[1]:02X}"
+                text = f"切换{op - 0xE0:02X}区域的图库号：图库编号:{tail[1]:02X}"
                 editable = [(1, 0, 255)]
         elif op in (0xF0, 0xF2):
             size = 3 + tail[2] if len(tail) >= 3 else len(tail) + 1
             if len(tail) >= size and tail[2]:
                 values = tail[3:size]
                 if op == 0xF0:
-                    text = f"调用颜色（{'物理' if tail[1] == 0x11 else '背景'}）：{values.hex(' ').upper()}"
+                    color_kind = "物理" if tail[1] == 0x11 else "光束"
+                    text = (
+                        f"调用颜色（{color_kind}）：颜色三字节:"
+                        + " ".join(f"{value:02X}" for value in values)
+                    )
                     editable = [(i, 0, 0x3F) for i in range(3, size) if tail[i] < 0x40]
                 else:
-                    text = f"切换图库：区域 ${tail[1]:02X}，图库 {values.hex(' ').upper()}"
+                    text = (
+                        f"切换光束图库：区域 {tail[1]:02X}，"
+                        + "图库 " + " ".join(f"{value:02X}" for value in values)
+                    )
                     editable = [(i, 0, 255) for i in range(3, size)]
         elif op == 0xF1:
             size = 2
             if len(tail) >= size:
-                text = f"更新调色板/显示状态：${tail[1]:02X}"
+                text = f"刷新调色板/显示状态：{tail[1]:02X}"
         elif op == 0xF3:
             size = 3
             if len(tail) >= size:
-                text = f"调用背景规律：资源 ${tail[1]:02X}，规律 ${tail[2]:02X}"
+                text = f"调用背景规律：背景 {tail[1]:02X}，规律 {tail[2]:02X}"
         elif op == 0xF4:
             size = 2
             if len(tail) >= size:
-                text = f"调用音乐/音效：${tail[1]:02X}"
+                text = f"调用音乐：音乐代码:{tail[1]:02X}"
                 editable = [(1, 0, 255)]
         elif op in (0xF5, 0xF7):
             size = 3
             if len(tail) >= size:
-                text = f"{'物体坐标' if op == 0xF5 else '背景参数'}：{tail[1:size].hex(' ').upper()}"
+                text = (
+                    f"物体坐标：编号 {tail[1]:02X}，位置 {tail[2]:02X}"
+                    if op == 0xF5
+                    else (
+                        f"设置背景位置：状态代码:{tail[1]:02X} "
+                        f"X轴偏移:{_signed_byte(tail[2]):+d}"
+                    )
+                )
                 if op == 0xF5:
+                    editable = [(2, 0, 255)]
+                else:
+                    # F7 is a fixed three-byte command in the verified map
+                    # interpreter.  Byte 1 selects the background state and
+                    # stays locked; byte 2 is the signed horizontal offset.
                     editable = [(2, 0, 255)]
         elif op in (0xF6, 0xFA, 0xFB, 0xFC):
             size = 2
             if len(tail) >= size:
-                text = {0xF6: "屏幕属性", 0xFA: "删除物体", 0xFB: "隐藏物体", 0xFC: "显示物体"}[op] + f"：${tail[1]:02X}"
+                text = {0xF6: "设置屏幕属性", 0xFA: "删除物体", 0xFB: "隐藏物体", 0xFC: "显示物体"}[op] + f"：编号 {tail[1]:02X}"
         elif op in (0xF8, 0xF9):
             if len(tail) >= 2:
                 # C583 reads its value from the event argument queue without
-                # consuming script bytes when coordinate flag bits are set.
-                coordinates = 2 - bool(tail[1] & 0x80) - bool(tail[1] & 0x40)
-                size = 7 + coordinates
+                # consuming script bytes when coordinate flag bits are set on
+                # F8.  The reference weapon editor proves that F9 always
+                # stores both entered coordinates, for every object value.
+                coordinates = (
+                    2
+                    if op == 0xF9
+                    else 2 - bool(tail[1] & 0x80) - bool(tail[1] & 0x40)
+                )
+                size = 2 + coordinates
                 if len(tail) >= size:
-                    base = 2 + coordinates
-                    text = (f"创建物体：${tail[1] & 15:02X}，"
-                            f"坐标 {tail[2:base].hex(' ').upper() or '事件参数'}；"
-                            f"运行规律：{tail[base:base+2].hex(' ').upper()}，"
-                            f"组图 ${tail[base+2]:02X} / X ${tail[base+3]:02X} / Y ${tail[base+4]:02X}")
-                    editable = [(i, 0, 255) for i in range(2, base)]
+                    coordinates_text = (
+                        "坐标由事件传入"
+                        if coordinates == 0
+                        else (
+                            f"物体X坐标:{tail[2]:03d} "
+                            + (f"物体Y坐标:{tail[3]:03d}" if coordinates > 1 else "物体Y坐标:由事件传入")
+                        )
+                    )
+                    text = (
+                        f"创建物体： 物体编号:{tail[1]:02X} "
+                        f"{coordinates_text}"
+                    )
+                    editable = [(i, 0, 255) for i in range(2, 2 + coordinates)]
         elif op == 0xFD:
             size = 3
             if len(tail) >= size:
@@ -471,17 +959,33 @@ def decode_script(raw: bytes, start: int) -> tuple[tuple[AnimationInstruction, .
         elif op == 0xFE:
             size = 4
             if len(tail) >= size:
-                text = f"循环 {tail[1]} 次：转到 CPU ${int.from_bytes(tail[2:4], 'little'):04X}（控制流保留）"
+                text = f"循环 {tail[1]} 次：返回前面的循环起点"
                 editable = [(1, 1, 255)]
         elif op == 0xFF:
             rows.append(AnimationInstruction(start + cursor, b"\xff", "动画结束"))
             return tuple(rows), True
         if not text or cursor + size > len(raw):
-            rows.append(AnimationInstruction(start + cursor, tail, "未验证指令/截断记录：原始字节保留，后续停止解码"))
+            rows.append(AnimationInstruction(start + cursor, tail, "这条动画指令尚未完整识别，后续内容保持不变"))
             return tuple(rows), False
         rows.append(AnimationInstruction(start + cursor, tail[:size], text, tuple(editable)))
         cursor += size
     return tuple(rows), False
+
+
+def legacy_script_lines(instruction: AnimationInstruction) -> tuple[str, ...]:
+    """Return the exact reference-style visible lines for one decoded command.
+
+    The legacy editor suppresses F1 refresh commands and expands F8/F9 into a
+    creation line plus a movement-rule line.  This is presentation only; the
+    decoder and writer retain the real instruction boundary.
+    """
+
+    raw = instruction.raw
+    if not raw:
+        return (instruction.text,)
+    if raw[0] == 0xF1:
+        return ()
+    return (instruction.text,)
 
 
 def decode_background_rule(
@@ -605,6 +1109,7 @@ class AnimationCodec:
 
     def __init__(self, data: bytes | bytearray) -> None:
         self.data = bytes(data)
+        self._calls_cache: tuple[tuple[int, int], ...] | None = None
         if self.data[:4] != b"NES\x1a" or len(self.data) < 0x80010:
             raise ValueError("当前 ROM 不具备已验证的 DC 动画资源。")
         self.fixed = 16 + (self.data[4] * 2 - 1) * 0x2000
@@ -721,17 +1226,37 @@ class AnimationCodec:
         )
         return end - pointer
 
+    def script_pool_usage(self, kind: str) -> AnimationPoolUsage:
+        """Return actual instruction usage for one verified script pool.
+
+        Pointer gaps are not treated as occupied.  Structural writes repack
+        complete records, so every such gap is reusable capacity.
+        """
+
+        if kind not in ("map", "ally", "enemy"):
+            raise ValueError("当前资源不是动画脚本。")
+        table = TABLE_BY_KIND[kind]
+        pointers = self.pointers[kind]
+        unique = sorted(set(pointer for pointer in pointers if pointer))
+        records = [self.record(kind, pointers.index(pointer)) for pointer in unique]
+        if any(not record.complete for record in records):
+            raise ValueError("动画池含未验证或截断记录，不能计算可重排空间。")
+        capacity = table.end - (table.table + table.count * 2)
+        used = sum(len(record.raw) for record in records)
+        return AnimationPoolUsage(capacity, used, capacity - used, len(records))
+
     def script_sequence_patch(
         self,
         record: AnimationRecord,
         replacement: bytes,
     ) -> BytePatch:
-        """Replace one complete script and relocate proven ``FE`` targets.
+        """Repack a complete script pool and relocate every proven ``FE`` target.
 
-        Structural edits may move instructions inside the selected script and,
-        after its pointer-bounded allocation is exhausted, all later scripts.
-        Every affected absolute target must still resolve to an instruction
-        boundary; deleting a referenced instruction therefore fails closed.
+        Map/ally/enemy scripts share a pointer-bounded pool.  Repacking all
+        unique records makes holes left by shorter records reusable instead of
+        imposing the old record's length on later edits.  Pointer aliases are
+        preserved exactly.  Any absolute loop target that no longer resolves
+        to a proven instruction boundary aborts the whole operation.
         """
 
         current = self.record(record.kind, record.index)
@@ -746,96 +1271,389 @@ class AnimationCodec:
         table = TABLE_BY_KIND[record.kind]
         pointers = self.pointers[record.kind]
         selected_pointer = pointers[record.index]
-        capacity = self.script_capacity(record)
-        extra = max(0, len(replacement) - capacity)
         unique_pointers = sorted(set(pointer for pointer in pointers if pointer))
-        used_end = max(
-            pointer + len(self.record(record.kind, pointers.index(pointer)).raw)
+        records = {
+            pointer: self.record(record.kind, pointers.index(pointer))
             for pointer in unique_pointers
+        }
+        if any(not item.complete for item in records.values()):
+            raise ValueError("动画池含未验证或截断记录，不能安全重排。")
+        pool_start = table.table + table.count * 2
+        required = sum(
+            len(replacement) if pointer == selected_pointer else len(item.raw)
+            for pointer, item in records.items()
         )
-        if used_end + extra > table.end:
+        capacity = table.end - pool_start
+        if required > capacity:
             raise ValueError(
-                f"动画区只剩 {table.end - used_end} 字节，新增指令需要 {extra} 字节。"
+                f"动画区总容量 {capacity} 字节，当前修改需要 {required} 字节，"
+                f"还差 {required - capacity} 字节。"
             )
-        pointer_table_offset = table.offset(table.table)
-        span_end = table.offset(used_end + extra)
-        before = bytes(self.data[pointer_table_offset:span_end])
-        after = bytearray(before)
-        rebased = tuple(pointer + extra if pointer > selected_pointer else pointer for pointer in pointers)
-        struct.pack_into(f"<{len(rebased)}H", after, 0, *rebased)
-        next_offset = record.offset + capacity
-        used_end_offset = table.offset(used_end)
-        if extra:
-            source = bytes(self.data[next_offset:used_end_offset])
-            destination = next_offset + extra - pointer_table_offset
-            after[destination:destination + len(source)] = source
 
-        # Match unchanged instructions across the edit.  This deliberately
-        # uses whole instruction bytes: if a referenced row itself was
-        # rewritten so heavily that its identity cannot be proven, saving is
-        # refused instead of guessing which duplicate opcode was intended.
-        old_rows = current.instructions
-        old_keys = [row.raw for row in old_rows]
-        new_keys = [row.raw for row in decoded]
-        boundary_map: dict[int, int] = {selected_pointer: selected_pointer}
-        matcher = SequenceMatcher(a=old_keys, b=new_keys, autojunk=False)
-        for old_at, new_at, size in matcher.get_matching_blocks():
-            for step in range(size):
-                old_local = old_rows[old_at + step].offset - record.offset
-                new_local = decoded[new_at + step].offset - record.offset
-                boundary_map[selected_pointer + old_local] = selected_pointer + new_local
-        # The byte immediately after the record is also a boundary, although
-        # normal FE loops target an instruction rather than this sentinel.
-        boundary_map[selected_pointer + len(record.raw)] = selected_pointer + len(replacement)
+        new_pointers: dict[int, int] = {}
+        cursor = pool_start
+        for pointer in unique_pointers:
+            new_pointers[pointer] = cursor
+            cursor += len(replacement) if pointer == selected_pointer else len(records[pointer].raw)
 
-        moved_start = selected_pointer + capacity
+        # Map every old, proven instruction boundary to its new location.
+        # The edited record uses whole-command matching so deleting a loop
+        # destination fails closed rather than silently retargeting it.
+        boundary_map: dict[int, int] = {}
+        for pointer, item in records.items():
+            destination = new_pointers[pointer]
+            if pointer != selected_pointer:
+                for row in item.instructions:
+                    boundary_map[pointer + row.offset - item.offset] = (
+                        destination + row.offset - item.offset
+                    )
+                boundary_map[pointer + len(item.raw)] = destination + len(item.raw)
+                continue
+            boundary_map[pointer] = destination
+            matcher = SequenceMatcher(
+                a=[row.raw for row in item.instructions],
+                b=[row.raw for row in decoded],
+                autojunk=False,
+            )
+            for old_at, new_at, size in matcher.get_matching_blocks():
+                for step in range(size):
+                    old_row = item.instructions[old_at + step]
+                    new_row = decoded[new_at + step]
+                    boundary_map[pointer + old_row.offset - item.offset] = (
+                        destination + new_row.offset - record.offset
+                    )
+            boundary_map[pointer + len(item.raw)] = destination + len(replacement)
 
         def relocate_target(target: int) -> int:
-            if selected_pointer <= target < selected_pointer + len(record.raw):
+            if pool_start <= target < table.end:
                 try:
                     return boundary_map[target]
                 except KeyError as error:
                     raise ValueError(
                         f"动画循环目标 CPU ${target:04X} 对应的指令已删除或无法唯一识别。"
                     ) from error
-            if moved_start <= target < used_end:
-                return target + extra
             return target
 
-        def write_target(instruction_offset: int, target: int) -> None:
-            local = instruction_offset - pointer_table_offset + 2
-            after[local:local + 2] = target.to_bytes(2, "little")
-
-        # Rebase FE operands in every other script, including an earlier
-        # script that jumps into the selected or moved suffix script.
+        pointer_table_offset = table.offset(table.table)
+        span_end = table.offset(table.end)
+        before = bytes(self.data[pointer_table_offset:span_end])
+        after = bytearray(len(before))
+        rebased = tuple(new_pointers.get(pointer, 0) for pointer in pointers)
+        struct.pack_into(f"<{len(rebased)}H", after, 0, *rebased)
         for pointer in unique_pointers:
-            if pointer == selected_pointer:
-                continue
-            other = self.record(record.kind, pointers.index(pointer))
-            shift = extra if pointer > selected_pointer else 0
-            for instruction in other.instructions:
+            source_record = records[pointer]
+            raw = bytearray(
+                replacement if pointer == selected_pointer else source_record.raw
+            )
+            rows = decoded if pointer == selected_pointer else source_record.instructions
+            source_start = record.offset if pointer == selected_pointer else source_record.offset
+            for instruction in rows:
                 if instruction.raw[:1] != b"\xFE" or len(instruction.raw) != 4:
                     continue
+                local = instruction.offset - source_start
                 target = int.from_bytes(instruction.raw[2:4], "little")
-                relocated = relocate_target(target)
-                if relocated != target:
-                    write_target(instruction.offset + shift, relocated)
+                raw[local + 2:local + 4] = relocate_target(target).to_bytes(2, "little")
+            destination = table.offset(new_pointers[pointer]) - pointer_table_offset
+            after[destination:destination + len(raw)] = raw
+        return pointer_table_offset, before, bytes(after)
 
-        local = record.offset - pointer_table_offset
-        after[local:local + len(replacement)] = replacement
-        if len(replacement) < len(record.raw):
-            after[local + len(replacement):local + len(record.raw)] = b"\xFF" * (
-                len(record.raw) - len(replacement)
+    def script_insert_end_patch(
+        self,
+        record: AnimationRecord,
+        instruction_index: int,
+    ) -> BytePatch:
+        """Reproduce the reference editor's immediate ``FF`` insertion.
+
+        The old editor does not replace every alias of a shared script.  It
+        inserts a private physical copy at the selected pointer, places the
+        new terminator before the selected command, and moves the original
+        pool (including the shared source record) after that copy.  The
+        selected directory entry keeps its address; every other entry at or
+        after that address moves by the private allocation size.  This is a
+        distinct storage operation from the normal compacting editor.
+        """
+
+        current = self.record(record.kind, record.index)
+        if current != record:
+            raise ValueError("动画原值已变化，请重新载入。")
+        if record.kind not in ("ally", "enemy"):
+            raise ValueError("旧版 FF 独立化写法只在双方武器动画中完成验证。")
+        if not current.complete or not current.raw:
+            raise ValueError("当前动画含未验证或截断指令，不能插入结束指令。")
+        if not 0 <= instruction_index < len(current.instructions):
+            raise ValueError("请选择有效的动画指令位置。")
+
+        selected_row = current.instructions[instruction_index]
+        if selected_row.raw == b"\xFF":
+            raise ValueError("所选位置已经是动画结束。")
+        insert_at = selected_row.offset - current.offset
+        private = current.raw[:insert_at] + b"\xFF" + current.raw[insert_at:]
+        shared = bool(current.aliases)
+        # A shared source must remain available for its aliases, so the old
+        # editor inserts a complete private allocation before it.  A unique
+        # source only needs the new one-byte terminator inserted in place.
+        delta = len(private) if shared else 1
+
+        table = TABLE_BY_KIND[record.kind]
+        pointers = self.pointers[record.kind]
+        selected_pointer = pointers[record.index]
+        unique_pointers = sorted(set(pointer for pointer in pointers if pointer))
+        records = {
+            pointer: self.record(record.kind, pointers.index(pointer))
+            for pointer in unique_pointers
+        }
+        if any(not item.complete for item in records.values()):
+            raise ValueError("动画池含未验证或截断记录，不能安全搬移。")
+
+        used_end = max(item.offset + len(item.raw) for item in records.values())
+        pool_end = table.offset(table.end)
+        if used_end + delta > pool_end:
+            free = pool_end - used_end
+            raise ValueError(
+                f"动画区尾部只剩 {free} 字节，旧版独立化写入需要 {delta} 字节，"
+                f"还差 {delta - free} 字节。"
             )
-        # Finally rewrite the selected script's own FE operands.  They still
-        # contain pre-edit CPU addresses because insert/delete UI operations
-        # preserve the original instruction bytes.
-        for instruction in decoded:
+
+        pointer_table_offset = table.offset(table.table)
+        span_end = used_end + delta
+        before = bytes(self.data[pointer_table_offset:span_end])
+        after = bytearray(before)
+
+        rebased = tuple(
+            pointer
+            if not pointer or pointer < selected_pointer or index == record.index
+            else pointer + delta
+            for index, pointer in enumerate(pointers)
+        )
+        struct.pack_into(f"<{len(rebased)}H", after, 0, *rebased)
+
+        selected_local = current.offset - pointer_table_offset
+        if shared:
+            source_pool = self.data[current.offset:used_end]
+            after[selected_local:selected_local + delta] = private
+            after[
+                selected_local + delta:selected_local + delta + len(source_pool)
+            ] = source_pool
+        else:
+            insertion_local = selected_local + insert_at
+            source_pool = self.data[current.offset + insert_at:used_end]
+            after[insertion_local] = 0xFF
+            after[
+                insertion_local + 1:insertion_local + 1 + len(source_pool)
+            ] = source_pool
+
+        def relocate_target(target: int) -> int:
+            relocation_start = (
+                selected_pointer if shared else selected_pointer + insert_at
+            )
+            if target >= relocation_start and target < table.end:
+                return target + delta
+            return target
+
+        # Relocate every active loop in the original pool.  Records before
+        # the insertion keep their physical position but may target a moved
+        # record; records at/after it move with the original pool.
+        for pointer, item in records.items():
+            destination = item.offset + (
+                delta
+                if (pointer >= selected_pointer if shared else pointer > selected_pointer)
+                else 0
+            )
+            for instruction in item.instructions:
+                if instruction.raw[:1] != b"\xFE" or len(instruction.raw) != 4:
+                    continue
+                local = instruction.offset - item.offset
+                target = int.from_bytes(instruction.raw[2:4], "little")
+                target = relocate_target(target)
+                instruction_shift = (
+                    delta
+                    if not shared
+                    and pointer == selected_pointer
+                    and local >= insert_at
+                    else 0
+                )
+                destination_local = (
+                    destination - pointer_table_offset + local + instruction_shift
+                )
+                after[destination_local + 2:destination_local + 4] = target.to_bytes(
+                    2, "little"
+                )
+
+        # Only the prefix before the inserted FF remains executable in the
+        # private copy.  Its absolute loop targets must follow the moved pool;
+        # the unreachable suffix is intentionally retained byte-for-byte,
+        # matching the reference editor's physical output.
+        for instruction in (
+            current.instructions[:instruction_index] if shared else ()
+        ):
             if instruction.raw[:1] != b"\xFE" or len(instruction.raw) != 4:
                 continue
+            local = instruction.offset - current.offset
             target = int.from_bytes(instruction.raw[2:4], "little")
-            relocated = relocate_target(target)
-            write_target(instruction.offset, relocated)
+            target = relocate_target(target)
+            destination_local = selected_local + local
+            after[destination_local + 2:destination_local + 4] = target.to_bytes(
+                2, "little"
+            )
+
+        return pointer_table_offset, before, bytes(after)
+
+    def legacy_weapon_sequence_patch(
+        self,
+        record: AnimationRecord,
+        replacement: bytes,
+    ) -> BytePatch:
+        """Rebuild a weapon script pool exactly like the reference editor.
+
+        The reference database does not preserve pointer identity when a
+        weapon animation is structurally edited.  On confirmation it walks
+        weapon records in numeric order, writes the first occurrence of each
+        complete byte sequence, and makes later byte-identical records reuse
+        that address.  Consequently editing one member of a shared pointer is
+        copy-on-write, while ``paste all`` and ``clear`` can merge records
+        whose resulting scripts are identical.  This differs deliberately
+        from :meth:`script_sequence_patch`, whose modern map-animation policy
+        preserves existing aliases.
+        """
+
+        current = self.record(record.kind, record.index)
+        if current != record:
+            raise ValueError("动画原值已变化，请重新载入。")
+        if record.kind not in ("ally", "enemy"):
+            raise ValueError("旧版武器动画重排只适用于我方或敌方武器动画。")
+        if not current.complete:
+            raise ValueError("当前动画含未验证或截断指令，不能进行结构编辑。")
+        decoded, complete = decode_script(replacement, record.offset)
+        if not complete or sum(len(row.raw) for row in decoded) != len(replacement):
+            raise ValueError("动画必须由完整指令组成，并以 FF 动画结束结束。")
+
+        table = TABLE_BY_KIND[record.kind]
+        pointers = self.pointers[record.kind]
+        records_by_pointer = {
+            pointer: self.record(record.kind, pointers.index(pointer))
+            for pointer in set(pointers) if pointer
+        }
+        if any(not item.complete for item in records_by_pointer.values()):
+            raise ValueError("动画池含未验证或截断记录，不能安全重排。")
+
+        # First pass: reproduce the old editor's index-order allocation and
+        # whole-script content deduplication.
+        pool_start = table.table + table.count * 2
+        cursor = pool_start
+        content_pointer: dict[bytes, int] = {}
+        rebased: list[int] = []
+        allocations: list[tuple[int, bytes, AnimationRecord, bool]] = []
+        for index, pointer in enumerate(pointers):
+            if not pointer:
+                rebased.append(0)
+                continue
+            source = records_by_pointer[pointer]
+            raw = bytes(replacement if index == record.index else source.raw)
+            destination = content_pointer.get(raw)
+            if destination is None:
+                destination = cursor
+                content_pointer[raw] = destination
+                cursor += len(raw)
+                allocations.append((destination, raw, source, index == record.index))
+            rebased.append(destination)
+
+        if cursor > table.end:
+            capacity = table.end - pool_start
+            required = cursor - pool_start
+            raise ValueError(
+                f"动画区总容量 {capacity} 字节，当前修改需要 {required} 字节，"
+                f"还差 {required - capacity} 字节。"
+            )
+
+        # Old absolute FE targets identify instruction boundaries in the old
+        # pool.  Prefer an unchanged alias when the edited record was shared;
+        # otherwise map the selected record through matching commands.
+        global_boundaries: dict[int, int] = {}
+        for old_pointer, source in records_by_pointer.items():
+            unchanged_index = next(
+                (
+                    index for index, pointer in enumerate(pointers)
+                    if pointer == old_pointer and index != record.index
+                ),
+                None,
+            )
+            if unchanged_index is not None:
+                destination = rebased[unchanged_index]
+                for row in source.instructions:
+                    global_boundaries[old_pointer + row.offset - source.offset] = (
+                        destination + row.offset - source.offset
+                    )
+                global_boundaries[old_pointer + len(source.raw)] = (
+                    destination + len(source.raw)
+                )
+            elif old_pointer != pointers[record.index]:
+                index = pointers.index(old_pointer)
+                destination = rebased[index]
+                for row in source.instructions:
+                    global_boundaries[old_pointer + row.offset - source.offset] = (
+                        destination + row.offset - source.offset
+                    )
+                global_boundaries[old_pointer + len(source.raw)] = (
+                    destination + len(source.raw)
+                )
+
+        selected_destination = rebased[record.index]
+        selected_boundaries: dict[int, int] = dict(global_boundaries)
+        selected_boundaries[pointers[record.index]] = selected_destination
+        matcher = SequenceMatcher(
+            a=[row.raw for row in current.instructions],
+            b=[row.raw for row in decoded],
+            autojunk=False,
+        )
+        for old_at, new_at, size in matcher.get_matching_blocks():
+            for step in range(size):
+                old_row = current.instructions[old_at + step]
+                new_row = decoded[new_at + step]
+                selected_boundaries[
+                    pointers[record.index] + old_row.offset - current.offset
+                ] = selected_destination + new_row.offset - record.offset
+        selected_boundaries[pointers[record.index] + len(current.raw)] = (
+            selected_destination + len(replacement)
+        )
+
+        old_used_end = max(
+            item.offset + len(item.raw) for item in records_by_pointer.values()
+        )
+        pointer_table_offset = table.offset(table.table)
+        span_end = max(old_used_end, table.offset(cursor))
+        before = bytes(self.data[pointer_table_offset:span_end])
+        after = bytearray(before)
+        struct.pack_into(f"<{len(rebased)}H", after, 0, *rebased)
+        # When content deduplication shortens the pool, the reference editor
+        # clears the released tail rather than leaving the former script
+        # bytes behind.  This is observable in its whole-ROM save output.
+        new_used_end = table.offset(cursor)
+        if new_used_end < old_used_end:
+            tail_start = new_used_end - pointer_table_offset
+            tail_end = old_used_end - pointer_table_offset
+            after[tail_start:tail_end] = b"\x00" * (tail_end - tail_start)
+
+        for destination, source_raw, source, is_selected in allocations:
+            raw = bytearray(source_raw)
+            rows = decoded if is_selected else source.instructions
+            source_start = record.offset if is_selected else source.offset
+            boundaries = selected_boundaries if is_selected else global_boundaries
+            for instruction in rows:
+                if instruction.raw[:1] != b"\xFE" or len(instruction.raw) != 4:
+                    continue
+                local = instruction.offset - source_start
+                target = int.from_bytes(instruction.raw[2:4], "little")
+                if pool_start <= target < table.end:
+                    try:
+                        target = boundaries[target]
+                    except KeyError as error:
+                        raise ValueError(
+                            f"动画循环目标 CPU ${target:04X} 对应的指令已删除或无法唯一识别。"
+                        ) from error
+                raw[local + 2:local + 4] = target.to_bytes(2, "little")
+            local = table.offset(destination) - pointer_table_offset
+            after[local:local + len(raw)] = raw
+
         return pointer_table_offset, before, bytes(after)
 
     def clone_map_animation_patches(
@@ -1112,13 +1930,13 @@ class AnimationCodec:
             raw = instruction.raw
             if (
                 not raw
-                or raw[0] not in (0xF8, 0xF9)
-                or len(raw) < 7
-                or raw[-4] != table.selector
+                or raw[0] not in (0x40, 0x42, 0xC0, 0xC2)
+                or len(raw) != 5
+                or raw[1] != table.selector
             ):
                 continue
             for local, role in zip(
-                range(len(raw) - 3, len(raw)),
+                range(2, 5),
                 ("frames", "axis", "axis"),
             ):
                 if raw[local] == source_index:
@@ -1366,11 +2184,11 @@ class AnimationCodec:
         for index in range(self.count("map")):
             for instruction in self.record("map", index).instructions:
                 raw = instruction.raw
-                if raw[0] not in (0xF8, 0xF9) or len(raw) < 7:
+                if raw[0] not in (0x40, 0x42, 0xC0, 0xC2) or len(raw) != 5:
                     continue
-                if raw[-4] != 0x68:
+                if raw[1] != 0x68:
                     continue
-                for ref, role in zip(raw[-3:], ("frames", "axis", "axis")):
+                for ref, role in zip(raw[2:5], ("frames", "axis", "axis")):
                     if ref < self.count("movement"):
                         result.setdefault(ref, set()).add(role)
         # A pointer alias shares both bytes and interpretation.
@@ -1410,8 +2228,15 @@ class AnimationCodec:
         # Script bank $1C/$1D, excluding its unrelated pointer/data tail.
         # Sites are discovered from current data and displayed by address;
         # no unverified spirit name is assigned to a byte-search result.
-        return tuple((i, self.data[i + 2]) for i in range(0x38010, 0x3C00E)
-                     if self.data[i:i + 2] == b"\x38\x02" and self.data[i + 2] < self.count("map"))
+        if self._calls_cache is None:
+            map_count = self.count("map")
+            self._calls_cache = tuple(
+                (offset, self.data[offset + 2])
+                for offset in range(0x38010, 0x3C00E)
+                if self.data[offset : offset + 2] == b"\x38\x02"
+                and self.data[offset + 2] < map_count
+            )
+        return self._calls_cache
 
     def call_patch(self, offset: int, animation_id: int) -> BytePatch:
         if not 0x38010 <= offset < 0x3C00E or (offset, self.data[offset + 2]) not in self.calls():

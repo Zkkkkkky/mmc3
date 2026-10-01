@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "scope": "isolated reference executable; descendant dialogs cancelled; no save",
+  "records": [
+    {
+      "state": "武器修改",
+      "control_id": 2530,
+      "command": "插入",
+      "command_id": 20014,
+      "activation": "wm_command_from_validated_menu_id",
+      "status": "captured",
+      "tab_x": 185,
+      "menu": [],
+      "descendants": [
+        {
+          "title": "错误",
+          "class": "#32770",
+          "tag": "DBCMD_01_武器修改_插入_1",
+          "visible_controls": 4
+        }
+      ],
+      "foreground_after_command": null
+    },
+    {
+      "state": "武器修改",
+      "control_id": 2530,
+      "command": "编辑",
+      "status": "target_not_found"
+    },
+    {
+      "state": "机体修改",
+      "control_id": 120,
+      "command": "导出机体",
+      "status": "target_not_found"
+    },
+    {
+      "state": "人物修改",
+      "control_id": 630,
+      "command": "导出人物",
+      "status": "target_not_found"
+    }
+  ]
+}

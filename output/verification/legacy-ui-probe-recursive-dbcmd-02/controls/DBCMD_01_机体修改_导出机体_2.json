@@ -1,0 +1,67 @@
+{
+  "tag": "DBCMD_01_机体修改_导出机体_2",
+  "hwnd": 264522,
+  "title": "ChatGPT",
+  "class": "Chrome_WidgetWin_1",
+  "rect": {
+    "left": 487,
+    "top": 50,
+    "right": 1856,
+    "bottom": 1008,
+    "width": 1369,
+    "height": 958
+  },
+  "pid": 13860,
+  "tree": {
+    "hwnd": 264522,
+    "class": "Chrome_WidgetWin_1",
+    "text": "ChatGPT",
+    "ctrl_id": 0,
+    "rect": {
+      "left": 487,
+      "top": 50,
+      "right": 1856,
+      "bottom": 1008,
+      "width": 1369,
+      "height": 958
+    },
+    "visible": true,
+    "enabled": true,
+    "children": [
+      {
+        "hwnd": 197788,
+        "class": "Chrome_RenderWidgetHostHWND",
+        "text": "Chrome Legacy Window",
+        "ctrl_id": 1501640,
+        "rect": {
+          "left": 487,
+          "top": 50,
+          "right": 1857,
+          "bottom": 1009,
+          "width": 1370,
+          "height": 959
+        },
+        "visible": true,
+        "enabled": true,
+        "children": []
+      },
+      {
+        "hwnd": 132258,
+        "class": "Intermediate D3D Window",
+        "text": "",
+        "ctrl_id": 0,
+        "rect": {
+          "left": 487,
+          "top": 50,
+          "right": 1856,
+          "bottom": 1008,
+          "width": 1369,
+          "height": 958
+        },
+        "visible": true,
+        "enabled": false,
+        "children": []
+      }
+    ]
+  }
+}

@@ -1,0 +1,1690 @@
+{
+  "schema_version": 1,
+  "validated": true,
+  "scope": "isolated reference executable; all visible weapon-rule buttons activated by left-click, right-click and focused Space; descendants cancelled; outer dialogs cancelled; main-window save used to verify zero leakage",
+  "database_cancel_closed": true,
+  "sha256_before": "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E",
+  "sha256_after": "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E",
+  "diff_count": 0,
+  "records": [
+    {
+      "page": "光束组图规律",
+      "button_id": 710,
+      "text": "运动规律模拟器",
+      "status": "descendant_captured",
+      "signature_changed": false,
+      "descendants": [
+        {
+          "title": "运行规律模拟",
+          "class": "WTWindow",
+          "tag": "DBWRULEBTN_01_01_光束组图规律_710_1",
+          "visible_controls": [
+            {
+              "class": "WTWindow",
+              "control_id": 0,
+              "text": "运行规律模拟",
+              "enabled": true
+            },
+            {
+              "class": "Afx:400000:b:10003:900015:0",
+              "control_id": 300,
+              "text": "每移动几次记录一次坐标",
+              "enabled": true
+            },
+            {
+              "class": "msctls_updown32",
+              "control_id": 294,
+              "text": "",
+              "enabled": true
+            },
+            {
+              "class": "Edit",
+              "control_id": 290,
+              "text": "1",
+              "enabled": true
+            },
+            {
+              "class": "Button",
+              "control_id": 270,
+              "text": "结束",
+              "enabled": true
+            },
+            {
+              "class": "Button",
+              "control_id": 260,
+              "text": "开始",
+              "enabled": true
+            },
+            {
+              "class": "Button",
+              "control_id": 250,
+              "text": "鼠标模拟运动",
+              "enabled": true
+            },
+            {
+              "class": "msctls_updown32",
+              "control_id": 244,
+              "text": "",
+              "enabled": true
+            },
+            {
+              "class": "Edit",
+              "control_id": 240,
+              "text": "0",
+              "enabled": true
+            },
+            {
+              "class": "msctls_updown32",
+              "control_id": 234,
+              "text": "",
+              "enabled": true
+            },
+            {
+              "class": "Edit",
+              "control_id": 230,
+              "text": "0",
+              "enabled": true
+            },
+            {
+              "class": "Afx:400000:b:10003:900015:0",
+              "control_id": 220,
+              "text": "y轴：",
+              "enabled": true
+            },
+            {
+              "class": "Afx:400000:b:10003:900015:0",
+              "control_id": 210,
+              "text": "X轴：",
+              "enabled": true
+            },
+            {
+              "class": "Afx:400000:b:10003:900015:0",
+              "control_id": 200,
+              "text": "Y运行规律：",
+              "enabled": true
+            },
+            {
+              "class": "Edit",
+              "control_id": 190,
+              "text": "",
+              "enabled": true
+            },
+            {
+              "class": "Afx:400000:b:10003:900015:0",
+              "control_id": 180,
+              "text": "物体宽度：",
+              "enabled": true
+            },
+            {
+              "class": "msctls_updown32",
+              "control_id": 174,
+              "text": "",
+              "enabled": true
+            },
+            {
+              "class": "Edit",
+              "control_id": 170,
+              "text": "8",
+              "enabled": true
+            },
+            {
+              "class": "Afx:400000:b:10003:900015:0",
+              "control_id": 160,
+              "text": "物体高度：",
+              "enabled": true
+            },
+            {
+              "class": "msctls_updown32",
+              "control_id": 154,
+              "text": "",
+              "enabled": true
+            },
+            {
+              "class": "Edit",
+              "control_id": 150,
+              "text": "8",
+              "enabled": true
+            },
+            {
+              "class": "Button",
+              "control_id": 140,
+              "text": "移动",
+              "enabled": true
+            },
+            {
+              "class": "Afx:400000:b:10003:900015:0",
+              "control_id": 120,
+              "text": "X运行规律：",
+              "enabled": true
+            },
+            {
+              "class": "Edit",
+              "control_id": 110,
+              "text": "",
+              "enabled": true
+            },
+            {
+              "class": "Afx:400000:b:10003:900015:0",
+              "control_id": 100,
+              "text": "",
+              "enabled": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "page": "光束组图规律",
+      "button_id": 270,
+      "text": "基本设置",
+      "status": "no_visible_effect",
+      "signature_changed": false,
+      "descendants": []
+    },
+    {
+      "page": "光束组图规律",
+      "button_id": 220,
+      "text": "规律选择",
+      "status": "no_visible_effect",
+      "signature_changed": false,
+      "descendants": []
+    },
+    {
+      "page": "光束组图规律",
+      "button_id": 140,
+      "text": "光束组图规律",
+      "status": "no_visible_effect",
+      "signature_changed": false,
+      "descendants": []
+    },
+    {
+      "page": "光束组图规律",
+      "button_id": 570,
+      "text": "复制\r\n\r\n完整\r\n\r\n代码",
+      "status": "no_visible_effect",
+      "signature_changed": false,
+      "descendants": []
+    },
+    {
+      "page": "光束组图规律",
+      "button_id": 410,
+      "text": "设置下一张图片坐标",
+      "status": "inline_state_changed",
+      "signature_changed": true,
+      "descendants": []
+    },
+    {
+      "page": "光束组图规律",
+      "button_id": 400,
+      "text": "设置初始坐标",
+      "status": "inline_state_changed",
+      "signature_changed": true,
+      "descendants": []
+    },
+    {
+      "page": "光束组图规律",
+      "button_id": 380,
+      "text": "光束规律拼图",
+      "status": "descendant_captured",
+      "signature_changed": false,
+      "descendants": [
+        {
+          "title": "光束拼图",
+          "class": "WTWindow",
+          "tag": "DBWRULEBTN_01_08_光束组图规律_380_1",
+          "visible_controls": [
+            {
+              "class": "WTWindow",
+              "control_id": 0,
+              "text": "光束拼图",
+              "enabled": true
+            },
+            {
+              "class": "Button",
+              "control_id": 200,
+              "text": "取消",
+              "enabled": true
+            },
+            {
+              "class": "Button",
+              "control_id": 190,
+              "text": "确定",
+              "enabled": true
+            },
+            {
+              "class": "Button",
+              "control_id": 150,
+              "text": "效果图片(提示：左键编辑图块 右键删除图块)",
+              "enabled": true
+            },
+            {
+              "class": "Afx:400000:b:10003:900015:0",
+              "control_id": 160,
+              "text": "",
+              "enabled": true
+            },
+            {
+              "class": "Button",
+              "control_id": 130,
+              "text": "图库（提示：左键选择图块）",
+              "enabled": true
+            },
+            {
+              "class": "Button",
+              "control_id": 280,
+              "text": "80开始",
+              "enabled": true
+            },
+            {
+              "class": "Button",
+              "control_id": 270,
+              "text": "40开始",
+              "enabled": true
+            },
+            {
+              "class": "Afx:400000:b:10003:900015:0",
+              "control_id": 250,
+              "text": "40",
+              "enabled": true
+            },
+            {
+              "class": "Afx:400000:b:10003:900015:0",
+              "control_id": 240,
+              "text": "当前选择的图块编号：",
+              "enabled": true
+            },
+            {
+              "class": "Button",
+              "control_id": 210,
+              "text": "显示图块编号",
+              "enabled": true
+            },
+            {
+              "class": "Afx:400000:b:10003:900015:0",
+              "control_id": 140,
+              "text": "",
+              "enabled": true
+            },
+            {
+              "class": "Button",
+              "control_id": 100,
+              "text": "参考设置",
+              "enabled": true
+            },
+            {
+              "class": "ComboBox",
+              "control_id": 120,
+              "text": "[00]000：80010",
+              "enabled": true
+            },
+            {
+              "class": "Afx:400000:b:10003:900015:0",
+              "control_id": 110,
+              "text": "图库地址：",
+              "enabled": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "page": "物理运行规律1",
+      "button_id": 710,
+      "text": "运动规律模拟器",
+      "status": "descendant_captured",
+      "signature_changed": false,
+      "descendants": [
+        {
+          "title": "运行规律模拟",
+          "class": "WTWindow",
+          "tag": "DBWRULEBTN_02_01_物理运行规律1_710_1",
+          "visible_controls": [
+            {
+              "class": "WTWindow",
+              "control_id": 0,
+              "text": "运行规律模拟",
+              "enabled": true
+            },
+            {
+              "class": "Afx:400000:b:10003:900015:0",
+              "control_id": 300,
+              "text": "每移动几次记录一次坐标",
+              "enabled": true
+            },
+            {
+              "class": "msctls_updown32",
+              "control_id": 294,
+              "text": "",
+              "enabled": true
+            },
+            {
+              "class": "Edit",
+              "control_id": 290,
+              "text": "1",
+              "enabled": true
+            },
+            {
+              "class": "Button",
+              "control_id": 270,
+              "text": "结束",
+              "enabled": true
+            },
+            {
+              "class": "Button",
+              "control_id": 260,
+              "text": "开始",
+              "enabled": true
+            },
+            {
+              "class": "Button",
+              "control_id": 250,
+              "text": "鼠标模拟运动",
+              "enabled": true
+            },
+            {
+              "class": "msctls_updown32",
+              "control_id": 244,
+              "text": "",
+              "enabled": true
+            },
+            {
+              "class": "Edit",
+              "control_id": 240,
+              "text": "0",
+              "enabled": true
+            },
+            {
+              "class": "msctls_updown32",
+              "control_id": 234,
+              "text": "",
+              "enabled": true
+            },
+            {
+              "class": "Edit",
+              "control_id": 230,
+              "text": "0",
+              "enabled": true
+            },
+            {
+              "class": "Afx:400000:b:10003:900015:0",
+              "control_id": 220,
+              "text": "y轴：",
+              "enabled": true
+            },
+            {
+              "class": "Afx:400000:b:10003:900015:0",
+              "control_id": 210,
+              "text": "X轴：",
+              "enabled": true
+            },
+            {
+              "class": "Afx:400000:b:10003:900015:0",
+              "control_id": 200,
+              "text": "Y运行规律：",
+              "enabled": true
+            },
+            {
+              "class": "Edit",
+              "control_id": 190,
+              "text": "",
+              "enabled": true
+            },
+            {
+              "class": "Afx:400000:b:10003:900015:0",
+              "control_id": 180,
+              "text": "物体宽度：",
+              "enabled": true
+            },
+            {
+              "class": "msctls_updown32",
+              "control_id": 174,
+              "text": "",
+              "enabled": true
+            },
+            {
+              "class": "Edit",
+              "control_id": 170,
+              "text": "8",
+              "enabled": true
+            },
+            {
+              "class": "Afx:400000:b:10003:900015:0",
+              "control_id": 160,
+              "text": "物体高度：",
+              "enabled": true
+            },
+            {
+              "class": "msctls_updown32",
+              "control_id": 154,
+              "text": "",
+              "enabled": true
+            },
+            {
+              "class": "Edit",
+              "control_id": 150,
+              "text": "8",
+              "enabled": true
+            },
+            {
+              "class": "Button",
+              "control_id": 140,
+              "text": "移动",
+              "enabled": true
+            },
+            {
+              "class": "Afx:400000:b:10003:900015:0",
+              "control_id": 120,
+              "text": "X运行规律：",
+              "enabled": true
+            },
+            {
+              "class": "Edit",
+              "control_id": 110,
+              "text": "",
+              "enabled": true
+            },
+            {
+              "class": "Afx:400000:b:10003:900015:0",
+              "control_id": 100,
+              "text": "",
+              "enabled": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "page": "物理运行规律1",
+      "button_id": 310,
+      "text": "基本设置",
+      "status": "no_visible_effect",
+      "signature_changed": false,
+      "descendants": []
+    },
+    {
+      "page": "物理运行规律1",
+      "button_id": 280,
+      "text": "规律选择",
+      "status": "no_visible_effect",
+      "signature_changed": false,
+      "descendants": []
+    },
+    {
+      "page": "物理运行规律1",
+      "button_id": 170,
+      "text": "物理运行规律",
+      "status": "no_visible_effect",
+      "signature_changed": false,
+      "descendants": []
+    },
+    {
+      "page": "物理运行规律2",
+      "button_id": 710,
+      "text": "运动规律模拟器",
+      "status": "descendant_captured",
+      "signature_changed": false,
+      "descendants": [
+        {
+          "title": "运行规律模拟",
+          "class": "WTWindow",
+          "tag": "DBWRULEBTN_03_01_物理运行规律2_710_1",
+          "visible_controls": [
+            {
+              "class": "WTWindow",
+              "control_id": 0,
+              "text": "运行规律模拟",
+              "enabled": true
+            },
+            {
+              "class": "Afx:400000:b:10003:900015:0",
+              "control_id": 300,
+              "text": "每移动几次记录一次坐标",
+              "enabled": true
+            },
+            {
+              "class": "msctls_updown32",
+              "control_id": 294,
+              "text": "",
+              "enabled": true
+            },
+            {
+              "class": "Edit",
+              "control_id": 290,
+              "text": "1",
+              "enabled": true
+            },
+            {
+              "class": "Button",
+              "control_id": 270,
+              "text": "结束",
+              "enabled": true
+            },
+            {
+              "class": "Button",
+              "control_id": 260,
+              "text": "开始",
+              "enabled": true
+            },
+            {
+              "class": "Button",
+              "control_id": 250,
+              "text": "鼠标模拟运动",
+              "enabled": true
+            },
+            {
+              "class": "msctls_updown32",
+              "control_id": 244,
+              "text": "",
+              "enabled": true
+            },
+            {
+              "class": "Edit",
+              "control_id": 240,
+              "text": "0",
+              "enabled": true
+            },
+            {
+              "class": "msctls_updown32",
+              "control_id": 234,
+              "text": "",
+              "enabled": true
+            },
+            {
+              "class": "Edit",
+              "control_id": 230,
+              "text": "0",
+              "enabled": true
+            },
+            {
+              "class": "Afx:400000:b:10003:900015:0",
+              "control_id": 220,
+              "text": "y轴：",
+              "enabled": true
+            },
+            {
+              "class": "Afx:400000:b:10003:900015:0",
+              "control_id": 210,
+              "text": "X轴：",
+              "enabled": true
+            },
+            {
+              "class": "Afx:400000:b:10003:900015:0",
+              "control_id": 200,
+              "text": "Y运行规律：",
+              "enabled": true
+            },
+            {
+              "class": "Edit",
+              "control_id": 190,
+              "text": "",
+              "enabled": true
+            },
+            {
+              "class": "Afx:400000:b:10003:900015:0",
+              "control_id": 180,
+              "text": "物体宽度：",
+              "enabled": true
+            },
+            {
+              "class": "msctls_updown32",
+              "control_id": 174,
+              "text": "",
+              "enabled": true
+            },
+            {
+              "class": "Edit",
+              "control_id": 170,
+              "text": "8",
+              "enabled": true
+            },
+            {
+              "class": "Afx:400000:b:10003:900015:0",
+              "control_id": 160,
+              "text": "物体高度：",
+              "enabled": true
+            },
+            {
+              "class": "msctls_updown32",
+              "control_id": 154,
+              "text": "",
+              "enabled": true
+            },
+            {
+              "class": "Edit",
+              "control_id": 150,
+              "text": "8",
+              "enabled": true
+            },
+            {
+              "class": "Button",
+              "control_id": 140,
+              "text": "移动",
+              "enabled": true
+            },
+            {
+              "class": "Afx:400000:b:10003:900015:0",
+              "control_id": 120,
+              "text": "X运行规律：",
+              "enabled": true
+            },
+            {
+              "class": "Edit",
+              "control_id": 110,
+              "text": "",
+              "enabled": true
+            },
+            {
+              "class": "Afx:400000:b:10003:900015:0",
+              "control_id": 100,
+              "text": "",
+              "enabled": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "page": "物理运行规律2",
+      "button_id": 700,
+      "text": "规律选择",
+      "status": "no_visible_effect",
+      "signature_changed": false,
+      "descendants": []
+    },
+    {
+      "page": "物理运行规律2",
+      "button_id": 680,
+      "text": "基本设置",
+      "status": "no_visible_effect",
+      "signature_changed": false,
+      "descendants": []
+    },
+    {
+      "page": "物理运行规律2",
+      "button_id": 650,
+      "text": "物理运行规律",
+      "status": "no_visible_effect",
+      "signature_changed": false,
+      "descendants": []
+    },
+    {
+      "page": "物理图片规律",
+      "button_id": 710,
+      "text": "运动规律模拟器",
+      "status": "descendant_captured",
+      "signature_changed": false,
+      "descendants": [
+        {
+          "title": "运行规律模拟",
+          "class": "WTWindow",
+          "tag": "DBWRULEBTN_04_01_物理图片规律_710_1",
+          "visible_controls": [
+            {
+              "class": "WTWindow",
+              "control_id": 0,
+              "text": "运行规律模拟",
+              "enabled": true
+            },
+            {
+              "class": "Afx:400000:b:10003:900015:0",
+              "control_id": 300,
+              "text": "每移动几次记录一次坐标",
+              "enabled": true
+            },
+            {
+              "class": "msctls_updown32",
+              "control_id": 294,
+              "text": "",
+              "enabled": true
+            },
+            {
+              "class": "Edit",
+              "control_id": 290,
+              "text": "1",
+              "enabled": true
+            },
+            {
+              "class": "Button",
+              "control_id": 270,
+              "text": "结束",
+              "enabled": true
+            },
+            {
+              "class": "Button",
+              "control_id": 260,
+              "text": "开始",
+              "enabled": true
+            },
+            {
+              "class": "Button",
+              "control_id": 250,
+              "text": "鼠标模拟运动",
+              "enabled": true
+            },
+            {
+              "class": "msctls_updown32",
+              "control_id": 244,
+              "text": "",
+              "enabled": true
+            },
+            {
+              "class": "Edit",
+              "control_id": 240,
+              "text": "0",
+              "enabled": true
+            },
+            {
+              "class": "msctls_updown32",
+              "control_id": 234,
+              "text": "",
+              "enabled": true
+            },
+            {
+              "class": "Edit",
+              "control_id": 230,
+              "text": "0",
+              "enabled": true
+            },
+            {
+              "class": "Afx:400000:b:10003:900015:0",
+              "control_id": 220,
+              "text": "y轴：",
+              "enabled": true
+            },
+            {
+              "class": "Afx:400000:b:10003:900015:0",
+              "control_id": 210,
+              "text": "X轴：",
+              "enabled": true
+            },
+            {
+              "class": "Afx:400000:b:10003:900015:0",
+              "control_id": 200,
+              "text": "Y运行规律：",
+              "enabled": true
+            },
+            {
+              "class": "Edit",
+              "control_id": 190,
+              "text": "",
+              "enabled": true
+            },
+            {
+              "class": "Afx:400000:b:10003:900015:0",
+              "control_id": 180,
+              "text": "物体宽度：",
+              "enabled": true
+            },
+            {
+              "class": "msctls_updown32",
+              "control_id": 174,
+              "text": "",
+              "enabled": true
+            },
+            {
+              "class": "Edit",
+              "control_id": 170,
+              "text": "8",
+              "enabled": true
+            },
+            {
+              "class": "Afx:400000:b:10003:900015:0",
+              "control_id": 160,
+              "text": "物体高度：",
+              "enabled": true
+            },
+            {
+              "class": "msctls_updown32",
+              "control_id": 154,
+              "text": "",
+              "enabled": true
+            },
+            {
+              "class": "Edit",
+              "control_id": 150,
+              "text": "8",
+              "enabled": true
+            },
+            {
+              "class": "Button",
+              "control_id": 140,
+              "text": "移动",
+              "enabled": true
+            },
+            {
+              "class": "Afx:400000:b:10003:900015:0",
+              "control_id": 120,
+              "text": "X运行规律：",
+              "enabled": true
+            },
+            {
+              "class": "Edit",
+              "control_id": 110,
+              "text": "",
+              "enabled": true
+            },
+            {
+              "class": "Afx:400000:b:10003:900015:0",
+              "control_id": 100,
+              "text": "",
+              "enabled": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "page": "物理图片规律",
+      "button_id": 360,
+      "text": "基本设置",
+      "status": "no_visible_effect",
+      "signature_changed": false,
+      "descendants": []
+    },
+    {
+      "page": "物理图片规律",
+      "button_id": 330,
+      "text": "规律选择",
+      "status": "no_visible_effect",
+      "signature_changed": false,
+      "descendants": []
+    },
+    {
+      "page": "物理图片规律",
+      "button_id": 210,
+      "text": "物体图片",
+      "status": "no_visible_effect",
+      "signature_changed": false,
+      "descendants": []
+    },
+    {
+      "page": "物理图片规律",
+      "button_id": 580,
+      "text": "复制\r\n\r\n完整\r\n\r\n代码",
+      "status": "no_visible_effect",
+      "signature_changed": false,
+      "descendants": []
+    },
+    {
+      "page": "物理图片规律",
+      "button_id": 390,
+      "text": "物理图片拼图",
+      "status": "descendant_captured",
+      "signature_changed": false,
+      "descendants": [
+        {
+          "title": "物理拼图",
+          "class": "WTWindow",
+          "tag": "DBWRULEBTN_04_06_物理图片规律_390_1",
+          "visible_controls": [
+            {
+              "class": "WTWindow",
+              "control_id": 0,
+              "text": "物理拼图",
+              "enabled": true
+            },
+            {
+              "class": "Button",
+              "control_id": 190,
+              "text": "取消",
+              "enabled": true
+            },
+            {
+              "class": "Button",
+              "control_id": 180,
+              "text": "确定",
+              "enabled": true
+            },
+            {
+              "class": "Button",
+              "control_id": 140,
+              "text": "效果图片（提示：左键编辑调整图块位置  右键翻转图块）",
+              "enabled": true
+            },
+            {
+              "class": "Button",
+              "control_id": 300,
+              "text": "图片垂直翻转",
+              "enabled": true
+            },
+            {
+              "class": "Button",
+              "control_id": 290,
+              "text": "图片水平翻转",
+              "enabled": true
+            },
+            {
+              "class": "Afx:400000:b:10003:900015:0",
+              "control_id": 150,
+              "text": "",
+              "enabled": true
+            },
+            {
+              "class": "Button",
+              "control_id": 110,
+              "text": "图库（提示：左键选择图块）",
+              "enabled": true
+            },
+            {
+              "class": "ListBox",
+              "control_id": 280,
+              "text": "",
+              "enabled": true
+            },
+            {
+              "class": "Afx:400000:b:10003:900015:0",
+              "control_id": 120,
+              "text": "",
+              "enabled": true
+            },
+            {
+              "class": "Button",
+              "control_id": 100,
+              "text": "参考设置",
+              "enabled": true
+            },
+            {
+              "class": "Button",
+              "control_id": 270,
+              "text": "显示图块编号",
+              "enabled": true
+            },
+            {
+              "class": "Button",
+              "control_id": 260,
+              "text": "00开始",
+              "enabled": true
+            },
+            {
+              "class": "Button",
+              "control_id": 250,
+              "text": "80开始",
+              "enabled": true
+            },
+            {
+              "class": "Afx:400000:b:10003:900015:0",
+              "control_id": 210,
+              "text": "图库地址：",
+              "enabled": true
+            },
+            {
+              "class": "ComboBox",
+              "control_id": 200,
+              "text": "[00]000：80010",
+              "enabled": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "page": "物理图片规律",
+      "button_id": 200,
+      "text": "拼图预览",
+      "status": "no_visible_effect",
+      "signature_changed": false,
+      "descendants": []
+    }
+  ],
+  "gesture_records": [
+    {
+      "page": "光束组图规律",
+      "button_id": 710,
+      "gesture": "right_click",
+      "action_id": "c191f1e93ee5bb4099bd",
+      "result": "no_new_titled_window"
+    },
+    {
+      "page": "光束组图规律",
+      "button_id": 710,
+      "gesture": "keyboard_activate",
+      "action_id": "d7a4ce9c1b4b1493871b",
+      "result": "descendant_captured",
+      "descendant_titles": [
+        "运行规律模拟"
+      ]
+    },
+    {
+      "page": "光束组图规律",
+      "button_id": 270,
+      "gesture": "right_click",
+      "action_id": "ae68c4b622dde583bf5b",
+      "result": "no_new_titled_window"
+    },
+    {
+      "page": "光束组图规律",
+      "button_id": 270,
+      "gesture": "keyboard_activate",
+      "action_id": "b1276178139f07f89390",
+      "result": "no_visible_effect",
+      "descendant_titles": []
+    },
+    {
+      "page": "光束组图规律",
+      "button_id": 220,
+      "gesture": "right_click",
+      "action_id": "c342780584e85b96cb7c",
+      "result": "no_new_titled_window"
+    },
+    {
+      "page": "光束组图规律",
+      "button_id": 220,
+      "gesture": "keyboard_activate",
+      "action_id": "40b51baed6214884f16a",
+      "result": "no_visible_effect",
+      "descendant_titles": []
+    },
+    {
+      "page": "光束组图规律",
+      "button_id": 140,
+      "gesture": "right_click",
+      "action_id": "23ced51403c8e5685b57",
+      "result": "no_new_titled_window"
+    },
+    {
+      "page": "光束组图规律",
+      "button_id": 140,
+      "gesture": "keyboard_activate",
+      "action_id": "c932fd126896dcc9cdf4",
+      "result": "no_visible_effect",
+      "descendant_titles": []
+    },
+    {
+      "page": "光束组图规律",
+      "button_id": 570,
+      "gesture": "right_click",
+      "action_id": "b0b3d131f6bc55fe797b",
+      "result": "no_new_titled_window"
+    },
+    {
+      "page": "光束组图规律",
+      "button_id": 570,
+      "gesture": "keyboard_activate",
+      "action_id": "b37a93a318009f99ebbf",
+      "result": "no_visible_effect",
+      "descendant_titles": []
+    },
+    {
+      "page": "光束组图规律",
+      "button_id": 410,
+      "gesture": "right_click",
+      "action_id": "1f9164c0e45737813640",
+      "result": "no_new_titled_window"
+    },
+    {
+      "page": "光束组图规律",
+      "button_id": 410,
+      "gesture": "keyboard_activate",
+      "action_id": "6109b6383b37d96c3b3d",
+      "result": "inline_state_changed",
+      "descendant_titles": []
+    },
+    {
+      "page": "光束组图规律",
+      "button_id": 400,
+      "gesture": "right_click",
+      "action_id": "54ee687f66bfe888cbb0",
+      "result": "no_new_titled_window"
+    },
+    {
+      "page": "光束组图规律",
+      "button_id": 400,
+      "gesture": "keyboard_activate",
+      "action_id": "d0f9023b78304afae9de",
+      "result": "inline_state_changed",
+      "descendant_titles": []
+    },
+    {
+      "page": "光束组图规律",
+      "button_id": 380,
+      "gesture": "right_click",
+      "action_id": "ee6cb32863eb110f54a3",
+      "result": "no_new_titled_window"
+    },
+    {
+      "page": "光束组图规律",
+      "button_id": 380,
+      "gesture": "keyboard_activate",
+      "action_id": "6b3c222df4123b413720",
+      "result": "descendant_captured",
+      "descendant_titles": [
+        "光束拼图"
+      ]
+    },
+    {
+      "page": "物理运行规律1",
+      "button_id": 710,
+      "gesture": "right_click",
+      "action_id": "c191f1e93ee5bb4099bd",
+      "result": "no_new_titled_window"
+    },
+    {
+      "page": "物理运行规律1",
+      "button_id": 710,
+      "gesture": "keyboard_activate",
+      "action_id": "d7a4ce9c1b4b1493871b",
+      "result": "descendant_captured",
+      "descendant_titles": [
+        "运行规律模拟"
+      ]
+    },
+    {
+      "page": "物理运行规律1",
+      "button_id": 310,
+      "gesture": "right_click",
+      "action_id": "cf66c0f9c00f716293ec",
+      "result": "no_new_titled_window"
+    },
+    {
+      "page": "物理运行规律1",
+      "button_id": 310,
+      "gesture": "keyboard_activate",
+      "action_id": "85a67072035f3004dbc2",
+      "result": "no_visible_effect",
+      "descendant_titles": []
+    },
+    {
+      "page": "物理运行规律1",
+      "button_id": 280,
+      "gesture": "right_click",
+      "action_id": "fa7ce27a8b65420542ef",
+      "result": "no_new_titled_window"
+    },
+    {
+      "page": "物理运行规律1",
+      "button_id": 280,
+      "gesture": "keyboard_activate",
+      "action_id": "9e7dfa62ccb30c4effbd",
+      "result": "no_visible_effect",
+      "descendant_titles": []
+    },
+    {
+      "page": "物理运行规律1",
+      "button_id": 170,
+      "gesture": "right_click",
+      "action_id": "24ee526f1eadba48210a",
+      "result": "no_new_titled_window"
+    },
+    {
+      "page": "物理运行规律1",
+      "button_id": 170,
+      "gesture": "keyboard_activate",
+      "action_id": "060473a37305ce1c5271",
+      "result": "no_visible_effect",
+      "descendant_titles": []
+    },
+    {
+      "page": "物理运行规律2",
+      "button_id": 710,
+      "gesture": "right_click",
+      "action_id": "c191f1e93ee5bb4099bd",
+      "result": "no_new_titled_window"
+    },
+    {
+      "page": "物理运行规律2",
+      "button_id": 710,
+      "gesture": "keyboard_activate",
+      "action_id": "d7a4ce9c1b4b1493871b",
+      "result": "descendant_captured",
+      "descendant_titles": [
+        "运行规律模拟"
+      ]
+    },
+    {
+      "page": "物理运行规律2",
+      "button_id": 700,
+      "gesture": "right_click",
+      "action_id": "ff3df44b8a237a2cabec",
+      "result": "no_new_titled_window"
+    },
+    {
+      "page": "物理运行规律2",
+      "button_id": 700,
+      "gesture": "keyboard_activate",
+      "action_id": "9e17ea731ea18ba9c26c",
+      "result": "no_visible_effect",
+      "descendant_titles": []
+    },
+    {
+      "page": "物理运行规律2",
+      "button_id": 680,
+      "gesture": "right_click",
+      "action_id": "d87377a96f8b290c6f53",
+      "result": "no_new_titled_window"
+    },
+    {
+      "page": "物理运行规律2",
+      "button_id": 680,
+      "gesture": "keyboard_activate",
+      "action_id": "42d8c1f1998458783099",
+      "result": "no_visible_effect",
+      "descendant_titles": []
+    },
+    {
+      "page": "物理运行规律2",
+      "button_id": 650,
+      "gesture": "right_click",
+      "action_id": "58af023aec08764cb243",
+      "result": "no_new_titled_window"
+    },
+    {
+      "page": "物理运行规律2",
+      "button_id": 650,
+      "gesture": "keyboard_activate",
+      "action_id": "9958dcfbf46284f29804",
+      "result": "no_visible_effect",
+      "descendant_titles": []
+    },
+    {
+      "page": "物理图片规律",
+      "button_id": 710,
+      "gesture": "right_click",
+      "action_id": "c191f1e93ee5bb4099bd",
+      "result": "no_new_titled_window"
+    },
+    {
+      "page": "物理图片规律",
+      "button_id": 710,
+      "gesture": "keyboard_activate",
+      "action_id": "d7a4ce9c1b4b1493871b",
+      "result": "descendant_captured",
+      "descendant_titles": [
+        "运行规律模拟"
+      ]
+    },
+    {
+      "page": "物理图片规律",
+      "button_id": 360,
+      "gesture": "right_click",
+      "action_id": "d73ce763e698ab990acc",
+      "result": "no_new_titled_window"
+    },
+    {
+      "page": "物理图片规律",
+      "button_id": 360,
+      "gesture": "keyboard_activate",
+      "action_id": "e7dcbfcf5a9c4db9bc24",
+      "result": "no_visible_effect",
+      "descendant_titles": []
+    },
+    {
+      "page": "物理图片规律",
+      "button_id": 330,
+      "gesture": "right_click",
+      "action_id": "b69e766441436f6787c2",
+      "result": "no_new_titled_window"
+    },
+    {
+      "page": "物理图片规律",
+      "button_id": 330,
+      "gesture": "keyboard_activate",
+      "action_id": "bb9e24f298d9df9ad6d9",
+      "result": "no_visible_effect",
+      "descendant_titles": []
+    },
+    {
+      "page": "物理图片规律",
+      "button_id": 210,
+      "gesture": "right_click",
+      "action_id": "e694df06775dcebcb374",
+      "result": "no_new_titled_window"
+    },
+    {
+      "page": "物理图片规律",
+      "button_id": 210,
+      "gesture": "keyboard_activate",
+      "action_id": "b3466e1f3e0e9db47c5b",
+      "result": "no_visible_effect",
+      "descendant_titles": []
+    },
+    {
+      "page": "物理图片规律",
+      "button_id": 580,
+      "gesture": "right_click",
+      "action_id": "31784e5badc9959521ce",
+      "result": "no_new_titled_window"
+    },
+    {
+      "page": "物理图片规律",
+      "button_id": 580,
+      "gesture": "keyboard_activate",
+      "action_id": "f3b50cfe7166b0191b69",
+      "result": "no_visible_effect",
+      "descendant_titles": []
+    },
+    {
+      "page": "物理图片规律",
+      "button_id": 390,
+      "gesture": "right_click",
+      "action_id": "36d6676ec9ed35ca1cb6",
+      "result": "no_new_titled_window"
+    },
+    {
+      "page": "物理图片规律",
+      "button_id": 390,
+      "gesture": "keyboard_activate",
+      "action_id": "4fb2a8258ede14bb21fb",
+      "result": "descendant_captured",
+      "descendant_titles": [
+        "物理拼图"
+      ]
+    },
+    {
+      "page": "物理图片规律",
+      "button_id": 200,
+      "gesture": "right_click",
+      "action_id": "fd90c0cceef17ddfadaa",
+      "result": "no_new_titled_window"
+    },
+    {
+      "page": "物理图片规律",
+      "button_id": 200,
+      "gesture": "keyboard_activate",
+      "action_id": "0517eca6de723e19ccfb",
+      "result": "no_visible_effect",
+      "descendant_titles": []
+    }
+  ],
+  "execution_records": [
+    {
+      "action_id": "0a95ce00147de5a36d14",
+      "status": "passed",
+      "result": "旧版物理图片规律按钮 710 实际左键：打开并捕获子窗口。"
+    },
+    {
+      "action_id": "c191f1e93ee5bb4099bd",
+      "status": "passed",
+      "result": "旧版物理图片规律按钮 710 真实右键未打开有标题的功能窗口。"
+    },
+    {
+      "action_id": "d7a4ce9c1b4b1493871b",
+      "status": "passed",
+      "result": "旧版物理图片规律按钮 710 真实焦点空格键：打开并关闭 ['运行规律模拟']。"
+    },
+    {
+      "action_id": "bf2dda9112eda6d947a1",
+      "status": "passed",
+      "result": "旧版光束组图规律按钮 270 实际左键：无新窗口且无可见状态变化。"
+    },
+    {
+      "action_id": "ae68c4b622dde583bf5b",
+      "status": "passed",
+      "result": "旧版光束组图规律按钮 270 真实右键未打开有标题的功能窗口。"
+    },
+    {
+      "action_id": "b1276178139f07f89390",
+      "status": "passed",
+      "result": "旧版光束组图规律按钮 270 真实焦点空格键：无新窗口且无可见状态变化。"
+    },
+    {
+      "action_id": "b0a1bcbdf5de52bb7701",
+      "status": "passed",
+      "result": "旧版光束组图规律按钮 220 实际左键：无新窗口且无可见状态变化。"
+    },
+    {
+      "action_id": "c342780584e85b96cb7c",
+      "status": "passed",
+      "result": "旧版光束组图规律按钮 220 真实右键未打开有标题的功能窗口。"
+    },
+    {
+      "action_id": "40b51baed6214884f16a",
+      "status": "passed",
+      "result": "旧版光束组图规律按钮 220 真实焦点空格键：无新窗口且无可见状态变化。"
+    },
+    {
+      "action_id": "fe3b99732d3f867daeed",
+      "status": "passed",
+      "result": "旧版光束组图规律按钮 140 实际左键：无新窗口且无可见状态变化。"
+    },
+    {
+      "action_id": "23ced51403c8e5685b57",
+      "status": "passed",
+      "result": "旧版光束组图规律按钮 140 真实右键未打开有标题的功能窗口。"
+    },
+    {
+      "action_id": "c932fd126896dcc9cdf4",
+      "status": "passed",
+      "result": "旧版光束组图规律按钮 140 真实焦点空格键：无新窗口且无可见状态变化。"
+    },
+    {
+      "action_id": "83dcc1339b5306556855",
+      "status": "passed",
+      "result": "旧版光束组图规律按钮 570 实际左键：无新窗口且无可见状态变化。"
+    },
+    {
+      "action_id": "b0b3d131f6bc55fe797b",
+      "status": "passed",
+      "result": "旧版光束组图规律按钮 570 真实右键未打开有标题的功能窗口。"
+    },
+    {
+      "action_id": "b37a93a318009f99ebbf",
+      "status": "passed",
+      "result": "旧版光束组图规律按钮 570 真实焦点空格键：无新窗口且无可见状态变化。"
+    },
+    {
+      "action_id": "545a02c1236ac33a73e8",
+      "status": "passed",
+      "result": "旧版光束组图规律按钮 410 实际左键：产生行内状态变化。"
+    },
+    {
+      "action_id": "1f9164c0e45737813640",
+      "status": "passed",
+      "result": "旧版光束组图规律按钮 410 真实右键未打开有标题的功能窗口。"
+    },
+    {
+      "action_id": "6109b6383b37d96c3b3d",
+      "status": "passed",
+      "result": "旧版光束组图规律按钮 410 真实焦点空格键：产生行内状态变化。"
+    },
+    {
+      "action_id": "4693cf8895c0cb71b128",
+      "status": "passed",
+      "result": "旧版光束组图规律按钮 400 实际左键：产生行内状态变化。"
+    },
+    {
+      "action_id": "54ee687f66bfe888cbb0",
+      "status": "passed",
+      "result": "旧版光束组图规律按钮 400 真实右键未打开有标题的功能窗口。"
+    },
+    {
+      "action_id": "d0f9023b78304afae9de",
+      "status": "passed",
+      "result": "旧版光束组图规律按钮 400 真实焦点空格键：产生行内状态变化。"
+    },
+    {
+      "action_id": "24dc57351440388ebde0",
+      "status": "passed",
+      "result": "旧版光束组图规律按钮 380 实际左键：打开并捕获子窗口。"
+    },
+    {
+      "action_id": "ee6cb32863eb110f54a3",
+      "status": "passed",
+      "result": "旧版光束组图规律按钮 380 真实右键未打开有标题的功能窗口。"
+    },
+    {
+      "action_id": "6b3c222df4123b413720",
+      "status": "passed",
+      "result": "旧版光束组图规律按钮 380 真实焦点空格键：打开并关闭 ['光束拼图']。"
+    },
+    {
+      "action_id": "8b999c5c3f34cbb194fc",
+      "status": "passed",
+      "result": "旧版物理运行规律1按钮 310 实际左键：无新窗口且无可见状态变化。"
+    },
+    {
+      "action_id": "cf66c0f9c00f716293ec",
+      "status": "passed",
+      "result": "旧版物理运行规律1按钮 310 真实右键未打开有标题的功能窗口。"
+    },
+    {
+      "action_id": "85a67072035f3004dbc2",
+      "status": "passed",
+      "result": "旧版物理运行规律1按钮 310 真实焦点空格键：无新窗口且无可见状态变化。"
+    },
+    {
+      "action_id": "396582ee3355e2ebddee",
+      "status": "passed",
+      "result": "旧版物理运行规律1按钮 280 实际左键：无新窗口且无可见状态变化。"
+    },
+    {
+      "action_id": "fa7ce27a8b65420542ef",
+      "status": "passed",
+      "result": "旧版物理运行规律1按钮 280 真实右键未打开有标题的功能窗口。"
+    },
+    {
+      "action_id": "9e7dfa62ccb30c4effbd",
+      "status": "passed",
+      "result": "旧版物理运行规律1按钮 280 真实焦点空格键：无新窗口且无可见状态变化。"
+    },
+    {
+      "action_id": "721f9953387fcd644330",
+      "status": "passed",
+      "result": "旧版物理运行规律1按钮 170 实际左键：无新窗口且无可见状态变化。"
+    },
+    {
+      "action_id": "24ee526f1eadba48210a",
+      "status": "passed",
+      "result": "旧版物理运行规律1按钮 170 真实右键未打开有标题的功能窗口。"
+    },
+    {
+      "action_id": "060473a37305ce1c5271",
+      "status": "passed",
+      "result": "旧版物理运行规律1按钮 170 真实焦点空格键：无新窗口且无可见状态变化。"
+    },
+    {
+      "action_id": "fd9870ce343c5662715b",
+      "status": "passed",
+      "result": "旧版物理运行规律2按钮 700 实际左键：无新窗口且无可见状态变化。"
+    },
+    {
+      "action_id": "ff3df44b8a237a2cabec",
+      "status": "passed",
+      "result": "旧版物理运行规律2按钮 700 真实右键未打开有标题的功能窗口。"
+    },
+    {
+      "action_id": "9e17ea731ea18ba9c26c",
+      "status": "passed",
+      "result": "旧版物理运行规律2按钮 700 真实焦点空格键：无新窗口且无可见状态变化。"
+    },
+    {
+      "action_id": "e94d13f4f42e4f87c1d5",
+      "status": "passed",
+      "result": "旧版物理运行规律2按钮 680 实际左键：无新窗口且无可见状态变化。"
+    },
+    {
+      "action_id": "d87377a96f8b290c6f53",
+      "status": "passed",
+      "result": "旧版物理运行规律2按钮 680 真实右键未打开有标题的功能窗口。"
+    },
+    {
+      "action_id": "42d8c1f1998458783099",
+      "status": "passed",
+      "result": "旧版物理运行规律2按钮 680 真实焦点空格键：无新窗口且无可见状态变化。"
+    },
+    {
+      "action_id": "d8b36af892cb4f2ea8a6",
+      "status": "passed",
+      "result": "旧版物理运行规律2按钮 650 实际左键：无新窗口且无可见状态变化。"
+    },
+    {
+      "action_id": "58af023aec08764cb243",
+      "status": "passed",
+      "result": "旧版物理运行规律2按钮 650 真实右键未打开有标题的功能窗口。"
+    },
+    {
+      "action_id": "9958dcfbf46284f29804",
+      "status": "passed",
+      "result": "旧版物理运行规律2按钮 650 真实焦点空格键：无新窗口且无可见状态变化。"
+    },
+    {
+      "action_id": "82591ade9dd8c811cbde",
+      "status": "passed",
+      "result": "旧版物理图片规律按钮 360 实际左键：无新窗口且无可见状态变化。"
+    },
+    {
+      "action_id": "d73ce763e698ab990acc",
+      "status": "passed",
+      "result": "旧版物理图片规律按钮 360 真实右键未打开有标题的功能窗口。"
+    },
+    {
+      "action_id": "e7dcbfcf5a9c4db9bc24",
+      "status": "passed",
+      "result": "旧版物理图片规律按钮 360 真实焦点空格键：无新窗口且无可见状态变化。"
+    },
+    {
+      "action_id": "2fdffdbd5a082b6bcfdc",
+      "status": "passed",
+      "result": "旧版物理图片规律按钮 330 实际左键：无新窗口且无可见状态变化。"
+    },
+    {
+      "action_id": "b69e766441436f6787c2",
+      "status": "passed",
+      "result": "旧版物理图片规律按钮 330 真实右键未打开有标题的功能窗口。"
+    },
+    {
+      "action_id": "bb9e24f298d9df9ad6d9",
+      "status": "passed",
+      "result": "旧版物理图片规律按钮 330 真实焦点空格键：无新窗口且无可见状态变化。"
+    },
+    {
+      "action_id": "7fd39e90071e6b86e8f9",
+      "status": "passed",
+      "result": "旧版物理图片规律按钮 210 实际左键：无新窗口且无可见状态变化。"
+    },
+    {
+      "action_id": "e694df06775dcebcb374",
+      "status": "passed",
+      "result": "旧版物理图片规律按钮 210 真实右键未打开有标题的功能窗口。"
+    },
+    {
+      "action_id": "b3466e1f3e0e9db47c5b",
+      "status": "passed",
+      "result": "旧版物理图片规律按钮 210 真实焦点空格键：无新窗口且无可见状态变化。"
+    },
+    {
+      "action_id": "f1e20f006c43536f9791",
+      "status": "passed",
+      "result": "旧版物理图片规律按钮 580 实际左键：无新窗口且无可见状态变化。"
+    },
+    {
+      "action_id": "31784e5badc9959521ce",
+      "status": "passed",
+      "result": "旧版物理图片规律按钮 580 真实右键未打开有标题的功能窗口。"
+    },
+    {
+      "action_id": "f3b50cfe7166b0191b69",
+      "status": "passed",
+      "result": "旧版物理图片规律按钮 580 真实焦点空格键：无新窗口且无可见状态变化。"
+    },
+    {
+      "action_id": "4f66b49be308c8759568",
+      "status": "passed",
+      "result": "旧版物理图片规律按钮 390 实际左键：打开并捕获子窗口。"
+    },
+    {
+      "action_id": "36d6676ec9ed35ca1cb6",
+      "status": "passed",
+      "result": "旧版物理图片规律按钮 390 真实右键未打开有标题的功能窗口。"
+    },
+    {
+      "action_id": "4fb2a8258ede14bb21fb",
+      "status": "passed",
+      "result": "旧版物理图片规律按钮 390 真实焦点空格键：打开并关闭 ['物理拼图']。"
+    },
+    {
+      "action_id": "5fe4b2d16bbc58bd50c1",
+      "status": "passed",
+      "result": "旧版物理图片规律按钮 200 实际左键：无新窗口且无可见状态变化。"
+    },
+    {
+      "action_id": "fd90c0cceef17ddfadaa",
+      "status": "passed",
+      "result": "旧版物理图片规律按钮 200 真实右键未打开有标题的功能窗口。"
+    },
+    {
+      "action_id": "0517eca6de723e19ccfb",
+      "status": "passed",
+      "result": "旧版物理图片规律按钮 200 真实焦点空格键：无新窗口且无可见状态变化。"
+    }
+  ]
+}

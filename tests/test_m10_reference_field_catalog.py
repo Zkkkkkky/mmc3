@@ -19,8 +19,8 @@ class M10ReferenceFieldCatalogTests(unittest.TestCase):
     def test_catalog_covers_every_visible_edit_surface(self) -> None:
         report = json.loads((ROOT / "output/reports/m10-reference-field-catalog.json").read_text(encoding="utf-8"))
         self.assertEqual(report["counts"]["logical_fields"], 254)
-        self.assertEqual(report["counts"]["product_safe_candidates"], 134)
-        self.assertEqual(report["counts"]["product_blocked_candidates"], 120)
+        self.assertEqual(report["counts"]["product_safe_candidates"], 197)
+        self.assertEqual(report["counts"]["product_blocked_candidates"], 57)
         self.assertEqual(report["counts"]["families"], {
             "item_description": 24, "item_name": 24, "item_price": 24,
             "shop_clerk": 14, "shop_dialogue_id": 14, "shop_dialogue_text": 98,

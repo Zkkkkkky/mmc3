@@ -1,0 +1,15 @@
+[    0.0s] launched pid=2600
+[    0.0s] === stage A: launcher -> main window (no ROM) ===
+[    3.0s] top window: {'hwnd': 11077138, 'title': 'SRW2�޸���V1.5', 'class': 'WTWindow', 'rect': {'left': 571, 'top': 244, 'right': 1346, 'bottom': 843, 'width': 775, 'height': 599}, 'pid': 2600}
+[    4.0s] dump A01_������: title='SRW2�޸���V1.5' class='WTWindow' controls=8 shot=ok
+[   12.8s] main window hwnd=3868914 title='SRW2���ݰ��޸���V1.0'
+[   14.3s] dump A02_������_δ����ROM: title='SRW2���ݰ��޸���V1.0' class='WTWindow' controls=63 shot=ok
+[   22.3s] === stage LOAD: load ROM copy only ===
+[   23.4s] dump LOAD01_��ROM�Ի���: title='���ļ�' class='#32770' controls=49 shot=ok
+[   23.9s] open dialog confirmed gone=True
+[   31.4s] ROM loaded without main-window sweep, title='SRW2���ݰ��޸���V1.0��D:\\GIT\\mmc3\\output\\build\\legacy-ui-probe\\database-edit-dialogue-controls.nes'
+[   32.5s] dump LOAD02_������_�����: title='SRW2���ݰ��޸���V1.0��D:\\GIT\\mmc3\\output\\build\\legacy-ui-probe\\database-edit-dialogue-controls.nes' class='WTWindow' controls=63 shot=ok
+[   32.5s] === stage DBEDITDIALOGUECONTROLS ===
+[   33.5s] ���ݿ�: hwnd=4851430 title='���ݿ�'
+[   90.0s] DBEDITDIALOGUECONTROLS complete: 36/36 actions, zero ROM diff
+[   90.2s] terminated owned pid=2600

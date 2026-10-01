@@ -9,7 +9,9 @@ os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 from PySide6.QtCore import QSize, Qt
 from PySide6.QtGui import QColor, QImage
 from PySide6.QtTest import QTest
-from PySide6.QtWidgets import QApplication, QAbstractSpinBox, QDialogButtonBox
+from PySide6.QtWidgets import (
+    QApplication, QAbstractSpinBox, QDialogButtonBox, QHeaderView,
+)
 
 from dc_modifier.app import DEFAULT_ROM
 from dc_modifier.map_page import (
@@ -400,7 +402,8 @@ class LegacyMapUiTests(QtTestCase):
             self.assertIn("颜色表：", preview.toolTip())
             self.assertIn("防御补正：", preview.toolTip())
             self.assertIn("海属性：", preview.toolTip())
-            self.assertIn("移动补正：空", preview.toolTip())
+            self.assertIn("空中通行：", preview.toolTip())
+            self.assertIn("移动补正：陆", preview.toolTip())
         for preview, tile in (
             (self.page.left_brush_preview, 3),
             (self.page.right_brush_preview, 7),
@@ -421,20 +424,35 @@ class LegacyMapUiTests(QtTestCase):
         )
         self.assertTrue(dialog._supported)
         self.assertEqual(dialog.table.rowCount(), 16)
-        self.assertEqual(dialog.size(), QSize(880, 610))
-        self.assertEqual(dialog.minimumSize(), QSize(820, 520))
-        self.assertEqual(dialog.palette_preview.size(), QSize(120, 30))
+        self.assertEqual(dialog.size(), QSize(920, 600))
+        self.assertEqual(dialog.minimumSize(), QSize(860, 540))
+        self.assertEqual(dialog.palette_preview.size(), QSize(104, 28))
         self.assertFalse(hasattr(dialog, "color_spins"))
         self.assertTrue(
-            all(button.size() == QSize(80, 28) for button in dialog.color_buttons)
+            all(button.size() == QSize(72, 28) for button in dialog.color_buttons)
         )
-        self.assertEqual(dialog.table.verticalHeader().defaultSectionSize(), 28)
+        self.assertEqual(dialog.table.verticalHeader().defaultSectionSize(), 27)
         self.assertEqual(dialog.table.horizontalHeaderItem(1).text(), "颜色表")
         self.assertEqual(
-            tuple(dialog.table.columnWidth(index) for index in range(1, 9)),
-            (96, 88, 44, 50, 68, 132, 132, 132),
+            tuple(dialog.table.columnWidth(index) for index in range(1, 6)),
+            (92, 86, 44, 48, 66),
         )
-        self.assertTrue(all(button.height() == 26 for button in dialog.buttons.buttons()))
+        self.assertTrue(
+            all(
+                dialog.table.horizontalHeader().sectionResizeMode(index)
+                == QHeaderView.ResizeMode.Stretch
+                for index in (6, 7, 8)
+            )
+        )
+        self.assertTrue(all(button.height() == 29 for button in dialog.buttons.buttons()))
+        self.assertEqual(tuple(dialog.tileset_buttons), tuple("ABCDEFGH"))
+        self.assertTrue(dialog.tileset_buttons["D"].isChecked())
+        self.assertTrue(
+            all(
+                preview.size() == QSize(64, 24) and not preview.pixmap().isNull()
+                for preview in dialog.shared_palette_previews.values()
+            )
+        )
         dialog.defense_spins[1].setValue((original.tiles[1].defense + 1) & 0x7F)
         dialog.reject()
         self.assertEqual(self.project.get_map_tileset_attributes("D"), original)
@@ -457,11 +475,16 @@ class LegacyMapUiTests(QtTestCase):
         self.assertIn("#4CDC48", button.toolTip())
         picker = NesPaletteDialog(0x2A)
         self.assertEqual(picker.windowTitle(), "调色板选择")
-        self.assertEqual((picker.width(), picker.height()), (530, 175))
+        self.assertEqual((picker.width(), picker.height()), (544, 150))
         picker_layout = picker.layout()
+        picker_layout.activate()
         self.assertIsNotNone(picker_layout.itemAtPosition(0, 15))
         self.assertIsNotNone(picker_layout.itemAtPosition(1, 0))
         self.assertIsNotNone(picker_layout.itemAtPosition(3, 15))
+        first = picker_layout.itemAtPosition(0, 0).widget()
+        second = picker_layout.itemAtPosition(0, 1).widget()
+        self.assertEqual((first.width(), first.height()), (32, 30))
+        self.assertEqual(second.geometry().left() - first.geometry().right(), 2)
         picker._select(0x1A)
         self.assertEqual(picker.selected_value, 0x1A)
 
@@ -469,9 +492,17 @@ class LegacyMapUiTests(QtTestCase):
         dialog = TileAttributeDialog(
             self.project, "D", self.page.canvas.tile_images, self.page
         )
-        self.assertTrue(dialog.sea_checks[5].isChecked())
-        self.assertIn("ROM 漏写海属性", dialog.sea_checks[5].toolTip())
-        self.assertIn("应用后会补写标志", dialog.sea_checks[5].toolTip())
+        self.assertFalse(dialog.sea_checks[5].isChecked())
+        self.assertIn("ROM 海属性位：0（否）", dialog.sea_checks[5].toolTip())
+        self.assertIn("不根据图形推断", dialog.sea_checks[5].toolTip())
+        self.assertEqual(dialog.table.horizontalHeaderItem(6).text(), "空中通行")
+        self.assertEqual(dialog.air_boxes[8].count(), 2)
+        self.assertEqual(dialog.air_boxes[8].currentText(), "可以通行")
+        self.assertEqual(dialog.palette_boxes[5].currentText(), "颜色表2")
+        self.assertEqual(dialog.defense_spins[5].value(), 85)
+        self.assertEqual(dialog.air_boxes[5].currentText(), "可以通行")
+        self.assertEqual(dialog.land_boxes[5].currentText(), "补正2格")
+        self.assertEqual(dialog.sea_boxes[5].currentText(), "不补正")
         tile_zero = dialog.table.item(0, 0).icon().pixmap(16, 16).toImage()
         expected_zero = render_map_tile(
             self.project,
@@ -487,21 +518,19 @@ class LegacyMapUiTests(QtTestCase):
         self.assertEqual(bytes(self.project.working), before_rom)
         self.assertEqual(dialog.color_buttons[1].value, 0x0F)
         for palette_index in (2, 3):
+            reference = dialog.shared_palette_tiles[palette_index]
+            self.assertIn(
+                "引用位图",
+                reference.text(),
+            )
+            self.assertNotIn("$", reference.text())
+            self.assertIn("不在此窗口显示或修改色号", reference.toolTip())
+            self.assertTrue(dialog.palette_boxes[0].itemIcon(palette_index).isNull())
+        for palette_index in (2, 3):
             preview = dialog.shared_palette_previews[palette_index]
             self.assertFalse(preview.pixmap().isNull())
-            self.assertIn("只读", preview.toolTip())
-            self.assertIn("真实 NES 色号", preview.toolTip())
-            expected = (
-                "$0F · $30 · $21 · $02"
-                if palette_index == 2
-                else "$0F · $37 · $27 · $16"
-            )
-            self.assertIn(expected, dialog.shared_palette_tiles[palette_index].text())
-            self.assertIn(
-                "引用图块",
-                dialog.shared_palette_tiles[palette_index].text(),
-            )
-            self.assertTrue(dialog.palette_boxes[0].itemIcon(palette_index).isNull())
+            self.assertIn("组合预览（只读）", preview.toolTip())
+            self.assertNotIn("$", preview.toolTip())
         self.assertEqual(
             tuple(dialog.palette_boxes[0].itemText(index) for index in range(4)),
             ("背景色", "颜色表1", "颜色表2", "颜色表3"),
@@ -525,20 +554,64 @@ class LegacyMapUiTests(QtTestCase):
         self.assertTrue(all(spin.value() == 45 for spin in dialog.heal_ratio_spins))
         dialog.accept()
 
-        for key in "ABCDEFG":
+        for key in "ABCDEFGH":
             value = self.project.get_map_tileset_attributes(key)
             self.assertEqual(value.heal_ratio, 45)
             self.assertTrue(value.tiles[2].heal)
             self.assertEqual(sum(tile.heal for tile in value.tiles), 1)
 
-    def test_unverified_tileset_h_stays_read_only(self) -> None:
+
+    def test_runtime_verified_tileset_h_is_editable(self) -> None:
         dialog = TileAttributeDialog(
             self.project, "H", self.page.canvas.tile_images, self.page
         )
-        self.assertFalse(dialog._supported)
-        self.assertFalse(
+        self.assertTrue(dialog._supported)
+        self.assertTrue(
             dialog.buttons.button(QDialogButtonBox.StandardButton.Save).isEnabled()
         )
+
+    def test_tile_attribute_dialog_switches_a_to_h_and_keeps_drafts(self) -> None:
+        original_d = self.project.get_map_tileset_attributes("D")
+        original_e = self.project.get_map_tileset_attributes("E")
+        undo_count = len(self.project._undo_stack)
+        changed_d = (original_d.tiles[1].defense + 1) & 0x7F
+        changed_e = (original_e.tiles[2].defense + 2) & 0x7F
+
+        cancelled = TileAttributeDialog(
+            self.project, "D", self.page.canvas.tile_images, self.page
+        )
+        cancelled.defense_spins[1].setValue(changed_d)
+        cancelled.tileset_buttons["E"].click()
+        cancelled.defense_spins[2].setValue(changed_e)
+        cancelled.reject()
+        self.assertEqual(self.project.get_map_tileset_attributes("D"), original_d)
+        self.assertEqual(self.project.get_map_tileset_attributes("E"), original_e)
+
+        dialog = TileAttributeDialog(
+            self.project, "D", self.page.canvas.tile_images, self.page
+        )
+        dialog.defense_spins[1].setValue(changed_d)
+        dialog.tileset_buttons["E"].click()
+        self.assertEqual(dialog.tileset_key, "E")
+        self.assertEqual(dialog.defense_spins[2].value(), original_e.tiles[2].defense)
+        self.assertIn("图库 E", dialog.notice.text())
+        dialog.defense_spins[2].setValue(changed_e)
+        dialog.tileset_buttons["D"].click()
+        self.assertEqual(dialog.defense_spins[1].value(), changed_d)
+
+        dialog.accept()
+        self.assertEqual(
+            self.project.get_map_tileset_attributes("D").tiles[1].defense,
+            changed_d,
+        )
+        self.assertEqual(
+            self.project.get_map_tileset_attributes("E").tiles[2].defense,
+            changed_e,
+        )
+        self.assertEqual(len(self.project._undo_stack), undo_count + 1)
+        self.project.undo()
+        self.assertEqual(self.project.get_map_tileset_attributes("D"), original_d)
+        self.assertEqual(self.project.get_map_tileset_attributes("E"), original_e)
 
     def test_initial_configuration_defaults_to_real_icon_sheets(self) -> None:
         self.page.editor_tabs.setCurrentIndex(1)

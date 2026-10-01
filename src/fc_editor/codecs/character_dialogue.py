@@ -88,10 +88,14 @@ class TransformDialogueBinding:
 
 
 class CharacterDialogueCodec:
-    """Read and edit the verified fixed-size character dialogue records."""
+    """Read and repack the verified native character-dialogue pool."""
 
-    def __init__(self, rom: RomImage) -> None:
+    NATIVE_END_POINTER = 0xB510
+    NATIVE_END_CODE = bytes.fromhex("a50785024cdab5a50785024c79b5")
+
+    def __init__(self, rom: RomImage, data: bytes | bytearray | None = None) -> None:
         self.rom = rom
+        source = rom.data if data is None else data
         profile = rom.profile
         if (
             profile.character_dialogue_pointer_table_offset is None
@@ -101,13 +105,31 @@ class CharacterDialogueCodec:
         ):
             raise RomFormatError("当前 ROM 没有已验证的人物台词绑定表。")
         table_size = profile.character_dialogue_count * 2
-        raw = rom.read(profile.character_dialogue_pointer_table_offset, table_size)
+        start = profile.character_dialogue_pointer_table_offset
+        raw = bytes(source[start:start + table_size])
         pointers = struct.unpack(f"<{profile.character_dialogue_count}H", raw)
         if any(not 0x8000 <= pointer < profile.character_dialogue_data_end_pointer for pointer in pointers):
             raise RomFormatError("人物台词指针超出已验证数据区。")
         self._pool_start = min(pointers)
-        self._validate_all(rom.data)
-        self.transform_bindings(rom.data)
+        self._validate_all(source)
+        self._validate_native_tail(source)
+        self.transform_bindings(source)
+
+    def _validate_native_tail(self, data: bytes | bytearray) -> None:
+        profile = self.rom.profile
+        if profile.character_dialogue_data_end_pointer != self.NATIVE_END_POINTER:
+            raise RomFormatError("人物台词原生容量边界未通过验证。")
+        code_offset = self.pointer_to_file_offset(self.NATIVE_END_POINTER - 1) + 1
+        if bytes(data[code_offset : code_offset + len(self.NATIVE_END_CODE)]) != self.NATIVE_END_CODE:
+            raise RomFormatError("人物台词数据区后的固定代码签名不匹配。")
+        used_end = max(
+            self._record_end_offset(
+                self.pointer_to_file_offset(pointer), data
+            )
+            for pointer in set(self._pointers(data))
+        )
+        if any(data[used_end:code_offset]):
+            raise RomFormatError("人物台词记录与固定代码之间含未识别数据。")
 
     def _check_id(self, character_id: int) -> None:
         if type(character_id) is not int or not 1 <= character_id <= self.rom.profile.character_dialogue_count:
@@ -147,15 +169,38 @@ class CharacterDialogueCodec:
 
     def _record_bytes(self, character_id: int, data: bytes | bytearray) -> bytes:
         pointer = self.pointer(character_id, data)
-        pointers = sorted(set(self._pointers(data)))
-        end = next(
-            (candidate for candidate in pointers if candidate > pointer),
-            self.rom.profile.character_dialogue_data_end_pointer,
-        )
-        assert end is not None
         start_offset = self.pointer_to_file_offset(pointer)
-        end_offset = self.pointer_to_file_offset(end - 1) + 1
+        end_offset = self._record_end_offset(start_offset, data)
         return bytes(data[start_offset:end_offset])
+
+    def _record_end_offset(
+        self, start_offset: int, data: bytes | bytearray
+    ) -> int:
+        """Return the explicit end of one dialogue record.
+
+        A record contains eight fixed two-byte bindings followed by three
+        independently FF-terminated four-byte rule lists.  The old modifier
+        uses those terminators, not the next pointer, when it expands the
+        packed resource into the native gap before the code at CPU $B510.
+        """
+
+        profile = self.rom.profile
+        assert profile.character_dialogue_data_end_pointer is not None
+        limit = self.pointer_to_file_offset(
+            profile.character_dialogue_data_end_pointer - 1
+        ) + 1
+        cursor = start_offset + 16
+        if cursor > limit:
+            raise RomFormatError("人物台词固定绑定越过原生数据区。")
+        for _group in range(3):
+            while cursor < limit and data[cursor] != 0xFF:
+                if cursor + 4 > limit:
+                    raise RomFormatError("人物特殊台词规则越过原生数据区。")
+                cursor += 4
+            if cursor >= limit:
+                raise RomFormatError("人物特殊台词规则缺少结束码。")
+            cursor += 1
+        return cursor
 
     def raw_record(
         self, character_id: int, data: bytes | bytearray | None = None
@@ -217,6 +262,11 @@ class CharacterDialogueCodec:
         character_id: int,
         record: CharacterDialogueRecord,
     ) -> BytePatch | None:
+        aliases = self.shared_ids(character_id, data)
+        if len(aliases) > 1:
+            raise ValueError(
+                "人物台词共用物理记录必须通过 repack_patches 按人物 ID 自动拆分。"
+            )
         before = self._record_bytes(character_id, data)
         after = record.encode()
         if len(after) != len(before):
@@ -234,63 +284,59 @@ class CharacterDialogueCodec:
         character_id: int,
         record: CharacterDialogueRecord,
     ) -> tuple[BytePatch, ...]:
-        """Resize one shared dialogue record and safely rebuild its fixed pool.
+        """Rebuild logical character records in the legacy modifier's style.
 
-        Character IDs which shared the edited pointer continue to share the
-        replacement.  Other alias groups and their bytes are preserved.  The
-        operation is rejected before producing patches when the verified pool
-        is too small.
+        Repeated pointers are storage deduplication only.  Editing one logical
+        character automatically separates that ID while every other character
+        keeps its previous decoded record.  Identical resulting records are
+        deduplicated again in logical-ID order, matching the legacy cold-save
+        evidence.  Growth may use the native gap up to the fixed code at $B510.
         """
 
         self._check_id(character_id)
         source = bytes(data)
-        target_pointer = self.pointer(character_id, source)
         replacement = record.encode()
         pointers = self._pointers(source)
-        unique_pointers = tuple(sorted(set(pointers)))
         pool_start = self._pool_start
         pool_end = self.rom.profile.character_dialogue_data_end_pointer
         assert pool_end is not None
         capacity = pool_end - pool_start
 
-        records: dict[int, bytes] = {}
-        for pointer in unique_pointers:
-            owner = pointers.index(pointer) + 1
-            records[pointer] = (
-                replacement if pointer == target_pointer
-                else self._record_bytes(owner, source)
-            )
-
-        encoded_records = [records[pointer] for pointer in unique_pointers]
-        packed_size = sum(len(raw) for raw in encoded_records)
+        logical_records = [
+            replacement
+            if candidate == character_id
+            else self._record_bytes(candidate, source)
+            for candidate in range(1, len(pointers) + 1)
+        ]
+        packed = bytearray()
+        assigned: dict[bytes, int] = {}
+        remapped: list[int] = []
+        cursor = pool_start
+        for raw in logical_records:
+            pointer = assigned.get(raw)
+            if pointer is None:
+                pointer = cursor
+                assigned[raw] = pointer
+                packed.extend(raw)
+                cursor += len(raw)
+            remapped.append(pointer)
+        packed_size = len(packed)
         if packed_size > capacity:
             raise ValueError(
-                f"人物台词共享池容量不足：需要 {packed_size} 字节，"
-                f"固定容量为 {capacity} 字节。请先删除不用的特殊规则。"
+                f"人物台词原生数据区容量不足：需要 {packed_size} 字节，"
+                f"容量为 {capacity} 字节。请先删除不用的特殊规则。"
             )
-        # Records have no explicit length field: the next pointer (or the fixed
-        # pool end) is their boundary.  Right-aligning keeps the final record
-        # ending exactly at that boundary when a rule is inserted or removed.
-        cursor = pool_end - packed_size
-        remapped: dict[int, int] = {}
-        packed = bytearray()
-        for pointer in unique_pointers:
-            raw = records[pointer]
-            remapped[pointer] = cursor
-            packed.extend(raw)
-            cursor += len(raw)
 
         table_offset = self.rom.profile.character_dialogue_pointer_table_offset
         assert table_offset is not None
         table_size = len(pointers) * 2
         before_table = source[table_offset : table_offset + table_size]
         after_table = struct.pack(
-            f"<{len(pointers)}H", *(remapped[pointer] for pointer in pointers)
+            f"<{len(pointers)}H", *remapped
         )
         pool_offset = self.pointer_to_file_offset(pool_start)
         before_pool = source[pool_offset : pool_offset + capacity]
-        leading = capacity - len(packed)
-        after_pool = before_pool[:leading] + bytes(packed)
+        after_pool = bytes(packed) + b"\x00" * (capacity - len(packed))
         patches = []
         if before_table != after_table:
             patches.append((table_offset, before_table, after_table))

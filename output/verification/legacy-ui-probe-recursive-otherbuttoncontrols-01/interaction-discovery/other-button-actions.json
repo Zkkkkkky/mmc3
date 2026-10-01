@@ -1,0 +1,328 @@
+{
+  "schema_version": 1,
+  "validated": true,
+  "error": null,
+  "execution_record_count": 21,
+  "diff_count": 0,
+  "sha256_before": "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E",
+  "sha256_after": "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E",
+  "observations": [
+    {
+      "control_id": 100,
+      "action": "right_click",
+      "path": [
+        6
+      ],
+      "focused": null,
+      "window_visible": true,
+      "descendants": []
+    },
+    {
+      "control_id": 100,
+      "action": "keyboard_activate",
+      "path": [
+        6
+      ],
+      "focused": true,
+      "window_visible": true,
+      "descendants": []
+    },
+    {
+      "control_id": 100,
+      "action": "left_click",
+      "path": [
+        6
+      ],
+      "focused": null,
+      "window_visible": true,
+      "descendants": []
+    },
+    {
+      "control_id": 130,
+      "action": "right_click",
+      "path": [
+        5
+      ],
+      "focused": null,
+      "window_visible": true,
+      "descendants": []
+    },
+    {
+      "control_id": 130,
+      "action": "keyboard_activate",
+      "path": [
+        5
+      ],
+      "focused": true,
+      "window_visible": true,
+      "descendants": []
+    },
+    {
+      "control_id": 130,
+      "action": "left_click",
+      "path": [
+        5
+      ],
+      "focused": null,
+      "window_visible": true,
+      "descendants": []
+    },
+    {
+      "control_id": 370,
+      "action": "right_click",
+      "path": [
+        2
+      ],
+      "focused": null,
+      "window_visible": true,
+      "descendants": []
+    },
+    {
+      "control_id": 370,
+      "action": "keyboard_activate",
+      "path": [
+        2
+      ],
+      "focused": true,
+      "window_visible": true,
+      "descendants": []
+    },
+    {
+      "control_id": 370,
+      "action": "left_click",
+      "path": [
+        2
+      ],
+      "focused": null,
+      "window_visible": true,
+      "descendants": []
+    },
+    {
+      "control_id": 740,
+      "action": "right_click",
+      "path": [
+        1
+      ],
+      "focused": null,
+      "window_visible": true,
+      "descendants": []
+    },
+    {
+      "control_id": 740,
+      "action": "keyboard_activate",
+      "path": [
+        1
+      ],
+      "focused": true,
+      "window_visible": true,
+      "descendants": []
+    },
+    {
+      "control_id": 740,
+      "action": "left_click",
+      "path": [
+        1
+      ],
+      "focused": null,
+      "window_visible": true,
+      "descendants": []
+    },
+    {
+      "control_id": 810,
+      "action": "right_click",
+      "path": [
+        0
+      ],
+      "focused": null,
+      "window_visible": true,
+      "descendants": []
+    },
+    {
+      "control_id": 810,
+      "action": "keyboard_activate",
+      "path": [
+        0
+      ],
+      "focused": true,
+      "window_visible": true,
+      "descendants": []
+    },
+    {
+      "control_id": 810,
+      "action": "left_click",
+      "path": [
+        0
+      ],
+      "focused": null,
+      "window_visible": true,
+      "descendants": []
+    },
+    {
+      "control_id": 320,
+      "action": "right_click",
+      "path": [
+        4
+      ],
+      "focused": null,
+      "window_visible": true,
+      "descendants": []
+    },
+    {
+      "control_id": 320,
+      "action": "keyboard_activate",
+      "path": [
+        4
+      ],
+      "focused": true,
+      "window_visible": false,
+      "descendants": []
+    },
+    {
+      "control_id": 320,
+      "action": "left_click",
+      "path": [
+        4
+      ],
+      "focused": null,
+      "window_visible": false,
+      "descendants": []
+    },
+    {
+      "control_id": 330,
+      "action": "right_click",
+      "path": [
+        3
+      ],
+      "focused": null,
+      "window_visible": true,
+      "descendants": []
+    },
+    {
+      "control_id": 330,
+      "action": "keyboard_activate",
+      "path": [
+        3
+      ],
+      "focused": true,
+      "window_visible": false,
+      "descendants": []
+    },
+    {
+      "control_id": 330,
+      "action": "left_click",
+      "path": [
+        3
+      ],
+      "focused": null,
+      "window_visible": false,
+      "descendants": []
+    }
+  ],
+  "execution_records": [
+    {
+      "action_id": "9c015349c35443f5ab7e",
+      "status": "passed",
+      "result": "焦点=None；窗口仍可见=True；子窗=[]。"
+    },
+    {
+      "action_id": "af9b4ab48e0bd6f1332b",
+      "status": "passed",
+      "result": "焦点=True；窗口仍可见=True；子窗=[]。"
+    },
+    {
+      "action_id": "e3bd29164fae06bf55b0",
+      "status": "passed",
+      "result": "焦点=None；窗口仍可见=True；子窗=[]。"
+    },
+    {
+      "action_id": "f3f9b1aa3a1d838b33c9",
+      "status": "passed",
+      "result": "焦点=None；窗口仍可见=True；子窗=[]。"
+    },
+    {
+      "action_id": "ec144d550422e58da7c2",
+      "status": "passed",
+      "result": "焦点=True；窗口仍可见=True；子窗=[]。"
+    },
+    {
+      "action_id": "85d751eac239358b2042",
+      "status": "passed",
+      "result": "焦点=None；窗口仍可见=True；子窗=[]。"
+    },
+    {
+      "action_id": "8d8c1ffbd4362ef86094",
+      "status": "passed",
+      "result": "焦点=None；窗口仍可见=True；子窗=[]。"
+    },
+    {
+      "action_id": "8e6b05d49168c9612301",
+      "status": "passed",
+      "result": "焦点=True；窗口仍可见=True；子窗=[]。"
+    },
+    {
+      "action_id": "e2873d2884017586f13d",
+      "status": "passed",
+      "result": "焦点=None；窗口仍可见=True；子窗=[]。"
+    },
+    {
+      "action_id": "5fe325eb377b6378c222",
+      "status": "passed",
+      "result": "焦点=None；窗口仍可见=True；子窗=[]。"
+    },
+    {
+      "action_id": "fb9dfdb781f65c38b59f",
+      "status": "passed",
+      "result": "焦点=True；窗口仍可见=True；子窗=[]。"
+    },
+    {
+      "action_id": "bffd1e9bd52df18c5947",
+      "status": "passed",
+      "result": "焦点=None；窗口仍可见=True；子窗=[]。"
+    },
+    {
+      "action_id": "ba38091e0f509d7b1f98",
+      "status": "passed",
+      "result": "焦点=None；窗口仍可见=True；子窗=[]。"
+    },
+    {
+      "action_id": "909f2bfb706e0285143e",
+      "status": "passed",
+      "result": "焦点=True；窗口仍可见=True；子窗=[]。"
+    },
+    {
+      "action_id": "41ff38b237d300dc00f3",
+      "status": "passed",
+      "result": "焦点=None；窗口仍可见=True；子窗=[]。"
+    },
+    {
+      "action_id": "7c391b878ab1e84d939a",
+      "status": "passed",
+      "result": "焦点=None；窗口仍可见=True；子窗=[]。"
+    },
+    {
+      "action_id": "0fc3b75026652049b33f",
+      "status": "passed",
+      "result": "焦点=True；窗口仍可见=False；子窗=[]。"
+    },
+    {
+      "action_id": "d3daa61380d23e0c710a",
+      "status": "passed",
+      "result": "焦点=None；窗口仍可见=False；子窗=[]。"
+    },
+    {
+      "action_id": "bf9e51dcf830d9a92e16",
+      "status": "passed",
+      "result": "焦点=None；窗口仍可见=True；子窗=[]。"
+    },
+    {
+      "action_id": "b9d734b4cde21480fe38",
+      "status": "passed",
+      "result": "焦点=True；窗口仍可见=False；子窗=[]。"
+    },
+    {
+      "action_id": "433a758efcc4f2ae0a3d",
+      "status": "passed",
+      "result": "焦点=None；窗口仍可见=False；子窗=[]。"
+    }
+  ]
+}

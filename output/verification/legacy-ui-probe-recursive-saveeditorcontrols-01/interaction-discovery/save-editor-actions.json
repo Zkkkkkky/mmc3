@@ -1,0 +1,245 @@
+{
+  "schema_version": 1,
+  "validated": true,
+  "error": null,
+  "execution_record_count": 28,
+  "diff_count": 0,
+  "sha256_before": "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E",
+  "sha256_after": "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E",
+  "observations": [
+    {
+      "control_id": 160,
+      "action": "right_click",
+      "descendants": [],
+      "process_alive": true
+    },
+    {
+      "control_id": 160,
+      "action": "keyboard_activate",
+      "descendants": [
+        {
+          "title": "打开存档",
+          "class": "#32770"
+        }
+      ],
+      "process_alive": true
+    },
+    {
+      "control_id": 160,
+      "action": "left_click",
+      "descendants": [
+        {
+          "title": "打开存档",
+          "class": "#32770"
+        }
+      ],
+      "process_alive": true
+    },
+    {
+      "control_id": 170,
+      "action": "right_click",
+      "descendants": [],
+      "process_alive": true
+    },
+    {
+      "control_id": 170,
+      "action": "keyboard_activate",
+      "descendants": [],
+      "process_alive": true
+    },
+    {
+      "control_id": 170,
+      "action": "left_click",
+      "descendants": [],
+      "process_alive": true
+    },
+    {
+      "control_id": 180,
+      "action": "right_click",
+      "descendants": [],
+      "process_alive": true
+    },
+    {
+      "control_id": 180,
+      "action": "keyboard_activate",
+      "descendants": [],
+      "process_alive": true
+    },
+    {
+      "control_id": 180,
+      "action": "left_click",
+      "descendants": [],
+      "process_alive": true
+    },
+    {
+      "control_id": 190,
+      "action": "right_click",
+      "descendants": [],
+      "process_alive": true
+    },
+    {
+      "control_id": 190,
+      "action": "left_click",
+      "descendants": [
+        {
+          "title": "错误",
+          "class": "#32770"
+        }
+      ],
+      "process_alive": false
+    },
+    {
+      "control_id": 190,
+      "action": "keyboard_activate",
+      "descendants": [
+        {
+          "title": "错误",
+          "class": "#32770"
+        }
+      ],
+      "process_alive": false
+    }
+  ],
+  "execution_records": [
+    {
+      "action_id": "ab2cbf768813987086c5",
+      "status": "passed",
+      "result": "项数=32。"
+    },
+    {
+      "action_id": "674d77a5c9b7e78c7661",
+      "status": "passed",
+      "result": "逐项 32 并恢复。"
+    },
+    {
+      "action_id": "71c93b5abb2c47e166be",
+      "status": "passed",
+      "result": "Home/Down 后恢复。"
+    },
+    {
+      "action_id": "cc90173219ac81c0a8d6",
+      "status": "passed",
+      "result": "菜单=False。"
+    },
+    {
+      "action_id": "975be5171188a20e5ea7",
+      "status": "passed",
+      "result": "项数=3。"
+    },
+    {
+      "action_id": "8d9630cd0496d718d1f7",
+      "status": "passed",
+      "result": "逐项 3 并恢复。"
+    },
+    {
+      "action_id": "df4cb9f118bba72d382d",
+      "status": "passed",
+      "result": "Home/Down 后恢复。"
+    },
+    {
+      "action_id": "5e49798c2eae22ff20f3",
+      "status": "passed",
+      "result": "菜单=False。"
+    },
+    {
+      "action_id": "32ec48ccee94409ce913",
+      "status": "passed",
+      "result": "键盘逐项 0 项。"
+    },
+    {
+      "action_id": "4a3f2c9156a9f05368f4",
+      "status": "passed",
+      "result": "Home/Down 导航。"
+    },
+    {
+      "action_id": "c285a1a5e8c267e9f0b1",
+      "status": "passed",
+      "result": "逐项双击 0 项，子窗=0。"
+    },
+    {
+      "action_id": "5616cf27d1d128347141",
+      "status": "passed",
+      "result": "逐项右键 0 项，菜单=0。"
+    },
+    {
+      "action_id": "ecd3814ee444058e7ef2",
+      "status": "passed",
+      "result": "键盘逐项 0 项。"
+    },
+    {
+      "action_id": "baa88dec083ed27fe885",
+      "status": "passed",
+      "result": "Home/Down 导航。"
+    },
+    {
+      "action_id": "e35153987458a721e54e",
+      "status": "passed",
+      "result": "逐项双击 0 项，子窗=0。"
+    },
+    {
+      "action_id": "6745a001b5e6d3489951",
+      "status": "passed",
+      "result": "逐项右键 0 项，菜单=0。"
+    },
+    {
+      "action_id": "f4ba56ec9932eeae66e4",
+      "status": "passed",
+      "result": "焦点=None；子窗=[]；进程存活=True。"
+    },
+    {
+      "action_id": "efbfe5eb2eca846ab88c",
+      "status": "passed",
+      "result": "焦点=True；子窗=[{'title': '打开存档', 'class': '#32770'}]；进程存活=True。"
+    },
+    {
+      "action_id": "28decb208fc23066a3ce",
+      "status": "passed",
+      "result": "焦点=None；子窗=[{'title': '打开存档', 'class': '#32770'}]；进程存活=True。"
+    },
+    {
+      "action_id": "d1b40625c2ad15123e6f",
+      "status": "passed",
+      "result": "焦点=None；子窗=[]；进程存活=True。"
+    },
+    {
+      "action_id": "10ac97809ce38c9ba40d",
+      "status": "passed",
+      "result": "焦点=True；子窗=[]；进程存活=True。"
+    },
+    {
+      "action_id": "c04f7abfdc69ae08bd15",
+      "status": "passed",
+      "result": "焦点=None；子窗=[]；进程存活=True。"
+    },
+    {
+      "action_id": "d4e3f61b4e7722921bc3",
+      "status": "passed",
+      "result": "焦点=None；子窗=[]；进程存活=True。"
+    },
+    {
+      "action_id": "7e09cb9e483183378ceb",
+      "status": "passed",
+      "result": "焦点=True；子窗=[]；进程存活=True。"
+    },
+    {
+      "action_id": "bdb421ce7bb8b6d2917f",
+      "status": "passed",
+      "result": "焦点=None；子窗=[]；进程存活=True。"
+    },
+    {
+      "action_id": "0d051acb3762e981375d",
+      "status": "passed",
+      "result": "焦点=None；子窗=[]；进程存活=True。"
+    },
+    {
+      "action_id": "e3fb2a3c5e49f19bdc8e",
+      "status": "passed",
+      "result": "焦点=None；子窗=[{'title': '错误', 'class': '#32770'}]；进程存活=False。"
+    },
+    {
+      "action_id": "1af06e233e2515046e20",
+      "status": "passed",
+      "result": "焦点=True；子窗=[{'title': '错误', 'class': '#32770'}]；进程存活=False。"
+    }
+  ]
+}

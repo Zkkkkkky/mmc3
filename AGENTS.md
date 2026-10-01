@@ -32,6 +32,18 @@ working branch until the user explicitly requests another switch.
 
 The project's core goal is to develop a ROM editor for the FC game *第二次机器人大战*. `references/legacy_modifier/SRW2_patched.exe` is a completed editor product used as a reference source for behavior, workflows, and supported data; it is not the editor currently being developed. “新DC修改器” is the active editor product in this repository.
 
+### Legacy Restoration Is the Minimum Contract
+
+The active editor is a complete restoration of the legacy editor plus additive improvements. The legacy editor is not merely visual inspiration: every evidenced window, control, command, field, default, workflow, side effect, save/cancel rule, output, and reachable nested dialog is part of the minimum product contract.
+
+- Never remove, hide, disable, merge, rename into a less recognisable concept, or reinterpret an evidenced legacy capability merely to simplify the UI, improve safety, or reduce implementation work.
+- Optimisation is additive only. Performance, layout, readability, validation, transactions, undo, previews, and safety prompts may improve, but the legacy operation and result must remain reachable and equivalent unless the user explicitly approves that exact deviation.
+- A request concerning one control does not authorise removal or redesign of neighbouring capabilities. If space is limited, reorganise the layout while retaining all legacy functions and familiar natural-language labels.
+- Safety concerns should normally add validation, preview, undo, or an optional enhanced path. They do not authorise replacing an evidenced legacy command with a different command.
+- Before changing a module, compare its reference control/action inventory and golden evidence. After changing it, run the corresponding no-regression audit. Missing evidence means preserve the existing legacy-reachable behaviour and collect evidence; it does not mean delete the feature.
+- Every deliberate legacy deviation requires explicit user approval for that specific behaviour and must be recorded in the requirements, user guide, module status, and development log. Do not infer approval or write a safety preference on the user's behalf.
+- Module completion means full reference feature/action coverage plus verified additive improvements. Field-count coverage alone does not establish functional parity.
+
 Every change to the active editor must update `docs/DC修改器使用说明.md` in the same change. Keep the instructions synchronized with changes to features, UI, supported data, operating steps, validation, and user-visible limitations.
 
 Whenever a change affects reusable ROM-editor architecture or methodology—including ROM identity/Profile, address mapping, codecs, transactions, resource graphs or allocation, reverse-engineering evidence, golden comparison, testing and acceptance, packaging and delivery, or cross-ROM reuse boundaries—update `docs/ROM定制修改器建设方案.md` in the same change. Improve the general guidance from verified experience without copying game-specific addresses into the reusable method.

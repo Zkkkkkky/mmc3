@@ -1,0 +1,31 @@
+﻿[    0.1s] launched pid=12952
+[    0.1s] === stage A: launcher -> main window (no ROM) ===
+[    3.1s] top window: {'hwnd': 7604782, 'title': 'SRW2修改器V1.5', 'class': 'WTWindow', 'rect': {'left': 571, 'top': 244, 'right': 1346, 'bottom': 843, 'width': 775, 'height': 599}, 'pid': 12952}
+[    4.2s] dump A01_启动器: title='SRW2修改器V1.5' class='WTWindow' controls=8 shot=ok
+[    4.2s] main window hwnd=263508 title='SRW2扩容版修改器V1.0：C:\\Users\\hu\\Desktop\\新DC上\\新DC上原始文件.nes'
+[    5.8s] dump A02_主窗口_未载入ROM: title='SRW2扩容版修改器V1.0：C:\\Users\\hu\\Desktop\\新DC上\\新DC上原始文件.nes' class='WTWindow' controls=62 shot=ok
+[   10.4s] menu 文件(F): could not open menu via Alt+F
+[   15.0s] menu 数据(A): could not open menu via Alt+D
+[   19.7s] menu 帮助(H): could not open menu via Alt+H
+[   20.2s] === stage B: load ROM copy -> tabs ===
+[   21.2s] dump B01_打开ROM对话框: title='打开文件' class='#32770' controls=46 shot=ok
+[   21.7s] open dialog confirmed gone=True
+[   27.7s] ROM loaded, title='SRW2扩容版修改器V1.0：D:\\GIT\\mmc3\\output\\build\\legacy-ui-probe\\probe.nes'
+[   28.6s] dump B02_主窗口_载入后: title='SRW2扩容版修改器V1.0：D:\\GIT\\mmc3\\output\\build\\legacy-ui-probe\\probe.nes' class='WTWindow' controls=62 shot=ok
+[   33.2s] menu 文件(F): could not open menu via Alt+F
+[   37.9s] menu 数据(A): could not open menu via Alt+D
+[   42.6s] menu 帮助(H): could not open menu via Alt+H
+[   43.1s] tab count unknown (CPageControl); assuming 3
+[   43.1s] main window tabs: 3 (class=CPageControl)
+[   43.1s] B04_主窗口_实际页签: tab band at window-y=104 (CPageControl top=80)
+[   45.0s] dump B04_主窗口_实际页签_页签A: title='SRW2扩容版修改器V1.0：D:\\GIT\\mmc3\\output\\build\\legacy-ui-probe\\probe.nes' class='WTWindow' controls=62 shot=ok
+[   62.0s] B04_主窗口_实际页签: swept 1 distinct tab pages
+[   62.0s] main tab sweep found 1/3 distinct pages; no inferred control IDs
+[   62.0s] === stage DBCTX: recursive database context-menu discovery ===
+[   63.1s] dump DIAG_阻塞弹窗1: title='数据库' class='WTWindow' controls=300 shot=ok
+[   63.3s] dismissed 1 blocking popup(s)
+[   78.3s] dump DIAG_阻塞弹窗1: title='错误' class='#32770' controls=4 shot=ok
+[   78.5s] dismissed 1 blocking popup(s)
+[   78.5s] 数据库: window did not appear (cmd 20008)
+[   78.5s] stage DBCTX FAILED: RuntimeError('database window did not appear')
+[   79.2s] terminated pid=14772

@@ -1,0 +1,220 @@
+{
+  "tag": "DBDIALOGBUTTONCONTROLS_1420_left_click_1",
+  "hwnd": 8390080,
+  "title": "攻击对话",
+  "class": "WTWindow",
+  "rect": {
+    "left": 679,
+    "top": 280,
+    "right": 1239,
+    "bottom": 806,
+    "width": 560,
+    "height": 526
+  },
+  "pid": 13244,
+  "menu": [],
+  "tree": {
+    "hwnd": 8390080,
+    "class": "WTWindow",
+    "text": "攻击对话",
+    "ctrl_id": 0,
+    "rect": {
+      "left": 679,
+      "top": 280,
+      "right": 1239,
+      "bottom": 806,
+      "width": 560,
+      "height": 526
+    },
+    "visible": true,
+    "enabled": true,
+    "children": [
+      {
+        "hwnd": 5047728,
+        "class": "Button",
+        "text": "确定",
+        "ctrl_id": 180,
+        "rect": {
+          "left": 1041,
+          "top": 769,
+          "right": 1131,
+          "bottom": 799,
+          "width": 90,
+          "height": 30
+        },
+        "visible": true,
+        "enabled": true,
+        "button_check_state": 0,
+        "children": []
+      },
+      {
+        "hwnd": 4785930,
+        "class": "Button",
+        "text": "取消",
+        "ctrl_id": 170,
+        "rect": {
+          "left": 1141,
+          "top": 769,
+          "right": 1231,
+          "bottom": 799,
+          "width": 90,
+          "height": 30
+        },
+        "visible": true,
+        "enabled": true,
+        "button_check_state": 0,
+        "children": []
+      },
+      {
+        "hwnd": 5375402,
+        "class": "Button",
+        "text": "文字段",
+        "ctrl_id": 160,
+        "rect": {
+          "left": 681,
+          "top": 679,
+          "right": 1231,
+          "bottom": 759,
+          "width": 550,
+          "height": 80
+        },
+        "visible": true,
+        "enabled": true,
+        "button_check_state": 0,
+        "children": [
+          {
+            "hwnd": 1706670,
+            "class": "ComboBox",
+            "text": "[FF]255：-++",
+            "ctrl_id": 150,
+            "rect": {
+              "left": 811,
+              "top": 709,
+              "right": 1221,
+              "bottom": 739,
+              "width": 410,
+              "height": 30
+            },
+            "visible": true,
+            "enabled": true,
+            "combo_count": 256,
+            "combo_selected": 255,
+            "children": []
+          },
+          {
+            "hwnd": 3541344,
+            "class": "ComboBox",
+            "text": "00",
+            "ctrl_id": 140,
+            "rect": {
+              "left": 691,
+              "top": 709,
+              "right": 781,
+              "bottom": 739,
+              "width": 90,
+              "height": 30
+            },
+            "visible": true,
+            "enabled": true,
+            "combo_count": 5,
+            "combo_selected": 0,
+            "children": []
+          }
+        ]
+      },
+      {
+        "hwnd": 9046588,
+        "class": "Button",
+        "text": "特殊对话限制（起始至终止）",
+        "ctrl_id": 110,
+        "rect": {
+          "left": 681,
+          "top": 559,
+          "right": 1231,
+          "bottom": 669,
+          "width": 550,
+          "height": 110
+        },
+        "visible": true,
+        "enabled": true,
+        "button_check_state": 0,
+        "children": [
+          {
+            "hwnd": 5114544,
+            "class": "ComboBox",
+            "text": "我方武器限制",
+            "ctrl_id": 190,
+            "rect": {
+              "left": 691,
+              "top": 589,
+              "right": 951,
+              "bottom": 619,
+              "width": 260,
+              "height": 30
+            },
+            "visible": true,
+            "enabled": true,
+            "combo_count": 3,
+            "combo_selected": 0,
+            "children": []
+          },
+          {
+            "hwnd": 5440972,
+            "class": "ComboBox",
+            "text": "[FF]255：不可用",
+            "ctrl_id": 130,
+            "rect": {
+              "left": 961,
+              "top": 629,
+              "right": 1221,
+              "bottom": 659,
+              "width": 260,
+              "height": 30
+            },
+            "visible": true,
+            "enabled": true,
+            "combo_count": 256,
+            "combo_selected": 255,
+            "children": []
+          },
+          {
+            "hwnd": 10814930,
+            "class": "ComboBox",
+            "text": "[00]000：无",
+            "ctrl_id": 120,
+            "rect": {
+              "left": 691,
+              "top": 629,
+              "right": 951,
+              "bottom": 659,
+              "width": 260,
+              "height": 30
+            },
+            "visible": true,
+            "enabled": true,
+            "combo_count": 256,
+            "combo_selected": 0,
+            "children": []
+          }
+        ]
+      },
+      {
+        "hwnd": 10552878,
+        "class": "ListBox",
+        "text": "",
+        "ctrl_id": 100,
+        "rect": {
+          "left": 681,
+          "top": 329,
+          "right": 1231,
+          "bottom": 549,
+          "width": 550,
+          "height": 220
+        },
+        "visible": true,
+        "enabled": true,
+        "children": []
+      }
+    ]
+  }
+}

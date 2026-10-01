@@ -15,66 +15,6 @@
       "sha256": "F465C2A989C69D5BD9B20007DF31EAE7F80A1524B5D9D439B7843CD26B28F3FA"
     },
     {
-      "file": "A-defense.nes",
-      "gallery": "A",
-      "field": "tile0.defense",
-      "changed_bytes": 1,
-      "difference": {
-        "offset": 24692,
-        "before": "5A",
-        "after": "5B"
-      },
-      "sha256": "2B4AFEE9FC6C9F2648C5BC269F996D9DA49889CDAE39E6B146F832D1C81A2152"
-    },
-    {
-      "file": "A-sea.nes",
-      "gallery": "A",
-      "field": "tile0.sea",
-      "changed_bytes": 1,
-      "difference": {
-        "offset": 24692,
-        "before": "5A",
-        "after": "DA"
-      },
-      "sha256": "EE063A0481F16A2BB1D5784C4F5E029ED3696E327B5493EEB46AF06EA741D2EC"
-    },
-    {
-      "file": "A-air_move.nes",
-      "gallery": "A",
-      "field": "tile0.air_move",
-      "changed_bytes": 1,
-      "difference": {
-        "offset": 24708,
-        "before": "01",
-        "after": "02"
-      },
-      "sha256": "2EB4E3D8C34BDC7C278E8D601554EA7E414BBD6933ED4EC959A4270FEBEF4335"
-    },
-    {
-      "file": "A-land_move.nes",
-      "gallery": "A",
-      "field": "tile0.land_move",
-      "changed_bytes": 1,
-      "difference": {
-        "offset": 24724,
-        "before": "02",
-        "after": "03"
-      },
-      "sha256": "45C2B8AB89B06E48DDABCE68B57F0C78FBA62E36912D447C78BBD97EF4D4162C"
-    },
-    {
-      "file": "A-sea_move.nes",
-      "gallery": "A",
-      "field": "tile0.sea_move",
-      "changed_bytes": 1,
-      "difference": {
-        "offset": 24740,
-        "before": "01",
-        "after": "02"
-      },
-      "sha256": "180C4EBA640139BC7F04102F2EDDF95BD197D392DB877B5B2D02E2E4DCD286BF"
-    },
-    {
       "file": "B-color1.nes",
       "gallery": "B",
       "field": "color1",
@@ -145,28 +85,22 @@
         "after": "24"
       },
       "sha256": "74E734B2D7B930AA35529DB93C8D4D2400C4D2A290A1C8DC9F4E61BB3F1CE303"
+    },
+    {
+      "file": "H-color1.nes",
+      "gallery": "H",
+      "field": "color1",
+      "changed_bytes": 1,
+      "difference": {
+        "offset": 25260,
+        "before": "23",
+        "after": "24"
+      },
+      "sha256": "B30DABF3F933D72531F8A48485D8F3150D3DCEB985B31C2A5995A001C1A8C18A"
     }
   ],
-  "ui_observed_samples": [
-    {
-      "file": "B-color1-ui.nes",
-      "gallery": "B",
-      "requested_field": "color1",
-      "automatic_repair": "tile5.sea",
-      "changed_bytes": 2,
-      "differences": [
-        {
-          "offset": 24756,
-          "before": "27",
-          "after": "28"
-        },
-        {
-          "offset": 24781,
-          "before": "50",
-          "after": "D0"
-        }
-      ],
-      "sha256": "FB409D3225FC72F1FA586E27953538107751AAEC99E08198E31F8BE25ACB4DF6"
-    }
-  ]
+  "rejected_legacy_sample": {
+    "file": "B-color1-ui.nes",
+    "reason": "旧产品按图形推断并旁写海属性，且记录分组错误；不再作为黄金样本。"
+  }
 }

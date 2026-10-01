@@ -1,0 +1,650 @@
+{
+  "schema_version": 1,
+  "validated": true,
+  "scope": "字库编辑 45/45 + 嵌套系统字体框 53/53；父窗口取消；隔离 ROM 零差异",
+  "error": null,
+  "sha256_before": "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E",
+  "sha256_after": "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E",
+  "diff_count": 0,
+  "execution_record_count": 98,
+  "observations": [
+    {
+      "window": "字库编辑",
+      "class": "Edit",
+      "control_id": 300,
+      "path": [
+        4,
+        1
+      ],
+      "boundary_lengths": [
+        0,
+        256
+      ]
+    },
+    {
+      "window": "字库编辑",
+      "class": "Edit",
+      "control_id": 160,
+      "path": [
+        4,
+        9
+      ],
+      "boundary_lengths": [
+        0,
+        256
+      ]
+    },
+    {
+      "window": "字库编辑",
+      "class": "Edit",
+      "control_id": 150,
+      "path": [
+        4,
+        10
+      ],
+      "boundary_lengths": [
+        0,
+        256
+      ]
+    },
+    {
+      "window": "字库编辑",
+      "class": "Edit",
+      "control_id": 140,
+      "path": [
+        4,
+        11
+      ],
+      "boundary_lengths": [
+        0,
+        256
+      ]
+    },
+    {
+      "window": "字库编辑",
+      "class": "ComboBox",
+      "control_id": 130,
+      "path": [
+        4,
+        12
+      ],
+      "item_count": 12
+    },
+    {
+      "window": "字体",
+      "class": "ComboBox",
+      "control_id": 1136,
+      "path": [
+        1
+      ],
+      "item_count": 242
+    },
+    {
+      "window": "字体",
+      "class": "Edit",
+      "control_id": 1001,
+      "path": [
+        1,
+        1
+      ],
+      "boundary_lengths": [
+        0,
+        0
+      ]
+    },
+    {
+      "window": "字体",
+      "class": "ComboBox",
+      "control_id": 1137,
+      "path": [
+        3
+      ],
+      "item_count": 0
+    },
+    {
+      "window": "字体",
+      "class": "Edit",
+      "control_id": 1001,
+      "path": [
+        3,
+        1
+      ],
+      "boundary_lengths": [
+        0,
+        0
+      ]
+    },
+    {
+      "window": "字体",
+      "class": "ComboBox",
+      "control_id": 1138,
+      "path": [
+        5
+      ],
+      "item_count": 0
+    },
+    {
+      "window": "字体",
+      "class": "Edit",
+      "control_id": 1001,
+      "path": [
+        5,
+        1
+      ],
+      "boundary_lengths": [
+        0,
+        0
+      ]
+    },
+    {
+      "window": "字体",
+      "class": "ComboBox",
+      "control_id": 1139,
+      "path": [
+        10
+      ],
+      "item_count": 0
+    },
+    {
+      "window": "字体",
+      "class": "ComboBox",
+      "control_id": 1140,
+      "path": [
+        15
+      ],
+      "item_count": 0
+    }
+  ],
+  "execution_records": [
+    {
+      "action_id": "89506e0ea7220f2cf67c",
+      "status": "passed",
+      "result": "真实焦点=False。"
+    },
+    {
+      "action_id": "2fee853c59140ba76db4",
+      "status": "passed",
+      "result": "读回='啊A'，已恢复。"
+    },
+    {
+      "action_id": "ecd3a40d36f467f4af18",
+      "status": "passed",
+      "result": "执行 Ctrl+A/Ctrl+Z，已恢复。"
+    },
+    {
+      "action_id": "cf47f66104baf328df19",
+      "status": "passed",
+      "result": "执行右键并关闭菜单。"
+    },
+    {
+      "action_id": "ebe110a41e65cf8742d0",
+      "status": "passed",
+      "result": "边界长度=[0, 256]，已恢复。"
+    },
+    {
+      "action_id": "6e4cb6fccf5e018a1eb8",
+      "status": "passed",
+      "result": "真实焦点=True。"
+    },
+    {
+      "action_id": "18f12411eb175936960c",
+      "status": "passed",
+      "result": "读回='70010A'，已恢复。"
+    },
+    {
+      "action_id": "f74bbc6e1181e2b1c775",
+      "status": "passed",
+      "result": "执行 Ctrl+A/Ctrl+Z，已恢复。"
+    },
+    {
+      "action_id": "afc5c591418e4c9d15d7",
+      "status": "passed",
+      "result": "执行右键并关闭菜单。"
+    },
+    {
+      "action_id": "c429db43968554429ee4",
+      "status": "passed",
+      "result": "边界长度=[0, 256]，已恢复。"
+    },
+    {
+      "action_id": "85ab5659f7c8bb1ccb07",
+      "status": "passed",
+      "result": "真实焦点=True。"
+    },
+    {
+      "action_id": "204a8244ad6c746769c7",
+      "status": "passed",
+      "result": "读回='C800A'，已恢复。"
+    },
+    {
+      "action_id": "52da07151550b6331071",
+      "status": "passed",
+      "result": "执行 Ctrl+A/Ctrl+Z，已恢复。"
+    },
+    {
+      "action_id": "0fcda1b4ea8401d68a34",
+      "status": "passed",
+      "result": "执行右键并关闭菜单。"
+    },
+    {
+      "action_id": "7a92d96327fa6fdebe0b",
+      "status": "passed",
+      "result": "边界长度=[0, 256]，已恢复。"
+    },
+    {
+      "action_id": "a1b2dcf64a719dc6e0ef",
+      "status": "passed",
+      "result": "真实焦点=True。"
+    },
+    {
+      "action_id": "ae77ad42fb391b77ba29",
+      "status": "passed",
+      "result": "读回='啊A'，已恢复。"
+    },
+    {
+      "action_id": "99e1656845cec7b51dc9",
+      "status": "passed",
+      "result": "执行 Ctrl+A/Ctrl+Z，已恢复。"
+    },
+    {
+      "action_id": "97471aba3b8a64dadd02",
+      "status": "passed",
+      "result": "执行右键并关闭菜单。"
+    },
+    {
+      "action_id": "d6525246ef478475fb37",
+      "status": "passed",
+      "result": "边界长度=[0, 256]，已恢复。"
+    },
+    {
+      "action_id": "e20bef3486141147cb06",
+      "status": "passed",
+      "result": "展开/收起，共 12 项。"
+    },
+    {
+      "action_id": "116aef92e9c35c0e0b55",
+      "status": "passed",
+      "result": "逐项选择 12 项，恢复 4。"
+    },
+    {
+      "action_id": "063dd9c10375134ad9c8",
+      "status": "passed",
+      "result": "键盘读回 4，已恢复。"
+    },
+    {
+      "action_id": "1dee7f04fc28f0f16fe6",
+      "status": "passed",
+      "result": "执行右键并关闭菜单。"
+    },
+    {
+      "action_id": "c9706c6c44ab44cdaac8",
+      "status": "passed",
+      "result": "执行按钮手势，安全关闭新增窗口 0 个。"
+    },
+    {
+      "action_id": "788a035a513ef3f5471c",
+      "status": "passed",
+      "result": "执行按钮手势，安全关闭新增窗口 0 个。"
+    },
+    {
+      "action_id": "c03ff607fcddce2799fe",
+      "status": "passed",
+      "result": "执行按钮手势，安全关闭新增窗口 0 个。"
+    },
+    {
+      "action_id": "3927bbe34f7677b58df1",
+      "status": "passed",
+      "result": "执行按钮手势，安全关闭新增窗口 0 个。"
+    },
+    {
+      "action_id": "016015739ed6aa1e43b3",
+      "status": "passed",
+      "result": "执行按钮手势，安全关闭新增窗口 0 个。"
+    },
+    {
+      "action_id": "9a631507ac3a42b7535b",
+      "status": "passed",
+      "result": "执行按钮手势，安全关闭新增窗口 0 个。"
+    },
+    {
+      "action_id": "7becf849473c20712079",
+      "status": "passed",
+      "result": "执行按钮手势，安全关闭新增窗口 0 个。"
+    },
+    {
+      "action_id": "67efe12a73c351395159",
+      "status": "passed",
+      "result": "执行按钮手势，安全关闭新增窗口 0 个。"
+    },
+    {
+      "action_id": "728197c8bcb46ff0eafe",
+      "status": "passed",
+      "result": "执行按钮手势，安全关闭新增窗口 0 个。"
+    },
+    {
+      "action_id": "b78f1dece3d44171c5fd",
+      "status": "passed",
+      "result": "执行按钮手势，安全关闭新增窗口 1 个。"
+    },
+    {
+      "action_id": "7ed6c111667b57100a95",
+      "status": "passed",
+      "result": "执行按钮手势，安全关闭新增窗口 1 个。"
+    },
+    {
+      "action_id": "bbadc112d2285a7438f3",
+      "status": "passed",
+      "result": "执行按钮手势，安全关闭新增窗口 0 个。"
+    },
+    {
+      "action_id": "c3336119cbc7d6cbf3a5",
+      "status": "passed",
+      "result": "展开/收起，共 242 项。"
+    },
+    {
+      "action_id": "a564c3352dced4c6acdb",
+      "status": "passed",
+      "result": "逐项选择 242 项，恢复 238。"
+    },
+    {
+      "action_id": "af38810f3b67c402eea5",
+      "status": "passed",
+      "result": "键盘读回 238，已恢复。"
+    },
+    {
+      "action_id": "2a32baa8ffea42c31e1e",
+      "status": "passed",
+      "result": "执行右键并关闭菜单。"
+    },
+    {
+      "action_id": "392d120c7fce22e44c18",
+      "status": "passed",
+      "result": "真实焦点=True。"
+    },
+    {
+      "action_id": "8ef6390e272f70f02b2d",
+      "status": "passed",
+      "result": "读回='宋体'，已恢复。"
+    },
+    {
+      "action_id": "470a403d22d95524972e",
+      "status": "passed",
+      "result": "执行 Ctrl+A/Ctrl+Z，已恢复。"
+    },
+    {
+      "action_id": "715344d2c2caea3baea9",
+      "status": "passed",
+      "result": "执行右键并关闭菜单。"
+    },
+    {
+      "action_id": "990cf969c6843d3a0ca6",
+      "status": "passed",
+      "result": "边界长度=[0, 0]，已恢复。"
+    },
+    {
+      "action_id": "ff21ef2f4f328578d03e",
+      "status": "passed",
+      "result": "展开/收起，共 0 项。"
+    },
+    {
+      "action_id": "cf7de342c157cd281ff8",
+      "status": "passed",
+      "result": "逐项选择 0 项，恢复 0。"
+    },
+    {
+      "action_id": "71c57d0e5b70e3555ab1",
+      "status": "passed",
+      "result": "键盘读回 0，已恢复。"
+    },
+    {
+      "action_id": "8c8ed315c201d23dff4b",
+      "status": "passed",
+      "result": "执行右键并关闭菜单。"
+    },
+    {
+      "action_id": "34acff26e99ca51c7e69",
+      "status": "passed",
+      "result": "真实焦点=False。"
+    },
+    {
+      "action_id": "c1d96c71265c453d524d",
+      "status": "passed",
+      "result": "读回=''，已恢复。"
+    },
+    {
+      "action_id": "078ac2820e090c62a094",
+      "status": "passed",
+      "result": "执行 Ctrl+A/Ctrl+Z，已恢复。"
+    },
+    {
+      "action_id": "41978de52bd089fee0ff",
+      "status": "passed",
+      "result": "执行右键并关闭菜单。"
+    },
+    {
+      "action_id": "48773f034d39c0ccbcc8",
+      "status": "passed",
+      "result": "边界长度=[0, 0]，已恢复。"
+    },
+    {
+      "action_id": "8f41fc0473b1a705bf0b",
+      "status": "passed",
+      "result": "展开/收起，共 0 项。"
+    },
+    {
+      "action_id": "1fe567be6cacac65fc60",
+      "status": "passed",
+      "result": "逐项选择 0 项，恢复 0。"
+    },
+    {
+      "action_id": "487f3f377df49503a227",
+      "status": "passed",
+      "result": "键盘读回 0，已恢复。"
+    },
+    {
+      "action_id": "e32de744cbd535af3abb",
+      "status": "passed",
+      "result": "执行右键并关闭菜单。"
+    },
+    {
+      "action_id": "e921cb2e65a11acb916c",
+      "status": "passed",
+      "result": "真实焦点=False。"
+    },
+    {
+      "action_id": "a63ef07e77cc3a550692",
+      "status": "passed",
+      "result": "读回=''，已恢复。"
+    },
+    {
+      "action_id": "6f8eaf473fee74be70f4",
+      "status": "passed",
+      "result": "执行 Ctrl+A/Ctrl+Z，已恢复。"
+    },
+    {
+      "action_id": "d22a57e2c57533bb41f7",
+      "status": "passed",
+      "result": "执行右键并关闭菜单。"
+    },
+    {
+      "action_id": "d4c1222e1454141f8f63",
+      "status": "passed",
+      "result": "边界长度=[0, 0]，已恢复。"
+    },
+    {
+      "action_id": "df074cd5e1a0a3c67396",
+      "status": "passed",
+      "result": "展开/收起，共 0 项。"
+    },
+    {
+      "action_id": "75747ecf304b0651eeaa",
+      "status": "passed",
+      "result": "逐项选择 0 项，恢复 0。"
+    },
+    {
+      "action_id": "f0a46380ca56ef62c21d",
+      "status": "passed",
+      "result": "键盘读回 0，已恢复。"
+    },
+    {
+      "action_id": "b49033b39ef5f6ff97c4",
+      "status": "passed",
+      "result": "执行右键并关闭菜单。"
+    },
+    {
+      "action_id": "23420baddc33716c5db1",
+      "status": "passed",
+      "result": "展开/收起，共 0 项。"
+    },
+    {
+      "action_id": "a9dfc8f5d94ac255b77e",
+      "status": "passed",
+      "result": "逐项选择 0 项，恢复 0。"
+    },
+    {
+      "action_id": "359c4fc7b51c3d3f5818",
+      "status": "passed",
+      "result": "键盘读回 0，已恢复。"
+    },
+    {
+      "action_id": "9bd40176bd82434e9145",
+      "status": "passed",
+      "result": "执行右键并关闭菜单。"
+    },
+    {
+      "action_id": "d6de6d11f5798e7e94ba",
+      "status": "passed",
+      "result": "执行旧版字体框按钮手势。"
+    },
+    {
+      "action_id": "c21039b609f776d66cd1",
+      "status": "passed",
+      "result": "执行旧版字体框按钮手势。"
+    },
+    {
+      "action_id": "cf2051814ea42b586972",
+      "status": "passed",
+      "result": "执行旧版字体框按钮手势。"
+    },
+    {
+      "action_id": "f9d7dae0a6550bfd5f9c",
+      "status": "passed",
+      "result": "执行旧版字体框按钮手势。"
+    },
+    {
+      "action_id": "3f5275eb9d8068cc925a",
+      "status": "passed",
+      "result": "执行旧版字体框按钮手势。"
+    },
+    {
+      "action_id": "516962c96c1c834cb844",
+      "status": "passed",
+      "result": "执行旧版字体框按钮手势。"
+    },
+    {
+      "action_id": "4f357886b5db23b8d5ee",
+      "status": "passed",
+      "result": "执行旧版字体框按钮手势。"
+    },
+    {
+      "action_id": "3ea3591bfd5238be13b4",
+      "status": "passed",
+      "result": "执行旧版字体框按钮手势。"
+    },
+    {
+      "action_id": "1f68fda870e3e81feb9d",
+      "status": "passed",
+      "result": "执行旧版字体框按钮手势。"
+    },
+    {
+      "action_id": "3d732b8074c3af61561a",
+      "status": "passed",
+      "result": "执行旧版字体框按钮手势。"
+    },
+    {
+      "action_id": "4e515f967cbdcc582a61",
+      "status": "passed",
+      "result": "执行旧版字体框按钮手势。"
+    },
+    {
+      "action_id": "2fe7d25572f86cd611e6",
+      "status": "passed",
+      "result": "执行旧版字体框按钮手势。"
+    },
+    {
+      "action_id": "23909ff9a4d94ef89c17",
+      "status": "passed",
+      "result": "执行旧版字体框按钮手势。"
+    },
+    {
+      "action_id": "ce0efdb9fb87b4297f71",
+      "status": "passed",
+      "result": "执行旧版字体框按钮手势。"
+    },
+    {
+      "action_id": "a1d3b82f44070a82de2b",
+      "status": "passed",
+      "result": "执行旧版字体框按钮手势。"
+    },
+    {
+      "action_id": "0c635495b06e322545b9",
+      "status": "passed",
+      "result": "执行旧版字体框按钮手势。"
+    },
+    {
+      "action_id": "ea3a7fcc938454fa3bea",
+      "status": "passed",
+      "result": "执行旧版字体框按钮手势。"
+    },
+    {
+      "action_id": "7c0fc50760390982dd7a",
+      "status": "passed",
+      "result": "执行旧版字体框按钮手势。"
+    },
+    {
+      "action_id": "327d7551eb8ef35918f9",
+      "status": "passed",
+      "result": "在最终草稿执行重建类按钮手势；新增窗口 0 个。"
+    },
+    {
+      "action_id": "3c1fe544f0bb648a82e4",
+      "status": "passed",
+      "result": "在最终草稿执行重建类按钮手势；新增窗口 0 个。"
+    },
+    {
+      "action_id": "530d717624d5ded22cbb",
+      "status": "passed",
+      "result": "在最终草稿执行重建类按钮手势；新增窗口 0 个。"
+    },
+    {
+      "action_id": "ce017ee7ac7e66c0b56b",
+      "status": "passed",
+      "result": "在最终草稿执行重建类按钮手势；新增窗口 0 个。"
+    },
+    {
+      "action_id": "cbd7e7d288bfd92e7c2f",
+      "status": "passed",
+      "result": "在最终草稿执行重建类按钮手势；新增窗口 0 个。"
+    },
+    {
+      "action_id": "6999b2fc931cfc1ad9b8",
+      "status": "passed",
+      "result": "在最终草稿执行重建类按钮手势；新增窗口 0 个。"
+    },
+    {
+      "action_id": "acdcc0f5db57627e42f8",
+      "status": "passed",
+      "result": "在最终草稿执行重建类按钮手势；新增窗口 0 个。"
+    },
+    {
+      "action_id": "6c31d5840fd341498d39",
+      "status": "passed",
+      "result": "在最终草稿执行重建类按钮手势；新增窗口 0 个。"
+    },
+    {
+      "action_id": "d8d1c5708c3e45e80392",
+      "status": "passed",
+      "result": "在最终草稿执行重建类按钮手势；新增窗口 0 个。"
+    }
+  ]
+}

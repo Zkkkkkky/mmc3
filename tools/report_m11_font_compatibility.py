@@ -22,6 +22,8 @@ from fc_editor.codecs.dc_font import (  # noqa: E402
     full_font_payload,
     glyph_file_offset,
     glyphs_from_full_payload,
+    incompatible_channel_tokens,
+    safe_channel_tokens,
     safe_unmapped_tokens,
 )
 from fc_editor.dc_text import default_dc_text_table  # noqa: E402
@@ -96,6 +98,82 @@ def analyze(rom_path: Path) -> dict[str, object]:
             and reopened.dc_text_table().encode("龘") == candidate
         )
 
+    name_candidates = safe_channel_tokens(
+        data, set(default_dc_text_table().byte_to_text), "name"
+    )
+    cleanup_project = RomProject.load(rom_path)
+    cleanup_project.font_glyph_renderer = lambda _character: changed_glyph
+    allocated = cleanup_project.ensure_font_characters("龘", channel="name")
+    allocated_token = allocated["龘"]
+    usage_before_cleanup = cleanup_project.font_usage_audit()
+    cleared = cleanup_project.clear_unused_custom_font_glyphs()
+    usage_cleanup_ok = (
+        allocated_token == bytes.fromhex("D8B7")
+        and allocated_token in usage_before_cleanup.unused_custom_tokens
+        and cleared == (allocated_token,)
+        and allocated_token not in cleanup_project.font_character_overrides
+        and bytes(
+            cleanup_project.working[
+                glyph_file_offset(allocated_token, writable=True) :
+                glyph_file_offset(allocated_token, writable=True) + 18
+            ]
+        ) == b"\xff" * 18
+    )
+    builtin_cleanup_project = RomProject.load(rom_path)
+    builtin_before = bytes(builtin_cleanup_project.working)
+    builtin_audit = builtin_cleanup_project.font_usage_audit()
+    reclaimed_builtins = builtin_cleanup_project.clear_unused_builtin_font_glyphs()
+    reusable_story_after_cleanup = safe_channel_tokens(
+        bytes(builtin_cleanup_project.original),
+        set(builtin_cleanup_project.dc_text_table().byte_to_text),
+        "story",
+        set(builtin_cleanup_project.font_disabled_builtin_tokens),
+        reclaimed_data=bytes(builtin_cleanup_project.working),
+    )
+    reusable_name_after_cleanup = safe_channel_tokens(
+        bytes(builtin_cleanup_project.original),
+        set(builtin_cleanup_project.dc_text_table(channel="name").byte_to_text),
+        "name",
+        set(builtin_cleanup_project.font_disabled_builtin_tokens),
+        reclaimed_data=bytes(builtin_cleanup_project.working),
+    )
+    restored_builtins = builtin_cleanup_project.restore_disabled_builtin_font_glyphs()
+    builtin_cleanup_ok = (
+        len(builtin_audit.unused_builtin_tokens) == 485
+        and reclaimed_builtins == builtin_audit.unused_builtin_tokens
+        and len(reusable_story_after_cleanup) == len(candidates) + len(reclaimed_builtins)
+        and len(reusable_name_after_cleanup) == 302
+        and restored_builtins == reclaimed_builtins
+        and bytes(builtin_cleanup_project.working) == builtin_before
+        and not builtin_cleanup_project.font_disabled_builtin_tokens
+    )
+    name_record_groups = {
+        "unit": tuple(
+            project.unit_name_record_bytes(index)
+            for index in range(1, project.unit_count)
+        ),
+        "character": tuple(
+            project.character_name_record_bytes(index)
+            for index in range(1, project.profile.character_name_count)
+        ),
+        "weapon": tuple(
+            project.weapon_name_record_bytes(index)
+            for index in range(1, project.weapon_count)
+        ),
+        "item": tuple(project.get_item_name_records()),
+    }
+    name_page_violations = {
+        channel: [
+            {
+                "record": index,
+                "tokens": [token.hex().upper() for token in incompatible],
+            }
+            for index, raw in enumerate(records)
+            if (incompatible := incompatible_channel_tokens(raw, channel))
+        ]
+        for channel, records in name_record_groups.items()
+    }
+
     checks = {
         "supported_rom_hash": rom_sha256 == EXPECTED_ROM_SHA256,
         "all_2688_independent_glyphs_extracted": (
@@ -108,6 +186,9 @@ def analyze(rom_path: Path) -> dict[str, object]:
         ),
         "safe_slot_count_and_first_token": (
             len(candidates) == 76 and candidate == bytes.fromhex("BAE3")
+        ),
+        "field_channel_routing": (
+            name_candidates and name_candidates[0] == bytes.fromhex("D8B7")
         ),
         "safe_slots_are_unmapped_uniform_and_unreferenced": all(
             token not in default_dc_text_table().byte_to_text
@@ -130,6 +211,11 @@ def analyze(rom_path: Path) -> dict[str, object]:
         "all_row_padding_preserved": padding_preserved,
         "glyph_and_mapping_are_one_undo_transaction": undo_restored and redo_restored,
         "project_reopen_preserves_mapping_and_glyph": project_reopen_ok,
+        "unused_custom_detection_and_cleanup": usage_cleanup_ok,
+        "unused_builtin_reclaim_reuse_and_restore": builtin_cleanup_ok,
+        "existing_name_records_use_runtime_compatible_pages": not any(
+            name_page_violations.values()
+        ),
         "reference_all_2688_fields_classified": (
             reference_summary["passed"]
             and reference_summary["physical_fields"] == 2688
@@ -155,6 +241,17 @@ def analyze(rom_path: Path) -> dict[str, object]:
             "first_safe_token": candidate.hex().upper(),
             "first_safe_file_offset": f"0x{candidate_offset:06X}",
             "safe_tokens": [token.hex().upper() for token in candidates],
+            "story_first_safe_token": candidate.hex().upper(),
+            "name_first_safe_token": name_candidates[0].hex().upper(),
+            "unused_builtin_count": len(usage_before_cleanup.unused_builtin_tokens),
+            "safe_slots_after_builtin_reclaim": len(reusable_story_after_cleanup),
+            "name_safe_slots": len(name_candidates),
+            "name_safe_slots_after_builtin_reclaim": len(reusable_name_after_cleanup),
+            "unmapped_nonempty_count": len(usage_before_cleanup.unused_unmapped_glyphs),
+            "name_record_counts": {
+                key: len(value) for key, value in name_record_groups.items()
+            },
+            "name_page_violations": name_page_violations,
         },
         "full_font_file": {
             "extension": ".dcfontset",
@@ -177,8 +274,10 @@ def analyze(rom_path: Path) -> dict[str, object]:
         "reference_all_fields": reference_summary,
         "checks": checks,
         "limitations": [
-            "自动分配只使用内置码表未占用、全 ROM 中 Token 零出现、且字模为统一填充值的槽位；不自动回收任何已分配槽。",
-            "自定义字符到 Token 的关系是编辑工程元数据，游戏 ROM 只保存字模和正文 Token；单独打开 ROM 时需同时打开 .dcmod 或导入 .dcfontset 才能恢复 Unicode 名称。",
+            "自动分配同时复核基准与当前工作 ROM 的 Token 引用及统一填充字模；剧情/战斗允许 B/C/D 十二页（初始 76、回收后 561），名称/资料仅允许 C/D 八页（初始 20、回收后 302）。",
+            "同一 Unicode 字符跨通道复用时可保留剧情 B 页 Token 并补建名称 C/D 页别名；名称编码表过滤 B 页，原始不兼容 Token 会被拒绝。",
+            "零引用独立内置文字可经提交复核后停用并回收；整批可撤销，未重新分配项可从不可变基准 ROM 恢复。无映射旧字模因身份不明仍只报告。",
+            "停用内置代码及自定义字符到 Token 的关系是编辑工程元数据，游戏 ROM 只保存字模和正文 Token；续改必须打开对应 .dcmod。",
             ".dcfontset 是新修改器的版本化超集协议；参考程序可见窗口没有自动分配或字体文件控件，不能宣称与未知参考文件协议字节级一致。",
             "参考版仅 B8/B9/C8 三页清页表现为目标区隔离保存；其余页或单字模动作存在 no-effect/非目标写入。产品的 18 字节定长隔离写入是安全增强，不冒充参考版逐字模字节一致。",
         ],

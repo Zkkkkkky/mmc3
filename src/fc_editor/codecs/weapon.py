@@ -13,8 +13,22 @@ from ..rom_image import BankAddress, RomImage
 class WeaponCodec:
     """Lossless, read-only decoder for the 192-entry weapon pointer table."""
 
-    def __init__(self, rom: RomImage) -> None:
+    def __init__(
+        self,
+        rom: RomImage,
+        data: bytes | bytearray | None = None,
+        *,
+        pointer_table_offset: int | None = None,
+        pair_first_bank: int | None = None,
+    ) -> None:
         self.rom = rom
+        self._source = rom.data if data is None else bytes(data)
+        self.pointer_table_offset = (
+            rom.profile.weapon_pointer_table_offset
+            if pointer_table_offset is None
+            else pointer_table_offset
+        )
+        self.pair_first_bank = pair_first_bank
         self.pointers = self._read_pointers()
 
     def _read_pointers(self) -> tuple[int, ...]:
@@ -22,11 +36,13 @@ class WeaponCodec:
         table_size = profile.weapon_pointer_count * 2
         pointers = struct.unpack(
             f"<{profile.weapon_pointer_count}H",
-            self.rom.read(profile.weapon_pointer_table_offset, table_size),
+            self._source[
+                self.pointer_table_offset:self.pointer_table_offset + table_size
+            ],
         )
         if pointers[0] != 0:
             raise RomFormatError("武器指针表起始标记不正确。")
-        table_end = profile.weapon_pointer_table_offset + table_size
+        table_end = self.pointer_table_offset + table_size
         for weapon_id, pointer in enumerate(pointers[1:], 1):
             try:
                 offset = self.record_offset_from_pointer(pointer)
@@ -39,6 +55,10 @@ class WeaponCodec:
         return tuple(pointers)
 
     def record_offset_from_pointer(self, pointer: int) -> int:
+        if self.pair_first_bank is not None:
+            if not 0x8000 <= pointer < 0xC000:
+                raise ValueError(f"武器记录指针 ${pointer:04X} 超出扩展 Bank 对。")
+            return 16 + self.pair_first_bank * 0x2000 + pointer - 0x8000
         return BankAddress(
             self.rom.profile.weapon_data_prg_bank,
             pointer,
@@ -57,7 +77,7 @@ class WeaponCodec:
         weapon_id: int,
         data: bytes | bytearray | None = None,
     ) -> WeaponRecord:
-        source = self.rom.data if data is None else data
+        source = self._source if data is None else data
         pointer = self.pointers[weapon_id]
         offset = self.record_offset(weapon_id)
         raw = bytes(source[offset : offset + WEAPON_RECORD_SIZE])

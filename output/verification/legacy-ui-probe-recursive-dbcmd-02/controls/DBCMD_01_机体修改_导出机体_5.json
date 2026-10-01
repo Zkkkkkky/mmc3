@@ -1,0 +1,84 @@
+{
+  "tag": "DBCMD_01_机体修改_导出机体_5",
+  "hwnd": 7997762,
+  "title": "电影和电视",
+  "class": "ApplicationFrameWindow",
+  "rect": {
+    "left": 50,
+    "top": 0,
+    "right": 1348,
+    "bottom": 1010,
+    "width": 1298,
+    "height": 1010
+  },
+  "pid": 5168,
+  "tree": {
+    "hwnd": 7997762,
+    "class": "ApplicationFrameWindow",
+    "text": "电影和电视",
+    "ctrl_id": 0,
+    "rect": {
+      "left": 50,
+      "top": 0,
+      "right": 1348,
+      "bottom": 1010,
+      "width": 1298,
+      "height": 1010
+    },
+    "visible": true,
+    "enabled": true,
+    "children": [
+      {
+        "hwnd": 5770394,
+        "class": "ApplicationFrameTitleBarWindow",
+        "text": "",
+        "ctrl_id": 0,
+        "rect": {
+          "left": 59,
+          "top": 1,
+          "right": 1339,
+          "bottom": 41,
+          "width": 1280,
+          "height": 40
+        },
+        "visible": true,
+        "enabled": true,
+        "children": []
+      },
+      {
+        "hwnd": 1445012,
+        "class": "ApplicationFrameTitleBarWindow",
+        "text": "",
+        "ctrl_id": 0,
+        "rect": {
+          "left": 59,
+          "top": 0,
+          "right": 59,
+          "bottom": 0,
+          "width": 0,
+          "height": 0
+        },
+        "visible": false,
+        "enabled": true,
+        "children": []
+      },
+      {
+        "hwnd": 6490666,
+        "class": "ApplicationFrameInputSinkWindow",
+        "text": "",
+        "ctrl_id": 0,
+        "rect": {
+          "left": 59,
+          "top": 41,
+          "right": 1339,
+          "bottom": 1001,
+          "width": 1280,
+          "height": 960
+        },
+        "visible": true,
+        "enabled": true,
+        "children": []
+      }
+    ]
+  }
+}

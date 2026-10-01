@@ -1,0 +1,32 @@
+{
+  "tag": "DBCMD_01_机体修改_导出机体_13",
+  "hwnd": 131496,
+  "title": "",
+  "class": "DummyDWMListenerWindow",
+  "rect": {
+    "left": 0,
+    "top": 0,
+    "right": 0,
+    "bottom": 0,
+    "width": 0,
+    "height": 0
+  },
+  "pid": 9016,
+  "tree": {
+    "hwnd": 131496,
+    "class": "DummyDWMListenerWindow",
+    "text": "",
+    "ctrl_id": 0,
+    "rect": {
+      "left": 0,
+      "top": 0,
+      "right": 0,
+      "bottom": 0,
+      "width": 0,
+      "height": 0
+    },
+    "visible": true,
+    "enabled": true,
+    "children": []
+  }
+}

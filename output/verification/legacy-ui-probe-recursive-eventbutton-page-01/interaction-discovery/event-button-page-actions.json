@@ -1,0 +1,909 @@
+{
+  "schema_version": 1,
+  "validated": true,
+  "error": null,
+  "execution_record_count": 84,
+  "diff_count": 0,
+  "sha256_before": "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E",
+  "sha256_after": "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E",
+  "observations": [
+    {
+      "control_id": 170,
+      "action": "keyboard_activate",
+      "path": [
+        1,
+        18
+      ],
+      "focused": true,
+      "window_visible": true,
+      "descendants": []
+    },
+    {
+      "control_id": 170,
+      "action": "left_click",
+      "path": [
+        1,
+        18
+      ],
+      "focused": null,
+      "window_visible": true,
+      "descendants": []
+    },
+    {
+      "control_id": 180,
+      "action": "keyboard_activate",
+      "path": [
+        1,
+        17
+      ],
+      "focused": true,
+      "window_visible": true,
+      "descendants": []
+    },
+    {
+      "control_id": 180,
+      "action": "left_click",
+      "path": [
+        1,
+        17
+      ],
+      "focused": null,
+      "window_visible": true,
+      "descendants": []
+    },
+    {
+      "control_id": 200,
+      "action": "keyboard_activate",
+      "path": [
+        1,
+        16
+      ],
+      "focused": true,
+      "window_visible": true,
+      "descendants": []
+    },
+    {
+      "control_id": 200,
+      "action": "left_click",
+      "path": [
+        1,
+        16
+      ],
+      "focused": null,
+      "window_visible": true,
+      "descendants": []
+    },
+    {
+      "control_id": 210,
+      "action": "keyboard_activate",
+      "path": [
+        1,
+        15
+      ],
+      "focused": true,
+      "window_visible": true,
+      "descendants": []
+    },
+    {
+      "control_id": 210,
+      "action": "left_click",
+      "path": [
+        1,
+        15
+      ],
+      "focused": null,
+      "window_visible": true,
+      "descendants": []
+    },
+    {
+      "control_id": 250,
+      "action": "keyboard_activate",
+      "path": [
+        1,
+        14
+      ],
+      "focused": true,
+      "window_visible": true,
+      "descendants": []
+    },
+    {
+      "control_id": 250,
+      "action": "left_click",
+      "path": [
+        1,
+        14
+      ],
+      "focused": null,
+      "window_visible": true,
+      "descendants": []
+    },
+    {
+      "control_id": 270,
+      "action": "keyboard_activate",
+      "path": [
+        1,
+        13
+      ],
+      "focused": true,
+      "window_visible": true,
+      "descendants": []
+    },
+    {
+      "control_id": 270,
+      "action": "left_click",
+      "path": [
+        1,
+        13
+      ],
+      "focused": null,
+      "window_visible": true,
+      "descendants": []
+    },
+    {
+      "control_id": 300,
+      "action": "keyboard_activate",
+      "path": [
+        1,
+        12
+      ],
+      "focused": true,
+      "window_visible": true,
+      "descendants": []
+    },
+    {
+      "control_id": 300,
+      "action": "left_click",
+      "path": [
+        1,
+        12
+      ],
+      "focused": null,
+      "window_visible": true,
+      "descendants": []
+    },
+    {
+      "control_id": 320,
+      "action": "keyboard_activate",
+      "path": [
+        1,
+        11
+      ],
+      "focused": true,
+      "window_visible": true,
+      "descendants": []
+    },
+    {
+      "control_id": 320,
+      "action": "left_click",
+      "path": [
+        1,
+        11
+      ],
+      "focused": null,
+      "window_visible": true,
+      "descendants": []
+    },
+    {
+      "control_id": 350,
+      "action": "keyboard_activate",
+      "path": [
+        1,
+        10
+      ],
+      "focused": true,
+      "window_visible": true,
+      "descendants": []
+    },
+    {
+      "control_id": 350,
+      "action": "left_click",
+      "path": [
+        1,
+        10
+      ],
+      "focused": null,
+      "window_visible": true,
+      "descendants": []
+    },
+    {
+      "control_id": 370,
+      "action": "keyboard_activate",
+      "path": [
+        1,
+        9
+      ],
+      "focused": true,
+      "window_visible": true,
+      "descendants": []
+    },
+    {
+      "control_id": 370,
+      "action": "left_click",
+      "path": [
+        1,
+        9
+      ],
+      "focused": null,
+      "window_visible": true,
+      "descendants": []
+    },
+    {
+      "control_id": 400,
+      "action": "keyboard_activate",
+      "path": [
+        1,
+        8
+      ],
+      "focused": true,
+      "window_visible": true,
+      "descendants": []
+    },
+    {
+      "control_id": 400,
+      "action": "left_click",
+      "path": [
+        1,
+        8
+      ],
+      "focused": null,
+      "window_visible": true,
+      "descendants": []
+    },
+    {
+      "control_id": 410,
+      "action": "keyboard_activate",
+      "path": [
+        1,
+        7
+      ],
+      "focused": true,
+      "window_visible": true,
+      "descendants": []
+    },
+    {
+      "control_id": 410,
+      "action": "left_click",
+      "path": [
+        1,
+        7
+      ],
+      "focused": null,
+      "window_visible": true,
+      "descendants": []
+    },
+    {
+      "control_id": 500,
+      "action": "keyboard_activate",
+      "path": [
+        1,
+        6
+      ],
+      "focused": true,
+      "window_visible": true,
+      "descendants": []
+    },
+    {
+      "control_id": 500,
+      "action": "left_click",
+      "path": [
+        1,
+        6
+      ],
+      "focused": null,
+      "window_visible": true,
+      "descendants": []
+    },
+    {
+      "control_id": 530,
+      "action": "keyboard_activate",
+      "path": [
+        1,
+        5
+      ],
+      "focused": true,
+      "window_visible": true,
+      "descendants": []
+    },
+    {
+      "control_id": 530,
+      "action": "left_click",
+      "path": [
+        1,
+        5
+      ],
+      "focused": null,
+      "window_visible": true,
+      "descendants": []
+    },
+    {
+      "control_id": 550,
+      "action": "keyboard_activate",
+      "path": [
+        1,
+        4
+      ],
+      "focused": true,
+      "window_visible": true,
+      "descendants": []
+    },
+    {
+      "control_id": 550,
+      "action": "left_click",
+      "path": [
+        1,
+        4
+      ],
+      "focused": null,
+      "window_visible": true,
+      "descendants": []
+    },
+    {
+      "control_id": 580,
+      "action": "keyboard_activate",
+      "path": [
+        1,
+        3
+      ],
+      "focused": true,
+      "window_visible": true,
+      "descendants": []
+    },
+    {
+      "control_id": 580,
+      "action": "left_click",
+      "path": [
+        1,
+        3
+      ],
+      "focused": null,
+      "window_visible": true,
+      "descendants": []
+    },
+    {
+      "control_id": 610,
+      "action": "keyboard_activate",
+      "path": [
+        1,
+        17,
+        1
+      ],
+      "focused": true,
+      "window_visible": true,
+      "descendants": [
+        {
+          "title": "标题拼图",
+          "class": "WTWindow"
+        }
+      ]
+    },
+    {
+      "control_id": 610,
+      "action": "left_click",
+      "path": [
+        1,
+        17,
+        1
+      ],
+      "focused": null,
+      "window_visible": true,
+      "descendants": [
+        {
+          "title": "标题拼图",
+          "class": "WTWindow"
+        }
+      ]
+    },
+    {
+      "control_id": 640,
+      "action": "keyboard_activate",
+      "path": [
+        1,
+        2
+      ],
+      "focused": true,
+      "window_visible": true,
+      "descendants": []
+    },
+    {
+      "control_id": 640,
+      "action": "left_click",
+      "path": [
+        1,
+        2
+      ],
+      "focused": null,
+      "window_visible": true,
+      "descendants": []
+    },
+    {
+      "control_id": 660,
+      "action": "keyboard_activate",
+      "path": [
+        1,
+        1
+      ],
+      "focused": true,
+      "window_visible": true,
+      "descendants": []
+    },
+    {
+      "control_id": 660,
+      "action": "left_click",
+      "path": [
+        1,
+        1
+      ],
+      "focused": null,
+      "window_visible": true,
+      "descendants": []
+    },
+    {
+      "control_id": 680,
+      "action": "keyboard_activate",
+      "path": [
+        1,
+        0
+      ],
+      "focused": true,
+      "window_visible": true,
+      "descendants": []
+    },
+    {
+      "control_id": 680,
+      "action": "left_click",
+      "path": [
+        1,
+        0
+      ],
+      "focused": null,
+      "window_visible": true,
+      "descendants": []
+    },
+    {
+      "control_id": 700,
+      "action": "keyboard_activate",
+      "path": [
+        1,
+        3,
+        0
+      ],
+      "focused": true,
+      "window_visible": true,
+      "descendants": []
+    },
+    {
+      "control_id": 700,
+      "action": "left_click",
+      "path": [
+        1,
+        3,
+        0
+      ],
+      "focused": null,
+      "window_visible": true,
+      "descendants": []
+    }
+  ],
+  "execution_records": [
+    {
+      "action_id": "93abd9c31bbacee728a0",
+      "status": "passed",
+      "result": "真实右键；菜单=False。"
+    },
+    {
+      "action_id": "19722d9c954621603fa0",
+      "status": "passed",
+      "result": "切至 240 后隐藏；返回路径=(1, 18)，启用=True。"
+    },
+    {
+      "action_id": "3eac88a1749cede042a1",
+      "status": "passed",
+      "result": "焦点=True；主窗可见=True；子窗=[]。"
+    },
+    {
+      "action_id": "2306a2f8314429ffa3df",
+      "status": "passed",
+      "result": "焦点=None；主窗可见=True；子窗=[]。"
+    },
+    {
+      "action_id": "3255779cd91389e31dc5",
+      "status": "passed",
+      "result": "真实右键；菜单=False。"
+    },
+    {
+      "action_id": "5f3d5b63f8da7b4bb19e",
+      "status": "passed",
+      "result": "切至 240 后隐藏；返回路径=(1, 17)，启用=True。"
+    },
+    {
+      "action_id": "bfca3e9945bb38657c9b",
+      "status": "passed",
+      "result": "焦点=True；主窗可见=True；子窗=[]。"
+    },
+    {
+      "action_id": "68b4ad8f07fcce4c6cbd",
+      "status": "passed",
+      "result": "焦点=None；主窗可见=True；子窗=[]。"
+    },
+    {
+      "action_id": "4aa00a9aa28ece71101b",
+      "status": "passed",
+      "result": "真实右键；菜单=False。"
+    },
+    {
+      "action_id": "fd30529e200e46a40adb",
+      "status": "passed",
+      "result": "切至 240 后隐藏；返回路径=(1, 16)，启用=True。"
+    },
+    {
+      "action_id": "62e336daedd6f4de333c",
+      "status": "passed",
+      "result": "焦点=True；主窗可见=True；子窗=[]。"
+    },
+    {
+      "action_id": "be97967b2fc896840fe3",
+      "status": "passed",
+      "result": "焦点=None；主窗可见=True；子窗=[]。"
+    },
+    {
+      "action_id": "e2c49c23845e3ca820d3",
+      "status": "passed",
+      "result": "真实右键；菜单=False。"
+    },
+    {
+      "action_id": "f9920954ad7c852fbd51",
+      "status": "passed",
+      "result": "切至 240 后隐藏；返回路径=(1, 15)，启用=True。"
+    },
+    {
+      "action_id": "78e4ef4791dafdb72710",
+      "status": "passed",
+      "result": "焦点=True；主窗可见=True；子窗=[]。"
+    },
+    {
+      "action_id": "0751be14a4c5c48c40b4",
+      "status": "passed",
+      "result": "焦点=None；主窗可见=True；子窗=[]。"
+    },
+    {
+      "action_id": "3d23d8c66a781f44f761",
+      "status": "passed",
+      "result": "真实右键；菜单=False。"
+    },
+    {
+      "action_id": "7702df32ef558726e9f7",
+      "status": "passed",
+      "result": "切至 160 后隐藏；返回路径=(1, 14)，启用=True。"
+    },
+    {
+      "action_id": "4fca0466328f739f40bf",
+      "status": "passed",
+      "result": "焦点=True；主窗可见=True；子窗=[]。"
+    },
+    {
+      "action_id": "db4a9e2542f37b0c77b8",
+      "status": "passed",
+      "result": "焦点=None；主窗可见=True；子窗=[]。"
+    },
+    {
+      "action_id": "08c2e8977b6b7a243691",
+      "status": "passed",
+      "result": "真实右键；菜单=False。"
+    },
+    {
+      "action_id": "e3aa4b86d50b309a4301",
+      "status": "passed",
+      "result": "切至 160 后隐藏；返回路径=(1, 13)，启用=True。"
+    },
+    {
+      "action_id": "9f85bd806b18e7f8423a",
+      "status": "passed",
+      "result": "焦点=True；主窗可见=True；子窗=[]。"
+    },
+    {
+      "action_id": "545804ac692f43638f64",
+      "status": "passed",
+      "result": "焦点=None；主窗可见=True；子窗=[]。"
+    },
+    {
+      "action_id": "88b4fc977275b36fbd31",
+      "status": "passed",
+      "result": "真实右键；菜单=False。"
+    },
+    {
+      "action_id": "c2ecb5bd031a4375952b",
+      "status": "passed",
+      "result": "切至 160 后隐藏；返回路径=(1, 12)，启用=True。"
+    },
+    {
+      "action_id": "642b19559e63ed60da0b",
+      "status": "passed",
+      "result": "焦点=True；主窗可见=True；子窗=[]。"
+    },
+    {
+      "action_id": "01a0d4ba1b1b6eae7784",
+      "status": "passed",
+      "result": "焦点=None；主窗可见=True；子窗=[]。"
+    },
+    {
+      "action_id": "820bc3b5821ec4a74adb",
+      "status": "passed",
+      "result": "真实右键；菜单=False。"
+    },
+    {
+      "action_id": "e9a425a5a6a710304849",
+      "status": "passed",
+      "result": "切至 160 后隐藏；返回路径=(1, 11)，启用=True。"
+    },
+    {
+      "action_id": "169b6a33df1f300c2f83",
+      "status": "passed",
+      "result": "焦点=True；主窗可见=True；子窗=[]。"
+    },
+    {
+      "action_id": "02d66bd662eac0ceaa22",
+      "status": "passed",
+      "result": "焦点=None；主窗可见=True；子窗=[]。"
+    },
+    {
+      "action_id": "d94d547342c879a959ea",
+      "status": "passed",
+      "result": "真实右键；菜单=False。"
+    },
+    {
+      "action_id": "f53306bae36737def41f",
+      "status": "passed",
+      "result": "切至 160 后隐藏；返回路径=(1, 10)，启用=True。"
+    },
+    {
+      "action_id": "f9d95bc07c41287363ed",
+      "status": "passed",
+      "result": "焦点=True；主窗可见=True；子窗=[]。"
+    },
+    {
+      "action_id": "e9c914dd0a5909ec096f",
+      "status": "passed",
+      "result": "焦点=None；主窗可见=True；子窗=[]。"
+    },
+    {
+      "action_id": "c8b0a3e7f6ea8c431918",
+      "status": "passed",
+      "result": "真实右键；菜单=False。"
+    },
+    {
+      "action_id": "9973cde789f7730cd704",
+      "status": "passed",
+      "result": "切至 160 后隐藏；返回路径=(1, 9)，启用=True。"
+    },
+    {
+      "action_id": "2dbe4d0982e2485a8e74",
+      "status": "passed",
+      "result": "焦点=True；主窗可见=True；子窗=[]。"
+    },
+    {
+      "action_id": "70cd7bf15dd189901ac8",
+      "status": "passed",
+      "result": "焦点=None；主窗可见=True；子窗=[]。"
+    },
+    {
+      "action_id": "cd4330fddcd54cf4f7a4",
+      "status": "passed",
+      "result": "真实右键；菜单=False。"
+    },
+    {
+      "action_id": "3c8b8696d0ea40abe094",
+      "status": "passed",
+      "result": "切至 160 后隐藏；返回路径=(1, 8)，启用=True。"
+    },
+    {
+      "action_id": "a1cf9281276f7e760aa9",
+      "status": "passed",
+      "result": "焦点=True；主窗可见=True；子窗=[]。"
+    },
+    {
+      "action_id": "126e2162b4cb902483bc",
+      "status": "passed",
+      "result": "焦点=None；主窗可见=True；子窗=[]。"
+    },
+    {
+      "action_id": "243ac07162665af89789",
+      "status": "passed",
+      "result": "真实右键；菜单=False。"
+    },
+    {
+      "action_id": "b905960b9e3189a1c5e2",
+      "status": "passed",
+      "result": "切至 160 后隐藏；返回路径=(1, 7)，启用=True。"
+    },
+    {
+      "action_id": "9e447ac6c276d1cff2ee",
+      "status": "passed",
+      "result": "焦点=True；主窗可见=True；子窗=[]。"
+    },
+    {
+      "action_id": "e76dbf8c12f36dcf5e7e",
+      "status": "passed",
+      "result": "焦点=None；主窗可见=True；子窗=[]。"
+    },
+    {
+      "action_id": "8af6282bd50ed88977ef",
+      "status": "passed",
+      "result": "真实右键；菜单=False。"
+    },
+    {
+      "action_id": "69de918f3bd63a89a79d",
+      "status": "passed",
+      "result": "切至 160 后隐藏；返回路径=(1, 6)，启用=True。"
+    },
+    {
+      "action_id": "f14b885037aabca3c8fa",
+      "status": "passed",
+      "result": "焦点=True；主窗可见=True；子窗=[]。"
+    },
+    {
+      "action_id": "13d5bef60f3292424c97",
+      "status": "passed",
+      "result": "焦点=None；主窗可见=True；子窗=[]。"
+    },
+    {
+      "action_id": "6fdc16cecfcb9364a62e",
+      "status": "passed",
+      "result": "真实右键；菜单=False。"
+    },
+    {
+      "action_id": "833d10df994eb52f1b97",
+      "status": "passed",
+      "result": "切至 160 后隐藏；返回路径=(1, 5)，启用=True。"
+    },
+    {
+      "action_id": "ac37607cca2cdeb700dc",
+      "status": "passed",
+      "result": "焦点=True；主窗可见=True；子窗=[]。"
+    },
+    {
+      "action_id": "1ef9ba937cec89d7e32a",
+      "status": "passed",
+      "result": "焦点=None；主窗可见=True；子窗=[]。"
+    },
+    {
+      "action_id": "ce89edb8e6c6b85b8021",
+      "status": "passed",
+      "result": "真实右键；菜单=False。"
+    },
+    {
+      "action_id": "956a48d6f1af17a912de",
+      "status": "passed",
+      "result": "切至 160 后隐藏；返回路径=(1, 4)，启用=True。"
+    },
+    {
+      "action_id": "c1bde171a4a16aad93bb",
+      "status": "passed",
+      "result": "焦点=True；主窗可见=True；子窗=[]。"
+    },
+    {
+      "action_id": "e4afe30bbd26545b8638",
+      "status": "passed",
+      "result": "焦点=None；主窗可见=True；子窗=[]。"
+    },
+    {
+      "action_id": "5129223b384f6d3aaa33",
+      "status": "passed",
+      "result": "真实右键；菜单=False。"
+    },
+    {
+      "action_id": "9c5dbe758225320fff2e",
+      "status": "passed",
+      "result": "切至 160 后隐藏；返回路径=(1, 3)，启用=True。"
+    },
+    {
+      "action_id": "9b79b99d73fe33c5a1a3",
+      "status": "passed",
+      "result": "焦点=True；主窗可见=True；子窗=[]。"
+    },
+    {
+      "action_id": "89d4e7ea04b480521b87",
+      "status": "passed",
+      "result": "焦点=None；主窗可见=True；子窗=[]。"
+    },
+    {
+      "action_id": "869c4e523eb213c0a384",
+      "status": "passed",
+      "result": "真实右键；菜单=False。"
+    },
+    {
+      "action_id": "8b438c0a12d89f13bd74",
+      "status": "passed",
+      "result": "切至 240 后隐藏；返回路径=(1, 17, 1)，启用=True。"
+    },
+    {
+      "action_id": "36a5988ea6d755cce394",
+      "status": "passed",
+      "result": "焦点=True；主窗可见=True；子窗=[{'title': '标题拼图', 'class': 'WTWindow'}]。"
+    },
+    {
+      "action_id": "ecdb99a619cf6c8f4500",
+      "status": "passed",
+      "result": "焦点=None；主窗可见=True；子窗=[{'title': '标题拼图', 'class': 'WTWindow'}]。"
+    },
+    {
+      "action_id": "7ac7d27317d00bb22fd2",
+      "status": "passed",
+      "result": "真实右键；菜单=False。"
+    },
+    {
+      "action_id": "3b89f13ca3464fdc3232",
+      "status": "passed",
+      "result": "切至 160 后隐藏；返回路径=(1, 2)，启用=True。"
+    },
+    {
+      "action_id": "0fadca5df94f8dd8fc55",
+      "status": "passed",
+      "result": "焦点=True；主窗可见=True；子窗=[]。"
+    },
+    {
+      "action_id": "f526282464dc2cbc618a",
+      "status": "passed",
+      "result": "焦点=None；主窗可见=True；子窗=[]。"
+    },
+    {
+      "action_id": "5c15a392934c3f2db965",
+      "status": "passed",
+      "result": "真实右键；菜单=False。"
+    },
+    {
+      "action_id": "51154be96e3016fb0e69",
+      "status": "passed",
+      "result": "切至 160 后隐藏；返回路径=(1, 1)，启用=True。"
+    },
+    {
+      "action_id": "f76997ff48da1b397ab4",
+      "status": "passed",
+      "result": "焦点=True；主窗可见=True；子窗=[]。"
+    },
+    {
+      "action_id": "e5ce59b0fb4d91b37c85",
+      "status": "passed",
+      "result": "焦点=None；主窗可见=True；子窗=[]。"
+    },
+    {
+      "action_id": "58274a7fe74cf427538f",
+      "status": "passed",
+      "result": "真实右键；菜单=False。"
+    },
+    {
+      "action_id": "1128095a7e8eaef7e91a",
+      "status": "passed",
+      "result": "切至 160 后隐藏；返回路径=(1, 0)，启用=True。"
+    },
+    {
+      "action_id": "72c435745871807dc058",
+      "status": "passed",
+      "result": "焦点=True；主窗可见=True；子窗=[]。"
+    },
+    {
+      "action_id": "4bb9a243dffca670f217",
+      "status": "passed",
+      "result": "焦点=None；主窗可见=True；子窗=[]。"
+    },
+    {
+      "action_id": "372ec2480b78ab1f4a42",
+      "status": "passed",
+      "result": "真实右键；菜单=False。"
+    },
+    {
+      "action_id": "b9eaf2b09be530f480ed",
+      "status": "passed",
+      "result": "切至 160 后隐藏；返回路径=(1, 3, 0)，启用=True。"
+    },
+    {
+      "action_id": "8c18c5775d92de257362",
+      "status": "passed",
+      "result": "焦点=True；主窗可见=True；子窗=[]。"
+    },
+    {
+      "action_id": "e159a073c29c182c722d",
+      "status": "passed",
+      "result": "焦点=None；主窗可见=True；子窗=[]。"
+    }
+  ]
+}

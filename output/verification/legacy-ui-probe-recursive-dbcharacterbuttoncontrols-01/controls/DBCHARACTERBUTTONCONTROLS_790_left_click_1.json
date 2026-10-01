@@ -1,0 +1,86 @@
+{
+  "tag": "DBCHARACTERBUTTONCONTROLS_790_left_click_1",
+  "hwnd": 5113258,
+  "title": "信息：",
+  "class": "#32770",
+  "rect": {
+    "left": 676,
+    "top": 446,
+    "right": 975,
+    "bottom": 644,
+    "width": 299,
+    "height": 198
+  },
+  "pid": 8800,
+  "tree": {
+    "hwnd": 5113258,
+    "class": "#32770",
+    "text": "信息：",
+    "ctrl_id": 0,
+    "rect": {
+      "left": 676,
+      "top": 446,
+      "right": 975,
+      "bottom": 644,
+      "width": 299,
+      "height": 198
+    },
+    "visible": true,
+    "enabled": true,
+    "children": [
+      {
+        "hwnd": 5966266,
+        "class": "Button",
+        "text": "是(&Y)",
+        "ctrl_id": 6,
+        "rect": {
+          "left": 719,
+          "top": 590,
+          "right": 829,
+          "bottom": 625,
+          "width": 110,
+          "height": 35
+        },
+        "visible": true,
+        "enabled": true,
+        "button_check_state": 0,
+        "children": []
+      },
+      {
+        "hwnd": 7145216,
+        "class": "Button",
+        "text": "否(&N)",
+        "ctrl_id": 7,
+        "rect": {
+          "left": 839,
+          "top": 590,
+          "right": 949,
+          "bottom": 625,
+          "width": 110,
+          "height": 35
+        },
+        "visible": true,
+        "enabled": true,
+        "button_check_state": 0,
+        "children": []
+      },
+      {
+        "hwnd": 10225076,
+        "class": "Static",
+        "text": "是否上传空白图像",
+        "ctrl_id": 65535,
+        "rect": {
+          "left": 694,
+          "top": 520,
+          "right": 928,
+          "bottom": 543,
+          "width": 234,
+          "height": 23
+        },
+        "visible": true,
+        "enabled": true,
+        "children": []
+      }
+    ]
+  }
+}

@@ -1,21 +1,21 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-09-25T11:11:46+08:00",
+  "generatedAt": "2026-10-01T09:25:00+08:00",
   "formalExecutable": {
     "path": "output/app/新DC篇完整修改器.exe",
-    "sha256": "F08EB5869704CAC5971A749B39FC88C5D52D65825E7065FA6351C3EA95F8F1E2",
+    "sha256": "DD828C2C7F9D7FCBEF8FDEE609E9D0E1BD6A8AD4A68C6A239AA2D78F6BDF98B5",
     "checksumFileMatches": true,
     "selfTestExitCode": 0
   },
   "fullRegression": {
     "command": ".\\.venv\\Scripts\\python.exe -m unittest discover -s tests -t . -p \"test_*.py\"",
-    "testsRun": 818,
+    "testsRun": 1039,
     "failures": 0,
     "errors": 0,
-    "durationSeconds": 1291.833,
+    "durationSeconds": 768.341,
     "passed": true,
     "appliesToCurrentExecutableHash": true,
-    "bootstrapNote": "把同类修复扩展到全模块后，从头运行 818 项全部通过：武器动画插入改为纯类型目录后再开新指令参数页，独立行动主页面移除内嵌当前原码和重复按钮；随后以相同源码重建正式 EXE并通过隐藏自检。"
+    "bootstrapNote": "2026-10-01 首轮从头运行时，1038 项功能与回归断言通过，唯一失败为本报告仍绑定旧 EXE 哈希和旧测试总数；第二轮执行期间完成正式 EXE 可见烟测，已启动进程仍加载旧的‘未做烟测’断言。更新报告和断言后第三轮从头执行 1039 项，最终 1039/1039 通过，耗时 768.341 秒。"
   },
   "focusedRegression": {
     "command": ".\\.venv\\Scripts\\python.exe -m unittest tests.test_legacy_windows_ui.LegacyWindowTests.test_story_unicode_edit_preserves_untouched_real_alias_tokens tests.test_chapter_title tests.test_chapter_victory tests.test_legacy_text_scenario tests.test_dc_modifier tests.test_story_integrity tests.test_m14_scenario_report",
@@ -85,9 +85,9 @@
   },
   "nativeUiAutomation": {
     "availableInCurrentSession": true,
-    "observed": "Computer Use 启动本次正式 EXE，载入仓库 ROM 并打开剧情事件窗口；关卡事件显示旧版自然语言列表，行动事件页只显示行动/指令双列表与容量说明，不再内嵌当前原码或重复操作按钮。取消退出后主状态仍为无未保存修改。",
+    "observed": "Computer Use 已对哈希为 DD828C2C7F9D7FCBEF8FDEE609E9D0E1BD6A8AD4A68C6A239AA2D78F6BDF98B5 的正式 EXE 实际打开推荐 ROM，展开数据菜单和数据库，验证机体列表五项右键菜单、分模块内存栏及取消返回；随后用 Ctrl+M 打开地图动画，确认游戏内真实预览、快速结构预览和 23 行指令可见，再取消返回。主窗口最终状态为‘已载入 · 无未保存修改’，关闭测试实例，全程未保存 ROM。",
     "currentBuildClickSmokePerformed": true,
-    "reason": "当前正式 EXE SHA-256 为 F08EB5869704CAC5971A749B39FC88C5D52D65825E7065FA6351C3EA95F8F1E2；已完成可见启动、载入、剧情事件关卡页/行动页切换与取消退出烟测。武器动画两段式插入由离屏 UI 与全仓回归覆盖。M08—M18 的既有用户签收按模块实现范围持续有效。"
+    "reason": "正式 EXE 已完成当前哈希的可见点击烟测；参考旧版递归交互分母另由 3376/3376 有效执行证据闭合，两类证据分开记录。"
   },
   "priorPackagedUiSmoke": {
     "path": "output/verification/m08-m18-agent-ui-smoke-2026-09-19.json",

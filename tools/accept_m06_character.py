@@ -16,7 +16,7 @@ sys.path.insert(0, str(ROOT / "src"))
 from PySide6.QtWidgets import QApplication, QMessageBox, QTabWidget
 
 from dc_modifier.app import DEFAULT_ROM
-from dc_modifier.character_editor import legacy_portrait_selectors
+from dc_modifier.character_editor import TransformDialogueDialog, legacy_portrait_selectors
 from dc_modifier.legacy_windows import DatabaseDialog
 from fc_editor.codecs.character_attributes import CharacterAttributesCodec
 from fc_rom_editor_core import RomProject
@@ -99,19 +99,24 @@ def main() -> int:
     details.show_back.setChecked(True)
     require(checks, "预览开关不会写ROM", bytes(project.working) == source_bytes)
     require(checks, "预览开关不会产生字段草稿", not details.has_pending_changes())
-    select_tab(details, "头像设置与上传")
     app.processEvents()
-    artifacts.append(save_widget(details, "01-character-06-portrait.png"))
+    require(checks, "头像设置区可见", details.portrait_group.isVisible())
+    artifacts.append(save_widget(details.portrait_group, "01-character-06-portrait.png"))
 
     add_button = page.add_record_button
     require(checks, "新增人物入口可见", add_button.isVisible())
-    require(checks, "固定池满时新增人物入口提供容量诊断", add_button.isEnabled())
-    require(checks, "新增人物容量原因明确", "$01—$C8" in add_button.toolTip() and "固定名称、属性和头像池均无剩余容量" in add_button.toolTip())
-    before_add = bytes(project.working)
-    with patch.object(QMessageBox, "information") as information:
-        add_button.click()
-    require(checks, "新增人物容量诊断已显示", information.call_count == 1)
-    require(checks, "点击容量诊断不写ROM", bytes(project.working) == before_add)
+    require(checks, "新增人物入口可操作", add_button.isEnabled())
+    require(checks, "新增人物说明覆盖旧版整体重排", "按旧修改器规则新增" in add_button.toolTip() and "容量不足时整笔取消" in add_button.toolTip())
+
+    add_project = RomProject.load(DEFAULT_ROM)
+    add_before = bytes(add_project.working)
+    add_count = add_project.character_count
+    add_dialog, add_page = open_character_dialog(app, add_project)
+    add_page.add_record_button.click()
+    require(checks, "新增人物生成下一人物ID", add_project.character_count == add_count + 1)
+    require(checks, "新增人物后目录定位新ID", add_page.current_id == add_count + 1)
+    finish_dialog(app, add_dialog, accept=False)
+    require(checks, "数据库取消完整撤销新增人物", bytes(add_project.working) == add_before)
     artifacts.append(save_widget(add_button.parentWidget(), "02-add-character-guard.png"))
 
     # B. Edit unique fixed-size fields, portrait color and a dialogue binding.
@@ -131,14 +136,15 @@ def main() -> int:
     details = page.character_details
     dialogue = page.character_dialogue
     original_portrait = CharacterAttributesCodec(project).read_portrait(6)
-    original_direct = project.character_dialogue_codec.read(6, project.working).direct[0]
+    direct_record_index = dialogue.UI_DIRECT_TO_RECORD[0]
+    original_direct = project.character_dialogue_codec.read(6, project.working).direct[direct_record_index]
     details.portrait_fields["color0"].setValue((original_portrait.colors[0] + 1) & 0x3F)
     dialogue.direct_controls[0][1].setValue((original_direct.dialogue + 1) & 0xFF)
     with patch.object(QMessageBox, "question", return_value=QMessageBox.StandardButton.Yes):
         page.apply_record()
-    select_tab(dialogue, "变形起飞")
     app.processEvents()
-    artifacts.append(save_widget(dialogue, "03-character-06-dialogue.png"))
+    require(checks, "变形起飞对话区可见", dialogue.transform_group.isVisible())
+    artifacts.append(save_widget(dialogue.transform_group, "03-character-06-dialogue.png"))
     finish_dialog(app, dialog, accept=True)
     project.save_as(EDITED_ROM, make_backup=False)
 
@@ -152,7 +158,7 @@ def main() -> int:
     changed_portrait = codec.read_portrait(6)
     require(checks, "人物06头像颜色保存并重开一致", changed_portrait.colors[0] == ((original_portrait.colors[0] + 1) & 0x3F))
     require(checks, "人物06头像图库位置未漂移", legacy_portrait_selectors(changed_portrait) == (25, 1, 27, 2))
-    require(checks, "人物06直接台词保存并重开一致", reopened.character_dialogue_codec.read(6, reopened.working).direct[0].dialogue == ((original_direct.dialogue + 1) & 0xFF))
+    require(checks, "人物06直接台词保存并重开一致", reopened.character_dialogue_codec.read(6, reopened.working).direct[direct_record_index].dialogue == ((original_direct.dialogue + 1) & 0xFF))
     require(checks, "基准ROM未被覆盖", sha256(DEFAULT_ROM) == source_hash)
 
     # C. Cancel must restore both unstaged controls and already staged project bytes.
@@ -188,7 +194,15 @@ def main() -> int:
     restore_dialog, restore_page = open_character_dialog(app, restore_project)
     restore_page.select_record_id(6)
     transform = restore_page.character_dialogue
-    transform._add_transform()
+    with (
+        patch.object(
+            TransformDialogueDialog,
+            "exec",
+            return_value=TransformDialogueDialog.DialogCode.Accepted,
+        ),
+        patch.object(TransformDialogueDialog, "binding", return_value=removed),
+    ):
+        transform._add_transform()
     row = transform.transform_table.rowCount() - 1
     for column, value in enumerate((removed.unit_start, removed.unit_end, removed.dialogue)):
         transform.transform_table.setItem(row, column, transform._hex_item(value))
@@ -200,26 +214,30 @@ def main() -> int:
     require(checks, "补回变形绑定后保存重开恢复原4条", restored_transforms == original_transforms)
     require(checks, "变形绑定删后补回字节完全可逆", sha256(RESTORED_ROM) == sha256(EDITED_ROM))
 
-    # E. A known expanding edit is rejected atomically when the fixed pool is full.
+    # E. A formerly blocked expanding edit now uses the verified legacy
+    # Bank $24 composite repacker and remains reversible by Database Cancel.
     guard_project = RomProject.load(DEFAULT_ROM)
     guard_before = bytes(guard_project.working)
     guard_dialog, guard_page = open_character_dialog(app, guard_project)
     guard_page.select_record_id(1)
-    guard_page.character_details.fields["spirit"].setValue(1)
+    guard_before_spirit = CharacterAttributesCodec(guard_project).read(1).spirit
+    guard_after_spirit = guard_before_spirit + 1 if guard_before_spirit < 0xFF else guard_before_spirit - 1
+    guard_page.character_details.fields["spirit"].setValue(guard_after_spirit)
     errors: list[str] = []
     guard_page.show_error = lambda error: errors.append(str(error))
     guard_page.apply_record()
-    require(checks, "固定池扩容请求明确报容量不足", bool(errors) and "容量不足" in errors[-1])
-    require(checks, "容量不足时ROM保持原样", bytes(guard_project.working) == guard_before)
-    require(checks, "容量不足时表单草稿仍保留", guard_page.has_pending_draft)
+    require(checks, "旧版八资源重排编辑无错误", not errors)
+    require(checks, "旧版八资源重排写入目标人物", CharacterAttributesCodec(guard_project).read(1).spirit == guard_after_spirit)
+    require(checks, "旧版八资源重排产生窗口会话修改", bytes(guard_project.working) != guard_before)
     finish_dialog(app, guard_dialog, accept=False)
+    require(checks, "数据库取消撤销八资源重排", bytes(guard_project.working) == guard_before)
 
     report = {
         "module": "M06 人物修改",
         "result": "PASS" if all(checks.values()) else "FAIL",
         "scope": {
             "reference_golden_fields_and_actions": 106,
-            "unsafe_add_character": "固定名称、属性和头像池均满，界面可见但禁用并说明原因",
+            "add_character": "按旧修改器八资源整体重排新增，容量不足原子拒绝",
         },
         "source_rom": str(Path(DEFAULT_ROM).relative_to(ROOT)).replace("\\", "/"),
         "source_sha256": source_hash,

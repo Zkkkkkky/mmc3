@@ -118,6 +118,19 @@ def analyze(rom_path: Path) -> dict[str, object]:
     map_changed = bytearray(map_record.raw)
     map_changed[5] = 0x27
     map_patch = codec.script_patch(map_record, bytes(map_changed))
+    pool_usage = {
+        kind: asdict(codec.script_pool_usage(kind))
+        for kind in ("map", "ally", "enemy")
+    }
+    map_structural_replacement = map_record.raw[:-1] + b"\x01\xFF"
+    map_structural_patch = codec.script_sequence_patch(
+        map_record, map_structural_replacement
+    )
+    map_structural_data = bytearray(data)
+    map_structural_data[
+        map_structural_patch[0]:map_structural_patch[0] + len(map_structural_patch[2])
+    ] = map_structural_patch[2]
+    map_structural_codec = AnimationCodec(map_structural_data)
     movement_record = codec.record("movement", 1)
     movement_changed = bytearray(movement_record.raw)
     movement_changed[2] = 0x05
@@ -356,6 +369,13 @@ def analyze(rom_path: Path) -> dict[str, object]:
             map_patch[0] == map_record.offset
             and _changed_indices(map_patch[1], map_patch[2]) == [5]
         ),
+        "map_pool_repack_accepts_variable_length": (
+            pool_usage["map"]
+            == {"capacity": 7890, "used": 5584, "free": 2306, "unique_records": 60}
+            and map_structural_codec.record("map", 1).raw
+            == map_structural_replacement
+            and map_structural_codec.script_pool_usage("map").free == 2305
+        ),
         "movement_patch_is_one_verified_operand": (
             movement_patch[0] == movement_record.offset
             and _changed_indices(movement_patch[1], movement_patch[2]) == [2]
@@ -485,6 +505,7 @@ def analyze(rom_path: Path) -> dict[str, object]:
             "renderer_file_offset": f"0x{INTERPRETER_OFFSET:06X}",
             "table_counts": table_counts,
             "script_records": script_summary,
+            "script_pool_usage": pool_usage,
             "safe_patches": {
                 "map": {
                     "offset": f"0x{map_patch[0]:06X}",

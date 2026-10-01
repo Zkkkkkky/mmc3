@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "validated": true,
+  "error": null,
+  "execution_record_count": 1,
+  "diff_count": 0,
+  "sha256_before": "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E",
+  "sha256_after": "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E",
+  "observations": [
+    {
+      "control_id": 110,
+      "action": "keyboard_activate",
+      "path": [
+        2
+      ],
+      "focused": true,
+      "window_visible": false,
+      "descendants": []
+    }
+  ],
+  "execution_records": [
+    {
+      "action_id": "4c9b72e144fd24c2e525",
+      "status": "passed",
+      "result": "焦点=True；主窗可见=False；子窗=[]。"
+    }
+  ]
+}

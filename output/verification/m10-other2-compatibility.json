@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-09-24T11:04:45+08:00",
+  "generated_at": "2026-10-01T11:10:02+08:00",
   "passed": true,
   "delivery_status": "reference_field_scope_complete_user_pending",
-  "conclusion": "M10 参考版 254 个逻辑入口已逐字段保存并完成全新进程回读；134 个安全字段进入最终分母，风险入口维持产品禁写，仅待用户签收。",
+  "conclusion": "M10 参考版 254 个逻辑入口已逐字段保存并完成全新进程回读；产品保留 134 个原安全字段，并恢复 F5—FC、FE 共 63 个七段系统文字入口；会覆盖地图事件指针的商店元数据继续禁写。",
   "rom": {
     "path": "output/rom/DC_kuorong_464K.nes",
     "size": 1310736,
@@ -276,6 +276,7 @@
         "离开商店"
       ],
       "no_op_roundtrips": 35,
+      "invalid_reference_row_safe_roundtrips": 63,
       "sample_patch_offset": "0x055CAF",
       "sample_changed_indices": [
         7,
@@ -316,6 +317,7 @@
     "shops_f0_f4_roundtrip_and_capacities": true,
     "shop_single_fields_are_isolated": true,
     "invalid_shops_and_f4_overflow_rejected": true,
+    "invalid_reference_rows_preserve_safe_dialogue_route": true,
     "seven_dialogues_roundtrip_and_edit_is_confined": true,
     "source_rom_unchanged": true,
     "reference_all_254_fields_saved_and_cold_read": true

@@ -1,0 +1,162 @@
+{
+  "scope": "M05 body/fragment puzzle functional golden parity",
+  "golden_actions": 17,
+  "passed": 17,
+  "failed": 0,
+  "fragment_import_rule": "retain proven global minimum-tile cover",
+  "rows": [
+    {
+      "action": "body-puzzle-clear",
+      "status": "pass",
+      "before_bytes": 53,
+      "expected_bytes": 1,
+      "actual_bytes": 1,
+      "expected_hex": "FF",
+      "actual_hex": "FF"
+    },
+    {
+      "action": "body-puzzle-move-up",
+      "status": "pass",
+      "before_bytes": 53,
+      "expected_bytes": 53,
+      "actual_bytes": 53,
+      "expected_hex": "F3 F6 07 01 F3 01 FA 02 F3 00 04 03 F3 01 F8 F9 0A 04 F3 01 F8 F9 08 0E F3 01 F7 F9 09 16 F3 01 F6 FD 20 09 F9 11 1F F3 01 FA FD 20 06 F9 0C 30 00 F9 04 3C FF",
+      "actual_hex": "F3 F6 07 01 F3 01 FA 02 F3 00 04 03 F3 01 F8 F9 0A 04 F3 01 F8 F9 08 0E F3 01 F7 F9 09 16 F3 01 F6 FD 20 09 F9 11 1F F3 01 FA FD 20 06 F9 0C 30 00 F9 04 3C FF"
+    },
+    {
+      "action": "body-puzzle-move-down",
+      "status": "pass",
+      "before_bytes": 53,
+      "expected_bytes": 53,
+      "actual_bytes": 53,
+      "expected_hex": "F3 F7 07 01 F3 01 FA 02 F3 00 04 03 F3 01 F8 F9 0A 04 F3 01 F8 F9 08 0E F3 01 F7 F9 09 16 F3 01 F6 FD 20 09 F9 11 1F F3 01 FA FD 20 06 F9 0C 30 00 F9 04 3C FF",
+      "actual_hex": "F3 F7 07 01 F3 01 FA 02 F3 00 04 03 F3 01 F8 F9 0A 04 F3 01 F8 F9 08 0E F3 01 F7 F9 09 16 F3 01 F6 FD 20 09 F9 11 1F F3 01 FA FD 20 06 F9 0C 30 00 F9 04 3C FF"
+    },
+    {
+      "action": "body-puzzle-move-left",
+      "status": "pass",
+      "before_bytes": 53,
+      "expected_bytes": 53,
+      "actual_bytes": 53,
+      "expected_hex": "F3 F7 07 01 F3 01 FA 02 F3 00 04 03 F3 01 F8 F9 0A 04 F3 01 F8 F9 08 0E F3 01 F7 F9 09 16 F3 01 F6 FD 20 09 F9 11 1F F3 01 FA FD 20 06 F9 0C 30 00 F9 04 3C FF",
+      "actual_hex": "F3 F7 07 01 F3 01 FA 02 F3 00 04 03 F3 01 F8 F9 0A 04 F3 01 F8 F9 08 0E F3 01 F7 F9 09 16 F3 01 F6 FD 20 09 F9 11 1F F3 01 FA FD 20 06 F9 0C 30 00 F9 04 3C FF"
+    },
+    {
+      "action": "body-puzzle-move-right",
+      "status": "pass",
+      "before_bytes": 53,
+      "expected_bytes": 53,
+      "actual_bytes": 53,
+      "expected_hex": "F3 F7 08 01 F3 01 FA 02 F3 00 04 03 F3 01 F8 F9 0A 04 F3 01 F8 F9 08 0E F3 01 F7 F9 09 16 F3 01 F6 FD 20 09 F9 11 1F F3 01 FA FD 20 06 F9 0C 30 00 F9 04 3C FF",
+      "actual_hex": "F3 F7 08 01 F3 01 FA 02 F3 00 04 03 F3 01 F8 F9 0A 04 F3 01 F8 F9 08 0E F3 01 F7 F9 09 16 F3 01 F6 FD 20 09 F9 11 1F F3 01 FA FD 20 06 F9 0C 30 00 F9 04 3C FF"
+    },
+    {
+      "action": "body-puzzle-swap-banks",
+      "status": "pass",
+      "before_bytes": 53,
+      "expected_bytes": 53,
+      "actual_bytes": 53,
+      "expected_hex": "F3 F7 07 01 F3 01 FA 02 F3 00 04 03 F3 01 F8 F9 0A 04 F3 01 F8 F9 08 0E F3 01 F7 F9 09 16 F3 01 F6 FD 20 09 F9 11 1F F3 01 FA FD 20 06 F9 0C 30 00 F9 04 3C FF",
+      "actual_hex": "F3 F7 07 01 F3 01 FA 02 F3 00 04 03 F3 01 F8 F9 0A 04 F3 01 F8 F9 08 0E F3 01 F7 F9 09 16 F3 01 F6 FD 20 09 F9 11 1F F3 01 FA FD 20 06 F9 0C 30 00 F9 04 3C FF"
+    },
+    {
+      "action": "body-puzzle-template-8x8",
+      "status": "pass",
+      "before_bytes": 53,
+      "expected_bytes": 10,
+      "actual_bytes": 10,
+      "expected_hex": "F3 F9 00 FD 20 08 F9 40 00 FF",
+      "actual_hex": "F3 F9 00 FD 20 08 F9 40 00 FF"
+    },
+    {
+      "action": "body-puzzle-template-7x9",
+      "status": "pass",
+      "before_bytes": 53,
+      "expected_bytes": 53,
+      "actual_bytes": 53,
+      "expected_hex": "F3 F7 07 01 F3 01 FA 02 F3 00 04 03 F3 01 F8 F9 0A 04 F3 01 F8 F9 08 0E F3 01 F7 F9 09 16 F3 01 F6 FD 20 09 F9 11 1F F3 01 FA FD 20 06 F9 0C 30 00 F9 04 3C FF",
+      "actual_hex": "F3 F7 07 01 F3 01 FA 02 F3 00 04 03 F3 01 F8 F9 0A 04 F3 01 F8 F9 08 0E F3 01 F7 F9 09 16 F3 01 F6 FD 20 09 F9 11 1F F3 01 FA FD 20 06 F9 0C 30 00 F9 04 3C FF"
+    },
+    {
+      "action": "body-puzzle-template-9x7",
+      "status": "pass",
+      "before_bytes": 53,
+      "expected_bytes": 10,
+      "actual_bytes": 10,
+      "expected_hex": "F3 FA 00 FD 20 09 F9 3F 00 FF",
+      "actual_hex": "F3 FA 00 FD 20 09 F9 3F 00 FF"
+    },
+    {
+      "action": "body-puzzle-template-10x6",
+      "status": "pass",
+      "before_bytes": 53,
+      "expected_bytes": 10,
+      "actual_bytes": 10,
+      "expected_hex": "F3 FB 00 FD 20 0A F9 3C 00 FF",
+      "actual_hex": "F3 FB 00 FD 20 0A F9 3C 00 FF"
+    },
+    {
+      "action": "fragment-puzzle-move-up",
+      "status": "pass",
+      "before_bytes": 49,
+      "expected_bytes": 49,
+      "actual_bytes": 49,
+      "expected_hex": "06 BD 05 0E 41 02 0E D3 04 02 0E 1D 01 0E C9 01 0E 38 02 02 0E D3 04 0E 20 03 0E 02 01 02 0E D0 05 0E 08 02 0E 01 07 06 0A 0E F0 05 0E 08 03 02 FF",
+      "actual_hex": "06 BD 05 0E 41 02 0E D3 04 02 0E 1D 01 0E C9 01 0E 38 02 02 0E D3 04 0E 20 03 0E 02 01 02 0E D0 05 0E 08 02 0E 01 07 06 0A 0E F0 05 0E 08 03 02 FF"
+    },
+    {
+      "action": "fragment-puzzle-move-down",
+      "status": "pass",
+      "before_bytes": 49,
+      "expected_bytes": 49,
+      "actual_bytes": 49,
+      "expected_hex": "06 BF 05 0E 41 02 0E D3 04 02 0E 1D 01 0E C9 01 0E 38 02 02 0E D3 04 0E 20 03 0E 02 01 02 0E D0 05 0E 08 02 0E 01 07 06 0A 0E F0 05 0E 08 03 02 FF",
+      "actual_hex": "06 BF 05 0E 41 02 0E D3 04 02 0E 1D 01 0E C9 01 0E 38 02 02 0E D3 04 0E 20 03 0E 02 01 02 0E D0 05 0E 08 02 0E 01 07 06 0A 0E F0 05 0E 08 03 02 FF"
+    },
+    {
+      "action": "fragment-puzzle-move-left",
+      "status": "pass",
+      "before_bytes": 49,
+      "expected_bytes": 49,
+      "actual_bytes": 49,
+      "expected_hex": "05 BE 05 0E 41 02 0E D3 04 02 0E 1D 01 0E C9 01 0E 38 02 02 0E D3 04 0E 20 03 0E 02 01 02 0E D0 05 0E 08 02 0E 01 07 06 0A 0E F0 05 0E 08 03 02 FF",
+      "actual_hex": "05 BE 05 0E 41 02 0E D3 04 02 0E 1D 01 0E C9 01 0E 38 02 02 0E D3 04 0E 20 03 0E 02 01 02 0E D0 05 0E 08 02 0E 01 07 06 0A 0E F0 05 0E 08 03 02 FF"
+    },
+    {
+      "action": "fragment-puzzle-move-right",
+      "status": "pass",
+      "before_bytes": 49,
+      "expected_bytes": 49,
+      "actual_bytes": 49,
+      "expected_hex": "07 BE 05 0E 41 02 0E D3 04 02 0E 1D 01 0E C9 01 0E 38 02 02 0E D3 04 0E 20 03 0E 02 01 02 0E D0 05 0E 08 02 0E 01 07 06 0A 0E F0 05 0E 08 03 02 FF",
+      "actual_hex": "07 BE 05 0E 41 02 0E D3 04 02 0E 1D 01 0E C9 01 0E 38 02 02 0E D3 04 0E 20 03 0E 02 01 02 0E D0 05 0E 08 02 0E 01 07 06 0A 0E F0 05 0E 08 03 02 FF"
+    },
+    {
+      "action": "fragment-puzzle-clear",
+      "status": "pass",
+      "before_bytes": 49,
+      "expected_bytes": 5,
+      "actual_bytes": 5,
+      "expected_hex": "00 F0 00 00 FF",
+      "actual_hex": "00 F0 00 00 FF"
+    },
+    {
+      "action": "fragment-puzzle-flip-horizontal",
+      "status": "pass",
+      "before_bytes": 49,
+      "expected_bytes": 52,
+      "actual_bytes": 52,
+      "expected_hex": "72 BE 05 4E BF 02 4E 2D 04 46 F8 4E E3 01 4E 37 01 4E C8 02 46 F8 4E 2D 04 4E E0 03 4E FE 01 46 F8 4E 30 05 4E F8 02 4E FF 07 46 F6 4E 10 05 4E F8 03 42 FF",
+      "actual_hex": "72 BE 05 4E BF 02 4E 2D 04 46 F8 4E E3 01 4E 37 01 4E C8 02 46 F8 4E 2D 04 4E E0 03 4E FE 01 46 F8 4E 30 05 4E F8 02 4E FF 07 46 F6 4E 10 05 4E F8 03 42 FF"
+    },
+    {
+      "action": "fragment-puzzle-flip-vertical",
+      "status": "pass",
+      "before_bytes": 49,
+      "expected_bytes": 49,
+      "actual_bytes": 49,
+      "expected_hex": "06 BA 05 8E 41 FE 8E D3 FC 82 8E 1D FF 8E C9 FF 8E 38 FE 82 8E D3 FC 8E 20 FD 8E 02 FF 82 8E D0 FB 8E 08 FE 8E 01 F9 86 0A 8E F0 FB 8E 08 FD 82 FF",
+      "actual_hex": "06 BA 05 8E 41 FE 8E D3 FC 82 8E 1D FF 8E C9 FF 8E 38 FE 82 8E D3 FC 8E 20 FD 8E 02 FF 82 8E D0 FB 8E 08 FE 8E 01 F9 86 0A 8E F0 FB 8E 08 FD 82 FF"
+    }
+  ]
+}

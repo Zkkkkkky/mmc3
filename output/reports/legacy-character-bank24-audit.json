@@ -1,0 +1,157 @@
+[
+  {
+    "path": "output\\rom\\DC_kuorong_464K.nes",
+    "sha256": "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E",
+    "roots": [
+      "$83F0",
+      "$875F",
+      "$8EBF",
+      "$9449",
+      "$9766",
+      "$98F8",
+      "$9DAD",
+      "$A415"
+    ],
+    "used_end": "$A929",
+    "capacity": 15184,
+    "used": 9529,
+    "remaining": 5655,
+    "unique_records": {
+      "人物属性": 56,
+      "机体属性": 86,
+      "武器属性": 151,
+      "人物目录名": 65,
+      "人物战斗名": 63,
+      "机体名": 77,
+      "武器名": 113,
+      "初始配置": 11
+    },
+    "exact_rebuild": true,
+    "mismatch_count": 0,
+    "first_mismatches": []
+  },
+  {
+    "path": "output\\build\\legacy-diff-audit\\m05-reference-baseline.nes",
+    "sha256": "C5D2C1DFBE0DC39AFC9EFFD314C082F121B98C9AD67C4825B1C9DD4B9E991954",
+    "roots": [
+      "$83F0",
+      "$882C",
+      "$95FC",
+      "$9DCC",
+      "$A213",
+      "$A3AC",
+      "$AB1C",
+      "$B0A3"
+    ],
+    "used_end": "$B641",
+    "capacity": 15184,
+    "used": 12881,
+    "remaining": 2303,
+    "unique_records": {
+      "人物属性": 93,
+      "机体属性": 189,
+      "武器属性": 248,
+      "人物目录名": 111,
+      "人物战斗名": 111,
+      "机体名": 144,
+      "武器名": 90,
+      "初始配置": 16
+    },
+    "exact_rebuild": true,
+    "mismatch_count": 0,
+    "first_mismatches": []
+  },
+  {
+    "path": "output\\build\\legacy-diff-audit\\cases\\legacy_live\\M06\\sp\\cold_start_01\\after.nes",
+    "sha256": "C0D96B8E9623BB01972A153B573A851346EF5F26784B7049E2214B36C452763B",
+    "roots": [
+      "$83F0",
+      "$8832",
+      "$9602",
+      "$9DD2",
+      "$A219",
+      "$A3B2",
+      "$AB22",
+      "$B0A9"
+    ],
+    "used_end": "$B647",
+    "capacity": 15184,
+    "used": 12887,
+    "remaining": 2297,
+    "unique_records": {
+      "人物属性": 94,
+      "机体属性": 189,
+      "武器属性": 248,
+      "人物目录名": 111,
+      "人物战斗名": 111,
+      "机体名": 144,
+      "武器名": 90,
+      "初始配置": 16
+    },
+    "exact_rebuild": true,
+    "mismatch_count": 0,
+    "first_mismatches": []
+  },
+  {
+    "path": "output\\build\\legacy-diff-audit\\cases\\legacy_live\\M06\\name\\cold_start_01\\after.nes",
+    "sha256": "D07AA05F459EC152B8E34B3D11D58189C45359445BFA9305D115A8BDBDDBC939",
+    "roots": [
+      "$83F0",
+      "$882C",
+      "$95FC",
+      "$9DCC",
+      "$A213",
+      "$A3AE",
+      "$AB1E",
+      "$B0A5"
+    ],
+    "used_end": "$B643",
+    "capacity": 15184,
+    "used": 12883,
+    "remaining": 2301,
+    "unique_records": {
+      "人物属性": 93,
+      "机体属性": 189,
+      "武器属性": 248,
+      "人物目录名": 111,
+      "人物战斗名": 111,
+      "机体名": 144,
+      "武器名": 90,
+      "初始配置": 16
+    },
+    "exact_rebuild": true,
+    "mismatch_count": 0,
+    "first_mismatches": []
+  },
+  {
+    "path": "output\\build\\legacy-diff-audit\\cases\\legacy_live\\M06\\battle_name\\cold_start_01\\after.nes",
+    "sha256": "93A7CA7E0B2090243F4346CC89DAFF406F7E284B40F6B9B2560ADD9F9EBDE88F",
+    "roots": [
+      "$83F0",
+      "$882C",
+      "$95FC",
+      "$9DCC",
+      "$A213",
+      "$A3AE",
+      "$AB1E",
+      "$B0A5"
+    ],
+    "used_end": "$B643",
+    "capacity": 15184,
+    "used": 12883,
+    "remaining": 2301,
+    "unique_records": {
+      "人物属性": 93,
+      "机体属性": 189,
+      "武器属性": 248,
+      "人物目录名": 111,
+      "人物战斗名": 111,
+      "机体名": 144,
+      "武器名": 90,
+      "初始配置": 16
+    },
+    "exact_rebuild": true,
+    "mismatch_count": 0,
+    "first_mismatches": []
+  }
+]

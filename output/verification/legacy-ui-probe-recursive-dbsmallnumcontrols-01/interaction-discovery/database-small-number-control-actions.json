@@ -1,0 +1,136 @@
+{
+  "schema_version": 1,
+  "validated": true,
+  "error": null,
+  "execution_record_count": 25,
+  "diff_count": 0,
+  "sha256_before": "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E",
+  "sha256_after": "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E",
+  "execution_records": [
+    {
+      "action_id": "7b42756210ee03d19877",
+      "status": "passed",
+      "result": "真实焦点=True。"
+    },
+    {
+      "action_id": "a457eb2cdc186d8e307e",
+      "status": "passed",
+      "result": "读回='621212121212121212121212121212121212121212121212121212121212121212121212121212121212121212121212120'，已恢复。"
+    },
+    {
+      "action_id": "adcc14ec2db8cb632456",
+      "status": "passed",
+      "result": "Ctrl+A/Ctrl+Z 后恢复。"
+    },
+    {
+      "action_id": "1305fbed562304a240c7",
+      "status": "passed",
+      "result": "执行右键路径。"
+    },
+    {
+      "action_id": "5f72318d3d66229c9391",
+      "status": "passed",
+      "result": "边界长度=[60, 60]，已恢复。"
+    },
+    {
+      "action_id": "6ef5905e1fabe47eabdd",
+      "status": "passed",
+      "result": "执行数值弹窗按钮手势。"
+    },
+    {
+      "action_id": "9f9163a0e0b4e59c77b6",
+      "status": "passed",
+      "result": "执行数值弹窗按钮手势。"
+    },
+    {
+      "action_id": "2df1f01bc161a2e38c31",
+      "status": "passed",
+      "result": "执行数值弹窗按钮手势。"
+    },
+    {
+      "action_id": "1bd9f9847d06e04f14c9",
+      "status": "passed",
+      "result": "执行数值弹窗按钮手势。"
+    },
+    {
+      "action_id": "08b21e6e4c86cb58a78f",
+      "status": "passed",
+      "result": "执行数值弹窗按钮手势。"
+    },
+    {
+      "action_id": "25b2fa3ef7cefa6d7564",
+      "status": "passed",
+      "result": "执行数值弹窗按钮手势。"
+    },
+    {
+      "action_id": "0b77a9eec16ac182819b",
+      "status": "passed",
+      "result": "真实焦点=True。"
+    },
+    {
+      "action_id": "908a45ab4c4a4b30fd84",
+      "status": "passed",
+      "result": "读回='98'，已恢复。"
+    },
+    {
+      "action_id": "5c8cddae49a47a903b93",
+      "status": "passed",
+      "result": "Ctrl+A/Ctrl+Z 后恢复。"
+    },
+    {
+      "action_id": "7a71a25444025f9ae888",
+      "status": "passed",
+      "result": "执行右键路径。"
+    },
+    {
+      "action_id": "369ecb831c423172dd8e",
+      "status": "passed",
+      "result": "边界长度=[1, 3]，已恢复。"
+    },
+    {
+      "action_id": "15ce4faf109d52a4315e",
+      "status": "passed",
+      "result": "上箭头读回='1'。"
+    },
+    {
+      "action_id": "4cc7dbd43dd110a9d9e7",
+      "status": "passed",
+      "result": "下箭头读回='98'。"
+    },
+    {
+      "action_id": "c2ae04571c0cd79debb6",
+      "status": "passed",
+      "result": "伙伴边界=['-32768', '32767']，已恢复。"
+    },
+    {
+      "action_id": "0bf90f7d8eb4abe288ef",
+      "status": "passed",
+      "result": "执行数值弹窗按钮手势。"
+    },
+    {
+      "action_id": "7b4eb6ab6f6e7dce6d60",
+      "status": "passed",
+      "result": "执行数值弹窗按钮手势。"
+    },
+    {
+      "action_id": "4d42fa0dccebaa616dd5",
+      "status": "passed",
+      "result": "执行数值弹窗按钮手势。"
+    },
+    {
+      "action_id": "8b517cd5110c6a065201",
+      "status": "passed",
+      "result": "执行数值弹窗按钮手势。"
+    },
+    {
+      "action_id": "8b84e87687e841d60de4",
+      "status": "passed",
+      "result": "执行数值弹窗按钮手势。"
+    },
+    {
+      "action_id": "d6d9ae82877f3b3adb2d",
+      "status": "passed",
+      "result": "执行数值弹窗按钮手势。"
+    }
+  ]
+}

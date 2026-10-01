@@ -1,0 +1,20 @@
+﻿[    0.0s] launched pid=8120
+[    0.0s] === stage A: launcher -> main window (no ROM) ===
+[    3.0s] top window: {'hwnd': 5964204, 'title': 'SRW2修改器V1.5', 'class': 'WTWindow', 'rect': {'left': 571, 'top': 244, 'right': 1346, 'bottom': 843, 'width': 775, 'height': 599}, 'pid': 8120}
+[    4.0s] dump A01_启动器: title='SRW2修改器V1.5' class='WTWindow' controls=8 shot=ok
+[    6.4s] main window hwnd=7343034 title='SRW2扩容版修改器V1.0'
+[    8.3s] dump A02_主窗口_未载入ROM: title='SRW2扩容版修改器V1.0' class='WTWindow' controls=63 shot=ok
+[   13.0s] menu 文件(F): could not open menu via Alt+F
+[   17.6s] menu 帮助(H): could not open menu via Alt+H
+[   18.1s] === stage LOAD: load ROM copy only ===
+[   19.0s] dump LOAD01_打开ROM对话框: title='打开文件' class='#32770' controls=51 shot=ok
+[   19.6s] open dialog confirmed gone=True
+[   26.6s] ROM loaded without main-window sweep, title='SRW2扩容版修改器V1.0：D:\\GIT\\mmc3\\output\\build\\legacy-ui-probe\\weapon-rule-save-beam-puzzle-noop.nes'
+[   27.5s] dump LOAD02_主窗口_载入后: title='SRW2扩容版修改器V1.0：D:\\GIT\\mmc3\\output\\build\\legacy-ui-probe\\weapon-rule-save-beam-puzzle-noop.nes' class='WTWindow' controls=63 shot=ok
+[   27.5s] === stage DBWRULESAVE: beam-puzzle-noop ===
+[   28.3s] 数据库: hwnd=7079232 title='数据库'
+[   56.3s] dump DBWRULESAVE_beam-puzzle-noop_拼图动作前: title='光束拼图' class='WTWindow' controls=20 shot=ok
+[   57.2s] dump DBWRULESAVE_beam-puzzle-noop_拼图动作后: title='光束拼图' class='WTWindow' controls=20 shot=ok
+[   58.3s] dump DBWRULESAVE_beam-puzzle-noop_修改后: title='规律' class='WTWindow' controls=73 shot=ok
+[   63.9s] DBWRULESAVE complete: case=beam-puzzle-noop diffs=0
+[   64.1s] terminated owned pid=8120

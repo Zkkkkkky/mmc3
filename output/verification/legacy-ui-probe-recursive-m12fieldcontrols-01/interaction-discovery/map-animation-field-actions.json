@@ -1,0 +1,772 @@
+{
+  "schema_version": 1,
+  "validated": true,
+  "error": null,
+  "execution_record_count": 91,
+  "diff_count": 0,
+  "sha256_before": "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E",
+  "sha256_after": "82C218275459D53C0F306F6BC036C4797316976E0FA7AD1D5A8247E338995B8E",
+  "observations": [
+    {
+      "class": "Edit",
+      "control_id": 190,
+      "path": [
+        2,
+        4,
+        3
+      ],
+      "original": "",
+      "hidden_on": 110
+    },
+    {
+      "class": "Edit",
+      "control_id": 210,
+      "path": [
+        2,
+        4,
+        1
+      ],
+      "original": "",
+      "hidden_on": 110
+    },
+    {
+      "class": "Edit",
+      "control_id": 240,
+      "path": [
+        2,
+        3,
+        7
+      ],
+      "original": "",
+      "hidden_on": 110
+    },
+    {
+      "class": "Edit",
+      "control_id": 260,
+      "path": [
+        2,
+        3,
+        5
+      ],
+      "original": "",
+      "hidden_on": 110
+    },
+    {
+      "class": "Edit",
+      "control_id": 280,
+      "path": [
+        2,
+        6,
+        1
+      ],
+      "original": "",
+      "hidden_on": 530
+    },
+    {
+      "class": "Edit",
+      "control_id": 550,
+      "path": [
+        2,
+        0,
+        2
+      ],
+      "original": "",
+      "hidden_on": 110
+    },
+    {
+      "class": "Edit",
+      "control_id": 570,
+      "path": [
+        2,
+        0,
+        0
+      ],
+      "original": "",
+      "hidden_on": 110
+    },
+    {
+      "class": "Edit",
+      "control_id": 630,
+      "path": [
+        2,
+        3,
+        0,
+        4
+      ],
+      "original": "",
+      "hidden_on": 110
+    },
+    {
+      "class": "Edit",
+      "control_id": 650,
+      "path": [
+        2,
+        3,
+        0,
+        1
+      ],
+      "original": "",
+      "hidden_on": 110
+    },
+    {
+      "class": "ComboBox",
+      "control_id": 400,
+      "path": [
+        2,
+        2,
+        0,
+        0
+      ],
+      "item_count": 152,
+      "hidden_on": 110
+    },
+    {
+      "class": "ComboBox",
+      "control_id": 450,
+      "path": [
+        2,
+        1,
+        0,
+        6
+      ],
+      "item_count": 152,
+      "hidden_on": 110
+    },
+    {
+      "class": "ComboBox",
+      "control_id": 600,
+      "path": [
+        2,
+        3,
+        2
+      ],
+      "item_count": 256,
+      "hidden_on": 110
+    },
+    {
+      "class": "msctls_updown32",
+      "control_id": 634,
+      "path": [
+        2,
+        3,
+        0,
+        3
+      ],
+      "partner_id": 630,
+      "hidden_on": 110
+    },
+    {
+      "class": "msctls_updown32",
+      "control_id": 654,
+      "path": [
+        2,
+        3,
+        0,
+        0
+      ],
+      "partner_id": 650,
+      "hidden_on": 110
+    },
+    {
+      "class": "Afx:400000:b:10003:900015:0",
+      "control_id": 180,
+      "path": [
+        2,
+        4,
+        4
+      ],
+      "hidden_on": 110
+    },
+    {
+      "class": "Afx:400000:b:10003:900015:0",
+      "control_id": 200,
+      "path": [
+        2,
+        4,
+        2
+      ],
+      "hidden_on": 110
+    },
+    {
+      "class": "Afx:400000:b:10003:900015:0",
+      "control_id": 230,
+      "path": [
+        2,
+        3,
+        8
+      ],
+      "hidden_on": 110
+    },
+    {
+      "class": "Afx:400000:b:10003:900015:0",
+      "control_id": 250,
+      "path": [
+        2,
+        3,
+        6
+      ],
+      "hidden_on": 110
+    },
+    {
+      "class": "Afx:400000:b:10003:900015:0",
+      "control_id": 290,
+      "path": [
+        2,
+        6,
+        0
+      ],
+      "hidden_on": 530
+    },
+    {
+      "class": "Afx:400000:b:10003:900015:0",
+      "control_id": 370,
+      "path": [
+        2,
+        2,
+        1
+      ],
+      "hidden_on": 110
+    },
+    {
+      "class": "Afx:400000:b:10003:900015:0",
+      "control_id": 390,
+      "path": [
+        2,
+        2,
+        0,
+        1
+      ],
+      "hidden_on": 110
+    },
+    {
+      "class": "Afx:400000:b:10003:900015:0",
+      "control_id": 420,
+      "path": [
+        2,
+        1,
+        1
+      ],
+      "hidden_on": 110
+    },
+    {
+      "class": "Afx:400000:b:10003:900015:0",
+      "control_id": 440,
+      "path": [
+        2,
+        1,
+        0,
+        7
+      ],
+      "hidden_on": 110
+    },
+    {
+      "class": "Afx:400000:b:10003:900015:0",
+      "control_id": 540,
+      "path": [
+        2,
+        0,
+        3
+      ],
+      "hidden_on": 110
+    },
+    {
+      "class": "Afx:400000:b:10003:900015:0",
+      "control_id": 560,
+      "path": [
+        2,
+        0,
+        1
+      ],
+      "hidden_on": 110
+    },
+    {
+      "class": "Afx:400000:b:10003:900015:0",
+      "control_id": 590,
+      "path": [
+        2,
+        3,
+        3
+      ],
+      "hidden_on": 110
+    },
+    {
+      "class": "Afx:400000:b:10003:900015:0",
+      "control_id": 620,
+      "path": [
+        2,
+        3,
+        0,
+        5
+      ],
+      "hidden_on": 110
+    },
+    {
+      "class": "Afx:400000:b:10003:900015:0",
+      "control_id": 640,
+      "path": [
+        2,
+        3,
+        0,
+        2
+      ],
+      "hidden_on": 110
+    }
+  ],
+  "execution_records": [
+    {
+      "action_id": "81697bf1885a7ae7f6fd",
+      "status": "passed",
+      "result": "真实焦点=True。"
+    },
+    {
+      "action_id": "9debccabbd06abacff20",
+      "status": "passed",
+      "result": "替换读回=''，随后恢复原值。"
+    },
+    {
+      "action_id": "26a7e066b91c7fc51fc9",
+      "status": "passed",
+      "result": "执行 Ctrl+A/Ctrl+Z 并恢复。"
+    },
+    {
+      "action_id": "f5bd6fdc89175261838a",
+      "status": "passed",
+      "result": "真实右键；可见菜单=True。"
+    },
+    {
+      "action_id": "96a643c59f17b9170c87",
+      "status": "passed",
+      "result": "空值读回=''；256字符读回长度=0；已恢复。"
+    },
+    {
+      "action_id": "b05794ba4d79b2d9f1ad",
+      "status": "passed",
+      "result": "切至代表控件 110 后隐藏；返回路径=(2, 4, 3)，启用=True。"
+    },
+    {
+      "action_id": "e1b40cce0dd447ebc638",
+      "status": "passed",
+      "result": "真实焦点=True。"
+    },
+    {
+      "action_id": "3cb9ceb882ba9386f700",
+      "status": "passed",
+      "result": "替换读回=''，随后恢复原值。"
+    },
+    {
+      "action_id": "17e9ca361522e7f089e9",
+      "status": "passed",
+      "result": "执行 Ctrl+A/Ctrl+Z 并恢复。"
+    },
+    {
+      "action_id": "1ac0fbce73b6f1667ae6",
+      "status": "passed",
+      "result": "真实右键；可见菜单=True。"
+    },
+    {
+      "action_id": "64f322bce61d4e5296c9",
+      "status": "passed",
+      "result": "空值读回=''；256字符读回长度=0；已恢复。"
+    },
+    {
+      "action_id": "953c8a83d497a8de7e41",
+      "status": "passed",
+      "result": "切至代表控件 110 后隐藏；返回路径=(2, 4, 1)，启用=True。"
+    },
+    {
+      "action_id": "13e2aa269648ee73bf68",
+      "status": "passed",
+      "result": "真实焦点=True。"
+    },
+    {
+      "action_id": "fdd6edba08e213076857",
+      "status": "passed",
+      "result": "替换读回=''，随后恢复原值。"
+    },
+    {
+      "action_id": "e1d095e246aca0bc069c",
+      "status": "passed",
+      "result": "执行 Ctrl+A/Ctrl+Z 并恢复。"
+    },
+    {
+      "action_id": "aaab7d7641239073deeb",
+      "status": "passed",
+      "result": "真实右键；可见菜单=True。"
+    },
+    {
+      "action_id": "0e041017b6458d180d68",
+      "status": "passed",
+      "result": "空值读回=''；256字符读回长度=0；已恢复。"
+    },
+    {
+      "action_id": "1c4961fa1db65e0f451b",
+      "status": "passed",
+      "result": "切至代表控件 110 后隐藏；返回路径=(2, 3, 7)，启用=True。"
+    },
+    {
+      "action_id": "7d070587b8ba3c929237",
+      "status": "passed",
+      "result": "真实焦点=True。"
+    },
+    {
+      "action_id": "035ecdca3fa2510629c7",
+      "status": "passed",
+      "result": "替换读回=''，随后恢复原值。"
+    },
+    {
+      "action_id": "aaec51346c7ef087a149",
+      "status": "passed",
+      "result": "执行 Ctrl+A/Ctrl+Z 并恢复。"
+    },
+    {
+      "action_id": "0f310f98cda923f66c37",
+      "status": "passed",
+      "result": "真实右键；可见菜单=True。"
+    },
+    {
+      "action_id": "43eeebeacf28b7488b68",
+      "status": "passed",
+      "result": "空值读回=''；256字符读回长度=0；已恢复。"
+    },
+    {
+      "action_id": "5f06d365314467345b15",
+      "status": "passed",
+      "result": "切至代表控件 110 后隐藏；返回路径=(2, 3, 5)，启用=True。"
+    },
+    {
+      "action_id": "c7f496924f507e62285f",
+      "status": "passed",
+      "result": "真实焦点=True。"
+    },
+    {
+      "action_id": "9d6257bd21c719d05657",
+      "status": "passed",
+      "result": "替换读回=''，随后恢复原值。"
+    },
+    {
+      "action_id": "58dbb260b57ef9923fe0",
+      "status": "passed",
+      "result": "执行 Ctrl+A/Ctrl+Z 并恢复。"
+    },
+    {
+      "action_id": "6b7106d785ecd6a6c325",
+      "status": "passed",
+      "result": "真实右键；可见菜单=True。"
+    },
+    {
+      "action_id": "f7f300d144c6db704fe0",
+      "status": "passed",
+      "result": "空值读回=''；256字符读回长度=0；已恢复。"
+    },
+    {
+      "action_id": "f422d5170350f8d4599f",
+      "status": "passed",
+      "result": "切至代表控件 530 后隐藏；返回路径=(2, 6, 1)，启用=True。"
+    },
+    {
+      "action_id": "5cf7b8fc857314272e2d",
+      "status": "passed",
+      "result": "真实焦点=True。"
+    },
+    {
+      "action_id": "29fbad8b3dc472fdff61",
+      "status": "passed",
+      "result": "替换读回=''，随后恢复原值。"
+    },
+    {
+      "action_id": "c8fa940402570cc2ea92",
+      "status": "passed",
+      "result": "执行 Ctrl+A/Ctrl+Z 并恢复。"
+    },
+    {
+      "action_id": "fef3694bbfce43458b63",
+      "status": "passed",
+      "result": "真实右键；可见菜单=True。"
+    },
+    {
+      "action_id": "014b02bf6caa808d57ae",
+      "status": "passed",
+      "result": "空值读回=''；256字符读回长度=0；已恢复。"
+    },
+    {
+      "action_id": "bf68358c0f1909ae7ae5",
+      "status": "passed",
+      "result": "切至代表控件 110 后隐藏；返回路径=(2, 0, 2)，启用=True。"
+    },
+    {
+      "action_id": "ff35db06704a6f712765",
+      "status": "passed",
+      "result": "真实焦点=True。"
+    },
+    {
+      "action_id": "e1ad3254ec9adbeb53b1",
+      "status": "passed",
+      "result": "替换读回=''，随后恢复原值。"
+    },
+    {
+      "action_id": "500b715959f80c15a682",
+      "status": "passed",
+      "result": "执行 Ctrl+A/Ctrl+Z 并恢复。"
+    },
+    {
+      "action_id": "80a53975377380bb33b5",
+      "status": "passed",
+      "result": "真实右键；可见菜单=True。"
+    },
+    {
+      "action_id": "e548b0af44951ad0a48d",
+      "status": "passed",
+      "result": "空值读回=''；256字符读回长度=0；已恢复。"
+    },
+    {
+      "action_id": "cfb0042ac0e3da686429",
+      "status": "passed",
+      "result": "切至代表控件 110 后隐藏；返回路径=(2, 0, 0)，启用=True。"
+    },
+    {
+      "action_id": "825f6eae813742a912e0",
+      "status": "passed",
+      "result": "真实焦点=True。"
+    },
+    {
+      "action_id": "45853ffc742fe932a981",
+      "status": "passed",
+      "result": "替换读回=''，随后恢复原值。"
+    },
+    {
+      "action_id": "a7b8d0507db44043a696",
+      "status": "passed",
+      "result": "执行 Ctrl+A/Ctrl+Z 并恢复。"
+    },
+    {
+      "action_id": "20bdd4b81d4eb99b5d3d",
+      "status": "passed",
+      "result": "真实右键；可见菜单=True。"
+    },
+    {
+      "action_id": "74a33c77ff6ef45ab771",
+      "status": "passed",
+      "result": "空值读回=''；256字符读回长度=0；已恢复。"
+    },
+    {
+      "action_id": "3baaa960d7503fd9bcf3",
+      "status": "passed",
+      "result": "切至代表控件 110 后隐藏；返回路径=(2, 3, 0, 4)，启用=True。"
+    },
+    {
+      "action_id": "03350fb3022405a5a90a",
+      "status": "passed",
+      "result": "真实焦点=True。"
+    },
+    {
+      "action_id": "92b09734ce60e5162006",
+      "status": "passed",
+      "result": "替换读回=''，随后恢复原值。"
+    },
+    {
+      "action_id": "81cdf43b8aea4bd8c4a5",
+      "status": "passed",
+      "result": "执行 Ctrl+A/Ctrl+Z 并恢复。"
+    },
+    {
+      "action_id": "a59b06d7693966d12928",
+      "status": "passed",
+      "result": "真实右键；可见菜单=True。"
+    },
+    {
+      "action_id": "70ef6c6087bbcf24e59a",
+      "status": "passed",
+      "result": "空值读回=''；256字符读回长度=0；已恢复。"
+    },
+    {
+      "action_id": "3bfd0383fda49e603512",
+      "status": "passed",
+      "result": "切至代表控件 110 后隐藏；返回路径=(2, 3, 0, 1)，启用=True。"
+    },
+    {
+      "action_id": "c7938effa2232c347585",
+      "status": "passed",
+      "result": "展开并收起，共 152 项。"
+    },
+    {
+      "action_id": "5a8a6c9821d29f8c3f6a",
+      "status": "passed",
+      "result": "逐项选择并读回 152/152 项，已恢复。"
+    },
+    {
+      "action_id": "829642d471766c850727",
+      "status": "passed",
+      "result": "Home/Down 后索引=1，已恢复。"
+    },
+    {
+      "action_id": "543fdae8ba6cbba79e49",
+      "status": "passed",
+      "result": "右键菜单=False。"
+    },
+    {
+      "action_id": "ea5aa7db77ff4f09afa9",
+      "status": "passed",
+      "result": "切至代表控件 110 后隐藏；返回路径=(2, 2, 0, 0)，启用=True。"
+    },
+    {
+      "action_id": "3ef84cd52b06a6adf1f5",
+      "status": "passed",
+      "result": "展开并收起，共 152 项。"
+    },
+    {
+      "action_id": "ca79b354c4a8940d7572",
+      "status": "passed",
+      "result": "逐项选择并读回 152/152 项，已恢复。"
+    },
+    {
+      "action_id": "c5ec4b9cba0af03194c1",
+      "status": "passed",
+      "result": "Home/Down 后索引=43，已恢复。"
+    },
+    {
+      "action_id": "9dbf300e1afaf83debf3",
+      "status": "passed",
+      "result": "右键菜单=False。"
+    },
+    {
+      "action_id": "52520030f2cb05b2da79",
+      "status": "passed",
+      "result": "切至代表控件 110 后隐藏；返回路径=(2, 1, 0, 6)，启用=True。"
+    },
+    {
+      "action_id": "c2bd106e5abc474bbe59",
+      "status": "passed",
+      "result": "展开并收起，共 256 项。"
+    },
+    {
+      "action_id": "f24dcbb8a42ba6bd5b8b",
+      "status": "passed",
+      "result": "逐项选择并读回 256/256 项，已恢复。"
+    },
+    {
+      "action_id": "3fa29c918290cd194a71",
+      "status": "passed",
+      "result": "Home/Down 后索引=8，已恢复。"
+    },
+    {
+      "action_id": "a3900c2853efea843eb1",
+      "status": "passed",
+      "result": "右键菜单=False。"
+    },
+    {
+      "action_id": "4f5d34521730c36eb268",
+      "status": "passed",
+      "result": "切至代表控件 110 后隐藏；返回路径=(2, 3, 2)，启用=True。"
+    },
+    {
+      "action_id": "f8e0f72db52309097f8e",
+      "status": "passed",
+      "result": "伙伴值 ''->''。"
+    },
+    {
+      "action_id": "64204eee514ffd9379a3",
+      "status": "passed",
+      "result": "伙伴值 ''->''。"
+    },
+    {
+      "action_id": "a081e76ae839cabf3718",
+      "status": "passed",
+      "result": "伙伴边界读回=['', '']，已恢复。"
+    },
+    {
+      "action_id": "ee955866f087c59ad104",
+      "status": "passed",
+      "result": "切至代表控件 110 后隐藏；返回路径=(2, 3, 0, 3)，启用=True。"
+    },
+    {
+      "action_id": "7d0d30d45e7b46dd1c3d",
+      "status": "passed",
+      "result": "伙伴值 ''->''。"
+    },
+    {
+      "action_id": "75f7d67fb3a9fd54dec3",
+      "status": "passed",
+      "result": "伙伴值 ''->''。"
+    },
+    {
+      "action_id": "042a49d5304186bf0e37",
+      "status": "passed",
+      "result": "伙伴边界读回=['', '']，已恢复。"
+    },
+    {
+      "action_id": "f9302dd273c8d7832b36",
+      "status": "passed",
+      "result": "切至代表控件 110 后隐藏；返回路径=(2, 3, 0, 0)，启用=True。"
+    },
+    {
+      "action_id": "a0b4dedb3f8169b23b56",
+      "status": "passed",
+      "result": "切至代表控件 110 后隐藏；返回路径=(2, 4, 4)，启用=True。"
+    },
+    {
+      "action_id": "6ae666c49e2b939cecd0",
+      "status": "passed",
+      "result": "切至代表控件 110 后隐藏；返回路径=(2, 4, 2)，启用=True。"
+    },
+    {
+      "action_id": "aaf7cb9e5a27083c4799",
+      "status": "passed",
+      "result": "切至代表控件 110 后隐藏；返回路径=(2, 3, 8)，启用=True。"
+    },
+    {
+      "action_id": "573c9a0f92f17858078b",
+      "status": "passed",
+      "result": "切至代表控件 110 后隐藏；返回路径=(2, 3, 6)，启用=True。"
+    },
+    {
+      "action_id": "2b14fb947c868c0c98b1",
+      "status": "passed",
+      "result": "切至代表控件 530 后隐藏；返回路径=(2, 6, 0)，启用=True。"
+    },
+    {
+      "action_id": "f324b5b9ed10f64590b7",
+      "status": "passed",
+      "result": "切至代表控件 110 后隐藏；返回路径=(2, 2, 1)，启用=True。"
+    },
+    {
+      "action_id": "a68743901305a955cd4b",
+      "status": "passed",
+      "result": "切至代表控件 110 后隐藏；返回路径=(2, 2, 0, 1)，启用=True。"
+    },
+    {
+      "action_id": "018274d5006fe7a3673d",
+      "status": "passed",
+      "result": "切至代表控件 110 后隐藏；返回路径=(2, 1, 1)，启用=True。"
+    },
+    {
+      "action_id": "5a6cfd4ce4433c35006b",
+      "status": "passed",
+      "result": "切至代表控件 110 后隐藏；返回路径=(2, 1, 0, 7)，启用=True。"
+    },
+    {
+      "action_id": "7c4b29ecfdd1bb384d80",
+      "status": "passed",
+      "result": "切至代表控件 110 后隐藏；返回路径=(2, 0, 3)，启用=True。"
+    },
+    {
+      "action_id": "b403e081e0c88d9980f7",
+      "status": "passed",
+      "result": "切至代表控件 110 后隐藏；返回路径=(2, 0, 1)，启用=True。"
+    },
+    {
+      "action_id": "9d61db6f84fe67c4280e",
+      "status": "passed",
+      "result": "切至代表控件 110 后隐藏；返回路径=(2, 3, 3)，启用=True。"
+    },
+    {
+      "action_id": "5445c4eaa83c2b0bfc9a",
+      "status": "passed",
+      "result": "切至代表控件 110 后隐藏；返回路径=(2, 3, 0, 5)，启用=True。"
+    },
+    {
+      "action_id": "7ef91ac7160cbc9c01ae",
+      "status": "passed",
+      "result": "切至代表控件 110 后隐藏；返回路径=(2, 3, 0, 2)，启用=True。"
+    }
+  ]
+}

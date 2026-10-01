@@ -253,7 +253,11 @@ class StoryPage(ProjectPage):
         for index, pointer in enumerate(pointers):
             record = self.project.get_story_text(self.current_selector, index)
             suffix = f"{record.capacity} B" if record.capacity else "空/别名哨兵"
-            preview = concise_dc_text(record.raw) if record.capacity else ""
+            preview = (
+                concise_dc_text(record.raw, text_table=self.text_table)
+                if record.capacity
+                else ""
+            )
             item = QListWidgetItem(f"{index:03d} · {preview or '空文本 / 共享哨兵'}")
             item.setData(Qt.ItemDataRole.UserRole, index)
             item.setToolTip(
@@ -461,17 +465,22 @@ class StoryPage(ProjectPage):
 
         if self.text_table is None:
             raise ValueError("请先载入 .tbl 字库映射。")
+        text_table = self.text_table
+        if self.project is not None:
+            text_table, _allocated = self.project.prospective_font_text_table(
+                text, channel="story", validate_renderer=True
+            )
         if text == self._decoded_source_text:
             return self._decoded_source_raw
         if self.project is None:
-            return self.text_table.encode(text)
+            return text_table.encode(text)
 
         token_spans: list[tuple[int, int, bytes]] = []
         text_cursor = 0
         for token in self.project.story_text_codec.tokenize(
             self._decoded_source_raw
         ):
-            token_text = self.text_table.byte_to_text.get(
+            token_text = text_table.byte_to_text.get(
                 token.raw,
                 f"<{token.raw.hex().upper()}>",
             )
@@ -482,7 +491,7 @@ class StoryPage(ProjectPage):
         if text_cursor != len(self._decoded_source_text):
             # The table was mutated without asking the page to render it again.
             # Falling back is safer than splicing against stale boundaries.
-            return self.text_table.encode(text)
+            return text_table.encode(text)
 
         preserved: list[tuple[int, int, bytes]] = []
         matcher = SequenceMatcher(
@@ -509,10 +518,10 @@ class StoryPage(ProjectPage):
         for token_start, token_end, raw in preserved:
             if token_start < edited_cursor:
                 continue
-            result.extend(self.text_table.encode(text[edited_cursor:token_start]))
+            result.extend(text_table.encode(text[edited_cursor:token_start]))
             result.extend(raw)
             edited_cursor = token_end
-        result.extend(self.text_table.encode(text[edited_cursor:]))
+        result.extend(text_table.encode(text[edited_cursor:]))
         return bytes(result)
 
     def _set_raw_editor(self, raw: bytes, *, dirty: bool) -> None:
@@ -772,22 +781,32 @@ class StoryPage(ProjectPage):
         if self.project is None or self.current_selector is None or self.current_index is None:
             return
         try:
-            replacement = self._pending_replacement()
-            self._validate_replacement(replacement)
-            conflict = self._transaction_conflict_error()
-            if conflict is not None:
-                raise ValueError(conflict)
-            self.project.set_story_text_raw(
-                self.current_selector,
-                self.current_index,
-                replacement,
-            )
+            with self.project.transaction(
+                f"剧情文本 ${self.current_selector:02X}:{self.current_index:02X}"
+            ):
+                if self._decoded_dirty:
+                    self.project.ensure_font_characters(
+                        self.decoded.toPlainText(), channel="story"
+                    )
+                    self.text_table = self.project.dc_text_table()
+                replacement = self._pending_replacement()
+                self._validate_replacement(replacement)
+                conflict = self._transaction_conflict_error()
+                if conflict is not None:
+                    raise ValueError(conflict)
+                self.project.set_story_text_raw(
+                    self.current_selector,
+                    self.current_index,
+                    replacement,
+                )
             self._set_raw_editor(replacement, dirty=False)
             self._render_tokens()
             self.project_changed.emit(
                 f"已更新剧情文本 ${self.current_selector:02X}:${self.current_index:02X}"
             )
         except Exception as error:
+            if self.project is not None:
+                self.text_table = self.project.dc_text_table()
             self.show_error(error)
 
     def reset_text(self) -> None:
